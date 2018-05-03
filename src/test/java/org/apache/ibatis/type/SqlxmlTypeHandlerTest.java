@@ -20,17 +20,15 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.io.Reader;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.SQLXML;
 import java.util.Collections;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
@@ -74,14 +72,8 @@ public class SqlxmlTypeHandlerTest extends BaseTypeHandlerTest {
     configuration.addMapper(Mapper.class);
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
 
-    try (SqlSession session = sqlSessionFactory.openSession();
-        Connection conn = session.getConnection();
-        Reader reader = Resources
-            .getResourceAsReader("org/apache/ibatis/type/SqlxmlTypeHandlerTest.sql")) {
-      ScriptRunner runner = new ScriptRunner(conn);
-      runner.setLogWriter(null);
-      runner.runScript(reader);
-    }
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+            "org/apache/ibatis/type/SqlxmlTypeHandlerTest.sql");
   }
 
   @AfterClass

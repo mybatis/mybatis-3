@@ -18,13 +18,12 @@ package org.apache.ibatis.submitted.custom_collection_handling;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.Reader;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -76,26 +75,13 @@ public class CustomCollectionHandlingTest {
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configReader);
         configReader.close();
 
-        Connection conn = sqlSessionFactory.getConfiguration().getEnvironment().getDataSource().getConnection();
-        initDb(conn);
-        conn.close();
+        initDb(sqlSessionFactory);
 
         return sqlSessionFactory;
     }
 
-    private static void initDb(Connection conn) throws IOException, SQLException {
-        try {
-            Reader scriptReader = Resources.getResourceAsReader("org/apache/ibatis/submitted/custom_collection_handling/CreateDB.sql");
-            ScriptRunner runner = new ScriptRunner(conn);
-            runner.setLogWriter(null);
-            runner.setErrorLogWriter(new PrintWriter(System.err));
-            runner.runScript(scriptReader);
-            conn.commit();
-            scriptReader.close();
-        } finally {
-            if (conn != null) {
-                conn.close();
-            }
-        }
+    private static void initDb(SqlSessionFactory sqlSessionFactory) throws IOException, SQLException {
+        BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+                "org/apache/ibatis/submitted/custom_collection_handling/CreateDB.sql");
     }
 }

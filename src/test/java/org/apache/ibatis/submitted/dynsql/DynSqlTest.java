@@ -18,8 +18,8 @@ package org.apache.ibatis.submitted.dynsql;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -29,7 +29,6 @@ import org.junit.Test;
 import java.io.Reader;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -40,26 +39,12 @@ public class DynSqlTest {
 
   @BeforeClass
   public static void setUp() throws Exception {
-    Connection conn = null;
-    try {
-      Reader configReader = Resources.getResourceAsReader("org/apache/ibatis/submitted/dynsql/MapperConfig.xml");
-      sqlSessionFactory = new SqlSessionFactoryBuilder().build(configReader);
-      configReader.close();
-      conn = sqlSessionFactory.getConfiguration().getEnvironment().getDataSource().getConnection();
+    Reader configReader = Resources.getResourceAsReader("org/apache/ibatis/submitted/dynsql/MapperConfig.xml");
+    sqlSessionFactory = new SqlSessionFactoryBuilder().build(configReader);
+    configReader.close();
 
-      Reader scriptReader = Resources.getResourceAsReader("org/apache/ibatis/submitted/dynsql/CreateDB.sql");
-      ScriptRunner runner = new ScriptRunner(conn);
-      runner.setLogWriter(null);
-      runner.setErrorLogWriter(null);
-      runner.runScript(scriptReader);
-      conn.commit();
-      scriptReader.close();
-
-    } finally {
-      if (conn != null) {
-        conn.close();
-      }
-    }
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+            "org/apache/ibatis/submitted/dynsql/CreateDB.sql");
   }
 
   @Test

@@ -15,9 +15,9 @@
  */
 package org.apache.ibatis.submitted.selectkey;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -29,8 +29,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.Reader;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,31 +38,13 @@ public class SelectKeyTest {
 
   @Before
   public void setUp() throws Exception {
-    Connection conn = null;
+    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/selectkey/MapperConfig.xml");
+    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    reader.close();
+    sqlSessionFactory.getConfiguration().addMapper(AnnotatedMapper.class);
 
-    try {
-      Class.forName("org.hsqldb.jdbcDriver");
-      conn = DriverManager.getConnection("jdbc:hsqldb:mem:lname", "sa",
-          "");
-
-      Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/selectkey/CreateDB.sql");
-
-      ScriptRunner runner = new ScriptRunner(conn);
-      runner.setLogWriter(null);
-      runner.setErrorLogWriter(null);
-      runner.runScript(reader);
-      conn.commit();
-      reader.close();
-
-      reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/selectkey/MapperConfig.xml");
-      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-      reader.close();
-      sqlSessionFactory.getConfiguration().addMapper(AnnotatedMapper.class);
-    } finally {
-      if (conn != null) {
-        conn.close();
-      }
-    }
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+            "org/apache/ibatis/submitted/selectkey/CreateDB.sql");
   }
 
   @Test

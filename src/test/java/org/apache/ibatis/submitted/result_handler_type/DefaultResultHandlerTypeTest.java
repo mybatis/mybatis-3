@@ -17,15 +17,12 @@ package org.apache.ibatis.submitted.result_handler_type;
 
 import static org.junit.Assert.*;
 
-import java.io.IOException;
 import java.io.Reader;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -74,28 +71,10 @@ public class DefaultResultHandlerTypeTest {
     SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configReader);
     configReader.close();
 
-    Connection conn = sqlSessionFactory.getConfiguration().getEnvironment().getDataSource().getConnection();
-    initDb(conn);
-    conn.close();
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+            "org/apache/ibatis/submitted/result_handler_type/CreateDB.sql");
 
     return sqlSessionFactory;
-  }
-
-  private static void initDb(Connection conn) throws IOException, SQLException {
-    try {
-      Reader scriptReader = Resources
-          .getResourceAsReader("org/apache/ibatis/submitted/result_handler_type/CreateDB.sql");
-      ScriptRunner runner = new ScriptRunner(conn);
-      runner.setLogWriter(null);
-      runner.setErrorLogWriter(null);
-      runner.runScript(scriptReader);
-      conn.commit();
-      scriptReader.close();
-    } finally {
-      if (conn != null) {
-        conn.close();
-      }
-    }
   }
 
 }

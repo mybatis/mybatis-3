@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.submitted.lazy_immutable;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 
@@ -38,29 +39,12 @@ public final class ImmutablePOJOTest {
 
     @BeforeClass
     public static void setupClass() throws Exception {
-        Connection conn = null;
+        Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/lazy_immutable/ibatisConfig.xml");
+        factory = new SqlSessionFactoryBuilder().build(reader);
+        reader.close();
 
-        try {
-            Class.forName("org.hsqldb.jdbcDriver");
-            conn = DriverManager.getConnection("jdbc:hsqldb:mem:lazy_immutable", "sa", "");
-
-            Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/lazy_immutable/CreateDB.sql");
-
-            ScriptRunner runner = new ScriptRunner(conn);
-            runner.setLogWriter(null);
-            runner.setErrorLogWriter(new PrintWriter(System.err));
-            runner.runScript(reader);
-            conn.commit();
-            reader.close();
-
-            reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/lazy_immutable/ibatisConfig.xml");
-            factory = new SqlSessionFactoryBuilder().build(reader);
-            reader.close();
-        } finally {
-            if (conn != null) {
-                conn.close();
-            }
-        }
+        BaseDataTest.runScript(factory.getConfiguration().getEnvironment().getDataSource(),
+                "org/apache/ibatis/submitted/lazy_immutable/CreateDB.sql");
     }
 
     @Test

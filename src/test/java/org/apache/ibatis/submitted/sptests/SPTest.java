@@ -21,14 +21,13 @@ import static org.junit.Assert.assertNull;
 
 import java.io.Reader;
 import java.sql.Array;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
@@ -42,30 +41,15 @@ public class SPTest {
 
   @BeforeClass
   public static void initDatabase() throws Exception {
-    Connection conn = null;
+    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/sptests/MapperConfig.xml");
+    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    reader.close();
 
-    try {
-      Class.forName("org.hsqldb.jdbcDriver");
-      conn = DriverManager.getConnection("jdbc:hsqldb:mem:sptest", "sa", "");
-
-      Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/sptests/CreateDB.sql");
-
-      ScriptRunner runner = new ScriptRunner(conn);
-      runner.setDelimiter("go");
-      runner.setLogWriter(null);
-      runner.setErrorLogWriter(null);
-      runner.runScript(reader);
-      conn.commit();
-      reader.close();
-
-      reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/sptests/MapperConfig.xml");
-      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-      reader.close();
-    } finally {
-      if (conn != null) {
-        conn.close();
-      }
-    }
+    ScriptRunner runner = new ScriptRunner(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource().getConnection());
+    runner.setDelimiter("go");
+    runner.setLogWriter(null);
+    runner.setErrorLogWriter(null);
+    BaseDataTest.runScript(runner, "org/apache/ibatis/submitted/sptests/CreateDB.sql");
   }
 
   /*

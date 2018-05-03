@@ -17,20 +17,16 @@ package org.apache.ibatis.submitted.usesjava8.postgres_genkeys;
 
 import static org.junit.Assert.*;
 
-import java.io.Reader;
 import java.nio.file.Paths;
-import java.sql.Connection;
 import java.util.Collections;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.apache.ibatis.submitted.usesjava8.keycolumn.InsertMapper;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -58,13 +54,8 @@ public class PostgresGeneratedKeysTest {
     configuration.addMapper(Mapper.class);
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
 
-    try (SqlSession session = sqlSessionFactory.openSession();
-        Connection conn = session.getConnection();
-        Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/usesjava8/postgres_genkeys/CreateDB.sql")) {
-      ScriptRunner runner = new ScriptRunner(conn);
-      runner.setLogWriter(null);
-      runner.runScript(reader);
-    }
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+            "org/apache/ibatis/submitted/usesjava8/postgres_genkeys/CreateDB.sql");
   }
 
   @AfterClass
