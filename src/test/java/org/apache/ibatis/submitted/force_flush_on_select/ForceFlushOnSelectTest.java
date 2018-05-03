@@ -39,9 +39,9 @@ public class ForceFlushOnSelectTest {
 
   @Before
   public void initDatabase() throws Exception {
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/force_flush_on_select/ibatisConfig.xml");
-    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    reader.close();
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/force_flush_on_select/ibatisConfig.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    }
 
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
             "org/apache/ibatis/submitted/force_flush_on_select/CreateDB.sql");
@@ -96,9 +96,9 @@ public class ForceFlushOnSelectTest {
   }
 
   private void updateDatabase(Connection conn) throws SQLException {
-    Statement stmt = conn.createStatement();
-    stmt.executeUpdate("UPDATE person SET firstName = 'Simone' WHERE id = 1");
-    stmt.close();
+    try (Statement stmt = conn.createStatement()) {
+      stmt.executeUpdate("UPDATE person SET firstName = 'Simone' WHERE id = 1");
+    }
   }
 
   @Test

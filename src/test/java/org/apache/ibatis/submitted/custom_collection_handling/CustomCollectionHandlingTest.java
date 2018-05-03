@@ -40,15 +40,12 @@ public class CustomCollectionHandlingTest {
     public void testSelectListWithNestedResultMap() throws Exception {
         String xmlConfig = "org/apache/ibatis/submitted/custom_collection_handling/MapperConfig.xml";
         SqlSessionFactory sqlSessionFactory = getSqlSessionFactoryXmlConfig(xmlConfig);
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        try {
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             List<Person> list = sqlSession.selectList("org.apache.ibatis.submitted.custom_collection_handling.PersonMapper.findWithResultMap");
             assertEquals(2, list.size());
             assertEquals(2, list.get(0).getContacts().size());
             assertEquals(1, list.get(1).getContacts().size());
             assertEquals("3 Wall Street", list.get(0).getContacts().get(1).getAddress());
-        } finally {
-            sqlSession.close();
         }
     }
 
@@ -71,13 +68,13 @@ public class CustomCollectionHandlingTest {
     }
 
     private SqlSessionFactory getSqlSessionFactoryXmlConfig(String resource) throws Exception {
-        Reader configReader = Resources.getResourceAsReader(resource);
-        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configReader);
-        configReader.close();
+        try (Reader configReader = Resources.getResourceAsReader(resource)) {
+            SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configReader);
 
-        initDb(sqlSessionFactory);
+            initDb(sqlSessionFactory);
 
-        return sqlSessionFactory;
+            return sqlSessionFactory;
+        }
     }
 
     private static void initDb(SqlSessionFactory sqlSessionFactory) throws IOException, SQLException {

@@ -42,11 +42,8 @@ public class DmlMapperReturnTypesTest {
   @BeforeClass
   public static void setUp() throws Exception {
     // create a SqlSessionFactory
-    Reader reader = Resources.getResourceAsReader(XML);
-    try {
+    try (Reader reader = Resources.getResourceAsReader(XML)) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    } finally {
-      reader.close();
     }
 
     // populate in-memory database

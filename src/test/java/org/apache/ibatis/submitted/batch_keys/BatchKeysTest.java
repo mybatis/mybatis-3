@@ -42,40 +42,39 @@ public class BatchKeysTest {
 
   @Before
   public void setUp() throws Exception {
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/batch_keys/Config.xml");
-    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    reader.close();
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/batch_keys/Config.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    }
 
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
             "org/apache/ibatis/submitted/batch_keys/CreateDB.sql");
   }
 
   public void testJdbc3Support() throws Exception {
-    Connection conn = sqlSessionFactory.getConfiguration().getEnvironment().getDataSource().getConnection();
-    PreparedStatement stmt = conn.prepareStatement("insert into users2 values(null, 'Pocoyo')", Statement.RETURN_GENERATED_KEYS);
-    stmt.addBatch();
-    stmt.executeBatch();
-    ResultSet rs = stmt.getGeneratedKeys();
-    if (rs.next()) {
-      ResultSetMetaData rsmd = rs.getMetaData();
-      int colCount = rsmd.getColumnCount();
-      do {
-        for (int i = 1; i <= colCount; i++) {
-          String key = rs.getString(i);
-          System.out.println("key " + i + " is " + key);
+    try (Connection conn = sqlSessionFactory.getConfiguration().getEnvironment().getDataSource().getConnection();
+         PreparedStatement stmt = conn.prepareStatement("insert into users2 values(null, 'Pocoyo')", Statement.RETURN_GENERATED_KEYS)) {
+      stmt.addBatch();
+      stmt.executeBatch();
+      try (ResultSet rs = stmt.getGeneratedKeys()) {
+        if (rs.next()) {
+          ResultSetMetaData rsmd = rs.getMetaData();
+          int colCount = rsmd.getColumnCount();
+          do {
+            for (int i = 1; i <= colCount; i++) {
+              String key = rs.getString(i);
+              System.out.println("key " + i + " is " + key);
+            }
+          } while (rs.next());
+        } else {
+          System.out.println("There are no generated keys.");
         }
-      } while (rs.next());
-    } else {
-      System.out.println("There are no generated keys.");
+      }
     }
-    stmt.close();
-    conn.close();
   }
 
   @Test
   public void testInsert() throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH)) {
       User user1 = new User(null, "Pocoyo");
       sqlSession.insert("insert", user1);
       User user2 = new User(null, "Valentina");
@@ -84,23 +83,17 @@ public class BatchKeysTest {
       assertEquals(new Integer(50), user1.getId());
       assertEquals(new Integer(50), user2.getId());
       sqlSession.commit();
-    } finally {
-      sqlSession.close();
     }
-    try {
-      sqlSession = sqlSessionFactory.openSession();
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       List<User> users = sqlSession.selectList("select");
       Assert.assertTrue(users.size() == 2);
-    } finally {
-      sqlSession.close();
     }
   }
 
 
   @Test
-  public void testInsertJdbc3() throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);
-    try {
+  public void testInsertJdbc3() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH)) {
       User user1 = new User(null, "Pocoyo");
       sqlSession.insert("insertIdentity", user1);
       User user2 = new User(null, "Valentina");
@@ -109,23 +102,17 @@ public class BatchKeysTest {
       assertEquals(Integer.valueOf(0), user1.getId());
       assertEquals(Integer.valueOf(1), user2.getId());
       sqlSession.commit();
-    } finally {
-      sqlSession.close();
     }
 
-    try {
-      sqlSession = sqlSessionFactory.openSession();
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       List<User> users = sqlSession.selectList("selectIdentity");
       Assert.assertTrue(users.size() == 2);
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
-  public void testInsertWithMapper() throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);
-    try {
+  public void testInsertWithMapper() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH)) {
       Mapper userMapper = sqlSession.getMapper(Mapper.class);
       User user1 = new User(null, "Pocoyo");
       userMapper.insert(user1);
@@ -135,23 +122,17 @@ public class BatchKeysTest {
       assertEquals(new Integer(50), user1.getId());
       assertEquals(new Integer(50), user2.getId());
       sqlSession.commit();
-    } finally {
-      sqlSession.close();
     }
 
-    try {
-      sqlSession = sqlSessionFactory.openSession();
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       List<User> users = sqlSession.selectList("select");
       Assert.assertTrue(users.size() == 2);
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
-  public void testInsertMapperJdbc3() throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);
-    try {
+  public void testInsertMapperJdbc3() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH)) {
       Mapper userMapper = sqlSession.getMapper(Mapper.class);
       User user1 = new User(null, "Pocoyo");
       userMapper.insertIdentity(user1);
@@ -161,38 +142,27 @@ public class BatchKeysTest {
       assertEquals(Integer.valueOf(0), user1.getId());
       assertEquals(Integer.valueOf(1), user2.getId());
       sqlSession.commit();
-    } finally {
-      sqlSession.close();
     }
 
-    try {
-      sqlSession = sqlSessionFactory.openSession();
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       List<User> users = sqlSession.selectList("selectIdentity");
       Assert.assertTrue(users.size() == 2);
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
-  public void testInsertMapperNoBatchJdbc3() throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  public void testInsertMapperNoBatchJdbc3() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper userMapper = sqlSession.getMapper(Mapper.class);
       User user1 = new User(null, "Pocoyo");
       userMapper.insertIdentity(user1);
       assertEquals(Integer.valueOf(0), user1.getId());
       sqlSession.commit();
-    } finally {
-      sqlSession.close();
     }
 
-    try {
-      sqlSession = sqlSessionFactory.openSession();
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       List<User> users = sqlSession.selectList("selectIdentity");
       Assert.assertTrue(users.size() == 1);
-    } finally {
-      sqlSession.close();
     }
   }
   

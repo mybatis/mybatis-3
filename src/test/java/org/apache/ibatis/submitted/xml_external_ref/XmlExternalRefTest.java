@@ -72,19 +72,18 @@ public class XmlExternalRefTest {
 
   @Test
   public void testMappedStatementCache() throws Exception {
-    Reader configReader = Resources
-    .getResourceAsReader("org/apache/ibatis/submitted/xml_external_ref/MapperConfig.xml");
-    SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configReader);
-    configReader.close();
+    try (Reader configReader = Resources.getResourceAsReader("org/apache/ibatis/submitted/xml_external_ref/MapperConfig.xml")) {
+      SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configReader);
 
-    Configuration configuration = sqlSessionFactory.getConfiguration();
-    configuration.getMappedStatementNames();
+      Configuration configuration = sqlSessionFactory.getConfiguration();
+      configuration.getMappedStatementNames();
 
-    MappedStatement selectPetStatement = configuration.getMappedStatement("org.apache.ibatis.submitted.xml_external_ref.PetMapper.select");
-    MappedStatement selectPersonStatement = configuration.getMappedStatement("org.apache.ibatis.submitted.xml_external_ref.PersonMapper.select");
-    Cache cache = selectPetStatement.getCache();
-    assertEquals("org.apache.ibatis.submitted.xml_external_ref.PetMapper", cache.getId());
-    assertSame(cache, selectPersonStatement.getCache());
+      MappedStatement selectPetStatement = configuration.getMappedStatement("org.apache.ibatis.submitted.xml_external_ref.PetMapper.select");
+      MappedStatement selectPersonStatement = configuration.getMappedStatement("org.apache.ibatis.submitted.xml_external_ref.PersonMapper.select");
+      Cache cache = selectPetStatement.getCache();
+      assertEquals("org.apache.ibatis.submitted.xml_external_ref.PetMapper", cache.getId());
+      assertSame(cache, selectPersonStatement.getCache());
+    }
   }
 
   private void testCrossReference(SqlSessionFactory sqlSessionFactory) {
@@ -106,14 +105,14 @@ public class XmlExternalRefTest {
   }
 
   private SqlSessionFactory getSqlSessionFactoryXmlConfig() throws Exception {
-    Reader configReader = Resources
-        .getResourceAsReader("org/apache/ibatis/submitted/xml_external_ref/MapperConfig.xml");
-    SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configReader);
-    configReader.close();
+    try (Reader configReader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/xml_external_ref/MapperConfig.xml")) {
+      SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configReader);
 
-    initDb(sqlSessionFactory);
+      initDb(sqlSessionFactory);
 
-    return sqlSessionFactory;
+      return sqlSessionFactory;
+    }
   }
 
   private SqlSessionFactory getSqlSessionFactoryJavaConfig() throws Exception {

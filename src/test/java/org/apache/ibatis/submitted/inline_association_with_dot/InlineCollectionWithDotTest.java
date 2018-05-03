@@ -34,22 +34,15 @@ public class InlineCollectionWithDotTest {
   public void openSession(String aConfig) throws Exception {
 
     final String resource = "org/apache/ibatis/submitted/inline_association_with_dot/ibatis-" + aConfig + ".xml";
-    Reader batisConfigReader = Resources.getResourceAsReader(resource);
+    try (Reader batisConfigReader = Resources.getResourceAsReader(resource)) {
 
-    SqlSessionFactory sqlSessionFactory;
-    try {
-      sqlSessionFactory = new SqlSessionFactoryBuilder().build(batisConfigReader);
-    } catch(Exception anException) {
-      batisConfigReader.close();
-      throw new RuntimeException("Mapper configuration failed, expected this to work: " + anException.getMessage(), anException);
+      SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(batisConfigReader);
+
+      BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+              "org/apache/ibatis/submitted/inline_association_with_dot/create.sql");
+
+      sqlSession = sqlSessionFactory.openSession();
     }
-
-    batisConfigReader.close();
-
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/inline_association_with_dot/create.sql");
-
-    sqlSession = sqlSessionFactory.openSession();
   }
 
   @After

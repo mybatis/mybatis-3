@@ -40,9 +40,9 @@ public class CursorSimpleTest {
     @BeforeClass
     public static void setUp() throws Exception {
         // create a SqlSessionFactory
-        Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/cursor_simple/mybatis-config.xml");
-        sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-        reader.close();
+        try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/cursor_simple/mybatis-config.xml")) {
+            sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+        }
 
         // populate in-memory database
         BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
@@ -158,48 +158,44 @@ public class CursorSimpleTest {
     }
 
     @Test
-    public void testCursorIteratorNoSuchElementExceptionWithHasNext() {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
+    public void testCursorIteratorNoSuchElementExceptionWithHasNext() throws IOException {
 
-        Cursor<User> usersCursor = sqlSession.selectCursor("getAllUsers", null, new RowBounds(1, 1));
-        try {
-            Iterator<User> iterator = usersCursor.iterator();
+        try (SqlSession sqlSession = sqlSessionFactory.openSession();
+             Cursor<User> usersCursor = sqlSession.selectCursor("getAllUsers", null, new RowBounds(1, 1))) {
+            try {
+                Iterator<User> iterator = usersCursor.iterator();
 
-            User user = iterator.next();
-            Assert.assertEquals("User2", user.getName());
-            Assert.assertEquals(1, usersCursor.getCurrentIndex());
+                User user = iterator.next();
+                Assert.assertEquals("User2", user.getName());
+                Assert.assertEquals(1, usersCursor.getCurrentIndex());
 
-            Assert.assertFalse(iterator.hasNext());
-            iterator.next();
-            Assert.fail("We should have failed since we call next() when hasNext() returned false");
-        } catch (NoSuchElementException e) {
-            Assert.assertFalse(usersCursor.isOpen());
-            Assert.assertTrue(usersCursor.isConsumed());
-        } finally {
-            sqlSession.close();
+                Assert.assertFalse(iterator.hasNext());
+                iterator.next();
+                Assert.fail("We should have failed since we call next() when hasNext() returned false");
+            } catch (NoSuchElementException e) {
+                Assert.assertFalse(usersCursor.isOpen());
+                Assert.assertTrue(usersCursor.isConsumed());
+            }
         }
     }
 
     @Test
-    public void testCursorIteratorNoSuchElementExceptionNoHasNext() {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
+    public void testCursorIteratorNoSuchElementExceptionNoHasNext() throws IOException {
+        try (SqlSession sqlSession = sqlSessionFactory.openSession();
+             Cursor<User> usersCursor = sqlSession.selectCursor("getAllUsers", null, new RowBounds(1, 1))) {
+            try {
+                Iterator<User> iterator = usersCursor.iterator();
+                User user = iterator.next();
+                Assert.assertEquals("User2", user.getName());
+                Assert.assertEquals(1, usersCursor.getCurrentIndex());
 
-        Cursor<User> usersCursor = sqlSession.selectCursor("getAllUsers", null, new RowBounds(1, 1));
-        try {
-            Iterator<User> iterator = usersCursor.iterator();
-
-            User user = iterator.next();
-            Assert.assertEquals("User2", user.getName());
-            Assert.assertEquals(1, usersCursor.getCurrentIndex());
-
-            // Trying next() without hasNext()
-            iterator.next();
-            Assert.fail("We should have failed since we call next() when is no more items");
-        } catch (NoSuchElementException e) {
-            Assert.assertFalse(usersCursor.isOpen());
-            Assert.assertTrue(usersCursor.isConsumed());
-        } finally {
-            sqlSession.close();
+                // Trying next() without hasNext()
+                iterator.next();
+                Assert.fail("We should have failed since we call next() when is no more items");
+            } catch (NoSuchElementException e) {
+                Assert.assertFalse(usersCursor.isOpen());
+                Assert.assertTrue(usersCursor.isConsumed());
+            }
         }
     }
 
@@ -293,38 +289,38 @@ public class CursorSimpleTest {
 
     @Test
     public void testCursorUsageAfterClose() throws IOException {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        Mapper mapper = sqlSession.getMapper(Mapper.class);
-        Cursor<User> usersCursor = mapper.getAllUsers();
 
-        try {
-            Iterator<User> iterator = usersCursor.iterator();
-            User user = iterator.next();
-            Assert.assertEquals("User1", user.getName());
-            Assert.assertEquals(0, usersCursor.getCurrentIndex());
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
 
-            user = iterator.next();
-            Assert.assertEquals("User2", user.getName());
-            Assert.assertEquals(1, usersCursor.getCurrentIndex());
+            Cursor<User> usersCursor = mapper.getAllUsers();
+            try {
+                Iterator<User> iterator = usersCursor.iterator();
+                User user = iterator.next();
+                Assert.assertEquals("User1", user.getName());
+                Assert.assertEquals(0, usersCursor.getCurrentIndex());
 
-            usersCursor.close();
+                user = iterator.next();
+                Assert.assertEquals("User2", user.getName());
+                Assert.assertEquals(1, usersCursor.getCurrentIndex());
 
-            // hasNext now return false, since the cursor is closed
-            Assert.assertFalse(iterator.hasNext());
-            Assert.assertFalse(usersCursor.isOpen());
-            Assert.assertFalse(usersCursor.isConsumed());
+                usersCursor.close();
 
-            // trying next() will fail
-            iterator.next();
+                // hasNext now return false, since the cursor is closed
+                Assert.assertFalse(iterator.hasNext());
+                Assert.assertFalse(usersCursor.isOpen());
+                Assert.assertFalse(usersCursor.isConsumed());
 
-            Assert.fail("We should have failed with NoSuchElementException since Cursor is closed");
-        } catch (NoSuchElementException e) {
-            // We had an exception and current index has not changed
-            Assert.assertEquals(1, usersCursor.getCurrentIndex());
-            usersCursor.close();
-            return;
-        } finally {
-            sqlSession.close();
+                // trying next() will fail
+                iterator.next();
+
+                Assert.fail("We should have failed with NoSuchElementException since Cursor is closed");
+            } catch (NoSuchElementException e) {
+                // We had an exception and current index has not changed
+                Assert.assertEquals(1, usersCursor.getCurrentIndex());
+                usersCursor.close();
+                return;
+            }
         }
 
         Assert.fail("Should have returned earlier");

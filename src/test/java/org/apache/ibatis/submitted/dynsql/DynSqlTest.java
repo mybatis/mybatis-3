@@ -39,9 +39,9 @@ public class DynSqlTest {
 
   @BeforeClass
   public static void setUp() throws Exception {
-    Reader configReader = Resources.getResourceAsReader("org/apache/ibatis/submitted/dynsql/MapperConfig.xml");
-    sqlSessionFactory = new SqlSessionFactoryBuilder().build(configReader);
-    configReader.close();
+    try (Reader configReader = Resources.getResourceAsReader("org/apache/ibatis/submitted/dynsql/MapperConfig.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(configReader);
+    }
 
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
             "org/apache/ibatis/submitted/dynsql/CreateDB.sql");

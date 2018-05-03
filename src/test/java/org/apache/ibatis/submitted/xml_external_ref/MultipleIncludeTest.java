@@ -55,16 +55,14 @@ public class MultipleIncludeTest {
   }
 
   private SqlSessionFactory getSqlSessionFactoryXmlConfig() throws Exception {
-    Reader configReader = Resources
-        .getResourceAsReader("org/apache/ibatis/submitted/xml_external_ref/MultipleIncludeMapperConfig.xml");
-    SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configReader);
-    configReader.close();
+    try (Reader configReader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/xml_external_ref/MultipleIncludeMapperConfig.xml");) {
+      SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configReader);
 
-    Connection conn = sqlSessionFactory.getConfiguration().getEnvironment().getDataSource().getConnection();
-    initDb(sqlSessionFactory);
-    conn.close();
+      initDb(sqlSessionFactory);
 
-    return sqlSessionFactory;
+      return sqlSessionFactory;
+    }
   }
 
   private SqlSessionFactory getSqlSessionFactoryJavaConfig() throws Exception {

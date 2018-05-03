@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -56,31 +56,31 @@ public class ResourcesTest extends BaseDataTest {
   @Test
   public void shouldGetUrlAsStream() throws Exception {
     URL url = Resources.getResourceURL(CLASS_LOADER, JPETSTORE_PROPERTIES);
-    InputStream in = Resources.getUrlAsStream(url.toString());
-    assertNotNull(in);
-    in.close();
+    try (InputStream in = Resources.getUrlAsStream(url.toString())) {
+      assertNotNull(in);
+    }
   }
 
   @Test
   public void shouldGetUrlAsReader() throws Exception {
     URL url = Resources.getResourceURL(CLASS_LOADER, JPETSTORE_PROPERTIES);
-    Reader in = Resources.getUrlAsReader(url.toString());
-    assertNotNull(in);
-    in.close();
+    try (Reader in = Resources.getUrlAsReader(url.toString())) {
+      assertNotNull(in);
+    }
   }
 
   @Test
   public void shouldGetResourceAsStream() throws Exception {
-    InputStream in = Resources.getResourceAsStream(CLASS_LOADER, JPETSTORE_PROPERTIES);
-    assertNotNull(in);
-    in.close();
+    try (InputStream in = Resources.getResourceAsStream(CLASS_LOADER, JPETSTORE_PROPERTIES)) {
+      assertNotNull(in);
+    }
   }
 
   @Test
   public void shouldGetResourceAsReader() throws Exception {
-    Reader in = Resources.getResourceAsReader(CLASS_LOADER, JPETSTORE_PROPERTIES);
-    assertNotNull(in);
-    in.close();
+    try(Reader in = Resources.getResourceAsReader(CLASS_LOADER, JPETSTORE_PROPERTIES)) {
+      assertNotNull(in);
+    }
   }
 
   @Test

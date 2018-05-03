@@ -36,20 +36,11 @@ public class HeavyInitialLoadTest {
 
   @BeforeClass
   public static void initSqlSessionFactory() throws Exception {
-    Connection conn = null;
-
-    try {
-      Class.forName("org.hsqldb.jdbcDriver");
-      conn = DriverManager.getConnection("jdbc:hsqldb:mem:heavy_initial_load", "sa", "");
-
-      Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/heavy_initial_load/ibatisConfig.xml");
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/heavy_initial_load/ibatisConfig.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-      reader.close();
-    } finally {
-      if (conn != null) {
-        conn.close();
-      }
     }
+
+    sqlSessionFactory.getConfiguration().getEnvironment().getDataSource().getConnection().close();
   }
 
   private static final int THREAD_COUNT = 5;

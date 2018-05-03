@@ -36,9 +36,9 @@ public class AuthorDAOTest {
   @BeforeClass
   public static void testGetMessageForEmptyDatabase() throws Exception {
     final String resource = "org/apache/ibatis/submitted/initialized_collection_property/mybatis-config.xml";
-    Reader reader = Resources.getResourceAsReader(resource);
-    factory = new SqlSessionFactoryBuilder().build(reader);
-    reader.close();
+    try (Reader reader = Resources.getResourceAsReader(resource)) {
+      factory = new SqlSessionFactoryBuilder().build(reader);
+    }
 
     BaseDataTest.runScript(factory.getConfiguration().getEnvironment().getDataSource(),
             "org/apache/ibatis/submitted/initialized_collection_property/create.sql");

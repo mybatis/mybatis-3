@@ -47,10 +47,10 @@ public class OptionalOnMapperMethodTest {
   @BeforeClass
   public static void setUp() throws Exception {
     // create an SqlSessionFactory
-    Reader reader = Resources.getResourceAsReader(
-        "org/apache/ibatis/submitted/usesjava8/optional_on_mapper_method/mybatis-config.xml");
-    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    reader.close();
+    try (Reader reader = Resources.getResourceAsReader(
+        "org/apache/ibatis/submitted/usesjava8/optional_on_mapper_method/mybatis-config.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    }
 
     // populate in-memory database
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
@@ -97,19 +97,15 @@ public class OptionalOnMapperMethodTest {
 
   @Test
   public void returnOptionalFromSqlSession() {
-    SqlSession sqlSession = Mockito.spy(sqlSessionFactory.openSession());
+    try (SqlSession sqlSession = Mockito.spy(sqlSessionFactory.openSession());) {
+      User mockUser = new User();
+      mockUser.setName("mock user");
+      Optional<User> optionalMockUser = Optional.of(mockUser);
+      doReturn(optionalMockUser).when(sqlSession).selectOne(any(String.class), any(Object.class));
 
-    User mockUser = new User();
-    mockUser.setName("mock user");
-    Optional<User> optionalMockUser = Optional.of(mockUser);
-    doReturn(optionalMockUser).when(sqlSession).selectOne(any(String.class), any(Object.class));
-
-    try {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Optional<User> user = mapper.getUserUsingAnnotation(3);
       assertTrue(user == optionalMockUser);
-    } finally {
-      sqlSession.close();
     }
   }
 

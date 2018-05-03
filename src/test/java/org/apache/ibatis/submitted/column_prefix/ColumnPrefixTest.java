@@ -34,9 +34,9 @@ public class ColumnPrefixTest {
 
   @Before
   public void setUp() throws Exception {
-    Reader reader = Resources.getResourceAsReader(getConfigPath());
-    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    reader.close();
+    try (Reader reader = Resources.getResourceAsReader(getConfigPath())) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    }
 
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
             "org/apache/ibatis/submitted/column_prefix/CreateDB.sql");

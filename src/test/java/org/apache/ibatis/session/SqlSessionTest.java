@@ -732,15 +732,12 @@ public class SqlSessionTest extends BaseDataTest {
 
   @Test
   public void shouldFindPostsWithAuthorIdUsingDynamicSql() throws Exception {
-    SqlSession session = sqlMapper.openSession();
-    try {
+    try (SqlSession session = sqlMapper.openSession()) {
       List<Post> posts = session.selectList("org.apache.ibatis.domain.blog.mappers.PostMapper.findPost",
           new HashMap<String, Integer>() {{
             put("author_id", 101);
           }});
       assertEquals(3, posts.size());
-    } finally {
-      session.close();
     }
   }
 

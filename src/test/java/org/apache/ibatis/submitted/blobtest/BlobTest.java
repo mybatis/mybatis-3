@@ -34,9 +34,9 @@ public class BlobTest {
 
     @BeforeClass
     public static void initDatabase() throws Exception {
-        Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/blobtest/MapperConfig.xml");
-        sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-        reader.close();
+        try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/blobtest/MapperConfig.xml")) {
+            sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+        }
 
         BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
                 "org/apache/ibatis/submitted/blobtest/CreateDB.sql");

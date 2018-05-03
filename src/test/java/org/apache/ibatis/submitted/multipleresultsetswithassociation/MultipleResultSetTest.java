@@ -40,26 +40,25 @@ public class MultipleResultSetTest {
 
   @BeforeClass
   public static void setUp() throws Exception {
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multipleresultsetswithassociation/mybatis-config.xml");
-    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    reader.close();
-    
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multipleresultsetswithassociation/mybatis-config.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    }
+
     // populate in-memory database
     // Could not get the table creation, procedure creation, and data population to work from the same script.
     // Once it was in three scripts, all seemed well.
-    SqlSession session = sqlSessionFactory.openSession();
-    Connection conn = session.getConnection();
-    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multipleresultsetswithassociation/CreateDB1.sql");
-    runReaderScript(conn, session, reader);
-    reader.close();
-    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multipleresultsetswithassociation/CreateDB2.sql");
-    runReaderScript(conn, session, reader);
-    reader.close();
-    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multipleresultsetswithassociation/CreateDB3.sql");
-    runReaderScript(conn, session, reader);
-    reader.close();
-    conn.close();
-    session.close();
+    try (SqlSession session = sqlSessionFactory.openSession();
+         Connection conn = session.getConnection()) {
+      try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multipleresultsetswithassociation/CreateDB1.sql")) {
+        runReaderScript(conn, session, reader);
+      }
+      try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multipleresultsetswithassociation/CreateDB2.sql")) {
+        runReaderScript(conn, session, reader);
+      }
+      try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multipleresultsetswithassociation/CreateDB3.sql")) {
+        runReaderScript(conn, session, reader);
+      }
+    }
   }
   
   private static void runReaderScript(Connection conn, SqlSession session, Reader reader) throws Exception {

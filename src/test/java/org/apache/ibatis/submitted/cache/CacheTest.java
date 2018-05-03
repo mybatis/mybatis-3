@@ -44,9 +44,9 @@ public class CacheTest {
   @Before
   public void setUp() throws Exception {
     // create a SqlSessionFactory
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/cache/mybatis-config.xml");
-    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    reader.close();
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/cache/mybatis-config.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    }
 
     // populate in-memory database
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
@@ -70,14 +70,14 @@ public class CacheTest {
       Assert.assertEquals(2, pm.findAll().size());
     }
 
-    SqlSession sqlSession2 = sqlSessionFactory.openSession(false);
-    try {
-      PersonMapper pm = sqlSession2.getMapper(PersonMapper.class);
-      pm.delete(1);
-      Assert.assertEquals(1, pm.findAll().size());
-    } finally {
-      sqlSession2.commit();
-      sqlSession2.close();
+    try (SqlSession sqlSession2 = sqlSessionFactory.openSession(false)) {
+      try {
+        PersonMapper pm = sqlSession2.getMapper(PersonMapper.class);
+        pm.delete(1);
+        Assert.assertEquals(1, pm.findAll().size());
+      } finally {
+        sqlSession2.commit();
+      }
     }
   }
 
@@ -95,29 +95,23 @@ public class CacheTest {
    */
   @Test
   public void testplan2() {
-    SqlSession sqlSession1 = sqlSessionFactory.openSession(false);
-    try {
+    try (SqlSession sqlSession1 = sqlSessionFactory.openSession(false)) {
       PersonMapper pm = sqlSession1.getMapper(PersonMapper.class);
       Assert.assertEquals(2, pm.findAll().size());
-    } finally {
-      sqlSession1.close();
     }
 
-    SqlSession sqlSession2 = sqlSessionFactory.openSession(false);
-    try {
-      PersonMapper pm = sqlSession2.getMapper(PersonMapper.class);
-      pm.delete(1);
-    } finally {
-      sqlSession2.rollback();
-      sqlSession2.close();
+    try (SqlSession sqlSession2 = sqlSessionFactory.openSession(false)) {
+      try {
+        PersonMapper pm = sqlSession2.getMapper(PersonMapper.class);
+        pm.delete(1);
+      } finally {
+        sqlSession2.rollback();
+      }
     }
 
-    SqlSession sqlSession3 = sqlSessionFactory.openSession(false);
-    try {
+    try (SqlSession sqlSession3 = sqlSessionFactory.openSession(false)) {
       PersonMapper pm = sqlSession3.getMapper(PersonMapper.class);
       Assert.assertEquals(2, pm.findAll().size());
-    } finally {
-      sqlSession3.close();
     }
   }
 
@@ -135,28 +129,20 @@ public class CacheTest {
    */
   @Test
   public void testplan3() {
-    SqlSession sqlSession1 = sqlSessionFactory.openSession(true);
-    try {
+    try (SqlSession sqlSession1 = sqlSessionFactory.openSession(true)) {
       PersonMapper pm = sqlSession1.getMapper(PersonMapper.class);
       Assert.assertEquals(2, pm.findAll().size());
-    } finally {
-      sqlSession1.close();
     }
 
-    SqlSession sqlSession2 = sqlSessionFactory.openSession(true);
-    try {
+
+    try (SqlSession sqlSession2 = sqlSessionFactory.openSession(true)) {
       PersonMapper pm = sqlSession2.getMapper(PersonMapper.class);
       pm.delete(1);
-    } finally {
-      sqlSession2.close();
     }
 
-    SqlSession sqlSession3 = sqlSessionFactory.openSession(true);
-    try {
+    try (SqlSession sqlSession3 = sqlSessionFactory.openSession(true)) {
       PersonMapper pm = sqlSession3.getMapper(PersonMapper.class);
       Assert.assertEquals(1, pm.findAll().size());
-    } finally {
-      sqlSession3.close();
     }
   }
 
@@ -176,29 +162,20 @@ public class CacheTest {
    */
   @Test
   public void shouldInsertWithOptionsFlushesCache() {
-    SqlSession sqlSession1 = sqlSessionFactory.openSession(true);
-    try {
+    try (SqlSession sqlSession1 = sqlSessionFactory.openSession(true)) {
       PersonMapper pm = sqlSession1.getMapper(PersonMapper.class);
       Assert.assertEquals(2, pm.findAll().size());
-    } finally {
-      sqlSession1.close();
     }
 
-    SqlSession sqlSession2 = sqlSessionFactory.openSession(true);
-    try {
+    try (SqlSession sqlSession2 = sqlSessionFactory.openSession(true)) {
       PersonMapper pm = sqlSession2.getMapper(PersonMapper.class);
       Person p = new Person(3, "hello", "world");
       pm.createWithOptions(p);
-    } finally {
-      sqlSession2.close();
     }
 
-    SqlSession sqlSession3 = sqlSessionFactory.openSession(true);
-    try {
+    try (SqlSession sqlSession3 = sqlSessionFactory.openSession(true)) {
       PersonMapper pm = sqlSession3.getMapper(PersonMapper.class);
       Assert.assertEquals(3, pm.findAll().size());
-    } finally {
-      sqlSession3.close();
     }
   }
 
@@ -219,99 +196,57 @@ public class CacheTest {
    */
   @Test
   public void shouldApplyFlushCacheOptions() {
-    SqlSession sqlSession1 = sqlSessionFactory.openSession(true);
-    try {
+    try (SqlSession sqlSession1 = sqlSessionFactory.openSession(true)) {
       PersonMapper pm = sqlSession1.getMapper(PersonMapper.class);
       Assert.assertEquals(2, pm.findAll().size());
-    } finally {
-      sqlSession1.close();
     }
 
-    SqlSession sqlSession2 = sqlSessionFactory.openSession(true);
-    try {
+    try (SqlSession sqlSession2 = sqlSessionFactory.openSession(true)) {
       PersonMapper pm = sqlSession2.getMapper(PersonMapper.class);
       Person p = new Person(3, "hello", "world");
       pm.createWithoutFlushCache(p);
-    } finally {
-      sqlSession2.close();
     }
 
-    SqlSession sqlSession3 = sqlSessionFactory.openSession(true);
-    try {
+    try (SqlSession sqlSession3 = sqlSessionFactory.openSession(true)) {
       PersonMapper pm = sqlSession3.getMapper(PersonMapper.class);
       Assert.assertEquals(2, pm.findAll().size());
-    } finally {
-      sqlSession3.close();
     }
 
-    SqlSession sqlSession4 = sqlSessionFactory.openSession(true);
-    try {
+    try (SqlSession sqlSession4 = sqlSessionFactory.openSession(true)) {
       PersonMapper pm = sqlSession4.getMapper(PersonMapper.class);
       Assert.assertEquals(3, pm.findWithFlushCache().size());
-    } finally {
-      sqlSession4.close();
     }
   }
 
   @Test
   public void shouldApplyCacheNamespaceRef() {
-    {
-      SqlSession sqlSession = sqlSessionFactory.openSession(true);
-      try {
-        PersonMapper pm = sqlSession.getMapper(PersonMapper.class);
-        Assert.assertEquals(2, pm.findAll().size());
-        Person p = new Person(3, "hello", "world");
-        pm.createWithoutFlushCache(p);
-      } finally {
-        sqlSession.close();
-      }
+    try (SqlSession sqlSession = sqlSessionFactory.openSession(true)) {
+      PersonMapper pm = sqlSession.getMapper(PersonMapper.class);
+      Assert.assertEquals(2, pm.findAll().size());
+      Person p = new Person(3, "hello", "world");
+      pm.createWithoutFlushCache(p);
     }
-    {
-      SqlSession sqlSession = sqlSessionFactory.openSession(true);
-      try {
-        PersonMapper pm = sqlSession.getMapper(PersonMapper.class);
-        Assert.assertEquals(2, pm.findAll().size());
-      } finally {
-        sqlSession.close();
-      }
+    try (SqlSession sqlSession = sqlSessionFactory.openSession(true)) {
+      PersonMapper pm = sqlSession.getMapper(PersonMapper.class);
+      Assert.assertEquals(2, pm.findAll().size());
     }
-    {
-      SqlSession sqlSession = sqlSessionFactory.openSession(true);
-      try {
-        ImportantPersonMapper pm = sqlSession.getMapper(ImportantPersonMapper.class);
-        Assert.assertEquals(3, pm.findWithFlushCache().size());
-      } finally {
-        sqlSession.close();
-      }
+    try (SqlSession sqlSession = sqlSessionFactory.openSession(true)) {
+      ImportantPersonMapper pm = sqlSession.getMapper(ImportantPersonMapper.class);
+      Assert.assertEquals(3, pm.findWithFlushCache().size());
     }
-    {
-      SqlSession sqlSession = sqlSessionFactory.openSession(true);
-      try {
-        PersonMapper pm = sqlSession.getMapper(PersonMapper.class);
-        Assert.assertEquals(3, pm.findAll().size());
-        Person p = new Person(4, "foo", "bar");
-        pm.createWithoutFlushCache(p);
-      } finally {
-        sqlSession.close();
-      }
+    try (SqlSession sqlSession = sqlSessionFactory.openSession(true)) {
+      PersonMapper pm = sqlSession.getMapper(PersonMapper.class);
+      Assert.assertEquals(3, pm.findAll().size());
+      Person p = new Person(4, "foo", "bar");
+      pm.createWithoutFlushCache(p);
     }
-    {
-      SqlSession sqlSession = sqlSessionFactory.openSession(true);
-      try {
-        SpecialPersonMapper pm = sqlSession.getMapper(SpecialPersonMapper.class);
-        Assert.assertEquals(4, pm.findWithFlushCache().size());
-      } finally {
-        sqlSession.close();
-      }
+    try (SqlSession sqlSession = sqlSessionFactory.openSession(true)) {
+      SpecialPersonMapper pm = sqlSession.getMapper(SpecialPersonMapper.class);
+      Assert.assertEquals(4, pm.findWithFlushCache().size());
     }
-    {
-      SqlSession sqlSession = sqlSessionFactory.openSession(true);
-      try {
-        PersonMapper pm = sqlSession.getMapper(PersonMapper.class);
-        Assert.assertEquals(4, pm.findAll().size());
-      } finally {
-        sqlSession.close();
-      }
+    try (SqlSession sqlSession = sqlSessionFactory.openSession(true)) {
+      PersonMapper pm = sqlSession.getMapper(PersonMapper.class);
+      Assert.assertEquals(4, pm.findAll().size());
     }
   }
 

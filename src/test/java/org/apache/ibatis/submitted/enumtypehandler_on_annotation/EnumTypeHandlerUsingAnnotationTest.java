@@ -47,10 +47,10 @@ public class EnumTypeHandlerUsingAnnotationTest {
 
     @BeforeClass
     public static void initDatabase() throws Exception {
-        Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/enumtypehandler_on_annotation/mybatis-config.xml");
-        sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-        sqlSessionFactory.getConfiguration().getMapperRegistry().addMapper(PersonMapper.class);
-        reader.close();
+        try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/enumtypehandler_on_annotation/mybatis-config.xml")) {
+            sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+            sqlSessionFactory.getConfiguration().getMapperRegistry().addMapper(PersonMapper.class);
+        }
 
         BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
                 "org/apache/ibatis/submitted/enumtypehandler_on_annotation/CreateDB.sql");

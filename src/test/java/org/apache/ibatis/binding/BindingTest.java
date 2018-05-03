@@ -86,7 +86,6 @@ public class BindingTest {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
       Blog b = mapper.selectBlogWithPostsUsingSubSelect(1);
       assertEquals(1, b.getId());
-      session.close();
       assertNotNull(b.getAuthor());
       assertEquals(101, b.getAuthor().getId());
       assertEquals("jim", b.getAuthor().getUsername());
@@ -637,14 +636,12 @@ public class BindingTest {
   public void executeWithCursorAndRowBounds() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
-      Cursor<Blog> blogs = mapper.openRangeBlogs(new RowBounds(1, 1));
-
-      Iterator<Blog> blogIterator = blogs.iterator();
-      Blog blog = blogIterator.next();
-      assertEquals(2, blog.getId());
-      assertFalse(blogIterator.hasNext());
-
-      blogs.close();
+      try (Cursor<Blog> blogs = mapper.openRangeBlogs(new RowBounds(1, 1)) ) {
+        Iterator<Blog> blogIterator = blogs.iterator();
+        Blog blog = blogIterator.next();
+        assertEquals(2, blog.getId());
+        assertFalse(blogIterator.hasNext());
+      }
     } catch (IOException e) {
       Assert.fail(e.getMessage());
     }
