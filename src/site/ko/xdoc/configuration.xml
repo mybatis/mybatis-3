@@ -1101,6 +1101,17 @@ public class Author {
             </tr>
             <tr>
               <td>
+                <code>SqlxmlTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.String</code>
+              </td>
+              <td>
+                <code>SQLXML</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
                 <code>InstantTypeHandler</code>
               </td>
               <td>
