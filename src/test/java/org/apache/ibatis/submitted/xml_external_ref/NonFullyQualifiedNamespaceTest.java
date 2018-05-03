@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,11 +19,10 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.sql.Connection;
 import java.sql.SQLException;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
@@ -46,11 +45,9 @@ public class NonFullyQualifiedNamespaceTest {
                 "org/apache/ibatis/submitted/xml_external_ref/NonFullyQualifiedNamespacePersonMapper.xml",
                 selectPerson.getResource());
 
-        Connection conn = configuration.getEnvironment().getDataSource().getConnection();
-        initDb(conn);
+        initDb(sqlSessionFactory);
 
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        try {
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             Person person = (Person) sqlSession.selectOne("person namespace.select", 1);
             assertEquals((Integer)1, person.getId());
             assertEquals(2, person.getPets().size());
@@ -63,27 +60,11 @@ public class NonFullyQualifiedNamespaceTest {
             assertEquals((Integer)3, pet2.getId());
             assertEquals((Integer)2, pet2.getOwner().getId());
         }
-        finally {
-            conn.close();
-            sqlSession.close();
-        }
     }
 
-    private static void initDb(Connection conn) throws IOException, SQLException {
-        try {
-            Reader scriptReader = Resources
-                    .getResourceAsReader("org/apache/ibatis/submitted/xml_external_ref/CreateDB.sql");
-            ScriptRunner runner = new ScriptRunner(conn);
-            runner.setLogWriter(null);
-            runner.setErrorLogWriter(null);
-            runner.runScript(scriptReader);
-            conn.commit();
-            scriptReader.close();
-        }
-        finally {
-            if (conn != null) {
-                conn.close();
-            }
-        }
+    private static void initDb(SqlSessionFactory sqlSessionFactory) throws IOException, SQLException {
+        BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+                "org/apache/ibatis/submitted/xml_external_ref/CreateDB.sql");
     }
+
 }

@@ -15,8 +15,8 @@
  */
 package org.apache.ibatis.submitted.initialized_collection_property;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -27,7 +27,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.Reader;
-import java.sql.Connection;
 import java.util.List;
 
 public class AuthorDAOTest {
@@ -39,17 +38,10 @@ public class AuthorDAOTest {
     final String resource = "org/apache/ibatis/submitted/initialized_collection_property/mybatis-config.xml";
     Reader reader = Resources.getResourceAsReader(resource);
     factory = new SqlSessionFactoryBuilder().build(reader);
+    reader.close();
 
-    SqlSession session = factory.openSession();
-
-    Connection conn = session.getConnection();
-    ScriptRunner runner = new ScriptRunner(conn);
-    runner.setLogWriter(null);
-    runner.setErrorLogWriter(null);
-    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/initialized_collection_property/create.sql");
-    runner.runScript(reader);
-    conn.close();
-    session.close();
+    BaseDataTest.runScript(factory.getConfiguration().getEnvironment().getDataSource(),
+            "org/apache/ibatis/submitted/initialized_collection_property/create.sql");
   }
 
   @Test

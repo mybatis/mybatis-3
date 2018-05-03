@@ -15,9 +15,9 @@
  */
 package org.apache.ibatis.autoconstructor;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -27,7 +27,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.Reader;
-import java.sql.Connection;
 import java.util.List;
 
 public class AutoConstructorTest {
@@ -41,15 +40,8 @@ public class AutoConstructorTest {
     reader.close();
 
     // populate in-memory database
-    final SqlSession session = sqlSessionFactory.openSession();
-    final Connection conn = session.getConnection();
-    final Reader dbReader = Resources.getResourceAsReader("org/apache/ibatis/autoconstructor/CreateDB.sql");
-    final ScriptRunner runner = new ScriptRunner(conn);
-    runner.setLogWriter(null);
-    runner.runScript(dbReader);
-    conn.close();
-    dbReader.close();
-    session.close();
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+            "org/apache/ibatis/autoconstructor/CreateDB.sql");
   }
 
   @Test

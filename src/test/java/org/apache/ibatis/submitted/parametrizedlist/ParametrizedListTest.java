@@ -15,17 +15,14 @@
  */
 package org.apache.ibatis.submitted.parametrizedlist;
 
-import java.io.PrintWriter;
 import java.io.Reader;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.BaseDataTest;
 import org.junit.Assert;
 
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -38,29 +35,12 @@ public class ParametrizedListTest {
 
   @Before
   public void setUp() throws Exception {
-    Connection conn = null;
+    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/parametrizedlist/Config.xml");
+    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    reader.close();
 
-    try {
-      Class.forName("org.hsqldb.jdbcDriver");
-      conn = DriverManager.getConnection("jdbc:hsqldb:mem:parametrizedlist", "sa", "");
-
-      Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/parametrizedlist/CreateDB.sql");
-
-      ScriptRunner runner = new ScriptRunner(conn);
-      runner.setLogWriter(null);
-      runner.setErrorLogWriter(new PrintWriter(System.err));
-      runner.runScript(reader);
-      conn.commit();
-      reader.close();
-
-      reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/parametrizedlist/Config.xml");
-      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-      reader.close();
-    } finally {
-      if (conn != null) {
-        conn.close();
-      }
-    }
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+            "org/apache/ibatis/submitted/parametrizedlist/CreateDB.sql");
   }
 
   @Test

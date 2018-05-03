@@ -16,18 +16,16 @@
 package org.apache.ibatis.submitted.complex_property;
 
 import static org.junit.Assert.assertNotNull;
+
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.io.Reader;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.Calendar;
 
 public class ComponentTest {
@@ -35,8 +33,12 @@ public class ComponentTest {
 
   @BeforeClass
   public static void setup() throws Exception {
-    setupSqlSessionFactory();
-    runDBScript();
+    String resource = "org/apache/ibatis/submitted/complex_property/Configuration.xml";
+    Reader reader = Resources.getResourceAsReader(resource);
+    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+            "org/apache/ibatis/submitted/complex_property/db.sql");
   }
 
 
@@ -59,23 +61,6 @@ public class ComponentTest {
 
       sqlSession.rollback();
     }
-  }
-
-  private static void runDBScript() throws SQLException, IOException {
-    Connection conn = sqlSessionFactory.getConfiguration().getEnvironment().getDataSource().getConnection();
-    ScriptRunner runner = new ScriptRunner(conn);
-    runner.setLogWriter(null);
-    runner.setErrorLogWriter(null);
-    String resource = "org/apache/ibatis/submitted/complex_property/db.sql";
-    Reader reader = Resources.getResourceAsReader(resource);
-    runner.runScript(reader);
-    conn.close();
-  }
-
-  private static void setupSqlSessionFactory() throws IOException {
-    String resource = "org/apache/ibatis/submitted/complex_property/Configuration.xml";
-    Reader reader = Resources.getResourceAsReader(resource);
-    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
   }
 
 }

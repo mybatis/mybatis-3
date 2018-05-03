@@ -15,8 +15,8 @@
  */
 package org.apache.ibatis.submitted.dml_return_types;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -26,7 +26,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.Reader;
-import java.sql.Connection;
 
 import static org.junit.Assert.assertEquals;
 
@@ -51,18 +50,8 @@ public class DmlMapperReturnTypesTest {
     }
 
     // populate in-memory database
-    try (SqlSession session = sqlSessionFactory.openSession()) {
-      Connection conn = session.getConnection();
-      reader = Resources.getResourceAsReader(SQL);
-      try {
-        ScriptRunner runner = new ScriptRunner(conn);
-        runner.setLogWriter(null);
-        runner.runScript(reader);
-        conn.close();
-      } finally {
-        reader.close();
-      }
-    }
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(), SQL);
+
   }
 
   @Before

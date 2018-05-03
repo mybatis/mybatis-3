@@ -18,13 +18,12 @@ package org.apache.ibatis.submitted.mapper_type_parameter;
 import static org.junit.Assert.*;
 
 import java.io.Reader;
-import java.sql.Connection;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -42,15 +41,8 @@ public class MapperTypeParameterTest {
     reader.close();
 
     // populate in-memory database
-    SqlSession session = sqlSessionFactory.openSession();
-    Connection conn = session.getConnection();
-    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/mapper_type_parameter/CreateDB.sql");
-    ScriptRunner runner = new ScriptRunner(conn);
-    runner.setLogWriter(null);
-    runner.runScript(reader);
-    conn.close();
-    reader.close();
-    session.close();
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+            "org/apache/ibatis/submitted/mapper_type_parameter/CreateDB.sql");
   }
 
   @Test

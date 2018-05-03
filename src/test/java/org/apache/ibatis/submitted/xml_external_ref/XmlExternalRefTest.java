@@ -19,15 +19,13 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.session.Configuration;
@@ -113,44 +111,29 @@ public class XmlExternalRefTest {
     SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configReader);
     configReader.close();
 
-    Connection conn = sqlSessionFactory.getConfiguration().getEnvironment().getDataSource().getConnection();
-    initDb(conn);
-    conn.close();
+    initDb(sqlSessionFactory);
 
     return sqlSessionFactory;
   }
 
   private SqlSessionFactory getSqlSessionFactoryJavaConfig() throws Exception {
-    Class.forName("org.hsqldb.jdbcDriver");
-    Connection c = DriverManager.getConnection("jdbc:hsqldb:mem:xmlextref", "sa", "");
-    initDb(c);
-
     Configuration configuration = new Configuration();
     Environment environment = new Environment("development", new JdbcTransactionFactory(), new UnpooledDataSource(
         "org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:xmlextref", null));
     configuration.setEnvironment(environment);
-
     configuration.addMapper(PersonMapper.class);
     configuration.addMapper(PetMapper.class);
-    c.close();
 
-    return new SqlSessionFactoryBuilder().build(configuration);
+    SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
+
+    initDb(sqlSessionFactory);
+
+    return sqlSessionFactory;
   }
 
-  private static void initDb(Connection conn) throws IOException, SQLException {
-    try {
-      Reader scriptReader = Resources.getResourceAsReader("org/apache/ibatis/submitted/xml_external_ref/CreateDB.sql");
-      ScriptRunner runner = new ScriptRunner(conn);
-      runner.setLogWriter(null);
-      runner.setErrorLogWriter(null);
-      runner.runScript(scriptReader);
-      conn.commit();
-      scriptReader.close();
-    } finally {
-      if (conn != null) {
-        conn.close();
-      }
-    }
+  private static void initDb(SqlSessionFactory sqlSessionFactory) throws IOException, SQLException {
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+            "org/apache/ibatis/submitted/xml_external_ref/CreateDB.sql");
   }
 
 }

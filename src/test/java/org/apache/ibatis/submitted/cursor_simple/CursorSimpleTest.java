@@ -15,9 +15,9 @@
  */
 package org.apache.ibatis.submitted.cursor_simple;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -28,7 +28,6 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -46,15 +45,8 @@ public class CursorSimpleTest {
         reader.close();
 
         // populate in-memory database
-        SqlSession session = sqlSessionFactory.openSession();
-        Connection conn = session.getConnection();
-        reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/cursor_simple/CreateDB.sql");
-        ScriptRunner runner = new ScriptRunner(conn);
-        runner.setLogWriter(null);
-        runner.runScript(reader);
-        conn.close();
-        reader.close();
-        session.close();
+        BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+                "org/apache/ibatis/submitted/cursor_simple/CreateDB.sql");
     }
 
     @Test

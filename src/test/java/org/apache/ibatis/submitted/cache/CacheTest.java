@@ -17,8 +17,8 @@ package org.apache.ibatis.submitted.cache;
 
 import java.io.Reader;
 import java.lang.reflect.Field;
-import java.sql.Connection;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.annotations.CacheNamespace;
 import org.apache.ibatis.annotations.Property;
 import org.apache.ibatis.cache.Cache;
@@ -26,7 +26,6 @@ import org.apache.ibatis.cache.CacheException;
 import org.apache.ibatis.annotations.CacheNamespaceRef;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -50,15 +49,8 @@ public class CacheTest {
     reader.close();
 
     // populate in-memory database
-    SqlSession session = sqlSessionFactory.openSession();
-    Connection conn = session.getConnection();
-    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/cache/CreateDB.sql");
-    ScriptRunner runner = new ScriptRunner(conn);
-    runner.setLogWriter(null);
-    runner.runScript(reader);
-    conn.close();
-    reader.close();
-    session.close();
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+            "org/apache/ibatis/submitted/cache/CreateDB.sql");
   }
 
   /*

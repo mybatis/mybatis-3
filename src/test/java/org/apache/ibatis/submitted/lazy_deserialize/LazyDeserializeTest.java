@@ -21,19 +21,15 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.io.Reader;
-import java.sql.Connection;
-import java.sql.DriverManager;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -54,31 +50,13 @@ public final class LazyDeserializeTest {
 
   @Before
   public void setupClass() throws Exception {
-    Connection conn = null;
+    Reader reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/lazy_deserialize/ibatisConfig.xml");
+    factory = new SqlSessionFactoryBuilder().build(reader);
+    reader.close();
 
-    try {
-      Class.forName("org.hsqldb.jdbcDriver");
-      conn = DriverManager.getConnection("jdbc:hsqldb:mem:lazy_deserialize", "sa", "");
-
-      Reader reader = Resources
-          .getResourceAsReader("org/apache/ibatis/submitted/lazy_deserialize/CreateDB.sql");
-
-      ScriptRunner runner = new ScriptRunner(conn);
-      runner.setLogWriter(null);
-      runner.setErrorLogWriter(new PrintWriter(System.err));
-      runner.runScript(reader);
-      conn.commit();
-      reader.close();
-
-      reader = Resources
-          .getResourceAsReader("org/apache/ibatis/submitted/lazy_deserialize/ibatisConfig.xml");
-      factory = new SqlSessionFactoryBuilder().build(reader);
-      reader.close();
-    } finally {
-      if (conn != null) {
-        conn.close();
-      }
-    }
+    BaseDataTest.runScript(factory.getConfiguration().getEnvironment().getDataSource(),
+            "org/apache/ibatis/submitted/lazy_deserialize/CreateDB.sql");
   }
 
   @Test

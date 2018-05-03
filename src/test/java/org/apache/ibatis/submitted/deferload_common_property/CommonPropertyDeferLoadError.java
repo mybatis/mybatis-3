@@ -18,13 +18,11 @@ package org.apache.ibatis.submitted.deferload_common_property;
 import static org.junit.Assert.*;
 
 import java.io.Reader;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.ResultContext;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.SqlSession;
@@ -40,32 +38,15 @@ public class CommonPropertyDeferLoadError {
 
     @BeforeClass
     public static void initDatabase() throws Exception {
-        Connection conn = null;
+        Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/deferload_common_property/ibatisConfig.xml");
+        sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+        reader.close();
+        reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/deferload_common_property/lazyLoadIbatisConfig.xml");
+        lazyLoadSqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+        reader.close();
 
-        try {
-            Class.forName("org.hsqldb.jdbcDriver");
-            conn = DriverManager.getConnection("jdbc:hsqldb:mem:deferload_common_property", "sa",
-                    "");
-
-            Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/deferload_common_property/CreateDB.sql");
-
-            ScriptRunner runner = new ScriptRunner(conn);
-            runner.setLogWriter(null);
-            runner.setErrorLogWriter(null);
-            runner.runScript(reader);
-            conn.commit();
-            reader.close();
-
-            reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/deferload_common_property/ibatisConfig.xml");
-            sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-            reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/deferload_common_property/lazyLoadIbatisConfig.xml");
-            lazyLoadSqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-            reader.close();
-        } finally {
-            if (conn != null) {
-                conn.close();
-            }
-        }
+        BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+                "org/apache/ibatis/submitted/deferload_common_property/CreateDB.sql");
     }
 
     @Test
