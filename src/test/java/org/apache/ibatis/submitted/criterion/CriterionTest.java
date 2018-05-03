@@ -35,9 +35,9 @@ public class CriterionTest {
 
   @BeforeClass
   public static void setUp() throws Exception {
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/criterion/MapperConfig.xml");
-    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    reader.close();
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/criterion/MapperConfig.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    }
 
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
             "org/apache/ibatis/submitted/criterion/CreateDB.sql");

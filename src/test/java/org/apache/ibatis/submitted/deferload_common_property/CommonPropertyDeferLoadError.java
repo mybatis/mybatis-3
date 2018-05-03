@@ -38,12 +38,12 @@ public class CommonPropertyDeferLoadError {
 
     @BeforeClass
     public static void initDatabase() throws Exception {
-        Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/deferload_common_property/ibatisConfig.xml");
-        sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-        reader.close();
-        reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/deferload_common_property/lazyLoadIbatisConfig.xml");
-        lazyLoadSqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-        reader.close();
+        try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/deferload_common_property/ibatisConfig.xml")) {
+            sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+        }
+        try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/deferload_common_property/lazyLoadIbatisConfig.xml")) {
+            lazyLoadSqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+        }
 
         BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
                 "org/apache/ibatis/submitted/deferload_common_property/CreateDB.sql");

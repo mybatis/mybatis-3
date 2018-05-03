@@ -32,9 +32,9 @@ public class ComplexColumnTest {
     
     @BeforeClass
     public static void initDatabase() throws Exception {
-        Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/complex_column/ibatisConfig.xml");
-        sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-        reader.close();
+        try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/complex_column/ibatisConfig.xml")) {
+            sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+        }
 
         BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
                 "org/apache/ibatis/submitted/complex_column/CreateDB.sql");
@@ -42,97 +42,94 @@ public class ComplexColumnTest {
     
     @Test
     public void testWithoutComplex() {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
-        Person person = personMapper.getWithoutComplex(2l);
-        Assert.assertNotNull("person must not be null", person);
-        Assert.assertEquals("Christian", person.getFirstName());
-        Assert.assertEquals("Poitras", person.getLastName());
-        Person parent = person.getParent();
-        Assert.assertNotNull("parent must not be null", parent);
-        Assert.assertEquals("John", parent.getFirstName());
-        Assert.assertEquals("Smith", parent.getLastName());
-      sqlSession.close();
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
+            Person person = personMapper.getWithoutComplex(2l);
+            Assert.assertNotNull("person must not be null", person);
+            Assert.assertEquals("Christian", person.getFirstName());
+            Assert.assertEquals("Poitras", person.getLastName());
+            Person parent = person.getParent();
+            Assert.assertNotNull("parent must not be null", parent);
+            Assert.assertEquals("John", parent.getFirstName());
+            Assert.assertEquals("Smith", parent.getLastName());
+        }
     }
     
     @Test
     public void testWithComplex() {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
-        Person person = personMapper.getWithComplex(2l);
-        Assert.assertNotNull("person must not be null", person);
-        Assert.assertEquals("Christian", person.getFirstName());
-        Assert.assertEquals("Poitras", person.getLastName());
-        Person parent = person.getParent();
-        Assert.assertNotNull("parent must not be null", parent);
-        Assert.assertEquals("John", parent.getFirstName());
-        Assert.assertEquals("Smith", parent.getLastName());
-      sqlSession.close();
-
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
+            Person person = personMapper.getWithComplex(2l);
+            Assert.assertNotNull("person must not be null", person);
+            Assert.assertEquals("Christian", person.getFirstName());
+            Assert.assertEquals("Poitras", person.getLastName());
+            Person parent = person.getParent();
+            Assert.assertNotNull("parent must not be null", parent);
+            Assert.assertEquals("John", parent.getFirstName());
+            Assert.assertEquals("Smith", parent.getLastName());
+        }
     }
 
     @Test
     public void testWithComplex2() {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
-        Person person = personMapper.getWithComplex2(2l);
-        Assert.assertNotNull("person must not be null", person);
-        Assert.assertEquals("Christian", person.getFirstName());
-        Assert.assertEquals("Poitras", person.getLastName());
-        Person parent = person.getParent();
-        Assert.assertNotNull("parent must not be null", parent);
-        Assert.assertEquals("John", parent.getFirstName());
-        Assert.assertEquals("Smith", parent.getLastName());
-      sqlSession.close();
-
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
+            Person person = personMapper.getWithComplex2(2l);
+            Assert.assertNotNull("person must not be null", person);
+            Assert.assertEquals("Christian", person.getFirstName());
+            Assert.assertEquals("Poitras", person.getLastName());
+            Person parent = person.getParent();
+            Assert.assertNotNull("parent must not be null", parent);
+            Assert.assertEquals("John", parent.getFirstName());
+            Assert.assertEquals("Smith", parent.getLastName());
+        }
     }
 
     @Test
     public void testWithComplex3() {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
-        Person person = personMapper.getWithComplex3(2l);
-        Assert.assertNotNull("person must not be null", person);
-        Assert.assertEquals("Christian", person.getFirstName());
-        Assert.assertEquals("Poitras", person.getLastName());
-        Person parent = person.getParent();
-        Assert.assertNotNull("parent must not be null", parent);
-        Assert.assertEquals("John", parent.getFirstName());
-        Assert.assertEquals("Smith", parent.getLastName());
-      sqlSession.close();
-
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
+            Person person = personMapper.getWithComplex3(2l);
+            Assert.assertNotNull("person must not be null", person);
+            Assert.assertEquals("Christian", person.getFirstName());
+            Assert.assertEquals("Poitras", person.getLastName());
+            Person parent = person.getParent();
+            Assert.assertNotNull("parent must not be null", parent);
+            Assert.assertEquals("John", parent.getFirstName());
+            Assert.assertEquals("Smith", parent.getLastName());
+        }
     }
 
     @Test
     public void testWithComplex4() {
-      SqlSession sqlSession = sqlSessionFactory.openSession();
-      PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
-      Person criteria = new Person();
-      criteria.setFirstName("Christian");
-      criteria.setLastName("Poitras");
-      Person person = personMapper.getParentWithComplex(criteria);
-      Assert.assertNotNull("person must not be null", person);
-      Assert.assertEquals("Christian", person.getFirstName());
-      Assert.assertEquals("Poitras", person.getLastName());
-      Person parent = person.getParent();
-      Assert.assertNotNull("parent must not be null", parent);
-      Assert.assertEquals("John", parent.getFirstName());
-      Assert.assertEquals("Smith", parent.getLastName());
-      sqlSession.close();
+      try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+          PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
+          Person criteria = new Person();
+          criteria.setFirstName("Christian");
+          criteria.setLastName("Poitras");
+          Person person = personMapper.getParentWithComplex(criteria);
+          Assert.assertNotNull("person must not be null", person);
+          Assert.assertEquals("Christian", person.getFirstName());
+          Assert.assertEquals("Poitras", person.getLastName());
+          Person parent = person.getParent();
+          Assert.assertNotNull("parent must not be null", parent);
+          Assert.assertEquals("John", parent.getFirstName());
+          Assert.assertEquals("Smith", parent.getLastName());
+      }
     }
 
     @Test
     public void testWithParamAttributes() {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
-        Person person = personMapper.getComplexWithParamAttributes(2l);
-        Assert.assertNotNull("person must not be null", person);
-        Assert.assertEquals("Christian", person.getFirstName());
-        Assert.assertEquals("Poitras", person.getLastName());
-        Person parent = person.getParent();
-        Assert.assertNotNull("parent must not be null", parent);
-        Assert.assertEquals("John", parent.getFirstName());
-        Assert.assertEquals("Smith", parent.getLastName());
-        sqlSession.close();
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
+            Person person = personMapper.getComplexWithParamAttributes(2l);
+            Assert.assertNotNull("person must not be null", person);
+            Assert.assertEquals("Christian", person.getFirstName());
+            Assert.assertEquals("Poitras", person.getLastName());
+            Person parent = person.getParent();
+            Assert.assertNotNull("parent must not be null", parent);
+            Assert.assertEquals("John", parent.getFirstName());
+            Assert.assertEquals("Smith", parent.getLastName());
+        }
     }
 }

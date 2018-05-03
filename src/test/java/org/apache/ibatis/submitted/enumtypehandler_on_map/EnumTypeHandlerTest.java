@@ -35,9 +35,9 @@ public class EnumTypeHandlerTest {
     
     @BeforeClass
     public static void initDatabase() throws Exception {
-        Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/enumtypehandler_on_map/ibatisConfig.xml");
-        sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-        reader.close();
+        try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/enumtypehandler_on_map/ibatisConfig.xml")) {
+            sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+        }
 
         BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
                 "org/apache/ibatis/submitted/enumtypehandler_on_map/CreateDB.sql");
@@ -45,29 +45,30 @@ public class EnumTypeHandlerTest {
     
     @Test
     public void testEnumWithParam() {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
-        List<Person> persons = personMapper.getByType(Person.Type.PERSON, "");
-        Assert.assertNotNull("Persons must not be null", persons);
-        Assert.assertEquals("Persons must contain exactly 1 person", 1, persons.size());
-      sqlSession.close();
+        try (SqlSession sqlSession = sqlSessionFactory.openSession() ) {
+            PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
+            List<Person> persons = personMapper.getByType(Person.Type.PERSON, "");
+            Assert.assertNotNull("Persons must not be null", persons);
+            Assert.assertEquals("Persons must contain exactly 1 person", 1, persons.size());
+        }
     }
     @Test
     public void testEnumWithoutParam() {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
-        List<Person> persons = personMapper.getByTypeNoParam(new TypeName() {
-            @Override
-            public String getName() {
-                return "";
-            }
-            @Override
-            public Type getType() {
-                return Person.Type.PERSON;
-            }
-        });
-        Assert.assertNotNull("Persons must not be null", persons);
-        Assert.assertEquals("Persons must contain exactly 1 person", 1, persons.size());
-      sqlSession.close();
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
+            List<Person> persons = personMapper.getByTypeNoParam(new TypeName() {
+                @Override
+                public String getName() {
+                    return "";
+                }
+
+                @Override
+                public Type getType() {
+                    return Person.Type.PERSON;
+                }
+            });
+            Assert.assertNotNull("Persons must not be null", persons);
+            Assert.assertEquals("Persons must contain exactly 1 person", 1, persons.size());
+        }
     }
 }

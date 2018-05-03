@@ -36,10 +36,10 @@ public class DuplicateStatementsTest {
   @Before
   public void setupDb() throws Exception {
       // create a SqlSessionFactory
-      Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/duplicate_statements/mybatis-config.xml");
-      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-      reader.close();
-      
+      try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/duplicate_statements/mybatis-config.xml")) {
+        sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+      }
+
       // populate in-memory database
       BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
               "org/apache/ibatis/submitted/duplicate_statements/CreateDB.sql");

@@ -39,9 +39,9 @@ public final class ImmutablePOJOTest {
 
     @BeforeClass
     public static void setupClass() throws Exception {
-        Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/lazy_immutable/ibatisConfig.xml");
-        factory = new SqlSessionFactoryBuilder().build(reader);
-        reader.close();
+        try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/lazy_immutable/ibatisConfig.xml")) {
+            factory = new SqlSessionFactoryBuilder().build(reader);
+        }
 
         BaseDataTest.runScript(factory.getConfiguration().getEnvironment().getDataSource(),
                 "org/apache/ibatis/submitted/lazy_immutable/CreateDB.sql");

@@ -43,28 +43,28 @@ public class XmlMapperBuilderTest {
   public void shouldSuccessfullyLoadXMLMapperFile() throws Exception {
     Configuration configuration = new Configuration();
     String resource = "org/apache/ibatis/builder/AuthorMapper.xml";
-    InputStream inputStream = Resources.getResourceAsStream(resource);
-    XMLMapperBuilder builder = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
-    builder.parse();
-    inputStream.close();
+    try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
+      XMLMapperBuilder builder = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
+      builder.parse();
+    }
   }
 
   @Test
   public void mappedStatementWithOptions() throws Exception {
     Configuration configuration = new Configuration();
     String resource = "org/apache/ibatis/builder/AuthorMapper.xml";
-    InputStream inputStream = Resources.getResourceAsStream(resource);
-    XMLMapperBuilder builder = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
-    builder.parse();
+    try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
+      XMLMapperBuilder builder = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
+      builder.parse();
 
-    MappedStatement mappedStatement = configuration.getMappedStatement("selectWithOptions");
-    assertThat(mappedStatement.getFetchSize()).isEqualTo(200);
-    assertThat(mappedStatement.getTimeout()).isEqualTo(10);
-    assertThat(mappedStatement.getStatementType()).isEqualTo(StatementType.PREPARED);
-    assertThat(mappedStatement.getResultSetType()).isEqualTo(ResultSetType.SCROLL_SENSITIVE);
-    assertThat(mappedStatement.isFlushCacheRequired()).isFalse();
-    assertThat(mappedStatement.isUseCache()).isFalse();
-    inputStream.close();
+      MappedStatement mappedStatement = configuration.getMappedStatement("selectWithOptions");
+      assertThat(mappedStatement.getFetchSize()).isEqualTo(200);
+      assertThat(mappedStatement.getTimeout()).isEqualTo(10);
+      assertThat(mappedStatement.getStatementType()).isEqualTo(StatementType.PREPARED);
+      assertThat(mappedStatement.getResultSetType()).isEqualTo(ResultSetType.SCROLL_SENSITIVE);
+      assertThat(mappedStatement.isFlushCacheRequired()).isFalse();
+      assertThat(mappedStatement.isUseCache()).isFalse();
+    }
   }
 
   @Test
@@ -178,9 +178,10 @@ public class XmlMapperBuilderTest {
     expectedEx.expectMessage("Error parsing Mapper XML. The XML location is 'org/apache/ibatis/builder/ProblemMapper.xml'");
     Configuration configuration = new Configuration();
     String resource = "org/apache/ibatis/builder/ProblemMapper.xml";
-    InputStream inputStream = Resources.getResourceAsStream(resource);
-    XMLMapperBuilder builder = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
-    builder.parse();
+    try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
+      XMLMapperBuilder builder = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
+      builder.parse();
+    }
   }
 
 //  @Test

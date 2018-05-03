@@ -36,9 +36,9 @@ public class TypeHandlerInjectionTest {
   @BeforeClass
   public static void setUp() throws Exception {
     // create a SqlSessionFactory
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/typehandlerinjection/mybatis-config.xml");
-    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    reader.close();
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/typehandlerinjection/mybatis-config.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    }
 
     sqlSessionFactory.getConfiguration().getTypeHandlerRegistry().register(handler);
     sqlSessionFactory.getConfiguration().addMapper(Mapper.class);

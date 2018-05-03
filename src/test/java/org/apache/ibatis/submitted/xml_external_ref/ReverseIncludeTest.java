@@ -54,14 +54,14 @@ public class ReverseIncludeTest {
   }
 
   private SqlSessionFactory getSqlSessionFactoryXmlConfig() throws Exception {
-    Reader configReader = Resources
-        .getResourceAsReader("org/apache/ibatis/submitted/xml_external_ref/ReverseIncludeMapperConfig.xml");
-    SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configReader);
-    configReader.close();
+    try (Reader configReader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/xml_external_ref/ReverseIncludeMapperConfig.xml")) {
+      SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configReader);
 
-    initDb(sqlSessionFactory);
+      initDb(sqlSessionFactory);
 
-    return sqlSessionFactory;
+      return sqlSessionFactory;
+    }
   }
 
   private SqlSessionFactory getSqlSessionFactoryJavaConfig() throws Exception {

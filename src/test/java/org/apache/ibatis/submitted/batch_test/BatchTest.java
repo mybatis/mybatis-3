@@ -35,9 +35,9 @@ public class BatchTest
   @BeforeClass
   public static void setUp() throws Exception {
     // create an SqlSessionFactory
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/batch_test/mybatis-config.xml");
-    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    reader.close();
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/batch_test/mybatis-config.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    }
 
     // populate in-memory database
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
@@ -46,26 +46,24 @@ public class BatchTest
 
   @Test
   public void shouldGetAUserNoException() {
-    SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH,false);
-    try {
-      Mapper mapper = sqlSession.getMapper(Mapper.class);
+    try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH,false)) {
+      try {
+        Mapper mapper = sqlSession.getMapper(Mapper.class);
 
-      User user   = mapper.getUser(1);
+        User user = mapper.getUser(1);
 
-      user.setId(2);
-      user.setName("User2");
-      mapper.insertUser(user);
-      Assert.assertEquals("Dept1", mapper.getUser(2).getDept().getName());
+        user.setId(2);
+        user.setName("User2");
+        mapper.insertUser(user);
+        Assert.assertEquals("Dept1", mapper.getUser(2).getDept().getName());
+      } finally {
+        sqlSession.commit();
+      }
     }
     catch (Exception e)
     {
       Assert.fail(e.getMessage());
 
-    }
-
-    finally {
-      sqlSession.commit();
-      sqlSession.close();
     }
   }
 

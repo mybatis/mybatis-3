@@ -49,11 +49,11 @@ public class SqlProviderTest {
   @BeforeClass
   public static void setUp() throws Exception {
     // create a SqlSessionFactory
-    Reader reader = Resources
-        .getResourceAsReader("org/apache/ibatis/submitted/sqlprovider/mybatis-config.xml");
-    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    sqlSessionFactory.getConfiguration().addMapper(StaticMethodSqlProviderMapper.class);
-    reader.close();
+    try (Reader reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/sqlprovider/mybatis-config.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+      sqlSessionFactory.getConfiguration().addMapper(StaticMethodSqlProviderMapper.class);
+    }
 
     // populate in-memory database
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
@@ -329,8 +329,7 @@ public class SqlProviderTest {
 
   @Test
   public void shouldInsertUser() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = new User();
       user.setId(999);
@@ -339,9 +338,6 @@ public class SqlProviderTest {
 
       User loadedUser = mapper.getUser(999);
       assertEquals("MyBatis", loadedUser.getName());
-
-    } finally {
-      sqlSession.close();
     }
   }
 

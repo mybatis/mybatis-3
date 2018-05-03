@@ -40,9 +40,9 @@ public class MapTypeHandlerTest {
   @BeforeClass
   public static void setUp() throws Exception {
     // create an SqlSessionFactory
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/maptypehandler/mybatis-config.xml");
-    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    reader.close();
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/maptypehandler/mybatis-config.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    }
 
     // populate in-memory database
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
@@ -51,28 +51,22 @@ public class MapTypeHandlerTest {
 
   @Test
   public void shouldGetAUserFromAnnotation() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUser(1, "User1");
       Assert.assertEquals("User1", user.getName());
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test(expected=PersistenceException.class)
   public void shouldGetAUserFromXML() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Map<String, Object> params = new HashMap<String, Object>();
       params.put("id", 1);
       params.put("name", "User1");
       User user = mapper.getUserXML(params);
       Assert.assertEquals("User1", user.getName());
-    } finally {
-      sqlSession.close();
     }
   }
   

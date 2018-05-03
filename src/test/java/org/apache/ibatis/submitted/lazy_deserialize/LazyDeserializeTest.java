@@ -50,10 +50,10 @@ public final class LazyDeserializeTest {
 
   @Before
   public void setupClass() throws Exception {
-    Reader reader = Resources
-        .getResourceAsReader("org/apache/ibatis/submitted/lazy_deserialize/ibatisConfig.xml");
-    factory = new SqlSessionFactoryBuilder().build(reader);
-    reader.close();
+    try (Reader reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/lazy_deserialize/ibatisConfig.xml")) {
+      factory = new SqlSessionFactoryBuilder().build(reader);
+    }
 
     BaseDataTest.runScript(factory.getConfiguration().getEnvironment().getDataSource(),
             "org/apache/ibatis/submitted/lazy_deserialize/CreateDB.sql");
@@ -93,20 +93,18 @@ public final class LazyDeserializeTest {
   }
 
   private byte[] serializeFoo(final LazyObjectFoo foo) throws Exception {
-    final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-    final ObjectOutputStream oos = new ObjectOutputStream(bos);
-    oos.writeObject(foo);
-    oos.close();
-
-    return bos.toByteArray();
+    try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
+         ObjectOutputStream oos = new ObjectOutputStream(bos)) {
+      oos.writeObject(foo);
+      return bos.toByteArray();
+    }
   }
 
   private LazyObjectFoo deserializeFoo(final byte[] serializedFoo) throws Exception {
-    final ByteArrayInputStream bis = new ByteArrayInputStream(serializedFoo);
-    final ObjectInputStream ios = new ObjectInputStream(bis);
-    final LazyObjectFoo foo = LazyObjectFoo.class.cast(ios.readObject());
-    ios.close();
-    return foo;
+    try (ByteArrayInputStream bis = new ByteArrayInputStream(serializedFoo);
+         ObjectInputStream ios = new ObjectInputStream(bis)) {
+      return LazyObjectFoo.class.cast(ios.readObject());
+    }
   }
 
 }

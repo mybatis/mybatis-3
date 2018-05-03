@@ -35,9 +35,9 @@ public class ParametrizedListTest {
 
   @Before
   public void setUp() throws Exception {
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/parametrizedlist/Config.xml");
-    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    reader.close();
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/parametrizedlist/Config.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    }
 
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
             "org/apache/ibatis/submitted/parametrizedlist/CreateDB.sql");

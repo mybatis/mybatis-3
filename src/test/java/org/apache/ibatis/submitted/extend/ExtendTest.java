@@ -33,9 +33,9 @@ public class ExtendTest {
 
   @BeforeClass
   public static void setUp() throws Exception {
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/extend/ExtendConfig.xml");
-    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    reader.close();
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/extend/ExtendConfig.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    }
 
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
             "org/apache/ibatis/submitted/extend/CreateDB.sql");

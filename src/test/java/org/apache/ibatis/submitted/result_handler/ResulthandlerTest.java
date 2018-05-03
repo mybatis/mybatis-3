@@ -33,10 +33,10 @@ public class ResulthandlerTest {
   @BeforeClass
   public static void setUp() throws Exception {
     // create a SqlSessionFactory
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/result_handler/mybatis-config.xml");
-    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    reader.close();
-    sqlSessionFactory.getConfiguration().addMapper(Mapper.class);
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/result_handler/mybatis-config.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+      sqlSessionFactory.getConfiguration().addMapper(Mapper.class);
+    }
 
     // populate in-memory database
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),

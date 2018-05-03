@@ -35,10 +35,10 @@ public class NestedResultHandlerMultipleAssociationTest {
   @BeforeClass
   public static void setUp() throws Exception {
     // create an SqlSessionFactory
-    Reader reader = Resources
-        .getResourceAsReader("org/apache/ibatis/submitted/nestedresulthandler_multiple_association/mybatis-config.xml");
-    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    reader.close();
+    try (Reader reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/nestedresulthandler_multiple_association/mybatis-config.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    }
 
     // populate in-memory database
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
@@ -46,40 +46,39 @@ public class NestedResultHandlerMultipleAssociationTest {
   }
 
   @Test
-  public void failure() throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
+  public void failure() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 
-    // Parents have child going from somewhere to somewhere, they are stored in
-    // a Binome object
-    // In this test we have 2 parents:
-    // Parent1 is going from Child1 to Child2
-    // Parent2 is going from Child2 to Child3 and from Child1 to Child2
-    // You'll see a NULL entry in the list instead of the Binome Child1/Child2
-    List<ParentBean> list = sqlSession.selectList("selectParentBeans");
-    for (ParentBean pb : list) {
-      for (Binome<ChildBean, ChildBean> childs : pb.getChilds()) {
+      // Parents have child going from somewhere to somewhere, they are stored in
+      // a Binome object
+      // In this test we have 2 parents:
+      // Parent1 is going from Child1 to Child2
+      // Parent2 is going from Child2 to Child3 and from Child1 to Child2
+      // You'll see a NULL entry in the list instead of the Binome Child1/Child2
+      List<ParentBean> list = sqlSession.selectList("selectParentBeans");
+      for (ParentBean pb : list) {
+        for (Binome<ChildBean, ChildBean> childs : pb.getChilds()) {
+          Assert.assertNotNull(childs);
+          Assert.assertNotNull(childs.getOne());
+          Assert.assertNotNull(childs.getTwo());
+        }
+      }
+    }
+  }
+
+  @Test
+  public void success() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+
+      ParentBean parent = sqlSession.selectOne("selectParentBeanById", 2);
+
+      // If you only select the Parent2 it works
+      for (Binome<ChildBean, ChildBean> childs : parent.getChilds()) {
         Assert.assertNotNull(childs);
         Assert.assertNotNull(childs.getOne());
         Assert.assertNotNull(childs.getTwo());
       }
     }
-
-    sqlSession.close();
-  }
-
-  @Test
-  public void success() throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-
-    ParentBean parent = sqlSession.selectOne("selectParentBeanById", 2);
-
-    // If you only select the Parent2 it works
-    for (Binome<ChildBean, ChildBean> childs : parent.getChilds()) {
-      Assert.assertNotNull(childs);
-      Assert.assertNotNull(childs.getOne());
-      Assert.assertNotNull(childs.getTwo());
-    }
-    sqlSession.close();
   }
 
 }

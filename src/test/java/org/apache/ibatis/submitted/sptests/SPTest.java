@@ -41,9 +41,9 @@ public class SPTest {
 
   @BeforeClass
   public static void initDatabase() throws Exception {
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/sptests/MapperConfig.xml");
-    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    reader.close();
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/sptests/MapperConfig.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    }
 
     ScriptRunner runner = new ScriptRunner(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource().getConnection());
     runner.setDelimiter("go");

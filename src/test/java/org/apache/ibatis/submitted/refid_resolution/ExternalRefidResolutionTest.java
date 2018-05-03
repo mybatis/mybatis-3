@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -29,10 +29,10 @@ public class ExternalRefidResolutionTest {
   @Test
   public void testExternalRefAfterSelectKey() throws Exception {
     String resource = "org/apache/ibatis/submitted/refid_resolution/ExternalMapperConfig.xml";
-    Reader reader = Resources.getResourceAsReader(resource);
-    SqlSessionFactoryBuilder builder = new SqlSessionFactoryBuilder();
-    SqlSessionFactory sqlSessionFactory = builder.build(reader);
-    reader.close();
-    sqlSessionFactory.getConfiguration().getMappedStatementNames();
+    try (Reader reader = Resources.getResourceAsReader(resource)) {
+      SqlSessionFactoryBuilder builder = new SqlSessionFactoryBuilder();
+      SqlSessionFactory sqlSessionFactory = builder.build(reader);
+      sqlSessionFactory.getConfiguration().getMappedStatementNames();
+    }
   }
 }
