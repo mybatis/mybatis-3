@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -72,25 +72,19 @@ public class EncodingTest {
 
   @Test
   public void testEncoding1() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       EncodingMapper mapper = sqlSession.getMapper(EncodingMapper.class);
       String answer = mapper.select1();
       assertEquals("Mara\u00f1\u00f3n", answer);
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void testEncoding2() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       EncodingMapper mapper = sqlSession.getMapper(EncodingMapper.class);
       String answer = mapper.select2();
       assertEquals("Mara\u00f1\u00f3n", answer);
-    } finally {
-      sqlSession.close();
     }
   }
 }

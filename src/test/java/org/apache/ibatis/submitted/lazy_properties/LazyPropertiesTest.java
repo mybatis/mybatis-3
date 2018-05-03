@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -62,86 +62,68 @@ public class LazyPropertiesTest {
   @Test
   public void shouldLoadOnlyTheInvokedLazyProperty() {
     sqlSessionFactory.getConfiguration().setAggressiveLazyLoading(false);
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUser(1);
       assertEquals(0, user.setterCounter);
       assertNotNull(user.getLazy1());
       assertEquals("Should NOT load other lazy properties.", 1, user.setterCounter);
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void verifyAggressiveLazyLoadingBehavior() {
     sqlSessionFactory.getConfiguration().setAggressiveLazyLoading(true);
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUser(1);
       // Setter invocation by MyBatis triggers aggressive lazy-loading.
       assertEquals("Should load all lazy properties.", 3,
           user.setterCounter);
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void shouldToStringTriggerLazyLoading() {
     sqlSessionFactory.getConfiguration().setAggressiveLazyLoading(false);
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUser(1);
       user.toString();
       assertEquals(3, user.setterCounter);
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void shouldHashCodeTriggerLazyLoading() {
     sqlSessionFactory.getConfiguration().setAggressiveLazyLoading(false);
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUser(1);
       user.hashCode();
       assertEquals(3, user.setterCounter);
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void shouldEqualsTriggerLazyLoading() {
     sqlSessionFactory.getConfiguration().setAggressiveLazyLoading(false);
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUser(1);
       user.equals(null);
       assertEquals(3, user.setterCounter);
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void shouldCloneTriggerLazyLoading() {
     sqlSessionFactory.getConfiguration().setAggressiveLazyLoading(false);
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUser(1);
       user.clone();
       assertEquals(3, user.setterCounter);
-    } finally {
-      sqlSession.close();
     }
   }
 
@@ -150,8 +132,7 @@ public class LazyPropertiesTest {
     Configuration configuration = sqlSessionFactory.getConfiguration();
     configuration.setAggressiveLazyLoading(false);
     configuration.setLazyLoadTriggerMethods(new HashSet<String>());
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUser(1);
       user.toString();
@@ -159,8 +140,6 @@ public class LazyPropertiesTest {
       user.equals(null);
       user.clone();
       assertEquals(0, user.setterCounter);
-    } finally {
-      sqlSession.close();
     }
   }
 
@@ -170,8 +149,7 @@ public class LazyPropertiesTest {
     configuration.setAggressiveLazyLoading(false);
     configuration
         .setLazyLoadTriggerMethods(new HashSet<String>(Collections.singleton("trigger")));
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUser(1);
       user.toString();
@@ -181,8 +159,6 @@ public class LazyPropertiesTest {
       assertEquals(0, user.setterCounter);
       user.trigger();
       assertEquals(3, user.setterCounter);
-    } finally {
-      sqlSession.close();
     }
   }
 
@@ -200,8 +176,7 @@ public class LazyPropertiesTest {
     Configuration config = sqlSessionFactory.getConfiguration();
     config.setProxyFactory(proxyFactory);
     config.setAggressiveLazyLoading(false);
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUser(1);
       User u2 = new User();
@@ -210,8 +185,6 @@ public class LazyPropertiesTest {
       assertEquals(1, user.setterCounter);
       assertEquals(Integer.valueOf(99), user.getLazy1().getId());
       assertEquals(1, user.setterCounter);
-    } finally {
-      sqlSession.close();
     }
   }
 }

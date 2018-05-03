@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -55,11 +55,11 @@ public class CursorNestedTest {
 
     @Test
     public void shouldGetAllUser() {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        Mapper mapper = sqlSession.getMapper(Mapper.class);
-        Cursor<User> usersCursor = mapper.getAllUsers();
+        Cursor<User> usersCursor;
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
+            usersCursor = mapper.getAllUsers();
 
-        try {
             Assert.assertFalse(usersCursor.isOpen());
             // Retrieving iterator, fetching is not started
             Iterator<User> iterator = usersCursor.iterator();
@@ -89,17 +89,13 @@ public class CursorNestedTest {
             Assert.assertFalse(iterator.hasNext());
             Assert.assertFalse(usersCursor.isOpen());
             Assert.assertTrue(usersCursor.isConsumed());
-        } finally {
-            sqlSession.close();
         }
         Assert.assertFalse(usersCursor.isOpen());
     }
 
     @Test
     public void testCursorWithRowBound() {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-
-        try {
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             Cursor<User> usersCursor = sqlSession.selectCursor("getAllUsers", null, new RowBounds(2, 1));
 
             Iterator<User> iterator = usersCursor.iterator();
@@ -112,8 +108,6 @@ public class CursorNestedTest {
             Assert.assertFalse(iterator.hasNext());
             Assert.assertFalse(usersCursor.isOpen());
             Assert.assertTrue(usersCursor.isConsumed());
-        } finally {
-            sqlSession.close();
         }
     }
 }

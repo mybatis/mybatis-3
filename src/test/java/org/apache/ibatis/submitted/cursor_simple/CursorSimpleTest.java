@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -59,10 +59,10 @@ public class CursorSimpleTest {
 
     @Test
     public void shouldGetAllUser() {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        Mapper mapper = sqlSession.getMapper(Mapper.class);
-        Cursor<User> usersCursor = mapper.getAllUsers();
-        try {
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
+            Cursor<User> usersCursor = mapper.getAllUsers();
+
             Assert.assertFalse(usersCursor.isOpen());
 
             // Cursor is just created, current index is -1
@@ -102,17 +102,16 @@ public class CursorSimpleTest {
             Assert.assertFalse(iterator.hasNext());
             Assert.assertFalse(usersCursor.isOpen());
             Assert.assertTrue(usersCursor.isConsumed());
-        } finally {
-            sqlSession.close();
         }
     }
 
     @Test
     public void testCursorClosedOnSessionClose() {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        Mapper mapper = sqlSession.getMapper(Mapper.class);
-        Cursor<User> usersCursor = mapper.getAllUsers();
-        try {
+        Cursor<User> usersCursor;
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
+            usersCursor = mapper.getAllUsers();
+
             Assert.assertFalse(usersCursor.isOpen());
 
             Iterator<User> iterator = usersCursor.iterator();
@@ -130,8 +129,6 @@ public class CursorSimpleTest {
             Assert.assertTrue(iterator.hasNext());
             Assert.assertTrue(usersCursor.isOpen());
             Assert.assertFalse(usersCursor.isConsumed());
-        } finally {
-            sqlSession.close();
         }
 
         // The cursor was not fully consumed, but it should be close since we closed the session
@@ -141,9 +138,7 @@ public class CursorSimpleTest {
 
     @Test
     public void testCursorWithRowBound() {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-
-        try {
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             // RowBound starting at offset 1 and limiting to 2 items
             Cursor<User> usersCursor = sqlSession.selectCursor("getAllUsers", null, new RowBounds(1, 3));
 
@@ -167,8 +162,6 @@ public class CursorSimpleTest {
             Assert.assertFalse(iterator.hasNext());
             Assert.assertFalse(usersCursor.isOpen());
             Assert.assertTrue(usersCursor.isConsumed());
-        } finally {
-            sqlSession.close();
         }
     }
 
@@ -221,9 +214,7 @@ public class CursorSimpleTest {
 
     @Test
     public void testCursorWithBadRowBound() {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-
-        try {
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             // Trying to start at offset 10 (which does not exist, since there is only 4 items)
             Cursor<User> usersCursor = sqlSession.selectCursor("getAllUsers", null, new RowBounds(10, 2));
             Iterator<User> iterator = usersCursor.iterator();
@@ -231,18 +222,15 @@ public class CursorSimpleTest {
             Assert.assertFalse(iterator.hasNext());
             Assert.assertFalse(usersCursor.isOpen());
             Assert.assertTrue(usersCursor.isConsumed());
-        } finally {
-            sqlSession.close();
         }
     }
 
     @Test
     public void testCursorMultipleHasNextCall() {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        Mapper mapper = sqlSession.getMapper(Mapper.class);
-        Cursor<User> usersCursor = mapper.getAllUsers();
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
+            Cursor<User> usersCursor = mapper.getAllUsers();
 
-        try {
             Iterator<User> iterator = usersCursor.iterator();
 
             Assert.assertEquals(-1, usersCursor.getCurrentIndex());
@@ -256,19 +244,16 @@ public class CursorSimpleTest {
             Assert.assertTrue(iterator.hasNext());
             // assert that index has not changed after hasNext() call
             Assert.assertEquals(0, usersCursor.getCurrentIndex());
-        } finally {
-            sqlSession.close();
         }
     }
 
     @Test
     public void testCursorMultipleIteratorCall() {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        Mapper mapper = sqlSession.getMapper(Mapper.class);
-        Cursor<User> usersCursor = mapper.getAllUsers();
-
         Iterator<User> iterator2 = null;
-        try {
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
+            Cursor<User> usersCursor = mapper.getAllUsers();
+
             Iterator<User> iterator = usersCursor.iterator();
             User user = iterator.next();
             Assert.assertEquals("User1", user.getName());
@@ -280,18 +265,16 @@ public class CursorSimpleTest {
         } catch (IllegalStateException e) {
             Assert.assertNull("iterator2 should be null", iterator2);
             return;
-        } finally {
-            sqlSession.close();
         }
         Assert.fail("Should have returned earlier");
     }
 
     @Test
     public void testCursorMultipleCloseCall() throws IOException {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        Mapper mapper = sqlSession.getMapper(Mapper.class);
-        Cursor<User> usersCursor = mapper.getAllUsers();
-        try {
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
+            Cursor<User> usersCursor = mapper.getAllUsers();
+
             Assert.assertFalse(usersCursor.isOpen());
 
             Iterator<User> iterator = usersCursor.iterator();
@@ -313,8 +296,6 @@ public class CursorSimpleTest {
             Assert.assertFalse(iterator.hasNext());
             Assert.assertFalse(usersCursor.isOpen());
             Assert.assertFalse(usersCursor.isConsumed());
-        } finally {
-            sqlSession.close();
         }
     }
 
@@ -359,11 +340,11 @@ public class CursorSimpleTest {
 
     @Test
     public void shouldGetAllUserUsingAnnotationBasedMapper() {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        sqlSession.getConfiguration().getMapperRegistry().addMapper(AnnotationMapper.class);
-        AnnotationMapper mapper = sqlSession.getMapper(AnnotationMapper.class);
-        Cursor<User> usersCursor = mapper.getAllUsers();
-        try {
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            sqlSession.getConfiguration().getMapperRegistry().addMapper(AnnotationMapper.class);
+            AnnotationMapper mapper = sqlSession.getMapper(AnnotationMapper.class);
+            Cursor<User> usersCursor = mapper.getAllUsers();
+
             Assert.assertFalse(usersCursor.isOpen());
             Assert.assertFalse(usersCursor.isConsumed());
             Assert.assertEquals(-1, usersCursor.getCurrentIndex());
@@ -389,9 +370,6 @@ public class CursorSimpleTest {
             Assert.assertEquals("User4", user.getName());
             user = userList.get(4);
             Assert.assertEquals("User5", user.getName());
-
-        } finally {
-            sqlSession.close();
         }
     }
 

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -101,28 +101,22 @@ public class NpeExtendsTest {
     @Test
     public void testSelectWithTeacher() {
         SqlSessionFactory sqlSessionFactory = getSqlSessionFactoryWithConstructor();
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        try {
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             StudentConstructorMapper studentConstructorMapper = sqlSession.getMapper(StudentConstructorMapper.class);
             StudentConstructor testStudent = studentConstructorMapper.selectWithTeacherById(1);
             assertEquals(1, testStudent.getConstructors().size());
             assertTrue(testStudent.getConstructors().contains(StudentConstructor.Constructor.ID_NAME));
-        } finally {
-            sqlSession.close();
         }
     }
     @Test
     public void testSelectNoName() {
         SqlSessionFactory sqlSessionFactory = getSqlSessionFactoryWithConstructor();
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        try {
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             StudentConstructorMapper studentConstructorMapper = sqlSession.getMapper(StudentConstructorMapper.class);
             StudentConstructor testStudent = studentConstructorMapper.selectNoNameById(1);
             assertEquals(1, testStudent.getConstructors().size());
             assertTrue(testStudent.getConstructors().contains(StudentConstructor.Constructor.ID));
             assertNull(testStudent.getName());
-        } finally {
-            sqlSession.close();
         }
     }
 }

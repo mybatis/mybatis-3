@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -79,17 +79,14 @@ public class BlockingCacheTest {
   }
 
   private void accessDB() {
-    SqlSession sqlSession1 = sqlSessionFactory.openSession();
-    try {
-      PersonMapper pm = sqlSession1.getMapper(PersonMapper.class);
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      PersonMapper pm = sqlSession.getMapper(PersonMapper.class);
       pm.findAll();
       try {
         Thread.sleep(500);
       } catch (InterruptedException e) {
         Assert.fail(e.getMessage());
       }
-    } finally {
-      sqlSession1.close();
     }
   }
 

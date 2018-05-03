@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -53,53 +53,41 @@ public class HashMapTypeHandlerTest {
 
   @Test
   public void shouldNotApplyTypeHandlerToParamMap() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUser(1, "User1");
       Assert.assertEquals("User1", user.getName());
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void shouldNotApplyTypeHandlerToParamMapXml() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUserXml(1, "User1");
       Assert.assertEquals("User1", user.getName());
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void shouldApplyHashMapTypeHandler() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       HashMap<String, String> map = new HashMap<String, String>();
       map.put("name", "User1");
       User user = mapper.getUserWithTypeHandler(map);
       Assert.assertNotNull(user);
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void shouldApplyHashMapTypeHandlerXml() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       HashMap<String, String> map = new HashMap<String, String>();
       map.put("name", "User1");
       User user = mapper.getUserWithTypeHandlerXml(map);
       Assert.assertNotNull(user);
-    } finally {
-      sqlSession.close();
     }
   }
 }

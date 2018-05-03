@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -55,8 +55,7 @@ public class RoundingHandlersTest {
 
   @Test
   public void shouldGetAUser() {
-    SqlSession session = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession session = sqlSessionFactory.openSession()) {
       Mapper mapper = session.getMapper(Mapper.class);
       User user = mapper.getUser(1);
       Assert.assertEquals("User1", user.getName());
@@ -64,15 +63,12 @@ public class RoundingHandlersTest {
       user = mapper.getUser2(1);
       Assert.assertEquals("User1", user.getName());
       Assert.assertEquals(RoundingMode.UP, user.getRoundingMode());
-    } finally {
-      session.close();
     }
   }
 
   @Test
   public void shouldInsertUser2() {
-    SqlSession session = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession session = sqlSessionFactory.openSession()) {
       Mapper mapper = session.getMapper(Mapper.class);
       User user = new User();
       user.setId(2);
@@ -81,8 +77,6 @@ public class RoundingHandlersTest {
       user.setRoundingMode(RoundingMode.UNNECESSARY);
       mapper.insert(user);
       mapper.insert2(user);
-    } finally {
-      session.close();
     }
   }
 

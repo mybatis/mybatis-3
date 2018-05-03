@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -54,9 +54,7 @@ public class AwfulTableTest {
 
   @Test
   public void testAwfulTableInsert() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       AwfulTableMapper mapper = sqlSession.getMapper(AwfulTableMapper.class);
       AwfulTable record = new AwfulTable();
       record.seteMail("fred@fred.com");
@@ -89,8 +87,6 @@ public class AwfulTableTest {
       assertEquals(record.getId7(), returnedRecord.getId7());
       assertEquals(record.getSecondFirstName(), returnedRecord.getSecondFirstName());
       assertEquals(record.getThirdFirstName(), returnedRecord.getThirdFirstName());
-    } finally {
-      sqlSession.close();
     }
   }
 

@@ -122,9 +122,7 @@ public class BlobInputStreamTypeHandlerTest extends BaseTypeHandlerTest {
 
   @Test
   public void integrationTest() throws IOException {
-    SqlSession session = sqlSessionFactory.openSession();
-
-    try {
+    try (SqlSession session = sqlSessionFactory.openSession()) {
       Mapper mapper = session.getMapper(Mapper.class);
       // insert (InputStream -> Blob)
       {
@@ -139,8 +137,6 @@ public class BlobInputStreamTypeHandlerTest extends BaseTypeHandlerTest {
         BlobContent blobContent = mapper.findOne(1);
         assertThat(new BufferedReader(new InputStreamReader(blobContent.getContent())).readLine()).isEqualTo("Hello");
       }
-    } finally {
-      session.close();
     }
 
   }

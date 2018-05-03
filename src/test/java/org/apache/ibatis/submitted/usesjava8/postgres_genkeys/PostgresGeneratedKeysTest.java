@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -73,44 +73,35 @@ public class PostgresGeneratedKeysTest {
   }
 
   @Test
-  public void testInsertIntoTableWithNoSerialColumn() throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  public void testInsertIntoTableWithNoSerialColumn() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Section section = new Section();
       section.setSectionId(2);
       section.setName("Section 2");
       int result = mapper.insertSection(section);
       assertEquals(1, result);
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
-  public void testUpdateTableWithSerial() throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  public void testUpdateTableWithSerial() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = new User();
       user.setUserId(1);
       user.setName("Ethan");
       int result = mapper.updateUser(user);
       assertEquals(1, result);
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
-  public void testUnusedGeneratedKey() throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  public void testUnusedGeneratedKey() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       int result = mapper.insertUser("John");
       assertEquals(1, result);
-    } finally {
-      sqlSession.close();
     }
   }
 }

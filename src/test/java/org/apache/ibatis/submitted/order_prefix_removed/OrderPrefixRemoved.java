@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -63,8 +63,7 @@ public class OrderPrefixRemoved {
 
   @Test
   public void testOrderPrefixNotRemoved() {
-    SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.SIMPLE);
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.SIMPLE)) {
       PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
 
       Person person = personMapper.select(new String("slow"));
@@ -72,8 +71,6 @@ public class OrderPrefixRemoved {
       assertNotNull(person);
       
       sqlSession.commit();
-    } finally {
-      sqlSession.close();
     }
   }
 }

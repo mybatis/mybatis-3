@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -52,10 +52,7 @@ public class FlushTest {
 
     @Test
     public void invokeFlushStatementsViaMapper() {
-
-        SqlSession session = sqlSessionFactory.openSession();
-
-        try {
+        try (SqlSession session = sqlSessionFactory.openSession()) {
 
             BoundAuthorMapper mapper = session.getMapper(BoundAuthorMapper.class);
             Author author = new Author(-1, "cbegin", "******", "cbegin@nowhere.com", "N/A", Section.NEWS);
@@ -83,8 +80,6 @@ public class FlushTest {
             }
 
             session.rollback();
-        } finally {
-            session.close();
         }
 
     }

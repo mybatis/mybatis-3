@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -53,24 +53,18 @@ public class IncludeTest {
   }
 
   @Test
-  public void testIncludes() throws Exception {
-    final SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  public void testIncludes()  {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       final Integer result = sqlSession.selectOne("org.apache.ibatis.submitted.includes.mapper.selectWithProperty");
       Assert.assertEquals(Integer.valueOf(1), result);
-    } finally {
-      sqlSession.close();
     }
   }
   
   @Test
-  public void testParametrizedIncludes() throws Exception {
-    final SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  public void testParametrizedIncludes() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       final Map<String, Object> result = sqlSession.selectOne("org.apache.ibatis.submitted.includes.mapper.select");
       //Assert.assertEquals(Integer.valueOf(1), result);
-    } finally {
-      sqlSession.close();
     }
   }
   

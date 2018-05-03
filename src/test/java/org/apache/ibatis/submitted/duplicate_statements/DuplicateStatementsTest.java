@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -55,25 +55,19 @@ public class DuplicateStatementsTest {
 
   @Test
   public void shouldGetAllUsers() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<User> users = mapper.getAllUsers();
       Assert.assertEquals(10, users.size());
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void shouldGetFirstFourUsers() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<User> users = mapper.getAllUsers(new RowBounds(0, 4));
       Assert.assertEquals(4, users.size());
-    } finally {
-      sqlSession.close();
     }
   }
 
@@ -81,13 +75,10 @@ public class DuplicateStatementsTest {
   @Ignore("fails currently - issue 507")
   public void shouldGetAllUsers_Annotated() {
     sqlSessionFactory.getConfiguration().addMapper(AnnotatedMapper.class);
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       AnnotatedMapper mapper = sqlSession.getMapper(AnnotatedMapper.class);
       List<User> users = mapper.getAllUsers();
       Assert.assertEquals(10, users.size());
-    } finally {
-      sqlSession.close();
     }
   }
 
@@ -95,13 +86,10 @@ public class DuplicateStatementsTest {
   @Ignore("fails currently - issue 507")
   public void shouldGetFirstFourUsers_Annotated() {
     sqlSessionFactory.getConfiguration().addMapper(AnnotatedMapper.class);
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       AnnotatedMapper mapper = sqlSession.getMapper(AnnotatedMapper.class);
       List<User> users = mapper.getAllUsers(new RowBounds(0, 4));
       Assert.assertEquals(4, users.size());
-    } finally {
-      sqlSession.close();
     }
   }
 

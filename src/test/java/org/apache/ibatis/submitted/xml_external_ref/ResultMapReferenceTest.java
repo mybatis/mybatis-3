@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -46,16 +46,12 @@ public class ResultMapReferenceTest {
     testCrossReference(getSqlSessionFactoryJavaConfig());
   }
 
-  private void testCrossReference(SqlSessionFactory sqlSessionFactory) throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  private void testCrossReference(SqlSessionFactory sqlSessionFactory) {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       ResultMapReferencePersonMapper personMapper = sqlSession.getMapper(ResultMapReferencePersonMapper.class);
 
       Pet pet = personMapper.selectPet(1);
       assertEquals(Integer.valueOf(1), pet.getId());
-
-    } finally {
-      sqlSession.close();
     }
   }
 

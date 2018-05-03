@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -52,15 +52,12 @@ public class PrimitiveArrayTest {
 
   @Test
   public void shouldGetAUser() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUser(1);
       Assert.assertEquals("User1", user.getName());
       Assert.assertEquals(2, user.getNum().length);
       Assert.assertEquals(100, user.getNum()[0]);
-    } finally {
-      sqlSession.close();
     }
   }
 

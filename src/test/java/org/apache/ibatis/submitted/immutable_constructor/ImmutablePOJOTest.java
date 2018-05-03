@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -68,27 +68,21 @@ public final class ImmutablePOJOTest {
 
   @Test
   public void shouldLoadImmutablePOJOBySignature() {
-    final SqlSession session = factory.openSession();
-    try {
+    try (SqlSession session = factory.openSession()) {
       final ImmutablePOJOMapper mapper = session.getMapper(ImmutablePOJOMapper.class);
       final ImmutablePOJO pojo = mapper.getImmutablePOJO(POJO_ID);
 
       assertEquals(POJO_ID, pojo.getImmutableId());
       assertEquals(POJO_DESCRIPTION, pojo.getImmutableDescription());
-    } finally {
-      session.close();
     }
   }
 
 
   @Test(expected=PersistenceException.class)
   public void shouldFailLoadingImmutablePOJO() {
-    final SqlSession session = factory.openSession();
-    try {
+    try (SqlSession session = factory.openSession()) {
       final ImmutablePOJOMapper mapper = session.getMapper(ImmutablePOJOMapper.class);
       mapper.getImmutablePOJONoMatchingConstructor(POJO_ID);
-    } finally {
-      session.close();
     }
   }
   

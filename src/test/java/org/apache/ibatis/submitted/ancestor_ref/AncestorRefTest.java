@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -52,33 +52,26 @@ public class AncestorRefTest {
 
   @Test
   public void testCircularAssociation() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUserAssociation(1);
       assertEquals("User2", user.getFriend().getName());
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void testCircularCollection() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUserCollection(2);
       assertEquals("User2", user.getFriends().get(0).getName());
       assertEquals("User3", user.getFriends().get(1).getName());
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void testAncestorRef() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Blog blog = mapper.selectBlog(1);
       assertEquals("Author1", blog.getAuthor().getName());
@@ -89,8 +82,6 @@ public class AncestorRefTest {
       // reputation should point to it author? or fail but do not point to a random one
       assertEquals(blog.getAuthor(), blog.getAuthor().getReputation().getAuthor());
       assertEquals(blog.getCoAuthor(), blog.getCoAuthor().getReputation().getAuthor());
-    } finally {
-      sqlSession.close();
     }
   }
 }

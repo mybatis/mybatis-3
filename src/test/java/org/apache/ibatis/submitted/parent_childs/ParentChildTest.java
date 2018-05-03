@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -53,8 +53,7 @@ public class ParentChildTest {
 
   @Test
   public void shouldGetAUser() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<Parent> parents = mapper.getParents();
       Assert.assertEquals(2, parents.size());
@@ -64,8 +63,6 @@ public class ParentChildTest {
       Parent secondParent = parents.get(1);
       Assert.assertEquals("Juan", secondParent.getName());
       Assert.assertEquals(0, secondParent.getChilds().size()); // note an empty list is inyected
-    } finally {
-      sqlSession.close();
     }
   }
 

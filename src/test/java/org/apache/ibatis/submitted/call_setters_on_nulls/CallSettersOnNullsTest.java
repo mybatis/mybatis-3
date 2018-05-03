@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -56,59 +56,46 @@ public class CallSettersOnNullsTest {
 
   @Test
   public void shouldCallNullOnMappedProperty() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUserMapped(1);
       Assert.assertTrue(user.nullReceived);
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void shouldCallNullOnAutomaticMapping() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUserUnmapped(1);
       Assert.assertTrue(user.nullReceived);
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void shouldCallNullOnMap() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Map user = mapper.getUserInMap(1);
       Assert.assertTrue(user.containsKey("NAME"));
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void shouldCallNullOnMapForSingleColumn() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<Map<String, Object>> oneColumns = mapper.getNameOnly();
       // When callSetterOnNull is true, setters are called with null values
       // but if all the values for an object are null
       // the object itself should be null (same as default behaviour)
       Assert.assertNull(oneColumns.get(1));
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void shouldCallNullOnMapForSingleColumnWithResultMap() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<Map<String, Object>> oneColumns = mapper.getNameOnlyMapped();
 //      Assert.assertNotNull(oneColumns.get(1));
@@ -117,8 +104,6 @@ public class CallSettersOnNullsTest {
       // but if all the values for an object are null
       // the object itself should be null (same as default behaviour)
       Assert.assertNull(oneColumns.get(1));
-    } finally {
-      sqlSession.close();
     }
   }
   

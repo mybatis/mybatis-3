@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -52,8 +52,7 @@ public class ColumnForwardingTest {
 
   @Test
   public void shouldGetUserWithGroup() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUser(1);
       Assert.assertNotNull(user);
@@ -62,23 +61,18 @@ public class ColumnForwardingTest {
       Assert.assertNotNull(user.getGroup());
       Assert.assertNotNull(user.getGroup().getId());
       Assert.assertEquals("active", user.getGroup().getState());
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void shouldGetUserWithoutGroup() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUser(2);
       Assert.assertNotNull(user);
       Assert.assertNotNull(user.getId());
       Assert.assertNull(user.getState());
       Assert.assertNull(user.getGroup());
-    } finally {
-      sqlSession.close();
     }
   }
 }

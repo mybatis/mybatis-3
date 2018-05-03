@@ -122,9 +122,7 @@ public class ClobReaderTypeHandlerTest extends BaseTypeHandlerTest {
 
   @Test
   public void integrationTest() throws IOException {
-    SqlSession session = sqlSessionFactory.openSession();
-
-    try {
+    try (SqlSession session = sqlSessionFactory.openSession()) {
       Mapper mapper = session.getMapper(Mapper.class);
       // insert (Reader -> Clob)
       {
@@ -139,8 +137,6 @@ public class ClobReaderTypeHandlerTest extends BaseTypeHandlerTest {
         ClobContent clobContent = mapper.findOne(1);
         assertThat(new BufferedReader(clobContent.getContent()).readLine()).isEqualTo("Hello");
       }
-    } finally {
-      session.close();
     }
 
   }

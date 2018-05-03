@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -64,13 +64,10 @@ public class NonExistentVariablesTest {
 
   @Test(expected = PersistenceException.class)
   public void testWrongParameter() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       mapper.count(1, "John");
       fail("should have failed");
-    } finally {
-      sqlSession.close();
     }
   }
 }

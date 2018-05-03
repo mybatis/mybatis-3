@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -57,49 +57,37 @@ public class UseActualParamNameTest {
 
   @Test
   public void shouldSingleParamBeReferencedByAnyName() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUserById(1);
       assertNotNull(user);
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void shouldMultipleParamsBeReferencedByActualNames() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUserByIdAndName(1, "User1");
       assertNotNull(user);
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void shouldSoleListParamBeReferencedByImplicitName() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<User> users = mapper.getUsersByIdList(Arrays.asList(1, 2));
       assertEquals(2, users.size());
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void shouldListParamBeReferencedByActualNameIfAnotherParamExists() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<User> users = mapper.getUsersByIdListAndName(Arrays.asList(1, 2), null);
       assertEquals(2, users.size());
-    } finally {
-      sqlSession.close();
     }
   }
 

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -54,8 +54,7 @@ public class PermissionsTest {
 
   @Test // see issue #168
   public void checkNestedResultMapLoop() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       final PermissionsMapper mapper = sqlSession.getMapper(PermissionsMapper.class);
 
       final List<Resource> resources = mapper.getResources();
@@ -73,15 +72,12 @@ public class PermissionsTest {
       Assert.assertSame(firstResource, firstPermission.getResource());
       final Permission secondPermission = firstPrincipal.getPermissions().get(1);
       Assert.assertSame(firstResource, secondPermission.getResource());
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void checkNestedSelectLoop() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       final PermissionsMapper mapper = sqlSession.getMapper(PermissionsMapper.class);
 
       final List<Resource> resources = mapper.getResource("read");
@@ -106,9 +102,6 @@ public class PermissionsTest {
       if (!readFound) {
         Assert.fail();
       }
-
-    } finally {
-      sqlSession.close();
     }
   }
   

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -33,47 +33,35 @@ public class SerializeCircularTest {
   @Test
   public void serializeAndDeserializeObjectsWithAggressiveLazyLoadingWithoutPreloadingAttribute() 
   throws Exception {
-    SqlSession sqlSession = createSessionWithAggressiveLazyLoading();
-    try {
+    try (SqlSession sqlSession = createSessionWithAggressiveLazyLoading()) {
       testSerializeWithoutPreloadingAttribute(sqlSession);
-      } finally {
-        sqlSession.close();
-      }
+    }
   }
   
   @Test
   public void serializeAndDeserializeObjectsWithAggressiveLazyLoadingWithPreloadingAttribute() 
   throws Exception {
-    SqlSession sqlSession = createSessionWithAggressiveLazyLoading();
-    try {
+    try (SqlSession sqlSession = createSessionWithAggressiveLazyLoading()) {
       testSerializeWithPreloadingAttribute(sqlSession);
-      } finally {
-        sqlSession.close();
-      }
+    }
   }
 
 //  @Ignore("See http://code.google.com/p/mybatis/issues/detail?id=614")
   @Test
   public void serializeAndDeserializeObjectsWithoutAggressiveLazyLoadingWithoutPreloadingAttribute() 
   throws Exception {
-    SqlSession sqlSession = createSessionWithoutAggressiveLazyLoading();
-    try {
+    try (SqlSession sqlSession = createSessionWithoutAggressiveLazyLoading()) {
         //expected problem with deserializing
       testSerializeWithoutPreloadingAttribute(sqlSession);
-      } finally {
-        sqlSession.close();
-      }
+    }
   }
 
   @Test
   public void serializeAndDeserializeObjectsWithoutAggressiveLazyLoadingWithPreloadingAttribute() 
   throws Exception {
-    SqlSession sqlSession = createSessionWithoutAggressiveLazyLoading();
-    try {
+    try (SqlSession sqlSession = createSessionWithoutAggressiveLazyLoading()) {
       testSerializeWithPreloadingAttribute(sqlSession);
-      } finally {
-        sqlSession.close();
-      }
+    }
   }
 
   private SqlSession createSessionWithoutAggressiveLazyLoading() throws Exception {

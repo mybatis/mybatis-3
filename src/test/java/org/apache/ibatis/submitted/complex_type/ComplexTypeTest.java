@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -54,8 +54,7 @@ public class ComplexTypeTest {
   // see https://issues.apache.org/jira/browse/IBATIS-653
   @Test
   public void shouldUpdateProps() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Item item = new Item();
       item.id = 10;
       Property p1 = new Property();
@@ -69,8 +68,6 @@ public class ComplexTypeTest {
       list.add(p2);
       item.properties = list;
       sqlSession.update("updateProps", item);
-    } finally {
-      sqlSession.close();
     }
   }
 

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -53,15 +53,12 @@ public class StringListTest {
 
   @Test
   public void shouldGetAUser() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<User> users = mapper.getUsersAndGroups(1);
       Assert.assertEquals(1, users.size());
       Assert.assertEquals(2, users.get(0).getGroups().size());
       Assert.assertEquals(2, users.get(0).getRoles().size());
-    } finally {
-      sqlSession.close();
     }
   }
 

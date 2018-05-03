@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -51,8 +51,7 @@ public class MultipleIteratesTest {
 
   @Test
   public void shouldGetAUser() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = new User();
       user.setId(1);
@@ -60,8 +59,6 @@ public class MultipleIteratesTest {
       user.setFirstAttr(new String[] { "asd", "asd" });
       user.setSecondAttr(new String[] { "fds", "fds" });
       mapper.insertUser(user);
-    } finally {
-      sqlSession.close();
     }
   }
 

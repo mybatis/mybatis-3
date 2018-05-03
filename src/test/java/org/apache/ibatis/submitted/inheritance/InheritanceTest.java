@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -53,13 +53,10 @@ public class InheritanceTest {
 
   @Test
   public void shouldGetAUser() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       UserProfileMapper mapper = sqlSession.getMapper(UserProfileMapper.class);
       UserProfile user = mapper.retrieveById(1);
       Assert.assertEquals("Profile1", user.getName());
-    } finally {
-      sqlSession.close();
     }
   }
 
