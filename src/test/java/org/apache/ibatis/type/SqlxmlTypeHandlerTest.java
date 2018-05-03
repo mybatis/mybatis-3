@@ -71,7 +71,6 @@ public class SqlxmlTypeHandlerTest extends BaseTypeHandlerTest {
     Environment environment = new Environment("development", new JdbcTransactionFactory(), new UnpooledDataSource(
         "org.postgresql.Driver", url, null));
     configuration.setEnvironment(environment);
-    configuration.setUseGeneratedKeys(true);
     configuration.addMapper(Mapper.class);
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
 
@@ -154,58 +153,42 @@ public class SqlxmlTypeHandlerTest extends BaseTypeHandlerTest {
   }
 
   @Test
-  public void shouldReturnXmlAsString() throws Exception {
-    SqlSession session = sqlSessionFactory.openSession();
-    try {
+  public void shouldReturnXmlAsString() {
+    try (SqlSession session = sqlSessionFactory.openSession()) {
       Mapper mapper = session.getMapper(Mapper.class);
       XmlBean bean = mapper.select(1);
       assertEquals("<title>XML data</title>",
           bean.getContent());
-    } finally {
-      session.close();
     }
   }
 
   @Test
-  public void shouldReturnNull() throws Exception {
-    SqlSession session = sqlSessionFactory.openSession();
-    try {
+  public void shouldReturnNull() {
+    try (SqlSession session = sqlSessionFactory.openSession()) {
       Mapper mapper = session.getMapper(Mapper.class);
       XmlBean bean = mapper.select(2);
       assertNull(bean.getContent());
-    } finally {
-      session.close();
     }
   }
 
   @Test
-  public void shouldInsertXmlString() throws Exception {
+  public void shouldInsertXmlString() {
     final Integer id = 100;
     final String content = "<books><book><title>Save XML</title></book><book><title>Get XML</title></book></books>";
     // Insert
-    {
-      SqlSession session = sqlSessionFactory.openSession();
-      try {
-        Mapper mapper = session.getMapper(Mapper.class);
-        XmlBean bean = new XmlBean();
-        bean.setId(id);
-        bean.setContent(content);
-        mapper.insert(bean);
-        session.commit();
-      } finally {
-        session.close();
-      }
+    try (SqlSession session = sqlSessionFactory.openSession()) {
+      Mapper mapper = session.getMapper(Mapper.class);
+      XmlBean bean = new XmlBean();
+      bean.setId(id);
+      bean.setContent(content);
+      mapper.insert(bean);
+      session.commit();
     }
     // Select to verify
-    {
-      SqlSession session = sqlSessionFactory.openSession();
-      try {
-        Mapper mapper = session.getMapper(Mapper.class);
-        XmlBean bean = mapper.select(id);
-        assertEquals(content, bean.getContent());
-      } finally {
-        session.close();
-      }
+    try (SqlSession session = sqlSessionFactory.openSession()) {
+      Mapper mapper = session.getMapper(Mapper.class);
+      XmlBean bean = mapper.select(id);
+      assertEquals(content, bean.getContent());
     }
   }
 
