@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -62,16 +62,12 @@ public class CustomCollectionHandlingTest {
     public void testSelectListWithNestedSelect() throws Exception {
         String xmlConfig = "org/apache/ibatis/submitted/custom_collection_handling/MapperConfig.xml";
         SqlSessionFactory sqlSessionFactory = getSqlSessionFactoryXmlConfig(xmlConfig);
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        try {
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             List<Person> list = sqlSession.selectList("org.apache.ibatis.submitted.custom_collection_handling.PersonMapper.findWithSelect");
             assertEquals(2, list.size());
             assertEquals(2, list.get(0).getContacts().size());
             assertEquals(1, list.get(1).getContacts().size());
             assertEquals("3 Wall Street", list.get(0).getContacts().get(1).getAddress());
-        } 
-        finally {
-            sqlSession.close();
         }
     }
 

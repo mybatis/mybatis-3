@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -46,16 +46,12 @@ public class MultipleIncludeTest {
     testMultipleIncludes(getSqlSessionFactoryJavaConfig());
   }
 
-  private void testMultipleIncludes(SqlSessionFactory sqlSessionFactory) throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  private void testMultipleIncludes(SqlSessionFactory sqlSessionFactory) {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       MultipleIncludePersonMapper personMapper = sqlSession.getMapper(MultipleIncludePersonMapper.class);
       Person person = personMapper.select(1);
       assertEquals((Integer)1, person.getId());
       assertEquals("John", person.getName());
-
-    } finally {
-      sqlSession.close();
     }
   }
 

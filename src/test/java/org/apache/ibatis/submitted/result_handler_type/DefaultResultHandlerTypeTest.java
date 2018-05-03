@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -37,14 +37,11 @@ public class DefaultResultHandlerTypeTest {
   public void testSelectList() throws Exception {
     String xmlConfig = "org/apache/ibatis/submitted/result_handler_type/MapperConfig.xml";
     SqlSessionFactory sqlSessionFactory = getSqlSessionFactoryXmlConfig(xmlConfig);
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       List<Person> list = sqlSession
           .selectList("org.apache.ibatis.submitted.result_handler_type.PersonMapper.doSelect");
       assertEquals(list.size(), 2);
       assertEquals("java.util.LinkedList", list.getClass().getCanonicalName());
-    } finally {
-      sqlSession.close();
     }
   }
 
@@ -52,14 +49,11 @@ public class DefaultResultHandlerTypeTest {
   public void testSelectMap() throws Exception {
     String xmlConfig = "org/apache/ibatis/submitted/result_handler_type/MapperConfig.xml";
     SqlSessionFactory sqlSessionFactory = getSqlSessionFactoryXmlConfig(xmlConfig);
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Map<Integer, Person> map = sqlSession.selectMap(
           "org.apache.ibatis.submitted.result_handler_type.PersonMapper.doSelect", "id");
       assertEquals(map.size(), 2);
       assertEquals("java.util.LinkedHashMap", map.getClass().getCanonicalName());
-    } finally {
-      sqlSession.close();
     }
   }
 
@@ -67,14 +61,11 @@ public class DefaultResultHandlerTypeTest {
   public void testSelectMapAnnotation() throws Exception {
     String xmlConfig = "org/apache/ibatis/submitted/result_handler_type/MapperConfig.xml";
     SqlSessionFactory sqlSessionFactory = getSqlSessionFactoryXmlConfig(xmlConfig);
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       PersonMapper mapper = sqlSession.getMapper(PersonMapper.class);
       Map<Integer, Person> map = mapper.selectAsMap();
       assertEquals(map.size(), 2);
       assertEquals("java.util.LinkedHashMap", map.getClass().getCanonicalName());
-    } finally {
-      sqlSession.close();
     }
   }
 

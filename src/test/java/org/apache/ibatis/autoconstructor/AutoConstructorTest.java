@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -54,57 +54,42 @@ public class AutoConstructorTest {
 
   @Test
   public void fullyPopulatedSubject() {
-    final SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       final AutoConstructorMapper mapper = sqlSession.getMapper(AutoConstructorMapper.class);
       final Object subject = mapper.getSubject(1);
       Assert.assertNotNull(subject);
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test(expected = PersistenceException.class)
   public void primitiveSubjects() {
-    final SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       final AutoConstructorMapper mapper = sqlSession.getMapper(AutoConstructorMapper.class);
       mapper.getSubjects();
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void wrapperSubject() {
-    final SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       final AutoConstructorMapper mapper = sqlSession.getMapper(AutoConstructorMapper.class);
       verifySubjects(mapper.getWrapperSubjects());
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void annotatedSubject() {
-    final SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       final AutoConstructorMapper mapper = sqlSession.getMapper(AutoConstructorMapper.class);
       verifySubjects(mapper.getAnnotatedSubjects());
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test(expected = PersistenceException.class)
   public void badSubject() {
-    final SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       final AutoConstructorMapper mapper = sqlSession.getMapper(AutoConstructorMapper.class);
       mapper.getBadSubjects();
-    } finally {
-      sqlSession.close();
     }
   }
 

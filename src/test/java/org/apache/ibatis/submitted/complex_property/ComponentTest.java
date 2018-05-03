@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -42,8 +42,7 @@ public class ComponentTest {
 
   @Test
   public void shouldInsertNestedPasswordFieldOfComplexType() throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       //Create User
       User user = new User();
       user.setId(500000L);
@@ -59,8 +58,6 @@ public class ComponentTest {
       assertNotNull(user.getId());
 
       sqlSession.rollback();
-    } finally {
-      sqlSession.close();
     }
   }
 

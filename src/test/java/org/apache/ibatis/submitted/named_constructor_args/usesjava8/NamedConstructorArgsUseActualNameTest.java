@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -57,27 +57,21 @@ public class NamedConstructorArgsUseActualNameTest {
 
   @Test
   public void argsByActualNames() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.mapConstructorWithoutParamAnnos(1);
       assertEquals(Integer.valueOf(1), user.getId());
       assertEquals("User1", user.getName());
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void argsByActualNamesXml() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.mapConstructorWithoutParamAnnosXml(1);
       assertEquals(Integer.valueOf(1), user.getId());
       assertEquals("User1", user.getName());
-    } finally {
-      sqlSession.close();
     }
   }
 

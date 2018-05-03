@@ -67,51 +67,39 @@ public class OptionalOnMapperMethodTest {
 
   @Test
   public void returnNotNullOnAnnotation() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Optional<User> user = mapper.getUserUsingAnnotation(1);
       assertTrue(user.isPresent());
       assertThat(user.get().getName(), is("User1"));
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void returnNullOnAnnotation() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Optional<User> user = mapper.getUserUsingAnnotation(3);
       assertFalse(user.isPresent());
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void returnNotNullOnXml() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Optional<User> user = mapper.getUserUsingXml(2);
       assertTrue(user.isPresent());
       assertThat(user.get().getName(), is("User2"));
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void returnNullOnXml() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Optional<User> user = mapper.getUserUsingXml(3);
       assertFalse(user.isPresent());
-    } finally {
-      sqlSession.close();
     }
   }
 

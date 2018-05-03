@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -53,51 +53,39 @@ public class ArrayResultTypeTest {
 
   @Test
   public void shouldGetUserArray() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User[] users = mapper.getUsers();
       assertEquals("User1", users[0].getName());
       assertEquals("User2", users[1].getName());
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void shouldGetUserArrayXml() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User[] users = mapper.getUsersXml();
       assertEquals("User1", users[0].getName());
       assertEquals("User2", users[1].getName());
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void shouldGetSimpleTypeArray() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Integer[] ids = mapper.getUserIds();
       assertEquals(Integer.valueOf(1), ids[0]);
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void shouldGetPrimitiveArray() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       int[] ids = mapper.getUserIdsPrimitive();
       assertEquals(1, ids[0]);
-    } finally {
-      sqlSession.close();
     }
   }
 }

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -51,8 +51,7 @@ public class DmlMapperReturnTypesTest {
     }
 
     // populate in-memory database
-    SqlSession session = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession session = sqlSessionFactory.openSession()) {
       Connection conn = session.getConnection();
       reader = Resources.getResourceAsReader(SQL);
       try {
@@ -63,8 +62,6 @@ public class DmlMapperReturnTypesTest {
       } finally {
         reader.close();
       }
-    } finally {
-      session.close();
     }
   }
 

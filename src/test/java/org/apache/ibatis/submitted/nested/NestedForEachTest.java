@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -66,8 +66,7 @@ public class NestedForEachTest {
 
   @Test
   public void testSimpleSelect() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Name name = new Name();
       name.setLastName("Flintstone");
       Parameter parameter = new Parameter();
@@ -77,15 +76,12 @@ public class NestedForEachTest {
           sqlSession.selectList("org.apache.ibatis.submitted.nested.Mapper.simpleSelect", parameter);
 
       assertEquals(3, answer.size());
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void testSimpleSelectWithPrimitives() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Map<String, Object> parameter = new HashMap<String, Object>();
       int[] array = new int[] {1, 3, 5};
       parameter.put("ids", array);
@@ -94,27 +90,21 @@ public class NestedForEachTest {
           sqlSession.selectList("org.apache.ibatis.submitted.nested.Mapper.simpleSelectWithPrimitives", parameter);
 
       assertEquals(3, answer.size());
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void testSimpleSelectWithMapperAndPrimitives() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<Map<String, Object>> answer = mapper.simpleSelectWithMapperAndPrimitives(1, 3, 5);
       assertEquals(3, answer.size());
-    } finally {
-      sqlSession.close();
     }
   }
   
   @Test
   public void testNestedSelect() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Name name = new Name();
       name.setLastName("Flintstone");
       name.addFirstName("Fred");
@@ -127,15 +117,12 @@ public class NestedForEachTest {
           sqlSession.selectList("org.apache.ibatis.submitted.nested.Mapper.nestedSelect", parameter);
 
       assertEquals(2, answer.size());
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void testNestedSelect2() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Name name = new Name();
       name.setLastName("Flintstone");
       name.addFirstName("Fred");
@@ -153,8 +140,6 @@ public class NestedForEachTest {
           sqlSession.selectList("org.apache.ibatis.submitted.nested.Mapper.nestedSelect", parameter);
 
       assertEquals(3, answer.size());
-    } finally {
-      sqlSession.close();
     }
   }
 }

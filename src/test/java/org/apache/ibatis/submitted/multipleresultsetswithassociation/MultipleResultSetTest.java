@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -72,9 +72,8 @@ public class MultipleResultSetTest {
   }
 
   @Test
-  public void shouldGetOrderDetailsEachHavingAnOrderHeader() throws IOException {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  public void shouldGetOrderDetailsEachHavingAnOrderHeader() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<OrderDetail> orderDetails = mapper.getOrderDetailsWithHeaders();
       
@@ -87,16 +86,12 @@ public class MultipleResultSetTest {
       for(OrderDetail orderDetail : orderDetails){
           Assert.assertNotNull(orderDetail.getOrderHeader());
       }
-      
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
-  public void shouldGetOrderDetailsEachHavingAnOrderHeaderAnnotationBased() throws IOException {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  public void shouldGetOrderDetailsEachHavingAnOrderHeaderAnnotationBased() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<OrderDetail> orderDetails = mapper.getOrderDetailsWithHeadersAnnotationBased();
 
@@ -109,9 +104,6 @@ public class MultipleResultSetTest {
       for(OrderDetail orderDetail : orderDetails){
           Assert.assertNotNull(orderDetail.getOrderHeader());
       }
-
-    } finally {
-      sqlSession.close();
     }
   }
 

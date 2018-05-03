@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -69,15 +69,12 @@ public class RawSqlSourceTest {
   }
 
   private void test(String statement, Class<? extends SqlSource> sqlSource) {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Assert.assertEquals(sqlSource, sqlSession.getConfiguration().getMappedStatement(statement).getSqlSource().getClass());
       String sql = sqlSession.getConfiguration().getMappedStatement(statement).getSqlSource().getBoundSql('?').getSql();
       Assert.assertEquals("select * from users where id = ?", sql);
       User user = sqlSession.selectOne(statement, 1);
       Assert.assertEquals("User1", user.getName());
-    } finally {
-      sqlSession.close();
     }
   }
 

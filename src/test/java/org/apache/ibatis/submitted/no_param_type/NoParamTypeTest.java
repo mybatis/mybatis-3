@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -56,8 +56,7 @@ public class NoParamTypeTest {
 
   @Test
   public void shouldAcceptDifferentTypeInTheSameBatch() {
-    SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH)) {
       ObjA a = new ObjA();
       a.setId(1);
       a.setName(111);
@@ -72,8 +71,6 @@ public class NoParamTypeTest {
       sqlSession.commit();
       List<User> users = sqlSession.selectList("selectUser");
       assertEquals(2, users.size());
-    } finally {
-      sqlSession.close();
     }
   }
 

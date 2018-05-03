@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -54,26 +54,20 @@ public class AuthorDAOTest {
 
   @Test
   public void shouldNotOverwriteCollectionOnNestedResultMap() {
-    SqlSession session = factory.openSession();
-    try {
-    List<Author> authors = session.selectList("getAllAuthors");
-    assertEquals(1, authors.size());
-    assertEquals(4, authors.get(0).getPosts().size());
-    } finally {
-      session.close();
+    try (SqlSession session = factory.openSession()) {
+      List<Author> authors = session.selectList("getAllAuthors");
+      assertEquals(1, authors.size());
+      assertEquals(4, authors.get(0).getPosts().size());
     }
   }
 
   @Ignore // issue #75 nested selects overwrite collections
   @Test
   public void shouldNotOverwriteCollectionOnNestedQuery() {
-    SqlSession session = factory.openSession();
-    try {
-    List<Author> authors = session.selectList("getAllAuthorsNestedQuery");
-    assertEquals(1, authors.size());
-    assertEquals(4, authors.get(0).getPosts().size());
-    } finally {
-      session.close();
+    try (SqlSession session = factory.openSession()) {
+      List<Author> authors = session.selectList("getAllAuthorsNestedQuery");
+      assertEquals(1, authors.size());
+      assertEquals(4, authors.get(0).getPosts().size());
     }
   }
 

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -84,8 +84,7 @@ public final class LazyDeserializeTest {
   @Test
   public void testLoadLazyDeserialize() throws Exception {
     factory.getConfiguration().setConfigurationFactory(this.getClass());
-    final SqlSession session = factory.openSession();
-    try {
+    try (SqlSession session = factory.openSession()) {
       final Mapper mapper = session.getMapper(Mapper.class);
       final LazyObjectFoo foo = mapper.loadFoo(FOO_ID);
 
@@ -96,15 +95,12 @@ public final class LazyDeserializeTest {
       assertEquals(Integer.valueOf(FOO_ID), deserializedFoo.getId());
       assertNotNull(deserializedFoo.getLazyObjectBar());
       assertEquals(Integer.valueOf(BAR_ID), deserializedFoo.getLazyObjectBar().getId());
-    } finally {
-      session.close();
     }
   }
 
   @Test
   public void testLoadLazyDeserializeWithoutConfigurationFactory() throws Exception {
-    final SqlSession session = factory.openSession();
-    try {
+    try (SqlSession session = factory.openSession()) {
       final Mapper mapper = session.getMapper(Mapper.class);
       final LazyObjectFoo foo = mapper.loadFoo(FOO_ID);
       final byte[] serializedFoo = this.serializeFoo(foo);
@@ -115,8 +111,6 @@ public final class LazyDeserializeTest {
       } catch (ExecutorException e) {
         assertTrue(e.getMessage().contains("Cannot get Configuration as configuration factory was not set."));
       }
-    } finally {
-      session.close();
     }
   }
 

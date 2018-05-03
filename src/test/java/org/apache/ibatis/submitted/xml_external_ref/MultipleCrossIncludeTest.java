@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -66,8 +66,7 @@ public class MultipleCrossIncludeTest {
   }
 
   private void testCrossReference(SqlSessionFactory sqlSessionFactory) throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       MultipleCrossIncludePersonMapper personMapper = sqlSession.getMapper(MultipleCrossIncludePersonMapper.class);
       Person person = personMapper.select(1);
       assertEquals((Integer)1, person.getId());
@@ -81,8 +80,6 @@ public class MultipleCrossIncludeTest {
       Pet pet2 = petMapper.select(3);
       assertEquals((Integer)3, pet2.getId());
       assertEquals((Integer)2, pet2.getOwner().getId());
-    } finally {
-      sqlSession.close();
     }
   }
 

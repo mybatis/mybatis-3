@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -51,16 +51,13 @@ public class MissingIdPropertyTest {
   }
 
   @Test
-  public void shouldMapResultsWithoutActuallyWritingIdProperties() throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  public void shouldMapResultsWithoutActuallyWritingIdProperties() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       CarMapper carMapper = sqlSession.getMapper(CarMapper.class);
       Car car = carMapper.getCarsInfo(1L);
       Assert.assertNotNull(car.getName());
       Assert.assertNotNull(car.getCarParts());
       Assert.assertEquals(3, car.getCarParts().size());
-    } finally {
-      sqlSession.close();
     }
   }
 

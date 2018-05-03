@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -54,27 +54,21 @@ public class UUIDTest {
 
   @Test(expected=PersistenceException.class)
   public void shouldGetAUser() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUser(UUID.fromString("38400000-8cf0-11bd-b23e-10b96e4ef00d"));
       Assert.assertEquals("User1", user.getName());
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void shouldInsertAUser() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = new User();
       user.setId(UUID.randomUUID());
       user.setName("User2");
       mapper.insertUser(user);
-    } finally {
-      sqlSession.close();
     }
   }
 

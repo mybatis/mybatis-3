@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -68,8 +68,7 @@ public class BlobTest {
      * in constructor based result maps
      */
     public void testInsertBlobThenSelectAll() {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        try {
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             BlobMapper blobMapper = sqlSession.getMapper(BlobMapper.class);
             
             byte[] myblob = new byte[] {1, 2, 3, 4, 5};
@@ -84,8 +83,6 @@ public class BlobTest {
             BlobRecord result = results.get(0);
             assertEquals (blobRecord.getId(), result.getId());
             assertTrue (blobsAreEqual(blobRecord.getBlob(), result.getBlob()));
-        } finally {
-            sqlSession.close();
         }
     }
 
@@ -95,8 +92,7 @@ public class BlobTest {
      * in constructor based result maps
      */
     public void testInsertBlobObjectsThenSelectAll() {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        try {
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             BlobMapper blobMapper = sqlSession.getMapper(BlobMapper.class);
 
             Byte[] myblob = new Byte[] {1, 2, 3, 4, 5};
@@ -111,8 +107,6 @@ public class BlobTest {
             BlobRecord result = results.get(0);
             assertEquals (blobRecord.getId(), result.getId());
             assertTrue (blobsAreEqual(blobRecord.getBlob(), result.getBlob()));
-        } finally {
-            sqlSession.close();
         }
     }
 

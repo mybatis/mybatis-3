@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -63,13 +63,10 @@ public class CountTest {
 
   @Test
   public void testCount() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       CountMapper mapper = sqlSession.getMapper(CountMapper.class);
       int answer = mapper.count();
       assertEquals(6, answer);
-    } finally {
-      sqlSession.close();
     }
   }
 }

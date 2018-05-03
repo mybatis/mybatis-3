@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -53,37 +53,28 @@ public class DoNotCallSettersOnNullsTest {
 
   @Test
   public void shouldCallNullOnMappedProperty() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUserMapped(1);
       Assert.assertFalse(user.nullReceived);
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void shouldCallNullOnAutomaticMapping() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUserUnmapped(1);
       Assert.assertFalse(user.nullReceived);
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void shouldCallNullOnMap() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Map user = mapper.getUserInMap(1);
       Assert.assertFalse(user.containsKey("NAME"));
-    } finally {
-      sqlSession.close();
     }
   }
 
