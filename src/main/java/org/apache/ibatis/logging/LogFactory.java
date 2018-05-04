@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,11 +15,15 @@
  */
 package org.apache.ibatis.logging;
 
+import org.apache.ibatis.util.LazyReference;
+
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Proxy;
 
 /**
  * @author Clinton Begin
  * @author Eduardo Macarron
+ * @author Kazuki Shimizu
  */
 public final class LogFactory {
 
@@ -83,6 +87,30 @@ public final class LogFactory {
     } catch (Throwable t) {
       throw new LogException("Error creating logger for logger " + logger + ".  Cause: " + t, t);
     }
+  }
+
+  /**
+   * Returns a log that lazy initialization.
+   *
+   * @param aClass a logger class
+   * @return a log that lazy initialization(proxied log object)
+   * @since 3.5.0
+   */
+  public static Log getLazyInitializationLog(Class<?> aClass) {
+    return getLazyInitializationLog(aClass.getName());
+  }
+
+  /**
+   * Returns a log that lazy initialization.
+   *
+   * @param logger a logger name
+   * @return a log that lazy initialization(proxied log object)
+   * @since 3.5.0
+   */
+  public static Log getLazyInitializationLog(String logger) {
+    LazyReference<Log> logReference = LazyReference.of(() -> getLog(logger));
+    return (Log) Proxy.newProxyInstance(Log.class.getClassLoader(), new Class<?>[]{Log.class},
+        (proxy, method, args) -> method.invoke(logReference.get(), args));
   }
 
   public static synchronized void useCustomLogging(Class<? extends Log> clazz) {

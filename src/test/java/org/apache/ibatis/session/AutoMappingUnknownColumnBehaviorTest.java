@@ -19,11 +19,13 @@ import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.domain.blog.Author;
 import org.apache.ibatis.exceptions.PersistenceException;
+import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.mapping.Environment;
+import org.apache.ibatis.test.logging.MockitoLogImpl;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
-import org.apache.log4j.spi.LoggingEvent;
-import org.apache.log4j.varia.NullAppender;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -31,6 +33,7 @@ import javax.sql.DataSource;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
 /**
  * Tests for specify the behavior when detects an unknown column (or unknown property type) of automatic mapping target.
@@ -80,24 +83,27 @@ public class AutoMappingUnknownColumnBehaviorTest {
         }
     }
 
-    public static class LastEventSavedAppender extends NullAppender {
-        private static LoggingEvent event;
-
-        public void doAppend(LoggingEvent event) {
-            LastEventSavedAppender.event = event;
-        }
-    }
-
     private static SqlSessionFactory sqlSessionFactory;
+    private static Class<? extends Log> originalLogImplClass;
 
     @BeforeClass
     public static void setup() throws Exception {
+        originalLogImplClass = LogFactory.getLog(AutoMappingUnknownColumnBehaviorTest.class).getClass();
+
         DataSource dataSource = BaseDataTest.createBlogDataSource();
         TransactionFactory transactionFactory = new JdbcTransactionFactory();
         Environment environment = new Environment("Production", transactionFactory, dataSource);
         Configuration configuration = new Configuration(environment);
         configuration.addMapper(Mapper.class);
         sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
+        sqlSessionFactory.getConfiguration().setLogImpl(MockitoLogImpl.class);
+
+        MockitoLogImpl.reset();
+    }
+
+    @AfterClass
+    public static void restore() {
+        LogFactory.useCustomLogging(originalLogImplClass);
     }
 
     @Test
@@ -119,7 +125,8 @@ public class AutoMappingUnknownColumnBehaviorTest {
             SimpleAuthor author = mapper.selectSimpleAuthor(101);
             assertThat(author.getId()).isNull();
             assertThat(author.getUsername()).isEqualTo("jim");
-            assertThat(LastEventSavedAppender.event.getMessage().toString()).isEqualTo("Unknown column is detected on 'org.apache.ibatis.session.AutoMappingUnknownColumnBehaviorTest$Mapper.selectSimpleAuthor' auto-mapping. Mapping parameters are [columnName=ID,propertyName=id,propertyType=java.util.concurrent.atomic.AtomicInteger]");
+            verify(MockitoLogImpl.logs.get(AutoMappingUnknownColumnBehavior.class.getName()))
+                .warn("Unknown column is detected on 'org.apache.ibatis.session.AutoMappingUnknownColumnBehaviorTest$Mapper.selectSimpleAuthor' auto-mapping. Mapping parameters are [columnName=ID,propertyName=id,propertyType=java.util.concurrent.atomic.AtomicInteger]");
         }
     }
 

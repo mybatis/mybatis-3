@@ -28,7 +28,9 @@ import org.apache.ibatis.logging.nologging.NoLoggingImpl;
 import org.apache.ibatis.logging.slf4j.Slf4jImpl;
 import org.apache.ibatis.logging.stdout.StdOutImpl;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.apache.ibatis.test.logging.MockitoLogImpl;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 public class LogFactoryTest {
 
@@ -106,4 +108,48 @@ public class LogFactoryTest {
     log.error("Error with Exception.", new Exception("Test exception."));
   }
 
+  @Test
+  public void shouldLazyInitializationLogByClass() {
+    Class<? extends Log> currentLogImplClass = LogFactory.getLog(LogFactoryTest.class).getClass();
+    try {
+      Log log = LogFactory.getLazyInitializationLog(LogFactoryTest.class);
+
+      LogFactory.useCustomLogging(MockitoLogImpl.class);
+      MockitoLogImpl.reset();
+
+      log.warn("log message");
+
+      Mockito.verify(MockitoLogImpl.logs.get(LogFactoryTest.class.getName())).warn("log message");
+
+    } finally {
+      try {
+        LogFactory.useCustomLogging(currentLogImplClass);
+      } finally {
+        MockitoLogImpl.reset();
+      }
+    }
+  }
+
+  @Test
+  public void shouldLazyInitializationLogByName() {
+    String loggerName = LogFactoryTest.class.getName() + ".byName";
+    Class<? extends Log> currentLogImplClass = LogFactory.getLog(loggerName).getClass();
+    try {
+      Log log = LogFactory.getLazyInitializationLog(loggerName);
+
+      LogFactory.useCustomLogging(MockitoLogImpl.class);
+      MockitoLogImpl.reset();
+
+      log.warn("log message");
+
+      Mockito.verify(MockitoLogImpl.logs.get(loggerName)).warn("log message");
+
+    } finally {
+      try {
+        LogFactory.useCustomLogging(currentLogImplClass);
+      } finally {
+        MockitoLogImpl.reset();
+      }
+    }
+  }
 }

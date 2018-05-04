@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ import org.apache.ibatis.logging.LogFactory;
  */
 public class PooledDataSource implements DataSource {
 
-  private static final Log log = LogFactory.getLog(PooledDataSource.class);
+  private static final Log log = LogFactory.getLazyInitializationLog(PooledDataSource.class);
 
   private final PoolState state = new PoolState(this);
 

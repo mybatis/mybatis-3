@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -105,6 +105,7 @@ public class XMLConfigBuilder extends BaseBuilder {
       //issue #117 read properties first
       propertiesElement(root.evalNode("properties"));
       Properties settings = settingsAsProperties(root.evalNode("settings"));
+      setLogImpl(settings);
       loadCustomVfs(settings);
       typeAliasesElement(root.evalNode("typeAliases"));
       pluginElement(root.evalNode("plugins"));
@@ -149,6 +150,11 @@ public class XMLConfigBuilder extends BaseBuilder {
         }
       }
     }
+  }
+
+  private void setLogImpl(Properties props) {
+    Class<? extends Log> logImpl = resolveClass(props.getProperty("logImpl"));
+    configuration.setLogImpl(logImpl);
   }
 
   private void typeAliasesElement(XNode parent) {
@@ -262,9 +268,6 @@ public class XMLConfigBuilder extends BaseBuilder {
     configuration.setUseActualParamName(booleanValueOf(props.getProperty("useActualParamName"), true));
     configuration.setReturnInstanceForEmptyRow(booleanValueOf(props.getProperty("returnInstanceForEmptyRow"), false));
     configuration.setLogPrefix(props.getProperty("logPrefix"));
-    @SuppressWarnings("unchecked")
-    Class<? extends Log> logImpl = (Class<? extends Log>)resolveClass(props.getProperty("logImpl"));
-    configuration.setLogImpl(logImpl);
     configuration.setConfigurationFactory(resolveClass(props.getProperty("configurationFactory")));
   }
 
