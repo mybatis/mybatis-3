@@ -1,5 +1,5 @@
 --
---    Copyright 2009-2017 the original author or authors.
+--    Copyright 2009-2018 the original author or authors.
 --
 --    Licensed under the Apache License, Version 2.0 (the "License");
 --    you may not use this file except in compliance with the License.
@@ -22,10 +22,11 @@ CREATE TABLE subject (
   name   VARCHAR(20),
   age    INT NOT NULL,
   height INT,
-  weight INT
+  weight INT,
+  dt TIMESTAMP
 );
 
-INSERT INTO subject (id, name, age, height, weight) VALUES (1, 'a', 10, 100, 45);
-INSERT INTO subject (id, name, age, height, weight) VALUES (2, 'b', 10, NULL, 45);
-INSERT INTO subject (id, name, age, height, weight) VALUES (2, 'b', 10, NULL, NULL);
+INSERT INTO subject (id, name, age, height, weight, dt) VALUES (1, 'a', 10, 100, 45, CURRENT_TIMESTAMP );
+INSERT INTO subject (id, name, age, height, weight, dt) VALUES (2, 'b', 10, NULL, 45, CURRENT_TIMESTAMP);
+INSERT INTO subject (id, name, age, height, weight, dt) VALUES (2, 'b', 10, NULL, NULL, CURRENT_TIMESTAMP);
 

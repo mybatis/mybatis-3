@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.result.DefaultResultContext;
 import org.apache.ibatis.executor.result.DefaultResultHandler;
 import org.apache.ibatis.executor.result.ResultMapException;
+import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.Discriminator;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -697,13 +698,23 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     if (parameterTypes.length != classNames.size()) return false;
     for (int i = 0; i < parameterTypes.length; i++) {
       final Class<?> parameterType = parameterTypes[i];
-      if (parameterType.isPrimitive() && !primitiveTypes.getWrapper(parameterType).getName().equals(classNames.get(i))) {
-        return false;
-      } else if (!parameterType.isPrimitive() && !parameterType.getName().equals(classNames.get(i))) {
+      final Class<?> resultSetType = toClassForName(classNames.get(i));
+      boolean matches = parameterType.isPrimitive()
+          ? primitiveTypes.matchesWithWrapperType(parameterType, resultSetType)
+          : parameterType.isAssignableFrom(resultSetType);
+      if (!matches) {
         return false;
       }
     }
     return true;
+  }
+
+  private Class<?> toClassForName(String className) {
+    try {
+      return Resources.classForName(className);
+    } catch (ClassNotFoundException e) {
+      throw new ExecutorException(e);
+    }
   }
 
   private List<String> typeNames(Class<?>[] parameterTypes) {
