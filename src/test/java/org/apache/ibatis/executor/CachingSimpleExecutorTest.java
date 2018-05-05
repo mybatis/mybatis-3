@@ -35,13 +35,13 @@ public class CachingSimpleExecutorTest extends BaseExecutorTest {
     return new CachingExecutor(new SimpleExecutor(config,transaction));
   }
 
-  private final java.util.concurrent.Executor threadExecutor = Executors.newFixedThreadPool(20);
+  private final java.util.concurrent.Executor threadExecutor = Executors.newFixedThreadPool(200);
 
   @Test
   public void testMultiThreadQuery() {
     final Executor mybatisExecutor = createExecutor(new JdbcTransaction(ds, null, false));
 
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < 200; i++) {
       this.threadExecutor.execute(() -> {
         try {
           MappedStatement selectStatement = ExecutorTestHelper.prepareSelectOneAuthorMappedStatement(config);
