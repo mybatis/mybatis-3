@@ -29,7 +29,6 @@ import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.result.DefaultResultContext;
 import org.apache.ibatis.executor.result.DefaultResultHandler;
 import org.apache.ibatis.executor.result.ResultMapException;
-import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.Discriminator;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -46,6 +45,7 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultContext;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
+import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
@@ -84,21 +84,19 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   private final ReflectorFactory reflectorFactory;
 
   // nested resultmaps
-  private final Map<CacheKey, Object> nestedResultObjects = new HashMap<CacheKey, Object>();
-  private final Map<String, Object> ancestorObjects = new HashMap<String, Object>();
+  private final Map<CacheKey, Object> nestedResultObjects = new HashMap<>();
+  private final Map<String, Object> ancestorObjects = new HashMap<>();
   private Object previousRowValue;
 
   // multiple resultsets
-  private final Map<String, ResultMapping> nextResultMaps = new HashMap<String, ResultMapping>();
-  private final Map<CacheKey, List<PendingRelation>> pendingRelations = new HashMap<CacheKey, List<PendingRelation>>();
+  private final Map<String, ResultMapping> nextResultMaps = new HashMap<>();
+  private final Map<CacheKey, List<PendingRelation>> pendingRelations = new HashMap<>();
 
   // Cached Automappings
-  private final Map<String, List<UnMappedColumnAutoMapping>> autoMappingsCache = new HashMap<String, List<UnMappedColumnAutoMapping>>();
+  private final Map<String, List<UnMappedColumnAutoMapping>> autoMappingsCache = new HashMap<>();
 
   // temporary marking flag that indicate using constructor mapping (use field to reduce memory usage)
   private boolean useConstructorMappings;
-
-  private final PrimitiveTypes primitiveTypes;
 
   private static class PendingRelation {
     public MetaObject metaObject;
@@ -131,7 +129,6 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     this.objectFactory = configuration.getObjectFactory();
     this.reflectorFactory = configuration.getReflectorFactory();
     this.resultHandler = resultHandler;
-    this.primitiveTypes = new PrimitiveTypes();
   }
 
   //
@@ -184,7 +181,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   public List<Object> handleResultSets(Statement stmt) throws SQLException {
     ErrorContext.instance().activity("handling results").object(mappedStatement.getId());
 
-    final List<Object> multipleResults = new ArrayList<Object>();
+    final List<Object> multipleResults = new ArrayList<>();
 
     int resultSetCount = 0;
     ResultSetWrapper rsw = getFirstResultSet(stmt);
@@ -233,7 +230,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     }
 
     ResultMap resultMap = resultMaps.get(0);
-    return new DefaultCursor<E>(this, resultMap, rsw, rowBounds);
+    return new DefaultCursor<>(this, resultMap, rsw, rowBounds);
   }
 
   private ResultSetWrapper getFirstResultSet(Statement stmt) throws SQLException {
@@ -253,7 +250,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     return rs != null ? new ResultSetWrapper(rs, configuration) : null;
   }
 
-  private ResultSetWrapper getNextResultSet(Statement stmt) throws SQLException {
+  private ResultSetWrapper getNextResultSet(Statement stmt) {
     // Making this method tolerant of bad JDBC drivers
     try {
       if (stmt.getConnection().getMetaData().supportsMultipleResultSets()) {
@@ -349,7 +346,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private void handleRowValuesForSimpleResultMap(ResultSetWrapper rsw, ResultMap resultMap, ResultHandler<?> resultHandler, RowBounds rowBounds, ResultMapping parentMapping)
       throws SQLException {
-    DefaultResultContext<Object> resultContext = new DefaultResultContext<Object>();
+    DefaultResultContext<Object> resultContext = new DefaultResultContext<>();
     skipRows(rsw.getResultSet(), rowBounds);
     while (shouldProcessMoreRows(resultContext, rowBounds) && rsw.getResultSet().next()) {
       ResultMap discriminatedResultMap = resolveDiscriminatedResultMap(rsw.getResultSet(), resultMap, null);
@@ -372,7 +369,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     ((ResultHandler<Object>) resultHandler).handleResult(resultContext);
   }
 
-  private boolean shouldProcessMoreRows(ResultContext<?> context, RowBounds rowBounds) throws SQLException {
+  private boolean shouldProcessMoreRows(ResultContext<?> context, RowBounds rowBounds) {
     return !context.isStopped() && context.getResultCount() < rowBounds.getLimit();
   }
 
@@ -477,7 +474,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     final String mapKey = resultMap.getId() + ":" + columnPrefix;
     List<UnMappedColumnAutoMapping> autoMapping = autoMappingsCache.get(mapKey);
     if (autoMapping == null) {
-      autoMapping = new ArrayList<UnMappedColumnAutoMapping>();
+      autoMapping = new ArrayList<>();
       final List<String> unmappedColumnNames = rsw.getUnmappedColumnNames(resultMap, columnPrefix);
       for (String columnName : unmappedColumnNames) {
         String propertyName = columnName;
@@ -550,12 +547,8 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     PendingRelation deferLoad = new PendingRelation();
     deferLoad.metaObject = metaResultObject;
     deferLoad.propertyMapping = parentMapping;
-    List<PendingRelation> relations = pendingRelations.get(cacheKey);
+    List<PendingRelation> relations = pendingRelations.computeIfAbsent(cacheKey, k -> new ArrayList<>());
     // issue #255
-    if (relations == null) {
-      relations = new ArrayList<DefaultResultSetHandler.PendingRelation>();
-      pendingRelations.put(cacheKey, relations);
-    }
     relations.add(deferLoad);
     ResultMapping previous = nextResultMaps.get(parentMapping.getResultSet());
     if (previous == null) {
@@ -590,8 +583,8 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private Object createResultObject(ResultSetWrapper rsw, ResultMap resultMap, ResultLoaderMap lazyLoader, String columnPrefix) throws SQLException {
     this.useConstructorMappings = false; // reset previous mapping result
-    final List<Class<?>> constructorArgTypes = new ArrayList<Class<?>>();
-    final List<Object> constructorArgs = new ArrayList<Object>();
+    final List<Class<?>> constructorArgTypes = new ArrayList<>();
+    final List<Object> constructorArgs = new ArrayList<>();
     Object resultObject = createResultObject(rsw, resultMap, constructorArgTypes, constructorArgs, columnPrefix);
     if (resultObject != null && !hasTypeHandlerForResultObject(rsw, resultMap.getType())) {
       final List<ResultMapping> propertyMappings = resultMap.getPropertyResultMappings();
@@ -656,12 +649,12 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   private Object createByConstructorSignature(ResultSetWrapper rsw, Class<?> resultType, List<Class<?>> constructorArgTypes, List<Object> constructorArgs,
                                               String columnPrefix) throws SQLException {
     final Constructor<?>[] constructors = resultType.getDeclaredConstructors();
-    final Constructor<?> annotatedConstructor = findAnnotatedConstructor(constructors);
-    if (annotatedConstructor != null) {
-      return createUsingConstructor(rsw, resultType, constructorArgTypes, constructorArgs, columnPrefix, annotatedConstructor);
+    final Constructor<?> defaultConstructor = findDefaultConstructor(constructors);
+    if (defaultConstructor != null) {
+      return createUsingConstructor(rsw, resultType, constructorArgTypes, constructorArgs, columnPrefix, defaultConstructor);
     } else {
       for (Constructor<?> constructor : constructors) {
-        if (allowedConstructor(constructor, rsw.getClassNames())) {
+        if (allowedConstructorUsingTypeHandlers(constructor, rsw.getJdbcTypes())) {
           return createUsingConstructor(rsw, resultType, constructorArgTypes, constructorArgs, columnPrefix, constructor);
         }
       }
@@ -683,7 +676,9 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     return foundValues ? objectFactory.create(resultType, constructorArgTypes, constructorArgs) : null;
   }
 
-  private Constructor<?> findAnnotatedConstructor(final Constructor<?>[] constructors) {
+  private Constructor<?> findDefaultConstructor(final Constructor<?>[] constructors) {
+    if (constructors.length == 1) return constructors[0];
+
     for (final Constructor<?> constructor : constructors) {
       if (constructor.isAnnotationPresent(AutomapConstructor.class)) {
         return constructor;
@@ -692,37 +687,15 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     return null;
   }
 
-  private boolean allowedConstructor(final Constructor<?> constructor, final List<String> classNames) {
+  private boolean allowedConstructorUsingTypeHandlers(final Constructor<?> constructor, final List<JdbcType> jdbcTypes) {
     final Class<?>[] parameterTypes = constructor.getParameterTypes();
-    if (typeNames(parameterTypes).equals(classNames)) return true;
-    if (parameterTypes.length != classNames.size()) return false;
+    if (parameterTypes.length != jdbcTypes.size()) return false;
     for (int i = 0; i < parameterTypes.length; i++) {
-      final Class<?> parameterType = parameterTypes[i];
-      final Class<?> resultSetType = toClassForName(classNames.get(i));
-      boolean matches = parameterType.isPrimitive()
-          ? primitiveTypes.matchesWithWrapperType(parameterType, resultSetType)
-          : parameterType.isAssignableFrom(resultSetType);
-      if (!matches) {
+      if (!typeHandlerRegistry.hasTypeHandler(parameterTypes[i], jdbcTypes.get(i))) {
         return false;
       }
     }
     return true;
-  }
-
-  private Class<?> toClassForName(String className) {
-    try {
-      return Resources.classForName(className);
-    } catch (ClassNotFoundException e) {
-      throw new ExecutorException(e);
-    }
-  }
-
-  private List<String> typeNames(Class<?>[] parameterTypes) {
-    List<String> names = new ArrayList<String>();
-    for (Class<?> type : parameterTypes) {
-      names.add(type.getName());
-    }
-    return names;
   }
 
   private Object createPrimitiveResultObject(ResultSetWrapper rsw, ResultMap resultMap, String columnPrefix) throws SQLException {
@@ -824,9 +797,9 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private Object instantiateParameterObject(Class<?> parameterType) {
     if (parameterType == null) {
-      return new HashMap<Object, Object>();
+      return new HashMap<>();
     } else if (ParamMap.class.equals(parameterType)) {
-      return new HashMap<Object, Object>(); // issue #649
+      return new HashMap<>(); // issue #649
     } else {
       return objectFactory.create(parameterType);
     }
@@ -837,7 +810,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   //
 
   public ResultMap resolveDiscriminatedResultMap(ResultSet rs, ResultMap resultMap, String columnPrefix) throws SQLException {
-    Set<String> pastDiscriminators = new HashSet<String>();
+    Set<String> pastDiscriminators = new HashSet<>();
     Discriminator discriminator = resultMap.getDiscriminator();
     while (discriminator != null) {
       final Object value = getDiscriminatorValue(rs, discriminator, columnPrefix);
@@ -874,7 +847,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   //
 
   private void handleRowValuesForNestedResultMap(ResultSetWrapper rsw, ResultMap resultMap, ResultHandler<?> resultHandler, RowBounds rowBounds, ResultMapping parentMapping) throws SQLException {
-    final DefaultResultContext<Object> resultContext = new DefaultResultContext<Object>();
+    final DefaultResultContext<Object> resultContext = new DefaultResultContext<>();
     skipRows(rsw.getResultSet(), rowBounds);
     Object rowValue = previousRowValue;
     while (shouldProcessMoreRows(resultContext, rowBounds) && rsw.getResultSet().next()) {
