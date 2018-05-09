@@ -76,6 +76,7 @@ public class TypeParameterResolver {
             // 如果type是泛型对象，比如 List<Double>
             return resolveParameterizedType((ParameterizedType) type, srcType, declaringClass);
         } else if (type instanceof GenericArrayType) {
+            // 如果type是数组
             return resolveGenericArrayType((GenericArrayType) type, srcType, declaringClass);
         } else {
             return type;
@@ -83,6 +84,7 @@ public class TypeParameterResolver {
     }
 
     private static Type resolveGenericArrayType(GenericArrayType genericArrayType, Type srcType, Class<?> declaringClass) {
+        // 获取数组元素的类型
         Type componentType = genericArrayType.getGenericComponentType();
         Type resolvedComponentType = null;
         if (componentType instanceof TypeVariable) {
