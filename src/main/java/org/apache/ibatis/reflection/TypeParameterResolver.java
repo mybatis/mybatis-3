@@ -35,9 +35,9 @@ public class TypeParameterResolver {
      * they will be resolved to the actual runtime {@link Type}s.
      */
     public static Type resolveFieldType(Field field, Type srcType) {
-        //获取字段的声名类型
+        // 得到field的类型，不局限于private修饰符
         Type fieldType = field.getGenericType();
-        // 获取字段定义所在类的class对象
+        // 得到field所在类对应的Class对象
         Class<?> declaringClass = field.getDeclaringClass();
         return resolveType(fieldType, srcType, declaringClass);
     }
@@ -47,7 +47,9 @@ public class TypeParameterResolver {
      * they will be resolved to the actual runtime {@link Type}s.
      */
     public static Type resolveReturnType(Method method, Type srcType) {
+        // 得到method返回类型对应的Type对象
         Type returnType = method.getGenericReturnType();
+        // 得到method所在类的Class对象
         Class<?> declaringClass = method.getDeclaringClass();
         return resolveType(returnType, srcType, declaringClass);
     }
@@ -67,9 +69,11 @@ public class TypeParameterResolver {
     }
 
     private static Type resolveType(Type type, Type srcType, Class<?> declaringClass) {
+        // 如果type类型是TypeVariable
         if (type instanceof TypeVariable) {
             return resolveTypeVar((TypeVariable<?>) type, srcType, declaringClass);
         } else if (type instanceof ParameterizedType) {
+            // 如果type是泛型对象，比如 List<Double>
             return resolveParameterizedType((ParameterizedType) type, srcType, declaringClass);
         } else if (type instanceof GenericArrayType) {
             return resolveGenericArrayType((GenericArrayType) type, srcType, declaringClass);
@@ -96,8 +100,9 @@ public class TypeParameterResolver {
     }
 
     private static ParameterizedType resolveParameterizedType(ParameterizedType parameterizedType, Type srcType, Class<?> declaringClass) {
+        // 获取除去泛型的对象，比如List<Double> 会拿到List
         Class<?> rawType = (Class<?>) parameterizedType.getRawType();
-        // 类型变量为K和V
+        // 拿到所有泛型K,V类型,比如List<Double,String> 则拿到Double,String，如果是单个，则数组中只有一个值
         Type[] typeArgs = parameterizedType.getActualTypeArguments();
         //用于保存解析后的结果
         Type[] args = new Type[typeArgs.length];
@@ -105,8 +110,10 @@ public class TypeParameterResolver {
             if (typeArgs[i] instanceof TypeVariable) {
                 args[i] = resolveTypeVar((TypeVariable<?>) typeArgs[i], srcType, declaringClass);
             } else if (typeArgs[i] instanceof ParameterizedType) {
+                // 获取泛型参数类型
                 args[i] = resolveParameterizedType((ParameterizedType) typeArgs[i], srcType, declaringClass);
             } else if (typeArgs[i] instanceof WildcardType) {
+                // 如果泛型参数是通配符类型，获取通配符的上限类型和下限类型
                 args[i] = resolveWildcardType((WildcardType) typeArgs[i], srcType, declaringClass);
             } else {
                 args[i] = typeArgs[i];
@@ -116,7 +123,9 @@ public class TypeParameterResolver {
     }
 
     private static Type resolveWildcardType(WildcardType wildcardType, Type srcType, Class<?> declaringClass) {
+        // 获取泛型通配符下限
         Type[] lowerBounds = resolveWildcardTypeBounds(wildcardType.getLowerBounds(), srcType, declaringClass);
+        // 获取通配符上限，比如 ? extends java.lang.String ， 则获取到是String
         Type[] upperBounds = resolveWildcardTypeBounds(wildcardType.getUpperBounds(), srcType, declaringClass);
         return new WildcardTypeImpl(lowerBounds, upperBounds);
     }
@@ -144,13 +153,14 @@ public class TypeParameterResolver {
             clazz = (Class<?>) srcType;
         } else if (srcType instanceof ParameterizedType) {
             ParameterizedType parameterizedType = (ParameterizedType) srcType;
+            // 返回srcType声明的类或者接口
             clazz = (Class<?>) parameterizedType.getRawType();
         } else {
             throw new IllegalArgumentException("The 2nd arg must be Class or ParameterizedType, but was: " + srcType.getClass());
         }
 
         if (clazz == declaringClass) {
-            // 获得泛型的上限，若未明确声明上边界则默认为Object
+            // 获得泛型类型的上限，若未明确声明上边界则默认为Object
             Type[] bounds = typeVar.getBounds();
             if (bounds.length > 0) {
                 return bounds[0];
@@ -165,7 +175,7 @@ public class TypeParameterResolver {
             return result;
         }
 
-        // 獲取类的接口
+        // 获取类的所有接口
         Type[] superInterfaces = clazz.getGenericInterfaces();
         for (Type superInterface : superInterfaces) {
             result = scanSuperTypes(typeVar, srcType, declaringClass, clazz, superInterface);
@@ -228,10 +238,12 @@ public class TypeParameterResolver {
     }
 
     static class ParameterizedTypeImpl implements ParameterizedType {
+        // 保存泛型类
         private Class<?> rawType;
 
         private Type ownerType;
 
+        // 保存泛型参数
         private Type[] actualTypeArguments;
 
         public ParameterizedTypeImpl(Class<?> rawType, Type ownerType, Type[] actualTypeArguments) {
@@ -263,8 +275,10 @@ public class TypeParameterResolver {
     }
 
     static class WildcardTypeImpl implements WildcardType {
+        // 保存通配符上限
         private Type[] lowerBounds;
 
+        // 保存通配符下限
         private Type[] upperBounds;
 
         WildcardTypeImpl(Type[] lowerBounds, Type[] upperBounds) {
