@@ -54,10 +54,10 @@ import org.apache.ibatis.reflection.Jdk;
  */
 public final class TypeHandlerRegistry {
 
-  private final Map<JdbcType, TypeHandler<?>> JDBC_TYPE_HANDLER_MAP = new EnumMap<JdbcType, TypeHandler<?>>(JdbcType.class);
-  private final Map<Type, Map<JdbcType, TypeHandler<?>>> TYPE_HANDLER_MAP = new ConcurrentHashMap<Type, Map<JdbcType, TypeHandler<?>>>();
+  private final Map<JdbcType, TypeHandler<?>> JDBC_TYPE_HANDLER_MAP = new EnumMap<>(JdbcType.class);
+  private final Map<Type, Map<JdbcType, TypeHandler<?>>> TYPE_HANDLER_MAP = new ConcurrentHashMap<>();
   private final TypeHandler<Object> UNKNOWN_TYPE_HANDLER = new UnknownTypeHandler(this);
-  private final Map<Class<?>, TypeHandler<?>> ALL_TYPE_HANDLERS_MAP = new HashMap<Class<?>, TypeHandler<?>>();
+  private final Map<Class<?>, TypeHandler<?>> ALL_TYPE_HANDLERS_MAP = new HashMap<>();
 
   private static final Map<JdbcType, TypeHandler<?>> NULL_TYPE_HANDLER_MAP = Collections.emptyMap();
 
@@ -267,7 +267,7 @@ public final class TypeHandlerRegistry {
       }
       if (jdbcHandlerMap != null) {
         // Found a type handler regsiterd to a super interface
-        HashMap<JdbcType, TypeHandler<?>> newMap = new HashMap<JdbcType, TypeHandler<?>>();
+        HashMap<JdbcType, TypeHandler<?>> newMap = new HashMap<>();
         for (Entry<JdbcType, TypeHandler<?>> entry : jdbcHandlerMap.entrySet()) {
           // Create a type handler instance with enum type as a constructor arg
           newMap.put(entry.getKey(), getInstance(enumClazz, entry.getValue().getClass()));
@@ -377,7 +377,7 @@ public final class TypeHandlerRegistry {
     if (javaType != null) {
       Map<JdbcType, TypeHandler<?>> map = TYPE_HANDLER_MAP.get(javaType);
       if (map == null || map == NULL_TYPE_HANDLER_MAP) {
-        map = new HashMap<JdbcType, TypeHandler<?>>();
+        map = new HashMap<>();
         TYPE_HANDLER_MAP.put(javaType, map);
       }
       map.put(jdbcType, handler);
@@ -446,7 +446,7 @@ public final class TypeHandlerRegistry {
   // scan
 
   public void register(String packageName) {
-    ResolverUtil<Class<?>> resolverUtil = new ResolverUtil<Class<?>>();
+    ResolverUtil<Class<?>> resolverUtil = new ResolverUtil<>();
     resolverUtil.find(new ResolverUtil.IsA(TypeHandler.class), packageName);
     Set<Class<? extends Class<?>>> handlerSet = resolverUtil.getClasses();
     for (Class<?> type : handlerSet) {

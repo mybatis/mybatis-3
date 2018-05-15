@@ -22,12 +22,13 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.assertj.core.api.Assertions;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.Reader;
 import java.util.List;
+
+import static org.junit.Assert.assertNotNull;
 
 public class AutoConstructorTest {
   private static SqlSessionFactory sqlSessionFactory;
@@ -41,7 +42,7 @@ public class AutoConstructorTest {
 
     // populate in-memory database
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/autoconstructor/CreateDB.sql");
+        "org/apache/ibatis/autoconstructor/CreateDB.sql");
   }
 
   @Test
@@ -49,7 +50,7 @@ public class AutoConstructorTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       final AutoConstructorMapper mapper = sqlSession.getMapper(AutoConstructorMapper.class);
       final Object subject = mapper.getSubject(1);
-      Assert.assertNotNull(subject);
+      assertNotNull(subject);
     }
   }
 
@@ -58,14 +59,6 @@ public class AutoConstructorTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       final AutoConstructorMapper mapper = sqlSession.getMapper(AutoConstructorMapper.class);
       mapper.getSubjects();
-    }
-  }
-
-  @Test
-  public void wrapperSubject() {
-    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      final AutoConstructorMapper mapper = sqlSession.getMapper(AutoConstructorMapper.class);
-      verifySubjects(mapper.getWrapperSubjects());
     }
   }
 
@@ -85,8 +78,16 @@ public class AutoConstructorTest {
     }
   }
 
+  @Test
+  public void extensiveSubject() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      final AutoConstructorMapper mapper = sqlSession.getMapper(AutoConstructorMapper.class);
+      verifySubjects(mapper.getExtensiveSubject());
+    }
+  }
+
   private void verifySubjects(final List<?> subjects) {
-    Assert.assertNotNull(subjects);
+    assertNotNull(subjects);
     Assertions.assertThat(subjects.size()).isEqualTo(3);
   }
 }
