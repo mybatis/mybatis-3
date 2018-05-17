@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ public class TrimSqlNode implements SqlNode {
   private static List<String> parseOverrides(String overrides) {
     if (overrides != null) {
       final StringTokenizer parser = new StringTokenizer(overrides, "|", false);
-      final List<String> list = new ArrayList<String>(parser.countTokens());
+      final List<String> list = new ArrayList<>(parser.countTokens());
       while (parser.hasMoreTokens()) {
         list.add(parser.nextToken().toUpperCase(Locale.ENGLISH));
       }

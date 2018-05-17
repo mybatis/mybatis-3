@@ -52,7 +52,7 @@ public class ExpressionEvaluator {
         // a ClassCastException (issue 209).  Do the work manually
         // Curse primitives! :) (JGB)
         int size = Array.getLength(value);
-        List<Object> answer = new ArrayList<Object>();
+        List<Object> answer = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             Object o = Array.get(value, i);
             answer.add(o);
