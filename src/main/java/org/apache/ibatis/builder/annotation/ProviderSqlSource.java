@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,11 +15,6 @@
  */
 package org.apache.ibatis.builder.annotation;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.builder.SqlSourceBuilder;
 import org.apache.ibatis.mapping.BoundSql;
@@ -27,6 +22,11 @@ import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.parsing.PropertyParser;
 import org.apache.ibatis.reflection.ParamNameResolver;
 import org.apache.ibatis.session.Configuration;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Clinton Begin
@@ -62,6 +62,24 @@ public class ProviderSqlSource implements SqlSource {
       this.providerType = (Class<?>) provider.getClass().getMethod("type").invoke(provider);
       providerMethodName = (String) provider.getClass().getMethod("method").invoke(provider);
 
+      // apply mapper's method name when it is the same as provider's and when providerMethodName is an empty string.
+      if ("".equals(providerMethodName)) {
+        String mapperMethodName = mapperMethod.getName();
+        boolean hasSameMethodName = false;
+        for (Method m : this.providerType.getMethods()) {
+          if (mapperMethodName.equals(m.getName())) {
+            providerMethodName = mapperMethodName;
+            hasSameMethodName = true;
+            break;
+          }
+        }
+        if (!hasSameMethodName) {
+          throw new BuilderException(
+                  "Error creating SqlSource for SqlProvider. Auto associate method name of method '" +
+                          mapperMethodName + "' failed, please specify 'method' attribute or define a method in " +
+                          "SqlProvider" + this.providerType.getName() + "with method name '" + mapperMethodName + "'.");
+        }
+      }
       for (Method m : this.providerType.getMethods()) {
         if (providerMethodName.equals(m.getName()) && CharSequence.class.isAssignableFrom(m.getReturnType())) {
           if (providerMethod != null){
