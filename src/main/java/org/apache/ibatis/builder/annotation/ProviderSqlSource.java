@@ -77,7 +77,8 @@ public class ProviderSqlSource implements SqlSource {
           throw new BuilderException(
                   "Error creating SqlSource for SqlProvider. Auto associate method name of method '" +
                           mapperMethodName + "' failed, please specify 'method' attribute or define a method in " +
-                          "SqlProvider" + this.providerType.getName() + "with method name '" + mapperMethodName + "'.");
+                          "SqlProvider " + this.providerType.getName() + " with method name '" + mapperMethodName +
+                          "'.");
         }
       }
       for (Method m : this.providerType.getMethods()) {
