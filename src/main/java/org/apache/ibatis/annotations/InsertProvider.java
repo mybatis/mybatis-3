@@ -30,5 +30,5 @@ import java.lang.annotation.Target;
 public @interface InsertProvider {
   Class<?> type();
 
-  String method();
+  String method() default "";
 }
