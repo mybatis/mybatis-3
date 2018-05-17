@@ -30,5 +30,5 @@ import java.lang.annotation.Target;
 public @interface DeleteProvider {
   Class<?> type();
 
-  String method();
+  String method() default "";
 }
