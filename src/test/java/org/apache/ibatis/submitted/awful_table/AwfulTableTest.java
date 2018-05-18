@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,11 +18,9 @@ package org.apache.ibatis.submitted.awful_table;
 import static org.junit.Assert.assertEquals;
 
 import java.io.Reader;
-import java.sql.Connection;
-import java.sql.DriverManager;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -34,28 +32,17 @@ public class AwfulTableTest {
 
   @Before
   public void setUp() throws Exception {
-    Class.forName("org.hsqldb.jdbcDriver");
-    Connection conn = DriverManager.getConnection("jdbc:hsqldb:mem:attest", "sa", "");
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/awful_table/MapperConfig.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    }
 
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/awful_table/CreateDB.sql");
-
-    ScriptRunner runner = new ScriptRunner(conn);
-    runner.setLogWriter(null);
-    runner.setErrorLogWriter(null);
-    runner.runScript(reader);
-    conn.commit();
-    reader.close();
-
-    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/awful_table/MapperConfig.xml");
-    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    reader.close();
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+            "org/apache/ibatis/submitted/awful_table/CreateDB.sql");
   }
 
   @Test
   public void testAwfulTableInsert() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       AwfulTableMapper mapper = sqlSession.getMapper(AwfulTableMapper.class);
       AwfulTable record = new AwfulTable();
       record.seteMail("fred@fred.com");
@@ -88,8 +75,6 @@ public class AwfulTableTest {
       assertEquals(record.getId7(), returnedRecord.getId7());
       assertEquals(record.getSecondFirstName(), returnedRecord.getSecondFirstName());
       assertEquals(record.getThirdFirstName(), returnedRecord.getThirdFirstName());
-    } finally {
-      sqlSession.close();
     }
   }
 

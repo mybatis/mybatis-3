@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2010-2012 the original author or authors.
 
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+       Copyright 2009-2017 the original author or authors.
 
-    http://www.apache.org/licenses/LICENSE-2.0
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
 
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
 -->
-
-<!-- version: $Id$ -->
-
 <document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
 
@@ -34,7 +33,7 @@
 		이미 본것처럼 마이바티스는 XML매핑 기능으로 동적 SQL을 처리하는 강력한 기능을 제공한다. 
 		하지만 종종 자바 코드를 사용해서 SQL구문을 만들어야 할수도 있다. 
 		마이바티스는 이런 경우를 위한 기능도 제공한다. 
-		더하기 기호나 따옴표, 개행처리, 포매팅 그리고 콤마나 문자열을 합치는 등의 다양한 조건을 처리하지 않아도 되도록 해주낟. 
+		더하기 기호나 따옴표, 개행처리, 포매팅 그리고 콤마나 문자열을 합치는 등의 다양한 조건을 처리하지 않아도 되도록 해준다. 
 		정말 자바코드에서 SQL을 동적으로 만드는 것은 악몽과 같다. 
 		예를들어보자. 
         </p>
@@ -99,7 +98,7 @@ private String selectPersonSql() {
 public String deletePersonSql() {
   return new SQL() {{
     DELETE_FROM("PERSON");
-    WHERE("ID = ${id}");
+    WHERE("ID = #{id}");
   }}.toString();
 }
 
@@ -107,8 +106,8 @@ public String deletePersonSql() {
 public String insertPersonSql() {
   String sql = new SQL()
     .INSERT_INTO("PERSON");
-    .VALUES("ID, FIRST_NAME", "${id}, ${firstName}");
-    .VALUES("LAST_NAME", "${lastName}")
+    .VALUES("ID, FIRST_NAME", "#{id}, #{firstName}");
+    .VALUES("LAST_NAME", "#{lastName}")
     .toString();
   return sql;
 }
@@ -119,13 +118,13 @@ public String selectPersonLike(final String id, final String firstName, final St
     SELECT("P.ID, P.USERNAME, P.PASSWORD, P.FIRST_NAME, P.LAST_NAME");
     FROM("PERSON P");
     if (id != null) {
-      WHERE("P.ID like ${id}");
+      WHERE("P.ID like #{id}");
     }
     if (firstName != null) {
-      WHERE("P.FIRST_NAME like ${firstName}");
+      WHERE("P.FIRST_NAME like #{firstName}");
     }
     if (lastName != null) {
-      WHERE("P.LAST_NAME like ${lastName}");
+      WHERE("P.LAST_NAME like #{lastName}");
     }
     ORDER_BY("P.LAST_NAME");
   }}.toString();
@@ -134,23 +133,23 @@ public String selectPersonLike(final String id, final String firstName, final St
 public String deletePersonSql() {
   return new SQL() {{
     DELETE_FROM("PERSON");
-    WHERE("ID = ${id}");
+    WHERE("ID = #{id}");
   }}.toString();
 }
 
 public String insertPersonSql() {
   return new SQL() {{
     INSERT_INTO("PERSON");
-    VALUES("ID, FIRST_NAME", "${id}, ${firstName}");
-    VALUES("LAST_NAME", "${lastName}");
+    VALUES("ID, FIRST_NAME", "#{id}, #{firstName}");
+    VALUES("LAST_NAME", "#{lastName}");
   }}.toString();
 }
 
 public String updatePersonSql() {
   return new SQL() {{
     UPDATE("PERSON");
-    SET("FIRST_NAME = ${firstName}");
-    WHERE("ID = ${id}");
+    SET("FIRST_NAME = #{firstName}");
+    WHERE("ID = #{id}");
   }}.toString();
 }
 ]]></source>
@@ -165,7 +164,14 @@ public String updatePersonSql() {
           <tbody>
             <tr>
               <td>
-                <code>SELECT(String)</code>
+                <ul>
+                  <li>
+                    <code>SELECT(String)</code>
+                  </li>
+                  <li>
+                    <code>SELECT(String...)</code>
+                  </li>
+                </ul>
               </td>
               <td><code>SELECT</code>절로 시작하거나 덧붙이기.
 			  한번 이상 호출할 수 있고 파라미터는 <code>SELECT</code>절에 덧붙일것이다.
@@ -174,7 +180,14 @@ public String updatePersonSql() {
             </tr>
             <tr>
               <td>
-                <code>SELECT_DISTINCT(String)</code>
+                <ul>
+                  <li>
+                    <code>SELECT_DISTINCT(String)</code>
+                  </li>
+                  <li>
+                    <code>SELECT_DISTINCT(String...)</code>
+                  </li>
+                </ul>
               </td>
               <td><code>SELECT</code>절로 시작하거나 덧붙이기.
 			  생성된 쿼리에 <code>DISTINCT</code>를 추가한다. 
@@ -184,7 +197,14 @@ public String updatePersonSql() {
             </tr>
             <tr>
               <td>
-                <code>FROM(String)</code>
+                <ul>
+                  <li>
+                    <code>FROM(String)</code>
+                  </li>
+                  <li>
+                    <code>FROM(String...)</code>
+                  </li>
+                </ul>
               </td>
               <td><code>FROM</code>절로 시작하거나 덧붙이기.
 			  한번 이상 호출할 수 있고 파라미터는 <code>FROM</code>절에 덧붙일것이다.
@@ -198,13 +218,25 @@ public String updatePersonSql() {
                     <code>JOIN(String)</code>
                   </li>
                   <li>
+                    <code>JOIN(String...)</code>
+                  </li>
+                  <li>
                     <code>INNER_JOIN(String)</code>
+                  </li>
+                  <li>
+                    <code>INNER_JOIN(String...)</code>
                   </li>
                   <li>
                     <code>LEFT_OUTER_JOIN(String)</code>
                   </li>
                   <li>
+                    <code>LEFT_OUTER_JOIN(String...)</code>
+                  </li>
+                  <li>
                     <code>RIGHT_OUTER_JOIN(String)</code>
+                  </li>
+                  <li>
+                    <code>RIGHT_OUTER_JOIN(String...)</code>
                   </li>
                 </ul>
               </td>
@@ -215,7 +247,14 @@ public String updatePersonSql() {
             </tr>
             <tr>
               <td>
-                <code>WHERE(String)</code>
+                <ul>
+                  <li>
+                    <code>WHERE(String)</code>
+                  </li>
+                  <li>
+                    <code>WHERE(String...)</code>
+                  </li>
+                </ul>
               </td>
               <td>새로운 <code>WHERE</code>절과 <code>AND</code>로 합친 조건을 덧붙인다. 
 			  여러번 호출할 수 있고 <code>AND</code>를 사용할때마다 새로운 조건을 합친다. 
@@ -242,7 +281,14 @@ public String updatePersonSql() {
             </tr>
             <tr>
               <td>
-                <code>GROUP_BY(String)</code>
+                <ul>
+                  <li>
+                    <code>GROUP_BY(String)</code>
+                  </li>
+                  <li>
+                    <code>GROUP_BY(String...)</code>
+                  </li>
+                </ul>
               </td>
               <td>새로운 <code>GROUP BY</code>절을 콤마를 더해서 덧붙인다. 
 			  여러번 호출할 수 있고 개별 조건을 콤마를 붙여서 합칠 수 있다. 
@@ -250,7 +296,14 @@ public String updatePersonSql() {
             </tr>
             <tr>
               <td>
-                <code>HAVING(String)</code>
+                <ul>
+                  <li>
+                    <code>HAVING(String)</code>
+                  </li>
+                  <li>
+                    <code>HAVING(String...)</code>
+                  </li>
+                </ul>
               </td>
               <td>새로운 <code>HAVING</code>절을 AND를 더해서 덧붙인다. 
 			  여러번 호출할 수 있고 개별 조건을 <code>AND</code>를 붙여서 합칠 수 있다. 
@@ -259,7 +312,14 @@ public String updatePersonSql() {
             </tr>
             <tr>
               <td>
-                <code>ORDER_BY(String)</code>
+                <ul>
+                  <li>
+                    <code>ORDER_BY(String)</code>
+                  </li>
+                  <li>
+                    <code>ORDER_BY(String...)</code>
+                  </li>
+                </ul>
               </td>
               <td>새로운 <code>ORDER BY</code>절을 콤마를 더해서 덧붙인다. 
 			  여러번 호출할 수 있고 개별조건을 콤마를 붙여서 합칠수 있다. 
@@ -278,12 +338,19 @@ public String updatePersonSql() {
                 <code>INSERT_INTO(String)</code>
               </td>
               <td>insert구문을 시작하고 입력한 테이블을 명시한다. 
-			  VALUES() 메소드 호출은 여러번 해서 입력한 칼럼과 값을 명시한다. 
+			  VALUES() or INTO_COLUMNS() and INTO_VALUES() 메소드 호출은 여러번 해서 입력한 칼럼과 값을 명시한다.
               </td>
             </tr>
             <tr>
               <td>
-                <code>SET(String)</code>
+                <ul>
+                  <li>
+                    <code>SET(String)</code>
+                  </li>
+                  <li>
+                    <code>SET(String...)</code>
+                  </li>
+                </ul>
               </td>
               <td>update구문에서 "set" 대상 목록을 덧붙인다. </td>
             </tr>
@@ -303,8 +370,56 @@ public String updatePersonSql() {
 			  첫번째 파라미터는 입력한 칼럼이고 두번째 파라미터는 입력할 값이다. 
               </td>
             </tr>
+            <tr>
+              <td>
+                <code>INTO_COLUMNS(String...)</code>
+              </td>
+              <td>
+                insert 구문에 columns 절을 추가한다.
+                반드시 INTO_VALUES()와 함께 호출되어야 한다.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>INTO_VALUES(String...)</code>
+              </td>
+              <td>
+                insert 구문에 values 절을 추가한다.
+                반드시 INTO_COLUMNS()와 함께 호출되어야 한다.
+              </td>
+            </tr>
           </tbody>
         </table>
+
+        <p>3.4.2 버전부터, variable-length 매개변수를 아래와 같이 사용할 수 있습니다.</p>
+
+<source><![CDATA[
+public String selectPersonSql() {
+  return new SQL()
+    .SELECT("P.ID", "A.USERNAME", "A.PASSWORD", "P.FULL_NAME", "D.DEPARTMENT_NAME", "C.COMPANY_NAME")
+    .FROM("PERSON P", "ACCOUNT A")
+    .INNER_JOIN("DEPARTMENT D on D.ID = P.DEPARTMENT_ID", "COMPANY C on D.COMPANY_ID = C.ID")
+    .WHERE("P.ID = A.ID", "P.FULL_NAME like #{name}")
+    .ORDER_BY("P.ID", "P.FULL_NAME")
+    .toString();
+}
+
+public String insertPersonSql() {
+  return new SQL()
+    .INSERT_INTO("PERSON")
+    .INTO_COLUMNS("ID", "FULL_NAME")
+    .INTO_VALUES("#{id}", "#{fullName}")
+    .toString();
+}
+
+public String updatePersonSql() {
+  return new SQL()
+    .UPDATE("PERSON")
+    .SET("FULL_NAME = #{fullName}", "DATE_OF_BIRTH = #{dateOfBirth}")
+    .WHERE("ID = #{id}")
+    .toString();
+}
+]]></source>
 
       </subsection>
 
@@ -363,7 +478,7 @@ public String updatePersonSql() {
         <source><![CDATA[
 /* 향후 제거예정 */
 public String selectBlogsSql() {
-  BEGIN(); // Clears ThreadLocal variable
+  BEGIN(); // ThreadLocal 변수 제거
   SELECT("*");
   FROM("BLOG");
   return SQL();
@@ -373,7 +488,7 @@ public String selectBlogsSql() {
         <source><![CDATA[
 /* 향후 제거예정 */
 private String selectPersonSql() {
-  BEGIN(); // ThreadLocal 변수를 제거
+  BEGIN(); // ThreadLocal 변수 제거
   SELECT("P.ID, P.USERNAME, P.PASSWORD, P.FULL_NAME");
   SELECT("P.LAST_NAME, P.CREATED_ON, P.UPDATED_ON");
   FROM("PERSON P");

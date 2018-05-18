@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,8 +15,8 @@
  */
 package org.apache.ibatis.submitted.call_setters_on_nulls;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -25,7 +25,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.Reader;
-import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
 
@@ -36,75 +35,58 @@ public class CallSettersOnNullsTest {
   @BeforeClass
   public static void setUp() throws Exception {
     // create a SqlSessionFactory
-    Reader reader = Resources
-        .getResourceAsReader("org/apache/ibatis/submitted/call_setters_on_nulls/mybatis-config.xml");
-    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    reader.close();
+    try (Reader reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/call_setters_on_nulls/mybatis-config.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    }
 
     // populate in-memory database
-    SqlSession session = sqlSessionFactory.openSession();
-    Connection conn = session.getConnection();
-    reader = Resources
-        .getResourceAsReader("org/apache/ibatis/submitted/call_setters_on_nulls/CreateDB.sql");
-    ScriptRunner runner = new ScriptRunner(conn);
-    runner.setLogWriter(null);
-    runner.runScript(reader);
-    reader.close();
-    session.close();
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+            "org/apache/ibatis/submitted/call_setters_on_nulls/CreateDB.sql");
   }
 
   @Test
   public void shouldCallNullOnMappedProperty() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUserMapped(1);
       Assert.assertTrue(user.nullReceived);
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void shouldCallNullOnAutomaticMapping() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUserUnmapped(1);
       Assert.assertTrue(user.nullReceived);
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void shouldCallNullOnMap() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Map user = mapper.getUserInMap(1);
       Assert.assertTrue(user.containsKey("NAME"));
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void shouldCallNullOnMapForSingleColumn() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<Map<String, Object>> oneColumns = mapper.getNameOnly();
-      Assert.assertNotNull(oneColumns.get(1));
-    } finally {
-      sqlSession.close();
+      // When callSetterOnNull is true, setters are called with null values
+      // but if all the values for an object are null
+      // the object itself should be null (same as default behaviour)
+      Assert.assertNull(oneColumns.get(1));
     }
   }
 
   @Test
   public void shouldCallNullOnMapForSingleColumnWithResultMap() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<Map<String, Object>> oneColumns = mapper.getNameOnlyMapped();
 //      Assert.assertNotNull(oneColumns.get(1));
@@ -113,8 +95,6 @@ public class CallSettersOnNullsTest {
       // but if all the values for an object are null
       // the object itself should be null (same as default behaviour)
       Assert.assertNull(oneColumns.get(1));
-    } finally {
-      sqlSession.close();
     }
   }
   

@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2010-2012 the original author or authors.
 
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+       Copyright 2009-2016 the original author or authors.
 
-    http://www.apache.org/licenses/LICENSE-2.0
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
 
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
 -->
-
-<!-- version: $Id$ -->
-
 <document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
 
@@ -161,7 +160,7 @@ AND title like ‘someTitle’]]></source>
   </foreach>
 </select>]]></source>
   <p><em>foreach</em> 要素は非常に強力で、イテレーション処理の対象となるコレクションを指定する collection と、ループ内で要素を格納する変数 item、ループ回数を格納する index 変数を宣言することができます。また、開始・終了の文字列とイテレーションの合間に出力する区切り文字を指定することもできます。foreach タグは賢いので、余分な区切り文字を出力することはありません。</p>
-  <p><span class="label important">NOTE</span> List のインスタンスや Array を引数オブジェクトとして MyBatis に渡すこともできます。この場合、MyBatis は渡された引数を Map に格納しキーとして名前を設定します。List のインスタンスは "list" というキーで Map に格納され、Array の場合は "array" というキーで格納されます。</p>
+  <p><span class="label important">NOTE</span> collection には Iterable を実装したオブジェクト（List や Set など）の他に Map や Array を指定することもできます。collection に Iterable または Array を指定した場合、 index で指定した変数にはインデックスの数値、 item で指定した変数にはコレクション、配列の要素が格納されます。Map あるいは Map.Entry のコレクションを指定した場合は index にマップのキー、item にマップの値が格納されます。</p>
   <p>XML 設定ファイルと XML Mapper ファイルについての説明はここまでになります。次の章では、Java API について詳しく見ていきます。</p>
   </subsection>  
   <subsection name="bind">

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -31,61 +31,60 @@ public class CustomObjectWrapper implements org.apache.ibatis.reflection.wrapper
   
   @Override
   public Object get(PropertyTokenizer prop) {
-    // TODO Auto-generated method stub
+    // Not Implemented
     return null;
   }
 
   @Override
   public void set(PropertyTokenizer prop, Object value) {
-    // TODO Auto-generated method stub
-
+    // Not Implemented
   }
 
   @Override
   public String findProperty(String name, boolean useCamelCaseMapping) {
-    // TODO Auto-generated method stub
+    // Not Implemented
     return null;
   }
 
   @Override
   public String[] getGetterNames() {
-    // TODO Auto-generated method stub
+    // Not Implemented
     return null;
   }
 
   @Override
   public String[] getSetterNames() {
-    // TODO Auto-generated method stub
+    // Not Implemented
     return null;
   }
 
   @Override
   public Class<?> getSetterType(String name) {
-    // TODO Auto-generated method stub
+    // Not Implemented
     return null;
   }
 
   @Override
   public Class<?> getGetterType(String name) {
-    // TODO Auto-generated method stub
+    // Not Implemented
     return null;
   }
 
   @Override
   public boolean hasSetter(String name) {
-    // TODO Auto-generated method stub
+    // Not Implemented
     return false;
   }
 
   @Override
   public boolean hasGetter(String name) {
-    // TODO Auto-generated method stub
+    // Not Implemented
     return false;
   }
 
   @Override
   public MetaObject instantiatePropertyValue(String name, PropertyTokenizer prop, ObjectFactory objectFactory) {
-    // TODO Auto-generated method stub
+    // Not Implemented
     return null;
   }
 

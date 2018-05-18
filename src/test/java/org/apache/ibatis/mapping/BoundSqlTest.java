@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -40,6 +40,9 @@ public class BoundSqlTest {
     bean.id = 1;
     boundSql.setAdditionalParameter("person", bean);
 
+    String[] array = new String[] {"User1", "User2"};
+    boundSql.setAdditionalParameter("array", array);
+
     assertFalse(boundSql.hasAdditionalParameter("pet"));
     assertFalse(boundSql.hasAdditionalParameter("pet.name"));
 
@@ -50,6 +53,9 @@ public class BoundSqlTest {
     assertTrue(boundSql.hasAdditionalParameter("person"));
     assertTrue(boundSql.hasAdditionalParameter("person.id"));
     assertTrue("should return true even if the child property does not exists.", boundSql.hasAdditionalParameter("person.name"));
+
+    assertTrue(boundSql.hasAdditionalParameter("array[0]"));
+    assertTrue("should return true even if the element does not exists.", boundSql.hasAdditionalParameter("array[99]"));
   }
 
   public static class Person {

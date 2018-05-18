@@ -13,7 +13,6 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-
 package org.apache.ibatis.submitted.typehandler;
 
 import java.sql.CallableStatement;
@@ -29,6 +28,16 @@ public class Product {
   private ProductId id;
 
   private String name;
+
+  public Product() {
+    super();
+  }
+
+  public Product(ProductId id, String name) {
+    super();
+    this.id = id;
+    this.name = name;
+  }
 
   public ProductId getId() {
     return id;
@@ -49,13 +58,12 @@ public class Product {
   public static class ProductId {
     private Integer value;
 
-    private ProductId(Integer value) {
-      super();
-      this.value = value;
-    }
-
     public Integer getValue() {
       return value;
+    }
+
+    public void setValue(Integer value) {
+      this.value = value;
     }
   }
 
@@ -67,17 +75,50 @@ public class Product {
 
     @Override
     public ProductId getNullableResult(ResultSet rs, String columnName) throws SQLException {
-      return new ProductId(rs.getInt(columnName));
+      ProductId id = new ProductId();
+      id.setValue(rs.getInt(columnName));
+      return id;
     }
 
     @Override
     public ProductId getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
-      return new ProductId(rs.getInt(columnIndex));
+      ProductId id = new ProductId();
+      id.setValue(rs.getInt(columnIndex));
+      return id;
     }
 
     @Override
     public ProductId getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
-      return new ProductId(cs.getInt(columnIndex));
+      ProductId id = new ProductId();
+      id.setValue(cs.getInt(columnIndex));
+      return id;
+    }
+  }
+
+  public static class ConstantProductIdTypeHandler extends BaseTypeHandler<ProductId> {
+    @Override
+    public void setNonNullParameter(PreparedStatement ps, int i, ProductId parameter, JdbcType jdbcType) throws SQLException {
+    }
+
+    @Override
+    public ProductId getNullableResult(ResultSet rs, String columnName) throws SQLException {
+      return getConstantId();
+    }
+
+    @Override
+    public ProductId getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
+      return getConstantId();
+    }
+
+    @Override
+    public ProductId getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
+      return getConstantId();
+    }
+
+    private ProductId getConstantId() {
+      ProductId id = new ProductId();
+      id.setValue(999);
+      return id;
     }
   }
 }

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -46,8 +46,8 @@ public class ResultSetWrapper {
   private final List<String> classNames = new ArrayList<String>();
   private final List<JdbcType> jdbcTypes = new ArrayList<JdbcType>();
   private final Map<String, Map<Class<?>, TypeHandler<?>>> typeHandlerMap = new HashMap<String, Map<Class<?>, TypeHandler<?>>>();
-  private Map<String, List<String>> mappedColumnNamesMap = new HashMap<String, List<String>>();
-  private Map<String, List<String>> unMappedColumnNamesMap = new HashMap<String, List<String>>();
+  private final Map<String, List<String>> mappedColumnNamesMap = new HashMap<String, List<String>>();
+  private final Map<String, List<String>> unMappedColumnNamesMap = new HashMap<String, List<String>>();
 
   public ResultSetWrapper(ResultSet rs, Configuration configuration) throws SQLException {
     super();
@@ -74,6 +74,19 @@ public class ResultSetWrapper {
     return Collections.unmodifiableList(classNames);
   }
 
+  public List<JdbcType> getJdbcTypes() {
+    return jdbcTypes;
+  }
+
+  public JdbcType getJdbcType(String columnName) {
+    for (int i = 0 ; i < columnNames.size(); i++) {
+      if (columnNames.get(i).equalsIgnoreCase(columnName)) {
+        return jdbcTypes.get(i);
+      }
+    }
+    return null;
+  }
+
   /**
    * Gets the type handler to use when reading the result set.
    * Tries to get from the TypeHandlerRegistry by searching for the property type.
@@ -93,12 +106,12 @@ public class ResultSetWrapper {
       handler = columnHandlers.get(propertyType);
     }
     if (handler == null) {
-      handler = typeHandlerRegistry.getTypeHandler(propertyType);
+      JdbcType jdbcType = getJdbcType(columnName);
+      handler = typeHandlerRegistry.getTypeHandler(propertyType, jdbcType);
       // Replicate logic of UnknownTypeHandler#resolveTypeHandler
       // See issue #59 comment 10
       if (handler == null || handler instanceof UnknownTypeHandler) {
         final int index = columnNames.indexOf(columnName);
-        final JdbcType jdbcType = jdbcTypes.get(index);
         final Class<?> javaType = resolveClass(classNames.get(index));
         if (javaType != null && jdbcType != null) {
           handler = typeHandlerRegistry.getTypeHandler(javaType, jdbcType);
@@ -118,10 +131,14 @@ public class ResultSetWrapper {
 
   private Class<?> resolveClass(String className) {
     try {
-      return Resources.classForName(className);
+      // #699 className could be null
+      if (className != null) {
+        return Resources.classForName(className);
+      }
     } catch (ClassNotFoundException e) {
-      return null;
+      // ignore
     }
+    return null;
   }
 
   private void loadMappedAndUnmappedColumnNames(ResultMap resultMap, String columnPrefix) throws SQLException {

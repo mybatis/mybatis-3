@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2010-2012 the original author or authors.
 
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+       Copyright 2009-2017 the original author or authors.
 
-  http://www.apache.org/licenses/LICENSE-2.0
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
 
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
 -->
-
-<!-- version: $Id$ -->
-
 <document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
 
@@ -86,7 +85,7 @@
           The select statement is one of the most popular elements that you'll use in MyBatis.
           Putting data in a database isn't terribly valuable until you get it back out, so most
           applications query far more than they modify the data. For every insert, update or delete,
-          there is probably many selects. This is one of the founding principles of MyBatis, and is the
+          there are probably many selects. This is one of the founding principles of MyBatis, and is the
           reason so much focus and effort was placed on querying and result mapping. The select element is
           quite simple for simple cases. For example:
         </p>
@@ -399,6 +398,18 @@ ps.setInt(1,id);]]></source>
 </insert>]]></source>
 
         <p>
+          If your database also supports multi-row insert, you can pass a list or an array of <code>Author</code>s and retrieve the auto-generated keys.
+        </p>
+
+        <source><![CDATA[<insert id="insertAuthor" useGeneratedKeys="true"
+    keyProperty="id">
+  insert into Author (username, password, email, bio) values
+  <foreach item="item" collection="list" separator=",">
+    (#{item.username}, #{item.password}, #{item.email}, #{item.bio})
+  </foreach>
+</insert>]]></source>
+
+        <p>
           MyBatis has another way to deal with key generation for databases that don't support auto-generated
           column types, or perhaps don't yet support the JDBC driver support for auto-generated keys.
         </p>
@@ -530,7 +541,7 @@ ps.setInt(1,id);]]></source>
         <p>
           In all of the past statements, you've seen examples of simple parameters. Parameters are very
           powerful elements in MyBatis. For simple situations, probably 90% of the cases, there's not much
-          too them, for example:
+          to them, for example:
         </p>
 
         <source><![CDATA[<select id="selectUsers" resultType="User">
@@ -541,7 +552,7 @@ ps.setInt(1,id);]]></source>
 
         <p>
           The example above demonstrates a very simple named parameter mapping. The parameterType is set to
-          <code>int</code>, so therefore the parameter could be named anything. Primitive or simply data types such as
+          <code>int</code>, so therefore the parameter could be named anything. Primitive or simple data types such as
           <code>Integer</code> and <code>String</code> have no relevant properties, and thus will replace the full value of the
           parameter entirely. However, if you pass in a complex object, then the behavior is a little
           different. For example:
@@ -632,8 +643,8 @@ ps.setInt(1,id);]]></source>
         <p>
           By default, using the <code>#{}</code> syntax will cause MyBatis to generate <code>PreparedStatement</code> properties and
           set the values safely against the <code>PreparedStatement</code> parameters (e.g. ?). While this is safer,
-          faster and almost always preferred, sometimes you just want to directly inject a string
-          unmodified into the SQL Statement. For example, for ORDER BY, you might use something like this:
+          faster and almost always preferred, sometimes you just want to directly inject an unmodified string
+          into the SQL Statement. For example, for ORDER BY, you might use something like this:
         </p>
 
         <source><![CDATA[ORDER BY ${columnName}]]></source>
@@ -720,7 +731,7 @@ public class User {
 </select>]]></source>
 
         <p>
-          And remember that TypeAliases are your friend. Use them so that you don't have to keep typing the
+          And remember that TypeAliases are your friends. Use them so that you don't have to keep typing the
           fully qualified path of your class out. For example:
         </p>
 
@@ -776,7 +787,7 @@ public class User {
 </select>]]></source>
 
         <p>
-          Now if only the world were always that simple.
+          Now if only the world was always that simple.
         </p>
 
 	    <h4>Advanced Result Maps</h4>
@@ -954,7 +965,7 @@ public class User {
 <result property="subject" column="post_subject"/>]]></source>
 
         <p>
-          These are the most basic of result mappings. Both <i>id</i>, and
+          These are the most basic of result mappings. Both <i>id</i> and
           <i>result</i> map a single column value to a
           single property or field of a simple data type (String, int, double, Date, etc.).
         </p>
@@ -1051,7 +1062,7 @@ public class User {
             <td><code>REAL</code></td>
             <td><code>VARCHAR</code></td>
             <td><code>BINARY</code></td>
-            <td><code>BLOG</code></td>
+            <td><code>BLOB</code></td>
             <td><code>NVARCHAR</code></td>
           </tr>
           <tr>
@@ -1082,11 +1093,6 @@ public class User {
 
         <h4>constructor</h4>
 
-        <source><![CDATA[<constructor>
-   <idArg column="id" javaType="int"/>
-   <arg column="username" javaType="String"/>
-</constructor>]]></source>
-
         <p>
           While properties will work for most Data Transfer Object (DTO) type classes, and likely most of your
           domain model, there may be some cases where you want to use immutable classes. Often tables that
@@ -1104,24 +1110,38 @@ public class User {
 
         <source><![CDATA[public class User {
    //...
-   public User(int id, String username) {
+   public User(Integer id, String username, int age) {
      //...
   }
 //...
 }]]></source>
 
         <p>
-          In order to inject the results into the constructor, MyBatis needs to identify the constructor by
-          the type of its parameters. Java has no way to introspect (or reflect) on parameter names. So when
-          creating a constructor element, ensure that the arguments are in order, and that the data types are
-          specified.
+          In order to inject the results into the constructor, MyBatis needs to identify the constructor for somehow.
+          In the following example, MyBatis searches a constructor declared with three parameters: <code>java.lang.Integer</code>, <code>java.lang.String</code> and <code>int</code> in this order.
         </p>
-
 
         <source><![CDATA[<constructor>
    <idArg column="id" javaType="int"/>
    <arg column="username" javaType="String"/>
+   <arg column="age" javaType="_int"/>
 </constructor>]]></source>
+
+        <p>
+          When you are dealing with a constructor with many parameters, maintaining the order of arg elements is error-prone.<br />
+          Since 3.4.3, by specifying the name of each parameter, you can write arg elements in any order. To reference constructor parameters by their names, you can either add <code>@Param</code> annotation to them or compile the project with '-parameters' compiler option and enable <code>useActualParamName</code> (this option is enabled by default).
+          The following example is valid for the same constructor even though the order of the second and the third parameters does not match with the declared order.
+        </p>
+
+        <source><![CDATA[<constructor>
+   <idArg column="id" javaType="int" name="id" />
+   <arg column="age" javaType="_int" name="age" />
+   <arg column="username" javaType="String" name="username" />
+</constructor>]]></source>
+
+        <p>
+          <code>javaType</code> can be omitted if there is a property with the same name and type.
+        </p>
 
         <p>
           The rest of the attributes and rules are the same as for the regular id and result elements.
@@ -1187,6 +1207,12 @@ public class User {
                 decomposed and mapped properly to a nested object graph. To facilitate this, MyBatis
                 lets you "chain" result maps together, to deal with the nested results. See the
                 Association element below for more.
+              </td>
+            </tr>
+            <tr>
+              <td><code>name</code></td>
+              <td>
+                The name of the constructor parameter. Specifying name allows you to write arg elements in any order. See the above explanation. Since 3.4.3.
               </td>
             </tr>
           </tbody>
@@ -1565,7 +1591,7 @@ public class User {
             <tr>
               <td><code>foreignColumn</code></td>
               <td>
-                Identifies the name of the columns that contains the foreing keys which values will be matched against the 
+                Identifies the name of the columns that contains the foreign keys which values will be matched against the 
                 values of the columns specified in the <code>column</code> attibute of the parent type. 
               </td>
             </tr>
@@ -1745,7 +1771,7 @@ SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
         <h4>Multiple ResultSets for Collection</h4>
         
         <p>
-          As we did for the association, we can call an stored procedure that executes two queries and returns two result sets, one with Blogs
+          As we did for the association, we can call a stored procedure that executes two queries and returns two result sets, one with Blogs
           and another with Posts:
         </p>
 
@@ -1987,7 +2013,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         </p>
 
         <p>          
-          By default, just local sessión caching is enabled that is used solely to cache data for the duration of a sessión.
+          By default, just local session caching is enabled that is used solely to cache data for the duration of a session.
           To enable a global second level of caching you simply need to add one line to your SQL Mapping file:
         </p>
 
@@ -2010,6 +2036,13 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
             other callers or threads.
           </li>
         </ul>
+
+        <p>
+          <span class="label important">NOTE</span> The cache will only apply to statements declared in the mapping file
+          where the cache tag is located. If you are using the Java API in conjunction with the XML mapping files, then
+          statements declared in the companion interface will not be cached by default. You will need to refer to the
+          cache region using the @CacheNamespaceRef annotation.
+        </p>
 
         <p>
           All of these properties are modifiable through the attributes of the cache element. For example:
@@ -2111,7 +2144,20 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
   <property name="cacheFile" value="/tmp/my-custom-cache.tmp"/>
 </cache>]]></source>
 
-        <p>You can use JavaBeans properties of all simple types, MyBatis will do the conversion.</p>
+        <p>
+          You can use JavaBeans properties of all simple types, MyBatis will do the conversion.
+          And you can specify a placeholder(e.g. <code>${cache.file}</code>) to replace value defined at <a href="configuration.html#properties">configuration properties</a>.
+        </p>
+
+        <p>
+          Since 3.4.2, the MyBatis has been supported to call an initialization method after it's set all properties.
+          If you want to use this feature, please implements the <code>org.apache.ibatis.builder.InitializingObject</code>
+          interface on your custom cache class.
+        </p>
+
+        <source><![CDATA[public interface InitializingObject {
+  void initialize() throws Exception;
+}]]></source>
 
         <p><span class="label important">NOTE</span>
           Settings of cache (like eviction strategy, read write..etc.) in section above are not applied

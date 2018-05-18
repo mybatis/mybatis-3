@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,19 +17,21 @@ package org.apache.ibatis.jdbc;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
  * @author Clinton Begin
  * @author Jeff Butler
  * @author Adam Gent
+ * @author Kazuki Shimizu
  */
 public abstract class AbstractSQL<T> {
 
   private static final String AND = ") \nAND (";
   private static final String OR = ") \nOR (";
 
-  private SQLStatement sql = new SQLStatement();
+  private final SQLStatement sql = new SQLStatement();
 
   public abstract T getSelf();
 
@@ -41,6 +43,14 @@ public abstract class AbstractSQL<T> {
 
   public T SET(String sets) {
     sql().sets.add(sets);
+    return getSelf();
+  }
+
+  /**
+   * @since 3.4.2
+   */
+  public T SET(String... sets) {
+    sql().sets.addAll(Arrays.asList(sets));
     return getSelf();
   }
 
@@ -56,13 +66,47 @@ public abstract class AbstractSQL<T> {
     return getSelf();
   }
 
+  /**
+   * @since 3.4.2
+   */
+  public T INTO_COLUMNS(String... columns) {
+    sql().columns.addAll(Arrays.asList(columns));
+    return getSelf();
+  }
+
+  /**
+   * @since 3.4.2
+   */
+  public T INTO_VALUES(String... values) {
+    sql().values.addAll(Arrays.asList(values));
+    return getSelf();
+  }
+
   public T SELECT(String columns) {
     sql().statementType = SQLStatement.StatementType.SELECT;
     sql().select.add(columns);
     return getSelf();
   }
 
+  /**
+   * @since 3.4.2
+   */
+  public T SELECT(String... columns) {
+    sql().statementType = SQLStatement.StatementType.SELECT;
+    sql().select.addAll(Arrays.asList(columns));
+    return getSelf();
+  }
+
   public T SELECT_DISTINCT(String columns) {
+    sql().distinct = true;
+    SELECT(columns);
+    return getSelf();
+  }
+
+  /**
+   * @since 3.4.2
+   */
+  public T SELECT_DISTINCT(String... columns) {
     sql().distinct = true;
     SELECT(columns);
     return getSelf();
@@ -79,8 +123,24 @@ public abstract class AbstractSQL<T> {
     return getSelf();
   }
 
+  /**
+   * @since 3.4.2
+   */
+  public T FROM(String... tables) {
+    sql().tables.addAll(Arrays.asList(tables));
+    return getSelf();
+  }
+
   public T JOIN(String join) {
     sql().join.add(join);
+    return getSelf();
+  }
+
+  /**
+   * @since 3.4.2
+   */
+  public T JOIN(String... joins) {
+    sql().join.addAll(Arrays.asList(joins));
     return getSelf();
   }
 
@@ -89,8 +149,24 @@ public abstract class AbstractSQL<T> {
     return getSelf();
   }
 
+  /**
+   * @since 3.4.2
+   */
+  public T INNER_JOIN(String... joins) {
+    sql().innerJoin.addAll(Arrays.asList(joins));
+    return getSelf();
+  }
+
   public T LEFT_OUTER_JOIN(String join) {
     sql().leftOuterJoin.add(join);
+    return getSelf();
+  }
+
+  /**
+   * @since 3.4.2
+   */
+  public T LEFT_OUTER_JOIN(String... joins) {
+    sql().leftOuterJoin.addAll(Arrays.asList(joins));
     return getSelf();
   }
 
@@ -99,13 +175,38 @@ public abstract class AbstractSQL<T> {
     return getSelf();
   }
 
+  /**
+   * @since 3.4.2
+   */
+  public T RIGHT_OUTER_JOIN(String... joins) {
+    sql().rightOuterJoin.addAll(Arrays.asList(joins));
+    return getSelf();
+  }
+
   public T OUTER_JOIN(String join) {
     sql().outerJoin.add(join);
     return getSelf();
   }
 
+  /**
+   * @since 3.4.2
+   */
+  public T OUTER_JOIN(String... joins) {
+    sql().outerJoin.addAll(Arrays.asList(joins));
+    return getSelf();
+  }
+
   public T WHERE(String conditions) {
     sql().where.add(conditions);
+    sql().lastList = sql().where;
+    return getSelf();
+  }
+
+  /**
+   * @since 3.4.2
+   */
+  public T WHERE(String... conditions) {
+    sql().where.addAll(Arrays.asList(conditions));
     sql().lastList = sql().where;
     return getSelf();
   }
@@ -125,14 +226,39 @@ public abstract class AbstractSQL<T> {
     return getSelf();
   }
 
+  /**
+   * @since 3.4.2
+   */
+  public T GROUP_BY(String... columns) {
+    sql().groupBy.addAll(Arrays.asList(columns));
+    return getSelf();
+  }
+
   public T HAVING(String conditions) {
     sql().having.add(conditions);
     sql().lastList = sql().having;
     return getSelf();
   }
 
+  /**
+   * @since 3.4.2
+   */
+  public T HAVING(String... conditions) {
+    sql().having.addAll(Arrays.asList(conditions));
+    sql().lastList = sql().having;
+    return getSelf();
+  }
+
   public T ORDER_BY(String columns) {
     sql().orderBy.add(columns);
+    return getSelf();
+  }
+
+  /**
+   * @since 3.4.2
+   */
+  public T ORDER_BY(String... columns) {
+    sql().orderBy.addAll(Arrays.asList(columns));
     return getSelf();
   }
 
@@ -237,16 +363,20 @@ public abstract class AbstractSQL<T> {
       }
 
       sqlClause(builder, "FROM", tables, "", "", ", ");
-      sqlClause(builder, "JOIN", join, "", "", "\nJOIN ");
-      sqlClause(builder, "INNER JOIN", innerJoin, "", "", "\nINNER JOIN ");
-      sqlClause(builder, "OUTER JOIN", outerJoin, "", "", "\nOUTER JOIN ");
-      sqlClause(builder, "LEFT OUTER JOIN", leftOuterJoin, "", "", "\nLEFT OUTER JOIN ");
-      sqlClause(builder, "RIGHT OUTER JOIN", rightOuterJoin, "", "", "\nRIGHT OUTER JOIN ");
+      joins(builder);
       sqlClause(builder, "WHERE", where, "(", ")", " AND ");
       sqlClause(builder, "GROUP BY", groupBy, "", "", ", ");
       sqlClause(builder, "HAVING", having, "(", ")", " AND ");
       sqlClause(builder, "ORDER BY", orderBy, "", "", ", ");
       return builder.toString();
+    }
+
+    private void joins(SafeAppendable builder) {
+      sqlClause(builder, "JOIN", join, "", "", "\nJOIN ");
+      sqlClause(builder, "INNER JOIN", innerJoin, "", "", "\nINNER JOIN ");
+      sqlClause(builder, "OUTER JOIN", outerJoin, "", "", "\nOUTER JOIN ");
+      sqlClause(builder, "LEFT OUTER JOIN", leftOuterJoin, "", "", "\nLEFT OUTER JOIN ");
+      sqlClause(builder, "RIGHT OUTER JOIN", rightOuterJoin, "", "", "\nRIGHT OUTER JOIN ");
     }
 
     private String insertSQL(SafeAppendable builder) {
@@ -263,8 +393,8 @@ public abstract class AbstractSQL<T> {
     }
 
     private String updateSQL(SafeAppendable builder) {
-
       sqlClause(builder, "UPDATE", tables, "", "", "");
+      joins(builder);
       sqlClause(builder, "SET", sets, "", "", ", ");
       sqlClause(builder, "WHERE", where, "(", ")", " AND ");
       return builder.toString();

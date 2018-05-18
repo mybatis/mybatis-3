@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.apache.ibatis.cursor.Cursor;
+import org.apache.ibatis.executor.statement.StatementUtil;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.logging.jdbc.ConnectionLogger;
@@ -58,7 +59,7 @@ public abstract class BaseExecutor implements Executor {
   protected PerpetualCache localOutputParameterCache;
   protected Configuration configuration;
 
-  protected int queryStack = 0;
+  protected int queryStack;
   private boolean closed;
 
   protected BaseExecutor(Configuration configuration, Transaction transaction) {
@@ -207,15 +208,14 @@ public abstract class BaseExecutor implements Executor {
       throw new ExecutorException("Executor was closed.");
     }
     CacheKey cacheKey = new CacheKey();
-    cacheKey.update(ms.getId()); // mapperStatement的id
-    cacheKey.update(Integer.valueOf(rowBounds.getOffset()));// 分页 offset
-    cacheKey.update(Integer.valueOf(rowBounds.getLimit())); // 分页 size
-    cacheKey.update(boundSql.getSql()); // sql语句
+    cacheKey.update(ms.getId());
+    cacheKey.update(rowBounds.getOffset());
+    cacheKey.update(rowBounds.getLimit());
+    cacheKey.update(boundSql.getSql());
     List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
     TypeHandlerRegistry typeHandlerRegistry = ms.getConfiguration().getTypeHandlerRegistry();
     // mimic DefaultParameterHandler logic
-    for (int i = 0; i < parameterMappings.size(); i++) {
-      ParameterMapping parameterMapping = parameterMappings.get(i);
+    for (ParameterMapping parameterMapping : parameterMappings) {
       if (parameterMapping.getMode() != ParameterMode.OUT) {
         Object value;
         String propertyName = parameterMapping.getProperty();
@@ -293,11 +293,24 @@ public abstract class BaseExecutor implements Executor {
   protected void closeStatement(Statement statement) {
     if (statement != null) {
       try {
-        statement.close();
+        if (!statement.isClosed()) {
+          statement.close();
+        }
       } catch (SQLException e) {
         // ignore
       }
     }
+  }
+
+  /**
+   * Apply a transaction timeout.
+   * @param statement a current statement
+   * @throws SQLException if a database access error occurs, this method is called on a closed <code>Statement</code>
+   * @since 3.4.0
+   * @see StatementUtil#applyTransactionTimeout(Statement, Integer, Integer)
+   */
+  protected void applyTransactionTimeout(Statement statement) throws SQLException {
+    StatementUtil.applyTransactionTimeout(statement, statement.getQueryTimeout(), transaction.getTimeout());
   }
 
   private void handleLocallyCachedOutputParameters(MappedStatement ms, CacheKey key, Object parameter, BoundSql boundSql) {

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -28,12 +28,12 @@ public interface LanguageDriver {
   /**
    * Creates a {@link ParameterHandler} that passes the actual parameters to the the JDBC statement.
    * 
-   * @author Frank D. Martinez [mnesarco]
-   * @see DefaultParameterHandler
    * @param mappedStatement The mapped statement that is being executed
    * @param parameterObject The input parameter object (can be null) 
    * @param boundSql The resulting SQL once the dynamic language has been executed.
    * @return
+   * @author Frank D. Martinez [mnesarco]
+   * @see DefaultParameterHandler
    */
   ParameterHandler createParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql);
 

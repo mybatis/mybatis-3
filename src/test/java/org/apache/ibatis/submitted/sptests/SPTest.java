@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -21,14 +21,13 @@ import static org.junit.Assert.assertNull;
 
 import java.io.Reader;
 import java.sql.Array;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
@@ -42,30 +41,15 @@ public class SPTest {
 
   @BeforeClass
   public static void initDatabase() throws Exception {
-    Connection conn = null;
-
-    try {
-      Class.forName("org.hsqldb.jdbcDriver");
-      conn = DriverManager.getConnection("jdbc:hsqldb:mem:sptest", "sa", "");
-
-      Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/sptests/CreateDB.sql");
-
-      ScriptRunner runner = new ScriptRunner(conn);
-      runner.setDelimiter("go");
-      runner.setLogWriter(null);
-      runner.setErrorLogWriter(null);
-      runner.runScript(reader);
-      conn.commit();
-      reader.close();
-
-      reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/sptests/MapperConfig.xml");
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/sptests/MapperConfig.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-      reader.close();
-    } finally {
-      if (conn != null) {
-        conn.close();
-      }
     }
+
+    ScriptRunner runner = new ScriptRunner(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource().getConnection());
+    runner.setDelimiter("go");
+    runner.setLogWriter(null);
+    runner.setErrorLogWriter(null);
+    BaseDataTest.runScript(runner, "org/apache/ibatis/submitted/sptests/CreateDB.sql");
   }
 
   /*
@@ -76,8 +60,7 @@ public class SPTest {
    */
   @Test
   public void testAdderAsSelect() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Parameter parameter = new Parameter();
       parameter.setAddend1(2);
       parameter.setAddend2(3);
@@ -86,8 +69,6 @@ public class SPTest {
       spMapper.adderAsSelect(parameter);
 
       assertEquals((Integer) 5, parameter.getSum());
-    } finally {
-      sqlSession.close();
     }
   }
 
@@ -99,8 +80,7 @@ public class SPTest {
    */
   @Test
   public void testAdderAsSelectDoubleCall1() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Parameter parameter = new Parameter();
       parameter.setAddend1(2);
       parameter.setAddend2(3);
@@ -115,9 +95,6 @@ public class SPTest {
       parameter.setAddend2(3);
       spMapper.adderAsSelect(parameter);
       assertEquals((Integer) 5, parameter.getSum());
-
-    } finally {
-      sqlSession.close();
     }
   }
 
@@ -131,8 +108,7 @@ public class SPTest {
    */
   @Test
   public void testAdderAsSelectDoubleCall2() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Parameter parameter = new Parameter();
       parameter.setAddend1(2);
       parameter.setAddend2(3);
@@ -147,9 +123,6 @@ public class SPTest {
       parameter.setAddend2(5);
       spMapper.adderAsSelect(parameter);
       assertEquals((Integer) 9, parameter.getSum());
-
-    } finally {
-      sqlSession.close();
     }
   }
 
@@ -162,8 +135,7 @@ public class SPTest {
    */
   @Test
   public void testAdderAsUpdate() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Parameter parameter = new Parameter();
       parameter.setAddend1(2);
       parameter.setAddend2(3);
@@ -178,17 +150,13 @@ public class SPTest {
       parameter.setAddend2(3);
       spMapper.adderAsUpdate(parameter);
       assertEquals((Integer) 5, parameter.getSum());
-
-    } finally {
-      sqlSession.close();
     }
   }
 
   // issue #145  
   @Test
   public void testEchoDate() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       HashMap<String, Object> parameter = new HashMap<String, Object>();
       Date now = new Date();
       parameter.put("input date", now);
@@ -198,8 +166,6 @@ public class SPTest {
 
       java.sql.Date outDate = new java.sql.Date(now.getTime());      
       assertEquals(outDate.toString(), parameter.get("output date").toString());
-    } finally {
-      sqlSession.close();
     }
   }
   
@@ -210,8 +176,7 @@ public class SPTest {
    */
   @Test
   public void testAdderAsUpdateWithParameterMap() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Map<String, Object> parms = new HashMap<String, Object>();
       parms.put("addend1", 3);
       parms.put("addend2", 4);
@@ -226,9 +191,6 @@ public class SPTest {
       parms.put("addend2", 3);
       spMapper.adderWithParameterMap(parms);
       assertEquals(5, parms.get("sum"));
-
-    } finally {
-      sqlSession.close();
     }
   }
 
@@ -240,15 +202,12 @@ public class SPTest {
    */
   @Test
   public void testCallWithResultSet1() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
       Name name = spMapper.getName(1);
       assertNotNull(name);
       assertEquals("Wilma", name.getFirstName());
-    } finally {
-      sqlSession.close();
     }
   }
 
@@ -260,8 +219,7 @@ public class SPTest {
    */
   @Test
   public void testCallWithResultSet2() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
       Map<String, Object> parms = new HashMap<String, Object>();
@@ -269,8 +227,6 @@ public class SPTest {
       List<Name> names = spMapper.getNames(parms);
       assertEquals(3, names.size());
       assertEquals(3, parms.get("totalRows"));
-    } finally {
-      sqlSession.close();
     }
   }
 
@@ -282,8 +238,7 @@ public class SPTest {
    */
   @Test
   public void testCallWithResultSet3() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
       Map<String, Object> parms = new HashMap<String, Object>();
@@ -297,8 +252,6 @@ public class SPTest {
       names = spMapper.getNames(parms);
       assertEquals(1, names.size());
       assertEquals(1, parms.get("totalRows"));
-    } finally {
-      sqlSession.close();
     }
   }
 
@@ -310,8 +263,7 @@ public class SPTest {
    */
   @Test
   public void testCallWithResultSet4() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
       Map<String, Object> parms = new HashMap<String, Object>();
@@ -325,8 +277,6 @@ public class SPTest {
       names = spMapper.getNames(parms);
       assertEquals(2, names.size());
       assertEquals(2, parms.get("totalRows"));
-    } finally {
-      sqlSession.close();
     }
   }
 
@@ -337,8 +287,7 @@ public class SPTest {
    */
   @Test
   public void testGetNamesWithArray() throws SQLException {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
       Array array = sqlSession.getConnection().createArrayOf("int", new Integer[] { 1, 2, 5 });
@@ -350,8 +299,6 @@ public class SPTest {
       assertEquals(4, returnedIds.length);
       assertEquals(3, parms.get("requestedRows"));
       assertEquals(2, names.size());
-    } finally {
-      sqlSession.close();
     }
   }
 
@@ -361,17 +308,14 @@ public class SPTest {
    * @throws SQLException
    */
   @Test
-  public void testGetNamesAndItems() throws SQLException {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  public void testGetNamesAndItems() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
       List<List<?>> results = spMapper.getNamesAndItems();
       assertEquals(2, results.size());
       assertEquals(4, results.get(0).size());
       assertEquals(3, results.get(1).size());
-    } finally {
-      sqlSession.close();
     }
   }
 
@@ -385,8 +329,7 @@ public class SPTest {
    */
   @Test
   public void testAdderAsSelectAnnotated() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Parameter parameter = new Parameter();
       parameter.setAddend1(2);
       parameter.setAddend2(3);
@@ -395,8 +338,6 @@ public class SPTest {
       spMapper.adderAsSelectAnnotated(parameter);
 
       assertEquals((Integer) 5, parameter.getSum());
-    } finally {
-      sqlSession.close();
     }
   }
 
@@ -410,8 +351,7 @@ public class SPTest {
    */
   @Test
   public void testAdderAsSelectDoubleCallAnnotated1() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Parameter parameter = new Parameter();
       parameter.setAddend1(2);
       parameter.setAddend2(3);
@@ -426,9 +366,6 @@ public class SPTest {
       parameter.setAddend2(3);
       spMapper.adderAsSelectAnnotated(parameter);
       assertEquals((Integer) 5, parameter.getSum());
-
-    } finally {
-      sqlSession.close();
     }
   }
 
@@ -444,8 +381,7 @@ public class SPTest {
    */
   @Test
   public void testAdderAsSelectDoubleCallAnnotated2() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Parameter parameter = new Parameter();
       parameter.setAddend1(2);
       parameter.setAddend2(3);
@@ -460,9 +396,6 @@ public class SPTest {
       parameter.setAddend2(5);
       spMapper.adderAsSelectAnnotated(parameter);
       assertEquals((Integer) 9, parameter.getSum());
-
-    } finally {
-      sqlSession.close();
     }
   }
 
@@ -477,8 +410,7 @@ public class SPTest {
    */
   @Test
   public void testAdderAsUpdateAnnotated() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Parameter parameter = new Parameter();
       parameter.setAddend1(2);
       parameter.setAddend2(3);
@@ -493,9 +425,6 @@ public class SPTest {
       parameter.setAddend2(3);
       spMapper.adderAsUpdateAnnotated(parameter);
       assertEquals((Integer) 5, parameter.getSum());
-
-    } finally {
-      sqlSession.close();
     }
   }
 
@@ -509,15 +438,12 @@ public class SPTest {
    */
   @Test
   public void testCallWithResultSet1Annotated() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
       Name name = spMapper.getNameAnnotated(1);
       assertNotNull(name);
       assertEquals("Wilma", name.getFirstName());
-    } finally {
-      sqlSession.close();
     }
   }
 
@@ -532,15 +458,12 @@ public class SPTest {
    */
   @Test
   public void testCallWithResultSet1_a2() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
       Name name = spMapper.getNameAnnotatedWithXMLResultMap(1);
       assertNotNull(name);
       assertEquals("Wilma", name.getFirstName());
-    } finally {
-      sqlSession.close();
     }
   }
 
@@ -554,8 +477,7 @@ public class SPTest {
    */
   @Test
   public void testCallWithResultSet2_a1() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
       Map<String, Object> parms = new HashMap<String, Object>();
@@ -563,8 +485,6 @@ public class SPTest {
       List<Name> names = spMapper.getNamesAnnotated(parms);
       assertEquals(3, names.size());
       assertEquals(3, parms.get("totalRows"));
-    } finally {
-      sqlSession.close();
     }
   }
 
@@ -579,8 +499,7 @@ public class SPTest {
    */
   @Test
   public void testCallWithResultSet2_a2() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
       Map<String, Object> parms = new HashMap<String, Object>();
@@ -588,8 +507,6 @@ public class SPTest {
       List<Name> names = spMapper.getNamesAnnotatedWithXMLResultMap(parms);
       assertEquals(3, names.size());
       assertEquals(3, parms.get("totalRows"));
-    } finally {
-      sqlSession.close();
     }
   }
 
@@ -603,8 +520,7 @@ public class SPTest {
    */
   @Test
   public void testCallWithResultSet3_a1() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
       Map<String, Object> parms = new HashMap<String, Object>();
@@ -618,8 +534,6 @@ public class SPTest {
       names = spMapper.getNamesAnnotated(parms);
       assertEquals(1, names.size());
       assertEquals(1, parms.get("totalRows"));
-    } finally {
-      sqlSession.close();
     }
   }
 
@@ -634,8 +548,7 @@ public class SPTest {
    */
   @Test
   public void testCallWithResultSet3_a2() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
       Map<String, Object> parms = new HashMap<String, Object>();
@@ -649,8 +562,6 @@ public class SPTest {
       names = spMapper.getNamesAnnotatedWithXMLResultMap(parms);
       assertEquals(1, names.size());
       assertEquals(1, parms.get("totalRows"));
-    } finally {
-      sqlSession.close();
     }
   }
 
@@ -664,8 +575,7 @@ public class SPTest {
    */
   @Test
   public void testCallWithResultSet4_a1() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
       Map<String, Object> parms = new HashMap<String, Object>();
@@ -679,8 +589,6 @@ public class SPTest {
       names = spMapper.getNamesAnnotated(parms);
       assertEquals(2, names.size());
       assertEquals(2, parms.get("totalRows"));
-    } finally {
-      sqlSession.close();
     }
   }
 
@@ -695,8 +603,7 @@ public class SPTest {
    */
   @Test
   public void testCallWithResultSet4_a2() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
       Map<String, Object> parms = new HashMap<String, Object>();
@@ -710,8 +617,6 @@ public class SPTest {
       names = spMapper.getNamesAnnotatedWithXMLResultMap(parms);
       assertEquals(2, names.size());
       assertEquals(2, parms.get("totalRows"));
-    } finally {
-      sqlSession.close();
     }
   }
 
@@ -724,13 +629,10 @@ public class SPTest {
    */
   @Test
   public void testCallLowHighWithResultSet() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
       List<Name> names = spMapper.getNamesAnnotatedLowHighWithXMLResultMap(1, 1);
       assertEquals(1, names.size());
-    } finally {
-      sqlSession.close();
     }
   }
 
@@ -743,8 +645,7 @@ public class SPTest {
    */
   @Test
   public void testGetNamesWithArray_a1() throws SQLException {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
       Array array = sqlSession.getConnection().createArrayOf("int", new Integer[] { 1, 2, 5 });
@@ -756,8 +657,6 @@ public class SPTest {
       assertEquals(4, returnedIds.length);
       assertEquals(3, parms.get("requestedRows"));
       assertEquals(2, names.size());
-    } finally {
-      sqlSession.close();
     }
   }
 
@@ -771,8 +670,7 @@ public class SPTest {
    */
   @Test
   public void testGetNamesWithArray_a2() throws SQLException {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
       Array array = sqlSession.getConnection().createArrayOf("int", new Integer[] { 1, 2, 5 });
@@ -784,8 +682,6 @@ public class SPTest {
       assertEquals(4, returnedIds.length);
       assertEquals(3, parms.get("requestedRows"));
       assertEquals(2, names.size());
-    } finally {
-      sqlSession.close();
     }
   }
 
@@ -798,39 +694,32 @@ public class SPTest {
    * @throws SQLException
    */
   @Test
-  public void testGetNamesAndItems_a2() throws SQLException {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  public void testGetNamesAndItems_a2() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
       List<List<?>> results = spMapper.getNamesAndItemsAnnotatedWithXMLResultMap();
       assertEquals(2, results.size());
       assertEquals(4, results.get(0).size());
       assertEquals(3, results.get(1).size());
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
-  public void testGetNamesAndItems_a3() throws SQLException {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  public void testGetNamesAndItems_a3() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
       List<List<?>> results = spMapper.getNamesAndItemsAnnotatedWithXMLResultMapArray();
       assertEquals(2, results.size());
       assertEquals(4, results.get(0).size());
       assertEquals(3, results.get(1).size());
-    } finally {
-      sqlSession.close();
     }
   }
   
   @Test
-  public void testGetNamesAndItemsLinked() throws SQLException {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  public void testGetNamesAndItemsLinked() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
       List<Name> names = spMapper.getNamesAndItemsLinked();
@@ -839,23 +728,31 @@ public class SPTest {
       assertEquals(1, names.get(1).getItems().size());
       assertNull(names.get(2).getItems());
       assertNull(names.get(3).getItems());
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
-  public void testGetNamesAndItemsLinkedWithNoMatchingInfo() throws SQLException {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  public void testGetNamesAndItemsLinkedWithNoMatchingInfo() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
       List<Name> names = spMapper.getNamesAndItemsLinkedById(0);
       assertEquals(1, names.size());
       assertEquals(2, names.get(0).getItems().size());
-    } finally {
-      sqlSession.close();
     }
   }
 
+  @Test
+  public void testMultipleForeignKeys() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
+      List<Book> books = spMapper.getBookAndGenre();
+      assertEquals("Book1", books.get(0).getName());
+      assertEquals("Genre1", books.get(0).getGenre().getName());
+      assertEquals("Book2", books.get(1).getName());
+      assertEquals("Genre2", books.get(1).getGenre().getName());
+      assertEquals("Book3", books.get(2).getName());
+      assertEquals("Genre1", books.get(2).getGenre().getName());
+    }
+  }
 }

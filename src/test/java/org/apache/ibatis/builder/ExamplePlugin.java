@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import java.util.Properties;
 
 @Intercepts({})
 public class ExamplePlugin implements Interceptor {
-
+  private Properties properties;
   @Override
   public Object intercept(Invocation invocation) throws Throwable {
     return invocation.proceed();
@@ -37,7 +37,11 @@ public class ExamplePlugin implements Interceptor {
 
   @Override
   public void setProperties(Properties properties) {
+    this.properties = properties;
+  }
 
+  public Properties getProperties() {
+    return properties;
   }
 
 }

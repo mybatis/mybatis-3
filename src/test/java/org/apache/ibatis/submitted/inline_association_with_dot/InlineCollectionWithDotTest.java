@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,10 +18,9 @@ package org.apache.ibatis.submitted.inline_association_with_dot;
 import static org.junit.Assert.assertEquals;
 
 import java.io.Reader;
-import java.sql.Connection;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -35,25 +34,15 @@ public class InlineCollectionWithDotTest {
   public void openSession(String aConfig) throws Exception {
 
     final String resource = "org/apache/ibatis/submitted/inline_association_with_dot/ibatis-" + aConfig + ".xml";
-    Reader batisConfigReader = Resources.getResourceAsReader(resource);
+    try (Reader batisConfigReader = Resources.getResourceAsReader(resource)) {
 
-    SqlSessionFactory sqlSessionFactory;
-    try {
-      sqlSessionFactory = new SqlSessionFactoryBuilder().build(batisConfigReader);
-    } catch(Exception anException) {
-      throw new RuntimeException("Mapper configuration failed, expected this to work: " + anException.getMessage(), anException);
+      SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(batisConfigReader);
+
+      BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+              "org/apache/ibatis/submitted/inline_association_with_dot/create.sql");
+
+      sqlSession = sqlSessionFactory.openSession();
     }
-
-    SqlSession session = sqlSessionFactory.openSession();
-
-    Connection conn = session.getConnection();
-    ScriptRunner runner = new ScriptRunner(conn);
-    runner.setLogWriter(null);
-    runner.setErrorLogWriter(null);
-    Reader createScriptReader = Resources.getResourceAsReader("org/apache/ibatis/submitted/inline_association_with_dot/create.sql");
-    runner.runScript(createScriptReader);
-
-    sqlSession = sqlSessionFactory.openSession();
   }
 
   @After

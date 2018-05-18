@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -86,7 +86,7 @@ public class CglibProxyFactory implements ProxyFactory {
     } catch (SecurityException e) {
       // nothing to do here
     }
-    Object enhanced = null;
+    Object enhanced;
     if (constructorArgTypes.isEmpty()) {
       enhanced = enhancer.create();
     } else {
@@ -99,13 +99,13 @@ public class CglibProxyFactory implements ProxyFactory {
 
   private static class EnhancedResultObjectProxyImpl implements MethodInterceptor {
 
-    private Class<?> type;
-    private ResultLoaderMap lazyLoader;
-    private boolean aggressive;
-    private Set<String> lazyLoadTriggerMethods;
-    private ObjectFactory objectFactory;
-    private List<Class<?>> constructorArgTypes;
-    private List<Object> constructorArgs;
+    private final Class<?> type;
+    private final ResultLoaderMap lazyLoader;
+    private final boolean aggressive;
+    private final Set<String> lazyLoadTriggerMethods;
+    private final ObjectFactory objectFactory;
+    private final List<Class<?>> constructorArgTypes;
+    private final List<Object> constructorArgs;
 
     private EnhancedResultObjectProxyImpl(Class<?> type, ResultLoaderMap lazyLoader, Configuration configuration, ObjectFactory objectFactory, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
       this.type = type;
@@ -131,7 +131,7 @@ public class CglibProxyFactory implements ProxyFactory {
       try {
         synchronized (lazyLoader) {
           if (WRITE_REPLACE_METHOD.equals(methodName)) {
-            Object original = null;
+            Object original;
             if (constructorArgTypes.isEmpty()) {
               original = objectFactory.create(type);
             } else {
@@ -147,7 +147,10 @@ public class CglibProxyFactory implements ProxyFactory {
             if (lazyLoader.size() > 0 && !FINALIZE_METHOD.equals(methodName)) {
               if (aggressive || lazyLoadTriggerMethods.contains(methodName)) {
                 lazyLoader.loadAll();
-              } else if (PropertyNamer.isProperty(methodName)) {
+              } else if (PropertyNamer.isSetter(methodName)) {
+                final String property = PropertyNamer.methodToProperty(methodName);
+                lazyLoader.remove(property);
+              } else if (PropertyNamer.isGetter(methodName)) {
                 final String property = PropertyNamer.methodToProperty(methodName);
                 if (lazyLoader.hasLoader(property)) {
                   lazyLoader.load(property);
@@ -182,7 +185,7 @@ public class CglibProxyFactory implements ProxyFactory {
     @Override
     public Object intercept(Object enhanced, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
       final Object o = super.invoke(enhanced, method, args);
-      return (o instanceof AbstractSerialStateHolder) ? o : methodProxy.invokeSuper(o, args);
+      return o instanceof AbstractSerialStateHolder ? o : methodProxy.invokeSuper(o, args);
     }
 
     @Override

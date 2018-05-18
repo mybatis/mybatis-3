@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 package org.apache.ibatis.cursor.defaults;
 
 import org.apache.ibatis.cursor.Cursor;
-import org.apache.ibatis.cursor.CursorException;
 import org.apache.ibatis.executor.resultset.DefaultResultSetHandler;
 import org.apache.ibatis.executor.resultset.ResultSetWrapper;
 import org.apache.ibatis.mapping.ResultMap;
@@ -45,8 +44,8 @@ public class DefaultCursor<T> implements Cursor<T> {
     private final RowBounds rowBounds;
     private final ObjectWrapperResultHandler<T> objectWrapperResultHandler = new ObjectWrapperResultHandler<T>();
 
-    private CursorIterator cursorIterator = new CursorIterator();
-    private boolean iteratorRetrieved = false;
+    private final CursorIterator cursorIterator = new CursorIterator();
+    private boolean iteratorRetrieved;
 
     private CursorStatus status = CursorStatus.CREATED;
     private int indexWithRowBound = -1;
@@ -149,7 +148,7 @@ public class DefaultCursor<T> implements Cursor<T> {
             indexWithRowBound++;
         }
         // No more object or limit reached
-        if (next == null || (getReadItemsCount() == rowBounds.getOffset() + rowBounds.getLimit())) {
+        if (next == null || getReadItemsCount() == rowBounds.getOffset() + rowBounds.getLimit()) {
             close();
             status = CursorStatus.CONSUMED;
         }
@@ -166,13 +165,13 @@ public class DefaultCursor<T> implements Cursor<T> {
         return indexWithRowBound + 1;
     }
 
-    private static class ObjectWrapperResultHandler<E> implements ResultHandler<E> {
+    private static class ObjectWrapperResultHandler<T> implements ResultHandler<T> {
 
-        private E result;
+        private T result;
 
         @Override
-        public void handleResult(ResultContext<? extends E> context) {
-            this.result = (E) context.getResultObject();
+        public void handleResult(ResultContext<? extends T> context) {
+            this.result = context.getResultObject();
             context.stop();
         }
     }
@@ -191,10 +190,6 @@ public class DefaultCursor<T> implements Cursor<T> {
 
         @Override
         public boolean hasNext() {
-            if (isClosed()) {
-                return false;
-            }
-
             if (object == null) {
                 object = fetchNextUsingRowBound();
             }
@@ -203,10 +198,6 @@ public class DefaultCursor<T> implements Cursor<T> {
 
         @Override
         public T next() {
-            if (isClosed()) {
-                throw new CursorException("Cursor is closed");
-            }
-
             // Fill next with object fetched from hasNext()
             T next = object;
 

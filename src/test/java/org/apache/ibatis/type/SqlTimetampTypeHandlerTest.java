@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package org.apache.ibatis.type;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -38,18 +39,41 @@ public class SqlTimetampTypeHandlerTest extends BaseTypeHandlerTest {
 
   @Override
   @Test
-  public void shouldGetResultFromResultSet() throws Exception {
+  public void shouldGetResultFromResultSetByName() throws Exception {
     when(rs.getTimestamp("column")).thenReturn(SQL_TIME);
-    when(rs.wasNull()).thenReturn(false);
     assertEquals(SQL_TIME, TYPE_HANDLER.getResult(rs, "column"));
+    verify(rs, never()).wasNull();
+  }
+
+  @Override
+  public void shouldGetResultNullFromResultSetByName() throws Exception {
+    // Unnecessary
+  }
+
+  @Override
+  @Test
+  public void shouldGetResultFromResultSetByPosition() throws Exception {
+    when(rs.getTimestamp(1)).thenReturn(SQL_TIME);
+    assertEquals(SQL_TIME, TYPE_HANDLER.getResult(rs, 1));
+    verify(rs, never()).wasNull();
+  }
+
+  @Override
+  public void shouldGetResultNullFromResultSetByPosition() throws Exception {
+    // Unnecessary
   }
 
   @Override
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
     when(cs.getTimestamp(1)).thenReturn(SQL_TIME);
-    when(cs.wasNull()).thenReturn(false);
     assertEquals(SQL_TIME, TYPE_HANDLER.getResult(cs, 1));
+    verify(cs, never()).wasNull();
+  }
+
+  @Override
+  public void shouldGetResultNullFromCallableStatement() throws Exception {
+    // Unnecessary
   }
 
 }

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,10 +16,11 @@
 package org.apache.ibatis.submitted.global_variables;
 
 import java.io.Reader;
-import java.sql.Connection;
+import java.lang.reflect.Field;
 
+import org.apache.ibatis.BaseDataTest;
+import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -34,42 +35,55 @@ public class BaseTest {
   @BeforeClass
   public static void setUp() throws Exception {
     // create an SqlSessionFactory
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/global_variables/mybatis-config.xml");
-    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    reader.close();
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/global_variables/mybatis-config.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    }
 
     // populate in-memory database
-    SqlSession session = sqlSessionFactory.openSession();
-    Connection conn = session.getConnection();
-    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/global_variables/CreateDB.sql");
-    ScriptRunner runner = new ScriptRunner(conn);
-    runner.setLogWriter(null);
-    runner.runScript(reader);
-    reader.close();
-    session.close();
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+            "org/apache/ibatis/submitted/global_variables/CreateDB.sql");
   }
 
   @Test
   public void shouldGetAUser() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUser(1);
+      CustomCache customCache = unwrap(sqlSessionFactory.getConfiguration().getCache(Mapper.class.getName()));
       Assert.assertEquals("User1", user.getName());
-    } finally {
-      sqlSession.close();
+      Assert.assertEquals("foo", customCache.getStringValue());
+      Assert.assertEquals(10, customCache.getIntegerValue().intValue());
+      Assert.assertEquals(1000, customCache.getLongValue());
     }
   }
 
   @Test
   public void shouldGetAUserFromAnnotation() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
-      Mapper mapper = sqlSession.getMapper(Mapper.class);
-      User user = mapper.getUserFromAnnotation(1);
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      AnnotationMapper mapper = sqlSession.getMapper(AnnotationMapper.class);
+      User user = mapper.getUser(1);
+      CustomCache customCache = unwrap(sqlSessionFactory.getConfiguration().getCache(Mapper.class.getName()));
       Assert.assertEquals("User1", user.getName());
+      Assert.assertEquals("foo", customCache.getStringValue());
+      Assert.assertEquals(10, customCache.getIntegerValue().intValue());
+      Assert.assertEquals(1000, customCache.getLongValue());
+    }
+  }
+
+  private CustomCache unwrap(Cache cache){
+    Field field;
+    try {
+      field = cache.getClass().getDeclaredField("delegate");
+    } catch (NoSuchFieldException e) {
+      throw new IllegalStateException(e);
+    }
+    try {
+      field.setAccessible(true);
+      return (CustomCache)field.get(cache);
+    } catch (IllegalAccessException e) {
+      throw new IllegalStateException(e);
     } finally {
-      sqlSession.close();
+      field.setAccessible(false);
     }
   }
   

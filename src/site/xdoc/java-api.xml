@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2010-2012 the original author or authors.
 
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+       Copyright 2009-2018 the original author or authors.
 
-    http://www.apache.org/licenses/LICENSE-2.0
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
 
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
 -->
-
-<!-- version: $Id$ -->
-
 <document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
 
@@ -147,7 +146,7 @@ SqlSessionFactory factory = builder.build(configuration);</source>
   <p>Now you have a SqlSessionFactory that can be used to create SqlSession instances.</p>
 
   <h4>SqlSessionFactory</h4>
-  <p>SqlSessionFactory has six methods that are used to create SqlSessionInstances. In general, the decisions you'll be making when selecting one of these methods are:</p>
+  <p>SqlSessionFactory has six methods that are used to create SqlSession instances. In general, the decisions you'll be making when selecting one of these methods are:</p>
   <ul>
     <li><strong>Transaction</strong>: Do you want to use a transaction scope for the session, or use auto-commit (usually means no transaction with most databases and/or JDBC drivers)?</li>
     <li><strong>Connection</strong>: Do you want MyBatis to acquire a Connection from the configured DataSource for you, or do you want to provide your own?</li>
@@ -222,6 +221,7 @@ RowBounds rowBounds = new RowBounds(offset, limit);</source>
 
   <p>Different drivers are able to achieve different levels of efficiency in this regard. For the best performance, use result set types of SCROLL_SENSITIVE or SCROLL_INSENSITIVE (in other words: not FORWARD_ONLY).</p>
   <p>The ResultHandler parameter allows you to handle each row however you like. You can add it to a List, create a Map, Set, or throw each result away and instead keep only rolled up totals of calculations. You can do pretty much anything with the ResultHandler, and it's what MyBatis uses internally itself to build result set lists.</p>
+  <p>Since 3.4.6, ResultHandler passed to a CALLABLE statement is used on every REFCURSOR output parameter of the stored procedure if there is any.</p>
   <p>The interface is very simple.</p>  
   <source><![CDATA[package org.apache.ibatis.session;
 public interface ResultHandler<T> {
@@ -288,9 +288,9 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
   <p>While the various insert, update, delete and select methods above are powerful, they are also very verbose, not type safe and not as helpful to your IDE or unit tests as they could be. We've already seen an example of using Mappers in the Getting Started section above.</p>
   <p>Therefore, a more common way to execute mapped statements is to use Mapper classes. A mapper class is simply an interface with method definitions that match up against the SqlSession methods. The following example class demonstrates some method signatures and how they map to the SqlSession.</p>
   <source><![CDATA[public interface AuthorMapper {
-  // (Author) selectOne("selectAuthor",5);
+  // (Author) selectOne("selectAuthor", 5);
   Author selectAuthor(int id); 
-  // (List<Author>) selectList(“selectAuthors”)
+  // (List<Author>) selectList("selectAuthors")
   List<Author> selectAuthors();
   // (Map<Integer,Author>) selectMap("selectAuthors", "id")
   @MapKey("id")
@@ -299,7 +299,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
   int insertAuthor(Author author);
   // updateAuthor("updateAuthor", author)
   int updateAuthor(Author author);
-  // delete("deleteAuthor",5)
+  // delete("deleteAuthor", 5)
   int deleteAuthor(int id);
 }]]></source>
   <p>In a nutshell, each Mapper method signature should match that of the SqlSession method that it's associated to, but without the String parameter ID. Instead, the method name must match the mapped statement ID.</p> 
@@ -327,14 +327,29 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>@CacheNamespace</code></td>
         <td><code>Class</code></td>
         <td><code>&lt;cache&gt;</code></td>
-        <td>Configures the cache for the given namespace (i.e. class). Attributes: <code>implementation</code>,
-        <code>eviction</code>, <code>flushInterval</code>, <code>size</code>, <code>readWrite</code>.</td>
+        <td>
+          Configures the cache for the given namespace (i.e. class). Attributes: <code>implementation</code>,
+          <code>eviction</code>, <code>flushInterval</code>, <code>size</code>, <code>readWrite</code>,
+          <code>blocking</code>, <code>properties</code>.
+        </td>
+      </tr>
+      <tr>
+        <td><code>@Property</code></td>
+        <td>N/A</td>
+        <td><code>&lt;property&gt;</code></td>
+        <td>Specifies the property value or placeholder(can replace by configuration properties that defined at the <code>mybatis-config.xml</code>). Attributes: <code>name</code>, <code>value</code>. (Available on MyBatis 3.4.2+)</td>
       </tr>
       <tr>
         <td><code>@CacheNamespaceRef</code></td>
         <td><code>Class</code></td>
         <td><code>&lt;cacheRef&gt;</code></td>
-        <td>References the cache of another namespace to use. Attributes: <code>value</code>, which should be the string value of a namespace (i.e. a fully qualified class name).</td>
+        <td>
+          References the cache of another namespace to use. Note that caches declared in an XML mapper file are considered
+          a separate namespace, even if they share the same FQCN. Attributes: <code>value</code> and <code>name</code>.
+          If you use this annotation, you should be specified either <code>value</code> or <code>name</code> attribute.
+          For the <code>value</code> attribute specify a java type indicating the namespace(the namespace name become a FQCN of specified java type),
+          and for the <code>name</code> attribute(this attribute is available since 3.4.2) specify a name indicating the namespace.
+        </td>
       </tr>
       <tr>
         <td><code>@ConstructorArgs</code></td>
@@ -344,7 +359,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
       </tr>
       <tr>
         <td><code>@Arg</code></td>
-        <td><code>Method</code></td>
+        <td>N/A</td>
         <td>
           <ul>
             <li><code>&lt;arg&gt;</code></li>
@@ -365,7 +380,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
       </tr>
       <tr>
         <td><code>@Case</code></td>
-        <td><code>Method</code></td>
+        <td>N/A</td>
         <td><code>&lt;case&gt;</code></td>
         <td>A single case of a value and its corresponding mappings. Attributes: <code>value</code>, <code>type</code>,
         <code>results</code>. The results attribute is an array of Results, thus this <code>Case</code> Annotation is
@@ -380,7 +395,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
       </tr>
       <tr>
         <td><code>@Result</code></td>
-        <td><code>Method</code></td>
+        <td>N/A</td>
         <td>
           <ul>
             <li><code>&lt;result&gt;</code></li>
@@ -396,7 +411,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
       </tr>
       <tr>
         <td><code>@One</code></td>
-        <td><code>Method</code></td>
+        <td>N/A</td>
         <td><code>&lt;association&gt;</code></td>
         <td>A mapping to a single property value of a complex type. Attributes: <code>select</code>, which is the fully
         qualified name of a mapped statement (i.e. mapper method) that can load an instance of the appropriate type,
@@ -407,7 +422,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
       </tr>
       <tr>
         <td><code>@Many</code></td>
-        <td><code>Method</code></td>
+        <td>N/A</td>
         <td><code>&lt;collection&gt;</code></td>
         <td>A mapping to a collection property of a complex type. Attributes: <code>select</code>, which is the fully
         qualified name of a mapped statement (i.e. mapper method) that can load a collection of instances of the appropriate
@@ -432,7 +447,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <code>Options</code> annotation provides a consistent and clear way to access these. Attributes:
         <code>useCache=true</code>, <code>flushCache=FlushCachePolicy.DEFAULT</code>, <code>resultSetType=FORWARD_ONLY</code>,
         <code>statementType=PREPARED</code>, <code>fetchSize=-1</code>, <code>timeout=-1</code>,
-        <code>useGeneratedKeys=false</code>, <code>keyProperty="id"</code>, <code>keyColumn=""</code>.
+        <code>useGeneratedKeys=false</code>, <code>keyProperty=""</code>, <code>keyColumn=""</code>, <code>resultSets=""</code>.
         It's important to understand that with Java Annotations, there is no way to specify <code>null</code> as a value.
         Therefore, once you engage the <code>Options</code> annotation, your statement is subject to all of the default
         values. Pay attention to what the default values are to avoid unexpected behavior.<br/><br/>
@@ -482,13 +497,16 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
             <li><code>&lt;select&gt;</code></li>
           </ul>
         </td>
-        <td>Allows for creation of dynamic SQL.	These alternative SQL annotations allow you to specify a class name and
-        a method that will return the SQL to run at execution time. Upon executing the mapped statement, MyBatis will
-        instantiate the class, and execute the method, as specified by the provider.
-        <u>The method can optionally accept the parameter object as its sole parameter, but must only specify that parameter, or no parameters</u>.
-        Attributes: <code>type</code>, <code>method</code>. The type attribute is the fully qualified name of a class.
-        The method is the name of the method on that class. <span class="label important">NOTE</span>
-        Following this section is a discussion about the SelectBuilder class, which can help build dynamic SQL in a cleaner, easier to read way.</td>
+        <td>Allows for creation of dynamic SQL. These alternative SQL annotations allow you to specify a class and
+        a method name that will return the SQL to run at execution time
+        (Since 3.4.6, you can specify the <code>CharSequence</code> instead of <code>String</code> as a method return type).
+        Upon executing the mapped statement, MyBatis will instantiate the class, and execute the method, as specified by the provider.
+        You can pass objects that passed to arguments of a mapper method, "Mapper interface type" and "Mapper method"
+        via the <code>ProviderContext</code>(available since MyBatis 3.4.5 or later) as method argument.
+        (In MyBatis 3.4 or later, it's allow multiple parameters)
+        Attributes: <code>type</code>, <code>method</code>. The <code>type</code> attribute is a class.
+        The <code>method</code> is the name of the method on that class. <span class="label important">NOTE</span>
+        Following this section is a discussion about the class, which can help build dynamic SQL in a cleaner, easier to read way.</td>
       </tr>
       <tr>
         <td><code>@Param</code></td>
@@ -574,6 +592,52 @@ User getUserById(Integer id);
 })
 @Select("select * from company where id = #{id}")
 Company getCompanyById(Integer id);</source>
+
+  <p>This example shows solo parameter using the SelectProvider annotation:</p>
+  <source><![CDATA[@SelectProvider(type = UserSqlBuilder.class, method = "buildGetUsersByName")
+List<User> getUsersByName(String name);
+
+class UserSqlBuilder {
+  public static String buildGetUsersByName(final String name) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      if (name != null) {
+        WHERE("name like #{value} || '%'");
+      }
+      ORDER_BY("id");
+    }}.toString();
+  }
+}]]></source>
+
+  <p>This example shows multiple parameters using the Sql Provider annotation:</p>
+  <source><![CDATA[@SelectProvider(type = UserSqlBuilder.class, method = "buildGetUsersByName")
+List<User> getUsersByName(
+    @Param("name") String name, @Param("orderByColumn") String orderByColumn);
+
+class UserSqlBuilder {
+
+  // If not use @Param, you should be define same arguments with mapper method
+  public static String buildGetUsersByName(
+      final String name, final String orderByColumn) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      WHERE("name like #{name} || '%'");
+      ORDER_BY(orderByColumn);
+    }}.toString();
+  }
+
+  // If use @Param, you can define only arguments to be used
+  public static String buildGetUsersByName(@Param("orderByColumn") final String orderByColumn) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      WHERE("name like #{name} || '%'");
+      ORDER_BY(orderByColumn);
+    }}.toString();
+  }
+}]]></source>
   </subsection>
 
   </section>

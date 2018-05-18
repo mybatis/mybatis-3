@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@
 package org.apache.ibatis.type;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -38,18 +40,50 @@ public class TimeOnlyTypeHandlerTest extends BaseTypeHandlerTest {
 
   @Override
   @Test
-  public void shouldGetResultFromResultSet() throws Exception {
+  public void shouldGetResultFromResultSetByName() throws Exception {
     when(rs.getTime("column")).thenReturn(SQL_TIME);
-    when(rs.wasNull()).thenReturn(false);
     assertEquals(DATE, TYPE_HANDLER.getResult(rs, "column"));
+    verify(rs, never()).wasNull();
+  }
+
+  @Override
+  @Test
+  public void shouldGetResultNullFromResultSetByName() throws Exception {
+    when(rs.getTime("column")).thenReturn(null);
+    assertNull(TYPE_HANDLER.getResult(rs, "column"));
+    verify(rs, never()).wasNull();
+  }
+
+  @Override
+  @Test
+  public void shouldGetResultFromResultSetByPosition() throws Exception {
+    when(rs.getTime(1)).thenReturn(SQL_TIME);
+    assertEquals(DATE, TYPE_HANDLER.getResult(rs, 1));
+    verify(rs, never()).wasNull();
+  }
+
+  @Override
+  @Test
+  public void shouldGetResultNullFromResultSetByPosition() throws Exception {
+    when(rs.getTime(1)).thenReturn(null);
+    assertNull(TYPE_HANDLER.getResult(rs, 1));
+    verify(rs, never()).wasNull();
   }
 
   @Override
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
     when(cs.getTime(1)).thenReturn(SQL_TIME);
-    when(cs.wasNull()).thenReturn(false);
     assertEquals(DATE, TYPE_HANDLER.getResult(cs, 1));
+    verify(cs, never()).wasNull();
+  }
+
+  @Override
+  @Test
+  public void shouldGetResultNullFromCallableStatement() throws Exception {
+    when(cs.getTime(1)).thenReturn(null);
+    assertNull(TYPE_HANDLER.getResult(cs, 1));
+    verify(cs, never()).wasNull();
   }
 
 }

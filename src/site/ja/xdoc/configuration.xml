@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2010-2012 the original author or authors.
 
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+       Copyright 2009-2018 the original author or authors.
 
-    http://www.apache.org/licenses/LICENSE-2.0
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
 
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
 -->
-
-<!-- version: $Id$ -->
-
 <document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
 
@@ -79,13 +78,13 @@
           この例では username と password の値が properties 要素で指定した値に、そして driver と url の値が config.properties 内で定義されている値に置き換えられます。この仕組みによって柔軟な設定が実現可能です。
         </p>
         <p>
-          SqlSessionBuilder.build() メソッドに Properties を渡すこともできます。<br />例：
+          SqlSessionFactoryBuilder.build() メソッドに Properties を渡すこともできます。<br />例：
         </p>
-        <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, props);
+        <source><![CDATA[SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, props);
 
 // ... or ...
 
-SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, props);
+SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environment, props);
 ]]></source>
         <p>
           あるプロパティが複数の箇所で指定されている場合、MyBatis は次の順番で値を読み込みます。
@@ -101,6 +100,43 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
         <p>
           従って、メソッド引数として渡されたプロパティが最も優先度が高く、次に resource/url 属性、最も優先度が低いのは properties 要素のボディで指定された値ということになります。
         </p>
+
+        <p>
+          MyBatis 3.4.2以降では、下記に示すようにプレースホルダの中にデフォルト値を指定することができます。
+        </p>
+        <source><![CDATA[
+<dataSource type="POOLED">
+  <!-- ... -->
+  <property name="username" value="${username:ut_user}"/> <!-- 'username'プロパティが存在しない場合は、 usernameは'ut_user'になる -->
+</dataSource>]]></source>
+
+        <p>
+          この機能はデフォルトでは無効になっています。もしプレースホルダの中にデフォルト値を指定したい場合は、下記に示すように特別なプロパティを追加して機能を有効化する必要があります。
+        </p>
+
+        <source><![CDATA[
+<properties resource="org/mybatis/example/config.properties">
+  <!-- ... -->
+  <property name="org.apache.ibatis.parsing.PropertyParser.enable-default-value" value="true"/> <!-- この機能を有効化 -->
+</properties>]]></source>
+
+        <p>
+          <span class="label important">NOTE</span> また、既にプロパティキーとして<code>":"</code>を使用(例: <code>db:username</code>)していたり、
+          SQL定義の中でOGNL式の三項演算子(例: <code>${tableName != null ? tableName : 'global_constants'}</code>)を使用している場合は、
+          下記に示すように特別なプロパティを追加してキーとデフォルト値を分割するための文字を変更する必要があります。
+        </p>
+
+        <source><![CDATA[
+<properties resource="org/mybatis/example/config.properties">
+  <!-- ... -->
+  <property name="org.apache.ibatis.parsing.PropertyParser.default-value-separator" value="?:"/> <!-- 分割文字を変更 -->
+</properties>]]></source>
+        <source><![CDATA[
+<dataSource type="POOLED">
+  <!-- ... -->
+  <property name="username" value="${db:username?:ut_user}"/>
+</dataSource>]]></source>
+
       </subsection>
       <subsection name="settings">
         <p>
@@ -152,14 +188,14 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 aggressiveLazyLoading
               </td>
               <td>
-                この設定が有効の場合、Lazy loading が指定されたプロパティが要求されると、そのプロパティを内包するオブジェクト全体が読み込まれます。
-                無効の場合は、各プロパティはそれぞれ要求時に読み込まれます。
+                この設定が有効の場合、オブジェクトのいずれかのメソッド呼び出しと同時にすべての Lazy loading が実行されます。
+                無効の場合は、各プロパティはそれぞれ要求時に読み込まれます（関連項目 <code>lazyLoadTriggerMethods</code> ）。
               </td>
               <td>
                 true | false
               </td>
               <td>
-                true
+                false （3.4.1 以下は true）
               </td>
             </tr>
             <tr>
@@ -226,6 +262,25 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
             </tr>
             <tr>
               <td>
+                autoMappingUnknownColumnBehavior
+              </td>
+              <td>
+                自動マッピング対象のプロパティが存在しない(又はプロパティ型がサポート外の)カラムを検知した時の動作を指定します。
+                <ul>
+                  <li><code>NONE</code>: 何もしません</li>
+                  <li><code>WARNING</code>: 警告ログを出力します (<code>'org.apache.ibatis.session.AutoMappingUnknownColumnBehavior'</code> のログレベルを<code>WARN</code>に設定してください)</li>
+                  <li><code>FAILING</code>: 自動マッピング処理をエラーにします。(<code>SqlSessionException</code>が発生します)</li>
+                </ul>
+              </td>
+              <td>
+                NONE, WARNING, FAILING
+              </td>
+              <td>
+                NONE
+              </td>
+            </tr>
+            <tr>
+              <td>
                 defaultExecutorType
               </td>
               <td>
@@ -278,12 +333,28 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
               </td>
               <td>
                 ネストされたステートメントに対して RowBounds の使用を許可するかどうかを設定します。
+                許可する場合は、 false を設定します。
               </td>
               <td>
                 true | false
               </td>
               <td>
                 False
+              </td>
+            </tr>
+            <tr>
+              <td>
+                safeResultHandlerEnabled
+              </td>
+              <td>
+                ネストされたステートメントに対して ResultHandler の使用を許可するかどうかを設定します。
+                許可する場合は、 false を設定します。
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                True
               </td>
             </tr>
             <tr>
@@ -355,7 +426,21 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 タイプエイリアスまたは完全修飾クラス名
               </td>
               <td>
-                org.apache.ibatis.scripting.xmltags.XMLDynamicLanguageDriver
+                org.apache.ibatis.scripting.xmltags.XMLLanguageDriver
+              </td>
+            </tr>
+            <tr>
+              <td>
+                defaultEnumTypeHandler
+              </td>
+              <td>
+                Enum型に適用するデフォルトの <code>TypeHandler</code> を指定します。(導入されたバージョン: 3.4.5)
+              </td>
+              <td>
+                タイプエイリアスまたは完全修飾クラス名
+              </td>
+              <td>
+                org.apache.ibatis.type.EnumTypeHandler
               </td>
             </tr>
             <tr>
@@ -365,6 +450,20 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
               <td>
                 取得した値が null の場合にセッターあるいは Map の put メソッドを呼び出すかどうかを指定します。
                 この設定は Map.keySet() や null 値による初期化を利用している場合に有用です。プリミティブ型（int, boolean, 等）に null がセットされることはありません。
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
+              </td>
+            </tr>
+            <tr>
+              <td>
+                returnInstanceForEmptyRow
+              </td>
+              <td>
+                取得した列が全て NULL だった場合、デフォルトの動作では <code>null</code> が返りますが、 returnInstanceForEmptyRow に true を設定すると空のインスタンスが返るようになります。この動作はネストされた結果をマッピングする際にも適用されます。導入されたバージョン: 3.4.2
               </td>
               <td>
                 true | false
@@ -429,6 +528,36 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 未指定
               </td>
             </tr>
+            <tr>
+              <td>
+                useActualParamName
+              </td>
+              <td>
+                ステートメントの引数を参照する際、メソッドシグネチャで宣言されている名前で参照できるようにします。
+                このオプションを有効にする場合、プロジェクトを Java 8 （コンパイラオプション <code>-parameters</code> 付き）でコンパイルする必要があります。 (導入されたバージョン: 3.4.1)
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                true
+              </td>
+            </tr>
+            <tr>
+              <td>
+                configurationFactory
+              </td>
+              <td>
+                デシリアライズされたオブジェクトの遅延読込（Lazy loading）を行う際に利用される <code>Configuration</code> のインスタンスを返すクラスを指定します。
+                このクラスには次のシグネチャを持つメソッドが定義されている必要があります。 <code>static Configuration getConfiguration()</code>. (導入されたバージョン: 3.2.3)
+              </td>
+              <td>
+                タイプエイリアスまたは完全修飾クラス名
+              </td>
+              <td>
+                未指定
+              </td>
+            </tr>
           </tbody>
         </table>
         <p>
@@ -441,6 +570,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
   <setting name="useColumnLabel" value="true"/>
   <setting name="useGeneratedKeys" value="false"/>
   <setting name="autoMappingBehavior" value="PARTIAL"/>
+  <setting name="autoMappingUnknownColumnBehavior" value="WARNING"/>
   <setting name="defaultExecutorType" value="SIMPLE"/>
   <setting name="defaultStatementTimeout" value="25"/>
   <setting name="defaultFetchSize" value="100"/>
@@ -741,6 +871,10 @@ public class Author {
           MyBatis が PreparedStatement のパラメーターをセットするとき、あるいは ResultSet から値を取得するときには、必ずその Java タイプに対応する TypeHandler が使用されます。<br />
           次の表はデフォルトの TypeHandler の一覧です。
         </p>
+        <p>
+          <span class="label important">NOTE</span>
+          バージョン3.4.5より、JSR-310(Date and Time API)のクラスがデフォルトでサポートされました。
+        </p>
         <table>
           <thead>
             <tr>
@@ -857,6 +991,17 @@ public class Author {
             </tr>
             <tr>
               <td>
+                ClobReaderTypeHandler
+              </td>
+              <td>
+                java.io.Reader
+              </td>
+              <td>
+                -
+              </td>
+            </tr>
+            <tr>
+              <td>
                 ClobTypeHandler
               </td>
               <td>
@@ -886,6 +1031,17 @@ public class Author {
               </td>
               <td>
                 NCLOB
+              </td>
+            </tr>
+            <tr>
+              <td>
+                BlobInputStreamTypeHandler
+              </td>
+              <td>
+                java.io.InputStream
+              </td>
+              <td>
+                -
               </td>
             </tr>
             <tr>
@@ -1000,13 +1156,145 @@ public class Author {
             </tr>
             <tr>
               <td>
-                <code>EnumOrdinalTypeHandler</code>
+                EnumOrdinalTypeHandler
               </td>
               <td>
                 Enumeration Type
               </td>
               <td>
                 コードではなく位置（ordinal）が保存されるので、NUMERIC または DOUBLE 互換の型
+              </td>
+            </tr>
+            <tr>
+              <td>
+                SqlxmlTypeHandler
+              </td>
+              <td>
+                java.lang.String
+              </td>
+              <td>
+                SQLXML
+              </td>
+            </tr>
+            <tr>
+              <td>
+                InstantTypeHandler
+              </td>
+              <td>
+                java.time.Instant
+              </td>
+              <td>
+                TIMESTAMP
+              </td>
+            </tr>
+            <tr>
+              <td>
+                LocalDateTimeTypeHandler
+              </td>
+              <td>
+                java.time.LocalDateTime
+              </td>
+              <td>
+                TIMESTAMP
+              </td>
+            </tr>
+            <tr>
+              <td>
+                LocalDateTypeHandler
+              </td>
+              <td>
+                java.time.LocalDate
+              </td>
+              <td>
+                DATE
+              </td>
+            </tr>
+            <tr>
+              <td>
+                LocalTimeTypeHandler
+              </td>
+              <td>
+                java.time.LocalTime
+              </td>
+              <td>
+                TIME
+              </td>
+            </tr>
+            <tr>
+              <td>
+                OffsetDateTimeTypeHandler
+              </td>
+              <td>
+                java.time.OffsetDateTime
+              </td>
+              <td>
+                TIMESTAMP
+              </td>
+            </tr>
+            <tr>
+              <td>
+                OffsetTimeTypeHandler
+              </td>
+              <td>
+                java.time.OffsetTime
+              </td>
+              <td>
+                TIME
+              </td>
+            </tr>
+            <tr>
+              <td>
+                ZonedDateTimeTypeHandler
+              </td>
+              <td>
+                java.time.ZonedDateTime
+              </td>
+              <td>
+                TIMESTAMP
+              </td>
+            </tr>
+            <tr>
+              <td>
+                YearTypeHandler
+              </td>
+              <td>
+                java.time.Year
+              </td>
+              <td>
+                INTEGER
+              </td>
+            </tr>
+            <tr>
+              <td>
+                MonthTypeHandler
+              </td>
+              <td>
+                java.time.Month
+              </td>
+              <td>
+                INTEGER
+              </td>
+            </tr>
+            <tr>
+              <td>
+                YearMonthTypeHandler
+              </td>
+              <td>
+                java.time.YearMonth
+              </td>
+              <td>
+                VARCHAR または LONGVARCHAR
+              </td>
+            </tr>
+            <tr>
+              <td>
+                JapaneseDateTypeHandler
+              </td>
+              <td>
+                java.time.chrono.JapaneseDate
+              </td>
+              <td>
+                DATE
               </td>
             </tr>
           </tbody>
@@ -1070,6 +1358,12 @@ public class StringTypeHandler extends BaseTypeHandler<String> {
           <li>typeHandler 要素に jdbcType 属性を追加する（例：jdbcType=VARCHAR）。</li>
           <li>TypeHandler の実装クラスに <code>@MappedJdbcTypes</code> を付加し、JDBC タイプのリストを指定します。jdbcType 属性が指定されている場合、このアノテーションは無視されます。</li>
         </ul>
+
+        <p>
+          <code>ResultMap</code>　でプロパティの指定に <code>typeHandler</code> と <code>jdbcType</code> が明示的に指定されていない場合、パース時点で <code>javaType</code> はプロパティの型から推測可能ですが <code>jdbcType</code> は未知となります。 MyBatis は javaType=[推測された型] と jdbcType=null にマップされた TypeHandler を探します。
+          TypeHandler を jdbcType=null にマップするためには <code>@MappedJdbcTypes</code> の <code>includeNullJdbcType</code> 属性に <code>true</code> を指定します。<br />
+          MyBatis 3.4.0 以降は javaType に対してマップされている TypeHandler が１つの場合は登録時の jdbcType に関わらずこの TypeHandler が使われるようになりました。
+        </p>
 
         <p>また、MyBatis にタイプハンドラーを自動検出させることもできます。</p>
         <source><![CDATA[<!-- mybatis-config.xml -->
@@ -1139,10 +1433,6 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
           （Mapper ファイルについては次の章で解説していますので、このドキュメントを初めて読む方はこの部分を後回しにした方が良いかも知れません）
         </p>
         <source><![CDATA[<!DOCTYPE mapper
-    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-
-<!DOCTYPE mapper
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
@@ -1286,7 +1576,7 @@ public class ExamplePlugin implements Interceptor {
         </p>
         <p>
           プラグインによって MyBatis の動作を変更する以外に、Configuration クラスをオーバーライドすることもできます。
-          方法は単純で、Configuration のサブクラスを作って任意のメソッドをオーバーライドし、sqlSessionFactoryBuilder.build(myConfig) のようにして呼び出すだけです。
+          方法は単純で、Configuration のサブクラスを作って任意のメソッドをオーバーライドし、SqlSessionFactoryBuilder.build(myConfig) のようにして呼び出すだけです。
           繰り返しになりますが、これは MyBatis の動作に重大な影響を与える可能性があるので注意してください。
         </p>
       </subsection>
@@ -1313,15 +1603,15 @@ public class ExamplePlugin implements Interceptor {
           envrionment を引数に取るシグネチャは下記の２つです。
         </p>
 
-        <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment);
-SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment,properties);]]></source>
+        <source><![CDATA[SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environment);
+SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environment,properties);]]></source>
 
         <p>
           environment が省略された場合、デフォルトの environment がロードされます。
         </p>
 
-        <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader);
-SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]></source>
+        <source><![CDATA[SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader);
+SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properties);]]></source>
 
         <p>
           environment の具体的な設定は、environments 要素で行います。
@@ -1403,6 +1693,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
   void commit() throws SQLException;
   void rollback() throws SQLException;
   void close() throws SQLException;
+  Integer getTimeout() throws SQLException;
 }]]></source>
         <p>
           これらのインターフェイスを使えば、MyBatis のトランザクション管理方法を完全にカスタマイズすることが可能です。
@@ -1471,6 +1762,14 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
           </li>
           <li>poolTimeToWait – 接続の取得に長時間を要した場合にログを出力し、接続の再取得を試みる機会を与えるための低レベルの設定です（プールが誤って設定された場合、無限に待機状態となってしまうのを防ぐため）。
             デフォルト: 20000ms （20秒）
+          </li>
+          <li><code>poolMaximumLocalBadConnectionTolerance</code> – This is a low level setting about
+            tolerance of bad connections got for any thread. If a thread got a bad connection, it may
+            still have another chance to re-attempt to get another connection which is valid. But the
+            retrying times should not more than the sum of <code>poolMaximumIdleConnections</code>
+            and <code>poolMaximumLocalBadConnectionTolerance</code>.
+            Default:
+            3 (Since: 3.4.5)
           </li>
           <li>poolPingQuery – プールされた接続が正常で、リクエストを受け付けられる状態にあるかどうか確認するためにデータベースに送信される ping クエリを設定します。
             デフォルトは "NO PING QUERY SET" で、一般的なドライバーであれば問い合わせは失敗し、適切なエラーメッセージが出力されるはずです。

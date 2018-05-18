@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,8 +15,8 @@
  */
 package org.apache.ibatis.submitted.dml_return_types;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -26,7 +26,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.Reader;
-import java.sql.Connection;
 
 import static org.junit.Assert.assertEquals;
 
@@ -43,28 +42,13 @@ public class DmlMapperReturnTypesTest {
   @BeforeClass
   public static void setUp() throws Exception {
     // create a SqlSessionFactory
-    Reader reader = Resources.getResourceAsReader(XML);
-    try {
+    try (Reader reader = Resources.getResourceAsReader(XML)) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    } finally {
-      reader.close();
     }
 
     // populate in-memory database
-    SqlSession session = sqlSessionFactory.openSession();
-    try {
-      Connection conn = session.getConnection();
-      reader = Resources.getResourceAsReader(SQL);
-      try {
-        ScriptRunner runner = new ScriptRunner(conn);
-        runner.setLogWriter(null);
-        runner.runScript(reader);
-      } finally {
-        reader.close();
-      }
-    } finally {
-      session.close();
-    }
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(), SQL);
+
   }
 
   @Before

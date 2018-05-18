@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -78,15 +78,15 @@ public class SqlSourceBuilder extends BaseBuilder {
         propertyType = parameterType;
       } else if (JdbcType.CURSOR.name().equals(propertiesMap.get("jdbcType"))) {
         propertyType = java.sql.ResultSet.class;
-      } else if (property != null) {
+      } else if (property == null || Map.class.isAssignableFrom(parameterType)) {
+        propertyType = Object.class;
+      } else {
         MetaClass metaClass = MetaClass.forClass(parameterType, configuration.getReflectorFactory());
         if (metaClass.hasGetter(property)) {
           propertyType = metaClass.getGetterType(property);
         } else {
           propertyType = Object.class;
         }
-      } else {
-        propertyType = Object.class;
       }
       ParameterMapping.Builder builder = new ParameterMapping.Builder(configuration, property, propertyType);
       Class<?> javaType = propertyType;

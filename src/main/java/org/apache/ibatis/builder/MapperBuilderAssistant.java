@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ import org.apache.ibatis.type.TypeHandler;
 public class MapperBuilderAssistant extends BaseBuilder {
 
   private String currentNamespace;
-  private String resource;
+  private final String resource;
   private Cache currentCache;
   private boolean unresolvedCacheRef; // issue #676
 
@@ -286,7 +286,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
         .databaseId(databaseId)
         .lang(lang)
         .resultOrdered(resultOrdered)
-        .resulSets(resultSets)
+        .resultSets(resultSets)
         .resultMaps(getStatementResultMaps(resultMap, resultType, id))
         .resultSetType(resultSetType)
         .flushCacheRequired(valueOrDefault(flushCache, !isSelect))
@@ -376,9 +376,6 @@ public class MapperBuilderAssistant extends BaseBuilder {
     Class<?> javaTypeClass = resolveResultJavaType(resultType, property, javaType);
     TypeHandler<?> typeHandlerInstance = resolveTypeHandler(javaTypeClass, typeHandler);
     List<ResultMapping> composites = parseCompositeColumnName(column);
-    if (composites.size() > 0) {
-      column = null;
-    }
     return new ResultMapping.Builder(configuration, property, column, javaTypeClass)
         .jdbcType(jdbcType)
         .nestedQueryId(applyCurrentNamespace(nestedSelect, true))
@@ -475,7 +472,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
         nestedResultMap, notNullColumn, columnPrefix, typeHandler, flags, null, null, configuration.isLazyLoadingEnabled());
   }
 
-  public LanguageDriver getLanguageDriver(Class<?> langClass) {
+  public LanguageDriver getLanguageDriver(Class<? extends LanguageDriver> langClass) {
     if (langClass != null) {
       configuration.getLanguageRegistry().register(langClass);
     } else {

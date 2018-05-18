@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,12 +18,11 @@ package org.apache.ibatis.submitted.no_param_type;
 import static org.junit.Assert.*;
 
 import java.io.Reader;
-import java.sql.Connection;
 import java.util.List;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.executor.BatchResult;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -38,25 +37,18 @@ public class NoParamTypeTest {
   @BeforeClass
   public static void setUp() throws Exception {
     // create a SqlSessionFactory
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/no_param_type/mybatis-config.xml");
-    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    reader.close();
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/no_param_type/mybatis-config.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    }
 
     // populate in-memory database
-    SqlSession session = sqlSessionFactory.openSession();
-    Connection conn = session.getConnection();
-    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/no_param_type/CreateDB.sql");
-    ScriptRunner runner = new ScriptRunner(conn);
-    runner.setLogWriter(null);
-    runner.runScript(reader);
-    reader.close();
-    session.close();
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+            "org/apache/ibatis/submitted/no_param_type/CreateDB.sql");
   }
 
   @Test
   public void shouldAcceptDifferentTypeInTheSameBatch() {
-    SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH)) {
       ObjA a = new ObjA();
       a.setId(1);
       a.setName(111);
@@ -71,8 +63,6 @@ public class NoParamTypeTest {
       sqlSession.commit();
       List<User> users = sqlSession.selectList("selectUser");
       assertEquals(2, users.size());
-    } finally {
-      sqlSession.close();
     }
   }
 

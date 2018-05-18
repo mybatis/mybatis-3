@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import org.junit.Test;
 
 import java.io.Reader;
 
-import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 
 public class NestedQueryCacheTest extends BaseDataTest {
@@ -36,67 +36,54 @@ public class NestedQueryCacheTest extends BaseDataTest {
   @BeforeClass
   public static void setUp() throws Exception {
     // create a SqlSessionFactory
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/nested_query_cache/MapperConfig.xml");
-    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    reader.close();
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/nested_query_cache/MapperConfig.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    }
 
     createBlogDataSource();
   }
 
   @Test
   public void testThatNestedQueryItemsAreRetrievedFromCache() throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
     final Author author;
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       final AuthorMapper authorMapper = sqlSession.getMapper(AuthorMapper.class);
       author = authorMapper.selectAuthor(101);
       
       // ensure that author is cached
       final Author cachedAuthor = authorMapper.selectAuthor(101);
-      assertThat("cached author", author, sameInstance(cachedAuthor));
-    } finally {
-      sqlSession.close();
+      assertThat(author).isSameAs(cachedAuthor);
     }
 
     // open a new session
-    sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       final BlogMapper blogMapper = sqlSession.getMapper(BlogMapper.class);
 
       // ensure that nested author within blog is cached
-      assertThat("blog author", blogMapper.selectBlog(1).getAuthor(), sameInstance(author));
-      assertThat("blog author", blogMapper.selectBlogUsingConstructor(1).getAuthor(), sameInstance(author));
-    } finally {
-      sqlSession.close();
+      assertThat(blogMapper.selectBlog(1).getAuthor()).isSameAs(author);
+      assertThat(blogMapper.selectBlogUsingConstructor(1).getAuthor()).isSameAs(author);
     }
   }
   
   @Test
   public void testThatNestedQueryItemsAreRetrievedIfNotInCache() throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    Author author = null;
-    try {
+    Author author;
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       final BlogMapper blogMapper = sqlSession.getMapper(BlogMapper.class);
       author = blogMapper.selectBlog(1).getAuthor();
       
       // ensure that nested author within blog is cached
       assertNotNull("blog author", blogMapper.selectBlog(1).getAuthor());
       assertNotNull("blog author", blogMapper.selectBlogUsingConstructor(1).getAuthor());
-    } finally {
-      sqlSession.close();
     }
 
     // open a new session
-    sqlSession = sqlSessionFactory.openSession();    
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       final AuthorMapper authorMapper = sqlSession.getMapper(AuthorMapper.class);
       Author cachedAuthor = authorMapper.selectAuthor(101);
 
       // ensure that nested author within blog is cached
-      assertThat("blog author", cachedAuthor, sameInstance(author));
-      
-    } finally {
-      sqlSession.close();
+      assertThat(cachedAuthor).isSameAs(author);
     }
     
   }  
