@@ -137,9 +137,11 @@ public class JdbcTransaction implements Transaction {
     }
     connection = dataSource.getConnection();
     if (level != null) {
+      // 设置事务的隔离级别
       connection.setTransactionIsolation(level.getLevel());
     }
-    setDesiredAutoCommit(autoCommit);
+    // 设置是否自动提交事务
+    setDesiredAutoCommit(autoCommmit);
   }
 
   @Override
