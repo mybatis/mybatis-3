@@ -27,8 +27,8 @@
   </properties>
 
   <body>
-    <section name="XML 映射配置文件">
-      <p>MyBatis 的配置文件包含了会深深影响 MyBatis 行为的设置（settings）和属性（properties）信息。配置文档的顶层结构如下：</p>
+    <section name="配置">
+      <p>MyBatis 的配置文件包含了会深深影响 MyBatis 行为的设置和属性信息。配置文档的顶层结构如下：</p>
 
       <ul>
         <li>
@@ -513,7 +513,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               </td>
               <td>
                 允许使用方法签名中的名称作为语句参数名称。
-		为了使用该特性，你的工程必须采用 Java 8 编译，并且加上 <code>-parameters</code> 选项。（新增于 3.4.1）
+		为了使用该特性，你的项目必须采用 Java 8 编译，并且加上 <code>-parameters</code> 选项。（新增于 3.4.1）
               </td>
               <td>
                 true | false
