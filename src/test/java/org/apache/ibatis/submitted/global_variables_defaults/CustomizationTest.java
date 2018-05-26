@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -58,12 +58,9 @@ public class CustomizationTest {
         .isEqualTo("default");
     Assertions.assertThat(cache.getName()).isEqualTo("default");
 
-    SqlSession sqlSession = factory.openSession();
-    try {
+    try (SqlSession sqlSession = factory.openSession()) {
       CustomDefaultValueSeparatorMapper mapper = sqlSession.getMapper(CustomDefaultValueSeparatorMapper.class);
       Assertions.assertThat(mapper.selectValue(null)).isEqualTo("default");
-    } finally {
-      sqlSession.close();
     }
 
   }
@@ -95,12 +92,9 @@ public class CustomizationTest {
          .isEqualTo("customObjectFactory");
     Assertions.assertThat(cache.getName()).isEqualTo("customCache");
 
-    SqlSession sqlSession = factory.openSession();
-    try {
+    try (SqlSession sqlSession = factory.openSession()) {
       CustomDefaultValueSeparatorMapper mapper = sqlSession.getMapper(CustomDefaultValueSeparatorMapper.class);
       Assertions.assertThat(mapper.selectValue("3333")).isEqualTo("3333");
-    } finally {
-      sqlSession.close();
     }
 
   }

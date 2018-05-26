@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -82,11 +82,9 @@ public class ExternalResourcesTest {
   public void testGetConfiguredTemplate() {
     String templateName = "";
 
-    try {
-      FileWriter fileWriter = new FileWriter(tempFile);
+    try (FileWriter fileWriter = new FileWriter(tempFile)) {
       fileWriter.append("new_command.template=templates/col_new_template_migration.sql");
       fileWriter.flush();
-      fileWriter.close();
       templateName = ExternalResources.getConfiguredTemplate(tempFile.getAbsolutePath(), "new_command.template");
       assertEquals("templates/col_new_template_migration.sql", templateName);
     } catch (Exception e) {

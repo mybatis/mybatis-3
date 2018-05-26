@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,13 +18,11 @@ package org.apache.ibatis.submitted.deferload_common_property;
 import static org.junit.Assert.*;
 
 import java.io.Reader;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.ResultContext;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.SqlSession;
@@ -40,38 +38,20 @@ public class CommonPropertyDeferLoadError {
 
     @BeforeClass
     public static void initDatabase() throws Exception {
-        Connection conn = null;
-
-        try {
-            Class.forName("org.hsqldb.jdbcDriver");
-            conn = DriverManager.getConnection("jdbc:hsqldb:mem:deferload_common_property", "sa",
-                    "");
-
-            Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/deferload_common_property/CreateDB.sql");
-
-            ScriptRunner runner = new ScriptRunner(conn);
-            runner.setLogWriter(null);
-            runner.setErrorLogWriter(null);
-            runner.runScript(reader);
-            conn.commit();
-            reader.close();
-
-            reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/deferload_common_property/ibatisConfig.xml");
+        try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/deferload_common_property/ibatisConfig.xml")) {
             sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-            reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/deferload_common_property/lazyLoadIbatisConfig.xml");
-            lazyLoadSqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-            reader.close();
-        } finally {
-            if (conn != null) {
-                conn.close();
-            }
         }
+        try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/deferload_common_property/lazyLoadIbatisConfig.xml")) {
+            lazyLoadSqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+        }
+
+        BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+                "org/apache/ibatis/submitted/deferload_common_property/CreateDB.sql");
     }
 
     @Test
     public void testDeferLoadAfterResultHandler() {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        try {
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             class MyResultHandler implements ResultHandler {
                 List<Child> children = new ArrayList<Child>();
                 @Override
@@ -85,15 +65,12 @@ public class CommonPropertyDeferLoadError {
             for (Child child: myResultHandler.children) {
                 assertNotNull(child.getFather());
             }
-        } finally {
-            sqlSession.close();
         }
     }
 
     @Test
     public void testDeferLoadDuringResultHandler() {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        try {
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             class MyResultHandler implements ResultHandler {
                 @Override
                 public void handleResult(ResultContext context) {
@@ -102,15 +79,12 @@ public class CommonPropertyDeferLoadError {
                 }
             };
             sqlSession.select("org.apache.ibatis.submitted.deferload_common_property.ChildMapper.selectAll", new MyResultHandler());
-        } finally {
-            sqlSession.close();
         }
     }
 
     @Test
     public void testDeferLoadAfterResultHandlerWithLazyLoad() {
-        SqlSession sqlSession = lazyLoadSqlSessionFactory.openSession();
-        try {
+        try (SqlSession sqlSession = lazyLoadSqlSessionFactory.openSession()) {
             class MyResultHandler implements ResultHandler {
                 List<Child> children = new ArrayList<Child>();
                 @Override
@@ -124,15 +98,12 @@ public class CommonPropertyDeferLoadError {
             for (Child child: myResultHandler.children) {
                 assertNotNull(child.getFather());
             }
-        } finally {
-            sqlSession.close();
         }
     }
 
     @Test
     public void testDeferLoadDuringResultHandlerWithLazyLoad() {
-        SqlSession sqlSession = lazyLoadSqlSessionFactory.openSession();
-        try {
+        try (SqlSession sqlSession = lazyLoadSqlSessionFactory.openSession()) {
             class MyResultHandler implements ResultHandler {
                 @Override
                 public void handleResult(ResultContext context) {
@@ -141,8 +112,6 @@ public class CommonPropertyDeferLoadError {
                 }
             };
             sqlSession.select("org.apache.ibatis.submitted.deferload_common_property.ChildMapper.selectAll", new MyResultHandler());
-        } finally {
-            sqlSession.close();
         }
     }
 }

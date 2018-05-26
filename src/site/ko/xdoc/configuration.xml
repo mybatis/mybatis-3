@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2017 the original author or authors.
+       Copyright 2009-2018 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -1097,6 +1097,17 @@ public class Author {
               </td>
               <td>
                 코드자체가 아니라 위치를 저장할수 있는 <code>NUMERIC</code> 또는 <code>DOUBLE</code>와 호환가능한 타입
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>SqlxmlTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.String</code>
+              </td>
+              <td>
+                <code>SQLXML</code>
               </td>
             </tr>
             <tr>

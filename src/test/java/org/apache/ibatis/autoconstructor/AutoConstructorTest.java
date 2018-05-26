@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,20 +15,20 @@
  */
 package org.apache.ibatis.autoconstructor;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.assertj.core.api.Assertions;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.Reader;
-import java.sql.Connection;
 import java.util.List;
+
+import static org.junit.Assert.assertNotNull;
 
 public class AutoConstructorTest {
   private static SqlSessionFactory sqlSessionFactory;
@@ -36,80 +36,58 @@ public class AutoConstructorTest {
   @BeforeClass
   public static void setUp() throws Exception {
     // create a SqlSessionFactory
-    final Reader reader = Resources.getResourceAsReader("org/apache/ibatis/autoconstructor/mybatis-config.xml");
-    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    reader.close();
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/autoconstructor/mybatis-config.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    }
 
     // populate in-memory database
-    final SqlSession session = sqlSessionFactory.openSession();
-    final Connection conn = session.getConnection();
-    final Reader dbReader = Resources.getResourceAsReader("org/apache/ibatis/autoconstructor/CreateDB.sql");
-    final ScriptRunner runner = new ScriptRunner(conn);
-    runner.setLogWriter(null);
-    runner.runScript(dbReader);
-    conn.close();
-    dbReader.close();
-    session.close();
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/autoconstructor/CreateDB.sql");
   }
 
   @Test
   public void fullyPopulatedSubject() {
-    final SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       final AutoConstructorMapper mapper = sqlSession.getMapper(AutoConstructorMapper.class);
       final Object subject = mapper.getSubject(1);
-      Assert.assertNotNull(subject);
-    } finally {
-      sqlSession.close();
+      assertNotNull(subject);
     }
   }
 
   @Test(expected = PersistenceException.class)
   public void primitiveSubjects() {
-    final SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       final AutoConstructorMapper mapper = sqlSession.getMapper(AutoConstructorMapper.class);
       mapper.getSubjects();
-    } finally {
-      sqlSession.close();
-    }
-  }
-
-  @Test
-  public void wrapperSubject() {
-    final SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
-      final AutoConstructorMapper mapper = sqlSession.getMapper(AutoConstructorMapper.class);
-      verifySubjects(mapper.getWrapperSubjects());
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void annotatedSubject() {
-    final SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       final AutoConstructorMapper mapper = sqlSession.getMapper(AutoConstructorMapper.class);
       verifySubjects(mapper.getAnnotatedSubjects());
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test(expected = PersistenceException.class)
   public void badSubject() {
-    final SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       final AutoConstructorMapper mapper = sqlSession.getMapper(AutoConstructorMapper.class);
       mapper.getBadSubjects();
-    } finally {
-      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void extensiveSubject() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      final AutoConstructorMapper mapper = sqlSession.getMapper(AutoConstructorMapper.class);
+      verifySubjects(mapper.getExtensiveSubject());
     }
   }
 
   private void verifySubjects(final List<?> subjects) {
-    Assert.assertNotNull(subjects);
+    assertNotNull(subjects);
     Assertions.assertThat(subjects.size()).isEqualTo(3);
   }
 }

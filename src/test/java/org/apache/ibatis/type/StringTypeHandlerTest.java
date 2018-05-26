@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package org.apache.ibatis.type;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -36,8 +37,8 @@ public class StringTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldGetResultFromResultSetByName() throws Exception {
     when(rs.getString("column")).thenReturn("Hello");
-    when(rs.wasNull()).thenReturn(false);
     assertEquals("Hello", TYPE_HANDLER.getResult(rs, "column"));
+    verify(rs, never()).wasNull();
   }
 
   @Override
@@ -49,8 +50,8 @@ public class StringTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldGetResultFromResultSetByPosition() throws Exception {
     when(rs.getString(1)).thenReturn("Hello");
-    when(rs.wasNull()).thenReturn(false);
     assertEquals("Hello", TYPE_HANDLER.getResult(rs, 1));
+    verify(rs, never()).wasNull();
   }
 
   @Override
@@ -62,8 +63,8 @@ public class StringTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
     when(cs.getString(1)).thenReturn("Hello");
-    when(cs.wasNull()).thenReturn(false);
     assertEquals("Hello", TYPE_HANDLER.getResult(cs, 1));
+    verify(cs, never()).wasNull();
   }
 
   @Override

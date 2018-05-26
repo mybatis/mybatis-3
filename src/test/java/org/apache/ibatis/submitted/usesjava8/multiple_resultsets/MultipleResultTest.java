@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,15 +16,12 @@
 package org.apache.ibatis.submitted.usesjava8.multiple_resultsets;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.nio.file.Paths;
-import java.sql.Connection;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
@@ -65,13 +62,8 @@ public class MultipleResultTest {
     configuration.addMapper(Mapper.class);
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
 
-    try (SqlSession session = sqlSessionFactory.openSession();
-        Connection conn = session.getConnection();
-        Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/usesjava8/multiple_resultsets/CreateDB.sql")) {
-      ScriptRunner runner = new ScriptRunner(conn);
-      runner.setLogWriter(null);
-      runner.runScript(reader);
-    }
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+            "org/apache/ibatis/submitted/usesjava8/multiple_resultsets/CreateDB.sql");
   }
 
   @AfterClass

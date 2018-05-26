@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -135,7 +135,11 @@ public class TypeParameterResolverTest {
     Class<?> clazz = Level1Mapper.class;
     Method method = clazz.getMethod("simpleSelectTypeVar");
     Type result = TypeParameterResolver.resolveReturnType(method, clazz);
-    assertEquals(Object.class, result);
+    assertTrue(result instanceof ParameterizedType);
+    ParameterizedType paramType = (ParameterizedType) result;
+    assertEquals(Calculator.class, paramType.getRawType());
+    assertEquals(1, paramType.getActualTypeArguments().length);
+    assertTrue(paramType.getActualTypeArguments()[0] instanceof WildcardType);
   }
 
   @Test
@@ -401,5 +405,23 @@ public class TypeParameterResolverTest {
     assertEquals(Key.class, TypeParameterResolver.resolveReturnType(getter2, clazz));
     Method setter2 = clazz.getMethod("setKey2", Key.class);
     assertEquals(Key.class, TypeParameterResolver.resolveParamTypes(setter2, clazz)[0]);
+  }
+
+  @Test
+  public void testDeepHierarchy() throws Exception {
+    @SuppressWarnings("unused")
+    abstract class A<S> {
+      protected S id;
+      public S getId() { return this.id;}
+      public void setId(S id) {this.id = id;}
+    }
+    abstract class B<T> extends A<T> {}
+    abstract class C<U> extends B<U> {}
+    class D extends C<Integer> {}
+    Class<?> clazz = D.class;
+    Method method = clazz.getMethod("getId");
+    assertEquals(Integer.class, TypeParameterResolver.resolveReturnType(method, clazz));
+    Field field = A.class.getDeclaredField("id");
+    assertEquals(Integer.class, TypeParameterResolver.resolveFieldType(field, clazz));
   }
 }

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,12 +18,10 @@ package org.apache.ibatis.submitted.column_prefix;
 import static org.junit.Assert.*;
 
 import java.io.Reader;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.util.List;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -36,48 +34,28 @@ public class ColumnPrefixTest {
 
   @Before
   public void setUp() throws Exception {
-    Connection conn = null;
-
-    try {
-      Class.forName("org.hsqldb.jdbcDriver");
-      conn = DriverManager.getConnection("jdbc:hsqldb:mem:clmpfx", "sa", "");
-      Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/column_prefix/CreateDB.sql");
-      ScriptRunner runner = new ScriptRunner(conn);
-      runner.setLogWriter(null);
-      runner.setErrorLogWriter(null);
-      runner.runScript(reader);
-      conn.commit();
-      reader.close();
-
-      reader = Resources.getResourceAsReader(getConfigPath());
+    try (Reader reader = Resources.getResourceAsReader(getConfigPath())) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-      reader.close();
-
-    } finally {
-      if (conn != null) {
-        conn.close();
-      }
     }
+
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+            "org/apache/ibatis/submitted/column_prefix/CreateDB.sql");
   }
 
   @Test
-  public void testSelectPetAndRoom() throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  public void testSelectPetAndRoom() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       List<Pet> pets = getPetAndRoom(sqlSession);
       assertEquals(3, pets.size());
       assertEquals("Ume", pets.get(0).getRoom().getRoomName());
       assertNull(pets.get(1).getRoom());
       assertEquals("Sakura", pets.get(2).getRoom().getRoomName());
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
-  public void testComplexPerson() throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  public void testComplexPerson() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       List<Person> list = getPersons(sqlSession);
       Person person1 = list.get(0);
       assertEquals(Integer.valueOf(1), person1.getId());
@@ -133,8 +111,6 @@ public class ColumnPrefixTest {
       assertEquals(1, person3.getPets().size());
       assertEquals("Dodo", person3.getPets().get(0).getName());
       assertEquals("Sakura", person3.getPets().get(0).getRoom().getRoomName());
-    } finally {
-      sqlSession.close();
     }
   }
 

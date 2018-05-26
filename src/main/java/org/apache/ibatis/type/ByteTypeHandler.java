@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -34,18 +34,21 @@ public class ByteTypeHandler extends BaseTypeHandler<Byte> {
   @Override
   public Byte getNullableResult(ResultSet rs, String columnName)
       throws SQLException {
-    return rs.getByte(columnName);
+    byte result = rs.getByte(columnName);
+    return (result == 0 && rs.wasNull()) ? null : result;
   }
 
   @Override
   public Byte getNullableResult(ResultSet rs, int columnIndex)
       throws SQLException {
-    return rs.getByte(columnIndex);
+    byte result = rs.getByte(columnIndex);
+    return (result == 0 && rs.wasNull()) ? null : result;
   }
 
   @Override
   public Byte getNullableResult(CallableStatement cs, int columnIndex)
       throws SQLException {
-    return cs.getByte(columnIndex);
+    byte result = cs.getByte(columnIndex);
+    return (result == 0 && cs.wasNull()) ? null : result;
   }
 }
