@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -25,8 +25,8 @@ public class PoolState {
 
   protected PooledDataSource dataSource;
 
-  protected final List<PooledConnection> idleConnections = new ArrayList<PooledConnection>();
-  protected final List<PooledConnection> activeConnections = new ArrayList<PooledConnection>();
+  protected final List<PooledConnection> idleConnections = new ArrayList<>();
+  protected final List<PooledConnection> activeConnections = new ArrayList<>();
   protected long requestCount = 0;
   protected long accumulatedRequestTime = 0;
   protected long accumulatedCheckoutTime = 0;

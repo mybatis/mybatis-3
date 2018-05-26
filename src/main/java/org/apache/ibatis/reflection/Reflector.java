@@ -49,13 +49,13 @@ public class Reflector {
   private final Class<?> type;
   private final String[] readablePropertyNames;
   private final String[] writeablePropertyNames;
-  private final Map<String, Invoker> setMethods = new HashMap<String, Invoker>();
-  private final Map<String, Invoker> getMethods = new HashMap<String, Invoker>();
-  private final Map<String, Class<?>> setTypes = new HashMap<String, Class<?>>();
-  private final Map<String, Class<?>> getTypes = new HashMap<String, Class<?>>();
+  private final Map<String, Invoker> setMethods = new HashMap<>();
+  private final Map<String, Invoker> getMethods = new HashMap<>();
+  private final Map<String, Class<?>> setTypes = new HashMap<>();
+  private final Map<String, Class<?>> getTypes = new HashMap<>();
   private Constructor<?> defaultConstructor;
 
-  private Map<String, String> caseInsensitivePropertyMap = new HashMap<String, String>();
+  private Map<String, String> caseInsensitivePropertyMap = new HashMap<>();
 
   public Reflector(Class<?> clazz) {
     type = clazz;
@@ -92,7 +92,7 @@ public class Reflector {
   }
 
   private void addGetMethods(Class<?> cls) {
-    Map<String, List<Method>> conflictingGetters = new HashMap<String, List<Method>>();
+    Map<String, List<Method>> conflictingGetters = new HashMap<>();
     Method[] methods = getClassMethods(cls);
     for (Method method : methods) {
       if (method.getParameterTypes().length > 0) {
@@ -152,7 +152,7 @@ public class Reflector {
   }
 
   private void addSetMethods(Class<?> cls) {
-    Map<String, List<Method>> conflictingSetters = new HashMap<String, List<Method>>();
+    Map<String, List<Method>> conflictingSetters = new HashMap<>();
     Method[] methods = getClassMethods(cls);
     for (Method method : methods) {
       String name = method.getName();
@@ -167,11 +167,7 @@ public class Reflector {
   }
 
   private void addMethodConflict(Map<String, List<Method>> conflictingMethods, String name, Method method) {
-    List<Method> list = conflictingMethods.get(name);
-    if (list == null) {
-      list = new ArrayList<Method>();
-      conflictingMethods.put(name, list);
-    }
+    List<Method> list = conflictingMethods.computeIfAbsent(name, k -> new ArrayList<>());
     list.add(method);
   }
 
@@ -311,7 +307,7 @@ public class Reflector {
    * @return An array containing all methods in this class
    */
   private Method[] getClassMethods(Class<?> cls) {
-    Map<String, Method> uniqueMethods = new HashMap<String, Method>();
+    Map<String, Method> uniqueMethods = new HashMap<>();
     Class<?> currentClass = cls;
     while (currentClass != null && currentClass != Object.class) {
       addUniqueMethods(uniqueMethods, currentClass.getDeclaredMethods());

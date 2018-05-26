@@ -62,8 +62,7 @@ public class SqlxmlTypeHandler extends BaseTypeHandler<String> {
       return null;
     }
     try {
-      String result = sqlxml.getString();
-      return result;
+      return sqlxml.getString();
     } finally {
       sqlxml.free();
     }

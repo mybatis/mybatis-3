@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ import org.apache.ibatis.io.Resources;
  */
 public class TypeAliasRegistry {
 
-  private final Map<String, Class<?>> TYPE_ALIASES = new HashMap<String, Class<?>>();
+  private final Map<String, Class<?>> TYPE_ALIASES = new HashMap<>();
 
   public TypeAliasRegistry() {
     registerAlias("string", String.class);
@@ -126,7 +126,7 @@ public class TypeAliasRegistry {
   }
 
   public void registerAliases(String packageName, Class<?> superType){
-    ResolverUtil<Class<?>> resolverUtil = new ResolverUtil<Class<?>>();
+    ResolverUtil<Class<?>> resolverUtil = new ResolverUtil<>();
     resolverUtil.find(new ResolverUtil.IsA(superType), packageName);
     Set<Class<? extends Class<?>>> typeSet = resolverUtil.getClasses();
     for(Class<?> type : typeSet){

@@ -217,7 +217,7 @@ public class XMLMapperBuilder extends BaseBuilder {
       String type = parameterMapNode.getStringAttribute("type");
       Class<?> parameterClass = resolveClass(type);
       List<XNode> parameterNodes = parameterMapNode.evalNodes("parameter");
-      List<ParameterMapping> parameterMappings = new ArrayList<ParameterMapping>();
+      List<ParameterMapping> parameterMappings = new ArrayList<>();
       for (XNode parameterNode : parameterNodes) {
         String property = parameterNode.getStringAttribute("property");
         String javaType = parameterNode.getStringAttribute("javaType");
@@ -264,7 +264,7 @@ public class XMLMapperBuilder extends BaseBuilder {
     Boolean autoMapping = resultMapNode.getBooleanAttribute("autoMapping");
     Class<?> typeClass = resolveClass(type);
     Discriminator discriminator = null;
-    List<ResultMapping> resultMappings = new ArrayList<ResultMapping>();
+    List<ResultMapping> resultMappings = new ArrayList<>();
     resultMappings.addAll(additionalResultMappings);
     List<XNode> resultChildren = resultMapNode.getChildren();
     for (XNode resultChild : resultChildren) {
@@ -273,7 +273,7 @@ public class XMLMapperBuilder extends BaseBuilder {
       } else if ("discriminator".equals(resultChild.getName())) {
         discriminator = processDiscriminatorElement(resultChild, typeClass, resultMappings);
       } else {
-        List<ResultFlag> flags = new ArrayList<ResultFlag>();
+        List<ResultFlag> flags = new ArrayList<>();
         if ("id".equals(resultChild.getName())) {
           flags.add(ResultFlag.ID);
         }
@@ -292,7 +292,7 @@ public class XMLMapperBuilder extends BaseBuilder {
   private void processConstructorElement(XNode resultChild, Class<?> resultType, List<ResultMapping> resultMappings) throws Exception {
     List<XNode> argChildren = resultChild.getChildren();
     for (XNode argChild : argChildren) {
-      List<ResultFlag> flags = new ArrayList<ResultFlag>();
+      List<ResultFlag> flags = new ArrayList<>();
       flags.add(ResultFlag.CONSTRUCTOR);
       if ("idArg".equals(argChild.getName())) {
         flags.add(ResultFlag.ID);
@@ -310,7 +310,7 @@ public class XMLMapperBuilder extends BaseBuilder {
     @SuppressWarnings("unchecked")
     Class<? extends TypeHandler<?>> typeHandlerClass = (Class<? extends TypeHandler<?>>) resolveClass(typeHandler);
     JdbcType jdbcTypeEnum = resolveJdbcType(jdbcType);
-    Map<String, String> discriminatorMap = new HashMap<String, String>();
+    Map<String, String> discriminatorMap = new HashMap<>();
     for (XNode caseChild : context.getChildren()) {
       String value = caseChild.getStringAttribute("value");
       String resultMap = caseChild.getStringAttribute("resultMap", processNestedResultMappings(caseChild, resultMappings));

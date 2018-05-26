@@ -634,9 +634,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
           final TypeHandler<?> typeHandler = constructorMapping.getTypeHandler();
           value = typeHandler.getResult(rsw.getResultSet(), prependPrefix(column, columnPrefix));
         }
-      } catch (ResultMapException e) {
-        throw new ExecutorException("Could not process result for mapping: " + constructorMapping, e);
-      } catch (SQLException e) {
+      } catch (ResultMapException | SQLException e) {
         throw new ExecutorException("Could not process result for mapping: " + constructorMapping, e);
       }
       constructorArgTypes.add(parameterType);

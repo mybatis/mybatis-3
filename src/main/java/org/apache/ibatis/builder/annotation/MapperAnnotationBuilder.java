@@ -245,7 +245,7 @@ public class MapperAnnotationBuilder {
   }
 
   private void applyResultMap(String resultMapId, Class<?> returnType, Arg[] args, Result[] results, TypeDiscriminator discriminator) {
-    List<ResultMapping> resultMappings = new ArrayList<ResultMapping>();
+    List<ResultMapping> resultMappings = new ArrayList<>();
     applyConstructorArgs(args, returnType, resultMappings);
     applyResults(results, returnType, resultMappings);
     Discriminator disc = applyDiscriminator(resultMapId, returnType, discriminator);
@@ -258,7 +258,7 @@ public class MapperAnnotationBuilder {
     if (discriminator != null) {
       for (Case c : discriminator.cases()) {
         String caseResultMapId = resultMapId + "-" + c.value();
-        List<ResultMapping> resultMappings = new ArrayList<ResultMapping>();
+        List<ResultMapping> resultMappings = new ArrayList<>();
         // issue #136
         applyConstructorArgs(c.constructArgs(), resultType, resultMappings);
         applyResults(c.results(), resultType, resultMappings);
@@ -277,7 +277,7 @@ public class MapperAnnotationBuilder {
       Class<? extends TypeHandler<?>> typeHandler = (Class<? extends TypeHandler<?>>)
               (discriminator.typeHandler() == UnknownTypeHandler.class ? null : discriminator.typeHandler());
       Case[] cases = discriminator.cases();
-      Map<String, String> discriminatorMap = new HashMap<String, String>();
+      Map<String, String> discriminatorMap = new HashMap<>();
       for (Case c : cases) {
         String value = c.value();
         String caseResultMapId = resultMapId + "-" + value;
@@ -537,7 +537,7 @@ public class MapperAnnotationBuilder {
 
   private void applyResults(Result[] results, Class<?> resultType, List<ResultMapping> resultMappings) {
     for (Result result : results) {
-      List<ResultFlag> flags = new ArrayList<ResultFlag>();
+      List<ResultFlag> flags = new ArrayList<>();
       if (result.id()) {
         flags.add(ResultFlag.ID);
       }
@@ -593,7 +593,7 @@ public class MapperAnnotationBuilder {
 
   private void applyConstructorArgs(Arg[] args, Class<?> resultType, List<ResultMapping> resultMappings) {
     for (Arg arg : args) {
-      List<ResultFlag> flags = new ArrayList<ResultFlag>();
+      List<ResultFlag> flags = new ArrayList<>();
       flags.add(ResultFlag.CONSTRUCTOR);
       if (arg.id()) {
         flags.add(ResultFlag.ID);
