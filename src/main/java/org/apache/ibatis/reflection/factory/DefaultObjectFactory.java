@@ -114,6 +114,7 @@ public class DefaultObjectFactory implements ObjectFactory, Serializable {
 
     @Override
     public <T> boolean isCollection(Class<T> type) {
+        // 判断是否是Collection接口的实现
         return Collection.class.isAssignableFrom(type);
     }
 
