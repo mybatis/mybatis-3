@@ -28,7 +28,6 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
-import org.apache.ibatis.reflection.Jdk;
 import org.apache.ibatis.reflection.ParamNameUtil;
 import org.apache.ibatis.session.Configuration;
 
@@ -193,7 +192,7 @@ public class ResultMap {
             break;
           }
         }
-        if (name == null && resultMap.configuration.isUseActualParamName() && Jdk.parameterExists) {
+        if (name == null && resultMap.configuration.isUseActualParamName()) {
           if (actualParamNames == null) {
             actualParamNames = ParamNameUtil.getParamNames(constructor);
           }

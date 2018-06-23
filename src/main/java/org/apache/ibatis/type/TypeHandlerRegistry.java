@@ -46,7 +46,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.ibatis.binding.MapperMethod.ParamMap;
 import org.apache.ibatis.io.ResolverUtil;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.reflection.Jdk;
 
 /**
  * @author Clinton Begin
@@ -147,20 +146,17 @@ public final class TypeHandlerRegistry {
 
     register(String.class, JdbcType.SQLXML, new SqlxmlTypeHandler());
 
-    // mybatis-typehandlers-jsr310
-    if (Jdk.dateAndTimeApiExists) {
-      this.register(Instant.class, InstantTypeHandler.class);
-      this.register(LocalDateTime.class, LocalDateTimeTypeHandler.class);
-      this.register(LocalDate.class, LocalDateTypeHandler.class);
-      this.register(LocalTime.class, LocalTimeTypeHandler.class);
-      this.register(OffsetDateTime.class, OffsetDateTimeTypeHandler.class);
-      this.register(OffsetTime.class, OffsetTimeTypeHandler.class);
-      this.register(ZonedDateTime.class, ZonedDateTimeTypeHandler.class);
-      this.register(Month.class, MonthTypeHandler.class);
-      this.register(Year.class, YearTypeHandler.class);
-      this.register(YearMonth.class, YearMonthTypeHandler.class);
-      this.register(JapaneseDate.class, JapaneseDateTypeHandler.class);
-    }
+    register(Instant.class, InstantTypeHandler.class);
+    register(LocalDateTime.class, LocalDateTimeTypeHandler.class);
+    register(LocalDate.class, LocalDateTypeHandler.class);
+    register(LocalTime.class, LocalTimeTypeHandler.class);
+    register(OffsetDateTime.class, OffsetDateTimeTypeHandler.class);
+    register(OffsetTime.class, OffsetTimeTypeHandler.class);
+    register(ZonedDateTime.class, ZonedDateTimeTypeHandler.class);
+    register(Month.class, MonthTypeHandler.class);
+    register(Year.class, YearTypeHandler.class);
+    register(YearMonth.class, YearMonthTypeHandler.class);
+    register(JapaneseDate.class, JapaneseDateTypeHandler.class);
 
     // issue #273
     register(Character.class, new CharacterTypeHandler());
