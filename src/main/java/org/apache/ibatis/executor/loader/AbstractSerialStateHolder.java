@@ -133,12 +133,15 @@ public abstract class AbstractSerialStateHolder implements Externalizable {
 
   private static class LookAheadObjectInputStream extends ObjectInputStream {
     private static final List<String> blacklist = Arrays.asList(
+        "org.apache.commons.beanutils.BeanComparator",
         "org.apache.commons.collections.functors.InvokerTransformer",
         "org.apache.commons.collections.functors.InstantiateTransformer",
         "org.apache.commons.collections4.functors.InvokerTransformer",
         "org.apache.commons.collections4.functors.InstantiateTransformer",
-        "org.codehaus.groovy.runtime.ConvertedClosure", "org.codehaus.groovy.runtime.MethodClosure",
+        "org.codehaus.groovy.runtime.ConvertedClosure",
+        "org.codehaus.groovy.runtime.MethodClosure",
         "org.springframework.beans.factory.ObjectFactory",
+        "org.springframework.transaction.jta.JtaTransactionManager",
         "com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl");
 
     public LookAheadObjectInputStream(InputStream in) throws IOException {
