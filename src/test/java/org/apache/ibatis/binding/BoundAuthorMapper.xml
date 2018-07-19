@@ -77,5 +77,10 @@
     where id in (#{one},#{two},#{2})
   </select>
 
+  <select id="findThreeSpecificPosts#int" parameterType="map" resultType="org.apache.ibatis.domain.blog.Post">
+    select * from post
+    where id = (#{one})
+  </select>
+
 
 </mapper>

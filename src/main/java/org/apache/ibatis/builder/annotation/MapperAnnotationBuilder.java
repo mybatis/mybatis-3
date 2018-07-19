@@ -355,6 +355,7 @@ public class MapperAnnotationBuilder {
 
       assistant.addMappedStatement(
           mappedStatementId,
+          method.getParameterTypes(),
           sqlSource,
           statementType,
           sqlCommandType,
@@ -653,7 +654,7 @@ public class MapperAnnotationBuilder {
     SqlSource sqlSource = buildSqlSourceFromStrings(selectKeyAnnotation.statement(), parameterTypeClass, languageDriver);
     SqlCommandType sqlCommandType = SqlCommandType.SELECT;
 
-    assistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType, fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass, resultSetTypeEnum,
+    assistant.addMappedStatement(id, new Class<?>[]{parameterTypeClass}, sqlSource, statementType, sqlCommandType, fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass, resultSetTypeEnum,
         flushCache, useCache, false,
         keyGenerator, keyProperty, keyColumn, null, languageDriver, null);
 

@@ -57,6 +57,8 @@ public final class MappedStatement {
   private LanguageDriver lang;
   private String[] resultSets;
 
+  private Class<?>[] parameterTypes;
+
   MappedStatement() {
     // constructor disabled
   }
@@ -179,6 +181,12 @@ public final class MappedStatement {
       mappedStatement.resultSets = delimitedStringToArray(resultSet);
       return this;
     }
+
+    public Builder parameterTypes(Class<?>[] parameterTypes){
+      mappedStatement.parameterTypes = parameterTypes;
+      return this;
+    }
+
     
     public MappedStatement build() {
       assert mappedStatement.configuration != null;
@@ -208,6 +216,10 @@ public final class MappedStatement {
 
   public String getId() {
     return id;
+  }
+
+  public Class<?>[] getParameterTypes() {
+    return parameterTypes;
   }
 
   public boolean hasNestedResultMaps() {

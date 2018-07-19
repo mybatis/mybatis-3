@@ -248,6 +248,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
 
   public MappedStatement addMappedStatement(
       String id,
+      Class<?>[] parameterTypes,
       SqlSource sqlSource,
       StatementType statementType,
       SqlCommandType sqlCommandType,
@@ -276,6 +277,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
     boolean isSelect = sqlCommandType == SqlCommandType.SELECT;
 
     MappedStatement.Builder statementBuilder = new MappedStatement.Builder(configuration, id, sqlSource, sqlCommandType)
+        .parameterTypes(parameterTypes)
         .resource(resource)
         .fetchSize(fetchSize)
         .timeout(timeout)
@@ -503,7 +505,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
     String databaseId,
     LanguageDriver lang) {
     return addMappedStatement(
-      id, sqlSource, statementType, sqlCommandType, fetchSize, timeout,
+      id, null,sqlSource, statementType, sqlCommandType, fetchSize, timeout,
       parameterMap, parameterType, resultMap, resultType, resultSetType,
       flushCache, useCache, resultOrdered, keyGenerator, keyProperty,
       keyColumn, databaseId, lang, null);
