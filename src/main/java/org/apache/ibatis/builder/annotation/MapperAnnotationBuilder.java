@@ -81,7 +81,6 @@ import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.parsing.PropertyParser;
-import org.apache.ibatis.reflection.Jdk;
 import org.apache.ibatis.reflection.TypeParameterResolver;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
@@ -451,7 +450,7 @@ public class MapperAnnotationBuilder {
               returnType = (Class<?>) ((ParameterizedType) returnTypeParameter).getRawType();
             }
           }
-      } else if (Jdk.optionalExists && Optional.class.equals(rawType)) {
+      } else if (Optional.class.equals(rawType)) {
         Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
         Type returnTypeParameter = actualTypeArguments[0];
         if (returnTypeParameter instanceof Class<?>) {
