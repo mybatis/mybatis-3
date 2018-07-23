@@ -15,6 +15,8 @@
  */
 package org.apache.ibatis.binding;
 
+import static com.googlecode.catchexception.apis.BDDCatchException.*;
+import static org.assertj.core.api.BDDAssertions.then;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -45,6 +47,7 @@ import org.apache.ibatis.domain.blog.Blog;
 import org.apache.ibatis.domain.blog.DraftPost;
 import org.apache.ibatis.domain.blog.Post;
 import org.apache.ibatis.domain.blog.Section;
+import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.executor.result.DefaultResultHandler;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.session.Configuration;
@@ -138,6 +141,40 @@ public class BindingTest {
       int rows = mapper.insertAuthor(author);
       assertEquals(1, rows);
       session.rollback();
+    }
+  }
+
+  @Test
+  public void verifyErrorMessageFromSelectKey() {
+    try (SqlSession session = sqlSessionFactory.openSession()) {
+      try {
+        BoundAuthorMapper mapper = session.getMapper(BoundAuthorMapper.class);
+        Author author = new Author(-1, "cbegin", "******", "cbegin@nowhere.com", "N/A", Section.NEWS);
+        when(mapper).insertAuthorInvalidSelectKey(author);
+        then(caughtException()).isInstanceOf(PersistenceException.class).hasMessageContaining(
+            "### The error may exist in org/apache/ibatis/binding/BoundAuthorMapper.xml\n" +
+                "### The error may involve org.apache.ibatis.binding.BoundAuthorMapper.insertAuthorInvalidSelectKey!selectKey\n" +
+                "### The error occurred while executing a query");
+      } finally {
+        session.rollback();
+      }
+    }
+  }
+
+  @Test
+  public void verifyErrorMessageFromInsertAfterSelectKey() {
+    try (SqlSession session = sqlSessionFactory.openSession()) {
+      try {
+        BoundAuthorMapper mapper = session.getMapper(BoundAuthorMapper.class);
+        Author author = new Author(-1, "cbegin", "******", "cbegin@nowhere.com", "N/A", Section.NEWS);
+        when(mapper).insertAuthorInvalidInsert(author);
+        then(caughtException()).isInstanceOf(PersistenceException.class).hasMessageContaining(
+            "### The error may exist in org/apache/ibatis/binding/BoundAuthorMapper.xml\n" +
+                "### The error may involve org.apache.ibatis.binding.BoundAuthorMapper.insertAuthorInvalidInsert\n" +
+                "### The error occurred while executing an update");
+      } finally {
+        session.rollback();
+      }
     }
   }
 
