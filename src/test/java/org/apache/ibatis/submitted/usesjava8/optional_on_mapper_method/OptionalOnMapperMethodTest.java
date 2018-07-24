@@ -15,8 +15,8 @@
  */
 package org.apache.ibatis.submitted.usesjava8.optional_on_mapper_method;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -25,7 +25,6 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.io.Reader;
-import java.sql.Connection;
 import java.util.Optional;
 
 import static org.hamcrest.core.Is.is;
@@ -48,88 +47,65 @@ public class OptionalOnMapperMethodTest {
   @BeforeClass
   public static void setUp() throws Exception {
     // create an SqlSessionFactory
-    Reader reader = Resources.getResourceAsReader(
-        "org/apache/ibatis/submitted/usesjava8/optional_on_mapper_method/mybatis-config.xml");
-    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    reader.close();
+    try (Reader reader = Resources.getResourceAsReader(
+        "org/apache/ibatis/submitted/usesjava8/optional_on_mapper_method/mybatis-config.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    }
 
     // populate in-memory database
-    SqlSession session = sqlSessionFactory.openSession();
-    Connection conn = session.getConnection();
-    reader = Resources.getResourceAsReader(
-        "org/apache/ibatis/submitted/usesjava8/optional_on_mapper_method/CreateDB.sql");
-    ScriptRunner runner = new ScriptRunner(conn);
-    runner.setLogWriter(null);
-    runner.runScript(reader);
-    reader.close();
-    session.close();
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+            "org/apache/ibatis/submitted/usesjava8/optional_on_mapper_method/CreateDB.sql");
   }
 
   @Test
   public void returnNotNullOnAnnotation() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Optional<User> user = mapper.getUserUsingAnnotation(1);
       assertTrue(user.isPresent());
       assertThat(user.get().getName(), is("User1"));
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void returnNullOnAnnotation() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Optional<User> user = mapper.getUserUsingAnnotation(3);
       assertFalse(user.isPresent());
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void returnNotNullOnXml() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Optional<User> user = mapper.getUserUsingXml(2);
       assertTrue(user.isPresent());
       assertThat(user.get().getName(), is("User2"));
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void returnNullOnXml() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Optional<User> user = mapper.getUserUsingXml(3);
       assertFalse(user.isPresent());
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void returnOptionalFromSqlSession() {
-    SqlSession sqlSession = Mockito.spy(sqlSessionFactory.openSession());
+    try (SqlSession sqlSession = Mockito.spy(sqlSessionFactory.openSession());) {
+      User mockUser = new User();
+      mockUser.setName("mock user");
+      Optional<User> optionalMockUser = Optional.of(mockUser);
+      doReturn(optionalMockUser).when(sqlSession).selectOne(any(String.class), any(Object.class));
 
-    User mockUser = new User();
-    mockUser.setName("mock user");
-    Optional<User> optionalMockUser = Optional.of(mockUser);
-    doReturn(optionalMockUser).when(sqlSession).selectOne(any(String.class), any(Object.class));
-
-    try {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Optional<User> user = mapper.getUserUsingAnnotation(3);
       assertTrue(user == optionalMockUser);
-    } finally {
-      sqlSession.close();
     }
   }
 

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -27,11 +27,11 @@ public interface AutoConstructorMapper {
   List<PrimitiveSubject> getSubjects();
 
   @Select("SELECT * FROM subject")
-  List<WrapperSubject> getWrapperSubjects();
-
-  @Select("SELECT * FROM subject")
   List<AnnotatedSubject> getAnnotatedSubjects();
 
   @Select("SELECT * FROM subject")
   List<BadSubject> getBadSubjects();
+
+  @Select("SELECT * FROM extensive_subject")
+  List<ExtensiveSubject> getExtensiveSubject();
 }

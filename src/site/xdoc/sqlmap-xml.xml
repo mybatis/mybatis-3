@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2017 the original author or authors.
+       Copyright 2009-2018 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -330,7 +330,7 @@ ps.setInt(1,id);]]></source>
               <td><code>useGeneratedKeys</code></td>
               <td>(insert and update only) This tells MyBatis to use the JDBC <code>getGeneratedKeys</code> method to retrieve
                 keys generated internally by the database (e.g. auto increment fields in RDBMS like
-                MySQL or SQL Server). Default: <code>false</code>
+                MySQL or SQL Server). Default: <code>false</code>.
               </td>
             </tr>
             <tr>

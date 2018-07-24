@@ -23,7 +23,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 
-import org.apache.ibatis.binding.BindingException;
 import org.apache.ibatis.binding.MapperMethod.ParamMap;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.ExecutorException;
@@ -172,14 +171,11 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
     TypeHandler<?>[] typeHandlers = new TypeHandler<?>[keyProperties.length];
     for (int i = 0; i < keyProperties.length; i++) {
       if (metaParam.hasSetter(keyProperties[i])) {
-        TypeHandler<?> th;
-        try {
-          Class<?> keyPropertyType = metaParam.getSetterType(keyProperties[i]);
-          th = typeHandlerRegistry.getTypeHandler(keyPropertyType, JdbcType.forCode(rsmd.getColumnType(i + 1)));
-        } catch (BindingException e) {
-          th = null;
-        }
-        typeHandlers[i] = th;
+        Class<?> keyPropertyType = metaParam.getSetterType(keyProperties[i]);
+        typeHandlers[i] = typeHandlerRegistry.getTypeHandler(keyPropertyType, JdbcType.forCode(rsmd.getColumnType(i + 1)));
+      } else {
+        throw new ExecutorException("No setter found for the keyProperty '" + keyProperties[i] + "' in '"
+            + metaParam.getOriginalObject().getClass().getName() + "'.");
       }
     }
     return typeHandlers;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2017 the original author or authors.
+       Copyright 2009-2018 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -447,7 +447,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <code>Options</code> annotation provides a consistent and clear way to access these. Attributes:
         <code>useCache=true</code>, <code>flushCache=FlushCachePolicy.DEFAULT</code>, <code>resultSetType=FORWARD_ONLY</code>,
         <code>statementType=PREPARED</code>, <code>fetchSize=-1</code>, <code>timeout=-1</code>,
-        <code>useGeneratedKeys=false</code>, <code>keyProperty="id"</code>, <code>keyColumn=""</code>, <code>resultSets=""</code>.
+        <code>useGeneratedKeys=false</code>, <code>keyProperty=""</code>, <code>keyColumn=""</code>, <code>resultSets=""</code>.
         It's important to understand that with Java Annotations, there is no way to specify <code>null</code> as a value.
         Therefore, once you engage the <code>Options</code> annotation, your statement is subject to all of the default
         values. Pay attention to what the default values are to avoid unexpected behavior.<br/><br/>

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -36,19 +36,17 @@ public class ManyAnnoTest extends BaseDataTest {
     final Configuration config = new Configuration(environment);
     config.addMapper(PostMapper.class);
     final SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(config);
-    final SqlSession session = factory.openSession();
-    
-    PostMapper mapper = session.getMapper(PostMapper.class);
-    List<AnnoPost> posts = mapper.getPosts(101);
+    try (SqlSession session = factory.openSession()) {
+
+      PostMapper mapper = session.getMapper(PostMapper.class);
+      List<AnnoPost> posts = mapper.getPosts(101);
 
 
-    assertEquals(3,posts.size());
-    assertEquals(3,posts.get(0).getTags().size());
-    assertEquals(1,posts.get(1).getTags().size());
-    assertEquals(0,posts.get(2).getTags().size());
-
-    session.close();
-
+      assertEquals(3, posts.size());
+      assertEquals(3, posts.get(0).getTags().size());
+      assertEquals(1, posts.get(1).getTags().size());
+      assertEquals(0, posts.get(2).getTags().size());
+    }
   }
 
 }

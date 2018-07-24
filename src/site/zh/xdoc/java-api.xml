@@ -414,7 +414,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>@Options</code></td>
         <td><code>方法</code></td>
         <td>映射语句的属性</td>
-        <td>这个注解提供访问大范围的交换和配置选项的入口，它们通常在映射语句上作为属性出现。<code>Options</code> 注解提供了通俗易懂的方式来访问它们，而不是让每条语句注解变复杂。属性有：<code>useCache=true</code>, <code>flushCache=FlushCachePolicy.DEFAULT</code>, <code>resultSetType=FORWARD_ONLY</code>, <code>statementType=PREPARED</code>, <code>fetchSize=-1</code>, <code>timeout=-1</code>, <code>useGeneratedKeys=false</code>, <code>keyProperty="id"</code>, <code>keyColumn=""</code>, <code>resultSets=""</code>。值得一提的是， Java 注解无法指定 <code>null</code> 值。因此，一旦你使用了 <code>Options</code> 注解，你的语句就会被上述属性的默认值所影响。要注意避免默认值带来的预期以外的行为。<br/><br/>
+        <td>这个注解提供访问大范围的交换和配置选项的入口，它们通常在映射语句上作为属性出现。<code>Options</code> 注解提供了通俗易懂的方式来访问它们，而不是让每条语句注解变复杂。属性有：<code>useCache=true</code>, <code>flushCache=FlushCachePolicy.DEFAULT</code>, <code>resultSetType=FORWARD_ONLY</code>, <code>statementType=PREPARED</code>, <code>fetchSize=-1</code>, <code>timeout=-1</code>, <code>useGeneratedKeys=false</code>, <code>keyProperty=""</code>, <code>keyColumn=""</code>, <code>resultSets=""</code>。值得一提的是， Java 注解无法指定 <code>null</code> 值。因此，一旦你使用了 <code>Options</code> 注解，你的语句就会被上述属性的默认值所影响。要注意避免默认值带来的预期以外的行为。<br/><br/>
         注意： <code>keyColumn</code> 属性只在某些数据库中有效（如 Oracle、PostgreSQL等）。请在插入语句一节查看更多关于 <code>keyColumn</code> 和 <code>keyProperty</code> 两者的有效值详情。</td>
       </tr>
       <tr>
