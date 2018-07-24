@@ -115,7 +115,7 @@ public class BlockingCache implements Cache {
   
   private void releaseLock(Object key) {
     ReentrantLock lock = locks.get(key);
-    if (lock.isHeldByCurrentThread()) {
+    if (lock != null && lock.isHeldByCurrentThread()) {
       lock.unlock();
     }
   }
