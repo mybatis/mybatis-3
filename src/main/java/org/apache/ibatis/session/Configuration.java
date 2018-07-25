@@ -15,16 +15,6 @@
  */
 package org.apache.ibatis.session;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-
 import org.apache.ibatis.binding.MapperRegistry;
 import org.apache.ibatis.builder.CacheRefResolver;
 import org.apache.ibatis.builder.ResultMapResolver;
@@ -90,6 +80,16 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeAliasRegistry;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 /**
  * @author Clinton Begin
@@ -758,6 +758,15 @@ public class Configuration {
       buildAllStatements();
     }
     return mappedStatements.containsKey(statementName);
+  }
+
+  /*
+   * Used for reset the loaded xml mappers
+   */
+  public void resetLoadedMapperInfos() {
+    this.loadedResources.clear();
+    this.mappedStatements.clear();
+    this.resultMaps.clear();
   }
 
   public void addCacheRef(String namespace, String referencedNamespace) {
