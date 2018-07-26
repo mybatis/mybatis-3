@@ -44,8 +44,9 @@ public class ErrorContext {
   }
 
   public ErrorContext store() {
-    stored = this;
-    LOCAL.set(new ErrorContext());
+    ErrorContext newContext = new ErrorContext();
+    newContext.stored = this;
+    LOCAL.set(newContext);
     return LOCAL.get();
   }
 

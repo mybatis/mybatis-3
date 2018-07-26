@@ -21,14 +21,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Month;
 
-import org.apache.ibatis.lang.UsesJava8;
-
 /**
  *
  * @since 3.4.5
  * @author Björn Raupach
  */
-@UsesJava8
 public class MonthTypeHandler extends BaseTypeHandler<Month> {
     
     @Override

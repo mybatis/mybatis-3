@@ -22,9 +22,6 @@ import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.ibatis.lang.UsesJava8;
-
-@UsesJava8
 public class ParamNameUtil {
   public static List<String> getParamNames(Method method) {
     return getParameterNames(method);

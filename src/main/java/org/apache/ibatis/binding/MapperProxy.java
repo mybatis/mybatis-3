@@ -23,7 +23,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Map;
 
-import org.apache.ibatis.lang.UsesJava7;
 import org.apache.ibatis.reflection.ExceptionUtil;
 import org.apache.ibatis.session.SqlSession;
 
@@ -63,7 +62,6 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
     return methodCache.computeIfAbsent(method, k -> new MapperMethod(mapperInterface, method, sqlSession.getConfiguration()));
   }
 
-  @UsesJava7
   private Object invokeDefaultMethod(Object proxy, Method method, Object[] args)
       throws Throwable {
     final Constructor<MethodHandles.Lookup> constructor = MethodHandles.Lookup.class

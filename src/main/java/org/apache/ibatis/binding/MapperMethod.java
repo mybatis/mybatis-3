@@ -82,7 +82,7 @@ public class MapperMethod {
           result = sqlSession.selectOne(command.getName(), param);
           if (method.returnsOptional() &&
               (result == null || !method.getReturnType().equals(result.getClass()))) {
-            result = OptionalUtil.ofNullable(result);
+            result = Optional.ofNullable(result);
           }
         }
         break;
@@ -304,7 +304,7 @@ public class MapperMethod {
       this.returnsVoid = void.class.equals(this.returnType);
       this.returnsMany = configuration.getObjectFactory().isCollection(this.returnType) || this.returnType.isArray();
       this.returnsCursor = Cursor.class.equals(this.returnType);
-      this.returnsOptional = Jdk.optionalExists && Optional.class.equals(this.returnType);
+      this.returnsOptional = Optional.class.equals(this.returnType);
       this.mapKey = getMapKey(method);
       this.returnsMap = this.mapKey != null;
       this.rowBoundsIndex = getUniqueParamIndex(method, RowBounds.class);
