@@ -609,7 +609,7 @@ public class MapperAnnotationBuilder {
           nullOrEmpty(arg.select()),
           nullOrEmpty(arg.resultMap()),
           null,
-          null,
+          nullOrEmpty(arg.columnPrefix()),
           typeHandler,
           flags,
           null,
