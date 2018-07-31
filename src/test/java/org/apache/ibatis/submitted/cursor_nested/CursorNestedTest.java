@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,9 +15,9 @@
  */
 package org.apache.ibatis.submitted.cursor_nested;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -27,7 +27,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.Reader;
-import java.sql.Connection;
 import java.util.Iterator;
 
 public class CursorNestedTest {
@@ -37,28 +36,22 @@ public class CursorNestedTest {
     @BeforeClass
     public static void setUp() throws Exception {
         // create a SqlSessionFactory
-        Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/cursor_nested/mybatis-config.xml");
-        sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-        reader.close();
+        try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/cursor_nested/mybatis-config.xml")) {
+            sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+        }
 
         // populate in-memory database
-        SqlSession session = sqlSessionFactory.openSession();
-        Connection conn = session.getConnection();
-        reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/cursor_nested/CreateDB.sql");
-        ScriptRunner runner = new ScriptRunner(conn);
-        runner.setLogWriter(null);
-        runner.runScript(reader);
-        reader.close();
-        session.close();
+        BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+                "org/apache/ibatis/submitted/cursor_nested/CreateDB.sql");
     }
 
     @Test
     public void shouldGetAllUser() {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        Mapper mapper = sqlSession.getMapper(Mapper.class);
-        Cursor<User> usersCursor = mapper.getAllUsers();
+        Cursor<User> usersCursor;
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
+            usersCursor = mapper.getAllUsers();
 
-        try {
             Assert.assertFalse(usersCursor.isOpen());
             // Retrieving iterator, fetching is not started
             Iterator<User> iterator = usersCursor.iterator();
@@ -88,17 +81,13 @@ public class CursorNestedTest {
             Assert.assertFalse(iterator.hasNext());
             Assert.assertFalse(usersCursor.isOpen());
             Assert.assertTrue(usersCursor.isConsumed());
-        } finally {
-            sqlSession.close();
         }
         Assert.assertFalse(usersCursor.isOpen());
     }
 
     @Test
     public void testCursorWithRowBound() {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-
-        try {
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             Cursor<User> usersCursor = sqlSession.selectCursor("getAllUsers", null, new RowBounds(2, 1));
 
             Iterator<User> iterator = usersCursor.iterator();
@@ -111,8 +100,6 @@ public class CursorNestedTest {
             Assert.assertFalse(iterator.hasNext());
             Assert.assertFalse(usersCursor.isOpen());
             Assert.assertTrue(usersCursor.isConsumed());
-        } finally {
-            sqlSession.close();
         }
     }
 }

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -38,9 +38,9 @@ import org.apache.ibatis.reflection.SystemMetaObject;
  * @author Clinton Begin
  */
 public class CacheBuilder {
-  private String id;
+  private final String id;
   private Class<? extends Cache> implementation;
-  private List<Class<? extends Cache>> decorators;
+  private final List<Class<? extends Cache>> decorators;
   private Integer size;
   private Long clearInterval;
   private boolean readWrite;
@@ -49,7 +49,7 @@ public class CacheBuilder {
 
   public CacheBuilder(String id) {
     this.id = id;
-    this.decorators = new ArrayList<Class<? extends Cache>>();
+    this.decorators = new ArrayList<>();
   }
 
   public CacheBuilder implementation(Class<? extends Cache> implementation) {

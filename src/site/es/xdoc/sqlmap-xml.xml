@@ -1659,6 +1659,13 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
           <li>La caché puede tratarse como una cache de tipo lectura/escritura, lo cual significa que los objetos obtenidos no se comparten y pueden modificarse con seguridad por el llamante sin interferir en otras potenciales modificaciones realizadas por otros llamantes o hilos.</li>
         </ul>
 
+        <p>
+          <span class="label important">NOTE</span> The cache will only apply to statements declared in the mapping file
+          where the cache tag is located. If you are using the Java API in conjunction with the XML mapping files, then
+          statements declared in the companion interface will not be cached by default. You will need to refer to the
+          cache region using the @CacheNamespaceRef annotation.
+        </p>
+
         <p>Todas estas propiedades son modificables mediante atributos del elemento cache. Por ejemplo:
         </p>
 

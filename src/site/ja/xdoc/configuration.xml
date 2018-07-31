@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2017 the original author or authors.
+       Copyright 2009-2018 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -427,6 +427,20 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               </td>
               <td>
                 org.apache.ibatis.scripting.xmltags.XMLLanguageDriver
+              </td>
+            </tr>
+            <tr>
+              <td>
+                defaultEnumTypeHandler
+              </td>
+              <td>
+                Enum型に適用するデフォルトの <code>TypeHandler</code> を指定します。(導入されたバージョン: 3.4.5)
+              </td>
+              <td>
+                タイプエイリアスまたは完全修飾クラス名
+              </td>
+              <td>
+                org.apache.ibatis.type.EnumTypeHandler
               </td>
             </tr>
             <tr>
@@ -859,8 +873,7 @@ public class Author {
         </p>
         <p>
           <span class="label important">NOTE</span>
-          JSR-310(Date and Time API)から提供されているクラスを使用する場合は、
-          <a href="https://github.com/mybatis/typehandlers-jsr310">mybatis-typehandlers-jsr310</a>を使用することができます。
+          バージョン3.4.5より、JSR-310(Date and Time API)のクラスがデフォルトでサポートされました。
         </p>
         <table>
           <thead>
@@ -1143,13 +1156,145 @@ public class Author {
             </tr>
             <tr>
               <td>
-                <code>EnumOrdinalTypeHandler</code>
+                EnumOrdinalTypeHandler
               </td>
               <td>
                 Enumeration Type
               </td>
               <td>
                 コードではなく位置（ordinal）が保存されるので、NUMERIC または DOUBLE 互換の型
+              </td>
+            </tr>
+            <tr>
+              <td>
+                SqlxmlTypeHandler
+              </td>
+              <td>
+                java.lang.String
+              </td>
+              <td>
+                SQLXML
+              </td>
+            </tr>
+            <tr>
+              <td>
+                InstantTypeHandler
+              </td>
+              <td>
+                java.time.Instant
+              </td>
+              <td>
+                TIMESTAMP
+              </td>
+            </tr>
+            <tr>
+              <td>
+                LocalDateTimeTypeHandler
+              </td>
+              <td>
+                java.time.LocalDateTime
+              </td>
+              <td>
+                TIMESTAMP
+              </td>
+            </tr>
+            <tr>
+              <td>
+                LocalDateTypeHandler
+              </td>
+              <td>
+                java.time.LocalDate
+              </td>
+              <td>
+                DATE
+              </td>
+            </tr>
+            <tr>
+              <td>
+                LocalTimeTypeHandler
+              </td>
+              <td>
+                java.time.LocalTime
+              </td>
+              <td>
+                TIME
+              </td>
+            </tr>
+            <tr>
+              <td>
+                OffsetDateTimeTypeHandler
+              </td>
+              <td>
+                java.time.OffsetDateTime
+              </td>
+              <td>
+                TIMESTAMP
+              </td>
+            </tr>
+            <tr>
+              <td>
+                OffsetTimeTypeHandler
+              </td>
+              <td>
+                java.time.OffsetTime
+              </td>
+              <td>
+                TIME
+              </td>
+            </tr>
+            <tr>
+              <td>
+                ZonedDateTimeTypeHandler
+              </td>
+              <td>
+                java.time.ZonedDateTime
+              </td>
+              <td>
+                TIMESTAMP
+              </td>
+            </tr>
+            <tr>
+              <td>
+                YearTypeHandler
+              </td>
+              <td>
+                java.time.Year
+              </td>
+              <td>
+                INTEGER
+              </td>
+            </tr>
+            <tr>
+              <td>
+                MonthTypeHandler
+              </td>
+              <td>
+                java.time.Month
+              </td>
+              <td>
+                INTEGER
+              </td>
+            </tr>
+            <tr>
+              <td>
+                YearMonthTypeHandler
+              </td>
+              <td>
+                java.time.YearMonth
+              </td>
+              <td>
+                VARCHAR または LONGVARCHAR
+              </td>
+            </tr>
+            <tr>
+              <td>
+                JapaneseDateTypeHandler
+              </td>
+              <td>
+                java.time.chrono.JapaneseDate
+              </td>
+              <td>
+                DATE
               </td>
             </tr>
           </tbody>
@@ -1288,10 +1433,6 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
           （Mapper ファイルについては次の章で解説していますので、このドキュメントを初めて読む方はこの部分を後回しにした方が良いかも知れません）
         </p>
         <source><![CDATA[<!DOCTYPE mapper
-    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-
-<!DOCTYPE mapper
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
@@ -1621,6 +1762,14 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
           </li>
           <li>poolTimeToWait – 接続の取得に長時間を要した場合にログを出力し、接続の再取得を試みる機会を与えるための低レベルの設定です（プールが誤って設定された場合、無限に待機状態となってしまうのを防ぐため）。
             デフォルト: 20000ms （20秒）
+          </li>
+          <li><code>poolMaximumLocalBadConnectionTolerance</code> – This is a low level setting about
+            tolerance of bad connections got for any thread. If a thread got a bad connection, it may
+            still have another chance to re-attempt to get another connection which is valid. But the
+            retrying times should not more than the sum of <code>poolMaximumIdleConnections</code>
+            and <code>poolMaximumLocalBadConnectionTolerance</code>.
+            Default:
+            3 (Since: 3.4.5)
           </li>
           <li>poolPingQuery – プールされた接続が正常で、リクエストを受け付けられる状態にあるかどうか確認するためにデータベースに送信される ping クエリを設定します。
             デフォルトは "NO PING QUERY SET" で、一般的なドライバーであれば問い合わせは失敗し、適切なエラーメッセージが出力されるはずです。

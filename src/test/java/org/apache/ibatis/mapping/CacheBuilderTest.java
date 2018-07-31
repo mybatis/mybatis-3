@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,32 +19,28 @@ import org.apache.ibatis.builder.InitializingObject;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheException;
 import org.apache.ibatis.cache.impl.PerpetualCache;
-import org.hamcrest.core.Is;
-import org.junit.Assert;
-import org.junit.Rule;
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import java.lang.reflect.Field;
 
-public class CacheBuilderTest {
+import static com.googlecode.catchexception.apis.BDDCatchException.*;
+import static org.assertj.core.api.BDDAssertions.then;
 
-  @Rule
-  public ExpectedException expectedException = ExpectedException.none();
+public class CacheBuilderTest {
 
   @Test
   public void testInitializing() throws Exception {
     InitializingCache cache = unwrap(new CacheBuilder("test").implementation(InitializingCache.class).build());
 
-    Assert.assertThat(cache.initialized, Is.is(true));
+    Assertions.assertThat(cache.initialized).isTrue();
   }
 
   @Test
   public void testInitializingFailure() throws Exception {
-    expectedException.expect(CacheException.class);
-    expectedException.expectMessage("Failed cache initialization for 'test' on 'org.apache.ibatis.mapping.CacheBuilderTest$InitializingFailureCache'");
-
-    new CacheBuilder("test").implementation(InitializingFailureCache.class).build();
+    when(new CacheBuilder("test").implementation(InitializingFailureCache.class)).build();
+    then(caughtException()).isInstanceOf(CacheException.class)
+      .hasMessage("Failed cache initialization for 'test' on 'org.apache.ibatis.mapping.CacheBuilderTest$InitializingFailureCache'");
   }
 
   @SuppressWarnings("unchecked")

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -35,16 +35,15 @@ public class FolderMapperTest {
 
   @Test
   public void testFindWithChildren() throws Exception {
-    Connection conn = DriverManager.getConnection("jdbc:hsqldb:mem:association_nested", "SA", "");
-    Statement stmt = conn.createStatement();
-    stmt.execute("create table folder (id int, name varchar(100), parent_id int)");
-
-
-    stmt.execute("insert into folder (id, name) values(1, 'Root')");
-    stmt.execute("insert into folder values(2, 'Folder 1', 1)");
-    stmt.execute("insert into folder values(3, 'Folder 2', 1)");
-    stmt.execute("insert into folder values(4, 'Folder 2_1', 3)");
-    stmt.execute("insert into folder values(5, 'Folder 2_2', 3)");
+    try (Connection conn = DriverManager.getConnection("jdbc:hsqldb:mem:association_nested", "SA", "");
+         Statement stmt = conn.createStatement()) {
+      stmt.execute("create table folder (id int, name varchar(100), parent_id int)");
+      stmt.execute("insert into folder (id, name) values(1, 'Root')");
+      stmt.execute("insert into folder values(2, 'Folder 1', 1)");
+      stmt.execute("insert into folder values(3, 'Folder 2', 1)");
+      stmt.execute("insert into folder values(4, 'Folder 2_1', 3)");
+      stmt.execute("insert into folder values(5, 'Folder 2_2', 3)");
+    }
 
     /**
      * Root/
@@ -55,17 +54,16 @@ public class FolderMapperTest {
      */
 
     String resource = "org/apache/ibatis/submitted/association_nested/mybatis-config.xml";
-    InputStream inputStream = Resources.getResourceAsStream(resource);
-    SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+    try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
+      SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+      try (SqlSession session = sqlSessionFactory.openSession()) {
+        FolderMapper postMapper = session.getMapper(FolderMapper.class);
 
-    SqlSession session = sqlSessionFactory.openSession();
-    FolderMapper postMapper = session.getMapper(FolderMapper.class);
+        List<FolderFlatTree> folders = postMapper.findWithSubFolders("Root");
 
-    List<FolderFlatTree> folders = postMapper.findWithSubFolders("Root");
-
-    Assert.assertEquals(3, folders.size());
-
-    session.close();
+        Assert.assertEquals(3, folders.size());
+      }
+    }
   }
 
 }

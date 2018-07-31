@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ import org.apache.ibatis.io.Resources;
  */
 public class SerializedCache implements Cache {
 
-  private Cache delegate;
+  private final Cache delegate;
 
   public SerializedCache(Cache delegate) {
     this.delegate = delegate;
@@ -91,12 +91,10 @@ public class SerializedCache implements Cache {
   }
 
   private byte[] serialize(Serializable value) {
-    try {
-      ByteArrayOutputStream bos = new ByteArrayOutputStream();
-      ObjectOutputStream oos = new ObjectOutputStream(bos);
+    try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
+         ObjectOutputStream oos = new ObjectOutputStream(bos)) {
       oos.writeObject(value);
       oos.flush();
-      oos.close();
       return bos.toByteArray();
     } catch (Exception e) {
       throw new CacheException("Error serializing object.  Cause: " + e, e);
@@ -105,11 +103,9 @@ public class SerializedCache implements Cache {
 
   private Serializable deserialize(byte[] value) {
     Serializable result;
-    try {
-      ByteArrayInputStream bis = new ByteArrayInputStream(value);
-      ObjectInputStream ois = new CustomObjectInputStream(bis);
+    try (ByteArrayInputStream bis = new ByteArrayInputStream(value);
+         ObjectInputStream ois = new CustomObjectInputStream(bis)) {
       result = (Serializable) ois.readObject();
-      ois.close();
     } catch (Exception e) {
       throw new CacheException("Error deserializing object.  Cause: " + e, e);
     }

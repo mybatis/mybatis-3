@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import org.apache.ibatis.cache.decorators.TransactionalCache;
  */
 public class TransactionalCacheManager {
 
-  private Map<Cache, TransactionalCache> transactionalCaches = new HashMap<Cache, TransactionalCache>();
+  private final Map<Cache, TransactionalCache> transactionalCaches = new HashMap<>();
 
   public void clear(Cache cache) {
     getTransactionalCache(cache).clear();
@@ -52,12 +52,7 @@ public class TransactionalCacheManager {
   }
 
   private TransactionalCache getTransactionalCache(Cache cache) {
-    TransactionalCache txCache = transactionalCaches.get(cache);
-    if (txCache == null) {
-      txCache = new TransactionalCache(cache);
-      transactionalCaches.put(cache, txCache);
-    }
-    return txCache;
+    return transactionalCaches.computeIfAbsent(cache, TransactionalCache::new);
   }
 
 }

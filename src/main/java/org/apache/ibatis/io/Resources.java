@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -125,9 +125,9 @@ public class Resources {
    */
   public static Properties getResourceAsProperties(String resource) throws IOException {
     Properties props = new Properties();
-    InputStream in = getResourceAsStream(resource);
-    props.load(in);
-    in.close();
+    try (InputStream in = getResourceAsStream(resource)) {
+      props.load(in);
+    }
     return props;
   }
 
@@ -141,9 +141,9 @@ public class Resources {
    */
   public static Properties getResourceAsProperties(ClassLoader loader, String resource) throws IOException {
     Properties props = new Properties();
-    InputStream in = getResourceAsStream(loader, resource);
-    props.load(in);
-    in.close();
+    try (InputStream in = getResourceAsStream(loader, resource)) {
+      props.load(in);
+    }
     return props;
   }
 
@@ -244,9 +244,9 @@ public class Resources {
    */
   public static Properties getUrlAsProperties(String urlString) throws IOException {
     Properties props = new Properties();
-    InputStream in = getUrlAsStream(urlString);
-    props.load(in);
-    in.close();
+    try (InputStream in = getUrlAsStream(urlString)) {
+      props.load(in);
+    }
     return props;
   }
 

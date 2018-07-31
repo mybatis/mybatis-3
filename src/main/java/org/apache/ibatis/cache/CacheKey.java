@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -33,17 +33,18 @@ public class CacheKey implements Cloneable, Serializable {
   private static final int DEFAULT_MULTIPLYER = 37;
   private static final int DEFAULT_HASHCODE = 17;
 
-  private int multiplier;
+  private final int multiplier;
   private int hashcode;
   private long checksum;
   private int count;
+  // 8/21/2017 - Sonarlint flags this as needing to be marked transient.  While true if content is not serializable, this is not always true and thus should not be marked transient.
   private List<Object> updateList;
 
   public CacheKey() {
     this.hashcode = DEFAULT_HASHCODE;
     this.multiplier = DEFAULT_MULTIPLYER;
     this.count = 0;
-    this.updateList = new ArrayList<Object>();
+    this.updateList = new ArrayList<>();
   }
 
   public CacheKey(Object[] objects) {
@@ -121,7 +122,7 @@ public class CacheKey implements Cloneable, Serializable {
   @Override
   public CacheKey clone() throws CloneNotSupportedException {
     CacheKey clonedCacheKey = (CacheKey) super.clone();
-    clonedCacheKey.updateList = new ArrayList<Object>(updateList);
+    clonedCacheKey.updateList = new ArrayList<>(updateList);
     return clonedCacheKey;
   }
 

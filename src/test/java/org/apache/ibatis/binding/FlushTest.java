@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -31,9 +31,8 @@ import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class FlushTest {
     private static SqlSessionFactory sqlSessionFactory;
@@ -53,10 +52,7 @@ public class FlushTest {
 
     @Test
     public void invokeFlushStatementsViaMapper() {
-
-        SqlSession session = sqlSessionFactory.openSession();
-
-        try {
+        try (SqlSession session = sqlSessionFactory.openSession()) {
 
             BoundAuthorMapper mapper = session.getMapper(BoundAuthorMapper.class);
             Author author = new Author(-1, "cbegin", "******", "cbegin@nowhere.com", "N/A", Section.NEWS);
@@ -75,8 +71,8 @@ public class FlushTest {
             // test
             List<BatchResult> results = mapper.flush();
 
-            assertThat(results.size(), is(1));
-            assertThat(results.get(0).getUpdateCounts().length, is(ids.size()));
+            assertThat(results.size()).isEqualTo(1);
+            assertThat(results.get(0).getUpdateCounts().length).isEqualTo(ids.size());
 
             for (int id : ids) {
                 Author selectedAuthor = mapper.selectAuthor(id);
@@ -84,8 +80,6 @@ public class FlushTest {
             }
 
             session.rollback();
-        } finally {
-            session.close();
         }
 
     }

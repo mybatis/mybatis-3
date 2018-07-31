@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -48,8 +48,9 @@ public class EnumWithOgnlTest {
     }
     @Test
     public void testMixedConfiguration() throws Exception {
-      Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/xml_references/ibatisConfig.xml");
-      SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-      sqlSessionFactory.getConfiguration().addMapper(PersonMapper2.class);
+      try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/xml_references/ibatisConfig.xml")) {
+          SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+          sqlSessionFactory.getConfiguration().addMapper(PersonMapper2.class);
+      }
     }
 }

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -39,8 +39,8 @@ public class SqlRunner {
 
   public static final int NO_GENERATED_KEY = Integer.MIN_VALUE + 1001;
 
-  private Connection connection;
-  private TypeHandlerRegistry typeHandlerRegistry;
+  private final Connection connection;
+  private final TypeHandlerRegistry typeHandlerRegistry;
   private boolean useGeneratedKeySupport;
 
   public SqlRunner(Connection connection) {
@@ -121,7 +121,7 @@ public class SqlRunner {
               try {
                 return Integer.parseInt(genkey.toString());
               } catch (NumberFormatException e) {
-                //ignore, no numeric key suppot
+                //ignore, no numeric key support
               }
             }
           }
@@ -218,9 +218,9 @@ public class SqlRunner {
 
   private List<Map<String, Object>> getResults(ResultSet rs) throws SQLException {
     try {
-      List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-      List<String> columns = new ArrayList<String>();
-      List<TypeHandler<?>> typeHandlers = new ArrayList<TypeHandler<?>>();
+      List<Map<String, Object>> list = new ArrayList<>();
+      List<String> columns = new ArrayList<>();
+      List<TypeHandler<?>> typeHandlers = new ArrayList<>();
       ResultSetMetaData rsmd = rs.getMetaData();
       for (int i = 0, n = rsmd.getColumnCount(); i < n; i++) {
         columns.add(rsmd.getColumnLabel(i + 1));
@@ -236,7 +236,7 @@ public class SqlRunner {
         }
       }
       while (rs.next()) {
-        Map<String, Object> row = new HashMap<String, Object>();
+        Map<String, Object> row = new HashMap<>();
         for (int i = 0, n = columns.size(); i < n; i++) {
           String name = columns.get(i);
           TypeHandler<?> handler = typeHandlers.get(i);

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ import org.apache.ibatis.session.RowBounds;
  */
 public class ResultLoaderMap {
 
-  private final Map<String, LoadPair> loaderMap = new HashMap<String, LoadPair>();
+  private final Map<String, LoadPair> loaderMap = new HashMap<>();
 
   public void addLoader(String property, MetaObject metaResultObject, ResultLoader resultLoader) {
     String upperFirst = getUppercaseFirstProperty(property);
@@ -60,7 +60,7 @@ public class ResultLoaderMap {
   }
 
   public final Map<String, LoadPair> getProperties() {
-    return new HashMap<String, LoadPair>(this.loaderMap);
+    return new HashMap<>(this.loaderMap);
   }
 
   public Set<String> getPropertyNames() {
@@ -82,6 +82,10 @@ public class ResultLoaderMap {
       return true;
     }
     return false;
+  }
+
+  public void remove(String property) {
+    loaderMap.remove(property.toUpperCase(Locale.ENGLISH));
   }
 
   public void loadAll() throws SQLException {

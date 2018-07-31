@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,12 +16,11 @@
 package org.apache.ibatis.submitted.nestedresulthandler;
 
 import java.io.Reader;
-import java.sql.Connection;
 import java.util.List;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.ResultContext;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.SqlSession;
@@ -37,25 +36,18 @@ public class NestedResultHandlerTest {
   @BeforeClass
   public static void setUp() throws Exception {
     // create a SqlSessionFactory
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/nestedresulthandler/mybatis-config.xml");
-    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    reader.close();
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/nestedresulthandler/mybatis-config.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    }
 
     // populate in-memory database
-    SqlSession session = sqlSessionFactory.openSession();
-    Connection conn = session.getConnection();
-    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/nestedresulthandler/CreateDB.sql");
-    ScriptRunner runner = new ScriptRunner(conn);
-    runner.setLogWriter(null);
-    runner.runScript(reader);
-    reader.close();
-    session.close();
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+            "org/apache/ibatis/submitted/nestedresulthandler/CreateDB.sql");
   }
 
   @Test
   public void testGetPerson() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
 
       List<Person> persons = mapper.getPersons();
@@ -76,16 +68,13 @@ public class NestedResultHandlerTest {
       Assert.assertEquals("brother", person.getName());
       Assert.assertTrue(person.owns("car"));
       Assert.assertEquals(1, person.getItems().size());
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   // issue #542
   public void testGetPersonWithHandler() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       sqlSession.select("getPersons", new ResultHandler() {
         public void handleResult(ResultContext context) {
           Person person = (Person) context.getResultObject();
@@ -94,15 +83,12 @@ public class NestedResultHandlerTest {
           }
         }
       });
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test(expected=PersistenceException.class)
   public void testUnorderedGetPersonWithHandler() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       sqlSession.select("getPersonsWithItemsOrdered", new ResultHandler() {
         public void handleResult(ResultContext context) {
           Person person = (Person) context.getResultObject();
@@ -111,8 +97,6 @@ public class NestedResultHandlerTest {
           }
         }
       });
-    } finally {
-      sqlSession.close();
     }
   }
 
@@ -123,8 +107,7 @@ public class NestedResultHandlerTest {
    */
   @Test
   public void testGetPersonOrderedByItem() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
 
       List<Person> persons = mapper.getPersonsWithItemsOrdered();
@@ -145,15 +128,12 @@ public class NestedResultHandlerTest {
       Assert.assertTrue(person.owns("phone"));
       Assert.assertTrue(person.owns("shoes"));
       Assert.assertEquals(2, person.getItems().size());
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test //reopen issue 39? (not a bug?)
   public void testGetPersonItemPairs(){
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try{
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<PersonItemPair> pairs = mapper.getPersonItemPairs();
 
@@ -165,8 +145,6 @@ public class NestedResultHandlerTest {
       Assert.assertEquals(pairs.get(0).getPerson().getId(), Integer.valueOf(1));
       Assert.assertNotNull(pairs.get(0).getItem());
       Assert.assertEquals( pairs.get(0).getItem().getId(), Integer.valueOf(1));
-    } finally{
-      sqlSession.close();
     }
   }
 

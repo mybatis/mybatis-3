@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -21,8 +21,7 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.hamcrest.core.Is;
-import org.junit.Assert;
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -43,18 +42,14 @@ public class XmlMapperTest {
     configuration.addMapper(XmlMapper.class);
     SupportClasses.CustomCache cache = SupportClasses.Utils.unwrap(configuration.getCache(XmlMapper.class.getName()));
 
-    Assert.assertThat(cache.getName(), Is.is("default"));
+    Assertions.assertThat(cache.getName()).isEqualTo("default");
 
-    SqlSession sqlSession = factory.openSession();
-    try {
+    try (SqlSession sqlSession = factory.openSession()) {
       XmlMapper mapper = sqlSession.getMapper(XmlMapper.class);
 
-      Assert.assertThat(mapper.ping(), Is.is("Hello"));
-      Assert.assertThat(mapper.selectOne(), Is.is("1"));
-      Assert.assertThat(mapper.selectFromVariable(), Is.is("9999"));
-
-    } finally {
-      sqlSession.close();
+      Assertions.assertThat(mapper.ping()).isEqualTo("Hello");
+      Assertions.assertThat(mapper.selectOne()).isEqualTo("1");
+      Assertions.assertThat(mapper.selectFromVariable()).isEqualTo("9999");
     }
 
   }
@@ -74,18 +69,14 @@ public class XmlMapperTest {
     configuration.addMapper(XmlMapper.class);
     SupportClasses.CustomCache cache = SupportClasses.Utils.unwrap(configuration.getCache(XmlMapper.class.getName()));
 
-    Assert.assertThat(cache.getName(), Is.is("custom"));
+    Assertions.assertThat(cache.getName()).isEqualTo("custom");
 
-    SqlSession sqlSession = factory.openSession();
-    try {
+    try (SqlSession sqlSession = factory.openSession()) {
       XmlMapper mapper = sqlSession.getMapper(XmlMapper.class);
 
-      Assert.assertThat(mapper.ping(), Is.is("Hi"));
-      Assert.assertThat(mapper.selectOne(), Is.is("1"));
-      Assert.assertThat(mapper.selectFromVariable(), Is.is("5555"));
-
-    } finally {
-      sqlSession.close();
+      Assertions.assertThat(mapper.ping()).isEqualTo("Hi");
+      Assertions.assertThat(mapper.selectOne()).isEqualTo("1");
+      Assertions.assertThat(mapper.selectFromVariable()).isEqualTo("5555");
     }
 
   }

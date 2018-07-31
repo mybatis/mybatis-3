@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -27,9 +27,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.type.JdbcType;
-import org.hamcrest.core.Is;
-import org.hamcrest.core.IsNull;
-import org.junit.Assert;
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -52,20 +50,17 @@ public class CustomizationTest {
 
     SupportClasses.CustomCache cache = SupportClasses.Utils.unwrap(configuration.getCache(CustomDefaultValueSeparatorMapper.class.getName()));
 
-    Assert.assertThat(configuration.getJdbcTypeForNull(), Is.is(JdbcType.NULL));
-    Assert.assertThat(((UnpooledDataSource) configuration.getEnvironment().getDataSource()).getUrl(),
-        Is.is("jdbc:hsqldb:mem:global_variables_defaults"));
-    Assert.assertThat(configuration.getDatabaseId(), Is.is("hsql"));
-    Assert.assertThat(((SupportClasses.CustomObjectFactory) configuration.getObjectFactory()).getProperties().getProperty("name"),
-        Is.is("default"));
-    Assert.assertThat(cache.getName(), Is.is("default"));
+    Assertions.assertThat(configuration.getJdbcTypeForNull()).isEqualTo(JdbcType.NULL);
+    Assertions.assertThat(((UnpooledDataSource) configuration.getEnvironment().getDataSource()).getUrl())
+        .isEqualTo("jdbc:hsqldb:mem:global_variables_defaults");
+    Assertions.assertThat(configuration.getDatabaseId()).isEqualTo("hsql");
+    Assertions.assertThat(((SupportClasses.CustomObjectFactory) configuration.getObjectFactory()).getProperties().getProperty("name"))
+        .isEqualTo("default");
+    Assertions.assertThat(cache.getName()).isEqualTo("default");
 
-    SqlSession sqlSession = factory.openSession();
-    try {
+    try (SqlSession sqlSession = factory.openSession()) {
       CustomDefaultValueSeparatorMapper mapper = sqlSession.getMapper(CustomDefaultValueSeparatorMapper.class);
-      Assert.assertThat(mapper.selectValue(null), Is.is("default"));
-    } finally {
-      sqlSession.close();
+      Assertions.assertThat(mapper.selectValue(null)).isEqualTo("default");
     }
 
   }
@@ -89,20 +84,17 @@ public class CustomizationTest {
 
     SupportClasses.CustomCache cache = SupportClasses.Utils.unwrap(configuration.getCache(CustomDefaultValueSeparatorMapper.class.getName()));
 
-    Assert.assertThat(configuration.getJdbcTypeForNull(), Is.is(JdbcType.CHAR));
-    Assert.assertThat(((UnpooledDataSource) configuration.getEnvironment().getDataSource()).getUrl(),
-        Is.is("jdbc:hsqldb:mem:global_variables_defaults_custom"));
-    Assert.assertThat(configuration.getDatabaseId(), IsNull.nullValue());
-    Assert.assertThat(((SupportClasses.CustomObjectFactory) configuration.getObjectFactory()).getProperties().getProperty("name"),
-        Is.is("customObjectFactory"));
-    Assert.assertThat(cache.getName(), Is.is("customCache"));
+    Assertions.assertThat(configuration.getJdbcTypeForNull()).isEqualTo(JdbcType.CHAR);
+    Assertions.assertThat(((UnpooledDataSource) configuration.getEnvironment().getDataSource()).getUrl())
+        .isEqualTo("jdbc:hsqldb:mem:global_variables_defaults_custom");
+    Assertions.assertThat(configuration.getDatabaseId()).isNull();
+    Assertions.assertThat(((SupportClasses.CustomObjectFactory) configuration.getObjectFactory()).getProperties().getProperty("name"))
+         .isEqualTo("customObjectFactory");
+    Assertions.assertThat(cache.getName()).isEqualTo("customCache");
 
-    SqlSession sqlSession = factory.openSession();
-    try {
+    try (SqlSession sqlSession = factory.openSession()) {
       CustomDefaultValueSeparatorMapper mapper = sqlSession.getMapper(CustomDefaultValueSeparatorMapper.class);
-      Assert.assertThat(mapper.selectValue("3333"), Is.is("3333"));
-    } finally {
-      sqlSession.close();
+      Assertions.assertThat(mapper.selectValue("3333")).isEqualTo("3333");
     }
 
   }

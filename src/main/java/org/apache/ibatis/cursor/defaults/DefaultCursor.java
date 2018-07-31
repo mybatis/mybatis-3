@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ public class DefaultCursor<T> implements Cursor<T> {
     private final ResultMap resultMap;
     private final ResultSetWrapper rsw;
     private final RowBounds rowBounds;
-    private final ObjectWrapperResultHandler<T> objectWrapperResultHandler = new ObjectWrapperResultHandler<T>();
+    private final ObjectWrapperResultHandler<T> objectWrapperResultHandler = new ObjectWrapperResultHandler<>();
 
     private final CursorIterator cursorIterator = new CursorIterator();
     private boolean iteratorRetrieved;
@@ -148,7 +148,7 @@ public class DefaultCursor<T> implements Cursor<T> {
             indexWithRowBound++;
         }
         // No more object or limit reached
-        if (next == null || (getReadItemsCount() == rowBounds.getOffset() + rowBounds.getLimit())) {
+        if (next == null || getReadItemsCount() == rowBounds.getOffset() + rowBounds.getLimit()) {
             close();
             status = CursorStatus.CONSUMED;
         }

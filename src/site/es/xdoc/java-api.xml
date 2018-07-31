@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2018 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -189,14 +189,22 @@ Configuration getConfiguration();</source>
   <p>Estos métodos se usan para ejecutar las sentencias SELECT, INSERT, UPDATE y DELETE que se hayan definido en los ficheros xml de mapeo SQL. Son bastante auto explicativos, cada uno recibe el ID del statement y el objeto de parámetro, que puede ser una primitiva, un JavaBean, un POJO o un Map.</p>
   <source><![CDATA[<T> T selectOne(String statement, Object parameter)
 <E> List<E> selectList(String statement, Object parameter)
+<T> Cursor<T> selectCursor(String statement, Object parameter)
 <K,V> Map<K,V> selectMap(String statement, Object parameter, String mapKey)
 int insert(String statement, Object parameter)
 int update(String statement, Object parameter)
 int delete(String statement, Object parameter)]]></source>
   <p>La diferencia entre selectOne y selectList es que selectOne debe devolver sólo un objeto. Si hay más de uno se lanzará una excepción. Si no hay ninguno se devolverá null. Si no sabes cuantos objetos esperas recibir, usa selectList. Si quieres comprobar la existencia de un objeto sería mejor que devuelvas un count(). SelectMap es un caso especial diseñado para convertir una lista de resultados en un Map basado en las propiedades de los objetos recibidos. Como no todas las sentencias requieren un parámetro, estos métodos han sido sobrecargados de forma que se proporcionan versiones que no reciben el parámetro objeto.</p>
+  <p>A Cursor offers the same results as a List, except it fetches data lazily using an Iterator.</p>
+  <source><![CDATA[try (Cursor<MyEntity> entities = session.selectCursor(statement, param)) {
+   for (MyEntity entity:entities) {
+      // process one entity
+   }
+}]]></source>
   <p>El valor devuelto por los métodos insert, update and delete indica el número de filas afectadas por la sentencia.</p>
   <source><![CDATA[<T> T selectOne(String statement)
 <E> List<E> selectList(String statement)
+<T> Cursor<T> selectCursor(String statement)
 <K,V> Map<K,V> selectMap(String statement, String mapKey)
 int insert(String statement)
 int update(String statement)
@@ -204,6 +212,7 @@ int delete(String statement)]]></source>
 
   <p>Finalmente hay tres versiones avanzadas de los métodos select que te permiten restringir el rango de filas devueltas, o proporcionar lógica de tratamiento de resultados personalizada, normalmente para grandes cantidades de datos.</p>
   <source><![CDATA[<E> List<E> selectList (String statement, Object parameter, RowBounds rowBounds)
+<T> Cursor<T> selectCursor(String statement, Object parameter, RowBounds rowBounds)
 <K,V> Map<K,V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowbounds)
 void select (String statement, Object parameter, ResultHandler<T> handler)
 void select (String statement, Object parameter, RowBounds rowBounds, ResultHandler<T> handler)]]></source>
@@ -215,6 +224,7 @@ RowBounds rowBounds = new RowBounds(offset, limit);</source>
 
   <p>El rendimiento de algunos drivers puede variar mucho en este aspecto. Para un rendimiento optimo, usa tipos de ResultSet SCROLL_SENSITIVE o SCROLL_INSENSITIVE (es decir, no FORWARD_ONLY)</p>
   <p>El parámetro ResultHandler te permite manejar cada fila como tú quieras. Puedes añadirla a una lista, crear un Map, un Set, o descartar cada resultado y guardar solo cálculos. Puedes hacer casi todo lo que quieras con un ResultHandler, de hecho, es lo que MyBatis usa internamente para construir listas de ResultSets.</p>
+  <p>Since 3.4.6, ResultHandler passed to a CALLABLE statement is used on every REFCURSOR output parameter of the stored procedure if there is any.</p>
   <p>La interfaz es muy sencilla:</p>  
   <source><![CDATA[package org.apache.ibatis.session;
 public interface ResultHandler<T> {
@@ -222,6 +232,13 @@ public interface ResultHandler<T> {
 }]]></source>
 
   <p>El parámetro ResultContext te da acceso al objeto resultado en sí mismo, un contador del número de objetos creados y un método booleano stop() que te permite indicar a MyBatis que pare la carga de datos.</p>
+
+  <p>Using a ResultHandler has two limitations that you should be aware of:</p>
+  
+  <ul>
+  <li>Data got from an method called with a ResultHandler will not be cached.</li>
+  <li>When using advanced resultmaps MyBatis will probably require several rows to build an object. If a ResultHandler is used you may be given an object whose associations or collections are not yet filled.</li>
+  </ul>
 
   <h5>Batch update statement Flush Method</h5>
   <p>There is method for flushing(executing) batch update statements that stored in a JDBC driver class at any timing. This method can be used when you use the <code>ExecutorType.BATCH</code> as <code>ExecutorType</code>.</p>
@@ -326,7 +343,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>Class</code></td>
         <td><code>&lt;cacheRef&gt;</code></td>
         <td>
-          Referencia una cache de otro namespace. Atributos: <code>value</code> and <code>name</code>.
+          Referencia una cache de otro namespace. Note that caches declared in an XML mapper file are considered a separate namespace, even if they share the same FQCN. Atributos: <code>value</code> and <code>name</code>.
           If you use this annotation, you should be specified either <code>value</code> or <code>name</code> attribute.
           For the <code>value</code> attribute specify a java type indicating the namespace(the namespace name become a FQCN of specified java type),
           and for the <code>name</code> attribute(this attribute is available since 3.4.2) specify a name indicating the namespace.
@@ -405,7 +422,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>@Options</code></td>
         <td><code>Method</code></td>
         <td>Attributes of mapped statements.</td>
-        <td>Esta anotación proporciona acceso a un gran conjunto de opciones de configuración que normalmente aparecen como atributos en los mapped statements. En lugar de complicar cada anotación existente la anotación Options proporciona una forma sencilla y concisa de acceder a estas opciones. Atributos: useCache=true, flushCache=FlushCachePolicy.DEFAULT, resultSetType=FORWARD_ONLY, statementType=PREPARED, fetchSize=-1, timeout=-1, useGeneratedKeys=false, keyProperty=“id”, keyColumn=“”, resultSets=“”.  Es importante comprender que las anotaciones en Java no permiten indicar un valor nulo. Por lo tanto, cuando usas la anotación Options el statement usará todos los valores por defecto. Presta atención a estos valores pro defecto para evitar comportamientos inesperados. La keyColumn solo se requiere para algunas bases de datos (como PostgreSQL) cuando la columna no es la primera columna de la tabla.</td>
+        <td>Esta anotación proporciona acceso a un gran conjunto de opciones de configuración que normalmente aparecen como atributos en los mapped statements. En lugar de complicar cada anotación existente la anotación Options proporciona una forma sencilla y concisa de acceder a estas opciones. Atributos: useCache=true, flushCache=FlushCachePolicy.DEFAULT, resultSetType=FORWARD_ONLY, statementType=PREPARED, fetchSize=-1, timeout=-1, useGeneratedKeys=false, keyProperty=“”, keyColumn=“”, resultSets=“”.  Es importante comprender que las anotaciones en Java no permiten indicar un valor nulo. Por lo tanto, cuando usas la anotación Options el statement usará todos los valores por defecto. Presta atención a estos valores pro defecto para evitar comportamientos inesperados. La keyColumn solo se requiere para algunas bases de datos (como PostgreSQL) cuando la columna no es la primera columna de la tabla.</td>
       </tr>
       <tr>
         <td>
@@ -445,7 +462,9 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
             <li><code>&lt;select&gt;</code></li>
           </ul>
         </td>
-        <td>Estas anotaciones SQL alternativas te permiten especificar un nombre de clases y un método que devolverán la SQL que debe ejecutarse. Cuando se ejecute el método MyBatis instanciará la clase y ejecutará el método especificados en el provider. El método puede opcionalmente recibir el objeto parámetro.(In MyBatis 3.4 or later, it's allow multiple parameters) Atributos: type, method.  El atributo type es el nombre completamente cualificado de una clase. El method es el nombre un método de dicha clase. Nota: A continuación hay una sección sobre la clase, que puede ayudar a construir SQL dinámico de una forma más clara y sencilla de leer.</td>
+        <td>Estas anotaciones SQL alternativas te permiten especificar un nombre de clases y un método que devolverán la SQL que debe ejecutarse (Since 3.4.6, you can specify the <code>CharSequence</code> instead of <code>String</code> as a method return type).
+          Cuando se ejecute el método MyBatis instanciará la clase y ejecutará el método especificados en el provider. You can pass objects that passed to arguments of a mapper method, "Mapper interface type" and "Mapper method"
+          via the <code>ProviderContext</code>(available since MyBatis 3.4.5 or later) as method argument.(In MyBatis 3.4 or later, it's allow multiple parameters) Atributos: type, method.  El atributo type es el nombre completamente cualificado de una clase. El method es el nombre un método de dicha clase. Nota: A continuación hay una sección sobre la clase, que puede ayudar a construir SQL dinámico de una forma más clara y sencilla de leer.</td>
       </tr>
       <tr>
         <td><code>@Param</code></td>
@@ -523,7 +542,7 @@ Company getCompanyById(Integer id);</source>
 List<User> getUsersByName(String name);
 
 class UserSqlBuilder {
-  public String buildGetUsersByName(final String name) {
+  public static String buildGetUsersByName(final String name) {
     return new SQL(){{
       SELECT("*");
       FROM("users");
@@ -543,7 +562,7 @@ List<User> getUsersByName(
 class UserSqlBuilder {
 
   // If not use @Param, you should be define same arguments with mapper method
-  public String buildGetUsersByName(
+  public static String buildGetUsersByName(
       final String name, final String orderByColumn) {
     return new SQL(){{
       SELECT("*");
@@ -554,7 +573,7 @@ class UserSqlBuilder {
   }
 
   // If use @Param, you can define only arguments to be used
-  public String buildGetUsersByName(@Param("orderByColumn") final String orderByColumn) {
+  public static String buildGetUsersByName(@Param("orderByColumn") final String orderByColumn) {
     return new SQL(){{
       SELECT("*");
       FROM("users");

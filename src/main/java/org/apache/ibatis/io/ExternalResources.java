@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package org.apache.ibatis.io;
 
-import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -24,11 +23,16 @@ import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.util.Properties;
 
+import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.logging.LogFactory;
+
 /**
  * @author Clinton Begin
  */
 @Deprecated
 public class ExternalResources {
+
+  private static final Log log = LogFactory.getLog(ExternalResources.class);
 
   private ExternalResources() {
     // do nothing
@@ -39,27 +43,11 @@ public class ExternalResources {
       destFile.createNewFile();
     }
 
-    FileChannel source = null;
-    FileChannel destination = null;
-    try {
-      source = new FileInputStream(sourceFile).getChannel();
-      destination = new FileOutputStream(destFile).getChannel();
+    try (FileChannel source = new FileInputStream(sourceFile).getChannel();
+         FileChannel destination = new FileOutputStream(destFile).getChannel()){
       destination.transferFrom(source, 0, source.size());
-    } finally {
-      closeQuietly(source);
-      closeQuietly(destination);
     }
 
-  }
-
-  private static void closeQuietly(Closeable closeable) {
-    if (closeable != null) {
-      try {
-        closeable.close();
-      } catch (IOException e) {
-        // do nothing, close quietly
-      }
-    }
   }
 
   public static String getConfiguredTemplate(String templatePath, String templateProperty) throws FileNotFoundException {
@@ -72,7 +60,7 @@ public class ExternalResources {
     } catch (FileNotFoundException e) {
       throw e;
     } catch (Exception e) {
-      e.printStackTrace();
+      log.error("", e);
     }
 
     return templateName;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2017 the original author or authors.
+       Copyright 2009-2018 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -907,8 +907,8 @@ public class User {
 }]]></source>
 
         <p>
-          In order to inject the results into the constructor, MyBatis needs to identify the constructor for somehow.
-          In the following example, MyBatis searches a constructor declared with three parameters: <code>java.lang.Integer</code>, <code>java.lang.String</code> and <code>int</code> in this order.
+          결과를 생성자에 주입하려면 MyBatis 가 어떻게든 생성자를 식별해야 한다.
+          다음 예제에서 MyBatis는 <code>java.lang.Integer</code>, <code>java.lang.String</code> and <code>int</code> 의 순서로 세 개의 매개 변수로 선언 된 생성자를 검색한다.
         </p>
 
         <source><![CDATA[<constructor>
@@ -918,9 +918,9 @@ public class User {
 </constructor>]]></source>
 
         <p>
-          When you are dealing with a constructor with many parameters, maintaining the order of arg elements is error-prone.<br />
-          Since 3.4.3, by specifying the name of each parameter, you can write arg elements in any order. To reference constructor parameters by their names, you can either add <code>@Param</code> annotation to them or compile the project with '-parameters' compiler option and enable <code>useActualParamName</code> (this option is enabled by default).
-          The following example is valid for the same constructor even though the order of the second and the third parameters does not match with the declared order.
+          많은 매개 변수를 가진 생성자를 다루는 경우, arg 엘리먼트의 순서를 유지하는 것은 오류가 발생하기 쉽다. <br />
+          3.4.3 부터, 각 매개 변수의 이름을 지정하여 임의의 순서로 arg 엘리먼트를 작성할 수 있다. 이름으로 생성자 매개변수를 참조하려면, <code>@Param</code> annotation 을 추가하거나 '-parameters' 컴파일러 옵션을 통해 프로젝트를 컴파일하고 <code>useActualParamName</code> 을 활성화 할 수 있다. (이 옵션은 기본적으로 활성화 되어있다).
+          다음 예제는 2번째 및 3번째 매개변수의 순서가 선언 된 순서와 일치하지 않더라도 동일한 생성자에 대해 유효하다.
         </p>
 
         <source><![CDATA[<constructor>
@@ -930,7 +930,7 @@ public class User {
 </constructor>]]></source>
 
         <p>
-          <code>javaType</code> can be omitted if there is a property with the same name and type.
+          같은 이름과 형태의 property 가 있는 경우는 <code>javaType</code> 를 생략 할 수 있다.
         </p>
 
         <p>나머지 속성과 규칙은 id와 result엘리먼트와 동일하다.</p>
@@ -985,7 +985,7 @@ public class User {
             <tr>
               <td><code>name</code></td>
               <td>
-                The name of the constructor parameter. Specifying name allows you to write arg elements in any order. See the above explanation. Since 3.4.3.
+                생성자 매개변수의 이름. name 을 지정함으로써 순서에 상관없이 arg 엘리먼트를 작성할 수 있다. 위의 설명을 보아라. 3.4.3 부터 가능하다.
               </td>
             </tr>
           </tbody>
@@ -1501,7 +1501,7 @@ public class User {
 
         <p>
           대개 데이터베이스 칼럼은 대문자를 사용해서 명명하고 단어 사이사이에는 밑줄을 넣는다. 
-          자바 프로퍼티는 대개 낙나표기법을 사용해서 명명한다. 
+          자바 프로퍼티는 대개 낙타표기법을 사용해서 명명한다. 
           이런 둘사이의 자동매핑을 가능하게 하기 위해서는 <code>mapUnderscoreToCamelCase</code> 를 true로 설정하자. 
         </p>
         
@@ -1600,6 +1600,13 @@ public class User {
           <li>캐시는 읽기/쓰기 캐시처럼 처리될 것이다. 이것은 가져올 객체는 공유되지 않고 호출자에 의해 안전하게 변경된다는 것을 의미한다.</li>
         </ul>
 
+        <p>
+          <span class="label important">NOTE</span> The cache will only apply to statements declared in the mapping file
+          where the cache tag is located. If you are using the Java API in conjunction with the XML mapping files, then
+          statements declared in the companion interface will not be cached by default. You will need to refer to the
+          cache region using the @CacheNamespaceRef annotation.
+        </p>
+
         <p>모든 프로퍼티는 cache 엘리먼트의 속성을 통해 변경가능하다. 
 		예를들면</p>
 
@@ -1668,13 +1675,12 @@ public class User {
 
         <p>
 			모든 간단한 타입의 자바빈 프로퍼티를 사용할 수 있다. 마이바티스는 변환할 것이다.
-			And you can specify a placeholder(e.g. <code>${cache.file}</code>) to replace value defined at <a href="configuration.html#properties">configuration properties</a>.
+      <a href="configuration.html#properties">configuration properties</a> 에 정의된 값을 대체할 placeholder(예: <code>${cache.file}</code>) 를 지정할 수 있다.
 		</p>
 
 		<p>
-		  Since 3.4.2, the MyBatis has been supported to call an initialization method after it's set all properties.
-		  If you want to use this feature, please implements the <code>org.apache.ibatis.builder.InitializingObject</code>
-		  interface on your custom cache class.
+      3.4.2 부터, MyBatis 는 모든 properties 를 설정한 후 초기화 메서드를 호출하도록 지원한다.
+      이 기능을 사용하려면, custom 캐시 클래스에서 <code>org.apache.ibatis.builder.InitializingObject</code> interface 를 구현해야 한다.
 		</p>
 
 		<source><![CDATA[public interface InitializingObject {

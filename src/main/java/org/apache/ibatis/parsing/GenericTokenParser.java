@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -34,13 +34,13 @@ public class GenericTokenParser {
     if (text == null || text.isEmpty()) {
       return "";
     }
-    char[] src = text.toCharArray();
-    int offset = 0;
     // search open token
-    int start = text.indexOf(openToken, offset);
+    int start = text.indexOf(openToken, 0);
     if (start == -1) {
       return text;
     }
+    char[] src = text.toCharArray();
+    int offset = 0;
     final StringBuilder builder = new StringBuilder();
     StringBuilder expression = null;
     while (start > -1) {

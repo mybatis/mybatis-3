@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -32,21 +32,16 @@ public class MyBatisTest {
   @BeforeClass
   public static void setUp() throws Exception {
     // create an SqlSessionFactory
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/call_setters_on_nulls_again/mybatis-config.xml");
-    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    reader.close();
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/call_setters_on_nulls_again/mybatis-config.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    }
   }
 
   @Test
   public void test() {
-    SqlSession session = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession session = sqlSessionFactory.openSession()) {
       ParentBean parentBean = session.selectOne("test");
       Assert.assertEquals("p1", parentBean.getName());
-//    Assert.assertThat(parentBean.toString(), CoreMatchers.is("ParentBean [name=p1, client=ChildBean [name=null, child=ChildBean [name=null, child=null, beans=null], beans=null]]"));      
-      
-    } finally {
-      session.close();
     }
   }
 

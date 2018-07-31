@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package org.apache.ibatis.type;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -36,39 +37,54 @@ public class DoubleTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldGetResultFromResultSetByName() throws Exception {
     when(rs.getDouble("column")).thenReturn(100d);
-    when(rs.wasNull()).thenReturn(false);
     assertEquals(new Double(100d), TYPE_HANDLER.getResult(rs, "column"));
+
+    when(rs.getDouble("column")).thenReturn(0d);
+    assertEquals(new Double(0d), TYPE_HANDLER.getResult(rs, "column"));
   }
 
   @Override
+  @Test
   public void shouldGetResultNullFromResultSetByName() throws Exception {
-    // Unnecessary
+    when(rs.getDouble("column")).thenReturn(0d);
+    when(rs.wasNull()).thenReturn(true);
+    assertNull(TYPE_HANDLER.getResult(rs, "column"));
   }
 
   @Override
   @Test
   public void shouldGetResultFromResultSetByPosition() throws Exception {
     when(rs.getDouble(1)).thenReturn(100d);
-    when(rs.wasNull()).thenReturn(false);
     assertEquals(new Double(100d), TYPE_HANDLER.getResult(rs, 1));
+
+    when(rs.getDouble(1)).thenReturn(0d);
+    assertEquals(new Double(0d), TYPE_HANDLER.getResult(rs, 1));
   }
 
   @Override
+  @Test
   public void shouldGetResultNullFromResultSetByPosition() throws Exception {
-    // Unnecessary
+    when(rs.getDouble(1)).thenReturn(0d);
+    when(rs.wasNull()).thenReturn(true);
+    assertNull(TYPE_HANDLER.getResult(rs, 1));
   }
 
   @Override
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
     when(cs.getDouble(1)).thenReturn(100d);
-    when(cs.wasNull()).thenReturn(false);
     assertEquals(new Double(100d), TYPE_HANDLER.getResult(cs, 1));
+
+    when(cs.getDouble(1)).thenReturn(0d);
+    assertEquals(new Double(0d), TYPE_HANDLER.getResult(cs, 1));
   }
 
   @Override
+  @Test
   public void shouldGetResultNullFromCallableStatement() throws Exception {
-    // Unnecessary
+    when(cs.getDouble(1)).thenReturn(0d);
+    when(cs.wasNull()).thenReturn(true);
+    assertNull(TYPE_HANDLER.getResult(cs, 1));
   }
 
 }

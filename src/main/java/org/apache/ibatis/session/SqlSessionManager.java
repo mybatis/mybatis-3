@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
   private final SqlSessionFactory sqlSessionFactory;
   private final SqlSession sqlSessionProxy;
 
-  private ThreadLocal<SqlSession> localSqlSession = new ThreadLocal<SqlSession>();
+  private final ThreadLocal<SqlSession> localSqlSession = new ThreadLocal<>();
 
   private SqlSessionManager(SqlSessionFactory sqlSessionFactory) {
     this.sqlSessionFactory = sqlSessionFactory;
@@ -352,16 +352,15 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
           throw ExceptionUtil.unwrapThrowable(t);
         }
       } else {
-        final SqlSession autoSqlSession = openSession();
-        try {
-          final Object result = method.invoke(autoSqlSession, args);
-          autoSqlSession.commit();
-          return result;
-        } catch (Throwable t) {
-          autoSqlSession.rollback();
-          throw ExceptionUtil.unwrapThrowable(t);
-        } finally {
-          autoSqlSession.close();
+        try (SqlSession autoSqlSession = openSession()) {
+          try {
+            final Object result = method.invoke(autoSqlSession, args);
+            autoSqlSession.commit();
+            return result;
+          } catch (Throwable t) {
+            autoSqlSession.rollback();
+            throw ExceptionUtil.unwrapThrowable(t);
+          }
         }
       }
     }

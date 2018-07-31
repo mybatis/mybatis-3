@@ -15,11 +15,10 @@
  */
 package org.apache.ibatis.jdbc;
 
-import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 
 public class SQLTest {
 
@@ -302,6 +301,6 @@ public class SQLTest {
   @Test
   public void fixFor903UpdateJoins() {
     final SQL sql = new SQL().UPDATE("table1 a").INNER_JOIN("table2 b USING (ID)").SET("a.value = b.value");
-    assertThat(sql.toString(), CoreMatchers.equalTo("UPDATE table1 a\nINNER JOIN table2 b USING (ID)\nSET a.value = b.value"));
+    assertThat(sql.toString()).isEqualTo("UPDATE table1 a\nINNER JOIN table2 b USING (ID)\nSET a.value = b.value");
   }
 }

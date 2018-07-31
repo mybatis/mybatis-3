@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -33,10 +33,9 @@ import javax.sql.DataSource;
 import java.io.*;
 import java.sql.Clob;
 
-import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -58,12 +57,14 @@ public class ClobReaderTypeHandlerTest extends BaseTypeHandlerTest {
   @BeforeClass
   public static void setupSqlSessionFactory() throws Exception {
     DataSource dataSource = BaseDataTest.createUnpooledDataSource("org/apache/ibatis/type/jdbc.properties");
-    BaseDataTest.runScript(dataSource, "org/apache/ibatis/type/ClobReaderTypeHandlerTest.sql");
     TransactionFactory transactionFactory = new JdbcTransactionFactory();
     Environment environment = new Environment("Production", transactionFactory, dataSource);
     Configuration configuration = new Configuration(environment);
     configuration.addMapper(Mapper.class);
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
+
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+            "org/apache/ibatis/type/ClobReaderTypeHandlerTest.sql");
   }
 
   @Override
@@ -79,7 +80,6 @@ public class ClobReaderTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldGetResultFromResultSetByName() throws Exception {
     Reader reader = new StringReader("Hello");
     when(rs.getClob("column")).thenReturn(clob);
-    when(rs.wasNull()).thenReturn(false);
     when(clob.getCharacterStream()).thenReturn(reader);
     assertEquals(reader, TYPE_HANDLER.getResult(rs, "column"));
   }
@@ -88,7 +88,6 @@ public class ClobReaderTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldGetResultNullFromResultSetByName() throws Exception {
     when(rs.getClob("column")).thenReturn(null);
-    when(rs.wasNull()).thenReturn(true);
     assertNull(TYPE_HANDLER.getResult(rs, "column"));
   }
 
@@ -96,7 +95,6 @@ public class ClobReaderTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldGetResultFromResultSetByPosition() throws Exception {
     when(rs.getClob(1)).thenReturn(clob);
-    when(rs.wasNull()).thenReturn(true);
     assertNull(TYPE_HANDLER.getResult(rs, 1));
   }
 
@@ -104,7 +102,6 @@ public class ClobReaderTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldGetResultNullFromResultSetByPosition() throws Exception {
     when(rs.getClob(1)).thenReturn(null);
-    when(rs.wasNull()).thenReturn(true);
     assertNull(TYPE_HANDLER.getResult(rs, 1));
   }
 
@@ -113,7 +110,6 @@ public class ClobReaderTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldGetResultFromCallableStatement() throws Exception {
     Reader reader = new StringReader("Hello");
     when(cs.getClob(1)).thenReturn(clob);
-    when(cs.wasNull()).thenReturn(false);
     when(clob.getCharacterStream()).thenReturn(reader);
     assertEquals(reader, TYPE_HANDLER.getResult(cs, 1));
   }
@@ -122,16 +118,13 @@ public class ClobReaderTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldGetResultNullFromCallableStatement() throws Exception {
     when(cs.getClob(1)).thenReturn(null);
-    when(cs.wasNull()).thenReturn(true);
     assertNull(TYPE_HANDLER.getResult(cs, 1));
   }
 
 
   @Test
   public void integrationTest() throws IOException {
-    SqlSession session = sqlSessionFactory.openSession();
-
-    try {
+    try (SqlSession session = sqlSessionFactory.openSession()) {
       Mapper mapper = session.getMapper(Mapper.class);
       // insert (Reader -> Clob)
       {
@@ -144,10 +137,8 @@ public class ClobReaderTypeHandlerTest extends BaseTypeHandlerTest {
       // select (Clob -> Reader)
       {
         ClobContent clobContent = mapper.findOne(1);
-        assertThat(new BufferedReader(clobContent.getContent()).readLine(), is("Hello"));
+        assertThat(new BufferedReader(clobContent.getContent()).readLine()).isEqualTo("Hello");
       }
-    } finally {
-      session.close();
     }
 
   }

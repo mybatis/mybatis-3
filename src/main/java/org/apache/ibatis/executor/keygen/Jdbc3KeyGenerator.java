@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -106,7 +106,7 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
       }
     }
     if (parameters == null) {
-      parameters = new ArrayList<Object>();
+      parameters = new ArrayList<>();
       parameters.add(parameter);
     }
     return parameters;
@@ -117,8 +117,10 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
     for (int i = 0; i < keyProperties.length; i++) {
       if (metaParam.hasSetter(keyProperties[i])) {
         Class<?> keyPropertyType = metaParam.getSetterType(keyProperties[i]);
-        TypeHandler<?> th = typeHandlerRegistry.getTypeHandler(keyPropertyType, JdbcType.forCode(rsmd.getColumnType(i + 1)));
-        typeHandlers[i] = th;
+        typeHandlers[i] = typeHandlerRegistry.getTypeHandler(keyPropertyType, JdbcType.forCode(rsmd.getColumnType(i + 1)));
+      } else {
+        throw new ExecutorException("No setter found for the keyProperty '" + keyProperties[i] + "' in '"
+            + metaParam.getOriginalObject().getClass().getName() + "'.");
       }
     }
     return typeHandlers;
@@ -127,9 +129,6 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
   private void populateKeys(ResultSet rs, MetaObject metaParam, String[] keyProperties, TypeHandler<?>[] typeHandlers) throws SQLException {
     for (int i = 0; i < keyProperties.length; i++) {
       String property = keyProperties[i];
-      if (!metaParam.hasSetter(property)) {
-        throw new ExecutorException("No setter found for the keyProperty '" + property + "' in " + metaParam.getOriginalObject().getClass().getName() + ".");
-      }
       TypeHandler<?> th = typeHandlers[i];
       if (th != null) {
         Object value = th.getResult(rs, i + 1);

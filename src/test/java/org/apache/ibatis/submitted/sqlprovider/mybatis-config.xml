@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2017 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -21,6 +21,11 @@
     "http://mybatis.org/dtd/mybatis-3-config.dtd">
 
 <configuration>
+
+	<properties>
+		<property name="Constants.LOGICAL_DELETE_OFF" value="false"/>
+		<property name="org.apache.ibatis.parsing.PropertyParser.enable-default-value" value="true"/>
+	</properties>
 
 	<environments default="development">
 		<environment id="development">

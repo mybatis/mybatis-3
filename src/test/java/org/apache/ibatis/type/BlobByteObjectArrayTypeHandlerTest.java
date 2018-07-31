@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -22,9 +22,7 @@ import org.mockito.Mock;
 import java.io.*;
 import java.sql.Blob;
 
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNull.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
@@ -44,11 +42,11 @@ public class BlobByteObjectArrayTypeHandlerTest extends BaseTypeHandlerTest {
     doNothing().when(ps).setBinaryStream(positionCaptor.capture(), byteArrayCaptor.capture(), lengthCaptor.capture());
     TYPE_HANDLER.setParameter(ps, 1, new Byte[]{1, 2}, null);
     ByteArrayInputStream actualIn = byteArrayCaptor.getValue();
-    assertThat(positionCaptor.getValue(), is(1));
-    assertThat(actualIn.read(), is(1));
-    assertThat(actualIn.read(), is(2));
-    assertThat(actualIn.read(), is(-1));
-    assertThat(lengthCaptor.getValue(), is(2));
+    assertThat(positionCaptor.getValue()).isEqualTo(1);
+    assertThat(actualIn.read()).isEqualTo(1);
+    assertThat(actualIn.read()).isEqualTo(2);
+    assertThat(actualIn.read()).isEqualTo(-1);
+    assertThat(lengthCaptor.getValue()).isEqualTo(2);
   }
 
   @Override
@@ -56,10 +54,9 @@ public class BlobByteObjectArrayTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldGetResultFromResultSetByName() throws Exception {
     byte[] byteArray = new byte[]{1, 2};
     when(rs.getBlob("column")).thenReturn(blob);
-    when(rs.wasNull()).thenReturn(false);
     when(blob.length()).thenReturn((long)byteArray.length);
     when(blob.getBytes(1, 2)).thenReturn(byteArray);
-    assertThat(TYPE_HANDLER.getResult(rs, "column"), is(new Byte[]{1, 2}));
+    assertThat(TYPE_HANDLER.getResult(rs, "column")).isEqualTo(new Byte[]{1, 2});
 
   }
 
@@ -67,8 +64,7 @@ public class BlobByteObjectArrayTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldGetResultNullFromResultSetByName() throws Exception {
     when(rs.getBlob("column")).thenReturn(null);
-    when(rs.wasNull()).thenReturn(true);
-    assertThat(TYPE_HANDLER.getResult(rs, "column"), nullValue());
+    assertThat(TYPE_HANDLER.getResult(rs, "column")).isNull();
   }
 
   @Override
@@ -76,18 +72,16 @@ public class BlobByteObjectArrayTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldGetResultFromResultSetByPosition() throws Exception {
     byte[] byteArray = new byte[]{1, 2};
     when(rs.getBlob(1)).thenReturn(blob);
-    when(rs.wasNull()).thenReturn(false);
     when(blob.length()).thenReturn((long)byteArray.length);
     when(blob.getBytes(1, 2)).thenReturn(byteArray);
-    assertThat(TYPE_HANDLER.getResult(rs, 1), is(new Byte[]{1, 2}));
+    assertThat(TYPE_HANDLER.getResult(rs, 1)).isEqualTo(new Byte[]{1, 2});
   }
 
   @Override
   @Test
   public void shouldGetResultNullFromResultSetByPosition() throws Exception {
     when(rs.getBlob(1)).thenReturn(null);
-    when(rs.wasNull()).thenReturn(true);
-    assertThat(TYPE_HANDLER.getResult(rs, 1), nullValue());
+    assertThat(TYPE_HANDLER.getResult(rs, 1)).isNull();
   }
 
   @Override
@@ -95,18 +89,16 @@ public class BlobByteObjectArrayTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldGetResultFromCallableStatement() throws Exception {
     byte[] byteArray = new byte[]{1, 2};
     when(cs.getBlob(1)).thenReturn(blob);
-    when(cs.wasNull()).thenReturn(false);
     when(blob.length()).thenReturn((long)byteArray.length);
     when(blob.getBytes(1, 2)).thenReturn(byteArray);
-    assertThat(TYPE_HANDLER.getResult(cs, 1), is(new Byte[]{1, 2}));
+    assertThat(TYPE_HANDLER.getResult(cs, 1)).isEqualTo(new Byte[]{1, 2});
   }
 
   @Override
   @Test
   public void shouldGetResultNullFromCallableStatement() throws Exception {
     when(cs.getBlob(1)).thenReturn(null);
-    when(cs.wasNull()).thenReturn(true);
-    assertThat(TYPE_HANDLER.getResult(cs, 1), nullValue());
+    assertThat(TYPE_HANDLER.getResult(cs, 1)).isNull();
   }
 
 }

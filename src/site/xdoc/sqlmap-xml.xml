@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2017 the original author or authors.
+       Copyright 2009-2018 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -330,7 +330,7 @@ ps.setInt(1,id);]]></source>
               <td><code>useGeneratedKeys</code></td>
               <td>(insert and update only) This tells MyBatis to use the JDBC <code>getGeneratedKeys</code> method to retrieve
                 keys generated internally by the database (e.g. auto increment fields in RDBMS like
-                MySQL or SQL Server). Default: <code>false</code>
+                MySQL or SQL Server). Default: <code>false</code>.
               </td>
             </tr>
             <tr>
@@ -2013,7 +2013,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         </p>
 
         <p>          
-          By default, just local sessión caching is enabled that is used solely to cache data for the duration of a sessión.
+          By default, just local session caching is enabled that is used solely to cache data for the duration of a session.
           To enable a global second level of caching you simply need to add one line to your SQL Mapping file:
         </p>
 
@@ -2036,6 +2036,13 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
             other callers or threads.
           </li>
         </ul>
+
+        <p>
+          <span class="label important">NOTE</span> The cache will only apply to statements declared in the mapping file
+          where the cache tag is located. If you are using the Java API in conjunction with the XML mapping files, then
+          statements declared in the companion interface will not be cached by default. You will need to refer to the
+          cache region using the @CacheNamespaceRef annotation.
+        </p>
 
         <p>
           All of these properties are modifiable through the attributes of the cache element. For example:

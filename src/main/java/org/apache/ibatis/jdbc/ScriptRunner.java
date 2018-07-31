@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,13 +18,14 @@ package org.apache.ibatis.jdbc;
 import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Clinton Begin
@@ -35,7 +36,9 @@ public class ScriptRunner {
 
   private static final String DEFAULT_DELIMITER = ";";
 
-  private Connection connection;
+  private static final Pattern DELIMITER_PATTERN = Pattern.compile("^\\s*((--)|(//))?\\s*(//)?\\s*@DELIMITER\\s+([^\\s]+)", Pattern.CASE_INSENSITIVE);
+
+  private final Connection connection;
 
   private boolean stopOnError;
   private boolean throwWarning;
@@ -137,7 +140,7 @@ public class ScriptRunner {
       BufferedReader lineReader = new BufferedReader(reader);
       String line;
       while ((line = lineReader.readLine()) != null) {
-        command = handleLine(command, line);
+        handleLine(command, line);
       }
       commitConnection();
       checkForMissingLineTerminator(command);
@@ -192,14 +195,13 @@ public class ScriptRunner {
     }
   }
 
-  private StringBuilder handleLine(StringBuilder command, String line) throws SQLException, UnsupportedEncodingException {
+  private void handleLine(StringBuilder command, String line) throws SQLException {
     String trimmedLine = line.trim();
     if (lineIsComment(trimmedLine)) {
-        final String cleanedString = trimmedLine.substring(2).trim().replaceFirst("//", "");
-        if(cleanedString.toUpperCase().startsWith("@DELIMITER")) {
-            delimiter = cleanedString.substring(11,12);
-            return command;
-        }
+      Matcher matcher = DELIMITER_PATTERN.matcher(trimmedLine);
+      if (matcher.find()) {
+        delimiter = matcher.group(5);
+      }
       println(trimmedLine);
     } else if (commandReadyToExecute(trimmedLine)) {
       command.append(line.substring(0, line.lastIndexOf(delimiter)));
@@ -211,7 +213,6 @@ public class ScriptRunner {
       command.append(line);
       command.append(LINE_SEPARATOR);
     }
-    return command;
   }
 
   private boolean lineIsComment(String trimmedLine) {
@@ -224,59 +225,70 @@ public class ScriptRunner {
   }
 
   private void executeStatement(String command) throws SQLException {
-    boolean hasResults = false;
     Statement statement = connection.createStatement();
-    statement.setEscapeProcessing(escapeProcessing);
-    String sql = command;
-    if (removeCRs) {
-      sql = sql.replaceAll("\r\n", "\n");
-    }
-    if (stopOnError) {
-      hasResults = statement.execute(sql);
-      if (throwWarning) {
-        // In Oracle, CRATE PROCEDURE, FUNCTION, etc. returns warning
-        // instead of throwing exception if there is compilation error.
-        SQLWarning warning = statement.getWarnings();
-        if (warning != null) {
-          throw warning;
+    try {
+      statement.setEscapeProcessing(escapeProcessing);
+      String sql = command;
+      if (removeCRs) {
+        sql = sql.replaceAll("\r\n", "\n");
+      }
+      try {
+        boolean hasResults = statement.execute(sql);
+        while (!(!hasResults && statement.getUpdateCount() == -1)) {
+          checkWarnings(statement);
+          printResults(statement, hasResults);
+          hasResults = statement.getMoreResults();
+        }
+      } catch (SQLWarning e) {
+        throw e;
+      } catch (SQLException e) {
+        if (stopOnError) {
+          throw e;
+        } else {
+          String message = "Error executing: " + command + ".  Cause: " + e;
+          printlnError(message);
         }
       }
-    } else {
+    } finally {
       try {
-        hasResults = statement.execute(sql);
-      } catch (SQLException e) {
-        String message = "Error executing: " + command + ".  Cause: " + e;
-        printlnError(message);
+        statement.close();
+      } catch (Exception e) {
+        // Ignore to workaround a bug in some connection pools
+        // (Does anyone know the details of the bug?)
       }
     }
-    printResults(statement, hasResults);
-    try {
-      statement.close();
-    } catch (Exception e) {
-      // Ignore to workaround a bug in some connection pools
+  }
+
+  private void checkWarnings(Statement statement) throws SQLException {
+    if (!throwWarning) {
+      return;
+    }
+    // In Oracle, CREATE PROCEDURE, FUNCTION, etc. returns warning
+    // instead of throwing exception if there is compilation error.
+    SQLWarning warning = statement.getWarnings();
+    if (warning != null) {
+      throw warning;
     }
   }
 
   private void printResults(Statement statement, boolean hasResults) {
-    try {
-      if (hasResults) {
-        ResultSet rs = statement.getResultSet();
-        if (rs != null) {
-          ResultSetMetaData md = rs.getMetaData();
-          int cols = md.getColumnCount();
-          for (int i = 0; i < cols; i++) {
-            String name = md.getColumnLabel(i + 1);
-            print(name + "\t");
-          }
-          println("");
-          while (rs.next()) {
-            for (int i = 0; i < cols; i++) {
-              String value = rs.getString(i + 1);
-              print(value + "\t");
-            }
-            println("");
-          }
+    if (!hasResults) {
+      return;
+    }
+    try (ResultSet rs = statement.getResultSet()) {
+      ResultSetMetaData md = rs.getMetaData();
+      int cols = md.getColumnCount();
+      for (int i = 0; i < cols; i++) {
+        String name = md.getColumnLabel(i + 1);
+        print(name + "\t");
+      }
+      println("");
+      while (rs.next()) {
+        for (int i = 0; i < cols; i++) {
+          String value = rs.getString(i + 1);
+          print(value + "\t");
         }
+        println("");
       }
     } catch (SQLException e) {
       printlnError("Error printing results: " + e.getMessage());

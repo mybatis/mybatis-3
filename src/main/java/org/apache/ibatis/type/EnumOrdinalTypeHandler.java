@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import java.sql.SQLException;
  */
 public class EnumOrdinalTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E> {
 
-  private Class<E> type;
+  private final Class<E> type;
   private final E[] enums;
 
   public EnumOrdinalTypeHandler(Class<E> type) {
@@ -47,7 +47,7 @@ public class EnumOrdinalTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E
   @Override
   public E getNullableResult(ResultSet rs, String columnName) throws SQLException {
     int i = rs.getInt(columnName);
-    if (rs.wasNull()) {
+    if (i == 0 && rs.wasNull()) {
       return null;
     } else {
       try {
@@ -61,7 +61,7 @@ public class EnumOrdinalTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E
   @Override
   public E getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
     int i = rs.getInt(columnIndex);
-    if (rs.wasNull()) {
+    if (i == 0 && rs.wasNull()) {
       return null;
     } else {
       try {
@@ -75,7 +75,7 @@ public class EnumOrdinalTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E
   @Override
   public E getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
     int i = cs.getInt(columnIndex);
-    if (cs.wasNull()) {
+    if (i == 0 && cs.wasNull()) {
       return null;
     } else {
       try {

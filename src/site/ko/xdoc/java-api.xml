@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2018 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -248,6 +248,7 @@ Configuration getConfiguration();</source>
   메소드 각각은 구문의 ID 와 파라미터 객체(원시타입, 자바빈, POJO 또는 Map)을 가진다.</p>
   <source><![CDATA[<T> T selectOne(String statement, Object parameter)
 <E> List<E> selectList(String statement, Object parameter)
+<T> Cursor<T> selectCursor(String statement, Object parameter)
 <K,V> Map<K,V> selectMap(String statement, Object parameter, String mapKey)
 int insert(String statement, Object parameter)
 int update(String statement, Object parameter)
@@ -259,9 +260,16 @@ int delete(String statement, Object parameter)]]></source>
   selectMap은 결과 목록을 Map으로 변환하기 위해 디자인된 특별한 경우이다. 
   이 경우 결과 객체의 프로퍼티 중 하나를 키로 사용하게 된다. 
   모든 구문이 파라미터를 필요로 하지는 않기 때문에 파라미터 객체를 요구하지 않는 형태로 오버로드되었다.</p>
+  <p>A Cursor offers the same results as a List, except it fetches data lazily using an Iterator.</p>
+  <source><![CDATA[try (Cursor<MyEntity> entities = session.selectCursor(statement, param)) {
+   for (MyEntity entity:entities) {
+      // process one entity
+   }
+}]]></source>
   <p>insert, update 그리고 delete 메소드에 의해 리턴되는 값은 실행된 구문에 의해 영향을 받은 레코드수를 표시한다. </p>
   <source><![CDATA[<T> T selectOne(String statement)
 <E> List<E> selectList(String statement)
+<T> Cursor<T> selectCursor(String statement)
 <K,V> Map<K,V> selectMap(String statement, String mapKey)
 int insert(String statement)
 int update(String statement)
@@ -270,6 +278,7 @@ int delete(String statement)]]></source>
   <p>마지막으로 리턴되는 데이터의 범위를 제한하거나 결과를 핸들링 하는 로직을 부여할 수 있는 3개의 select 메소드가 있다.</p>
   
   <source><![CDATA[<E> List<E> selectList (String statement, Object parameter, RowBounds rowBounds)
+<T> Cursor<T> selectCursor(String statement, Object parameter, RowBounds rowBounds)
 <K,V> Map<K,V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowbounds)
 void select (String statement, Object parameter, ResultHandler<T> handler)
 void select (String statement, Object parameter, RowBounds rowBounds, ResultHandler<T> handler)]]></source>
@@ -285,6 +294,7 @@ RowBounds rowBounds = new RowBounds(offset, limit);</source>
   <p>ResultHandler파라미터는 레코드별로 다룰수 있도록 해준다. 
   List에 추가할수도 있고 Map, Set을 만들수도 있으며 각각의 결과를 그냥 던질수도 있다. 
   ResultHandler로 많은 것을 할 수 있고 마이바티스는 결과셋을 다루기 위해 내부적으로 사용한다.</p>
+  <p>Since 3.4.6, ResultHandler passed to a CALLABLE statement is used on every REFCURSOR output parameter of the stored procedure if there is any.</p>
   <p>인터페이스는 매우 간단하다.</p>  
   <source><![CDATA[package org.apache.ibatis.session;
 public interface ResultHandler<T> {
@@ -292,6 +302,13 @@ public interface ResultHandler<T> {
 }]]></source>
 
   <p>ResultContext파라미터는 결과 객체에 접근할 수 있도록 해준다.</p>
+
+  <p>Using a ResultHandler has two limitations that you should be aware of:</p>
+  
+  <ul>
+  <li>Data got from an method called with a ResultHandler will not be cached.</li>
+  <li>When using advanced resultmaps MyBatis will probably require several rows to build an object. If a ResultHandler is used you may be given an object whose associations or collections are not yet filled.</li>
+  </ul>
 
   <h5>배치 수정시 flush메소드</h5>
   <p>어떤 시점에 JDBC드라이버 클래스에 저장된 배치 수정구문을 지울(flushing(executing)) 방법이 있다. 
@@ -416,17 +433,17 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>@Property</code></td>
         <td>N/A</td>
         <td><code>&lt;property&gt;</code></td>
-        <td>Specifies the property value or placeholder(can replace by configuration properties that defined at the <code>mybatis-config.xml</code>). Attributes: <code>name</code>, <code>value</code>. (Available on MyBatis 3.4.2+)</td>
+        <td>property 값 또는 placeholder(<code>mybatis-config.xml</code> 에 정의된 configuration properties 로 대체 할 수 있음) 를 지정한다. 사용가능한 속성들: <code>name</code>, <code>value</code>. (MyBatis 3.4.2 이상에서 사용 가능)</td>
       </tr>
       <tr>
         <td><code>@CacheNamespaceRef</code></td>
         <td><code>Class</code></td>
         <td><code>&lt;cacheRef&gt;</code></td>
         <td>
-          다른 명명공간의 캐시에 대한 참조 사용가능한 속성들 : <code>value</code>, <code>name</code>.
-          If you use this annotation, you should be specified either <code>value</code> or <code>name</code> attribute.
-          For the <code>value</code> attribute specify a java type indicating the namespace(the namespace name become a FQCN of specified java type),
-          and for the <code>name</code> attribute(this attribute is available since 3.4.2) specify a name indicating the namespace.
+          다른 명명공간의 캐시에 대한 참조 Note that caches declared in an XML mapper file are considered a separate namespace, even if they share the same FQCN. 사용가능한 속성들 : <code>value</code>, <code>name</code>.
+          이 annotation 을 사용하려면 <code>value</code> 또는 <code>name</code> 속성을 지정해야 한다.
+          <code>value</code> 속성은 namespace(namespace 이름은 지정된 java type 의 FQCN 이 된다) 를 나타내는 java type 을 지정한다,
+          그리고 <code>name</code> 속성(이 속성은 3.4.2 부터 사용가능하다) 은 namespace 를 나타내는 이름을 지정한다.
         </td>
       </tr>
       <tr>
@@ -528,7 +545,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
 		fetchSize=-1,
 		timeout=-1, 
 		useGeneratedKeys=false,
-		keyProperty=“id”, 
+		keyProperty=“”,
 		keyColumn=“”,
 		resultSets=“”.
 		자바 애노테이션을 이해하는 것이 중요하다. 
@@ -579,9 +596,9 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
             <li><code>&lt;select&gt;</code></li>
           </ul>
         </td>
-        <td>실행시 SQL 을 리턴할 클래스 과 메소드명을 명시하도록 해주는 대체수단의 애노테이션이다.
-		매핑된 구문을 실행할 때 마이바티스는 클래스의 인스턴스를 만들고 메소드를 실행한다. 
-		메소드는 파라미터 객체를 받을 수도 있다.(마이바티스 3.4이상에서는 복수 파라미터를 허용한다.)
+        <td>실행시 SQL 을 리턴할 클래스 과 메소드명을 명시하도록 해주는 대체수단의 애노테이션이다 (Since 3.4.6, you can specify the <code>CharSequence</code> instead of <code>String</code> as a method return type).
+		매핑된 구문을 실행할 때 마이바티스는 클래스의 인스턴스를 만들고 메소드를 실행한다.
+    Mapper 메서드의 인수인 "Mapper interface type" 과 <code>ProviderContext</code>(Mybatis 3.4.5 부터) 를 이용한 "Mapper method" 로 전달 된 객체를 메서드 매개변수로 전달할 수 있다.(마이바티스 3.4이상에서는 복수 파라미터를 허용한다.)
 		사용가능한 속성들 : type, method. 
 		type 속성은 클래스.
 		method 속성은 메소드명이다.
@@ -676,7 +693,7 @@ Company getCompanyById(Integer id);</source>
 List<User> getUsersByName(String name);
 
 class UserSqlBuilder {
-  public String buildGetUsersByName(final String name) {
+  public static String buildGetUsersByName(final String name) {
     return new SQL(){{
       SELECT("*");
       FROM("users");
@@ -696,7 +713,7 @@ List<User> getUsersByName(
 class UserSqlBuilder {
 
   // @Param애노테이션을 사용하지 않으면 매퍼 메소드와 동일한 인자를 정의해야만 한다. 
-  public String buildGetUsersByName(
+  public static String buildGetUsersByName(
       final String name, final String orderByColumn) {
     return new SQL(){{
       SELECT("*");
@@ -707,7 +724,7 @@ class UserSqlBuilder {
   }
 
   // @Param애노테이션을 사용한다면, 오직 사용할 인자만 정의할 수 있다. 
-  public String buildGetUsersByName(@Param("orderByColumn") final String orderByColumn) {
+  public static String buildGetUsersByName(@Param("orderByColumn") final String orderByColumn) {
     return new SQL(){{
       SELECT("*");
       FROM("users");

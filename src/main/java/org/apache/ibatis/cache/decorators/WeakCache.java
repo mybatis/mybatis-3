@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -38,8 +38,8 @@ public class WeakCache implements Cache {
   public WeakCache(Cache delegate) {
     this.delegate = delegate;
     this.numberOfHardLinks = 256;
-    this.hardLinksToAvoidGarbageCollection = new LinkedList<Object>();
-    this.queueOfGarbageCollectedEntries = new ReferenceQueue<Object>();
+    this.hardLinksToAvoidGarbageCollection = new LinkedList<>();
+    this.queueOfGarbageCollectedEntries = new ReferenceQueue<>();
   }
 
   @Override
