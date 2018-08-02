@@ -329,9 +329,12 @@ ps.setInt(1,id);]]></source>
 
         <p>
           如果你的数据库还支持多行插入, 你也可以传入一个<code>Author</code>s数组或集合，并返回自动生成的主键。
+          <b>注意：批量插入数据并且返回自动生成的主键列表的时候，<code>@Param("list")</code>和<code>collection="list"</code>中的key必须是约定的字符串<code>list</code>。这个是设计过的，以解决有多个集合类型参数的时候，不知道自动生成的主键该回填到哪个参数的问题。</b>
         </p>
 
-        <source><![CDATA[<insert id="insertAuthor" useGeneratedKeys="true"
+        <source><![CDATA[List<Long> insert(@Param("list") List<Author> authors);
+
+        <insert id="insertAuthor" useGeneratedKeys="true"
     keyProperty="id">
   insert into Author (username, password, email, bio) values
   <foreach item="item" collection="list" separator=",">

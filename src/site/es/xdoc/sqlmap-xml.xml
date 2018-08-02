@@ -335,9 +335,12 @@ Por ejemplo, si la columna id de la tabla Author del ejemplo siguiente fuera aut
 
         <p>
           If your database also supports multi-row insert, you can pass a list or an array of <code>Author</code>s and retrieve the auto-generated keys.
+          <b> NOTA: cuando usted lote insertar datos y recuperar el auto genera llaves, clave en la <code>@Param ("list")</code> y <code>collection = "list"</code> debe ser una cadena <code>list</code>. Esto esta diseñado para solucionar el problema de que parametros la genera automaticamente la llave primaria debe rellenar cuando hay múltiples parámetros de tipo de recogida.</b>
         </p>
 
-        <source><![CDATA[<insert id="insertAuthor" useGeneratedKeys="true"
+        <source><![CDATA[List<Long> insert(@Param("list") List<Author> authors);
+
+        <insert id="insertAuthor" useGeneratedKeys="true"
     keyProperty="id">
   insert into Author (username, password, email, bio) values
   <foreach item="item" collection="list" separator=",">

@@ -374,9 +374,12 @@ ps.setInt(1,id);]]></source>
 
         <p>
           複数行の一括挿入に対応したデータベースなら、 <code>Author</code> のリストまたは配列を引数として渡して自動生成された id の値を一括取得することも可能です。
+          <b>注意：ロットにデータを挿入するそして自動生成のキーのリストの時、<code>@Param("list")</code>と<code>collection="list"</code>中のキーでなければならない約束の文字列<code>list</code>。これは設計して、解決が集合タイプのパラメータの時、知らない自動生成のキー同埋戻しどのパラメータの問題。</b>
         </p>
 
-        <source><![CDATA[<insert id="insertAuthor" useGeneratedKeys="true"
+        <source><![CDATA[List<Long> insert(@Param("list") List<Author> authors);
+
+        <insert id="insertAuthor" useGeneratedKeys="true"
     keyProperty="id">
   insert into Author (username, password, email, bio) values
   <foreach item="item" collection="list" separator=",">

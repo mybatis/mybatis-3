@@ -399,9 +399,12 @@ ps.setInt(1,id);]]></source>
 
         <p>
           If your database also supports multi-row insert, you can pass a list or an array of <code>Author</code>s and retrieve the auto-generated keys.
+          <b> Note: when you batch insert data and retrieve the auto-generated keys, key in <code>@Param ("list")</code> and <code>collection = "list"</code> must be an agreed string <code>list</code>. This is designed to solve the problem of which parameters the auto generated primary key should backfill when there are multiple collection type parameters.</b>
         </p>
 
-        <source><![CDATA[<insert id="insertAuthor" useGeneratedKeys="true"
+        <source><![CDATA[List<Long> insert(@Param("list") List<Author> authors);
+
+        <insert id="insertAuthor" useGeneratedKeys="true"
     keyProperty="id">
   insert into Author (username, password, email, bio) values
   <foreach item="item" collection="list" separator=",">
