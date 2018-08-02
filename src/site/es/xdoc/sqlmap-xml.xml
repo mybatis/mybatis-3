@@ -334,7 +334,7 @@ Por ejemplo, si la columna id de la tabla Author del ejemplo siguiente fuera aut
 </insert>]]></source>
 
         <p>
-          If your database also supports multi-row insert, you can pass a list or an array of <code>Author</code>s and retrieve the auto-generated keys.
+          If your database also supports multi-row insert, you can pass a list or an array of <code>Authors</code> and retrieve the auto-generated keys.
         </p>
 
         <source><![CDATA[<insert id="insertAuthor" useGeneratedKeys="true"
