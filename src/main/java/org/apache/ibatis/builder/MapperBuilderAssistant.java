@@ -227,7 +227,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
         throw new IncompleteElementException("Could not find a parent resultmap with id '" + extend + "'");
       }
       ResultMap resultMap = configuration.getResultMap(extend);
-      List<ResultMapping> extendedResultMappings = new ArrayList<ResultMapping>(resultMap.getResultMappings());
+      List<ResultMapping> extendedResultMappings = new ArrayList<>(resultMap.getResultMappings());
       extendedResultMappings.removeAll(resultMappings);
       // Remove parent constructor if this resultMap declares a constructor.
       boolean declaresConstructor = false;
@@ -289,7 +289,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
         null,
         null,
         false);
-    Map<String, String> namespaceDiscriminatorMap = new HashMap<String, String>();
+    Map<String, String> namespaceDiscriminatorMap = new HashMap<>();
     for (Map.Entry<String, String> e : discriminatorMap.entrySet()) {
       String resultMap = e.getValue();
       resultMap = applyCurrentNamespace(resultMap, true);
@@ -372,7 +372,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
         throw new IncompleteElementException("Could not find parameter map " + parameterMapName, e);
       }
     } else if (parameterTypeClass != null) {
-      List<ParameterMapping> parameterMappings = new ArrayList<ParameterMapping>();
+      List<ParameterMapping> parameterMappings = new ArrayList<>();
       parameterMap = new ParameterMap.Builder(
           configuration,
           statementId + "-Inline",
@@ -388,7 +388,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       String statementId) {
     resultMap = applyCurrentNamespace(resultMap, true);
 
-    List<ResultMap> resultMaps = new ArrayList<ResultMap>();
+    List<ResultMap> resultMaps = new ArrayList<>();
     if (resultMap != null) {
       String[] resultMapNames = resultMap.split(",");
       for (String resultMapName : resultMapNames) {
@@ -444,7 +444,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
   }
 
   private Set<String> parseMultipleColumnNames(String columnName) {
-    Set<String> columns = new HashSet<String>();
+    Set<String> columns = new HashSet<>();
     if (columnName != null) {
       if (columnName.indexOf(',') > -1) {
         StringTokenizer parser = new StringTokenizer(columnName, "{}, ", false);
@@ -460,7 +460,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
   }
 
   private List<ResultMapping> parseCompositeColumnName(String columnName) {
-    List<ResultMapping> composites = new ArrayList<ResultMapping>();
+    List<ResultMapping> composites = new ArrayList<>();
     if (columnName != null && (columnName.indexOf('=') > -1 || columnName.indexOf(',') > -1)) {
       StringTokenizer parser = new StringTokenizer(columnName, "{}=, ", false);
       while (parser.hasMoreTokens()) {

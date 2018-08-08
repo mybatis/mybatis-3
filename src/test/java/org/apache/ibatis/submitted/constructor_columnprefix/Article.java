@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -13,20 +13,39 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.autoconstructor;
+package org.apache.ibatis.submitted.constructor_columnprefix;
 
-public class WrapperSubject {
-  private final int id;
-  private final String name;
-  private final int age;
-  private final int height;
-  private final int weight;
+public class Article {
 
-  public WrapperSubject(final int id, final String name, final int age, final Integer height, final Integer weight) {
+  private EntityKey id;
+
+  private String name;
+
+  private Author author;
+
+  private Author coauthor;
+
+  public Article(EntityKey id, String name, Author author, Author coauthor) {
+    super();
     this.id = id;
     this.name = name;
-    this.age = age;
-    this.height = height == null ? 0 : height;
-    this.weight = weight == null ? 0 : weight;
+    this.author = author;
+    this.coauthor = coauthor;
+  }
+
+  public EntityKey getId() {
+    return id;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public Author getAuthor() {
+    return author;
+  }
+
+  public Author getCoauthor() {
+    return coauthor;
   }
 }

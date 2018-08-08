@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,11 +18,9 @@ package org.apache.ibatis.submitted.parent_reference_3level;
 import static org.junit.Assert.*;
 
 import java.io.Reader;
-import java.sql.Connection;
-import java.sql.DriverManager;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -40,34 +38,17 @@ public class BlogTest {
 
   @Before
   public void setUp() throws Exception {
-    Connection conn = null;
-
-    try {
-      Class.forName("org.hsqldb.jdbcDriver");
-      conn = DriverManager.getConnection("jdbc:hsqldb:mem:parent_reference_3level", "sa", "");
-      Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/parent_reference_3level/CreateDB.sql");
-      ScriptRunner runner = new ScriptRunner(conn);
-      runner.setLogWriter(null);
-      runner.setErrorLogWriter(null);
-      runner.runScript(reader);
-      conn.commit();
-      reader.close();
-
-      reader = Resources.getResourceAsReader(getConfigPath());
+    try (Reader reader = Resources.getResourceAsReader(getConfigPath())) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-      reader.close();
-
-    } finally {
-      if (conn != null) {
-        conn.close();
-      }
     }
+
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+            "org/apache/ibatis/submitted/parent_reference_3level/CreateDB.sql");
   }
 
   @Test
   public void testSelectBlogWithPosts() {
-    SqlSession session = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession session = sqlSessionFactory.openSession()) {
       Mapper mapper = session.getMapper(Mapper.class);
       Blog result = mapper.selectBlogByPrimaryKey(1);
       assertNotNull(result);
@@ -79,29 +60,23 @@ public class BlogTest {
       Post secondPost = result.getPosts().get(1);
       Assert.assertEquals(1, secondPost.getComments().size());
       Assert.assertEquals(2, secondPost.getComments().get(0).getPost().getId());
-    } finally {
-      session.close();
     }
   }
 
   @Test
   public void testSelectBlogWithoutPosts() {
-    SqlSession session = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession session = sqlSessionFactory.openSession()) {
       Mapper mapper = session.getMapper(Mapper.class);
       Blog result = mapper.selectBlogByPrimaryKey(2);
       assertNotNull(result);
       assertEquals("Blog without posts", result.getTitle());
       Assert.assertEquals(0, result.getPosts().size());
-    } finally {
-      session.close();
     }
   }
 
   @Test
   public void testSelectBlogWithPostsColumnPrefix() {
-    SqlSession session = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession session = sqlSessionFactory.openSession()) {
       Mapper mapper = session.getMapper(Mapper.class);
       Blog result = mapper.selectBlogByPrimaryKeyColumnPrefix(1);
       assertNotNull(result);
@@ -113,22 +88,17 @@ public class BlogTest {
       Post secondPost = result.getPosts().get(1);
       Assert.assertEquals(1, secondPost.getComments().size());
       Assert.assertEquals(2, secondPost.getComments().get(0).getPost().getId());
-    } finally {
-      session.close();
     }
   }
 
   @Test
   public void testSelectBlogWithoutPostsColumnPrefix() {
-    SqlSession session = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession session = sqlSessionFactory.openSession()) {
       Mapper mapper = session.getMapper(Mapper.class);
       Blog result = mapper.selectBlogByPrimaryKeyColumnPrefix(2);
       assertNotNull(result);
       assertEquals("Blog without posts", result.getTitle());
       Assert.assertEquals(0, result.getPosts().size());
-    } finally {
-      session.close();
     }
   }
 }

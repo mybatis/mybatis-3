@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -48,8 +48,8 @@ public class TransactionalCache implements Cache {
   public TransactionalCache(Cache delegate) {
     this.delegate = delegate;
     this.clearOnCommit = false;
-    this.entriesToAddOnCommit = new HashMap<Object, Object>();
-    this.entriesMissedInCache = new HashSet<Object>();
+    this.entriesToAddOnCommit = new HashMap<>();
+    this.entriesMissedInCache = new HashSet<>();
   }
 
   @Override

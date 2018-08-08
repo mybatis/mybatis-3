@@ -18,13 +18,12 @@ package org.apache.ibatis.submitted.keygen;
 import static org.junit.Assert.*;
 
 import java.io.Reader;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -44,53 +43,46 @@ public class Jdbc3KeyGeneratorTest {
   @BeforeClass
   public static void setUp() throws Exception {
     // create an SqlSessionFactory
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/keygen/MapperConfig.xml");
-    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    reader.close();
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/keygen/MapperConfig.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    }
 
     // populate in-memory database
-    SqlSession session = sqlSessionFactory.openSession();
-    Connection conn = session.getConnection();
-    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/keygen/CreateDB.sql");
-    ScriptRunner runner = new ScriptRunner(conn);
-    runner.setLogWriter(null);
-    runner.runScript(reader);
-    conn.close();
-    reader.close();
-    session.close();
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+            "org/apache/ibatis/submitted/keygen/CreateDB.sql");
   }
 
   @Test
-  public void shouldInsertListAndRetrieveId() throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
-      CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
-      List<Country> countries = new ArrayList<Country>();
-      countries.add(new Country("China", "CN"));
-      countries.add(new Country("United Kiongdom", "GB"));
-      countries.add(new Country("United States of America", "US"));
-      mapper.insertList(countries);
-      for (Country country : countries) {
-        assertNotNull(country.getId());
+  public void shouldInsertListAndRetrieveId() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      try {
+        CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
+        List<Country> countries = new ArrayList<Country>();
+        countries.add(new Country("China", "CN"));
+        countries.add(new Country("United Kiongdom", "GB"));
+        countries.add(new Country("United States of America", "US"));
+        mapper.insertList(countries);
+        for (Country country : countries) {
+          assertNotNull(country.getId());
+        }
+      } finally {
+        sqlSession.rollback();
       }
-    } finally {
-      sqlSession.rollback();
-      sqlSession.close();
     }
   }
 
   @Test
   public void shouldErrorUndefineProperty()  {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
-      CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      try {
+        CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
 
-      when(mapper).insertUndefineKeyProperty(new Country("China", "CN"));
-      then(caughtException()).isInstanceOf(PersistenceException.class).hasMessageContaining(
-          "### Error updating database.  Cause: org.apache.ibatis.executor.ExecutorException: Error getting generated key or setting result to parameter object. Cause: org.apache.ibatis.executor.ExecutorException: No setter found for the keyProperty 'country_id' in 'org.apache.ibatis.submitted.keygen.Country'.");
-    } finally {
-      sqlSession.rollback();
-      sqlSession.close();
+        when(mapper).insertUndefineKeyProperty(new Country("China", "CN"));
+        then(caughtException()).isInstanceOf(PersistenceException.class).hasMessageContaining(
+                "### Error updating database.  Cause: org.apache.ibatis.executor.ExecutorException: Error getting generated key or setting result to parameter object. Cause: org.apache.ibatis.executor.ExecutorException: No setter found for the keyProperty 'country_id' in 'org.apache.ibatis.submitted.keygen.Country'.");
+      } finally {
+        sqlSession.rollback();
+      }
     }
   }
 }

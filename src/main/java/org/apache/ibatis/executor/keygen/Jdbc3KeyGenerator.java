@@ -25,7 +25,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.binding.BindingException;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -107,7 +106,7 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
       }
     }
     if (parameters == null) {
-      parameters = new ArrayList<Object>();
+      parameters = new ArrayList<>();
       parameters.add(parameter);
     }
     return parameters;

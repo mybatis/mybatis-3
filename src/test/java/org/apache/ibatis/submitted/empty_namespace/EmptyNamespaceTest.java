@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -25,11 +25,8 @@ import org.junit.Test;
 public class EmptyNamespaceTest {
   @Test(expected = PersistenceException.class)
   public void testEmptyNamespace() throws Exception {
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/empty_namespace/ibatisConfig.xml");
-    try {
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/empty_namespace/ibatisConfig.xml")) {
       new SqlSessionFactoryBuilder().build(reader);
-    } finally {
-      reader.close();
     }
   }
 }

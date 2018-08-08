@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2017 the original author or authors.
+       Copyright 2009-2018 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -1116,6 +1116,17 @@ public class Author {
               </td>
               <td>
                 任何兼容的 <code>NUMERIC</code> 或 <code>DOUBLE</code> 类型，存储枚举的索引（而不是名称）。
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>SqlxmlTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.String</code>
+              </td>
+              <td>
+                <code>SQLXML</code>
               </td>
             </tr>
             <tr>
