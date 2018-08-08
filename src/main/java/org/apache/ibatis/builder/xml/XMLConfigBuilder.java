@@ -48,6 +48,8 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 
 /**
+ * Mybatis-config.xml配置文件解析
+ *
  * @author Clinton Begin
  * @author Kazuki Shimizu
  */
@@ -65,7 +67,10 @@ public class XMLConfigBuilder extends BaseBuilder {
   public XMLConfigBuilder(Reader reader, String environment) {
     this(reader, environment, null);
   }
-
+  
+  /**
+   * 字符流构造
+   */
   public XMLConfigBuilder(Reader reader, String environment, Properties props) {
     this(new XPathParser(reader, true, props, new XMLMapperEntityResolver()), environment, props);
   }
@@ -81,41 +86,64 @@ public class XMLConfigBuilder extends BaseBuilder {
   public XMLConfigBuilder(InputStream inputStream, String environment, Properties props) {
     this(new XPathParser(inputStream, true, props, new XMLMapperEntityResolver()), environment, props);
   }
-
+  
+  /**
+   * 构造XmlConfigBuilder
+   */
   private XMLConfigBuilder(XPathParser parser, String environment, Properties props) {
+	// 构造new Configuration()对象
     super(new Configuration());
     ErrorContext.instance().resource("SQL Mapper Configuration");
+    // 设置属性
     this.configuration.setVariables(props);
     this.parsed = false;
     this.environment = environment;
     this.parser = parser;
   }
-
+  
+  /**
+   * 核心方法，解析xml生成给Configuration赋予属性
+   * @return
+   */
   public Configuration parse() {
+	// 只允许执行一次
     if (parsed) {
       throw new BuilderException("Each XMLConfigBuilder can only be used once.");
     }
     parsed = true;
+    // 读取xml的configuration节点内容
     parseConfiguration(parser.evalNode("/configuration"));
     return configuration;
   }
-
+  
+  // 解析xml配置，给Configuration赋值
   private void parseConfiguration(XNode root) {
     try {
+      // 读取properties节点信息   	
       //issue #117 read properties first
       propertiesElement(root.evalNode("properties"));
+      // 读取setting节点
       Properties settings = settingsAsProperties(root.evalNode("settings"));
+      // 加载vfs实现类
       loadCustomVfs(settings);
+      // 类别名加载
       typeAliasesElement(root.evalNode("typeAliases"));
+      // 插件加载
       pluginElement(root.evalNode("plugins"));
+      // 对象工厂
       objectFactoryElement(root.evalNode("objectFactory"));
       objectWrapperFactoryElement(root.evalNode("objectWrapperFactory"));
       reflectorFactoryElement(root.evalNode("reflectorFactory"));
+      // 设置setting节点信息
       settingsElement(settings);
+      // 读取environments属性
       // read it after objectFactory and objectWrapperFactory issue #631
       environmentsElement(root.evalNode("environments"));
+      // 配置数据库id
       databaseIdProviderElement(root.evalNode("databaseIdProvider"));
+      // 自定义的typeHandlers
       typeHandlerElement(root.evalNode("typeHandlers"));
+      // 非常重要,读取Mapper节点配置
       mapperElement(root.evalNode("mappers"));
     } catch (Exception e) {
       throw new BuilderException("Error parsing SQL Mapper Configuration. Cause: " + e, e);
@@ -136,7 +164,12 @@ public class XMLConfigBuilder extends BaseBuilder {
     }
     return props;
   }
-
+  
+  /**
+   * VFS的实现 自定义VFS的实现的类全限定名,以逗号分隔 
+   * @param props
+   * @throws ClassNotFoundException
+   */
   private void loadCustomVfs(Properties props) throws ClassNotFoundException {
     String value = props.getProperty("vfsImpl");
     if (value != null) {
@@ -212,15 +245,24 @@ public class XMLConfigBuilder extends BaseBuilder {
        configuration.setReflectorFactory(factory);
     }
   }
-
+  
+  /**
+   * 读取properties的节点
+   * 设置数据库配置信息，url，driver，username，password
+   * 
+   * @param context
+   * @throws Exception
+   */
   private void propertiesElement(XNode context) throws Exception {
     if (context != null) {
       Properties defaults = context.getChildrenAsProperties();
+      // 先获取xml的resource内容或url路径配置
       String resource = context.getStringAttribute("resource");
       String url = context.getStringAttribute("url");
       if (resource != null && url != null) {
         throw new BuilderException("The properties element cannot specify both a URL and a resource based property file reference.  Please specify one or the other.");
       }
+      // 
       if (resource != null) {
         defaults.putAll(Resources.getResourceAsProperties(resource));
       } else if (url != null) {
@@ -230,6 +272,7 @@ public class XMLConfigBuilder extends BaseBuilder {
       if (vars != null) {
         defaults.putAll(vars);
       }
+      // 设置数据库信息
       parser.setVariables(defaults);
       configuration.setVariables(defaults);
     }
@@ -267,7 +310,13 @@ public class XMLConfigBuilder extends BaseBuilder {
     configuration.setLogImpl(logImpl);
     configuration.setConfigurationFactory(resolveClass(props.getProperty("configurationFactory")));
   }
-
+  
+  /**
+   * 设置环境Environment
+   * 
+   * @param context
+   * @throws Exception
+   */
   private void environmentsElement(XNode context) throws Exception {
     if (context != null) {
       if (environment == null) {
@@ -277,6 +326,7 @@ public class XMLConfigBuilder extends BaseBuilder {
         String id = child.getStringAttribute("id");
         if (isSpecifiedEnvironment(id)) {
           TransactionFactory txFactory = transactionManagerElement(child.evalNode("transactionManager"));
+          // 两个子类，JndiDataSourceFactory和UnpooledDataSourceFactory
           DataSourceFactory dsFactory = dataSourceElement(child.evalNode("dataSource"));
           DataSource dataSource = dsFactory.getDataSource();
           Environment.Builder environmentBuilder = new Environment.Builder(id)
@@ -287,7 +337,13 @@ public class XMLConfigBuilder extends BaseBuilder {
       }
     }
   }
-
+  
+  /**
+   * 设置databaseId属性，支持xml动态_databaseId值，同一xml支持不同数据库
+   * 
+   * @param context
+   * @throws Exception
+   */
   private void databaseIdProviderElement(XNode context) throws Exception {
     DatabaseIdProvider databaseIdProvider = null;
     if (context != null) {
@@ -355,7 +411,13 @@ public class XMLConfigBuilder extends BaseBuilder {
       }
     }
   }
-
+  
+  /**
+   * 解析mybatis-mapper.xml配置文件
+   * 
+   * @param parent
+   * @throws Exception
+   */
   private void mapperElement(XNode parent) throws Exception {
     if (parent != null) {
       for (XNode child : parent.getChildren()) {
@@ -366,17 +428,20 @@ public class XMLConfigBuilder extends BaseBuilder {
           String resource = child.getStringAttribute("resource");
           String url = child.getStringAttribute("url");
           String mapperClass = child.getStringAttribute("class");
-          if (resource != null && url == null && mapperClass == null) {
+          // 根据不同的方式解析mapper.xml文件
+          if (resource != null && url == null && mapperClass == null) { // resource路径
             ErrorContext.instance().resource(resource);
             InputStream inputStream = Resources.getResourceAsStream(resource);
+            // 构造XMLMapperBuilder
             XMLMapperBuilder mapperParser = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
+            // 解析mapper.xml文件
             mapperParser.parse();
-          } else if (resource == null && url != null && mapperClass == null) {
+          } else if (resource == null && url != null && mapperClass == null) {// url路径
             ErrorContext.instance().resource(url);
             InputStream inputStream = Resources.getUrlAsStream(url);
             XMLMapperBuilder mapperParser = new XMLMapperBuilder(inputStream, configuration, url, configuration.getSqlFragments());
             mapperParser.parse();
-          } else if (resource == null && url == null && mapperClass != null) {
+          } else if (resource == null && url == null && mapperClass != null) {// mapper接口
             Class<?> mapperInterface = Resources.classForName(mapperClass);
             configuration.addMapper(mapperInterface);
           } else {

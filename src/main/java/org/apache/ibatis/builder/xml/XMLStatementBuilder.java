@@ -34,6 +34,9 @@ import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
 
 /**
+ * 
+ * xml声明语句构建类
+ * 
  * @author Clinton Begin
  */
 public class XMLStatementBuilder extends BaseBuilder {
@@ -53,6 +56,10 @@ public class XMLStatementBuilder extends BaseBuilder {
     this.requiredDatabaseId = databaseId;
   }
 
+  /**
+   * 解析声明语句节点，增删改查语句
+   * 非常重点，解析节点
+   */
   public void parseStatementNode() {
     String id = context.getStringAttribute("id");
     String databaseId = context.getStringAttribute("databaseId");
@@ -77,12 +84,14 @@ public class XMLStatementBuilder extends BaseBuilder {
     ResultSetType resultSetTypeEnum = resolveResultSetType(resultSetType);
 
     String nodeName = context.getNode().getNodeName();
+    // 获取Sql语句命令
     SqlCommandType sqlCommandType = SqlCommandType.valueOf(nodeName.toUpperCase(Locale.ENGLISH));
     boolean isSelect = sqlCommandType == SqlCommandType.SELECT;
     boolean flushCache = context.getBooleanAttribute("flushCache", !isSelect);
     boolean useCache = context.getBooleanAttribute("useCache", isSelect);
     boolean resultOrdered = context.getBooleanAttribute("resultOrdered", false);
-
+    
+    // 优先解析<include refid=""/> 标签
     // Include Fragments before parsing
     XMLIncludeTransformer includeParser = new XMLIncludeTransformer(configuration, builderAssistant);
     includeParser.applyIncludes(context.getNode());
@@ -112,6 +121,13 @@ public class XMLStatementBuilder extends BaseBuilder {
         keyGenerator, keyProperty, keyColumn, databaseId, langDriver, resultSets);
   }
 
+  /**
+   * 处理selectKey节点，生成主键方式
+   * 
+   * @param id
+   * @param parameterTypeClass
+   * @param langDriver
+   */
   private void processSelectKeyNodes(String id, Class<?> parameterTypeClass, LanguageDriver langDriver) {
     List<XNode> selectKeyNodes = context.evalNodes("selectKey");
     if (configuration.getDatabaseId() != null) {
@@ -121,6 +137,15 @@ public class XMLStatementBuilder extends BaseBuilder {
     removeSelectKeyNodes(selectKeyNodes);
   }
 
+  /**
+   * 解析selectKey
+   * 
+   * @param parentId
+   * @param list
+   * @param parameterTypeClass
+   * @param langDriver
+   * @param skRequiredDatabaseId
+   */
   private void parseSelectKeyNodes(String parentId, List<XNode> list, Class<?> parameterTypeClass, LanguageDriver langDriver, String skRequiredDatabaseId) {
     for (XNode nodeToHandle : list) {
       String id = parentId + SelectKeyGenerator.SELECT_KEY_SUFFIX;
@@ -169,7 +194,15 @@ public class XMLStatementBuilder extends BaseBuilder {
       nodeToHandle.getParent().getNode().removeChild(nodeToHandle.getNode());
     }
   }
-
+  
+  /**
+   * 判断数据库id是否匹配当前
+   * 
+   * @param id
+   * @param databaseId
+   * @param requiredDatabaseId
+   * @return
+   */
   private boolean databaseIdMatchesCurrent(String id, String databaseId, String requiredDatabaseId) {
     if (requiredDatabaseId != null) {
       if (!requiredDatabaseId.equals(databaseId)) {
@@ -181,6 +214,7 @@ public class XMLStatementBuilder extends BaseBuilder {
       }
       // skip this statement if there is a previous one with a not null databaseId
       id = builderAssistant.applyCurrentNamespace(id, false);
+      // 如果已经存在Statement的语句
       if (this.configuration.hasStatement(id, false)) {
         MappedStatement previous = this.configuration.getMappedStatement(id, false); // issue #2
         if (previous.getDatabaseId() != null) {

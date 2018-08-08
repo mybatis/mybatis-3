@@ -40,6 +40,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
+ * 采用Java的dom解析xml文件
  * @author Clinton Begin
  */
 public class XPathParser {
@@ -47,6 +48,7 @@ public class XPathParser {
   private final Document document;
   private boolean validation;
   private EntityResolver entityResolver;
+  // properties属性
   private Properties variables;
   private XPath xpath;
 
@@ -216,7 +218,15 @@ public class XPathParser {
     }
     return new XNode(this, node, variables);
   }
-
+  
+  /**
+   * 获取节点
+   * 
+   * @param expression
+   * @param root
+   * @param returnType
+   * @return
+   */
   private Object evaluate(String expression, Object root, QName returnType) {
     try {
       return xpath.evaluate(expression, root, returnType);

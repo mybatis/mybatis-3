@@ -95,7 +95,13 @@ public abstract class BaseBuilder {
       throw new BuilderException("Error resolving ParameterMode. Cause: " + e, e);
     }
   }
-
+  
+  /**
+   * 创建对象实体
+   * 
+   * @param alias
+   * @return
+   */
   protected Object createInstance(String alias) {
     Class<?> clazz = resolveClass(alias);
     if (clazz == null) {
@@ -107,7 +113,13 @@ public abstract class BaseBuilder {
       throw new BuilderException("Error creating instance. Cause: " + e, e);
     }
   }
-
+  
+  /**
+   * 根据别名创建类Class
+   * 
+   * @param alias
+   * @return
+   */
   protected <T> Class<? extends T> resolveClass(String alias) {
     if (alias == null) {
       return null;

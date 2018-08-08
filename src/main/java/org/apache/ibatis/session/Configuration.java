@@ -92,12 +92,15 @@ import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
 /**
+ * 核心Configuration类
+ * 
  * @author Clinton Begin
  */
 public class Configuration {
-
+  
+  // 环境配置，对应environments节点
   protected Environment environment;
-
+  // 设置信息，对应setting
   protected boolean safeRowBoundsEnabled;
   protected boolean safeResultHandlerEnabled = true;
   protected boolean mapUnderscoreToCamelCase;
@@ -121,7 +124,7 @@ public class Configuration {
   protected ExecutorType defaultExecutorType = ExecutorType.SIMPLE;
   protected AutoMappingBehavior autoMappingBehavior = AutoMappingBehavior.PARTIAL;
   protected AutoMappingUnknownColumnBehavior autoMappingUnknownColumnBehavior = AutoMappingUnknownColumnBehavior.NONE;
-
+  // 数据库连接配置信息
   protected Properties variables = new Properties();
   protected ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
   protected ObjectFactory objectFactory = new DefaultObjectFactory();

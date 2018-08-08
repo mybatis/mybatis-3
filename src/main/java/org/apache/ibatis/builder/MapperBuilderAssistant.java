@@ -50,6 +50,8 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 
 /**
+ * Mapper建造助手
+ * 
  * @author Clinton Begin
  */
 public class MapperBuilderAssistant extends BaseBuilder {
@@ -69,6 +71,11 @@ public class MapperBuilderAssistant extends BaseBuilder {
     return currentNamespace;
   }
 
+  /**
+   * 设置当前的命名空间
+   * 
+   * @param currentNamespace
+   */
   public void setCurrentNamespace(String currentNamespace) {
     if (currentNamespace == null) {
       throw new BuilderException("The mapper element requires a namespace attribute to be specified.");
@@ -81,7 +88,14 @@ public class MapperBuilderAssistant extends BaseBuilder {
 
     this.currentNamespace = currentNamespace;
   }
-
+  
+  /**
+   * 命名空间+语句id
+   * 
+   * @param base
+   * @param isReference
+   * @return
+   */
   public String applyCurrentNamespace(String base, boolean isReference) {
     if (base == null) {
       return null;
@@ -102,7 +116,13 @@ public class MapperBuilderAssistant extends BaseBuilder {
     }
     return currentNamespace + "." + base;
   }
-
+  
+  /**
+   * 是否使用缓存
+   * 
+   * @param namespace
+   * @return
+   */
   public Cache useCacheRef(String namespace) {
     if (namespace == null) {
       throw new BuilderException("cache-ref element requires a namespace attribute.");
@@ -141,7 +161,15 @@ public class MapperBuilderAssistant extends BaseBuilder {
     currentCache = cache;
     return cache;
   }
-
+  
+  /**
+   * 组装新的查询id
+   * 
+   * @param id
+   * @param parameterClass
+   * @param parameterMappings
+   * @return
+   */
   public ParameterMap addParameterMap(String id, Class<?> parameterClass, List<ParameterMapping> parameterMappings) {
     id = applyCurrentNamespace(id, false);
     ParameterMap parameterMap = new ParameterMap.Builder(configuration, id, parameterClass, parameterMappings).build();
@@ -172,7 +200,18 @@ public class MapperBuilderAssistant extends BaseBuilder {
         .typeHandler(typeHandlerInstance)
         .build();
   }
-
+  
+  /**
+   * 添加ResultMap
+   * 
+   * @param id
+   * @param type
+   * @param extend
+   * @param discriminator
+   * @param resultMappings
+   * @param autoMapping
+   * @return
+   */
   public ResultMap addResultMap(
       String id,
       Class<?> type,
@@ -208,13 +247,26 @@ public class MapperBuilderAssistant extends BaseBuilder {
       }
       resultMappings.addAll(extendedResultMappings);
     }
+    // 构造ResultMapper
     ResultMap resultMap = new ResultMap.Builder(configuration, id, type, resultMappings, autoMapping)
         .discriminator(discriminator)
         .build();
+    // 往configuration里面添加结果隐射
     configuration.addResultMap(resultMap);
     return resultMap;
   }
-
+  
+  /**
+   * 构造鉴别器
+   * 
+   * @param resultType
+   * @param column
+   * @param javaType
+   * @param jdbcType
+   * @param typeHandler
+   * @param discriminatorMap
+   * @return
+   */
   public Discriminator buildDiscriminator(
       Class<?> resultType,
       String column,
