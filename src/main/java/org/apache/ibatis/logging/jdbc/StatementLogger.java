@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -67,7 +67,7 @@ public final class StatementLogger extends BaseJdbcLogger implements InvocationH
     }
   }
 
-  /*
+  /**
    * Creates a logging version of a Statement
    *
    * @param stmt - the statement
@@ -79,7 +79,7 @@ public final class StatementLogger extends BaseJdbcLogger implements InvocationH
     return (Statement) Proxy.newProxyInstance(cl, new Class[]{Statement.class}, handler);
   }
 
-  /*
+  /**
    * return the wrapped statement
    *
    * @return the statement
