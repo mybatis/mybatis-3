@@ -49,6 +49,18 @@ public class MetaClassTest {
   }
 
   @Test
+  public void shouldThrowReflectionExceptionGetGetterType() throws Exception {
+    try {
+      ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
+      MetaClass meta = MetaClass.forClass(RichType.class, reflectorFactory);
+      meta.getGetterType("aString");
+      org.junit.Assert.fail("should have thrown ReflectionException");
+    } catch (ReflectionException expected) {
+      assertEquals("There is no getter for property named \'aString\' in \'class org.apache.ibatis.domain.misc.RichType\'", expected.getMessage());
+    }
+  }
+
+  @Test
   public void shouldCheckGetterExistance() {
     ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
     MetaClass meta = MetaClass.forClass(RichType.class, reflectorFactory);
