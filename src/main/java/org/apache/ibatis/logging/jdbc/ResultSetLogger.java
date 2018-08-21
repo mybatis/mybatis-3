@@ -128,7 +128,7 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
     trace(row.toString(), false);
   }
 
-  /*
+  /**
    * Creates a logging version of a ResultSet
    *
    * @param rs - the ResultSet to proxy
@@ -140,7 +140,7 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
     return (ResultSet) Proxy.newProxyInstance(cl, new Class[]{ResultSet.class}, handler);
   }
 
-  /*
+  /**
    * Get the wrapped result set
    *
    * @return the resultSet
