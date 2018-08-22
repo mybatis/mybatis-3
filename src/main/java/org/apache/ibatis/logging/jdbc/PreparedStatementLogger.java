@@ -86,7 +86,8 @@ public final class PreparedStatementLogger extends BaseJdbcLogger implements Inv
    * Creates a logging version of a PreparedStatement
    *
    * @param stmt - the statement
-   * @param sql  - the sql statement
+   * @param statementLog - the statement log
+   * @param queryStack - the query stack
    * @return - the proxy
    */
   public static PreparedStatement newInstance(PreparedStatement stmt, Log statementLog, int queryStack) {
