@@ -421,10 +421,10 @@ public class PooledDataSource implements DataSource {
                 } catch (SQLException e) {
                   /*
                      Just log a message for debug and continue to execute the following
-                     statement like nothing happend.
+                     statement like nothing happened.
                      Wrap the bad connection with a new PooledConnection, this will help
-                     to not intterupt current executing thread and give current thread a
-                     chance to join the next competion for another valid/good database
+                     to not interrupt current executing thread and give current thread a
+                     chance to join the next competition for another valid/good database
                      connection. At the end of this loop, bad {@link @conn} will be set as null.
                    */
                   log.debug("Bad connection. Could not roll back");
