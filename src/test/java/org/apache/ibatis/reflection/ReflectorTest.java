@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,8 +18,10 @@ package org.apache.ibatis.reflection;
 import static org.junit.Assert.*;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 
+import org.apache.ibatis.reflection.invoker.Invoker;
 import org.junit.Assert;
 import org.junit.Test;
 import static com.googlecode.catchexception.apis.BDDCatchException.*;
@@ -184,17 +186,99 @@ public class ReflectorTest {
   public void shouldSettersWithUnrelatedArgTypesThrowException() throws Exception {
     @SuppressWarnings("unused")
     class BeanClass {
-      public void setTheProp(String arg) {}
-      public void setTheProp(Integer arg) {}
+      public void setProp1(String arg) {}
+      public void setProp2(String arg) {}
+      public void setProp2(Integer arg) {}
     }
-
     ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
-    when(reflectorFactory).findForClass(BeanClass.class);
+    Reflector reflector = reflectorFactory.findForClass(BeanClass.class);
+
+    List<String> setableProps = Arrays.asList(reflector.getSetablePropertyNames());
+    assertTrue(setableProps.contains("prop1"));
+    assertTrue(setableProps.contains("prop2"));
+    assertEquals("prop1", reflector.findPropertyName("PROP1"));
+    assertEquals("prop2", reflector.findPropertyName("PROP2"));
+
+    assertEquals(String.class, reflector.getSetterType("prop1"));
+    assertNotNull(reflector.getSetInvoker("prop1"));
+
+    when(reflector).getSetterType("prop2");
     then(caughtException()).isInstanceOf(ReflectionException.class)
-      .hasMessageContaining("theProp")
+      .hasMessageContaining("prop2")
       .hasMessageContaining("BeanClass")
       .hasMessageContaining("java.lang.String")
       .hasMessageContaining("java.lang.Integer");
+
+    when(reflector).getSetInvoker("prop2");
+    then(caughtException()).isInstanceOf(ReflectionException.class)
+      .hasMessageContaining("prop2")
+      .hasMessageContaining("BeanClass")
+      .hasMessageContaining("java.lang.String")
+      .hasMessageContaining("java.lang.Integer");
+  }
+
+  @Test
+  public void shouldTwoGettersForNonBooleanPropertyThrowException() throws Exception {
+    @SuppressWarnings("unused")
+    class BeanClass {
+      public Integer getProp1() {return 1;}
+      public int getProp2() {return 0;}
+      public int isProp2() {return 0;}
+    }
+    ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
+    Reflector reflector = reflectorFactory.findForClass(BeanClass.class);
+
+    List<String> getableProps = Arrays.asList(reflector.getGetablePropertyNames());
+    assertTrue(getableProps.contains("prop1"));
+    assertTrue(getableProps.contains("prop2"));
+    assertEquals("prop1", reflector.findPropertyName("PROP1"));
+    assertEquals("prop2", reflector.findPropertyName("PROP2"));
+
+    assertEquals(Integer.class, reflector.getGetterType("prop1"));
+    Invoker getInvoker = reflector.getGetInvoker("prop1");
+    assertEquals(Integer.valueOf(1), getInvoker.invoke(new BeanClass(), null));
+
+    when(reflector).getGetterType("prop2");
+    then(caughtException()).isInstanceOf(ReflectionException.class)
+      .hasMessageContaining("prop2")
+      .hasMessageContaining("BeanClass");
+
+    when(reflector).getGetInvoker("prop2");
+    then(caughtException()).isInstanceOf(ReflectionException.class)
+      .hasMessageContaining("prop2")
+      .hasMessageContaining("BeanClass");
+  }
+
+  @Test
+  public void shouldTwoGettersWithDifferentTypesThrowException() throws Exception {
+    @SuppressWarnings("unused")
+    class BeanClass {
+      public Integer getProp1() {return 1;}
+      public Integer getProp2() {return 1;}
+      public boolean isProp2() {return false;}
+    }
+    ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
+    Reflector reflector = reflectorFactory.findForClass(BeanClass.class);
+
+    List<String> getableProps = Arrays.asList(reflector.getGetablePropertyNames());
+    assertTrue(getableProps.contains("prop1"));
+    assertTrue(getableProps.contains("prop2"));
+    assertEquals("prop1", reflector.findPropertyName("PROP1"));
+    assertEquals("prop2", reflector.findPropertyName("PROP2"));
+
+    assertEquals(Integer.class, reflector.getGetterType("prop1"));
+    Invoker getInvoker = reflector.getGetInvoker("prop1");
+    assertEquals(Integer.valueOf(1), getInvoker.invoke(new BeanClass(), null));
+
+    when(reflector).getGetterType("prop2");
+    then(caughtException()).isInstanceOf(ReflectionException.class)
+      .hasMessageContaining("prop2")
+      .hasMessageContaining("BeanClass");
+
+    when(reflector).getGetInvoker("prop2");
+    then(caughtException()).isInstanceOf(ReflectionException.class)
+      .hasMessageContaining("prop2")
+      .hasMessageContaining("BeanClass");
   }
 
   @Test

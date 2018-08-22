@@ -24,6 +24,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.ReflectPermission;
 import java.lang.reflect.Type;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -56,6 +57,9 @@ public class Reflector {
   private Constructor<?> defaultConstructor;
 
   private Map<String, String> caseInsensitivePropertyMap = new HashMap<>();
+
+  private AmbiguousMethods ambiguousGetters = new AmbiguousMethods("Illegal overloaded getter method with ambiguous type for property ''{0}'' in class ''{1}''. This breaks the JavaBeans specification and can cause unpredictable results.");
+  private AmbiguousMethods ambiguousSetters = new AmbiguousMethods("Ambiguous setters defined for property ''{0}'' in class ''{1}'' with types ''{2}'' and ''{3}''.");
 
   public Reflector(Class<?> clazz) {
     type = clazz;
@@ -121,10 +125,8 @@ public class Reflector {
         Class<?> candidateType = candidate.getReturnType();
         if (candidateType.equals(winnerType)) {
           if (!boolean.class.equals(candidateType)) {
-            throw new ReflectionException(
-                "Illegal overloaded getter method with ambiguous type for property "
-                    + propName + " in class " + winner.getDeclaringClass()
-                    + ". This breaks the JavaBeans specification and can cause unpredictable results.");
+            ambiguousGetters.add(propName, propName, winner.getDeclaringClass().getName());
+            break;
           } else if (candidate.getName().startsWith("is")) {
             winner = candidate;
           }
@@ -133,13 +135,13 @@ public class Reflector {
         } else if (winnerType.isAssignableFrom(candidateType)) {
           winner = candidate;
         } else {
-          throw new ReflectionException(
-              "Illegal overloaded getter method with ambiguous type for property "
-                  + propName + " in class " + winner.getDeclaringClass()
-                  + ". This breaks the JavaBeans specification and can cause unpredictable results.");
+          ambiguousGetters.add(propName, propName, winner.getDeclaringClass().getName());
+          break;
         }
       }
-      addGetMethod(propName, winner);
+      if (winner != null) {
+        addGetMethod(propName, winner);
+      }
     }
   }
 
@@ -176,7 +178,6 @@ public class Reflector {
       List<Method> setters = conflictingSetters.get(propName);
       Class<?> getterType = getTypes.get(propName);
       Method match = null;
-      ReflectionException exception = null;
       for (Method setter : setters) {
         Class<?> paramType = setter.getParameterTypes()[0];
         if (paramType.equals(getterType)) {
@@ -184,19 +185,9 @@ public class Reflector {
           match = setter;
           break;
         }
-        if (exception == null) {
-          try {
-            match = pickBetterSetter(match, setter, propName);
-          } catch (ReflectionException e) {
-            // there could still be the 'best match'
-            match = null;
-            exception = e;
-          }
-        }
+        match = pickBetterSetter(match, setter, propName);
       }
-      if (match == null) {
-        throw exception;
-      } else {
+      if (match != null) {
         addSetMethod(propName, match);
       }
     }
@@ -213,9 +204,11 @@ public class Reflector {
     } else if (paramType2.isAssignableFrom(paramType1)) {
       return setter1;
     }
-    throw new ReflectionException("Ambiguous setters defined for property '" + property + "' in class '"
-        + setter2.getDeclaringClass() + "' with types '" + paramType1.getName() + "' and '"
-        + paramType2.getName() + "'.");
+    ambiguousSetters.add(property, property, setter2.getDeclaringClass().getName(), paramType1.getName(),
+        paramType2.getName());
+    // Returns one of the ambiguous setters just to expose the property.
+    // ReflectionException will be thrown before this setter is invoked.
+    return setter1;
   }
 
   private void addSetMethod(String name, Method method) {
@@ -408,6 +401,7 @@ public class Reflector {
   }
 
   public Invoker getSetInvoker(String propertyName) {
+    ambiguousSetters.throwIfPresent(propertyName);
     Invoker method = setMethods.get(propertyName);
     if (method == null) {
       throw new ReflectionException("There is no setter for property named '" + propertyName + "' in '" + type + "'");
@@ -416,6 +410,7 @@ public class Reflector {
   }
 
   public Invoker getGetInvoker(String propertyName) {
+    ambiguousGetters.throwIfPresent(propertyName);
     Invoker method = getMethods.get(propertyName);
     if (method == null) {
       throw new ReflectionException("There is no getter for property named '" + propertyName + "' in '" + type + "'");
@@ -430,6 +425,7 @@ public class Reflector {
    * @return The Class of the propery setter
    */
   public Class<?> getSetterType(String propertyName) {
+    ambiguousSetters.throwIfPresent(propertyName);
     Class<?> clazz = setTypes.get(propertyName);
     if (clazz == null) {
       throw new ReflectionException("There is no setter for property named '" + propertyName + "' in '" + type + "'");
@@ -444,6 +440,7 @@ public class Reflector {
    * @return The Class of the propery getter
    */
   public Class<?> getGetterType(String propertyName) {
+    ambiguousGetters.throwIfPresent(propertyName);
     Class<?> clazz = getTypes.get(propertyName);
     if (clazz == null) {
       throw new ReflectionException("There is no getter for property named '" + propertyName + "' in '" + type + "'");
@@ -476,6 +473,7 @@ public class Reflector {
    * @return True if the object has a writeable property by the name
    */
   public boolean hasSetter(String propertyName) {
+    ambiguousSetters.throwIfPresent(propertyName);
     return setMethods.keySet().contains(propertyName);
   }
 
@@ -486,10 +484,32 @@ public class Reflector {
    * @return True if the object has a readable property by the name
    */
   public boolean hasGetter(String propertyName) {
+    ambiguousGetters.throwIfPresent(propertyName);
     return getMethods.keySet().contains(propertyName);
   }
 
   public String findPropertyName(String name) {
     return caseInsensitivePropertyMap.get(name.toUpperCase(Locale.ENGLISH));
+  }
+
+  private static class AmbiguousMethods {
+    private final String exceptionMessage;
+
+    private final Map<String, Object[]> map = new HashMap<>();
+
+    public AmbiguousMethods(String exceptionMessage) {
+      super();
+      this.exceptionMessage = exceptionMessage;
+    }
+
+    public void add(String property, String... messageParams) {
+      map.put(property, messageParams);
+    }
+
+    public void throwIfPresent(String property) {
+      map.computeIfPresent(property, (k, v) -> {
+        throw new ReflectionException(MessageFormat.format(exceptionMessage, v));
+      });
+    }
   }
 }
