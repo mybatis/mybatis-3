@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -302,5 +302,17 @@ public class SQLTest {
   public void fixFor903UpdateJoins() {
     final SQL sql = new SQL().UPDATE("table1 a").INNER_JOIN("table2 b USING (ID)").SET("a.value = b.value");
     assertThat(sql.toString()).isEqualTo("UPDATE table1 a\nINNER JOIN table2 b USING (ID)\nSET a.value = b.value");
+  }
+
+  @Test
+  public void supportBatchInsert(){
+
+    final SQL sql =  new SQL(){{
+      INSERT_INTO("table1 a");
+      INTO_COLUMNS("col1,col2");
+      INTO_VALUES("val1","val2");
+      INTO_VALUES("val1","val2");
+    }};
+    assertThat(sql.toString()).isEqualToIgnoringWhitespace("INSERT INTO table1 a (col1,col2) VALUES (val1,val2), (val1,val2)");
   }
 }

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package org.apache.ibatis.jdbc;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -62,7 +63,7 @@ public abstract class AbstractSQL<T> {
 
   public T VALUES(String columns, String values) {
     sql().columns.add(columns);
-    sql().values.add(values);
+    sql().values.add(Collections.singletonList(values));
     return getSelf();
   }
 
@@ -78,7 +79,7 @@ public abstract class AbstractSQL<T> {
    * @since 3.4.2
    */
   public T INTO_VALUES(String... values) {
-    sql().values.addAll(Arrays.asList(values));
+    sql().values.add(Arrays.asList(values));
     return getSelf();
   }
 
@@ -326,7 +327,7 @@ public abstract class AbstractSQL<T> {
     List<String> orderBy = new ArrayList<String>();
     List<String> lastList = new ArrayList<String>();
     List<String> columns = new ArrayList<String>();
-    List<String> values = new ArrayList<String>();
+    List<List<String>> values = new ArrayList<>();
     boolean distinct;
 
     public SQLStatement() {
@@ -382,7 +383,13 @@ public abstract class AbstractSQL<T> {
     private String insertSQL(SafeAppendable builder) {
       sqlClause(builder, "INSERT INTO", tables, "", "", "");
       sqlClause(builder, "", columns, "(", ")", ", ");
-      sqlClause(builder, "VALUES", values, "(", ")", ", ");
+        for (int i = 0; i < values.size(); i++) {
+            if(i == 0){
+                sqlClause(builder, "VALUES", values.get(0), "(", ")", ", ");
+            }else{
+                sqlClause(builder, ",", values.get(i), "(", ")", ", ");
+            }
+        }
       return builder.toString();
     }
 
