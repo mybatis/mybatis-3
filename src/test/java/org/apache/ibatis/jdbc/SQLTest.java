@@ -315,4 +315,14 @@ public class SQLTest {
     }};
     assertThat(sql.toString()).isEqualToIgnoringWhitespace("INSERT INTO table1 a (col1,col2) VALUES (val1,val2), (val1,val2)");
   }
+
+  @Test
+  public void singleInsert(){
+    final SQL sql = new SQL(){{
+      INSERT_INTO("table1 a");
+      INTO_COLUMNS("col1,col2");
+      INTO_VALUES("val1","val2");
+    }};
+    assertThat(sql.toString()).isEqualToIgnoringWhitespace("INSERT INTO table1 a (col1,col2) VALUES (val1,val2)");
+  }
 }
