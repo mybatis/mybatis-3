@@ -101,7 +101,51 @@ public class ScriptRunner {
     this.fullLineDelimiter = fullLineDelimiter;
   }
 
-  public void runScript(Reader reader) {
+    public Connection getConnection() {
+        return connection;
+    }
+
+    public boolean isStopOnError() {
+        return stopOnError;
+    }
+
+    public boolean isThrowWarning() {
+        return throwWarning;
+    }
+
+    public boolean isAutoCommit() {
+        return autoCommit;
+    }
+
+    public boolean isSendFullScript() {
+        return sendFullScript;
+    }
+
+    public boolean isRemoveCRs() {
+        return removeCRs;
+    }
+
+    public boolean isEscapeProcessing() {
+        return escapeProcessing;
+    }
+
+    public PrintWriter getLogWriter() {
+        return logWriter;
+    }
+
+    public PrintWriter getErrorLogWriter() {
+        return errorLogWriter;
+    }
+
+    public String getDelimiter() {
+        return delimiter;
+    }
+
+    public boolean isFullLineDelimiter() {
+        return fullLineDelimiter;
+    }
+
+    public void runScript(Reader reader) {
     setAutoCommit();
 
     try {
