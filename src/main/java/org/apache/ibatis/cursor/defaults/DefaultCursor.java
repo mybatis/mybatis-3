@@ -97,6 +97,9 @@ public class DefaultCursor<T> implements Cursor<T> {
         if (iteratorRetrieved) {
             throw new IllegalStateException("Cannot open more than one iterator on a Cursor");
         }
+        if (isClosed()) {
+            throw new IllegalStateException("A Cursor is already closed.");
+        }
         iteratorRetrieved = true;
         return cursorIterator;
     }

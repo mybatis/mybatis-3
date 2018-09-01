@@ -361,4 +361,31 @@ public class CursorSimpleTest {
         }
     }
 
+    @Test
+    public void shouldThrowIllegalStateExceptionUsingIteratorOnSessionClosed() {
+        Cursor<User> usersCursor;
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            usersCursor = sqlSession.getMapper(Mapper.class).getAllUsers();
+        }
+        try {
+            usersCursor.iterator();
+            Assert.fail("Should throws the IllegalStateException when call the iterator method after session is closed.");
+        } catch (IllegalStateException e) {
+            Assert.assertEquals("A Cursor is already closed.", e.getMessage());
+        }
+
+        // verify for checking order
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            usersCursor = sqlSession.getMapper(Mapper.class).getAllUsers();
+            usersCursor.iterator();
+        }
+        try {
+            usersCursor.iterator();
+            Assert.fail("Should throws the IllegalStateException when call the iterator already.");
+        } catch (IllegalStateException e) {
+            Assert.assertEquals("Cannot open more than one iterator on a Cursor", e.getMessage());
+        }
+
+    }
+
 }
