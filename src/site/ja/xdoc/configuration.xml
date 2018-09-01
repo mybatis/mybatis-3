@@ -920,7 +920,7 @@ public class Author {
                 Short, short
               </td>
               <td>
-                NUMERIC または SHORT INTEGER 互換の型
+                NUMERIC または SMALLINT 互換の型
               </td>
             </tr>
             <tr>
@@ -942,7 +942,7 @@ public class Author {
                 Long, long
               </td>
               <td>
-                NUMERIC または LONG INTEGER 互換の型
+                NUMERIC または BIGINT 互換の型
               </td>
             </tr>
             <tr>

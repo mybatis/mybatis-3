@@ -873,7 +873,7 @@ public class Author {
                 <code>java.lang.Short</code>, <code>short</code>
               </td>
               <td>
-                数据库兼容的 <code>NUMERIC</code> 或 <code>SHORT INTEGER</code>
+                数据库兼容的 <code>NUMERIC</code> 或 <code>SMALLINT</code>
               </td>
             </tr>
             <tr>
@@ -895,7 +895,7 @@ public class Author {
                 <code>java.lang.Long</code>, <code>long</code>
               </td>
               <td>
-                数据库兼容的 <code>NUMERIC</code> 或 <code>LONG INTEGER</code>
+                数据库兼容的 <code>NUMERIC</code> 或 <code>BIGINT</code>
               </td>
             </tr>
             <tr>
