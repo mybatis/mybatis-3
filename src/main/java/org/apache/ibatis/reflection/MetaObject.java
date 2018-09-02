@@ -128,7 +128,7 @@ public class MetaObject {
     if (prop.hasNext()) {
       MetaObject metaValue = metaObjectForProperty(prop.getIndexedName());
       if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
-        if (value == null && prop.getChildren() != null) {
+        if (value == null) {
           // don't instantiate child path if value is null
           return;
         } else {
