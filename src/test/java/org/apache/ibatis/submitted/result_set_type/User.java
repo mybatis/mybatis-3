@@ -13,31 +13,26 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.mapping;
+package org.apache.ibatis.submitted.result_set_type;
 
-import java.sql.ResultSet;
+public class User {
 
-/**
- * @author Clinton Begin
- */
-public enum ResultSetType {
-  /**
-   * behavior with same as unset (driver dependent).
-   *
-   * @since 3.5.0
-   */
-  DEFAULT(-1),
-  FORWARD_ONLY(ResultSet.TYPE_FORWARD_ONLY),
-  SCROLL_INSENSITIVE(ResultSet.TYPE_SCROLL_INSENSITIVE),
-  SCROLL_SENSITIVE(ResultSet.TYPE_SCROLL_SENSITIVE);
+  private Integer id;
+  private String name;
 
-  private final int value;
-
-  ResultSetType(int value) {
-    this.value = value;
+  public Integer getId() {
+    return id;
   }
 
-  public int getValue() {
-    return value;
+  public void setId(Integer id) {
+    this.id = id;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
   }
 }
