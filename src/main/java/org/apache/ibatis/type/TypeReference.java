@@ -51,6 +51,12 @@ public abstract class TypeReference<T> {
       rawType = ((ParameterizedType) rawType).getRawType();
     }
 
+    if(rawType.toString().equals("T"))
+      throw new RuntimeException("'" + getClass() + "' extends TypeReference but misses the type parameter. "
+              + "Remove the extension or add a type parameter to it.");
+
+
+
     return rawType;
   }
 
