@@ -29,7 +29,7 @@
 			</transactionManager>
 			<dataSource type="UNPOOLED">
 				<property name="driver" value="org.hsqldb.jdbcDriver" />
-				<property name="url" value="jdbc:hsqldb:mem:basetest" />
+				<property name="url" value="jdbc:hsqldb:mem:resultsettype" />
 				<property name="username" value="sa" />
 			</dataSource>
 		</environment>
