@@ -455,7 +455,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td>This annotation provides access to the wide range of switches and configuration options that are normally
         present on the mapped statement as attributes. Rather than complicate each statement annotation, the
         <code>Options</code> annotation provides a consistent and clear way to access these. Attributes:
-        <code>useCache=true</code>, <code>flushCache=FlushCachePolicy.DEFAULT</code>, <code>resultSetType=FORWARD_ONLY</code>,
+        <code>useCache=true</code>, <code>flushCache=FlushCachePolicy.DEFAULT</code>, <code>resultSetType=DEFAULT</code>,
         <code>statementType=PREPARED</code>, <code>fetchSize=-1</code>, <code>timeout=-1</code>,
         <code>useGeneratedKeys=false</code>, <code>keyProperty=""</code>, <code>keyColumn=""</code>, <code>resultSets=""</code>.
         It's important to understand that with Java Annotations, there is no way to specify <code>null</code> as a value.

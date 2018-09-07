@@ -540,7 +540,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
 		각 구문을 복잡하게 만들기 보다 Options 애노테이션으로 일관되고 깔끔한 방법으로 설정 할수 있게 한다.
 		사용가능한 속성들 : useCache=true,
 		flushCache=FlushCachePolicy.DEFAULT,
-		resultSetType=FORWARD_ONLY,
+		resultSetType=DEFAULT,
 		statementType=PREPARED, 
 		fetchSize=-1,
 		timeout=-1, 
