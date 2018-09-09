@@ -846,9 +846,11 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private void handleRowValuesForNestedResultMap(ResultSetWrapper rsw, ResultMap resultMap, ResultHandler<?> resultHandler, RowBounds rowBounds, ResultMapping parentMapping) throws SQLException {
     final DefaultResultContext<Object> resultContext = new DefaultResultContext<>();
-    skipRows(rsw.getResultSet(), rowBounds);
+    if ( ! rsw.getResultSet().isClosed()) {
+        skipRows(rsw.getResultSet(), rowBounds);
+    }
     Object rowValue = previousRowValue;
-    while (shouldProcessMoreRows(resultContext, rowBounds) && rsw.getResultSet().next()) {
+    while (shouldProcessMoreRows(resultContext, rowBounds) && ! rsw.getResultSet().isClosed() && rsw.getResultSet().next()) {
       final ResultMap discriminatedResultMap = resolveDiscriminatedResultMap(rsw.getResultSet(), resultMap, null);
       final CacheKey rowKey = createRowKey(discriminatedResultMap, rsw, null);
       Object partialObject = nestedResultObjects.get(rowKey);
