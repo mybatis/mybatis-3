@@ -385,6 +385,20 @@ SqlSessionFactory factory =
             </tr>
             <tr>
               <td>
+                defaultResultSetType
+              </td>
+              <td>
+                Specifies a scroll strategy when omit it per statement settings.
+              </td>
+              <td>
+                FORWARD_ONLY | SCROLL_SENSITIVE | SCROLL_INSENSITIVE | DEFAULT(same behavior with 'Not Set')
+              </td>
+              <td>
+                Not Set (null)
+              </td>
+            </tr>
+            <tr>
+              <td>
                 safeRowBoundsEnabled
               </td>
               <td>
