@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ public class DateOnlyTypeHandler extends BaseTypeHandler<Date> {
   @Override
   public void setNonNullParameter(PreparedStatement ps, int i, Date parameter, JdbcType jdbcType)
       throws SQLException {
-    ps.setDate(i, new java.sql.Date((parameter.getTime())));
+    ps.setDate(i, new java.sql.Date(parameter.getTime()));
   }
 
   @Override
@@ -37,7 +37,7 @@ public class DateOnlyTypeHandler extends BaseTypeHandler<Date> {
       throws SQLException {
     java.sql.Date sqlDate = rs.getDate(columnName);
     if (sqlDate != null) {
-      return new java.util.Date(sqlDate.getTime());
+      return new Date(sqlDate.getTime());
     }
     return null;
   }
@@ -47,7 +47,7 @@ public class DateOnlyTypeHandler extends BaseTypeHandler<Date> {
       throws SQLException {
     java.sql.Date sqlDate = rs.getDate(columnIndex);
     if (sqlDate != null) {
-      return new java.util.Date(sqlDate.getTime());
+      return new Date(sqlDate.getTime());
     }
     return null;
   }
@@ -57,7 +57,7 @@ public class DateOnlyTypeHandler extends BaseTypeHandler<Date> {
       throws SQLException {
     java.sql.Date sqlDate = cs.getDate(columnIndex);
     if (sqlDate != null) {
-      return new java.util.Date(sqlDate.getTime());
+      return new Date(sqlDate.getTime());
     }
     return null;
   }

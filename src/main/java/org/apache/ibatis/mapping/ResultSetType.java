@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -22,8 +22,9 @@ import java.sql.ResultSet;
  */
 public enum ResultSetType {
   /**
-   * Special value that indicate to use default value.
-   * @since 3.4.5
+   * behavior with same as unset (driver dependent).
+   *
+   * @since 3.5.0
    */
   DEFAULT(-1),
   FORWARD_ONLY(ResultSet.TYPE_FORWARD_ONLY),

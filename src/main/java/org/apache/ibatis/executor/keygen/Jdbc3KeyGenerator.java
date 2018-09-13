@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,17 +19,18 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.binding.MapperMethod.ParamMap;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.reflection.ArrayUtil;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.defaults.DefaultSqlSession.StrictMap;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
@@ -42,6 +43,7 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
 
   /**
    * A shared instance.
+   * 
    * @since 3.4.3
    */
   public static final Jdbc3KeyGenerator INSTANCE = new Jdbc3KeyGenerator();
@@ -53,29 +55,24 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
 
   @Override
   public void processAfter(Executor executor, MappedStatement ms, Statement stmt, Object parameter) {
-    processBatch(ms, stmt, getParameters(parameter));
+    processBatch(ms, stmt, parameter);
   }
 
-  public void processBatch(MappedStatement ms, Statement stmt, Collection<Object> parameters) {
+  public void processBatch(MappedStatement ms, Statement stmt, Object parameter) {
+    final String[] keyProperties = ms.getKeyProperties();
+    if (keyProperties == null || keyProperties.length == 0) {
+      return;
+    }
     ResultSet rs = null;
     try {
       rs = stmt.getGeneratedKeys();
       final Configuration configuration = ms.getConfiguration();
-      final TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();
-      final String[] keyProperties = ms.getKeyProperties();
-      final ResultSetMetaData rsmd = rs.getMetaData();
-      TypeHandler<?>[] typeHandlers = null;
-      if (keyProperties != null && rsmd.getColumnCount() >= keyProperties.length) {
-        for (Object parameter : parameters) {
-          // there should be one row for each statement (also one for each parameter)
-          if (!rs.next()) {
-            break;
-          }
-          final MetaObject metaParam = configuration.newMetaObject(parameter);
-          if (typeHandlers == null) {
-            typeHandlers = getTypeHandlers(typeHandlerRegistry, metaParam, keyProperties, rsmd);
-          }
-          populateKeys(rs, metaParam, keyProperties, typeHandlers);
+      if (rs.getMetaData().getColumnCount() >= keyProperties.length) {
+        Object soleParam = getSoleParameter(parameter);
+        if (soleParam != null) {
+          assignKeysToParam(configuration, rs, keyProperties, soleParam);
+        } else {
+          assignKeysToOneOfParams(configuration, rs, keyProperties, (Map<?, ?>) parameter);
         }
       }
     } catch (Exception e) {
@@ -91,25 +88,83 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
     }
   }
 
-  private Collection<Object> getParameters(Object parameter) {
-    Collection<Object> parameters = null;
-    if (parameter instanceof Collection) {
-      parameters = (Collection) parameter;
-    } else if (parameter instanceof Map) {
-      Map parameterMap = (Map) parameter;
-      if (parameterMap.containsKey("collection")) {
-        parameters = (Collection) parameterMap.get("collection");
-      } else if (parameterMap.containsKey("list")) {
-        parameters = (List) parameterMap.get("list");
-      } else if (parameterMap.containsKey("array")) {
-        parameters = Arrays.asList((Object[]) parameterMap.get("array"));
+  protected void assignKeysToOneOfParams(final Configuration configuration, ResultSet rs, final String[] keyProperties,
+      Map<?, ?> paramMap) throws SQLException {
+    // Assuming 'keyProperty' includes the parameter name. e.g. 'param.id'.
+    int firstDot = keyProperties[0].indexOf('.');
+    if (firstDot == -1) {
+      throw new ExecutorException(
+          "Could not determine which parameter to assign generated keys to. "
+              + "Note that when there are multiple parameters, 'keyProperty' must include the parameter name (e.g. 'param.id'). "
+              + "Specified key properties are " + ArrayUtil.toString(keyProperties) + " and available parameters are "
+              + paramMap.keySet());
+    }
+    String paramName = keyProperties[0].substring(0, firstDot);
+    Object param;
+    if (paramMap.containsKey(paramName)) {
+      param = paramMap.get(paramName);
+    } else {
+      throw new ExecutorException("Could not find parameter '" + paramName + "'. "
+          + "Note that when there are multiple parameters, 'keyProperty' must include the parameter name (e.g. 'param.id'). "
+          + "Specified key properties are " + ArrayUtil.toString(keyProperties) + " and available parameters are "
+          + paramMap.keySet());
+    }
+    // Remove param name from 'keyProperty' string. e.g. 'param.id' -> 'id'
+    String[] modifiedKeyProperties = new String[keyProperties.length];
+    for (int i = 0; i < keyProperties.length; i++) {
+      if (keyProperties[i].charAt(firstDot) == '.' && keyProperties[i].startsWith(paramName)) {
+        modifiedKeyProperties[i] = keyProperties[i].substring(firstDot + 1);
+      } else {
+        throw new ExecutorException("Assigning generated keys to multiple parameters is not supported. "
+            + "Note that when there are multiple parameters, 'keyProperty' must include the parameter name (e.g. 'param.id'). "
+            + "Specified key properties are " + ArrayUtil.toString(keyProperties) + " and available parameters are "
+            + paramMap.keySet());
       }
     }
-    if (parameters == null) {
-      parameters = new ArrayList<Object>();
-      parameters.add(parameter);
+    assignKeysToParam(configuration, rs, modifiedKeyProperties, param);
+  }
+
+  private void assignKeysToParam(final Configuration configuration, ResultSet rs, final String[] keyProperties,
+      Object param)
+      throws SQLException {
+    final TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();
+    final ResultSetMetaData rsmd = rs.getMetaData();
+    // Wrap the parameter in Collection to normalize the logic.
+    Collection<?> paramAsCollection = null;
+    if (param instanceof Object[]) {
+      paramAsCollection = Arrays.asList((Object[]) param);
+    } else if (!(param instanceof Collection)) {
+      paramAsCollection = Arrays.asList(param);
+    } else {
+      paramAsCollection = (Collection<?>) param;
     }
-    return parameters;
+    TypeHandler<?>[] typeHandlers = null;
+    for (Object obj : paramAsCollection) {
+      if (!rs.next()) {
+        break;
+      }
+      MetaObject metaParam = configuration.newMetaObject(obj);
+      if (typeHandlers == null) {
+        typeHandlers = getTypeHandlers(typeHandlerRegistry, metaParam, keyProperties, rsmd);
+      }
+      populateKeys(rs, metaParam, keyProperties, typeHandlers);
+    }
+  }
+
+  private Object getSoleParameter(Object parameter) {
+    if (!(parameter instanceof ParamMap || parameter instanceof StrictMap)) {
+      return parameter;
+    }
+    Object soleParam = null;
+    for (Object paramValue : ((Map<?, ?>) parameter).values()) {
+      if (soleParam == null) {
+        soleParam = paramValue;
+      } else if (soleParam != paramValue) {
+        soleParam = null;
+        break;
+      }
+    }
+    return soleParam;
   }
 
   private TypeHandler<?>[] getTypeHandlers(TypeHandlerRegistry typeHandlerRegistry, MetaObject metaParam, String[] keyProperties, ResultSetMetaData rsmd) throws SQLException {
@@ -117,8 +172,10 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
     for (int i = 0; i < keyProperties.length; i++) {
       if (metaParam.hasSetter(keyProperties[i])) {
         Class<?> keyPropertyType = metaParam.getSetterType(keyProperties[i]);
-        TypeHandler<?> th = typeHandlerRegistry.getTypeHandler(keyPropertyType, JdbcType.forCode(rsmd.getColumnType(i + 1)));
-        typeHandlers[i] = th;
+        typeHandlers[i] = typeHandlerRegistry.getTypeHandler(keyPropertyType, JdbcType.forCode(rsmd.getColumnType(i + 1)));
+      } else {
+        throw new ExecutorException("No setter found for the keyProperty '" + keyProperties[i] + "' in '"
+            + metaParam.getOriginalObject().getClass().getName() + "'.");
       }
     }
     return typeHandlers;
@@ -127,9 +184,6 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
   private void populateKeys(ResultSet rs, MetaObject metaParam, String[] keyProperties, TypeHandler<?>[] typeHandlers) throws SQLException {
     for (int i = 0; i < keyProperties.length; i++) {
       String property = keyProperties[i];
-      if (!metaParam.hasSetter(property)) {
-        throw new ExecutorException("No setter found for the keyProperty '" + property + "' in " + metaParam.getOriginalObject().getClass().getName() + ".");
-      }
       TypeHandler<?> th = typeHandlers[i];
       if (th != null) {
         Object value = th.getResult(rs, i + 1);

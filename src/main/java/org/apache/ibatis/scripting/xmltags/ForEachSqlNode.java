@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package org.apache.ibatis.scripting.xmltags;
 import java.util.Map;
 
 import org.apache.ibatis.parsing.GenericTokenParser;
-import org.apache.ibatis.parsing.TokenHandler;
 import org.apache.ibatis.session.Configuration;
 
 /**
@@ -117,14 +116,14 @@ public class ForEachSqlNode implements SqlNode {
   }
 
   private static String itemizeItem(String item, int i) {
-    return new StringBuilder(ITEM_PREFIX).append(item).append("_").append(i).toString();
+    return ITEM_PREFIX + item + "_" + i;
   }
 
   private static class FilteredDynamicContext extends DynamicContext {
-    private DynamicContext delegate;
-    private int index;
-    private String itemIndex;
-    private String item;
+    private final DynamicContext delegate;
+    private final int index;
+    private final String itemIndex;
+    private final String item;
 
     public FilteredDynamicContext(Configuration configuration,DynamicContext delegate, String itemIndex, String item, int i) {
       super(configuration, null);
@@ -151,15 +150,12 @@ public class ForEachSqlNode implements SqlNode {
 
     @Override
     public void appendSql(String sql) {
-      GenericTokenParser parser = new GenericTokenParser("#{", "}", new TokenHandler() {
-        @Override
-        public String handleToken(String content) {
-          String newContent = content.replaceFirst("^\\s*" + item + "(?![^.,:\\s])", itemizeItem(item, index));
-          if (itemIndex != null && newContent.equals(content)) {
-            newContent = content.replaceFirst("^\\s*" + itemIndex + "(?![^.,:\\s])", itemizeItem(itemIndex, index));
-          }
-          return new StringBuilder("#{").append(newContent).append("}").toString();
+      GenericTokenParser parser = new GenericTokenParser("#{", "}", content -> {
+        String newContent = content.replaceFirst("^\\s*" + item + "(?![^.,:\\s])", itemizeItem(item, index));
+        if (itemIndex != null && newContent.equals(content)) {
+          newContent = content.replaceFirst("^\\s*" + itemIndex + "(?![^.,:\\s])", itemizeItem(itemIndex, index));
         }
+        return "#{" + newContent + "}";
       });
 
       delegate.appendSql(parser.parse(sql));
@@ -174,8 +170,8 @@ public class ForEachSqlNode implements SqlNode {
 
 
   private class PrefixedContext extends DynamicContext {
-    private DynamicContext delegate;
-    private String prefix;
+    private final DynamicContext delegate;
+    private final String prefix;
     private boolean prefixApplied;
 
     public PrefixedContext(DynamicContext delegate, String prefix) {

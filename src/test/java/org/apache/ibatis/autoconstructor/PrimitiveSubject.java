@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,18 +15,24 @@
  */
 package org.apache.ibatis.autoconstructor;
 
+import java.util.Date;
+
 public class PrimitiveSubject {
   private final int id;
   private final String name;
   private final int age;
   private final int height;
   private final int weight;
+  private final boolean active;
+  private final Date dt;
 
-  public PrimitiveSubject(final int id, final String name, final int age, final int height, final int weight) {
+  public PrimitiveSubject(final int id, final String name, final int age, final int height, final int weight, final boolean active, final Date dt) {
     this.id = id;
     this.name = name;
     this.age = age;
     this.height = height;
     this.weight = weight;
+    this.active = active;
+    this.dt = dt;
   }
 }

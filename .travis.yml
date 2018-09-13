@@ -2,10 +2,9 @@ language: java
 sudo: false
 
 jdk:
+  - oraclejdk9
   - oraclejdk8
-  - oraclejdk7
-  - openjdk7
-  - openjdk6
+  - openjdk8
 
 before_install:
   - echo "MAVEN_OPTS='-Dlicense.skip=true'" > ~/.mavenrc

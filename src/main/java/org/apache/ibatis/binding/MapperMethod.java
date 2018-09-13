@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
+import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.ParamNameResolver;
 import org.apache.ibatis.reflection.TypeParameterResolver;
@@ -38,6 +39,7 @@ import java.util.*;
  * @author Clinton Begin
  * @author Eduardo Macarron
  * @author Lasse Voss
+ * @author Kazuki Shimizu
  */
 public class MapperMethod {
 
@@ -80,6 +82,10 @@ public class MapperMethod {
         } else {
           Object param = method.convertArgsToSqlCommandParam(args);
           result = sqlSession.selectOne(command.getName(), param);
+          if (method.returnsOptional() &&
+              (result == null || !method.getReturnType().equals(result.getClass()))) {
+            result = Optional.ofNullable(result);
+          }
         }
         break;
       case FLUSH:
@@ -113,7 +119,8 @@ public class MapperMethod {
 
   private void executeWithResultHandler(SqlSession sqlSession, Object[] args) {
     MappedStatement ms = sqlSession.getConfiguration().getMappedStatement(command.getName());
-    if (void.class.equals(ms.getResultMaps().get(0).getType())) {
+    if (!StatementType.CALLABLE.equals(ms.getStatementType())
+        && void.class.equals(ms.getResultMaps().get(0).getType())) {
       throw new BindingException("method " + command.getName() 
           + " needs either a @ResultMap annotation, a @ResultType annotation," 
           + " or a resultType attribute in XML so a ResultHandler can be used as a parameter.");
@@ -174,7 +181,7 @@ public class MapperMethod {
       for (int i = 0; i < list.size(); i++) {
         Array.set(array, i, list.get(i));
       }
-      return array;
+    return array;
     } else {
       return list.toArray((E[])array);
     }
@@ -217,7 +224,7 @@ public class MapperMethod {
       MappedStatement ms = resolveMappedStatement(mapperInterface, methodName, declaringClass,
           configuration);
       if (ms == null) {
-        if (method.getAnnotation(Flush.class) != null) {
+        if(method.getAnnotation(Flush.class) != null){
           name = null;
           type = SqlCommandType.FLUSH;
         } else {
@@ -268,6 +275,7 @@ public class MapperMethod {
     private final boolean returnsMap;
     private final boolean returnsVoid;
     private final boolean returnsCursor;
+    private final boolean returnsOptional;
     private final Class<?> returnType;
     private final String mapKey;
     private final Integer resultHandlerIndex;
@@ -284,10 +292,11 @@ public class MapperMethod {
         this.returnType = method.getReturnType();
       }
       this.returnsVoid = void.class.equals(this.returnType);
-      this.returnsMany = (configuration.getObjectFactory().isCollection(this.returnType) || this.returnType.isArray());
+      this.returnsMany = configuration.getObjectFactory().isCollection(this.returnType) || this.returnType.isArray();
       this.returnsCursor = Cursor.class.equals(this.returnType);
+      this.returnsOptional = Optional.class.equals(this.returnType);
       this.mapKey = getMapKey(method);
-      this.returnsMap = (this.mapKey != null);
+      this.returnsMap = this.mapKey != null;
       this.rowBoundsIndex = getUniqueParamIndex(method, RowBounds.class);
       this.resultHandlerIndex = getUniqueParamIndex(method, ResultHandler.class);
       this.paramNameResolver = new ParamNameResolver(configuration, method);
@@ -335,6 +344,15 @@ public class MapperMethod {
 
     public boolean returnsCursor() {
       return returnsCursor;
+    }
+
+    /**
+     * return whether return type is {@code java.util.Optional}
+     * @return return {@code true}, if return type is {@code java.util.Optional}
+     * @since 3.5.0
+     */
+    public boolean returnsOptional() {
+      return returnsOptional;
     }
 
     private Integer getUniqueParamIndex(Method method, Class<?> paramType) {

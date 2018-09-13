@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2017 the original author or authors.
+       Copyright 2009-2018 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -213,7 +213,7 @@ ps.setInt(1,id);]]></source>
             <tr>
               <td><code>resultSetType</code></td>
               <td>
-                <code>FORWARD_ONLY</code>, <code>SCROLL_SENSITIVE</code>, <code>SCROLL_INSENSITIVE</code> のいずれかを指定します。デフォルトは未指定（ドライバー依存）です。
+                <code>FORWARD_ONLY</code>, <code>SCROLL_SENSITIVE</code>, <code>SCROLL_INSENSITIVE</code>, <code>DEFAULT</code>(未指定と同じ) のいずれかを指定します。デフォルトは未指定（ドライバー依存）です。
               </td>
             </tr>
             <tr>
@@ -1875,6 +1875,10 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
           <li>このキャッシュはクエリ結果のリストまたはオブジェクトへの参照を 1024 個格納します。</li>
           <li>このキャッシュは読み書き可能なキャッシュとして扱われます。これはつまり、取得したオブジェクトは共有されず、呼び出した側で安全に変更することができる（別の呼び出し元や他スレッドでの変更の影響を受けない）ということを意味しています。</li>
         </ul>
+
+        <p>
+          <span class="label important">重要</span> 対応する Java マッパーのステートメントをキャッシュの適用対象に含めるためには <code>@CacheNamespaceRef</code> アノテーションで XML マッパーのネームスペースを指定する必要があります。
+        </p>
 
         <p>
           これらのプロパティは cache 要素の属性で変更することができます。

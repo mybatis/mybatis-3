@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ public class BatchExecutorException extends ExecutorException {
     this.batchResult = batchResult;
   }
 
-  /*
+  /**
    * Returns the BatchUpdateException that caused the nested executor
    * to fail.  That exception contains an array of row counts
    * that can be used to determine exactly which statement of the
@@ -55,7 +55,7 @@ public class BatchExecutorException extends ExecutorException {
     return batchUpdateException;
   }
 
-  /*
+  /**
    * Returns a list of BatchResult objects.  There will be one entry
    * in the list for each successful sub-executor executed before the failing
    * executor.
@@ -67,7 +67,7 @@ public class BatchExecutorException extends ExecutorException {
     return successfulBatchResults;
   }
 
-  /*
+  /**
    * Returns the SQL statement that caused the failure
    * (not the parameterArray)
    *
@@ -77,7 +77,7 @@ public class BatchExecutorException extends ExecutorException {
     return batchResult.getSql();
   }
 
-  /*
+  /**
    * Returns the statement id of the statement that caused the failure
    *
    * @return the statement id

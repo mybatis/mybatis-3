@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2017 the original author or authors.
+       Copyright 2009-2018 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -182,7 +182,7 @@ ps.setInt(1,id);]]></source>
             </tr>
             <tr>
               <td><code>resultSetType</code></td>
-              <td>Puede valer FORWARD_ONLY|SCROLL_SENSITIVE|SCROLL_INSENSITIVE.  Por defecto: no informado (depende del driver de base de datos).
+              <td>Puede valer FORWARD_ONLY|SCROLL_SENSITIVE|SCROLL_INSENSITIVE|DEFAULT(same as unset).  Por defecto: no informado (depende del driver de base de datos).
               </td>
             </tr>
             <tr>
@@ -1658,6 +1658,13 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
           <li>La caché guardará 1024 referencias a listas u objetos (según lo que devuelva el statement).</li>
           <li>La caché puede tratarse como una cache de tipo lectura/escritura, lo cual significa que los objetos obtenidos no se comparten y pueden modificarse con seguridad por el llamante sin interferir en otras potenciales modificaciones realizadas por otros llamantes o hilos.</li>
         </ul>
+
+        <p>
+          <span class="label important">NOTE</span> The cache will only apply to statements declared in the mapping file
+          where the cache tag is located. If you are using the Java API in conjunction with the XML mapping files, then
+          statements declared in the companion interface will not be cached by default. You will need to refer to the
+          cache region using the @CacheNamespaceRef annotation.
+        </p>
 
         <p>Todas estas propiedades son modificables mediante atributos del elemento cache. Por ejemplo:
         </p>

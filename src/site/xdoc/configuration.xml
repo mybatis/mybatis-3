@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2017 the original author or authors.
+       Copyright 2009-2018 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -990,7 +990,7 @@ public class Author {
                 <code>java.lang.Short</code>, <code>short</code>
               </td>
               <td>
-                Any compatible <code>NUMERIC</code> or <code>SHORT INTEGER</code>
+                Any compatible <code>NUMERIC</code> or <code>SMALLINT</code>
               </td>
             </tr>
             <tr>
@@ -1012,7 +1012,7 @@ public class Author {
                 <code>java.lang.Long</code>, <code>long</code>
               </td>
               <td>
-                Any compatible <code>NUMERIC</code> or <code>LONG INTEGER</code>
+                Any compatible <code>NUMERIC</code> or <code>BIGINT</code>
               </td>
             </tr>
             <tr>
@@ -1234,6 +1234,17 @@ public class Author {
               <td>
                 Any compatible <code>NUMERIC</code> or <code>DOUBLE</code>, as the position is stored
                 (not the code itself).
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>SqlxmlTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.String</code>
+              </td>
+              <td>
+                <code>SQLXML</code>
               </td>
             </tr>
             <tr>
@@ -1946,6 +1957,14 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, propert
             failing silently forever if the pool is misconfigured).
             Default:
             20000ms (i.e. 20 seconds)
+          </li>
+          <li><code>poolMaximumLocalBadConnectionTolerance</code> – This is a low level setting about
+            tolerance of bad connections got for any thread. If a thread got a bad connection, it may
+            still have another chance to re-attempt to get another connection which is valid. But the
+            retrying times should not more than the sum of <code>poolMaximumIdleConnections</code>
+            and <code>poolMaximumLocalBadConnectionTolerance</code>.
+            Default:
+            3 (Since: 3.4.5)
           </li>
           <li><code>poolPingQuery</code> – The Ping Query is sent to the database to
             validate that a connection is in good working order and is ready

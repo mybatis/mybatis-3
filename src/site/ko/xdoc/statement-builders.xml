@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2017 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -375,8 +375,8 @@ public String updatePersonSql() {
                 <code>INTO_COLUMNS(String...)</code>
               </td>
               <td>
-                Appends columns phrase to an insert statement.
-                This should be call INTO_VALUES() with together.
+                insert 구문에 columns 절을 추가한다.
+                반드시 INTO_VALUES()와 함께 호출되어야 한다.
               </td>
             </tr>
             <tr>
@@ -384,14 +384,14 @@ public String updatePersonSql() {
                 <code>INTO_VALUES(String...)</code>
               </td>
               <td>
-                Appends values phrase to an insert statement.
-                This should be call INTO_COLUMNS() with together.
+                insert 구문에 values 절을 추가한다.
+                반드시 INTO_COLUMNS()와 함께 호출되어야 한다.
               </td>
             </tr>
           </tbody>
         </table>
 
-        <p>Since version 3.4.2, you can use variable-length arguments as follows:</p>
+        <p>3.4.2 버전부터, variable-length 매개변수를 아래와 같이 사용할 수 있습니다.</p>
 
 <source><![CDATA[
 public String selectPersonSql() {

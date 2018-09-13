@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,11 +16,10 @@
 package org.apache.ibatis.submitted.permissions;
 
 import java.io.Reader;
-import java.sql.Connection;
 import java.util.List;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -35,27 +34,18 @@ public class PermissionsTest {
   @BeforeClass
   public static void setUp() throws Exception {
     // create a SqlSessionFactory
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/permissions/mybatis-config.xml");
-    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    reader.close();
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/permissions/mybatis-config.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    }
 
     // populate in-memory database
-    SqlSession session = sqlSessionFactory.openSession();
-    Connection conn = session.getConnection();
-    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/permissions/CreateDB.sql");
-    ScriptRunner runner = new ScriptRunner(conn);
-    runner.setLogWriter(null);
-    runner.setErrorLogWriter(null);
-    runner.runScript(reader);
-    conn.commit();
-    conn.close();
-    reader.close();
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+            "org/apache/ibatis/submitted/permissions/CreateDB.sql");
   }
 
   @Test // see issue #168
   public void checkNestedResultMapLoop() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       final PermissionsMapper mapper = sqlSession.getMapper(PermissionsMapper.class);
 
       final List<Resource> resources = mapper.getResources();
@@ -73,15 +63,12 @@ public class PermissionsTest {
       Assert.assertSame(firstResource, firstPermission.getResource());
       final Permission secondPermission = firstPrincipal.getPermissions().get(1);
       Assert.assertSame(firstResource, secondPermission.getResource());
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void checkNestedSelectLoop() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       final PermissionsMapper mapper = sqlSession.getMapper(PermissionsMapper.class);
 
       final List<Resource> resources = mapper.getResource("read");
@@ -106,9 +93,6 @@ public class PermissionsTest {
       if (!readFound) {
         Assert.fail();
       }
-
-    } finally {
-      sqlSession.close();
     }
   }
   

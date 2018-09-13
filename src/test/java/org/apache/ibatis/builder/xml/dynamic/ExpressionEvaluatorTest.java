@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,14 +15,13 @@
  */
 package org.apache.ibatis.builder.xml.dynamic;
 
+import static org.junit.Assert.*;
+
 import java.util.HashMap;
 
 import org.apache.ibatis.domain.blog.Author;
 import org.apache.ibatis.domain.blog.Section;
 import org.apache.ibatis.scripting.xmltags.ExpressionEvaluator;
-
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 
 public class ExpressionEvaluatorTest {
@@ -63,6 +62,15 @@ public class ExpressionEvaluatorTest {
   public void shouldReturnFalseIfZero() {
     boolean value = evaluator.evaluateBoolean("id", new Author(0, "cbegin", null, "cbegin@apache.org", "N/A", Section.NEWS));
     assertEquals(false, value);
+  }
+
+  @Test
+  public void shouldReturnFalseIfZeroWithScale() {
+    class Bean {
+      @SuppressWarnings("unused")
+      public double d = 0.0d;
+    }
+    assertFalse(evaluator.evaluateBoolean("d", new Bean()));
   }
 
   @Test

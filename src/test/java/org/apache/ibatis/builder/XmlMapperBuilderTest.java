@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,8 +24,10 @@ import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.session.Configuration;
+import org.junit.Rule;
 import org.apache.ibatis.type.TypeHandler;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import static com.googlecode.catchexception.apis.BDDCatchException.*;
 import static org.assertj.core.api.BDDAssertions.then;
@@ -34,32 +36,35 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class XmlMapperBuilderTest {
 
+  @Rule
+  public ExpectedException expectedEx = ExpectedException.none();
+
   @Test
   public void shouldSuccessfullyLoadXMLMapperFile() throws Exception {
     Configuration configuration = new Configuration();
     String resource = "org/apache/ibatis/builder/AuthorMapper.xml";
-    InputStream inputStream = Resources.getResourceAsStream(resource);
-    XMLMapperBuilder builder = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
-    builder.parse();
-    inputStream.close();
+    try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
+      XMLMapperBuilder builder = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
+      builder.parse();
+    }
   }
 
   @Test
   public void mappedStatementWithOptions() throws Exception {
     Configuration configuration = new Configuration();
     String resource = "org/apache/ibatis/builder/AuthorMapper.xml";
-    InputStream inputStream = Resources.getResourceAsStream(resource);
-    XMLMapperBuilder builder = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
-    builder.parse();
+    try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
+      XMLMapperBuilder builder = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
+      builder.parse();
 
-    MappedStatement mappedStatement = configuration.getMappedStatement("selectWithOptions");
-    assertThat(mappedStatement.getFetchSize()).isEqualTo(200);
-    assertThat(mappedStatement.getTimeout()).isEqualTo(10);
-    assertThat(mappedStatement.getStatementType()).isEqualTo(StatementType.PREPARED);
-    assertThat(mappedStatement.getResultSetType()).isEqualTo(ResultSetType.SCROLL_SENSITIVE);
-    assertThat(mappedStatement.isFlushCacheRequired()).isFalse();
-    assertThat(mappedStatement.isUseCache()).isFalse();
-    inputStream.close();
+      MappedStatement mappedStatement = configuration.getMappedStatement("selectWithOptions");
+      assertThat(mappedStatement.getFetchSize()).isEqualTo(200);
+      assertThat(mappedStatement.getTimeout()).isEqualTo(10);
+      assertThat(mappedStatement.getStatementType()).isEqualTo(StatementType.PREPARED);
+      assertThat(mappedStatement.getResultSetType()).isEqualTo(ResultSetType.SCROLL_SENSITIVE);
+      assertThat(mappedStatement.isFlushCacheRequired()).isFalse();
+      assertThat(mappedStatement.isUseCache()).isFalse();
+    }
   }
 
   @Test
@@ -179,6 +184,18 @@ public class XmlMapperBuilderTest {
     when(builder).useCacheRef("eee");
     then(caughtException())
       .hasMessage("No cache for namespace 'eee' could be found.");
+  }
+
+  @Test
+  public void shouldFailedLoadXMLMapperFile() throws Exception {
+    expectedEx.expect(BuilderException.class);
+    expectedEx.expectMessage("Error parsing Mapper XML. The XML location is 'org/apache/ibatis/builder/ProblemMapper.xml'");
+    Configuration configuration = new Configuration();
+    String resource = "org/apache/ibatis/builder/ProblemMapper.xml";
+    try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
+      XMLMapperBuilder builder = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
+      builder.parse();
+    }
   }
 
 //  @Test
