@@ -169,8 +169,7 @@ public class MapperMethod {
   private <E> Object convertToDeclaredCollection(Configuration config, List<E> list) {
     Object collection = config.getObjectFactory().create(method.getReturnType());
     MetaObject metaObject = config.newMetaObject(collection);
-    metaObject.addAll(list);
-    return collection;
+    return metaObject.addAll(list);
   }
 
   @SuppressWarnings("unchecked")

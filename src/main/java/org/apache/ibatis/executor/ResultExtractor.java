@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ public class ResultExtractor {
     } else if (targetType != null && objectFactory.isCollection(targetType)) {
       value = objectFactory.create(targetType);
       MetaObject metaObject = configuration.newMetaObject(value);
-      metaObject.addAll(list);
+      value = metaObject.addAll(list);
     } else if (targetType != null && targetType.isArray()) {
       Class<?> arrayComponentType = targetType.getComponentType();
       Object array = Array.newInstance(arrayComponentType, list.size());

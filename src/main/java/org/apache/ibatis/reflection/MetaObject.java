@@ -158,8 +158,7 @@ public class MetaObject {
     objectWrapper.add(element);
   }
 
-  public <E> void addAll(List<E> list) {
-    objectWrapper.addAll(list);
+  public <E> Object addAll(List<E> list) {
+    return objectWrapper.addAll(list);
   }
-
 }

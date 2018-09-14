@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,12 +20,12 @@ import java.util.List;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
+import org.apache.ibatis.reflection.wrapper.ObjectWrapper;
 
-public class CustomObjectWrapper implements org.apache.ibatis.reflection.wrapper.ObjectWrapper {
-
-  private CustomCollection collection;
+public class CustomObjectWrapper implements ObjectWrapper {
+  private CustomCollection<? super Object> collection;
   
-  public CustomObjectWrapper(CustomCollection collection){
+  CustomObjectWrapper(CustomCollection<? super Object> collection){
     this.collection = collection;
   }
   
@@ -95,12 +95,12 @@ public class CustomObjectWrapper implements org.apache.ibatis.reflection.wrapper
 
   @Override
   public void add(Object element) {
-    ((CustomCollection<Object>) collection).add(element);
+    collection.add(element);
   }
 
   @Override
-  public <E> void addAll(List<E> element) {
-    ((CustomCollection<Object>) collection).addAll(element);
+  public <E> Object addAll(List<E> element) {
+    collection.addAll(element);
+    return new ImmutableCustomCollection<>(collection.getData());
   }
-
 }
