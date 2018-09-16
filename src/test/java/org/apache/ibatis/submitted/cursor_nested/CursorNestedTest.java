@@ -77,6 +77,9 @@ public class CursorNestedTest {
       Assert.assertEquals(2, user.getGroups().size());
       Assert.assertEquals(2, user.getRoles().size());
 
+      Assert.assertTrue(usersCursor.isOpen());
+      Assert.assertFalse(usersCursor.isConsumed());
+
       // Check no more elements
       Assert.assertFalse(iterator.hasNext());
       Assert.assertFalse(usersCursor.isOpen());

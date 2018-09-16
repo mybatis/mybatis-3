@@ -100,9 +100,13 @@ public class DefaultCursorTest {
       Map<String, Object> map = (Map<String, Object>) iter.next();
       assertEquals(Integer.valueOf(1), map.get("id"));
       assertEquals("CEO", ((Map<String, Object>) map.get("roles")).get("role"));
+
+      assertFalse(cursor.isConsumed());
+      assertTrue(cursor.isOpen());
+
+      assertFalse(iter.hasNext());
       assertTrue(cursor.isConsumed());
       assertFalse(cursor.isOpen());
-      assertFalse(iter.hasNext());
     }
   }
 

@@ -139,12 +139,11 @@ public class DefaultCursor<T> implements Cursor<T> {
       return null;
     }
 
-    final boolean resultSetClosed;
     try {
       status = CursorStatus.OPEN;
-      resultSetHandler.handleRowValues(rsw, resultMap, objectWrapperResultHandler, RowBounds.DEFAULT, null);
-      // ResultSet might have been closed by the driver (e.g. DB2).
-      resultSetClosed = rsw.getResultSet().isClosed();
+      if (!rsw.getResultSet().isClosed()) {
+        resultSetHandler.handleRowValues(rsw, resultMap, objectWrapperResultHandler, RowBounds.DEFAULT, null);
+      }
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
@@ -154,7 +153,7 @@ public class DefaultCursor<T> implements Cursor<T> {
       indexWithRowBound++;
     }
     // No more object or limit reached
-    if (resultSetClosed || next == null || getReadItemsCount() == rowBounds.getOffset() + rowBounds.getLimit()) {
+    if (next == null || getReadItemsCount() == rowBounds.getOffset() + rowBounds.getLimit()) {
       close();
       status = CursorStatus.CONSUMED;
     }
