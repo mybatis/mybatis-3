@@ -12,7 +12,7 @@ import org.junit.Test;
  */
 public class BlockingCacheTest {
 
-    @Test
+    @Test(timeout = 3000L)
     public void getObject() throws InterruptedException {
         final BlockingCache cache = new BlockingCache(new PerpetualCache("default"));
 
