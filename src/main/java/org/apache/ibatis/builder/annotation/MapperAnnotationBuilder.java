@@ -166,11 +166,15 @@ public class MapperAnnotationBuilder {
     // this flag is set at XMLMapperBuilder#bindMapperForNamespace
     if (!configuration.isResourceLoaded("namespace:" + type.getName())) {
       String xmlResource = type.getName().replace('.', '/') + ".xml";
-      InputStream inputStream = null;
-      try {
-        inputStream = Resources.getResourceAsStream(type.getClassLoader(), xmlResource);
-      } catch (IOException e) {
-        // ignore, resource is not required
+      // #1347
+      InputStream inputStream = type.getResourceAsStream("/" + xmlResource);
+      if (inputStream == null) {
+        // Search XML mapper that is not in the module but in the classpath. 
+        try {
+          inputStream = Resources.getResourceAsStream(type.getClassLoader(), xmlResource);
+        } catch (IOException e2) {
+          // ignore, resource is not required
+        }
       }
       if (inputStream != null) {
         XMLMapperBuilder xmlParser = new XMLMapperBuilder(inputStream, assistant.getConfiguration(), xmlResource, configuration.getSqlFragments(), type.getName());
