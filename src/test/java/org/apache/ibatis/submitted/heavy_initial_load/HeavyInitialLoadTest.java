@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -36,20 +36,11 @@ public class HeavyInitialLoadTest {
 
   @BeforeClass
   public static void initSqlSessionFactory() throws Exception {
-    Connection conn = null;
-
-    try {
-      Class.forName("org.hsqldb.jdbcDriver");
-      conn = DriverManager.getConnection("jdbc:hsqldb:mem:heavy_initial_load", "sa", "");
-
-      Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/heavy_initial_load/ibatisConfig.xml");
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/heavy_initial_load/ibatisConfig.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-      reader.close();
-    } finally {
-      if (conn != null) {
-        conn.close();
-      }
     }
+
+    sqlSessionFactory.getConfiguration().getEnvironment().getDataSource().getConnection().close();
   }
 
   private static final int THREAD_COUNT = 5;
@@ -95,14 +86,11 @@ public class HeavyInitialLoadTest {
     Assert.assertTrue("There were exceptions: " + throwables, throwables.isEmpty());
   }
 
-  public void selectThing() throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  public void selectThing() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       ThingMapper mapper = sqlSession.getMapper(ThingMapper.class);
       Thing selected = mapper.selectByCode(Code._1);
       Assert.assertEquals(1, selected.getId().longValue());
-    } finally {
-      sqlSession.close();
     }
   }
 }

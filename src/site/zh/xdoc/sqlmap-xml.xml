@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2017 the original author or authors.
+       Copyright 2009-2018 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -181,7 +181,7 @@ ps.setInt(1,id);]]></source>
             </tr>
             <tr>
               <td><code>resultSetType</code></td>
-              <td>FORWARD_ONLY，SCROLL_SENSITIVE 或 SCROLL_INSENSITIVE 中的一个，默认值为 unset （依赖驱动）。
+              <td>FORWARD_ONLY，SCROLL_SENSITIVE, SCROLL_INSENSITIVE 或 DEFAULT(same as unset) 中的一个，默认值为 unset （依赖驱动）。
               </td>
             </tr>
             <tr>

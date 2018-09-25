@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,25 +15,27 @@
  */
 package org.apache.ibatis.submitted.keygen;
 
+import static com.googlecode.catchexception.apis.BDDCatchException.*;
+import static org.assertj.core.api.BDDAssertions.then;
 import static org.junit.Assert.*;
 
 import java.io.Reader;
-import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
-
-import static com.googlecode.catchexception.apis.BDDCatchException.*;
-import static org.assertj.core.api.BDDAssertions.then;
 
 /**
  * @author liuzh
@@ -45,54 +47,354 @@ public class Jdbc3KeyGeneratorTest {
   @BeforeClass
   public static void setUp() throws Exception {
     // create an SqlSessionFactory
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/keygen/MapperConfig.xml");
-    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    reader.close();
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/keygen/MapperConfig.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    }
 
     // populate in-memory database
-    SqlSession session = sqlSessionFactory.openSession();
-    Connection conn = session.getConnection();
-    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/keygen/CreateDB.sql");
-    ScriptRunner runner = new ScriptRunner(conn);
-    runner.setLogWriter(null);
-    runner.runScript(reader);
-    conn.close();
-    reader.close();
-    session.close();
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+            "org/apache/ibatis/submitted/keygen/CreateDB.sql");
   }
 
   @Test
-  public void shouldInsertListAndRetrieveId() throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
-      CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
-      List<Country> countries = new ArrayList<Country>();
-      countries.add(new Country("China", "CN"));
-      countries.add(new Country("United Kiongdom", "GB"));
-      countries.add(new Country("United States of America", "US"));
-      mapper.insertList(countries);
-      for (Country country : countries) {
+  public void shouldAssignKeyToBean() throws Exception {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      try {
+        CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
+        Country country = new Country("China", "CN");
+        mapper.insertBean(country);
         assertNotNull(country.getId());
+      } finally {
+        sqlSession.rollback();
       }
-    } finally {
-      sqlSession.rollback();
-      sqlSession.close();
     }
   }
 
-  @Ignore("#782 was reverted. See #902.")
   @Test
-  public void shouldErrorUndefineProperty()  {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
-      CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
+  public void shouldAssignKeyToNamedBean() throws Exception {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      try {
+        CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
+        Country country = new Country("China", "CN");
+        mapper.insertNamedBean(country);
+        assertNotNull(country.getId());
+      } finally {
+        sqlSession.rollback();
+      }
+    }
+  }
 
-      when(mapper).insertUndefineKeyProperty(new Country("China", "CN"));
-      then(caughtException()).isInstanceOf(PersistenceException.class).hasMessageContaining(
-          "### Error updating database.  Cause: org.apache.ibatis.executor.ExecutorException: Error getting generated key or setting result to parameter object. Cause: org.apache.ibatis.executor.ExecutorException: No setter found for the keyProperty 'country_id' in org.apache.ibatis.submitted.keygen.Country.");
-    } finally {
-      sqlSession.rollback();
-      sqlSession.close();
+  @Test
+  public void shouldAssignKeysToList() throws Exception {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      try {
+        CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
+        List<Country> countries = new ArrayList<Country>();
+        countries.add(new Country("China", "CN"));
+        countries.add(new Country("United Kiongdom", "GB"));
+        countries.add(new Country("United States of America", "US"));
+        mapper.insertList(countries);
+        for (Country country : countries) {
+          assertNotNull(country.getId());
+        }
+      } finally {
+        sqlSession.rollback();
+      }
+    }
+  }
+
+  @Test
+  public void shouldAssignKeysToNamedList() throws Exception {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      try {
+        CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
+        List<Country> countries = new ArrayList<Country>();
+        countries.add(new Country("China", "CN"));
+        countries.add(new Country("United Kiongdom", "GB"));
+        countries.add(new Country("United States of America", "US"));
+        mapper.insertNamedList(countries);
+        for (Country country : countries) {
+          assertNotNull(country.getId());
+        }
+      } finally {
+        sqlSession.rollback();
+      }
+    }
+  }
+
+  @Test
+  public void shouldAssingKeysToCollection() throws Exception {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      try {
+        CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
+        Set<Country> countries = new HashSet<Country>();
+        countries.add(new Country("China", "CN"));
+        countries.add(new Country("United Kiongdom", "GB"));
+        mapper.insertSet(countries);
+        for (Country country : countries) {
+          assertNotNull(country.getId());
+        }
+      } finally {
+        sqlSession.rollback();
+      }
+    }
+  }
+
+  @Test
+  public void shouldAssingKeysToNamedCollection() throws Exception {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      try {
+        CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
+        Set<Country> countries = new HashSet<Country>();
+        countries.add(new Country("China", "CN"));
+        countries.add(new Country("United Kiongdom", "GB"));
+        mapper.insertNamedSet(countries);
+        for (Country country : countries) {
+          assertNotNull(country.getId());
+        }
+      } finally {
+        sqlSession.rollback();
+      }
+    }
+  }
+
+  @Test
+  public void shouldAssingKeysToArray() throws Exception {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      try {
+        CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
+        Country[] countries = new Country[2];
+        countries[0] = new Country("China", "CN");
+        countries[1] = new Country("United Kiongdom", "GB");
+        mapper.insertArray(countries);
+        for (Country country : countries) {
+          assertNotNull(country.getId());
+        }
+      } finally {
+        sqlSession.rollback();
+      }
+    }
+  }
+
+  @Test
+  public void shouldAssingKeysToNamedArray() throws Exception {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      try {
+        CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
+        Country[] countries = new Country[2];
+        countries[0] = new Country("China", "CN");
+        countries[1] = new Country("United Kiongdom", "GB");
+        mapper.insertNamedArray(countries);
+        for (Country country : countries) {
+          assertNotNull(country.getId());
+        }
+      } finally {
+        sqlSession.rollback();
+      }
+    }
+  }
+
+  @Test
+  public void shouldAssignKeyToBean_MultiParams() throws Exception {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      try {
+        CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
+        Country country = new Country("China", "CN");
+        mapper.insertMultiParams(country, Integer.valueOf(1));
+        assertNotNull(country.getId());
+      } finally {
+        sqlSession.rollback();
+      }
+    }
+  }
+
+  @Test
+  public void shouldFailIfKeyPropertyIsInvalid_NoParamName() throws Exception {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      try {
+        CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
+        Country country = new Country("China", "CN");
+        when(mapper).insertMultiParams_keyPropertyWithoutParamName(country, Integer.valueOf(1));
+        then(caughtException()).isInstanceOf(PersistenceException.class).hasMessageContaining(
+            "Could not determine which parameter to assign generated keys to. "
+                + "Note that when there are multiple parameters, 'keyProperty' must include the parameter name (e.g. 'param.id'). "
+                + "Specified key properties are [id] and available parameters are [");
+      } finally {
+        sqlSession.rollback();
+      }
+    }
+  }
+
+  @Test
+  public void shouldFailIfKeyPropertyIsInvalid_WrongParamName() throws Exception {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      try {
+        CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
+        Country country = new Country("China", "CN");
+        when(mapper).insertMultiParams_keyPropertyWithWrongParamName(country, Integer.valueOf(1));
+        then(caughtException()).isInstanceOf(PersistenceException.class).hasMessageContaining(
+            "Could not find parameter 'bogus'. "
+                + "Note that when there are multiple parameters, 'keyProperty' must include the parameter name (e.g. 'param.id'). "
+                + "Specified key properties are [bogus.id] and available parameters are [");
+      } finally {
+        sqlSession.rollback();
+      }
+    }
+  }
+
+  @Test
+  public void shouldAssignKeysToNamedList_MultiParams() throws Exception {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      try {
+        CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
+        List<Country> countries = new ArrayList<Country>();
+        countries.add(new Country("China", "CN"));
+        countries.add(new Country("United Kiongdom", "GB"));
+        mapper.insertList_MultiParams(countries, Integer.valueOf(1));
+        for (Country country : countries) {
+          assertNotNull(country.getId());
+        }
+      } finally {
+        sqlSession.rollback();
+      }
+    }
+  }
+
+  @Test
+  public void shouldAssignKeysToNamedCollection_MultiParams() throws Exception {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      try {
+        CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
+        Set<Country> countries = new HashSet<Country>();
+        countries.add(new Country("China", "CN"));
+        countries.add(new Country("United Kiongdom", "GB"));
+        mapper.insertSet_MultiParams(countries, Integer.valueOf(1));
+        for (Country country : countries) {
+          assertNotNull(country.getId());
+        }
+      } finally {
+        sqlSession.rollback();
+      }
+    }
+  }
+
+  @Test
+  public void shouldAssignKeysToNamedArray_MultiParams() throws Exception {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      try {
+        CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
+        Country[] countries = new Country[2];
+        countries[0] = new Country("China", "CN");
+        countries[1] = new Country("United Kiongdom", "GB");
+        mapper.insertArray_MultiParams(countries, Integer.valueOf(1));
+        for (Country country : countries) {
+          assertNotNull(country.getId());
+        }
+      } finally {
+        sqlSession.rollback();
+      }
+    }
+  }
+
+  @Test
+  public void shouldAssignMultipleGeneratedKeysToABean() throws Exception {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      try {
+        CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
+        Planet planet = new Planet();
+        planet.setName("pluto");
+        mapper.insertPlanet(planet);
+        assertEquals("pluto-" + planet.getId(), planet.getCode());
+      } finally {
+        sqlSession.rollback();
+      }
+    }
+  }
+
+  @Test
+  public void shouldAssignMultipleGeneratedKeysToBeans() throws Exception {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      try {
+        CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
+        Planet planet1 = new Planet();
+        planet1.setName("pluto");
+        Planet planet2 = new Planet();
+        planet2.setName("neptune");
+        List<Planet> planets = Arrays.asList(planet1, planet2);
+        mapper.insertPlanets(planets);
+        assertEquals("pluto-" + planet1.getId(), planet1.getCode());
+        assertEquals("neptune-" + planet2.getId(), planet2.getCode());
+      } finally {
+        sqlSession.rollback();
+      }
+    }
+  }
+
+  @Test
+  public void shouldAssignMultipleGeneratedKeysToABean_MultiParams() throws Exception {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      try {
+        CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
+        Planet planet = new Planet();
+        planet.setName("pluto");
+        mapper.insertPlanet_MultiParams(planet, Integer.valueOf(1));
+        assertEquals("pluto-" + planet.getId(), planet.getCode());
+      } finally {
+        sqlSession.rollback();
+      }
+    }
+  }
+
+  @Test
+  public void shouldAssignMultipleGeneratedKeysToBeans_MultiParams() throws Exception {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      try {
+        CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
+        Planet planet1 = new Planet();
+        planet1.setName("pluto");
+        Planet planet2 = new Planet();
+        planet2.setName("neptune");
+        List<Planet> planets = Arrays.asList(planet1, planet2);
+        mapper.insertPlanets_MultiParams(planets, Integer.valueOf(1));
+        assertEquals("pluto-" + planet1.getId(), planet1.getCode());
+        assertEquals("neptune-" + planet2.getId(), planet2.getCode());
+      } finally {
+        sqlSession.rollback();
+      }
+    }
+  }
+
+  @Test
+  public void assigningKeysToMultipleParamsIsNotSupportedYet() throws Exception {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      try {
+        CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
+        Planet planet = new Planet();
+        planet.setName("pluto");
+        Map<String, Object> map = new HashMap<>();
+        when(mapper).insertAssignKeysToTwoParams(planet, map);
+        then(caughtException()).isInstanceOf(PersistenceException.class).hasMessageContaining(
+            "Assigning generated keys to multiple parameters is not supported. "
+                + "Note that when there are multiple parameters, 'keyProperty' must include the parameter name (e.g. 'param.id'). "
+                + "Specified key properties are [planet.id, map.code] and available parameters are [");
+      } finally {
+        sqlSession.rollback();
+      }
+    }
+  }
+
+  @Test
+  public void shouldErrorUndefineProperty() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      try {
+        CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
+
+        when(mapper).insertUndefineKeyProperty(new Country("China", "CN"));
+        then(caughtException()).isInstanceOf(PersistenceException.class).hasMessageContaining(
+                "### Error updating database.  Cause: org.apache.ibatis.executor.ExecutorException: Error getting generated key or setting result to parameter object. Cause: org.apache.ibatis.executor.ExecutorException: No setter found for the keyProperty 'country_id' in 'org.apache.ibatis.submitted.keygen.Country'.");
+      } finally {
+        sqlSession.rollback();
+      }
     }
   }
 }

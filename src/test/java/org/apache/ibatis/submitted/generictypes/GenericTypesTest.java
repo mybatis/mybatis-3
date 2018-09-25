@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,15 +15,12 @@
  */
 package org.apache.ibatis.submitted.generictypes;
 
-import java.io.PrintWriter;
 import java.io.Reader;
-import java.sql.Connection;
-import java.sql.DriverManager;
 
+import org.apache.ibatis.BaseDataTest;
 import org.junit.Assert;
 
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -36,40 +33,20 @@ public class GenericTypesTest {
 
   @Before
   public void setUp() throws Exception {
-    Connection conn = null;
-
-    try {
-      Class.forName("org.hsqldb.jdbcDriver");
-      conn = DriverManager.getConnection("jdbc:hsqldb:mem:generictypes", "sa", "");
-
-      Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/generictypes/CreateDB.sql");
-
-      ScriptRunner runner = new ScriptRunner(conn);
-      runner.setLogWriter(null);
-      runner.setErrorLogWriter(new PrintWriter(System.err));
-      runner.runScript(reader);
-      conn.commit();
-      reader.close();
-
-      reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/generictypes/Config.xml");
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/generictypes/Config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-      reader.close();
-    } finally {
-      if (conn != null) {
-        conn.close();
-      }
     }
+
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+            "org/apache/ibatis/submitted/generictypes/CreateDB.sql");
   }
 
   @Test
-  public void testShouldGetAListOfMaps() throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  public void testShouldGetAListOfMaps() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Group group = mapper.getGroup();
       Assert.assertNotNull(group.getOwner());
-    } finally {
-      sqlSession.close();
     }
   }
 

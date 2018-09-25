@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2017 the original author or authors.
+       Copyright 2009-2018 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -189,14 +189,22 @@ Configuration getConfiguration();</source>
   <p>Estos métodos se usan para ejecutar las sentencias SELECT, INSERT, UPDATE y DELETE que se hayan definido en los ficheros xml de mapeo SQL. Son bastante auto explicativos, cada uno recibe el ID del statement y el objeto de parámetro, que puede ser una primitiva, un JavaBean, un POJO o un Map.</p>
   <source><![CDATA[<T> T selectOne(String statement, Object parameter)
 <E> List<E> selectList(String statement, Object parameter)
+<T> Cursor<T> selectCursor(String statement, Object parameter)
 <K,V> Map<K,V> selectMap(String statement, Object parameter, String mapKey)
 int insert(String statement, Object parameter)
 int update(String statement, Object parameter)
 int delete(String statement, Object parameter)]]></source>
   <p>La diferencia entre selectOne y selectList es que selectOne debe devolver sólo un objeto. Si hay más de uno se lanzará una excepción. Si no hay ninguno se devolverá null. Si no sabes cuantos objetos esperas recibir, usa selectList. Si quieres comprobar la existencia de un objeto sería mejor que devuelvas un count(). SelectMap es un caso especial diseñado para convertir una lista de resultados en un Map basado en las propiedades de los objetos recibidos. Como no todas las sentencias requieren un parámetro, estos métodos han sido sobrecargados de forma que se proporcionan versiones que no reciben el parámetro objeto.</p>
+  <p>A Cursor offers the same results as a List, except it fetches data lazily using an Iterator.</p>
+  <source><![CDATA[try (Cursor<MyEntity> entities = session.selectCursor(statement, param)) {
+   for (MyEntity entity:entities) {
+      // process one entity
+   }
+}]]></source>
   <p>El valor devuelto por los métodos insert, update and delete indica el número de filas afectadas por la sentencia.</p>
   <source><![CDATA[<T> T selectOne(String statement)
 <E> List<E> selectList(String statement)
+<T> Cursor<T> selectCursor(String statement)
 <K,V> Map<K,V> selectMap(String statement, String mapKey)
 int insert(String statement)
 int update(String statement)
@@ -204,6 +212,7 @@ int delete(String statement)]]></source>
 
   <p>Finalmente hay tres versiones avanzadas de los métodos select que te permiten restringir el rango de filas devueltas, o proporcionar lógica de tratamiento de resultados personalizada, normalmente para grandes cantidades de datos.</p>
   <source><![CDATA[<E> List<E> selectList (String statement, Object parameter, RowBounds rowBounds)
+<T> Cursor<T> selectCursor(String statement, Object parameter, RowBounds rowBounds)
 <K,V> Map<K,V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowbounds)
 void select (String statement, Object parameter, ResultHandler<T> handler)
 void select (String statement, Object parameter, RowBounds rowBounds, ResultHandler<T> handler)]]></source>
@@ -413,7 +422,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>@Options</code></td>
         <td><code>Method</code></td>
         <td>Attributes of mapped statements.</td>
-        <td>Esta anotación proporciona acceso a un gran conjunto de opciones de configuración que normalmente aparecen como atributos en los mapped statements. En lugar de complicar cada anotación existente la anotación Options proporciona una forma sencilla y concisa de acceder a estas opciones. Atributos: useCache=true, flushCache=FlushCachePolicy.DEFAULT, resultSetType=FORWARD_ONLY, statementType=PREPARED, fetchSize=-1, timeout=-1, useGeneratedKeys=false, keyProperty=“id”, keyColumn=“”, resultSets=“”.  Es importante comprender que las anotaciones en Java no permiten indicar un valor nulo. Por lo tanto, cuando usas la anotación Options el statement usará todos los valores por defecto. Presta atención a estos valores pro defecto para evitar comportamientos inesperados. La keyColumn solo se requiere para algunas bases de datos (como PostgreSQL) cuando la columna no es la primera columna de la tabla.</td>
+        <td>Esta anotación proporciona acceso a un gran conjunto de opciones de configuración que normalmente aparecen como atributos en los mapped statements. En lugar de complicar cada anotación existente la anotación Options proporciona una forma sencilla y concisa de acceder a estas opciones. Atributos: useCache=true, flushCache=FlushCachePolicy.DEFAULT, resultSetType=DEFAULT, statementType=PREPARED, fetchSize=-1, timeout=-1, useGeneratedKeys=false, keyProperty=“”, keyColumn=“”, resultSets=“”.  Es importante comprender que las anotaciones en Java no permiten indicar un valor nulo. Por lo tanto, cuando usas la anotación Options el statement usará todos los valores por defecto. Presta atención a estos valores pro defecto para evitar comportamientos inesperados. La keyColumn solo se requiere para algunas bases de datos (como PostgreSQL) cuando la columna no es la primera columna de la tabla.</td>
       </tr>
       <tr>
         <td>

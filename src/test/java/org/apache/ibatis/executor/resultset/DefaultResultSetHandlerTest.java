@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -88,7 +88,6 @@ public class DefaultResultSetHandlerTest {
     when(rs.getType()).thenReturn(ResultSet.TYPE_FORWARD_ONLY);
     when(rs.next()).thenReturn(true).thenReturn(false);
     when(rs.getInt("CoLuMn1")).thenReturn(100);
-    when(rs.wasNull()).thenReturn(false);
     when(rsmd.getColumnCount()).thenReturn(1);
     when(rsmd.getColumnLabel(1)).thenReturn("CoLuMn1");
     when(rsmd.getColumnType(1)).thenReturn(Types.INTEGER);

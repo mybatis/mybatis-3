@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -82,11 +82,12 @@ public final class PreparedStatementLogger extends BaseJdbcLogger implements Inv
     }
   }
 
-  /*
+  /**
    * Creates a logging version of a PreparedStatement
    *
    * @param stmt - the statement
-   * @param sql  - the sql statement
+   * @param statementLog - the statement log
+   * @param queryStack - the query stack
    * @return - the proxy
    */
   public static PreparedStatement newInstance(PreparedStatement stmt, Log statementLog, int queryStack) {
@@ -95,7 +96,7 @@ public final class PreparedStatementLogger extends BaseJdbcLogger implements Inv
     return (PreparedStatement) Proxy.newProxyInstance(cl, new Class[]{PreparedStatement.class, CallableStatement.class}, handler);
   }
 
-  /*
+  /**
    * Return the wrapped prepared statement
    *
    * @return the PreparedStatement

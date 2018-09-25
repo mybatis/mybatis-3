@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -23,50 +23,38 @@ import java.util.List;
 public class ProductDAO {
 
   public static List<Integer> selectProductCodes() {
-    SqlSession session = IbatisConfig.getSession();
-    try {
+    try (SqlSession session = IbatisConfig.getSession()) {
       ProductMapper productMapper = session.getMapper(ProductMapper.class);
       return productMapper.selectProductCodes();
     } catch (Exception e) {
       throw new RuntimeException(e);
-    } finally {
-      session.close();
     }
   }
 
   public static List<Long> selectProductCodesL() {
-    SqlSession session = IbatisConfig.getSession();
-    try {
+    try (SqlSession session = IbatisConfig.getSession()) {
       ProductMapper productMapper = session.getMapper(ProductMapper.class);
       return productMapper.selectProductCodesL();
     } catch (Exception e) {
       throw new RuntimeException(e);
-    } finally {
-      session.close();
     }
   }
 
   public static List<BigDecimal> selectProductCodesB() {
-    SqlSession session = IbatisConfig.getSession();
-    try {
+    try (SqlSession session = IbatisConfig.getSession()) {
       ProductMapper productMapper = session.getMapper(ProductMapper.class);
       return productMapper.selectProductCodesB();
     } catch (Exception e) {
       throw new RuntimeException(e);
-    } finally {
-      session.close();
     }
   }
 
   public static List<Product> selectAllProducts() {
-    SqlSession session = IbatisConfig.getSession();
-    try {
+    try (SqlSession session = IbatisConfig.getSession()) {
       ProductMapper productMapper = session.getMapper(ProductMapper.class);
       return productMapper.selectAllProducts();
     } catch (Exception e) {
       throw new RuntimeException(e);
-    } finally {
-      session.close();
     }
   }
 

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,14 +15,13 @@
  */
 package org.apache.ibatis.submitted.null_associations;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.*;
 
-import java.io.Reader;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -33,20 +32,13 @@ public class FooMapperTest {
   private static Connection conn;
 
   @BeforeClass
-  public static void setUpBeforeClass() {
-    try {
-      final SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(Resources.getResourceAsReader(SQL_MAP_CONFIG));
-      session = factory.openSession();
-      conn = session.getConnection();
-      ScriptRunner runner = new ScriptRunner(conn);
-      runner.setLogWriter(null);
-      runner.setErrorLogWriter(null);
-      Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/null_associations/create-schema-mysql.sql");
-      runner.runScript(reader);
-      reader.close();
-    } catch (Exception ex) {
-      Assert.fail(ex.getMessage());
-    }
+  public static void setUpBeforeClass() throws Exception {
+    final SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(Resources.getResourceAsReader(SQL_MAP_CONFIG));
+    session = factory.openSession();
+    conn = session.getConnection();
+
+    BaseDataTest.runScript(factory.getConfiguration().getEnvironment().getDataSource(),
+            "org/apache/ibatis/submitted/null_associations/create-schema-mysql.sql");
   }
 
   @Before

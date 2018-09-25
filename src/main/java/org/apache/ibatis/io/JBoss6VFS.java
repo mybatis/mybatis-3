@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ public class JBoss6VFS extends VFS {
 
     List<VirtualFile> getChildren() throws IOException {
       List<?> objects = invoke(getChildrenRecursively, virtualFile);
-      List<VirtualFile> children = new ArrayList<VirtualFile>(objects.size());
+      List<VirtualFile> children = new ArrayList<>(objects.size());
       for (Object object : objects) {
         children.add(new VirtualFile(object));
       }
@@ -166,7 +166,7 @@ public class JBoss6VFS extends VFS {
     }
 
     List<VirtualFile> children = directory.getChildren();
-    List<String> names = new ArrayList<String>(children.size());
+    List<String> names = new ArrayList<>(children.size());
     for (VirtualFile vf : children) {
       names.add(path + vf.getPathNameRelativeTo(directory));
     }
