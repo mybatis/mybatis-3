@@ -178,12 +178,10 @@ public class ScriptRunnerTest extends BaseDataTest {
 
       Reader reader = new StringReader("select userid from account where userid = 'j2ee';");
       runner.runScript(reader);
-
-      assertEquals(
-              "select userid from account where userid = 'j2ee'" + LINE_SEPARATOR
-                      + LINE_SEPARATOR + "USERID\t" + LINE_SEPARATOR
-                      + "j2ee\t" + LINE_SEPARATOR, sw.toString());
-    }
+    assertEquals(
+            "select userid from account where userid = 'j2ee'" + LINE_SEPARATOR
+                    + LINE_SEPARATOR + "USERID\t" + LINE_SEPARATOR
+                    + "j2ee\t" + LINE_SEPARATOR, sw.toString());
   }
 
   @Test
@@ -201,12 +199,10 @@ public class ScriptRunnerTest extends BaseDataTest {
 
       Reader reader = new StringReader("select userid from account where userid = 'j2ee';");
       runner.runScript(reader);
-
-      assertEquals(
-              "select userid from account where userid = 'j2ee';" + LINE_SEPARATOR
-                      + LINE_SEPARATOR + "USERID\t" + LINE_SEPARATOR
-                      + "j2ee\t" + LINE_SEPARATOR, sw.toString());
-    }
+    assertEquals(
+            "select userid from account where userid = 'j2ee';" + LINE_SEPARATOR
+                    + LINE_SEPARATOR + "USERID\t" + LINE_SEPARATOR
+                    + "j2ee\t" + LINE_SEPARATOR, sw.toString());
   }
 
   private void runJPetStoreScripts(ScriptRunner runner) throws IOException, SQLException {
