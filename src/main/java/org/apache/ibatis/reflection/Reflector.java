@@ -86,6 +86,7 @@ public class Reflector {
         }
         if (constructor.isAccessible()) {
           this.defaultConstructor = constructor;
+          break;
         }
       }
     }
