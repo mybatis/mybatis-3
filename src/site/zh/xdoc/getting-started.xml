@@ -45,7 +45,7 @@
     <subsection name="从 XML 中构建 SqlSessionFactory">
       <p>
         每个基于 MyBatis 的应用都是以一个 SqlSessionFactory
-        的实例为中心的。SqlSessionFactory 的实例可以通过 SqlSessionFactoryBuilder
+        的实例为核心的。SqlSessionFactory 的实例可以通过 SqlSessionFactoryBuilder
         获得。而 SqlSessionFactoryBuilder 则可以从 XML 配置文件或一个预先定制的
         Configuration 的实例构建出 SqlSessionFactory 的实例。
       </p>
@@ -89,7 +89,7 @@ SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(input
   </mappers>
 </configuration>]]></source>
       <p>
-        当然，还有很多可以在XML 文件中进行配置，上面的示例指出的则是最关键的部分。
+        当然，还有很多可以在 XML 文件中进行配置，上面的示例指出的则是最关键的部分。
         要注意 XML 头部的声明，它用来验证 XML 文档正确性。environment
         元素体中包含了事务管理和连接池的配置。mappers 元素则是包含一组映射器（mapper），这些映射器的
         XML 映射文件包含了 SQL 代码和映射定义信息。
@@ -99,7 +99,7 @@ SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(input
 
     <subsection name="不使用 XML 构建 SqlSessionFactory">
       <p>
-        如果你更愿意直接从 Java 程序而不是 XML 文件中创建配置，或者想要创建你自己的配置构建器，MyBatis
+        如果你更愿意直接从 Java 代码而不是 XML 文件中创建配置，或者想要创建你自己的配置构建器，MyBatis
         也提供了完整的配置类，提供所有和 XML 文件相同功能的配置项。
       </p>
 
@@ -112,17 +112,17 @@ SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(confi
 
       <p>
         注意该例中，configuration 添加了一个映射器类（mapper class）。映射器类是
-        Java 类，它们包含 SQL 映射语句的注解从而避免了 XML 文件的依赖。不过，由于
-        Java 注解的一些限制加之某些 MyBatis 映射的复杂性，XML
-        映射对于大多数高级映射（比如：嵌套联合映射）来说仍然是必须的。有鉴于此，如果存在一个对等的
-        XML 配置文件的话，MyBatis 会自动查找并加载它（这种情况下，BlogMapper.xml
-        将会基于类路径和 BlogMapper.class 的类名被加载进来）。具体细节稍后讨论。
+        Java 类，它们包含 SQL 映射语句的注解从而避免依赖 XML 文件。不过，由于
+        Java 注解的一些限制以及某些 MyBatis 映射的复杂性，要使用大多数高级映射（比如：嵌套联合映射），仍然需要使用 XML
+        配置。有鉴于此，如果存在一个同名
+        XML 配置文件，MyBatis 会自动查找并加载它（在这个例子中，基于类路径和 BlogMapper.class 的类名，会加载
+        BlogMapper.xml）。具体细节稍后讨论。
       </p>
     </subsection>
 
     <subsection name="从 SqlSessionFactory 中获取 SqlSession">
       <p>
-        既然有了 SqlSessionFactory ，顾名思义，我们就可以从中获得 SqlSession 的实例了。SqlSession
+        既然有了 SqlSessionFactory，顾名思义，我们就可以从中获得 SqlSession 的实例了。SqlSession
         完全包含了面向数据库执行 SQL 命令所需的所有方法。你可以通过
         SqlSession 实例来直接执行已映射的 SQL 语句。例如：
       </p>
@@ -134,10 +134,10 @@ try {
   session.close();
 }]]></source>
       <p>
-        诚然这种方式能够正常工作，并且对于使用旧版本 MyBatis
-        的用户来说也比较熟悉，不过现在有了一种更直白的方式。
-        使用对于给定语句能够合理描述参数和返回值的接口（比如说
-        BlogMapper.class），你现在不但可以执行更清晰和类型安全的代码，而且还不用担心易错的字符串字面值以及强制类型转换。</p>
+        诚然，这种方式能够正常工作，并且对于使用旧版本 MyBatis
+        的用户来说也比较熟悉。不过现在有了一种更简洁的方式
+        ——使用正确描述每个语句的参数和返回值的接口（比如
+        BlogMapper.class），你现在不仅可以执行更清晰和类型安全的代码，而且还不用担心易错的字符串字面值以及强制类型转换。</p>
 
       <p>例如：</p>
 
@@ -153,13 +153,13 @@ try {
 
     <subsection name="探究已映射的 SQL 语句">
       <p>
-        现在，或许你很想知道 SqlSession 和 Mapper 到底执行了什么操作，而 SQL
+        现在你可能很想知道 SqlSession 和 Mapper 到底执行了什么操作，但 SQL
         语句映射是个相当大的话题，可能会占去文档的大部分篇幅。
         不过为了让你能够了解个大概，这里会给出几个例子。
       </p>
       <p>
         在上面提到的例子中，一个语句既可以通过 XML 定义，也可以通过注解定义。我们先看看
-        XML 定义语句的方式，事实上 MyBatis 提供的全部特性可以利用基于 XML 的映射语言来实现，这使得
+        XML 定义语句的方式，事实上 MyBatis 提供的全部特性都可以利用基于 XML 的映射语言来实现，这使得
         MyBatis 在过去的数年间得以流行。如果你以前用过 MyBatis，你应该对这个概念比较熟悉。
         不过自那以后，XML 的配置也改进了许多，我们稍后还会再提到。这里给出一个基于 XML
         映射语句的示例，它应该可以满足上述示例中 SqlSession 的调用。
@@ -176,46 +176,46 @@ try {
 </mapper>]]></source>
 
       <p>
-        对于这个简单的例子来说似乎有点小题大做了，但实际上它是非常轻量级的。在一个
-        XML 映射文件中，你想定义多少个映射语句都是可以的，这样下来，XML
-        头部和文档类型声明占去的部分就显得微不足道了。文件的剩余部分具有很好的自解释性。
+        为了这个简单的例子，我们似乎写了不少配置，但实际上它并不多。在一个
+        XML 映射文件中，可以定义无数个映射语句，这样一来，XML
+        头部和文档类型声明占去的部分就显得微不足道了。而文件的剩余部分具备自解释性，很容易理解。
         在命名空间 “org.mybatis.example.BlogMapper” 中定义了一个名为 “selectBlog”
-        的映射语句，这样它就允许你使用指定的完全限定名
-        “org.mybatis.example.BlogMapper.selectBlog” 来调用映射语句，就像上面的例子中做的那样：
+        的映射语句，允许你使用指定的完全限定名
+        “org.mybatis.example.BlogMapper.selectBlog” 来调用映射语句，就像上面例子中那样：
       </p>
 
       <source><![CDATA[Blog blog = (Blog) session.selectOne("org.mybatis.example.BlogMapper.selectBlog", 101);]]></source>
 
       <p>
         你可能注意到这和使用完全限定名调用 Java
-        对象的方法是相似的，之所以这样做是有原因的。这个命名可以直接映射到在命名空间中同名的
+        对象的方法类似。这样，该命名就可以直接映射到在命名空间中同名的
         Mapper 类，并将已映射的 select 语句中的名字、参数和返回类型匹配成方法。
-        这样你就可以像上面那样很容易地调用这个对应 Mapper
-        接口的方法。不过让我们再看一遍下面的例子：
+        因此你就可以像上面那样很容易地调用这个对应 Mapper
+        接口的方法，就像下面这样：
       </p>
 
       <source><![CDATA[BlogMapper mapper = session.getMapper(BlogMapper.class);
 Blog blog = mapper.selectBlog(101);]]></source>
 
       <p>
-        第二种方法有很多优势，首先它不是基于字符串常量的，会更安全一点；
-        其次，如果你的 IDE 有代码补全功能，那么你可以在有了已映射 SQL
-        语句的基础之上利用这个功能。
+        第二种方法有很多优势，首先它不依赖于字符串字面值，会更安全一点；
+        其次，如果你的 IDE 有代码补全功能，那么代码补全可以帮你快速选择已映射的 SQL
+        语句。
       </p>
 
       <hr/>
 
-      <p><span class="label important">提示</span><strong>命名空间的一点注释</strong></p>
+      <p><span class="label important">提示</span><strong>对命名空间的一点说明</strong></p>
       <p>
-        <strong>命名空间（Namespaces）</strong>在之前版本的 MyBatis
-        中曾是可选的，但它弊大于利。
-        但现在命名空间则是必须的，且意于简单地用更长的完全限定名来隔离语句。
+        在之前版本的 MyBatis
+        中，<strong>命名空间（Namespaces）</strong>的作用并不大，是可选的。
+        但现在，随着命名空间越发重要，你必须指定命名空间。
       </p>
       <p>
-        命名空间使得你上面见到的接口绑定成为可能，尽管你觉得这些东西未必用得上，你还是应该遵循这里的规定，以防哪天你改变了主意。
-        出于长远考虑，使用命名空间，并将它置于合适的 Java
-        包命名空间之下，你将拥有一份更加整洁的代码并提高了 MyBatis 的可用性。
-      </p>      
+        命名空间的作用有两个，一个是利用更长的完全限定名来将不同的语句隔离开来，同时也实现了你上面见到的接口绑定。就算你觉得暂时用不到接口绑定，你也应该遵循这里的规定，以防哪天你改变了主意。
+        长远来看，只要将命名空间置于合适的 Java
+        包命名空间之中，你的代码会变得更加整洁，也有利于你更方便地使用 MyBatis。
+      </p>
       <p>
         <strong>命名解析：</strong>为了减少输入量，MyBatis
         对所有的命名配置元素（包括语句，结果映射，缓存等）使用了如下的命名解析规则。
@@ -223,11 +223,11 @@ Blog blog = mapper.selectBlog(101);]]></source>
 
       <ul>
         <li>完全限定名（比如
-        “com.mypackage.MyMapper.selectAllThings）将被直接查找并且找到即用。
+        “com.mypackage.MyMapper.selectAllThings）将被直接用于查找及使用。
         </li>
         <li>短名称（比如 “selectAllThings”）如果全局唯一也可以作为一个单独的引用。
         如果不唯一，有两个或两个以上的相同名称（比如 “com.foo.selectAllThings” 和
-        “com.bar.selectAllThings”），那么使用时就会收到错误报告说短名称是不唯一的，这种情况下就必须使用完全限定名。
+        “com.bar.selectAllThings”），那么使用时就会产生“短名称不唯一”的错误，这种情况下就必须使用完全限定名。
         </li>
       </ul>
       <hr/>
@@ -242,12 +242,12 @@ public interface BlogMapper {
   Blog selectBlog(int id);
 }]]></source>
       <p>
-        对于简单语句来说，注解使代码显得更加简洁，然而 Java
-        注解对于稍微复杂的语句就会力不从心并且会显得更加混乱。
-        因此，如果你需要做很复杂的事情，那么最好使用 XML 来映射语句。
+        使用注解来映射简单语句会使代码显得更加简洁，然而对于稍微复杂一点的语句，Java
+        注解就力不从心了，并且会显得更加混乱。
+        因此，如果你需要完成很复杂的事情，那么最好使用 XML 来映射语句。
       </p>
       <p>
-        选择何种方式来配置映射以及认为映射语句定义的一致性是否重要，这些完全取决于你和你的团队。
+        选择何种方式来配置映射，以及认为映射语句定义的一致性是否重要，这些完全取决于你和你的团队。
         换句话说，永远不要拘泥于一种方式，你可以很轻松的在基于注解和 XML
         的语句映射方式间自由移植和切换。
       </p>
@@ -297,17 +297,17 @@ try {
 } finally {
   session.close();
 }]]></source>
-        <p>在你的所有的代码中一致性地使用这种模式来保证所有数据库资源都能被正确地关闭。</p>
+        <p>在你的所有的代码中一致地使用这种模式来保证所有数据库资源都能被正确地关闭。</p>
 
       <h4>映射器实例</h4>
         <p>
           映射器是一些由你创建的、绑定你映射的语句的接口。映射器接口的实例是从
           SqlSession 中获得的。因此从技术层面讲，任何映射器实例的最大作用域是和请求它们的
           SqlSession 相同的。尽管如此，映射器实例的最佳作用域是方法作用域。
-          也就是说，映射器实例应该在调用它们的方法中被请求，用过之后即可废弃。
-          并不需要显式地关闭映射器实例，尽管在整个请求作用域保持映射器实例也不会有什么问题，但是很快你会发现，像
+          也就是说，映射器实例应该在调用它们的方法中被请求，用过之后即可丢弃。
+          并不需要显式地关闭映射器实例，尽管在整个请求作用域保持映射器实例也不会有什么问题，但是你很快会发现，像
           SqlSession 一样，在这个作用域上管理太多的资源的话会难于控制。
-          所以要保持简单，最好把映射器放在方法作用域内。下面的示例就展示了这个实践：
+          为了避免这种复杂性，最好把映射器放在方法作用域内。下面的示例就展示了这个实践：
         </p>
         <source><![CDATA[SqlSession session = sqlSessionFactory.openSession();
 try {
