@@ -52,7 +52,7 @@ public class SqlRunner {
     this.useGeneratedKeySupport = useGeneratedKeySupport;
   }
 
-  /*
+  /**
    * Executes a SELECT statement that returns one row.
    *
    * @param sql  The SQL
@@ -68,7 +68,7 @@ public class SqlRunner {
     return results.get(0);
   }
 
-  /*
+  /**
    * Executes a SELECT statement that returns multiple rows.
    *
    * @param sql  The SQL
@@ -91,7 +91,7 @@ public class SqlRunner {
     }
   }
 
-  /*
+  /**
    * Executes an INSERT statement.
    *
    * @param sql  The SQL
@@ -137,7 +137,7 @@ public class SqlRunner {
     }
   }
 
-  /*
+  /**
    * Executes an UPDATE statement.
    *
    * @param sql  The SQL
@@ -159,7 +159,7 @@ public class SqlRunner {
     }
   }
 
-  /*
+  /**
    * Executes a DELETE statement.
    *
    * @param sql  The SQL
@@ -171,7 +171,7 @@ public class SqlRunner {
     return update(sql, args);
   }
 
-  /*
+  /**
    * Executes any string as a JDBC Statement.
    * Good for DDL
    *

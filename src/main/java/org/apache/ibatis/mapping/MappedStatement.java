@@ -69,6 +69,7 @@ public final class MappedStatement {
       mappedStatement.id = id;
       mappedStatement.sqlSource = sqlSource;
       mappedStatement.statementType = StatementType.PREPARED;
+      mappedStatement.resultSetType = ResultSetType.DEFAULT;
       mappedStatement.parameterMap = new ParameterMap.Builder(configuration, "defaultParameterMap", null, new ArrayList<>()).build();
       mappedStatement.resultMaps = new ArrayList<>();
       mappedStatement.sqlCommandType = sqlCommandType;
@@ -119,7 +120,7 @@ public final class MappedStatement {
     }
 
     public Builder resultSetType(ResultSetType resultSetType) {
-      mappedStatement.resultSetType = resultSetType;
+      mappedStatement.resultSetType = resultSetType == null ? ResultSetType.DEFAULT : resultSetType;
       return this;
     }
 

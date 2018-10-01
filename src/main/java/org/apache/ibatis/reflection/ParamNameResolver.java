@@ -85,10 +85,7 @@ public class ParamNameResolver {
   }
 
   private String getActualParamName(Method method, int paramIndex) {
-    if (Jdk.parameterExists) {
-      return ParamNameUtil.getParamNames(method).get(paramIndex);
-    }
-    return null;
+    return ParamNameUtil.getParamNames(method).get(paramIndex);
   }
 
   private static boolean isSpecialParameter(Class<?> clazz) {

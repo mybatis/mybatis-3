@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -23,13 +23,10 @@ import java.sql.Timestamp;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
-import org.apache.ibatis.lang.UsesJava8;
-
 /**
  * @since 3.4.5
  * @author Tomas Rohovsky
  */
-@UsesJava8
 public class ZonedDateTimeTypeHandler extends BaseTypeHandler<ZonedDateTime> {
 
   @Override

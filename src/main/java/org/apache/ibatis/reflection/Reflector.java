@@ -297,7 +297,7 @@ public class Reflector {
     return !(name.startsWith("$") || "serialVersionUID".equals(name) || "class".equals(name));
   }
 
-  /*
+  /**
    * This method returns an array containing all methods
    * declared in this class and any superclass.
    * We use this method, instead of the simpler Class.getMethods(),
@@ -386,7 +386,7 @@ public class Reflector {
     return true;
   }
 
-  /*
+  /**
    * Gets the name of the class the instance provides information for
    *
    * @return The class name
@@ -423,11 +423,11 @@ public class Reflector {
     return method;
   }
 
-  /*
+  /**
    * Gets the type for a property setter
    *
    * @param propertyName - the name of the property
-   * @return The Class of the propery setter
+   * @return The Class of the property setter
    */
   public Class<?> getSetterType(String propertyName) {
     Class<?> clazz = setTypes.get(propertyName);
@@ -437,11 +437,11 @@ public class Reflector {
     return clazz;
   }
 
-  /*
+  /**
    * Gets the type for a property getter
    *
    * @param propertyName - the name of the property
-   * @return The Class of the propery getter
+   * @return The Class of the property getter
    */
   public Class<?> getGetterType(String propertyName) {
     Class<?> clazz = getTypes.get(propertyName);
@@ -451,7 +451,7 @@ public class Reflector {
     return clazz;
   }
 
-  /*
+  /**
    * Gets an array of the readable properties for an object
    *
    * @return The array
@@ -460,8 +460,8 @@ public class Reflector {
     return readablePropertyNames;
   }
 
-  /*
-   * Gets an array of the writeable properties for an object
+  /**
+   * Gets an array of the writable properties for an object
    *
    * @return The array
    */
@@ -469,17 +469,17 @@ public class Reflector {
     return writeablePropertyNames;
   }
 
-  /*
-   * Check to see if a class has a writeable property by name
+  /**
+   * Check to see if a class has a writable property by name
    *
    * @param propertyName - the name of the property to check
-   * @return True if the object has a writeable property by the name
+   * @return True if the object has a writable property by the name
    */
   public boolean hasSetter(String propertyName) {
     return setMethods.keySet().contains(propertyName);
   }
 
-  /*
+  /**
    * Check to see if a class has a readable property by name
    *
    * @param propertyName - the name of the property to check

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 
-       Copyright 2009-2017 the original author or authors.
+       Copyright 2009-2018 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -90,6 +90,7 @@ typeHandler CDATA #IMPLIED
 select CDATA #IMPLIED
 resultMap CDATA #IMPLIED
 name CDATA #IMPLIED
+columnPrefix CDATA #IMPLIED
 >
 
 <!ELEMENT arg EMPTY>
@@ -101,6 +102,7 @@ typeHandler CDATA #IMPLIED
 select CDATA #IMPLIED
 resultMap CDATA #IMPLIED
 name CDATA #IMPLIED
+columnPrefix CDATA #IMPLIED
 >
 
 <!ELEMENT collection (constructor?,id*,result*,association*,collection*, discriminator?)>
@@ -172,7 +174,7 @@ parameterMap CDATA #IMPLIED
 parameterType CDATA #IMPLIED
 resultMap CDATA #IMPLIED
 resultType CDATA #IMPLIED
-resultSetType (FORWARD_ONLY | SCROLL_INSENSITIVE | SCROLL_SENSITIVE) #IMPLIED
+resultSetType (FORWARD_ONLY | SCROLL_INSENSITIVE | SCROLL_SENSITIVE | DEFAULT) #IMPLIED
 statementType (STATEMENT|PREPARED|CALLABLE) #IMPLIED
 fetchSize CDATA #IMPLIED
 timeout CDATA #IMPLIED

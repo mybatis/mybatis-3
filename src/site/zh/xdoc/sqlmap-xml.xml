@@ -206,8 +206,8 @@ ps.setInt(1,id);]]></source>
             <tr>
               <td><code>resultSetType</code></td>
               <td>
-                FORWARD_ONLY，SCROLL_SENSITIVE 或 SCROLL_INSENSITIVE
-                中的一个，默认值为未设置（unset） （依赖驱动）。
+                FORWARD_ONLY，SCROLL_SENSITIVE, SCROLL_INSENSITIVE 或
+                DEFAULT（等价于 unset） 中的一个，默认值为 unset （依赖驱动）。
               </td>
             </tr>
             <tr>

@@ -990,7 +990,7 @@ public class Author {
                 <code>java.lang.Short</code>, <code>short</code>
               </td>
               <td>
-                Any compatible <code>NUMERIC</code> or <code>SHORT INTEGER</code>
+                Any compatible <code>NUMERIC</code> or <code>SMALLINT</code>
               </td>
             </tr>
             <tr>
@@ -1012,7 +1012,7 @@ public class Author {
                 <code>java.lang.Long</code>, <code>long</code>
               </td>
               <td>
-                Any compatible <code>NUMERIC</code> or <code>LONG INTEGER</code>
+                Any compatible <code>NUMERIC</code> or <code>BIGINT</code>
               </td>
             </tr>
             <tr>

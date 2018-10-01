@@ -81,7 +81,6 @@ import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.parsing.PropertyParser;
-import org.apache.ibatis.reflection.Jdk;
 import org.apache.ibatis.reflection.TypeParameterResolver;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
@@ -167,11 +166,15 @@ public class MapperAnnotationBuilder {
     // this flag is set at XMLMapperBuilder#bindMapperForNamespace
     if (!configuration.isResourceLoaded("namespace:" + type.getName())) {
       String xmlResource = type.getName().replace('.', '/') + ".xml";
-      InputStream inputStream = null;
-      try {
-        inputStream = Resources.getResourceAsStream(type.getClassLoader(), xmlResource);
-      } catch (IOException e) {
-        // ignore, resource is not required
+      // #1347
+      InputStream inputStream = type.getResourceAsStream("/" + xmlResource);
+      if (inputStream == null) {
+        // Search XML mapper that is not in the module but in the classpath. 
+        try {
+          inputStream = Resources.getResourceAsStream(type.getClassLoader(), xmlResource);
+        } catch (IOException e2) {
+          // ignore, resource is not required
+        }
       }
       if (inputStream != null) {
         XMLMapperBuilder xmlParser = new XMLMapperBuilder(inputStream, assistant.getConfiguration(), xmlResource, configuration.getSqlFragments(), type.getName());
@@ -298,7 +301,7 @@ public class MapperAnnotationBuilder {
       Integer fetchSize = null;
       Integer timeout = null;
       StatementType statementType = StatementType.PREPARED;
-      ResultSetType resultSetType = ResultSetType.FORWARD_ONLY;
+      ResultSetType resultSetType = null;
       SqlCommandType sqlCommandType = getSqlCommandType(method);
       boolean isSelect = sqlCommandType == SqlCommandType.SELECT;
       boolean flushCache = !isSelect;
@@ -451,7 +454,7 @@ public class MapperAnnotationBuilder {
               returnType = (Class<?>) ((ParameterizedType) returnTypeParameter).getRawType();
             }
           }
-      } else if (Jdk.optionalExists && Optional.class.equals(rawType)) {
+      } else if (Optional.class.equals(rawType)) {
         Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
         Type returnTypeParameter = actualTypeArguments[0];
         if (returnTypeParameter instanceof Class<?>) {
@@ -610,7 +613,7 @@ public class MapperAnnotationBuilder {
           nullOrEmpty(arg.select()),
           nullOrEmpty(arg.resultMap()),
           null,
-          null,
+          nullOrEmpty(arg.columnPrefix()),
           typeHandler,
           flags,
           null,

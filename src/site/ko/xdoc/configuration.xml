@@ -875,7 +875,7 @@ public class Author {
               <td>
                 <code>java.lang.Short</code>, <code>short</code>
               </td>
-              <td>어떤 호환가능한 NUMERIC 또는 SHORT INTEGER</td>
+              <td>어떤 호환가능한 NUMERIC 또는 SMALLINT</td>
             </tr>
             <tr>
               <td>
@@ -893,7 +893,7 @@ public class Author {
               <td>
                 <code>java.lang.Long</code>, <code>long</code>
               </td>
-              <td>어떤 호환가능한 NUMERIC 또는 LONG INTEGER</td>
+              <td>어떤 호환가능한 NUMERIC 또는 BIGINT</td>
             </tr>
             <tr>
               <td>
