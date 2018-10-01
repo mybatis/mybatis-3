@@ -139,6 +139,7 @@ public final class TypeHandlerRegistry {
     register(JdbcType.TIMESTAMP, new DateTypeHandler());
     register(JdbcType.DATE, new DateOnlyTypeHandler());
     register(JdbcType.TIME, new TimeOnlyTypeHandler());
+    register(JdbcType.DATETIME, new DateTypeHandler());//default datetime handler
 
     register(java.sql.Date.class, new SqlDateTypeHandler());
     register(java.sql.Time.class, new SqlTimeTypeHandler());

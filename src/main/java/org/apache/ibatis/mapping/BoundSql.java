@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.mapping;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +41,7 @@ public class BoundSql {
   private final Object parameterObject;
   private final Map<String, Object> additionalParameters;
   private final MetaObject metaParameters;
+  private final List<Object> inParameterValues;
 
   public BoundSql(Configuration configuration, String sql, List<ParameterMapping> parameterMappings, Object parameterObject) {
     this.sql = sql;
@@ -47,6 +49,19 @@ public class BoundSql {
     this.parameterObject = parameterObject;
     this.additionalParameters = new HashMap<>();
     this.metaParameters = configuration.newMetaObject(additionalParameters);
+    this.inParameterValues = new ArrayList<Object>(parameterMappings != null ? parameterMappings.size() : 0);
+  }
+  
+  public void addInParameterValue(Object value) {
+      inParameterValues.add(value);
+  }
+
+  public Object getInParameterValue(int paramterIndex) {
+      return inParameterValues.get(paramterIndex);
+  }
+
+  public boolean isInParameterValueUnset() {
+      return inParameterValues != null && inParameterValues.isEmpty();
   }
 
   public String getSql() {

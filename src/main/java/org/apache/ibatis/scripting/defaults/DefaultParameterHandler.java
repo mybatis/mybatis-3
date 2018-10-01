@@ -63,20 +63,27 @@ public class DefaultParameterHandler implements ParameterHandler {
     ErrorContext.instance().activity("setting parameters").object(mappedStatement.getParameterMap().getId());
     List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
     if (parameterMappings != null) {
+      boolean inParameterValueUnset = boundSql.isInParameterValueUnset();
+      int inParamIndex = 0;
       for (int i = 0; i < parameterMappings.size(); i++) {
         ParameterMapping parameterMapping = parameterMappings.get(i);
         if (parameterMapping.getMode() != ParameterMode.OUT) {
-          Object value;
-          String propertyName = parameterMapping.getProperty();
-          if (boundSql.hasAdditionalParameter(propertyName)) { // issue #448 ask first for additional params
-            value = boundSql.getAdditionalParameter(propertyName);
-          } else if (parameterObject == null) {
-            value = null;
-          } else if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {
-            value = parameterObject;
-          } else {
-            MetaObject metaObject = configuration.newMetaObject(parameterObject);
-            value = metaObject.getValue(propertyName);
+          Object value = null;
+          if (inParameterValueUnset) {
+              String propertyName = parameterMapping.getProperty();
+              if (boundSql.hasAdditionalParameter(propertyName)) { // issue #448 ask first for additional params
+                value = boundSql.getAdditionalParameter(propertyName);
+              } else if (parameterObject == null) {
+                value = null;
+              } else if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {
+                value = parameterObject;
+              } else {
+                MetaObject metaObject = configuration.newMetaObject(parameterObject);
+                value = metaObject.getValue(propertyName);
+              }
+              boundSql.addInParameterValue(value);
+          }else{
+              value = boundSql.getInParameterValue(inParamIndex++);
           }
           TypeHandler typeHandler = parameterMapping.getTypeHandler();
           JdbcType jdbcType = parameterMapping.getJdbcType();

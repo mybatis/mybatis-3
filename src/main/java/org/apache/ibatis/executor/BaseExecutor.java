@@ -204,19 +204,26 @@ public abstract class BaseExecutor implements Executor {
     List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
     TypeHandlerRegistry typeHandlerRegistry = ms.getConfiguration().getTypeHandlerRegistry();
     // mimic DefaultParameterHandler logic
+    int inParamIndex = 0;
+    boolean inParameterValueUnset = boundSql.isInParameterValueUnset();
     for (ParameterMapping parameterMapping : parameterMappings) {
       if (parameterMapping.getMode() != ParameterMode.OUT) {
-        Object value;
-        String propertyName = parameterMapping.getProperty();
-        if (boundSql.hasAdditionalParameter(propertyName)) {
-          value = boundSql.getAdditionalParameter(propertyName);
-        } else if (parameterObject == null) {
-          value = null;
-        } else if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {
-          value = parameterObject;
-        } else {
-          MetaObject metaObject = configuration.newMetaObject(parameterObject);
-          value = metaObject.getValue(propertyName);
+        Object value = null;
+        if (inParameterValueUnset) {
+            String propertyName = parameterMapping.getProperty();
+            if (boundSql.hasAdditionalParameter(propertyName)) {
+                value = boundSql.getAdditionalParameter(propertyName);
+            } else if (parameterObject == null) {
+                value = null;
+            } else if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {
+                value = parameterObject;
+            } else {
+                MetaObject metaObject = configuration.newMetaObject(parameterObject);
+                value = metaObject.getValue(propertyName);
+            }
+            boundSql.addInParameterValue(value);
+        }else{
+            value = boundSql.getInParameterValue(inParamIndex++);
         }
         cacheKey.update(value);
       }
