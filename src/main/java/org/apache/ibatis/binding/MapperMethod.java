@@ -291,7 +291,7 @@ public class MapperMethod {
       } else {
         this.returnType = method.getReturnType();
       }
-      this.returnsVoid = void.class.equals(this.returnType);
+      this.returnsVoid = void.class.equals(this.returnType) || Void.class.equals(this.returnType);
       this.returnsMany = configuration.getObjectFactory().isCollection(this.returnType) || this.returnType.isArray();
       this.returnsCursor = Cursor.class.equals(this.returnType);
       this.returnsOptional = Optional.class.equals(this.returnType);
