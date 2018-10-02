@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -281,6 +281,18 @@ public class DynamicSqlSourceTest extends BaseDataTest {
             new IfSqlNode(mixedContents(new TextSqlNode(" NAME = ?, ")), "true"
             )
         )));
+    BoundSql boundSql = source.getBoundSql(null);
+    assertEquals(expected, boundSql.getSql());
+  }
+
+  @Test
+  public void shouldTrimCommaAfterSET() throws Exception {
+    final String expected = "UPDATE BLOG SET  NAME = ?";
+    DynamicSqlSource source = createDynamicSqlSource(
+      new TextSqlNode("UPDATE BLOG"),
+      new SetSqlNode(new Configuration(), mixedContents(
+        new IfSqlNode(mixedContents(new TextSqlNode("ID = ?")), "false"),
+        new IfSqlNode(mixedContents(new TextSqlNode(", NAME = ?")), "true"))));
     BoundSql boundSql = source.getBoundSql(null);
     assertEquals(expected, boundSql.getSql());
   }
