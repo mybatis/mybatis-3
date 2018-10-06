@@ -103,6 +103,7 @@ public class BatchExecutor extends BaseExecutor {
     StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, null, boundSql);
     Connection connection = getConnection(ms.getStatementLog());
     Statement stmt = handler.prepare(connection, transaction.getTimeout());
+    stmt.closeOnCompletion();
     handler.parameterize(stmt);
     return handler.<E>queryCursor(stmt);
   }

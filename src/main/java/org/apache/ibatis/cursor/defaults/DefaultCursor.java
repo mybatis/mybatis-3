@@ -25,7 +25,6 @@ import org.apache.ibatis.session.RowBounds;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -113,12 +112,7 @@ public class DefaultCursor<T> implements Cursor<T> {
     ResultSet rs = rsw.getResultSet();
     try {
       if (rs != null) {
-        Statement statement = rs.getStatement();
-
         rs.close();
-        if (statement != null) {
-          statement.close();
-        }
       }
       status = CursorStatus.CLOSED;
     } catch (SQLException e) {
