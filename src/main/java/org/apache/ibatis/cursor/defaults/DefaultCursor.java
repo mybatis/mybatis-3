@@ -114,9 +114,10 @@ public class DefaultCursor<T> implements Cursor<T> {
       if (rs != null) {
         rs.close();
       }
-      status = CursorStatus.CLOSED;
     } catch (SQLException e) {
       // ignore
+    } finally {
+      status = CursorStatus.CLOSED;
     }
   }
 
