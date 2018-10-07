@@ -30,7 +30,7 @@ Feature request?
 <!-- BUG REPORT FORM -->
 
 ## MyBatis version
-3.3.1
+3.x.x
 
 ## Database vendor and version
 
