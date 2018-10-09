@@ -94,6 +94,8 @@ public interface BoundAuthorMapper {
                                     @Param("two") int two,
                                     int three);
 
+  List<Post> findThreeSpecificPosts(@Param("one") int one);
+
   @Flush
   List<BatchResult> flush();
 

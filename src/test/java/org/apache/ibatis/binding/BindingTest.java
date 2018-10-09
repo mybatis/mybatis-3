@@ -134,6 +134,16 @@ public class BindingTest {
   }
 
   @Test
+  public void shouldfindOneSpecificPosts() {
+    try (SqlSession session = sqlSessionFactory.openSession()) {
+      BoundAuthorMapper mapper = session.getMapper(BoundAuthorMapper.class);
+      List<Post> posts = mapper.findThreeSpecificPosts(1);
+      assertEquals(1, posts.size());
+      assertEquals(1, posts.get(0).getId());
+      session.rollback();
+    }
+  }
+  @Test
   public void shouldInsertAuthorWithSelectKey() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       BoundAuthorMapper mapper = session.getMapper(BoundAuthorMapper.class);

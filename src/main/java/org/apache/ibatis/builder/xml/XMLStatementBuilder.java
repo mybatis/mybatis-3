@@ -15,23 +15,20 @@
  */
 package org.apache.ibatis.builder.xml;
 
-import java.util.List;
-import java.util.Locale;
-
 import org.apache.ibatis.builder.BaseBuilder;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.executor.keygen.NoKeyGenerator;
 import org.apache.ibatis.executor.keygen.SelectKeyGenerator;
-import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.mapping.ResultSetType;
-import org.apache.ibatis.mapping.SqlCommandType;
-import org.apache.ibatis.mapping.SqlSource;
-import org.apache.ibatis.mapping.StatementType;
+import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.parsing.XNode;
+import org.apache.ibatis.reflection.ClassUtils;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
+
+import java.util.List;
+import java.util.Locale;
 
 /**
  * @author Clinton Begin
@@ -106,10 +103,27 @@ public class XMLStatementBuilder extends BaseBuilder {
           ? Jdbc3KeyGenerator.INSTANCE : NoKeyGenerator.INSTANCE;
     }
 
-    builderAssistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType,
+    builderAssistant.addMappedStatement(id, getParameterTypes(id), sqlSource, statementType, sqlCommandType,
         fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,
         resultSetTypeEnum, flushCache, useCache, resultOrdered, 
         keyGenerator, keyProperty, keyColumn, databaseId, langDriver, resultSets);
+  }
+
+  private Class<?>[] getParameterTypes(String id) {
+    int index = id.indexOf('#');
+    if (index <= 0 || id.length() == 2) {
+      return new Class[]{};
+    }
+    String types = id.substring(index + 1).trim();
+    if (types.length() == 0) {
+      return new Class[]{};
+    }
+    String[] classTypeNames = types.split(",");
+    Class<?>[] classes = new Class<?>[classTypeNames.length];
+    for (int i = 0; i < classTypeNames.length; i++) {
+      classes[i] = ClassUtils.getClassByName(classTypeNames[i]);
+    }
+    return classes;
   }
 
   private void processSelectKeyNodes(String id, Class<?> parameterTypeClass, LanguageDriver langDriver) {
@@ -153,7 +167,7 @@ public class XMLStatementBuilder extends BaseBuilder {
     SqlSource sqlSource = langDriver.createSqlSource(configuration, nodeToHandle, parameterTypeClass);
     SqlCommandType sqlCommandType = SqlCommandType.SELECT;
 
-    builderAssistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType,
+    builderAssistant.addMappedStatement(id, getParameterTypes(id), sqlSource, statementType, sqlCommandType,
         fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,
         resultSetTypeEnum, flushCache, useCache, resultOrdered,
         keyGenerator, keyProperty, keyColumn, databaseId, langDriver, null);

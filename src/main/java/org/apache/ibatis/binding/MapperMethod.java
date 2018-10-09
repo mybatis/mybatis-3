@@ -21,9 +21,7 @@ import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.mapping.StatementType;
-import org.apache.ibatis.reflection.MetaObject;
-import org.apache.ibatis.reflection.ParamNameResolver;
-import org.apache.ibatis.reflection.TypeParameterResolver;
+import org.apache.ibatis.reflection.*;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
@@ -221,7 +219,7 @@ public class MapperMethod {
     public SqlCommand(Configuration configuration, Class<?> mapperInterface, Method method) {
       final String methodName = method.getName();
       final Class<?> declaringClass = method.getDeclaringClass();
-      MappedStatement ms = resolveMappedStatement(mapperInterface, methodName, declaringClass,
+      MappedStatement ms = resolveMappedStatement(mapperInterface, methodName, method.getParameterTypes(), declaringClass,
           configuration);
       if (ms == null) {
         if(method.getAnnotation(Flush.class) != null){
@@ -248,17 +246,29 @@ public class MapperMethod {
       return type;
     }
 
-    private MappedStatement resolveMappedStatement(Class<?> mapperInterface, String methodName,
+    private MappedStatement resolveMappedStatement(Class<?> mapperInterface, String methodName, Class<?>[] parameterTypes,
         Class<?> declaringClass, Configuration configuration) {
       String statementId = mapperInterface.getName() + "." + methodName;
-      if (configuration.hasStatement(statementId)) {
-        return configuration.getMappedStatement(statementId);
+
+      String params = ClassUtils.classesToString(parameterTypes);
+      String statementIdWithParameterTypes = statementId + ("".equals(params) ? "" : "#" + params);
+      MappedStatement mappedStatement = null;
+      try {
+        mappedStatement = configuration.getMappedStatement(statementIdWithParameterTypes);
+      } catch (Exception ex) {
+        //
+      }
+
+      if (mappedStatement != null && Arrays.deepEquals(mappedStatement.getParameterTypes(), parameterTypes)) {
+        return mappedStatement;
+      } else if ((configuration.hasStatement(statementId)) && (mappedStatement = configuration.getMappedStatement(statementId)) != null) {
+        return mappedStatement;
       } else if (mapperInterface.equals(declaringClass)) {
         return null;
       }
       for (Class<?> superInterface : mapperInterface.getInterfaces()) {
         if (declaringClass.isAssignableFrom(superInterface)) {
-          MappedStatement ms = resolveMappedStatement(superInterface, methodName,
+          MappedStatement ms = resolveMappedStatement(superInterface, methodName, parameterTypes,
               declaringClass, configuration);
           if (ms != null) {
             return ms;
