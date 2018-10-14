@@ -29,6 +29,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.apache.ibatis.reflection.ReflectionException;
+import org.apache.ibatis.reflection.Reflector;
 
 /**
  * @author Clinton Begin
@@ -60,16 +61,28 @@ public class DefaultObjectFactory implements ObjectFactory, Serializable {
       Constructor<T> constructor;
       if (constructorArgTypes == null || constructorArgs == null) {
         constructor = type.getDeclaredConstructor();
-        if (!constructor.isAccessible()) {
-          constructor.setAccessible(true);
+        try {
+          return constructor.newInstance();
+        } catch (IllegalAccessException e) {
+          if (Reflector.canControlMemberAccessible()) {
+            constructor.setAccessible(true);
+            return constructor.newInstance();
+          } else {
+            throw e;
+          }
         }
-        return constructor.newInstance();
       }
       constructor = type.getDeclaredConstructor(constructorArgTypes.toArray(new Class[constructorArgTypes.size()]));
-      if (!constructor.isAccessible()) {
-        constructor.setAccessible(true);
+      try {
+        return constructor.newInstance(constructorArgs.toArray(new Object[constructorArgs.size()]));
+      } catch (IllegalAccessException e) {
+        if (Reflector.canControlMemberAccessible()) {
+          constructor.setAccessible(true);
+          return constructor.newInstance(constructorArgs.toArray(new Object[constructorArgs.size()]));
+        } else {
+          throw e;
+        }
       }
-      return constructor.newInstance(constructorArgs.toArray(new Object[constructorArgs.size()]));
     } catch (Exception e) {
       StringBuilder argTypes = new StringBuilder();
       if (constructorArgTypes != null && !constructorArgTypes.isEmpty()) {

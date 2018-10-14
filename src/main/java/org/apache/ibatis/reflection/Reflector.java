@@ -77,16 +77,7 @@ public class Reflector {
     Constructor<?>[] consts = clazz.getDeclaredConstructors();
     for (Constructor<?> constructor : consts) {
       if (constructor.getParameterTypes().length == 0) {
-        if (canControlMemberAccessible()) {
-          try {
-            constructor.setAccessible(true);
-          } catch (Exception e) {
-            // Ignored. This is only a final precaution, nothing we can do.
-          }
-        }
-        if (constructor.isAccessible()) {
           this.defaultConstructor = constructor;
-        }
       }
     }
   }
@@ -250,26 +241,17 @@ public class Reflector {
   private void addFields(Class<?> clazz) {
     Field[] fields = clazz.getDeclaredFields();
     for (Field field : fields) {
-      if (canControlMemberAccessible()) {
-        try {
-          field.setAccessible(true);
-        } catch (Exception e) {
-          // Ignored. This is only a final precaution, nothing we can do.
+      if (!setMethods.containsKey(field.getName())) {
+        // issue #379 - removed the check for final because JDK 1.5 allows
+        // modification of final fields through reflection (JSR-133). (JGB)
+        // pr #16 - final static can only be set by the classloader
+        int modifiers = field.getModifiers();
+        if (!(Modifier.isFinal(modifiers) && Modifier.isStatic(modifiers))) {
+          addSetField(field);
         }
       }
-      if (field.isAccessible()) {
-        if (!setMethods.containsKey(field.getName())) {
-          // issue #379 - removed the check for final because JDK 1.5 allows
-          // modification of final fields through reflection (JSR-133). (JGB)
-          // pr #16 - final static can only be set by the classloader
-          int modifiers = field.getModifiers();
-          if (!(Modifier.isFinal(modifiers) && Modifier.isStatic(modifiers))) {
-            addSetField(field);
-          }
-        }
-        if (!getMethods.containsKey(field.getName())) {
-          addGetField(field);
-        }
+      if (!getMethods.containsKey(field.getName())) {
+        addGetField(field);
       }
     }
     if (clazz.getSuperclass() != null) {
@@ -335,14 +317,6 @@ public class Reflector {
         // if it is known, then an extended class must have
         // overridden a method
         if (!uniqueMethods.containsKey(signature)) {
-          if (canControlMemberAccessible()) {
-            try {
-              currentMethod.setAccessible(true);
-            } catch (Exception e) {
-              // Ignored. This is only a final precaution, nothing we can do.
-            }
-          }
-
           uniqueMethods.put(signature, currentMethod);
         }
       }
