@@ -350,4 +350,18 @@ public class SQLTest {
     System.out.println(sql);
     assertEquals("INSERT INTO TABLE_A\n (a, b)\nVALUES \n (#{a1}, #{b1}),\n (#{a2}, #{b2})", sql);
   }
+
+  @Test
+  public void batchInsertWithMultipleInsertValues(){
+    final String sql = new SQL() {{
+      INSERT_INTO("TABLE_A");
+      INTO_COLUMNS("a", "b");
+      INTO_VALUES("#{a}");
+      INTO_VALUES("#{b}");
+      ADD_ROW();
+      INTO_VALUES("#{a}");
+      INTO_VALUES("#{b}");
+    }}.toString();
+    System.out.println(sql.toString());
+  }
 }
