@@ -334,4 +334,18 @@ public class SQLTest {
       }}.toString();
       System.out.println(sql.toString());
   }
+
+  @Test
+  public void batchInsertWithMultipleInsertValues(){
+    final String sql = new SQL() {{
+      INSERT_INTO("TABLE_A");
+      INTO_COLUMNS("a", "b");
+      INTO_VALUES("#{a}");
+      INTO_VALUES("#{b}");
+      ADD_ROW();
+      INTO_VALUES("#{a}");
+      INTO_VALUES("#{b}");
+    }}.toString();
+    System.out.println(sql.toString());
+  }
 }
