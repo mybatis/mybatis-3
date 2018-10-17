@@ -79,8 +79,15 @@ public abstract class AbstractSQL<T> {
    * @since 3.4.2
    */
   public T INTO_VALUES(String... values) {
-    sql().values.add(Arrays.asList(values));
-    return getSelf();
+      List<List<String>> list = sql().values;
+      if(list.isEmpty()){
+          list.add(new ArrayList<>());
+      }
+      int index = list.size() - 1;
+      for (String value : values) {
+          list.get(index).add(value);
+      }
+      return getSelf();
   }
 
   public T SELECT(String columns) {
@@ -260,6 +267,11 @@ public abstract class AbstractSQL<T> {
    */
   public T ORDER_BY(String... columns) {
     sql().orderBy.addAll(Arrays.asList(columns));
+    return getSelf();
+  }
+
+  public T ADD_ROW(){
+    sql().values.add(new ArrayList<>());
     return getSelf();
   }
 

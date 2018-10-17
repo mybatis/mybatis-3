@@ -311,6 +311,7 @@ public class SQLTest {
       INSERT_INTO("table1 a");
       INTO_COLUMNS("col1,col2");
       INTO_VALUES("val1","val2");
+      ADD_ROW();
       INTO_VALUES("val1","val2");
     }};
     assertThat(sql.toString()).isEqualToIgnoringWhitespace("INSERT INTO table1 a (col1,col2) VALUES (val1,val2), (val1,val2)");
@@ -324,5 +325,13 @@ public class SQLTest {
       INTO_VALUES("val1","val2");
     }};
     assertThat(sql.toString()).isEqualToIgnoringWhitespace("INSERT INTO table1 a (col1,col2) VALUES (val1,val2)");
+  }
+
+  @Test
+  public void singleInsertWithMultipleInsertValues(){
+      final String sql = new SQL() {{
+          INSERT_INTO("TABLE_A").INTO_COLUMNS("a", "b").INTO_VALUES("#{a}").INTO_VALUES("#{b}");
+      }}.toString();
+      System.out.println(sql.toString());
   }
 }
