@@ -396,11 +396,15 @@ public abstract class AbstractSQL<T> {
       sqlClause(builder, "INSERT INTO", tables, "", "", "");
       sqlClause(builder, "", columns, "(", ")", ", ");
         for (int i = 0; i < values.size(); i++) {
+            String keyword = "";
+            String close = "),";
             if(i == 0){
-                sqlClause(builder, "VALUES", values.get(0), "(", ")", ", ");
-            }else{
-                sqlClause(builder, ",", values.get(i), "(", ")", ", ");
+                keyword = "VALUES";
             }
+            if(i == values.size() - 1){
+                close = ")";
+            }
+            sqlClause(builder, keyword, values.get(i), "(", close, ", ");
         }
       return builder.toString();
     }

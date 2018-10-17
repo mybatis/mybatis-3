@@ -318,26 +318,26 @@ public class SQLTest {
   }
 
   @Test
-  public void singleInsert(){
-    final SQL sql = new SQL(){{
+  public void singleInsert() {
+    final SQL sql = new SQL() {{
       INSERT_INTO("table1 a");
       INTO_COLUMNS("col1,col2");
-      INTO_VALUES("val1","val2");
+      INTO_VALUES("val1", "val2");
     }};
     assertThat(sql.toString()).isEqualToIgnoringWhitespace("INSERT INTO table1 a (col1,col2) VALUES (val1,val2)");
   }
 
   @Test
-  public void singleInsertWithMultipleInsertValues(){
-      final String sql = new SQL() {{
-          INSERT_INTO("TABLE_A").INTO_COLUMNS("a", "b").INTO_VALUES("#{a}").INTO_VALUES("#{b}");
-      }}.toString();
-      System.out.println(sql);
-      assertEquals("INSERT INTO TABLE_A\n (a, b)\nVALUES (#{a}, #{b})", sql);
+  public void singleInsertWithMultipleInsertValues() {
+    final String sql = new SQL() {{
+      INSERT_INTO("TABLE_A").INTO_COLUMNS("a", "b").INTO_VALUES("#{a}").INTO_VALUES("#{b}");
+    }}.toString();
+    System.out.println(sql);
+    assertThat(sql).isEqualToIgnoringWhitespace("INSERT INTO TABLE_A (a, b) VALUES (#{a}, #{b})");
   }
 
   @Test
-  public void batchInsertWithMultipleInsertValues(){
+  public void batchInsertWithMultipleInsertValues() {
     final String sql = new SQL() {{
       INSERT_INTO("TABLE_A");
       INTO_COLUMNS("a", "b");
@@ -348,6 +348,6 @@ public class SQLTest {
       INTO_VALUES("#{b2}");
     }}.toString();
     System.out.println(sql);
-    assertEquals("INSERT INTO TABLE_A\n (a, b)\nVALUES \n (#{a1}, #{b1}),\n (#{a2}, #{b2})", sql);
+    assertThat(sql).isEqualToIgnoringWhitespace("INSERT INTO TABLE_A (a, b) VALUES (#{a1}, #{b1}), (#{a2}, #{b2})");
   }
 }
