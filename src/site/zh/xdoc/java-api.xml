@@ -27,13 +27,13 @@
 
   <body>
   <section name="Java API" id="javaApi">
-  <p>既然你已经知道如何配置 MyBatis 和创建映射文件，你就已经准备好来提升技能了。MyBatis 的 Java API 就是你收获你所做的努力的地方。正如你即将看到的，和 JDBC 相比，MyBatis 很大程度简化了你的代码并保持代码简洁，容易理解并维护。MyBatis 3 已经引入了很多重要的改进来使得 SQL 映射更加优秀。</p>
+  <p>既然你已经知道如何配置 MyBatis 以及如何创建映射，是时候来尝点甜头了。MyBatis 的 Java API 就是这个甜头。稍后你将看到，和 JDBC 相比，MyBatis 大幅简化了你的代码并力图保持代码简洁、容易理解和维护。为了使得 SQL 映射更加优秀，MyBatis 3 引入了许多重要的改进。</p>
 
-  <subsection name="应用目录结构" id="directoryStructure">
-  <p>在我们深入 Java API 之前，理解关于目录结构的最佳实践是很重要的。MyBatis 非常灵活，你可以用你自己的文件来做几乎所有的事情。但是对于任一框架，都有一些最佳的方式。
+  <subsection name="目录结构" id="directoryStructure">
+  <p>在我们深入 Java API 之前，理解关于目录结构的最佳实践是很重要的。MyBatis 非常灵活，你可以随意安排你的文件。但和其它框架一样，目录结构有一种最佳实践。
   </p>
   <p>
-让我们看一下典型的应用目录结构：
+  让我们看一下典型的应用目录结构：
   </p>
   <pre>/my_application
   /bin
@@ -42,14 +42,14 @@
   /src
     /org/myapp/
       /action
-      <strong>/data           <tt>&lt;-- MyBatis 配置文件在这里, 包括映射器类, XML 配置, XML 映射文件。</tt></strong>
+      <strong>/data           <tt>&lt;-- MyBatis 配置文件在这里，包括映射器类、XML 配置、XML 映射文件。</tt></strong>
         /mybatis-config.xml
         /BlogMapper.java
         /BlogMapper.xml
       /model
       /service
       /view
-    <strong>/properties       <tt>&lt;-- 在你 XML 中配置的属性文件在这里。</tt></strong>
+    <strong>/properties       <tt>&lt;-- 在 XML 配置中出现的属性值在这里。</tt></strong>
   /test
     /org/myapp/
       /action
@@ -61,23 +61,22 @@
   /web
     /WEB-INF
       /web.xml</pre>
-  <p>当然这是推荐的目录结构，并非强制要求，但是使用一个通用的目录结构将更利于大家沟通。</p>
-  <p>这部分内容剩余的示例将假设你使用了这种目录结构。</p>
+<p>当然，这是推荐的目录结构，并非强制要求，但是使用一个通用的目录结构将更有利于大家沟通。</p>
+<p>本章接下来的示例将假定你遵循这种目录结构。</p>
   </subsection>
 
   <subsection name="SqlSession" id="sqlSessions">
-  <p>使用 MyBatis 的主要 Java 接口就是 SqlSession。你可以通过这个接口来执行命令，获取映射器和管理事务。我们会概括讨论一下 SqlSession 本身，但是首先我们还是要了解如何获取一个 SqlSession 实例。SqlSession 是由 SqlSessionFactory 实例创建的。SqlSessionFactory 对象包含创建 SqlSession 实例的所有方法。而 SqlSessionFactory 本身是由 SqlSessionFactoryBuilder 创建的，它可以从 XML、注解或手动配置 Java 代码来创建 SqlSessionFactory。</p>
+  <p>使用 MyBatis 的主要 Java 接口就是 SqlSession。你可以通过这个接口来执行命令，获取映射器示例和管理事务。我们稍后会介绍 SqlSession 本身，但是首先我们先来了解如何获取一个 SqlSession 实例。SqlSessions 是由 SqlSessionFactory 实例创建的。SqlSessionFactory 对象包含创建 SqlSession 实例的各种方法。而 SqlSessionFactory 本身是由 SqlSessionFactoryBuilder 创建的，它可以从 XML、注解或 Java 配置代码来创建 SqlSessionFactory。</p>
   <p>
-  <span class="label important">注意</span> 当 Mybatis 与一些依赖注入框架（如 Spring 或者 Guice）同时使用时，SqlSession 将被依赖注入框架所创建，所以你不需要使用 SqlSessionFactoryBuilder 或者 SqlSessionFactory，可以直接看 SqlSession 这一节。请参考 Mybatis-Spring 或者 Mybatis-Guice 手册了解更多信息。</p>
+  <span class="label important">提示</span> 当 Mybatis 与一些依赖注入框架（如 Spring 或者 Guice）同时使用时，SqlSessions 将被依赖注入框架创建并注入，所以你不需要使用 SqlSessionFactoryBuilder 或者 SqlSessionFactory，可以直接阅读 SqlSession 这一节。请参考 Mybatis-Spring 或者 Mybatis-Guice 手册以了解更多信息。</p>
   <h4>SqlSessionFactoryBuilder</h4>
-  <p>SqlSessionFactoryBuilder 有五个 build() 方法，每一种都允许你从不同的资源中创建一个 SqlSessionFactory 实例。</p>
+  <p>SqlSessionFactoryBuilder 有五个 build() 方法，每一种都允许你从不同的资源中创建一个 SqlSession 实例。</p>
   <source>SqlSessionFactory build(InputStream inputStream)
 SqlSessionFactory build(InputStream inputStream, String environment)
 SqlSessionFactory build(InputStream inputStream, Properties properties)
 SqlSessionFactory build(InputStream inputStream, String env, Properties props)
 SqlSessionFactory build(Configuration config)</source>
-
-  <p>第一种方法是最常用的，它使用了一个参照了 XML 文档或上面讨论过的更特定的 mybatis-config.xml 文件的 Reader 实例。可选的参数是 environment 和 properties。environment 决定加载哪种环境，包括数据源和事务管理器。比如：</p>
+  <p>第一种方法是最常用的，它接受一个指向 XML 文件（也就是之前讨论的 mybatis-config.xml 文件）的 InputStream 实例。可选的参数是 environment 和 properties。environment 决定加载哪种环境，包括数据源和事务管理器。比如：</p>
 
   <source><![CDATA[<environments default="development">
   <environment id="development">
@@ -93,28 +92,27 @@ SqlSessionFactory build(Configuration config)</source>
         ...
   </environment>
 </environments>]]></source>
-  <p>如果你调用了参数有 environment 的 build 方法，那么 MyBatis 将会使用 configuration 对象来配置这个 environment。当然，如果你指定了一个不合法的 environment，你就会得到错误提示。如果你调用了不带 environment 参数的 build 方法，那么就使用默认的 environment（在上面的示例中指定为 default="development" 的代码）。</p>
-  <p>如果你调用了参数有 properties 实例的方法，那么 MyBatis 就会加载那些 properties（属性配置文件），并在配置中可用。那些属性可以用${propName} 语法形式多次用在配置文件中。</p>
-  <p>回想一下，属性可以从 mybatis-config.xml 中被引用，或者直接指定它。因此理解优先级是很重要的。我们在文档前面已经提及它了，但是这里要再次重申：</p>
+  <p>如果你调用了带 environment 参数的 build 方法，那么 MyBatis 将使用该环境对应的配置。当然，如果你指定了一个无效的环境，会收到错误。如果你调用了不带 environment 参数的 build 方法，那么就会使用默认的环境配置（在上面的示例中，通过 default="development" 指定了默认环境）。</p>
+
+  <p>如果你调用了接受 properties 实例的方法，那么 MyBatis 就会加载这些属性，并在配置中提供使用。在大部分配置值中，都可以通过 ${propName} 语法形式进行使用。</p>
+  <p>回想一下，属性可以从 mybatis-config.xml 中被引用，或者在该文件中直接指定。因此理解优先级是很重要的。在之前的文档中，我们已经介绍过了相关内容，但为了方便查阅，这里再重新介绍一下：</p>
   <hr/>
-  <p>如果一个属性存在于这些位置，那么 MyBatis 将会按照下面的顺序来加载它们：</p>
+  <p>如果一个属性存在于下面的多个位置，那么 MyBatis 将按照以下顺序来加载它们：</p>
   <ul>
   <li>首先读取在 properties 元素体中指定的属性；</li>
-  <li>其次，读取从 properties 元素的类路径 resource 或 url 指定的属性，且会覆盖已经指定了的重复属性；</li>
+  <li>其次，读取在 properties 元素的类路径 resource 或 url 指定的属性，且会覆盖已经指定了的重复属性；</li>
   <li>最后，读取作为方法参数传递的属性，且会覆盖已经从 properties 元素体和 resource 或 url 属性中加载了的重复属性。</li>
   </ul>
   <p>因此，通过方法参数传递的属性的优先级最高，resource 或 url 指定的属性优先级中等，在 properties 元素体中指定的属性优先级最低。
   </p>
   <hr/>
-
-  <p>总结一下，前四个方法很大程度上是相同的，但是由于覆盖机制，便允许你可选地指定 environment 和/或 properties。以下给出一个从 mybatis-config.xml 文件创建 SqlSessionFactory 的示例：</p>
+  <p>总结一下，前四个方法很大程度上是相同的，但提供了不同的覆盖选项，允许你可选地指定 environment 和/或 properties。以下给出一个从 mybatis-config.xml 文件创建 SqlSessionFactory 的示例：</p>
 
   <source>String <strong>resource</strong> = "org/mybatis/builder/mybatis-config.xml";
 InputStream <strong>inputStream</strong> = Resources.getResourceAsStream(resource);
 SqlSessionFactoryBuilder <strong>builder</strong> = new SqlSessionFactoryBuilder();
 SqlSessionFactory <strong>factory</strong> = builder.build(inputStream);</source>
-
-  <p>注意到这里我们使用了 Resources 工具类，这个类在 org.apache.ibatis.io 包中。Resources 类正如其名，会帮助你从类路径下、文件系统或一个 web URL 中加载资源文件。看一下这个类的源代码或者通过你的 IDE 来查看，就会看到一整套相当实用的方法。这里给出一个简表：</p>
+  <p>注意到这里我们使用了 Resources 工具类，这个类在 org.apache.ibatis.io 包中。Resources 类正如其名，会帮助你从类路径下、文件系统或一个 web URL 中加载资源文件。通过快速浏览这个类的源代码或使用 IDE 进行查看，你会看到一整套相当实用的方法。这里给出一个简表：</p>
   <source>URL getResourceURL(String resource)
 URL getResourceURL(ClassLoader loader, String resource)
 InputStream getResourceAsStream(String resource)
@@ -129,8 +127,7 @@ InputStream getUrlAsStream(String urlString)
 Reader getUrlAsReader(String urlString)
 Properties getUrlAsProperties(String urlString)
 Class classForName(String className)</source>
-
-  <p>最后一个 build 方法的参数为 Configuration 实例。configuration 类包含你可能需要了解 SqlSessionFactory 实例的所有内容。Configuration 类对于配置的自查很有用，它包含查找和操作 SQL 映射（当应用接收请求时便不推荐使用）。作为一个 Java API 的 configuration 类具有所有配置的开关，这些你已经了解了。这里有一个简单的示例，教你如何手动配置 configuration 实例，然后将它传递给 build() 方法来创建 SqlSessionFactory。</p>
+  <p>最后一个 build 方法的接受一个 Configuration 实例。Configuration 类包含了对一个 SqlSessionFactory 实例你可能关心的所有内容。对于配置的检查，Configuration 类很有用，允许你查找和操纵 SQL 映射（但当应用开始接收请求时不推荐使用）。Configuration 类具有你之前学习过的所有配置的开关，只不过它们是以 Java API 形式暴露的。以下是一个简单的示例，演示如何手动配置 Configuration 实例，然后将它传递给 build() 方法来创建 SqlSessionFactory。</p>
   <source>DataSource dataSource = BaseDataTest.createBlogDataSource();
 TransactionFactory transactionFactory = new JdbcTransactionFactory();
 
@@ -147,15 +144,14 @@ configuration.addMapper(BoundAuthorMapper.class);
 
 SqlSessionFactoryBuilder builder = new SqlSessionFactoryBuilder();
 SqlSessionFactory factory = builder.build(configuration);</source>
-
-  <p>现在你就获得一个可以用来创建 SqlSession 实例的 SqlSessionFactory 了！</p>
+  <p>现在你就获得一个可以用来创建 SqlSession 实例的 SqlSessionFactory 了。</p>
 
   <h4>SqlSessionFactory</h4>
-  <p>SqlSessionFactory 有六个方法创建 SqlSession 实例。通常来说，当你选择这些方法时你需要考虑以下几点：</p>
+  <p>SqlSessionFactory 有六个方法创建 SqlSession 实例。通常来说，当你选择其中一个方法时，你需要考虑以下几点：</p>
   <ul>
-    <li><strong>事务处理</strong>：我需要在 session 使用事务或者使用自动提交功能（auto-commit）吗？（通常意味着很多数据库和/或 JDBC 驱动没有事务）</li>
-    <li><strong>连接</strong>：我需要依赖 MyBatis 获得来自数据源的配置吗？还是使用自己提供的配置？</li>
-    <li><strong>执行语句</strong>：我需要 MyBatis 复用预处理语句和/或批量更新语句（包括插入和删除）吗？</li>
+    <li><strong>事务处理</strong>：你希望在 session 作用域中使用事务作用域，还是使用自动提交（auto-commit）？（对很多数据库和/或 JDBC 驱动来说，等同于关闭事务支持）</li>
+    <li><strong>数据库连接</strong>：你希望 MyBatis 帮你从已配置的数据源获取连接，还是使用自己提供的连接？</li>
+    <li><strong>语句执行</strong>：你希望 MyBatis 复用 PreparedStatement 和/或批量更新语句（包括插入语句和删除语句）吗？</li>
   </ul>
   <p>基于以上需求，有下列已重载的多个 openSession() 方法供使用。</p>
   <source>SqlSession openSession()
@@ -167,34 +163,33 @@ SqlSession openSession(ExecutorType execType)
 SqlSession openSession(ExecutorType execType, boolean autoCommit)
 SqlSession openSession(ExecutorType execType, Connection connection)
 Configuration getConfiguration();</source>
-
-  <p>默认的 openSession()方法没有参数，它会创建有如下特性的 SqlSession：</p>
+  <p>默认的 openSession() 方法没有参数，它会创建具备如下特性的 SqlSession：</p>
   <ul>
-    <li>会开启一个事务（也就是不自动提交）。</li>
-    <li>将从由当前环境配置的 DataSource 实例中获取 Connection 对象。</li>
+    <li>事务作用域<u>将会</u>开启（也就是不自动提交）。</li>
+    <li>将由当前环境配置的 DataSource 实例中获取 Connection 对象。</li>
     <li>事务隔离级别将会使用驱动或数据源的默认设置。</li>
     <li>预处理语句不会被复用，也不会批量处理更新。</li>
   </ul>
-  <p>这些方法大都是可读性强的。向 <code>autoCommit</code> 可选参数传递 <code>true</code> 值即可开启自动提交功能。若要使用自己的 <code>Connection</code> 实例，传递一个 <code>Connection</code> 实例给 <code>connection</code> 参数即可。注意并未覆写同时设置 <code>Connection</code> 和 <code>autoCommit</code> 两者的方法，因为 MyBatis 会使用正在使用中的、设置了 Connection 的环境。MyBatis 为事务隔离级别调用使用了一个 Java 枚举包装器，称为 <code>TransactionIsolationLevel</code>，若不使用它，将使用 JDBC 所支持五个隔离级（<code>NONE</code>、<code>READ_UNCOMMITTED</code>、<code>READ_COMMITTED</code>、<code>REPEATABLE_READ</code> 和 <code>SERIALIZABLE</code>），并按它们预期的方式来工作。</p>
-  <p>还有一个可能对你来说是新见到的参数，就是 <code>ExecutorType</code>。这个枚举类型定义了三个值:
+  <p>相信你已经能从方法签名中知道这些方法的区别。向 <code>autoCommit</code> 可选参数传递 <code>true</code> 值即可开启自动提交功能。若要使用自己的 <code>Connection</code> 实例，传递一个 <code>Connection</code> 实例给 <code>connection</code> 参数即可。注意没有提供同时设置 <code>Connection</code> 和 <code>autoCommit</code> 的方法，这是因为 MyBatis 会使用传入的 Connection 的当前使用配置。对于事务隔离级别，MyBatis 使用了一个 Java 枚举包装器来表示，称为 <code>TransactionIsolationLevel</code>，事务隔离级别支持 JDBC 的五个隔离级别（<code>NONE</code>、<code>READ_UNCOMMITTED</code>、<code>READ_COMMITTED</code>、<code>REPEATABLE_READ</code> 和 <code>SERIALIZABLE</code>），并且与预期的行为一致。</p>
+  <p>你可能对 <code>ExecutorType</code> 参数感到陌生。这个枚举类型定义了三个值:
   </p>
   <ul>
-    <li><code>ExecutorType.SIMPLE</code>：这个执行器类型不做特殊的事情。它为每个语句的执行创建一个新的预处理语句。</li>
-    <li><code>ExecutorType.REUSE</code>：这个执行器类型会复用预处理语句。</li>
-    <li><code>ExecutorType.BATCH</code>：这个执行器会批量执行所有更新语句，如果 SELECT 在它们中间执行，必要时请把它们区分开来以保证行为的易读性。</li>
+    <li><code>ExecutorType.SIMPLE</code>：该类型的执行器没有特别的行为。它为每个语句的执行创建一个新的预处理语句。</li>
+    <li><code>ExecutorType.REUSE</code>：该类型的执行器会复用预处理语句。</li>
+    <li><code>ExecutorType.BATCH</code>：该类型的执行器会批量执行所有更新语句，如果 SELECT 在多个更新中间执行，将在必要时将多条更新语句分隔开来，以方便理解。</li>
   </ul>
-  <p><span class="label important">注意</span> 在 SqlSessionFactory 中还有一个方法我们没有提及，就是 getConfiguration()。这
-个方法会返回一个 Configuration 实例，在运行时你可以使用它来自检 MyBatis 的配置。
+  <p><span class="label important">提示</span> 在 SqlSessionFactory 中还有一个方法我们没有提及，就是 getConfiguration()。这
+    个方法会返回一个 Configuration 实例，你可以在运行时使用它来检查 MyBatis 的配置。
   </p>
-  <p><span class="label important">注意</span> 如果你使用的是 MyBatis 之前的版本，你要重新调用 openSession，因为旧版本的 session、事务和批量操作是分离开来的。如果使用的是新版本，那么就不必这么做了，因为它们现在都包含在 session 的作用域内了。你不必再单独处理事务或批量操作就能得到想要的全部效果。
+  <p><span class="label important">提示</span> 如果你使用过 MyBatis 的旧版本，可能还记得 session、事务和批量操作是相互独立的。在新版本中则不是这样。上述三者都包含在 session 作用域内。你不必分别处理事务或批量操作就能得到想要的全部效果。
   </p>
 
   <h4>SqlSession</h4>
-  <p>正如上面所提到的，SqlSession 实例在 MyBatis 中是非常强大的一个类。在这里你会看到所有执行语句、提交或回滚事务和获取映射器实例的方法。</p>
-  <p>在 SqlSession 类中有超过 20 个方法，所以将它们组合成易于理解的分组。</p>
+  <p>正如上面所提到的，SqlSession 实例在 MyBatis 中是非常强大的一个类。它包含了所有执行语句、提交或回滚事务以及获取映射器实例的方法。</p>
+  <p>SqlSession 类的方法超过 20 个，为了方便理解，我们将它们分成几种组别。</p>
 
-  <h5>执行语句方法</h5>
-  <p>这些方法被用来执行定义在 SQL 映射的 XML 文件中的 SELECT、INSERT、UPDATE 和 DELETE 语句。它们都会自行解释，每一句都使用语句的 ID 属性和参数对象，参数可以是原生类型（自动装箱或包装类）、JavaBean、POJO 或 Map。</p>
+  <h5>语句执行方法</h5>
+  <p>这些方法被用来执行定义在 SQL 映射 XML 文件中的 SELECT、INSERT、UPDATE 和 DELETE 语句。你可以快速通过名字了解它们的作用，每一方法都接受语句的 ID 以及参数对象，参数可以是原生类型（支持自动装箱或包装类）、JavaBean、POJO 或 Map。</p>
   <source><![CDATA[<T> T selectOne(String statement, Object parameter)
 <E> List<E> selectList(String statement, Object parameter)
 <T> Cursor<T> selectCursor(String statement, Object parameter)
@@ -202,9 +197,15 @@ Configuration getConfiguration();</source>
 int insert(String statement, Object parameter)
 int update(String statement, Object parameter)
 int delete(String statement, Object parameter)]]></source>
-  <p>selectOne 和 selectList 的不同仅仅是 selectOne 必须返回一个对象或 null 值。如果返回值多于一个，那么就会抛出异常。如果你不知道返回对象的数量，请使用 selectList。如果需要查看返回对象是否存在，可行的方案是返回一个值即可（0 或 1）。selectMap 稍微特殊一点，因为它会将返回的对象的其中一个属性作为 key 值，将对象作为 value 值，从而将多结果集转为 Map 类型值。因为并不是所有语句都需要参数，所以这些方法都重载成不需要参数的形式。
+  <p>selectOne 和 selectList 的不同仅仅是 selectOne 必须返回一个对象或 null 值。如果返回值多于一个，那么就会抛出异常。如果你不知道返回对象会有多少，请使用 selectList。如果需要查看某个对象是否存在，最好的办法是查询一个 count 值（0 或 1）。selectMap 稍微特殊一点，它会将返回对象的其中一个属性作为 key 值，将对象作为 value 值，从而将多结果集转为 Map 类型值。由于并不是所有语句都需要参数，所以这些方法都具有一个不需要参数的重载形式。
   </p>
-  <p>The value returned by the insert, update and delete methods indicate the number of rows affected by the statement.</p>
+  <p>游标（Cursor）与列表（List）返回的结果相同，不同的是，游标借助迭代器实现了数据的惰性加载。</p>
+  <source><![CDATA[try (Cursor<MyEntity> entities = session.selectCursor(statement, param)) {
+   for (MyEntity entity:entities) {
+      // process one entity
+   }
+}]]></source>
+  <p>insert、update 以及 delete 方法返回的值表示受该语句影响的行数。</p>
   <source><![CDATA[<T> T selectOne(String statement)
 <E> List<E> selectList(String statement)
 <T> Cursor<T> selectCursor(String statement)
@@ -212,84 +213,74 @@ int delete(String statement, Object parameter)]]></source>
 int insert(String statement)
 int update(String statement)
 int delete(String statement)]]></source>
-
-  <p>A Cursor offers the same results as a List, except it fetches data lazily using an Iterator.</p>
-  <source><![CDATA[try (Cursor<MyEntity> entities = session.selectCursor(statement, param)) {
-   for (MyEntity entity:entities) {
-      // process one entity
-   }
-}]]></source>
-
-  <p>最后，还有 select 方法的三个高级版本，它们允许你限制返回行数的范围，或者提供自定义结果控制逻辑，这通常在数据集合庞大的情形下使用。
+  <p>最后，还有 select 方法的三个高级版本，它们允许你限制返回行数的范围，或是提供自定义结果处理逻辑，通常在数据集非常庞大的情形下使用。
   </p>
   <source><![CDATA[<E> List<E> selectList (String statement, Object parameter, RowBounds rowBounds)
 <T> Cursor<T> selectCursor(String statement, Object parameter, RowBounds rowBounds)
 <K,V> Map<K,V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowbounds)
 void select (String statement, Object parameter, ResultHandler<T> handler)
 void select (String statement, Object parameter, RowBounds rowBounds, ResultHandler<T> handler)]]></source>
+  <p>RowBounds 参数会告诉 MyBatis 略过指定数量的记录，并限制返回结果的数量。RowBounds 类有一个构造方法来接受 offset 和 limit，另外，它们是不可变的。</p>
 
-  <p>RowBounds 参数会告诉 MyBatis 略过指定数量的记录，还有限制返回结果的数量。RowBounds 类有一个构造方法来接收 offset 和 limit，另外，它们是不可二次赋值的。</p>
   <source>int offset = 100;
 int limit = 25;
 RowBounds rowBounds = new RowBounds(offset, limit);</source>
-
-  <p>所以在这方面，不同的驱动能够取得不同级别的高效率。为了取得最佳的表现，请使用结果集的 SCROLL_SENSITIVE 或 SCROLL_INSENSITIVE 的类型(换句话说：不用 FORWARD_ONLY)。</p>
-  <p>ResultHandler 参数允许你按你喜欢的方式处理每一行。你可以将它添加到 List 中、创建 Map 和 Set，或者丢弃每个返回值都可以，它取代了仅保留执行语句过后的总结果列表的死板结果。你可以使用 ResultHandler 做很多事，并且这是 MyBatis 自身内部会使用的方法，以创建结果集列表。</p>
-  <p>Since 3.4.6, ResultHandler passed to a CALLABLE statement is used on every REFCURSOR output parameter of the stored procedure if there is any.</p>
+  <p>在这方面，效率取决于驱动。为了获得最佳的性能，请将 ResultSet 类型设置为 SCROLL_SENSITIVE 或 SCROLL_INSENSITIVE 的类型（换句话说：不要使用 FORWARD_ONLY）。</p>
+  <p>ResultHandler 参数允许你按你喜欢的方式处理每一行。你可以将它添加到 List 中、创建 Map 和 Set，甚至丢弃每个返回值，而只保留计算后的统计结果。你可以使用 ResultHandler 做很多事，这其实就是 MyBatis 构建 结果列表的内部实现办法。</p>
+  <p>从版本 3.4.6 开始，ResultHandler 会在存储过程的 REFCURSOR 输出参数中传递使用的 CALLABLE statement。</p>
   <p>它的接口很简单。</p>
+
   <source><![CDATA[package org.apache.ibatis.session;
 public interface ResultHandler<T> {
   void handleResult(ResultContext<? extends T> context);
 }]]></source>
-
-  <p>ResultContext 参数允许你访问结果对象本身、被创建的对象数目、以及返回值为 Boolean 的 stop 方法，你可以使用此 stop 方法来停止 MyBatis 加载更多的结果。</p>
-
+  <p>ResultContext 参数允许你访问结果对象和当前已被创建的对象数目，另外还提供了一个返回值为 Boolean 的 stop 方法，你可以使用此 stop 方法来停止 MyBatis 加载更多的结果。</p>
   <p>使用 ResultHandler 的时候需要注意以下两种限制：</p>
-
   <ul>
-  <li>从被 ResultHandler 调用的方法返回的数据不会被缓存。</li>
-  <li>当使用结果映射集（resultMap）时，MyBatis 大多数情况下需要数行结果来构造外键对象。如果你正在使用 ResultHandler，你可以给出外键（association）或者集合（collection）尚未赋值的对象。</li>
+    <li>使用带 ResultHandler 参数的方法时，收到的数据不会被缓存。</li>
+    <li>当使用高级的结果映射集（resultMap）时，MyBatis 很可能需要数行结果来构造一个对象。如果你使用了 ResultHandler，你可能会接收到关联（association）或者集合（collection）尚未被填充的对象。</li>
   </ul>
 
-  <h5>批量立即更新方法</h5>
-  <p>有一个方法可以刷新（执行）存储在 JDBC 驱动类中的批量更新语句。当你将 <code>ExecutorType.BATCH</code> 作为 <code>ExecutorType</code> 使用时可以采用此方法。</p>
+  <h5>立即批量更新方法</h5>
+  <p>当你将 <code>ExecutorType</code> 设置为 <code>ExecutorType.BATCH</code> 时，可以使用这个方法刷新（执行）存储在 JDBC 驱动类中的批量更新语句。</p>
   <source><![CDATA[List<BatchResult> flushStatements()]]></source>
 
 
   <h5>事务控制方法</h5>
   <p>
-控制事务作用域有四个方法。当然，如果你已经设置了自动提交或你正在使用外部事务管理器，这就没有任何效果了。然而，如果你正在使用 JDBC 事务管理器，由Connection 实例来控制，那么这四个方法就会派上用场：
+    有四个方法用来控制事务作用域。当然，如果你已经设置了自动提交或你使用了外部事务管理器，这些方法就没什么作用了。然而，如果你正在使用由 Connection 实例控制的 JDBC 事务管理器，那么这四个方法就会派上用场：
   </p>
   <source>void commit()
 void commit(boolean force)
 void rollback()
 void rollback(boolean force)</source>
-  <p>默认情况下 MyBatis 不会自动提交事务，除非它侦测到有插入、更新或删除操作改变了数据库。如果你已经做出了一些改变而没有使用这些方法，那么你可以传递 true 值到 commit 和 rollback 方法来保证事务被正常处理（注意，在自动提交模式或者使用了外部事务管理器的情况下设置 force 值对 session 无效）。很多时候你不用调用 rollback()，因为 MyBatis 会在你没有调用 commit 时替你完成回滚操作。然而，如果你需要在支持多提交和回滚的 session 中获得更多细粒度控制，你可以使用回滚操作来达到目的。</p>
-  <p><span class="label important">注意</span> MyBatis-Spring 和 MyBatis-Guice 提供了声明事务处理，所以如果你在使用 Mybatis 的同时使用了Spring 或者 Guice，那么请参考它们的手册以获取更多的内容。</p>
-  <h5>本地缓存</h5>
+  <p>默认情况下 MyBatis 不会自动提交事务，除非它侦测到调用了插入、更新或删除方法改变了数据库。如果你没有使用这些方法提交修改，那么你可以在 commit 和 rollback 方法参数中传入 true 值，来保证事务被正常提交（注意，在自动提交模式或者使用了外部事务管理器的情况下，设置 force 值对 session 无效）。大部分情况下你无需调用 rollback()，因为 MyBatis 会在你没有调用 commit 时替你完成回滚操作。然而，如果你需要在一个可能会多次提交或回滚的 session 中获得更多细粒度控制，你可以使用回滚操作来达到目的。</p>
+  <p><span class="label important">提示</span> MyBatis-Spring 和 MyBatis-Guice 提供了声明事务处理，所以如果你在使用 Mybatis 的同时使用了 Spring 或者 Guice，请参考它们的手册以获取更多的内容。</p>
+  <h5>本地缓存</h5>
   <p>Mybatis 使用到了两种缓存：本地缓存（local cache）和二级缓存（second level cache）。</p>
-  <p>每当一个新 session 被创建，MyBatis 就会创建一个与之相关联的本地缓存。任何在 session 执行过的查询语句本身都会被保存在本地缓存中，那么，相同的查询语句和相同的参数所产生的更改就不会二度影响数据库了。本地缓存会被增删改、提交事务、关闭事务以及关闭 session 所清空。</p>
-  <p>默认情况下，本地缓存数据可在整个 session 的周期内使用，这一缓存需要被用来解决循环引用错误和加快重复嵌套查询的速度，所以它可以不被禁用掉，但是你可以设置 localCacheScope=STATEMENT 表示缓存仅在语句执行时有效。</p>
-  <p>注意，如果 localCacheScope 被设置为 SESSION，那么 MyBatis 所返回的引用将传递给保存在本地缓存里的相同对象。对返回的对象（例如 list）做出任何更新将会影响本地缓存的内容，进而影响存活在 session 生命周期中的缓存所返回的值。因此，不要对 MyBatis 所返回的对象作出更改，以防后患。</p>
+  <p>每当一个新 session 被创建，MyBatis 就会创建一个与之相关联的本地缓存。任何在 session 执行过的查询语句本身都会被保存在本地缓存中，所以，当再次执行参数相同的相同查询时，就不需要实际查询数据库了。本地缓存将会在做出修改、事务提交或回滚，以及关闭 session 时清空。</p>
+  <p>默认情况下，本地缓存数据的生命周期等同于整个 session 的周期。由于缓存会被用来解决循环引用问题和加快重复嵌套查询的速度，所以无法将其完全禁用。但是你可以通过设置 localCacheScope=STATEMENT 来只在语句执行时使用缓存。</p>
+  <p>注意，如果 localCacheScope 被设置为 SESSION，对于同一个对象，MyBatis 将返回在本地缓存中相同对象的引用。对返回的对象（例如 list）做出的任何修改将会影响本地缓存的内容，进而将会影响到在本次 session 中从缓存返回的值。因此，不要对 MyBatis 所返回的对象作出更改，以防后患。</p>
   <p>你可以随时调用以下方法来清空本地缓存：</p>
-  <source>void clearCache()</source>
+  <source>void clearCache()</source>
   <h5>确保 SqlSession 被关闭</h5>
   <source>void close()</source>
-  <p>你必须保证的最重要的事情是你要关闭所打开的任何 session。保证做到这点的最佳方式是下面的工作模式:</p>
-  <source>try (SqlSession session = sqlSessionFactory.openSession()) {
-    // following 3 lines pseudocod for "doing some work"
+  <p>对于你打开的任何 session，你都要保证它们被妥善关闭，这很重要。保证妥善关闭的最佳代码模式是这样的：</p>
+  <source>SqlSession session = sqlSessionFactory.openSession();
+try (SqlSession session = sqlSessionFactory.openSession()) {
+    // 假设下面三行代码是你的业务逻辑
     session.insert(...);
     session.update(...);
     session.delete(...);
     session.commit();
 }</source>
-  <p><span class="label important">注意</span> 就像 SqlSessionFactory，你可以通过调用当前使用中的 SqlSession 的 getConfiguration 方法来获得 Configuration 实例。</p>
+  <p><span class="label important">提示</span> 和 SqlSessionFactory 一样，你可以调用当前使用的 SqlSession 的 getConfiguration 方法来获得 Configuration 实例。</p>
   <source>Configuration getConfiguration()</source>
 
   <h5>使用映射器</h5>
   <source><![CDATA[<T> T getMapper(Class<T> type)]]></source>
-  <p>上述的各个 insert、update、delete 和 select 方法都很强大，但也有些繁琐，可能会产生类型安全问题并且对于你的 IDE 和单元测试也没有实质性的帮助。在上面的入门章节中我们已经看到了一个使用映射器的示例。</p>
-  <p>因此，一个更通用的方式来执行映射语句是使用映射器类。一个映射器类就是一个仅需声明与 SqlSession 方法相匹配的方法的接口类。下面的示例展示了一些方法签名以及它们是如何映射到 SqlSession 上的。</p>
+<p>上述的各个 insert、update、delete 和 select 方法都很强大，但也有些繁琐，可能会产生类型安全问题并且对于你的 IDE 和单元测试也没有实质性的帮助。在上面的入门章节中我们已经看到了一个使用映射器的示例。</p>
+<p>因此，一个更通用的方式来执行映射语句是使用映射器类。一个映射器类就是一个仅需声明与 SqlSession 方法相匹配的方法的接口类。下面的示例展示了一些方法签名以及它们是如何映射到 SqlSession 上的。</p>
   <source><![CDATA[public interface AuthorMapper {
   // (Author) selectOne("selectAuthor",5);
   Author selectAuthor(int id);
@@ -305,8 +296,8 @@ void rollback(boolean force)</source>
   // delete("deleteAuthor",5)
   int deleteAuthor(int id);
 }]]></source>
-  <p>总之，每个映射器方法签名应该匹配相关联的 SqlSession 方法，而字符串参数 ID 无需匹配。相反，方法名必须匹配映射语句的 ID。</p>
-  <p>此外，返回类型必须匹配期望的结果类型，单返回值时为所指定类的值，多返回值时为数组或集合。所有常用的类型都是支持的，包括：原生类
+<p>总之，每个映射器方法签名应该匹配相关联的 SqlSession 方法，而字符串参数 ID 无需匹配。相反，方法名必须匹配映射语句的 ID。</p>
+<p>此外，返回类型必须匹配期望的结果类型，单返回值时为所指定类的值，多返回值时为数组或集合。所有常用的类型都是支持的，包括：原生类
 型、Map、POJO 和 JavaBean。</p>
   <p><span class="label important">注意</span> 映射器接口不需要去实现任何接口或继承自任何类。只要方法可以被唯一标识对应的映射语句就可以了。</p>
   <p><span class="label important">注意</span> 映射器接口可以继承自其他接口。当使用 XML 来构建映射器接口时要保证语句被包含在合适的命名空间中。而且，唯一的限制就是你不能在两个继承关系的接口中拥有相同的方法签名（潜在的危险做法不可取）。</p>
@@ -355,10 +346,10 @@ void rollback(boolean force)</source>
         <td><code>@Arg</code></td>
         <td>N/A</td>
         <td>
-          <ul>
-            <li><code>&lt;arg&gt;</code></li>
-            <li><code>&lt;idArg&gt;</code></li>
-          </ul>
+<ul>
+<li><code>&lt;arg&gt;</code></li>
+<li><code>&lt;idArg&gt;</code></li>
+</ul>
         </td>
         <td>单参数构造方法，是 ConstructorArgs 集合的一部分。属性有：<code>id</code>, <code>column</code>, <code>javaType</code>, <code>jdbcType</code>, <code>typeHandler</code>, <code>select</code> 和 <code>resultMap</code>。id 属性是布尔值，来标识用于比较的属性，和<code>&lt;idArg&gt;</code> XML 元素相似。Since 3.5.4, it can be used as repeatable annotation.</td>
       </tr>
@@ -384,10 +375,10 @@ void rollback(boolean force)</source>
         <td><code>@Result</code></td>
         <td>N/A</td>
         <td>
-          <ul>
-            <li><code>&lt;result&gt;</code></li>
-            <li><code>&lt;id&gt;</code></li>
-          </ul>
+<ul>
+<li><code>&lt;result&gt;</code></li>
+<li><code>&lt;id&gt;</code></li>
+</ul>
         </td>
         <td>在列和属性或字段之间的单独结果映射。属性有：<code>id</code>, <code>column</code>, <code>javaType</code>, <code>jdbcType</code>, <code>typeHandler</code>, <code>one</code>, <code>many</code>。id 属性是一个布尔值，来标识应该被用于比较（和在 XML 映射中的<code>&lt;id&gt;</code>相似）的属性。one 属性是单独的联系，和 <code>&lt;association&gt;</code> 相似，而 many 属性是对集合而言的，和<code>&lt;collection&gt;</code>相似。它们这样命名是为了避免名称冲突。Since 3.5.4, it can be used as repeatable annotation.</td>
       </tr>
@@ -418,41 +409,41 @@ void rollback(boolean force)</source>
       </tr>
       <tr>
         <td>
-          <ul>
-            <li><code>@Insert</code></li>
-            <li><code>@Update</code></li>
-            <li><code>@Delete</code></li>
-            <li><code>@Select</code></li>
-          </ul>
+<ul>
+<li><code>@Insert</code></li>
+<li><code>@Update</code></li>
+<li><code>@Delete</code></li>
+<li><code>@Select</code></li>
+</ul>
         </td>
         <td><code>方法</code></td>
         <td>
-          <ul>
-            <li><code>&lt;insert&gt;</code></li>
-            <li><code>&lt;update&gt;</code></li>
-            <li><code>&lt;delete&gt;</code></li>
-            <li><code>&lt;select&gt;</code></li>
-          </ul>
+<ul>
+<li><code>&lt;insert&gt;</code></li>
+<li><code>&lt;update&gt;</code></li>
+<li><code>&lt;delete&gt;</code></li>
+<li><code>&lt;select&gt;</code></li>
+</ul>
         </td>
         <td>这四个注解分别代表将会被执行的 SQL 语句。它们用字符串数组（或单个字符串）作为参数。如果传递的是字符串数组，字符串之间先会被填充一个空格再连接成单个完整的字符串。这有效避免了以 Java 代码构建 SQL 语句时的“丢失空格”的问题。然而，你也可以提前手动连接好字符串。属性有：<code>value</code>，填入的值是用来组成单个 SQL 语句的字符串数组。</td>
       </tr>
       <tr>
         <td>
-          <ul>
-            <li><code>@InsertProvider</code></li>
-            <li><code>@UpdateProvider</code></li>
-            <li><code>@DeleteProvider</code></li>
-            <li><code>@SelectProvider</code></li>
-          </ul>
+<ul>
+<li><code>@InsertProvider</code></li>
+<li><code>@UpdateProvider</code></li>
+<li><code>@DeleteProvider</code></li>
+<li><code>@SelectProvider</code></li>
+</ul>
         </td>
         <td><code>方法</code></td>
         <td>
-          <ul>
-            <li><code>&lt;insert&gt;</code></li>
-            <li><code>&lt;update&gt;</code></li>
-            <li><code>&lt;delete&gt;</code></li>
-            <li><code>&lt;select&gt;</code></li>
-          </ul>
+<ul>
+<li><code>&lt;insert&gt;</code></li>
+<li><code>&lt;update&gt;</code></li>
+<li><code>&lt;delete&gt;</code></li>
+<li><code>&lt;select&gt;</code></li>
+</ul>
         </td>
         <td>允许构建动态 SQL。这些备选的 SQL 注解允许你指定类名和返回在运行时执行的 SQL 语句的方法。（自从MyBatis 3.4.6开始，你可以用 <code>CharSequence</code> 代替 <code>String</code> 来返回类型返回值了。）当执行映射语句的时候，MyBatis 会实例化类并执行方法，类和方法就是填入了注解的值。你可以把已经传递给映射方法了的对象作为参数，"Mapper interface type" 和 "Mapper method" and "Database ID" 会经过 <code>ProviderContext</code> （仅在MyBatis 3.4.5及以上支持）作为参数值。（MyBatis 3.4及以上的版本，支持多参数传入）
         属性有： <code>value</code>, <code>type</code>, <code>method</code>。
@@ -497,21 +488,18 @@ void rollback(boolean force)</source>
   </table>
 
   <h5>映射申明样例</h5>
-  <p>这个例子展示了如何使用 @SelectKey 注解来在插入前读取数据库序列的值：</p>
+<p>这个例子展示了如何使用 @SelectKey 注解来在插入前读取数据库序列的值：</p>
   <source>@Insert("insert into table3 (id, name) values(#{nameId}, #{name})")
 @SelectKey(statement="call next value for TestSequence", keyProperty="nameId", before=<strong>true</strong>, resultType=<strong>int.class</strong>)
 <strong>int</strong> insertTable3(Name name);</source>
-
-  <p>这个例子展示了如何使用 @SelectKey 注解来在插入后读取数据库识别列的值：</p>
+<p>这个例子展示了如何使用 @SelectKey 注解来在插入后读取数据库识别列的值：</p>
   <source>@Insert("insert into table2 (name) values(#{name})")
 @SelectKey(statement="call identity()", keyProperty="nameId", before=<strong>false</strong>, resultType=<strong>int.class</strong>)
 <strong>int</strong> insertTable2(Name name);</source>
-
   <p>这个例子展示了如何使用 <code>@Flush</code> 注解去调用 <code>SqlSession#flushStatements()</code>：</p>
   <source><![CDATA[@Flush
 List<BatchResult> flush();]]></source>
-
-  <p>这些例子展示了如何通过指定 @Result 的 id 属性来命名结果集：</p>
+<p>这些例子展示了如何通过指定 @Result 的 id 属性来命名结果集：</p>
   <source>@Results(id = "userResult", value = {
   @Result(property = "id", column = "uid", id = <strong>true</strong>),
   @Result(property = "firstName", column = "first_name"),
@@ -527,7 +515,6 @@ User getUserById(Integer id);
 })
 @Select("select * from company where id = #{id}")
 Company getCompanyById(Integer id);</source>
-
   <p>这个例子展示了单一参数使用 @SqlProvider 注解：</p>
   <source><![CDATA[@SelectProvider(type = UserSqlBuilder.class, method = "buildGetUsersByName")
 List<User> getUsersByName(String name);
@@ -544,7 +531,6 @@ class UserSqlBuilder {
     }}.toString();
   }
 }]]></source>
-
   <p>这个例子展示了多参数使用 @SqlProvider 注解：</p>
   <source><![CDATA[@SelectProvider(type = UserSqlBuilder.class, method = "buildGetUsersByName")
 List<User> getUsersByName(
