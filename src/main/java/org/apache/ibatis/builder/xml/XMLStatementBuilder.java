@@ -20,10 +20,12 @@ import java.util.Locale;
 
 import org.apache.ibatis.builder.BaseBuilder;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
+import org.apache.ibatis.exceptions.UnCorrectNodeTypeException;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.executor.keygen.NoKeyGenerator;
 import org.apache.ibatis.executor.keygen.SelectKeyGenerator;
+import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.mapping.SqlCommandType;
@@ -89,7 +91,7 @@ public class XMLStatementBuilder extends BaseBuilder {
 
     // Parse selectKey after includes and remove them.
     processSelectKeyNodes(id, parameterTypeClass, langDriver);
-    
+
     // Parse the SQL (pre: <selectKey> and <include> were parsed and removed)
     SqlSource sqlSource = langDriver.createSqlSource(configuration, context, parameterTypeClass);
     String resultSets = context.getStringAttribute("resultSets");
@@ -106,9 +108,17 @@ public class XMLStatementBuilder extends BaseBuilder {
           ? Jdbc3KeyGenerator.INSTANCE : NoKeyGenerator.INSTANCE;
     }
 
+    // Validate the node type around with the sql statement head
+    BoundSql boundSql = sqlSource.getBoundSql(null);
+    String sql = boundSql.getSql();
+    if (!sql.toUpperCase().startsWith(sqlCommandType.name())) {
+      String errMsg = String.format("Wrong Node Conf, NodeType:{%s}, Statement:{%s}", sqlCommandType.name(), sql);
+      throw new UnCorrectNodeTypeException(errMsg);
+    }
+
     builderAssistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType,
         fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,
-        resultSetTypeEnum, flushCache, useCache, resultOrdered, 
+        resultSetTypeEnum, flushCache, useCache, resultOrdered,
         keyGenerator, keyProperty, keyColumn, databaseId, langDriver, resultSets);
   }
 

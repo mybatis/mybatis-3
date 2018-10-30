@@ -196,4 +196,16 @@ public class XmlMapperBuilderTest {
 //    builder2.parse();
 //  }
 
+    @Test
+    public void shouldFailedLoadXMLMapperFile2() throws Exception {
+        expectedEx.expect(BuilderException.class);
+        expectedEx.expectMessage("Error parsing Mapper XML. The XML location is 'org/apache/ibatis/builder/UnCorrectNodeTypeMapper.xml'");
+        Configuration configuration = new Configuration();
+        String resource = "org/apache/ibatis/builder/UnCorrectNodeTypeMapper.xml";
+        try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
+            XMLMapperBuilder builder = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
+            builder.parse();
+        }
+    }
+
 }
