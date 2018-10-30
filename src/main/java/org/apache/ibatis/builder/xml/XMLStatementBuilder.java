@@ -108,7 +108,7 @@ public class XMLStatementBuilder extends BaseBuilder {
           ? Jdbc3KeyGenerator.INSTANCE : NoKeyGenerator.INSTANCE;
     }
 
-    // Validate the node type around with the sql statement head
+    // Validate the node type against the sql statement head
     BoundSql boundSql = sqlSource.getBoundSql(null);
     String sql = boundSql.getSql().trim();
     if (!sql.equals("") && !sql.toUpperCase().startsWith(sqlCommandType.name())) {
