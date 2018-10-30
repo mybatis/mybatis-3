@@ -110,8 +110,8 @@ public class XMLStatementBuilder extends BaseBuilder {
 
     // Validate the node type around with the sql statement head
     BoundSql boundSql = sqlSource.getBoundSql(null);
-    String sql = boundSql.getSql();
-    if (!sql.toUpperCase().startsWith(sqlCommandType.name())) {
+    String sql = boundSql.getSql().trim();
+    if (!sql.equals("") && !sql.toUpperCase().startsWith(sqlCommandType.name())) {
       String errMsg = String.format("Wrong Node Conf, NodeType:{%s}, Statement:{%s}", sqlCommandType.name(), sql);
       throw new UnCorrectNodeTypeException(errMsg);
     }

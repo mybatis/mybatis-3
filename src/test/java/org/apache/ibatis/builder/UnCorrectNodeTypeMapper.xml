@@ -22,8 +22,18 @@
 
 <mapper namespace="org.apache.ibatis.domain.blog.mappers.AuthorMapper">
 
-    <select id="updateAuthorName" parameterType="org.apache.ibatis.domain.blog.Author">
-		  update author set username=#{username}
-	  </select>
+  <select id="select" parameterType="org.apache.ibatis.submitted.dynsql.Parameter" resultType="map">
+    <if test="enabled">
+      <foreach collection="ids" item="id" separator="union">
+        <if test="schema != null">
+          select * from ${schema}.names where id = #{id}
+        </if>
+      </foreach>
+    </if>
+  </select>
+
+  <select id="updateAuthorName" parameterType="org.apache.ibatis.domain.blog.Author">
+    update author set username=#{username}
+  </select>
 
 </mapper>
