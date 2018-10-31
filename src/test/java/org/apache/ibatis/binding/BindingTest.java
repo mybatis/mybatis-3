@@ -383,6 +383,7 @@ public class BindingTest {
       assertEquals(101, author.getId());
       assertEquals("jim@ibatis.apache.org", author.getEmail());
       assertEquals("jim", author.getUsername());
+      assertEquals(Section.NEWS, author.getFavouriteSection());
       List<Post> posts = blog.getPosts();
       assertTrue("posts should not be empty", posts != null);
       assertEquals(2, posts.size());

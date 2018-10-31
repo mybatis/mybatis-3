@@ -39,7 +39,7 @@
       <result column="author_password" property="password"/>
       <result column="author_email" property="email"/>
       <result column="author_bio" property="bio"/>
-      <result column="favourite_section" javaType="org.apache.ibatis.domain.blog.Section"/>
+      <result column="favourite_section" property="favouriteSection" javaType="org.apache.ibatis.domain.blog.Section"/>
   </resultMap>
 
   <insert id="insertAuthor" parameterType="org.apache.ibatis.domain.blog.Author">
