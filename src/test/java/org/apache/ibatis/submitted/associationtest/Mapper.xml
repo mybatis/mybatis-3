@@ -40,10 +40,6 @@
     select * from cars
   </select>
 
-  <select id="getCarsNonUnique" resultMap="carResult">
-    select 1 as carid, cartype, enginetype, enginecylinders, brakestype from cars
-  </select>
-  
   <select id="getCars2" resultMap="carResult">
     select 1 as carid, cartype, enginetype, enginecylinders, brakestype from cars where carid in (1,2)
   </select>
