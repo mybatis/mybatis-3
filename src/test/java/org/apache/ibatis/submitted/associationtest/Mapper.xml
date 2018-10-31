@@ -44,4 +44,20 @@
     select 1 as carid, cartype, enginetype, enginecylinders, brakestype from cars where carid in (1,2)
   </select>
   
+  <resultMap type="org.apache.ibatis.submitted.associationtest.Car" id="carResultTypeDetect">
+    <id column="carid" property="id"/>
+    <result column="cartype" property="type"/>
+    <association property="engine">
+      <result column="enginetype" property="type"/>
+      <result column="enginecylinders" property="cylinders"/>
+    </association>
+    <association property="brakes">
+      <result column="brakesType" property="type"/>
+    </association>
+  </resultMap>
+    
+  <select id="getCarsAndDetectAssociationType" resultMap="carResultTypeDetect">
+    select * from cars
+  </select>
+  
 </mapper>
