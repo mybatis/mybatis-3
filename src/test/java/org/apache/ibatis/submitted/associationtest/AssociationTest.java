@@ -79,5 +79,20 @@ public class AssociationTest {
       Assert.assertEquals(1, cars.size());
     }
   }
+  
+  @Test
+  public void shouldGetAllCarsAndDetectAssociationType() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      List<Car> cars = mapper.getCarsAndDetectAssociationType();
+      Assert.assertEquals(4, cars.size());
+      Assert.assertEquals("VW", cars.get(0).getType());
+      Assert.assertNotNull(cars.get(0).getEngine());
+      Assert.assertNull(cars.get(0).getBrakes());
+      Assert.assertEquals("Opel", cars.get(1).getType());
+      Assert.assertNull(cars.get(1).getEngine());
+      Assert.assertNotNull(cars.get(1).getBrakes());
+    }
+  }
 
 }
