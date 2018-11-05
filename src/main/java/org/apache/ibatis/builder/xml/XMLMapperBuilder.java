@@ -405,11 +405,24 @@ public class XMLMapperBuilder extends BaseBuilder {
         || "collection".equals(context.getName())
         || "case".equals(context.getName())) {
       if (context.getStringAttribute("select") == null) {
+        validateCollection(context, enclosingType);
         ResultMap resultMap = resultMapElement(context, resultMappings, enclosingType);
         return resultMap.getId();
       }
     }
     return null;
+  }
+
+  protected void validateCollection(XNode context, Class<?> enclosingType) {
+    if ("collection".equals(context.getName()) && context.getStringAttribute("resultMap") == null
+      && context.getStringAttribute("resultType") == null) {
+      MetaClass metaResultType = MetaClass.forClass(enclosingType, configuration.getReflectorFactory());
+      String property = context.getStringAttribute("property");
+      if (!metaResultType.hasSetter(property)) {
+        throw new BuilderException(
+          "Ambiguous collection type for property '" + property + "'. You must specify 'resultType' or 'resultMap'.");
+      }
+    }
   }
 
   private void bindMapperForNamespace() {
