@@ -282,9 +282,7 @@ public abstract class BaseExecutor implements Executor {
   protected void closeStatement(Statement statement) {
     if (statement != null) {
       try {
-        if (!statement.isClosed()) {
-          statement.close();
-        }
+        statement.close();
       } catch (SQLException e) {
         // ignore
       }
