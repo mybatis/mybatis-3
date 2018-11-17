@@ -788,8 +788,10 @@ public class Configuration {
     }
     if (!incompleteMethods.isEmpty()) {
       synchronized (incompleteMethods) {
-        // This always throws a BuilderException.
-        incompleteMethods.iterator().next().resolve();
+        incompleteMethods.removeIf(x -> {
+          x.resolve();
+          return true;
+        });
       }
     }
   }
