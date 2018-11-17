@@ -784,8 +784,10 @@ public class Configuration {
     }
     if (!incompleteStatements.isEmpty()) {
       synchronized (incompleteStatements) {
-        // This always throws a BuilderException.
-        incompleteStatements.iterator().next().parseStatementNode();
+        incompleteStatements.removeIf(x -> {
+          x.parseStatementNode();
+          return true;
+        });
       }
     }
     if (!incompleteMethods.isEmpty()) {
