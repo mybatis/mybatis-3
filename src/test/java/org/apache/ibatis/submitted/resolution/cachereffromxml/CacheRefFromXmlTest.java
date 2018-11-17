@@ -46,14 +46,11 @@ public class CacheRefFromXmlTest {
 
   @Test
   public void shouldGetAUser() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       UserMapper mapper = sqlSession.getMapper(UserMapper.class);
       User user = mapper.getUser(1);
       Assert.assertEquals(Integer.valueOf(1), user.getId());
       Assert.assertEquals("User1", user.getName());
-    } finally {
-      sqlSession.close();
     }
   }
 
