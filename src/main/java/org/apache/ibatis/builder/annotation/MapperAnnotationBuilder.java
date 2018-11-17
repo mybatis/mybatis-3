@@ -62,6 +62,7 @@ import org.apache.ibatis.annotations.UpdateProvider;
 import org.apache.ibatis.binding.BindingException;
 import org.apache.ibatis.binding.MapperMethod.ParamMap;
 import org.apache.ibatis.builder.BuilderException;
+import org.apache.ibatis.builder.CacheRefResolver;
 import org.apache.ibatis.builder.IncompleteElementException;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
@@ -217,7 +218,11 @@ public class MapperAnnotationBuilder {
         throw new BuilderException("Cannot use both value() and name() attribute in the @CacheNamespaceRef");
       }
       String namespace = (refType != void.class) ? refType.getName() : refName;
-      assistant.useCacheRef(namespace);
+      try {
+        assistant.useCacheRef(namespace);
+      } catch (IncompleteElementException e) {
+        configuration.addIncompleteCacheRef(new CacheRefResolver(assistant, namespace));
+      }
     }
   }
 
