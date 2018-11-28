@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import java.util.Properties;
 
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.executor.BatchResult;
+import org.apache.ibatis.mapping.Mapping;
 import org.apache.ibatis.reflection.ExceptionUtil;
 
 /**
@@ -179,6 +180,11 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
   @Override
   public <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowBounds) {
     return sqlSessionProxy.<K, V> selectMap(statement, parameter, mapKey, rowBounds);
+  }
+
+  @Override
+  public <K, V> Map<K, V> selectMap(String statement, Object parameter, Mapping mapping, RowBounds rowBounds) {
+    return sqlSessionProxy.<K, V> selectMap(statement, parameter, mapping, rowBounds);
   }
 
   @Override

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.executor.BatchResult;
+import org.apache.ibatis.mapping.Mapping;
 
 /**
  * The primary Java interface for working with MyBatis.
@@ -115,6 +116,20 @@ public interface SqlSession extends Closeable {
    * @return Map containing key pair data.
    */
   <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowBounds);
+
+  /**
+   * The selectMap is a special case in that it is designed to convert a list
+   * of results into a Map based on one of the properties in the resulting
+   * objects.
+   * @param <K> the returned Map keys type
+   * @param <V> the returned Map values type
+   * @param statement Unique identifier matching the statement to use.
+   * @param parameter A parameter object to pass to the statement.
+   * @param mapping Function mapping value to key-value pair.
+   * @param rowBounds  Bounds to limit object retrieval
+   * @return Map containing key pair data.
+   */
+  <K, V> Map<K, V> selectMap(String statement, Object parameter, Mapping mapping, RowBounds rowBounds);
 
   /**
    * A Cursor offers the same results as a List, except it fetches data lazily using an Iterator.

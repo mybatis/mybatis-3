@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,10 +17,9 @@ package org.apache.ibatis.binding;
 
 import org.apache.ibatis.annotations.Flush;
 import org.apache.ibatis.annotations.MapKey;
+import org.apache.ibatis.annotations.MapKeyValue;
 import org.apache.ibatis.cursor.Cursor;
-import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.mapping.SqlCommandType;
-import org.apache.ibatis.mapping.StatementType;
+import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.ParamNameResolver;
 import org.apache.ibatis.reflection.TypeParameterResolver;
@@ -183,15 +182,12 @@ public class MapperMethod {
   }
 
   private <K, V> Map<K, V> executeForMap(SqlSession sqlSession, Object[] args) {
-    Map<K, V> result;
     Object param = method.convertArgsToSqlCommandParam(args);
+    RowBounds rowBounds = RowBounds.DEFAULT;
     if (method.hasRowBounds()) {
-      RowBounds rowBounds = method.extractRowBounds(args);
-      result = sqlSession.<K, V>selectMap(command.getName(), param, method.getMapKey(), rowBounds);
-    } else {
-      result = sqlSession.<K, V>selectMap(command.getName(), param, method.getMapKey());
+      rowBounds = method.extractRowBounds(args);
     }
-    return result;
+    return sqlSession.<K, V>selectMap(command.getName(), param, method.getMapping(), rowBounds);
   }
 
   public static class ParamMap<V> extends HashMap<String, V> {
@@ -271,7 +267,7 @@ public class MapperMethod {
     private final boolean returnsVoid;
     private final boolean returnsCursor;
     private final Class<?> returnType;
-    private final String mapKey;
+    private final Mapping mapping;
     private final Integer resultHandlerIndex;
     private final Integer rowBoundsIndex;
     private final ParamNameResolver paramNameResolver;
@@ -288,8 +284,8 @@ public class MapperMethod {
       this.returnsVoid = void.class.equals(this.returnType);
       this.returnsMany = configuration.getObjectFactory().isCollection(this.returnType) || this.returnType.isArray();
       this.returnsCursor = Cursor.class.equals(this.returnType);
-      this.mapKey = getMapKey(method);
-      this.returnsMap = this.mapKey != null;
+      this.mapping = createMapping(method, configuration);
+      this.returnsMap = this.mapping != null;
       this.rowBoundsIndex = getUniqueParamIndex(method, RowBounds.class);
       this.resultHandlerIndex = getUniqueParamIndex(method, ResultHandler.class);
       this.paramNameResolver = new ParamNameResolver(configuration, method);
@@ -315,8 +311,8 @@ public class MapperMethod {
       return hasResultHandler() ? (ResultHandler) args[resultHandlerIndex] : null;
     }
 
-    public String getMapKey() {
-      return mapKey;
+    public Mapping getMapping() {
+      return mapping;
     }
 
     public Class<?> getReturnType() {
@@ -354,15 +350,19 @@ public class MapperMethod {
       return index;
     }
 
-    private String getMapKey(Method method) {
-      String mapKey = null;
+    private Mapping createMapping(Method method, Configuration configuration) {
       if (Map.class.isAssignableFrom(method.getReturnType())) {
+        final MapKeyValue mapKeyValueAnnotation = method.getAnnotation(MapKeyValue.class);
+        if (mapKeyValueAnnotation != null) {
+          return configuration.getObjectFactory().create(mapKeyValueAnnotation.value());
+        }
         final MapKey mapKeyAnnotation = method.getAnnotation(MapKey.class);
         if (mapKeyAnnotation != null) {
-          mapKey = mapKeyAnnotation.value();
+          return new MappingByKey(mapKeyAnnotation.value(),
+                  configuration.getObjectFactory(), configuration.getObjectWrapperFactory(), configuration.getReflectorFactory());
         }
       }
-      return mapKey;
+      return null;
     }
   }
 

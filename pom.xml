@@ -131,6 +131,8 @@
   </distributionManagement>
 
   <properties>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
     <maven.compiler.testTarget>1.8</maven.compiler.testTarget>
     <maven.compiler.testSource>1.8</maven.compiler.testSource>
     <maven.compiler.testCompilerArgument>-parameters</maven.compiler.testCompilerArgument>
@@ -387,6 +389,8 @@
         <jdk>1.6</jdk>
       </activation>
       <properties>
+        <maven.compiler.source>1.6</maven.compiler.source>
+        <maven.compiler.target>1.6</maven.compiler.target>
         <maven.compiler.testTarget>1.6</maven.compiler.testTarget>
         <maven.compiler.testSource>1.6</maven.compiler.testSource>
         <maven.compiler.testCompilerArgument />
@@ -426,6 +430,8 @@
         <jdk>1.7</jdk>
       </activation>
       <properties>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
         <maven.compiler.testTarget>1.7</maven.compiler.testTarget>
         <maven.compiler.testSource>1.7</maven.compiler.testSource>
         <maven.compiler.testCompilerArgument />

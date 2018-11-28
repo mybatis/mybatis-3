@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -31,8 +31,8 @@ import org.apache.ibatis.exceptions.TooManyResultsException;
 import org.apache.ibatis.executor.BatchResult;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.executor.Executor;
-import org.apache.ibatis.executor.result.DefaultMapResultHandler;
-import org.apache.ibatis.executor.result.DefaultResultContext;
+import org.apache.ibatis.mapping.Mapping;
+import org.apache.ibatis.mapping.MappingByKey;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
@@ -96,15 +96,20 @@ public class DefaultSqlSession implements SqlSession {
 
   @Override
   public <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowBounds) {
-    final List<? extends V> list = selectList(statement, parameter, rowBounds);
-    final DefaultMapResultHandler<K, V> mapResultHandler = new DefaultMapResultHandler<K, V>(mapKey,
-        configuration.getObjectFactory(), configuration.getObjectWrapperFactory(), configuration.getReflectorFactory());
-    final DefaultResultContext<V> context = new DefaultResultContext<V>();
-    for (V o : list) {
-      context.nextResultObject(o);
-      mapResultHandler.handleResult(context);
+    Mapping mapping = new MappingByKey(mapKey,
+            configuration.getObjectFactory(), configuration.getObjectWrapperFactory(), configuration.getReflectorFactory());
+    return selectMap(statement, parameter, mapping, rowBounds);
+  }
+
+  @Override
+  public <K, V> Map<K, V> selectMap(String statement, Object parameter, Mapping mapping, RowBounds rowBounds) {
+    final List list = selectList(statement, parameter, rowBounds);
+    final Map<K, V> mappedResults = configuration.getObjectFactory().create(Map.class);
+    for (Object o : list) {
+      Map.Entry<K, V> entry = mapping.apply(o);
+      mappedResults.put(entry.getKey(), entry.getValue());
     }
-    return mapResultHandler.getMappedResults();
+    return mappedResults;
   }
 
   @Override
