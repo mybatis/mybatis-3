@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2017 the original author or authors.
+       Copyright 2009-2018 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -133,7 +133,7 @@ ps.setInt(1,id);]]></source>
   resultMap="personResultMap"
   flushCache="false"
   useCache="true"
-  timeout="10000"
+  timeout="10"
   fetchSize="256"
   statementType="PREPARED"
   resultSetType="FORWARD_ONLY">]]></source>
@@ -213,7 +213,7 @@ ps.setInt(1,id);]]></source>
             <tr>
               <td><code>resultSetType</code></td>
               <td>
-                <code>FORWARD_ONLY</code>, <code>SCROLL_SENSITIVE</code>, <code>SCROLL_INSENSITIVE</code> のいずれかを指定します。デフォルトは未指定（ドライバー依存）です。
+                <code>FORWARD_ONLY</code>, <code>SCROLL_SENSITIVE</code>, <code>SCROLL_INSENSITIVE</code>, <code>DEFAULT</code>(未指定と同じ) のいずれかを指定します。デフォルトは未指定（ドライバー依存）です。
               </td>
             </tr>
             <tr>

@@ -62,6 +62,7 @@ import org.apache.ibatis.annotations.UpdateProvider;
 import org.apache.ibatis.binding.BindingException;
 import org.apache.ibatis.binding.MapperMethod.ParamMap;
 import org.apache.ibatis.builder.BuilderException;
+import org.apache.ibatis.builder.CacheRefResolver;
 import org.apache.ibatis.builder.IncompleteElementException;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
@@ -166,11 +167,15 @@ public class MapperAnnotationBuilder {
     // this flag is set at XMLMapperBuilder#bindMapperForNamespace
     if (!configuration.isResourceLoaded("namespace:" + type.getName())) {
       String xmlResource = type.getName().replace('.', '/') + ".xml";
-      InputStream inputStream = null;
-      try {
-        inputStream = Resources.getResourceAsStream(type.getClassLoader(), xmlResource);
-      } catch (IOException e) {
-        // ignore, resource is not required
+      // #1347
+      InputStream inputStream = type.getResourceAsStream("/" + xmlResource);
+      if (inputStream == null) {
+        // Search XML mapper that is not in the module but in the classpath. 
+        try {
+          inputStream = Resources.getResourceAsStream(type.getClassLoader(), xmlResource);
+        } catch (IOException e2) {
+          // ignore, resource is not required
+        }
       }
       if (inputStream != null) {
         XMLMapperBuilder xmlParser = new XMLMapperBuilder(inputStream, assistant.getConfiguration(), xmlResource, configuration.getSqlFragments(), type.getName());
@@ -213,7 +218,11 @@ public class MapperAnnotationBuilder {
         throw new BuilderException("Cannot use both value() and name() attribute in the @CacheNamespaceRef");
       }
       String namespace = (refType != void.class) ? refType.getName() : refName;
-      assistant.useCacheRef(namespace);
+      try {
+        assistant.useCacheRef(namespace);
+      } catch (IncompleteElementException e) {
+        configuration.addIncompleteCacheRef(new CacheRefResolver(assistant, namespace));
+      }
     }
   }
 
@@ -297,7 +306,7 @@ public class MapperAnnotationBuilder {
       Integer fetchSize = null;
       Integer timeout = null;
       StatementType statementType = StatementType.PREPARED;
-      ResultSetType resultSetType = ResultSetType.FORWARD_ONLY;
+      ResultSetType resultSetType = null;
       SqlCommandType sqlCommandType = getSqlCommandType(method);
       boolean isSelect = sqlCommandType == SqlCommandType.SELECT;
       boolean flushCache = !isSelect;
@@ -609,7 +618,7 @@ public class MapperAnnotationBuilder {
           nullOrEmpty(arg.select()),
           nullOrEmpty(arg.resultMap()),
           null,
-          null,
+          nullOrEmpty(arg.columnPrefix()),
           typeHandler,
           flags,
           null,

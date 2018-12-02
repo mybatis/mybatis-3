@@ -875,7 +875,7 @@ public class Author {
                 <code>java.lang.Short</code>, <code>short</code>
               </td>
               <td>
-                Cualquiera compatible con <code>NUMERIC</code> o <code>SHORT INTEGER</code>
+                Cualquiera compatible con <code>NUMERIC</code> o <code>SMALLINT</code>
               </td>
             </tr>
             <tr>
@@ -897,7 +897,7 @@ public class Author {
                 <code>java.lang.Long</code>, <code>long</code>
               </td>
               <td>
-                Cualquiera compatible con <code>NUMERIC</code> o <code>LONG INTEGER</code>
+                Cualquiera compatible con <code>NUMERIC</code> o <code>BIGINT</code>
               </td>
             </tr>
             <tr>

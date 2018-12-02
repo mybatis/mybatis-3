@@ -15,10 +15,13 @@
  */
 package org.apache.ibatis.submitted.stringlist;
 
+import static org.junit.Assert.*;
+
 import java.io.Reader;
 import java.util.List;
 
 import org.apache.ibatis.BaseDataTest;
+import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -40,7 +43,7 @@ public class StringListTest {
 
     // populate in-memory database
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/stringlist/CreateDB.sql");
+      "org/apache/ibatis/submitted/stringlist/CreateDB.sql");
   }
 
   @Test
@@ -54,4 +57,15 @@ public class StringListTest {
     }
   }
 
+  @Test
+  public void shouldFailFastIfCollectionTypeIsAmbiguous() throws Exception {
+    try (Reader reader = Resources
+      .getResourceAsReader("org/apache/ibatis/submitted/stringlist/mybatis-config-invalid.xml")) {
+      new SqlSessionFactoryBuilder().build(reader);
+      fail("Should throw exception when collection type is unresolvable.");
+    } catch (PersistenceException e) {
+      assertTrue(e.getMessage()
+        .contains("Ambiguous collection type for property 'groups'. You must specify 'resultType' or 'resultMap'."));
+    }
+  }
 }

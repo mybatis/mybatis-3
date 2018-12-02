@@ -48,7 +48,7 @@ public @interface Options {
 
   FlushCachePolicy flushCache() default FlushCachePolicy.DEFAULT;
 
-  ResultSetType resultSetType() default ResultSetType.FORWARD_ONLY;
+  ResultSetType resultSetType() default ResultSetType.DEFAULT;
 
   StatementType statementType() default StatementType.PREPARED;
 

@@ -99,7 +99,7 @@ ps.setInt(1,id);]]></source>
   resultMap="personResultMap"
   flushCache="false"
   useCache="true"
-  timeout="10000"
+  timeout="10"
   fetchSize="256"
   statementType="PREPARED"
   resultSetType="FORWARD_ONLY">]]></source>
@@ -170,7 +170,7 @@ ps.setInt(1,id);]]></source>
             </tr>
             <tr>
               <td><code>resultSetType</code></td>
-              <td>FORWARD_ONLY|SCROLL_SENSITIVE|SCROLL_INSENSITIVE중 하나를 선택할 수 있다.
+              <td>FORWARD_ONLY|SCROLL_SENSITIVE|SCROLL_INSENSITIVE|DEFAULT(same as unset)중 하나를 선택할 수 있다.
 			  디폴트는 셋팅하지 않는 것이고 드라이버에 다라 다소 지원되지 않을 수 있다.</td>
             </tr>
             <tr>

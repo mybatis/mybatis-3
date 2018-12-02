@@ -136,7 +136,7 @@ ps.setInt(1,id);]]></source>
   resultMap="personResultMap"
   flushCache="false"
   useCache="true"
-  timeout="10000"
+  timeout="10"
   fetchSize="256"
   statementType="PREPARED"
   resultSetType="FORWARD_ONLY">]]></source>
@@ -219,7 +219,7 @@ ps.setInt(1,id);]]></source>
             </tr>
             <tr>
               <td><code>resultSetType</code></td>
-              <td>Any one of <code>FORWARD_ONLY</code>|<code>SCROLL_SENSITIVE</code>|<code>SCROLL_INSENSITIVE</code>.
+              <td>Any one of <code>FORWARD_ONLY</code>|<code>SCROLL_SENSITIVE</code>|<code>SCROLL_INSENSITIVE</code>|<code>DEFAULT</code>(same as unset).
               Default is <code>unset</code> (driver dependent).
               </td>
             </tr>

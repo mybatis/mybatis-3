@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,7 @@ import java.util.Set;
 
 import org.apache.ibatis.binding.MapperRegistry;
 import org.apache.ibatis.builder.CacheRefResolver;
+import org.apache.ibatis.builder.IncompleteElementException;
 import org.apache.ibatis.builder.ResultMapResolver;
 import org.apache.ibatis.builder.annotation.MethodResolver;
 import org.apache.ibatis.builder.xml.XMLStatementBuilder;
@@ -770,28 +772,53 @@ public class Configuration {
    * statement validation.
    */
   protected void buildAllStatements() {
-    if (!incompleteResultMaps.isEmpty()) {
-      synchronized (incompleteResultMaps) {
-        // This always throws a BuilderException.
-        incompleteResultMaps.iterator().next().resolve();
-      }
-    }
+    parsePendingResultMaps();
     if (!incompleteCacheRefs.isEmpty()) {
       synchronized (incompleteCacheRefs) {
-        // This always throws a BuilderException.
-        incompleteCacheRefs.iterator().next().resolveCacheRef();
+        incompleteCacheRefs.removeIf(x -> x.resolveCacheRef() != null);
       }
     }
     if (!incompleteStatements.isEmpty()) {
       synchronized (incompleteStatements) {
-        // This always throws a BuilderException.
-        incompleteStatements.iterator().next().parseStatementNode();
+        incompleteStatements.removeIf(x -> {
+          x.parseStatementNode();
+          return true;
+        });
       }
     }
     if (!incompleteMethods.isEmpty()) {
       synchronized (incompleteMethods) {
-        // This always throws a BuilderException.
-        incompleteMethods.iterator().next().resolve();
+        incompleteMethods.removeIf(x -> {
+          x.resolve();
+          return true;
+        });
+      }
+    }
+  }
+
+  private void parsePendingResultMaps() {
+    if (incompleteResultMaps.isEmpty()) {
+      return;
+    }
+    synchronized (incompleteResultMaps) {
+      boolean resolved;
+      IncompleteElementException ex = null;
+      do {
+        resolved = false;
+        Iterator<ResultMapResolver> iterator = incompleteResultMaps.iterator();
+        while (iterator.hasNext()) {
+          try {
+            iterator.next().resolve();
+            iterator.remove();
+            resolved = true;
+          } catch (IncompleteElementException e) {
+            ex = e;
+          }
+        }
+      } while (resolved);
+      if (!incompleteResultMaps.isEmpty() && ex != null) {
+        // At least one result map is unresolvable. 
+        throw ex;
       }
     }
   }
