@@ -48,14 +48,17 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 
 /**
+ * MyBatis-config.xml 解析，之后委托XMLMapperBuilder解析对应的Mapper
  * @author Clinton Begin
  * @author Kazuki Shimizu
  */
 public class XMLConfigBuilder extends BaseBuilder {
-
+  /** 是否在解析*/
   private boolean parsed;
+  /** XML解析器 通过XPath*/
   private final XPathParser parser;
   private String environment;
+  /** */
   private final ReflectorFactory localReflectorFactory = new DefaultReflectorFactory();
 
   public XMLConfigBuilder(Reader reader) {
@@ -82,7 +85,14 @@ public class XMLConfigBuilder extends BaseBuilder {
     this(new XPathParser(inputStream, true, props, new XMLMapperEntityResolver()), environment, props);
   }
 
+  /**
+   * 私有构造方法
+   * @param parser
+   * @param environment
+   * @param props
+   */
   private XMLConfigBuilder(XPathParser parser, String environment, Properties props) {
+    //手动创建一个Configuration，Configuration在MyBatis中是相当重要的，保存了所有配置信息
     super(new Configuration());
     ErrorContext.instance().resource("SQL Mapper Configuration");
     this.configuration.setVariables(props);
@@ -91,31 +101,48 @@ public class XMLConfigBuilder extends BaseBuilder {
     this.parser = parser;
   }
 
+  /**
+   * 此方法进行MyBatis-config.xml解析，并返回Configuration
+   * @return
+   */
   public Configuration parse() {
+    //判断是否正在解析
     if (parsed) {
+      //如果正在解析 抛出异常
       throw new BuilderException("Each XMLConfigBuilder can only be used once.");
     }
     parsed = true;
+    //解析configuration标签, 详见MyBatis-config.xml 或 org/apache/ibatis/builder/xml/mybatis-3-config.dtd文件
     parseConfiguration(parser.evalNode("/configuration"));
     return configuration;
   }
 
+  /**
+   * 解析MyBatis-config.xml
+   * @param root
+   */
   private void parseConfiguration(XNode root) {
     try {
       //issue #117 read properties first
+      //解析properties 并放到Configuration
       propertiesElement(root.evalNode("properties"));
+      //解析settings 并放到Configuration
       Properties settings = settingsAsProperties(root.evalNode("settings"));
       loadCustomVfs(settings);
+      //解析类型别名(自定义的实体别名)并放到Configuration
       typeAliasesElement(root.evalNode("typeAliases"));
       pluginElement(root.evalNode("plugins"));
+
       objectFactoryElement(root.evalNode("objectFactory"));
       objectWrapperFactoryElement(root.evalNode("objectWrapperFactory"));
       reflectorFactoryElement(root.evalNode("reflectorFactory"));
       settingsElement(settings);
       // read it after objectFactory and objectWrapperFactory issue #631
+      //读取environments 这里配置datasource以及事务
       environmentsElement(root.evalNode("environments"));
       databaseIdProviderElement(root.evalNode("databaseIdProvider"));
       typeHandlerElement(root.evalNode("typeHandlers"));
+      //解析mappers标签 这里开始解析自己的mapper, 并放到Configuration中
       mapperElement(root.evalNode("mappers"));
     } catch (Exception e) {
       throw new BuilderException("Error parsing SQL Mapper Configuration. Cause: " + e, e);
@@ -151,8 +178,13 @@ public class XMLConfigBuilder extends BaseBuilder {
     }
   }
 
+  /**
+   * 解析typeAliases标签 并放到Configuration中的typeAliasRegisery中
+   * @param parent
+   */
   private void typeAliasesElement(XNode parent) {
     if (parent != null) {
+      //
       for (XNode child : parent.getChildren()) {
         if ("package".equals(child.getName())) {
           String typeAliasPackage = child.getStringAttribute("name");
@@ -356,6 +388,23 @@ public class XMLConfigBuilder extends BaseBuilder {
     }
   }
 
+  /**
+   * 解析mappers标签， 委托XMLMapperBuilder解析mapper, 并放到Configuration
+   * DTD 定义如下
+   * <!ELEMENT mappers (mapper*,package*)>
+   * <!ELEMENT mapper EMPTY>
+   * <!ATTLIST mapper
+   *    resource CDATA #IMPLIED
+   *    url CDATA #IMPLIED
+   *    class CDATA #IMPLIED
+   * >
+   * <!ELEMENT package EMPTY>
+   *  <!ATTLIST package
+   *    name CDATA #REQUIRED
+   *  >
+   * @param parent
+   * @throws Exception
+   */
   private void mapperElement(XNode parent) throws Exception {
     if (parent != null) {
       for (XNode child : parent.getChildren()) {
@@ -367,16 +416,21 @@ public class XMLConfigBuilder extends BaseBuilder {
           String url = child.getStringAttribute("url");
           String mapperClass = child.getStringAttribute("class");
           if (resource != null && url == null && mapperClass == null) {
+            //如果只配置了resource属性
             ErrorContext.instance().resource(resource);
+            //读取resource, mapper文件路径
             InputStream inputStream = Resources.getResourceAsStream(resource);
+            //通过XMLMapperBuilder解析mapper
             XMLMapperBuilder mapperParser = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
             mapperParser.parse();
           } else if (resource == null && url != null && mapperClass == null) {
+            //配置了url属性
             ErrorContext.instance().resource(url);
             InputStream inputStream = Resources.getUrlAsStream(url);
             XMLMapperBuilder mapperParser = new XMLMapperBuilder(inputStream, configuration, url, configuration.getSqlFragments());
             mapperParser.parse();
           } else if (resource == null && url == null && mapperClass != null) {
+            //配置了class属性
             Class<?> mapperInterface = Resources.classForName(mapperClass);
             configuration.addMapper(mapperInterface);
           } else {
