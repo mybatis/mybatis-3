@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -49,7 +49,6 @@ import org.junit.rules.ExpectedException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Properties;
 import java.util.Set;
 
 import static org.hamcrest.core.Is.is;
@@ -63,108 +62,105 @@ public class XmlConfigBuilderTest {
 
   @Test
   public void shouldSuccessfullyLoadMinimalXMLConfigFile() throws Exception {
+    System.setProperty(XPathParser.KEY_USE_XSD, "true");
     String resource = "org/apache/ibatis/builder/xsd/MinimalMapperConfig.xml";
-    InputStream inputStream = Resources.getResourceAsStream(resource);
-    Properties variables = new Properties();
-    variables.setProperty(XPathParser.KEY_USE_XSD, "true");
-    XMLConfigBuilder builder = new XMLConfigBuilder(inputStream, null, variables);
-    Configuration config = builder.parse();
-    assertNotNull(config);
-    assertThat(config.getAutoMappingBehavior(), is(AutoMappingBehavior.PARTIAL));
-    assertThat(config.getAutoMappingUnknownColumnBehavior(), is(AutoMappingUnknownColumnBehavior.NONE));
-    assertThat(config.isCacheEnabled(), is(true));
-    assertThat(config.getProxyFactory(), is(instanceOf(JavassistProxyFactory.class)));
-    assertThat(config.isLazyLoadingEnabled(), is(false));
-    assertThat(config.isAggressiveLazyLoading(), is(false));
-    assertThat(config.isMultipleResultSetsEnabled(), is(true));
-    assertThat(config.isUseColumnLabel(), is(true));
-    assertThat(config.isUseGeneratedKeys(), is(false));
-    assertThat(config.getDefaultExecutorType(), is(ExecutorType.SIMPLE));
-    assertNull(config.getDefaultStatementTimeout());
-    assertNull(config.getDefaultFetchSize());
-    assertThat(config.isMapUnderscoreToCamelCase(), is(false));
-    assertThat(config.isSafeRowBoundsEnabled(), is(false));
-    assertThat(config.getLocalCacheScope(), is(LocalCacheScope.SESSION));
-    assertThat(config.getJdbcTypeForNull(), is(JdbcType.OTHER));
-    assertThat(config.getLazyLoadTriggerMethods(), is((Set<String>) new HashSet<String>(Arrays.asList("equals", "clone", "hashCode", "toString"))));
-    assertThat(config.isSafeResultHandlerEnabled(), is(true));
-    assertThat(config.getDefaultScriptingLanguageInstance(), is(instanceOf(XMLLanguageDriver.class)));
-    assertThat(config.isCallSettersOnNulls(), is(false));
-    assertNull(config.getLogPrefix());
-    assertNull(config.getLogImpl());
-    assertNull(config.getConfigurationFactory());
+    try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
+      XMLConfigBuilder builder = new XMLConfigBuilder(inputStream);
+      Configuration config = builder.parse();
+      assertNotNull(config);
+      assertThat(config.getAutoMappingBehavior(), is(AutoMappingBehavior.PARTIAL));
+      assertThat(config.getAutoMappingUnknownColumnBehavior(), is(AutoMappingUnknownColumnBehavior.NONE));
+      assertThat(config.isCacheEnabled(), is(true));
+      assertThat(config.getProxyFactory(), is(instanceOf(JavassistProxyFactory.class)));
+      assertThat(config.isLazyLoadingEnabled(), is(false));
+      assertThat(config.isAggressiveLazyLoading(), is(false));
+      assertThat(config.isMultipleResultSetsEnabled(), is(true));
+      assertThat(config.isUseColumnLabel(), is(true));
+      assertThat(config.isUseGeneratedKeys(), is(false));
+      assertThat(config.getDefaultExecutorType(), is(ExecutorType.SIMPLE));
+      assertNull(config.getDefaultStatementTimeout());
+      assertNull(config.getDefaultFetchSize());
+      assertThat(config.isMapUnderscoreToCamelCase(), is(false));
+      assertThat(config.isSafeRowBoundsEnabled(), is(false));
+      assertThat(config.getLocalCacheScope(), is(LocalCacheScope.SESSION));
+      assertThat(config.getJdbcTypeForNull(), is(JdbcType.OTHER));
+      assertThat(config.getLazyLoadTriggerMethods(), is((Set<String>) new HashSet<String>(Arrays.asList("equals", "clone", "hashCode", "toString"))));
+      assertThat(config.isSafeResultHandlerEnabled(), is(true));
+      assertThat(config.getDefaultScriptingLanguageInstance(), is(instanceOf(XMLLanguageDriver.class)));
+      assertThat(config.isCallSettersOnNulls(), is(false));
+      assertNull(config.getLogPrefix());
+      assertNull(config.getLogImpl());
+      assertNull(config.getConfigurationFactory());
+    }
   }
 
   @Test
-  public void shouldSuccessfullyLoadXMLConfigFile() throws Exception {
+  public void shouldSuccessfullyLoadXMLConfigFitle() throws Exception {
+    System.setProperty(XPathParser.KEY_USE_XSD, "true");
     String resource = "org/apache/ibatis/builder/xsd/CustomizedSettingsMapperConfig.xml";
-    InputStream inputStream = Resources.getResourceAsStream(resource);
-    Properties variables = new Properties();
-    variables.setProperty(XPathParser.KEY_USE_XSD, "true");
-    variables.put("prop2", "cccc");
-    XMLConfigBuilder builder = new XMLConfigBuilder(inputStream, null, variables);
-    Configuration config = builder.parse();
+    try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
+      XMLConfigBuilder builder = new XMLConfigBuilder(inputStream);
+      Configuration config = builder.parse();
 
-    assertThat(config.getAutoMappingBehavior(), is(AutoMappingBehavior.NONE));
-    assertThat(config.getAutoMappingUnknownColumnBehavior(), is(AutoMappingUnknownColumnBehavior.WARNING));
-    assertThat(config.isCacheEnabled(), is(false));
-    assertThat(config.getProxyFactory(), is(instanceOf(CglibProxyFactory.class)));
-    assertThat(config.isLazyLoadingEnabled(), is(true));
-    assertThat(config.isAggressiveLazyLoading(), is(true));
-    assertThat(config.isMultipleResultSetsEnabled(), is(false));
-    assertThat(config.isUseColumnLabel(), is(false));
-    assertThat(config.isUseGeneratedKeys(), is(true));
-    assertThat(config.getDefaultExecutorType(), is(ExecutorType.BATCH));
-    assertThat(config.getDefaultStatementTimeout(), is(10));
-    assertThat(config.getDefaultFetchSize(), is(100));
-    assertThat(config.isMapUnderscoreToCamelCase(), is(true));
-    assertThat(config.isSafeRowBoundsEnabled(), is(true));
-    assertThat(config.getLocalCacheScope(), is(LocalCacheScope.STATEMENT));
-    assertThat(config.getJdbcTypeForNull(), is(JdbcType.NULL));
-    assertThat(config.getLazyLoadTriggerMethods(), is((Set<String>) new HashSet<String>(Arrays.asList("equals", "clone", "hashCode", "toString", "xxx"))));
-    assertThat(config.isSafeResultHandlerEnabled(), is(false));
-    assertThat(config.getDefaultScriptingLanguageInstance(), is(instanceOf(RawLanguageDriver.class)));
-    assertThat(config.isCallSettersOnNulls(), is(true));
-    assertThat(config.getLogPrefix(), is("mybatis_"));
-    assertThat(config.getLogImpl().getName(), is(Slf4jImpl.class.getName()));
-    assertThat(config.getVfsImpl().getName(), is(JBoss6VFS.class.getName()));
-    assertThat(config.getConfigurationFactory().getName(), is(String.class.getName()));
+      assertThat(config.getAutoMappingBehavior(), is(AutoMappingBehavior.NONE));
+      assertThat(config.getAutoMappingUnknownColumnBehavior(), is(AutoMappingUnknownColumnBehavior.WARNING));
+      assertThat(config.isCacheEnabled(), is(false));
+      assertThat(config.getProxyFactory(), is(instanceOf(CglibProxyFactory.class)));
+      assertThat(config.isLazyLoadingEnabled(), is(true));
+      assertThat(config.isAggressiveLazyLoading(), is(true));
+      assertThat(config.isMultipleResultSetsEnabled(), is(false));
+      assertThat(config.isUseColumnLabel(), is(false));
+      assertThat(config.isUseGeneratedKeys(), is(true));
+      assertThat(config.getDefaultExecutorType(), is(ExecutorType.BATCH));
+      assertThat(config.getDefaultStatementTimeout(), is(10));
+      assertThat(config.getDefaultFetchSize(), is(100));
+      assertThat(config.isMapUnderscoreToCamelCase(), is(true));
+      assertThat(config.isSafeRowBoundsEnabled(), is(true));
+      assertThat(config.getLocalCacheScope(), is(LocalCacheScope.STATEMENT));
+      assertThat(config.getJdbcTypeForNull(), is(JdbcType.NULL));
+      assertThat(config.getLazyLoadTriggerMethods(), is((Set<String>) new HashSet<String>(Arrays.asList("equals", "clone", "hashCode", "toString", "xxx"))));
+      assertThat(config.isSafeResultHandlerEnabled(), is(false));
+      assertThat(config.getDefaultScriptingLanguageInstance(), is(instanceOf(RawLanguageDriver.class)));
+      assertThat(config.isCallSettersOnNulls(), is(true));
+      assertThat(config.getLogPrefix(), is("mybatis_"));
+      assertThat(config.getLogImpl().getName(), is(Slf4jImpl.class.getName()));
+      assertThat(config.getVfsImpl().getName(), is(JBoss6VFS.class.getName()));
+      assertThat(config.getConfigurationFactory().getName(), is(String.class.getName()));
 
-    assertTrue(config.getTypeAliasRegistry().getTypeAliases().get("blogauthor").equals(Author.class));
-    assertTrue(config.getTypeAliasRegistry().getTypeAliases().get("blog").equals(Blog.class));
-    assertTrue(config.getTypeAliasRegistry().getTypeAliases().get("cart").equals(Cart.class));
+      assertTrue(config.getTypeAliasRegistry().getTypeAliases().get("blogauthor").equals(Author.class));
+      assertTrue(config.getTypeAliasRegistry().getTypeAliases().get("blog").equals(Blog.class));
+      assertTrue(config.getTypeAliasRegistry().getTypeAliases().get("cart").equals(Cart.class));
 
-    assertThat(config.getTypeHandlerRegistry().getTypeHandler(Integer.class), is(instanceOf(CustomIntegerTypeHandler.class)));
-    assertThat(config.getTypeHandlerRegistry().getTypeHandler(Long.class), is(instanceOf(CustomLongTypeHandler.class)));
-    assertThat(config.getTypeHandlerRegistry().getTypeHandler(String.class), is(instanceOf(CustomStringTypeHandler.class)));
-    assertThat(config.getTypeHandlerRegistry().getTypeHandler(String.class, JdbcType.VARCHAR), is(instanceOf(CustomStringTypeHandler.class)));
+      assertThat(config.getTypeHandlerRegistry().getTypeHandler(Integer.class), is(instanceOf(CustomIntegerTypeHandler.class)));
+      assertThat(config.getTypeHandlerRegistry().getTypeHandler(Long.class), is(instanceOf(CustomLongTypeHandler.class)));
+      assertThat(config.getTypeHandlerRegistry().getTypeHandler(String.class), is(instanceOf(CustomStringTypeHandler.class)));
+      assertThat(config.getTypeHandlerRegistry().getTypeHandler(String.class, JdbcType.VARCHAR), is(instanceOf(CustomStringTypeHandler.class)));
 
-    ExampleObjectFactory objectFactory = (ExampleObjectFactory)config.getObjectFactory();
-    assertThat(objectFactory.getProperties().size(), is(1));
-    assertThat(objectFactory.getProperties().getProperty("objectFactoryProperty"), is("100"));
+      ExampleObjectFactory objectFactory = (ExampleObjectFactory)config.getObjectFactory();
+      assertThat(objectFactory.getProperties().size(), is(1));
+      assertThat(objectFactory.getProperties().getProperty("objectFactoryProperty"), is("100"));
 
-    assertThat(config.getObjectWrapperFactory(), is(instanceOf(CustomObjectWrapperFactory.class)));
+      assertThat(config.getObjectWrapperFactory(), is(instanceOf(CustomObjectWrapperFactory.class)));
 
-    assertThat(config.getReflectorFactory(), is(instanceOf(CustomReflectorFactory.class)));
+      assertThat(config.getReflectorFactory(), is(instanceOf(CustomReflectorFactory.class)));
 
-    ExamplePlugin plugin = (ExamplePlugin)config.getInterceptors().get(0);
-    assertThat(plugin.getProperties().size(), is(1));
-    assertThat(plugin.getProperties().getProperty("pluginProperty"), is("100"));
+      ExamplePlugin plugin = (ExamplePlugin)config.getInterceptors().get(0);
+      assertThat(plugin.getProperties().size(), is(1));
+      assertThat(plugin.getProperties().getProperty("pluginProperty"), is("100"));
 
-    Environment environment = config.getEnvironment();
-    assertThat(environment.getId(), is("development"));
-    assertThat(environment.getDataSource(), is(instanceOf(UnpooledDataSource.class)));
-    assertThat(environment.getTransactionFactory(), is(instanceOf(JdbcTransactionFactory.class)));
+      Environment environment = config.getEnvironment();
+      assertThat(environment.getId(), is("development"));
+      assertThat(environment.getDataSource(), is(instanceOf(UnpooledDataSource.class)));
+      assertThat(environment.getTransactionFactory(), is(instanceOf(JdbcTransactionFactory.class)));
 
-    assertThat(config.getDatabaseId(), is("derby"));
+      assertThat(config.getDatabaseId(), is("derby"));
 
-    assertThat(config.getMapperRegistry().getMappers().size(), is(4));
-    assertThat(config.getMapperRegistry().hasMapper(CachedAuthorMapper.class), is(true));
-    assertThat(config.getMapperRegistry().hasMapper(CustomMapper.class), is(true));
-    assertThat(config.getMapperRegistry().hasMapper(BlogMapper.class), is(true));
-    assertThat(config.getMapperRegistry().hasMapper(NestedBlogMapper.class), is(true));
-
+      assertThat(config.getMapperRegistry().getMappers().size(), is(4));
+      assertThat(config.getMapperRegistry().hasMapper(CachedAuthorMapper.class), is(true));
+      assertThat(config.getMapperRegistry().hasMapper(CustomMapper.class), is(true));
+      assertThat(config.getMapperRegistry().hasMapper(BlogMapper.class), is(true));
+      assertThat(config.getMapperRegistry().hasMapper(NestedBlogMapper.class), is(true));
+    }
   }
-
 
 }

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -25,7 +25,6 @@ import org.apache.ibatis.session.Configuration;
 import org.junit.Test;
 
 import java.io.InputStream;
-import java.util.Properties;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
@@ -34,23 +33,21 @@ public class XmlMapperBuilderTest {
 
   @Test
   public void mappedStatementWithOptions() throws Exception {
+    System.setProperty(XPathParser.KEY_USE_XSD, "true");
     Configuration configuration = new Configuration();
-    Properties variables = new Properties();
-    variables.setProperty(XPathParser.KEY_USE_XSD, "true");
-    configuration.setVariables(variables);
     String resource = "org/apache/ibatis/builder/xsd/AuthorMapper.xml";
-    InputStream inputStream = Resources.getResourceAsStream(resource);
-    XMLMapperBuilder builder = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
-    builder.parse();
+    try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
+      XMLMapperBuilder builder = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
+      builder.parse();
 
-    MappedStatement mappedStatement = configuration.getMappedStatement("selectWithOptions");
-    assertThat(mappedStatement.getFetchSize(), is(200));
-    assertThat(mappedStatement.getTimeout(), is(10));
-    assertThat(mappedStatement.getStatementType(), is(StatementType.PREPARED));
-    assertThat(mappedStatement.getResultSetType(), is(ResultSetType.SCROLL_SENSITIVE));
-    assertThat(mappedStatement.isFlushCacheRequired(), is(false));
-    assertThat(mappedStatement.isUseCache(), is(false));
-
+      MappedStatement mappedStatement = configuration.getMappedStatement("selectWithOptions");
+      assertThat(mappedStatement.getFetchSize(), is(200));
+      assertThat(mappedStatement.getTimeout(), is(10));
+      assertThat(mappedStatement.getStatementType(), is(StatementType.PREPARED));
+      assertThat(mappedStatement.getResultSetType(), is(ResultSetType.SCROLL_SENSITIVE));
+      assertThat(mappedStatement.isFlushCacheRequired(), is(false));
+      assertThat(mappedStatement.isUseCache(), is(false));
+    }
   }
 
 }

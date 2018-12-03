@@ -31,7 +31,6 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.ibatis.builder.BuilderException;
-import org.apache.ibatis.io.Resources;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -55,7 +54,7 @@ public class XPathParser {
    * </p>
    * @since 3.5.0
    */
-  public static final String KEY_USE_XSD = "org.apache.ibatis.parsing.XPathParser.use-xsd";
+  public static final String KEY_USE_XSD = "org.mybatis.useXsd";
 
   private static final String USE_XSD_DEFAULT_VALUE = "false";
 
@@ -252,7 +251,7 @@ public class XPathParser {
       factory.setCoalescing(false);
       factory.setExpandEntityReferences(true);
 
-      boolean useXsd = Boolean.parseBoolean(getPropertyValue(KEY_USE_XSD, USE_XSD_DEFAULT_VALUE));
+      boolean useXsd = Boolean.parseBoolean(System.getProperty(KEY_USE_XSD, USE_XSD_DEFAULT_VALUE));
       if (useXsd) {
         factory.setNamespaceAware(true);
         factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaLanguage", XMLConstants.W3C_XML_SCHEMA_NS_URI);
@@ -287,10 +286,6 @@ public class XPathParser {
     this.variables = variables;
     XPathFactory factory = XPathFactory.newInstance();
     this.xpath = factory.newXPath();
-  }
-
-  private String getPropertyValue(String key, String defaultValue) {
-    return (variables == null) ? defaultValue : variables.getProperty(key, defaultValue);
   }
 
 }
