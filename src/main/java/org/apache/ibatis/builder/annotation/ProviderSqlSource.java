@@ -21,11 +21,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.ibatis.builder.BuilderException;
-import org.apache.ibatis.builder.SqlSourceBuilder;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.parsing.PropertyParser;
 import org.apache.ibatis.reflection.ParamNameResolver;
+import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
 
 /**
@@ -35,8 +35,8 @@ import org.apache.ibatis.session.Configuration;
 public class ProviderSqlSource implements SqlSource {
 
   private final Configuration configuration;
-  private final SqlSourceBuilder sqlSourceParser;
   private final Class<?> providerType;
+  private final LanguageDriver languageDriver;
   private Method providerMethod;
   private String[] providerMethodArgumentNames;
   private Class<?>[] providerMethodParameterTypes;
@@ -55,10 +55,17 @@ public class ProviderSqlSource implements SqlSource {
    * @since 3.4.5
    */
   public ProviderSqlSource(Configuration configuration, Object provider, Class<?> mapperType, Method mapperMethod) {
+    this(configuration, provider, mapperType, mapperMethod, configuration.getDefaultScriptingLanguageInstance());
+  }
+
+  /**
+   * @since 3.4.6
+   */
+  public ProviderSqlSource(Configuration configuration, Object provider, Class<?> mapperType, Method mapperMethod, LanguageDriver languageDriver) {
     String providerMethodName;
     try {
       this.configuration = configuration;
-      this.sqlSourceParser = new SqlSourceBuilder(configuration);
+      this.languageDriver = languageDriver;
       this.providerType = (Class<?>) provider.getClass().getMethod("type").invoke(provider);
       providerMethodName = (String) provider.getClass().getMethod("method").invoke(provider);
 
@@ -126,7 +133,7 @@ public class ProviderSqlSource implements SqlSource {
                 + " using a specifying parameterObject. In this case, please specify a 'java.util.Map' object.");
       }
       Class<?> parameterType = parameterObject == null ? Object.class : parameterObject.getClass();
-      return sqlSourceParser.parse(replacePlaceholder(sql), parameterType, new HashMap<String, Object>());
+      return languageDriver.createSqlSource(configuration, sql, parameterType);
     } catch (BuilderException e) {
       throw e;
     } catch (Exception e) {
