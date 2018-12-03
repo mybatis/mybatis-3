@@ -91,6 +91,8 @@ public class XmlConfigBuilderTest {
       assertNull(config.getLogPrefix());
       assertNull(config.getLogImpl());
       assertNull(config.getConfigurationFactory());
+    } finally {
+      System.clearProperty(XPathParser.KEY_USE_XSD);
     }
   }
 
@@ -160,6 +162,8 @@ public class XmlConfigBuilderTest {
       assertThat(config.getMapperRegistry().hasMapper(CustomMapper.class), is(true));
       assertThat(config.getMapperRegistry().hasMapper(BlogMapper.class), is(true));
       assertThat(config.getMapperRegistry().hasMapper(NestedBlogMapper.class), is(true));
+    } finally {
+      System.clearProperty(XPathParser.KEY_USE_XSD);
     }
   }
 

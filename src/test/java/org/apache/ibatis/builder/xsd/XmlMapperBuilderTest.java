@@ -47,6 +47,8 @@ public class XmlMapperBuilderTest {
       assertThat(mappedStatement.getResultSetType(), is(ResultSetType.SCROLL_SENSITIVE));
       assertThat(mappedStatement.isFlushCacheRequired(), is(false));
       assertThat(mappedStatement.isUseCache(), is(false));
+    } finally {
+      System.clearProperty(XPathParser.KEY_USE_XSD);
     }
   }
 
