@@ -49,13 +49,18 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 
 /**
+ * 解析Mappers下的Mapper属性， 同时委托MapperBuilderAssistant来处理Mapper
+ *
  * @author Clinton Begin
  */
 public class XMLMapperBuilder extends BaseBuilder {
 
+  /** 解析器 使用SAX */
   private final XPathParser parser;
+  /** 每个Mapper 委托MapperBuilderAssistant */
   private final MapperBuilderAssistant builderAssistant;
   private final Map<String, XNode> sqlFragments;
+  /** 当前mapper文件路径 */
   private final String resource;
 
   @Deprecated
@@ -80,18 +85,34 @@ public class XMLMapperBuilder extends BaseBuilder {
         configuration, resource, sqlFragments);
   }
 
+  /**
+   * XMLMapperBuilder构造方法
+   * @param parser        XPathParser
+   * @param configuration 上下文
+   * @param resource      mapper路径
+   * @param sqlFragments
+   */
   private XMLMapperBuilder(XPathParser parser, Configuration configuration, String resource, Map<String, XNode> sqlFragments) {
     super(configuration);
+    //创建MapperBuilderAssistant实例 XMLMapperBuilder委托MapperBuilderAssistant解析每个sql并放到Configuration
     this.builderAssistant = new MapperBuilderAssistant(configuration, resource);
     this.parser = parser;
     this.sqlFragments = sqlFragments;
     this.resource = resource;
   }
 
+  /**
+   * 解析Mapper
+   */
   public void parse() {
+    //判断mapper是否已经解析过
     if (!configuration.isResourceLoaded(resource)) {
+      //当前mapper未被解析过 则解析mapper
+      //获取Mapper文件中的mapper节点 并解析
       configurationElement(parser.evalNode("/mapper"));
+      //将Mapper-config.xml 中mapper resource保存到Configuration
       configuration.addLoadedResource(resource);
+      //
       bindMapperForNamespace();
     }
 
@@ -104,16 +125,24 @@ public class XMLMapperBuilder extends BaseBuilder {
     return sqlFragments.get(refid);
   }
 
+  /**
+   * 解析Mapper文件，从mapper标签开始
+   * @param context
+   */
   private void configurationElement(XNode context) {
     try {
+      //获取mapper的namespace属性(即 Dao )
       String namespace = context.getStringAttribute("namespace");
       if (namespace == null || namespace.equals("")) {
         throw new BuilderException("Mapper's namespace cannot be empty");
       }
       builderAssistant.setCurrentNamespace(namespace);
+      //解析cache-ref标签
       cacheRefElement(context.evalNode("cache-ref"));
       cacheElement(context.evalNode("cache"));
+      //解析parameterMap(可以配置多个) 定义详见mybatis-3-mapper.dtd
       parameterMapElement(context.evalNodes("/mapper/parameterMap"));
+      //解析resultMap(可以配置多个) 定义详见mybatis-3-mapper.dtd
       resultMapElements(context.evalNodes("/mapper/resultMap"));
       sqlElement(context.evalNodes("/mapper/sql"));
       buildStatementFromContext(context.evalNodes("select|insert|update|delete"));
@@ -212,13 +241,24 @@ public class XMLMapperBuilder extends BaseBuilder {
     }
   }
 
+  /**
+   * 解析所有parameterMap标签
+   * @param list
+   * @throws Exception
+   */
   private void parameterMapElement(List<XNode> list) throws Exception {
+    //循环parameterMap标签
     for (XNode parameterMapNode : list) {
+      //获取parameterMap的id 即自定义的别名
       String id = parameterMapNode.getStringAttribute("id");
+      //获取别名对应的类型 对应Java类型(类全路径)
       String type = parameterMapNode.getStringAttribute("type");
+      //转换成Class 先从从TypeAlias中查找，如果不存在则根据type加载Class
       Class<?> parameterClass = resolveClass(type);
+      //获取所有参数节点 格式定义见mybatis-3-mapper.dtd
       List<XNode> parameterNodes = parameterMapNode.evalNodes("parameter");
       List<ParameterMapping> parameterMappings = new ArrayList<>();
+      //循环解析参数节点
       for (XNode parameterNode : parameterNodes) {
         String property = parameterNode.getStringAttribute("property");
         String javaType = parameterNode.getStringAttribute("javaType");
@@ -232,9 +272,11 @@ public class XMLMapperBuilder extends BaseBuilder {
         JdbcType jdbcTypeEnum = resolveJdbcType(jdbcType);
         @SuppressWarnings("unchecked")
         Class<? extends TypeHandler<?>> typeHandlerClass = (Class<? extends TypeHandler<?>>) resolveClass(typeHandler);
+        //构建arameterMapping对象  ParameterMapping对应parameter配置  内部委托ParameterMappingBuilder构建
         ParameterMapping parameterMapping = builderAssistant.buildParameterMapping(parameterClass, property, javaTypeClass, jdbcTypeEnum, resultMap, modeEnum, typeHandlerClass, numericScale);
         parameterMappings.add(parameterMapping);
       }
+      //添加到将parameterMap添加到Configuration 内部通过ParameterBuilder构建ParameterMap
       builderAssistant.addParameterMap(id, parameterClass, parameterMappings);
     }
   }

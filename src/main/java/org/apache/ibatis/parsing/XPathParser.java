@@ -43,9 +43,10 @@ import org.xml.sax.SAXParseException;
  * @author Clinton Begin
  */
 public class XPathParser {
-
+  /** Mybatis-config.xml 对应的Dom树 */
   private final Document document;
   private boolean validation;
+  /** SAX 自定义实体(XML Dto)处理, 判断XML是否符合自己的DTD定义, 如果符合则进行加载解析*/
   private EntityResolver entityResolver;
   private Properties variables;
   private XPath xpath;

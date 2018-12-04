@@ -26,7 +26,10 @@ import org.xml.sax.SAXException;
 
 /**
  * Offline entity resolver for the MyBatis DTDs
- * 
+ * SAX 解析xml 自定义处理外部实体 DTD,
+ * 首先会读取该xml文档上的声明,根据声明去寻找相应的dtd定义,以便对文档的进行验证,
+ * 默认的寻找规则,(即:通过网络,实现上就是声明DTD的地址URI地址来下载DTD声明),
+ * 并进行认证,下载的过程是一个漫长的过程,而且当网络不可用时,这里会报错,就是应为相应的dtd没找到
  * @author Clinton Begin
  * @author Eduardo Macarron
  */
@@ -42,7 +45,7 @@ public class XMLMapperEntityResolver implements EntityResolver {
 
   /**
    * Converts a public DTD into a local one
-   * 
+   * 校验publicId和SystemId是否为MyBatis或IBatis的，如果是则进行加载
    * @param publicId The public id that is what comes after "PUBLIC"
    * @param systemId The system id that is what comes after the public id.
    * @return The InputSource for the DTD
