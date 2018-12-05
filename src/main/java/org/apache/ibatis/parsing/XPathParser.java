@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -41,8 +42,21 @@ import org.xml.sax.SAXParseException;
 
 /**
  * @author Clinton Begin
+ * @author Kazuki Shimizu
  */
 public class XPathParser {
+
+  /**
+   * The special property key that indicate whether use a xsd file on xml parsing.
+   * <p>
+   *   The default value is {@code false} (indicate disable using a xsd file xml parsing)
+   *   If you specify the {@code true}, you can use a xsd file on config xml or mapper xml.
+   * </p>
+   * @since 3.5.0
+   */
+  public static final String KEY_USE_XSD = "org.mybatis.useXsd";
+
+  private static final String USE_XSD_DEFAULT_VALUE = "false";
 
   private final Document document;
   private boolean validation;
@@ -236,6 +250,12 @@ public class XPathParser {
       factory.setIgnoringElementContentWhitespace(false);
       factory.setCoalescing(false);
       factory.setExpandEntityReferences(true);
+
+      boolean useXsd = Boolean.parseBoolean(System.getProperty(KEY_USE_XSD, USE_XSD_DEFAULT_VALUE));
+      if (useXsd) {
+        factory.setNamespaceAware(true);
+        factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaLanguage", XMLConstants.W3C_XML_SCHEMA_NS_URI);
+      }
 
       DocumentBuilder builder = factory.newDocumentBuilder();
       builder.setEntityResolver(entityResolver);
