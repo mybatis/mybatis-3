@@ -90,8 +90,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
           <li>最后读取作为方法参数传递的属性，并覆盖已读取的同名属性。
           </li>
         </ul>
-        <p>因此，通过方法参数传递的属性具有最高优先级，resource/url
-        属性中指定的配置文件次之，最低优先级的是 properties 属性中指定的属性。</p>
+        <p>因此，properties属性中指定的属性具有最高优先级，resource/url属性中指定的配置文件次之，最低优先级的是通过方法参数传递的属性。</p>
 
         <p>
 		    从 MyBatis 3.4.2 开始，你可以为占位符指定一个默认值。例如：
