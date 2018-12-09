@@ -296,6 +296,7 @@
             <xs:enumeration value="FORWARD_ONLY"/>
             <xs:enumeration value="SCROLL_INSENSITIVE"/>
             <xs:enumeration value="SCROLL_SENSITIVE"/>
+            <xs:enumeration value="DEFAULT"/>
           </xs:restriction>
         </xs:simpleType>
       </xs:attribute>
