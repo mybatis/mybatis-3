@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2017 the original author or authors.
+       Copyright 2009-2018 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -141,6 +141,7 @@
       <xs:attribute name="select"/>
       <xs:attribute name="resultMap"/>
       <xs:attribute name="name"/>
+      <xs:attribute name="columnPrefix"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="arg">
@@ -152,6 +153,7 @@
       <xs:attribute name="select"/>
       <xs:attribute name="resultMap"/>
       <xs:attribute name="name"/>
+      <xs:attribute name="columnPrefix"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="collection">
@@ -294,6 +296,7 @@
             <xs:enumeration value="FORWARD_ONLY"/>
             <xs:enumeration value="SCROLL_INSENSITIVE"/>
             <xs:enumeration value="SCROLL_SENSITIVE"/>
+            <xs:enumeration value="DEFAULT"/>
           </xs:restriction>
         </xs:simpleType>
       </xs:attribute>
