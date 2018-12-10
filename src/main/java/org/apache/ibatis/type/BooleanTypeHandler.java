@@ -35,20 +35,20 @@ public class BooleanTypeHandler extends BaseTypeHandler<Boolean> {
   public Boolean getNullableResult(ResultSet rs, String columnName)
       throws SQLException {
     boolean result = rs.getBoolean(columnName);
-    return (!result && rs.wasNull()) ? null : result;
+    return !result && rs.wasNull() ? null : result;
   }
 
   @Override
   public Boolean getNullableResult(ResultSet rs, int columnIndex)
       throws SQLException {
     boolean result = rs.getBoolean(columnIndex);
-    return (!result && rs.wasNull()) ? null : result;
+    return !result && rs.wasNull() ? null : result;
   }
 
   @Override
   public Boolean getNullableResult(CallableStatement cs, int columnIndex)
       throws SQLException {
     boolean result = cs.getBoolean(columnIndex);
-    return (!result && cs.wasNull()) ? null : result;
+    return !result && cs.wasNull() ? null : result;
   }
 }
