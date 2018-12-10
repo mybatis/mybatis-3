@@ -35,20 +35,20 @@ public class LongTypeHandler extends BaseTypeHandler<Long> {
   public Long getNullableResult(ResultSet rs, String columnName)
       throws SQLException {
     long result = rs.getLong(columnName);
-    return (result == 0 && rs.wasNull()) ? null : result;
+    return result == 0 && rs.wasNull() ? null : result;
   }
 
   @Override
   public Long getNullableResult(ResultSet rs, int columnIndex)
       throws SQLException {
     long result = rs.getLong(columnIndex);
-    return (result == 0 && rs.wasNull()) ? null : result;
+    return result == 0 && rs.wasNull() ? null : result;
   }
 
   @Override
   public Long getNullableResult(CallableStatement cs, int columnIndex)
       throws SQLException {
     long result = cs.getLong(columnIndex);
-    return (result == 0 && cs.wasNull()) ? null : result;
+    return result == 0 && cs.wasNull() ? null : result;
   }
 }

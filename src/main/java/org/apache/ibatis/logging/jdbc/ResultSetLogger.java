@@ -67,7 +67,7 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
       }    
       Object o = method.invoke(rs, params);
       if ("next".equals(method.getName())) {
-        if (((Boolean) o)) {
+        if ((Boolean) o) {
           rows++;
           if (isTraceEnabled()) {
             ResultSetMetaData rsmd = rs.getMetaData();
