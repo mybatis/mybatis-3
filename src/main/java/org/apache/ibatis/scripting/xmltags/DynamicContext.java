@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ognl.OgnlContext;
-import ognl.OgnlException;
 import ognl.OgnlRuntime;
 import ognl.PropertyAccessor;
 
@@ -101,8 +100,7 @@ public class DynamicContext {
   static class ContextAccessor implements PropertyAccessor {
 
     @Override
-    public Object getProperty(Map context, Object target, Object name)
-        throws OgnlException {
+    public Object getProperty(Map context, Object target, Object name) {
       Map map = (Map) target;
 
       Object result = map.get(name);
@@ -119,8 +117,7 @@ public class DynamicContext {
     }
 
     @Override
-    public void setProperty(Map context, Object target, Object name, Object value)
-        throws OgnlException {
+    public void setProperty(Map context, Object target, Object name, Object value) {
       Map<Object, Object> map = (Map<Object, Object>) target;
       map.put(name, value);
     }

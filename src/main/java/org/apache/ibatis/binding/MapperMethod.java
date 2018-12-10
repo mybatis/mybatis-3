@@ -192,9 +192,9 @@ public class MapperMethod {
     Object param = method.convertArgsToSqlCommandParam(args);
     if (method.hasRowBounds()) {
       RowBounds rowBounds = method.extractRowBounds(args);
-      result = sqlSession.<K, V>selectMap(command.getName(), param, method.getMapKey(), rowBounds);
+      result = sqlSession.selectMap(command.getName(), param, method.getMapKey(), rowBounds);
     } else {
-      result = sqlSession.<K, V>selectMap(command.getName(), param, method.getMapKey());
+      result = sqlSession.selectMap(command.getName(), param, method.getMapKey());
     }
     return result;
   }

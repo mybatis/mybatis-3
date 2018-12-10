@@ -35,7 +35,7 @@ public @interface Options {
    * The options for the {@link Options#flushCache()}.
    * The default is {@link FlushCachePolicy#DEFAULT}
    */
-  public enum FlushCachePolicy {
+  enum FlushCachePolicy {
     /** <code>false</code> for select statement; <code>true</code> for insert/update/delete statement. */
     DEFAULT,
     /** Flushes cache regardless of the statement type. */

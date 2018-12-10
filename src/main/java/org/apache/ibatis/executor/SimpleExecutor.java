@@ -60,7 +60,7 @@ public class SimpleExecutor extends BaseExecutor {
       Configuration configuration = ms.getConfiguration();
       StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, resultHandler, boundSql);
       stmt = prepareStatement(handler, ms.getStatementLog());
-      return handler.<E>query(stmt, resultHandler);
+      return handler.query(stmt, resultHandler);
     } finally {
       closeStatement(stmt);
     }
@@ -72,11 +72,11 @@ public class SimpleExecutor extends BaseExecutor {
     StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, null, boundSql);
     Statement stmt = prepareStatement(handler, ms.getStatementLog());
     stmt.closeOnCompletion();
-    return handler.<E>queryCursor(stmt);
+    return handler.queryCursor(stmt);
   }
 
   @Override
-  public List<BatchResult> doFlushStatements(boolean isRollback) throws SQLException {
+  public List<BatchResult> doFlushStatements(boolean isRollback) {
     return Collections.emptyList();
   }
 
