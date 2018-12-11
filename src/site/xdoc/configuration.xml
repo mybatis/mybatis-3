@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2017 the original author or authors.
+       Copyright 2009-2018 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -990,7 +990,7 @@ public class Author {
                 <code>java.lang.Short</code>, <code>short</code>
               </td>
               <td>
-                Any compatible <code>NUMERIC</code> or <code>SHORT INTEGER</code>
+                Any compatible <code>NUMERIC</code> or <code>SMALLINT</code>
               </td>
             </tr>
             <tr>
@@ -1012,7 +1012,7 @@ public class Author {
                 <code>java.lang.Long</code>, <code>long</code>
               </td>
               <td>
-                Any compatible <code>NUMERIC</code> or <code>LONG INTEGER</code>
+                Any compatible <code>NUMERIC</code> or <code>BIGINT</code>
               </td>
             </tr>
             <tr>
@@ -1234,6 +1234,17 @@ public class Author {
               <td>
                 Any compatible <code>NUMERIC</code> or <code>DOUBLE</code>, as the position is stored
                 (not the code itself).
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>SqlxmlTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.String</code>
+              </td>
+              <td>
+                <code>SQLXML</code>
               </td>
             </tr>
             <tr>

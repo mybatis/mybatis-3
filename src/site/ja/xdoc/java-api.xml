@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2017 the original author or authors.
+       Copyright 2009-2018 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -190,14 +190,22 @@ Configuration getConfiguration();</source>
   <p>これらは、SQL Mapper で定義されている SELECT, INSERT, UPDATE, DELETE の各メソッドを実行するためのメソッドです。ほとんど自明ですが、それぞれ引数としてステートメントの ID とステートメントの引数オブジェクト（プリミティブ、JavaBean、POJO、Map のいずれか）を取ります。</p>
   <source><![CDATA[<T> T selectOne(String statement, Object parameter)
 <E> List<E> selectList(String statement, Object parameter)
+<T> Cursor<T> selectCursor(String statement, Object parameter)
 <K,V> Map<K,V> selectMap(String statement, Object parameter, String mapKey)
 int insert(String statement, Object parameter)
 int update(String statement, Object parameter)
 int delete(String statement, Object parameter)]]></source>
   <p>selectOne と selectList の違いは、selectOne は１つのオブジェクトまたは null を返さなくてはならないということです。複数のオブジェクトが返されると例外が発生します。結果のオブジェクト数が未知の場合は selectList を使用してください。オブジェクトが存在するかどうかを確認したいのなら、カウント結果（0 or 1）を返すようにした方が良いでしょう。selectMap は、結果のリストを mapKey で指定したプロパティに基づいたマップに格納して返す特殊なメソッドです。<br />ステートメントの引数は不要な場合もあるので、parameter オブジェクトの引数を持たないオーバーロードメソッドも用意されています。</p>
+  <p>A Cursor offers the same results as a List, except it fetches data lazily using an Iterator.</p>
+  <source><![CDATA[try (Cursor<MyEntity> entities = session.selectCursor(statement, param)) {
+   for (MyEntity entity:entities) {
+      // process one entity
+   }
+}]]></source>
   <p>insert, update, delete の各メソッドは、ステートメントの実行によって影響を受けた行数を返します。</p>
   <source><![CDATA[<T> T selectOne(String statement)
 <E> List<E> selectList(String statement)
+<T> Cursor<T> selectCursor(String statement)
 <K,V> Map<K,V> selectMap(String statement, String mapKey)
 int insert(String statement)
 int update(String statement)
@@ -205,6 +213,7 @@ int delete(String statement)]]></source>
 
   <p>最後に、高度な処理を行うための select メソッドがあります。これらは主に非常に大きなデータセットを扱う場合に、返される行の範囲を限定したり、カスタムの ResultHandler を使って独自に結果処理を行うことができるようになっています。</p>
   <source><![CDATA[<E> List<E> selectList (String statement, Object parameter, RowBounds rowBounds)
+<T> Cursor<T> selectCursor(String statement, Object parameter, RowBounds rowBounds)
 <K,V> Map<K,V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowbounds)
 void select (String statement, Object parameter, ResultHandler<T> handler)
 void select (String statement, Object parameter, RowBounds rowBounds, ResultHandler<T> handler)]]></source>
@@ -420,9 +429,9 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>Method</code></td>
         <td>マップドステートメントの属性</td>
         <td>このアノテーションを使うと、通常マップドステートメントの属性として指定される多様なスイッチや設定オプションにアクセスすることができます。<code>Options</code> アノテーションによって、各ステートメントのアノテーションを複雑化することなく、一貫したクリーンな方法で設定にアクセスできるよう工夫されています。キー: Attributes:
-        <code>useCache=true</code>, <code>flushCache=FlushCachePolicy.DEFAULT</code>, <code>resultSetType=FORWARD_ONLY</code>,
+        <code>useCache=true</code>, <code>flushCache=FlushCachePolicy.DEFAULT</code>, <code>resultSetType=DEFAULT</code>,
         <code>statementType=PREPARED</code>, <code>fetchSize=-1</code>, <code>timeout=-1</code>,
-        <code>useGeneratedKeys=false</code>, <code>keyProperty="id"</code>, <code>keyColumn=""</code>, <code>resultSets=""</code>.
+        <code>useGeneratedKeys=false</code>, <code>keyProperty=""</code>, <code>keyColumn=""</code>, <code>resultSets=""</code>.
         Java アノテーションを使う場合、値として <code>null</code> を指定することはできないという制限があります。これはどういうことかというと、<code>Options</code> アノテーションを付加したステートメントにはデフォルトのオプションが適用されるということです。予期しない動作を防ぐため、各オプションのデフォルト値を把握しておくようにしてください。<br/><br/>
         <code>keyColumn</code> は特定のデータベース（Oracle や PostgreSQL など）でのみ必須となります。
         <code>keyColumn</code> と <code>keyProperty</code> に対して指定可能な値については、上で出てきた insert ステートメントについての説明を参照してください。</td>

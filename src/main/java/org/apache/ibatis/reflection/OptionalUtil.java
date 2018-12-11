@@ -18,11 +18,12 @@ package org.apache.ibatis.reflection;
 
 import java.util.Optional;
 
-import org.apache.ibatis.lang.UsesJava8;
-
+/**
+ * @deprecated Since 3.5.0, Will remove this class at future(next major version up).
+ */
+@Deprecated
 public abstract class OptionalUtil {
 
-  @UsesJava8
   public static Object ofNullable(Object value) {
     return Optional.ofNullable(value);
   }

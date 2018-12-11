@@ -24,8 +24,16 @@ import org.apache.ibatis.executor.result.ResultMapException;
 import org.apache.ibatis.session.Configuration;
 
 /**
+ * The base {@link TypeHandler} for references a generic type.
+ * <p>
+ * Important: Since 3.5.0, This class never call the {@link ResultSet#wasNull()} and
+ * {@link CallableStatement#wasNull()} method for handling the SQL {@code NULL} value.
+ * In other words, {@code null} value handling should be performed on subclass.
+ * </p>
+ * 
  * @author Clinton Begin
  * @author Simone Tripodi
+ * @author Kzuki Shimizu
  */
 public abstract class BaseTypeHandler<T> extends TypeReference<T> implements TypeHandler<T> {
 
@@ -69,46 +77,28 @@ public abstract class BaseTypeHandler<T> extends TypeReference<T> implements Typ
 
   @Override
   public T getResult(ResultSet rs, String columnName) throws SQLException {
-    T result;
     try {
-      result = getNullableResult(rs, columnName);
+      return getNullableResult(rs, columnName);
     } catch (Exception e) {
       throw new ResultMapException("Error attempting to get column '" + columnName + "' from result set.  Cause: " + e, e);
-    }
-    if (rs.wasNull()) {
-      return null;
-    } else {
-      return result;
     }
   }
 
   @Override
   public T getResult(ResultSet rs, int columnIndex) throws SQLException {
-    T result;
     try {
-      result = getNullableResult(rs, columnIndex);
+      return getNullableResult(rs, columnIndex);
     } catch (Exception e) {
       throw new ResultMapException("Error attempting to get column #" + columnIndex+ " from result set.  Cause: " + e, e);
-    }
-    if (rs.wasNull()) {
-      return null;
-    } else {
-      return result;
     }
   }
 
   @Override
   public T getResult(CallableStatement cs, int columnIndex) throws SQLException {
-    T result;
     try {
-      result = getNullableResult(cs, columnIndex);
+      return getNullableResult(cs, columnIndex);
     } catch (Exception e) {
       throw new ResultMapException("Error attempting to get column #" + columnIndex+ " from callable statement.  Cause: " + e, e);
-    }
-    if (cs.wasNull()) {
-      return null;
-    } else {
-      return result;
     }
   }
 

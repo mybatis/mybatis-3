@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2017 the original author or authors.
+       Copyright 2009-2018 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -248,6 +248,7 @@ Configuration getConfiguration();</source>
   메소드 각각은 구문의 ID 와 파라미터 객체(원시타입, 자바빈, POJO 또는 Map)을 가진다.</p>
   <source><![CDATA[<T> T selectOne(String statement, Object parameter)
 <E> List<E> selectList(String statement, Object parameter)
+<T> Cursor<T> selectCursor(String statement, Object parameter)
 <K,V> Map<K,V> selectMap(String statement, Object parameter, String mapKey)
 int insert(String statement, Object parameter)
 int update(String statement, Object parameter)
@@ -259,9 +260,16 @@ int delete(String statement, Object parameter)]]></source>
   selectMap은 결과 목록을 Map으로 변환하기 위해 디자인된 특별한 경우이다. 
   이 경우 결과 객체의 프로퍼티 중 하나를 키로 사용하게 된다. 
   모든 구문이 파라미터를 필요로 하지는 않기 때문에 파라미터 객체를 요구하지 않는 형태로 오버로드되었다.</p>
+  <p>A Cursor offers the same results as a List, except it fetches data lazily using an Iterator.</p>
+  <source><![CDATA[try (Cursor<MyEntity> entities = session.selectCursor(statement, param)) {
+   for (MyEntity entity:entities) {
+      // process one entity
+   }
+}]]></source>
   <p>insert, update 그리고 delete 메소드에 의해 리턴되는 값은 실행된 구문에 의해 영향을 받은 레코드수를 표시한다. </p>
   <source><![CDATA[<T> T selectOne(String statement)
 <E> List<E> selectList(String statement)
+<T> Cursor<T> selectCursor(String statement)
 <K,V> Map<K,V> selectMap(String statement, String mapKey)
 int insert(String statement)
 int update(String statement)
@@ -270,6 +278,7 @@ int delete(String statement)]]></source>
   <p>마지막으로 리턴되는 데이터의 범위를 제한하거나 결과를 핸들링 하는 로직을 부여할 수 있는 3개의 select 메소드가 있다.</p>
   
   <source><![CDATA[<E> List<E> selectList (String statement, Object parameter, RowBounds rowBounds)
+<T> Cursor<T> selectCursor(String statement, Object parameter, RowBounds rowBounds)
 <K,V> Map<K,V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowbounds)
 void select (String statement, Object parameter, ResultHandler<T> handler)
 void select (String statement, Object parameter, RowBounds rowBounds, ResultHandler<T> handler)]]></source>
@@ -531,12 +540,12 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
 		각 구문을 복잡하게 만들기 보다 Options 애노테이션으로 일관되고 깔끔한 방법으로 설정 할수 있게 한다.
 		사용가능한 속성들 : useCache=true,
 		flushCache=FlushCachePolicy.DEFAULT,
-		resultSetType=FORWARD_ONLY,
+		resultSetType=DEFAULT,
 		statementType=PREPARED, 
 		fetchSize=-1,
 		timeout=-1, 
 		useGeneratedKeys=false,
-		keyProperty=“id”, 
+		keyProperty=“”,
 		keyColumn=“”,
 		resultSets=“”.
 		자바 애노테이션을 이해하는 것이 중요하다. 

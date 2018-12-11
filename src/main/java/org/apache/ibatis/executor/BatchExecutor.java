@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -36,14 +36,14 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.transaction.Transaction;
 
 /**
- * @author Jeff Butler 
+ * @author Jeff Butler
  */
 public class BatchExecutor extends BaseExecutor {
 
   public static final int BATCH_UPDATE_RETURN_VALUE = Integer.MIN_VALUE + 1002;
 
-  private final List<Statement> statementList = new ArrayList<Statement>();
-  private final List<BatchResult> batchResultList = new ArrayList<BatchResult>();
+  private final List<Statement> statementList = new ArrayList<>();
+  private final List<BatchResult> batchResultList = new ArrayList<>();
   private String currentSql;
   private MappedStatement currentStatement;
 
@@ -90,7 +90,7 @@ public class BatchExecutor extends BaseExecutor {
       Connection connection = getConnection(ms.getStatementLog());
       stmt = handler.prepare(connection, transaction.getTimeout());
       handler.parameterize(stmt);
-      return handler.<E>query(stmt, resultHandler);
+      return handler.query(stmt, resultHandler);
     } finally {
       closeStatement(stmt);
     }
@@ -103,14 +103,15 @@ public class BatchExecutor extends BaseExecutor {
     StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, null, boundSql);
     Connection connection = getConnection(ms.getStatementLog());
     Statement stmt = handler.prepare(connection, transaction.getTimeout());
+    stmt.closeOnCompletion();
     handler.parameterize(stmt);
-    return handler.<E>queryCursor(stmt);
+    return handler.queryCursor(stmt);
   }
 
   @Override
   public List<BatchResult> doFlushStatements(boolean isRollback) throws SQLException {
     try {
-      List<BatchResult> results = new ArrayList<BatchResult>();
+      List<BatchResult> results = new ArrayList<>();
       if (isRollback) {
         return Collections.emptyList();
       }

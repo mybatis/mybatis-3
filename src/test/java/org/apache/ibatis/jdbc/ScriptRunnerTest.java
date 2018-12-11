@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -41,6 +41,8 @@ import java.util.Properties;
 
 public class ScriptRunnerTest extends BaseDataTest {
 
+  private static final String LINE_SEPARATOR = System.getProperty("line.separator", "\n");
+
   @Test
   @Ignore("This fails with HSQLDB 2.0 due to the create index statements in the schema script")
   public void shouldRunScriptsBySendingFullScriptAtOnce() throws Exception {
@@ -60,14 +62,14 @@ public class ScriptRunnerTest extends BaseDataTest {
   @Test
   public void shouldRunScriptsUsingConnection() throws Exception {
     DataSource ds = createUnpooledDataSource(JPETSTORE_PROPERTIES);
-    Connection conn = ds.getConnection();
-    ScriptRunner runner = new ScriptRunner(conn);
-    runner.setAutoCommit(true);
-    runner.setStopOnError(false);
-    runner.setErrorLogWriter(null);
-    runner.setLogWriter(null);
-    runJPetStoreScripts(runner);
-    conn.close();
+    try (Connection conn = ds.getConnection()) {
+      ScriptRunner runner = new ScriptRunner(conn);
+      runner.setAutoCommit(true);
+      runner.setStopOnError(false);
+      runner.setErrorLogWriter(null);
+      runner.setLogWriter(null);
+      runJPetStoreScripts(runner);
+    }
     assertProductsTableExistsAndLoaded();
   }
 
@@ -91,139 +93,120 @@ public class ScriptRunnerTest extends BaseDataTest {
   @Test
   public void shouldReturnWarningIfEndOfLineTerminatorNotFound() throws Exception {
     DataSource ds = createUnpooledDataSource(JPETSTORE_PROPERTIES);
-    Connection conn = ds.getConnection();
-    ScriptRunner runner = new ScriptRunner(conn);
-    runner.setAutoCommit(true);
-    runner.setStopOnError(false);
-    runner.setErrorLogWriter(null);
-    runner.setLogWriter(null);
-
     String resource = "org/apache/ibatis/jdbc/ScriptMissingEOLTerminator.sql";
-    Reader reader = Resources.getResourceAsReader(resource);
+    try (Connection conn = ds.getConnection();
+         Reader reader = Resources.getResourceAsReader(resource)) {
+      ScriptRunner runner = new ScriptRunner(conn);
+      runner.setAutoCommit(true);
+      runner.setStopOnError(false);
+      runner.setErrorLogWriter(null);
+      runner.setLogWriter(null);
 
-    try {
-      runner.runScript(reader);
-      fail("Expected script runner to fail due to missing end of line terminator.");
-    } catch (Exception e) {
-      assertTrue(e.getMessage().contains("end-of-line terminator"));
+      try {
+        runner.runScript(reader);
+        fail("Expected script runner to fail due to missing end of line terminator.");
+      } catch (Exception e) {
+        assertTrue(e.getMessage().contains("end-of-line terminator"));
+      }
     }
-    reader.close();
-    conn.close();
   }
 
   @Test
   public void commentAferStatementDelimiterShouldNotCauseRunnerFail() throws Exception {
     DataSource ds = createUnpooledDataSource(JPETSTORE_PROPERTIES);
-    Connection conn = ds.getConnection();
-    ScriptRunner runner = new ScriptRunner(conn);
-    runner.setAutoCommit(true);
-    runner.setStopOnError(true);
-    runner.setErrorLogWriter(null);
-    runner.setLogWriter(null);
-    runJPetStoreScripts(runner);
-
     String resource = "org/apache/ibatis/jdbc/ScriptCommentAfterEOLTerminator.sql";
-    Reader reader = Resources.getResourceAsReader(resource);
-
-    try {
+    try (Connection conn = ds.getConnection();
+         Reader reader = Resources.getResourceAsReader(resource)) {
+      ScriptRunner runner = new ScriptRunner(conn);
+      runner.setAutoCommit(true);
+      runner.setStopOnError(true);
+      runner.setErrorLogWriter(null);
+      runner.setLogWriter(null);
+      runJPetStoreScripts(runner);
       runner.runScript(reader);
-    } catch (Exception e) {
-      fail(e.getMessage());
     }
-    reader.close();
-    conn.close();
   }
 
   @Test
   public void shouldReturnWarningIfNotTheCurrentDelimiterUsed() throws Exception {
     DataSource ds = createUnpooledDataSource(JPETSTORE_PROPERTIES);
-    Connection conn = ds.getConnection();
-    ScriptRunner runner = new ScriptRunner(conn);
-    runner.setAutoCommit(false);
-    runner.setStopOnError(true);
-    runner.setErrorLogWriter(null);
-    runner.setLogWriter(null);
-
     String resource = "org/apache/ibatis/jdbc/ScriptChangingDelimiterMissingDelimiter.sql";
-    Reader reader = Resources.getResourceAsReader(resource);
-
-    try {
-      runner.runScript(reader);
-      fail("Expected script runner to fail due to the usage of invalid delimiter.");
-    } catch (Exception e) {
-      assertTrue(e.getMessage().contains("end-of-line terminator"));
+    try (Connection conn = ds.getConnection();
+         Reader reader = Resources.getResourceAsReader(resource)) {
+      ScriptRunner runner = new ScriptRunner(conn);
+      runner.setAutoCommit(false);
+      runner.setStopOnError(true);
+      runner.setErrorLogWriter(null);
+      runner.setLogWriter(null);
+      try {
+        runner.runScript(reader);
+        fail("Expected script runner to fail due to the usage of invalid delimiter.");
+      } catch (Exception e) {
+        assertTrue(e.getMessage().contains("end-of-line terminator"));
+      }
     }
-    reader.close();
-    conn.close();
   }
 
   @Test
   public void changingDelimiterShouldNotCauseRunnerFail() throws Exception {
     DataSource ds = createUnpooledDataSource(JPETSTORE_PROPERTIES);
-    Connection conn = ds.getConnection();
-    ScriptRunner runner = new ScriptRunner(conn);
-    runner.setAutoCommit(false);
-    runner.setStopOnError(true);
-    runner.setErrorLogWriter(null);
-    runner.setLogWriter(null);
-    runJPetStoreScripts(runner);
-
     String resource = "org/apache/ibatis/jdbc/ScriptChangingDelimiter.sql";
-    Reader reader = Resources.getResourceAsReader(resource);
-
-    try {
+    try (Connection conn = ds.getConnection();
+         Reader reader = Resources.getResourceAsReader(resource)) {
+      ScriptRunner runner = new ScriptRunner(conn);
+      runner.setAutoCommit(false);
+      runner.setStopOnError(true);
+      runner.setErrorLogWriter(null);
+      runner.setLogWriter(null);
+      runJPetStoreScripts(runner);
       runner.runScript(reader);
-    } catch (Exception e) {
-      fail(e.getMessage());
     }
-    reader.close();
-    conn.close();
   }
 
   @Test
   public void testLogging() throws Exception {
     DataSource ds = createUnpooledDataSource(JPETSTORE_PROPERTIES);
-    Connection conn = ds.getConnection();
-    ScriptRunner runner = new ScriptRunner(conn);
-    runner.setAutoCommit(true);
-    runner.setStopOnError(false);
-    runner.setErrorLogWriter(null);
-    runner.setSendFullScript(false);
-    StringWriter sw = new StringWriter();
-    PrintWriter logWriter = new PrintWriter(sw);
-    runner.setLogWriter(logWriter);
+    try (Connection conn = ds.getConnection()) {
+      ScriptRunner runner = new ScriptRunner(conn);
+      runner.setAutoCommit(true);
+      runner.setStopOnError(false);
+      runner.setErrorLogWriter(null);
+      runner.setSendFullScript(false);
+      StringWriter sw = new StringWriter();
+      PrintWriter logWriter = new PrintWriter(sw);
+      runner.setLogWriter(logWriter);
 
-    Reader reader = new StringReader("select userid from account where userid = 'j2ee';");
-    runner.runScript(reader);
-    conn.close();
+      Reader reader = new StringReader("select userid from account where userid = 'j2ee';");
+      runner.runScript(reader);
 
-    assertEquals(
-            "select userid from account where userid = 'j2ee'" + System.getProperty("line.separator")
-                    + System.getProperty("line.separator") + "USERID\t" + System.getProperty("line.separator")
-                    + "j2ee\t" + System.getProperty("line.separator"), sw.toString());
+      assertEquals(
+              "select userid from account where userid = 'j2ee'" + LINE_SEPARATOR
+                      + LINE_SEPARATOR + "USERID\t" + LINE_SEPARATOR
+                      + "j2ee\t" + LINE_SEPARATOR, sw.toString());
+    }
   }
 
   @Test
   public void testLoggingFullScipt() throws Exception {
     DataSource ds = createUnpooledDataSource(JPETSTORE_PROPERTIES);
-    Connection conn = ds.getConnection();
-    ScriptRunner runner = new ScriptRunner(conn);
-    runner.setAutoCommit(true);
-    runner.setStopOnError(false);
-    runner.setErrorLogWriter(null);
-    runner.setSendFullScript(true);
-    StringWriter sw = new StringWriter();
-    PrintWriter logWriter = new PrintWriter(sw);
-    runner.setLogWriter(logWriter);
+    try (Connection conn = ds.getConnection()) {
+      ScriptRunner runner = new ScriptRunner(conn);
+      runner.setAutoCommit(true);
+      runner.setStopOnError(false);
+      runner.setErrorLogWriter(null);
+      runner.setSendFullScript(true);
+      StringWriter sw = new StringWriter();
+      PrintWriter logWriter = new PrintWriter(sw);
+      runner.setLogWriter(logWriter);
 
-    Reader reader = new StringReader("select userid from account where userid = 'j2ee';");
-    runner.runScript(reader);
-    conn.close();
+      Reader reader = new StringReader("select userid from account where userid = 'j2ee';");
+      runner.runScript(reader);
 
-    assertEquals(
-            "select userid from account where userid = 'j2ee';" + System.getProperty("line.separator")
-                    + System.getProperty("line.separator") + "USERID\t" + System.getProperty("line.separator")
-                    + "j2ee\t" + System.getProperty("line.separator"), sw.toString());
+      assertEquals(
+              "select userid from account where userid = 'j2ee';" + LINE_SEPARATOR
+                      + LINE_SEPARATOR + "USERID\t" + LINE_SEPARATOR
+                      + "j2ee\t" + LINE_SEPARATOR, sw.toString());
+    }
   }
 
   private void runJPetStoreScripts(ScriptRunner runner) throws IOException, SQLException {
@@ -233,12 +216,10 @@ public class ScriptRunnerTest extends BaseDataTest {
 
   private void assertProductsTableExistsAndLoaded() throws IOException, SQLException {
     PooledDataSource ds = createPooledDataSource(JPETSTORE_PROPERTIES);
-    try {
-      Connection conn = ds.getConnection();
+    try (Connection conn = ds.getConnection()) {
       SqlRunner executor = new SqlRunner(conn);
       List<Map<String, Object>> products = executor.selectAll("SELECT * FROM PRODUCT");
       assertEquals(16, products.size());
-      conn.close();
     } finally {
       ds.forceCloseAll();
     }
@@ -249,6 +230,7 @@ public class ScriptRunnerTest extends BaseDataTest {
     Connection conn = mock(Connection.class);
     Statement stmt = mock(Statement.class);
     when(conn.createStatement()).thenReturn(stmt);
+    when(stmt.getUpdateCount()).thenReturn(-1);
     ScriptRunner runner = new ScriptRunner(conn);
 
     String sql = "-- @DELIMITER | \n"
@@ -264,10 +246,10 @@ public class ScriptRunnerTest extends BaseDataTest {
     Reader reader = new StringReader(sql);
     runner.runScript(reader);
 
-    verify(stmt, Mockito.times(1)).execute(eq("line 1;\n" + "line 2;\n\n"));
-    verify(stmt, Mockito.times(1)).execute(eq("line 3\n"));
-    verify(stmt, Mockito.times(1)).execute(eq("line 4\n"));
-    verify(stmt, Mockito.times(1)).execute(eq("line 5\n"));
+    verify(stmt, Mockito.times(1)).execute(eq("line 1;" + LINE_SEPARATOR + "line 2;" + LINE_SEPARATOR + LINE_SEPARATOR));
+    verify(stmt, Mockito.times(1)).execute(eq("line 3" + LINE_SEPARATOR));
+    verify(stmt, Mockito.times(1)).execute(eq("line 4" + LINE_SEPARATOR));
+    verify(stmt, Mockito.times(1)).execute(eq("line 5" + LINE_SEPARATOR));
   }
 
   @Test
@@ -287,6 +269,7 @@ public class ScriptRunnerTest extends BaseDataTest {
     Connection conn = mock(Connection.class);
     Statement stmt = mock(Statement.class);
     when(conn.createStatement()).thenReturn(stmt);
+    when(stmt.getUpdateCount()).thenReturn(-1);
     ScriptRunner runner = new ScriptRunner(conn);
 
     String sql = "-- @DELIMITER || \n"
@@ -298,7 +281,7 @@ public class ScriptRunnerTest extends BaseDataTest {
     Reader reader = new StringReader(sql);
     runner.runScript(reader);
 
-    verify(stmt, Mockito.times(1)).execute(eq("line 1;\n" + "line 2;\n\n"));
-    verify(stmt, Mockito.times(1)).execute(eq("line 3\n"));
+    verify(stmt, Mockito.times(1)).execute(eq("line 1;" + LINE_SEPARATOR + "line 2;" + LINE_SEPARATOR + LINE_SEPARATOR));
+    verify(stmt, Mockito.times(1)).execute(eq("line 3" + LINE_SEPARATOR));
   }
 }

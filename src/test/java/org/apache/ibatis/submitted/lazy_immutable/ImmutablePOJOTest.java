@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.submitted.lazy_immutable;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 
@@ -38,43 +39,23 @@ public final class ImmutablePOJOTest {
 
     @BeforeClass
     public static void setupClass() throws Exception {
-        Connection conn = null;
-
-        try {
-            Class.forName("org.hsqldb.jdbcDriver");
-            conn = DriverManager.getConnection("jdbc:hsqldb:mem:lazy_immutable", "sa", "");
-
-            Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/lazy_immutable/CreateDB.sql");
-
-            ScriptRunner runner = new ScriptRunner(conn);
-            runner.setLogWriter(null);
-            runner.setErrorLogWriter(new PrintWriter(System.err));
-            runner.runScript(reader);
-            conn.commit();
-            reader.close();
-
-            reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/lazy_immutable/ibatisConfig.xml");
+        try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/lazy_immutable/ibatisConfig.xml")) {
             factory = new SqlSessionFactoryBuilder().build(reader);
-            reader.close();
-        } finally {
-            if (conn != null) {
-                conn.close();
-            }
         }
+
+        BaseDataTest.runScript(factory.getConfiguration().getEnvironment().getDataSource(),
+                "org/apache/ibatis/submitted/lazy_immutable/CreateDB.sql");
     }
 
     @Test
     public void testLoadLazyImmutablePOJO() {
-        final SqlSession session = factory.openSession();
-        try {
+        try (SqlSession session = factory.openSession()) {
             final ImmutablePOJOMapper mapper = session.getMapper(ImmutablePOJOMapper.class);
             final ImmutablePOJO pojo = mapper.getImmutablePOJO(POJO_ID);
 
             assertEquals(POJO_ID, pojo.getId());
             assertNotNull("Description should not be null.", pojo.getDescription());
             assertFalse("Description should not be empty.", pojo.getDescription().length() == 0);
-        } finally {
-            session.close();
         }
     }
 

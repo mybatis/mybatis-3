@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ public class CacheKey implements Cloneable, Serializable {
     this.hashcode = DEFAULT_HASHCODE;
     this.multiplier = DEFAULT_MULTIPLYER;
     this.count = 0;
-    this.updateList = new ArrayList<Object>();
+    this.updateList = new ArrayList<>();
   }
 
   public CacheKey(Object[] objects) {
@@ -122,7 +122,7 @@ public class CacheKey implements Cloneable, Serializable {
   @Override
   public CacheKey clone() throws CloneNotSupportedException {
     CacheKey clonedCacheKey = (CacheKey) super.clone();
-    clonedCacheKey.updateList = new ArrayList<Object>(updateList);
+    clonedCacheKey.updateList = new ArrayList<>(updateList);
     return clonedCacheKey;
   }
 

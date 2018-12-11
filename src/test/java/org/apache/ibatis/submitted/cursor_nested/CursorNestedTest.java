@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,9 +15,9 @@
  */
 package org.apache.ibatis.submitted.cursor_nested;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -27,93 +27,82 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.Reader;
-import java.sql.Connection;
 import java.util.Iterator;
 
 public class CursorNestedTest {
 
-    private static SqlSessionFactory sqlSessionFactory;
+  private static SqlSessionFactory sqlSessionFactory;
 
-    @BeforeClass
-    public static void setUp() throws Exception {
-        // create a SqlSessionFactory
-        Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/cursor_nested/mybatis-config.xml");
-        sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-        reader.close();
-
-        // populate in-memory database
-        SqlSession session = sqlSessionFactory.openSession();
-        Connection conn = session.getConnection();
-        reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/cursor_nested/CreateDB.sql");
-        ScriptRunner runner = new ScriptRunner(conn);
-        runner.setLogWriter(null);
-        runner.runScript(reader);
-        conn.close();
-        reader.close();
-        session.close();
+  @BeforeClass
+  public static void setUp() throws Exception {
+    // create a SqlSessionFactory
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/cursor_nested/mybatis-config.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
-    @Test
-    public void shouldGetAllUser() {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        Mapper mapper = sqlSession.getMapper(Mapper.class);
-        Cursor<User> usersCursor = mapper.getAllUsers();
+    // populate in-memory database
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/cursor_nested/CreateDB.sql");
+  }
 
-        try {
-            Assert.assertFalse(usersCursor.isOpen());
-            // Retrieving iterator, fetching is not started
-            Iterator<User> iterator = usersCursor.iterator();
+  @Test
+  public void shouldGetAllUser() {
+    Cursor<User> usersCursor;
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      usersCursor = mapper.getAllUsers();
 
-            // Check if hasNext, fetching is started
-            Assert.assertTrue(iterator.hasNext());
-            Assert.assertTrue(usersCursor.isOpen());
-            Assert.assertFalse(usersCursor.isConsumed());
+      Assert.assertFalse(usersCursor.isOpen());
+      // Retrieving iterator, fetching is not started
+      Iterator<User> iterator = usersCursor.iterator();
 
-            User user = iterator.next();
-            Assert.assertEquals(2, user.getGroups().size());
-            Assert.assertEquals(3, user.getRoles().size());
+      // Check if hasNext, fetching is started
+      Assert.assertTrue(iterator.hasNext());
+      Assert.assertTrue(usersCursor.isOpen());
+      Assert.assertFalse(usersCursor.isConsumed());
 
-            user = iterator.next();
-            Assert.assertEquals(1, user.getGroups().size());
-            Assert.assertEquals(3, user.getRoles().size());
+      User user = iterator.next();
+      Assert.assertEquals(2, user.getGroups().size());
+      Assert.assertEquals(3, user.getRoles().size());
 
-            user = iterator.next();
-            Assert.assertEquals(3, user.getGroups().size());
-            Assert.assertEquals(1, user.getRoles().size());
+      user = iterator.next();
+      Assert.assertEquals(1, user.getGroups().size());
+      Assert.assertEquals(3, user.getRoles().size());
 
-            user = iterator.next();
-            Assert.assertEquals(2, user.getGroups().size());
-            Assert.assertEquals(2, user.getRoles().size());
+      user = iterator.next();
+      Assert.assertEquals(3, user.getGroups().size());
+      Assert.assertEquals(1, user.getRoles().size());
 
-            // Check no more elements
-            Assert.assertFalse(iterator.hasNext());
-            Assert.assertFalse(usersCursor.isOpen());
-            Assert.assertTrue(usersCursor.isConsumed());
-        } finally {
-            sqlSession.close();
-        }
-        Assert.assertFalse(usersCursor.isOpen());
+      user = iterator.next();
+      Assert.assertEquals(2, user.getGroups().size());
+      Assert.assertEquals(2, user.getRoles().size());
+
+      Assert.assertTrue(usersCursor.isOpen());
+      Assert.assertFalse(usersCursor.isConsumed());
+
+      // Check no more elements
+      Assert.assertFalse(iterator.hasNext());
+      Assert.assertFalse(usersCursor.isOpen());
+      Assert.assertTrue(usersCursor.isConsumed());
     }
+    Assert.assertFalse(usersCursor.isOpen());
+  }
 
-    @Test
-    public void testCursorWithRowBound() {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
+  @Test
+  public void testCursorWithRowBound() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Cursor<User> usersCursor = sqlSession.selectCursor("getAllUsers", null, new RowBounds(2, 1));
 
-        try {
-            Cursor<User> usersCursor = sqlSession.selectCursor("getAllUsers", null, new RowBounds(2, 1));
+      Iterator<User> iterator = usersCursor.iterator();
 
-            Iterator<User> iterator = usersCursor.iterator();
+      Assert.assertTrue(iterator.hasNext());
+      User user = iterator.next();
+      Assert.assertEquals("User3", user.getName());
+      Assert.assertEquals(2, usersCursor.getCurrentIndex());
 
-            Assert.assertTrue(iterator.hasNext());
-            User user = iterator.next();
-            Assert.assertEquals("User3", user.getName());
-            Assert.assertEquals(2, usersCursor.getCurrentIndex());
-
-            Assert.assertFalse(iterator.hasNext());
-            Assert.assertFalse(usersCursor.isOpen());
-            Assert.assertTrue(usersCursor.isConsumed());
-        } finally {
-            sqlSession.close();
-        }
+      Assert.assertFalse(iterator.hasNext());
+      Assert.assertFalse(usersCursor.isOpen());
+      Assert.assertTrue(usersCursor.isConsumed());
     }
+  }
 }

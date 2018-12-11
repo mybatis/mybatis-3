@@ -197,14 +197,23 @@ Configuration getConfiguration();</source>
   <p>这些方法被用来执行定义在 SQL 映射的 XML 文件中的 SELECT、INSERT、UPDATE 和 DELETE 语句。它们都会自行解释，每一句都使用语句的 ID 属性和参数对象，参数可以是原生类型（自动装箱或包装类）、JavaBean、POJO 或 Map。</p>
   <source><![CDATA[<T> T selectOne(String statement, Object parameter)
 <E> List<E> selectList(String statement, Object parameter)
+<T> Cursor<T> selectCursor(String statement, Object parameter)
 <K,V> Map<K,V> selectMap(String statement, Object parameter, String mapKey)
 int insert(String statement, Object parameter)
 int update(String statement, Object parameter)
 int delete(String statement, Object parameter)]]></source>
   <p>selectOne 和 selectList 的不同仅仅是 selectOne 必须返回一个对象或 null 值。如果返回值多于一个，那么就会抛出异常。如果你不知道返回对象的数量，请使用 selectList。如果需要查看返回对象是否存在，可行的方案是返回一个值即可（0 或 1）。selectMap 稍微特殊一点，因为它会将返回的对象的其中一个属性作为 key 值，将对象作为 value 值，从而将多结果集转为 Map 类型值。因为并不是所有语句都需要参数，所以这些方法都重载成不需要参数的形式。
   </p>
+  <p>A Cursor offers the same results as a List, except it fetches data lazily using an Iterator.</p>
+  <source><![CDATA[try (Cursor<MyEntity> entities = session.selectCursor(statement, param)) {
+   for (MyEntity entity:entities) {
+      // process one entity
+   }
+}]]></source>
+  <p>The value returned by the insert, update and delete methods indicate the number of rows affected by the statement.</p>
   <source><![CDATA[<T> T selectOne(String statement)
 <E> List<E> selectList(String statement)
+<T> Cursor<T> selectCursor(String statement)
 <K,V> Map<K,V> selectMap(String statement, String mapKey)
 int insert(String statement)
 int update(String statement)
@@ -213,6 +222,7 @@ int delete(String statement)]]></source>
   <p>最后，还有 select 方法的三个高级版本，它们允许你限制返回行数的范围，或者提供自定义结果控制逻辑，这通常在数据集合庞大的情形下使用。
   </p>
   <source><![CDATA[<E> List<E> selectList (String statement, Object parameter, RowBounds rowBounds)
+<T> Cursor<T> selectCursor(String statement, Object parameter, RowBounds rowBounds)
 <K,V> Map<K,V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowbounds)
 void select (String statement, Object parameter, ResultHandler<T> handler)
 void select (String statement, Object parameter, RowBounds rowBounds, ResultHandler<T> handler)]]></source>
@@ -414,7 +424,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>@Options</code></td>
         <td><code>方法</code></td>
         <td>映射语句的属性</td>
-        <td>这个注解提供访问大范围的交换和配置选项的入口，它们通常在映射语句上作为属性出现。<code>Options</code> 注解提供了通俗易懂的方式来访问它们，而不是让每条语句注解变复杂。属性有：<code>useCache=true</code>, <code>flushCache=FlushCachePolicy.DEFAULT</code>, <code>resultSetType=FORWARD_ONLY</code>, <code>statementType=PREPARED</code>, <code>fetchSize=-1</code>, <code>timeout=-1</code>, <code>useGeneratedKeys=false</code>, <code>keyProperty="id"</code>, <code>keyColumn=""</code>, <code>resultSets=""</code>。值得一提的是， Java 注解无法指定 <code>null</code> 值。因此，一旦你使用了 <code>Options</code> 注解，你的语句就会被上述属性的默认值所影响。要注意避免默认值带来的预期以外的行为。<br/><br/>
+        <td>这个注解提供访问大范围的交换和配置选项的入口，它们通常在映射语句上作为属性出现。<code>Options</code> 注解提供了通俗易懂的方式来访问它们，而不是让每条语句注解变复杂。属性有：<code>useCache=true</code>, <code>flushCache=FlushCachePolicy.DEFAULT</code>, <code>resultSetType=DEFAULT</code>, <code>statementType=PREPARED</code>, <code>fetchSize=-1</code>, <code>timeout=-1</code>, <code>useGeneratedKeys=false</code>, <code>keyProperty=""</code>, <code>keyColumn=""</code>, <code>resultSets=""</code>。值得一提的是， Java 注解无法指定 <code>null</code> 值。因此，一旦你使用了 <code>Options</code> 注解，你的语句就会被上述属性的默认值所影响。要注意避免默认值带来的预期以外的行为。<br/><br/>
         注意： <code>keyColumn</code> 属性只在某些数据库中有效（如 Oracle、PostgreSQL等）。请在插入语句一节查看更多关于 <code>keyColumn</code> 和 <code>keyProperty</code> 两者的有效值详情。</td>
       </tr>
       <tr>

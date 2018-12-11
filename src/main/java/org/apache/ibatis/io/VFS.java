@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ public abstract class VFS {
   public static final Class<?>[] IMPLEMENTATIONS = { JBoss6VFS.class, DefaultVFS.class };
 
   /** The list to which implementations are added by {@link #addImplClass(Class)}. */
-  public static final List<Class<? extends VFS>> USER_IMPLEMENTATIONS = new ArrayList<Class<? extends VFS>>();
+  public static final List<Class<? extends VFS>> USER_IMPLEMENTATIONS = new ArrayList<>();
 
   /** Singleton instance holder. */
   private static class VFSHolder {
@@ -48,7 +48,7 @@ public abstract class VFS {
     @SuppressWarnings("unchecked")
     static VFS createVFS() {
       // Try the user implementations first, then the built-ins
-      List<Class<? extends VFS>> impls = new ArrayList<Class<? extends VFS>>();
+      List<Class<? extends VFS>> impls = new ArrayList<>();
       impls.addAll(USER_IMPLEMENTATIONS);
       impls.addAll(Arrays.asList((Class<? extends VFS>[]) IMPLEMENTATIONS));
 
@@ -151,9 +151,7 @@ public abstract class VFS {
       throws IOException, RuntimeException {
     try {
       return (T) method.invoke(object, parameters);
-    } catch (IllegalArgumentException e) {
-      throw new RuntimeException(e);
-    } catch (IllegalAccessException e) {
+    } catch (IllegalArgumentException | IllegalAccessException e) {
       throw new RuntimeException(e);
     } catch (InvocationTargetException e) {
       if (e.getTargetException() instanceof IOException) {
@@ -200,7 +198,7 @@ public abstract class VFS {
    * @throws IOException If I/O errors occur
    */
   public List<String> list(String path) throws IOException {
-    List<String> names = new ArrayList<String>();
+    List<String> names = new ArrayList<>();
     for (URL url : getResources(path)) {
       names.addAll(list(url, path));
     }
