@@ -49,10 +49,14 @@ import org.apache.ibatis.domain.blog.mappers.BlogMapper;
 import org.apache.ibatis.exceptions.TooManyResultsException;
 import org.apache.ibatis.executor.result.DefaultResultHandler;
 import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.SqlCommandType;
+import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 public class SqlSessionTest extends BaseDataTest {
   private static SqlSessionFactory sqlMapper;
@@ -416,13 +420,32 @@ public class SqlSessionTest extends BaseDataTest {
   }
 
   @Test
-  public void shouldThrowExceptionIfTryingToAddStatementWithSameName() {
+  public void shouldThrowExceptionIfTryingToAddStatementWithSameNameInXml() throws Exception {
     Configuration config = sqlMapper.getConfiguration();
     try {
-      config.addMappedStatement(config.getMappedStatement("org.apache.ibatis.domain.blog.mappers.BlogMapper.selectBlogWithPostsUsingSubSelect"));
+      MappedStatement ms = new MappedStatement.Builder(config,
+          "org.apache.ibatis.domain.blog.mappers.BlogMapper.selectBlogWithPostsUsingSubSelect",
+          Mockito.mock(SqlSource.class), SqlCommandType.SELECT)
+              .resource("org/mybatis/TestMapper.xml").build();
+      config.addMappedStatement(ms);
       fail("Expected exception to be thrown due to statement that already exists.");
     } catch (Exception e) {
-      assertTrue(e.getMessage().contains("already contains value for org.apache.ibatis.domain.blog.mappers.BlogMapper.selectBlogWithPostsUsingSubSelect"));
+      assertTrue(e.getMessage().contains("already contains value for org.apache.ibatis.domain.blog.mappers.BlogMapper.selectBlogWithPostsUsingSubSelect. please check org/apache/ibatis/builder/BlogMapper.xml and org/mybatis/TestMapper.xml"));
+    }
+  }
+
+  @Test
+  public void shouldThrowExceptionIfTryingToAddStatementWithSameNameInAnnotation() throws Exception {
+    Configuration config = sqlMapper.getConfiguration();
+    try {
+      MappedStatement ms = new MappedStatement.Builder(config,
+          "org.apache.ibatis.domain.blog.mappers.AuthorMapper.selectAuthor2",
+          Mockito.mock(SqlSource.class), SqlCommandType.SELECT)
+              .resource("org/mybatis/TestMapper.xml").build();
+      config.addMappedStatement(ms);
+      fail("Expected exception to be thrown due to statement that already exists.");
+    } catch (Exception e) {
+      assertTrue(e.getMessage().contains("already contains value for org.apache.ibatis.domain.blog.mappers.AuthorMapper.selectAuthor2. please check org/apache/ibatis/domain/blog/mappers/AuthorMapper.java (best guess) and org/mybatis/TestMapper.xml"));
     }
   }
 
