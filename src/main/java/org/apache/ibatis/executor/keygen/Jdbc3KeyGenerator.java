@@ -76,7 +76,6 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
     } catch (Exception e) {
       throw new ExecutorException("Error getting generated key or setting result to parameter object. Cause: " + e, e);
     }
-    // ignore
   }
 
   protected void assignKeysToOneOfParams(final Configuration configuration, ResultSet rs, final String[] keyProperties,
