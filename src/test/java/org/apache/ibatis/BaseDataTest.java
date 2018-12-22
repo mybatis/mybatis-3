@@ -58,7 +58,7 @@ public abstract class BaseDataTest {
   }
 
   public static void runScript(DataSource ds, String resource) throws IOException, SQLException {
-    try (final Connection connection = ds.getConnection()) {
+    try (Connection connection = ds.getConnection()) {
       ScriptRunner runner = new ScriptRunner(connection);
       runner.setAutoCommit(true);
       runner.setStopOnError(false);
@@ -69,7 +69,7 @@ public abstract class BaseDataTest {
   }
 
   public static void runScript(ScriptRunner runner, String resource) throws IOException, SQLException {
-    try (final Reader reader = Resources.getResourceAsReader(resource)) {
+    try (Reader reader = Resources.getResourceAsReader(resource)) {
       runner.runScript(reader);
     }
   }
