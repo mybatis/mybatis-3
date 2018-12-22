@@ -235,7 +235,7 @@ class PooledConnection implements InvocationHandler {
     if (CLOSE.hashCode() == methodName.hashCode() && CLOSE.equals(methodName)) {
       dataSource.pushConnection(this);
       return null;
-    } else {
+    }
       try {
         if (!Object.class.equals(method.getDeclaringClass())) {
           // issue #579 toString() should never fail
@@ -246,7 +246,7 @@ class PooledConnection implements InvocationHandler {
       } catch (Throwable t) {
         throw ExceptionUtil.unwrapThrowable(t);
       }
-    }
+
   }
 
   private void checkConnection() throws SQLException {
