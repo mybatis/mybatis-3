@@ -19,12 +19,9 @@ package org.apache.ibatis.cursor.defaults;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,12 +55,6 @@ public class DefaultCursorTest {
   private ImpatientResultSet rs;
   @Mock
   protected ResultSetMetaData rsmd;
-  @Mock
-  private Connection conn;
-  @Mock
-  private DatabaseMetaData dbmd;
-  @Mock
-  private Statement stmt;
 
   @SuppressWarnings("unchecked")
   @Test
@@ -80,7 +71,6 @@ public class DefaultCursorTest {
     final DefaultResultSetHandler resultSetHandler = new DefaultResultSetHandler(executor, ms, parameterHandler,
       resultHandler, boundSql, rowBounds);
 
-    when(stmt.getResultSet()).thenReturn(rs);
     when(rsmd.getColumnCount()).thenReturn(2);
     when(rsmd.getColumnLabel(1)).thenReturn("id");
     when(rsmd.getColumnType(1)).thenReturn(Types.INTEGER);
@@ -88,9 +78,6 @@ public class DefaultCursorTest {
     when(rsmd.getColumnLabel(2)).thenReturn("role");
     when(rsmd.getColumnType(2)).thenReturn(Types.VARCHAR);
     when(rsmd.getColumnClassName(2)).thenReturn(String.class.getCanonicalName());
-    when(stmt.getConnection()).thenReturn(conn);
-    when(conn.getMetaData()).thenReturn(dbmd);
-    when(dbmd.supportsMultipleResultSets()).thenReturn(false);
 
     final ResultSetWrapper rsw = new ResultSetWrapper(rs, ms.getConfiguration());
 
