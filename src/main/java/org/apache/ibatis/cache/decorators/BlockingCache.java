@@ -92,7 +92,7 @@ public class BlockingCache implements Cache {
   }
 
   private ReentrantLock getLockForKey(Object key) {
-    return locks.computeIfAbsent(key, (k) -> new ReentrantLock());
+    return locks.computeIfAbsent(key, k -> new ReentrantLock());
   }
 
   private void acquireLock(Object key) {
