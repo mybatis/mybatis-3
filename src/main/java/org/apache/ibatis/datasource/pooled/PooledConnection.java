@@ -236,16 +236,16 @@ class PooledConnection implements InvocationHandler {
       dataSource.pushConnection(this);
       return null;
     }
-      try {
-        if (!Object.class.equals(method.getDeclaringClass())) {
-          // issue #579 toString() should never fail
-          // throw an SQLException instead of a Runtime
-          checkConnection();
-        }
-        return method.invoke(realConnection, args);
-      } catch (Throwable t) {
-        throw ExceptionUtil.unwrapThrowable(t);
+    try {
+      if (!Object.class.equals(method.getDeclaringClass())) {
+        // issue #579 toString() should never fail
+        // throw an SQLException instead of a Runtime
+        checkConnection();
       }
+      return method.invoke(realConnection, args);
+    } catch (Throwable t) {
+      throw ExceptionUtil.unwrapThrowable(t);
+    }
 
   }
 
