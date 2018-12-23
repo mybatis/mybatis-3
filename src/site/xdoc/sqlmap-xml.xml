@@ -655,7 +655,7 @@ ps.setInt(1,id);]]></source>
 
         <p>
           String Substitution can be very useful when the metadata(i.e. table name or column name) in the sql statement is dynamic,
-          for example, if you want to `select` from a table by any one of its columns, instead of writing code like:
+          for example, if you want to <code>select</code> from a table by any one of its columns, instead of writing code like:
           <source><![CDATA[
 @Select("select * from user where id = #{id}")
 User findById(@Param("id") long id);
@@ -680,6 +680,7 @@ User userOfId1 = userMapper.findByColumn("id", 1L);
 User userOfNameKid = userMapper.findByColumn("name", "kid");
 User userOfEmail = userMapper.findByColumn("email", "noone@nowhere.com");
 ]]></source>
+          This idea can be applied to substitute the table name as well.
         </p>
 
         <p>
