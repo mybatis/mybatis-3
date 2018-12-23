@@ -246,6 +246,7 @@ class PooledConnection implements InvocationHandler {
     } catch (Throwable t) {
       throw ExceptionUtil.unwrapThrowable(t);
     }
+    
   }
 
   private void checkConnection() throws SQLException {
