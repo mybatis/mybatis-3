@@ -68,9 +68,7 @@ public class BlockingCache implements Cache {
   public Object getObject(Object key) {
     acquireLock(key);
     Object value = delegate.getObject(key);
-    if (value != null) {
-      releaseLock(key);
-    }
+    releaseLock(key);
     return value;
   }
 
