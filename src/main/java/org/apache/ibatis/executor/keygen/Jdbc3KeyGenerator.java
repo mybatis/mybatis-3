@@ -43,7 +43,7 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
 
   /**
    * A shared instance.
-   * 
+   *
    * @since 3.4.3
    */
   public static final Jdbc3KeyGenerator INSTANCE = new Jdbc3KeyGenerator();
@@ -63,9 +63,7 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
     if (keyProperties == null || keyProperties.length == 0) {
       return;
     }
-    ResultSet rs = null;
-    try {
-      rs = stmt.getGeneratedKeys();
+    try (ResultSet rs = stmt.getGeneratedKeys()) {
       final Configuration configuration = ms.getConfiguration();
       if (rs.getMetaData().getColumnCount() >= keyProperties.length) {
         Object soleParam = getSoleParameter(parameter);
@@ -77,14 +75,6 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
       }
     } catch (Exception e) {
       throw new ExecutorException("Error getting generated key or setting result to parameter object. Cause: " + e, e);
-    } finally {
-      if (rs != null) {
-        try {
-          rs.close();
-        } catch (Exception e) {
-          // ignore
-        }
-      }
     }
   }
 
