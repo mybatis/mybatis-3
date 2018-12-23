@@ -538,6 +538,9 @@ User userOfId1 = userMapper.findByColumn("id", 1L);
 User userOfNameKid = userMapper.findByColumn("name", "kid");
 User userOfEmail = userMapper.findByColumn("email", "noone@nowhere.com");
 ]]></source>
+        </p>
+
+        <p>
           This idea can be applied to substitute the table name as well.
         </p>
 

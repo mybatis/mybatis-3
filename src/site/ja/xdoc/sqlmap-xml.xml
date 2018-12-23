@@ -599,8 +599,8 @@ ps.setInt(1,id);]]></source>
         </p>
 
         <p>
-          String Substitution can be very useful when the metadata(i.e. table name or column name) in the sql statement is dynamic,
-          for example, if you want to <code>select</code> from a table by any one of its columns, instead of writing code like:
+          文字列代入は、メタ情報(例：テーブル名やカラム名など)をSQLステートメントへ動的に埋め込みたい場合に非常に便利な仕組みです。
+          例えば、任意のカラム値に一致するレコードを取得する場合に、以下のようにカラム毎にメソッドを用意するのではなく、
           <source><![CDATA[
 @Select("select * from user where id = #{id}")
 User findById(@Param("id") long id);
@@ -613,19 +613,24 @@ User findByEmail(@Param("email") String email);
 
 // and more "findByXxx" method
 ]]></source>
-          you can just write:
+
+          指定したカラムの値に一致するレコードを取得するメソッドを一つ用意するだけで、同じことを実現することができます。
+
           <source><![CDATA[
 @Select("select * from user where ${column} = #{value}")
 User findByColumn(@Param("column") String column, @Param("value") String value);
 ]]></source>
-          in which the <code>${column}</code> will be substituted directly and the <code>#{value}</code> will be "prepared".
-          Thus you can just do the same work by:
+          <code>${column}</code> は指定した文字列(カラム名)が直接代入され、<code>#{value}</code> はバインド変数として扱われるため、
+          以下のように使用することができます。
           <source><![CDATA[
 User userOfId1 = userMapper.findByColumn("id", 1L);
 User userOfNameKid = userMapper.findByColumn("name", "kid");
 User userOfEmail = userMapper.findByColumn("email", "noone@nowhere.com");
 ]]></source>
-          This idea can be applied to substitute the table name as well.
+        </p>
+
+        <p>
+          この考え方はテーブル名にも適用することができます。
         </p>
 
         <p>

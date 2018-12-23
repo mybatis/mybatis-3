@@ -637,6 +637,9 @@ User userOfId1 = userMapper.findByColumn("id", 1L);
 User userOfNameKid = userMapper.findByColumn("name", "kid");
 User userOfEmail = userMapper.findByColumn("email", "noone@nowhere.com");
 ]]></source>
+        </p>
+
+        <p>
           这个想法也同样适用于用来替换表名的情况。
         </p>
 
