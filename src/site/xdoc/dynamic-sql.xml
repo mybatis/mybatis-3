@@ -35,6 +35,26 @@
     <li>trim (where, set)</li>
     <li>foreach</li>
   </ul>
+  <p>And in these elements, you can use normal OGNL syntax to evaluate expressions:</p>
+  <ul>
+    <li>e1 or e2</li>
+    <li>e1 and e2</li>
+    <li>e1 == e2, e1 eq e2</li>
+    <li>e1 != e2, e1 neq e2</li>
+    <li>e1 lt e2, e1 &lt; e2</li>
+    <li>e1 lte e2, e1 &lt;= e2, (gt, &gt;, gte, &gt;=)</li>
+    <li>e1 in e2</li>
+    <li>e1 not in e2</li>
+    <li>e1 + e2, e1 * e2, e1 / e2, e1 - e2, e1 % e2</li>
+    <li>!e, not e</li>
+    <li>e.method(args)</li>
+    <li>e.property</li>
+    <li>e1[e2]</li>
+    <li>e1{e2}</li>
+    <li>@Class@staticMethod(args)</li>
+    <li>@Class@staticField</li>
+  </ul>
+  <p>For more details about OGNL, see <a href="https://commons.apache.org/proper/commons-ognl/language-guide.html#Appendix:_OGNL_Language_Reference">OGNL Language Guide</a></p>
   <subsection name="if" id="if">
   <p>The most common thing to do in dynamic SQL is conditionally include a part of a where clause. For example:</p>
   <source><![CDATA[<select id="findActiveBlogWithTitleLike"
@@ -189,7 +209,7 @@ AND title like ‘someTitle’]]></source>
   ParameterHandler createParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql);
   SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType);
   SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType);
-}]]></source>    
+}]]></source>
     <p>Once you have your custom language driver you can set it to be the default by configuring it in the mybatis-config.xml file:</p>
   <source><![CDATA[<typeAliases>
   <typeAlias type="org.sample.MyLanguageDriver" alias="myLanguage"/>
@@ -197,7 +217,7 @@ AND title like ‘someTitle’]]></source>
 <settings>
   <setting name="defaultScriptingLanguage" value="myLanguage"/>
 </settings>
-]]></source>    
+]]></source>
     <p>Instead of changing the default, you can specify the language for an specific statement by adding the <code>lang</code> attribute as follows:
     </p>
   <source><![CDATA[<select id="selectBlog" lang="myLanguage">
@@ -212,7 +232,7 @@ AND title like ‘someTitle’]]></source>
 
     <p><span class="label important">NOTE</span> You can use Apache Velocity as your dynamic language. Have a look at the MyBatis-Velocity project for the details.</p>
 
-    <p>All the xml tags you have seen in the previous sections are provided by the default MyBatis language that is provided by the driver  
+    <p>All the xml tags you have seen in the previous sections are provided by the default MyBatis language that is provided by the driver
     <code>org.apache.ibatis.scripting.xmltags.XmlLanguageDriver</code> which is aliased as <code>xml</code>.</p>
 	</subsection>
   </section>
