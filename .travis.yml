@@ -1,9 +1,8 @@
 language: java
 
 jdk:
-  - oraclejdk9
+  - oraclejdk11
   - oraclejdk8
-  - openjdk8
 
 before_install:
   - echo "MAVEN_OPTS='-Dlicense.skip=true'" > ~/.mavenrc
