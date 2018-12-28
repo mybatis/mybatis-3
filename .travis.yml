@@ -10,7 +10,6 @@ before_install:
 install:
   - chmod -R 777 ./travis/install.sh
   - ./travis/install.sh
-script: ./mvnw test -Dmaven.surefire.excludeGroups= -B
 
 after_success:
   - chmod -R 777 ./travis/after_success.sh
