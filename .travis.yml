@@ -7,10 +7,6 @@ jdk:
 before_install:
   - echo "MAVEN_OPTS='-Dlicense.skip=true'" > ~/.mavenrc
 
-install:
-  - chmod -R 777 ./travis/install.sh
-  - ./travis/install.sh
-
 after_success:
   - chmod -R 777 ./travis/after_success.sh
   - ./travis/after_success.sh
