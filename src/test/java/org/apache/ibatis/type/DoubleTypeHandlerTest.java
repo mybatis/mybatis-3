@@ -37,10 +37,10 @@ public class DoubleTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldGetResultFromResultSetByName() throws Exception {
     when(rs.getDouble("column")).thenReturn(100d);
-    assertEquals(new Double(100d), TYPE_HANDLER.getResult(rs, "column"));
+    assertEquals(Double.valueOf(100d), TYPE_HANDLER.getResult(rs, "column"));
 
     when(rs.getDouble("column")).thenReturn(0d);
-    assertEquals(new Double(0d), TYPE_HANDLER.getResult(rs, "column"));
+    assertEquals(Double.valueOf(0d), TYPE_HANDLER.getResult(rs, "column"));
   }
 
   @Override
@@ -55,10 +55,10 @@ public class DoubleTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldGetResultFromResultSetByPosition() throws Exception {
     when(rs.getDouble(1)).thenReturn(100d);
-    assertEquals(new Double(100d), TYPE_HANDLER.getResult(rs, 1));
+    assertEquals(Double.valueOf(100d), TYPE_HANDLER.getResult(rs, 1));
 
     when(rs.getDouble(1)).thenReturn(0d);
-    assertEquals(new Double(0d), TYPE_HANDLER.getResult(rs, 1));
+    assertEquals(Double.valueOf(0d), TYPE_HANDLER.getResult(rs, 1));
   }
 
   @Override
@@ -73,10 +73,10 @@ public class DoubleTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
     when(cs.getDouble(1)).thenReturn(100d);
-    assertEquals(new Double(100d), TYPE_HANDLER.getResult(cs, 1));
+    assertEquals(Double.valueOf(100d), TYPE_HANDLER.getResult(cs, 1));
 
     when(cs.getDouble(1)).thenReturn(0d);
-    assertEquals(new Double(0d), TYPE_HANDLER.getResult(cs, 1));
+    assertEquals(Double.valueOf(0d), TYPE_HANDLER.getResult(cs, 1));
   }
 
   @Override
