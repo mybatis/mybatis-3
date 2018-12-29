@@ -343,6 +343,16 @@
           </excludes>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.gaul</groupId>
+        <artifactId>modernizer-maven-plugin</artifactId>
+        <configuration>
+          <ignoreClassNamePatterns>
+            <!-- Ignore this class only as it uses initial context which is still stuck on hashtable -->
+            <ignoreClassNamePattern>org.apache.ibatis.datasource.jndi.JndiDataSourceFactoryTest</ignoreClassNamePattern>
+          </ignoreClassNamePatterns>
+        </configuration>
+      </plugin>
     </plugins>
 
     <resources>
