@@ -37,10 +37,10 @@ public class LongTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldGetResultFromResultSetByName() throws Exception {
     when(rs.getLong("column")).thenReturn(100L);
-    assertEquals(new Long(100L), TYPE_HANDLER.getResult(rs, "column"));
+    assertEquals(Long.valueOf(100L), TYPE_HANDLER.getResult(rs, "column"));
 
     when(rs.getLong("column")).thenReturn(0L);
-    assertEquals(new Long(0L), TYPE_HANDLER.getResult(rs, "column"));
+    assertEquals(Long.valueOf(0L), TYPE_HANDLER.getResult(rs, "column"));
   }
 
   @Override
@@ -55,10 +55,10 @@ public class LongTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldGetResultFromResultSetByPosition() throws Exception {
     when(rs.getLong(1)).thenReturn(100L);
-    assertEquals(new Long(100L), TYPE_HANDLER.getResult(rs, 1));
+    assertEquals(Long.valueOf(100L), TYPE_HANDLER.getResult(rs, 1));
 
     when(rs.getLong(1)).thenReturn(0L);
-    assertEquals(new Long(0L), TYPE_HANDLER.getResult(rs, 1));
+    assertEquals(Long.valueOf(0L), TYPE_HANDLER.getResult(rs, 1));
   }
 
   @Override
@@ -73,10 +73,10 @@ public class LongTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
     when(cs.getLong(1)).thenReturn(100L);
-    assertEquals(new Long(100L), TYPE_HANDLER.getResult(cs, 1));
+    assertEquals(Long.valueOf(100L), TYPE_HANDLER.getResult(cs, 1));
 
     when(cs.getLong(1)).thenReturn(0L);
-    assertEquals(new Long(0L), TYPE_HANDLER.getResult(cs, 1));
+    assertEquals(Long.valueOf(0L), TYPE_HANDLER.getResult(cs, 1));
   }
 
   @Override
