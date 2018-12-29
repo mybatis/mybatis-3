@@ -381,11 +381,11 @@
 
   <profiles>
     <profile>
-        <!-- Run slow tests only on travis ci, to force run otherwise use -DTRAVIS_BRANCH -->
+        <!-- Run slow tests only on travis ci, to force run otherwise use -D"env.TRAVIS_BRANCH" -->
         <id>travis-ci</id>
         <activation>
             <property>
-                <name>!TRAVIS_BRANCH</name>
+                <name>!env.TRAVIS_BRANCH</name>
             </property>
         </activation>
         <properties>
