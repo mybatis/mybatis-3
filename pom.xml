@@ -137,7 +137,7 @@
     <osgi.export>org.apache.ibatis.*;version=${project.version};-noimport:=true</osgi.export>
     <osgi.import>*;resolution:=optional</osgi.import>
     <osgi.dynamicImport>*</osgi.dynamicImport>
-    <maven.surefire.excludeGroups>org.apache.ibatis.test.SlowTests</maven.surefire.excludeGroups>
+    <maven.surefire.excludeGroups />
   </properties>
 
   <dependencies>
@@ -378,5 +378,20 @@
       <url>https://oss.sonatype.org/content/repositories/snapshots</url>
     </repository>
   </repositories>
+
+  <profiles>
+    <profile>
+        <!-- Run slow tests only on travis ci, to force run otherwise use -D"env.TRAVIS_BRANCH" -->
+        <id>travis-ci</id>
+        <activation>
+            <property>
+                <name>!env.TRAVIS_BRANCH</name>
+            </property>
+        </activation>
+        <properties>
+            <maven.surefire.excludeGroups>org.apache.ibatis.test.SlowTests</maven.surefire.excludeGroups>
+        </properties>
+    </profile>
+  </profiles>
 
 </project>
