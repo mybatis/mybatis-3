@@ -138,6 +138,7 @@
     <osgi.import>*;resolution:=optional</osgi.import>
     <osgi.dynamicImport>*</osgi.dynamicImport>
     <maven.surefire.excludeGroups />
+    <module.name>org.mybatis</module.name>
   </properties>
 
   <dependencies>
