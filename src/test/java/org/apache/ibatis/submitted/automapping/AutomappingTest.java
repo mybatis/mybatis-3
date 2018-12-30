@@ -61,7 +61,7 @@ public class AutomappingTest {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUserWithPhoneNumber(1);
       Assert.assertEquals("User1", user.getName());
-      Assert.assertEquals(new Long(12345678901L), user.getPhone());
+      Assert.assertEquals(Long.valueOf(12345678901L), user.getPhone());
     }
   }
 

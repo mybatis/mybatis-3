@@ -90,8 +90,8 @@ public class DynSqlTest {
       List<Map<String, Object>> answer = sqlSession.selectList("org.apache.ibatis.submitted.dynsql.selectLike", "Ba");
 
       assertTrue(answer.size() == 2);
-      assertEquals(new Integer(4), answer.get(0).get("ID"));
-      assertEquals(new Integer(6), answer.get(1).get("ID"));
+      assertEquals(Integer.valueOf(4), answer.get(0).get("ID"));
+      assertEquals(Integer.valueOf(6), answer.get(1).get("ID"));
     }
   }
 
@@ -121,7 +121,7 @@ public class DynSqlTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       List<Map<String, Object>> answer = sqlSession.selectList("org.apache.ibatis.submitted.dynsql.ognlStaticMethodCall", "Rock 'n Roll");
       assertTrue(answer.size() == 1);
-      assertEquals(new Integer(7), answer.get(0).get("ID"));
+      assertEquals(Integer.valueOf(7), answer.get(0).get("ID"));
     }
   }
 

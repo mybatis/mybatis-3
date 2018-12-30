@@ -80,8 +80,8 @@ public class BatchKeysTest {
       User user2 = new User(null, "Valentina");
       sqlSession.insert("insert", user2);
       sqlSession.flushStatements();
-      assertEquals(new Integer(50), user1.getId());
-      assertEquals(new Integer(50), user2.getId());
+      assertEquals(Integer.valueOf(50), user1.getId());
+      assertEquals(Integer.valueOf(50), user2.getId());
       sqlSession.commit();
     }
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
@@ -119,8 +119,8 @@ public class BatchKeysTest {
       User user2 = new User(null, "Valentina");
       userMapper.insert(user2);
       sqlSession.flushStatements();
-      assertEquals(new Integer(50), user1.getId());
-      assertEquals(new Integer(50), user2.getId());
+      assertEquals(Integer.valueOf(50), user1.getId());
+      assertEquals(Integer.valueOf(50), user2.getId());
       sqlSession.commit();
     }
 

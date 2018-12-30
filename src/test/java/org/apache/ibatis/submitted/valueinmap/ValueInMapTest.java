@@ -55,7 +55,7 @@ public class ValueInMapTest {
       map.put("column", "name");
       map.put("value", "User1");
       Integer count = sqlSession.selectOne("count", map);
-      Assert.assertEquals(new Integer(1), count);
+      Assert.assertEquals(Integer.valueOf(1), count);
     }
   }
 
@@ -65,7 +65,7 @@ public class ValueInMapTest {
       List<String> list = new ArrayList<String>();
       list.add("users");
       Integer count = sqlSession.selectOne("count2",list);
-      Assert.assertEquals(new Integer(1), count);
+      Assert.assertEquals(Integer.valueOf(1), count);
     }
   }
 
