@@ -137,7 +137,7 @@
     <osgi.export>org.apache.ibatis.*;version=${project.version};-noimport:=true</osgi.export>
     <osgi.import>*;resolution:=optional</osgi.import>
     <osgi.dynamicImport>*</osgi.dynamicImport>
-    <maven.surefire.excludeGroups />
+    <maven.surefire.excludeGroups>org.apache.ibatis.test.SlowTests</maven.surefire.excludeGroups>
     <module.name>org.mybatis</module.name>
   </properties>
 
@@ -382,15 +382,15 @@
 
   <profiles>
     <profile>
-        <!-- Run slow tests only on travis ci, to force run otherwise use -D"env.TRAVIS_BRANCH" -->
+        <!-- Run slow tests only on travis ci, to force run otherwise use -D"env.TRAVIS" -->
         <id>travis-ci</id>
         <activation>
             <property>
-                <name>!env.TRAVIS_BRANCH</name>
+                <name>env.TRAVIS</name>
             </property>
         </activation>
         <properties>
-            <maven.surefire.excludeGroups>org.apache.ibatis.test.SlowTests</maven.surefire.excludeGroups>
+            <maven.surefire.excludeGroups />
         </properties>
     </profile>
   </profiles>
