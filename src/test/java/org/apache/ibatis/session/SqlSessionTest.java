@@ -15,11 +15,11 @@
  */
 package org.apache.ibatis.session;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.Reader;
 import java.util.ArrayList;
@@ -53,15 +53,15 @@ import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 public class SqlSessionTest extends BaseDataTest {
   private static SqlSessionFactory sqlMapper;
 
-  @BeforeClass
+  @BeforeAll
   public static void setup() throws Exception {
     createBlogDataSource();
     final String resource = "org/apache/ibatis/builder/MapperConfig.xml";
@@ -80,7 +80,7 @@ public class SqlSessionTest extends BaseDataTest {
     assertEquals(cache, c.getCache(shortName));
   }
 
-  @Test(expected=IllegalArgumentException.class)
+  @Test
   public void shouldFailOverToMostApplicableSimpleName() {
     Configuration c = new Configuration();
     final String fullName = "com.mycache.MyCache";
@@ -88,7 +88,9 @@ public class SqlSessionTest extends BaseDataTest {
     final PerpetualCache cache = new PerpetualCache(fullName);
     c.addCache(cache);
     assertEquals(cache, c.getCache(fullName));
-    assertEquals(cache, c.getCache(invalidName));
+    Assertions.assertThrows(IllegalArgumentException.class, () -> {
+      c.getCache(invalidName);
+    });
   }
 
   @Test
@@ -159,10 +161,12 @@ public class SqlSessionTest extends BaseDataTest {
     }
   }
 
-  @Test(expected=TooManyResultsException.class)
+  @Test
   public void shouldFailWithTooManyResultsException() {
     try (SqlSession session = sqlMapper.openSession(TransactionIsolationLevel.SERIALIZABLE)) {
-      session.selectOne("org.apache.ibatis.domain.blog.mappers.AuthorMapper.selectAllAuthors");
+      Assertions.assertThrows(TooManyResultsException.class, () -> {
+        session.selectOne("org.apache.ibatis.domain.blog.mappers.AuthorMapper.selectAllAuthors");
+      });
     }
   }
   
@@ -338,7 +342,7 @@ public class SqlSessionTest extends BaseDataTest {
   public void shouldSelectBlogWithPostsAndAuthorUsingSubSelectsLazily() {
     try (SqlSession session = sqlMapper.openSession()) {
       Blog blog = session.selectOne("org.apache.ibatis.domain.blog.mappers.BlogMapper.selectBlogWithPostsUsingSubSelectLazily", 1);
-      Assert.assertTrue(blog instanceof Proxy);
+      Assertions.assertTrue(blog instanceof Proxy);
       assertEquals("Jim Business", blog.getTitle());
       assertEquals(2, blog.getPosts().size());
       assertEquals("Corn nuts", blog.getPosts().get(0).getSubject());
@@ -555,17 +559,17 @@ public class SqlSessionTest extends BaseDataTest {
     }
   }
 
-  @Test(expected=BindingException.class)
+  @Test
   public void shouldFailExecutingAnAnnotatedMapperClassWithResultHandler() {
     try (SqlSession session = sqlMapper.openSession()) {
       DefaultResultHandler handler = new DefaultResultHandler();
       AuthorMapper mapper = session.getMapper(AuthorMapper.class);
-      mapper.selectAuthor2(101, handler);
-      Author author = (Author) handler.getResultList().get(0);
-      assertEquals(101, author.getId());
+      Assertions.assertThrows(BindingException.class, () -> {
+        mapper.selectAuthor2(101, handler);
+      });
     }
   }
-  
+
   @Test
   public void shouldSelectAuthorsUsingMapperClassWithResultHandler() {
     try (SqlSession session = sqlMapper.openSession()) {
@@ -576,7 +580,7 @@ public class SqlSessionTest extends BaseDataTest {
     }
   }
 
-  @Test(expected = BindingException.class)
+  @Test
   public void shouldFailSelectOneAuthorUsingMapperClassWithTwoResultHandlers() {
     Configuration configuration = new Configuration(sqlMapper.getConfiguration().getEnvironment());
     configuration.addMapper(AuthorMapperWithMultipleHandlers.class);
@@ -585,11 +589,13 @@ public class SqlSessionTest extends BaseDataTest {
       DefaultResultHandler handler1 = new DefaultResultHandler();
       DefaultResultHandler handler2 = new DefaultResultHandler();
       AuthorMapperWithMultipleHandlers mapper = sqlSession.getMapper(AuthorMapperWithMultipleHandlers.class);
-      mapper.selectAuthor(101, handler1, handler2);
+      Assertions.assertThrows(BindingException.class, () -> {
+        mapper.selectAuthor(101, handler1, handler2);
+      });
     }
   }
 
-  @Test(expected = BindingException.class)
+  @Test
   public void shouldFailSelectOneAuthorUsingMapperClassWithTwoRowBounds() {
     Configuration configuration = new Configuration(sqlMapper.getConfiguration().getEnvironment());
     configuration.addMapper(AuthorMapperWithRowBounds.class);
@@ -598,7 +604,9 @@ public class SqlSessionTest extends BaseDataTest {
       RowBounds bounds1 = new RowBounds(0, 1);
       RowBounds bounds2 = new RowBounds(0, 1);
       AuthorMapperWithRowBounds mapper = sqlSession.getMapper(AuthorMapperWithRowBounds.class);
-      mapper.selectAuthor(101, bounds1, bounds2);
+      Assertions.assertThrows(BindingException.class, () -> {
+        mapper.selectAuthor(101, bounds1, bounds2);
+      });
     }
   }
 

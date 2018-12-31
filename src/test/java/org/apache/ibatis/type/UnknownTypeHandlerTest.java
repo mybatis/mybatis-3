@@ -18,13 +18,13 @@ package org.apache.ibatis.type;
 import java.sql.Clob;
 import java.sql.SQLException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.*;
 
 import org.apache.ibatis.executor.result.ResultMapException;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class UnknownTypeHandlerTest extends BaseTypeHandlerTest {
 
@@ -94,10 +94,10 @@ public class UnknownTypeHandlerTest extends BaseTypeHandlerTest {
     doThrow(new SQLException("invalid column")).when(ps).setNull(1, JdbcType.INTEGER.TYPE_CODE);
     try {
       TYPE_HANDLER.setParameter(ps, 1, null, JdbcType.INTEGER);
-      Assert.fail("Should have thrown a TypeException");
+      Assertions.fail("Should have thrown a TypeException");
     } catch (Exception e) {
-      Assert.assertTrue("Expected TypedException", e instanceof TypeException);
-      Assert.assertTrue("Parameter index is in exception", e.getMessage().contains("parameter #1"));
+      Assertions.assertTrue(e instanceof TypeException, "Expected TypedException");
+      Assertions.assertTrue(e.getMessage().contains("parameter #1"), "Parameter index is in exception");
     }
   }
 
@@ -106,10 +106,10 @@ public class UnknownTypeHandlerTest extends BaseTypeHandlerTest {
     doThrow(new SQLException("invalid column")).when((UnknownTypeHandler)TYPE_HANDLER).setNonNullParameter(ps, 1, 99, JdbcType.INTEGER);
     try {
       TYPE_HANDLER.setParameter(ps, 1, 99, JdbcType.INTEGER);
-      Assert.fail("Should have thrown a TypeException");
+      Assertions.fail("Should have thrown a TypeException");
     } catch (Exception e) {
-      Assert.assertTrue("Expected TypedException", e instanceof TypeException);
-      Assert.assertTrue("Parameter index is in exception", e.getMessage().contains("parameter #1"));
+      Assertions.assertTrue(e instanceof TypeException, "Expected TypedException");
+      Assertions.assertTrue(e.getMessage().contains("parameter #1"), "Parameter index is in exception");
     }
   }
 
@@ -118,10 +118,10 @@ public class UnknownTypeHandlerTest extends BaseTypeHandlerTest {
     doThrow(new SQLException("invalid column")).when((UnknownTypeHandler)TYPE_HANDLER).getNullableResult(rs, "foo");
     try {
       TYPE_HANDLER.getResult(rs, "foo");
-      Assert.fail("Should have thrown a ResultMapException");
+      Assertions.fail("Should have thrown a ResultMapException");
     } catch (Exception e) {
-      Assert.assertTrue("Expected ResultMapException", e instanceof ResultMapException);
-      Assert.assertTrue("column name is not in exception", e.getMessage().contains("column 'foo'"));
+      Assertions.assertTrue(e instanceof ResultMapException, "Expected ResultMapException");
+      Assertions.assertTrue(e.getMessage().contains("column 'foo'"), "column name is not in exception");
     }
   }
 
@@ -130,10 +130,10 @@ public class UnknownTypeHandlerTest extends BaseTypeHandlerTest {
     doThrow(new SQLException("invalid column")).when((UnknownTypeHandler)TYPE_HANDLER).getNullableResult(rs, 1);
     try {
       TYPE_HANDLER.getResult(rs, 1);
-      Assert.fail("Should have thrown a ResultMapException");
+      Assertions.fail("Should have thrown a ResultMapException");
     } catch (Exception e) {
-      Assert.assertTrue("Expected ResultMapException", e instanceof ResultMapException);
-      Assert.assertTrue("column index is not in exception", e.getMessage().contains("column #1"));
+      Assertions.assertTrue(e instanceof ResultMapException, "Expected ResultMapException");
+      Assertions.assertTrue(e.getMessage().contains("column #1"), "column index is not in exception");
     }
   }
 
@@ -142,10 +142,10 @@ public class UnknownTypeHandlerTest extends BaseTypeHandlerTest {
     doThrow(new SQLException("invalid column")).when((UnknownTypeHandler)TYPE_HANDLER).getNullableResult(cs, 1);
     try {
       TYPE_HANDLER.getResult(cs, 1);
-      Assert.fail("Should have thrown a ResultMapException");
+      Assertions.fail("Should have thrown a ResultMapException");
     } catch (Exception e) {
-      Assert.assertTrue("Expected ResultMapException", e instanceof ResultMapException);
-      Assert.assertTrue("column index is not in exception", e.getMessage().contains("column #1"));
+      Assertions.assertTrue(e instanceof ResultMapException, "Expected ResultMapException");
+      Assertions.assertTrue(e.getMessage().contains("column #1"), "column index is not in exception");
     }
   }
 

@@ -20,13 +20,16 @@ import java.io.Reader;
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class EmptyNamespaceTest {
-  @Test(expected = PersistenceException.class)
+  @Test
   public void testEmptyNamespace() throws Exception {
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/empty_namespace/ibatisConfig.xml")) {
-      new SqlSessionFactoryBuilder().build(reader);
+        Assertions.assertThrows(PersistenceException.class, () -> {
+          new SqlSessionFactoryBuilder().build(reader);
+        });
     }
   }
 }

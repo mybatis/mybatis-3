@@ -15,8 +15,8 @@
  */
 package org.apache.ibatis.executor.resultset;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -42,13 +42,13 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.type.TypeHandlerRegistry;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class DefaultResultSetHandlerTest2 {
 
   @Spy
@@ -143,12 +143,6 @@ public class DefaultResultSetHandlerTest2 {
     when(rsmd.getColumnLabel(1)).thenReturn("id");
     when(rsmd.getColumnType(1)).thenReturn(Types.INTEGER);
     when(rsmd.getColumnClassName(1)).thenReturn(Integer.class.getCanonicalName());
-    when(rsmd.getColumnLabel(2)).thenReturn("role");
-    when(rsmd.getColumnType(2)).thenReturn(Types.VARCHAR);
-    when(rsmd.getColumnClassName(2)).thenReturn(String.class.getCanonicalName());
-    when(stmt.getConnection()).thenReturn(conn);
-    when(conn.getMetaData()).thenReturn(dbmd);
-    when(dbmd.supportsMultipleResultSets()).thenReturn(false); // for simplicity.
 
     final List<Object> results = resultSetHandler.handleResultSets(stmt);
     assertEquals(0, results.size());

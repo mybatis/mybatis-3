@@ -15,8 +15,8 @@
  */
 package org.apache.ibatis.submitted.blobtest;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.Reader;
 import java.util.List;
@@ -26,13 +26,13 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class BlobTest {
     private static SqlSessionFactory sqlSessionFactory;
 
-    @BeforeClass
+    @BeforeAll
     public static void initDatabase() throws Exception {
         try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/blobtest/MapperConfig.xml")) {
             sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);

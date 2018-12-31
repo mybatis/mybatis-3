@@ -27,15 +27,15 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class ValueInMapTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     // create a SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/valueinmap/mybatis-config.xml")) {
@@ -55,17 +55,18 @@ public class ValueInMapTest {
       map.put("column", "name");
       map.put("value", "User1");
       Integer count = sqlSession.selectOne("count", map);
-      Assert.assertEquals(Integer.valueOf(1), count);
+      Assertions.assertEquals(Integer.valueOf(1), count);
     }
   }
 
-  @Test(expected=PersistenceException.class)
+  @Test
   public void shouldWorkWithAList() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       List<String> list = new ArrayList<String>();
       list.add("users");
-      Integer count = sqlSession.selectOne("count2",list);
-      Assert.assertEquals(Integer.valueOf(1), count);
+      Assertions.assertThrows(PersistenceException.class, () -> {
+        sqlSession.selectOne("count2",list);
+      });
     }
   }
 

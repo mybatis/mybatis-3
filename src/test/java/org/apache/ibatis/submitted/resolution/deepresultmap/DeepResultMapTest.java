@@ -23,15 +23,15 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.submitted.resolution.User;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class DeepResultMapTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     // create an SqlSessionFactory
     try (Reader reader = Resources
@@ -49,8 +49,8 @@ public class DeepResultMapTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       MapperA mapper = sqlSession.getMapper(MapperA.class);
       User user = mapper.getUser(1);
-      Assert.assertEquals(Integer.valueOf(1), user.getId());
-      Assert.assertEquals("User1", user.getName());
+      Assertions.assertEquals(Integer.valueOf(1), user.getId());
+      Assertions.assertEquals("User1", user.getName());
     }
   }
 

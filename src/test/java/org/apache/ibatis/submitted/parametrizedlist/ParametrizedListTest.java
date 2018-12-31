@@ -20,20 +20,20 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.BaseDataTest;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class ParametrizedListTest {
 
   private SqlSessionFactory sqlSessionFactory;
 
-  @Before
+  @BeforeEach
   public void setUp() throws Exception {
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/parametrizedlist/Config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -48,7 +48,7 @@ public class ParametrizedListTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<User<String>> list = mapper.getAListOfUsers();
-      Assert.assertEquals(User.class, list.get(0).getClass());
+      Assertions.assertEquals(User.class, list.get(0).getClass());
     }
   }
 
@@ -57,7 +57,7 @@ public class ParametrizedListTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Map<Integer, User<String>> map = mapper.getAMapOfUsers();
-      Assert.assertEquals(User.class, map.get(1).getClass());
+      Assertions.assertEquals(User.class, map.get(1).getClass());
     }
   }
 
@@ -66,7 +66,7 @@ public class ParametrizedListTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Map<String, Object> map = mapper.getUserAsAMap();
-      Assert.assertEquals(1, map.get("ID"));
+      Assertions.assertEquals(1, map.get("ID"));
     }
   }
 
@@ -75,7 +75,7 @@ public class ParametrizedListTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<Map<String, Object>> map = mapper.getAListOfMaps();
-      Assert.assertEquals(1, map.get(0).get("ID"));
+      Assertions.assertEquals(1, map.get(0).get("ID"));
     }
   }
 

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,10 +15,10 @@
  */
 package org.apache.ibatis.session;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.Reader;
 
@@ -27,14 +27,14 @@ import org.apache.ibatis.domain.blog.Author;
 import org.apache.ibatis.domain.blog.mappers.AuthorMapper;
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.io.Resources;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class SqlSessionManagerTest extends BaseDataTest {
 
   private static SqlSessionManager manager;
 
-  @BeforeClass
+  @BeforeAll
   public static void setup() throws Exception {
     createBlogDataSource();
     final String resource = "org/apache/ibatis/builder/MapperConfig.xml";

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,23 +15,27 @@
  */
 package org.apache.ibatis.executor.statement;
 
-import org.apache.ibatis.builder.StaticSqlSource;
-import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.session.Configuration;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnitRunner;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import static org.mockito.Mockito.*;
+import org.apache.ibatis.builder.StaticSqlSource;
+import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.session.Configuration;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class BaseStatementHandlerTest {
 
     @Spy
@@ -42,12 +46,12 @@ public class BaseStatementHandlerTest {
 
     MappedStatement.Builder mappedStatementBuilder;
 
-    @Before
+    @BeforeEach
     public void setupMappedStatement() {
         this.mappedStatementBuilder = new MappedStatement.Builder(configuration, "id", new StaticSqlSource(configuration, "sql"), null);
     }
 
-    @After
+    @AfterEach
     public void resetMocks() {
         reset(configuration, statement);
     }

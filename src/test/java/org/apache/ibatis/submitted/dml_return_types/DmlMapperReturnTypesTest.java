@@ -20,14 +20,14 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.io.Reader;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DmlMapperReturnTypesTest {
 
@@ -39,7 +39,7 @@ public class DmlMapperReturnTypesTest {
   private SqlSession sqlSession;
   private Mapper mapper;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     // create a SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader(XML)) {
@@ -51,13 +51,13 @@ public class DmlMapperReturnTypesTest {
 
   }
 
-  @Before
+  @BeforeEach
   public void openSession() {
     sqlSession = sqlSessionFactory.openSession();
     mapper = sqlSession.getMapper(Mapper.class);
   }
 
-  @After
+  @AfterEach
   public void closeSession() {
     sqlSession.close();
   }

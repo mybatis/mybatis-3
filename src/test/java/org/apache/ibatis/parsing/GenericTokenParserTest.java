@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,11 +15,13 @@
  */
 package org.apache.ibatis.parsing;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -84,28 +86,30 @@ public class GenericTokenParserTest {
     assertEquals("The null is ${skipped} variable", parser.parse("The ${skipped} is \\${skipped} variable"));
   }
 
-  @Ignore("Because it randomly fails on Travis CI. It could be useful during development.")
-  @Test(timeout = 1000)
+  @Disabled("Because it randomly fails on Travis CI. It could be useful during development.")
+  @Test
   public void shouldParseFastOnJdk7u6() {
-    // issue #760
-    GenericTokenParser parser = new GenericTokenParser("${", "}", new VariableTokenHandler(new HashMap<String, String>() {
-      {
-        put("first_name", "James");
-        put("initial", "T");
-        put("last_name", "Kirk");
-        put("", "");
-      }
-    }));
+    Assertions.assertTimeout(Duration.ofMillis(1), () -> {
+      // issue #760
+      GenericTokenParser parser = new GenericTokenParser("${", "}", new VariableTokenHandler(new HashMap<String, String>() {
+        {
+          put("first_name", "James");
+          put("initial", "T");
+          put("last_name", "Kirk");
+          put("", "");
+        }
+      }));
 
-    StringBuilder input = new StringBuilder();
-    for (int i = 0; i < 10000; i++) {
-      input.append("${first_name} ${initial} ${last_name} reporting. ");
-    }
-    StringBuilder expected = new StringBuilder();
-    for (int i = 0; i < 10000; i++) {
-      expected.append("James T Kirk reporting. ");
-    }
-    assertEquals(expected.toString(), parser.parse(input.toString()));
+      StringBuilder input = new StringBuilder();
+      for (int i = 0; i < 10000; i++) {
+        input.append("${first_name} ${initial} ${last_name} reporting. ");
+      }
+      StringBuilder expected = new StringBuilder();
+      for (int i = 0; i < 10000; i++) {
+        expected.append("James T Kirk reporting. ");
+      }
+      assertEquals(expected.toString(), parser.parse(input.toString()));
+    });
   }
 
 }

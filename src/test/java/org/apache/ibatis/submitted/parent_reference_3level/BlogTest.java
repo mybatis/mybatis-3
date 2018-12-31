@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.submitted.parent_reference_3level;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.Reader;
 
@@ -24,9 +24,9 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class BlogTest {
 
@@ -36,7 +36,7 @@ public class BlogTest {
     return "org/apache/ibatis/submitted/parent_reference_3level/mybatis-config.xml";
   }
 
-  @Before
+  @BeforeEach
   public void setUp() throws Exception {
     try (Reader reader = Resources.getResourceAsReader(getConfigPath())) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -53,13 +53,13 @@ public class BlogTest {
       Blog result = mapper.selectBlogByPrimaryKey(1);
       assertNotNull(result);
       assertEquals("Blog with posts", result.getTitle());
-      Assert.assertEquals(2, result.getPosts().size());
+      Assertions.assertEquals(2, result.getPosts().size());
       Post firstPost = result.getPosts().get(0);
-      Assert.assertEquals(1, firstPost.getBlog().getId());
-      Assert.assertEquals(2, firstPost.getComments().size());
+      Assertions.assertEquals(1, firstPost.getBlog().getId());
+      Assertions.assertEquals(2, firstPost.getComments().size());
       Post secondPost = result.getPosts().get(1);
-      Assert.assertEquals(1, secondPost.getComments().size());
-      Assert.assertEquals(2, secondPost.getComments().get(0).getPost().getId());
+      Assertions.assertEquals(1, secondPost.getComments().size());
+      Assertions.assertEquals(2, secondPost.getComments().get(0).getPost().getId());
     }
   }
 
@@ -70,7 +70,7 @@ public class BlogTest {
       Blog result = mapper.selectBlogByPrimaryKey(2);
       assertNotNull(result);
       assertEquals("Blog without posts", result.getTitle());
-      Assert.assertEquals(0, result.getPosts().size());
+      Assertions.assertEquals(0, result.getPosts().size());
     }
   }
 
@@ -81,13 +81,13 @@ public class BlogTest {
       Blog result = mapper.selectBlogByPrimaryKeyColumnPrefix(1);
       assertNotNull(result);
       assertEquals("Blog with posts", result.getTitle());
-      Assert.assertEquals(2, result.getPosts().size());
+      Assertions.assertEquals(2, result.getPosts().size());
       Post firstPost = result.getPosts().get(0);
-      Assert.assertEquals(1, firstPost.getBlog().getId());
-      Assert.assertEquals(2, firstPost.getComments().size());
+      Assertions.assertEquals(1, firstPost.getBlog().getId());
+      Assertions.assertEquals(2, firstPost.getComments().size());
       Post secondPost = result.getPosts().get(1);
-      Assert.assertEquals(1, secondPost.getComments().size());
-      Assert.assertEquals(2, secondPost.getComments().get(0).getPost().getId());
+      Assertions.assertEquals(1, secondPost.getComments().size());
+      Assertions.assertEquals(2, secondPost.getComments().get(0).getPost().getId());
     }
   }
 
@@ -98,7 +98,7 @@ public class BlogTest {
       Blog result = mapper.selectBlogByPrimaryKeyColumnPrefix(2);
       assertNotNull(result);
       assertEquals("Blog without posts", result.getTitle());
-      Assert.assertEquals(0, result.getPosts().size());
+      Assertions.assertEquals(0, result.getPosts().size());
     }
   }
 }

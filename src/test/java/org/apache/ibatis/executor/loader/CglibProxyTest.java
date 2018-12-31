@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,9 +15,9 @@
  */
 package org.apache.ibatis.executor.loader;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -30,7 +30,8 @@ import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.executor.loader.cglib.CglibProxyFactory;
 import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
 import org.apache.ibatis.session.Configuration;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CglibProxyTest extends SerializableProxyTest {
 
@@ -47,13 +48,15 @@ public class CglibProxyTest extends SerializableProxyTest {
     assertTrue(author2 instanceof Factory);
   }
 
-  @Test(expected = ExecutorException.class)
+  @Test
   public void shouldFailCallingAnUnloadedProperty() throws Exception {
     // yes, it must go in uppercase
     HashMap<String, ResultLoaderMap.LoadPair> unloadedProperties = new HashMap<String, ResultLoaderMap.LoadPair>();
     unloadedProperties.put("ID", null);
     Author author2 = (Author) ((CglibProxyFactory)proxyFactory).createDeserializationProxy(author, unloadedProperties, new DefaultObjectFactory(), new ArrayList<Class<?>>(), new ArrayList<Object>());
-    author2.getId();
+    Assertions.assertThrows(ExecutorException.class, () -> {
+      author2.getId();
+    });
   }
 
   @Test

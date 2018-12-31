@@ -15,9 +15,9 @@
  */
 package org.apache.ibatis.executor.loader;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -32,7 +32,8 @@ import org.apache.ibatis.domain.blog.Section;
 import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
 import org.apache.ibatis.session.Configuration;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public abstract class SerializableProxyTest {
 
@@ -149,22 +150,26 @@ public abstract class SerializableProxyTest {
     assertEquals(author.getClass(), author2.getClass());
   }
 
-  @Test(expected = ExecutorException.class)
+  @Test
   public void shouldNotLetReadUnloadedPropertyAfterSerialization() throws Exception {
     ResultLoaderMap loader = new ResultLoaderMap();
     loader.addLoader("id", null, null);
     Object proxy = proxyFactory.createProxy(author, loader, new Configuration(), new DefaultObjectFactory(), new ArrayList<Class<?>>(), new ArrayList<Object>());
     Author author2 = (Author) deserialize(serialize((Serializable) proxy));
-    author2.getId();
+    Assertions.assertThrows(ExecutorException.class, () -> {
+      author2.getId();
+    });
   }
 
-  @Test(expected = ExecutorException.class)
+  @Test
   public void shouldNotLetReadUnloadedPropertyAfterTwoSerializations() throws Exception {
     ResultLoaderMap loader = new ResultLoaderMap();
     loader.addLoader("id", null, null);
     Object proxy = proxyFactory.createProxy(author, loader, new Configuration(), new DefaultObjectFactory(), new ArrayList<Class<?>>(), new ArrayList<Object>());
     Author author2 = (Author) deserialize(serialize(deserialize(serialize((Serializable) proxy))));
-    author2.getId();
+    Assertions.assertThrows(ExecutorException.class, () -> {
+      author2.getId();
+    });
   }
 
   @Test

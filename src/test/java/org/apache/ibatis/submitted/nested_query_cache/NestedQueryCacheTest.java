@@ -21,19 +21,19 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.io.Reader;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class NestedQueryCacheTest extends BaseDataTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     // create a SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/nested_query_cache/MapperConfig.xml")) {
@@ -73,8 +73,8 @@ public class NestedQueryCacheTest extends BaseDataTest {
       author = blogMapper.selectBlog(1).getAuthor();
       
       // ensure that nested author within blog is cached
-      assertNotNull("blog author", blogMapper.selectBlog(1).getAuthor());
-      assertNotNull("blog author", blogMapper.selectBlogUsingConstructor(1).getAuthor());
+      assertNotNull(blogMapper.selectBlog(1).getAuthor(), "blog author");
+      assertNotNull(blogMapper.selectBlogUsingConstructor(1).getAuthor(), "blog author");
     }
 
     // open a new session

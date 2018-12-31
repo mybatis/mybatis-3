@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,8 +15,8 @@
  */
 package org.apache.ibatis.io;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit test for VFS getInstance method in multi-thread environment
@@ -28,7 +28,7 @@ public class VFSTest {
   @Test
   public void getInstanceShouldNotBeNull() throws Exception {
     VFS vsf = VFS.getInstance();
-    Assert.assertNotNull(vsf);
+    Assertions.assertNotNull(vsf);
   }
 
   @Test
@@ -55,7 +55,7 @@ public class VFSTest {
 
     // All caller got must be the same instance
     for (int i = 0; i < threadCount - 1; i++) {
-      Assert.assertEquals(procedures[i].instanceGot, procedures[i + 1].instanceGot);
+      Assertions.assertEquals(procedures[i].instanceGot, procedures[i + 1].instanceGot);
     }
   }
 

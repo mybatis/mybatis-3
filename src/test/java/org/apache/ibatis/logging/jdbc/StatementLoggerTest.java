@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,24 +15,27 @@
  */
 package org.apache.ibatis.logging.jdbc;
 
-import org.apache.ibatis.logging.Log;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-
-import java.sql.SQLException;
-import java.sql.Statement;
-
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import org.apache.ibatis.logging.Log;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
+
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class StatementLoggerTest {
 
   @Mock
@@ -43,7 +46,7 @@ public class StatementLoggerTest {
 
   Statement st;
 
-  @Before
+  @BeforeEach
   public void setUp() throws SQLException {
     when(log.isDebugEnabled()).thenReturn(true);
     when(statement.execute(anyString())).thenReturn(true);
@@ -63,7 +66,7 @@ public class StatementLoggerTest {
     boolean execute = st.execute(sql);
 
     verify(log).debug(contains(sql));
-    Assert.assertTrue(execute);
+    Assertions.assertTrue(execute);
   }
 
   @Test

@@ -24,15 +24,15 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class UUIDTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     // create an SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/uuid_test/mybatis-config.xml")) {
@@ -44,12 +44,13 @@ public class UUIDTest {
             "org/apache/ibatis/submitted/uuid_test/CreateDB.sql");
   }
 
-  @Test(expected=PersistenceException.class)
+  @Test
   public void shouldGetAUser() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
-      User user = mapper.getUser(UUID.fromString("38400000-8cf0-11bd-b23e-10b96e4ef00d"));
-      Assert.assertEquals("User1", user.getName());
+      Assertions.assertThrows(PersistenceException.class, () -> {
+        mapper.getUser(UUID.fromString("38400000-8cf0-11bd-b23e-10b96e4ef00d"));
+      });
     }
   }
 

@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.submitted.column_prefix;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.Reader;
 import java.util.List;
@@ -25,14 +25,14 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class ColumnPrefixTest {
 
   protected SqlSessionFactory sqlSessionFactory;
 
-  @Before
+  @BeforeEach
   public void setUp() throws Exception {
     try (Reader reader = Resources.getResourceAsReader(getConfigPath())) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);

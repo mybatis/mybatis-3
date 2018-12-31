@@ -15,14 +15,14 @@
  */
 package org.apache.ibatis.builder.xml.dynamic;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.HashMap;
 
 import org.apache.ibatis.domain.blog.Author;
 import org.apache.ibatis.domain.blog.Section;
 import org.apache.ibatis.scripting.xmltags.ExpressionEvaluator;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ExpressionEvaluatorTest {
 

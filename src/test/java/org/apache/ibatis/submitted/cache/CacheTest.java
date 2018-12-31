@@ -29,9 +29,9 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static com.googlecode.catchexception.apis.BDDCatchException.*;
 import static org.assertj.core.api.BDDAssertions.then;
@@ -41,7 +41,7 @@ public class CacheTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @Before
+  @BeforeEach
   public void setUp() throws Exception {
     // create a SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/cache/mybatis-config.xml")) {
@@ -67,14 +67,14 @@ public class CacheTest {
   public void testplan1() {
     try (SqlSession sqlSession1 = sqlSessionFactory.openSession(false)) {
       PersonMapper pm = sqlSession1.getMapper(PersonMapper.class);
-      Assert.assertEquals(2, pm.findAll().size());
+      Assertions.assertEquals(2, pm.findAll().size());
     }
 
     try (SqlSession sqlSession2 = sqlSessionFactory.openSession(false)) {
       try {
         PersonMapper pm = sqlSession2.getMapper(PersonMapper.class);
         pm.delete(1);
-        Assert.assertEquals(1, pm.findAll().size());
+        Assertions.assertEquals(1, pm.findAll().size());
       } finally {
         sqlSession2.commit();
       }
@@ -97,7 +97,7 @@ public class CacheTest {
   public void testplan2() {
     try (SqlSession sqlSession1 = sqlSessionFactory.openSession(false)) {
       PersonMapper pm = sqlSession1.getMapper(PersonMapper.class);
-      Assert.assertEquals(2, pm.findAll().size());
+      Assertions.assertEquals(2, pm.findAll().size());
     }
 
     try (SqlSession sqlSession2 = sqlSessionFactory.openSession(false)) {
@@ -111,7 +111,7 @@ public class CacheTest {
 
     try (SqlSession sqlSession3 = sqlSessionFactory.openSession(false)) {
       PersonMapper pm = sqlSession3.getMapper(PersonMapper.class);
-      Assert.assertEquals(2, pm.findAll().size());
+      Assertions.assertEquals(2, pm.findAll().size());
     }
   }
 
@@ -131,7 +131,7 @@ public class CacheTest {
   public void testplan3() {
     try (SqlSession sqlSession1 = sqlSessionFactory.openSession(true)) {
       PersonMapper pm = sqlSession1.getMapper(PersonMapper.class);
-      Assert.assertEquals(2, pm.findAll().size());
+      Assertions.assertEquals(2, pm.findAll().size());
     }
 
 
@@ -142,7 +142,7 @@ public class CacheTest {
 
     try (SqlSession sqlSession3 = sqlSessionFactory.openSession(true)) {
       PersonMapper pm = sqlSession3.getMapper(PersonMapper.class);
-      Assert.assertEquals(1, pm.findAll().size());
+      Assertions.assertEquals(1, pm.findAll().size());
     }
   }
 
@@ -164,7 +164,7 @@ public class CacheTest {
   public void shouldInsertWithOptionsFlushesCache() {
     try (SqlSession sqlSession1 = sqlSessionFactory.openSession(true)) {
       PersonMapper pm = sqlSession1.getMapper(PersonMapper.class);
-      Assert.assertEquals(2, pm.findAll().size());
+      Assertions.assertEquals(2, pm.findAll().size());
     }
 
     try (SqlSession sqlSession2 = sqlSessionFactory.openSession(true)) {
@@ -175,7 +175,7 @@ public class CacheTest {
 
     try (SqlSession sqlSession3 = sqlSessionFactory.openSession(true)) {
       PersonMapper pm = sqlSession3.getMapper(PersonMapper.class);
-      Assert.assertEquals(3, pm.findAll().size());
+      Assertions.assertEquals(3, pm.findAll().size());
     }
   }
 
@@ -198,7 +198,7 @@ public class CacheTest {
   public void shouldApplyFlushCacheOptions() {
     try (SqlSession sqlSession1 = sqlSessionFactory.openSession(true)) {
       PersonMapper pm = sqlSession1.getMapper(PersonMapper.class);
-      Assert.assertEquals(2, pm.findAll().size());
+      Assertions.assertEquals(2, pm.findAll().size());
     }
 
     try (SqlSession sqlSession2 = sqlSessionFactory.openSession(true)) {
@@ -209,12 +209,12 @@ public class CacheTest {
 
     try (SqlSession sqlSession3 = sqlSessionFactory.openSession(true)) {
       PersonMapper pm = sqlSession3.getMapper(PersonMapper.class);
-      Assert.assertEquals(2, pm.findAll().size());
+      Assertions.assertEquals(2, pm.findAll().size());
     }
 
     try (SqlSession sqlSession4 = sqlSessionFactory.openSession(true)) {
       PersonMapper pm = sqlSession4.getMapper(PersonMapper.class);
-      Assert.assertEquals(3, pm.findWithFlushCache().size());
+      Assertions.assertEquals(3, pm.findWithFlushCache().size());
     }
   }
 
@@ -222,52 +222,52 @@ public class CacheTest {
   public void shouldApplyCacheNamespaceRef() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession(true)) {
       PersonMapper pm = sqlSession.getMapper(PersonMapper.class);
-      Assert.assertEquals(2, pm.findAll().size());
+      Assertions.assertEquals(2, pm.findAll().size());
       Person p = new Person(3, "hello", "world");
       pm.createWithoutFlushCache(p);
     }
     try (SqlSession sqlSession = sqlSessionFactory.openSession(true)) {
       PersonMapper pm = sqlSession.getMapper(PersonMapper.class);
-      Assert.assertEquals(2, pm.findAll().size());
+      Assertions.assertEquals(2, pm.findAll().size());
     }
     try (SqlSession sqlSession = sqlSessionFactory.openSession(true)) {
       ImportantPersonMapper pm = sqlSession.getMapper(ImportantPersonMapper.class);
-      Assert.assertEquals(3, pm.findWithFlushCache().size());
+      Assertions.assertEquals(3, pm.findWithFlushCache().size());
     }
     try (SqlSession sqlSession = sqlSessionFactory.openSession(true)) {
       PersonMapper pm = sqlSession.getMapper(PersonMapper.class);
-      Assert.assertEquals(3, pm.findAll().size());
+      Assertions.assertEquals(3, pm.findAll().size());
       Person p = new Person(4, "foo", "bar");
       pm.createWithoutFlushCache(p);
     }
     try (SqlSession sqlSession = sqlSessionFactory.openSession(true)) {
       SpecialPersonMapper pm = sqlSession.getMapper(SpecialPersonMapper.class);
-      Assert.assertEquals(4, pm.findWithFlushCache().size());
+      Assertions.assertEquals(4, pm.findWithFlushCache().size());
     }
     try (SqlSession sqlSession = sqlSessionFactory.openSession(true)) {
       PersonMapper pm = sqlSession.getMapper(PersonMapper.class);
-      Assert.assertEquals(4, pm.findAll().size());
+      Assertions.assertEquals(4, pm.findAll().size());
     }
   }
 
   @Test
   public void shouldApplyCustomCacheProperties() {
     CustomCache customCache = unwrap(sqlSessionFactory.getConfiguration().getCache(CustomCacheMapper.class.getName()));
-    Assert.assertEquals("bar", customCache.getStringValue());
-    Assert.assertEquals(1, customCache.getIntegerValue().intValue());
-    Assert.assertEquals(2, customCache.getIntValue());
-    Assert.assertEquals(3, customCache.getLongWrapperValue().longValue());
-    Assert.assertEquals(4, customCache.getLongValue());
-    Assert.assertEquals(5, customCache.getShortWrapperValue().shortValue());
-    Assert.assertEquals(6, customCache.getShortValue());
-    Assert.assertEquals((float) 7.1, customCache.getFloatWrapperValue(), 0);
-    Assert.assertEquals((float)8.1, customCache.getFloatValue(), 0);
-    Assert.assertEquals(9.01, customCache.getDoubleWrapperValue(), 0);
-    Assert.assertEquals(10.01, customCache.getDoubleValue(), 0);
-    Assert.assertEquals((byte)11, customCache.getByteWrapperValue().byteValue());
-    Assert.assertEquals((byte)12, customCache.getByteValue());
-    Assert.assertEquals(true, customCache.getBooleanWrapperValue());
-    Assert.assertEquals(true, customCache.isBooleanValue());
+    Assertions.assertEquals("bar", customCache.getStringValue());
+    Assertions.assertEquals(1, customCache.getIntegerValue().intValue());
+    Assertions.assertEquals(2, customCache.getIntValue());
+    Assertions.assertEquals(3, customCache.getLongWrapperValue().longValue());
+    Assertions.assertEquals(4, customCache.getLongValue());
+    Assertions.assertEquals(5, customCache.getShortWrapperValue().shortValue());
+    Assertions.assertEquals(6, customCache.getShortValue());
+    Assertions.assertEquals((float) 7.1, customCache.getFloatWrapperValue(), 1);
+    Assertions.assertEquals((float) 8.1, customCache.getFloatValue(), 1);
+    Assertions.assertEquals(9.01, customCache.getDoubleWrapperValue(), 1);
+    Assertions.assertEquals(10.01, customCache.getDoubleValue(), 1);
+    Assertions.assertEquals((byte) 11, customCache.getByteWrapperValue().byteValue());
+    Assertions.assertEquals((byte) 12, customCache.getByteValue());
+    Assertions.assertEquals(true, customCache.getBooleanWrapperValue());
+    Assertions.assertEquals(true, customCache.isBooleanValue());
   }
 
   @Test

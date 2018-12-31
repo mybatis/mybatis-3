@@ -23,17 +23,17 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class ForEachMapTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass() throws Exception {
     // create a SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/foreach_map/mybatis-config.xml")) {
@@ -45,12 +45,12 @@ public class ForEachMapTest {
             "org/apache/ibatis/submitted/foreach_map/CreateDB.sql");
   }
 
-  @Before
+  @BeforeEach
   public void setUp() throws Exception {
     sqlSession = sqlSessionFactory.openSession();
   }
 
-  @After
+  @AfterEach
   public void tearDown() throws Exception {
     sqlSession.close();
   }
@@ -63,8 +63,8 @@ public class ForEachMapTest {
     sqlSession.insert("ins_string_string", mapParam);
 
     List<StringStringMapEntry> entries = sqlSession.selectList("sel_string_string", new MapParam());
-    Assert.assertEquals(new StringStringMapEntry("key 1", "value 1"), entries.get(0));
-    Assert.assertEquals(new StringStringMapEntry("key 2", "value 2"), entries.get(1));
+    Assertions.assertEquals(new StringStringMapEntry("key 1", "value 1"), entries.get(0));
+    Assertions.assertEquals(new StringStringMapEntry("key 2", "value 2"), entries.get(1));
   }
 
   @Test
@@ -75,8 +75,8 @@ public class ForEachMapTest {
     sqlSession.insert("ins_int_bool", mapParam);
 
     List<IntBoolMapEntry> entries = sqlSession.selectList("sel_int_bool");
-    Assert.assertEquals(new IntBoolMapEntry(12345, true), entries.get(0));
-    Assert.assertEquals(new IntBoolMapEntry(54321, false), entries.get(1));
+    Assertions.assertEquals(new IntBoolMapEntry(12345, true), entries.get(0));
+    Assertions.assertEquals(new IntBoolMapEntry(54321, false), entries.get(1));
   }
 
   @Test
@@ -87,8 +87,8 @@ public class ForEachMapTest {
     sqlSession.insert("ins_nested_bean", mapParam);
 
     List<NestedBeanMapEntry> entries = sqlSession.selectList("sel_nested_bean");
-    Assert.assertEquals(new NestedBeanMapEntry(12345, true, 54321, false), entries.get(0));
-    Assert.assertEquals(new NestedBeanMapEntry(67890, true, 9876, false), entries.get(1));
+    Assertions.assertEquals(new NestedBeanMapEntry(12345, true, 54321, false), entries.get(0));
+    Assertions.assertEquals(new NestedBeanMapEntry(67890, true, 9876, false), entries.get(1));
   }
   
   @Test
@@ -97,7 +97,7 @@ public class ForEachMapTest {
     mapParam.getMap().put("col_a", 22);
     mapParam.getMap().put("col_b", 222);
     Integer count = sqlSession.selectOne("sel_key_cols", mapParam);
-    Assert.assertEquals(Integer.valueOf(1), count);
+    Assertions.assertEquals(Integer.valueOf(1), count);
   }
 
   private SqlSession sqlSession;

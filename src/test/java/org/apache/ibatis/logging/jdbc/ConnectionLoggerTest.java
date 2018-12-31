@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,21 +15,26 @@
  */
 package org.apache.ibatis.logging.jdbc;
 
-import org.apache.ibatis.logging.Log;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.contains;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import org.apache.ibatis.logging.Log;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ConnectionLoggerTest {
 
   @Mock
@@ -43,7 +48,7 @@ public class ConnectionLoggerTest {
 
   Connection conn;
 
-  @Before
+  @BeforeEach
   public void setUp() throws SQLException {
     when(log.isDebugEnabled()).thenReturn(true);
     conn = ConnectionLogger.newInstance(connection, log, 1);
@@ -61,6 +66,7 @@ public class ConnectionLoggerTest {
     verify(log).debug(contains("Preparing: { call test() }"));
   }
 
+  @MockitoSettings(strictness = Strictness.LENIENT)
   @Test
   public void shouldNotPrintCreateStatement() throws SQLException {
     conn.createStatement();

@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.submitted.force_flush_on_select;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.Reader;
 import java.sql.Connection;
@@ -30,14 +30,14 @@ import org.apache.ibatis.session.LocalCacheScope;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class ForceFlushOnSelectTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @Before
+  @BeforeEach
   public void initDatabase() throws Exception {
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/force_flush_on_select/ibatisConfig.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);

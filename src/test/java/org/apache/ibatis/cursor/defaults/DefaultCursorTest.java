@@ -16,8 +16,10 @@
 
 package org.apache.ibatis.cursor.defaults;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -43,19 +45,22 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.type.TypeHandlerRegistry;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class DefaultCursorTest {
   @Spy
   private ImpatientResultSet rs;
   @Mock
   protected ResultSetMetaData rsmd;
 
+  @MockitoSettings(strictness = Strictness.LENIENT)
   @SuppressWarnings("unchecked")
   @Test
   public void shouldCloseImmediatelyIfResultSetIsClosed() throws Exception {

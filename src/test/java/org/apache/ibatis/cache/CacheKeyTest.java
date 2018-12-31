@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,10 +15,10 @@
  */
 package org.apache.ibatis.cache;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -90,18 +90,20 @@ public class CacheKeyTest {
     assertTrue(key1.equals(key2));
   }
 
-  @Test (expected = NotSerializableException.class)
+  @Test
   public void serializationExceptionTest() throws Exception {
     CacheKey cacheKey = new CacheKey();
     cacheKey.update(new Object());
-    serialize(cacheKey);
+    Assertions.assertThrows(NotSerializableException.class, () -> {
+      serialize(cacheKey);
+    });
   }
 
   @Test
   public void serializationTest() throws Exception {
     CacheKey cacheKey = new CacheKey();
     cacheKey.update("serializable");
-    Assert.assertEquals(cacheKey, serialize(cacheKey));
+    Assertions.assertEquals(cacheKey, serialize(cacheKey));
   }
 
   private static <T> T serialize(T object) throws Exception {
