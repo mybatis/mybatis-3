@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -31,8 +31,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 
 @ExtendWith(MockitoExtension.class)
 public class ConnectionLoggerTest {
@@ -50,23 +48,23 @@ public class ConnectionLoggerTest {
 
   @BeforeEach
   public void setUp() throws SQLException {
-    when(log.isDebugEnabled()).thenReturn(true);
     conn = ConnectionLogger.newInstance(connection, log, 1);
   }
 
   @Test
   public void shouldPrintPrepareStatement() throws SQLException {
+    when(log.isDebugEnabled()).thenReturn(true);
     conn.prepareStatement("select 1");
     verify(log).debug(contains("Preparing: select 1"));
   }
 
   @Test
   public void shouldPrintPrepareCall() throws SQLException {
+    when(log.isDebugEnabled()).thenReturn(true);
     conn.prepareCall("{ call test() }");
     verify(log).debug(contains("Preparing: { call test() }"));
   }
 
-  @MockitoSettings(strictness = Strictness.LENIENT)
   @Test
   public void shouldNotPrintCreateStatement() throws SQLException {
     conn.createStatement();
