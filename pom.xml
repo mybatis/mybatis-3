@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2018 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -137,7 +137,7 @@
     <osgi.export>org.apache.ibatis.*;version=${project.version};-noimport:=true</osgi.export>
     <osgi.import>*;resolution:=optional</osgi.import>
     <osgi.dynamicImport>*</osgi.dynamicImport>
-    <maven.surefire.excludeGroups>org.apache.ibatis.test.SlowTests</maven.surefire.excludeGroups>
+    <maven.surefire.excludedGroups>EmbeddedPostgresqlTests</maven.surefire.excludedGroups>
     <module.name>org.mybatis</module.name>
   </properties>
 
@@ -282,7 +282,7 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
-          <excludedGroups>${maven.surefire.excludeGroups}</excludedGroups>
+          <excludedGroups>${maven.surefire.excludedGroups}</excludedGroups>
           <argLine>${argLine} -Xmx2048m</argLine>
           <systemProperties>
             <property>
@@ -389,15 +389,15 @@
   <profiles>
     <profile>
         <!-- Run slow tests only on travis ci, to force run otherwise use -D"env.TRAVIS" -->
-        <id>travis-ci</id>
-        <activation>
-            <property>
-                <name>env.TRAVIS</name>
-            </property>
-        </activation>
-        <properties>
-            <maven.surefire.excludeGroups />
-        </properties>
+      <id>travis-ci</id>
+      <activation>
+        <property>
+          <name>env.TRAVIS</name>
+        </property>
+      </activation>
+      <properties>
+        <maven.surefire.excludedGroups />
+      </properties>
     </profile>
   </profiles>
 
