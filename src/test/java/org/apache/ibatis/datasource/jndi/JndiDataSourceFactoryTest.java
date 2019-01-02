@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -61,7 +61,7 @@ public class JndiDataSourceFactoryTest extends BaseDataTest {
 
   private void createJndiDataSource() throws Exception {
     try {
-      Hashtable<String, String> env = new Hashtable<String, String>();
+      Properties env = new Properties();
       env.put(Context.INITIAL_CONTEXT_FACTORY, TEST_INITIAL_CONTEXT_FACTORY);
 
       MockContext ctx = new MockContext(false);
