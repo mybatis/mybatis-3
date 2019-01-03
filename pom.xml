@@ -189,7 +189,7 @@
     <dependency>
       <groupId>cglib</groupId>
       <artifactId>cglib</artifactId>
-      <version>3.2.9</version>
+      <version>3.2.10</version>
       <optional>true</optional>
     </dependency>
 
