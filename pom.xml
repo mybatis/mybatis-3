@@ -419,18 +419,6 @@
 
   <profiles>
     <profile>
-      <!-- Run slow tests only on github ci, to force run otherwise use -D"env.GITHUB" -->
-      <id>github-ci</id>
-      <activation>
-        <property>
-          <name>env.GITHUB</name>
-        </property>
-      </activation>
-      <properties>
-        <excludedGroups />
-      </properties>
-    </profile>
-    <profile>
       <id>pre16</id>
       <activation>
         <jdk>(,16)</jdk>
