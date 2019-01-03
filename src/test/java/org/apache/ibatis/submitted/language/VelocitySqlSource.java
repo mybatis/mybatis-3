@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -51,7 +51,9 @@ public class VelocitySqlSource implements SqlSource {
     try {
       RuntimeServices runtimeServices = RuntimeSingleton.getRuntimeServices();
       StringReader reader = new StringReader(scriptText);
-      SimpleNode node = runtimeServices.parse(reader, "Template name");
+      Template template = new Template();
+      template.setName("Template name");
+      SimpleNode node = runtimeServices.parse(reader, template);
       script = new Template();
       script.setRuntimeServices(runtimeServices);
       script.setData(node);
