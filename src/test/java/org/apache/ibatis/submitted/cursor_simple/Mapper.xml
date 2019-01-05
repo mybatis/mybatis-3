@@ -22,8 +22,8 @@
 
 <mapper namespace="org.apache.ibatis.submitted.cursor_simple.Mapper">
 
-	<select id="getAllUsers" resultMap="results" resultOrdered="true">
-		select * from users order by id
+	<select id="getAllUsers" resultMap="results">
+		select * from users
 	</select>
 	
 	<resultMap type="org.apache.ibatis.submitted.cursor_simple.User" id="results">
