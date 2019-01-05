@@ -93,16 +93,15 @@ public class EncryptionPluginTest {
 
       List<Customer> selectedCustomerList = customerMapper.selectAll();
 
-      System.out.println(selectedCustomerList.get(0).toString());
-      assertEquals(id, selectedCustomerList.get(0).getId());
-      assertEquals(email, selectedCustomerList.get(0).getEmail());
-      assertNotEquals(name, selectedCustomerList.get(0).getName());
-
-      System.out.println(selectedCustomerList.get(1).toString());
-      assertEquals(id2, selectedCustomerList.get(1).getId());
-      assertEquals(email + "2", selectedCustomerList.get(1).getEmail());
-      assertNotEquals(name + "2", selectedCustomerList.get(1).getName());
-
+      for (Customer selectedCustomer : selectedCustomerList) {
+        if (selectedCustomer.getId().equals(id)) {
+          assertEquals(email, selectedCustomer.getEmail());
+          assertNotEquals(name, selectedCustomer.getName());
+        } else {
+          assertEquals(email + "2", selectedCustomer.getEmail());
+          assertNotEquals(name + "2", selectedCustomer.getName());
+        }
+      }
       sqlSession.rollback();
     } catch (Exception e) {
       e.printStackTrace();
