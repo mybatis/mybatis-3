@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+  <typeAliases>
+    <typeAlias alias="Customer" type="org.apache.ibatis.plugin.encryption.Customer"/>
+  </typeAliases>
+
+  <plugins>
+    <plugin interceptor="org.apache.ibatis.plugin.encryption.EncryptionPlugin">
+      <property name="secretKey" value="IamSecretKey12345678"/>
+    </plugin>
+  </plugins>
+
+  <environments default="default">
+    <environment id="default">
+      <transactionManager type="JDBC"/>
+      <dataSource type="UNPOOLED">
+        <property name="driver" value="org.hsqldb.jdbc.JDBCDriver"/>
+        <property name="url"
+          value="jdbc:hsqldb:mem:plugin_test_db"/>
+        <property name="username" value="sa"/>
+        <property name="password" value=""/>
+
+      </dataSource>
+    </environment>
+  </environments>
+
+  <databaseIdProvider type="DB_VENDOR">
+    <property name="HSQL" value="hsql"/>
+  </databaseIdProvider>
+
+  <mappers>
+    <mapper resource="org/apache/ibatis/plugin/encryption/CustomerMapper.xml"/>
+  </mappers>
+
+
+</configuration>
