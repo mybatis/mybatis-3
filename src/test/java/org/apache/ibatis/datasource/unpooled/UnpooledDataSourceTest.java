@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.datasource.unpooled;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -23,8 +23,8 @@ import java.sql.Driver;
 import java.sql.DriverManager;
 import java.util.Enumeration;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class UnpooledDataSourceTest {
 
@@ -40,7 +40,7 @@ public class UnpooledDataSourceTest {
     assertEquals(before, countRegisteredDrivers());
   }
 
-  @Ignore("Requires MySQL server and a driver.")
+  @Disabled("Requires MySQL server and a driver.")
   @Test
   public void shouldRegisterDynamicallyLoadedDriver() throws Exception {
     int before = countRegisteredDrivers();

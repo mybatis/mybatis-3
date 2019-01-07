@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.reflection;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
@@ -33,7 +33,7 @@ import org.apache.ibatis.reflection.typeparam.Level0Mapper;
 import org.apache.ibatis.reflection.typeparam.Level0Mapper.Level0InnerMapper;
 import org.apache.ibatis.reflection.typeparam.Level1Mapper;
 import org.apache.ibatis.reflection.typeparam.Level2Mapper;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class TypeParameterResolverTest {
   @Test

@@ -15,13 +15,13 @@
  */
 package org.apache.ibatis.type;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.time.Month;
 
 import org.apache.ibatis.executor.result.ResultMapException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * 

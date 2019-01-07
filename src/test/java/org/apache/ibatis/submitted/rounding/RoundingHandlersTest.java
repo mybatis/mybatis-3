@@ -25,15 +25,15 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class RoundingHandlersTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     // create a SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/rounding/mybatis-config.xml")) {
@@ -50,11 +50,11 @@ public class RoundingHandlersTest {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       Mapper mapper = session.getMapper(Mapper.class);
       User user = mapper.getUser(1);
-      Assert.assertEquals("User1", user.getName());
-      Assert.assertEquals(RoundingMode.UP, user.getRoundingMode());
+      Assertions.assertEquals("User1", user.getName());
+      Assertions.assertEquals(RoundingMode.UP, user.getRoundingMode());
       user = mapper.getUser2(1);
-      Assert.assertEquals("User1", user.getName());
-      Assert.assertEquals(RoundingMode.UP, user.getRoundingMode());
+      Assertions.assertEquals("User1", user.getName());
+      Assertions.assertEquals(RoundingMode.UP, user.getRoundingMode());
     }
   }
 

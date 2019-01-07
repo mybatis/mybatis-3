@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.submitted.refcursor;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -34,12 +34,11 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.apache.ibatis.test.EmbeddedPostgresqlTests;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres;
 import ru.yandex.qatools.embed.postgresql.util.SocketUtil;
@@ -47,14 +46,14 @@ import ru.yandex.qatools.embed.postgresql.util.SocketUtil;
 /**
  * @author Jeff Butler
  */
-@Category(EmbeddedPostgresqlTests.class)
+@Tag("EmbeddedPostgresqlTests")
 public class RefCursorTest {
 
   private static final EmbeddedPostgres postgres = new EmbeddedPostgres();
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     // Launch PostgreSQL server. Download / unarchive if necessary.
     String url = postgres.start(EmbeddedPostgres.cachedRuntimeConfig(Paths.get(System.getProperty("java.io.tmpdir"), "pgembed")), "localhost", SocketUtil.findFreePort(), "refcursor", "postgres", "root", Collections.emptyList());
@@ -70,7 +69,7 @@ public class RefCursorTest {
         "org/apache/ibatis/submitted/refcursor/CreateDB.sql");
   }
 
-  @AfterClass
+  @AfterAll
   public static void tearDown() {
     postgres.stop();
   }

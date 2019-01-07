@@ -25,9 +25,9 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  * See issue #135
@@ -37,7 +37,7 @@ public class MapTypeHandlerTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     // create an SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/maptypehandler/mybatis-config.xml")) {
@@ -54,19 +54,20 @@ public class MapTypeHandlerTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUser(1, "User1");
-      Assert.assertEquals("User1", user.getName());
+      Assertions.assertEquals("User1", user.getName());
     }
   }
 
-  @Test(expected=PersistenceException.class)
+  @Test
   public void shouldGetAUserFromXML() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Map<String, Object> params = new HashMap<String, Object>();
       params.put("id", 1);
       params.put("name", "User1");
-      User user = mapper.getUserXML(params);
-      Assert.assertEquals("User1", user.getName());
+      Assertions.assertThrows(PersistenceException.class, () -> {
+        mapper.getUserXML(params);
+      });
     }
   }
   

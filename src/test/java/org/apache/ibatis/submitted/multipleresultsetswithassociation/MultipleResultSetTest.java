@@ -25,9 +25,9 @@ import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /*
  * This class contains tests for multiple result sets with an association mapping.
@@ -38,7 +38,7 @@ public class MultipleResultSetTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multipleresultsetswithassociation/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -78,12 +78,12 @@ public class MultipleResultSetTest {
       
       // There are six order detail records in the database
       // As long as the data does not change this should be successful
-      Assert.assertEquals(6, orderDetails.size());
+      Assertions.assertEquals(6, orderDetails.size());
       
       // Each order detail should have a corresponding OrderHeader
       // Only 2 of 6 orderDetails have orderHeaders
       for(OrderDetail orderDetail : orderDetails){
-          Assert.assertNotNull(orderDetail.getOrderHeader());
+          Assertions.assertNotNull(orderDetail.getOrderHeader());
       }
     }
   }
@@ -96,12 +96,12 @@ public class MultipleResultSetTest {
 
       // There are six order detail records in the database
       // As long as the data does not change this should be successful
-      Assert.assertEquals(6, orderDetails.size());
+      Assertions.assertEquals(6, orderDetails.size());
 
       // Each order detail should have a corresponding OrderHeader
       // Only 2 of 6 orderDetails have orderHeaders
       for(OrderDetail orderDetail : orderDetails){
-          Assert.assertNotNull(orderDetail.getOrderHeader());
+          Assertions.assertNotNull(orderDetail.getOrderHeader());
       }
     }
   }

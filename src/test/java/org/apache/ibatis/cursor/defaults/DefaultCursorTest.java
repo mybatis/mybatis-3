@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,8 +16,11 @@
 
 package org.apache.ibatis.cursor.defaults;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -43,13 +46,13 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.type.TypeHandlerRegistry;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class DefaultCursorTest {
   @Spy
   private ImpatientResultSet rs;
@@ -71,13 +74,14 @@ public class DefaultCursorTest {
     final DefaultResultSetHandler resultSetHandler = new DefaultResultSetHandler(executor, ms, parameterHandler,
       resultHandler, boundSql, rowBounds);
 
+    
     when(rsmd.getColumnCount()).thenReturn(2);
-    when(rsmd.getColumnLabel(1)).thenReturn("id");
-    when(rsmd.getColumnType(1)).thenReturn(Types.INTEGER);
-    when(rsmd.getColumnClassName(1)).thenReturn(Integer.class.getCanonicalName());
-    when(rsmd.getColumnLabel(2)).thenReturn("role");
-    when(rsmd.getColumnType(2)).thenReturn(Types.VARCHAR);
-    when(rsmd.getColumnClassName(2)).thenReturn(String.class.getCanonicalName());
+    doReturn("id").when(rsmd).getColumnLabel(1);
+    doReturn(Types.INTEGER).when(rsmd).getColumnType(1);
+    doReturn(Integer.class.getCanonicalName()).when(rsmd).getColumnClassName(1);
+    doReturn("role").when(rsmd).getColumnLabel(2);
+    doReturn(Types.VARCHAR).when(rsmd).getColumnType(2);
+    doReturn(String.class.getCanonicalName()).when(rsmd).getColumnClassName(2);
 
     final ResultSetWrapper rsw = new ResultSetWrapper(rs, ms.getConfiguration());
 

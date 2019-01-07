@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,20 +15,26 @@
  */
 package org.apache.ibatis.logging.jdbc;
 
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.contains;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.type.JdbcType;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.sql.*;
-
-import static org.mockito.Mockito.*;
-
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class PreparedStatementLoggerTest {
 
   @Mock
@@ -41,32 +47,35 @@ public class PreparedStatementLoggerTest {
   ResultSet resultSet;
 
   PreparedStatement ps;
-  @Before
-  public void setUp() throws SQLException {
-    when(log.isDebugEnabled()).thenReturn(true);
 
-    when(preparedStatement.executeQuery(anyString())).thenReturn(resultSet);
-    when(preparedStatement.execute(anyString())).thenReturn(true);
+  @BeforeEach
+  public void setUp() throws SQLException {
     ps = PreparedStatementLogger.newInstance(this.preparedStatement, log, 1);
   }
 
   @Test
   public void shouldPrintParameters() throws SQLException {
+    when(log.isDebugEnabled()).thenReturn(true);
+    when(preparedStatement.executeQuery(anyString())).thenReturn(resultSet);
+
     ps.setInt(1, 10);
     ResultSet rs = ps.executeQuery("select 1 limit ?");
 
     verify(log).debug(contains("Parameters: 10(Integer)"));
-    Assert.assertNotNull(rs);
-    Assert.assertNotSame(resultSet, rs);
+    Assertions.assertNotNull(rs);
+    Assertions.assertNotSame(resultSet, rs);
   }
 
   @Test
   public void shouldPrintNullParameters() throws SQLException {
+    when(log.isDebugEnabled()).thenReturn(true);
+    when(preparedStatement.execute(anyString())).thenReturn(true);
+
     ps.setNull(1, JdbcType.VARCHAR.TYPE_CODE);
     boolean result = ps.execute("update name = ? from test");
 
     verify(log).debug(contains("Parameters: null"));
-    Assert.assertTrue(result);
+    Assertions.assertTrue(result);
   }
 
   @Test
@@ -79,7 +88,9 @@ public class PreparedStatementLoggerTest {
 
   @Test
   public void shouldPrintUpdateCount() throws SQLException {
+    when(log.isDebugEnabled()).thenReturn(true);
     when(preparedStatement.getUpdateCount()).thenReturn(1);
+
     ps.getUpdateCount();
 
     verify(log).debug(contains("Updates: 1"));

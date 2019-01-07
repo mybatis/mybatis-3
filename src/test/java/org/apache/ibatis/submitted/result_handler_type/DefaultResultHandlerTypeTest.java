@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.submitted.result_handler_type;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.Reader;
 import java.util.List;
@@ -26,7 +26,7 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class DefaultResultHandlerTypeTest {
 

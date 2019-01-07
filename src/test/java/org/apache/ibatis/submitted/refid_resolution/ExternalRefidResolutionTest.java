@@ -20,7 +20,7 @@ import java.io.Reader;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @see http://code.google.com/p/mybatis/issues/detail?id=291

@@ -20,9 +20,9 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.io.Reader;
 import java.util.List;
@@ -32,7 +32,7 @@ public class CallSettersOnNullsTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     // create a SqlSessionFactory
     try (Reader reader = Resources
@@ -50,7 +50,7 @@ public class CallSettersOnNullsTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUserMapped(1);
-      Assert.assertTrue(user.nullReceived);
+      Assertions.assertTrue(user.nullReceived);
     }
   }
 
@@ -59,7 +59,7 @@ public class CallSettersOnNullsTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUserUnmapped(1);
-      Assert.assertTrue(user.nullReceived);
+      Assertions.assertTrue(user.nullReceived);
     }
   }
 
@@ -68,7 +68,7 @@ public class CallSettersOnNullsTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Map user = mapper.getUserInMap(1);
-      Assert.assertTrue(user.containsKey("NAME"));
+      Assertions.assertTrue(user.containsKey("NAME"));
     }
   }
 
@@ -80,7 +80,7 @@ public class CallSettersOnNullsTest {
       // When callSetterOnNull is true, setters are called with null values
       // but if all the values for an object are null
       // the object itself should be null (same as default behaviour)
-      Assert.assertNull(oneColumns.get(1));
+      Assertions.assertNull(oneColumns.get(1));
     }
   }
 
@@ -89,12 +89,12 @@ public class CallSettersOnNullsTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<Map<String, Object>> oneColumns = mapper.getNameOnlyMapped();
-//      Assert.assertNotNull(oneColumns.get(1));
+//      Assertions.assertNotNull(oneColumns.get(1));
       // TEST changed after fix for #307
       // When callSetterOnNull is true, setters are called with null values
       // but if all the values for an object are null
       // the object itself should be null (same as default behaviour)
-      Assert.assertNull(oneColumns.get(1));
+      Assertions.assertNull(oneColumns.get(1));
     }
   }
   

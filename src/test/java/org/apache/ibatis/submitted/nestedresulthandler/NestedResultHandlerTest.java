@@ -26,14 +26,14 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class NestedResultHandlerTest {
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     // create a SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/nestedresulthandler/mybatis-config.xml")) {
@@ -53,21 +53,21 @@ public class NestedResultHandlerTest {
       List<Person> persons = mapper.getPersons();
 
       Person person = persons.get(0);
-      Assert.assertEquals("grandma", person.getName());
-      Assert.assertTrue(person.owns("book"));
-      Assert.assertTrue(person.owns("tv"));
-      Assert.assertEquals(2, person.getItems().size());
+      Assertions.assertEquals("grandma", person.getName());
+      Assertions.assertTrue(person.owns("book"));
+      Assertions.assertTrue(person.owns("tv"));
+      Assertions.assertEquals(2, person.getItems().size());
 
       person = persons.get(1);
-      Assert.assertEquals("sister", person.getName());
-      Assert.assertTrue(person.owns("phone"));
-      Assert.assertTrue(person.owns("shoes"));
-      Assert.assertEquals(2, person.getItems().size());
+      Assertions.assertEquals("sister", person.getName());
+      Assertions.assertTrue(person.owns("phone"));
+      Assertions.assertTrue(person.owns("shoes"));
+      Assertions.assertEquals(2, person.getItems().size());
 
       person = persons.get(2);
-      Assert.assertEquals("brother", person.getName());
-      Assert.assertTrue(person.owns("car"));
-      Assert.assertEquals(1, person.getItems().size());
+      Assertions.assertEquals("brother", person.getName());
+      Assertions.assertTrue(person.owns("car"));
+      Assertions.assertEquals(1, person.getItems().size());
     }
   }
 
@@ -79,23 +79,25 @@ public class NestedResultHandlerTest {
         public void handleResult(ResultContext context) {
           Person person = (Person) context.getResultObject();
           if ("grandma".equals(person.getName())) {
-            Assert.assertEquals(2, person.getItems().size());
+            Assertions.assertEquals(2, person.getItems().size());
           }
         }
       });
     }
   }
 
-  @Test(expected=PersistenceException.class)
+  @Test
   public void testUnorderedGetPersonWithHandler() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      sqlSession.select("getPersonsWithItemsOrdered", new ResultHandler() {
-        public void handleResult(ResultContext context) {
-          Person person = (Person) context.getResultObject();
-          if ("grandma".equals(person.getName())) {
-            Assert.assertEquals(2, person.getItems().size());
+      Assertions.assertThrows(PersistenceException.class, () -> {
+        sqlSession.select("getPersonsWithItemsOrdered", new ResultHandler() {
+          public void handleResult(ResultContext context) {
+            Person person = (Person) context.getResultObject();
+            if ("grandma".equals(person.getName())) {
+              person.getItems().size();
+            }
           }
-        }
+        });
       });
     }
   }
@@ -113,21 +115,21 @@ public class NestedResultHandlerTest {
       List<Person> persons = mapper.getPersonsWithItemsOrdered();
 
       Person person = persons.get(0);
-      Assert.assertEquals("grandma", person.getName());
-      Assert.assertTrue(person.owns("book"));
-      Assert.assertTrue(person.owns("tv"));
-      Assert.assertEquals(2, person.getItems().size());
+      Assertions.assertEquals("grandma", person.getName());
+      Assertions.assertTrue(person.owns("book"));
+      Assertions.assertTrue(person.owns("tv"));
+      Assertions.assertEquals(2, person.getItems().size());
 
       person = persons.get(1);
-      Assert.assertEquals("brother", person.getName());
-      Assert.assertTrue(person.owns("car"));
-      Assert.assertEquals(1, person.getItems().size());
+      Assertions.assertEquals("brother", person.getName());
+      Assertions.assertTrue(person.owns("car"));
+      Assertions.assertEquals(1, person.getItems().size());
 
       person = persons.get(2);
-      Assert.assertEquals("sister", person.getName());
-      Assert.assertTrue(person.owns("phone"));
-      Assert.assertTrue(person.owns("shoes"));
-      Assert.assertEquals(2, person.getItems().size());
+      Assertions.assertEquals("sister", person.getName());
+      Assertions.assertTrue(person.owns("phone"));
+      Assertions.assertTrue(person.owns("shoes"));
+      Assertions.assertEquals(2, person.getItems().size());
     }
   }
 
@@ -137,14 +139,14 @@ public class NestedResultHandlerTest {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<PersonItemPair> pairs = mapper.getPersonItemPairs();
 
-      Assert.assertNotNull( pairs );
+      Assertions.assertNotNull( pairs );
 //      System.out.println( new StringBuilder().append("selected pairs: ").append(pairs) );
 
-      Assert.assertEquals(5, pairs.size() );
-      Assert.assertNotNull(pairs.get(0).getPerson());
-      Assert.assertEquals(pairs.get(0).getPerson().getId(), Integer.valueOf(1));
-      Assert.assertNotNull(pairs.get(0).getItem());
-      Assert.assertEquals( pairs.get(0).getItem().getId(), Integer.valueOf(1));
+      Assertions.assertEquals(5, pairs.size() );
+      Assertions.assertNotNull(pairs.get(0).getPerson());
+      Assertions.assertEquals(pairs.get(0).getPerson().getId(), Integer.valueOf(1));
+      Assertions.assertNotNull(pairs.get(0).getItem());
+      Assertions.assertEquals( pairs.get(0).getItem().getId(), Integer.valueOf(1));
     }
   }
 

@@ -24,15 +24,15 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class NestedResultHandlerMultipleAssociationTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     // create an SqlSessionFactory
     try (Reader reader = Resources
@@ -58,9 +58,9 @@ public class NestedResultHandlerMultipleAssociationTest {
       List<ParentBean> list = sqlSession.selectList("selectParentBeans");
       for (ParentBean pb : list) {
         for (Binome<ChildBean, ChildBean> childs : pb.getChilds()) {
-          Assert.assertNotNull(childs);
-          Assert.assertNotNull(childs.getOne());
-          Assert.assertNotNull(childs.getTwo());
+          Assertions.assertNotNull(childs);
+          Assertions.assertNotNull(childs.getOne());
+          Assertions.assertNotNull(childs.getTwo());
         }
       }
     }
@@ -74,9 +74,9 @@ public class NestedResultHandlerMultipleAssociationTest {
 
       // If you only select the Parent2 it works
       for (Binome<ChildBean, ChildBean> childs : parent.getChilds()) {
-        Assert.assertNotNull(childs);
-        Assert.assertNotNull(childs.getOne());
-        Assert.assertNotNull(childs.getTwo());
+        Assertions.assertNotNull(childs);
+        Assertions.assertNotNull(childs.getOne());
+        Assertions.assertNotNull(childs.getTwo());
       }
     }
   }

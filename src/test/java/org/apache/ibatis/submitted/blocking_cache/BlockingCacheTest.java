@@ -24,16 +24,16 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 // issue #524
 public class BlockingCacheTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @Before
+  @BeforeEach
   public void setUp() throws Exception {
     // create a SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/blocking_cache/mybatis-config.xml")) {
@@ -67,7 +67,7 @@ public class BlockingCacheTest {
     }
 
     long totalTime = System.currentTimeMillis() - init;
-    Assert.assertTrue(totalTime > 1000);
+    Assertions.assertTrue(totalTime > 1000);
   }
 
   private void accessDB() {
@@ -77,7 +77,7 @@ public class BlockingCacheTest {
       try {
         Thread.sleep(500);
       } catch (InterruptedException e) {
-        Assert.fail(e.getMessage());
+        Assertions.fail(e.getMessage());
       }
     }
   }

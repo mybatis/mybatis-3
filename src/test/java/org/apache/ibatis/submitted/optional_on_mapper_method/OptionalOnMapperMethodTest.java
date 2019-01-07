@@ -20,17 +20,16 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.io.Reader;
 import java.util.Optional;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static org.mockito.Mockito.*;
 
@@ -44,7 +43,7 @@ public class OptionalOnMapperMethodTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     // create an SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader(
@@ -63,7 +62,7 @@ public class OptionalOnMapperMethodTest {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Optional<User> user = mapper.getUserUsingAnnotation(1);
       assertTrue(user.isPresent());
-      assertThat(user.get().getName(), is("User1"));
+      assertEquals("User1", user.get().getName());
     }
   }
 
@@ -82,7 +81,7 @@ public class OptionalOnMapperMethodTest {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Optional<User> user = mapper.getUserUsingXml(2);
       assertTrue(user.isPresent());
-      assertThat(user.get().getName(), is("User2"));
+      assertEquals("User2", user.get().getName());
     }
   }
 

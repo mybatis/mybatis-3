@@ -25,15 +25,15 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.submitted.ognl_enum.Person.Type;
 import org.apache.ibatis.submitted.ognl_enum.PersonMapper.PersonType;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class EnumWithOgnlTest {
     
     private static SqlSessionFactory sqlSessionFactory;
     
-    @BeforeClass
+    @BeforeAll
     public static void initDatabase() throws Exception {
         try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/ognl_enum/ibatisConfig.xml")) {
             sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -48,7 +48,7 @@ public class EnumWithOgnlTest {
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
             List<Person> persons = personMapper.selectAllByType(null);
-            Assert.assertEquals("Persons must contain 3 persons", 3, persons.size());
+            Assertions.assertEquals(3, persons.size(), "Persons must contain 3 persons");
         }
     }
 
@@ -57,7 +57,7 @@ public class EnumWithOgnlTest {
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
             List<Person> persons = personMapper.selectAllByType(Person.Type.DIRECTOR);
-            Assert.assertEquals("Persons must contain 1 persons", 1, persons.size());
+            Assertions.assertEquals(1, persons.size(), "Persons must contain 1 persons");
         }
     }
 
@@ -66,7 +66,7 @@ public class EnumWithOgnlTest {
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
             List<Person> persons = personMapper.selectAllByTypeNameAttribute(Person.Type.DIRECTOR);
-            Assert.assertEquals("Persons must contain 1 persons", 1, persons.size());
+            Assertions.assertEquals(1, persons.size(), "Persons must contain 1 persons");
         }
     }
 
@@ -80,7 +80,7 @@ public class EnumWithOgnlTest {
                     return Person.Type.DIRECTOR;
                 }
             });
-            Assert.assertEquals("Persons must contain 1 persons", 1, persons.size());
+            Assertions.assertEquals(1, persons.size(), "Persons must contain 1 persons");
         }
     }
     @Test
@@ -93,7 +93,7 @@ public class EnumWithOgnlTest {
                     return Person.Type.DIRECTOR;
                 }
             });
-            Assert.assertEquals("Persons must contain 1 persons", 1, persons.size());
+            Assertions.assertEquals(1, persons.size(), "Persons must contain 1 persons");
         }
     }
 }

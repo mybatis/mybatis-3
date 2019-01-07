@@ -16,7 +16,7 @@
 
 package org.apache.ibatis.submitted.cursor_simple;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -32,24 +32,23 @@ import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.apache.ibatis.test.EmbeddedPostgresqlTests;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres;
 import ru.yandex.qatools.embed.postgresql.util.SocketUtil;
 
-@Category(EmbeddedPostgresqlTests.class)
+@Tag("EmbeddedPostgresqlTests")
 public class PostgresCursorTest {
 
   private static final EmbeddedPostgres postgres = new EmbeddedPostgres();
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     // Launch PostgreSQL server. Download / unarchive if necessary.
     String url = postgres.start(
@@ -67,7 +66,7 @@ public class PostgresCursorTest {
       "org/apache/ibatis/submitted/cursor_simple/CreateDB.sql");
   }
 
-  @AfterClass
+  @AfterAll
   public static void tearDown() {
     postgres.stop();
   }

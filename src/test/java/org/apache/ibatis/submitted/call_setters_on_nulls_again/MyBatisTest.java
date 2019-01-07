@@ -21,15 +21,15 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class MyBatisTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     // create an SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/call_setters_on_nulls_again/mybatis-config.xml")) {
@@ -41,7 +41,7 @@ public class MyBatisTest {
   public void test() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       ParentBean parentBean = session.selectOne("test");
-      Assert.assertEquals("p1", parentBean.getName());
+      Assertions.assertEquals("p1", parentBean.getName());
     }
   }
 

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,19 +15,19 @@
  */
 package org.apache.ibatis.logging.jdbc;
 
-import org.apache.ibatis.logging.Log;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-
-import java.sql.Array;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+import java.sql.Array;
+
+import org.apache.ibatis.logging.Log;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
 public class BaseJdbcLoggerTest {
 
   @Mock
@@ -36,7 +36,7 @@ public class BaseJdbcLoggerTest {
   Array array;
   BaseJdbcLogger logger;
 
-  @Before
+  @BeforeEach
   public void setUp() throws Exception {
     logger = new BaseJdbcLogger(log, 1) {
     };

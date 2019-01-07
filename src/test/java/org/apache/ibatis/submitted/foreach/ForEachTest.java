@@ -26,9 +26,9 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import static com.googlecode.catchexception.apis.BDDCatchException.*;
 import static org.assertj.core.api.BDDAssertions.then;
@@ -37,7 +37,7 @@ public class ForEachTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     // create a SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/foreach/mybatis-config.xml")) {
@@ -61,7 +61,7 @@ public class ForEachTest {
       friendList.add(friendProfile);
       testProfile.setFriendList(friendList);
       User user = mapper.getUser(testProfile);
-      Assert.assertEquals("User6", user.getName());
+      Assertions.assertEquals("User6", user.getName());
     }
   }
 
@@ -76,7 +76,7 @@ public class ForEachTest {
       users.add(user1);
       users.add(null);
       int count = mapper.countByUserList(users);
-      Assert.assertEquals(1, count);
+      Assertions.assertEquals(1, count);
     }
   }
 
@@ -92,7 +92,7 @@ public class ForEachTest {
       users.add(user1);
       users.add(null);
       int count = mapper.countByBestFriend(users);
-      Assert.assertEquals(1, count);
+      Assertions.assertEquals(1, count);
     }
   }
 
@@ -106,7 +106,7 @@ public class ForEachTest {
       users.add(user1);
       users.add(null);
       String name = mapper.selectWithNullItemCheck(users);
-      Assert.assertEquals("User3", name);
+      Assertions.assertEquals("User3", name);
     }
   }
 
@@ -125,7 +125,7 @@ public class ForEachTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       int result = mapper.itemVariableConflict(5, Arrays.asList(1, 2), Arrays.asList(3, 4));
-      Assert.assertEquals(5, result);
+      Assertions.assertEquals(5, result);
     }
   }
 
@@ -134,7 +134,7 @@ public class ForEachTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       int result = mapper.indexVariableConflict(4, Arrays.asList(6, 7), Arrays.asList(8, 9));
-      Assert.assertEquals(4, result);
+      Assertions.assertEquals(4, result);
     }
   }
 

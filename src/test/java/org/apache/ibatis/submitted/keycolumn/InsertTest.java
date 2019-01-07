@@ -15,8 +15,8 @@
  */
 package org.apache.ibatis.submitted.keycolumn;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.nio.file.Paths;
 import java.util.Collections;
@@ -31,12 +31,11 @@ import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.apache.ibatis.test.EmbeddedPostgresqlTests;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres;
 import ru.yandex.qatools.embed.postgresql.util.SocketUtil;
@@ -44,14 +43,14 @@ import ru.yandex.qatools.embed.postgresql.util.SocketUtil;
 /**
  * @author Jeff Butler
  */
-@Category(EmbeddedPostgresqlTests.class)
+@Tag("EmbeddedPostgresqlTests")
 public class InsertTest {
 
   private static final EmbeddedPostgres postgres = new EmbeddedPostgres();
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     // Launch PostgreSQL server. Download / unarchive if necessary.
     String url = postgres.start(EmbeddedPostgres.cachedRuntimeConfig(Paths.get(System.getProperty("java.io.tmpdir"), "pgembed")), "localhost", SocketUtil.findFreePort(), "keycolumn", "postgres", "root", Collections.emptyList());
@@ -67,7 +66,7 @@ public class InsertTest {
         "org/apache/ibatis/submitted/keycolumn/CreateDB.sql");
   }
 
-  @AfterClass
+  @AfterAll
   public static void tearDown() {
     postgres.stop();
   }

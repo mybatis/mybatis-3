@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.jdbc;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -29,8 +29,8 @@ import java.util.concurrent.TimeUnit;
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.datasource.pooled.PooledDataSource;
 import org.hsqldb.jdbc.JDBCConnection;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class PooledDataSourceTest extends BaseDataTest {
 
@@ -91,7 +91,7 @@ public class PooledDataSourceTest extends BaseDataTest {
     c.close();
   }
 
-  @Ignore("See the comments")
+  @Disabled("See the comments")
   @Test
   public void shouldReconnectWhenServerKilledLeakedConnection() throws Exception {
     // See #748

@@ -23,15 +23,15 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class AssociationTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     // create a SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/associationtest/mybatis-config.xml")) {
@@ -48,13 +48,13 @@ public class AssociationTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<Car> cars = mapper.getCars();
-      Assert.assertEquals(4, cars.size());
-      Assert.assertEquals("VW", cars.get(0).getType());
-      Assert.assertNotNull(cars.get(0).getEngine());
-      Assert.assertNull(cars.get(0).getBrakes());
-      Assert.assertEquals("Opel", cars.get(1).getType());
-      Assert.assertNull(cars.get(1).getEngine());
-      Assert.assertNotNull(cars.get(1).getBrakes());
+      Assertions.assertEquals(4, cars.size());
+      Assertions.assertEquals("VW", cars.get(0).getType());
+      Assertions.assertNotNull(cars.get(0).getEngine());
+      Assertions.assertNull(cars.get(0).getBrakes());
+      Assertions.assertEquals("Opel", cars.get(1).getType());
+      Assertions.assertNull(cars.get(1).getEngine());
+      Assertions.assertNotNull(cars.get(1).getBrakes());
     }
   }
 
@@ -63,9 +63,9 @@ public class AssociationTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<Car> cars = mapper.getCars2();      
-      Assert.assertEquals(1, cars.size());
-      Assert.assertNotNull(cars.get(0).getEngine());
-      Assert.assertNotNull(cars.get(0).getBrakes());      
+      Assertions.assertEquals(1, cars.size());
+      Assertions.assertNotNull(cars.get(0).getEngine());
+      Assertions.assertNotNull(cars.get(0).getBrakes());      
     }
   }
 
@@ -76,7 +76,7 @@ public class AssociationTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<Car> cars = mapper.getCars2();
-      Assert.assertEquals(1, cars.size());
+      Assertions.assertEquals(1, cars.size());
     }
   }
   
@@ -85,13 +85,13 @@ public class AssociationTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<Car> cars = mapper.getCarsAndDetectAssociationType();
-      Assert.assertEquals(4, cars.size());
-      Assert.assertEquals("VW", cars.get(0).getType());
-      Assert.assertNotNull(cars.get(0).getEngine());
-      Assert.assertNull(cars.get(0).getBrakes());
-      Assert.assertEquals("Opel", cars.get(1).getType());
-      Assert.assertNull(cars.get(1).getEngine());
-      Assert.assertNotNull(cars.get(1).getBrakes());
+      Assertions.assertEquals(4, cars.size());
+      Assertions.assertEquals("VW", cars.get(0).getType());
+      Assertions.assertNotNull(cars.get(0).getEngine());
+      Assertions.assertNull(cars.get(0).getBrakes());
+      Assertions.assertEquals("Opel", cars.get(1).getType());
+      Assertions.assertNull(cars.get(1).getEngine());
+      Assertions.assertNotNull(cars.get(1).getBrakes());
     }
   }
 

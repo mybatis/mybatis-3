@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.submitted.empty_row;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.Reader;
 import java.util.Map;
@@ -25,15 +25,15 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class ReturnInstanceForEmptyRowTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     // create an SqlSessionFactory
     try (Reader reader = Resources
@@ -46,7 +46,7 @@ public class ReturnInstanceForEmptyRowTest {
             "org/apache/ibatis/submitted/empty_row/CreateDB.sql");
   }
 
-  @Before
+  @BeforeEach
   public void resetCallSettersOnNulls() {
     sqlSessionFactory.getConfiguration().setCallSettersOnNulls(false);
   }

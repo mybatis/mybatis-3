@@ -23,9 +23,9 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class TypeHandlerInjectionTest {
 
@@ -33,7 +33,7 @@ public class TypeHandlerInjectionTest {
 
   private static UserStateTypeHandler<String> handler = new UserStateTypeHandler<String>();
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     // create a SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/typehandlerinjection/mybatis-config.xml")) {
@@ -53,7 +53,7 @@ public class TypeHandlerInjectionTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<User> users = mapper.getUsers();
-      Assert.assertEquals("Inactive", users.get(0).getName());
+      Assertions.assertEquals("Inactive", users.get(0).getName());
     }
   }
 

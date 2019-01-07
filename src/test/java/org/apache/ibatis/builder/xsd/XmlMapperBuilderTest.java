@@ -22,12 +22,10 @@ import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.parsing.XPathParser;
 import org.apache.ibatis.session.Configuration;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
-
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
 
 public class XmlMapperBuilderTest {
 
@@ -41,12 +39,12 @@ public class XmlMapperBuilderTest {
       builder.parse();
 
       MappedStatement mappedStatement = configuration.getMappedStatement("selectWithOptions");
-      assertThat(mappedStatement.getFetchSize(), is(200));
-      assertThat(mappedStatement.getTimeout(), is(10));
-      assertThat(mappedStatement.getStatementType(), is(StatementType.PREPARED));
-      assertThat(mappedStatement.getResultSetType(), is(ResultSetType.SCROLL_SENSITIVE));
-      assertThat(mappedStatement.isFlushCacheRequired(), is(false));
-      assertThat(mappedStatement.isUseCache(), is(false));
+      Assertions.assertEquals(Integer.valueOf(200), mappedStatement.getFetchSize());
+      Assertions.assertEquals(Integer.valueOf(10), mappedStatement.getTimeout());
+      Assertions.assertEquals(StatementType.PREPARED, mappedStatement.getStatementType());
+      Assertions.assertEquals(ResultSetType.SCROLL_SENSITIVE, mappedStatement.getResultSetType());
+      Assertions.assertFalse(mappedStatement.isFlushCacheRequired());
+      Assertions.assertFalse(mappedStatement.isUseCache());
     } finally {
       System.clearProperty(XPathParser.KEY_USE_XSD);
     }

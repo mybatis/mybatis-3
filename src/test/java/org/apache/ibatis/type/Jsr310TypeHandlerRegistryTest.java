@@ -29,8 +29,8 @@ import java.time.YearMonth;
 import java.time.ZonedDateTime;
 import java.time.chrono.JapaneseDate;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Kazuki Shimizu
@@ -39,7 +39,7 @@ public class Jsr310TypeHandlerRegistryTest {
 
   private TypeHandlerRegistry typeHandlerRegistry;
 
-  @Before
+  @BeforeEach
   public void setup() {
     typeHandlerRegistry = new TypeHandlerRegistry();
   }

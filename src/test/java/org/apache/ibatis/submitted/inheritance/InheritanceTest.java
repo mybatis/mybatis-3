@@ -22,16 +22,16 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 // see issue #289
 public class InheritanceTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     // create a SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/inheritance/mybatis-config.xml")) {
@@ -48,7 +48,7 @@ public class InheritanceTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       UserProfileMapper mapper = sqlSession.getMapper(UserProfileMapper.class);
       UserProfile user = mapper.retrieveById(1);
-      Assert.assertEquals("Profile1", user.getName());
+      Assertions.assertEquals("Profile1", user.getName());
     }
   }
 

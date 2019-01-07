@@ -15,12 +15,12 @@
  */
 package org.apache.ibatis.type;
 
-import static org.junit.Assert.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ByteArrayTypeHandlerTest extends BaseTypeHandlerTest {
 

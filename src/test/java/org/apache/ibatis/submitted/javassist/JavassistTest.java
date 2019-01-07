@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.submitted.javassist;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.Reader;
 
@@ -26,15 +26,15 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class JavassistTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     // create a SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/javassist/mybatis-config.xml")) {
@@ -51,9 +51,9 @@ public class JavassistTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUser(1);
-      Assert.assertEquals("User1", user.getName());
+      Assertions.assertEquals("User1", user.getName());
       assertTrue(user instanceof Proxy);
-      Assert.assertEquals(1, user.getGroups().size());
+      Assertions.assertEquals(1, user.getGroups().size());
     }
   }
 

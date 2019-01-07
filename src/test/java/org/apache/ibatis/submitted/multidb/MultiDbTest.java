@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.submitted.multidb;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.Reader;
 
@@ -24,15 +24,15 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class MultiDbTest {
 
   protected static SqlSessionFactory sqlSessionFactory;
   protected static SqlSessionFactory sqlSessionFactory2;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multidb/MultiDbConfig.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);

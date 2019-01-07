@@ -24,10 +24,9 @@ import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.session.Configuration;
-import org.junit.Rule;
 import org.apache.ibatis.type.TypeHandler;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static com.googlecode.catchexception.apis.BDDCatchException.*;
 import static org.assertj.core.api.BDDAssertions.then;
@@ -35,9 +34,6 @@ import static org.assertj.core.api.BDDAssertions.then;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class XmlMapperBuilderTest {
-
-  @Rule
-  public ExpectedException expectedEx = ExpectedException.none();
 
   @Test
   public void shouldSuccessfullyLoadXMLMapperFile() throws Exception {
@@ -174,13 +170,14 @@ public class XmlMapperBuilderTest {
 
   @Test
   public void shouldFailedLoadXMLMapperFile() throws Exception {
-    expectedEx.expect(BuilderException.class);
-    expectedEx.expectMessage("Error parsing Mapper XML. The XML location is 'org/apache/ibatis/builder/ProblemMapper.xml'");
     Configuration configuration = new Configuration();
     String resource = "org/apache/ibatis/builder/ProblemMapper.xml";
     try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
       XMLMapperBuilder builder = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
-      builder.parse();
+      Exception exception = Assertions.assertThrows(BuilderException.class, () -> {
+        builder.parse();
+      });
+      Assertions.assertTrue(exception.getMessage().contains("Error parsing Mapper XML. The XML location is 'org/apache/ibatis/builder/ProblemMapper.xml'"));
     }
   }
 
