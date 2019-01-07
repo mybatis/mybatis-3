@@ -41,7 +41,6 @@ public class ComponentTest {
             "org/apache/ibatis/submitted/complex_property/db.sql");
   }
 
-
   @Test
   public void shouldInsertNestedPasswordFieldOfComplexType() throws Exception {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
@@ -49,12 +48,12 @@ public class ComponentTest {
       User user = new User();
       user.setId(500000L);
       user.setPassword(new EncryptedString("secret"));
-      user.setUsername("johnny" + Calendar.getInstance().getTimeInMillis());//random
+      user.setUsername("johnny" + Calendar.getInstance().getTimeInMillis());// random
       user.setAdministrator(true);
 
       sqlSession.insert("User.insert", user);
 
-      //Retrieve User
+      // Retrieve User
       user = (User) sqlSession.selectOne("User.find", user.getId());
 
       assertNotNull(user.getId());

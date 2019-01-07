@@ -64,7 +64,7 @@ public class DmlMapperReturnTypesTest {
 
   @Test
   public void updateShouldReturnVoid() {
-      mapper.updateReturnsVoid(new User(1, "updateShouldReturnVoid"));
+    mapper.updateReturnsVoid(new User(1, "updateShouldReturnVoid"));
   }
 
   @Test

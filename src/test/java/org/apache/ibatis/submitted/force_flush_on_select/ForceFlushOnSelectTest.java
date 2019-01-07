@@ -106,7 +106,7 @@ public class ForceFlushOnSelectTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.SIMPLE)) {
       PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
       Person person = personMapper.selectByIdNoFlush(1);
-      person.setLastName("Perez"); //it is ignored in update
+      person.setLastName("Perez"); // it is ignored in update
       personMapper.update(person);
       Person updatedPerson = personMapper.selectByIdNoFlush(1);
       assertEquals("Smith", updatedPerson.getLastName());

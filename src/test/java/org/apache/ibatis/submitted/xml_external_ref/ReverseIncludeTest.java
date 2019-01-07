@@ -48,7 +48,7 @@ public class ReverseIncludeTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       ReverseIncludePersonMapper personMapper = sqlSession.getMapper(ReverseIncludePersonMapper.class);
       Person person = personMapper.select(1);
-      assertEquals((Integer)1, person.getId());
+      assertEquals((Integer) 1, person.getId());
       assertEquals("John", person.getName());
     }
   }

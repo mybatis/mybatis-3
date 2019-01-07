@@ -82,7 +82,7 @@ public class PooledDataSourceTest extends BaseDataTest {
     c.close();
     c.toString();
   }
-  
+
   @Test
   public void ShouldReturnRealConnection() throws Exception {
     PooledDataSource ds = createPooledDataSource(JPETSTORE_PROPERTIES);

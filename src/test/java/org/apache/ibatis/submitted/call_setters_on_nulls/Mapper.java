@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -21,9 +21,13 @@ import java.util.Map;
 public interface Mapper {
 
   User getUserMapped(Integer id);
+
   User getUserUnmapped(Integer id);
+
   Map getUserInMap(Integer id);
-  List<Map<String,Object>> getNameOnly();
-  List<Map<String,Object>> getNameOnlyMapped();
+
+  List<Map<String, Object>> getNameOnly();
+
+  List<Map<String, Object>> getNameOnlyMapped();
 
 }

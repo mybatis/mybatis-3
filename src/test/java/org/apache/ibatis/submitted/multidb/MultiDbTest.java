@@ -59,7 +59,7 @@ public class MultiDbTest {
       assertEquals("common", answer);
     }
   }
-  
+
   @Test
   public void shouldExecuteHsqlQueryWithDynamicIf() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
@@ -86,8 +86,8 @@ public class MultiDbTest {
       String answer = mapper.select2(1);
       assertEquals("common", answer);
     }
-  }  
-  
+  }
+
   @Test
   public void shouldInsertInCommonWithSelectKey2() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
@@ -96,6 +96,6 @@ public class MultiDbTest {
       String answer = mapper.select2(1);
       assertEquals("common", answer);
     }
-  }  
+  }
 
 }

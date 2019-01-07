@@ -50,6 +50,7 @@ public class ReflectorTest {
 
   static interface Entity<T> {
     T getId();
+
     void setId(T id);
   }
 
@@ -137,24 +138,31 @@ public class ReflectorTest {
     protected T[] array;
     private T fld;
     public T pubFld;
+
     public T getId() {
       return id;
     }
+
     public void setId(T id) {
       this.id = id;
     }
+
     public List<T> getList() {
       return list;
     }
+
     public void setList(List<T> list) {
       this.list = list;
     }
+
     public T[] getArray() {
       return array;
     }
+
     public void setArray(T[] array) {
       this.array = array;
     }
+
     public T getFld() {
       return fld;
     }

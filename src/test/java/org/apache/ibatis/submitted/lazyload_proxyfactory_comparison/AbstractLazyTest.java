@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
 public abstract class AbstractLazyTest {
 
   private SqlSessionFactory sqlSessionFactory;
-  private SqlSession sqlSession; 
+  private SqlSession sqlSession;
   private Mapper mapper;
 
   protected abstract String getConfiguration();

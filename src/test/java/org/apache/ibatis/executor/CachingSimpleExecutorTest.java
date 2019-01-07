@@ -26,7 +26,7 @@ public class CachingSimpleExecutorTest extends BaseExecutorTest {
 
   @Override
   protected Executor createExecutor(Transaction transaction) {
-    return new CachingExecutor(new SimpleExecutor(config,transaction));
+    return new CachingExecutor(new SimpleExecutor(config, transaction));
   }
 
 }

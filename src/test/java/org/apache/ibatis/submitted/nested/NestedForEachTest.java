@@ -81,7 +81,7 @@ public class NestedForEachTest {
       assertEquals(3, answer.size());
     }
   }
-  
+
   @Test
   public void testNestedSelect() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {

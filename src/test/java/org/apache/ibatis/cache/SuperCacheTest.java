@@ -32,7 +32,7 @@ public class SuperCacheTest {
     cache = new WeakCache(cache);
     cache = new ScheduledCache(cache);
     cache = new SerializedCache(cache);
-//    cache = new LoggingCache(cache);
+    // cache = new LoggingCache(cache);
     cache = new SynchronizedCache(cache);
     cache = new TransactionalCache(cache);
     for (int i = 0; i < N; i++) {
@@ -43,6 +43,5 @@ public class SuperCacheTest {
     }
     assertTrue(cache.getSize() < N);
   }
-
 
 }
