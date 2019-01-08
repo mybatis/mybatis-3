@@ -26,15 +26,15 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class CollectionParametersTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     // create an SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/collectionparameters/mybatis-config.xml")) {
@@ -54,7 +54,7 @@ public class CollectionParametersTest {
       list.add(1);
       list.add(2);
       List<User> users = mapper.getUsersFromList(list);
-      Assert.assertEquals(2, users.size());
+      Assertions.assertEquals(2, users.size());
     }
   }
 
@@ -63,10 +63,10 @@ public class CollectionParametersTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Integer[] list = new Integer[2];
-      list[0]=1;
-      list[1]=2;
+      list[0] = 1;
+      list[1] = 2;
       List<User> users = mapper.getUsersFromArray(list);
-      Assert.assertEquals(2, users.size());
+      Assertions.assertEquals(2, users.size());
     }
   }
 
@@ -78,9 +78,8 @@ public class CollectionParametersTest {
       list.add(1);
       list.add(2);
       List<User> users = mapper.getUsersFromCollection(list);
-      Assert.assertEquals(2, users.size());
+      Assertions.assertEquals(2, users.size());
     }
   }
 
-  
 }

@@ -24,17 +24,17 @@ import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class DaoTest {
   private Connection conn;
   private Dao dao;
   private SqlSession sqlSession;
 
-  @Before
+  @BeforeEach
   public void setUp() throws Exception {
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/emptycollection/mybatis-config.xml")) {
       SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -46,7 +46,7 @@ public class DaoTest {
     dao = sqlSession.getMapper(Dao.class);
   }
 
-  @After
+  @AfterEach
   public void tearDown() throws Exception {
     conn.close();
     sqlSession.close();
@@ -55,9 +55,9 @@ public class DaoTest {
   @Test
   public void testWithEmptyList() throws Exception {
     final List<TodoLists> actual = dao.selectWithEmptyList();
-    Assert.assertEquals(1, actual.size());
+    Assertions.assertEquals(1, actual.size());
     final List<TodoItem> todoItems = actual.get(0).getTodoItems();
-    Assert.assertEquals("expect " + todoItems + " to be empty", 0, todoItems.size());        
+    Assertions.assertEquals(0, todoItems.size(), "expect " + todoItems + " to be empty");
   }
 
   @Test
@@ -74,21 +74,21 @@ public class DaoTest {
   }
 
   private void checkNonEmptyList(final List<TodoLists> actual) {
-//  Assert.assertEquals("[List(1)=[a description(1), a 2nd description(2)], List(2)=[a description(1)]]", actual.toString());
-    Assert.assertEquals(2, actual.size());
+//  Assertions.assertEquals("[List(1)=[a description(1), a 2nd description(2)], List(2)=[a description(1)]]", actual.toString());
+    Assertions.assertEquals(2, actual.size());
 
-    Assert.assertEquals(2, actual.get(0).getTodoItems().size());
-    Assert.assertEquals(1, actual.get(0).getTodoItems().get(0).getOrder());
-    Assert.assertEquals("a description", actual.get(0).getTodoItems().get(0).getDescription().trim());
-    Assert.assertEquals(2, actual.get(0).getTodoItems().get(1).getOrder());
-    Assert.assertEquals("a 2nd description", actual.get(0).getTodoItems().get(1).getDescription().trim());
+    Assertions.assertEquals(2, actual.get(0).getTodoItems().size());
+    Assertions.assertEquals(1, actual.get(0).getTodoItems().get(0).getOrder());
+    Assertions.assertEquals("a description", actual.get(0).getTodoItems().get(0).getDescription().trim());
+    Assertions.assertEquals(2, actual.get(0).getTodoItems().get(1).getOrder());
+    Assertions.assertEquals("a 2nd description", actual.get(0).getTodoItems().get(1).getDescription().trim());
 
-    Assert.assertEquals(1, actual.get(1).getTodoItems().size());
-    Assert.assertEquals(1, actual.get(1).getTodoItems().get(0).getOrder());
-    Assert.assertEquals("a description", actual.get(0).getTodoItems().get(0).getDescription().trim());
+    Assertions.assertEquals(1, actual.get(1).getTodoItems().size());
+    Assertions.assertEquals(1, actual.get(1).getTodoItems().get(0).getOrder());
+    Assertions.assertEquals("a description", actual.get(0).getTodoItems().get(0).getDescription().trim());
 
     // We should have gotten three item objects. The first item from the first list and the first item from
     // the second list have identical properties, but they should be distinct objects
-    Assert.assertNotSame(actual.get(0).getTodoItems().get(0), actual.get(1).getTodoItems().get(0));
+    Assertions.assertNotSame(actual.get(0).getTodoItems().get(0), actual.get(1).getTodoItems().get(0));
   }
 }

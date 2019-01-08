@@ -15,12 +15,12 @@
  */
 package org.apache.ibatis.type;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.time.YearMonth;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Björn Raupach

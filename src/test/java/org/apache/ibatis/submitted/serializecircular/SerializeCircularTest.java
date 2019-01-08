@@ -22,9 +22,9 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-//@Ignore("see issue #614")
+//@Disabled("see issue #614")
 public class SerializeCircularTest {
 
   @Test
@@ -34,7 +34,7 @@ public class SerializeCircularTest {
       testSerializeWithoutPreloadingAttribute(sqlSession);
     }
   }
-  
+
   @Test
   public void serializeAndDeserializeObjectsWithAggressiveLazyLoadingWithPreloadingAttribute() 
   throws Exception {
@@ -43,7 +43,7 @@ public class SerializeCircularTest {
     }
   }
 
-//  @Ignore("See http://code.google.com/p/mybatis/issues/detail?id=614")
+//  @Disabled("See http://code.google.com/p/mybatis/issues/detail?id=614")
   @Test
   public void serializeAndDeserializeObjectsWithoutAggressiveLazyLoadingWithoutPreloadingAttribute() 
   throws Exception {

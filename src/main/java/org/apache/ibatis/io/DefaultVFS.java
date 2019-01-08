@@ -189,13 +189,13 @@ public class DefaultVFS extends VFS {
     for (JarEntry entry; (entry = jar.getNextJarEntry()) != null;) {
       if (!entry.isDirectory()) {
         // Add leading slash if it's missing
-        String name = entry.getName();
-        if (!name.startsWith("/")) {
-          name = "/" + name;
+        StringBuilder name = new StringBuilder(entry.getName());
+        if (name.charAt(0) != '/') {
+          name.insert(0, '/');
         }
 
         // Check file name
-        if (name.startsWith(path)) {
+        if (name.indexOf(path) == 0) {
           if (log.isDebugEnabled()) {
             log.debug("Found resource: " + name);
           }

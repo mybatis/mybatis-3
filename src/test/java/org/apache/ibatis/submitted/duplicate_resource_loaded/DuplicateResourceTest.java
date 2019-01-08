@@ -15,14 +15,14 @@
  */
 package org.apache.ibatis.submitted.duplicate_resource_loaded;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.Reader;
 import java.util.List;
@@ -30,7 +30,7 @@ import java.util.Map;
 
 public class DuplicateResourceTest extends BaseDataTest {
 
-  @Before
+  @BeforeEach
   public void setup() throws Exception {
     BaseDataTest.createBlogDataSource();
   }
@@ -44,7 +44,7 @@ public class DuplicateResourceTest extends BaseDataTest {
     try (SqlSession sqlSession = factory.openSession()) {
       final Mapper mapper = sqlSession.getMapper(Mapper.class);
       final List<Map<String, Object>> list = mapper.selectAllBlogs();
-      Assert.assertEquals(2,list.size());
+      Assertions.assertEquals(2,list.size());
     }
   }
 }

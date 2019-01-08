@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheException;
 import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
 
@@ -44,7 +44,7 @@ public class CacheBuilderTest {
   }
 
   @SuppressWarnings("unchecked")
-  private <T> T unwrap(Cache cache){
+  private <T> T unwrap(Cache cache) {
     Field field;
     try {
       field = cache.getClass().getDeclaredField("delegate");
@@ -53,14 +53,13 @@ public class CacheBuilderTest {
     }
     try {
       field.setAccessible(true);
-      return (T)field.get(cache);
+      return (T) field.get(cache);
     } catch (IllegalAccessException e) {
       throw new IllegalStateException(e);
     } finally {
       field.setAccessible(false);
     }
   }
-
 
   private static class InitializingCache extends PerpetualCache implements InitializingObject {
 

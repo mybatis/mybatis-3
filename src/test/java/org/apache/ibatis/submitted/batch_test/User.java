@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -21,13 +21,11 @@ public class User {
   private String name;
   private Dept dept;
 
-  public Dept getDept()
-  {
+  public Dept getDept() {
     return dept;
   }
 
-  public void setDept(Dept dept)
-  {
+  public void setDept(Dept dept) {
     this.dept = dept;
   }
 

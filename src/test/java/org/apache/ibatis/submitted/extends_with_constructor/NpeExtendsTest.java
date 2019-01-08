@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.submitted.extends_with_constructor;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Properties;
 
@@ -28,8 +28,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /*
  * Test for NPE when using extends.
@@ -40,7 +40,7 @@ public class NpeExtendsTest {
 
     private static SqlSessionFactory sqlSessionFactory;
 
-    @BeforeClass
+    @BeforeAll
     public static void initDatabase() throws Exception {
         sqlSessionFactory = getSqlSessionFactoryWithConstructor();
 

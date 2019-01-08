@@ -24,15 +24,15 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class SimpleListParameterTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     // create a SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/simplelistparameter/mybatis-config.xml")) {
@@ -49,9 +49,9 @@ public class SimpleListParameterTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       CarMapper carMapper = sqlSession.getMapper(CarMapper.class);
       Car car = new Car();
-      car.setDoors(Arrays.asList(new String[] {"2", "4"}));
+      car.setDoors(Arrays.asList(new String[] { "2", "4" }));
       List<Car> cars = carMapper.getCar(car);
-      Assert.assertNotNull(cars);
+      Assertions.assertNotNull(cars);
     }
   }
 
@@ -60,9 +60,9 @@ public class SimpleListParameterTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       CarMapper carMapper = sqlSession.getMapper(CarMapper.class);
       Rv rv = new Rv();
-      rv.doors1 = Arrays.asList(new String[] {"2", "4"});
+      rv.doors1 = Arrays.asList(new String[] { "2", "4" });
       List<Rv> rvs = carMapper.getRv1(rv);
-      Assert.assertNotNull(rvs);
+      Assertions.assertNotNull(rvs);
     }
   }
 
@@ -71,9 +71,9 @@ public class SimpleListParameterTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       CarMapper carMapper = sqlSession.getMapper(CarMapper.class);
       Rv rv = new Rv();
-      rv.setDoors2(Arrays.asList(new String[] {"2", "4"}));
+      rv.setDoors2(Arrays.asList(new String[] { "2", "4" }));
       List<Rv> rvs = carMapper.getRv2(rv);
-      Assert.assertNotNull(rvs);
+      Assertions.assertNotNull(rvs);
     }
   }
 }

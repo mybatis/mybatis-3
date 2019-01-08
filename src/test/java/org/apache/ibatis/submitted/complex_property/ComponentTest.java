@@ -15,15 +15,15 @@
  */
 package org.apache.ibatis.submitted.complex_property;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.io.Reader;
 import java.util.Calendar;
@@ -31,7 +31,7 @@ import java.util.Calendar;
 public class ComponentTest {
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
+  @BeforeAll
   public static void setup() throws Exception {
     String resource = "org/apache/ibatis/submitted/complex_property/Configuration.xml";
     Reader reader = Resources.getResourceAsReader(resource);
@@ -41,7 +41,6 @@ public class ComponentTest {
             "org/apache/ibatis/submitted/complex_property/db.sql");
   }
 
-
   @Test
   public void shouldInsertNestedPasswordFieldOfComplexType() throws Exception {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
@@ -49,12 +48,12 @@ public class ComponentTest {
       User user = new User();
       user.setId(500000L);
       user.setPassword(new EncryptedString("secret"));
-      user.setUsername("johnny" + Calendar.getInstance().getTimeInMillis());//random
+      user.setUsername("johnny" + Calendar.getInstance().getTimeInMillis());// random
       user.setAdministrator(true);
 
       sqlSession.insert("User.insert", user);
 
-      //Retrieve User
+      // Retrieve User
       user = (User) sqlSession.selectOne("User.find", user.getId());
 
       assertNotNull(user.getId());

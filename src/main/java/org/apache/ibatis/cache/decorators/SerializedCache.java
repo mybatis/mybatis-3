@@ -119,7 +119,7 @@ public class SerializedCache implements Cache {
     }
 
     @Override
-    protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException {
+    protected Class<?> resolveClass(ObjectStreamClass desc) throws ClassNotFoundException {
       return Resources.classForName(desc.getName());
     }
     

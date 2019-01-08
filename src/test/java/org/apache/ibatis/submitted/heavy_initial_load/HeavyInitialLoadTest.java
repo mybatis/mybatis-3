@@ -26,15 +26,15 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class HeavyInitialLoadTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
+  @BeforeAll
   public static void initSqlSessionFactory() throws Exception {
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/heavy_initial_load/ibatisConfig.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -83,14 +83,14 @@ public class HeavyInitialLoadTest {
       threads[i].join();
     }
 
-    Assert.assertTrue("There were exceptions: " + throwables, throwables.isEmpty());
+    Assertions.assertTrue(throwables.isEmpty(), "There were exceptions: " + throwables);
   }
 
   public void selectThing() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       ThingMapper mapper = sqlSession.getMapper(ThingMapper.class);
       Thing selected = mapper.selectByCode(Code._1);
-      Assert.assertEquals(1, selected.getId().longValue());
+      Assertions.assertEquals(1, selected.getId().longValue());
     }
   }
 }

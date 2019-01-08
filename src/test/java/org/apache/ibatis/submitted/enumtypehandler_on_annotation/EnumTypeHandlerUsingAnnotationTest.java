@@ -20,10 +20,10 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.io.Reader;
 
@@ -45,7 +45,7 @@ public class EnumTypeHandlerUsingAnnotationTest {
     private static SqlSessionFactory sqlSessionFactory;
     private SqlSession sqlSession;
 
-    @BeforeClass
+    @BeforeAll
     public static void initDatabase() throws Exception {
         try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/enumtypehandler_on_annotation/mybatis-config.xml")) {
             sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -56,12 +56,12 @@ public class EnumTypeHandlerUsingAnnotationTest {
                 "org/apache/ibatis/submitted/enumtypehandler_on_annotation/CreateDB.sql");
     }
 
-    @Before
+    @BeforeEach
     public void openSqlSession() {
         this.sqlSession = sqlSessionFactory.openSession();
     }
 
-    @After
+    @AfterEach
     public void closeSqlSession() {
         sqlSession.close();
     }

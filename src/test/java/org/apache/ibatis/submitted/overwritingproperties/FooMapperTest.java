@@ -15,13 +15,19 @@
  */
 package org.apache.ibatis.submitted.overwritingproperties;
 
-import org.apache.ibatis.BaseDataTest;
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.session.*;
-import org.junit.*;
-
 import java.sql.Connection;
 import java.sql.SQLException;
+
+import org.apache.ibatis.BaseDataTest;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /*
  * @author jjensen
@@ -32,7 +38,7 @@ public class FooMapperTest {
   private static SqlSession session;
   private static Connection conn;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUpBeforeClass() throws Exception {
     final SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(Resources.getResourceAsReader(SQL_MAP_CONFIG));
     session = factory.openSession();
@@ -42,7 +48,7 @@ public class FooMapperTest {
             "org/apache/ibatis/submitted/overwritingproperties/create-schema-mysql.sql");
   }
 
-  @Before
+  @BeforeEach
   public void setUp() {
     final FooMapper mapper = session.getMapper(FooMapper.class);
     mapper.deleteAllFoo();
@@ -57,33 +63,33 @@ public class FooMapperTest {
     mapper.insertFoo(inserted);
 
     final Foo selected = mapper.selectFoo();
-    
+
     // field1 is explicitly mapped properly
     // <result property="field1" column="field1" jdbcType="INTEGER"/>
-    Assert.assertEquals(inserted.getField1(), selected.getField1());
+    Assertions.assertEquals(inserted.getField1(), selected.getField1());
 
     // field4 is not mapped in the result map
     // <result property="field4" column="field3" jdbcType="INTEGER"/>
-    Assert.assertEquals(inserted.getField3(), selected.getField4() );
+    Assertions.assertEquals(inserted.getField3(), selected.getField4() );
 
     // field4 is explicitly remapped to field3 in the resultmap
     // <result property="field3" column="field4" jdbcType="INTEGER"/>
-    Assert.assertEquals(inserted.getField4(), selected.getField3());
+    Assertions.assertEquals(inserted.getField4(), selected.getField3());
 
     // is automapped from the only column that matches... which is Field1
     // probably not the intention, but it's working correctly given the code
     // <association property="field2" javaType="Bar">
-    //  <result property="field1" column="bar_field1" jdbcType="INTEGER"/>
+    // <result property="field1" column="bar_field1" jdbcType="INTEGER"/>
     // </association>
-    Assert.assertEquals(inserted.getField2().getField1(), selected.getField2().getField1());
+    Assertions.assertEquals(inserted.getField2().getField1(), selected.getField2().getField1());
   }
 
-  @AfterClass
+  @AfterAll
   public static void tearDownAfterClass() {
     try {
       conn.close();
     } catch (SQLException e) {
-      Assert.fail(e.getMessage());
+      Assertions.fail(e.getMessage());
     }
     session.close();
   }

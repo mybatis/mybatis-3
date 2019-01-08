@@ -15,13 +15,13 @@
  */
 package org.apache.ibatis.type;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class CharacterTypeHandlerTest extends BaseTypeHandlerTest {
 
@@ -44,7 +44,7 @@ public class CharacterTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldGetResultFromResultSetByName() throws Exception {
     when(rs.getString("column")).thenReturn("a");
-    assertEquals(new Character('a'), TYPE_HANDLER.getResult(rs, "column"));
+    assertEquals(Character.valueOf('a'), TYPE_HANDLER.getResult(rs, "column"));
     verify(rs, never()).wasNull();
   }
 
@@ -60,7 +60,7 @@ public class CharacterTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldGetResultFromResultSetByPosition() throws Exception {
     when(rs.getString(1)).thenReturn("a");
-    assertEquals(new Character('a'), TYPE_HANDLER.getResult(rs, 1));
+    assertEquals(Character.valueOf('a'), TYPE_HANDLER.getResult(rs, 1));
     verify(rs, never()).wasNull();
   }
 
@@ -76,7 +76,7 @@ public class CharacterTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
     when(cs.getString(1)).thenReturn("a");
-    assertEquals(new Character('a'), TYPE_HANDLER.getResult(cs, 1));
+    assertEquals(Character.valueOf('a'), TYPE_HANDLER.getResult(cs, 1));
     verify(cs, never()).wasNull();
   }
 

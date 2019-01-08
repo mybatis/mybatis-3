@@ -24,8 +24,8 @@ import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.apache.log4j.spi.LoggingEvent;
 import org.apache.log4j.varia.NullAppender;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import javax.sql.DataSource;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -90,7 +90,7 @@ public class AutoMappingUnknownColumnBehaviorTest {
 
     private static SqlSessionFactory sqlSessionFactory;
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws Exception {
         DataSource dataSource = BaseDataTest.createBlogDataSource();
         TransactionFactory transactionFactory = new JdbcTransactionFactory();

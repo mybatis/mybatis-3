@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,9 +18,9 @@ package org.apache.ibatis.datasource.jndi;
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.datasource.DataSourceException;
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
-import static org.junit.Assert.assertEquals;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -39,7 +39,7 @@ public class JndiDataSourceFactoryTest extends BaseDataTest {
   private static final String TEST_DATA_SOURCE = "myDataSource";
   private UnpooledDataSource expectedDataSource;
 
-  @Before
+  @BeforeEach
   public void setup() throws Exception {
     expectedDataSource = createUnpooledDataSource(BLOG_PROPERTIES);
   }
@@ -61,7 +61,7 @@ public class JndiDataSourceFactoryTest extends BaseDataTest {
 
   private void createJndiDataSource() throws Exception {
     try {
-      Hashtable<String, String> env = new Hashtable<String, String>();
+      Properties env = new Properties();
       env.put(Context.INITIAL_CONTEXT_FACTORY, TEST_INITIAL_CONTEXT_FACTORY);
 
       MockContext ctx = new MockContext(false);
@@ -98,6 +98,5 @@ public class JndiDataSourceFactoryTest extends BaseDataTest {
       bindings.put(name, obj);
     }
   }
-
 
 }

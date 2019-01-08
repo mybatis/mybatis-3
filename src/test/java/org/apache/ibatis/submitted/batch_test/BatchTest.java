@@ -23,16 +23,15 @@ import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-public class BatchTest
-{
+public class BatchTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     // create an SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/batch_test/mybatis-config.xml")) {
@@ -55,18 +54,13 @@ public class BatchTest
         user.setId(2);
         user.setName("User2");
         mapper.insertUser(user);
-        Assert.assertEquals("Dept1", mapper.getUser(2).getDept().getName());
+        Assertions.assertEquals("Dept1", mapper.getUser(2).getDept().getName());
       } finally {
         sqlSession.commit();
       }
-    }
-    catch (Exception e)
-    {
-      Assert.fail(e.getMessage());
-
+    } catch (Exception e) {
+      Assertions.fail(e.getMessage());
     }
   }
-
-
 
 }

@@ -20,11 +20,11 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import org.junit.Test;
-import org.junit.Before;
-import org.junit.After;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ExternalResourcesTest {
 
@@ -36,7 +36,7 @@ public class ExternalResourcesTest {
   /*
    * @throws java.lang.Exception
    */
-  @Before
+  @BeforeEach
   public void setUp() throws Exception {
     tempFile = File.createTempFile("migration", "properties");
     tempFile.canWrite();
@@ -92,7 +92,7 @@ public class ExternalResourcesTest {
     }
   }
 
-  @After
+  @AfterEach
   public void cleanUp() {
     sourceFile.delete();
     destFile.delete();

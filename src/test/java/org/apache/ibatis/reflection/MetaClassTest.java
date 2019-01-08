@@ -15,9 +15,9 @@
  */
 package org.apache.ibatis.reflection;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,12 +25,12 @@ import java.util.Map;
 
 import org.apache.ibatis.domain.misc.RichType;
 import org.apache.ibatis.domain.misc.generics.GenericConcrete;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class MetaClassTest {
 
   private RichType rich = new RichType();
-  Map<String,RichType> map = new HashMap<String,RichType>() {
+  Map<String, RichType> map = new HashMap<String, RichType>() {
     {
       put("richType", rich);
     }
@@ -54,7 +54,7 @@ public class MetaClassTest {
       ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
       MetaClass meta = MetaClass.forClass(RichType.class, reflectorFactory);
       meta.getGetterType("aString");
-      org.junit.Assert.fail("should have thrown ReflectionException");
+      org.junit.jupiter.api.Assertions.fail("should have thrown ReflectionException");
     } catch (ReflectionException expected) {
       assertEquals("There is no getter for property named \'aString\' in \'class org.apache.ibatis.domain.misc.RichType\'", expected.getMessage());
     }

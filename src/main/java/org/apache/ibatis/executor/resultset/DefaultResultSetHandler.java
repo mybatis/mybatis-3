@@ -70,7 +70,7 @@ import java.util.Set;
  */
 public class DefaultResultSetHandler implements ResultSetHandler {
 
-  private static final Object DEFERED = new Object();
+  private static final Object DEFERRED = new Object();
 
   private final Executor executor;
   private final Configuration configuration;
@@ -443,7 +443,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         final String property = propertyMapping.getProperty();
         if (property == null) {
           continue;
-        } else if (value == DEFERED) {
+        } else if (value == DEFERRED) {
           foundValues = true;
           continue;
         }
@@ -465,7 +465,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       return getNestedQueryMappingValue(rs, metaResultObject, propertyMapping, lazyLoader, columnPrefix);
     } else if (propertyMapping.getResultSet() != null) {
       addPendingChildRelation(rs, metaResultObject, propertyMapping);   // TODO is that OK?
-      return DEFERED;
+      return DEFERRED;
     } else {
       final TypeHandler<?> typeHandler = propertyMapping.getTypeHandler();
       final String column = prependPrefix(propertyMapping.getColumn(), columnPrefix);
@@ -747,12 +747,12 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       final Class<?> targetType = propertyMapping.getJavaType();
       if (executor.isCached(nestedQuery, key)) {
         executor.deferLoad(nestedQuery, metaResultObject, property, key, targetType);
-        value = DEFERED;
+        value = DEFERRED;
       } else {
         final ResultLoader resultLoader = new ResultLoader(configuration, executor, nestedQuery, nestedQueryParameterObject, targetType, key, nestedBoundSql);
         if (propertyMapping.isLazy()) {
           lazyLoader.addLoader(property, metaResultObject, resultLoader);
-          value = DEFERED;
+          value = DEFERRED;
         } else {
           value = resultLoader.loadResult();
         }

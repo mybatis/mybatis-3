@@ -15,13 +15,13 @@
  */
 package org.apache.ibatis.type;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.sql.Date;
 import java.time.LocalDate;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class LocalDateTypeHandlerTest extends BaseTypeHandlerTest {
 

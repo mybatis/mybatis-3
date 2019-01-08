@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.reflection;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
@@ -33,7 +33,7 @@ import org.apache.ibatis.reflection.typeparam.Level0Mapper;
 import org.apache.ibatis.reflection.typeparam.Level0Mapper.Level0InnerMapper;
 import org.apache.ibatis.reflection.typeparam.Level1Mapper;
 import org.apache.ibatis.reflection.typeparam.Level2Mapper;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class TypeParameterResolverTest {
   @Test
@@ -378,20 +378,25 @@ public class TypeParameterResolverTest {
 
   @Test
   public void testReturnParam_WildcardWithUpperBounds() throws Exception {
-    class Key {}
+    class Key {
+    }
     @SuppressWarnings("unused")
     class KeyBean<S extends Key & Cloneable, T extends Key> {
       private S key1;
       private T key2;
+
       public S getKey1() {
         return key1;
       }
+
       public void setKey1(S key1) {
         this.key1 = key1;
       }
+
       public T getKey2() {
         return key2;
       }
+
       public void setKey2(T key2) {
         this.key2 = key2;
       }

@@ -22,11 +22,12 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.io.Reader;
 import java.util.HashMap;
@@ -36,7 +37,7 @@ public class SelectKeyTest {
 
   protected static SqlSessionFactory sqlSessionFactory;
 
-  @Before
+  @BeforeEach
   public void setUp() throws Exception {
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/selectkey/MapperConfig.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -80,24 +81,26 @@ public class SelectKeyTest {
     }
   }
 
-  @Test(expected=PersistenceException.class)
+  @Test
   public void testSeleckKeyReturnsNoData() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Map<String, String> parms = new HashMap<String, String>();
       parms.put("name", "Fred");
-      int rows = sqlSession.insert("org.apache.ibatis.submitted.selectkey.Table2.insertNoValuesInSelectKey", parms);
-      assertEquals(1, rows);
-      assertNull(parms.get("id"));
+      Assertions.assertThrows(PersistenceException.class, () -> {
+        sqlSession.insert("org.apache.ibatis.submitted.selectkey.Table2.insertNoValuesInSelectKey", parms);
+      });
     }
   }
 
-  @Test(expected=PersistenceException.class)
+  @Test
   public void testSeleckKeyReturnsTooManyData() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Map<String, String> parms = new HashMap<String, String>();
       parms.put("name", "Fred");
       sqlSession.insert("org.apache.ibatis.submitted.selectkey.Table2.insertTooManyValuesInSelectKey", parms);
-      sqlSession.insert("org.apache.ibatis.submitted.selectkey.Table2.insertTooManyValuesInSelectKey", parms);
+      Assertions.assertThrows(PersistenceException.class, () -> {
+        sqlSession.insert("org.apache.ibatis.submitted.selectkey.Table2.insertTooManyValuesInSelectKey", parms);
+      });
     }
   }
 
@@ -127,7 +130,7 @@ public class SelectKeyTest {
   }
 
   @Test
-  @Ignore("HSQLDB is not returning the generated column after the update")
+  @Disabled("HSQLDB is not returning the generated column after the update")
   public void testAnnotatedUpdateTable2WithGeneratedKey() {
       try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
         Name name = new Name();
@@ -147,7 +150,7 @@ public class SelectKeyTest {
   }
 
   @Test
-  @Ignore("HSQLDB is not returning the generated column after the update")
+  @Disabled("HSQLDB is not returning the generated column after the update")
   public void testAnnotatedUpdateTable2WithGeneratedKeyXml() {
       try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
         Name name = new Name();
@@ -331,12 +334,14 @@ public class SelectKeyTest {
       }
   }
 
-  @Test(expected = PersistenceException.class)
+  @Test
   public void testSeleckKeyWithWrongKeyProperty() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Name name = new Name();
       name.setName("Kyoto");
-      sqlSession.insert("org.apache.ibatis.submitted.selectkey.Table2.insertWrongKeyProperty", name);
+      Assertions.assertThrows(PersistenceException.class, () -> {
+        sqlSession.insert("org.apache.ibatis.submitted.selectkey.Table2.insertWrongKeyProperty", name);
+      });
     }
   }
 }

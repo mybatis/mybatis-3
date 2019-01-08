@@ -36,7 +36,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.transaction.Transaction;
 
 /**
- * @author Jeff Butler 
+ * @author Jeff Butler
  */
 public class BatchExecutor extends BaseExecutor {
 
@@ -90,7 +90,7 @@ public class BatchExecutor extends BaseExecutor {
       Connection connection = getConnection(ms.getStatementLog());
       stmt = handler.prepare(connection, transaction.getTimeout());
       handler.parameterize(stmt);
-      return handler.<E>query(stmt, resultHandler);
+      return handler.query(stmt, resultHandler);
     } finally {
       closeStatement(stmt);
     }
@@ -105,7 +105,7 @@ public class BatchExecutor extends BaseExecutor {
     Statement stmt = handler.prepare(connection, transaction.getTimeout());
     stmt.closeOnCompletion();
     handler.parameterize(stmt);
-    return handler.<E>queryCursor(stmt);
+    return handler.queryCursor(stmt);
   }
 
   @Override

@@ -17,12 +17,13 @@ package org.apache.ibatis.binding;
 
 import static com.googlecode.catchexception.apis.BDDCatchException.*;
 import static org.assertj.core.api.BDDAssertions.then;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -57,15 +58,15 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class BindingTest {
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
+  @BeforeAll
   public static void setup() throws Exception {
     DataSource dataSource = BaseDataTest.createBlogDataSource();
     BaseDataTest.runScript(dataSource, BaseDataTest.BLOG_DDL);
@@ -152,8 +153,8 @@ public class BindingTest {
         Author author = new Author(-1, "cbegin", "******", "cbegin@nowhere.com", "N/A", Section.NEWS);
         when(mapper).insertAuthorInvalidSelectKey(author);
         then(caughtException()).isInstanceOf(PersistenceException.class).hasMessageContaining(
-            "### The error may exist in org/apache/ibatis/binding/BoundAuthorMapper.xml\n" +
-                "### The error may involve org.apache.ibatis.binding.BoundAuthorMapper.insertAuthorInvalidSelectKey!selectKey\n" +
+            "### The error may exist in org/apache/ibatis/binding/BoundAuthorMapper.xml" + System.lineSeparator() +
+                "### The error may involve org.apache.ibatis.binding.BoundAuthorMapper.insertAuthorInvalidSelectKey!selectKey" + System.lineSeparator() +
                 "### The error occurred while executing a query");
       } finally {
         session.rollback();
@@ -169,8 +170,8 @@ public class BindingTest {
         Author author = new Author(-1, "cbegin", "******", "cbegin@nowhere.com", "N/A", Section.NEWS);
         when(mapper).insertAuthorInvalidInsert(author);
         then(caughtException()).isInstanceOf(PersistenceException.class).hasMessageContaining(
-            "### The error may exist in org/apache/ibatis/binding/BoundAuthorMapper.xml\n" +
-                "### The error may involve org.apache.ibatis.binding.BoundAuthorMapper.insertAuthorInvalidInsert\n" +
+            "### The error may exist in org/apache/ibatis/binding/BoundAuthorMapper.xml" + System.lineSeparator() +
+                "### The error may involve org.apache.ibatis.binding.BoundAuthorMapper.insertAuthorInvalidInsert" + System.lineSeparator() +
                 "### The error occurred while executing an update");
       } finally {
         session.rollback();
@@ -352,9 +353,9 @@ public class BindingTest {
       Blog blog = mapper.selectBlogUsingConstructor(1);
       assertEquals(1, blog.getId());
       assertEquals("Jim Business", blog.getTitle());
-      assertNotNull("author should not be null", blog.getAuthor());
+      assertNotNull(blog.getAuthor(), "author should not be null");
       List<Post> posts = blog.getPosts();
-      assertTrue("posts should not be empty", posts != null && !posts.isEmpty());
+      assertTrue(posts != null && !posts.isEmpty(), "posts should not be empty");
     }
   }
 
@@ -365,9 +366,9 @@ public class BindingTest {
       Blog blog = mapper.selectBlogUsingConstructorWithResultMap(1);
       assertEquals(1, blog.getId());
       assertEquals("Jim Business", blog.getTitle());
-      assertNotNull("author should not be null", blog.getAuthor());
+      assertNotNull(blog.getAuthor(), "author should not be null");
       List<Post> posts = blog.getPosts();
-      assertTrue("posts should not be empty", posts != null && !posts.isEmpty());
+      assertTrue(posts != null && !posts.isEmpty(), "posts should not be empty");
     }
   }
 
@@ -378,18 +379,19 @@ public class BindingTest {
       Blog blog = mapper.selectBlogUsingConstructorWithResultMapAndProperties(1);
       assertEquals(1, blog.getId());
       assertEquals("Jim Business", blog.getTitle());
-      assertNotNull("author should not be null", blog.getAuthor());
+      assertNotNull(blog.getAuthor(), "author should not be null");
       Author author = blog.getAuthor();
       assertEquals(101, author.getId());
       assertEquals("jim@ibatis.apache.org", author.getEmail());
       assertEquals("jim", author.getUsername());
+      assertEquals(Section.NEWS, author.getFavouriteSection());
       List<Post> posts = blog.getPosts();
-      assertTrue("posts should not be empty", posts != null);
+      assertTrue(posts != null, "posts should not be empty");
       assertEquals(2, posts.size());
     }
   }
   
-  @Ignore
+  @Disabled
   @Test // issue #480 and #101
   public void shouldExecuteBoundSelectBlogUsingConstructorWithResultMapCollection() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
@@ -397,9 +399,9 @@ public class BindingTest {
       Blog blog = mapper.selectBlogUsingConstructorWithResultMapCollection(1);
       assertEquals(1, blog.getId());
       assertEquals("Jim Business", blog.getTitle());
-      assertNotNull("author should not be null", blog.getAuthor());
+      assertNotNull(blog.getAuthor(), "author should not be null");
       List<Post> posts = blog.getPosts();
-      assertTrue("posts should not be empty", posts != null && !posts.isEmpty());
+      assertTrue(posts != null && !posts.isEmpty(), "posts should not be empty");
     }
   }
   
@@ -410,9 +412,9 @@ public class BindingTest {
       Blog blog = mapper.selectBlogByIdUsingConstructor(1);
       assertEquals(1, blog.getId());
       assertEquals("Jim Business", blog.getTitle());
-      assertNotNull("author should not be null", blog.getAuthor());
+      assertNotNull(blog.getAuthor(), "author should not be null");
       List<Post> posts = blog.getPosts();
-      assertTrue("posts should not be empty", posts != null && !posts.isEmpty());
+      assertTrue(posts != null && !posts.isEmpty(), "posts should not be empty");
     }
   }
 
@@ -447,7 +449,7 @@ public class BindingTest {
   public void shouldSelectOneAuthorFromCache() {
     Author author1 = selectOneAuthor();
     Author author2 = selectOneAuthor();
-    assertTrue("Same (cached) instance should be returned unless rollback is called.", author1 == author2);
+    assertTrue(author1 == author2, "Same (cached) instance should be returned unless rollback is called.");
   }
 
   private Author selectOneAuthor() {
@@ -523,19 +525,23 @@ public class BindingTest {
     }
   }
 
-  @Test(expected = Exception.class)
+  @Test
   public void shouldFailWhenSelectingOneBlogWithNonExistentParam() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
-      mapper.selectBlogByNonExistentParam(1);
+      assertThrows(Exception.class, () -> {
+        mapper.selectBlogByNonExistentParam(1);
+      });
     }
   }
 
-  @Test(expected = Exception.class)
+  @Test
   public void shouldFailWhenSelectingOneBlogWithNullParam() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
-      mapper.selectBlogByNullParam(null);
+      assertThrows(Exception.class, () -> {
+        mapper.selectBlogByNullParam(null);
+      });
     }
   }
 
@@ -680,7 +686,7 @@ public class BindingTest {
         assertFalse(blogIterator.hasNext());
       }
     } catch (IOException e) {
-      Assert.fail(e.getMessage());
+      Assertions.fail(e.getMessage());
     }
   }
 

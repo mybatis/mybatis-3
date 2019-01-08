@@ -158,27 +158,27 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 
   @Override
   public <T> T selectOne(String statement) {
-    return sqlSessionProxy.<T> selectOne(statement);
+    return sqlSessionProxy.selectOne(statement);
   }
 
   @Override
   public <T> T selectOne(String statement, Object parameter) {
-    return sqlSessionProxy.<T> selectOne(statement, parameter);
+    return sqlSessionProxy.selectOne(statement, parameter);
   }
 
   @Override
   public <K, V> Map<K, V> selectMap(String statement, String mapKey) {
-    return sqlSessionProxy.<K, V> selectMap(statement, mapKey);
+    return sqlSessionProxy.selectMap(statement, mapKey);
   }
 
   @Override
   public <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey) {
-    return sqlSessionProxy.<K, V> selectMap(statement, parameter, mapKey);
+    return sqlSessionProxy.selectMap(statement, parameter, mapKey);
   }
 
   @Override
   public <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowBounds) {
-    return sqlSessionProxy.<K, V> selectMap(statement, parameter, mapKey, rowBounds);
+    return sqlSessionProxy.selectMap(statement, parameter, mapKey, rowBounds);
   }
 
   @Override
@@ -198,12 +198,12 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 
   @Override
   public <E> List<E> selectList(String statement) {
-    return sqlSessionProxy.<E> selectList(statement);
+    return sqlSessionProxy.selectList(statement);
   }
 
   @Override
   public <E> List<E> selectList(String statement, Object parameter) {
-    return sqlSessionProxy.<E> selectList(statement, parameter);
+    return sqlSessionProxy.selectList(statement, parameter);
   }
 
   @Override

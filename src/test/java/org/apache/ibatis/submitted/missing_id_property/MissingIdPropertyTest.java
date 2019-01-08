@@ -22,15 +22,15 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class MissingIdPropertyTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     // create a SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/missing_id_property/MapperConfig.xml")) {
@@ -47,9 +47,9 @@ public class MissingIdPropertyTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       CarMapper carMapper = sqlSession.getMapper(CarMapper.class);
       Car car = carMapper.getCarsInfo(1L);
-      Assert.assertNotNull(car.getName());
-      Assert.assertNotNull(car.getCarParts());
-      Assert.assertEquals(3, car.getCarParts().size());
+      Assertions.assertNotNull(car.getName());
+      Assertions.assertNotNull(car.getCarParts());
+      Assertions.assertEquals(3, car.getCarParts().size());
     }
   }
 

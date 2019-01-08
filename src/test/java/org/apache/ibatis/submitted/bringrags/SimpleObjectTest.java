@@ -24,17 +24,17 @@ import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class SimpleObjectTest {
   private SimpleChildObjectMapper simpleChildObjectMapper;
   private SqlSession sqlSession;
   private Connection conn;
 
-  @Before
+  @BeforeEach
   public void setUp() throws Exception {
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/bringrags/mybatis-config.xml")) {
       SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -53,7 +53,7 @@ public class SimpleObjectTest {
     }
   }
 
-  @After
+  @AfterEach
   public void tearDown() throws Exception {
     conn.close();
     sqlSession.close();
@@ -62,8 +62,8 @@ public class SimpleObjectTest {
   @Test
   public void testGetById() throws Exception {
     SimpleChildObject sc = simpleChildObjectMapper.getSimpleChildObjectById("20000");
-    Assert.assertNotNull(sc);
-    Assert.assertNotNull(sc.getSimpleObject());
+    Assertions.assertNotNull(sc);
+    Assertions.assertNotNull(sc.getSimpleObject());
   }
 
 }

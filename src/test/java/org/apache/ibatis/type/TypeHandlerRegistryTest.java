@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.type;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.net.URI;
 import java.sql.CallableStatement;
@@ -26,14 +26,14 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.domain.misc.RichType;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class TypeHandlerRegistryTest {
 
   private TypeHandlerRegistry typeHandlerRegistry;
 
-  @Before
+  @BeforeEach
   public void setup() {
     typeHandlerRegistry = new TypeHandlerRegistry();
   }
@@ -159,17 +159,22 @@ public class TypeHandlerRegistryTest {
 
   interface SomeInterface {
   }
+
   interface ExtendingSomeInterface extends SomeInterface {
   }
+
   interface NoTypeHandlerInterface {
   }
 
   enum SomeEnum implements SomeInterface {
   }
+
   enum ExtendingSomeEnum implements ExtendingSomeInterface {
   }
+
   enum ImplementingMultiInterfaceSomeEnum implements NoTypeHandlerInterface, ExtendingSomeInterface {
   }
+
   enum NoTypeHandlerInterfaceEnum implements NoTypeHandlerInterface {
   }
 
@@ -182,14 +187,17 @@ public class TypeHandlerRegistryTest {
     public void setNonNullParameter(PreparedStatement ps, int i, E parameter, JdbcType jdbcType)
         throws SQLException {
     }
+
     @Override
     public E getNullableResult(ResultSet rs, String columnName) throws SQLException {
       return null;
     }
+
     @Override
     public E getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
       return null;
     }
+
     @Override
     public E getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
       return null;
@@ -199,9 +207,9 @@ public class TypeHandlerRegistryTest {
   @Test
   public void demoTypeHandlerForSuperInterface() {
     typeHandlerRegistry.register(SomeInterfaceTypeHandler.class);
-    assertNull("Registering interface works only for enums.", typeHandlerRegistry.getTypeHandler(SomeClass.class));
-    assertSame("When type handler for interface is not exist, apply default enum type handler.",
-      EnumTypeHandler.class, typeHandlerRegistry.getTypeHandler(NoTypeHandlerInterfaceEnum.class).getClass());
+    assertNull(typeHandlerRegistry.getTypeHandler(SomeClass.class), "Registering interface works only for enums.");
+    assertSame(EnumTypeHandler.class, typeHandlerRegistry.getTypeHandler(NoTypeHandlerInterfaceEnum.class).getClass(),
+        "When type handler for interface is not exist, apply default enum type handler.");
     assertSame(SomeInterfaceTypeHandler.class, typeHandlerRegistry.getTypeHandler(SomeEnum.class).getClass());
     assertSame(SomeInterfaceTypeHandler.class, typeHandlerRegistry.getTypeHandler(ExtendingSomeEnum.class).getClass());
     assertSame(SomeInterfaceTypeHandler.class, typeHandlerRegistry.getTypeHandler(ImplementingMultiInterfaceSomeEnum.class).getClass());
@@ -209,7 +217,8 @@ public class TypeHandlerRegistryTest {
 
   @Test
   public void shouldRegisterReplaceNullMap() {
-    class Address {}
+    class Address {
+    }
     assertFalse(typeHandlerRegistry.hasTypeHandler(Address.class));
     typeHandlerRegistry.register(Address.class, StringTypeHandler.class);
     assertTrue(typeHandlerRegistry.hasTypeHandler(Address.class));

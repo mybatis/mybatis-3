@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.submitted.include_property;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.Reader;
 import java.util.HashMap;
@@ -27,14 +27,14 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class IncludePropertyTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     // create an SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/include_property/mybatis-config.xml")) {
@@ -95,7 +95,7 @@ public class IncludePropertyTest {
   public void testConfigVar() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       List<String> results = sqlSession.selectList("org.apache.ibatis.submitted.include_property.Mapper.selectConfigVar");
-      assertEquals("Property defined in the config file should be used.", "col_c value", results.get(0));
+      assertEquals("col_c value", results.get(0), "Property defined in the config file should be used.");
     }
   }
 

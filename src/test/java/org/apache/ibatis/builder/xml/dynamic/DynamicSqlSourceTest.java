@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.builder.xml.dynamic;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -41,8 +41,8 @@ import org.apache.ibatis.scripting.xmltags.WhereSqlNode;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class DynamicSqlSourceTest extends BaseDataTest {
 
@@ -286,6 +286,18 @@ public class DynamicSqlSourceTest extends BaseDataTest {
   }
 
   @Test
+  public void shouldTrimCommaAfterSET() throws Exception {
+    final String expected = "UPDATE BLOG SET  NAME = ?";
+    DynamicSqlSource source = createDynamicSqlSource(
+      new TextSqlNode("UPDATE BLOG"),
+      new SetSqlNode(new Configuration(), mixedContents(
+        new IfSqlNode(mixedContents(new TextSqlNode("ID = ?")), "false"),
+        new IfSqlNode(mixedContents(new TextSqlNode(", NAME = ?")), "true"))));
+    BoundSql boundSql = source.getBoundSql(null);
+    assertEquals(expected, boundSql.getSql());
+  }
+
+  @Test
   public void shouldTrimNoSetClause() throws Exception {
     final String expected = "UPDATE BLOG";
     DynamicSqlSource source = createDynamicSqlSource(
@@ -384,7 +396,7 @@ public class DynamicSqlSourceTest extends BaseDataTest {
     final MixedSqlNode sqlNode = mixedContents(new TextSqlNode(expected));
     final DynamicSqlSource source = new DynamicSqlSource(new Configuration(), sqlNode);
     String sql = source.getBoundSql(new Bean(null)).getSql();
-    Assert.assertEquals("id=", sql);
+    Assertions.assertEquals("id=", sql);
   }
 
   public static class Bean {

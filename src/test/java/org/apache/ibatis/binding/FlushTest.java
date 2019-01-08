@@ -24,20 +24,20 @@ import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.session.*;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class FlushTest {
     private static SqlSessionFactory sqlSessionFactory;
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws Exception {
         DataSource dataSource = BaseDataTest.createBlogDataSource();
         TransactionFactory transactionFactory = new JdbcTransactionFactory();
@@ -76,7 +76,7 @@ public class FlushTest {
 
             for (int id : ids) {
                 Author selectedAuthor = mapper.selectAuthor(id);
-                assertNotNull(id + " is not found.", selectedAuthor);
+                assertNotNull(selectedAuthor, id + " is not found.");
             }
 
             session.rollback();

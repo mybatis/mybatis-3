@@ -19,14 +19,17 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.function.BiFunction;
 
 import org.apache.ibatis.binding.MapperRegistry;
 import org.apache.ibatis.builder.CacheRefResolver;
+import org.apache.ibatis.builder.IncompleteElementException;
 import org.apache.ibatis.builder.ResultMapResolver;
 import org.apache.ibatis.builder.annotation.MethodResolver;
 import org.apache.ibatis.builder.xml.XMLStatementBuilder;
@@ -145,7 +148,9 @@ public class Configuration {
   protected final TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
   protected final LanguageDriverRegistry languageRegistry = new LanguageDriverRegistry();
 
-  protected final Map<String, MappedStatement> mappedStatements = new StrictMap<>("Mapped Statements collection");
+  protected final Map<String, MappedStatement> mappedStatements = new StrictMap<MappedStatement>("Mapped Statements collection")
+      .conflictMessageProducer((savedValue, targetValue) ->
+          ". please check " + savedValue.getResource() + " and " + targetValue.getResource());
   protected final Map<String, Cache> caches = new StrictMap<>("Caches collection");
   protected final Map<String, ResultMap> resultMaps = new StrictMap<>("Result Maps collection");
   protected final Map<String, ParameterMap> parameterMaps = new StrictMap<>("Parameter Maps collection");
@@ -770,28 +775,53 @@ public class Configuration {
    * statement validation.
    */
   protected void buildAllStatements() {
-    if (!incompleteResultMaps.isEmpty()) {
-      synchronized (incompleteResultMaps) {
-        // This always throws a BuilderException.
-        incompleteResultMaps.iterator().next().resolve();
-      }
-    }
+    parsePendingResultMaps();
     if (!incompleteCacheRefs.isEmpty()) {
       synchronized (incompleteCacheRefs) {
-        // This always throws a BuilderException.
-        incompleteCacheRefs.iterator().next().resolveCacheRef();
+        incompleteCacheRefs.removeIf(x -> x.resolveCacheRef() != null);
       }
     }
     if (!incompleteStatements.isEmpty()) {
       synchronized (incompleteStatements) {
-        // This always throws a BuilderException.
-        incompleteStatements.iterator().next().parseStatementNode();
+        incompleteStatements.removeIf(x -> {
+          x.parseStatementNode();
+          return true;
+        });
       }
     }
     if (!incompleteMethods.isEmpty()) {
       synchronized (incompleteMethods) {
-        // This always throws a BuilderException.
-        incompleteMethods.iterator().next().resolve();
+        incompleteMethods.removeIf(x -> {
+          x.resolve();
+          return true;
+        });
+      }
+    }
+  }
+
+  private void parsePendingResultMaps() {
+    if (incompleteResultMaps.isEmpty()) {
+      return;
+    }
+    synchronized (incompleteResultMaps) {
+      boolean resolved;
+      IncompleteElementException ex = null;
+      do {
+        resolved = false;
+        Iterator<ResultMapResolver> iterator = incompleteResultMaps.iterator();
+        while (iterator.hasNext()) {
+          try {
+            iterator.next().resolve();
+            iterator.remove();
+            resolved = true;
+          } catch (IncompleteElementException e) {
+            ex = e;
+          }
+        }
+      } while (resolved);
+      if (!incompleteResultMaps.isEmpty() && ex != null) {
+        // At least one result map is unresolvable. 
+        throw ex;
       }
     }
   }
@@ -845,6 +875,7 @@ public class Configuration {
 
     private static final long serialVersionUID = -4950446264854982944L;
     private final String name;
+    private BiFunction<V, V, String> conflictMessageProducer;
 
     public StrictMap(String name, int initialCapacity, float loadFactor) {
       super(initialCapacity, loadFactor);
@@ -866,10 +897,24 @@ public class Configuration {
       this.name = name;
     }
 
+    /**
+     * Assign a function for producing a conflict error message when contains value with the same key.
+     * <p>
+     * function arguments are 1st is saved value and 2nd is target value.
+     * @param conflictMessageProducer A function for producing a conflict error message
+     * @return a conflict error message
+     * @since 3.5.0
+     */
+    public StrictMap<V> conflictMessageProducer(BiFunction<V, V, String> conflictMessageProducer) {
+      this.conflictMessageProducer = conflictMessageProducer;
+      return this;
+    }
+
     @SuppressWarnings("unchecked")
     public V put(String key, V value) {
       if (containsKey(key)) {
-        throw new IllegalArgumentException(name + " already contains value for " + key);
+        throw new IllegalArgumentException(name + " already contains value for " + key
+            + (conflictMessageProducer == null ? "" : conflictMessageProducer.apply(super.get(key), value)));
       }
       if (key.contains(".")) {
         final String shortKey = getShortName(key);

@@ -24,15 +24,15 @@ import org.apache.ibatis.session.AutoMappingBehavior;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class AutomappingTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     // create a SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/automapping/mybatis-config.xml")) {
@@ -50,7 +50,7 @@ public class AutomappingTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUser(1);
-      Assert.assertEquals("User1", user.getName());
+      Assertions.assertEquals("User1", user.getName());
     }
   }
 
@@ -60,8 +60,8 @@ public class AutomappingTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUserWithPhoneNumber(1);
-      Assert.assertEquals("User1", user.getName());
-      Assert.assertEquals(new Long(12345678901L), user.getPhone());
+      Assertions.assertEquals("User1", user.getName());
+      Assertions.assertEquals(Long.valueOf(12345678901L), user.getPhone());
     }
   }
 
@@ -71,23 +71,23 @@ public class AutomappingTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUserWithPets_Inline(2);
-      Assert.assertEquals(Integer.valueOf(2), user.getId());
-      Assert.assertEquals("User2", user.getName());
-      Assert.assertNull("should not inherit auto-mapping", user.getPets().get(0).getPetName());
-      Assert.assertEquals("John", user.getPets().get(0).getBreeder().getBreederName());
+      Assertions.assertEquals(Integer.valueOf(2), user.getId());
+      Assertions.assertEquals("User2", user.getName());
+      Assertions.assertNull(user.getPets().get(0).getPetName(), "should not inherit auto-mapping");
+      Assertions.assertEquals("John", user.getPets().get(0).getBreeder().getBreederName());
     }
   }
-  
+
   @Test
   public void shouldNotInheritAutoMappingInherited_ExternalNestedResultMap() {
     sqlSessionFactory.getConfiguration().setAutoMappingBehavior(AutoMappingBehavior.NONE);
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUserWithPets_External(2);
-      Assert.assertEquals(Integer.valueOf(2), user.getId());
-      Assert.assertEquals("User2", user.getName());
-      Assert.assertNull("should not inherit auto-mapping", user.getPets().get(0).getPetName());
-      Assert.assertEquals("John", user.getPets().get(0).getBreeder().getBreederName());
+      Assertions.assertEquals(Integer.valueOf(2), user.getId());
+      Assertions.assertEquals("User2", user.getName());
+      Assertions.assertNull(user.getPets().get(0).getPetName(), "should not inherit auto-mapping");
+      Assertions.assertEquals("John", user.getPets().get(0).getBreeder().getBreederName());
     }
   }
 
@@ -98,10 +98,10 @@ public class AutomappingTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUserWithPets_Inline(2);
-      Assert.assertEquals(Integer.valueOf(2), user.getId());
-      Assert.assertEquals("User2", user.getName());
-      Assert.assertNull("should not inherit auto-mapping", user.getPets().get(0).getPetName());
-      Assert.assertEquals("John", user.getPets().get(0).getBreeder().getBreederName());
+      Assertions.assertEquals(Integer.valueOf(2), user.getId());
+      Assertions.assertEquals("User2", user.getName());
+      Assertions.assertNull(user.getPets().get(0).getPetName(), "should not inherit auto-mapping");
+      Assertions.assertEquals("John", user.getPets().get(0).getBreeder().getBreederName());
     }
   }
 
@@ -111,10 +111,10 @@ public class AutomappingTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUserWithPets_Inline(2);
-      Assert.assertEquals(Integer.valueOf(2), user.getId());
-      Assert.assertEquals("User2", user.getName());
-      Assert.assertEquals("Chien", user.getPets().get(0).getPetName());
-      Assert.assertEquals("John", user.getPets().get(0).getBreeder().getBreederName());
+      Assertions.assertEquals(Integer.valueOf(2), user.getId());
+      Assertions.assertEquals("User2", user.getName());
+      Assertions.assertEquals("Chien", user.getPets().get(0).getPetName());
+      Assertions.assertEquals("John", user.getPets().get(0).getBreeder().getBreederName());
     }
   }
 
@@ -125,10 +125,10 @@ public class AutomappingTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUserWithPets_External(2);
-      Assert.assertEquals(Integer.valueOf(2), user.getId());
-      Assert.assertEquals("User2", user.getName());
-      Assert.assertNull("should not inherit auto-mapping", user.getPets().get(0).getPetName());
-      Assert.assertEquals("John", user.getPets().get(0).getBreeder().getBreederName());
+      Assertions.assertEquals(Integer.valueOf(2), user.getId());
+      Assertions.assertEquals("User2", user.getName());
+      Assertions.assertNull(user.getPets().get(0).getPetName(), "should not inherit auto-mapping");
+      Assertions.assertEquals("John", user.getPets().get(0).getBreeder().getBreederName());
     }
   }
 
@@ -138,10 +138,10 @@ public class AutomappingTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUserWithPets_External(2);
-      Assert.assertEquals(Integer.valueOf(2), user.getId());
-      Assert.assertEquals("User2", user.getName());
-      Assert.assertEquals("Chien", user.getPets().get(0).getPetName());
-      Assert.assertEquals("John", user.getPets().get(0).getBreeder().getBreederName());
+      Assertions.assertEquals(Integer.valueOf(2), user.getId());
+      Assertions.assertEquals("User2", user.getName());
+      Assertions.assertEquals("Chien", user.getPets().get(0).getPetName());
+      Assertions.assertEquals("John", user.getPets().get(0).getBreeder().getBreederName());
     }
   }
 
@@ -153,7 +153,7 @@ public class AutomappingTest {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       // no errors throw
       List<Book> books = mapper.getBooks();
-      Assert.assertTrue("should return results,no errors throw", !books.isEmpty());
+      Assertions.assertTrue(!books.isEmpty(), "should return results,no errors throw");
     }
   }
 
@@ -167,7 +167,7 @@ public class AutomappingTest {
       // Java Language Specification 17.5.3 Subsequent Modification of Final Fields
       // http://docs.oracle.com/javase/specs/jls/se5.0/html/memory.html#17.5.3
       // The final field should be updated in mapping
-      Assert.assertTrue("should update version in mapping", article.version > 0);
+      Assertions.assertTrue(article.version > 0, "should update version in mapping");
     }
   }
 }
