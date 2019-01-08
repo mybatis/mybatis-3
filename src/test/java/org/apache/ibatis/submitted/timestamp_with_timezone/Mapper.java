@@ -13,16 +13,17 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.submitted.usesjava8.timestamp_with_timezone;
+package org.apache.ibatis.submitted.timestamp_with_timezone;
 
-import org.apache.ibatis.submitted.usesjava8.use_actual_param_name.*;
-import java.util.List;
-
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
 
 public interface Mapper {
-  
-  @Select("select * from records")
-  List<Record> selectAll();
+
+  @Select("select id, odt from records where id = #{id}")
+  Record selectById(Integer id);
+
+  @Insert("insert into records (id, odt) values (#{id}, #{odt})")
+  int insertOffsetDateTime(Record record);
 
 }

@@ -33,7 +33,7 @@ public class OffsetDateTimeTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldSetParameter() throws Exception {
     TYPE_HANDLER.setParameter(ps, 1, OFFSET_DATE_TIME, null);
-    verify(ps).setTimestamp(1, TIMESTAMP);
+    verify(ps).setObject(1, OFFSET_DATE_TIME);
   }
 
   @Override

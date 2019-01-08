@@ -19,10 +19,7 @@ import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.sql.Types;
 import java.time.OffsetDateTime;
-import java.time.ZoneId;
 
 /**
  * @since 3.4.5
@@ -38,18 +35,17 @@ public class OffsetDateTimeTypeHandler extends BaseTypeHandler<OffsetDateTime> {
 
   @Override
   public OffsetDateTime getNullableResult(ResultSet rs, String columnName) throws SQLException {
-    return (OffsetDateTime) rs.getObject(columnName);
+    return rs.getObject(columnName, OffsetDateTime.class);
   }
 
   @Override
   public OffsetDateTime getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
-    return (OffsetDateTime) rs.getObject(columnIndex);
+    return rs.getObject(columnIndex, OffsetDateTime.class);
   }
 
   @Override
   public OffsetDateTime getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
-    return (OffsetDateTime) cs.getObject(columnIndex);
+    return cs.getObject(columnIndex, OffsetDateTime.class);
   }
 
-  
 }

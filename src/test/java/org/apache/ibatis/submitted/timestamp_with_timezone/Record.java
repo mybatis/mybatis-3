@@ -13,20 +13,30 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.submitted.usesjava8.timestamp_with_timezone;
+package org.apache.ibatis.submitted.timestamp_with_timezone;
 
 import java.time.OffsetDateTime;
 
 public class Record {
-  
-  private OffsetDateTime datetime;
 
-  public OffsetDateTime getDatetime() {
-    return datetime;
+  private Integer id;
+
+  private OffsetDateTime odt;
+
+  public Integer getId() {
+    return id;
   }
 
-  public void setDatetime(OffsetDateTime datetime) {
-    this.datetime = datetime;
+  public void setId(Integer id) {
+    this.id = id;
   }
-  
+
+  public OffsetDateTime getOdt() {
+    return odt;
+  }
+
+  public void setOdt(OffsetDateTime odt) {
+    this.odt = odt;
+  }
+
 }
