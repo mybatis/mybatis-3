@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -36,12 +36,12 @@ import org.apache.ibatis.io.JBoss6VFS;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.logging.slf4j.Slf4jImpl;
 import org.apache.ibatis.mapping.Environment;
-import org.apache.ibatis.parsing.XPathParser;
 import org.apache.ibatis.scripting.defaults.RawLanguageDriver;
 import org.apache.ibatis.scripting.xmltags.XMLLanguageDriver;
 import org.apache.ibatis.session.*;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.apache.ibatis.type.JdbcType;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
@@ -51,11 +51,12 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Disabled("We'll try a different approach. See #1393")
 public class XmlConfigBuilderTest {
 
   @Test
   public void shouldSuccessfullyLoadMinimalXMLConfigFile() throws Exception {
-    System.setProperty(XPathParser.KEY_USE_XSD, "true");
+    // System.setProperty(XPathParser.KEY_USE_XSD, "true");
     String resource = "org/apache/ibatis/builder/xsd/MinimalMapperConfig.xml";
     try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
       XMLConfigBuilder builder = new XMLConfigBuilder(inputStream);
@@ -85,13 +86,13 @@ public class XmlConfigBuilderTest {
       assertNull(config.getLogImpl());
       assertNull(config.getConfigurationFactory());
     } finally {
-      System.clearProperty(XPathParser.KEY_USE_XSD);
+      // System.clearProperty(XPathParser.KEY_USE_XSD);
     }
   }
 
   @Test
   public void shouldSuccessfullyLoadXMLConfigFitle() throws Exception {
-    System.setProperty(XPathParser.KEY_USE_XSD, "true");
+    // System.setProperty(XPathParser.KEY_USE_XSD, "true");
     String resource = "org/apache/ibatis/builder/xsd/CustomizedSettingsMapperConfig.xml";
     try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
       XMLConfigBuilder builder = new XMLConfigBuilder(inputStream);
@@ -156,7 +157,7 @@ public class XmlConfigBuilderTest {
       assertTrue(config.getMapperRegistry().hasMapper(BlogMapper.class));
       assertTrue(config.getMapperRegistry().hasMapper(NestedBlogMapper.class));
     } finally {
-      System.clearProperty(XPathParser.KEY_USE_XSD);
+      // System.clearProperty(XPathParser.KEY_USE_XSD);
     }
   }
 

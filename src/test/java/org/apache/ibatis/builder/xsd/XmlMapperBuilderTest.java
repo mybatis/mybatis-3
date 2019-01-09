@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,18 +20,19 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.mapping.StatementType;
-import org.apache.ibatis.parsing.XPathParser;
 import org.apache.ibatis.session.Configuration;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
 
+@Disabled("We'll try a different approach. See #1393")
 public class XmlMapperBuilderTest {
 
   @Test
   public void mappedStatementWithOptions() throws Exception {
-    System.setProperty(XPathParser.KEY_USE_XSD, "true");
+    // System.setProperty(XPathParser.KEY_USE_XSD, "true");
     Configuration configuration = new Configuration();
     String resource = "org/apache/ibatis/builder/xsd/AuthorMapper.xml";
     try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
@@ -46,7 +47,7 @@ public class XmlMapperBuilderTest {
       Assertions.assertFalse(mappedStatement.isFlushCacheRequired());
       Assertions.assertFalse(mappedStatement.isUseCache());
     } finally {
-      System.clearProperty(XPathParser.KEY_USE_XSD);
+      // System.clearProperty(XPathParser.KEY_USE_XSD);
     }
   }
 
