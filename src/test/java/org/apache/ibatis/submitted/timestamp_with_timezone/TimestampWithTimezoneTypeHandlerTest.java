@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.Reader;
 import java.time.OffsetDateTime;
+import java.time.OffsetTime;
 import java.time.ZoneOffset;
 
 import org.apache.ibatis.BaseDataTest;
@@ -27,6 +28,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 public class TimestampWithTimezoneTypeHandlerTest {
@@ -50,6 +52,8 @@ public class TimestampWithTimezoneTypeHandlerTest {
       Record record = mapper.selectById(1);
       assertEquals(OffsetDateTime.of(2018, 1, 2, 11, 22, 33, 123456000, ZoneOffset.ofHoursMinutes(1, 23)),
           record.getOdt());
+      // HSQLDB 2.4.1 truncates nano seconds.
+      assertEquals(OffsetTime.of(11, 22, 33, 0, ZoneOffset.ofHoursMinutes(1, 23)), record.getOt());
     }
   }
 
@@ -69,6 +73,26 @@ public class TimestampWithTimezoneTypeHandlerTest {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Record record = mapper.selectById(2);
       assertEquals(odt, record.getOdt());
+    }
+  }
+
+  @Disabled("HSQLDB 2.4.1 does not support this.")
+  @Test
+  public void shouldInsertOffsetTime() {
+    OffsetTime ot = OffsetTime.of(11, 22, 33, 123456000, ZoneOffset.ofHoursMinutes(1, 23));
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      Record record = new Record();
+      record.setId(3);
+      record.setOt(ot);
+      int result = mapper.insertOffsetTime(record);
+      assertEquals(1, result);
+      sqlSession.commit();
+    }
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      Record record = mapper.selectById(3);
+      assertEquals(ot, record.getOt());
     }
   }
 
