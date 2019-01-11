@@ -15,9 +15,29 @@
  */
 package org.apache.ibatis.session;
 
+import org.apache.ibatis.executor.BatchExecutor;
+import org.apache.ibatis.executor.Executor;
+import org.apache.ibatis.executor.ReuseExecutor;
+import org.apache.ibatis.executor.SimpleExecutor;
+import org.apache.ibatis.transaction.Transaction;
+
 /**
  * @author Clinton Begin
  */
 public enum ExecutorType {
-  SIMPLE, REUSE, BATCH
+  SIMPLE(SimpleExecutor::new), REUSE(ReuseExecutor::new), BATCH(BatchExecutor::new);
+
+  private ExecutorCreator creator;
+
+  ExecutorType(ExecutorCreator creator){
+      this.creator = creator;
+  }
+
+  public Executor createExecutor(Configuration configuration, Transaction transaction){
+      return creator.create(configuration, transaction);
+  }
+
+  private interface ExecutorCreator{
+    Executor create(Configuration configuration, Transaction transaction);
+  }
 }
