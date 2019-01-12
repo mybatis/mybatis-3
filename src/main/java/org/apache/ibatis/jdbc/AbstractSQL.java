@@ -308,7 +308,25 @@ public abstract class AbstractSQL<T> {
   private static class SQLStatement {
 
     public enum StatementType {
-      DELETE, INSERT, SELECT, UPDATE
+      DELETE((sqlStatement,builder) -> sqlStatement.deleteSQL(builder)),
+      INSERT((sqlStatement,builder) -> sqlStatement.insertSQL(builder)),
+      SELECT((sqlStatement,builder) -> sqlStatement.selectSQL(builder)),
+      UPDATE((sqlStatement,builder) -> sqlStatement.updateSQL(builder));
+
+      private SqlBuilder sqlBuilder;
+
+      StatementType(SqlBuilder sqlBuilder){
+        this.sqlBuilder = sqlBuilder;
+      }
+
+      public String build(SQLStatement sqlStatement, SafeAppendable builder){
+        return sqlBuilder.buildSql(sqlStatement, builder);
+      }
+
+    }
+
+    private interface SqlBuilder{
+      String buildSql(SQLStatement sqlStatement, SafeAppendable builder);
     }
 
     StatementType statementType;
@@ -406,30 +424,7 @@ public abstract class AbstractSQL<T> {
         return null;
       }
 
-      String answer;
-
-      switch (statementType) {
-        case DELETE:
-          answer = deleteSQL(builder);
-          break;
-
-        case INSERT:
-          answer = insertSQL(builder);
-          break;
-
-        case SELECT:
-          answer = selectSQL(builder);
-          break;
-
-        case UPDATE:
-          answer = updateSQL(builder);
-          break;
-
-        default:
-          answer = null;
-      }
-
-      return answer;
+      return statementType.build(this, builder);
     }
   }
 }
