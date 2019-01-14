@@ -52,7 +52,7 @@ public class MapperMethod {
   }
 
   public Object execute(SqlSession sqlSession, Object[] args) {
-    Object result = command.getType().executeCommand(this, sqlSession, args);
+    Object result = command.getType().getSqlCommandExecutor().execute(this, sqlSession, args);
     if (result == null && method.getReturnType().isPrimitive() && !method.returnsVoid()) {
       throw new BindingException("Mapper method '" + command.getName() 
           + " attempted to return null from a method with a primitive return type (" + method.getReturnType() + ").");

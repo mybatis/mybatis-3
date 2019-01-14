@@ -15,19 +15,16 @@
  */
 package org.apache.ibatis.mapping;
 
-import org.apache.ibatis.binding.MapperMethod;
-import org.apache.ibatis.session.SqlSession;
-
 /**
  * @author Clinton Begin
  */
 public enum SqlCommandType {
-  UNKNOWN((method, sqlSession, args)->method.executeUnknown()),
-  INSERT((method, sqlSession, args)->method.executeInsert(sqlSession, args)),
-  UPDATE((method, sqlSession, args)->method.executeUpdate(sqlSession, args)),
-  DELETE((method, sqlSession, args)->method.executeDelete(sqlSession, args)),
-  SELECT((method, sqlSession, args)->method.executeSelect(sqlSession, args)),
-  FLUSH((method, sqlSession, args)->method.executeFlush(sqlSession));
+  UNKNOWN(SqlCommandExecutor.UNKNOWN),
+  INSERT(SqlCommandExecutor.INSERT),
+  UPDATE(SqlCommandExecutor.UPDATE),
+  DELETE(SqlCommandExecutor.DELETE),
+  SELECT(SqlCommandExecutor.SELECT),
+  FLUSH(SqlCommandExecutor.FLUSH);
 
   private SqlCommandExecutor sqlCommandExecutor;
 
@@ -35,11 +32,7 @@ public enum SqlCommandType {
     this.sqlCommandExecutor = sqlCommandExecutor;
   }
 
-  public Object executeCommand(MapperMethod method, SqlSession sqlSession, Object[] args){
-    return sqlCommandExecutor.execute(method, sqlSession, args);
-  }
-
-  private interface SqlCommandExecutor{
-    Object execute(MapperMethod method, SqlSession sqlSession, Object[] args);
+  public SqlCommandExecutor getSqlCommandExecutor(){
+    return sqlCommandExecutor;
   }
 }
