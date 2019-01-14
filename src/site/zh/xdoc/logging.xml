@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2018 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -119,16 +119,16 @@ log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n]]></source>
         </p>
 
         <source>log4j.logger.org.mybatis.example.BlogMapper.selectBlog=TRACE</source>
-        
+
         <p>与此相对，可以对一组映射器接口记录日志，只要对映射器接口所在的包开启日志功能即可：</p>
 
         <source>log4j.logger.org.mybatis.example=TRACE</source>
-        
+
         <p>某些查询可能会返回庞大的结果集，此时只想记录其执行的 SQL 语句而不想记录结果该怎么办？为此，Mybatis 中 SQL 语句的日志级别被设为DEBUG（JDK 日志设为 FINE），结果的日志级别为 TRACE（JDK 日志设为 FINER)。所以，只要将日志级别调整为 DEBUG 即可达到目的：
         </p>
 
         <source>log4j.logger.org.mybatis.example=DEBUG</source>
-        
+
         <p>要记录日志的是类似下面的映射器文件而不是映射器接口又该怎么做呢？
         </p>
 
@@ -153,12 +153,12 @@ log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n]]></source>
 
 		<p>你应该注意到了，为映射器接口和 XML 文件添加日志功能的语句毫无差别。
 		</p>
-		  
+
 		<p><span class="label important">注意</span> 如果你使用的是 SLF4J 或 Log4j 2，MyBatis 将以 MYBATIS 这个值进行调用。</p>
 
         <p>配置文件 <code>log4j.properties</code> 的余下内容是针对日志输出源的，这一内容已经超出本文档范围。关于 Log4J 的更多内容，可以参考Log4J 的网站。不过，你也可以简单地做做实验，看看不同的配置会产生怎样的效果。
         </p>
-		  
+
       </subsection>
     </section>
   </body>

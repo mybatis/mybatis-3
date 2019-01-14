@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -32,11 +32,11 @@
     </resultMap>
 
     <select id="getUser" resultMap="sampleHashResult">
-        SELECT id as f1, name as f2 from users 
+        SELECT id as f1, name as f2 from users
     </select>
-    
+
     <select id="associationTest" resultType="java.lang.String">
-        select id from users 
+        select id from users
     </select>
-    
+
 </mapper>

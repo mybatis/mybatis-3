@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -21,14 +21,14 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.apache.ibatis.submitted.deferload_common_property.ChildMapper">
-    
+
     <resultMap id="ChildMap" type="Child">
         <id property="id" column="id"/>
         <result property="name" column="name"/>
         <association property="father" column="father_id" select="org.apache.ibatis.submitted.deferload_common_property.FatherMapper.selectById"/>
     </resultMap>
-    
-    
+
+
     <select id="selectAll" resultMap="ChildMap">
     	SELECT id, name, father_id
     	FROM Child

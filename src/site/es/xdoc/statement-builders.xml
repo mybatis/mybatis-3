@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ String sql = "SELECT P.ID, P.USERNAME, P.PASSWORD, P.FULL_NAME, "
   <subsection name="La Solución">
   <p>MyBatis 3 introduce un concepto un tanto distinto para tratar con el problema.
     Con la clase SQL, puecdes crear una sentencia SQL en un sólo paso invocando a sus métodos.
-    El ejemplo anterior tendría este aspecto si se rescribe con la clase SQL:  
+    El ejemplo anterior tendría este aspecto si se rescribe con la clase SQL:
   </p>
 
       <source><![CDATA[
@@ -72,7 +72,7 @@ private String selectPersonSql() {
   }}.toString();
 }
 ]]></source>
-    <p>¿Qué hay de especial en este ejemplo? 
+    <p>¿Qué hay de especial en este ejemplo?
       Bien, si lo miras detenidamente, verás que no hay que preocuparse de duplicar “AND”s, o elegir entre “WHERE” o “AND”, o ninguno de ambos!
       La clase SQL se ocupa de colocar el "WHERE" donde debe de ir, si debe usarse "AND" o no y de realizar todas las concatenaciones de Strings.
     </p>
@@ -378,9 +378,9 @@ public String updatePersonSql() {
 
       <subsection name="SqlBuilder y SelectBuilder (DEPRECADAS)">
         <p>
-          En versiones anteriores a la 3.2 optamos por una solución distinta, usando una variable ThreadLocal para 
+          En versiones anteriores a la 3.2 optamos por una solución distinta, usando una variable ThreadLocal para
           resolver algunas limitaciones de las que hacen los DSLs Java algo incomodos. Sin embargo, esta solución está ahora
-          desprecada porque los frameworks actuales están mas orientados a usar patrones builder-type y clases anónimas 
+          desprecada porque los frameworks actuales están mas orientados a usar patrones builder-type y clases anónimas
           interas para este tipo de cosas. Por lo tanto las clases SelectBuilder y SqlBuilder están ahora deprecadas.
         </p>
         <p>
@@ -409,8 +409,8 @@ public String updatePersonSql() {
         </tbody>
         </table>
 
-  <p>La clase SelectBuilder no es mágica, pero es importante que conozcas cómo funcionan. 
-  SelectBuilder y SqlBuilder usan una combinación de imports estáticos y una variable ThreadLocal para permitir una sintaxis más limpia más fácilmente usabe con condicionales. 
+  <p>La clase SelectBuilder no es mágica, pero es importante que conozcas cómo funcionan.
+  SelectBuilder y SqlBuilder usan una combinación de imports estáticos y una variable ThreadLocal para permitir una sintaxis más limpia más fácilmente usabe con condicionales.
   Para usarlas debes importar estáticamente métodos de las siguientes clases (uno u otro, no ambos):</p>
 
         <source>import static org.apache.ibatis.jdbc.SelectBuilder.*;</source>

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
 /*
  * This class contains tests for multiple result sets with an association mapping.
  * This test is based on the org.apache.ibatis.submitted.multiple_resultsets test.
- * 
+ *
  */
 public class MultipleResultSetTest {
 
@@ -60,7 +60,7 @@ public class MultipleResultSetTest {
       }
     }
   }
-  
+
   private static void runReaderScript(Connection conn, SqlSession session, Reader reader) throws Exception {
     ScriptRunner runner = new ScriptRunner(conn);
     runner.setLogWriter(null);
@@ -75,11 +75,11 @@ public class MultipleResultSetTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<OrderDetail> orderDetails = mapper.getOrderDetailsWithHeaders();
-      
+
       // There are six order detail records in the database
       // As long as the data does not change this should be successful
       Assertions.assertEquals(6, orderDetails.size());
-      
+
       // Each order detail should have a corresponding OrderHeader
       // Only 2 of 6 orderDetails have orderHeaders
       for(OrderDetail orderDetail : orderDetails){

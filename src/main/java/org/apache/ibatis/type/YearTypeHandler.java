@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import java.time.Year;
  * @author Björn Raupach
  */
 public class YearTypeHandler extends BaseTypeHandler<Year> {
-    
+
     @Override
     public void setNonNullParameter(PreparedStatement ps, int i, Year year, JdbcType type) throws SQLException {
         ps.setInt(i, year.getValue());
@@ -49,5 +49,5 @@ public class YearTypeHandler extends BaseTypeHandler<Year> {
         int year = cs.getInt(columnIndex);
         return year == 0 && cs.wasNull() ? null : Year.of(year);
     }
-    
+
 }

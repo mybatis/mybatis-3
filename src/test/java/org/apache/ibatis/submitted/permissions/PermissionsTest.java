@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ public class PermissionsTest {
       final Resource firstResource = resources.get(0);
       final List<Principal> principalPermissions = firstResource.getPrincipals();
       Assertions.assertEquals(1, principalPermissions.size());
-      
+
       final Principal firstPrincipal = principalPermissions.get(0);
       final List<Permission> permissions = firstPrincipal.getPermissions();
       Assertions.assertEquals(2, permissions.size());
@@ -77,7 +77,7 @@ public class PermissionsTest {
       final Resource firstResource = resources.get(0);
       final List<Principal> principalPermissions = firstResource.getPrincipals();
       Assertions.assertEquals(1, principalPermissions.size());
-      
+
       final Principal firstPrincipal = principalPermissions.get(0);
       final List<Permission> permissions = firstPrincipal.getPermissions();
       Assertions.assertEquals(4, permissions.size());

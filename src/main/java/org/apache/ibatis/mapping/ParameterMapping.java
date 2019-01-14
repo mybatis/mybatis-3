@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -107,13 +107,13 @@ public class ParameterMapping {
 
     private void validate() {
       if (ResultSet.class.equals(parameterMapping.javaType)) {
-        if (parameterMapping.resultMapId == null) { 
-          throw new IllegalStateException("Missing resultmap in property '"  
-              + parameterMapping.property + "'.  " 
+        if (parameterMapping.resultMapId == null) {
+          throw new IllegalStateException("Missing resultmap in property '"
+              + parameterMapping.property + "'.  "
               + "Parameters of type java.sql.ResultSet require a resultmap.");
-        }            
+        }
       } else {
-        if (parameterMapping.typeHandler == null) { 
+        if (parameterMapping.typeHandler == null) {
           throw new IllegalStateException("Type handler was null on parameter mapping for property '"
             + parameterMapping.property + "'. It was either not specified and/or could not be found for the javaType ("
             + parameterMapping.javaType.getName() + ") : jdbcType (" + parameterMapping.jdbcType + ") combination.");

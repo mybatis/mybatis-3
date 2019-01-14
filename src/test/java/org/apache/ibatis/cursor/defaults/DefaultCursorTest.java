@@ -74,7 +74,7 @@ public class DefaultCursorTest {
     final DefaultResultSetHandler resultSetHandler = new DefaultResultSetHandler(executor, ms, parameterHandler,
       resultHandler, boundSql, rowBounds);
 
-    
+
     when(rsmd.getColumnCount()).thenReturn(2);
     doReturn("id").when(rsmd).getColumnLabel(1);
     doReturn(Types.INTEGER).when(rsmd).getColumnType(1);
