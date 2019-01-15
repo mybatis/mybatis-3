@@ -584,6 +584,7 @@ public class Configuration {
       executor = new CachingExecutor(executor);
     }
     executor = (Executor) interceptorChain.pluginAll(executor);
+    executor.setExecutorWrapper(executor);
     return executor;
   }
 

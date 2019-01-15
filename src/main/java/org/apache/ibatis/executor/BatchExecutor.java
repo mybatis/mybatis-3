@@ -83,7 +83,7 @@ public class BatchExecutor extends BaseExecutor {
       throws SQLException {
     Statement stmt = null;
     try {
-      flushStatements();
+      wrapper.flushStatements();
       Configuration configuration = ms.getConfiguration();
       StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameterObject, rowBounds, resultHandler, boundSql);
       Connection connection = getConnection(ms.getStatementLog());
@@ -97,7 +97,7 @@ public class BatchExecutor extends BaseExecutor {
 
   @Override
   protected <E> Cursor<E> doQueryCursor(MappedStatement ms, Object parameter, RowBounds rowBounds, BoundSql boundSql) throws SQLException {
-    flushStatements();
+    wrapper.flushStatements();
     Configuration configuration = ms.getConfiguration();
     StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, null, boundSql);
     Connection connection = getConnection(ms.getStatementLog());
