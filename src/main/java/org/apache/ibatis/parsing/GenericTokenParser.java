@@ -35,7 +35,7 @@ public class GenericTokenParser {
       return "";
     }
     // search open token
-    int start = text.indexOf(openToken, 0);
+    int start = text.indexOf(openToken);
     if (start == -1) {
       return text;
     }
