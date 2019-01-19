@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -21,69 +21,69 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.apache.ibatis.submitted.lazyload_proxyfactory_comparison.Mapper">
-	
+
 	<!-- UserWithGetObjectWithInterface -->
-	
+
 	<resultMap type="org.apache.ibatis.submitted.lazyload_proxyfactory_comparison.UserWithGetObjectWithInterface" id="user_with_get_object_with_interface_map">
 		<id column="id" property="id" />
 		<result column="name" property="name" />
 		<association property="owner" column="owner_id" select="getGroup" />
 	</resultMap>
-	
+
 	<select id="getUserWithGetObjectWithInterface" resultMap="user_with_get_object_with_interface_map">
 		select id, name, owner_id from users where id = #{id}
 	</select>
-	
+
 	<!-- UserWithGetObjectWithoutInterface -->
-	
+
 	<resultMap type="org.apache.ibatis.submitted.lazyload_proxyfactory_comparison.UserWithGetObjectWithoutInterface" id="user_with_get_object_without_interface_map">
 		<id column="id" property="id" />
 		<result column="name" property="name" />
 		<association property="owner" column="owner_id" select="getGroup" />
 	</resultMap>
-	
+
 	<select id="getUserWithGetObjectWithoutInterface" resultMap="user_with_get_object_without_interface_map">
 		select id, name, owner_id from users where id = #{id}
 	</select>
-	
+
 	<!-- UserWithGetXxxWithInterface -->
-	
+
 	<resultMap type="org.apache.ibatis.submitted.lazyload_proxyfactory_comparison.UserWithGetXxxWithInterface" id="user_with_get_xxx_with_interface_map">
 		<id column="id" property="id" />
 		<result column="name" property="name" />
 		<association property="owner" column="owner_id" select="getGroup" />
 	</resultMap>
-	
+
 	<select id="getUserWithGetXxxWithInterface" resultMap="user_with_get_xxx_with_interface_map">
 		select id, name, owner_id from users where id = #{id}
 	</select>
-	
+
 	<!-- UserWithGetXxxWithoutInterface -->
-	
+
 	<resultMap type="org.apache.ibatis.submitted.lazyload_proxyfactory_comparison.UserWithGetXxxWithoutInterface" id="user_with_get_xxx_without_interface_map">
 		<id column="id" property="id" />
 		<result column="name" property="name" />
 		<association property="owner" column="owner_id" select="getGroup" />
 	</resultMap>
-	
+
 	<select id="getUserWithGetXxxWithoutInterface" resultMap="user_with_get_xxx_without_interface_map">
 		select id, name, owner_id from users where id = #{id}
 	</select>
-	
+
 	<!-- UserWithNothingWithInterface -->
-	
+
 	<resultMap type="org.apache.ibatis.submitted.lazyload_proxyfactory_comparison.UserWithNothingWithInterface" id="user_with_nothing_with_interface_map">
 		<id column="id" property="id" />
 		<result column="name" property="name" />
 		<association property="owner" column="owner_id" select="getGroup" />
 	</resultMap>
-	
+
 	<select id="getUserWithNothingWithInterface" resultMap="user_with_nothing_with_interface_map">
 		select id, name, owner_id from users where id = #{id}
 	</select>
-	
+
 	<!-- UserWithNothingWithoutInterface -->
-	
+
 	<resultMap type="org.apache.ibatis.submitted.lazyload_proxyfactory_comparison.UserWithNothingWithoutInterface" id="user_with_nothing_without_interface_map">
 		<id column="id" property="id" />
 		<result column="name" property="name" />
@@ -93,9 +93,9 @@
 	<select id="getUserWithNothingWithoutInterface" resultMap="user_with_nothing_without_interface_map">
 		select id, name, owner_id from users where id = #{id}
 	</select>
-	
+
 	<!-- Group -->
-	
+
 	<resultMap type="org.apache.ibatis.submitted.lazyload_proxyfactory_comparison.Group" id="group_map">
 		<id column="id" property="id" />
 		<result column="name" property="name" />

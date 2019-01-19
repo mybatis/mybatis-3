@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -211,7 +211,7 @@ public class BindingTest {
       assertEquals(2, blogs.size());
     }
   }
-  
+
   @Test
   public void shouldExecuteBoundSelectMapOfBlogsById() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
@@ -390,7 +390,7 @@ public class BindingTest {
       assertEquals(2, posts.size());
     }
   }
-  
+
   @Disabled
   @Test // issue #480 and #101
   public void shouldExecuteBoundSelectBlogUsingConstructorWithResultMapCollection() {
@@ -404,7 +404,7 @@ public class BindingTest {
       assertTrue(posts != null && !posts.isEmpty(), "posts should not be empty");
     }
   }
-  
+
   @Test
   public void shouldExecuteBoundSelectOneBlogStatementWithConstructorUsingXMLConfig() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
@@ -626,7 +626,7 @@ public class BindingTest {
       assertEquals(101, blogs.get(0).getAuthor().getId());
       assertEquals(1, blogs.get(0).getPosts().size());
       assertEquals(1, blogs.get(0).getPosts().get(0).getId());
-      assertTrue(blogs.get(1) instanceof Proxy);      
+      assertTrue(blogs.get(1) instanceof Proxy);
       assertEquals(102, blogs.get(1).getAuthor().getId());
       assertEquals(1, blogs.get(1).getPosts().size());
       assertEquals(2, blogs.get(1).getPosts().get(0).getId());
@@ -643,7 +643,7 @@ public class BindingTest {
       assertEquals(101, blogs.get(0).getAuthor().getId());
       assertEquals(1, blogs.get(0).getPosts().size());
       assertEquals(1, blogs.get(0).getPosts().get(0).getId());
-      assertFalse(blogs.get(1) instanceof Factory);      
+      assertFalse(blogs.get(1) instanceof Factory);
       assertEquals(102, blogs.get(1).getAuthor().getId());
       assertEquals(1, blogs.get(1).getPosts().size());
       assertEquals(2, blogs.get(1).getPosts().get(0).getId());

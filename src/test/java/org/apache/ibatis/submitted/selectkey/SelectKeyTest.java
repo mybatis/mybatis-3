@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -140,7 +140,7 @@ public class SelectKeyTest {
         assertEquals(1, rows);
         assertEquals(22, name.getNameId());
         assertEquals("barney_fred", name.getGeneratedName());
-        
+
         name.setName("Wilma");
         rows = mapper.updateTable2WithGeneratedKey(name);
         assertEquals(1, rows);
@@ -160,7 +160,7 @@ public class SelectKeyTest {
         assertEquals(1, rows);
         assertEquals(22, name.getNameId());
         assertEquals("barney_fred", name.getGeneratedName());
-        
+
         name.setName("Wilma");
         rows = mapper.updateTable2WithGeneratedKeyXml(name);
         assertEquals(1, rows);
@@ -205,7 +205,7 @@ public class SelectKeyTest {
         assertEquals(1, rows);
         assertEquals(22, name.getNameId());
         assertEquals("barney_fred", name.getGeneratedName());
-        
+
         name.setName("Wilma");
         rows = mapper.updateTable2WithSelectKeyWithKeyMap(name);
         assertEquals(1, rows);

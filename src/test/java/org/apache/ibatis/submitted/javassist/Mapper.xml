@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -25,11 +25,11 @@
 	<select id="getUser" resultMap="users" >
 		select * from users
 	</select>
-	
+
 	<select id="getGroupsForUser" resultType="org.apache.ibatis.submitted.javassist.Group">
 		select * from groups where owner = #{id}
 	</select>
-	
+
 	<resultMap type="org.apache.ibatis.submitted.javassist.User" id="users">
 		<id column="id" property="id" />
 		<result column="name" property="name" />

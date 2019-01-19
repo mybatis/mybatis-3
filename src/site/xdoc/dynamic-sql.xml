@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -189,7 +189,7 @@ AND title like ‘someTitle’]]></source>
   ParameterHandler createParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql);
   SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType);
   SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType);
-}]]></source>    
+}]]></source>
     <p>Once you have your custom language driver you can set it to be the default by configuring it in the mybatis-config.xml file:</p>
   <source><![CDATA[<typeAliases>
   <typeAlias type="org.sample.MyLanguageDriver" alias="myLanguage"/>
@@ -197,7 +197,7 @@ AND title like ‘someTitle’]]></source>
 <settings>
   <setting name="defaultScriptingLanguage" value="myLanguage"/>
 </settings>
-]]></source>    
+]]></source>
     <p>Instead of changing the default, you can specify the language for an specific statement by adding the <code>lang</code> attribute as follows:
     </p>
   <source><![CDATA[<select id="selectBlog" lang="myLanguage">
@@ -212,7 +212,7 @@ AND title like ‘someTitle’]]></source>
 
     <p><span class="label important">NOTE</span> You can use Apache Velocity as your dynamic language. Have a look at the MyBatis-Velocity project for the details.</p>
 
-    <p>All the xml tags you have seen in the previous sections are provided by the default MyBatis language that is provided by the driver  
+    <p>All the xml tags you have seen in the previous sections are provided by the default MyBatis language that is provided by the driver
     <code>org.apache.ibatis.scripting.xmltags.XmlLanguageDriver</code> which is aliased as <code>xml</code>.</p>
 	</subsection>
   </section>

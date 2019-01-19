@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -27,8 +27,8 @@
 
 	<body>
 		<section name="Primeros pasos">
-		
-    
+
+
     <subsection name="Instalación">
       <p>
         Para usar MyBatis sólo tienes que incluir el fichero
@@ -44,10 +44,10 @@
   <artifactId>mybatis</artifactId>
   <version>x.x.x</version>
 </dependency>]]></source>
-    </subsection>    
-    
+    </subsection>
+
 			<subsection name="Cómo crear un SqlSessionFactory a partir de XML">
-		
+
 			<p>
 				Una aplicación que usa MyBatis debe utilizar una instancia de
 				SqlSessionFactory. Se puede obtener una instancia de

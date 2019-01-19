@@ -352,7 +352,7 @@ public class XMLMapperBuilder extends BaseBuilder {
       }
     }
   }
-  
+
   private boolean databaseIdMatchesCurrent(String id, String databaseId, String requiredDatabaseId) {
     if (requiredDatabaseId != null) {
       if (!requiredDatabaseId.equals(databaseId)) {

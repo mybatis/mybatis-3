@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2017 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -80,12 +80,12 @@
 	<resultMap type="org.apache.ibatis.submitted.automapping.Book" id="bookResult">
 		<result property="name" column="name"/>
 	</resultMap>
-	
+
 	<select id="getBooks" resultMap="bookResult">
 		select version, name from books
 	</select>
-	
+
 	<select id="getArticle" resultType="org.apache.ibatis.submitted.automapping.Article">
 		select 9 as version from INFORMATION_SCHEMA.SYSTEM_USERS
-	</select>	
+	</select>
 </mapper>

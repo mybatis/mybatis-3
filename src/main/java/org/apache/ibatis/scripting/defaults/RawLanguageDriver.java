@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import org.apache.ibatis.session.Configuration;
  * As of 3.2.4 the default XML language is able to identify static statements
  * and create a {@link RawSqlSource}. So there is no need to use RAW unless you
  * want to make sure that there is not any dynamic tag for any reason.
- * 
+ *
  * @since 3.2.0
  * @author Eduardo Macarron
  */
