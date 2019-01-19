@@ -23,8 +23,6 @@ import static org.mockito.Mockito.when;
 import java.math.BigDecimal;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 
 public class BigDecimalTypeHandlerTest extends BaseTypeHandlerTest {
 

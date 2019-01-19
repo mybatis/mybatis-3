@@ -15,7 +15,6 @@
  */
 package org.apache.ibatis.type;
 
-import java.sql.Clob;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

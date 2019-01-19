@@ -15,8 +15,6 @@
  */
 package org.apache.ibatis.submitted.nonexistentvariables;
 
-import static org.junit.jupiter.api.Assertions.fail;
-
 import java.io.Reader;
 
 import org.apache.ibatis.BaseDataTest;

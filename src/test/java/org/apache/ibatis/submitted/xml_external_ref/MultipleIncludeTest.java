@@ -19,7 +19,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.sql.Connection;
 import java.sql.SQLException;
 
 import org.apache.ibatis.BaseDataTest;
