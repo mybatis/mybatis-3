@@ -15,7 +15,6 @@
  */
 package org.apache.ibatis.submitted.multipleresultsetswithassociation;
 
-import java.io.IOException;
 import java.io.Reader;
 import java.sql.Connection;
 import java.util.List;

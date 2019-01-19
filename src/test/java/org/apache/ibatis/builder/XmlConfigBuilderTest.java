@@ -156,7 +156,7 @@ public class XmlConfigBuilderTest {
     TypeHandler<MyEnum> typeHandler = typeHandlerRegistry.getTypeHandler(MyEnum.class);
 
     assertTrue(typeHandler instanceof EnumOrderTypeHandler);
-    assertArrayEquals(MyEnum.values(), ((EnumOrderTypeHandler) typeHandler).constants);
+    assertArrayEquals(MyEnum.values(), ((EnumOrderTypeHandler<MyEnum>) typeHandler).constants);
   }
 
     @Test

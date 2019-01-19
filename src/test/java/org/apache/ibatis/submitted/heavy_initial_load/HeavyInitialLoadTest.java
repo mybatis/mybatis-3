@@ -16,8 +16,6 @@
 package org.apache.ibatis.submitted.heavy_initial_load;
 
 import java.io.Reader;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
