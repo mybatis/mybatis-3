@@ -20,7 +20,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.channels.FileChannel;
 import java.util.Properties;
 
 import org.apache.ibatis.logging.Log;
@@ -43,9 +42,9 @@ public class ExternalResources {
       destFile.createNewFile();
     }
 
-    try (FileChannel source = new FileInputStream(sourceFile).getChannel();
-         FileChannel destination = new FileOutputStream(destFile).getChannel()){
-      destination.transferFrom(source, 0, source.size());
+    try (FileInputStream source = new FileInputStream(sourceFile);
+         FileOutputStream destination = new FileOutputStream(destFile)) {
+      destination.getChannel().transferFrom(source.getChannel(), 0, source.getChannel().size());
     }
 
   }
