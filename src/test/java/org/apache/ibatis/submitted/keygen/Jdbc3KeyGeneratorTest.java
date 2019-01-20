@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -89,7 +89,7 @@ public class Jdbc3KeyGeneratorTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       try {
         CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
-        List<Country> countries = new ArrayList<Country>();
+        List<Country> countries = new ArrayList<>();
         countries.add(new Country("China", "CN"));
         countries.add(new Country("United Kiongdom", "GB"));
         countries.add(new Country("United States of America", "US"));
@@ -108,7 +108,7 @@ public class Jdbc3KeyGeneratorTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       try {
         CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
-        List<Country> countries = new ArrayList<Country>();
+        List<Country> countries = new ArrayList<>();
         countries.add(new Country("China", "CN"));
         countries.add(new Country("United Kiongdom", "GB"));
         countries.add(new Country("United States of America", "US"));
@@ -127,7 +127,7 @@ public class Jdbc3KeyGeneratorTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       try {
         CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
-        Set<Country> countries = new HashSet<Country>();
+        Set<Country> countries = new HashSet<>();
         countries.add(new Country("China", "CN"));
         countries.add(new Country("United Kiongdom", "GB"));
         mapper.insertSet(countries);
@@ -145,7 +145,7 @@ public class Jdbc3KeyGeneratorTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       try {
         CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
-        Set<Country> countries = new HashSet<Country>();
+        Set<Country> countries = new HashSet<>();
         countries.add(new Country("China", "CN"));
         countries.add(new Country("United Kiongdom", "GB"));
         mapper.insertNamedSet(countries);
@@ -247,7 +247,7 @@ public class Jdbc3KeyGeneratorTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       try {
         CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
-        List<Country> countries = new ArrayList<Country>();
+        List<Country> countries = new ArrayList<>();
         countries.add(new Country("China", "CN"));
         countries.add(new Country("United Kiongdom", "GB"));
         mapper.insertList_MultiParams(countries, Integer.valueOf(1));
@@ -265,7 +265,7 @@ public class Jdbc3KeyGeneratorTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       try {
         CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
-        Set<Country> countries = new HashSet<Country>();
+        Set<Country> countries = new HashSet<>();
         countries.add(new Country("China", "CN"));
         countries.add(new Country("United Kiongdom", "GB"));
         mapper.insertSet_MultiParams(countries, Integer.valueOf(1));

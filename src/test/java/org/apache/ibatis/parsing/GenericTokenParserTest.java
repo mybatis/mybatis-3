@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import java.util.Map;
 public class GenericTokenParserTest {
 
   public static class VariableTokenHandler implements TokenHandler {
-    private Map<String, String> variables = new HashMap<String, String>();
+    private Map<String, String> variables = new HashMap<>();
 
     public VariableTokenHandler(Map<String, String> variables) {
       this.variables = variables;
@@ -78,7 +78,7 @@ public class GenericTokenParserTest {
 
   @Test
   public void shallNotInterpolateSkippedVaiables() {
-    GenericTokenParser parser = new GenericTokenParser("${", "}", new VariableTokenHandler(new HashMap<String, String>()));
+    GenericTokenParser parser = new GenericTokenParser("${", "}", new VariableTokenHandler(new HashMap<>()));
 
     assertEquals("${skipped} variable", parser.parse("\\${skipped} variable"));
     assertEquals("This is a ${skipped} variable", parser.parse("This is a \\${skipped} variable"));

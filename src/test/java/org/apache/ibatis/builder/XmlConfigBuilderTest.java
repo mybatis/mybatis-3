@@ -91,7 +91,7 @@ public class XmlConfigBuilderTest {
       assertThat(config.isSafeRowBoundsEnabled()).isFalse();
       assertThat(config.getLocalCacheScope()).isEqualTo(LocalCacheScope.SESSION);
       assertThat(config.getJdbcTypeForNull()).isEqualTo(JdbcType.OTHER);
-      assertThat(config.getLazyLoadTriggerMethods()).isEqualTo((Set<String>) new HashSet<String>(Arrays.asList("equals", "clone", "hashCode", "toString")));
+      assertThat(config.getLazyLoadTriggerMethods()).isEqualTo(new HashSet<>(Arrays.asList("equals", "clone", "hashCode", "toString")));
       assertThat(config.isSafeResultHandlerEnabled()).isTrue();
       assertThat(config.getDefaultScriptingLanuageInstance()).isInstanceOf(XMLLanguageDriver.class);
       assertThat(config.isCallSettersOnNulls()).isFalse();
@@ -184,7 +184,7 @@ public class XmlConfigBuilderTest {
         assertThat(config.isSafeRowBoundsEnabled()).isTrue();
         assertThat(config.getLocalCacheScope()).isEqualTo(LocalCacheScope.STATEMENT);
         assertThat(config.getJdbcTypeForNull()).isEqualTo(JdbcType.NULL);
-        assertThat(config.getLazyLoadTriggerMethods()).isEqualTo((Set<String>) new HashSet<String>(Arrays.asList("equals", "clone", "hashCode", "toString", "xxx")));
+        assertThat(config.getLazyLoadTriggerMethods()).isEqualTo(new HashSet<>(Arrays.asList("equals", "clone", "hashCode", "toString", "xxx")));
         assertThat(config.isSafeResultHandlerEnabled()).isFalse();
         assertThat(config.getDefaultScriptingLanuageInstance()).isInstanceOf(RawLanguageDriver.class);
         assertThat(config.isCallSettersOnNulls()).isTrue();

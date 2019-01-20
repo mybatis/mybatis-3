@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ public class ValueInMapTest {
   @Test // issue #165
   public void shouldWorkWithAPropertyNamedValue() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      Map<String, String> map = new HashMap<String, String>();
+      Map<String, String> map = new HashMap<>();
       map.put("table", "users");
       map.put("column", "name");
       map.put("value", "User1");
@@ -62,7 +62,7 @@ public class ValueInMapTest {
   @Test
   public void shouldWorkWithAList() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      List<String> list = new ArrayList<String>();
+      List<String> list = new ArrayList<>();
       list.add("users");
       Assertions.assertThrows(PersistenceException.class, () -> {
         sqlSession.selectOne("count2",list);

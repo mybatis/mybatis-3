@@ -62,7 +62,7 @@ public class SelectKeyTest {
   @Test
   public void testInsertTable1() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      Map<String, String> parms = new HashMap<String, String>();
+      Map<String, String> parms = new HashMap<>();
       parms.put("name", "Fred");
       int rows = sqlSession.insert("org.apache.ibatis.submitted.selectkey.Table1.insert", parms);
       assertEquals(1, rows);
@@ -73,7 +73,7 @@ public class SelectKeyTest {
   @Test
   public void testInsertTable2() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      Map<String, String> parms = new HashMap<String, String>();
+      Map<String, String> parms = new HashMap<>();
       parms.put("name", "Fred");
       int rows = sqlSession.insert("org.apache.ibatis.submitted.selectkey.Table2.insert", parms);
       assertEquals(1, rows);
@@ -84,7 +84,7 @@ public class SelectKeyTest {
   @Test
   public void testSeleckKeyReturnsNoData() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      Map<String, String> parms = new HashMap<String, String>();
+      Map<String, String> parms = new HashMap<>();
       parms.put("name", "Fred");
       Assertions.assertThrows(PersistenceException.class, () -> {
         sqlSession.insert("org.apache.ibatis.submitted.selectkey.Table2.insertNoValuesInSelectKey", parms);
@@ -95,7 +95,7 @@ public class SelectKeyTest {
   @Test
   public void testSeleckKeyReturnsTooManyData() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      Map<String, String> parms = new HashMap<String, String>();
+      Map<String, String> parms = new HashMap<>();
       parms.put("name", "Fred");
       sqlSession.insert("org.apache.ibatis.submitted.selectkey.Table2.insertTooManyValuesInSelectKey", parms);
       Assertions.assertThrows(PersistenceException.class, () -> {

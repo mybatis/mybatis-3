@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ public class DynSqlTest {
   @Test
   public void testDynamicSelectWithTypeHandler() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      List<Name> names = new ArrayList<Name>();
+      List<Name> names = new ArrayList<>();
 
       Name name = new Name();
       name.setFirstName("Fred");

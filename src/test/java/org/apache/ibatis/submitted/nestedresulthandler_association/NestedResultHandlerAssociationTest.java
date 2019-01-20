@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ public class NestedResultHandlerAssociationTest {
   public void shouldHandleRowBounds() throws Exception {
     final SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
     Date targetMonth = fmt.parse("2014-01-01");
-    final List<Account> accounts = new ArrayList<Account>();
+    final List<Account> accounts = new ArrayList<>();
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       sqlSession.select("collectPageByBirthMonth", targetMonth, new RowBounds(1, 2), new ResultHandler() {
         @Override
@@ -72,7 +72,7 @@ public class NestedResultHandlerAssociationTest {
   @Test
   public void shouldHandleStop() throws Exception {
     final SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
-    final List<Account> accounts = new ArrayList<Account>();
+    final List<Account> accounts = new ArrayList<>();
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Date targetMonth = fmt.parse("2014-01-01");
       sqlSession.select("collectPageByBirthMonth", targetMonth, new ResultHandler() {

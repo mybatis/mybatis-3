@@ -157,7 +157,7 @@ public class SPTest {
   @Test
   public void testEchoDate() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      HashMap<String, Object> parameter = new HashMap<String, Object>();
+      HashMap<String, Object> parameter = new HashMap<>();
       Date now = new Date();
       parameter.put("input date", now);
 
@@ -177,7 +177,7 @@ public class SPTest {
   @Test
   public void testAdderAsUpdateWithParameterMap() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      Map<String, Object> parms = new HashMap<String, Object>();
+      Map<String, Object> parms = new HashMap<>();
       parms.put("addend1", 3);
       parms.put("addend2", 4);
 
@@ -186,7 +186,7 @@ public class SPTest {
       spMapper.adderWithParameterMap(parms);
       assertEquals(7, parms.get("sum"));
 
-      parms = new HashMap<String, Object>();
+      parms = new HashMap<>();
       parms.put("addend1", 2);
       parms.put("addend2", 3);
       spMapper.adderWithParameterMap(parms);
@@ -222,7 +222,7 @@ public class SPTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
-      Map<String, Object> parms = new HashMap<String, Object>();
+      Map<String, Object> parms = new HashMap<>();
       parms.put("lowestId", 1);
       List<Name> names = spMapper.getNames(parms);
       assertEquals(3, names.size());
@@ -241,13 +241,13 @@ public class SPTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
-      Map<String, Object> parms = new HashMap<String, Object>();
+      Map<String, Object> parms = new HashMap<>();
       parms.put("lowestId", 2);
       List<Name> names = spMapper.getNames(parms);
       assertEquals(2, parms.get("totalRows"));
       assertEquals(2, names.size());
 
-      parms = new HashMap<String, Object>();
+      parms = new HashMap<>();
       parms.put("lowestId", 3);
       names = spMapper.getNames(parms);
       assertEquals(1, names.size());
@@ -266,13 +266,13 @@ public class SPTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
-      Map<String, Object> parms = new HashMap<String, Object>();
+      Map<String, Object> parms = new HashMap<>();
       parms.put("lowestId", 2);
       List<Name> names = spMapper.getNames(parms);
       assertEquals(2, parms.get("totalRows"));
       assertEquals(2, names.size());
 
-      parms = new HashMap<String, Object>();
+      parms = new HashMap<>();
       parms.put("lowestId", 2);
       names = spMapper.getNames(parms);
       assertEquals(2, names.size());
@@ -292,7 +292,7 @@ public class SPTest {
 
       Array array = sqlSession.getConnection().createArrayOf("int", new Integer[] { 1, 2, 5 });
 
-      Map<String, Object> parms = new HashMap<String, Object>();
+      Map<String, Object> parms = new HashMap<>();
       parms.put("ids", array);
       List<Name> names = spMapper.getNamesWithArray(parms);
       Object[] returnedIds = (Object[]) parms.get("returnedIds");
@@ -480,7 +480,7 @@ public class SPTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
-      Map<String, Object> parms = new HashMap<String, Object>();
+      Map<String, Object> parms = new HashMap<>();
       parms.put("lowestId", 1);
       List<Name> names = spMapper.getNamesAnnotated(parms);
       assertEquals(3, names.size());
@@ -502,7 +502,7 @@ public class SPTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
-      Map<String, Object> parms = new HashMap<String, Object>();
+      Map<String, Object> parms = new HashMap<>();
       parms.put("lowestId", 1);
       List<Name> names = spMapper.getNamesAnnotatedWithXMLResultMap(parms);
       assertEquals(3, names.size());
@@ -523,13 +523,13 @@ public class SPTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
-      Map<String, Object> parms = new HashMap<String, Object>();
+      Map<String, Object> parms = new HashMap<>();
       parms.put("lowestId", 2);
       List<Name> names = spMapper.getNamesAnnotated(parms);
       assertEquals(2, parms.get("totalRows"));
       assertEquals(2, names.size());
 
-      parms = new HashMap<String, Object>();
+      parms = new HashMap<>();
       parms.put("lowestId", 3);
       names = spMapper.getNamesAnnotated(parms);
       assertEquals(1, names.size());
@@ -551,13 +551,13 @@ public class SPTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
-      Map<String, Object> parms = new HashMap<String, Object>();
+      Map<String, Object> parms = new HashMap<>();
       parms.put("lowestId", 2);
       List<Name> names = spMapper.getNamesAnnotatedWithXMLResultMap(parms);
       assertEquals(2, parms.get("totalRows"));
       assertEquals(2, names.size());
 
-      parms = new HashMap<String, Object>();
+      parms = new HashMap<>();
       parms.put("lowestId", 3);
       names = spMapper.getNamesAnnotatedWithXMLResultMap(parms);
       assertEquals(1, names.size());
@@ -578,13 +578,13 @@ public class SPTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
-      Map<String, Object> parms = new HashMap<String, Object>();
+      Map<String, Object> parms = new HashMap<>();
       parms.put("lowestId", 2);
       List<Name> names = spMapper.getNamesAnnotated(parms);
       assertEquals(2, parms.get("totalRows"));
       assertEquals(2, names.size());
 
-      parms = new HashMap<String, Object>();
+      parms = new HashMap<>();
       parms.put("lowestId", 2);
       names = spMapper.getNamesAnnotated(parms);
       assertEquals(2, names.size());
@@ -606,13 +606,13 @@ public class SPTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
-      Map<String, Object> parms = new HashMap<String, Object>();
+      Map<String, Object> parms = new HashMap<>();
       parms.put("lowestId", 2);
       List<Name> names = spMapper.getNamesAnnotatedWithXMLResultMap(parms);
       assertEquals(2, parms.get("totalRows"));
       assertEquals(2, names.size());
 
-      parms = new HashMap<String, Object>();
+      parms = new HashMap<>();
       parms.put("lowestId", 2);
       names = spMapper.getNamesAnnotatedWithXMLResultMap(parms);
       assertEquals(2, names.size());
@@ -650,7 +650,7 @@ public class SPTest {
 
       Array array = sqlSession.getConnection().createArrayOf("int", new Integer[] { 1, 2, 5 });
 
-      Map<String, Object> parms = new HashMap<String, Object>();
+      Map<String, Object> parms = new HashMap<>();
       parms.put("ids", array);
       List<Name> names = spMapper.getNamesWithArrayAnnotated(parms);
       Object[] returnedIds = (Object[]) parms.get("returnedIds");
@@ -675,7 +675,7 @@ public class SPTest {
 
       Array array = sqlSession.getConnection().createArrayOf("int", new Integer[] { 1, 2, 5 });
 
-      Map<String, Object> parms = new HashMap<String, Object>();
+      Map<String, Object> parms = new HashMap<>();
       parms.put("ids", array);
       List<Name> names = spMapper.getNamesWithArrayAnnotatedWithXMLResultMap(parms);
       Object[] returnedIds = (Object[]) parms.get("returnedIds");

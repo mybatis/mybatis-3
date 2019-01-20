@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -106,7 +106,7 @@ public class LanguageTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 
       int[] ids = { 2, 4, 5 };
-      Map<String, Object> param = new HashMap<String, Object>();
+      Map<String, Object> param = new HashMap<>();
       param.put("ids", ids);
       List<Name> answer = sqlSession.selectList("selectNamesWithIteration", param);
       assertEquals(3, answer.size());

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -57,7 +57,7 @@ public class ForEachTest {
       testProfile.setId(2);
       User friendProfile = new User();
       friendProfile.setId(6);
-      List<User> friendList = new ArrayList<User>();
+      List<User> friendList = new ArrayList<>();
       friendList.add(friendProfile);
       testProfile.setFriendList(friendList);
       User user = mapper.getUser(testProfile);
@@ -72,7 +72,7 @@ public class ForEachTest {
       User user1 = new User();
       user1.setId(2);
       user1.setName("User2");
-      List<User> users = new ArrayList<User>();
+      List<User> users = new ArrayList<>();
       users.add(user1);
       users.add(null);
       int count = mapper.countByUserList(users);
@@ -88,7 +88,7 @@ public class ForEachTest {
       User bestFriend = new User();
       bestFriend.setId(5);
       user1.setBestFriend(bestFriend);
-      List<User> users = new ArrayList<User>();
+      List<User> users = new ArrayList<>();
       users.add(user1);
       users.add(null);
       int count = mapper.countByBestFriend(users);
@@ -102,7 +102,7 @@ public class ForEachTest {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user1 = new User();
       user1.setId(3);
-      List<User> users = new ArrayList<User>();
+      List<User> users = new ArrayList<>();
       users.add(user1);
       users.add(null);
       String name = mapper.selectWithNullItemCheck(users);

@@ -43,7 +43,7 @@ public class BaseCacheTest {
     assertEquals(cache.hashCode(), new LoggingCache(cache).hashCode());
     assertEquals(cache.hashCode(), new ScheduledCache(cache).hashCode());
 
-    Set<Cache> caches = new HashSet<Cache>();
+    Set<Cache> caches = new HashSet<>();
     caches.add(cache);
     caches.add(new SynchronizedCache(cache));
     caches.add(new SerializedCache(cache));

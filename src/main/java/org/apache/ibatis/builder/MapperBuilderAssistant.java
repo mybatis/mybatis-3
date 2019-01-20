@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -233,7 +233,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
         null,
         null,
         typeHandler,
-        new ArrayList<ResultFlag>(),
+        new ArrayList<>(),
         null,
         null,
         false);
@@ -351,7 +351,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
           configuration,
           statementId + "-Inline",
           resultType,
-          new ArrayList<ResultMapping>(),
+          new ArrayList<>(),
           null).build();
       resultMaps.add(inlineResultMap);
     }
@@ -382,7 +382,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
         .nestedResultMapId(applyCurrentNamespace(nestedResultMap, true))
         .resultSet(resultSet)
         .typeHandler(typeHandlerInstance)
-        .flags(flags == null ? new ArrayList<ResultFlag>() : flags)
+        .flags(flags == null ? new ArrayList<>() : flags)
         .composites(composites)
         .notNullColumns(parseMultipleColumnNames(notNullColumn))
         .columnPrefix(columnPrefix)
