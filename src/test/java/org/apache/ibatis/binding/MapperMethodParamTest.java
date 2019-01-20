@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -61,7 +61,7 @@ public class MapperMethodParamTest {
   @Test
   public void parameterNameIsSizeUsingHashMap() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
-      HashMap<String, Object> params = new HashMap<String, Object>();
+      HashMap<String, Object> params = new HashMap<>();
       params.put("id", "foo");
       params.put("size", Long.MAX_VALUE);
       Mapper mapper = session.getMapper(Mapper.class);

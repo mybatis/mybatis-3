@@ -276,7 +276,7 @@ public class ExecutorTestHelper {
                 add(new ParameterMapping.Builder(config, "bio", registry.getTypeHandler(String.class)).jdbcType(JdbcType.VARCHAR).mode(ParameterMode.OUT).build());
               }
             }).build())
-        .resultMaps(new ArrayList<ResultMap>())
+        .resultMaps(new ArrayList<>())
         .cache(authorCache).build();
     return ms;
   }
@@ -319,7 +319,7 @@ public class ExecutorTestHelper {
     MappedStatement ms = new MappedStatement.Builder(config, "insertAuthor", new StaticSqlSource(config,"INSERT INTO author (id,username,password,email,bio) values(99,'someone','******','someone@apache.org',null)"), SqlCommandType.INSERT)
         .statementType(StatementType.STATEMENT)
         .parameterMap(new ParameterMap.Builder(config, "defaultParameterMap", Author.class,
-            new ArrayList<ParameterMapping>()).build())
+            new ArrayList<>()).build())
         .cache(authorCache)
         .build();
     return ms;
@@ -329,7 +329,7 @@ public class ExecutorTestHelper {
     final TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
     MappedStatement ms = new MappedStatement.Builder(config, "selectAuthor", new StaticSqlSource(config,"SELECT * FROM author WHERE id = 99"), SqlCommandType.SELECT)
         .statementType(StatementType.STATEMENT)
-        .parameterMap(new ParameterMap.Builder(config, "defaultParameterMap", Author.class, new ArrayList<ParameterMapping>()).build())
+        .parameterMap(new ParameterMap.Builder(config, "defaultParameterMap", Author.class, new ArrayList<>()).build())
         .resultMaps(new ArrayList<ResultMap>() {
           {
             add(new ResultMap.Builder(config, "defaultResultMap", Author.class, new ArrayList<ResultMapping>() {
@@ -638,7 +638,7 @@ public class ExecutorTestHelper {
 
   public static MappedStatement prepareInsertAuthorMappedStatementWithBeforeAutoKey(final Configuration config) {
     final TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
-    final ResultMap rm = new ResultMap.Builder(config, "keyResultMap", Integer.class, new ArrayList<ResultMapping>())
+    final ResultMap rm = new ResultMap.Builder(config, "keyResultMap", Integer.class, new ArrayList<>())
         .build();
 
     MappedStatement kms = new MappedStatement.Builder(config, "insertAuthor!selectKey", new StaticSqlSource(config,"SELECT 123456 as id FROM SYSIBM.SYSDUMMY1"), SqlCommandType.SELECT)

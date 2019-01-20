@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ public class FlushTest {
 
             BoundAuthorMapper mapper = session.getMapper(BoundAuthorMapper.class);
             Author author = new Author(-1, "cbegin", "******", "cbegin@nowhere.com", "N/A", Section.NEWS);
-            List<Integer> ids = new ArrayList<Integer>();
+            List<Integer> ids = new ArrayList<>();
             mapper.insertAuthor(author);
             ids.add(author.getId());
             mapper.insertAuthor(author);

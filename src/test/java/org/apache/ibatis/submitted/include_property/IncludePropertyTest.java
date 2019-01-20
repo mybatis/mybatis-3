@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -102,7 +102,7 @@ public class IncludePropertyTest {
   @Test
   public void testRuntimeVar() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      Map<String, String> params = new HashMap<String, String>();
+      Map<String, String> params = new HashMap<>();
       params.put("suffix", "b");
       List<String> results = sqlSession.selectList("org.apache.ibatis.submitted.include_property.Mapper.selectRuntimeVar", params);
       assertEquals("col_b value", results.get(0));

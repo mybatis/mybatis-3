@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -78,7 +78,7 @@ public class RefCursorTest {
   public void testRefCursor1() throws IOException {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       OrdersMapper mapper = sqlSession.getMapper(OrdersMapper.class);
-      Map<String, Object> parameter = new HashMap<String, Object>();
+      Map<String, Object> parameter = new HashMap<>();
       parameter.put("orderId", 1);
       mapper.getOrder1(parameter);
 
@@ -95,7 +95,7 @@ public class RefCursorTest {
   public void testRefCursor2() throws IOException {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       OrdersMapper mapper = sqlSession.getMapper(OrdersMapper.class);
-      Map<String, Object> parameter = new HashMap<String, Object>();
+      Map<String, Object> parameter = new HashMap<>();
       parameter.put("orderId", 1);
       mapper.getOrder2(parameter);
 
@@ -111,7 +111,7 @@ public class RefCursorTest {
   @Test
   public void shouldUseResultHandlerOnOutputParam() throws IOException {
     class OrderResultHandler implements ResultHandler<Order> {
-      private List<Order> orders = new ArrayList<Order>();
+      private List<Order> orders = new ArrayList<>();
 
       @Override
       public void handleResult(ResultContext<? extends Order> resultContext) {
@@ -128,7 +128,7 @@ public class RefCursorTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       OrdersMapper mapper = sqlSession.getMapper(OrdersMapper.class);
       OrderResultHandler handler = new OrderResultHandler();
-      Map<String, Object> parameter = new HashMap<String, Object>();
+      Map<String, Object> parameter = new HashMap<>();
       parameter.put("orderId", 1);
       mapper.getOrder3(parameter, handler);
 
@@ -142,7 +142,7 @@ public class RefCursorTest {
   public void shouldNullResultSetNotCauseNpe() throws IOException {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       OrdersMapper mapper = sqlSession.getMapper(OrdersMapper.class);
-      Map<String, Object> parameter = new HashMap<String, Object>();
+      Map<String, Object> parameter = new HashMap<>();
       parameter.put("orderId", 99);
       mapper.getOrder3(parameter, new ResultHandler<Order>() {
         @Override

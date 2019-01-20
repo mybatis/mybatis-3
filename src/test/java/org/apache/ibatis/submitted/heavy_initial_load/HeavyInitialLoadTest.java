@@ -59,7 +59,7 @@ public class HeavyInitialLoadTest {
    */
   @Test
   public void selectThingsConcurrently_mybatis_issue_224() throws Exception {
-    final List<Throwable> throwables = Collections.synchronizedList(new ArrayList<Throwable>());
+    final List<Throwable> throwables = Collections.synchronizedList(new ArrayList<>());
 
     Thread[] threads = new Thread[THREAD_COUNT];
     for (int i = 0; i < THREAD_COUNT; i++) {

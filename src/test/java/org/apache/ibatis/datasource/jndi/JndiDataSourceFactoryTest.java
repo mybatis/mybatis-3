@@ -82,7 +82,7 @@ public class JndiDataSourceFactoryTest extends BaseDataTest {
   }
 
   public static class MockContext extends InitialContext {
-    private static Map<String,Object> bindings = new HashMap<String,Object>();
+    private static Map<String,Object> bindings = new HashMap<>();
 
     public MockContext(boolean lazy) throws NamingException {
       super(lazy);
