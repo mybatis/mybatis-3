@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -202,6 +202,21 @@ public class Jdbc3KeyGeneratorTest {
         Country country = new Country("China", "CN");
         mapper.insertMultiParams(country, Integer.valueOf(1));
         assertNotNull(country.getId());
+      } finally {
+        sqlSession.rollback();
+      }
+    }
+  }
+
+  @Test
+  public void shouldFailIfKeyPropertyIsMissing() throws Exception {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      try {
+        CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
+        Country country = new Country("China", "CN");
+        when(mapper).insertBean_MissingKeyProperty(country);
+        then(caughtException()).isInstanceOf(PersistenceException.class).hasMessageContaining(
+            "Could not assign generated keys. Please specify 'keyProperty'.");
       } finally {
         sqlSession.rollback();
       }
