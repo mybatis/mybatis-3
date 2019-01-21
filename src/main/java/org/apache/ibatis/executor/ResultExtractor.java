@@ -15,12 +15,12 @@
  */
 package org.apache.ibatis.executor;
 
+import java.lang.reflect.Array;
+import java.util.List;
+
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.session.Configuration;
-
-import java.lang.reflect.Array;
-import java.util.List;
 
 /**
  * @author Andrew Gustafson

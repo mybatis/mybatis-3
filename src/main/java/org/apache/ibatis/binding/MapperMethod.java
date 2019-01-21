@@ -184,7 +184,7 @@ public class MapperMethod {
       for (int i = 0; i < list.size(); i++) {
         Array.set(array, i, list.get(i));
       }
-    return array;
+      return array;
     } else {
       return list.toArray((E[])array);
     }
@@ -350,7 +350,7 @@ public class MapperMethod {
     }
 
     /**
-     * return whether return type is {@code java.util.Optional}
+     * return whether return type is {@code java.util.Optional}.
      * @return return {@code true}, if return type is {@code java.util.Optional}
      * @since 3.5.0
      */

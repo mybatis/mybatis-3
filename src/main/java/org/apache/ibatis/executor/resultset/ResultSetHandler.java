@@ -15,12 +15,12 @@
  */
 package org.apache.ibatis.executor.resultset;
 
-import org.apache.ibatis.cursor.Cursor;
-
 import java.sql.CallableStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+
+import org.apache.ibatis.cursor.Cursor;
 
 /**
  * @author Clinton Begin
