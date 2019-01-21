@@ -74,7 +74,7 @@ public class MetaObject {
   }
 
   public ReflectorFactory getReflectorFactory() {
-	return reflectorFactory;
+    return reflectorFactory;
   }
 
   public Object getOriginalObject() {
