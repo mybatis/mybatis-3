@@ -15,6 +15,11 @@
  */
 package org.apache.ibatis.cursor.defaults;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.executor.resultset.DefaultResultSetHandler;
 import org.apache.ibatis.executor.resultset.ResultSetWrapper;
@@ -22,11 +27,6 @@ import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.session.ResultContext;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 /**
  * This is the default implementation of a MyBatis Cursor.
