@@ -131,14 +131,14 @@
   </distributionManagement>
 
   <properties>
+    <clirr.comparisonVersion>3.4.6</clirr.comparisonVersion>
+    <excludedGroups>EmbeddedPostgresqlTests</excludedGroups>
     <maven.compiler.testCompilerArgument>-parameters</maven.compiler.testCompilerArgument>
-    <clirr.comparisonVersion>3.3.1</clirr.comparisonVersion>
-    <spotbugs.onlyAnalyze>org.apache.ibatis.*</spotbugs.onlyAnalyze>
+    <module.name>org.mybatis</module.name>
     <osgi.export>org.apache.ibatis.*;version=${project.version};-noimport:=true</osgi.export>
     <osgi.import>*;resolution:=optional</osgi.import>
     <osgi.dynamicImport>*</osgi.dynamicImport>
-    <excludedGroups>EmbeddedPostgresqlTests</excludedGroups>
-    <module.name>org.mybatis</module.name>
+    <spotbugs.onlyAnalyze>org.apache.ibatis.*</spotbugs.onlyAnalyze>
   </properties>
 
   <dependencies>
