@@ -29,8 +29,8 @@
 
 
     <select id="selectById" resultMap="GrandFatherMap" parameterType="int">
-    	SELECT id, name
-    	FROM GrandFather
-    	WHERE id = #{id}
+        SELECT id, name
+        FROM GrandFather
+        WHERE id = #{id}
     </select>
 </mapper>
