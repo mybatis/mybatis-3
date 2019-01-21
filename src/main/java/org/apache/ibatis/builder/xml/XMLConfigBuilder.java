@@ -212,9 +212,9 @@ public class XMLConfigBuilder extends BaseBuilder {
 
   private void reflectorFactoryElement(XNode context) throws Exception {
     if (context != null) {
-       String type = context.getStringAttribute("type");
-       ReflectorFactory factory = (ReflectorFactory) resolveClass(type).newInstance();
-       configuration.setReflectorFactory(factory);
+      String type = context.getStringAttribute("type");
+      ReflectorFactory factory = (ReflectorFactory) resolveClass(type).newInstance();
+      configuration.setReflectorFactory(factory);
     }
   }
 
@@ -294,7 +294,7 @@ public class XMLConfigBuilder extends BaseBuilder {
       String type = context.getStringAttribute("type");
       // awful patch to keep backward compatibility
       if ("VENDOR".equals(type)) {
-          type = "DB_VENDOR";
+        type = "DB_VENDOR";
       }
       Properties properties = context.getChildrenAsProperties();
       databaseIdProvider = (DatabaseIdProvider) resolveClass(type).newInstance();
