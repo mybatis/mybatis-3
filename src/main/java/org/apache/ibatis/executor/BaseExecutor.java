@@ -134,7 +134,7 @@ public abstract class BaseExecutor implements Executor {
     BoundSql boundSql = ms.getBoundSql(parameter);
     CacheKey key = createCacheKey(ms, parameter, rowBounds, boundSql);
     return query(ms, parameter, rowBounds, resultHandler, key, boundSql);
- }
+  }
 
   @SuppressWarnings("unchecked")
   @Override
@@ -377,7 +377,7 @@ public abstract class BaseExecutor implements Executor {
     }
 
     public void load() {
-      @SuppressWarnings( "unchecked" )
+      @SuppressWarnings("unchecked")
       // we suppose we get back a List
       List<Object> list = (List<Object>) localCache.getObject(key);
       Object value = resultExtractor.extractObjectFromList(list, targetType);

@@ -19,11 +19,11 @@ import java.util.concurrent.locks.ReadWriteLock;
 
 /**
  * SPI for cache providers.
- *
+ * <p>
  * One instance of cache will be created for each namespace.
- *
+ * <p>
  * The cache implementation must have a constructor that receives the cache id as an String parameter.
- *
+ * <p>
  * MyBatis will pass the namespace as id to the constructor.
  *
  * <pre>
@@ -75,7 +75,7 @@ public interface Cache {
   Object removeObject(Object key);
 
   /**
-   * Clears this cache instance
+   * Clears this cache instance.
    */
   void clear();
 
@@ -88,7 +88,7 @@ public interface Cache {
 
   /**
    * Optional. As of 3.2.6 this method is no longer called by the core.
-   *
+   * <p>
    * Any locking needed by the cache must be provided internally by the cache provider.
    *
    * @return A ReadWriteLock

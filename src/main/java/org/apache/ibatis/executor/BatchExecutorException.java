@@ -69,7 +69,7 @@ public class BatchExecutorException extends ExecutorException {
 
   /**
    * Returns the SQL statement that caused the failure
-   * (not the parameterArray)
+   * (not the parameterArray).
    *
    * @return the failing SQL string
    */
@@ -78,7 +78,7 @@ public class BatchExecutorException extends ExecutorException {
   }
 
   /**
-   * Returns the statement id of the statement that caused the failure
+   * Returns the statement id of the statement that caused the failure.
    *
    * @return the statement id
    */
