@@ -29,7 +29,7 @@ import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.reflection.ExceptionUtil;
 
 /**
- * ResultSet proxy to add logging
+ * ResultSet proxy to add logging.
  *
  * @author Clinton Begin
  * @author Eduardo Macarron
@@ -129,7 +129,7 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
   }
 
   /**
-   * Creates a logging version of a ResultSet
+   * Creates a logging version of a ResultSet.
    *
    * @param rs - the ResultSet to proxy
    * @return - the ResultSet with logging
@@ -141,7 +141,7 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
   }
 
   /**
-   * Get the wrapped result set
+   * Get the wrapped result set.
    *
    * @return the resultSet
    */

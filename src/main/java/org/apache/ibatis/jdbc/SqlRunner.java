@@ -248,7 +248,7 @@ public class SqlRunner {
     } finally {
       if (rs != null) {
         try {
-            rs.close();
+          rs.close();
         } catch (Exception e) {
           // ignore
         }

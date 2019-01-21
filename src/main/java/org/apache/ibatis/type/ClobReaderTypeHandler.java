@@ -16,7 +16,12 @@
 package org.apache.ibatis.type;
 
 import java.io.Reader;
-import java.sql.*;
+import java.sql.CallableStatement;
+import java.sql.Clob;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 
 /**
  * The {@link TypeHandler} for {@link Clob}/{@link Reader} using method supported at JDBC 4.0.

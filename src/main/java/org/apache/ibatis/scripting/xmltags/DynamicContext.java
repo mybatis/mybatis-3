@@ -77,6 +77,7 @@ public class DynamicContext {
     private static final long serialVersionUID = 2977601501966151582L;
 
     private MetaObject parameterMetaObject;
+
     public ContextMap(MetaObject parameterMetaObject) {
       this.parameterMetaObject = parameterMetaObject;
     }

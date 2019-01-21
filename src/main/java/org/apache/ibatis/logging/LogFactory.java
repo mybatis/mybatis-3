@@ -24,7 +24,7 @@ import java.lang.reflect.Constructor;
 public final class LogFactory {
 
   /**
-   * Marker to be used by logging implementations that support markers
+   * Marker to be used by logging implementations that support markers.
    */
   public static final String MARKER = "MYBATIS";
 

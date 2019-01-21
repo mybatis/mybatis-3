@@ -26,7 +26,7 @@ import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.reflection.ExceptionUtil;
 
 /**
- * PreparedStatement proxy to add logging
+ * PreparedStatement proxy to add logging.
  *
  * @author Clinton Begin
  * @author Eduardo Macarron
@@ -83,7 +83,7 @@ public final class PreparedStatementLogger extends BaseJdbcLogger implements Inv
   }
 
   /**
-   * Creates a logging version of a PreparedStatement
+   * Creates a logging version of a PreparedStatement.
    *
    * @param stmt - the statement
    * @param statementLog - the statement log
@@ -97,7 +97,7 @@ public final class PreparedStatementLogger extends BaseJdbcLogger implements Inv
   }
 
   /**
-   * Return the wrapped prepared statement
+   * Return the wrapped prepared statement.
    *
    * @return the PreparedStatement
    */

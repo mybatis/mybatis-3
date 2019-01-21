@@ -48,16 +48,16 @@ public class ExpressionEvaluator {
       return (Iterable<?>) value;
     }
     if (value.getClass().isArray()) {
-        // the array may be primitive, so Arrays.asList() may throw
-        // a ClassCastException (issue 209).  Do the work manually
-        // Curse primitives! :) (JGB)
-        int size = Array.getLength(value);
-        List<Object> answer = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            Object o = Array.get(value, i);
-            answer.add(o);
-        }
-        return answer;
+      // the array may be primitive, so Arrays.asList() may throw
+      // a ClassCastException (issue 209).  Do the work manually
+      // Curse primitives! :) (JGB)
+      int size = Array.getLength(value);
+      List<Object> answer = new ArrayList<>();
+      for (int i = 0; i < size; i++) {
+        Object o = Array.get(value, i);
+        answer.add(o);
+      }
+      return answer;
     }
     if (value instanceof Map) {
       return ((Map) value).entrySet();

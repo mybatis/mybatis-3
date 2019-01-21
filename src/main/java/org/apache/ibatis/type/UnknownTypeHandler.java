@@ -88,7 +88,7 @@ public class UnknownTypeHandler extends BaseTypeHandler<Object> {
       columnIndexLookup = new HashMap<>();
       ResultSetMetaData rsmd = rs.getMetaData();
       int count = rsmd.getColumnCount();
-      for (int i=1; i <= count; i++) {
+      for (int i = 1; i <= count; i++) {
         String name = rsmd.getColumnName(i);
         columnIndexLookup.put(name,i);
       }

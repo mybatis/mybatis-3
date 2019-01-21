@@ -32,7 +32,7 @@ public final class PropertyCopier {
     Class<?> parent = type;
     while (parent != null) {
       final Field[] fields = parent.getDeclaredFields();
-      for(Field field : fields) {
+      for (Field field : fields) {
         try {
           try {
             field.set(destinationBean, field.get(sourceBean));

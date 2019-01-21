@@ -59,7 +59,6 @@ public class ForEachSqlNode implements SqlNode {
     applyOpen(context);
     int i = 0;
     for (Object o : iterable) {
-      DynamicContext oldContext = context;
       if (first || separator == null) {
         context = new PrefixedContext(context, "");
       } else {
@@ -80,6 +79,7 @@ public class ForEachSqlNode implements SqlNode {
       if (first) {
         first = !((PrefixedContext) context).isPrefixApplied();
       }
+      DynamicContext oldContext = context;
       context = oldContext;
       i++;
     }

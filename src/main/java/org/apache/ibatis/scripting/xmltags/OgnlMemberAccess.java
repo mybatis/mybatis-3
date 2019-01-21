@@ -15,12 +15,13 @@
  */
 package org.apache.ibatis.scripting.xmltags;
 
-import ognl.MemberAccess;
-import org.apache.ibatis.reflection.Reflector;
-
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Member;
 import java.util.Map;
+
+import ognl.MemberAccess;
+
+import org.apache.ibatis.reflection.Reflector;
 
 /**
  * The {@link MemberAccess} class that based on <a href=

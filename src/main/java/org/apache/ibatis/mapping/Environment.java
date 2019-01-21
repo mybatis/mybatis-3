@@ -32,7 +32,7 @@ public final class Environment {
       throw new IllegalArgumentException("Parameter 'id' must not be null");
     }
     if (transactionFactory == null) {
-        throw new IllegalArgumentException("Parameter 'transactionFactory' must not be null");
+      throw new IllegalArgumentException("Parameter 'transactionFactory' must not be null");
     }
     this.id = id;
     if (dataSource == null) {
@@ -43,9 +43,9 @@ public final class Environment {
   }
 
   public static class Builder {
-      private String id;
-      private TransactionFactory transactionFactory;
-      private DataSource dataSource;
+    private String id;
+    private TransactionFactory transactionFactory;
+    private DataSource dataSource;
 
     public Builder(String id) {
       this.id = id;

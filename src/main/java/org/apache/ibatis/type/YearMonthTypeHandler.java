@@ -22,8 +22,8 @@ import java.sql.SQLException;
 import java.time.YearMonth;
 
 /**
- * Type Handler for {@link java.time.YearMonth}
- *
+ * Type Handler for {@link java.time.YearMonth}.
+ * <p>
  * YearMonthTypeHandler relies upon
  * {@link java.time.YearMonth#parse YearMonth.parse}. Therefore column values
  * are expected as strings. The format must be uuuu-MM. Example: "2016-08"
