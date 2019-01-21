@@ -27,7 +27,7 @@ import java.sql.SQLException;
 public interface Transaction {
 
   /**
-   * Retrieve inner database connection
+   * Retrieve inner database connection.
    * @return DataBase connection
    * @throws SQLException
    */
@@ -52,7 +52,7 @@ public interface Transaction {
   void close() throws SQLException;
 
   /**
-   * Get transaction timeout if set
+   * Get transaction timeout if set.
    * @throws SQLException
    */
   Integer getTimeout() throws SQLException;

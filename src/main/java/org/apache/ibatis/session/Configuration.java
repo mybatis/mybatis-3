@@ -114,8 +114,8 @@ public class Configuration {
   protected boolean returnInstanceForEmptyRow;
 
   protected String logPrefix;
-  protected Class <? extends Log> logImpl;
-  protected Class <? extends VFS> vfsImpl;
+  protected Class<? extends Log> logImpl;
+  protected Class<? extends VFS> vfsImpl;
   protected LocalCacheScope localCacheScope = LocalCacheScope.SESSION;
   protected JdbcType jdbcTypeForNull = JdbcType.OTHER;
   protected Set<String> lazyLoadTriggerMethods = new HashSet<>(Arrays.asList("equals", "clone", "hashCode", "toString"));
@@ -536,7 +536,9 @@ public class Configuration {
     return languageRegistry.getDefaultDriver();
   }
 
-  /** @deprecated Use {@link #getDefaultScriptingLanguageInstance()} */
+  /**
+   * @deprecated Use {@link #getDefaultScriptingLanguageInstance()}
+   */
   @Deprecated
   public LanguageDriver getDefaultScriptingLanuageInstance() {
     return getDefaultScriptingLanguageInstance();
@@ -826,7 +828,7 @@ public class Configuration {
     }
   }
 
-  /*
+  /**
    * Extracts namespace from fully qualified statement id.
    *
    * @param statementId
@@ -939,11 +941,6 @@ public class Configuration {
       return value;
     }
 
-    private String getShortName(String key) {
-      final String[] keyParts = key.split("\\.");
-      return keyParts[keyParts.length - 1];
-    }
-
     protected static class Ambiguity {
       final private String subject;
 
@@ -954,6 +951,11 @@ public class Configuration {
       public String getSubject() {
         return subject;
       }
+    }
+
+    private String getShortName(String key) {
+      final String[] keyParts = key.split("\\.");
+      return keyParts[keyParts.length - 1];
     }
   }
 

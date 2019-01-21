@@ -25,7 +25,7 @@ import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.reflection.ExceptionUtil;
 
 /**
- * Statement proxy to add logging
+ * Statement proxy to add logging.
  *
  * @author Clinton Begin
  * @author Eduardo Macarron
@@ -68,7 +68,7 @@ public final class StatementLogger extends BaseJdbcLogger implements InvocationH
   }
 
   /**
-   * Creates a logging version of a Statement
+   * Creates a logging version of a Statement.
    *
    * @param stmt - the statement
    * @return - the proxy
@@ -80,7 +80,7 @@ public final class StatementLogger extends BaseJdbcLogger implements InvocationH
   }
 
   /**
-   * return the wrapped statement
+   * return the wrapped statement.
    *
    * @return the statement
    */

@@ -26,7 +26,7 @@ import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.reflection.ExceptionUtil;
 
 /**
- * Connection proxy to add logging
+ * Connection proxy to add logging.
  *
  * @author Clinton Begin
  * @author Eduardo Macarron
@@ -75,7 +75,7 @@ public final class ConnectionLogger extends BaseJdbcLogger implements Invocation
   }
 
   /**
-   * Creates a logging version of a connection
+   * Creates a logging version of a connection.
    *
    * @param conn - the original connection
    * @return - the connection with logging
@@ -87,7 +87,7 @@ public final class ConnectionLogger extends BaseJdbcLogger implements Invocation
   }
 
   /**
-   * return the wrapped connection
+   * return the wrapped connection.
    *
    * @return the connection
    */

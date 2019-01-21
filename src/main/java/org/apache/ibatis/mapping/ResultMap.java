@@ -104,7 +104,7 @@ public class ResultMap {
           }
         }
         final String property = resultMapping.getProperty();
-        if(property != null) {
+        if (property != null) {
           resultMap.mappedProperties.add(property);
         }
         if (resultMapping.getFlags().contains(ResultFlag.CONSTRUCTOR)) {
