@@ -43,7 +43,7 @@ if [ $TRAVIS_REPO_SLUG == "mybatis/mybatis-3" ] && [ "$TRAVIS_PULL_REQUEST" == "
     echo -e "Successfully ran coveralls under Travis job ${TRAVIS_JOB_NUMBER}"
 
     # Deploy to site
-	# Cannot currently run site this way
+    # Cannot currently run site this way
     # ./mvnw site site:deploy -q --settings ./travis/settings.xml
     # echo -e "Successfully deploy site under Travis job ${TRAVIS_JOB_NUMBER}"
 
