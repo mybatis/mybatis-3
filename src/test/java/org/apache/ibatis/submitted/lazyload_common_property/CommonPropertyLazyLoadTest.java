@@ -25,7 +25,7 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-class CommonPropertyLazyLoadError {
+class CommonPropertyLazyLoadTest {
 
     private static SqlSessionFactory sqlSessionFactory;
 

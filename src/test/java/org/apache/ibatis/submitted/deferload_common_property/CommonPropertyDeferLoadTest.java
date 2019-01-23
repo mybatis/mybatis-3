@@ -31,7 +31,7 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-class CommonPropertyDeferLoadError {
+class CommonPropertyDeferLoadTest {
 
     private static SqlSessionFactory sqlSessionFactory;
     private static SqlSessionFactory lazyLoadSqlSessionFactory;
