@@ -27,12 +27,12 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class ComplexTypeTest {
+class ComplexTypeTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
   @BeforeAll
-  public static void setUp() throws Exception {
+  static void setUp() throws Exception {
     // create a SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/complex_type/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -45,7 +45,7 @@ public class ComplexTypeTest {
 
   // see https://issues.apache.org/jira/browse/IBATIS-653
   @Test
-  public void shouldUpdateProps() {
+  void shouldUpdateProps() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Item item = new Item();
       item.id = 10;

@@ -29,12 +29,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class EnumWithOgnlTest {
+class EnumWithOgnlTest {
 
     private static SqlSessionFactory sqlSessionFactory;
 
     @BeforeAll
-    public static void initDatabase() throws Exception {
+    static void initDatabase() throws Exception {
         try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/ognl_enum/ibatisConfig.xml")) {
             sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
         }
@@ -44,7 +44,7 @@ public class EnumWithOgnlTest {
     }
 
     @Test
-    public void testEnumWithOgnl() {
+    void testEnumWithOgnl() {
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
             List<Person> persons = personMapper.selectAllByType(null);
@@ -52,8 +52,8 @@ public class EnumWithOgnlTest {
         }
     }
 
-  @Test
-    public void testEnumWithOgnlDirector() {
+    @Test
+    void testEnumWithOgnlDirector() {
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
             List<Person> persons = personMapper.selectAllByType(Person.Type.DIRECTOR);
@@ -62,7 +62,7 @@ public class EnumWithOgnlTest {
     }
 
     @Test
-    public void testEnumWithOgnlDirectorNameAttribute() {
+    void testEnumWithOgnlDirectorNameAttribute() {
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
             List<Person> persons = personMapper.selectAllByTypeNameAttribute(Person.Type.DIRECTOR);
@@ -70,29 +70,19 @@ public class EnumWithOgnlTest {
         }
     }
 
-  @Test
-    public void testEnumWithOgnlDirectorWithInterface() {
+    @Test
+    void testEnumWithOgnlDirectorWithInterface() {
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
-            List<Person> persons = personMapper.selectAllByTypeWithInterface(new PersonType() {
-                @Override
-                public Type getType() {
-                    return Person.Type.DIRECTOR;
-                }
-            });
+            List<Person> persons = personMapper.selectAllByTypeWithInterface(() -> Type.DIRECTOR);
             Assertions.assertEquals(1, persons.size(), "Persons must contain 1 persons");
         }
     }
     @Test
-    public void testEnumWithOgnlDirectorNameAttributeWithInterface() {
+    void testEnumWithOgnlDirectorNameAttributeWithInterface() {
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
-            List<Person> persons = personMapper.selectAllByTypeNameAttributeWithInterface(new PersonType() {
-                @Override
-                public Type getType() {
-                    return Person.Type.DIRECTOR;
-                }
-            });
+            List<Person> persons = personMapper.selectAllByTypeNameAttributeWithInterface(() -> Type.DIRECTOR);
             Assertions.assertEquals(1, persons.size(), "Persons must contain 1 persons");
         }
     }

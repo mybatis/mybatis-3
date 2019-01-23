@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -28,29 +28,29 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class BaseJdbcLoggerTest {
+class BaseJdbcLoggerTest {
 
   @Mock
   Log log;
   @Mock
   Array array;
-  BaseJdbcLogger logger;
+  private BaseJdbcLogger logger;
 
   @BeforeEach
-  public void setUp() throws Exception {
+  void setUp() {
     logger = new BaseJdbcLogger(log, 1) {
     };
   }
 
   @Test
-  public void shouldDescribePrimitiveArrayParameter() throws Exception {
+  void shouldDescribePrimitiveArrayParameter() throws Exception {
     logger.setColumn("1", array);
     when(array.getArray()).thenReturn(new int[] { 1, 2, 3 });
     assertThat(logger.getParameterValueString()).startsWith("[1, 2, 3]");
   }
 
   @Test
-  public void shouldDescribeObjectArrayParameter() throws Exception {
+  void shouldDescribeObjectArrayParameter() throws Exception {
     logger.setColumn("1", array);
     when(array.getArray()).thenReturn(new String[] { "one", "two", "three" });
     assertThat(logger.getParameterValueString()).startsWith("[one, two, three]");

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class ResultExtractorTest {
+class ResultExtractorTest {
 
   private ResultExtractor resultExtractor;
 
@@ -47,19 +47,19 @@ public class ResultExtractorTest {
   private ObjectFactory objectFactory;
 
   @BeforeEach
-  public void setUp() throws Exception {
+  void setUp() {
     resultExtractor = new ResultExtractor(configuration, objectFactory);
   }
 
   @Test
-  public void shouldExtractNullForNullTargetType() {
+  void shouldExtractNullForNullTargetType() {
     final Object result = resultExtractor.extractObjectFromList(null, null);
     assertThat(result).isNull();
   }
 
   @Test
-  public void shouldExtractList() {
-    final List list = Arrays.asList(1, 2, 3);
+  void shouldExtractList() {
+    final List<Object> list = Arrays.asList(1, 2, 3);
     final Object result = resultExtractor.extractObjectFromList(list, List.class);
     assertThat(result).isInstanceOf(List.class);
     final List resultList = (List) result;
@@ -67,8 +67,8 @@ public class ResultExtractorTest {
   }
 
   @Test
-  public void shouldExtractArray() {
-    final List list = Arrays.asList(1, 2, 3);
+  void shouldExtractArray() {
+    final List<Object> list = Arrays.asList(1, 2, 3);
     final Object result = resultExtractor.extractObjectFromList(list, Integer[].class);
     assertThat(result).isInstanceOf(Integer[].class);
     final Integer[] resultArray = (Integer[]) result;
@@ -76,8 +76,8 @@ public class ResultExtractorTest {
   }
 
   @Test
-  public void shouldExtractSet() {
-    final List list = Arrays.asList(1, 2, 3);
+  void shouldExtractSet() {
+    final List<Object> list = Arrays.asList(1, 2, 3);
     final Class<Set> targetType = Set.class;
     final Set set = new HashSet();
     final MetaObject metaObject = mock(MetaObject.class);
@@ -92,18 +92,16 @@ public class ResultExtractorTest {
   }
 
   @Test
-  public void shouldExtractSingleObject() {
-    final List list = Collections.singletonList("single object");
+  void shouldExtractSingleObject() {
+    final List<Object> list = Collections.singletonList("single object");
     assertThat((String) resultExtractor.extractObjectFromList(list, String.class)).isEqualTo("single object");
     assertThat((String) resultExtractor.extractObjectFromList(list, null)).isEqualTo("single object");
     assertThat((String) resultExtractor.extractObjectFromList(list, Integer.class)).isEqualTo("single object");
   }
 
   @Test
-  public void shouldFailWhenMutipleItemsInList() {
-    final List list = Arrays.asList("first object", "second object");
-    Assertions.assertThrows(ExecutorException.class, () -> {
-      resultExtractor.extractObjectFromList(list, String.class);
-    });
+  void shouldFailWhenMutipleItemsInList() {
+    final List<Object> list = Arrays.asList("first object", "second object");
+    Assertions.assertThrows(ExecutorException.class, () -> resultExtractor.extractObjectFromList(list, String.class));
   }
 }

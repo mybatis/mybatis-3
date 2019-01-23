@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -29,12 +29,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 // issue #524
-public class BlockingCacheTest {
+class BlockingCacheTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
   @BeforeEach
-  public void setUp() throws Exception {
+  void setUp() throws Exception {
     // create a SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/blocking_cache/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -46,7 +46,7 @@ public class BlockingCacheTest {
   }
 
   @Test
-  public void testBlockingCache() {
+  void testBlockingCache() {
     ExecutorService defaultThreadPool = Executors.newFixedThreadPool(2);
 
     long init = System.currentTimeMillis();

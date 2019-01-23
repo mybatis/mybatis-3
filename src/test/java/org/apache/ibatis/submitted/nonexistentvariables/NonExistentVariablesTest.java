@@ -27,12 +27,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class NonExistentVariablesTest {
+class NonExistentVariablesTest {
 
   protected static SqlSessionFactory sqlSessionFactory;
 
   @BeforeAll
-  public static void setUp() throws Exception {
+  static void setUp() throws Exception {
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/nonexistentvariables/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
@@ -42,12 +42,10 @@ public class NonExistentVariablesTest {
   }
 
   @Test
-  public void testWrongParameter() {
+  void testWrongParameter() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
-      Assertions.assertThrows(PersistenceException.class, () -> {
-        mapper.count(1, "John");
-      });
+      Assertions.assertThrows(PersistenceException.class, () -> mapper.count(1, "John"));
     }
   }
 }

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -28,15 +28,15 @@ import java.io.Reader;
 import java.util.List;
 import java.util.Map;
 
-public class DuplicateResourceTest extends BaseDataTest {
+class DuplicateResourceTest extends BaseDataTest {
 
   @BeforeEach
-  public void setup() throws Exception {
+  void setup() throws Exception {
     BaseDataTest.createBlogDataSource();
   }
 
   @Test
-  public void shouldDemonstrateDuplicateResourceIssue() throws Exception {
+  void shouldDemonstrateDuplicateResourceIssue() throws Exception {
     final String resource = "org/apache/ibatis/submitted/duplicate_resource_loaded/Config.xml";
     final Reader reader = Resources.getResourceAsReader(resource);
     final SqlSessionFactoryBuilder builder = new SqlSessionFactoryBuilder();

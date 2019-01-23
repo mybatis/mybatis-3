@@ -31,12 +31,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class ValueInMapTest {
+class ValueInMapTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
   @BeforeAll
-  public static void setUp() throws Exception {
+  static void setUp() throws Exception {
     // create a SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/valueinmap/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -48,7 +48,7 @@ public class ValueInMapTest {
   }
 
   @Test // issue #165
-  public void shouldWorkWithAPropertyNamedValue() {
+  void shouldWorkWithAPropertyNamedValue() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Map<String, String> map = new HashMap<>();
       map.put("table", "users");
@@ -60,13 +60,11 @@ public class ValueInMapTest {
   }
 
   @Test
-  public void shouldWorkWithAList() {
+  void shouldWorkWithAList() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       List<String> list = new ArrayList<>();
       list.add("users");
-      Assertions.assertThrows(PersistenceException.class, () -> {
-        sqlSession.selectOne("count2",list);
-      });
+      Assertions.assertThrows(PersistenceException.class, () -> sqlSession.selectOne("count2",list));
     }
   }
 

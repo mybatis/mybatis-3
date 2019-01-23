@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.Reader;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -30,11 +31,11 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class MapperTypeParameterTest {
+class MapperTypeParameterTest {
   private static SqlSessionFactory sqlSessionFactory;
 
   @BeforeAll
-  public static void setUp() throws Exception {
+  static void setUp() throws Exception {
     // create an SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/mapper_type_parameter/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -46,7 +47,7 @@ public class MapperTypeParameterTest {
   }
 
   @Test
-  public void shouldResolveReturnType() {
+  void shouldResolveReturnType() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       PersonMapper mapper = sqlSession.getMapper(PersonMapper.class);
       Person person = mapper.select(new Person(1));
@@ -55,7 +56,7 @@ public class MapperTypeParameterTest {
   }
 
   @Test
-  public void shouldResolveListTypeParam() {
+  void shouldResolveListTypeParam() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       PersonMapper mapper = sqlSession.getMapper(PersonMapper.class);
       List<Person> persons = mapper.selectList(null);
@@ -66,7 +67,7 @@ public class MapperTypeParameterTest {
   }
 
   @Test
-  public void shouldResolveMultipleTypeParam() {
+  void shouldResolveMultipleTypeParam() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
       Map<Long, Country> results = mapper.selectMap(new Country());
@@ -77,7 +78,7 @@ public class MapperTypeParameterTest {
   }
 
   @Test
-  public void shouldResolveParameterizedReturnType() {
+  void shouldResolveParameterizedReturnType() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       PersonListMapper mapper = sqlSession.getMapper(PersonListMapper.class);
       List<Person> persons = mapper.select(null);
@@ -88,7 +89,7 @@ public class MapperTypeParameterTest {
   }
 
   @Test
-  public void shouldResolveParam() {
+  void shouldResolveParam() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
       assertEquals(1, mapper.update(new Country(2L, "Greenland")));
@@ -96,11 +97,11 @@ public class MapperTypeParameterTest {
   }
 
   @Test
-  public void shouldResolveListParam() {
+  void shouldResolveListParam() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       PersonMapper mapper = sqlSession.getMapper(PersonMapper.class);
       Person person1 = new Person("James");
-      assertEquals(1, mapper.insert(Arrays.asList(person1)));
+      assertEquals(1, mapper.insert(Collections.singletonList(person1)));
       assertNotNull(person1.getId());
     }
   }

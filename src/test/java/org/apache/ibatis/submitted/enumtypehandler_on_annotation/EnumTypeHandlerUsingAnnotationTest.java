@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -40,13 +40,13 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @see org.apache.ibatis.annotations.Result
  * @see org.apache.ibatis.annotations.TypeDiscriminator
  */
-public class EnumTypeHandlerUsingAnnotationTest {
+class EnumTypeHandlerUsingAnnotationTest {
 
     private static SqlSessionFactory sqlSessionFactory;
     private SqlSession sqlSession;
 
     @BeforeAll
-    public static void initDatabase() throws Exception {
+    static void initDatabase() throws Exception {
         try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/enumtypehandler_on_annotation/mybatis-config.xml")) {
             sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
             sqlSessionFactory.getConfiguration().getMapperRegistry().addMapper(PersonMapper.class);
@@ -57,17 +57,17 @@ public class EnumTypeHandlerUsingAnnotationTest {
     }
 
     @BeforeEach
-    public void openSqlSession() {
+    void openSqlSession() {
         this.sqlSession = sqlSessionFactory.openSession();
     }
 
     @AfterEach
-    public void closeSqlSession() {
+    void closeSqlSession() {
         sqlSession.close();
     }
 
     @Test
-    public void testForArg() {
+    void testForArg() {
         PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
         {
             Person person = personMapper.findOneUsingConstructor(1);
@@ -86,7 +86,7 @@ public class EnumTypeHandlerUsingAnnotationTest {
     }
 
     @Test
-    public void testForResult() {
+    void testForResult() {
         PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
         {
             Person person = personMapper.findOneUsingSetter(1);
@@ -105,7 +105,7 @@ public class EnumTypeHandlerUsingAnnotationTest {
     }
 
     @Test
-    public void testForTypeDiscriminator() {
+    void testForTypeDiscriminator() {
         PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
         {
             Person person = personMapper.findOneUsingTypeDiscriminator(1);

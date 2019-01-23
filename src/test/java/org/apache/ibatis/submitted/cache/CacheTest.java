@@ -37,12 +37,12 @@ import static com.googlecode.catchexception.apis.BDDCatchException.*;
 import static org.assertj.core.api.BDDAssertions.then;
 
 // issue #524
-public class CacheTest {
+class CacheTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
   @BeforeEach
-  public void setUp() throws Exception {
+  void setUp() throws Exception {
     // create a SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/cache/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -64,7 +64,7 @@ public class CacheTest {
    *   Step 4 returns 1 row. (This case fails when caching is enabled.)
    */
   @Test
-  public void testplan1() {
+  void testplan1() {
     try (SqlSession sqlSession1 = sqlSessionFactory.openSession(false)) {
       PersonMapper pm = sqlSession1.getMapper(PersonMapper.class);
       Assertions.assertEquals(2, pm.findAll().size());
@@ -94,7 +94,7 @@ public class CacheTest {
    *   Step 6 returns 2 rows.
    */
   @Test
-  public void testplan2() {
+  void testplan2() {
     try (SqlSession sqlSession1 = sqlSessionFactory.openSession(false)) {
       PersonMapper pm = sqlSession1.getMapper(PersonMapper.class);
       Assertions.assertEquals(2, pm.findAll().size());
@@ -128,7 +128,7 @@ public class CacheTest {
    *   Step 6 returns 1 row.
    */
   @Test
-  public void testplan3() {
+  void testplan3() {
     try (SqlSession sqlSession1 = sqlSessionFactory.openSession(true)) {
       PersonMapper pm = sqlSession1.getMapper(PersonMapper.class);
       Assertions.assertEquals(2, pm.findAll().size());
@@ -161,7 +161,7 @@ public class CacheTest {
    *   Step 5 returns 3 row.
    */
   @Test
-  public void shouldInsertWithOptionsFlushesCache() {
+  void shouldInsertWithOptionsFlushesCache() {
     try (SqlSession sqlSession1 = sqlSessionFactory.openSession(true)) {
       PersonMapper pm = sqlSession1.getMapper(PersonMapper.class);
       Assertions.assertEquals(2, pm.findAll().size());
@@ -195,7 +195,7 @@ public class CacheTest {
    *   Step 7 returns 3 row.
    */
   @Test
-  public void shouldApplyFlushCacheOptions() {
+  void shouldApplyFlushCacheOptions() {
     try (SqlSession sqlSession1 = sqlSessionFactory.openSession(true)) {
       PersonMapper pm = sqlSession1.getMapper(PersonMapper.class);
       Assertions.assertEquals(2, pm.findAll().size());
@@ -219,7 +219,7 @@ public class CacheTest {
   }
 
   @Test
-  public void shouldApplyCacheNamespaceRef() {
+  void shouldApplyCacheNamespaceRef() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession(true)) {
       PersonMapper pm = sqlSession.getMapper(PersonMapper.class);
       Assertions.assertEquals(2, pm.findAll().size());
@@ -251,7 +251,7 @@ public class CacheTest {
   }
 
   @Test
-  public void shouldApplyCustomCacheProperties() {
+  void shouldApplyCustomCacheProperties() {
     CustomCache customCache = unwrap(sqlSessionFactory.getConfiguration().getCache(CustomCacheMapper.class.getName()));
     Assertions.assertEquals("bar", customCache.getStringValue());
     Assertions.assertEquals(1, customCache.getIntegerValue().intValue());
@@ -266,19 +266,19 @@ public class CacheTest {
     Assertions.assertEquals(10.01, customCache.getDoubleValue(), 1);
     Assertions.assertEquals((byte) 11, customCache.getByteWrapperValue().byteValue());
     Assertions.assertEquals((byte) 12, customCache.getByteValue());
-    Assertions.assertEquals(true, customCache.getBooleanWrapperValue());
-    Assertions.assertEquals(true, customCache.isBooleanValue());
+    Assertions.assertTrue(customCache.getBooleanWrapperValue());
+    Assertions.assertTrue(customCache.isBooleanValue());
   }
 
   @Test
-  public void shouldErrorUnsupportedProperties() {
+  void shouldErrorUnsupportedProperties() {
     when(sqlSessionFactory.getConfiguration()).addMapper(CustomCacheUnsupportedPropertyMapper.class);
     then(caughtException()).isInstanceOf(CacheException.class)
       .hasMessage("Unsupported property type for cache: 'date' of type class java.util.Date");
   }
 
   @Test
-  public void shouldErrorInvalidCacheNamespaceRefAttributesSpecifyBoth() {
+  void shouldErrorInvalidCacheNamespaceRefAttributesSpecifyBoth() {
     when(sqlSessionFactory.getConfiguration().getMapperRegistry())
       .addMapper(InvalidCacheNamespaceRefBothMapper.class);
     then(caughtException()).isInstanceOf(BuilderException.class)
@@ -286,7 +286,7 @@ public class CacheTest {
   }
 
   @Test
-  public void shouldErrorInvalidCacheNamespaceRefAttributesIsEmpty() {
+  void shouldErrorInvalidCacheNamespaceRefAttributesIsEmpty() {
     when(sqlSessionFactory.getConfiguration().getMapperRegistry())
       .addMapper(InvalidCacheNamespaceRefEmptyMapper.class);
     then(caughtException()).isInstanceOf(BuilderException.class)

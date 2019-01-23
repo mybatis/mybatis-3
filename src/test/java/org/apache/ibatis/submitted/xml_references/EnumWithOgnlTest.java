@@ -28,10 +28,10 @@ import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.junit.jupiter.api.Test;
 
-public class EnumWithOgnlTest {
+class EnumWithOgnlTest {
 
     @Test
-    public void testConfiguration() {
+    void testConfiguration() {
         UnpooledDataSourceFactory dataSourceFactory = new UnpooledDataSourceFactory();
         Properties dataSourceProperties = new Properties();
         dataSourceProperties.put("driver", "org.hsqldb.jdbcDriver");
@@ -47,7 +47,7 @@ public class EnumWithOgnlTest {
         new DefaultSqlSessionFactory(configuration);
     }
     @Test
-    public void testMixedConfiguration() throws Exception {
+    void testMixedConfiguration() throws Exception {
       try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/xml_references/ibatisConfig.xml")) {
           SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
           sqlSessionFactory.getConfiguration().addMapper(PersonMapper2.class);

@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author Eduardo Macarron
  */
-public class YearTypeHandlerTest extends BaseTypeHandlerTest {
+class YearTypeHandlerTest extends BaseTypeHandlerTest {
 
   private static final TypeHandler<Year> TYPE_HANDLER = new YearTypeHandler();
   private static final Year INSTANT = Year.now();

@@ -31,12 +31,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-public class TimestampWithTimezoneTypeHandlerTest {
+class TimestampWithTimezoneTypeHandlerTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
   @BeforeAll
-  public static void setUp() throws Exception {
+  static void setUp() throws Exception {
     try (Reader reader = Resources
         .getResourceAsReader("org/apache/ibatis/submitted/timestamp_with_timezone/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -46,7 +46,7 @@ public class TimestampWithTimezoneTypeHandlerTest {
   }
 
   @Test
-  public void shouldSelectOffsetDateTime() {
+  void shouldSelectOffsetDateTime() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Record record = mapper.selectById(1);
@@ -58,7 +58,7 @@ public class TimestampWithTimezoneTypeHandlerTest {
   }
 
   @Test
-  public void shouldInsertOffsetDateTime() {
+  void shouldInsertOffsetDateTime() {
     OffsetDateTime odt = OffsetDateTime.of(2018, 1, 2, 11, 22, 33, 123456000, ZoneOffset.ofHoursMinutes(1, 23));
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
@@ -78,7 +78,7 @@ public class TimestampWithTimezoneTypeHandlerTest {
 
   @Disabled("HSQLDB 2.4.1 does not support this.")
   @Test
-  public void shouldInsertOffsetTime() {
+  void shouldInsertOffsetTime() {
     OffsetTime ot = OffsetTime.of(11, 22, 33, 123456000, ZoneOffset.ofHoursMinutes(1, 23));
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);

@@ -18,6 +18,7 @@ package org.apache.ibatis.submitted.foreach;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.ibatis.BaseDataTest;
@@ -33,12 +34,12 @@ import org.junit.jupiter.api.Test;
 import static com.googlecode.catchexception.apis.BDDCatchException.*;
 import static org.assertj.core.api.BDDAssertions.then;
 
-public class ForEachTest {
+class ForEachTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
   @BeforeAll
-  public static void setUp() throws Exception {
+  static void setUp() throws Exception {
     // create a SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/foreach/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -50,7 +51,7 @@ public class ForEachTest {
   }
 
   @Test
-  public void shouldGetAUser() {
+  void shouldGetAUser() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User testProfile = new User();
@@ -66,7 +67,7 @@ public class ForEachTest {
   }
 
   @Test
-  public void shouldHandleComplexNullItem() {
+  void shouldHandleComplexNullItem() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user1 = new User();
@@ -81,7 +82,7 @@ public class ForEachTest {
   }
 
   @Test
-  public void shouldHandleMoreComplexNullItem() {
+  void shouldHandleMoreComplexNullItem() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user1 = new User();
@@ -97,7 +98,7 @@ public class ForEachTest {
   }
 
   @Test
-  public void nullItemInContext() {
+  void nullItemInContext() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user1 = new User();
@@ -111,17 +112,17 @@ public class ForEachTest {
   }
 
   @Test
-  public void shouldReportMissingPropertyName() {
+  void shouldReportMissingPropertyName() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
-      when(mapper).typoInItemProperty(Arrays.asList(new User()));
+      when(mapper).typoInItemProperty(Collections.singletonList(new User()));
       then(caughtException()).isInstanceOf(PersistenceException.class)
         .hasMessageContaining("There is no getter for property named 'idd' in 'class org.apache.ibatis.submitted.foreach.User'");
     }
   }
 
   @Test
-  public void shouldRemoveItemVariableInTheContext() {
+  void shouldRemoveItemVariableInTheContext() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       int result = mapper.itemVariableConflict(5, Arrays.asList(1, 2), Arrays.asList(3, 4));
@@ -130,7 +131,7 @@ public class ForEachTest {
   }
 
   @Test
-  public void shouldRemoveIndexVariableInTheContext() {
+  void shouldRemoveIndexVariableInTheContext() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       int result = mapper.indexVariableConflict(4, Arrays.asList(6, 7), Arrays.asList(8, 9));

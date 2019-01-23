@@ -34,12 +34,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import javax.sql.DataSource;
 import java.util.HashMap;
 
-public class MapperMethodParamTest {
+class MapperMethodParamTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
   @BeforeAll
-  public static void setup() throws Exception {
+  static void setup() throws Exception {
     DataSource dataSource = BaseDataTest.createUnpooledDataSource(BaseDataTest.BLOG_PROPERTIES);
     BaseDataTest.runScript(dataSource, "org/apache/ibatis/binding/paramtest-schema.sql");
     TransactionFactory transactionFactory = new JdbcTransactionFactory();
@@ -50,7 +50,7 @@ public class MapperMethodParamTest {
   }
 
   @Test
-  public void parameterNameIsSizeAndTypeIsLong() {
+  void parameterNameIsSizeAndTypeIsLong() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       Mapper mapper = session.getMapper(Mapper.class);
       mapper.insert("foo", Long.MAX_VALUE);
@@ -59,7 +59,7 @@ public class MapperMethodParamTest {
   }
 
   @Test
-  public void parameterNameIsSizeUsingHashMap() {
+  void parameterNameIsSizeUsingHashMap() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       HashMap<String, Object> params = new HashMap<>();
       params.put("id", "foo");

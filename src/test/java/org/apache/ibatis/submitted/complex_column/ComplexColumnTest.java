@@ -26,12 +26,12 @@ import org.junit.jupiter.api.Test;
 
 import java.io.Reader;
 
-public class ComplexColumnTest {
+class ComplexColumnTest {
 
     private static SqlSessionFactory sqlSessionFactory;
 
     @BeforeAll
-    public static void initDatabase() throws Exception {
+    static void initDatabase() throws Exception {
         try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/complex_column/ibatisConfig.xml")) {
             sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
         }
@@ -41,10 +41,10 @@ public class ComplexColumnTest {
     }
 
     @Test
-    public void testWithoutComplex() {
+    void testWithoutComplex() {
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
-            Person person = personMapper.getWithoutComplex(2l);
+            Person person = personMapper.getWithoutComplex(2L);
             Assertions.assertNotNull(person, "person must not be null");
             Assertions.assertEquals("Christian", person.getFirstName());
             Assertions.assertEquals("Poitras", person.getLastName());
@@ -56,10 +56,10 @@ public class ComplexColumnTest {
     }
 
     @Test
-    public void testWithComplex() {
+    void testWithComplex() {
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
-            Person person = personMapper.getWithComplex(2l);
+            Person person = personMapper.getWithComplex(2L);
             Assertions.assertNotNull(person, "person must not be null");
             Assertions.assertEquals("Christian", person.getFirstName());
             Assertions.assertEquals("Poitras", person.getLastName());
@@ -71,10 +71,10 @@ public class ComplexColumnTest {
     }
 
     @Test
-    public void testWithComplex2() {
+    void testWithComplex2() {
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
-            Person person = personMapper.getWithComplex2(2l);
+            Person person = personMapper.getWithComplex2(2L);
             Assertions.assertNotNull(person, "person must not be null");
             Assertions.assertEquals("Christian", person.getFirstName());
             Assertions.assertEquals("Poitras", person.getLastName());
@@ -86,10 +86,10 @@ public class ComplexColumnTest {
     }
 
     @Test
-    public void testWithComplex3() {
+    void testWithComplex3() {
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
-            Person person = personMapper.getWithComplex3(2l);
+            Person person = personMapper.getWithComplex3(2L);
             Assertions.assertNotNull(person, "person must not be null");
             Assertions.assertEquals("Christian", person.getFirstName());
             Assertions.assertEquals("Poitras", person.getLastName());
@@ -101,7 +101,7 @@ public class ComplexColumnTest {
     }
 
     @Test
-    public void testWithComplex4() {
+    void testWithComplex4() {
       try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
           PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
           Person criteria = new Person();
@@ -119,10 +119,10 @@ public class ComplexColumnTest {
     }
 
     @Test
-    public void testWithParamAttributes() {
+    void testWithParamAttributes() {
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
-            Person person = personMapper.getComplexWithParamAttributes(2l);
+            Person person = personMapper.getComplexWithParamAttributes(2L);
             Assertions.assertNotNull(person, "person must not be null");
             Assertions.assertEquals("Christian", person.getFirstName());
             Assertions.assertEquals("Poitras", person.getLastName());

@@ -33,12 +33,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-public class CursorSimpleTest {
+class CursorSimpleTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
   @BeforeAll
-  public static void setUp() throws Exception {
+  static void setUp() throws Exception {
     // create a SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/cursor_simple/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -50,7 +50,7 @@ public class CursorSimpleTest {
   }
 
   @Test
-  public void shouldGetAllUser() {
+  void shouldGetAllUser() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Cursor<User> usersCursor = mapper.getAllUsers();
@@ -98,7 +98,7 @@ public class CursorSimpleTest {
   }
 
   @Test
-  public void testCursorClosedOnSessionClose() {
+  void testCursorClosedOnSessionClose() {
     Cursor<User> usersCursor;
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
@@ -129,7 +129,7 @@ public class CursorSimpleTest {
   }
 
   @Test
-  public void testCursorWithRowBound() {
+  void testCursorWithRowBound() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       // RowBound starting at offset 1 and limiting to 2 items
       Cursor<User> usersCursor = sqlSession.selectCursor("getAllUsers", null, new RowBounds(1, 3));
@@ -158,7 +158,7 @@ public class CursorSimpleTest {
   }
 
   @Test
-  public void testCursorIteratorNoSuchElementExceptionWithHasNext() throws IOException {
+  void testCursorIteratorNoSuchElementExceptionWithHasNext() throws IOException {
 
     try (SqlSession sqlSession = sqlSessionFactory.openSession();
         Cursor<User> usersCursor = sqlSession.selectCursor("getAllUsers", null, new RowBounds(1, 1))) {
@@ -180,7 +180,7 @@ public class CursorSimpleTest {
   }
 
   @Test
-  public void testCursorIteratorNoSuchElementExceptionNoHasNext() throws IOException {
+  void testCursorIteratorNoSuchElementExceptionNoHasNext() throws IOException {
     try (SqlSession sqlSession = sqlSessionFactory.openSession();
         Cursor<User> usersCursor = sqlSession.selectCursor("getAllUsers", null, new RowBounds(1, 1))) {
       try {
@@ -200,7 +200,7 @@ public class CursorSimpleTest {
   }
 
   @Test
-  public void testCursorWithBadRowBound() {
+  void testCursorWithBadRowBound() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       // Trying to start at offset 10 (which does not exist, since there is only 4 items)
       Cursor<User> usersCursor = sqlSession.selectCursor("getAllUsers", null, new RowBounds(10, 2));
@@ -213,7 +213,7 @@ public class CursorSimpleTest {
   }
 
   @Test
-  public void testCursorMultipleHasNextCall() {
+  void testCursorMultipleHasNextCall() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Cursor<User> usersCursor = mapper.getAllUsers();
@@ -235,7 +235,7 @@ public class CursorSimpleTest {
   }
 
   @Test
-  public void testCursorMultipleIteratorCall() {
+  void testCursorMultipleIteratorCall() {
     Iterator<User> iterator2 = null;
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
@@ -257,7 +257,7 @@ public class CursorSimpleTest {
   }
 
   @Test
-  public void testCursorMultipleCloseCall() throws IOException {
+  void testCursorMultipleCloseCall() throws IOException {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Cursor<User> usersCursor = mapper.getAllUsers();
@@ -287,7 +287,7 @@ public class CursorSimpleTest {
   }
 
   @Test
-  public void testCursorUsageAfterClose() throws IOException {
+  void testCursorUsageAfterClose() throws IOException {
 
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
@@ -326,7 +326,7 @@ public class CursorSimpleTest {
   }
 
   @Test
-  public void shouldGetAllUserUsingAnnotationBasedMapper() {
+  void shouldGetAllUserUsingAnnotationBasedMapper() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       sqlSession.getConfiguration().getMapperRegistry().addMapper(AnnotationMapper.class);
       AnnotationMapper mapper = sqlSession.getMapper(AnnotationMapper.class);
@@ -361,7 +361,7 @@ public class CursorSimpleTest {
   }
 
   @Test
-  public void shouldThrowIllegalStateExceptionUsingIteratorOnSessionClosed() {
+  void shouldThrowIllegalStateExceptionUsingIteratorOnSessionClosed() {
     Cursor<User> usersCursor;
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       usersCursor = sqlSession.getMapper(Mapper.class).getAllUsers();

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -44,14 +44,14 @@ import ru.yandex.qatools.embed.postgresql.util.SocketUtil;
  * @author Jeff Butler
  */
 @Tag("EmbeddedPostgresqlTests")
-public class InsertTest {
+class InsertTest {
 
   private static final EmbeddedPostgres postgres = new EmbeddedPostgres();
 
   private static SqlSessionFactory sqlSessionFactory;
 
   @BeforeAll
-  public static void setUp() throws Exception {
+  static void setUp() throws Exception {
     // Launch PostgreSQL server. Download / unarchive if necessary.
     String url = postgres.start(EmbeddedPostgres.cachedRuntimeConfig(Paths.get(System.getProperty("java.io.tmpdir"), "pgembed")), "localhost", SocketUtil.findFreePort(), "keycolumn", "postgres", "root", Collections.emptyList());
 
@@ -67,12 +67,12 @@ public class InsertTest {
   }
 
   @AfterAll
-  public static void tearDown() {
+  static void tearDown() {
     postgres.stop();
   }
 
   @Test
-  public void testInsertAnnotated() throws Exception {
+  void testInsertAnnotated() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       InsertMapper mapper = sqlSession.getMapper(InsertMapper.class);
       Name name = new Name();
@@ -87,7 +87,7 @@ public class InsertTest {
   }
 
   @Test
-  public void testInsertMapped() throws Exception {
+  void testInsertMapped() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       InsertMapper mapper = sqlSession.getMapper(InsertMapper.class);
       Name name = new Name();
@@ -102,7 +102,7 @@ public class InsertTest {
   }
 
   @Test
-  public void testInsertMappedBatch() throws Exception {
+  void testInsertMappedBatch() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH)) {
       InsertMapper mapper = sqlSession.getMapper(InsertMapper.class);
       Name name = new Name();

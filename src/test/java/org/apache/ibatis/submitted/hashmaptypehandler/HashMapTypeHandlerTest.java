@@ -27,12 +27,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class HashMapTypeHandlerTest {
+class HashMapTypeHandlerTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
   @BeforeAll
-  public static void setUp() throws Exception {
+  static void setUp() throws Exception {
     // create an SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/hashmaptypehandler/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -44,7 +44,7 @@ public class HashMapTypeHandlerTest {
   }
 
   @Test
-  public void shouldNotApplyTypeHandlerToParamMap() {
+  void shouldNotApplyTypeHandlerToParamMap() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUser(1, "User1");
@@ -53,7 +53,7 @@ public class HashMapTypeHandlerTest {
   }
 
   @Test
-  public void shouldNotApplyTypeHandlerToParamMapXml() {
+  void shouldNotApplyTypeHandlerToParamMapXml() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUserXml(1, "User1");
@@ -62,7 +62,7 @@ public class HashMapTypeHandlerTest {
   }
 
   @Test
-  public void shouldApplyHashMapTypeHandler() {
+  void shouldApplyHashMapTypeHandler() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       HashMap<String, String> map = new HashMap<>();
@@ -73,7 +73,7 @@ public class HashMapTypeHandlerTest {
   }
 
   @Test
-  public void shouldApplyHashMapTypeHandlerXml() {
+  void shouldApplyHashMapTypeHandlerXml() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       HashMap<String, String> map = new HashMap<>();

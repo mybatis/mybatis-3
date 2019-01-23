@@ -17,7 +17,6 @@ package org.apache.ibatis.submitted.refcursor;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -47,14 +46,14 @@ import ru.yandex.qatools.embed.postgresql.util.SocketUtil;
  * @author Jeff Butler
  */
 @Tag("EmbeddedPostgresqlTests")
-public class RefCursorTest {
+class RefCursorTest {
 
   private static final EmbeddedPostgres postgres = new EmbeddedPostgres();
 
   private static SqlSessionFactory sqlSessionFactory;
 
   @BeforeAll
-  public static void setUp() throws Exception {
+  static void setUp() throws Exception {
     // Launch PostgreSQL server. Download / unarchive if necessary.
     String url = postgres.start(EmbeddedPostgres.cachedRuntimeConfig(Paths.get(System.getProperty("java.io.tmpdir"), "pgembed")), "localhost", SocketUtil.findFreePort(), "refcursor", "postgres", "root", Collections.emptyList());
 
@@ -70,12 +69,12 @@ public class RefCursorTest {
   }
 
   @AfterAll
-  public static void tearDown() {
+  static void tearDown() {
     postgres.stop();
   }
 
   @Test
-  public void testRefCursor1() throws IOException {
+  void testRefCursor1() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       OrdersMapper mapper = sqlSession.getMapper(OrdersMapper.class);
       Map<String, Object> parameter = new HashMap<>();
@@ -92,7 +91,7 @@ public class RefCursorTest {
   }
 
   @Test
-  public void testRefCursor2() throws IOException {
+  void testRefCursor2() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       OrdersMapper mapper = sqlSession.getMapper(OrdersMapper.class);
       Map<String, Object> parameter = new HashMap<>();
@@ -109,7 +108,7 @@ public class RefCursorTest {
   }
 
   @Test
-  public void shouldUseResultHandlerOnOutputParam() throws IOException {
+  void shouldUseResultHandlerOnOutputParam() {
     class OrderResultHandler implements ResultHandler<Order> {
       private List<Order> orders = new ArrayList<>();
 
@@ -133,24 +132,21 @@ public class RefCursorTest {
       mapper.getOrder3(parameter, handler);
 
       assertNull(parameter.get("order"));
-      assertEquals(Integer.valueOf(3), parameter.get("detailCount"));
+      assertEquals(3, parameter.get("detailCount"));
       assertEquals("Anonymous", handler.getResult().get(0).getCustomerName());
     }
   }
 
   @Test
-  public void shouldNullResultSetNotCauseNpe() throws IOException {
+  void shouldNullResultSetNotCauseNpe() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       OrdersMapper mapper = sqlSession.getMapper(OrdersMapper.class);
       Map<String, Object> parameter = new HashMap<>();
       parameter.put("orderId", 99);
-      mapper.getOrder3(parameter, new ResultHandler<Order>() {
-        @Override
-        public void handleResult(ResultContext<? extends Order> resultContext) {
-          // won't be used
-        }
+      mapper.getOrder3(parameter, resultContext -> {
+        // won't be used
       });
-      assertEquals(Integer.valueOf(0), parameter.get("detailCount"));
+      assertEquals(0, parameter.get("detailCount"));
     }
   }
 }

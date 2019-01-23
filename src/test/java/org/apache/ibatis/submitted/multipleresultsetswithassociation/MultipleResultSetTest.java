@@ -33,12 +33,12 @@ import org.junit.jupiter.api.Test;
  * This test is based on the org.apache.ibatis.submitted.multiple_resultsets test.
  *
  */
-public class MultipleResultSetTest {
+class MultipleResultSetTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
   @BeforeAll
-  public static void setUp() throws Exception {
+  static void setUp() throws Exception {
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multipleresultsetswithassociation/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
@@ -49,18 +49,18 @@ public class MultipleResultSetTest {
     try (SqlSession session = sqlSessionFactory.openSession();
          Connection conn = session.getConnection()) {
       try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multipleresultsetswithassociation/CreateDB1.sql")) {
-        runReaderScript(conn, session, reader);
+        runReaderScript(conn, reader);
       }
       try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multipleresultsetswithassociation/CreateDB2.sql")) {
-        runReaderScript(conn, session, reader);
+        runReaderScript(conn, reader);
       }
       try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multipleresultsetswithassociation/CreateDB3.sql")) {
-        runReaderScript(conn, session, reader);
+        runReaderScript(conn, reader);
       }
     }
   }
 
-  private static void runReaderScript(Connection conn, SqlSession session, Reader reader) throws Exception {
+  private static void runReaderScript(Connection conn, Reader reader) {
     ScriptRunner runner = new ScriptRunner(conn);
     runner.setLogWriter(null);
     runner.setSendFullScript(true);
@@ -70,7 +70,7 @@ public class MultipleResultSetTest {
   }
 
   @Test
-  public void shouldGetOrderDetailsEachHavingAnOrderHeader() {
+  void shouldGetOrderDetailsEachHavingAnOrderHeader() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<OrderDetail> orderDetails = mapper.getOrderDetailsWithHeaders();
@@ -88,7 +88,7 @@ public class MultipleResultSetTest {
   }
 
   @Test
-  public void shouldGetOrderDetailsEachHavingAnOrderHeaderAnnotationBased() {
+  void shouldGetOrderDetailsEachHavingAnOrderHeaderAnnotationBased() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<OrderDetail> orderDetails = mapper.getOrderDetailsWithHeadersAnnotationBased();

@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author Eduardo Macarron
  */
-public class MonthTypeHandlerTest extends BaseTypeHandlerTest {
+class MonthTypeHandlerTest extends BaseTypeHandlerTest {
 
   private static final TypeHandler<Month> TYPE_HANDLER = new MonthTypeHandler();
   private static final Month INSTANT = Month.JANUARY;

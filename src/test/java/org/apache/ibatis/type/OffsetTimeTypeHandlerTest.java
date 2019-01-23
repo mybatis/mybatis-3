@@ -22,7 +22,7 @@ import java.time.OffsetTime;
 
 import org.junit.jupiter.api.Test;
 
-public class OffsetTimeTypeHandlerTest extends BaseTypeHandlerTest {
+class OffsetTimeTypeHandlerTest extends BaseTypeHandlerTest {
 
   private static final TypeHandler<OffsetTime> TYPE_HANDLER = new OffsetTimeTypeHandler();
 

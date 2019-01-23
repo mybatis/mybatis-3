@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -27,17 +27,17 @@ import java.lang.reflect.Field;
 import static com.googlecode.catchexception.apis.BDDCatchException.*;
 import static org.assertj.core.api.BDDAssertions.then;
 
-public class CacheBuilderTest {
+class CacheBuilderTest {
 
   @Test
-  public void testInitializing() throws Exception {
+  void testInitializing() {
     InitializingCache cache = unwrap(new CacheBuilder("test").implementation(InitializingCache.class).build());
 
     Assertions.assertThat(cache.initialized).isTrue();
   }
 
   @Test
-  public void testInitializingFailure() throws Exception {
+  void testInitializingFailure() {
     when(new CacheBuilder("test").implementation(InitializingFailureCache.class)).build();
     then(caughtException()).isInstanceOf(CacheException.class)
       .hasMessage("Failed cache initialization for 'test' on 'org.apache.ibatis.mapping.CacheBuilderTest$InitializingFailureCache'");
@@ -83,7 +83,7 @@ public class CacheBuilderTest {
     }
 
     @Override
-    public void initialize() throws Exception {
+    public void initialize() {
       throw new IllegalStateException("error");
     }
 

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-
 package org.apache.ibatis.type;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -45,7 +44,7 @@ import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres;
 import ru.yandex.qatools.embed.postgresql.util.SocketUtil;
 
 @Tag("EmbeddedPostgresqlTests")
-public class SqlxmlTypeHandlerTest extends BaseTypeHandlerTest {
+class SqlxmlTypeHandlerTest extends BaseTypeHandlerTest {
   private static final TypeHandler<String> TYPE_HANDLER = new SqlxmlTypeHandler();
   private static final EmbeddedPostgres postgres = new EmbeddedPostgres();
 
@@ -58,7 +57,7 @@ public class SqlxmlTypeHandlerTest extends BaseTypeHandlerTest {
   private Connection connection;
 
   @BeforeAll
-  public static void setUp() throws Exception {
+  static void setUp() throws Exception {
     // Launch PostgreSQL server. Download / unarchive if necessary.
     String url = postgres.start(
         EmbeddedPostgres.cachedRuntimeConfig(Paths.get(System.getProperty("java.io.tmpdir"), "pgembed")), "localhost",
@@ -76,7 +75,7 @@ public class SqlxmlTypeHandlerTest extends BaseTypeHandlerTest {
   }
 
   @AfterAll
-  public static void tearDown() {
+  static void tearDown() {
     postgres.stop();
   }
 
@@ -144,7 +143,7 @@ public class SqlxmlTypeHandlerTest extends BaseTypeHandlerTest {
   }
 
   @Test
-  public void shouldReturnXmlAsString() {
+  void shouldReturnXmlAsString() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       Mapper mapper = session.getMapper(Mapper.class);
       XmlBean bean = mapper.select(1);
@@ -154,7 +153,7 @@ public class SqlxmlTypeHandlerTest extends BaseTypeHandlerTest {
   }
 
   @Test
-  public void shouldReturnNull() {
+  void shouldReturnNull() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       Mapper mapper = session.getMapper(Mapper.class);
       XmlBean bean = mapper.select(2);
@@ -163,7 +162,7 @@ public class SqlxmlTypeHandlerTest extends BaseTypeHandlerTest {
   }
 
   @Test
-  public void shouldInsertXmlString() {
+  void shouldInsertXmlString() {
     final Integer id = 100;
     final String content = "<books><book><title>Save XML</title></book><book><title>Get XML</title></book></books>";
     // Insert

@@ -42,12 +42,12 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class SqlProviderTest {
+class SqlProviderTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
   @BeforeAll
-  public static void setUp() throws Exception {
+  static void setUp() throws Exception {
     // create a SqlSessionFactory
     try (Reader reader = Resources
         .getResourceAsReader("org/apache/ibatis/submitted/sqlprovider/mybatis-config.xml")) {
@@ -62,7 +62,7 @@ public class SqlProviderTest {
 
   // Test for list
   @Test
-  public void shouldGetTwoUsers() {
+  void shouldGetTwoUsers() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<Integer> list = new ArrayList<>();
@@ -77,7 +77,7 @@ public class SqlProviderTest {
 
   // Test for simple value without @Param
   @Test
-  public void shouldGetOneUser() {
+  void shouldGetOneUser() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       {
@@ -94,7 +94,7 @@ public class SqlProviderTest {
 
   // Test for empty
   @Test
-  public void shouldGetAllUsers() {
+  void shouldGetAllUsers() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<User> users = mapper.getAllUsers();
@@ -108,7 +108,7 @@ public class SqlProviderTest {
 
   // Test for single JavaBean
   @Test
-  public void shouldGetUsersByCriteria() {
+  void shouldGetUsersByCriteria() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       {
@@ -133,7 +133,7 @@ public class SqlProviderTest {
 
   // Test for single map
   @Test
-  public void shouldGetUsersByCriteriaMap() {
+  void shouldGetUsersByCriteriaMap() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       {
@@ -158,7 +158,7 @@ public class SqlProviderTest {
 
   // Test for multiple parameter without @Param
   @Test
-  public void shouldGetUsersByName() {
+  void shouldGetUsersByName() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<User> users = mapper.getUsersByName("User", "id DESC");
@@ -172,7 +172,7 @@ public class SqlProviderTest {
 
   // Test for map without @Param
   @Test
-  public void shouldGetUsersByNameUsingMap() {
+  void shouldGetUsersByNameUsingMap() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<User> users = mapper.getUsersByNameUsingMap("User", "id DESC");
@@ -186,7 +186,7 @@ public class SqlProviderTest {
 
   // Test for multiple parameter with @Param
   @Test
-  public void shouldGetUsersByNameWithParamNameAndOrderBy() {
+  void shouldGetUsersByNameWithParamNameAndOrderBy() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<User> users = mapper.getUsersByNameWithParamNameAndOrderBy("User", "id DESC");
@@ -200,7 +200,7 @@ public class SqlProviderTest {
 
   // Test for map with @Param
   @Test
-  public void shouldGetUsersByNameWithParamNameUsingMap() {
+  void shouldGetUsersByNameWithParamNameUsingMap() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<User> users = mapper.getUsersByNameWithParamNameAndOrderBy("User", "id DESC");
@@ -214,7 +214,7 @@ public class SqlProviderTest {
 
   // Test for simple value with @Param
   @Test
-  public void shouldGetUsersByNameWithParamName() {
+  void shouldGetUsersByNameWithParamName() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       {
@@ -237,7 +237,7 @@ public class SqlProviderTest {
   }
 
   @Test
-  public void methodNotFound() throws NoSuchMethodException {
+  void methodNotFound() throws NoSuchMethodException {
     try {
       Class<?> mapperType = ErrorMapper.class;
       Method mapperMethod = mapperType.getMethod("methodNotFound");
@@ -250,7 +250,7 @@ public class SqlProviderTest {
   }
 
   @Test
-  public void methodOverload() throws NoSuchMethodException {
+  void methodOverload() throws NoSuchMethodException {
     try {
       Class<?> mapperType = ErrorMapper.class;
       Method mapperMethod = mapperType.getMethod("methodOverload", String.class);
@@ -263,7 +263,7 @@ public class SqlProviderTest {
   }
 
   @Test
-  public void notSqlProvider() throws NoSuchMethodException {
+  void notSqlProvider() {
     try {
       new ProviderSqlSource(new Configuration(), new Object(), null, null);
       fail();
@@ -273,7 +273,7 @@ public class SqlProviderTest {
   }
 
   @Test
-  public void multipleProviderContext() throws NoSuchMethodException {
+  void multipleProviderContext() throws NoSuchMethodException {
     try {
       Class<?> mapperType = ErrorMapper.class;
       Method mapperMethod = mapperType.getMethod("multipleProviderContext");
@@ -286,7 +286,7 @@ public class SqlProviderTest {
   }
 
   @Test
-  public void notSupportParameterObjectOnMultipleArguments() throws NoSuchMethodException {
+  void notSupportParameterObjectOnMultipleArguments() throws NoSuchMethodException {
     try {
       Class<?> mapperType = Mapper.class;
       Method mapperMethod = mapperType.getMethod("getUsersByName", String.class, String.class);
@@ -300,7 +300,7 @@ public class SqlProviderTest {
   }
 
   @Test
-  public void notSupportParameterObjectOnNamedArgument() throws NoSuchMethodException {
+  void notSupportParameterObjectOnNamedArgument() throws NoSuchMethodException {
     try {
       Class<?> mapperType = Mapper.class;
       Method mapperMethod = mapperType.getMethod("getUsersByNameWithParamName", String.class);
@@ -314,7 +314,7 @@ public class SqlProviderTest {
   }
 
   @Test
-  public void invokeError() throws NoSuchMethodException {
+  void invokeError() throws NoSuchMethodException {
     try {
       Class<?> mapperType = ErrorMapper.class;
       Method mapperMethod = mapperType.getMethod("invokeError");
@@ -328,7 +328,7 @@ public class SqlProviderTest {
   }
 
   @Test
-  public void shouldInsertUser() {
+  void shouldInsertUser() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = new User();
@@ -342,7 +342,7 @@ public class SqlProviderTest {
   }
 
   @Test
-  public void shouldUpdateUser() {
+  void shouldUpdateUser() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = new User();
@@ -359,7 +359,7 @@ public class SqlProviderTest {
   }
 
   @Test
-  public void shouldDeleteUser() {
+  void shouldDeleteUser() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = new User();
@@ -376,7 +376,7 @@ public class SqlProviderTest {
   }
 
   @Test
-  public void mapperProviderContextOnly() {
+  void mapperProviderContextOnly() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       assertEquals("User4", mapper.selectById(4).getName());
@@ -385,7 +385,7 @@ public class SqlProviderTest {
   }
 
   @Test
-  public void mapperOneParamAndProviderContext() {
+  void mapperOneParamAndProviderContext() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       assertEquals(1, mapper.selectByName("User4").size());
@@ -394,7 +394,7 @@ public class SqlProviderTest {
   }
 
   @Test
-  public void mapperMultipleParamAndProviderContextWithAtParam() {
+  void mapperMultipleParamAndProviderContextWithAtParam() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       assertEquals(1, mapper.selectByIdAndNameWithAtParam(4,"User4").size());
@@ -403,7 +403,7 @@ public class SqlProviderTest {
   }
 
   @Test
-  public void mapperMultipleParamAndProviderContext() {
+  void mapperMultipleParamAndProviderContext() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       assertEquals(1, mapper.selectByIdAndName(4,"User4").size());
@@ -412,7 +412,7 @@ public class SqlProviderTest {
   }
 
   @Test
-  public void staticMethodNoArgument() {
+  void staticMethodNoArgument() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       StaticMethodSqlProviderMapper mapper =
           sqlSession.getMapper(StaticMethodSqlProviderMapper.class);
@@ -421,7 +421,7 @@ public class SqlProviderTest {
   }
 
   @Test
-  public void staticMethodOneArgument() {
+  void staticMethodOneArgument() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       StaticMethodSqlProviderMapper mapper =
           sqlSession.getMapper(StaticMethodSqlProviderMapper.class);
@@ -430,7 +430,7 @@ public class SqlProviderTest {
   }
 
   @Test
-  public void staticMethodMultipleArgument() {
+  void staticMethodMultipleArgument() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       StaticMethodSqlProviderMapper mapper =
           sqlSession.getMapper(StaticMethodSqlProviderMapper.class);
@@ -439,7 +439,7 @@ public class SqlProviderTest {
   }
 
   @Test
-  public void staticMethodOnlyProviderContext() {
+  void staticMethodOnlyProviderContext() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       StaticMethodSqlProviderMapper mapper =
           sqlSession.getMapper(StaticMethodSqlProviderMapper.class);
@@ -448,7 +448,7 @@ public class SqlProviderTest {
   }
 
   @Test
-  public void staticMethodOneArgumentAndProviderContext() {
+  void staticMethodOneArgumentAndProviderContext() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       StaticMethodSqlProviderMapper mapper =
           sqlSession.getMapper(StaticMethodSqlProviderMapper.class);

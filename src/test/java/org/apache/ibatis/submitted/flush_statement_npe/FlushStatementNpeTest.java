@@ -26,12 +26,12 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class FlushStatementNpeTest {
+class FlushStatementNpeTest {
 
     private static SqlSessionFactory sqlSessionFactory;
 
     @BeforeAll
-    public static void initDatabase() throws Exception {
+    static void initDatabase() throws Exception {
         try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/flush_statement_npe/ibatisConfig.xml")) {
             sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
         }
@@ -41,7 +41,7 @@ public class FlushStatementNpeTest {
     }
 
     @Test
-    public void testSameUpdateAfterCommitSimple() {
+    void testSameUpdateAfterCommitSimple() {
         try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.SIMPLE)) {
             PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
             Person person = personMapper.selectById(1);
@@ -57,7 +57,7 @@ public class FlushStatementNpeTest {
         }
     }
     @Test
-    public void testSameUpdateAfterCommitReuse() {
+    void testSameUpdateAfterCommitReuse() {
         try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.REUSE)) {
             PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
             Person person = personMapper.selectById(1);
@@ -73,7 +73,7 @@ public class FlushStatementNpeTest {
         }
     }
     @Test
-    public void testSameUpdateAfterCommitBatch() {
+    void testSameUpdateAfterCommitBatch() {
         try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH)) {
             PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
             Person person = personMapper.selectById(1);

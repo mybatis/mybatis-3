@@ -36,33 +36,31 @@ import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class XmlExternalRefTest {
+class XmlExternalRefTest {
 
   @Test
-  public void testCrossReferenceXmlConfig() throws Exception {
+  void testCrossReferenceXmlConfig() throws Exception {
     testCrossReference(getSqlSessionFactoryXmlConfig());
   }
 
   @Test
-  public void testCrossReferenceJavaConfig() throws Exception {
+  void testCrossReferenceJavaConfig() throws Exception {
     testCrossReference(getSqlSessionFactoryJavaConfig());
   }
 
   @Test
-  public void testFailFastOnBuildAll() throws Exception {
+  void testFailFastOnBuildAll() {
     Configuration configuration = new Configuration();
     try {
       configuration.addMapper(InvalidMapper.class);
     } catch (Exception e) {
       fail("No exception should be thrown before parsing statement nodes.");
     }
-    Assertions.assertThrows(BuilderException.class, () -> {
-      configuration.getMappedStatementNames();
-    });
+    Assertions.assertThrows(BuilderException.class, configuration::getMappedStatementNames);
   }
 
   @Test
-  public void testFailFastOnBuildAllWithInsert() throws Exception {
+  void testFailFastOnBuildAllWithInsert() {
     Configuration configuration = new Configuration();
     try {
       configuration.addMapper(InvalidWithInsertMapper.class);
@@ -70,13 +68,11 @@ public class XmlExternalRefTest {
     } catch (Exception e) {
       fail("No exception should be thrown before parsing statement nodes.");
     }
-    Assertions.assertThrows(BuilderException.class, () -> {
-      configuration.getMappedStatementNames();
-    });
+    Assertions.assertThrows(BuilderException.class, configuration::getMappedStatementNames);
   }
 
   @Test
-  public void testMappedStatementCache() throws Exception {
+  void testMappedStatementCache() throws Exception {
     try (Reader configReader = Resources.getResourceAsReader("org/apache/ibatis/submitted/xml_external_ref/MapperConfig.xml")) {
       SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configReader);
 

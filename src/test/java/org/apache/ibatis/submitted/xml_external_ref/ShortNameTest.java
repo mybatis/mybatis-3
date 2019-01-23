@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -28,9 +28,9 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class ShortNameTest {
+class ShortNameTest {
     @Test
-    public void getStatementByShortName() throws Exception {
+    void getStatementByShortName() throws Exception {
         Configuration configuration = getConfiguration();
         // statement can be referenced by its short name.
         MappedStatement selectPet = configuration.getMappedStatement("selectPet");
@@ -38,12 +38,10 @@ public class ShortNameTest {
     }
 
     @Test
-    public void ambiguousShortNameShouldFail() throws Exception {
+    void ambiguousShortNameShouldFail() throws Exception {
         Configuration configuration = getConfiguration();
         // ambiguous short name should throw an exception.
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {
-          configuration.getMappedStatement("select");
-        });
+        Assertions.assertThrows(IllegalArgumentException.class, () -> configuration.getMappedStatement("select"));
     }
 
     private Configuration getConfiguration() throws IOException {

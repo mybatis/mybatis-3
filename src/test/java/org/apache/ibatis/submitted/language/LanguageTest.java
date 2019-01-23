@@ -25,20 +25,20 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Just a test case. Not a real Velocity implementation.
  */
-public class LanguageTest {
+class LanguageTest {
 
   protected static SqlSessionFactory sqlSessionFactory;
 
   @BeforeAll
-  public static void setUp() throws Exception {
+  static void setUp() throws Exception {
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/language/MapperConfig.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
@@ -48,7 +48,7 @@ public class LanguageTest {
   }
 
   @Test
-  public void testDynamicSelectWithPropertyParams() {
+  void testDynamicSelectWithPropertyParams() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 
       Parameter p = new Parameter(true, "Fli%");
@@ -62,20 +62,20 @@ public class LanguageTest {
       answer = sqlSession.selectList("selectNames", p);
       assertEquals(3, answer.size());
       for (Name n : answer) {
-        assertTrue(n.getLastName() == null);
+        assertNull(n.getLastName());
       }
 
       p = new Parameter(false, "Rub%");
       answer = sqlSession.selectList("selectNames", p);
       assertEquals(2, answer.size());
       for (Name n : answer) {
-        assertTrue(n.getLastName() == null);
+        assertNull(n.getLastName());
       }
     }
   }
 
   @Test
-  public void testDynamicSelectWithExpressionParams() {
+  void testDynamicSelectWithExpressionParams() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 
       Parameter p = new Parameter(true, "Fli");
@@ -89,20 +89,20 @@ public class LanguageTest {
       answer = sqlSession.selectList("selectNamesWithExpressions", p);
       assertEquals(3, answer.size());
       for (Name n : answer) {
-        assertTrue(n.getLastName() == null);
+        assertNull(n.getLastName());
       }
 
       p = new Parameter(false, "Rub");
       answer = sqlSession.selectList("selectNamesWithExpressions", p);
       assertEquals(2, answer.size());
       for (Name n : answer) {
-        assertTrue(n.getLastName() == null);
+        assertNull(n.getLastName());
       }
     }
   }
 
   @Test
-  public void testDynamicSelectWithIteration() {
+  void testDynamicSelectWithIteration() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 
       int[] ids = { 2, 4, 5 };
@@ -117,7 +117,7 @@ public class LanguageTest {
   }
 
   @Test
-  public void testLangRaw() {
+  void testLangRaw() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Parameter p = new Parameter(true, "Fli%");
       List<Name> answer = sqlSession.selectList("selectRaw", p);
@@ -129,7 +129,7 @@ public class LanguageTest {
   }
 
   @Test
-  public void testLangRawWithInclude() {
+  void testLangRawWithInclude() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Parameter p = new Parameter(true, "Fli%");
       List<Name> answer = sqlSession.selectList("selectRawWithInclude", p);
@@ -141,7 +141,7 @@ public class LanguageTest {
   }
 
   @Test
-  public void testLangRawWithIncludeAndCData() {
+  void testLangRawWithIncludeAndCData() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Parameter p = new Parameter(true, "Fli%");
       List<Name> answer = sqlSession.selectList("selectRawWithIncludeAndCData", p);
@@ -153,7 +153,7 @@ public class LanguageTest {
   }
 
   @Test
-  public void testLangXmlTags() {
+  void testLangXmlTags() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Parameter p = new Parameter(true, "Fli%");
       List<Name> answer = sqlSession.selectList("selectXml", p);
@@ -165,7 +165,7 @@ public class LanguageTest {
   }
 
   @Test
-  public void testLangRawWithMapper() {
+  void testLangRawWithMapper() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Parameter p = new Parameter(true, "Fli%");
       Mapper m = sqlSession.getMapper(Mapper.class);
@@ -178,7 +178,7 @@ public class LanguageTest {
   }
 
   @Test
-  public void testLangVelocityWithMapper() {
+  void testLangVelocityWithMapper() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Parameter p = new Parameter(true, "Fli%");
       Mapper m = sqlSession.getMapper(Mapper.class);
@@ -191,7 +191,7 @@ public class LanguageTest {
   }
 
   @Test
-  public void testLangXmlWithMapper() {
+  void testLangXmlWithMapper() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Parameter p = new Parameter(true, "Fli%");
       Mapper m = sqlSession.getMapper(Mapper.class);
@@ -204,7 +204,7 @@ public class LanguageTest {
   }
 
   @Test
-  public void testLangXmlWithMapperAndSqlSymbols() {
+  void testLangXmlWithMapperAndSqlSymbols() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Parameter p = new Parameter(true, "Fli%");
       Mapper m = sqlSession.getMapper(Mapper.class);

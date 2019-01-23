@@ -26,12 +26,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class OgnlStaticTest {
+class OgnlStaticTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
   @BeforeAll
-  public static void setUp() throws Exception {
+  static void setUp() throws Exception {
     // create a SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/ognlstatic/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -50,7 +50,7 @@ public class OgnlStaticTest {
    * There are two parameter mappings but DefaulParameterHandler maps them both to input paremeter (integer)
    */
   @Test // see issue #448
-  public void shouldGetAUserStatic() {
+  void shouldGetAUserStatic() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUserStatic(1);
@@ -60,7 +60,7 @@ public class OgnlStaticTest {
   }
 
   @Test // see issue #61 (gh)
-  public void shouldGetAUserWithIfNode() {
+  void shouldGetAUserWithIfNode() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUserIfNode("User1");

@@ -35,20 +35,20 @@ import org.apache.ibatis.transaction.TransactionException;
 import org.apache.ibatis.type.TypeException;
 import org.junit.jupiter.api.Test;
 
-public class GeneralExceptionsTest {
+class GeneralExceptionsTest {
 
   private static final String EXPECTED_MESSAGE = "Test Message";
   private static final Exception EXPECTED_CAUSE = new Exception("Nested Exception");
 
   @Test
-  public void should() {
+  void should() {
     RuntimeException thrown = ExceptionFactory.wrapException(EXPECTED_MESSAGE, EXPECTED_CAUSE);
     assertTrue(thrown instanceof PersistenceException, "Exception should be wrapped in RuntimeSqlException.");
     testThrowException(thrown);
   }
 
   @Test
-  public void shouldInstantiateAndThrowAllCustomExceptions() throws Exception {
+  void shouldInstantiateAndThrowAllCustomExceptions() throws Exception {
     Class<?>[] exceptionTypes = {
         BindingException.class,
         CacheException.class,

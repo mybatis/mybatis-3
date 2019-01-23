@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -35,17 +35,17 @@ import org.junit.jupiter.api.Test;
 /**
  * @author Kazuki Shimizu
  */
-public class Jsr310TypeHandlerRegistryTest {
+class Jsr310TypeHandlerRegistryTest {
 
   private TypeHandlerRegistry typeHandlerRegistry;
 
   @BeforeEach
-  public void setup() {
+  void setup() {
     typeHandlerRegistry = new TypeHandlerRegistry();
   }
 
   @Test
-  public void shouldRegisterJsr310TypeHandlers() throws ClassNotFoundException {
+  void shouldRegisterJsr310TypeHandlers() {
     assertThat(typeHandlerRegistry.getTypeHandler(Instant.class))
         .isInstanceOf(InstantTypeHandler.class);
     assertThat(typeHandlerRegistry.getTypeHandler(LocalDateTime.class))

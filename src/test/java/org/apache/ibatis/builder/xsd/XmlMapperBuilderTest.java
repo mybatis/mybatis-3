@@ -28,10 +28,10 @@ import org.junit.jupiter.api.Test;
 import java.io.InputStream;
 
 @Disabled("We'll try a different approach. See #1393")
-public class XmlMapperBuilderTest {
+class XmlMapperBuilderTest {
 
   @Test
-  public void mappedStatementWithOptions() throws Exception {
+  void mappedStatementWithOptions() throws Exception {
     // System.setProperty(XPathParser.KEY_USE_XSD, "true");
     Configuration configuration = new Configuration();
     String resource = "org/apache/ibatis/builder/xsd/AuthorMapper.xml";

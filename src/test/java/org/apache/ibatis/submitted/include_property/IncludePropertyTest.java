@@ -30,12 +30,12 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class IncludePropertyTest {
+class IncludePropertyTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
   @BeforeAll
-  public static void setUp() throws Exception {
+  static void setUp() throws Exception {
     // create an SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/include_property/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -47,7 +47,7 @@ public class IncludePropertyTest {
   }
 
   @Test
-  public void testSimpleProperty() {
+  void testSimpleProperty() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       List<String> results = sqlSession.selectList("org.apache.ibatis.submitted.include_property.Mapper.selectSimpleA");
       assertEquals("col_a value", results.get(0));
@@ -57,7 +57,7 @@ public class IncludePropertyTest {
   }
 
   @Test
-  public void testPropertyContext() {
+  void testPropertyContext() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       List<Map<String, String>> results = sqlSession.selectList("org.apache.ibatis.submitted.include_property.Mapper.selectPropertyContext");
       Map<String, String> map = results.get(0);
@@ -68,7 +68,7 @@ public class IncludePropertyTest {
   }
 
   @Test
-  public void testNestedDynamicValue() {
+  void testNestedDynamicValue() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       List<String> results = sqlSession.selectList("org.apache.ibatis.submitted.include_property.Mapper.selectNestedDynamicValue");
       assertEquals("col_a value", results.get(0));
@@ -76,7 +76,7 @@ public class IncludePropertyTest {
   }
 
   @Test
-  public void testEmptyString() {
+  void testEmptyString() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       List<String> results = sqlSession.selectList("org.apache.ibatis.submitted.include_property.Mapper.selectEmptyProperty");
       assertEquals("a value", results.get(0));
@@ -84,7 +84,7 @@ public class IncludePropertyTest {
   }
 
   @Test
-  public void testPropertyInRefid() {
+  void testPropertyInRefid() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       List<String> results = sqlSession.selectList("org.apache.ibatis.submitted.include_property.Mapper.selectPropertyInRefid");
       assertEquals("col_a value", results.get(0));
@@ -92,7 +92,7 @@ public class IncludePropertyTest {
   }
 
   @Test
-  public void testConfigVar() {
+  void testConfigVar() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       List<String> results = sqlSession.selectList("org.apache.ibatis.submitted.include_property.Mapper.selectConfigVar");
       assertEquals("col_c value", results.get(0), "Property defined in the config file should be used.");
@@ -100,7 +100,7 @@ public class IncludePropertyTest {
   }
 
   @Test
-  public void testRuntimeVar() {
+  void testRuntimeVar() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Map<String, String> params = new HashMap<>();
       params.put("suffix", "b");
@@ -110,7 +110,7 @@ public class IncludePropertyTest {
   }
 
   @Test
-  public void testNestedInclude() {
+  void testNestedInclude() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       List<String> results = sqlSession.selectList("org.apache.ibatis.submitted.include_property.Mapper.selectNestedInclude");
       assertEquals("a value", results.get(0));
@@ -118,7 +118,7 @@ public class IncludePropertyTest {
   }
 
   @Test
-  public void testParametersInAttribute() {
+  void testParametersInAttribute() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       List<Map<String, String>> results = sqlSession.selectList("org.apache.ibatis.submitted.include_property.Mapper.selectPropertyInAttribute");
       Map<String, String> map = results.get(0);

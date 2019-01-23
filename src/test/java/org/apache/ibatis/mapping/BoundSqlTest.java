@@ -25,10 +25,10 @@ import java.util.Map;
 import org.apache.ibatis.session.Configuration;
 import org.junit.jupiter.api.Test;
 
-public class BoundSqlTest {
+class BoundSqlTest {
 
   @Test
-  public void testHasAdditionalParameter() throws Exception {
+  void testHasAdditionalParameter() {
     List<ParameterMapping> params = Collections.emptyList();
     BoundSql boundSql = new BoundSql(new Configuration(), "some sql", params, new Object());
 

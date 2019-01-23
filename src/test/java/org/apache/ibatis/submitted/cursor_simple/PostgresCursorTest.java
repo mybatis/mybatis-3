@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-
 package org.apache.ibatis.submitted.cursor_simple;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -42,14 +41,14 @@ import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres;
 import ru.yandex.qatools.embed.postgresql.util.SocketUtil;
 
 @Tag("EmbeddedPostgresqlTests")
-public class PostgresCursorTest {
+class PostgresCursorTest {
 
   private static final EmbeddedPostgres postgres = new EmbeddedPostgres();
 
   private static SqlSessionFactory sqlSessionFactory;
 
   @BeforeAll
-  public static void setUp() throws Exception {
+  static void setUp() throws Exception {
     // Launch PostgreSQL server. Download / unarchive if necessary.
     String url = postgres.start(
       EmbeddedPostgres.cachedRuntimeConfig(Paths.get(System.getProperty("java.io.tmpdir"), "pgembed")), "localhost",
@@ -67,12 +66,12 @@ public class PostgresCursorTest {
   }
 
   @AfterAll
-  public static void tearDown() {
+  static void tearDown() {
     postgres.stop();
   }
 
   @Test
-  public void shouldBeAbleToReuseStatement() throws IOException {
+  void shouldBeAbleToReuseStatement() throws IOException {
     // #1351
     try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.REUSE)) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);

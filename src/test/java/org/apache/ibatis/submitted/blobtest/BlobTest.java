@@ -29,11 +29,11 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class BlobTest {
+class BlobTest {
     private static SqlSessionFactory sqlSessionFactory;
 
     @BeforeAll
-    public static void initDatabase() throws Exception {
+    static void initDatabase() throws Exception {
         try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/blobtest/MapperConfig.xml")) {
             sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
         }
@@ -47,7 +47,7 @@ public class BlobTest {
      * This test demonstrates the use of type aliases for primitive types
      * in constructor based result maps
      */
-    public void testInsertBlobThenSelectAll() {
+    void testInsertBlobThenSelectAll() {
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             BlobMapper blobMapper = sqlSession.getMapper(BlobMapper.class);
 
@@ -71,7 +71,7 @@ public class BlobTest {
      * This test demonstrates the use of type aliases for primitive types
      * in constructor based result maps
      */
-    public void testInsertBlobObjectsThenSelectAll() {
+    void testInsertBlobObjectsThenSelectAll() {
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             BlobMapper blobMapper = sqlSession.getMapper(BlobMapper.class);
 
@@ -90,7 +90,7 @@ public class BlobTest {
         }
     }
 
-    public static boolean blobsAreEqual(byte[] blob1, byte[] blob2) {
+    static boolean blobsAreEqual(byte[] blob1, byte[] blob2) {
         if (blob1 == null) {
             return blob2 == null;
         }

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -27,12 +27,12 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class NamedConstructorArgsUseActualNameTest {
+class NamedConstructorArgsUseActualNameTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
   @BeforeAll
-  public static void setUp() throws Exception {
+  static void setUp() throws Exception {
     // create an SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/named_constructor_args/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -46,7 +46,7 @@ public class NamedConstructorArgsUseActualNameTest {
   }
 
   @Test
-  public void argsByActualNames() {
+  void argsByActualNames() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       UseActualNameMapper mapper = sqlSession.getMapper(UseActualNameMapper.class);
       User user = mapper.mapConstructorWithoutParamAnnos(1);
@@ -56,7 +56,7 @@ public class NamedConstructorArgsUseActualNameTest {
   }
 
   @Test
-  public void argsByActualNamesXml() {
+  void argsByActualNamesXml() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       UseActualNameMapper mapper = sqlSession.getMapper(UseActualNameMapper.class);
       User user = mapper.mapConstructorWithoutParamAnnosXml(1);

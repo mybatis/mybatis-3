@@ -27,12 +27,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class MultipleDiscriminatorTest {
+class MultipleDiscriminatorTest {
 
     private static SqlSessionFactory sqlSessionFactory;
 
     @BeforeAll
-    public static void initDatabase() throws Exception {
+    static void initDatabase() throws Exception {
         try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multiple_discriminator/ibatisConfig.xml")) {
             sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
         }
@@ -42,7 +42,7 @@ public class MultipleDiscriminatorTest {
     }
 
     @Test
-    public void testMultipleDiscriminator() {
+    void testMultipleDiscriminator() {
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
             Person person = personMapper.get(1L);
@@ -51,7 +51,7 @@ public class MultipleDiscriminatorTest {
         }
     }
     @Test
-    public void testMultipleDiscriminator2() {
+    void testMultipleDiscriminator2() {
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
             Person person = personMapper.get2(1L);
@@ -60,7 +60,7 @@ public class MultipleDiscriminatorTest {
         }
     }
     @Test
-    public void testMultipleDiscriminatorLoop() {
+    void testMultipleDiscriminatorLoop() {
         Assertions.assertTimeout(Duration.ofMillis(20), () -> {
           try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);

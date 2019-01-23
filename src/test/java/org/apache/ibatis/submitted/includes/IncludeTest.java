@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -28,12 +28,12 @@ import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.jupiter.api.Assertions;
 
-public class IncludeTest {
+class IncludeTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
   @BeforeAll
-  public static void setUp() throws Exception {
+  static void setUp() throws Exception {
     // create a SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/includes/MapperConfig.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -45,7 +45,7 @@ public class IncludeTest {
   }
 
   @Test
-  public void testIncludes()  {
+  void testIncludes()  {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       final Integer result = sqlSession.selectOne("org.apache.ibatis.submitted.includes.mapper.selectWithProperty");
       Assertions.assertEquals(Integer.valueOf(1), result);
@@ -53,7 +53,7 @@ public class IncludeTest {
   }
 
   @Test
-  public void testParametrizedIncludes() {
+  void testParametrizedIncludes() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       final Map<String, Object> result = sqlSession.selectOne("org.apache.ibatis.submitted.includes.mapper.select");
       // Assertions.assertEquals(Integer.valueOf(1), result);

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -34,20 +34,20 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.junit.jupiter.api.Test;
 
-public class MultipleCrossIncludeTest {
+class MultipleCrossIncludeTest {
 
   @Test
-  public void testMultipleCrossIncludeXmlConfig() throws Exception {
+  void testMultipleCrossIncludeXmlConfig() throws Exception {
     testCrossReference(getSqlSessionFactoryXmlConfig());
   }
 
   @Test
-  public void testMultipleCrossIncludeJavaConfig() throws Exception {
+  void testMultipleCrossIncludeJavaConfig() throws Exception {
     testCrossReference(getSqlSessionFactoryJavaConfig());
   }
 
   @Test
-  public void testMappedStatementCache() throws Exception {
+  void testMappedStatementCache() throws Exception {
     try (Reader configReader = Resources.getResourceAsReader("org/apache/ibatis/submitted/xml_external_ref/MultipleCrossIncludeMapperConfig.xml")) {
       SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configReader);
 
@@ -62,7 +62,7 @@ public class MultipleCrossIncludeTest {
     }
   }
 
-  private void testCrossReference(SqlSessionFactory sqlSessionFactory) throws Exception {
+  private void testCrossReference(SqlSessionFactory sqlSessionFactory) {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       MultipleCrossIncludePersonMapper personMapper = sqlSession.getMapper(MultipleCrossIncludePersonMapper.class);
       Person person = personMapper.select(1);
