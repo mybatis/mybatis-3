@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -25,9 +25,9 @@ import org.junit.jupiter.api.Test;
 /**
  * @see http://code.google.com/p/mybatis/issues/detail?id=291
  */
-public class ExternalRefidResolutionTest {
+class ExternalRefidResolutionTest {
   @Test
-  public void testExternalRefAfterSelectKey() throws Exception {
+  void testExternalRefAfterSelectKey() throws Exception {
     String resource = "org/apache/ibatis/submitted/refid_resolution/ExternalMapperConfig.xml";
     try (Reader reader = Resources.getResourceAsReader(resource)) {
       SqlSessionFactoryBuilder builder = new SqlSessionFactoryBuilder();

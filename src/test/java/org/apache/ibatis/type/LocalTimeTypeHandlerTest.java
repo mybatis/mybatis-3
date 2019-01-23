@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import java.time.LocalTime;
 
 import org.junit.jupiter.api.Test;
 
-public class LocalTimeTypeHandlerTest extends BaseTypeHandlerTest {
+class LocalTimeTypeHandlerTest extends BaseTypeHandlerTest {
 
   private static final TypeHandler<LocalTime> TYPE_HANDLER = new LocalTimeTypeHandler();
   // java.sql.Time doesn't contain millis, so set nano to 0

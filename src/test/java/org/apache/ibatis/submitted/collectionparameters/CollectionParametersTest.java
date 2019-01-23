@@ -30,12 +30,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class CollectionParametersTest {
+class CollectionParametersTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
   @BeforeAll
-  public static void setUp() throws Exception {
+  static void setUp() throws Exception {
     // create an SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/collectionparameters/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -47,7 +47,7 @@ public class CollectionParametersTest {
   }
 
   @Test
-  public void shouldGetTwoUsersPassingAList() {
+  void shouldGetTwoUsersPassingAList() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       ArrayList<Integer> list = new ArrayList<>();
@@ -59,7 +59,7 @@ public class CollectionParametersTest {
   }
 
   @Test
-  public void shouldGetTwoUsersPassingAnArray() {
+  void shouldGetTwoUsersPassingAnArray() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Integer[] list = new Integer[2];
@@ -71,7 +71,7 @@ public class CollectionParametersTest {
   }
 
   @Test
-  public void shouldGetTwoUsersPassingACollection() {
+  void shouldGetTwoUsersPassingACollection() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Set<Integer> list = new HashSet<>();

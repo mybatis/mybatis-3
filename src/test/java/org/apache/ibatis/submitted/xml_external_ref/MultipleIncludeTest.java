@@ -32,15 +32,15 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.junit.jupiter.api.Test;
 
-public class MultipleIncludeTest {
+class MultipleIncludeTest {
 
   @Test
-  public void testMultipleIncludeXmlConfig() throws Exception {
+  void testMultipleIncludeXmlConfig() throws Exception {
     testMultipleIncludes(getSqlSessionFactoryXmlConfig());
   }
 
   @Test
-  public void testMultipleIncludeJavaConfig() throws Exception {
+  void testMultipleIncludeJavaConfig() throws Exception {
     testMultipleIncludes(getSqlSessionFactoryJavaConfig());
   }
 
@@ -55,7 +55,7 @@ public class MultipleIncludeTest {
 
   private SqlSessionFactory getSqlSessionFactoryXmlConfig() throws Exception {
     try (Reader configReader = Resources
-        .getResourceAsReader("org/apache/ibatis/submitted/xml_external_ref/MultipleIncludeMapperConfig.xml");) {
+        .getResourceAsReader("org/apache/ibatis/submitted/xml_external_ref/MultipleIncludeMapperConfig.xml")) {
       SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configReader);
 
       initDb(sqlSessionFactory);

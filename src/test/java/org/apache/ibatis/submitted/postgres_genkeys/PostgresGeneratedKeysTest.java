@@ -37,14 +37,14 @@ import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres;
 import ru.yandex.qatools.embed.postgresql.util.SocketUtil;
 
 @Tag("EmbeddedPostgresqlTests")
-public class PostgresGeneratedKeysTest {
+class PostgresGeneratedKeysTest {
 
   private static final EmbeddedPostgres postgres = new EmbeddedPostgres();
 
   private static SqlSessionFactory sqlSessionFactory;
 
   @BeforeAll
-  public static void setUp() throws Exception {
+  static void setUp() throws Exception {
     //  Launch PostgreSQL server. Download / unarchive if necessary.
     String url = postgres.start(EmbeddedPostgres.cachedRuntimeConfig(Paths.get(System.getProperty("java.io.tmpdir"), "pgembed")), "localhost", SocketUtil.findFreePort(), "postgres_genkeys", "postgres", "root", Collections.emptyList());
 
@@ -61,12 +61,12 @@ public class PostgresGeneratedKeysTest {
   }
 
   @AfterAll
-  public static void tearDown() {
+  static void tearDown() {
     postgres.stop();
   }
 
   @Test
-  public void testInsertIntoTableWithNoSerialColumn() {
+  void testInsertIntoTableWithNoSerialColumn() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Section section = new Section();
@@ -78,7 +78,7 @@ public class PostgresGeneratedKeysTest {
   }
 
   @Test
-  public void testUpdateTableWithSerial() {
+  void testUpdateTableWithSerial() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = new User();
@@ -90,7 +90,7 @@ public class PostgresGeneratedKeysTest {
   }
 
   @Test
-  public void testUnusedGeneratedKey() {
+  void testUnusedGeneratedKey() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       int result = mapper.insertUser("John");

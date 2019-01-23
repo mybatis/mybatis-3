@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -26,12 +26,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class CglibNPELazyTest {
+class CglibNPELazyTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
   @BeforeAll
-  public static void initDatabase() throws Exception {
+  static void initDatabase() throws Exception {
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/cglib_lazy_error/ibatisConfigLazy.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
       sqlSessionFactory.getConfiguration().setLazyLoadingEnabled(true);
@@ -43,7 +43,7 @@ public class CglibNPELazyTest {
   }
 
   @Test
-  public void testNoParent() {
+  void testNoParent() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
       Person person = personMapper.selectById(1);
@@ -54,7 +54,7 @@ public class CglibNPELazyTest {
   }
 
   @Test
-  public void testAncestorSelf() {
+  void testAncestorSelf() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
       Person person = personMapper.selectById(1);
@@ -65,7 +65,7 @@ public class CglibNPELazyTest {
   }
 
   @Test
-  public void testAncestorAfterQueryingParents() {
+  void testAncestorAfterQueryingParents() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
       Person expectedAncestor = personMapper.selectById(1);
@@ -79,7 +79,7 @@ public class CglibNPELazyTest {
   }
 
   @Test
-  public void testGrandParent() {
+  void testGrandParent() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
       Person expectedParent = personMapper.selectById(2);
@@ -94,7 +94,7 @@ public class CglibNPELazyTest {
   }
 
   @Test
-  public void testAncestor() {
+  void testAncestor() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
       Person expectedAncestor = personMapper.selectById(1);

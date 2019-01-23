@@ -23,13 +23,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class ResultMappingTest {
+class ResultMappingTest {
   @Mock
   private Configuration configuration;
 
   // Issue 697: Association with both a resultMap and a select attribute should throw exception
   @Test
-  public void shouldThrowErrorWhenBothResultMapAndNestedSelectAreSet() {
+  void shouldThrowErrorWhenBothResultMapAndNestedSelectAreSet() {
     Assertions.assertThrows(IllegalStateException.class, () -> {
       new ResultMapping.Builder(configuration, "prop")
         .nestedQueryId("nested query ID")
@@ -40,12 +40,10 @@ public class ResultMappingTest {
 
   //Issue 4: column is mandatory on nested queries
   @Test
-  public void shouldFailWithAMissingColumnInNetstedSelect() throws Exception {
-    Assertions.assertThrows(IllegalStateException.class, () -> {
-      new ResultMapping.Builder(configuration, "prop")
+  void shouldFailWithAMissingColumnInNetstedSelect() {
+    Assertions.assertThrows(IllegalStateException.class, () -> new ResultMapping.Builder(configuration, "prop")
         .nestedQueryId("nested query ID")
-        .build();
-    });
+        .build());
   }
 
 }

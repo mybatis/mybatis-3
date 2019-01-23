@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -29,13 +29,13 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class DaoTest {
+class DaoTest {
   private Connection conn;
   private Dao dao;
   private SqlSession sqlSession;
 
   @BeforeEach
-  public void setUp() throws Exception {
+  void setUp() throws Exception {
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/emptycollection/mybatis-config.xml")) {
       SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
       sqlSession = sqlSessionFactory.openSession();
@@ -47,13 +47,13 @@ public class DaoTest {
   }
 
   @AfterEach
-  public void tearDown() throws Exception {
+  void tearDown() throws Exception {
     conn.close();
     sqlSession.close();
   }
 
   @Test
-  public void testWithEmptyList() throws Exception {
+  void testWithEmptyList() {
     final List<TodoLists> actual = dao.selectWithEmptyList();
     Assertions.assertEquals(1, actual.size());
     final List<TodoItem> todoItems = actual.get(0).getTodoItems();
@@ -61,13 +61,13 @@ public class DaoTest {
   }
 
   @Test
-  public void testWithNonEmptyList() throws Exception {
+  void testWithNonEmptyList() {
     final List<TodoLists> actual = dao.selectWithNonEmptyList();
     checkNonEmptyList(actual);
   }
 
   @Test
-  public void testWithNonEmptyList_noCollectionId() throws Exception {
+  void testWithNonEmptyList_noCollectionId() {
     final List<TodoLists> actual = dao.selectWithNonEmptyList_noCollectionId();
 
     checkNonEmptyList(actual);

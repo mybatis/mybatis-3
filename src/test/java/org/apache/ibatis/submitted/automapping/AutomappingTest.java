@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -28,12 +28,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class AutomappingTest {
+class AutomappingTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
   @BeforeAll
-  public static void setUp() throws Exception {
+  static void setUp() throws Exception {
     // create a SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/automapping/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -45,7 +45,7 @@ public class AutomappingTest {
   }
 
   @Test
-  public void shouldGetAUser() {
+  void shouldGetAUser() {
     sqlSessionFactory.getConfiguration().setAutoMappingBehavior(AutoMappingBehavior.NONE);
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
@@ -55,7 +55,7 @@ public class AutomappingTest {
   }
 
   @Test
-  public void shouldGetAUserWhithPhoneNumber() {
+  void shouldGetAUserWhithPhoneNumber() {
     sqlSessionFactory.getConfiguration().setAutoMappingBehavior(AutoMappingBehavior.NONE);
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
@@ -66,7 +66,7 @@ public class AutomappingTest {
   }
 
   @Test
-  public void shouldNotInheritAutoMappingInherited_InlineNestedResultMap() {
+  void shouldNotInheritAutoMappingInherited_InlineNestedResultMap() {
     sqlSessionFactory.getConfiguration().setAutoMappingBehavior(AutoMappingBehavior.NONE);
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
@@ -79,7 +79,7 @@ public class AutomappingTest {
   }
 
   @Test
-  public void shouldNotInheritAutoMappingInherited_ExternalNestedResultMap() {
+  void shouldNotInheritAutoMappingInherited_ExternalNestedResultMap() {
     sqlSessionFactory.getConfiguration().setAutoMappingBehavior(AutoMappingBehavior.NONE);
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
@@ -92,7 +92,7 @@ public class AutomappingTest {
   }
 
   @Test
-  public void shouldIgnorePartialAutoMappingBehavior_InlineNestedResultMap() {
+  void shouldIgnorePartialAutoMappingBehavior_InlineNestedResultMap() {
     // For nested resultMaps, PARTIAL works the same as NONE
     sqlSessionFactory.getConfiguration().setAutoMappingBehavior(AutoMappingBehavior.PARTIAL);
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
@@ -106,7 +106,7 @@ public class AutomappingTest {
   }
 
   @Test
-  public void shouldRespectFullAutoMappingBehavior_InlineNestedResultMap() {
+  void shouldRespectFullAutoMappingBehavior_InlineNestedResultMap() {
     sqlSessionFactory.getConfiguration().setAutoMappingBehavior(AutoMappingBehavior.FULL);
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
@@ -119,7 +119,7 @@ public class AutomappingTest {
   }
 
   @Test
-  public void shouldIgnorePartialAutoMappingBehavior_ExternalNestedResultMap() {
+  void shouldIgnorePartialAutoMappingBehavior_ExternalNestedResultMap() {
     // For nested resultMaps, PARTIAL works the same as NONE
     sqlSessionFactory.getConfiguration().setAutoMappingBehavior(AutoMappingBehavior.PARTIAL);
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
@@ -133,7 +133,7 @@ public class AutomappingTest {
   }
 
   @Test
-  public void shouldRespectFullAutoMappingBehavior_ExternalNestedResultMap() {
+  void shouldRespectFullAutoMappingBehavior_ExternalNestedResultMap() {
     sqlSessionFactory.getConfiguration().setAutoMappingBehavior(AutoMappingBehavior.FULL);
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
@@ -146,7 +146,7 @@ public class AutomappingTest {
   }
 
   @Test
-  public void shouldGetBooks() {
+  void shouldGetBooks() {
     // set automapping to default partial
     sqlSessionFactory.getConfiguration().setAutoMappingBehavior(AutoMappingBehavior.PARTIAL);
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
@@ -158,7 +158,7 @@ public class AutomappingTest {
   }
 
   @Test
-  public void shouldUpdateFinalField() {
+  void shouldUpdateFinalField() {
     // set automapping to default partial
     sqlSessionFactory.getConfiguration().setAutoMappingBehavior(AutoMappingBehavior.PARTIAL);
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {

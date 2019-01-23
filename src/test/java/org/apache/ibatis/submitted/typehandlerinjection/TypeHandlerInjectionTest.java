@@ -27,14 +27,14 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class TypeHandlerInjectionTest {
+class TypeHandlerInjectionTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
   private static UserStateTypeHandler<String> handler = new UserStateTypeHandler<>();
 
   @BeforeAll
-  public static void setUp() throws Exception {
+  static void setUp() throws Exception {
     // create a SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/typehandlerinjection/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -49,7 +49,7 @@ public class TypeHandlerInjectionTest {
   }
 
   @Test
-  public void shouldGetAUser() {
+  void shouldGetAUser() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<User> users = mapper.getUsers();

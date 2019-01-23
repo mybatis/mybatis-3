@@ -33,7 +33,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class ConnectionLoggerTest {
+class ConnectionLoggerTest {
 
   @Mock
   Connection connection;
@@ -44,29 +44,29 @@ public class ConnectionLoggerTest {
   @Mock
   Log log;
 
-  Connection conn;
+  private Connection conn;
 
   @BeforeEach
-  public void setUp() throws SQLException {
+  void setUp() throws SQLException {
     conn = ConnectionLogger.newInstance(connection, log, 1);
   }
 
   @Test
-  public void shouldPrintPrepareStatement() throws SQLException {
+  void shouldPrintPrepareStatement() throws SQLException {
     when(log.isDebugEnabled()).thenReturn(true);
     conn.prepareStatement("select 1");
     verify(log).debug(contains("Preparing: select 1"));
   }
 
   @Test
-  public void shouldPrintPrepareCall() throws SQLException {
+  void shouldPrintPrepareCall() throws SQLException {
     when(log.isDebugEnabled()).thenReturn(true);
     conn.prepareCall("{ call test() }");
     verify(log).debug(contains("Preparing: { call test() }"));
   }
 
   @Test
-  public void shouldNotPrintCreateStatement() throws SQLException {
+  void shouldNotPrintCreateStatement() throws SQLException {
     conn.createStatement();
     conn.close();
     verify(log, times(0)).debug(anyString());

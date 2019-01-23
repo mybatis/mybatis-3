@@ -52,10 +52,10 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Disabled("We'll try a different approach. See #1393")
-public class XmlConfigBuilderTest {
+class XmlConfigBuilderTest {
 
   @Test
-  public void shouldSuccessfullyLoadMinimalXMLConfigFile() throws Exception {
+  void shouldSuccessfullyLoadMinimalXMLConfigFile() throws Exception {
     // System.setProperty(XPathParser.KEY_USE_XSD, "true");
     String resource = "org/apache/ibatis/builder/xsd/MinimalMapperConfig.xml";
     try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
@@ -91,7 +91,7 @@ public class XmlConfigBuilderTest {
   }
 
   @Test
-  public void shouldSuccessfullyLoadXMLConfigFitle() throws Exception {
+  void shouldSuccessfullyLoadXMLConfigFitle() throws Exception {
     // System.setProperty(XPathParser.KEY_USE_XSD, "true");
     String resource = "org/apache/ibatis/builder/xsd/CustomizedSettingsMapperConfig.xml";
     try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
@@ -123,9 +123,9 @@ public class XmlConfigBuilderTest {
       assertEquals(JBoss6VFS.class.getName(), config.getVfsImpl().getName());
       assertEquals(String.class.getName(), config.getConfigurationFactory().getName());
 
-      assertTrue(config.getTypeAliasRegistry().getTypeAliases().get("blogauthor").equals(Author.class));
-      assertTrue(config.getTypeAliasRegistry().getTypeAliases().get("blog").equals(Blog.class));
-      assertTrue(config.getTypeAliasRegistry().getTypeAliases().get("cart").equals(Cart.class));
+      assertEquals(Author.class, config.getTypeAliasRegistry().getTypeAliases().get("blogauthor"));
+      assertEquals(Blog.class, config.getTypeAliasRegistry().getTypeAliases().get("blog"));
+      assertEquals(Cart.class, config.getTypeAliasRegistry().getTypeAliases().get("cart"));
 
       assertTrue(config.getTypeHandlerRegistry().getTypeHandler(Integer.class) instanceof CustomIntegerTypeHandler);
       assertTrue(config.getTypeHandlerRegistry().getTypeHandler(Long.class) instanceof CustomLongTypeHandler);

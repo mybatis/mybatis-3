@@ -24,7 +24,7 @@ import java.math.BigDecimal;
 
 import org.junit.jupiter.api.Test;
 
-public class BigDecimalTypeHandlerTest extends BaseTypeHandlerTest {
+class BigDecimalTypeHandlerTest extends BaseTypeHandlerTest {
 
   private static final TypeHandler<BigDecimal> TYPE_HANDLER = new BigDecimalTypeHandler();
 

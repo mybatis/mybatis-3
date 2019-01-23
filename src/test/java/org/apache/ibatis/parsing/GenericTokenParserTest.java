@@ -25,12 +25,12 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GenericTokenParserTest {
+class GenericTokenParserTest {
 
   public static class VariableTokenHandler implements TokenHandler {
     private Map<String, String> variables = new HashMap<>();
 
-    public VariableTokenHandler(Map<String, String> variables) {
+    VariableTokenHandler(Map<String, String> variables) {
       this.variables = variables;
     }
 
@@ -41,7 +41,7 @@ public class GenericTokenParserTest {
   }
 
   @Test
-  public void shouldDemonstrateGenericTokenReplacement() {
+  void shouldDemonstrateGenericTokenReplacement() {
     GenericTokenParser parser = new GenericTokenParser("${", "}", new VariableTokenHandler(new HashMap<String, String>() {
       {
         put("first_name", "James");
@@ -77,7 +77,7 @@ public class GenericTokenParserTest {
   }
 
   @Test
-  public void shallNotInterpolateSkippedVaiables() {
+  void shallNotInterpolateSkippedVaiables() {
     GenericTokenParser parser = new GenericTokenParser("${", "}", new VariableTokenHandler(new HashMap<>()));
 
     assertEquals("${skipped} variable", parser.parse("\\${skipped} variable"));
@@ -88,7 +88,7 @@ public class GenericTokenParserTest {
 
   @Disabled("Because it randomly fails on Travis CI. It could be useful during development.")
   @Test
-  public void shouldParseFastOnJdk7u6() {
+  void shouldParseFastOnJdk7u6() {
     Assertions.assertTimeout(Duration.ofMillis(1), () -> {
       // issue #760
       GenericTokenParser parser = new GenericTokenParser("${", "}", new VariableTokenHandler(new HashMap<String, String>() {

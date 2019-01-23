@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -33,12 +33,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class TypeHandlerTest {
+class TypeHandlerTest {
 
   private SqlSessionFactory sqlSessionFactory;
 
   @BeforeEach
-  public void setUp() throws Exception {
+  void setUp() throws Exception {
     // create a SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/typehandler/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -57,7 +57,7 @@ public class TypeHandlerTest {
   }
 
   @Test
-  public void shouldGetAUser() {
+  void shouldGetAUser() {
     addMapper();
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
@@ -69,7 +69,7 @@ public class TypeHandlerTest {
   }
 
   @Test
-  public void shouldApplyTypeHandlerOnGeneratedKey() {
+  void shouldApplyTypeHandlerOnGeneratedKey() {
     addMapper();
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
@@ -82,7 +82,7 @@ public class TypeHandlerTest {
   }
 
   @Test
-  public void shouldApplyTypeHandlerWithJdbcTypeSpecified() {
+  void shouldApplyTypeHandlerWithJdbcTypeSpecified() {
     addMapper();
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
@@ -92,7 +92,7 @@ public class TypeHandlerTest {
   }
 
   @Test
-  public void shouldApplyTypeHandlerUsingConstructor() {
+  void shouldApplyTypeHandlerUsingConstructor() {
     addMapper();
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
@@ -102,7 +102,7 @@ public class TypeHandlerTest {
   }
 
   @Test
-  public void shouldApplyTypeHandlerOnReturnTypeWithJdbcTypeSpecified() {
+  void shouldApplyTypeHandlerOnReturnTypeWithJdbcTypeSpecified() {
     addMapper();
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
@@ -112,7 +112,7 @@ public class TypeHandlerTest {
   }
 
   @Test
-  public void shouldPickSoleTypeHandlerOnXmlResultMap() {
+  void shouldPickSoleTypeHandlerOnXmlResultMap() {
     addMapper();
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
@@ -122,7 +122,7 @@ public class TypeHandlerTest {
   }
 
   @Test
-  public void shouldPickSameTypeHandlerMappedToDifferentJdbcTypes() {
+  void shouldPickSameTypeHandlerMappedToDifferentJdbcTypes() {
     sqlSessionFactory.getConfiguration().getTypeHandlerRegistry().register(ProductId.class, JdbcType.BIGINT, ProductIdTypeHandler.class);
     addMapper();
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
@@ -133,17 +133,15 @@ public class TypeHandlerTest {
   }
 
   @Test
-  public void shouldFailIfMultipleHandlerMappedToAType() {
+  void shouldFailIfMultipleHandlerMappedToAType() {
     sqlSessionFactory.getConfiguration().getTypeHandlerRegistry().register(ProductId.class, JdbcType.BIGINT, ConstantProductIdTypeHandler.class);
     // multiple type handlers are mapped to ProductId and
     // none of them are mapped to null jdbcType.
-    Assertions.assertThrows(BuilderException.class,  () -> {
-      addMapper();
-    });
+    Assertions.assertThrows(BuilderException.class, this::addMapper);
   }
 
   @Test
-  public void shouldPickHandlerForNull() {
+  void shouldPickHandlerForNull() {
     sqlSessionFactory.getConfiguration().getTypeHandlerRegistry().register(ProductId.class, null, ConstantProductIdTypeHandler.class);
     // multiple type handlers are mapped to ProductId and
     // one of them are mapped to null jdbcType.

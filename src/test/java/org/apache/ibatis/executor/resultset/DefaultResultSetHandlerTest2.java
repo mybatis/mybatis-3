@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class DefaultResultSetHandlerTest2 {
+class DefaultResultSetHandlerTest2 {
 
   @Spy
   private ImpatientResultSet rs;
@@ -64,7 +64,7 @@ public class DefaultResultSetHandlerTest2 {
 
   @SuppressWarnings("serial")
   @Test
-  public void shouldNotCallNextOnClosedResultSet_SimpleResult() throws Exception {
+  void shouldNotCallNextOnClosedResultSet_SimpleResult() throws Exception {
     final Configuration config = new Configuration();
     final TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
     final MappedStatement ms = new MappedStatement.Builder(config, "testSelect",
@@ -102,7 +102,7 @@ public class DefaultResultSetHandlerTest2 {
 
   @SuppressWarnings("serial")
   @Test
-  public void shouldNotCallNextOnClosedResultSet_NestedResult() throws Exception {
+  void shouldNotCallNextOnClosedResultSet_NestedResult() throws Exception {
     final Configuration config = new Configuration();
     final TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
     final ResultMap nestedResultMap = new ResultMap.Builder(config, "roleMap", HashMap.class,
@@ -157,7 +157,7 @@ public class DefaultResultSetHandlerTest2 {
 
     protected ImpatientResultSet() {
       Map<String, Object> row = new HashMap<>();
-      row.put("id", Integer.valueOf(1));
+      row.put("id", 1);
       row.put("role", "CEO");
       rows.add(row);
     }
@@ -169,7 +169,7 @@ public class DefaultResultSetHandlerTest2 {
     }
 
     @Override
-    public boolean isClosed() throws SQLException {
+    public boolean isClosed() {
       return rowIndex >= rows.size();
     }
 
@@ -192,7 +192,7 @@ public class DefaultResultSetHandlerTest2 {
     }
 
     @Override
-    public ResultSetMetaData getMetaData() throws SQLException {
+    public ResultSetMetaData getMetaData() {
       return rsmd;
     }
 

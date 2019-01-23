@@ -21,18 +21,18 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit test for VFS getInstance method in multi-thread environment
  *
- * @author: jasonleaster
+ * @author jasonleaster
  */
-public class VFSTest {
+class VFSTest {
 
   @Test
-  public void getInstanceShouldNotBeNull() throws Exception {
+  void getInstanceShouldNotBeNull() {
     VFS vsf = VFS.getInstance();
     Assertions.assertNotNull(vsf);
   }
 
   @Test
-  public void getInstanceShouldNotBeNullInMultiThreadEnv() throws InterruptedException {
+  void getInstanceShouldNotBeNullInMultiThreadEnv() throws InterruptedException {
     final int threadCount = 3;
 
     Thread[] threads = new Thread[threadCount];

@@ -27,10 +27,10 @@ import org.junit.jupiter.api.Test;
 import java.util.HashSet;
 import java.util.Set;
 
-public class BaseCacheTest {
+class BaseCacheTest {
 
   @Test
-  public void shouldDemonstrateEqualsAndHashCodeForVariousCacheTypes() {
+  void shouldDemonstrateEqualsAndHashCodeForVariousCacheTypes() {
     PerpetualCache cache = new PerpetualCache("test_cache");
     assertTrue(cache.equals(cache));
     assertTrue(cache.equals(new SynchronizedCache(cache)));

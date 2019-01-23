@@ -35,7 +35,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class PreparedStatementLoggerTest {
+class PreparedStatementLoggerTest {
 
   @Mock
   Log log;
@@ -46,15 +46,15 @@ public class PreparedStatementLoggerTest {
   @Mock
   ResultSet resultSet;
 
-  PreparedStatement ps;
+  private PreparedStatement ps;
 
   @BeforeEach
-  public void setUp() throws SQLException {
+  void setUp() throws SQLException {
     ps = PreparedStatementLogger.newInstance(this.preparedStatement, log, 1);
   }
 
   @Test
-  public void shouldPrintParameters() throws SQLException {
+  void shouldPrintParameters() throws SQLException {
     when(log.isDebugEnabled()).thenReturn(true);
     when(preparedStatement.executeQuery(anyString())).thenReturn(resultSet);
 
@@ -67,7 +67,7 @@ public class PreparedStatementLoggerTest {
   }
 
   @Test
-  public void shouldPrintNullParameters() throws SQLException {
+  void shouldPrintNullParameters() throws SQLException {
     when(log.isDebugEnabled()).thenReturn(true);
     when(preparedStatement.execute(anyString())).thenReturn(true);
 
@@ -79,7 +79,7 @@ public class PreparedStatementLoggerTest {
   }
 
   @Test
-  public void shouldNotPrintLog() throws SQLException {
+  void shouldNotPrintLog() throws SQLException {
     ps.getResultSet();
     ps.getParameterMetaData();
 
@@ -87,7 +87,7 @@ public class PreparedStatementLoggerTest {
   }
 
   @Test
-  public void shouldPrintUpdateCount() throws SQLException {
+  void shouldPrintUpdateCount() throws SQLException {
     when(log.isDebugEnabled()).thenReturn(true);
     when(preparedStatement.getUpdateCount()).thenReturn(1);
 

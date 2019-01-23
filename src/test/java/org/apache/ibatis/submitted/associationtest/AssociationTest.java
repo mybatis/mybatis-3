@@ -27,12 +27,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class AssociationTest {
+class AssociationTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
   @BeforeAll
-  public static void setUp() throws Exception {
+  static void setUp() throws Exception {
     // create a SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/associationtest/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -44,7 +44,7 @@ public class AssociationTest {
   }
 
   @Test
-  public void shouldGetAllCars() {
+  void shouldGetAllCars() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<Car> cars = mapper.getCars();
@@ -59,7 +59,7 @@ public class AssociationTest {
   }
 
   @Test
-  public void shouldGetOneCarWithOneEngineAndBrakes() {
+  void shouldGetOneCarWithOneEngineAndBrakes() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<Car> cars = mapper.getCars2();
@@ -70,7 +70,7 @@ public class AssociationTest {
   }
 
   @Test
-  public void shouldGetAllCarsNonUnique() {
+  void shouldGetAllCarsNonUnique() {
     // this is a little weird - we might expect 4 objects back, but there are only
     // 1 distinct carid, so we get one back.
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
@@ -81,7 +81,7 @@ public class AssociationTest {
   }
 
   @Test
-  public void shouldGetAllCarsAndDetectAssociationType() {
+  void shouldGetAllCarsAndDetectAssociationType() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<Car> cars = mapper.getCarsAndDetectAssociationType();

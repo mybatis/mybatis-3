@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -29,14 +29,14 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class FooMapperTest {
+class FooMapperTest {
 
   private final static String SQL_MAP_CONFIG = "org/apache/ibatis/submitted/null_associations/sqlmap.xml";
   private static SqlSession session;
   private static Connection conn;
 
   @BeforeAll
-  public static void setUpBeforeClass() throws Exception {
+  static void setUpBeforeClass() throws Exception {
     final SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(Resources.getResourceAsReader(SQL_MAP_CONFIG));
     session = factory.openSession();
     conn = session.getConnection();
@@ -46,14 +46,14 @@ public class FooMapperTest {
   }
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     final FooMapper mapper = session.getMapper(FooMapper.class);
     mapper.deleteAllFoo();
     session.commit();
   }
 
   @Test
-  public void testNullAssociation() {
+  void testNullAssociation() {
     final FooMapper mapper = session.getMapper(FooMapper.class);
     final Foo foo = new Foo(1L, null, true);
     mapper.insertFoo(foo);
@@ -65,7 +65,7 @@ public class FooMapperTest {
   }
 
   @Test
-  public void testNotNullAssociation() {
+  void testNotNullAssociation() {
     final FooMapper mapper = session.getMapper(FooMapper.class);
     final Bar bar = new Bar(1L, 2L, 3L);
     final Foo foo = new Foo(1L, bar, true);
@@ -81,7 +81,7 @@ public class FooMapperTest {
   }
 
   @AfterAll
-  public static void tearDownAfterClass() throws SQLException {
+  static void tearDownAfterClass() throws SQLException {
     conn.close();
     session.close();
   }

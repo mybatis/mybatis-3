@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -29,12 +29,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class ForEachMapTest {
+class ForEachMapTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
   @BeforeAll
-  public static void setUpClass() throws Exception {
+  static void setUpClass() throws Exception {
     // create a SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/foreach_map/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -46,17 +46,17 @@ public class ForEachMapTest {
   }
 
   @BeforeEach
-  public void setUp() throws Exception {
+  void setUp() {
     sqlSession = sqlSessionFactory.openSession();
   }
 
   @AfterEach
-  public void tearDown() throws Exception {
+  void tearDown() {
     sqlSession.close();
   }
 
   @Test
-  public void shouldGetStringKeyStringValueEntries() {
+  void shouldGetStringKeyStringValueEntries() {
     MapParam mapParam = new MapParam();
     mapParam.getMap().put("key 1", "value 1");
     mapParam.getMap().put("key 2", "value 2");
@@ -68,7 +68,7 @@ public class ForEachMapTest {
   }
 
   @Test
-  public void shouldGetIntKeyBoolValueEntries() throws Exception {
+  void shouldGetIntKeyBoolValueEntries() {
     MapParam mapParam = new MapParam();
     mapParam.getMap().put(12345, true);
     mapParam.getMap().put(54321, false);
@@ -80,7 +80,7 @@ public class ForEachMapTest {
   }
 
   @Test
-  public void shouldGetNestedBeanKeyValueEntries() throws Exception {
+  void shouldGetNestedBeanKeyValueEntries() {
     MapParam mapParam = new MapParam();
     mapParam.getMap().put(new NestedBean(12345, true), new NestedBean(54321, false));
     mapParam.getMap().put(new NestedBean(67890, true), new NestedBean(9876, false));
@@ -92,7 +92,7 @@ public class ForEachMapTest {
   }
 
   @Test
-  public void shouldSubstituteIndexWithKey() throws Exception {
+  void shouldSubstituteIndexWithKey() {
     MapParam mapParam = new MapParam();
     mapParam.getMap().put("col_a", 22);
     mapParam.getMap().put("col_b", 222);

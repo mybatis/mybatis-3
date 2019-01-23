@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -30,12 +30,12 @@ import org.apache.ibatis.io.Resources;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class SqlSessionManagerTest extends BaseDataTest {
+class SqlSessionManagerTest extends BaseDataTest {
 
   private static SqlSessionManager manager;
 
   @BeforeAll
-  public static void setup() throws Exception {
+  static void setup() throws Exception {
     createBlogDataSource();
     final String resource = "org/apache/ibatis/builder/MapperConfig.xml";
     final Reader reader = Resources.getResourceAsReader(resource);
@@ -43,7 +43,7 @@ public class SqlSessionManagerTest extends BaseDataTest {
   }
 
   @Test
-  public void shouldThrowExceptionIfMappedStatementDoesNotExistAndSqlSessionIsOpen() throws Exception {
+  void shouldThrowExceptionIfMappedStatementDoesNotExistAndSqlSessionIsOpen() {
     try {
       manager.startManagedSession();
       manager.selectList("ThisStatementDoesNotExist");
@@ -56,7 +56,7 @@ public class SqlSessionManagerTest extends BaseDataTest {
   }
 
   @Test
-  public void shouldCommitInsertedAuthor() throws Exception {
+  void shouldCommitInsertedAuthor() {
     try {
       manager.startManagedSession();
       AuthorMapper mapper = manager.getMapper(AuthorMapper.class);
@@ -71,7 +71,7 @@ public class SqlSessionManagerTest extends BaseDataTest {
   }
 
   @Test
-  public void shouldRollbackInsertedAuthor() throws Exception {
+  void shouldRollbackInsertedAuthor() {
     try {
       manager.startManagedSession();
       AuthorMapper mapper = manager.getMapper(AuthorMapper.class);
@@ -86,7 +86,7 @@ public class SqlSessionManagerTest extends BaseDataTest {
   }
 
   @Test
-  public void shouldImplicitlyRollbackInsertedAuthor() throws Exception {
+  void shouldImplicitlyRollbackInsertedAuthor() {
     manager.startManagedSession();
     AuthorMapper mapper = manager.getMapper(AuthorMapper.class);
     Author expected = new Author(502, "emacarron", "******", "emacarron@somewhere.com", "Something...", null);

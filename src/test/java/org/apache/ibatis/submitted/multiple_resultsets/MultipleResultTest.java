@@ -42,14 +42,14 @@ import ru.yandex.qatools.embed.postgresql.util.SocketUtil;
  * It is based on Jeff's ref cursor tests.
  */
 @Tag("EmbeddedPostgresqlTests")
-public class MultipleResultTest {
+class MultipleResultTest {
 
   private static final EmbeddedPostgres postgres = new EmbeddedPostgres();
 
   private static SqlSessionFactory sqlSessionFactory;
 
   @BeforeAll
-  public static void setUp() throws Exception {
+  static void setUp() throws Exception {
     // Launch PostgreSQL server. Download / unarchive if necessary.
     String url = postgres.start(EmbeddedPostgres.cachedRuntimeConfig(Paths.get(System.getProperty("java.io.tmpdir"), "pgembed")), "localhost", SocketUtil.findFreePort(), "multiple_resultsets", "postgres", "root", Collections.emptyList());
 
@@ -66,12 +66,12 @@ public class MultipleResultTest {
   }
 
   @AfterAll
-  public static void tearDown() {
+  static void tearDown() {
     postgres.stop();
   }
 
   @Test
-  public void shouldGetMultipleResultSetsWithOneStatement() throws IOException {
+  void shouldGetMultipleResultSetsWithOneStatement() throws IOException {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<List<?>> results = mapper.getUsersAndGroups();
@@ -92,7 +92,7 @@ public class MultipleResultTest {
   }
 
   @Test
-  public void shouldSkipNullResultSet() {
+  void shouldSkipNullResultSet() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       try {
         Mapper mapper = sqlSession.getMapper(Mapper.class);

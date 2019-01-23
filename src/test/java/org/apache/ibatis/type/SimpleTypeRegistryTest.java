@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -23,20 +23,20 @@ import java.util.HashMap;
 import org.apache.ibatis.domain.misc.RichType;
 import org.junit.jupiter.api.Test;
 
-public class SimpleTypeRegistryTest {
+class SimpleTypeRegistryTest {
 
   @Test
-  public void shouldTestIfClassIsSimpleTypeAndReturnTrue() {
+  void shouldTestIfClassIsSimpleTypeAndReturnTrue() {
     assertTrue(SimpleTypeRegistry.isSimpleType(String.class));
   }
 
   @Test
-  public void shouldTestIfClassIsSimpleTypeAndReturnFalse() {
+  void shouldTestIfClassIsSimpleTypeAndReturnFalse() {
     assertFalse(SimpleTypeRegistry.isSimpleType(RichType.class));
   }
 
   @Test
-  public void shouldTestIfMapIsSimpleTypeAndReturnFalse() {
+  void shouldTestIfMapIsSimpleTypeAndReturnFalse() {
     assertFalse(SimpleTypeRegistry.isSimpleType(HashMap.class)); // see issue #165, a Map is not a simple type
   }
 

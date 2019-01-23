@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @since 3.4.0
  * @author Kazuki Shimizu
  */
-public class AutoMappingUnknownColumnBehaviorTest {
+class AutoMappingUnknownColumnBehaviorTest {
 
     interface Mapper {
         @Select({
@@ -91,7 +91,7 @@ public class AutoMappingUnknownColumnBehaviorTest {
     private static SqlSessionFactory sqlSessionFactory;
 
     @BeforeAll
-    public static void setup() throws Exception {
+    static void setup() throws Exception {
         DataSource dataSource = BaseDataTest.createBlogDataSource();
         TransactionFactory transactionFactory = new JdbcTransactionFactory();
         Environment environment = new Environment("Production", transactionFactory, dataSource);
@@ -101,7 +101,7 @@ public class AutoMappingUnknownColumnBehaviorTest {
     }
 
     @Test
-    public void none() {
+    void none() {
         sqlSessionFactory.getConfiguration().setAutoMappingUnknownColumnBehavior(AutoMappingUnknownColumnBehavior.NONE);
         try (SqlSession session = sqlSessionFactory.openSession()) {
             Mapper mapper = session.getMapper(Mapper.class);
@@ -112,7 +112,7 @@ public class AutoMappingUnknownColumnBehaviorTest {
     }
 
     @Test
-    public void warningCauseByUnknownPropertyType() {
+    void warningCauseByUnknownPropertyType() {
         sqlSessionFactory.getConfiguration().setAutoMappingUnknownColumnBehavior(AutoMappingUnknownColumnBehavior.WARNING);
         try (SqlSession session = sqlSessionFactory.openSession()) {
             Mapper mapper = session.getMapper(Mapper.class);
@@ -124,7 +124,7 @@ public class AutoMappingUnknownColumnBehaviorTest {
     }
 
     @Test
-    public void failingCauseByUnknownColumn() {
+    void failingCauseByUnknownColumn() {
         sqlSessionFactory.getConfiguration().setAutoMappingUnknownColumnBehavior(AutoMappingUnknownColumnBehavior.FAILING);
         try (SqlSession session = sqlSessionFactory.openSession()) {
             Mapper mapper = session.getMapper(Mapper.class);

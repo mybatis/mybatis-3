@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -31,11 +31,11 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class AutoConstructorTest {
+class AutoConstructorTest {
   private static SqlSessionFactory sqlSessionFactory;
 
   @BeforeAll
-  public static void setUp() throws Exception {
+  static void setUp() throws Exception {
     // create a SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/autoconstructor/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -47,7 +47,7 @@ public class AutoConstructorTest {
   }
 
   @Test
-  public void fullyPopulatedSubject() {
+  void fullyPopulatedSubject() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       final AutoConstructorMapper mapper = sqlSession.getMapper(AutoConstructorMapper.class);
       final Object subject = mapper.getSubject(1);
@@ -56,17 +56,15 @@ public class AutoConstructorTest {
   }
 
   @Test
-  public void primitiveSubjects() {
+  void primitiveSubjects() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       final AutoConstructorMapper mapper = sqlSession.getMapper(AutoConstructorMapper.class);
-      assertThrows(PersistenceException.class, () -> {
-        mapper.getSubjects();
-      });
+      assertThrows(PersistenceException.class, mapper::getSubjects);
     }
   }
 
   @Test
-  public void annotatedSubject() {
+  void annotatedSubject() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       final AutoConstructorMapper mapper = sqlSession.getMapper(AutoConstructorMapper.class);
       verifySubjects(mapper.getAnnotatedSubjects());
@@ -74,17 +72,15 @@ public class AutoConstructorTest {
   }
 
   @Test
-  public void badSubject() {
+  void badSubject() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       final AutoConstructorMapper mapper = sqlSession.getMapper(AutoConstructorMapper.class);
-      assertThrows(PersistenceException.class, () -> {
-        mapper.getBadSubjects();
-      });
+      assertThrows(PersistenceException.class, mapper::getBadSubjects);
     }
   }
 
   @Test
-  public void extensiveSubject() {
+  void extensiveSubject() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       final AutoConstructorMapper mapper = sqlSession.getMapper(AutoConstructorMapper.class);
       verifySubjects(mapper.getExtensiveSubject());

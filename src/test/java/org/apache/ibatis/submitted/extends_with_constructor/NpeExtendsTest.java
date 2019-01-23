@@ -36,27 +36,25 @@ import org.junit.jupiter.api.Test;
  *
  * @author poitrac
  */
-public class NpeExtendsTest {
-
-    private static SqlSessionFactory sqlSessionFactory;
+class NpeExtendsTest {
 
     @BeforeAll
-    public static void initDatabase() throws Exception {
-        sqlSessionFactory = getSqlSessionFactoryWithConstructor();
+    static void initDatabase() throws Exception {
+        SqlSessionFactory sqlSessionFactory = getSqlSessionFactoryWithConstructor();
 
         BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
                 "org/apache/ibatis/submitted/extends_with_constructor/CreateDB.sql");
     }
 
     @Test
-    public void testNoConstructorConfiguration() {
+    void testNoConstructorConfiguration() {
         Configuration configuration = new Configuration();
         configuration.addMapper(StudentMapper.class);
         configuration.addMapper(TeacherMapper.class);
         configuration.getMappedStatementNames();
     }
     @Test
-    public void testWithConstructorConfiguration() {
+    void testWithConstructorConfiguration() {
         Configuration configuration = new Configuration();
         configuration.addMapper(StudentConstructorMapper.class);
         configuration.addMapper(TeacherMapper.class);
@@ -82,7 +80,7 @@ public class NpeExtendsTest {
         return new DefaultSqlSessionFactory(configuration);
     }
     @Test
-    public void testSelectWithTeacher() {
+    void testSelectWithTeacher() {
         SqlSessionFactory sqlSessionFactory = getSqlSessionFactoryWithConstructor();
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             StudentConstructorMapper studentConstructorMapper = sqlSession.getMapper(StudentConstructorMapper.class);
@@ -92,7 +90,7 @@ public class NpeExtendsTest {
         }
     }
     @Test
-    public void testSelectNoName() {
+    void testSelectNoName() {
         SqlSessionFactory sqlSessionFactory = getSqlSessionFactoryWithConstructor();
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             StudentConstructorMapper studentConstructorMapper = sqlSession.getMapper(StudentConstructorMapper.class);

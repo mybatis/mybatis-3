@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,10 +24,10 @@ import org.apache.ibatis.cache.decorators.WeakCache;
 import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.junit.jupiter.api.Test;
 
-public class WeakCacheTest {
+class WeakCacheTest {
 
   @Test
-  public void shouldDemonstrateObjectsBeingCollectedAsNeeded() {
+  void shouldDemonstrateObjectsBeingCollectedAsNeeded() {
     final int N = 3000000;
     WeakCache cache = new WeakCache(new PerpetualCache("default"));
     for (int i = 0; i < N; i++) {
@@ -45,7 +45,7 @@ public class WeakCacheTest {
   }
 
   @Test
-  public void shouldDemonstrateCopiesAreEqual() {
+  void shouldDemonstrateCopiesAreEqual() {
     Cache cache = new WeakCache(new PerpetualCache("default"));
     cache = new SerializedCache(cache);
     for (int i = 0; i < 1000; i++) {
@@ -56,7 +56,7 @@ public class WeakCacheTest {
   }
 
   @Test
-  public void shouldRemoveItemOnDemand() {
+  void shouldRemoveItemOnDemand() {
     WeakCache cache = new WeakCache(new PerpetualCache("default"));
     cache.putObject(0, 0);
     assertNotNull(cache.getObject(0));
@@ -65,7 +65,7 @@ public class WeakCacheTest {
   }
 
   @Test
-  public void shouldFlushAllItemsOnDemand() {
+  void shouldFlushAllItemsOnDemand() {
     WeakCache cache = new WeakCache(new PerpetualCache("default"));
     for (int i = 0; i < 5; i++) {
       cache.putObject(i, i);

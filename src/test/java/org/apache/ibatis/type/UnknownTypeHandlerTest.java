@@ -25,7 +25,7 @@ import org.apache.ibatis.executor.result.ResultMapException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class UnknownTypeHandlerTest extends BaseTypeHandlerTest {
+class UnknownTypeHandlerTest extends BaseTypeHandlerTest {
 
   private static final TypeHandler<Object> TYPE_HANDLER = spy(new UnknownTypeHandler(new TypeHandlerRegistry()));
 
@@ -83,13 +83,13 @@ public class UnknownTypeHandlerTest extends BaseTypeHandlerTest {
   }
 
   @Test
-  public void setParameterWithNullParameter() throws Exception {
+  void setParameterWithNullParameter() throws Exception {
     TYPE_HANDLER.setParameter(ps, 0, null, JdbcType.INTEGER);
     verify(ps).setNull(0, JdbcType.INTEGER.TYPE_CODE);
   }
 
   @Test
-  public void setParameterWithNullParameterThrowsException() throws SQLException {
+  void setParameterWithNullParameterThrowsException() throws SQLException {
     doThrow(new SQLException("invalid column")).when(ps).setNull(1, JdbcType.INTEGER.TYPE_CODE);
     try {
       TYPE_HANDLER.setParameter(ps, 1, null, JdbcType.INTEGER);
@@ -101,7 +101,7 @@ public class UnknownTypeHandlerTest extends BaseTypeHandlerTest {
   }
 
   @Test
-  public void setParameterWithNonNullParameterThrowsException() throws SQLException {
+  void setParameterWithNonNullParameterThrowsException() throws SQLException {
     doThrow(new SQLException("invalid column")).when((UnknownTypeHandler)TYPE_HANDLER).setNonNullParameter(ps, 1, 99, JdbcType.INTEGER);
     try {
       TYPE_HANDLER.setParameter(ps, 1, 99, JdbcType.INTEGER);
@@ -113,7 +113,7 @@ public class UnknownTypeHandlerTest extends BaseTypeHandlerTest {
   }
 
   @Test
-  public void getResultWithResultSetAndColumnNameThrowsException() throws SQLException {
+  void getResultWithResultSetAndColumnNameThrowsException() throws SQLException {
     doThrow(new SQLException("invalid column")).when((UnknownTypeHandler) TYPE_HANDLER).getNullableResult(rs, "foo");
     try {
       TYPE_HANDLER.getResult(rs, "foo");
@@ -125,7 +125,7 @@ public class UnknownTypeHandlerTest extends BaseTypeHandlerTest {
   }
 
   @Test
-  public void getResultWithResultSetAndColumnIndexThrowsException() throws SQLException {
+  void getResultWithResultSetAndColumnIndexThrowsException() throws SQLException {
     doThrow(new SQLException("invalid column")).when((UnknownTypeHandler) TYPE_HANDLER).getNullableResult(rs, 1);
     try {
       TYPE_HANDLER.getResult(rs, 1);
@@ -137,7 +137,7 @@ public class UnknownTypeHandlerTest extends BaseTypeHandlerTest {
   }
 
   @Test
-  public void getResultWithCallableStatementAndColumnIndexThrowsException() throws SQLException {
+  void getResultWithCallableStatementAndColumnIndexThrowsException() throws SQLException {
     doThrow(new SQLException("invalid column")).when((UnknownTypeHandler) TYPE_HANDLER).getNullableResult(cs, 1);
     try {
       TYPE_HANDLER.getResult(cs, 1);

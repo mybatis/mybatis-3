@@ -33,12 +33,12 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class LazyPropertiesTest {
+class LazyPropertiesTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
   @BeforeEach
-  public void setUp() throws Exception {
+  void setUp() throws Exception {
     // create an SqlSessionFactory
     try (Reader reader = Resources
         .getResourceAsReader("org/apache/ibatis/submitted/lazy_properties/mybatis-config.xml")) {
@@ -51,7 +51,7 @@ public class LazyPropertiesTest {
   }
 
   @Test
-  public void shouldLoadOnlyTheInvokedLazyProperty() {
+  void shouldLoadOnlyTheInvokedLazyProperty() {
     sqlSessionFactory.getConfiguration().setAggressiveLazyLoading(false);
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
@@ -63,7 +63,7 @@ public class LazyPropertiesTest {
   }
 
   @Test
-  public void verifyAggressiveLazyLoadingBehavior() {
+  void verifyAggressiveLazyLoadingBehavior() {
     sqlSessionFactory.getConfiguration().setAggressiveLazyLoading(true);
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
@@ -74,7 +74,7 @@ public class LazyPropertiesTest {
   }
 
   @Test
-  public void shouldToStringTriggerLazyLoading() {
+  void shouldToStringTriggerLazyLoading() {
     sqlSessionFactory.getConfiguration().setAggressiveLazyLoading(false);
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
@@ -85,7 +85,7 @@ public class LazyPropertiesTest {
   }
 
   @Test
-  public void shouldHashCodeTriggerLazyLoading() {
+  void shouldHashCodeTriggerLazyLoading() {
     sqlSessionFactory.getConfiguration().setAggressiveLazyLoading(false);
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
@@ -96,7 +96,7 @@ public class LazyPropertiesTest {
   }
 
   @Test
-  public void shouldEqualsTriggerLazyLoading() {
+  void shouldEqualsTriggerLazyLoading() {
     sqlSessionFactory.getConfiguration().setAggressiveLazyLoading(false);
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
@@ -107,7 +107,7 @@ public class LazyPropertiesTest {
   }
 
   @Test
-  public void shouldCloneTriggerLazyLoading() {
+  void shouldCloneTriggerLazyLoading() {
     sqlSessionFactory.getConfiguration().setAggressiveLazyLoading(false);
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
@@ -118,7 +118,7 @@ public class LazyPropertiesTest {
   }
 
   @Test
-  public void verifyEmptyLazyLoadTriggerMethods() {
+  void verifyEmptyLazyLoadTriggerMethods() {
     Configuration configuration = sqlSessionFactory.getConfiguration();
     configuration.setAggressiveLazyLoading(false);
     configuration.setLazyLoadTriggerMethods(new HashSet<>());
@@ -134,7 +134,7 @@ public class LazyPropertiesTest {
   }
 
   @Test
-  public void verifyCustomLazyLoadTriggerMethods() {
+  void verifyCustomLazyLoadTriggerMethods() {
     Configuration configuration = sqlSessionFactory.getConfiguration();
     configuration.setAggressiveLazyLoading(false);
     configuration
@@ -153,12 +153,12 @@ public class LazyPropertiesTest {
   }
 
   @Test
-  public void shouldInvokingSetterInvalidateLazyLoading_Javassist() {
+  void shouldInvokingSetterInvalidateLazyLoading_Javassist() {
     shoulInvokingSetterInvalidateLazyLoading(new JavassistProxyFactory());
   }
 
   @Test
-  public void shouldInvokingSetterInvalidateLazyLoading_Cglib() {
+  void shouldInvokingSetterInvalidateLazyLoading_Cglib() {
     shoulInvokingSetterInvalidateLazyLoading(new CglibProxyFactory());
   }
 

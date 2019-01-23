@@ -22,7 +22,7 @@ import java.time.ZonedDateTime;
 
 import org.junit.jupiter.api.Test;
 
-public class ZonedDateTimeTypeHandlerTest extends BaseTypeHandlerTest {
+class ZonedDateTimeTypeHandlerTest extends BaseTypeHandlerTest {
 
   private static final TypeHandler<ZonedDateTime> TYPE_HANDLER = new ZonedDateTimeTypeHandler();
   private static final ZonedDateTime ZONED_DATE_TIME = ZonedDateTime.now();

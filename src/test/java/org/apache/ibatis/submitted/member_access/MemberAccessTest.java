@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -36,12 +36,12 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Tests for member access of Java Object.
  */
-public class MemberAccessTest {
+class MemberAccessTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
   @BeforeAll
-  public static void setUp() throws Exception {
+  static void setUp() throws Exception {
     try (Reader reader = Resources
         .getResourceAsReader("org/apache/ibatis/submitted/member_access/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -50,7 +50,7 @@ public class MemberAccessTest {
   }
 
   @Test
-  public void parameterMappingAndResultAutoMapping() {
+  void parameterMappingAndResultAutoMapping() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
 
@@ -70,7 +70,7 @@ public class MemberAccessTest {
   }
 
   @Test // gh-1258
-  public void parameterMappingAndResultAutoMappingUsingOgnl() {
+  void parameterMappingAndResultAutoMappingUsingOgnl() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
 
@@ -90,7 +90,7 @@ public class MemberAccessTest {
   }
 
   @Test
-  public void parameterMappingAndResultMapping() {
+  void parameterMappingAndResultMapping() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
 
@@ -110,7 +110,7 @@ public class MemberAccessTest {
   }
 
   @Test
-  public void constructorAutoMapping() {
+  void constructorAutoMapping() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
 
@@ -148,7 +148,7 @@ public class MemberAccessTest {
   }
 
   @Test
-  public void constructorMapping() {
+  void constructorMapping() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
 

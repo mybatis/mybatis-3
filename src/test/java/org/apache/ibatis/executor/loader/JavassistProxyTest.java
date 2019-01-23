@@ -15,10 +15,6 @@
  */
 package org.apache.ibatis.executor.loader;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,14 +29,16 @@ import org.apache.ibatis.session.Configuration;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class JavassistProxyTest extends SerializableProxyTest {
+import static org.junit.jupiter.api.Assertions.*;
 
-  public JavassistProxyTest() {
+class JavassistProxyTest extends SerializableProxyTest {
+
+  JavassistProxyTest() {
     proxyFactory = new JavassistProxyFactory();
   }
 
   @Test
-  public void shouldCreateAProxyForAPartiallyLoadedBean() throws Exception {
+  void shouldCreateAProxyForAPartiallyLoadedBean() throws Exception {
     ResultLoaderMap loader = new ResultLoaderMap();
     loader.addLoader("id", null, null);
     Object proxy = proxyFactory.createProxy(author, loader, new Configuration(), new DefaultObjectFactory(), new ArrayList<>(), new ArrayList<>());
@@ -49,28 +47,26 @@ public class JavassistProxyTest extends SerializableProxyTest {
   }
 
   @Test
-  public void shouldFailCallingAnUnloadedProperty() throws Exception {
+  void shouldFailCallingAnUnloadedProperty() {
     // yes, it must go in uppercase
     HashMap<String, ResultLoaderMap.LoadPair> unloadedProperties = new HashMap<> ();
     unloadedProperties.put("ID", null);
     Author author2 = (Author) ((JavassistProxyFactory)proxyFactory).createDeserializationProxy(author, unloadedProperties, new DefaultObjectFactory(), new ArrayList<>(), new ArrayList<>());
-    Assertions.assertThrows(ExecutorException.class, () -> {
-      author2.getId();
-    });
+    Assertions.assertThrows(ExecutorException.class, author2::getId);
   }
 
   @Test
-  public void shouldLetCallALoadedProperty() throws Exception {
+  void shouldLetCallALoadedProperty() {
     Author author2 = (Author) ((JavassistProxyFactory)proxyFactory).createDeserializationProxy(author, new HashMap<>(), new DefaultObjectFactory(), new ArrayList<>(), new ArrayList<>());
     assertEquals(999, author2.getId());
   }
 
   @Test
-  public void shouldSerizalizeADeserlizaliedProxy() throws Exception {
+  void shouldSerizalizeADeserlizaliedProxy() throws Exception {
     Object proxy = ((JavassistProxyFactory)proxyFactory).createDeserializationProxy(author, new HashMap<> (), new DefaultObjectFactory(), new ArrayList<>(), new ArrayList<>());
     Author author2 = (Author) deserialize(serialize((Serializable) proxy));
     assertEquals(author, author2);
-    assertFalse(author.getClass().equals(author2.getClass()));
+    assertNotEquals(author.getClass(), author2.getClass());
   }
 
 }

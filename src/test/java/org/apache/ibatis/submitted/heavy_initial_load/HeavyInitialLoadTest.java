@@ -28,12 +28,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class HeavyInitialLoadTest {
+class HeavyInitialLoadTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
   @BeforeAll
-  public static void initSqlSessionFactory() throws Exception {
+  static void initSqlSessionFactory() throws Exception {
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/heavy_initial_load/ibatisConfig.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
@@ -58,21 +58,18 @@ public class HeavyInitialLoadTest {
    * (hence the 'target is null for method equals' exception).
    */
   @Test
-  public void selectThingsConcurrently_mybatis_issue_224() throws Exception {
+  void selectThingsConcurrently_mybatis_issue_224() throws Exception {
     final List<Throwable> throwables = Collections.synchronizedList(new ArrayList<>());
 
     Thread[] threads = new Thread[THREAD_COUNT];
     for (int i = 0; i < THREAD_COUNT; i++) {
-      threads[i] = new Thread() {
-        @Override
-        public void run() {
-          try {
-            selectThing();
-          } catch(Exception exception) {
-            throwables.add(exception);
-          }
+      threads[i] = new Thread(() -> {
+        try {
+          selectThing();
+        } catch(Exception exception) {
+          throwables.add(exception);
         }
-      };
+      });
 
       threads[i].start();
     }
@@ -84,7 +81,7 @@ public class HeavyInitialLoadTest {
     Assertions.assertTrue(throwables.isEmpty(), "There were exceptions: " + throwables);
   }
 
-  public void selectThing() {
+  void selectThing() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       ThingMapper mapper = sqlSession.getMapper(ThingMapper.class);
       Thing selected = mapper.selectByCode(Code._1);

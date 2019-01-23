@@ -25,12 +25,12 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class CommonPropertyLazyLoadError {
+class CommonPropertyLazyLoadError {
 
     private static SqlSessionFactory sqlSessionFactory;
 
     @BeforeAll
-    public static void initDatabase() throws Exception {
+    static void initDatabase() throws Exception {
         try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/lazyload_common_property/ibatisConfig.xml")) {
             sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
         }
@@ -40,7 +40,7 @@ public class CommonPropertyLazyLoadError {
     }
 
     @Test
-    public void testLazyLoadWithNoAncestor() {
+    void testLazyLoadWithNoAncestor() {
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             ChildMapper childMapper = sqlSession.getMapper(ChildMapper.class);
 
@@ -48,7 +48,7 @@ public class CommonPropertyLazyLoadError {
         }
     }
     @Test
-    public void testLazyLoadWithFirstAncestor() {
+    void testLazyLoadWithFirstAncestor() {
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             FatherMapper fatherMapper = sqlSession.getMapper(FatherMapper.class);
             ChildMapper childMapper = sqlSession.getMapper(ChildMapper.class);
@@ -58,7 +58,7 @@ public class CommonPropertyLazyLoadError {
         }
     }
     @Test
-    public void testLazyLoadWithAllAncestors() {
+    void testLazyLoadWithAllAncestors() {
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             GrandFatherMapper grandFatherMapper = sqlSession.getMapper(GrandFatherMapper.class);
             FatherMapper fatherMapper = sqlSession.getMapper(FatherMapper.class);
@@ -70,7 +70,7 @@ public class CommonPropertyLazyLoadError {
         }
     }
     @Test
-    public void testLazyLoadSkipFirstAncestor() {
+    void testLazyLoadSkipFirstAncestor() {
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             GrandFatherMapper grandFatherMapper = sqlSession.getMapper(GrandFatherMapper.class);
             ChildMapper childMapper = sqlSession.getMapper(ChildMapper.class);

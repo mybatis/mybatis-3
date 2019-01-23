@@ -33,12 +33,12 @@ import org.junit.jupiter.api.Test;
  * See issue #135
  *
  */
-public class MapTypeHandlerTest {
+class MapTypeHandlerTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
   @BeforeAll
-  public static void setUp() throws Exception {
+  static void setUp() throws Exception {
     // create an SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/maptypehandler/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -50,7 +50,7 @@ public class MapTypeHandlerTest {
   }
 
   @Test
-  public void shouldGetAUserFromAnnotation() {
+  void shouldGetAUserFromAnnotation() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUser(1, "User1");
@@ -59,15 +59,13 @@ public class MapTypeHandlerTest {
   }
 
   @Test
-  public void shouldGetAUserFromXML() {
+  void shouldGetAUserFromXML() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Map<String, Object> params = new HashMap<>();
       params.put("id", 1);
       params.put("name", "User1");
-      Assertions.assertThrows(PersistenceException.class, () -> {
-        mapper.getUserXML(params);
-      });
+      Assertions.assertThrows(PersistenceException.class, () -> mapper.getUserXML(params));
     }
   }
 

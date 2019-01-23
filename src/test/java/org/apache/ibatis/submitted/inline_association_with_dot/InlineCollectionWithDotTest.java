@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-public class InlineCollectionWithDotTest {
+class InlineCollectionWithDotTest {
 
   private SqlSession sqlSession;
 
@@ -46,7 +46,7 @@ public class InlineCollectionWithDotTest {
   }
 
   @AfterEach
-  public void closeSession() {
+  void closeSession() {
     if (sqlSession != null) {
       sqlSession.close();
     }
@@ -57,7 +57,7 @@ public class InlineCollectionWithDotTest {
    * possible bij using an inline 'association' map.
    */
   @Test
-  public void selectElementValueInContainerUsingInline()
+  void selectElementValueInContainerUsingInline()
   throws Exception {
     openSession("inline");
 
@@ -71,7 +71,7 @@ public class InlineCollectionWithDotTest {
    * possible bij using an sub-'association' map.
    */
   @Test
-  public void selectElementValueInContainerUsingSubMap() throws Exception {
+  void selectElementValueInContainerUsingSubMap() throws Exception {
    openSession("submap");
 
    Element myElement = sqlSession.getMapper(ElementMapperUsingSubMap.class).selectElement();

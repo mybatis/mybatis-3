@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.Test;
 
-public class ObjectTypeHandlerTest extends BaseTypeHandlerTest {
+class ObjectTypeHandlerTest extends BaseTypeHandlerTest {
 
   private static final TypeHandler<Object> TYPE_HANDLER = new ObjectTypeHandler();
 

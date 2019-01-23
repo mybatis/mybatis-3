@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -28,16 +28,16 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class BlogTest {
+class BlogTest {
 
   protected SqlSessionFactory sqlSessionFactory;
 
-  protected String getConfigPath() {
+  String getConfigPath() {
     return "org/apache/ibatis/submitted/parent_reference_3level/mybatis-config.xml";
   }
 
   @BeforeEach
-  public void setUp() throws Exception {
+  void setUp() throws Exception {
     try (Reader reader = Resources.getResourceAsReader(getConfigPath())) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
@@ -47,7 +47,7 @@ public class BlogTest {
   }
 
   @Test
-  public void testSelectBlogWithPosts() {
+  void testSelectBlogWithPosts() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       Mapper mapper = session.getMapper(Mapper.class);
       Blog result = mapper.selectBlogByPrimaryKey(1);
@@ -64,7 +64,7 @@ public class BlogTest {
   }
 
   @Test
-  public void testSelectBlogWithoutPosts() {
+  void testSelectBlogWithoutPosts() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       Mapper mapper = session.getMapper(Mapper.class);
       Blog result = mapper.selectBlogByPrimaryKey(2);
@@ -75,7 +75,7 @@ public class BlogTest {
   }
 
   @Test
-  public void testSelectBlogWithPostsColumnPrefix() {
+  void testSelectBlogWithPostsColumnPrefix() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       Mapper mapper = session.getMapper(Mapper.class);
       Blog result = mapper.selectBlogByPrimaryKeyColumnPrefix(1);
@@ -92,7 +92,7 @@ public class BlogTest {
   }
 
   @Test
-  public void testSelectBlogWithoutPostsColumnPrefix() {
+  void testSelectBlogWithoutPostsColumnPrefix() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       Mapper mapper = session.getMapper(Mapper.class);
       Blog result = mapper.selectBlogByPrimaryKeyColumnPrefix(2);

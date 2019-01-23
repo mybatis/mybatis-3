@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -28,12 +28,12 @@ import java.io.Reader;
 import java.util.List;
 import java.util.Map;
 
-public class CallSettersOnNullsTest {
+class CallSettersOnNullsTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
   @BeforeAll
-  public static void setUp() throws Exception {
+  static void setUp() throws Exception {
     // create a SqlSessionFactory
     try (Reader reader = Resources
         .getResourceAsReader("org/apache/ibatis/submitted/call_setters_on_nulls/mybatis-config.xml")) {
@@ -46,7 +46,7 @@ public class CallSettersOnNullsTest {
   }
 
   @Test
-  public void shouldCallNullOnMappedProperty() {
+  void shouldCallNullOnMappedProperty() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUserMapped(1);
@@ -55,7 +55,7 @@ public class CallSettersOnNullsTest {
   }
 
   @Test
-  public void shouldCallNullOnAutomaticMapping() {
+  void shouldCallNullOnAutomaticMapping() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUserUnmapped(1);
@@ -64,7 +64,7 @@ public class CallSettersOnNullsTest {
   }
 
   @Test
-  public void shouldCallNullOnMap() {
+  void shouldCallNullOnMap() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Map user = mapper.getUserInMap(1);
@@ -73,7 +73,7 @@ public class CallSettersOnNullsTest {
   }
 
   @Test
-  public void shouldCallNullOnMapForSingleColumn() {
+  void shouldCallNullOnMapForSingleColumn() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<Map<String, Object>> oneColumns = mapper.getNameOnly();
@@ -85,7 +85,7 @@ public class CallSettersOnNullsTest {
   }
 
   @Test
-  public void shouldCallNullOnMapForSingleColumnWithResultMap() {
+  void shouldCallNullOnMapForSingleColumnWithResultMap() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<Map<String, Object>> oneColumns = mapper.getNameOnlyMapped();
