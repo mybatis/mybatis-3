@@ -18,6 +18,7 @@ package org.apache.ibatis.cache;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
 import org.apache.ibatis.reflection.ArrayUtil;
 
@@ -112,10 +113,10 @@ public class CacheKey implements Cloneable, Serializable {
 
   @Override
   public String toString() {
-    StringBuilder returnValue = new StringBuilder().append(hashcode).append(':').append(checksum);
-    for (Object object : updateList) {
-      returnValue.append(':').append(ArrayUtil.toString(object));
-    }
+    StringJoiner returnValue = new StringJoiner(":");
+    returnValue.add(String.valueOf(hashcode));
+    returnValue.add(String.valueOf(checksum));
+    updateList.stream().map(ArrayUtil::toString).forEach(returnValue::add);
     return returnValue.toString();
   }
 

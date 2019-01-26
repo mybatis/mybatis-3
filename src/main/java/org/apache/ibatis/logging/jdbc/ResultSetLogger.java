@@ -24,6 +24,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.StringJoiner;
 
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.reflection.ExceptionUtil;
@@ -90,39 +91,28 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
   }
 
   private void printColumnHeaders(ResultSetMetaData rsmd, int columnCount) throws SQLException {
-    StringBuilder row = new StringBuilder();
-    row.append("   Columns: ");
+    StringJoiner row = new StringJoiner(", ", "   Columns: ", "");
     for (int i = 1; i <= columnCount; i++) {
       if (BLOB_TYPES.contains(rsmd.getColumnType(i))) {
         blobColumns.add(i);
       }
-      String colname = rsmd.getColumnLabel(i);
-      row.append(colname);
-      if (i != columnCount) {
-        row.append(", ");
-      }
+      row.add(rsmd.getColumnLabel(i));
     }
     trace(row.toString(), false);
   }
 
   private void printColumnValues(int columnCount) {
-    StringBuilder row = new StringBuilder();
-    row.append("       Row: ");
+    StringJoiner row = new StringJoiner(", ", "       Row: ", "");
     for (int i = 1; i <= columnCount; i++) {
-      String colname;
       try {
         if (blobColumns.contains(i)) {
-          colname = "<<BLOB>>";
+          row.add("<<BLOB>>");
         } else {
-          colname = rs.getString(i);
+          row.add(rs.getString(i));
         }
       } catch (SQLException e) {
         // generally can't call getString() on a BLOB column
-        colname = "<<Cannot Display>>";
-      }
-      row.append(colname);
-      if (i != columnCount) {
-        row.append(", ");
+        row.add("<<Cannot Display>>");
       }
     }
     trace(row.toString(), false);
