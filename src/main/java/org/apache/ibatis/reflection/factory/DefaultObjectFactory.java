@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,14 +19,17 @@ import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import org.apache.ibatis.reflection.ReflectionException;
 import org.apache.ibatis.reflection.Reflector;
@@ -84,22 +87,10 @@ public class DefaultObjectFactory implements ObjectFactory, Serializable {
         }
       }
     } catch (Exception e) {
-      StringBuilder argTypes = new StringBuilder();
-      if (constructorArgTypes != null && !constructorArgTypes.isEmpty()) {
-        for (Class<?> argType : constructorArgTypes) {
-          argTypes.append(argType.getSimpleName());
-          argTypes.append(",");
-        }
-        argTypes.deleteCharAt(argTypes.length() - 1); // remove trailing ,
-      }
-      StringBuilder argValues = new StringBuilder();
-      if (constructorArgs != null && !constructorArgs.isEmpty()) {
-        for (Object argValue : constructorArgs) {
-          argValues.append(String.valueOf(argValue));
-          argValues.append(",");
-        }
-        argValues.deleteCharAt(argValues.length() - 1); // remove trailing ,
-      }
+      String argTypes = Optional.ofNullable(constructorArgTypes).orElseGet(Collections::emptyList)
+          .stream().map(Class::getSimpleName).collect(Collectors.joining(","));
+      String argValues = Optional.ofNullable(constructorArgs).orElseGet(Collections::emptyList)
+          .stream().map(String::valueOf).collect(Collectors.joining(","));
       throw new ReflectionException("Error instantiating " + type + " with invalid types (" + argTypes + ") or values (" + argValues + "). Cause: " + e, e);
     }
   }

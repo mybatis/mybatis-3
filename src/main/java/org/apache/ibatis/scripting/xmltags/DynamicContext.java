@@ -17,6 +17,7 @@ package org.apache.ibatis.scripting.xmltags;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.StringJoiner;
 
 import ognl.OgnlContext;
 import ognl.OgnlRuntime;
@@ -38,7 +39,7 @@ public class DynamicContext {
   }
 
   private final ContextMap bindings;
-  private final StringBuilder sqlBuilder = new StringBuilder();
+  private final StringJoiner sqlBuilder = new StringJoiner(" ");
   private int uniqueNumber = 0;
 
   public DynamicContext(Configuration configuration, Object parameterObject) {
@@ -61,8 +62,7 @@ public class DynamicContext {
   }
 
   public void appendSql(String sql) {
-    sqlBuilder.append(sql);
-    sqlBuilder.append(" ");
+    sqlBuilder.add(sql);
   }
 
   public String getSql() {
