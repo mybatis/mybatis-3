@@ -77,17 +77,10 @@ public class SqlRunner {
    * @throws SQLException If statement preparation or execution fails
    */
   public List<Map<String, Object>> selectAll(String sql, Object... args) throws SQLException {
-    PreparedStatement ps = connection.prepareStatement(sql);
-    try {
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
       setParameters(ps, args);
       ResultSet rs = ps.executeQuery();
       return getResults(rs);
-    } finally {
-      try {
-        ps.close();
-      } catch (SQLException e) {
-        //ignore
-      }
     }
   }
 
@@ -146,16 +139,9 @@ public class SqlRunner {
    * @throws SQLException If statement preparation or execution fails
    */
   public int update(String sql, Object... args) throws SQLException {
-    PreparedStatement ps = connection.prepareStatement(sql);
-    try {
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
       setParameters(ps, args);
       return ps.executeUpdate();
-    } finally {
-      try {
-        ps.close();
-      } catch (SQLException e) {
-        //ignore
-      }
     }
   }
 
@@ -179,15 +165,8 @@ public class SqlRunner {
    * @throws SQLException If statement preparation or execution fails
    */
   public void run(String sql) throws SQLException {
-    Statement stmt = connection.createStatement();
-    try {
+    try (Statement stmt = connection.createStatement()) {
       stmt.execute(sql);
-    } finally {
-      try {
-        stmt.close();
-      } catch (SQLException e) {
-        //ignore
-      }
     }
   }
 
