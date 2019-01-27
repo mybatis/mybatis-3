@@ -234,15 +234,12 @@ public class ResultLoaderMap {
         }
 
         if (!factoryMethod.isAccessible()) {
-          configurationObject = AccessController.doPrivileged(new PrivilegedExceptionAction<Object>() {
-            @Override
-            public Object run() throws Exception {
-              try {
-                factoryMethod.setAccessible(true);
-                return factoryMethod.invoke(null);
-              } finally {
-                factoryMethod.setAccessible(false);
-              }
+          configurationObject = AccessController.doPrivileged((PrivilegedExceptionAction<Object>) () -> {
+            try {
+              factoryMethod.setAccessible(true);
+              return factoryMethod.invoke(null);
+            } finally {
+              factoryMethod.setAccessible(false);
             }
           });
         } else {

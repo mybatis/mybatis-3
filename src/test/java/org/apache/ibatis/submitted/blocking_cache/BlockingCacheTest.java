@@ -52,13 +52,7 @@ class BlockingCacheTest {
     long init = System.currentTimeMillis();
 
     for (int i = 0; i < 2; i++) {
-      defaultThreadPool.execute(new Runnable() {
-
-        @Override
-        public void run() {
-          accessDB();
-        }
-      });
+      defaultThreadPool.execute(this::accessDB);
     }
 
     defaultThreadPool.shutdown();

@@ -174,9 +174,7 @@ class XmlMapperBuilderTest {
     String resource = "org/apache/ibatis/builder/ProblemMapper.xml";
     try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
       XMLMapperBuilder builder = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
-      Exception exception = Assertions.assertThrows(BuilderException.class, () -> {
-        builder.parse();
-      });
+      Exception exception = Assertions.assertThrows(BuilderException.class, builder::parse);
       Assertions.assertTrue(exception.getMessage().contains("Error parsing Mapper XML. The XML location is 'org/apache/ibatis/builder/ProblemMapper.xml'"));
     }
   }
