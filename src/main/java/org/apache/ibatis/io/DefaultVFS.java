@@ -332,8 +332,6 @@ public class DefaultVFS extends VFS {
     } catch (Exception e) {
       // Failure to read the stream means this is not a JAR
     }
-    // Ignore
-
     return false;
   }
 }
