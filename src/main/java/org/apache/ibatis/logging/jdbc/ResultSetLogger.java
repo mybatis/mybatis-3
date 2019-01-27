@@ -38,7 +38,7 @@ import org.apache.ibatis.reflection.ExceptionUtil;
  */
 public final class ResultSetLogger extends BaseJdbcLogger implements InvocationHandler {
 
-  private static Set<Integer> BLOB_TYPES = new HashSet<>();
+  private static final Set<Integer> BLOB_TYPES = new HashSet<>();
   private boolean first = true;
   private int rows;
   private final ResultSet rs;
