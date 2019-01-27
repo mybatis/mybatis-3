@@ -17,6 +17,7 @@ package org.apache.ibatis.builder.xml;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 
 import org.apache.ibatis.builder.BuilderException;
@@ -45,9 +46,7 @@ public class XMLIncludeTransformer {
   public void applyIncludes(Node source) {
     Properties variablesContext = new Properties();
     Properties configurationVariables = configuration.getVariables();
-    if (configurationVariables != null) {
-      variablesContext.putAll(configurationVariables);
-    }
+    Optional.ofNullable(configurationVariables).ifPresent(variablesContext::putAll);
     applyIncludes(source, variablesContext, false);
   }
 

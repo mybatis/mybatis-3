@@ -48,7 +48,7 @@ public class Reflector {
 
   private final Class<?> type;
   private final String[] readablePropertyNames;
-  private final String[] writeablePropertyNames;
+  private final String[] writablePropertyNames;
   private final Map<String, Invoker> setMethods = new HashMap<>();
   private final Map<String, Invoker> getMethods = new HashMap<>();
   private final Map<String, Class<?>> setTypes = new HashMap<>();
@@ -64,11 +64,11 @@ public class Reflector {
     addSetMethods(clazz);
     addFields(clazz);
     readablePropertyNames = getMethods.keySet().toArray(new String[getMethods.keySet().size()]);
-    writeablePropertyNames = setMethods.keySet().toArray(new String[setMethods.keySet().size()]);
+    writablePropertyNames = setMethods.keySet().toArray(new String[setMethods.keySet().size()]);
     for (String propName : readablePropertyNames) {
       caseInsensitivePropertyMap.put(propName.toUpperCase(Locale.ENGLISH), propName);
     }
-    for (String propName : writeablePropertyNames) {
+    for (String propName : writablePropertyNames) {
       caseInsensitivePropertyMap.put(propName.toUpperCase(Locale.ENGLISH), propName);
     }
   }
@@ -440,7 +440,7 @@ public class Reflector {
    * @return The array
    */
   public String[] getSetablePropertyNames() {
-    return writeablePropertyNames;
+    return writablePropertyNames;
   }
 
   /**

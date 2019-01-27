@@ -48,8 +48,8 @@ public abstract class BaseJdbcLogger {
   private final List<Object> columnNames = new ArrayList<>();
   private final List<Object> columnValues = new ArrayList<>();
 
-  protected Log statementLog;
-  protected int queryStack;
+  protected final Log statementLog;
+  protected final int queryStack;
 
   /*
    * Default constructor
