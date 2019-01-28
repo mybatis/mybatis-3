@@ -18,7 +18,6 @@ package org.apache.ibatis.submitted.mapper_type_parameter;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.Reader;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
