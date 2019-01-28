@@ -199,12 +199,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
         }
       }
       if (declaresConstructor) {
-        Iterator<ResultMapping> extendedResultMappingsIter = extendedResultMappings.iterator();
-        while (extendedResultMappingsIter.hasNext()) {
-          if (extendedResultMappingsIter.next().getFlags().contains(ResultFlag.CONSTRUCTOR)) {
-            extendedResultMappingsIter.remove();
-          }
-        }
+        extendedResultMappings.removeIf(resultMapping -> resultMapping.getFlags().contains(ResultFlag.CONSTRUCTOR));
       }
       resultMappings.addAll(extendedResultMappings);
     }
