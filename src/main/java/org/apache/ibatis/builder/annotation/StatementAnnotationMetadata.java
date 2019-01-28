@@ -13,46 +13,38 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.annotations;
+package org.apache.ibatis.builder.annotation;
 
-import org.apache.ibatis.builder.annotation.StatementAnnotationMetadata;
 import org.apache.ibatis.mapping.SqlCommandType;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
-import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author Clinton Begin
+ * The metadata for controlling the internal processing.
+ *
+ * @since 3.5.1
+ * @author Kazuki Shimizu
+ *
+ * @see org.apache.ibatis.annotations.Select
+ * @see org.apache.ibatis.annotations.Insert
+ * @see org.apache.ibatis.annotations.Update
+ * @see org.apache.ibatis.annotations.Delete
+ * @see org.apache.ibatis.annotations.SelectProvider
+ * @see org.apache.ibatis.annotations.InsertProvider
+ * @see org.apache.ibatis.annotations.UpdateProvider
+ * @see org.apache.ibatis.annotations.DeleteProvider
+ * @see MapperAnnotationBuilder
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-@Repeatable(Delete.List.class)
-@StatementAnnotationMetadata(commandType = SqlCommandType.DELETE)
-public @interface Delete {
-  String[] value();
-
+@Target(ElementType.ANNOTATION_TYPE)
+public @interface StatementAnnotationMetadata {
   /**
-   * @return A database id that correspond this statement
-   * @since 3.5.1
+   * @return A sql command type that correspond statement annotations.
    */
-  String databaseId() default "";
-
-  /**
-   * The container annotation for {@link Delete}.
-   * @author Kazuki Shimizu
-   * @since 3.5.1
-   */
-  @Documented
-  @Retention(RetentionPolicy.RUNTIME)
-  @Target(ElementType.METHOD)
-  @StatementAnnotationMetadata(commandType = SqlCommandType.DELETE)
-  @interface List {
-    Delete[] value();
-  }
-
+  SqlCommandType commandType();
 }

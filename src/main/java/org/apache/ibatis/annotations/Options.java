@@ -17,6 +17,7 @@ package org.apache.ibatis.annotations;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -30,6 +31,7 @@ import org.apache.ibatis.mapping.StatementType;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
+@Repeatable(Options.List.class)
 public @interface Options {
   /**
    * The options for the {@link Options#flushCache()}.
@@ -63,4 +65,23 @@ public @interface Options {
   String keyColumn() default "";
 
   String resultSets() default "";
+
+  /**
+   * @return A database id that correspond this options
+   * @since 3.5.1
+   */
+  String databaseId() default "";
+
+  /**
+   * The container annotation for {@link Options}.
+   * @author Kazuki Shimizu
+   * @since 3.5.1
+   */
+  @Documented
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target(ElementType.METHOD)
+  @interface List {
+    Options[] value();
+  }
+
 }

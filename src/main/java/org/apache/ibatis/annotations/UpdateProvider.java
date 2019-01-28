@@ -15,8 +15,12 @@
  */
 package org.apache.ibatis.annotations;
 
+import org.apache.ibatis.builder.annotation.StatementAnnotationMetadata;
+import org.apache.ibatis.mapping.SqlCommandType;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -27,6 +31,8 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
+@Repeatable(UpdateProvider.List.class)
+@StatementAnnotationMetadata(commandType = SqlCommandType.UPDATE)
 public @interface UpdateProvider {
 
   /**
@@ -56,5 +62,24 @@ public @interface UpdateProvider {
    * @return a method name of method for providing an SQL
    */
   String method() default "";
+
+  /**
+   * @return A database id that correspond this provider
+   * @since 3.5.1
+   */
+  String databaseId() default "";
+
+  /**
+   * The container annotation for {@link UpdateProvider}.
+   * @author Kazuki Shimizu
+   * @since 3.5.1
+   */
+  @Documented
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target(ElementType.METHOD)
+  @StatementAnnotationMetadata(commandType = SqlCommandType.UPDATE)
+  @interface List {
+    UpdateProvider[] value();
+  }
 
 }
