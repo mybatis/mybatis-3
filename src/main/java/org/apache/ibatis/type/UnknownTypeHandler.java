@@ -68,8 +68,8 @@ public class UnknownTypeHandler extends BaseTypeHandler<Object> {
     return cs.getObject(columnIndex);
   }
 
-  private TypeHandler<? extends Object> resolveTypeHandler(Object parameter, JdbcType jdbcType) {
-    TypeHandler<? extends Object> handler;
+  private TypeHandler<?> resolveTypeHandler(Object parameter, JdbcType jdbcType) {
+    TypeHandler<?> handler;
     if (parameter == null) {
       handler = OBJECT_TYPE_HANDLER;
     } else {

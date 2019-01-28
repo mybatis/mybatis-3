@@ -39,7 +39,7 @@ public class DefaultResultHandler implements ResultHandler<Object> {
   }
 
   @Override
-  public void handleResult(ResultContext<? extends Object> context) {
+  public void handleResult(ResultContext<?> context) {
     list.add(context.getResultObject());
   }
 
