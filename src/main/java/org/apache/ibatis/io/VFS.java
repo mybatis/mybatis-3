@@ -64,10 +64,7 @@ public abstract class VFS {
                   " is not valid in this environment.");
             }
           }
-        } catch (InstantiationException e) {
-          log.error("Failed to instantiate " + impl, e);
-          return null;
-        } catch (IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException e) {
           log.error("Failed to instantiate " + impl, e);
           return null;
         }
