@@ -85,9 +85,7 @@ public class DefaultParameterHandler implements ParameterHandler {
           }
           try {
             typeHandler.setParameter(ps, i + 1, value, jdbcType);
-          } catch (TypeException e) {
-            throw new TypeException("Could not set parameters for mapping: " + parameterMapping + ". Cause: " + e, e);
-          } catch (SQLException e) {
+          } catch (TypeException | SQLException e) {
             throw new TypeException("Could not set parameters for mapping: " + parameterMapping + ". Cause: " + e, e);
           }
         }
