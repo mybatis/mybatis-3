@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.Reader;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.exceptions.PersistenceException;
@@ -47,13 +48,24 @@ class StringListTest {
   }
 
   @Test
-  void shouldGetAUser() {
+  void shouldMapListOfStrings() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<User> users = mapper.getUsersAndGroups(1);
       Assertions.assertEquals(1, users.size());
       Assertions.assertEquals(2, users.get(0).getGroups().size());
       Assertions.assertEquals(2, users.get(0).getRoles().size());
+    }
+  }
+
+  @Test
+  void shouldMapListOfStringsToMap() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      List<Map<String, Object>> results = mapper.getUsersAndGroupsMap(1);
+      Assertions.assertEquals(1, results.size());
+      Assertions.assertEquals(2, ((List<?>)results.get(0).get("groups")).size());
+      Assertions.assertEquals(2, ((List<?>)results.get(0).get("roles")).size());
     }
   }
 
