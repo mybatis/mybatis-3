@@ -29,41 +29,49 @@ import org.apache.ibatis.logging.LogFactory;
 
 /**
  * Provides a very simple API for accessing resources within an application server.
- * 
+ * VFS(virtual File System) 是Linux文件系统对外的接口,是多数文件系统的抽象层
  * @author Ben Gunter
  */
 public abstract class VFS {
   private static final Log log = LogFactory.getLog(VFS.class);
 
-  /** The built-in implementations. */
+  /** The built-in implementations.mybatis的自定义的VFS的实现类 */
   public static final Class<?>[] IMPLEMENTATIONS = { JBoss6VFS.class, DefaultVFS.class };
 
-  /** The list to which implementations are added by {@link #addImplClass(Class)}. */
+  /** The list to which implementations are added by {@link #addImplClass(Class)}. 用户自定义的实现类*/
   public static final List<Class<? extends VFS>> USER_IMPLEMENTATIONS = new ArrayList<>();
 
   /** Singleton instance holder. */
   private static class VFSHolder {
+
     static final VFS INSTANCE = createVFS();
 
     @SuppressWarnings("unchecked")
     static VFS createVFS() {
-      // Try the user implementations first, then the built-ins
+      // Try the user implementations first, then the built-ins 先尝试使用用户实现的VFS,再使用内置的VFS
       List<Class<? extends VFS>> impls = new ArrayList<>();
-      impls.addAll(USER_IMPLEMENTATIONS);
-      impls.addAll(Arrays.asList((Class<? extends VFS>[]) IMPLEMENTATIONS));
 
-      // Try each implementation class until a valid one is found
+      impls.addAll(USER_IMPLEMENTATIONS); //用户自定义的vfs的集合
+      impls.addAll(Arrays.asList((Class<? extends VFS>[]) IMPLEMENTATIONS)); //内置的vfs
+
+      // Try each implementation class until a valid one is found 尝试使用所有的实现类
       VFS vfs = null;
+
       for (int i = 0; vfs == null || !vfs.isValid(); i++) {
+
         Class<? extends VFS> impl = impls.get(i);
+
         try {
+
           vfs = impl.newInstance();
+
           if (vfs == null || !vfs.isValid()) {
             if (log.isDebugEnabled()) {
               log.debug("VFS implementation " + impl.getName() +
                   " is not valid in this environment.");
             }
           }
+
         } catch (InstantiationException e) {
           log.error("Failed to instantiate " + impl, e);
           return null;

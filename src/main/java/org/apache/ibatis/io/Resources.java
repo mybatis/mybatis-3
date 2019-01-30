@@ -37,6 +37,7 @@ public class Resources {
   /**
    * Charset to use when calling getResourceAsReader.
    * null means use the system default.
+   * 设置的字符集,null的话默认为系统的字符集
    */
   private static Charset charset;
 
@@ -54,6 +55,7 @@ public class Resources {
 
   /**
    * Sets the default classloader
+   * 设置默认的classloader
    *
    * @param defaultClassLoader - the new default ClassLoader
    */

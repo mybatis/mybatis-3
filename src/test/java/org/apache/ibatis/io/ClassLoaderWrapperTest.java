@@ -16,12 +16,17 @@
 package org.apache.ibatis.io;
 
 import org.apache.ibatis.BaseDataTest;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.lang.reflect.Array;
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.util.Arrays;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ClassLoaderWrapperTest extends BaseDataTest {
 
@@ -40,6 +45,7 @@ public class ClassLoaderWrapperTest extends BaseDataTest {
   @Test
   public void classForName() throws ClassNotFoundException {
     assertNotNull(wrapper.classForName(CLASS_FOUND));
+    assertTrue(wrapper.classForName(CLASS_FOUND) instanceof Object);
   }
 
   @Test
@@ -82,6 +88,21 @@ public class ClassLoaderWrapperTest extends BaseDataTest {
   @Test
   public void getResourceAsStreamWithClassLoader() {
     assertNotNull(wrapper.getResourceAsStream(JPETSTORE_PROPERTIES, loader));
+  }
+
+  @Test
+  public void getClassLoadArgs() throws Exception{
+
+    Method getClassLoad = wrapper.getClass().getDeclaredMethod("getClassLoaders", ClassLoader.class);
+
+    getClassLoad.setAccessible(true); //设置为全部可见
+
+    Object invoke = getClassLoad.invoke(wrapper, ClassLoader.getSystemClassLoader());
+
+    ClassLoader[] classLoaders = (ClassLoader[]) invoke;
+
+    Assertions.assertTrue(classLoaders.length == 5);
+
   }
 
 }
