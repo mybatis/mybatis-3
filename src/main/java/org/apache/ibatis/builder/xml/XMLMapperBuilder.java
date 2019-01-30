@@ -413,12 +413,12 @@ public class XMLMapperBuilder extends BaseBuilder {
 
   protected void validateCollection(XNode context, Class<?> enclosingType) {
     if ("collection".equals(context.getName()) && context.getStringAttribute("resultMap") == null
-        && context.getStringAttribute("resultType") == null) {
+        && context.getStringAttribute("javaType") == null) {
       MetaClass metaResultType = MetaClass.forClass(enclosingType, configuration.getReflectorFactory());
       String property = context.getStringAttribute("property");
       if (!metaResultType.hasSetter(property)) {
         throw new BuilderException(
-          "Ambiguous collection type for property '" + property + "'. You must specify 'resultType' or 'resultMap'.");
+          "Ambiguous collection type for property '" + property + "'. You must specify 'javaType' or 'resultMap'.");
       }
     }
   }

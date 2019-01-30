@@ -65,7 +65,7 @@ class StringListTest {
       fail("Should throw exception when collection type is unresolvable.");
     } catch (PersistenceException e) {
       assertTrue(e.getMessage()
-        .contains("Ambiguous collection type for property 'groups'. You must specify 'resultType' or 'resultMap'."));
+        .contains("Ambiguous collection type for property 'groups'. You must specify 'javaType' or 'resultMap'."));
     }
   }
 }
