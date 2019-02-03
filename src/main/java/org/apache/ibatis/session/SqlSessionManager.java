@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -208,7 +208,7 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 
   @Override
   public <E> List<E> selectList(String statement, Object parameter, RowBounds rowBounds) {
-    return sqlSessionProxy.<E> selectList(statement, parameter, rowBounds);
+    return sqlSessionProxy.selectList(statement, parameter, rowBounds);
   }
 
   @Override
