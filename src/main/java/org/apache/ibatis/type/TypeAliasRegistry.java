@@ -37,7 +37,7 @@ import org.apache.ibatis.io.Resources;
  */
 public class TypeAliasRegistry {
 
-  private final Map<String, Class<?>> TYPE_ALIASES = new HashMap<>();
+  private final Map<String, Class<?>> typeAliases = new HashMap<>();
 
   public TypeAliasRegistry() {
     registerAlias("string", String.class);
@@ -110,8 +110,8 @@ public class TypeAliasRegistry {
       // issue #748
       String key = string.toLowerCase(Locale.ENGLISH);
       Class<T> value;
-      if (TYPE_ALIASES.containsKey(key)) {
-        value = (Class<T>) TYPE_ALIASES.get(key);
+      if (typeAliases.containsKey(key)) {
+        value = (Class<T>) typeAliases.get(key);
       } else {
         value = (Class<T>) Resources.classForName(string);
       }
@@ -153,10 +153,10 @@ public class TypeAliasRegistry {
     }
     // issue #748
     String key = alias.toLowerCase(Locale.ENGLISH);
-    if (TYPE_ALIASES.containsKey(key) && TYPE_ALIASES.get(key) != null && !TYPE_ALIASES.get(key).equals(value)) {
-      throw new TypeException("The alias '" + alias + "' is already mapped to the value '" + TYPE_ALIASES.get(key).getName() + "'.");
+    if (typeAliases.containsKey(key) && typeAliases.get(key) != null && !typeAliases.get(key).equals(value)) {
+      throw new TypeException("The alias '" + alias + "' is already mapped to the value '" + typeAliases.get(key).getName() + "'.");
     }
-    TYPE_ALIASES.put(key, value);
+    typeAliases.put(key, value);
   }
 
   public void registerAlias(String alias, String value) {
@@ -171,7 +171,7 @@ public class TypeAliasRegistry {
    * @since 3.2.2
    */
   public Map<String, Class<?>> getTypeAliases() {
-    return Collections.unmodifiableMap(TYPE_ALIASES);
+    return Collections.unmodifiableMap(typeAliases);
   }
 
 }
