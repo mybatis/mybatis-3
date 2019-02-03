@@ -142,9 +142,9 @@ public class MapperMethod {
     Object param = method.convertArgsToSqlCommandParam(args);
     if (method.hasRowBounds()) {
       RowBounds rowBounds = method.extractRowBounds(args);
-      result = sqlSession.<E>selectList(command.getName(), param, rowBounds);
+      result = sqlSession.selectList(command.getName(), param, rowBounds);
     } else {
-      result = sqlSession.<E>selectList(command.getName(), param);
+      result = sqlSession.selectList(command.getName(), param);
     }
     // issue #510 Collections & arrays support
     if (!method.getReturnType().isAssignableFrom(result.getClass())) {
@@ -162,9 +162,9 @@ public class MapperMethod {
     Object param = method.convertArgsToSqlCommandParam(args);
     if (method.hasRowBounds()) {
       RowBounds rowBounds = method.extractRowBounds(args);
-      result = sqlSession.<T>selectCursor(command.getName(), param, rowBounds);
+      result = sqlSession.selectCursor(command.getName(), param, rowBounds);
     } else {
-      result = sqlSession.<T>selectCursor(command.getName(), param);
+      result = sqlSession.selectCursor(command.getName(), param);
     }
     return result;
   }
