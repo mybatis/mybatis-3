@@ -120,7 +120,7 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
     final TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();
     final ResultSetMetaData rsmd = rs.getMetaData();
     // Wrap the parameter in Collection to normalize the logic.
-    Collection<?> paramAsCollection = null;
+    Collection<?> paramAsCollection;
     if (param instanceof Object[]) {
       paramAsCollection = Arrays.asList((Object[]) param);
     } else if (!(param instanceof Collection)) {

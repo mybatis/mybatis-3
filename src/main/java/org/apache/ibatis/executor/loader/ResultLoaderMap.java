@@ -224,7 +224,7 @@ public class ResultLoaderMap {
         throw new ExecutorException("Cannot get Configuration as configuration factory was not set.");
       }
 
-      Object configurationObject = null;
+      Object configurationObject;
       try {
         final Method factoryMethod = this.configurationFactory.getDeclaredMethod(FACTORY_METHOD);
         if (!Modifier.isStatic(factoryMethod.getModifiers())) {
