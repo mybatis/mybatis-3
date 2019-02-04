@@ -134,8 +134,8 @@ public class TypeParameterResolver {
   }
 
   private static Type resolveTypeVar(TypeVariable<?> typeVar, Type srcType, Class<?> declaringClass) {
-    Type result = null;
-    Class<?> clazz = null;
+    Type result;
+    Class<?> clazz;
     if (srcType instanceof Class) {
       clazz = (Class<?>) srcType;
     } else if (srcType instanceof ParameterizedType) {
