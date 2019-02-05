@@ -46,36 +46,36 @@ public class EnumOrdinalTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E
 
   @Override
   public E getNullableResult(ResultSet rs, String columnName) throws SQLException {
-    int i = rs.getInt(columnName);
-    if (i == 0 && rs.wasNull()) {
+    int ordinal = rs.getInt(columnName);
+    if (ordinal == 0 && rs.wasNull()) {
       return null;
     }
-    return tryConvertIndexToEnum(i);
+    return toOrdinalEnum(ordinal);
   }
 
   @Override
   public E getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
-    int i = rs.getInt(columnIndex);
-    if (i == 0 && rs.wasNull()) {
+    int ordinal = rs.getInt(columnIndex);
+    if (ordinal == 0 && rs.wasNull()) {
       return null;
     }
-    return tryConvertIndexToEnum(i);
+    return toOrdinalEnum(ordinal);
   }
 
   @Override
   public E getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
-    int i = cs.getInt(columnIndex);
-    if (i == 0 && cs.wasNull()) {
+    int ordinal = cs.getInt(columnIndex);
+    if (ordinal == 0 && cs.wasNull()) {
       return null;
     }
-    return tryConvertIndexToEnum(i);
+    return toOrdinalEnum(ordinal);
   }
 
-  private E tryConvertIndexToEnum(int i) {
+  private E toOrdinalEnum(int ordinal) {
     try {
-      return enums[i];
+      return enums[ordinal];
     } catch (Exception ex) {
-      throw new IllegalArgumentException("Cannot convert " + i + " to " + type.getSimpleName() + " by ordinal value.", ex);
+      throw new IllegalArgumentException("Cannot convert " + ordinal + " to " + type.getSimpleName() + " by ordinal value.", ex);
     }
   }
 }
