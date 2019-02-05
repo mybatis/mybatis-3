@@ -49,13 +49,8 @@ public class EnumOrdinalTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E
     int i = rs.getInt(columnName);
     if (i == 0 && rs.wasNull()) {
       return null;
-    } else {
-      try {
-        return enums[i];
-      } catch (Exception ex) {
-        throw new IllegalArgumentException("Cannot convert " + i + " to " + type.getSimpleName() + " by ordinal value.", ex);
-      }
     }
+    return tryConvertIndexToEnum(i);
   }
 
   @Override
@@ -63,13 +58,8 @@ public class EnumOrdinalTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E
     int i = rs.getInt(columnIndex);
     if (i == 0 && rs.wasNull()) {
       return null;
-    } else {
-      try {
-        return enums[i];
-      } catch (Exception ex) {
-        throw new IllegalArgumentException("Cannot convert " + i + " to " + type.getSimpleName() + " by ordinal value.", ex);
-      }
     }
+    return tryConvertIndexToEnum(i);
   }
 
   @Override
@@ -77,13 +67,15 @@ public class EnumOrdinalTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E
     int i = cs.getInt(columnIndex);
     if (i == 0 && cs.wasNull()) {
       return null;
-    } else {
-      try {
-        return enums[i];
-      } catch (Exception ex) {
-        throw new IllegalArgumentException("Cannot convert " + i + " to " + type.getSimpleName() + " by ordinal value.", ex);
-      }
     }
+    return tryConvertIndexToEnum(i);
   }
 
+  private E tryConvertIndexToEnum(int i) {
+    try {
+      return enums[i];
+    } catch (Exception ex) {
+      throw new IllegalArgumentException("Cannot convert " + i + " to " + type.getSimpleName() + " by ordinal value.", ex);
+    }
+  }
 }
