@@ -34,6 +34,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.ibatis.annotations.Arg;
 import org.apache.ibatis.annotations.CacheNamespace;
@@ -302,7 +304,8 @@ public class MapperAnnotationBuilder {
     SqlSource sqlSource = getSqlSourceFromAnnotations(method, parameterTypeClass, languageDriver);
     if (sqlSource != null) {
       Options options = method.getAnnotation(Options.class);
-      final String mappedStatementId = type.getName() + "." + method.getName();
+      String parameterTypeNames = Stream.of(method.getParameterTypes()).map(Class::getName).collect(Collectors.joining(","));
+      final String mappedStatementId = type.getName() + "." + method.getName() + (parameterTypeNames.isEmpty() ? "" : ("#" + parameterTypeNames));
       Integer fetchSize = null;
       Integer timeout = null;
       StatementType statementType = StatementType.PREPARED;
