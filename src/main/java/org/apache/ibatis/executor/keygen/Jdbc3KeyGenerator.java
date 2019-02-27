@@ -159,10 +159,7 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
     int firstDot = keyProperty.indexOf('.');
     if (firstDot == -1) {
       if (singleParam) {
-        // Assume 'keyProperty' to be a property of the single param.
-        String singleParamName = nameOfSingleParam(paramMap);
-        String argParamName = omitParamName ? null : singleParamName;
-        return entry(singleParamName, new KeyAssigner(config, rsmd, columnPosition, argParamName, keyProperty));
+        return getAssignerForSingleParam(config, rsmd, columnPosition, paramMap, keyProperty, omitParamName);
       }
       throw new ExecutorException("Could not determine which parameter to assign generated keys to. "
           + "Note that when there are multiple parameters, 'keyProperty' must include the parameter name (e.g. 'param.id'). "
@@ -175,16 +172,21 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
       String argKeyProperty = keyProperty.substring(firstDot + 1);
       return entry(paramName, new KeyAssigner(config, rsmd, columnPosition, argParamName, argKeyProperty));
     } else if (singleParam) {
-      // Assume 'keyProperty' to be a property of the single param.
-      String singleParamName = nameOfSingleParam(paramMap);
-      String argParamName = omitParamName ? null : singleParamName;
-      return entry(singleParamName, new KeyAssigner(config, rsmd, columnPosition, argParamName, keyProperty));
+      return getAssignerForSingleParam(config, rsmd, columnPosition, paramMap, keyProperty, omitParamName);
     } else {
       throw new ExecutorException("Could not find parameter '" + paramName + "'. "
           + "Note that when there are multiple parameters, 'keyProperty' must include the parameter name (e.g. 'param.id'). "
           + "Specified key properties are " + ArrayUtil.toString(keyProperties) + " and available parameters are "
           + paramMap.keySet());
     }
+  }
+
+  private Entry<String, KeyAssigner> getAssignerForSingleParam(Configuration config, ResultSetMetaData rsmd,
+      int columnPosition, Map<String, ?> paramMap, String keyProperty, boolean omitParamName) {
+    // Assume 'keyProperty' to be a property of the single param.
+    String singleParamName = nameOfSingleParam(paramMap);
+    String argParamName = omitParamName ? null : singleParamName;
+    return entry(singleParamName, new KeyAssigner(config, rsmd, columnPosition, argParamName, keyProperty));
   }
 
   private static String nameOfSingleParam(Map<String, ?> paramMap) {
@@ -208,13 +210,13 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
   }
 
   private class KeyAssigner {
-    protected final Configuration configuration;
-    protected final ResultSetMetaData rsmd;
-    protected final TypeHandlerRegistry typeHandlerRegistry;
-    protected final int columnPosition;
-    protected final String paramName;
-    protected final String propertyName;
-    protected TypeHandler<?> typeHandler;
+    private final Configuration configuration;
+    private final ResultSetMetaData rsmd;
+    private final TypeHandlerRegistry typeHandlerRegistry;
+    private final int columnPosition;
+    private final String paramName;
+    private final String propertyName;
+    private TypeHandler<?> typeHandler;
 
     protected KeyAssigner(Configuration configuration, ResultSetMetaData rsmd, int columnPosition, String paramName,
         String propertyName) {
