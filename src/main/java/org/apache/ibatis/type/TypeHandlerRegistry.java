@@ -241,7 +241,7 @@ public final class TypeHandlerRegistry {
     }
     if (jdbcHandlerMap == null && type instanceof Class) {
       Class<?> clazz = (Class<?>) type;
-      if (clazz.isEnum()) {
+      if (clazz.isEnum() || (clazz.isAnonymousClass() && clazz.getEnclosingClass().isEnum())) {
         jdbcHandlerMap = getJdbcHandlerMapForEnumInterfaces(clazz, clazz);
         if (jdbcHandlerMap == null) {
           register(clazz, getInstance(clazz, defaultEnumTypeHandler));
