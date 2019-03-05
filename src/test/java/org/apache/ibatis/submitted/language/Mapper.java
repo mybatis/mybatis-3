@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,8 +17,10 @@ package org.apache.ibatis.submitted.language;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Lang;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.SelectKey;
 import org.apache.ibatis.scripting.defaults.RawLanguageDriver;
 import org.apache.ibatis.scripting.xmltags.XMLLanguageDriver;
 
@@ -38,5 +40,10 @@ public interface Mapper {
   @Lang(XMLLanguageDriver.class)
   @Select("SELECT firstName, lastName FROM names WHERE lastName LIKE #{name} and 0 < 1")
   List<Name> selectXmlWithMapperAndSqlSymbols(Parameter p);
+
+  @Lang(LanguageTest.MyAnnotationLanguageDriver.class)
+  @Insert("INSERT INTO name (firstName) VALUES(#{firstName})")
+  @SelectKey(statement = "SELECT 1", keyProperty = "id", resultType = int.class, before = true)
+  String insertOnAnnotation(String firstName);
 
 }

@@ -16,19 +16,27 @@
 package org.apache.ibatis.submitted.language;
 
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.BaseDataTest;
+import org.apache.ibatis.builder.StaticSqlSource;
 import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.mapping.SqlSource;
+import org.apache.ibatis.parsing.XNode;
+import org.apache.ibatis.scripting.LanguageDriver;
+import org.apache.ibatis.scripting.defaults.RawLanguageDriver;
+import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * Just a test case. Not a real Velocity implementation.
@@ -213,6 +221,42 @@ class LanguageTest {
       for (Name n : answer) {
         assertEquals("Flintstone", n.getLastName());
       }
+    }
+  }
+
+  @Test
+  void testContextOnXmlMapper() {
+    assertEquals(2, MyXmlLanguageDriver.contexts.size());
+    assertEquals("org.apache.ibatis.submitted.language.Mapper.insertOnXml!selectKey",
+        MyXmlLanguageDriver.contexts.get(0).get(LanguageDriver.ContextKey.STATEMENT_ID));
+    assertEquals("org.apache.ibatis.submitted.language.Mapper.insertOnXml",
+        MyXmlLanguageDriver.contexts.get(1).get(LanguageDriver.ContextKey.STATEMENT_ID));
+  }
+
+  @Test
+  void testContextOnAnnotationMapper() {
+    assertEquals(2, MyAnnotationLanguageDriver.contexts.size());
+    assertEquals("org.apache.ibatis.submitted.language.Mapper.insertOnAnnotation",
+        MyAnnotationLanguageDriver.contexts.get(0).get(LanguageDriver.ContextKey.STATEMENT_ID));
+    assertEquals("org.apache.ibatis.submitted.language.Mapper.insertOnAnnotation!selectKey",
+        MyAnnotationLanguageDriver.contexts.get(1).get(LanguageDriver.ContextKey.STATEMENT_ID));
+  }
+
+  public static class MyXmlLanguageDriver extends RawLanguageDriver {
+    static List<Map<String, Object>> contexts = new ArrayList<>();
+    @Override
+    public SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType, Map<String, Object> context) {
+      MyXmlLanguageDriver.contexts.add(context);
+      return new StaticSqlSource(configuration, script.getNode().getTextContent());
+    }
+  }
+
+  public static class MyAnnotationLanguageDriver extends RawLanguageDriver {
+    static List<Map<String, Object>> contexts = new ArrayList<>();
+    @Override
+    public SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType, Map<String, Object> context) {
+      MyAnnotationLanguageDriver.contexts.add(context);
+      return new StaticSqlSource(configuration, script);
     }
   }
 

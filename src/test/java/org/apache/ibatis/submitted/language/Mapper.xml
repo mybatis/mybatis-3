@@ -86,4 +86,11 @@
     WHERE lastName LIKE #{name}
   </select>
 
+  <insert id="insertOnXml" lang="org.apache.ibatis.submitted.language.LanguageTest$MyXmlLanguageDriver">
+    <selectKey keyProperty="id" resultType="int" order="BEFORE">
+      SELECT 1
+    </selectKey>
+    INSERT INTO name (firstName) VALUES(#{firstName})
+  </insert>
+
 </mapper>

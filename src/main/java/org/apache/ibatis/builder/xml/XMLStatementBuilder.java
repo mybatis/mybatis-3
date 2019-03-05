@@ -15,8 +15,10 @@
  */
 package org.apache.ibatis.builder.xml;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.apache.ibatis.builder.BaseBuilder;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
@@ -93,7 +95,9 @@ public class XMLStatementBuilder extends BaseBuilder {
           ? Jdbc3KeyGenerator.INSTANCE : NoKeyGenerator.INSTANCE;
     }
 
-    SqlSource sqlSource = langDriver.createSqlSource(configuration, context, parameterTypeClass);
+    Map<String, Object> langDriverContext = new HashMap<>();
+    langDriverContext.put(LanguageDriver.ContextKey.STATEMENT_ID, builderAssistant.applyCurrentNamespace(id, false));
+    SqlSource sqlSource = langDriver.createSqlSource(configuration, context, parameterTypeClass, langDriverContext);
     StatementType statementType = StatementType.valueOf(context.getStringAttribute("statementType", StatementType.PREPARED.toString()));
     Integer fetchSize = context.getIntAttribute("fetchSize");
     Integer timeout = context.getIntAttribute("timeout");
@@ -151,7 +155,9 @@ public class XMLStatementBuilder extends BaseBuilder {
     String resultMap = null;
     ResultSetType resultSetTypeEnum = null;
 
-    SqlSource sqlSource = langDriver.createSqlSource(configuration, nodeToHandle, parameterTypeClass);
+    Map<String, Object> langDriverContext = new HashMap<>();
+    langDriverContext.put(LanguageDriver.ContextKey.STATEMENT_ID, builderAssistant.applyCurrentNamespace(id, false));
+    SqlSource sqlSource = langDriver.createSqlSource(configuration, nodeToHandle, parameterTypeClass, langDriverContext);
     SqlCommandType sqlCommandType = SqlCommandType.SELECT;
 
     builderAssistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType,

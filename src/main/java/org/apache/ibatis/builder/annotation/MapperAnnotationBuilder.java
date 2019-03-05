@@ -299,10 +299,10 @@ public class MapperAnnotationBuilder {
   void parseStatement(Method method) {
     Class<?> parameterTypeClass = getParameterType(method);
     LanguageDriver languageDriver = getLanguageDriver(method);
-    SqlSource sqlSource = getSqlSourceFromAnnotations(method, parameterTypeClass, languageDriver);
+    final String mappedStatementId = type.getName() + "." + method.getName();
+    SqlSource sqlSource = getSqlSourceFromAnnotations(mappedStatementId, method, parameterTypeClass, languageDriver);
     if (sqlSource != null) {
       Options options = method.getAnnotation(Options.class);
-      final String mappedStatementId = type.getName() + "." + method.getName();
       Integer fetchSize = null;
       Integer timeout = null;
       StatementType statementType = StatementType.PREPARED;
@@ -463,7 +463,7 @@ public class MapperAnnotationBuilder {
     return returnType;
   }
 
-  private SqlSource getSqlSourceFromAnnotations(Method method, Class<?> parameterType, LanguageDriver languageDriver) {
+  private SqlSource getSqlSourceFromAnnotations(String statementId, Method method, Class<?> parameterType, LanguageDriver languageDriver) {
     try {
       Class<? extends Annotation> sqlAnnotationType = getSqlAnnotationType(method);
       Class<? extends Annotation> sqlProviderAnnotationType = getSqlProviderAnnotationType(method);
@@ -473,7 +473,7 @@ public class MapperAnnotationBuilder {
         }
         Annotation sqlAnnotation = method.getAnnotation(sqlAnnotationType);
         final String[] strings = (String[]) sqlAnnotation.getClass().getMethod("value").invoke(sqlAnnotation);
-        return buildSqlSourceFromStrings(strings, parameterType, languageDriver);
+        return buildSqlSourceFromStrings(statementId, strings, parameterType, languageDriver);
       } else if (sqlProviderAnnotationType != null) {
         Annotation sqlProviderAnnotation = method.getAnnotation(sqlProviderAnnotationType);
         return new ProviderSqlSource(assistant.getConfiguration(), sqlProviderAnnotation, type, method);
@@ -484,13 +484,15 @@ public class MapperAnnotationBuilder {
     }
   }
 
-  private SqlSource buildSqlSourceFromStrings(String[] strings, Class<?> parameterTypeClass, LanguageDriver languageDriver) {
+  private SqlSource buildSqlSourceFromStrings(String statementId, String[] strings, Class<?> parameterTypeClass, LanguageDriver languageDriver) {
     final StringBuilder sql = new StringBuilder();
     for (String fragment : strings) {
       sql.append(fragment);
       sql.append(" ");
     }
-    return languageDriver.createSqlSource(configuration, sql.toString().trim(), parameterTypeClass);
+    Map<String, Object> langDriverContext = new HashMap<>();
+    langDriverContext.put(LanguageDriver.ContextKey.STATEMENT_ID, statementId);
+    return languageDriver.createSqlSource(configuration, sql.toString().trim(), parameterTypeClass, langDriverContext);
   }
 
   private SqlCommandType getSqlCommandType(Method method) {
@@ -650,7 +652,7 @@ public class MapperAnnotationBuilder {
     String resultMap = null;
     ResultSetType resultSetTypeEnum = null;
 
-    SqlSource sqlSource = buildSqlSourceFromStrings(selectKeyAnnotation.statement(), parameterTypeClass, languageDriver);
+    SqlSource sqlSource = buildSqlSourceFromStrings(id, selectKeyAnnotation.statement(), parameterTypeClass, languageDriver);
     SqlCommandType sqlCommandType = SqlCommandType.SELECT;
 
     assistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType, fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass, resultSetTypeEnum,
