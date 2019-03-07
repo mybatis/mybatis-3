@@ -25,7 +25,7 @@ import java.io.Closeable;
  *
  * @author Guillaume Darmont / guillaume@dropinocean.com
  */
-public interface Cursor<T> extends Closeable, Iterable<T> {
+public interface Cursor<T> extends AutoCloseable, Iterable<T> {
 
   /**
    * @return true if the cursor has started to fetch items from database.
@@ -43,4 +43,10 @@ public interface Cursor<T> extends Closeable, Iterable<T> {
    * @return -1 if the first cursor item has not been retrieved. The index of the current item retrieved.
    */
   int getCurrentIndex();
+
+  /**
+   * Closes the cursor.
+   */
+  @Override
+  void close();
 }

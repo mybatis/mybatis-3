@@ -271,11 +271,7 @@ public class DefaultSqlSession implements SqlSession {
   private void closeCursors() {
     if (cursorList != null && cursorList.size() != 0) {
       for (Cursor<?> cursor : cursorList) {
-        try {
-          cursor.close();
-        } catch (IOException e) {
-          throw ExceptionFactory.wrapException("Error closing cursor.  Cause: " + e, e);
-        }
+        cursor.close();
       }
       cursorList.clear();
     }

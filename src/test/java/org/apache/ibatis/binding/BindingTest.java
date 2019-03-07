@@ -675,8 +675,6 @@ class BindingTest {
         assertEquals(2, blog.getId());
         assertFalse(blogIterator.hasNext());
       }
-    } catch (IOException e) {
-      Assertions.fail(e.getMessage());
     }
   }
 

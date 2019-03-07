@@ -71,7 +71,7 @@ class PostgresCursorTest {
   }
 
   @Test
-  void shouldBeAbleToReuseStatement() throws IOException {
+  void shouldBeAbleToReuseStatement() {
     // #1351
     try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.REUSE)) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);

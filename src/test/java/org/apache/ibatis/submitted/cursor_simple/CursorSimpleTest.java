@@ -158,7 +158,7 @@ class CursorSimpleTest {
   }
 
   @Test
-  void testCursorIteratorNoSuchElementExceptionWithHasNext() throws IOException {
+  void testCursorIteratorNoSuchElementExceptionWithHasNext() {
 
     try (SqlSession sqlSession = sqlSessionFactory.openSession();
         Cursor<User> usersCursor = sqlSession.selectCursor("getAllUsers", null, new RowBounds(1, 1))) {
@@ -180,7 +180,7 @@ class CursorSimpleTest {
   }
 
   @Test
-  void testCursorIteratorNoSuchElementExceptionNoHasNext() throws IOException {
+  void testCursorIteratorNoSuchElementExceptionNoHasNext() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession();
         Cursor<User> usersCursor = sqlSession.selectCursor("getAllUsers", null, new RowBounds(1, 1))) {
       try {
@@ -257,7 +257,7 @@ class CursorSimpleTest {
   }
 
   @Test
-  void testCursorMultipleCloseCall() throws IOException {
+  void testCursorMultipleCloseCall() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Cursor<User> usersCursor = mapper.getAllUsers();
@@ -287,7 +287,7 @@ class CursorSimpleTest {
   }
 
   @Test
-  void testCursorUsageAfterClose() throws IOException {
+  void testCursorUsageAfterClose() {
 
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
