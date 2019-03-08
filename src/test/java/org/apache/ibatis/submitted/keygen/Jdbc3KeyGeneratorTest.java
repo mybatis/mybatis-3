@@ -31,6 +31,7 @@ import java.util.Set;
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -71,6 +72,25 @@ class Jdbc3KeyGeneratorTest {
   }
 
   @Test
+  void shouldAssignKeyToBean_batch() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH)) {
+      try {
+        CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
+        Country country1 = new Country("China", "CN");
+        mapper.insertBean(country1);
+        Country country2 = new Country("Canada", "CA");
+        mapper.insertBean(country2);
+        sqlSession.flushStatements();
+        sqlSession.clearCache();
+        assertNotNull(country1.getId());
+        assertNotNull(country2.getId());
+      } finally {
+        sqlSession.rollback();
+      }
+    }
+  }
+
+  @Test
   void shouldAssignKeyToNamedBean() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       try {
@@ -78,6 +98,58 @@ class Jdbc3KeyGeneratorTest {
         Country country = new Country("China", "CN");
         mapper.insertNamedBean(country);
         assertNotNull(country.getId());
+      } finally {
+        sqlSession.rollback();
+      }
+    }
+  }
+
+  @Test
+  void shouldAssignKeyToNamedBean_batch() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH)) {
+      try {
+        CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
+        Country country1 = new Country("China", "CN");
+        mapper.insertNamedBean(country1);
+        Country country2 = new Country("Canada", "CA");
+        mapper.insertNamedBean(country2);
+        sqlSession.flushStatements();
+        sqlSession.clearCache();
+        assertNotNull(country1.getId());
+        assertNotNull(country2.getId());
+      } finally {
+        sqlSession.rollback();
+      }
+    }
+  }
+
+  @Test
+  void shouldAssignKeyToNamedBean_keyPropertyWithParamName() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      try {
+        CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
+        Country country = new Country("China", "CN");
+        mapper.insertNamedBean_keyPropertyWithParamName(country);
+        assertNotNull(country.getId());
+      } finally {
+        sqlSession.rollback();
+      }
+    }
+  }
+
+  @Test
+  void shouldAssignKeyToNamedBean_keyPropertyWithParamName_batch() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH)) {
+      try {
+        CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
+        Country country1 = new Country("China", "CN");
+        mapper.insertNamedBean_keyPropertyWithParamName(country1);
+        Country country2 = new Country("Canada", "CA");
+        mapper.insertNamedBean_keyPropertyWithParamName(country2);
+        sqlSession.flushStatements();
+        sqlSession.clearCache();
+        assertNotNull(country1.getId());
+        assertNotNull(country2.getId());
       } finally {
         sqlSession.rollback();
       }
@@ -344,6 +416,26 @@ class Jdbc3KeyGeneratorTest {
       }
     }
   }
+  @Test
+  void shouldAssignMultipleGeneratedKeysToABean_MultiParams_batch() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH)) {
+      try {
+        CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
+        Planet planet1 = new Planet();
+        planet1.setName("pluto");
+        mapper.insertPlanet_MultiParams(planet1, 1);
+        Planet planet2 = new Planet();
+        planet2.setName("neptune");
+        mapper.insertPlanet_MultiParams(planet2, 1);
+        sqlSession.flushStatements();
+        sqlSession.clearCache();
+        assertEquals("pluto-" + planet1.getId(), planet1.getCode());
+        assertEquals("neptune-" + planet2.getId(), planet2.getCode());
+      } finally {
+        sqlSession.rollback();
+      }
+    }
+  }
 
   @Test
   void shouldAssignMultipleGeneratedKeysToBeans_MultiParams() {
@@ -365,18 +457,41 @@ class Jdbc3KeyGeneratorTest {
   }
 
   @Test
-  void assigningKeysToMultipleParamsIsNotSupportedYet() {
+  void assigningMultipleKeysToDifferentParams() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       try {
         CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
         Planet planet = new Planet();
         planet.setName("pluto");
         Map<String, Object> map = new HashMap<>();
-        when(mapper).insertAssignKeysToTwoParams(planet, map);
-        then(caughtException()).isInstanceOf(PersistenceException.class).hasMessageContaining(
-            "Assigning generated keys to multiple parameters is not supported. "
-                + "Note that when there are multiple parameters, 'keyProperty' must include the parameter name (e.g. 'param.id'). "
-                + "Specified key properties are [planet.id, map.code] and available parameters are [");
+        mapper.insertAssignKeysToTwoParams(planet, map);
+        assertNotNull(planet.getId());
+        assertNotNull(map.get("code"));
+      } finally {
+        sqlSession.rollback();
+      }
+    }
+  }
+
+  @Test
+  void assigningMultipleKeysToDifferentParams_batch() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH)) {
+      try {
+        CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
+        Planet planet1 = new Planet();
+        planet1.setName("pluto");
+        Map<String, Object> map1 = new HashMap<>();
+        mapper.insertAssignKeysToTwoParams(planet1, map1);
+        Planet planet2 = new Planet();
+        planet2.setName("pluto");
+        Map<String, Object> map2 = new HashMap<>();
+        mapper.insertAssignKeysToTwoParams(planet2, map2);
+        sqlSession.flushStatements();
+        sqlSession.clearCache();
+        assertNotNull(planet1.getId());
+        assertNotNull(map1.get("code"));
+        assertNotNull(planet2.getId());
+        assertNotNull(map2.get("code"));
       } finally {
         sqlSession.rollback();
       }

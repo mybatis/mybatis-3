@@ -65,4 +65,18 @@ class EnumInterfaceTypeHandlerTest {
       assertEquals(Color.BLUE, result.getColor());
     }
   }
+
+  @Test
+  void shouldInsertAUserWithoutParameterTypeInXmlElement() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      XmlMapper mapper = sqlSession.getMapper(XmlMapper.class);
+      User user = new User();
+      user.setId(2);
+      user.setColor(Color.BLUE);
+      mapper.insertUser(user);
+      User result = sqlSession.getMapper(Mapper.class).getUser(2);
+      assertEquals(Color.BLUE, result.getColor());
+    }
+  }
+
 }
