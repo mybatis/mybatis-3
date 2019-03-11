@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,7 +16,12 @@
 package org.apache.ibatis.type;
 
 import java.io.Reader;
-import java.sql.*;
+import java.sql.CallableStatement;
+import java.sql.Clob;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 
 /**
  * The {@link TypeHandler} for {@link Clob}/{@link Reader} using method supported at JDBC 4.0.

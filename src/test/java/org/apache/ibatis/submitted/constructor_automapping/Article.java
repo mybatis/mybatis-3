@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -13,8 +13,35 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
+package org.apache.ibatis.submitted.constructor_automapping;
 
-package org.apache.ibatis.test;
+public class Article {
 
-public interface EmbeddedPostgresqlTests extends SlowTests {
+  private Integer id;
+  private String title;
+  private Author author;
+
+  public Integer getId() {
+    return id;
+  }
+
+  public void setId(Integer id) {
+    this.id = id;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
+  }
+
+  public Author getAuthor() {
+    return author;
+  }
+
+  public void setAuthor(Author author) {
+    this.author = author;
+  }
 }

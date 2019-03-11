@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,6 +15,11 @@
  */
 package org.apache.ibatis.cursor.defaults;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.executor.resultset.DefaultResultSetHandler;
 import org.apache.ibatis.executor.resultset.ResultSetWrapper;
@@ -22,11 +27,6 @@ import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.session.ResultContext;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 /**
  * This is the default implementation of a MyBatis Cursor.
@@ -52,19 +52,19 @@ public class DefaultCursor<T> implements Cursor<T> {
   private enum CursorStatus {
 
     /**
-     * A freshly created cursor, database ResultSet consuming has not started
+     * A freshly created cursor, database ResultSet consuming has not started.
      */
     CREATED,
     /**
-     * A cursor currently in use, database ResultSet consuming has started
+     * A cursor currently in use, database ResultSet consuming has started.
      */
     OPEN,
     /**
-     * A closed cursor, not fully consumed
+     * A closed cursor, not fully consumed.
      */
     CLOSED,
     /**
-     * A fully consumed cursor, a consumed cursor is always closed
+     * A fully consumed cursor, a consumed cursor is always closed.
      */
     CONSUMED
   }
@@ -179,7 +179,7 @@ public class DefaultCursor<T> implements Cursor<T> {
   private class CursorIterator implements Iterator<T> {
 
     /**
-     * Holder for the next object to be returned
+     * Holder for the next object to be returned.
      */
     T object;
 

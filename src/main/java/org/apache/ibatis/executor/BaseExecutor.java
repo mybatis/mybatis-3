@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -134,7 +134,7 @@ public abstract class BaseExecutor implements Executor {
     BoundSql boundSql = ms.getBoundSql(parameter);
     CacheKey key = createCacheKey(ms, parameter, rowBounds, boundSql);
     return query(ms, parameter, rowBounds, resultHandler, key, boundSql);
- }
+  }
 
   @SuppressWarnings("unchecked")
   @Override
@@ -345,7 +345,7 @@ public abstract class BaseExecutor implements Executor {
   public void setExecutorWrapper(Executor wrapper) {
     this.wrapper = wrapper;
   }
-  
+
   private static class DeferredLoad {
 
     private final MetaObject resultObject;
@@ -377,7 +377,7 @@ public abstract class BaseExecutor implements Executor {
     }
 
     public void load() {
-      @SuppressWarnings( "unchecked" )
+      @SuppressWarnings("unchecked")
       // we suppose we get back a List
       List<Object> list = (List<Object>) localCache.getObject(key);
       Object value = resultExtractor.extractObjectFromList(list, targetType);

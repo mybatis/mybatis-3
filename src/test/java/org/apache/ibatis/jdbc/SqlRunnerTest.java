@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,8 +15,8 @@
  */
 package org.apache.ibatis.jdbc;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.Connection;
 import java.util.List;
@@ -25,12 +25,12 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import org.apache.ibatis.BaseDataTest;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class SqlRunnerTest extends BaseDataTest {
+class SqlRunnerTest extends BaseDataTest {
 
   @Test
-  public void shouldSelectOne() throws Exception {
+  void shouldSelectOne() throws Exception {
     DataSource ds = createUnpooledDataSource(JPETSTORE_PROPERTIES);
     runScript(ds, JPETSTORE_DDL);
     runScript(ds, JPETSTORE_DATA);
@@ -42,7 +42,7 @@ public class SqlRunnerTest extends BaseDataTest {
   }
 
   @Test
-  public void shouldSelectList() throws Exception {
+  void shouldSelectList() throws Exception {
     DataSource ds = createUnpooledDataSource(JPETSTORE_PROPERTIES);
     runScript(ds, JPETSTORE_DDL);
     runScript(ds, JPETSTORE_DATA);
@@ -54,7 +54,7 @@ public class SqlRunnerTest extends BaseDataTest {
   }
 
   @Test
-  public void shouldInsert() throws Exception {
+  void shouldInsert() throws Exception {
     DataSource ds = createUnpooledDataSource(BLOG_PROPERTIES);
     runScript(ds, BLOG_DDL);
     try (Connection connection = ds.getConnection()) {
@@ -69,7 +69,7 @@ public class SqlRunnerTest extends BaseDataTest {
   }
 
   @Test
-  public void shouldUpdateCategory() throws Exception {
+  void shouldUpdateCategory() throws Exception {
     DataSource ds = createUnpooledDataSource(JPETSTORE_PROPERTIES);
     runScript(ds, JPETSTORE_DDL);
     runScript(ds, JPETSTORE_DATA);
@@ -83,7 +83,7 @@ public class SqlRunnerTest extends BaseDataTest {
   }
 
   @Test
-  public void shouldDeleteOne() throws Exception {
+  void shouldDeleteOne() throws Exception {
     DataSource ds = createUnpooledDataSource(JPETSTORE_PROPERTIES);
     runScript(ds, JPETSTORE_DDL);
     runScript(ds, JPETSTORE_DATA);
@@ -97,7 +97,7 @@ public class SqlRunnerTest extends BaseDataTest {
   }
 
   @Test
-  public void shouldDemonstrateDDLThroughRunMethod() throws Exception {
+  void shouldDemonstrateDDLThroughRunMethod() throws Exception {
     DataSource ds = createUnpooledDataSource(JPETSTORE_PROPERTIES);
     try (Connection connection = ds.getConnection()) {
       SqlRunner exec = new SqlRunner(connection);

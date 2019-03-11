@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,9 +17,14 @@ package org.apache.ibatis.submitted.multidb;
 
 public interface MultiDbMapper {
   String select1(int id);
+
   String select2(int id);
+
   String select3(int id);
+
   String select4(int id);
+
   void insert(User user);
+
   void insert2(User user);
 }

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,24 +15,24 @@
  */
 package org.apache.ibatis.submitted.complex_property;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.io.Reader;
 import java.util.Calendar;
 
-public class ComponentTest {
+class ComponentTest {
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
-  public static void setup() throws Exception {
+  @BeforeAll
+  static void setup() throws Exception {
     String resource = "org/apache/ibatis/submitted/complex_property/Configuration.xml";
     Reader reader = Resources.getResourceAsReader(resource);
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -41,21 +41,20 @@ public class ComponentTest {
             "org/apache/ibatis/submitted/complex_property/db.sql");
   }
 
-
   @Test
-  public void shouldInsertNestedPasswordFieldOfComplexType() throws Exception {
+  void shouldInsertNestedPasswordFieldOfComplexType() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       //Create User
       User user = new User();
       user.setId(500000L);
       user.setPassword(new EncryptedString("secret"));
-      user.setUsername("johnny" + Calendar.getInstance().getTimeInMillis());//random
+      user.setUsername("johnny" + Calendar.getInstance().getTimeInMillis());// random
       user.setAdministrator(true);
 
       sqlSession.insert("User.insert", user);
 
-      //Retrieve User
-      user = (User) sqlSession.selectOne("User.find", user.getId());
+      // Retrieve User
+      user = sqlSession.selectOne("User.find", user.getId());
 
       assertNotNull(user.getId());
 

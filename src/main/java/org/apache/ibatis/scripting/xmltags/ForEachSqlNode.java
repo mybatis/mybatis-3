@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -66,9 +66,9 @@ public class ForEachSqlNode implements SqlNode {
         context = new PrefixedContext(context, separator);
       }
       int uniqueNumber = context.getUniqueNumber();
-      // Issue #709 
+      // Issue #709
       if (o instanceof Map.Entry) {
-        @SuppressWarnings("unchecked") 
+        @SuppressWarnings("unchecked")
         Map.Entry<Object, Object> mapEntry = (Map.Entry<Object, Object>) o;
         applyIndex(context, mapEntry.getKey(), uniqueNumber);
         applyItem(context, mapEntry.getValue(), uniqueNumber);

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,21 +18,21 @@ package org.apache.ibatis.submitted.generictypes;
 import java.io.Reader;
 
 import org.apache.ibatis.BaseDataTest;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class GenericTypesTest {
+class GenericTypesTest {
 
   private SqlSessionFactory sqlSessionFactory;
 
-  @Before
-  public void setUp() throws Exception {
+  @BeforeEach
+  void setUp() throws Exception {
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/generictypes/Config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
@@ -42,11 +42,11 @@ public class GenericTypesTest {
   }
 
   @Test
-  public void testShouldGetAListOfMaps() {
+  void testShouldGetAListOfMaps() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Group group = mapper.getGroup();
-      Assert.assertNotNull(group.getOwner());
+      Assertions.assertNotNull(group.getOwner());
     }
   }
 

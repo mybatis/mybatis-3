@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,14 +24,13 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.logging.jdbc.ResultSetLogger;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ResultSetLoggerTest {
+@ExtendWith(MockitoExtension.class)
+class ResultSetLoggerTest {
 
   @Mock
   private ResultSet rs;
@@ -42,27 +41,27 @@ public class ResultSetLoggerTest {
   @Mock
   private ResultSetMetaData metaData;
 
-  public void setup(int type) throws SQLException {
+  private void setup(int type) throws SQLException {
     when(rs.next()).thenReturn(true);
     when(rs.getMetaData()).thenReturn(metaData);
     when(metaData.getColumnCount()).thenReturn(1);
     when(metaData.getColumnType(1)).thenReturn(type);
     when(metaData.getColumnLabel(1)).thenReturn("ColumnName");
-    when(rs.getString(1)).thenReturn("value");
     when(log.isTraceEnabled()).thenReturn(true);
     ResultSet resultSet = ResultSetLogger.newInstance(rs, log, 1);
     resultSet.next();
   }
 
   @Test
-  public void shouldNotPrintBlobs() throws SQLException {
+  void shouldNotPrintBlobs() throws SQLException {
     setup(Types.LONGNVARCHAR);
     verify(log).trace("<==    Columns: ColumnName");
     verify(log).trace("<==        Row: <<BLOB>>");
   }
 
   @Test
-  public void shouldPrintVarchars() throws SQLException {
+  void shouldPrintVarchars() throws SQLException {
+    when(rs.getString(1)).thenReturn("value");
     setup(Types.VARCHAR);
     verify(log).trace("<==    Columns: ColumnName");
     verify(log).trace("<==        Row: value");

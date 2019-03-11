@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,15 +15,15 @@
  */
 package org.apache.ibatis.type;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.sql.Timestamp;
 import java.time.Instant;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class InstantTypeHandlerTest extends BaseTypeHandlerTest {
+class InstantTypeHandlerTest extends BaseTypeHandlerTest {
 
   private static final TypeHandler<Instant> TYPE_HANDLER = new InstantTypeHandler();
   private static final Instant INSTANT = Instant.now();

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,13 +18,13 @@ package org.apache.ibatis.cache;
 import org.apache.ibatis.cache.decorators.SerializedCache;
 import org.apache.ibatis.cache.decorators.SynchronizedCache;
 import org.apache.ibatis.cache.impl.PerpetualCache;
-import static org.junit.Assert.*;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
-public class PerpetualCacheTest {
+class PerpetualCacheTest {
 
   @Test
-  public void shouldDemonstrateHowAllObjectsAreKept() {
+  void shouldDemonstrateHowAllObjectsAreKept() {
     Cache cache = new PerpetualCache("default");
     cache = new SynchronizedCache(cache);
     for (int i = 0; i < 100000; i++) {
@@ -35,7 +35,7 @@ public class PerpetualCacheTest {
   }
 
   @Test
-  public void shouldDemonstrateCopiesAreEqual() {
+  void shouldDemonstrateCopiesAreEqual() {
     Cache cache = new PerpetualCache("default");
     cache = new SerializedCache(cache);
     for (int i = 0; i < 1000; i++) {
@@ -45,7 +45,7 @@ public class PerpetualCacheTest {
   }
 
   @Test
-  public void shouldRemoveItemOnDemand() {
+  void shouldRemoveItemOnDemand() {
     Cache cache = new PerpetualCache("default");
     cache = new SynchronizedCache(cache);
     cache.putObject(0, 0);
@@ -55,7 +55,7 @@ public class PerpetualCacheTest {
   }
 
   @Test
-  public void shouldFlushAllItemsOnDemand() {
+  void shouldFlushAllItemsOnDemand() {
     Cache cache = new PerpetualCache("default");
     cache = new SynchronizedCache(cache);
     for (int i = 0; i < 5; i++) {

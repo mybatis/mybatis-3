@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -22,10 +22,10 @@
 
 <mapper namespace="org.apache.ibatis.submitted.cursor_simple.Mapper">
 
-	<select id="getAllUsers" resultMap="results" resultOrdered="true">
-		select * from users order by id
+	<select id="getAllUsers" resultMap="results">
+		select * from users
 	</select>
-	
+
 	<resultMap type="org.apache.ibatis.submitted.cursor_simple.User" id="results">
 		<id column="id" property="id"/>
     <result property="name" column="name"/>

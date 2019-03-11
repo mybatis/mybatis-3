@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -27,16 +27,16 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-public class ValueInMapTest {
+class ValueInMapTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
-  public static void setUp() throws Exception {
+  @BeforeAll
+  static void setUp() throws Exception {
     // create a SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/valueinmap/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -48,24 +48,23 @@ public class ValueInMapTest {
   }
 
   @Test // issue #165
-  public void shouldWorkWithAPropertyNamedValue() {
+  void shouldWorkWithAPropertyNamedValue() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      Map<String, String> map = new HashMap<String, String>();
+      Map<String, String> map = new HashMap<>();
       map.put("table", "users");
       map.put("column", "name");
       map.put("value", "User1");
       Integer count = sqlSession.selectOne("count", map);
-      Assert.assertEquals(new Integer(1), count);
+      Assertions.assertEquals(Integer.valueOf(1), count);
     }
   }
 
-  @Test(expected=PersistenceException.class)
-  public void shouldWorkWithAList() {
+  @Test
+  void shouldWorkWithAList() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      List<String> list = new ArrayList<String>();
+      List<String> list = new ArrayList<>();
       list.add("users");
-      Integer count = sqlSession.selectOne("count2",list);
-      Assert.assertEquals(new Integer(1), count);
+      Assertions.assertThrows(PersistenceException.class, () -> sqlSession.selectOne("count2",list));
     }
   }
 

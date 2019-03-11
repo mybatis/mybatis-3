@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2018 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -42,8 +42,8 @@
         <p>动态 SQL 通常要做的事情是根据条件包含 where 子句的一部分。比如：</p>
         <source><![CDATA[<select id="findActiveBlogWithTitleLike"
      resultType="Blog">
-  SELECT * FROM BLOG 
-  WHERE state = ‘ACTIVE’ 
+  SELECT * FROM BLOG
+  WHERE state = ‘ACTIVE’
   <if test="title != null">
     AND title like #{title}
   </if>
@@ -52,7 +52,7 @@
         <p>如果希望通过“title”和“author”两个参数进行可选搜索该怎么办呢？首先，改变语句的名称让它更具实际意义；然后只要加入另一个条件即可。</p>
         <source><![CDATA[<select id="findActiveBlogLike"
      resultType="Blog">
-  SELECT * FROM BLOG WHERE state = ‘ACTIVE’ 
+  SELECT * FROM BLOG WHERE state = ‘ACTIVE’
   <if test="title != null">
     AND title like #{title}
   </if>
@@ -84,11 +84,11 @@
         <p>前面几个例子已经合宜地解决了一个臭名昭著的动态 SQL 问题。现在回到“if”示例，这次我们将“ACTIVE = 1”也设置成动态的条件，看看会发生什么。</p>
         <source><![CDATA[<select id="findActiveBlogLike"
      resultType="Blog">
-  SELECT * FROM BLOG 
-  WHERE 
+  SELECT * FROM BLOG
+  WHERE
   <if test="state != null">
     state = #{state}
-  </if> 
+  </if>
   <if test="title != null">
     AND title like #{title}
   </if>
@@ -102,17 +102,17 @@ WHERE]]></source>
         <p>这会导致查询失败。如果仅仅第二个条件匹配又会怎样？这条 SQL 最终会是这样:
         </p>
         <source><![CDATA[SELECT * FROM BLOG
-WHERE 
+WHERE
 AND title like ‘someTitle’]]></source>
         <p>这个查询也会失败。这个问题不能简单地用条件句式来解决，如果你也曾经被迫这样写过，那么你很可能从此以后都不会再写出这种语句了。</p>
         <p>MyBatis 有一个简单的处理，这在 90% 的情况下都会有用。而在不能使用的地方，你可以自定义处理方式来令其正常工作。一处简单的修改就能达到目的：</p>
         <source><![CDATA[<select id="findActiveBlogLike"
      resultType="Blog">
-  SELECT * FROM BLOG 
-  <where> 
+  SELECT * FROM BLOG
+  <where>
     <if test="state != null">
          state = #{state}
-    </if> 
+    </if>
     <if test="title != null">
         AND title like #{title}
     </if>
@@ -124,7 +124,7 @@ AND title like ‘someTitle’]]></source>
         <p><em>where</em> 元素只会在至少有一个子元素的条件返回 SQL 子句的情况下才去插入“WHERE”子句。而且，若语句的开头为“AND”或“OR”，<em>where</em> 元素也会将它们去除。</p>
         <p>如果 <em>where</em> 元素没有按正常套路出牌，我们可以通过自定义 trim 元素来定制 <em>where</em> 元素的功能。比如，和 <em>where</em> 元素等价的自定义 trim 元素为：</p>
         <source><![CDATA[<trim prefix="WHERE" prefixOverrides="AND |OR ">
-  ... 
+  ...
 </trim>]]></source>
         <p><em>prefixOverrides</em> 属性会忽略通过管道分隔的文本序列（注意此例中的空格也是必要的）。它的作用是移除所有指定在 <em>prefixOverrides</em> 属性中的内容，并且插入 <em>prefix</em> 属性中指定的内容。</p>
         <p>类似的用于动态更新语句的解决方案叫做 <em>set</em>。<em>set</em> 元素可以用于动态包含需要更新的列，而舍去其它的。比如：</p>

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,14 +15,14 @@
  */
 package org.apache.ibatis.type;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class ByteObjectArrayTypeHandlerTest extends BaseTypeHandlerTest {
+class ByteObjectArrayTypeHandlerTest extends BaseTypeHandlerTest {
 
   private static final TypeHandler<Byte[]> TYPE_HANDLER = new ByteObjectArrayTypeHandler();
 
@@ -36,7 +36,7 @@ public class ByteObjectArrayTypeHandlerTest extends BaseTypeHandlerTest {
   @Override
   @Test
   public void shouldGetResultFromResultSetByName() throws Exception {
-    byte[] byteArray = new byte[]{1, 2};
+    byte[] byteArray = new byte[] { 1, 2 };
     when(rs.getBytes("column")).thenReturn(byteArray);
     assertThat(TYPE_HANDLER.getResult(rs, "column")).isEqualTo(new Byte[]{1, 2});
     verify(rs, never()).wasNull();
@@ -53,7 +53,7 @@ public class ByteObjectArrayTypeHandlerTest extends BaseTypeHandlerTest {
   @Override
   @Test
   public void shouldGetResultFromResultSetByPosition() throws Exception {
-    byte[] byteArray = new byte[]{1, 2};
+    byte[] byteArray = new byte[] { 1, 2 };
     when(rs.getBytes(1)).thenReturn(byteArray);
     assertThat(TYPE_HANDLER.getResult(rs, 1)).isEqualTo(new Byte[]{1, 2});
     verify(rs, never()).wasNull();
@@ -70,7 +70,7 @@ public class ByteObjectArrayTypeHandlerTest extends BaseTypeHandlerTest {
   @Override
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
-    byte[] byteArray = new byte[]{1, 2};
+    byte[] byteArray = new byte[] { 1, 2 };
     when(cs.getBytes(1)).thenReturn(byteArray);
     assertThat(TYPE_HANDLER.getResult(cs, 1)).isEqualTo(new Byte[]{1, 2});
     verify(cs, never()).wasNull();
