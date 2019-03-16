@@ -262,7 +262,7 @@ public class OurSqlBuilder {
   public String buildInsertSelective(ProviderContext context) {
     final String tableName = context.getMapperType().getAnnotation(BaseMapper.Meta.class).tableName();
     Map<String, String> columnMap = getColumnMap(context);
-    StringBuffer sqlBuffer = new StringBuffer();
+    StringBuilder sqlBuffer = new StringBuilder();
     sqlBuffer.append("<script>");
     sqlBuffer.append("insert into ");
     sqlBuffer.append(tableName);
@@ -287,7 +287,7 @@ public class OurSqlBuilder {
   public String buildUpdateSelective(ProviderContext context) {
     final String tableName = context.getMapperType().getAnnotation(BaseMapper.Meta.class).tableName();
     Map<String, String> columnMap = getColumnMap(context);
-    StringBuffer sqlBuffer = new StringBuffer();
+    StringBuilder sqlBuffer = new StringBuilder();
     sqlBuffer.append("<script>");
     sqlBuffer.append("update ");
     sqlBuffer.append(tableName);
@@ -307,7 +307,7 @@ public class OurSqlBuilder {
   public String buildGetByEntityQuery(ProviderContext context) {
     final String tableName = context.getMapperType().getAnnotation(BaseMapper.Meta.class).tableName();
     Map<String, String> columnMap = getColumnMap(context);
-    StringBuffer sqlBuffer = new StringBuffer();
+    StringBuilder sqlBuffer = new StringBuilder();
     sqlBuffer.append("<script>");
     sqlBuffer.append("select * from ");
     sqlBuffer.append(tableName);
