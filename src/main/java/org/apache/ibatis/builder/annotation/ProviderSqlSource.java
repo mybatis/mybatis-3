@@ -17,9 +17,9 @@ package org.apache.ibatis.builder.annotation;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Lang;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.SqlSource;
@@ -55,17 +55,11 @@ public class ProviderSqlSource implements SqlSource {
    * @since 3.4.5
    */
   public ProviderSqlSource(Configuration configuration, Object provider, Class<?> mapperType, Method mapperMethod) {
-    this(configuration, provider, mapperType, mapperMethod, configuration.getDefaultScriptingLanguageInstance());
-  }
-
-  /**
-   * @since 3.4.6
-   */
-  public ProviderSqlSource(Configuration configuration, Object provider, Class<?> mapperType, Method mapperMethod, LanguageDriver languageDriver) {
     String providerMethodName;
     try {
       this.configuration = configuration;
-      this.languageDriver = languageDriver;
+      Lang lang = mapperMethod.getAnnotation(Lang.class);
+      this.languageDriver = configuration.getLanguageRegistry().getDriver(lang == null ? configuration.getLanguageRegistry().getDefaultDriverClass() : lang.value());
       this.providerType = (Class<?>) provider.getClass().getMethod("type").invoke(provider);
       providerMethodName = (String) provider.getClass().getMethod("method").invoke(provider);
 
