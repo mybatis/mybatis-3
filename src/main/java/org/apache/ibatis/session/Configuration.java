@@ -536,6 +536,9 @@ public class Configuration {
     return languageRegistry.getDefaultDriver();
   }
 
+  /**
+   * @since 3.5.1
+   */
   public LanguageDriver getLanguageDriver(Class<? extends LanguageDriver> langClass) {
     if (langClass == null) {
       return languageRegistry.getDefaultDriver();

@@ -23,7 +23,6 @@ import org.apache.ibatis.annotations.Lang;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.SqlSource;
-import org.apache.ibatis.parsing.PropertyParser;
 import org.apache.ibatis.reflection.ParamNameResolver;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
@@ -167,10 +166,6 @@ public class ProviderSqlSource implements SqlSource {
     }
     CharSequence sql = (CharSequence) providerMethod.invoke(targetObject, args);
     return sql != null ? sql.toString() : null;
-  }
-
-  private String replacePlaceholder(String sql) {
-    return PropertyParser.parse(sql, configuration.getVariables());
   }
 
 }
