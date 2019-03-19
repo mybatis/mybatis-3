@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
 
 /**
  * The marker annotation that indicate a constructor for automatic mapping.
- *
+ *标记注释，指示自动映射的构造函数。
  * @author Tim Chen
  * @since 3.4.3
  */
