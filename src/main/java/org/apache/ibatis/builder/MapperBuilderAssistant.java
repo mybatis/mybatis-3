@@ -457,13 +457,12 @@ public class MapperBuilderAssistant extends BaseBuilder {
       nestedResultMap, notNullColumn, columnPrefix, typeHandler, flags, null, null, configuration.isLazyLoadingEnabled());
   }
 
+  /**
+   * @deprecated Use {@link Configuration#getLanguageDriver(Class)}
+   */
+  @Deprecated
   public LanguageDriver getLanguageDriver(Class<? extends LanguageDriver> langClass) {
-    if (langClass != null) {
-      configuration.getLanguageRegistry().register(langClass);
-    } else {
-      langClass = configuration.getLanguageRegistry().getDefaultDriverClass();
-    }
-    return configuration.getLanguageRegistry().getDriver(langClass);
+    return configuration.getLanguageDriver(langClass);
   }
 
   /** Backward compatibility signature. */

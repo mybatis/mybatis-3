@@ -17,15 +17,14 @@ package org.apache.ibatis.builder.annotation;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Lang;
 import org.apache.ibatis.builder.BuilderException;
-import org.apache.ibatis.builder.SqlSourceBuilder;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.SqlSource;
-import org.apache.ibatis.parsing.PropertyParser;
 import org.apache.ibatis.reflection.ParamNameResolver;
+import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
 
 /**
@@ -35,8 +34,8 @@ import org.apache.ibatis.session.Configuration;
 public class ProviderSqlSource implements SqlSource {
 
   private final Configuration configuration;
-  private final SqlSourceBuilder sqlSourceParser;
   private final Class<?> providerType;
+  private final LanguageDriver languageDriver;
   private Method providerMethod;
   private String[] providerMethodArgumentNames;
   private Class<?>[] providerMethodParameterTypes;
@@ -58,7 +57,8 @@ public class ProviderSqlSource implements SqlSource {
     String providerMethodName;
     try {
       this.configuration = configuration;
-      this.sqlSourceParser = new SqlSourceBuilder(configuration);
+      Lang lang = mapperMethod == null ? null : mapperMethod.getAnnotation(Lang.class);
+      this.languageDriver = configuration.getLanguageDriver(lang == null ? null : lang.value());
       this.providerType = (Class<?>) provider.getClass().getMethod("type").invoke(provider);
       providerMethodName = (String) provider.getClass().getMethod("method").invoke(provider);
 
@@ -126,7 +126,7 @@ public class ProviderSqlSource implements SqlSource {
                 + " using a specifying parameterObject. In this case, please specify a 'java.util.Map' object.");
       }
       Class<?> parameterType = parameterObject == null ? Object.class : parameterObject.getClass();
-      return sqlSourceParser.parse(replacePlaceholder(sql), parameterType, new HashMap<>());
+      return languageDriver.createSqlSource(configuration, sql, parameterType);
     } catch (BuilderException e) {
       throw e;
     } catch (Exception e) {
@@ -166,10 +166,6 @@ public class ProviderSqlSource implements SqlSource {
     }
     CharSequence sql = (CharSequence) providerMethod.invoke(targetObject, args);
     return sql != null ? sql.toString() : null;
-  }
-
-  private String replacePlaceholder(String sql) {
-    return PropertyParser.parse(sql, configuration.getVariables());
   }
 
 }
