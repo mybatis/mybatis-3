@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -219,7 +219,7 @@ public class OurSqlBuilder {
     }}.toString();
   }
 
-  private Class getEntityClass(ProviderContext providerContext){
+  private Class<?> getEntityClass(ProviderContext providerContext) {
     Method mapperMethod = providerContext.getMapperMethod();
     Class<?> declaringClass = mapperMethod.getDeclaringClass();
     Class<?> mapperClass = providerContext.getMapperType();
@@ -234,27 +234,26 @@ public class OurSqlBuilder {
         }
       }
     }
-    throw new RuntimeException("The interface ["
-        + mapperClass.getCanonicalName() + "] must specify a generic type.");
+    throw new RuntimeException("The interface [" + mapperClass.getCanonicalName() + "] must specify a generic type.");
   }
 
-  private Map<String, String> getColumnMap(ProviderContext context){
-    Class entityClass = getEntityClass(context);
+  private Map<String, String> getColumnMap(ProviderContext context) {
+    Class<?> entityClass = getEntityClass(context);
     Field[] fields = entityClass.getDeclaredFields();
     Map<String, String> columnMap = new LinkedHashMap<String, String>();
     for (Field field : fields) {
       BaseMapper.Column column = field.getAnnotation(BaseMapper.Column.class);
-      if(column != null){
+      if (column != null) {
         String columnName = column.value();
-        if(columnName == null || columnName.length() == 0){
+        if (columnName == null || columnName.length() == 0) {
           columnName = field.getName();
         }
         columnMap.put(columnName, field.getName());
       }
     }
-    if(columnMap.size() == 0){
-      throw new RuntimeException("There is no field in the class ["
-          + entityClass.getCanonicalName() + "] that specifies the @BaseMapper.Column annotation.");
+    if (columnMap.size() == 0) {
+      throw new RuntimeException("There is no field in the class [" + entityClass.getCanonicalName()
+          + "] that specifies the @BaseMapper.Column annotation.");
     }
     return columnMap;
   }
@@ -298,7 +297,7 @@ public class OurSqlBuilder {
       sqlBuffer.append("</if>");
     }
     sqlBuffer.append("</set>");
-    //For simplicity, there is no @Id annotation here, using default id directly
+    // For simplicity, there is no @Id annotation here, using default id directly
     sqlBuffer.append("where id = #{id}");
     sqlBuffer.append("</script>");
     return sqlBuffer.toString();
