@@ -59,9 +59,7 @@ public class ProviderSqlSource implements SqlSource {
     try {
       this.configuration = configuration;
       Lang lang = mapperMethod == null ? null : mapperMethod.getAnnotation(Lang.class);
-      this.languageDriver = lang == null ?
-          configuration.getLanguageRegistry().getDefaultDriver() :
-          configuration.getLanguageRegistry().getDriver(lang.value());
+      this.languageDriver = configuration.getLanguageDriver(lang == null ? null : lang.value());
       this.providerType = (Class<?>) provider.getClass().getMethod("type").invoke(provider);
       providerMethodName = (String) provider.getClass().getMethod("method").invoke(provider);
 
