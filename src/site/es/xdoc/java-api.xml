@@ -464,7 +464,13 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         </td>
         <td>Estas anotaciones SQL alternativas te permiten especificar un nombre de clases y un método que devolverán la SQL que debe ejecutarse (Since 3.4.6, you can specify the <code>CharSequence</code> instead of <code>String</code> as a method return type).
           Cuando se ejecute el método MyBatis instanciará la clase y ejecutará el método especificados en el provider. You can pass objects that passed to arguments of a mapper method, "Mapper interface type" and "Mapper method"
-          via the <code>ProviderContext</code>(available since MyBatis 3.4.5 or later) as method argument.(In MyBatis 3.4 or later, it's allow multiple parameters) Atributos: type, method.  El atributo type es el nombre completamente cualificado de una clase. El method es el nombre un método de dicha clase. Nota: A continuación hay una sección sobre la clase, que puede ayudar a construir SQL dinámico de una forma más clara y sencilla de leer.</td>
+          via the <code>ProviderContext</code>(available since MyBatis 3.4.5 or later) as method argument.(In MyBatis 3.4 or later, it's allow multiple parameters)
+          Atributos: type, method.  El atributo type es el nombre completamente cualificado de una clase.
+          El method es el nombre un método de dicha clase
+          (Since 3.5.1, you can omit <code>method</code> attribute, the MyBatis will resolve a target method via the
+          <code>ProviderMethodResolver</code> interface.
+          If not resolve by it, the MyBatis use the reserved fallback method that named <code>provideSql</code>).
+          Nota: A continuación hay una sección sobre la clase, que puede ayudar a construir SQL dinámico de una forma más clara y sencilla de leer.</td>
       </tr>
       <tr>
         <td><code>@Param</code></td>
@@ -579,6 +585,44 @@ class UserSqlBuilder {
       FROM("users");
       WHERE("name like #{name} || '%'");
       ORDER_BY(orderByColumn);
+    }}.toString();
+  }
+}]]></source>
+
+    <p>This example shows usage the default implementation of <code>ProviderMethodResolver</code>(available since MyBatis 3.5.1 or later):</p>
+    <source><![CDATA[@SelectProvider(type = UserSqlProvider.class)
+List<User> getUsersByName(String name);
+
+// Implements the ProviderMethodResolver on your provider class
+class UserSqlProvider implements ProviderMethodResolver {
+  // In default implementation, it will resolve a method that method name is matched with mapper method
+  public static String getUsersByName(final String name) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      if (name != null) {
+        WHERE("name like #{value} || '%'");
+      }
+      ORDER_BY("id");
+    }}.toString();
+  }
+}]]></source>
+
+    <p>This example shows usage the default implementation of <code>ProviderMethodResolver</code>(available since MyBatis 3.5.1 or later):</p>
+    <source><![CDATA[@SelectProvider(type = UserSqlProvider.class)
+List<User> getUsersByName(String name);
+
+// Implements the ProviderMethodResolver on your provider class
+class UserSqlProvider implements ProviderMethodResolver {
+  // In default implementation, it will resolve a method that method name is matched with mapper method
+  public static String getUsersByName(final String name) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      if (name != null) {
+        WHERE("name like #{value} || '%'");
+      }
+      ORDER_BY("id");
     }}.toString();
   }
 }]]></source>
