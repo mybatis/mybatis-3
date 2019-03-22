@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>XPathParser.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.parsing</a> &gt; <span class="el_source">XPathParser.java</span></div><h1>XPathParser.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
@@ -41,6 +41,7 @@ import org.xml.sax.SAXParseException;
 
 /**
  * @author Clinton Begin
+ * @author Kazuki Shimizu
  */
 public class XPathParser {
 
@@ -50,223 +51,223 @@ public class XPathParser {
   private Properties variables;
   private XPath xpath;
 
-<span class="nc" id="L53">  public XPathParser(String xml) {</span>
-<span class="nc" id="L54">    commonConstructor(false, null, null);</span>
-<span class="nc" id="L55">    this.document = createDocument(new InputSource(new StringReader(xml)));</span>
-<span class="nc" id="L56">  }</span>
+<span class="nc" id="L54">  public XPathParser(String xml) {</span>
+<span class="nc" id="L55">    commonConstructor(false, null, null);</span>
+<span class="nc" id="L56">    this.document = createDocument(new InputSource(new StringReader(xml)));</span>
+<span class="nc" id="L57">  }</span>
 
-<span class="nc" id="L58">  public XPathParser(Reader reader) {</span>
-<span class="nc" id="L59">    commonConstructor(false, null, null);</span>
-<span class="nc" id="L60">    this.document = createDocument(new InputSource(reader));</span>
-<span class="nc" id="L61">  }</span>
+<span class="nc" id="L59">  public XPathParser(Reader reader) {</span>
+<span class="nc" id="L60">    commonConstructor(false, null, null);</span>
+<span class="nc" id="L61">    this.document = createDocument(new InputSource(reader));</span>
+<span class="nc" id="L62">  }</span>
 
-<span class="nc" id="L63">  public XPathParser(InputStream inputStream) {</span>
-<span class="nc" id="L64">    commonConstructor(false, null, null);</span>
-<span class="nc" id="L65">    this.document = createDocument(new InputSource(inputStream));</span>
-<span class="nc" id="L66">  }</span>
+<span class="nc" id="L64">  public XPathParser(InputStream inputStream) {</span>
+<span class="nc" id="L65">    commonConstructor(false, null, null);</span>
+<span class="nc" id="L66">    this.document = createDocument(new InputSource(inputStream));</span>
+<span class="nc" id="L67">  }</span>
 
-<span class="nc" id="L68">  public XPathParser(Document document) {</span>
-<span class="nc" id="L69">    commonConstructor(false, null, null);</span>
-<span class="nc" id="L70">    this.document = document;</span>
-<span class="nc" id="L71">  }</span>
+<span class="nc" id="L69">  public XPathParser(Document document) {</span>
+<span class="nc" id="L70">    commonConstructor(false, null, null);</span>
+<span class="nc" id="L71">    this.document = document;</span>
+<span class="nc" id="L72">  }</span>
 
-<span class="nc" id="L73">  public XPathParser(String xml, boolean validation) {</span>
-<span class="nc" id="L74">    commonConstructor(validation, null, null);</span>
-<span class="nc" id="L75">    this.document = createDocument(new InputSource(new StringReader(xml)));</span>
-<span class="nc" id="L76">  }</span>
+<span class="nc" id="L74">  public XPathParser(String xml, boolean validation) {</span>
+<span class="nc" id="L75">    commonConstructor(validation, null, null);</span>
+<span class="nc" id="L76">    this.document = createDocument(new InputSource(new StringReader(xml)));</span>
+<span class="nc" id="L77">  }</span>
 
-<span class="nc" id="L78">  public XPathParser(Reader reader, boolean validation) {</span>
-<span class="nc" id="L79">    commonConstructor(validation, null, null);</span>
-<span class="nc" id="L80">    this.document = createDocument(new InputSource(reader));</span>
-<span class="nc" id="L81">  }</span>
+<span class="nc" id="L79">  public XPathParser(Reader reader, boolean validation) {</span>
+<span class="nc" id="L80">    commonConstructor(validation, null, null);</span>
+<span class="nc" id="L81">    this.document = createDocument(new InputSource(reader));</span>
+<span class="nc" id="L82">  }</span>
 
-<span class="nc" id="L83">  public XPathParser(InputStream inputStream, boolean validation) {</span>
-<span class="nc" id="L84">    commonConstructor(validation, null, null);</span>
-<span class="nc" id="L85">    this.document = createDocument(new InputSource(inputStream));</span>
-<span class="nc" id="L86">  }</span>
+<span class="nc" id="L84">  public XPathParser(InputStream inputStream, boolean validation) {</span>
+<span class="nc" id="L85">    commonConstructor(validation, null, null);</span>
+<span class="nc" id="L86">    this.document = createDocument(new InputSource(inputStream));</span>
+<span class="nc" id="L87">  }</span>
 
-<span class="nc" id="L88">  public XPathParser(Document document, boolean validation) {</span>
-<span class="nc" id="L89">    commonConstructor(validation, null, null);</span>
-<span class="nc" id="L90">    this.document = document;</span>
-<span class="nc" id="L91">  }</span>
+<span class="nc" id="L89">  public XPathParser(Document document, boolean validation) {</span>
+<span class="nc" id="L90">    commonConstructor(validation, null, null);</span>
+<span class="nc" id="L91">    this.document = document;</span>
+<span class="nc" id="L92">  }</span>
 
-<span class="nc" id="L93">  public XPathParser(String xml, boolean validation, Properties variables) {</span>
-<span class="nc" id="L94">    commonConstructor(validation, variables, null);</span>
-<span class="nc" id="L95">    this.document = createDocument(new InputSource(new StringReader(xml)));</span>
-<span class="nc" id="L96">  }</span>
+<span class="nc" id="L94">  public XPathParser(String xml, boolean validation, Properties variables) {</span>
+<span class="nc" id="L95">    commonConstructor(validation, variables, null);</span>
+<span class="nc" id="L96">    this.document = createDocument(new InputSource(new StringReader(xml)));</span>
+<span class="nc" id="L97">  }</span>
 
-<span class="nc" id="L98">  public XPathParser(Reader reader, boolean validation, Properties variables) {</span>
-<span class="nc" id="L99">    commonConstructor(validation, variables, null);</span>
-<span class="nc" id="L100">    this.document = createDocument(new InputSource(reader));</span>
-<span class="nc" id="L101">  }</span>
+<span class="nc" id="L99">  public XPathParser(Reader reader, boolean validation, Properties variables) {</span>
+<span class="nc" id="L100">    commonConstructor(validation, variables, null);</span>
+<span class="nc" id="L101">    this.document = createDocument(new InputSource(reader));</span>
+<span class="nc" id="L102">  }</span>
 
-<span class="nc" id="L103">  public XPathParser(InputStream inputStream, boolean validation, Properties variables) {</span>
-<span class="nc" id="L104">    commonConstructor(validation, variables, null);</span>
-<span class="nc" id="L105">    this.document = createDocument(new InputSource(inputStream));</span>
-<span class="nc" id="L106">  }</span>
+<span class="nc" id="L104">  public XPathParser(InputStream inputStream, boolean validation, Properties variables) {</span>
+<span class="nc" id="L105">    commonConstructor(validation, variables, null);</span>
+<span class="nc" id="L106">    this.document = createDocument(new InputSource(inputStream));</span>
+<span class="nc" id="L107">  }</span>
 
-<span class="nc" id="L108">  public XPathParser(Document document, boolean validation, Properties variables) {</span>
-<span class="nc" id="L109">    commonConstructor(validation, variables, null);</span>
-<span class="nc" id="L110">    this.document = document;</span>
-<span class="nc" id="L111">  }</span>
+<span class="nc" id="L109">  public XPathParser(Document document, boolean validation, Properties variables) {</span>
+<span class="nc" id="L110">    commonConstructor(validation, variables, null);</span>
+<span class="nc" id="L111">    this.document = document;</span>
+<span class="nc" id="L112">  }</span>
 
-<span class="fc" id="L113">  public XPathParser(String xml, boolean validation, Properties variables, EntityResolver entityResolver) {</span>
-<span class="fc" id="L114">    commonConstructor(validation, variables, entityResolver);</span>
-<span class="fc" id="L115">    this.document = createDocument(new InputSource(new StringReader(xml)));</span>
-<span class="fc" id="L116">  }</span>
+<span class="fc" id="L114">  public XPathParser(String xml, boolean validation, Properties variables, EntityResolver entityResolver) {</span>
+<span class="fc" id="L115">    commonConstructor(validation, variables, entityResolver);</span>
+<span class="fc" id="L116">    this.document = createDocument(new InputSource(new StringReader(xml)));</span>
+<span class="fc" id="L117">  }</span>
 
-<span class="fc" id="L118">  public XPathParser(Reader reader, boolean validation, Properties variables, EntityResolver entityResolver) {</span>
-<span class="fc" id="L119">    commonConstructor(validation, variables, entityResolver);</span>
-<span class="fc" id="L120">    this.document = createDocument(new InputSource(reader));</span>
-<span class="fc" id="L121">  }</span>
+<span class="fc" id="L119">  public XPathParser(Reader reader, boolean validation, Properties variables, EntityResolver entityResolver) {</span>
+<span class="fc" id="L120">    commonConstructor(validation, variables, entityResolver);</span>
+<span class="fc" id="L121">    this.document = createDocument(new InputSource(reader));</span>
+<span class="fc" id="L122">  }</span>
 
-<span class="fc" id="L123">  public XPathParser(InputStream inputStream, boolean validation, Properties variables, EntityResolver entityResolver) {</span>
-<span class="fc" id="L124">    commonConstructor(validation, variables, entityResolver);</span>
-<span class="fc" id="L125">    this.document = createDocument(new InputSource(inputStream));</span>
-<span class="fc" id="L126">  }</span>
+<span class="fc" id="L124">  public XPathParser(InputStream inputStream, boolean validation, Properties variables, EntityResolver entityResolver) {</span>
+<span class="fc" id="L125">    commonConstructor(validation, variables, entityResolver);</span>
+<span class="fc" id="L126">    this.document = createDocument(new InputSource(inputStream));</span>
+<span class="fc" id="L127">  }</span>
 
-<span class="nc" id="L128">  public XPathParser(Document document, boolean validation, Properties variables, EntityResolver entityResolver) {</span>
-<span class="nc" id="L129">    commonConstructor(validation, variables, entityResolver);</span>
-<span class="nc" id="L130">    this.document = document;</span>
-<span class="nc" id="L131">  }</span>
+<span class="nc" id="L129">  public XPathParser(Document document, boolean validation, Properties variables, EntityResolver entityResolver) {</span>
+<span class="nc" id="L130">    commonConstructor(validation, variables, entityResolver);</span>
+<span class="nc" id="L131">    this.document = document;</span>
+<span class="nc" id="L132">  }</span>
 
   public void setVariables(Properties variables) {
-<span class="fc" id="L134">    this.variables = variables;</span>
-<span class="fc" id="L135">  }</span>
+<span class="fc" id="L135">    this.variables = variables;</span>
+<span class="fc" id="L136">  }</span>
 
   public String evalString(String expression) {
-<span class="fc" id="L138">    return evalString(document, expression);</span>
+<span class="fc" id="L139">    return evalString(document, expression);</span>
   }
 
   public String evalString(Object root, String expression) {
-<span class="fc" id="L142">    String result = (String) evaluate(expression, root, XPathConstants.STRING);</span>
-<span class="fc" id="L143">    result = PropertyParser.parse(result, variables);</span>
-<span class="fc" id="L144">    return result;</span>
+<span class="fc" id="L143">    String result = (String) evaluate(expression, root, XPathConstants.STRING);</span>
+<span class="fc" id="L144">    result = PropertyParser.parse(result, variables);</span>
+<span class="fc" id="L145">    return result;</span>
   }
 
   public Boolean evalBoolean(String expression) {
-<span class="fc" id="L148">    return evalBoolean(document, expression);</span>
+<span class="fc" id="L149">    return evalBoolean(document, expression);</span>
   }
 
   public Boolean evalBoolean(Object root, String expression) {
-<span class="fc" id="L152">    return (Boolean) evaluate(expression, root, XPathConstants.BOOLEAN);</span>
+<span class="fc" id="L153">    return (Boolean) evaluate(expression, root, XPathConstants.BOOLEAN);</span>
   }
 
   public Short evalShort(String expression) {
-<span class="fc" id="L156">    return evalShort(document, expression);</span>
+<span class="fc" id="L157">    return evalShort(document, expression);</span>
   }
 
   public Short evalShort(Object root, String expression) {
-<span class="fc" id="L160">    return Short.valueOf(evalString(root, expression));</span>
+<span class="fc" id="L161">    return Short.valueOf(evalString(root, expression));</span>
   }
 
   public Integer evalInteger(String expression) {
-<span class="fc" id="L164">    return evalInteger(document, expression);</span>
+<span class="fc" id="L165">    return evalInteger(document, expression);</span>
   }
 
   public Integer evalInteger(Object root, String expression) {
-<span class="fc" id="L168">    return Integer.valueOf(evalString(root, expression));</span>
+<span class="fc" id="L169">    return Integer.valueOf(evalString(root, expression));</span>
   }
 
   public Long evalLong(String expression) {
-<span class="fc" id="L172">    return evalLong(document, expression);</span>
+<span class="fc" id="L173">    return evalLong(document, expression);</span>
   }
 
   public Long evalLong(Object root, String expression) {
-<span class="fc" id="L176">    return Long.valueOf(evalString(root, expression));</span>
+<span class="fc" id="L177">    return Long.valueOf(evalString(root, expression));</span>
   }
 
   public Float evalFloat(String expression) {
-<span class="fc" id="L180">    return evalFloat(document, expression);</span>
+<span class="fc" id="L181">    return evalFloat(document, expression);</span>
   }
 
   public Float evalFloat(Object root, String expression) {
-<span class="fc" id="L184">    return Float.valueOf(evalString(root, expression));</span>
+<span class="fc" id="L185">    return Float.valueOf(evalString(root, expression));</span>
   }
 
   public Double evalDouble(String expression) {
-<span class="fc" id="L188">    return evalDouble(document, expression);</span>
+<span class="fc" id="L189">    return evalDouble(document, expression);</span>
   }
 
   public Double evalDouble(Object root, String expression) {
-<span class="fc" id="L192">    return (Double) evaluate(expression, root, XPathConstants.NUMBER);</span>
+<span class="fc" id="L193">    return (Double) evaluate(expression, root, XPathConstants.NUMBER);</span>
   }
 
   public List&lt;XNode&gt; evalNodes(String expression) {
-<span class="fc" id="L196">    return evalNodes(document, expression);</span>
+<span class="fc" id="L197">    return evalNodes(document, expression);</span>
   }
 
   public List&lt;XNode&gt; evalNodes(Object root, String expression) {
-<span class="fc" id="L200">    List&lt;XNode&gt; xnodes = new ArrayList&lt;XNode&gt;();</span>
-<span class="fc" id="L201">    NodeList nodes = (NodeList) evaluate(expression, root, XPathConstants.NODESET);</span>
-<span class="fc bfc" id="L202" title="All 2 branches covered.">    for (int i = 0; i &lt; nodes.getLength(); i++) {</span>
-<span class="fc" id="L203">      xnodes.add(new XNode(this, nodes.item(i), variables));</span>
+<span class="fc" id="L201">    List&lt;XNode&gt; xnodes = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L202">    NodeList nodes = (NodeList) evaluate(expression, root, XPathConstants.NODESET);</span>
+<span class="fc bfc" id="L203" title="All 2 branches covered.">    for (int i = 0; i &lt; nodes.getLength(); i++) {</span>
+<span class="fc" id="L204">      xnodes.add(new XNode(this, nodes.item(i), variables));</span>
     }
-<span class="fc" id="L205">    return xnodes;</span>
+<span class="fc" id="L206">    return xnodes;</span>
   }
 
   public XNode evalNode(String expression) {
-<span class="fc" id="L209">    return evalNode(document, expression);</span>
+<span class="fc" id="L210">    return evalNode(document, expression);</span>
   }
 
   public XNode evalNode(Object root, String expression) {
-<span class="fc" id="L213">    Node node = (Node) evaluate(expression, root, XPathConstants.NODE);</span>
-<span class="fc bfc" id="L214" title="All 2 branches covered.">    if (node == null) {</span>
-<span class="fc" id="L215">      return null;</span>
+<span class="fc" id="L214">    Node node = (Node) evaluate(expression, root, XPathConstants.NODE);</span>
+<span class="fc bfc" id="L215" title="All 2 branches covered.">    if (node == null) {</span>
+<span class="fc" id="L216">      return null;</span>
     }
-<span class="fc" id="L217">    return new XNode(this, node, variables);</span>
+<span class="fc" id="L218">    return new XNode(this, node, variables);</span>
   }
 
   private Object evaluate(String expression, Object root, QName returnType) {
     try {
-<span class="fc" id="L222">      return xpath.evaluate(expression, root, returnType);</span>
-<span class="nc" id="L223">    } catch (Exception e) {</span>
-<span class="nc" id="L224">      throw new BuilderException(&quot;Error evaluating XPath.  Cause: &quot; + e, e);</span>
+<span class="fc" id="L223">      return xpath.evaluate(expression, root, returnType);</span>
+<span class="nc" id="L224">    } catch (Exception e) {</span>
+<span class="nc" id="L225">      throw new BuilderException(&quot;Error evaluating XPath.  Cause: &quot; + e, e);</span>
     }
   }
 
   private Document createDocument(InputSource inputSource) {
     // important: this must only be called AFTER common constructor
     try {
-<span class="fc" id="L231">      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();</span>
-<span class="fc" id="L232">      factory.setValidating(validation);</span>
+<span class="fc" id="L232">      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();</span>
+<span class="fc" id="L233">      factory.setValidating(validation);</span>
 
-<span class="fc" id="L234">      factory.setNamespaceAware(false);</span>
-<span class="fc" id="L235">      factory.setIgnoringComments(true);</span>
-<span class="fc" id="L236">      factory.setIgnoringElementContentWhitespace(false);</span>
-<span class="fc" id="L237">      factory.setCoalescing(false);</span>
-<span class="fc" id="L238">      factory.setExpandEntityReferences(true);</span>
+<span class="fc" id="L235">      factory.setNamespaceAware(false);</span>
+<span class="fc" id="L236">      factory.setIgnoringComments(true);</span>
+<span class="fc" id="L237">      factory.setIgnoringElementContentWhitespace(false);</span>
+<span class="fc" id="L238">      factory.setCoalescing(false);</span>
+<span class="fc" id="L239">      factory.setExpandEntityReferences(true);</span>
 
-<span class="fc" id="L240">      DocumentBuilder builder = factory.newDocumentBuilder();</span>
-<span class="fc" id="L241">      builder.setEntityResolver(entityResolver);</span>
-<span class="fc" id="L242">      builder.setErrorHandler(new ErrorHandler() {</span>
+<span class="fc" id="L241">      DocumentBuilder builder = factory.newDocumentBuilder();</span>
+<span class="fc" id="L242">      builder.setEntityResolver(entityResolver);</span>
+<span class="fc" id="L243">      builder.setErrorHandler(new ErrorHandler() {</span>
         @Override
         public void error(SAXParseException exception) throws SAXException {
-<span class="nc" id="L245">          throw exception;</span>
+<span class="nc" id="L246">          throw exception;</span>
         }
 
         @Override
         public void fatalError(SAXParseException exception) throws SAXException {
-<span class="nc" id="L250">          throw exception;</span>
+<span class="nc" id="L251">          throw exception;</span>
         }
 
         @Override
         public void warning(SAXParseException exception) throws SAXException {
-<span class="nc" id="L255">        }</span>
+<span class="nc" id="L256">        }</span>
       });
-<span class="fc" id="L257">      return builder.parse(inputSource);</span>
-<span class="nc" id="L258">    } catch (Exception e) {</span>
-<span class="nc" id="L259">      throw new BuilderException(&quot;Error creating document instance.  Cause: &quot; + e, e);</span>
+<span class="fc" id="L258">      return builder.parse(inputSource);</span>
+<span class="nc" id="L259">    } catch (Exception e) {</span>
+<span class="nc" id="L260">      throw new BuilderException(&quot;Error creating document instance.  Cause: &quot; + e, e);</span>
     }
   }
 
   private void commonConstructor(boolean validation, Properties variables, EntityResolver entityResolver) {
-<span class="fc" id="L264">    this.validation = validation;</span>
-<span class="fc" id="L265">    this.entityResolver = entityResolver;</span>
-<span class="fc" id="L266">    this.variables = variables;</span>
-<span class="fc" id="L267">    XPathFactory factory = XPathFactory.newInstance();</span>
-<span class="fc" id="L268">    this.xpath = factory.newXPath();</span>
-<span class="fc" id="L269">  }</span>
+<span class="fc" id="L265">    this.validation = validation;</span>
+<span class="fc" id="L266">    this.entityResolver = entityResolver;</span>
+<span class="fc" id="L267">    this.variables = variables;</span>
+<span class="fc" id="L268">    XPathFactory factory = XPathFactory.newInstance();</span>
+<span class="fc" id="L269">    this.xpath = factory.newXPath();</span>
+<span class="fc" id="L270">  }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ResultLoader.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.executor.loader</a> &gt; <span class="el_source">ResultLoader.java</span></div><h1>ResultLoader.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
@@ -49,10 +49,10 @@ public class ResultLoader {
   protected final BoundSql boundSql;
   protected final ResultExtractor resultExtractor;
   protected final long creatorThreadId;
-  
+
   protected boolean loaded;
   protected Object resultObject;
-  
+
 <span class="fc" id="L56">  public ResultLoader(Configuration config, Executor executor, MappedStatement mappedStatement, Object parameterObject, Class&lt;?&gt; targetType, CacheKey cacheKey, BoundSql boundSql) {</span>
 <span class="fc" id="L57">    this.configuration = config;</span>
 <span class="fc" id="L58">    this.executor = executor;</span>
@@ -78,10 +78,10 @@ public class ResultLoader {
 <span class="fc" id="L78">      localExecutor = newExecutor();</span>
     }
     try {
-<span class="fc" id="L81">      return localExecutor.&lt;E&gt; query(mappedStatement, parameterObject, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER, cacheKey, boundSql);</span>
+<span class="fc" id="L81">      return localExecutor.query(mappedStatement, parameterObject, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER, cacheKey, boundSql);</span>
     } finally {
-<span class="pc bpc" id="L83" title="2 of 4 branches missed.">      if (localExecutor != executor) {</span>
-<span class="pc" id="L84">        localExecutor.close(false);</span>
+<span class="fc bfc" id="L83" title="All 2 branches covered.">      if (localExecutor != executor) {</span>
+<span class="fc" id="L84">        localExecutor.close(false);</span>
       }
     }
   }
@@ -105,4 +105,4 @@ public class ResultLoader {
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

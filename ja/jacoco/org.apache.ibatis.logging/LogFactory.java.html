@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ja"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LogFactory.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.logging</a> &gt; <span class="el_source">LogFactory.java</span></div><h1>LogFactory.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
@@ -24,121 +24,91 @@ import java.lang.reflect.Constructor;
 public final class LogFactory {
 
   /**
-   * Marker to be used by logging implementations that support markers
+   * Marker to be used by logging implementations that support markers.
    */
   public static final String MARKER = &quot;MYBATIS&quot;;
 
   private static Constructor&lt;? extends Log&gt; logConstructor;
 
   static {
-<span class="fc" id="L34">    tryImplementation(new Runnable() {</span>
-      @Override
-      public void run() {
-<span class="fc" id="L37">        useSlf4jLogging();</span>
-<span class="fc" id="L38">      }</span>
-    });
-<span class="fc" id="L40">    tryImplementation(new Runnable() {</span>
-      @Override
-      public void run() {
-<span class="nc" id="L43">        useCommonsLogging();</span>
-<span class="nc" id="L44">      }</span>
-    });
-<span class="fc" id="L46">    tryImplementation(new Runnable() {</span>
-      @Override
-      public void run() {
-<span class="nc" id="L49">        useLog4J2Logging();</span>
-<span class="nc" id="L50">      }</span>
-    });
-<span class="fc" id="L52">    tryImplementation(new Runnable() {</span>
-      @Override
-      public void run() {
-<span class="nc" id="L55">        useLog4JLogging();</span>
-<span class="nc" id="L56">      }</span>
-    });
-<span class="fc" id="L58">    tryImplementation(new Runnable() {</span>
-      @Override
-      public void run() {
-<span class="nc" id="L61">        useJdkLogging();</span>
-<span class="nc" id="L62">      }</span>
-    });
-<span class="fc" id="L64">    tryImplementation(new Runnable() {</span>
-      @Override
-      public void run() {
-<span class="nc" id="L67">        useNoLogging();</span>
-<span class="nc" id="L68">      }</span>
-    });
-<span class="fc" id="L70">  }</span>
+<span class="fc" id="L34">    tryImplementation(LogFactory::useSlf4jLogging);</span>
+<span class="fc" id="L35">    tryImplementation(LogFactory::useCommonsLogging);</span>
+<span class="fc" id="L36">    tryImplementation(LogFactory::useLog4J2Logging);</span>
+<span class="fc" id="L37">    tryImplementation(LogFactory::useLog4JLogging);</span>
+<span class="fc" id="L38">    tryImplementation(LogFactory::useJdkLogging);</span>
+<span class="fc" id="L39">    tryImplementation(LogFactory::useNoLogging);</span>
+<span class="fc" id="L40">  }</span>
 
-<span class="nc" id="L72">  private LogFactory() {</span>
+  private LogFactory() {
     // disable construction
-<span class="nc" id="L74">  }</span>
+  }
 
   public static Log getLog(Class&lt;?&gt; aClass) {
-<span class="fc" id="L77">    return getLog(aClass.getName());</span>
+<span class="fc" id="L47">    return getLog(aClass.getName());</span>
   }
 
   public static Log getLog(String logger) {
     try {
-<span class="fc" id="L82">      return logConstructor.newInstance(logger);</span>
-<span class="nc" id="L83">    } catch (Throwable t) {</span>
-<span class="nc" id="L84">      throw new LogException(&quot;Error creating logger for logger &quot; + logger + &quot;.  Cause: &quot; + t, t);</span>
+<span class="fc" id="L52">      return logConstructor.newInstance(logger);</span>
+<span class="nc" id="L53">    } catch (Throwable t) {</span>
+<span class="nc" id="L54">      throw new LogException(&quot;Error creating logger for logger &quot; + logger + &quot;.  Cause: &quot; + t, t);</span>
     }
   }
 
   public static synchronized void useCustomLogging(Class&lt;? extends Log&gt; clazz) {
-<span class="fc" id="L89">    setImplementation(clazz);</span>
-<span class="fc" id="L90">  }</span>
+<span class="fc" id="L59">    setImplementation(clazz);</span>
+<span class="fc" id="L60">  }</span>
 
   public static synchronized void useSlf4jLogging() {
-<span class="fc" id="L93">    setImplementation(org.apache.ibatis.logging.slf4j.Slf4jImpl.class);</span>
-<span class="fc" id="L94">  }</span>
+<span class="fc" id="L63">    setImplementation(org.apache.ibatis.logging.slf4j.Slf4jImpl.class);</span>
+<span class="fc" id="L64">  }</span>
 
   public static synchronized void useCommonsLogging() {
-<span class="fc" id="L97">    setImplementation(org.apache.ibatis.logging.commons.JakartaCommonsLoggingImpl.class);</span>
-<span class="fc" id="L98">  }</span>
+<span class="fc" id="L67">    setImplementation(org.apache.ibatis.logging.commons.JakartaCommonsLoggingImpl.class);</span>
+<span class="fc" id="L68">  }</span>
 
   public static synchronized void useLog4JLogging() {
-<span class="fc" id="L101">    setImplementation(org.apache.ibatis.logging.log4j.Log4jImpl.class);</span>
-<span class="fc" id="L102">  }</span>
+<span class="fc" id="L71">    setImplementation(org.apache.ibatis.logging.log4j.Log4jImpl.class);</span>
+<span class="fc" id="L72">  }</span>
 
   public static synchronized void useLog4J2Logging() {
-<span class="fc" id="L105">    setImplementation(org.apache.ibatis.logging.log4j2.Log4j2Impl.class);</span>
-<span class="fc" id="L106">  }</span>
+<span class="fc" id="L75">    setImplementation(org.apache.ibatis.logging.log4j2.Log4j2Impl.class);</span>
+<span class="fc" id="L76">  }</span>
 
   public static synchronized void useJdkLogging() {
-<span class="fc" id="L109">    setImplementation(org.apache.ibatis.logging.jdk14.Jdk14LoggingImpl.class);</span>
-<span class="fc" id="L110">  }</span>
+<span class="fc" id="L79">    setImplementation(org.apache.ibatis.logging.jdk14.Jdk14LoggingImpl.class);</span>
+<span class="fc" id="L80">  }</span>
 
   public static synchronized void useStdOutLogging() {
-<span class="fc" id="L113">    setImplementation(org.apache.ibatis.logging.stdout.StdOutImpl.class);</span>
-<span class="fc" id="L114">  }</span>
+<span class="fc" id="L83">    setImplementation(org.apache.ibatis.logging.stdout.StdOutImpl.class);</span>
+<span class="fc" id="L84">  }</span>
 
   public static synchronized void useNoLogging() {
-<span class="fc" id="L117">    setImplementation(org.apache.ibatis.logging.nologging.NoLoggingImpl.class);</span>
-<span class="fc" id="L118">  }</span>
+<span class="fc" id="L87">    setImplementation(org.apache.ibatis.logging.nologging.NoLoggingImpl.class);</span>
+<span class="fc" id="L88">  }</span>
 
   private static void tryImplementation(Runnable runnable) {
-<span class="fc bfc" id="L121" title="All 2 branches covered.">    if (logConstructor == null) {</span>
+<span class="fc bfc" id="L91" title="All 2 branches covered.">    if (logConstructor == null) {</span>
       try {
-<span class="fc" id="L123">        runnable.run();</span>
-<span class="nc" id="L124">      } catch (Throwable t) {</span>
+<span class="fc" id="L93">        runnable.run();</span>
+<span class="pc" id="L94">      } catch (Throwable t) {</span>
         // ignore
-<span class="fc" id="L126">      }</span>
+      }
     }
-<span class="fc" id="L128">  }</span>
+<span class="fc" id="L98">  }</span>
 
   private static void setImplementation(Class&lt;? extends Log&gt; implClass) {
     try {
-<span class="fc" id="L132">      Constructor&lt;? extends Log&gt; candidate = implClass.getConstructor(String.class);</span>
-<span class="fc" id="L133">      Log log = candidate.newInstance(LogFactory.class.getName());</span>
-<span class="fc bfc" id="L134" title="All 2 branches covered.">      if (log.isDebugEnabled()) {</span>
-<span class="fc" id="L135">        log.debug(&quot;Logging initialized using '&quot; + implClass + &quot;' adapter.&quot;);</span>
+<span class="fc" id="L102">      Constructor&lt;? extends Log&gt; candidate = implClass.getConstructor(String.class);</span>
+<span class="fc" id="L103">      Log log = candidate.newInstance(LogFactory.class.getName());</span>
+<span class="fc bfc" id="L104" title="All 2 branches covered.">      if (log.isDebugEnabled()) {</span>
+<span class="fc" id="L105">        log.debug(&quot;Logging initialized using '&quot; + implClass + &quot;' adapter.&quot;);</span>
       }
-<span class="fc" id="L137">      logConstructor = candidate;</span>
-<span class="nc" id="L138">    } catch (Throwable t) {</span>
-<span class="nc" id="L139">      throw new LogException(&quot;Error setting Log implementation.  Cause: &quot; + t, t);</span>
-<span class="fc" id="L140">    }</span>
-<span class="fc" id="L141">  }</span>
+<span class="fc" id="L107">      logConstructor = candidate;</span>
+<span class="pc" id="L108">    } catch (Throwable t) {</span>
+<span class="nc" id="L109">      throw new LogException(&quot;Error setting Log implementation.  Cause: &quot; + t, t);</span>
+    }
+<span class="fc" id="L111">  }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

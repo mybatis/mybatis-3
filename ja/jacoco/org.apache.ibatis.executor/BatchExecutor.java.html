@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ja"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BatchExecutor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.executor</a> &gt; <span class="el_source">BatchExecutor.java</span></div><h1>BatchExecutor.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
@@ -36,14 +36,14 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.transaction.Transaction;
 
 /**
- * @author Jeff Butler 
+ * @author Jeff Butler
  */
 public class BatchExecutor extends BaseExecutor {
 
   public static final int BATCH_UPDATE_RETURN_VALUE = Integer.MIN_VALUE + 1002;
 
-<span class="fc" id="L45">  private final List&lt;Statement&gt; statementList = new ArrayList&lt;Statement&gt;();</span>
-<span class="fc" id="L46">  private final List&lt;BatchResult&gt; batchResultList = new ArrayList&lt;BatchResult&gt;();</span>
+<span class="fc" id="L45">  private final List&lt;Statement&gt; statementList = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L46">  private final List&lt;BatchResult&gt; batchResultList = new ArrayList&lt;&gt;();</span>
   private String currentSql;
   private MappedStatement currentStatement;
 
@@ -62,7 +62,7 @@ public class BatchExecutor extends BaseExecutor {
 <span class="fc" id="L62">      int last = statementList.size() - 1;</span>
 <span class="fc" id="L63">      stmt = statementList.get(last);</span>
 <span class="fc" id="L64">      applyTransactionTimeout(stmt);</span>
-<span class="fc" id="L65">     handler.parameterize(stmt);//fix Issues 322</span>
+<span class="fc" id="L65">      handler.parameterize(stmt);//fix Issues 322</span>
 <span class="fc" id="L66">      BatchResult batchResult = batchResultList.get(last);</span>
 <span class="fc" id="L67">      batchResult.addParameterObject(parameterObject);</span>
 <span class="fc" id="L68">    } else {</span>
@@ -74,43 +74,43 @@ public class BatchExecutor extends BaseExecutor {
 <span class="fc" id="L74">      statementList.add(stmt);</span>
 <span class="fc" id="L75">      batchResultList.add(new BatchResult(ms, sql, parameterObject));</span>
     }
-  // handler.parameterize(stmt);
-<span class="fc" id="L78">    handler.batch(stmt);</span>
-<span class="fc" id="L79">    return BATCH_UPDATE_RETURN_VALUE;</span>
+<span class="fc" id="L77">    handler.batch(stmt);</span>
+<span class="fc" id="L78">    return BATCH_UPDATE_RETURN_VALUE;</span>
   }
 
   @Override
   public &lt;E&gt; List&lt;E&gt; doQuery(MappedStatement ms, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql)
       throws SQLException {
-<span class="fc" id="L85">    Statement stmt = null;</span>
+<span class="fc" id="L84">    Statement stmt = null;</span>
     try {
-<span class="fc" id="L87">      flushStatements();</span>
-<span class="fc" id="L88">      Configuration configuration = ms.getConfiguration();</span>
-<span class="fc" id="L89">      StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameterObject, rowBounds, resultHandler, boundSql);</span>
-<span class="fc" id="L90">      Connection connection = getConnection(ms.getStatementLog());</span>
-<span class="fc" id="L91">      stmt = handler.prepare(connection, transaction.getTimeout());</span>
-<span class="fc" id="L92">      handler.parameterize(stmt);</span>
-<span class="fc" id="L93">      return handler.&lt;E&gt;query(stmt, resultHandler);</span>
+<span class="fc" id="L86">      flushStatements();</span>
+<span class="fc" id="L87">      Configuration configuration = ms.getConfiguration();</span>
+<span class="fc" id="L88">      StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameterObject, rowBounds, resultHandler, boundSql);</span>
+<span class="fc" id="L89">      Connection connection = getConnection(ms.getStatementLog());</span>
+<span class="fc" id="L90">      stmt = handler.prepare(connection, transaction.getTimeout());</span>
+<span class="fc" id="L91">      handler.parameterize(stmt);</span>
+<span class="fc" id="L92">      return handler.query(stmt, resultHandler);</span>
     } finally {
-<span class="pc" id="L95">      closeStatement(stmt);</span>
+<span class="fc" id="L94">      closeStatement(stmt);</span>
     }
   }
 
   @Override
   protected &lt;E&gt; Cursor&lt;E&gt; doQueryCursor(MappedStatement ms, Object parameter, RowBounds rowBounds, BoundSql boundSql) throws SQLException {
-<span class="nc" id="L101">    flushStatements();</span>
-<span class="nc" id="L102">    Configuration configuration = ms.getConfiguration();</span>
-<span class="nc" id="L103">    StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, null, boundSql);</span>
-<span class="nc" id="L104">    Connection connection = getConnection(ms.getStatementLog());</span>
-<span class="nc" id="L105">    Statement stmt = handler.prepare(connection, transaction.getTimeout());</span>
+<span class="nc" id="L100">    flushStatements();</span>
+<span class="nc" id="L101">    Configuration configuration = ms.getConfiguration();</span>
+<span class="nc" id="L102">    StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, null, boundSql);</span>
+<span class="nc" id="L103">    Connection connection = getConnection(ms.getStatementLog());</span>
+<span class="nc" id="L104">    Statement stmt = handler.prepare(connection, transaction.getTimeout());</span>
+<span class="nc" id="L105">    stmt.closeOnCompletion();</span>
 <span class="nc" id="L106">    handler.parameterize(stmt);</span>
-<span class="nc" id="L107">    return handler.&lt;E&gt;queryCursor(stmt);</span>
+<span class="nc" id="L107">    return handler.queryCursor(stmt);</span>
   }
 
   @Override
   public List&lt;BatchResult&gt; doFlushStatements(boolean isRollback) throws SQLException {
     try {
-<span class="fc" id="L113">      List&lt;BatchResult&gt; results = new ArrayList&lt;BatchResult&gt;();</span>
+<span class="fc" id="L113">      List&lt;BatchResult&gt; results = new ArrayList&lt;&gt;();</span>
 <span class="fc bfc" id="L114" title="All 2 branches covered.">      if (isRollback) {</span>
 <span class="fc" id="L115">        return Collections.emptyList();</span>
       }
@@ -129,34 +129,36 @@ public class BatchExecutor extends BaseExecutor {
 <span class="fc bfc" id="L129" title="All 2 branches covered.">          } else if (!NoKeyGenerator.class.equals(keyGenerator.getClass())) { //issue #141</span>
 <span class="fc bfc" id="L130" title="All 2 branches covered.">            for (Object parameter : parameterObjects) {</span>
 <span class="fc" id="L131">              keyGenerator.processAfter(this, ms, stmt, parameter);</span>
-<span class="fc" id="L132">            }</span>
+            }
           }
-<span class="nc" id="L134">        } catch (BatchUpdateException e) {</span>
-<span class="nc" id="L135">          StringBuilder message = new StringBuilder();</span>
-<span class="nc" id="L136">          message.append(batchResult.getMappedStatement().getId())</span>
-<span class="nc" id="L137">              .append(&quot; (batch index #&quot;)</span>
-<span class="nc" id="L138">              .append(i + 1)</span>
-<span class="nc" id="L139">              .append(&quot;)&quot;)</span>
-<span class="nc" id="L140">              .append(&quot; failed.&quot;);</span>
-<span class="nc bnc" id="L141" title="All 2 branches missed.">          if (i &gt; 0) {</span>
-<span class="nc" id="L142">            message.append(&quot; &quot;)</span>
-<span class="nc" id="L143">                .append(i)</span>
-<span class="nc" id="L144">                .append(&quot; prior sub executor(s) completed successfully, but will be rolled back.&quot;);</span>
+          // Close statement to close cursor #1109
+<span class="fc" id="L135">          closeStatement(stmt);</span>
+<span class="pc" id="L136">        } catch (BatchUpdateException e) {</span>
+<span class="nc" id="L137">          StringBuilder message = new StringBuilder();</span>
+<span class="nc" id="L138">          message.append(batchResult.getMappedStatement().getId())</span>
+<span class="nc" id="L139">              .append(&quot; (batch index #&quot;)</span>
+<span class="nc" id="L140">              .append(i + 1)</span>
+<span class="nc" id="L141">              .append(&quot;)&quot;)</span>
+<span class="nc" id="L142">              .append(&quot; failed.&quot;);</span>
+<span class="nc bnc" id="L143" title="All 2 branches missed.">          if (i &gt; 0) {</span>
+<span class="nc" id="L144">            message.append(&quot; &quot;)</span>
+<span class="nc" id="L145">                .append(i)</span>
+<span class="nc" id="L146">                .append(&quot; prior sub executor(s) completed successfully, but will be rolled back.&quot;);</span>
           }
-<span class="nc" id="L146">          throw new BatchExecutorException(message.toString(), e, results, batchResult);</span>
-<span class="fc" id="L147">        }</span>
-<span class="fc" id="L148">        results.add(batchResult);</span>
+<span class="nc" id="L148">          throw new BatchExecutorException(message.toString(), e, results, batchResult);</span>
+        }
+<span class="fc" id="L150">        results.add(batchResult);</span>
       }
-<span class="fc" id="L150">      return results;</span>
+<span class="fc" id="L152">      return results;</span>
     } finally {
-<span class="pc bpc" id="L152" title="3 of 6 branches missed.">      for (Statement stmt : statementList) {</span>
-<span class="pc" id="L153">        closeStatement(stmt);</span>
-<span class="pc" id="L154">      }</span>
-<span class="pc" id="L155">      currentSql = null;</span>
-<span class="pc" id="L156">      statementList.clear();</span>
-<span class="pc" id="L157">      batchResultList.clear();</span>
+<span class="fc bfc" id="L154" title="All 2 branches covered.">      for (Statement stmt : statementList) {</span>
+<span class="fc" id="L155">        closeStatement(stmt);</span>
+      }
+<span class="fc" id="L157">      currentSql = null;</span>
+<span class="fc" id="L158">      statementList.clear();</span>
+<span class="fc" id="L159">      batchResultList.clear();</span>
     }
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

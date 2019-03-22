@@ -89,9 +89,9 @@ public abstract class BaseStatementHandler implements StatementHandler {
 <span class="fc" id="L89">      setStatementTimeout(statement, transactionTimeout);</span>
 <span class="fc" id="L90">      setFetchSize(statement);</span>
 <span class="fc" id="L91">      return statement;</span>
-<span class="nc" id="L92">    } catch (SQLException e) {</span>
-<span class="nc" id="L93">      closeStatement(statement);</span>
-<span class="nc" id="L94">      throw e;</span>
+<span class="fc" id="L92">    } catch (SQLException e) {</span>
+<span class="fc" id="L93">      closeStatement(statement);</span>
+<span class="fc" id="L94">      throw e;</span>
 <span class="nc" id="L95">    } catch (Exception e) {</span>
 <span class="nc" id="L96">      closeStatement(statement);</span>
 <span class="nc" id="L97">      throw new ExecutorException(&quot;Error preparing statement.  Cause: &quot; + e, e);</span>
@@ -127,13 +127,13 @@ public abstract class BaseStatementHandler implements StatementHandler {
 
   protected void closeStatement(Statement statement) {
     try {
-<span class="nc bnc" id="L130" title="All 2 branches missed.">      if (statement != null) {</span>
+<span class="pc bpc" id="L130" title="1 of 2 branches missed.">      if (statement != null) {</span>
 <span class="nc" id="L131">        statement.close();</span>
       }
 <span class="nc" id="L133">    } catch (SQLException e) {</span>
       //ignore
-<span class="nc" id="L135">    }</span>
-<span class="nc" id="L136">  }</span>
+    }
+<span class="fc" id="L136">  }</span>
 
   protected void generateKeys(Object parameter) {
 <span class="fc" id="L139">    KeyGenerator keyGenerator = mappedStatement.getKeyGenerator();</span>
@@ -143,4 +143,4 @@ public abstract class BaseStatementHandler implements StatementHandler {
 <span class="fc" id="L143">  }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

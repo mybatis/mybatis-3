@@ -7,13 +7,13 @@
 <body>
 <div id="overview"><a href="../../../../../../apidocs/org/apache/ibatis/io/ResolverUtil.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2017 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2019 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_javadoccomment"> *    You may obtain a copy of the License at</em>
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2." target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.</a>0</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_javadoccomment"> *    Unless required by applicable law or agreed to in writing, software</em>
 <a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_javadoccomment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
@@ -68,13 +68,13 @@
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>    <em class="jxr_comment">/*</em>
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>  <em class="jxr_comment">   * An instance of Log to use for logging in this class.</em>
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>  <em class="jxr_comment">   */</em>
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../org/apache/ibatis/logging/Log.html">Log</a> log = LogFactory.getLog(ResolverUtil.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a name="Log" href="../../../../org/apache/ibatis/logging/Log.html#Log">Log</a> log = LogFactory.getLog(ResolverUtil.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>  
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>    <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>  <em class="jxr_javadoccomment">   * A simple interface that specifies how to test classes to determine if they</em>
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>  <em class="jxr_javadoccomment">   * are to be included in the results produced by the ResolverUtil.</em>
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>  <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">interface</strong> <a href="../../../../org/apache/ibatis/io/ResolverUtil.html">Test</a> {
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">interface</strong> Test {
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>      <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>  <em class="jxr_javadoccomment">     * Will be called repeatedly with candidate classes. Must return True if a class</em>
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>  <em class="jxr_javadoccomment">     * is to be included in the results, false otherwise.</em>
@@ -86,11 +86,11 @@
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>  <em class="jxr_javadoccomment">   * A Test that checks to see if each class is assignable to the provided class. Note</em>
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>  <em class="jxr_javadoccomment">   * that this test will match the parent type itself if it is presented for matching.</em>
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>  <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/apache/ibatis/io/ResolverUtil.html">IsA</a> <strong class="jxr_keyword">implements</strong> <a href="../../../../org/apache/ibatis/io/ResolverUtil.html">Test</a> {
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> IsA <strong class="jxr_keyword">implements</strong> Test {
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>      <strong class="jxr_keyword">private</strong> Class&lt;?&gt; parent;
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>  
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>      <em class="jxr_javadoccomment">/** Constructs an IsA test using the supplied Class as the parent class/interface. */</em>
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>      <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/io/ResolverUtil.html">IsA</a>(Class&lt;?&gt; parentType) {
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>      <strong class="jxr_keyword">public</strong> IsA(Class&lt;?&gt; parentType) {
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>        <strong class="jxr_keyword">this</strong>.parent = parentType;
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>      }
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>  
@@ -110,11 +110,11 @@
 <a class="jxr_linenumber" name="L102" href="#L102">102</a> <em class="jxr_javadoccomment">   * A Test that checks to see if each class is annotated with a specific annotation. If it</em>
 <a class="jxr_linenumber" name="L103" href="#L103">103</a> <em class="jxr_javadoccomment">   * is, then the test returns true, otherwise false.</em>
 <a class="jxr_linenumber" name="L104" href="#L104">104</a> <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L105" href="#L105">105</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/apache/ibatis/io/ResolverUtil.html">AnnotatedWith</a> <strong class="jxr_keyword">implements</strong> <a href="../../../../org/apache/ibatis/io/ResolverUtil.html">Test</a> {
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> AnnotatedWith <strong class="jxr_keyword">implements</strong> Test {
 <a class="jxr_linenumber" name="L106" href="#L106">106</a>     <strong class="jxr_keyword">private</strong> Class&lt;? <strong class="jxr_keyword">extends</strong> Annotation&gt; annotation;
 <a class="jxr_linenumber" name="L107" href="#L107">107</a> 
 <a class="jxr_linenumber" name="L108" href="#L108">108</a>     <em class="jxr_javadoccomment">/** Constructs an AnnotatedWith test for the specified annotation type. */</em>
-<a class="jxr_linenumber" name="L109" href="#L109">109</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/io/ResolverUtil.html">AnnotatedWith</a>(Class&lt;? <strong class="jxr_keyword">extends</strong> Annotation&gt; annotation) {
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>     <strong class="jxr_keyword">public</strong> AnnotatedWith(Class&lt;? <strong class="jxr_keyword">extends</strong> Annotation&gt; annotation) {
 <a class="jxr_linenumber" name="L110" href="#L110">110</a>       <strong class="jxr_keyword">this</strong>.annotation = annotation;
 <a class="jxr_linenumber" name="L111" href="#L111">111</a>     }
 <a class="jxr_linenumber" name="L112" href="#L112">112</a> 
@@ -131,7 +131,7 @@
 <a class="jxr_linenumber" name="L123" href="#L123">123</a>   }
 <a class="jxr_linenumber" name="L124" href="#L124">124</a> 
 <a class="jxr_linenumber" name="L125" href="#L125">125</a>   <em class="jxr_javadoccomment">/** The set of matches being accumulated. */</em>
-<a class="jxr_linenumber" name="L126" href="#L126">126</a>   <strong class="jxr_keyword">private</strong> Set&lt;Class&lt;? <strong class="jxr_keyword">extends</strong> T&gt;&gt; matches = <strong class="jxr_keyword">new</strong> HashSet&lt;Class&lt;? <strong class="jxr_keyword">extends</strong> T&gt;&gt;();
+<a class="jxr_linenumber" name="L126" href="#L126">126</a>   <strong class="jxr_keyword">private</strong> Set&lt;Class&lt;? <strong class="jxr_keyword">extends</strong> T&gt;&gt; matches = <strong class="jxr_keyword">new</strong> HashSet&lt;&gt;();
 <a class="jxr_linenumber" name="L127" href="#L127">127</a> 
 <a class="jxr_linenumber" name="L128" href="#L128">128</a>   <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L129" href="#L129">129</a> <em class="jxr_javadoccomment">   * The ClassLoader to use when looking for classes. If null then the ClassLoader returned</em>
@@ -183,7 +183,7 @@
 <a class="jxr_linenumber" name="L175" href="#L175">175</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
 <a class="jxr_linenumber" name="L176" href="#L176">176</a>     }
 <a class="jxr_linenumber" name="L177" href="#L177">177</a> 
-<a class="jxr_linenumber" name="L178" href="#L178">178</a>     <a href="../../../../org/apache/ibatis/io/ResolverUtil.html">Test</a> test = <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/io/ResolverUtil.html">IsA</a>(parent);
+<a class="jxr_linenumber" name="L178" href="#L178">178</a>     Test test = <strong class="jxr_keyword">new</strong> IsA(parent);
 <a class="jxr_linenumber" name="L179" href="#L179">179</a>     <strong class="jxr_keyword">for</strong> (String pkg : packageNames) {
 <a class="jxr_linenumber" name="L180" href="#L180">180</a>       find(test, pkg);
 <a class="jxr_linenumber" name="L181" href="#L181">181</a>     }
@@ -203,7 +203,7 @@
 <a class="jxr_linenumber" name="L195" href="#L195">195</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
 <a class="jxr_linenumber" name="L196" href="#L196">196</a>     }
 <a class="jxr_linenumber" name="L197" href="#L197">197</a> 
-<a class="jxr_linenumber" name="L198" href="#L198">198</a>     <a href="../../../../org/apache/ibatis/io/ResolverUtil.html">Test</a> test = <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/io/ResolverUtil.html">AnnotatedWith</a>(annotation);
+<a class="jxr_linenumber" name="L198" href="#L198">198</a>     Test test = <strong class="jxr_keyword">new</strong> AnnotatedWith(annotation);
 <a class="jxr_linenumber" name="L199" href="#L199">199</a>     <strong class="jxr_keyword">for</strong> (String pkg : packageNames) {
 <a class="jxr_linenumber" name="L200" href="#L200">200</a>       find(test, pkg);
 <a class="jxr_linenumber" name="L201" href="#L201">201</a>     }
@@ -221,7 +221,7 @@
 <a class="jxr_linenumber" name="L213" href="#L213">213</a> <em class="jxr_javadoccomment">   * @param packageName the name of the package from which to start scanning for</em>
 <a class="jxr_linenumber" name="L214" href="#L214">214</a> <em class="jxr_javadoccomment">   *        classes, e.g. {@code net.sourceforge.stripes}</em>
 <a class="jxr_linenumber" name="L215" href="#L215">215</a> <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L216" href="#L216">216</a>   <strong class="jxr_keyword">public</strong> ResolverUtil&lt;T&gt; find(<a href="../../../../org/apache/ibatis/io/ResolverUtil.html">Test</a> test, String packageName) {
+<a class="jxr_linenumber" name="L216" href="#L216">216</a>   <strong class="jxr_keyword">public</strong> ResolverUtil&lt;T&gt; find(Test test, String packageName) {
 <a class="jxr_linenumber" name="L217" href="#L217">217</a>     String path = getPackagePath(packageName);
 <a class="jxr_linenumber" name="L218" href="#L218">218</a> 
 <a class="jxr_linenumber" name="L219" href="#L219">219</a>     <strong class="jxr_keyword">try</strong> {
@@ -241,7 +241,7 @@
 <a class="jxr_linenumber" name="L233" href="#L233">233</a>   <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L234" href="#L234">234</a> <em class="jxr_javadoccomment">   * Converts a Java package name to a path that can be looked up with a call to</em>
 <a class="jxr_linenumber" name="L235" href="#L235">235</a> <em class="jxr_javadoccomment">   * {@link ClassLoader#getResources(String)}.</em>
-<a class="jxr_linenumber" name="L236" href="#L236">236</a> <em class="jxr_javadoccomment">   * </em>
+<a class="jxr_linenumber" name="L236" href="#L236">236</a> <em class="jxr_javadoccomment">   *</em>
 <a class="jxr_linenumber" name="L237" href="#L237">237</a> <em class="jxr_javadoccomment">   * @param packageName The Java package name to convert to a path</em>
 <a class="jxr_linenumber" name="L238" href="#L238">238</a> <em class="jxr_javadoccomment">   */</em>
 <a class="jxr_linenumber" name="L239" href="#L239">239</a>   <strong class="jxr_keyword">protected</strong> String getPackagePath(String packageName) {
@@ -256,7 +256,7 @@
 <a class="jxr_linenumber" name="L248" href="#L248">248</a> <em class="jxr_javadoccomment">   * @param fqn the fully qualified name of a class</em>
 <a class="jxr_linenumber" name="L249" href="#L249">249</a> <em class="jxr_javadoccomment">   */</em>
 <a class="jxr_linenumber" name="L250" href="#L250">250</a>   @SuppressWarnings(<span class="jxr_string">"unchecked"</span>)
-<a class="jxr_linenumber" name="L251" href="#L251">251</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> addIfMatching(<a href="../../../../org/apache/ibatis/io/ResolverUtil.html">Test</a> test, String fqn) {
+<a class="jxr_linenumber" name="L251" href="#L251">251</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> addIfMatching(Test test, String fqn) {
 <a class="jxr_linenumber" name="L252" href="#L252">252</a>     <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L253" href="#L253">253</a>       String externalName = fqn.substring(0, fqn.indexOf('.')).replace('/', '.');
 <a class="jxr_linenumber" name="L254" href="#L254">254</a>       ClassLoader loader = getClassLoader();
@@ -276,6 +276,6 @@
 <a class="jxr_linenumber" name="L268" href="#L268">268</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2018 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2019 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

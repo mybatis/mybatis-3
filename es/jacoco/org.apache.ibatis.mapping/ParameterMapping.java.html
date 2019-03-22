@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ParameterMapping.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.mapping</a> &gt; <span class="el_source">ParameterMapping.java</span></div><h1>ParameterMapping.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
@@ -107,13 +107,13 @@ public class ParameterMapping {
 
     private void validate() {
 <span class="pc bpc" id="L109" title="1 of 2 branches missed.">      if (ResultSet.class.equals(parameterMapping.javaType)) {</span>
-<span class="nc bnc" id="L110" title="All 2 branches missed.">        if (parameterMapping.resultMapId == null) { </span>
-<span class="nc" id="L111">          throw new IllegalStateException(&quot;Missing resultmap in property '&quot;  </span>
-<span class="nc" id="L112">              + parameterMapping.property + &quot;'.  &quot; </span>
-              + &quot;Parameters of type java.sql.ResultSet require a resultmap.&quot;);
-        }            
+<span class="nc bnc" id="L110" title="All 2 branches missed.">        if (parameterMapping.resultMapId == null) {</span>
+<span class="nc" id="L111">          throw new IllegalStateException(&quot;Missing resultmap in property '&quot;</span>
+<span class="nc" id="L112">              + parameterMapping.property + &quot;'.  &quot;</span>
+<span class="nc" id="L113">              + &quot;Parameters of type java.sql.ResultSet require a resultmap.&quot;);</span>
+        }
       } else {
-<span class="pc bpc" id="L116" title="1 of 2 branches missed.">        if (parameterMapping.typeHandler == null) { </span>
+<span class="pc bpc" id="L116" title="1 of 2 branches missed.">        if (parameterMapping.typeHandler == null) {</span>
 <span class="nc" id="L117">          throw new IllegalStateException(&quot;Type handler was null on parameter mapping for property '&quot;</span>
 <span class="nc" id="L118">            + parameterMapping.property + &quot;'. It was either not specified and/or could not be found for the javaType (&quot;</span>
 <span class="nc" id="L119">            + parameterMapping.javaType.getName() + &quot;) : jdbcType (&quot; + parameterMapping.jdbcType + &quot;) combination.&quot;);</span>
@@ -136,7 +136,7 @@ public class ParameterMapping {
   }
 
   /**
-   * Used for handling output of callable statements
+   * Used for handling output of callable statements.
    * @return
    */
   public ParameterMode getMode() {
@@ -144,7 +144,7 @@ public class ParameterMapping {
   }
 
   /**
-   * Used for handling output of callable statements
+   * Used for handling output of callable statements.
    * @return
    */
   public Class&lt;?&gt; getJavaType() {
@@ -152,7 +152,7 @@ public class ParameterMapping {
   }
 
   /**
-   * Used in the UnknownTypeHandler in case there is no handler for the property type
+   * Used in the UnknownTypeHandler in case there is no handler for the property type.
    * @return
    */
   public JdbcType getJdbcType() {
@@ -160,7 +160,7 @@ public class ParameterMapping {
   }
 
   /**
-   * Used for handling output of callable statements
+   * Used for handling output of callable statements.
    * @return
    */
   public Integer getNumericScale() {
@@ -168,7 +168,7 @@ public class ParameterMapping {
   }
 
   /**
-   * Used when setting parameters to the PreparedStatement
+   * Used when setting parameters to the PreparedStatement.
    * @return
    */
   public TypeHandler&lt;?&gt; getTypeHandler() {
@@ -176,7 +176,7 @@ public class ParameterMapping {
   }
 
   /**
-   * Used for handling output of callable statements
+   * Used for handling output of callable statements.
    * @return
    */
   public String getResultMapId() {
@@ -184,7 +184,7 @@ public class ParameterMapping {
   }
 
   /**
-   * Used for handling output of callable statements
+   * Used for handling output of callable statements.
    * @return
    */
   public String getJdbcTypeName() {
@@ -216,4 +216,4 @@ public class ParameterMapping {
 <span class="fc" id="L216">    return sb.toString();</span>
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

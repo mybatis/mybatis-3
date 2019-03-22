@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Jdbc3KeyGenerator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.executor.keygen</a> &gt; <span class="el_source">Jdbc3KeyGenerator.java</span></div><h1>Jdbc3KeyGenerator.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
@@ -19,18 +19,24 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
-import org.apache.ibatis.binding.BindingException;
+import org.apache.ibatis.binding.MapperMethod.ParamMap;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.reflection.ArrayUtil;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.defaults.DefaultSqlSession.StrictMap;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
@@ -39,107 +45,218 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
  * @author Clinton Begin
  * @author Kazuki Shimizu
  */
-<span class="fc" id="L42">public class Jdbc3KeyGenerator implements KeyGenerator {</span>
+<span class="fc" id="L48">public class Jdbc3KeyGenerator implements KeyGenerator {</span>
 
   /**
    * A shared instance.
+   *
    * @since 3.4.3
    */
-<span class="fc" id="L48">  public static final Jdbc3KeyGenerator INSTANCE = new Jdbc3KeyGenerator();</span>
+<span class="fc" id="L55">  public static final Jdbc3KeyGenerator INSTANCE = new Jdbc3KeyGenerator();</span>
 
   @Override
   public void processBefore(Executor executor, MappedStatement ms, Statement stmt, Object parameter) {
     // do nothing
-<span class="fc" id="L53">  }</span>
+<span class="fc" id="L60">  }</span>
 
   @Override
   public void processAfter(Executor executor, MappedStatement ms, Statement stmt, Object parameter) {
-<span class="fc" id="L57">    processBatch(ms, stmt, getParameters(parameter));</span>
-<span class="fc" id="L58">  }</span>
+<span class="fc" id="L64">    processBatch(ms, stmt, parameter);</span>
+<span class="fc" id="L65">  }</span>
 
-  public void processBatch(MappedStatement ms, Statement stmt, Collection&lt;Object&gt; parameters) {
-<span class="fc" id="L61">    ResultSet rs = null;</span>
-    try {
-<span class="fc" id="L63">      rs = stmt.getGeneratedKeys();</span>
-<span class="fc" id="L64">      final Configuration configuration = ms.getConfiguration();</span>
-<span class="fc" id="L65">      final TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();</span>
-<span class="fc" id="L66">      final String[] keyProperties = ms.getKeyProperties();</span>
-<span class="fc" id="L67">      final ResultSetMetaData rsmd = rs.getMetaData();</span>
-<span class="fc" id="L68">      TypeHandler&lt;?&gt;[] typeHandlers = null;</span>
-<span class="pc bpc" id="L69" title="2 of 4 branches missed.">      if (keyProperties != null &amp;&amp; rsmd.getColumnCount() &gt;= keyProperties.length) {</span>
-<span class="fc bfc" id="L70" title="All 2 branches covered.">        for (Object parameter : parameters) {</span>
-          // there should be one row for each statement (also one for each parameter)
-<span class="pc bpc" id="L72" title="1 of 2 branches missed.">          if (!rs.next()) {</span>
-<span class="nc" id="L73">            break;</span>
-          }
-<span class="fc" id="L75">          final MetaObject metaParam = configuration.newMetaObject(parameter);</span>
-<span class="fc bfc" id="L76" title="All 2 branches covered.">          if (typeHandlers == null) {</span>
-<span class="fc" id="L77">            typeHandlers = getTypeHandlers(typeHandlerRegistry, metaParam, keyProperties, rsmd);</span>
-          }
-<span class="fc" id="L79">          populateKeys(rs, metaParam, keyProperties, typeHandlers);</span>
-<span class="fc" id="L80">        }</span>
-      }
-<span class="nc" id="L82">    } catch (Exception e) {</span>
-<span class="nc" id="L83">      throw new ExecutorException(&quot;Error getting generated key or setting result to parameter object. Cause: &quot; + e, e);</span>
-    } finally {
-<span class="pc bpc" id="L85" title="3 of 4 branches missed.">      if (rs != null) {</span>
-        try {
-<span class="pc" id="L87">          rs.close();</span>
-<span class="nc" id="L88">        } catch (Exception e) {</span>
-          // ignore
-<span class="pc" id="L90">        }</span>
-      }
+  public void processBatch(MappedStatement ms, Statement stmt, Object parameter) {
+<span class="fc" id="L68">    final String[] keyProperties = ms.getKeyProperties();</span>
+<span class="pc bpc" id="L69" title="2 of 4 branches missed.">    if (keyProperties == null || keyProperties.length == 0) {</span>
+<span class="nc" id="L70">      return;</span>
     }
-<span class="fc" id="L93">  }</span>
+<span class="fc" id="L72">    try (ResultSet rs = stmt.getGeneratedKeys()) {</span>
+<span class="fc" id="L73">      final ResultSetMetaData rsmd = rs.getMetaData();</span>
+<span class="fc" id="L74">      final Configuration configuration = ms.getConfiguration();</span>
+<span class="pc bpc" id="L75" title="1 of 2 branches missed.">      if (rsmd.getColumnCount() &lt; keyProperties.length) {</span>
+        // Error?
+      } else {
+<span class="fc" id="L78">        assignKeys(configuration, rs, rsmd, keyProperties, parameter);</span>
+      }
+<span class="fc" id="L80">    } catch (Exception e) {</span>
+<span class="fc" id="L81">      throw new ExecutorException(&quot;Error getting generated key or setting result to parameter object. Cause: &quot; + e, e);</span>
+    }
+<span class="fc" id="L83">  }</span>
 
-  private Collection&lt;Object&gt; getParameters(Object parameter) {
-<span class="fc" id="L96">    Collection&lt;Object&gt; parameters = null;</span>
-<span class="pc bpc" id="L97" title="1 of 2 branches missed.">    if (parameter instanceof Collection) {</span>
-<span class="nc" id="L98">      parameters = (Collection) parameter;</span>
-<span class="fc bfc" id="L99" title="All 2 branches covered.">    } else if (parameter instanceof Map) {</span>
-<span class="fc" id="L100">      Map parameterMap = (Map) parameter;</span>
-<span class="fc bfc" id="L101" title="All 2 branches covered.">      if (parameterMap.containsKey(&quot;collection&quot;)) {</span>
-<span class="fc" id="L102">        parameters = (Collection) parameterMap.get(&quot;collection&quot;);</span>
-<span class="pc bpc" id="L103" title="1 of 2 branches missed.">      } else if (parameterMap.containsKey(&quot;list&quot;)) {</span>
-<span class="nc" id="L104">        parameters = (List) parameterMap.get(&quot;list&quot;);</span>
-<span class="pc bpc" id="L105" title="1 of 2 branches missed.">      } else if (parameterMap.containsKey(&quot;array&quot;)) {</span>
-<span class="nc" id="L106">        parameters = Arrays.asList((Object[]) parameterMap.get(&quot;array&quot;));</span>
+  @SuppressWarnings(&quot;unchecked&quot;)
+  private void assignKeys(Configuration configuration, ResultSet rs, ResultSetMetaData rsmd, String[] keyProperties,
+      Object parameter) throws SQLException {
+<span class="fc bfc" id="L88" title="All 4 branches covered.">    if (parameter instanceof ParamMap || parameter instanceof StrictMap) {</span>
+      // Multi-param or single param with @Param
+<span class="fc" id="L90">      assignKeysToParamMap(configuration, rs, rsmd, keyProperties, (Map&lt;String, ?&gt;) parameter);</span>
+<span class="pc bpc" id="L91" title="1 of 4 branches missed.">    } else if (parameter instanceof ArrayList &amp;&amp; !((ArrayList&lt;?&gt;) parameter).isEmpty()</span>
+<span class="fc bfc" id="L92" title="All 2 branches covered.">        &amp;&amp; ((ArrayList&lt;?&gt;) parameter).get(0) instanceof ParamMap) {</span>
+      // Multi-param or single param with @Param in batch operation
+<span class="fc" id="L94">      assignKeysToParamMapList(configuration, rs, rsmd, keyProperties, ((ArrayList&lt;ParamMap&lt;?&gt;&gt;) parameter));</span>
+<span class="fc" id="L95">    } else {</span>
+      // Single param without @Param
+<span class="fc" id="L97">      assignKeysToParam(configuration, rs, rsmd, keyProperties, parameter);</span>
+    }
+<span class="fc" id="L99">  }</span>
+
+  private void assignKeysToParam(Configuration configuration, ResultSet rs, ResultSetMetaData rsmd,
+      String[] keyProperties, Object parameter) throws SQLException {
+<span class="fc" id="L103">    Collection&lt;?&gt; params = collectionize(parameter);</span>
+<span class="pc bpc" id="L104" title="1 of 2 branches missed.">    if (params.isEmpty()) {</span>
+<span class="nc" id="L105">      return;</span>
+    }
+<span class="fc" id="L107">    List&lt;KeyAssigner&gt; assignerList = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">    for (int i = 0; i &lt; keyProperties.length; i++) {</span>
+<span class="fc" id="L109">      assignerList.add(new KeyAssigner(configuration, rsmd, i + 1, null, keyProperties[i]));</span>
+    }
+<span class="fc" id="L111">    Iterator&lt;?&gt; iterator = params.iterator();</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">    while (rs.next()) {</span>
+<span class="fc" id="L113">      Object param = iterator.next();</span>
+<span class="fc" id="L114">      assignerList.forEach(x -&gt; x.assign(rs, param));</span>
+    }
+<span class="fc" id="L116">  }</span>
+
+  private void assignKeysToParamMapList(Configuration configuration, ResultSet rs, ResultSetMetaData rsmd,
+      String[] keyProperties, ArrayList&lt;ParamMap&lt;?&gt;&gt; paramMapList) throws SQLException {
+<span class="fc" id="L120">    Iterator&lt;ParamMap&lt;?&gt;&gt; iterator = paramMapList.iterator();</span>
+<span class="fc" id="L121">    List&lt;KeyAssigner&gt; assignerList = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L122" title="All 2 branches covered.">    while (rs.next()) {</span>
+<span class="fc" id="L123">      ParamMap&lt;?&gt; paramMap = iterator.next();</span>
+<span class="fc bfc" id="L124" title="All 2 branches covered.">      if (assignerList.isEmpty()) {</span>
+<span class="fc bfc" id="L125" title="All 2 branches covered.">        for (int i = 0; i &lt; keyProperties.length; i++) {</span>
+<span class="fc" id="L126">          assignerList</span>
+<span class="fc" id="L127">              .add(getAssignerForParamMap(configuration, rsmd, i + 1, paramMap, keyProperties[i], keyProperties, false)</span>
+<span class="fc" id="L128">                  .getValue());</span>
+        }
+      }
+<span class="fc" id="L131">      assignerList.forEach(x -&gt; x.assign(rs, paramMap));</span>
+    }
+<span class="fc" id="L133">  }</span>
+
+  private void assignKeysToParamMap(Configuration configuration, ResultSet rs, ResultSetMetaData rsmd,
+      String[] keyProperties, Map&lt;String, ?&gt; paramMap) throws SQLException {
+<span class="pc bpc" id="L137" title="1 of 2 branches missed.">    if (paramMap.isEmpty()) {</span>
+<span class="nc" id="L138">      return;</span>
+    }
+<span class="fc" id="L140">    Map&lt;String, Entry&lt;Iterator&lt;?&gt;, List&lt;KeyAssigner&gt;&gt;&gt; assignerMap = new HashMap&lt;&gt;();</span>
+<span class="fc bfc" id="L141" title="All 2 branches covered.">    for (int i = 0; i &lt; keyProperties.length; i++) {</span>
+<span class="fc" id="L142">      Entry&lt;String, KeyAssigner&gt; entry = getAssignerForParamMap(configuration, rsmd, i + 1, paramMap, keyProperties[i],</span>
+<span class="fc" id="L143">          keyProperties, true);</span>
+<span class="fc" id="L144">      Entry&lt;Iterator&lt;?&gt;, List&lt;KeyAssigner&gt;&gt; iteratorPair = assignerMap.computeIfAbsent(entry.getKey(),</span>
+<span class="fc" id="L145">          k -&gt; entry(collectionize(paramMap.get(k)).iterator(), new ArrayList&lt;&gt;()));</span>
+<span class="fc" id="L146">      iteratorPair.getValue().add(entry.getValue());</span>
+    }
+<span class="fc bfc" id="L148" title="All 2 branches covered.">    while (rs.next()) {</span>
+<span class="fc bfc" id="L149" title="All 2 branches covered.">      for (Entry&lt;Iterator&lt;?&gt;, List&lt;KeyAssigner&gt;&gt; pair : assignerMap.values()) {</span>
+<span class="fc" id="L150">        Object param = pair.getKey().next();</span>
+<span class="fc" id="L151">        pair.getValue().forEach(x -&gt; x.assign(rs, param));</span>
       }
     }
-<span class="fc bfc" id="L109" title="All 2 branches covered.">    if (parameters == null) {</span>
-<span class="fc" id="L110">      parameters = new ArrayList&lt;Object&gt;();</span>
-<span class="fc" id="L111">      parameters.add(parameter);</span>
+<span class="fc" id="L154">  }</span>
+
+  private Entry&lt;String, KeyAssigner&gt; getAssignerForParamMap(Configuration config, ResultSetMetaData rsmd,
+      int columnPosition, Map&lt;String, ?&gt; paramMap, String keyProperty, String[] keyProperties, boolean omitParamName) {
+<span class="fc bfc" id="L158" title="All 2 branches covered.">    boolean singleParam = paramMap.values().stream().distinct().count() == 1;</span>
+<span class="fc" id="L159">    int firstDot = keyProperty.indexOf('.');</span>
+<span class="fc bfc" id="L160" title="All 2 branches covered.">    if (firstDot == -1) {</span>
+<span class="fc bfc" id="L161" title="All 2 branches covered.">      if (singleParam) {</span>
+<span class="fc" id="L162">        return getAssignerForSingleParam(config, rsmd, columnPosition, paramMap, keyProperty, omitParamName);</span>
+      }
+<span class="fc" id="L164">      throw new ExecutorException(&quot;Could not determine which parameter to assign generated keys to. &quot;</span>
+          + &quot;Note that when there are multiple parameters, 'keyProperty' must include the parameter name (e.g. 'param.id'). &quot;
+<span class="fc" id="L166">          + &quot;Specified key properties are &quot; + ArrayUtil.toString(keyProperties) + &quot; and available parameters are &quot;</span>
+<span class="fc" id="L167">          + paramMap.keySet());</span>
     }
-<span class="fc" id="L113">    return parameters;</span>
+<span class="fc" id="L169">    String paramName = keyProperty.substring(0, firstDot);</span>
+<span class="fc bfc" id="L170" title="All 2 branches covered.">    if (paramMap.containsKey(paramName)) {</span>
+<span class="fc bfc" id="L171" title="All 2 branches covered.">      String argParamName = omitParamName ? null : paramName;</span>
+<span class="fc" id="L172">      String argKeyProperty = keyProperty.substring(firstDot + 1);</span>
+<span class="fc" id="L173">      return entry(paramName, new KeyAssigner(config, rsmd, columnPosition, argParamName, argKeyProperty));</span>
+<span class="pc bpc" id="L174" title="1 of 2 branches missed.">    } else if (singleParam) {</span>
+<span class="nc" id="L175">      return getAssignerForSingleParam(config, rsmd, columnPosition, paramMap, keyProperty, omitParamName);</span>
+    } else {
+<span class="fc" id="L177">      throw new ExecutorException(&quot;Could not find parameter '&quot; + paramName + &quot;'. &quot;</span>
+<span class="fc" id="L178">          + &quot;Note that when there are multiple parameters, 'keyProperty' must include the parameter name (e.g. 'param.id'). &quot;</span>
+<span class="fc" id="L179">          + &quot;Specified key properties are &quot; + ArrayUtil.toString(keyProperties) + &quot; and available parameters are &quot;</span>
+<span class="fc" id="L180">          + paramMap.keySet());</span>
+    }
   }
 
-  private TypeHandler&lt;?&gt;[] getTypeHandlers(TypeHandlerRegistry typeHandlerRegistry, MetaObject metaParam, String[] keyProperties, ResultSetMetaData rsmd) throws SQLException {
-<span class="fc" id="L117">    TypeHandler&lt;?&gt;[] typeHandlers = new TypeHandler&lt;?&gt;[keyProperties.length];</span>
-<span class="fc bfc" id="L118" title="All 2 branches covered.">    for (int i = 0; i &lt; keyProperties.length; i++) {</span>
-<span class="fc bfc" id="L119" title="All 2 branches covered.">      if (metaParam.hasSetter(keyProperties[i])) {</span>
-        TypeHandler&lt;?&gt; th;
-        try {
-<span class="fc" id="L122">          Class&lt;?&gt; keyPropertyType = metaParam.getSetterType(keyProperties[i]);</span>
-<span class="fc" id="L123">          th = typeHandlerRegistry.getTypeHandler(keyPropertyType, JdbcType.forCode(rsmd.getColumnType(i + 1)));</span>
-<span class="fc" id="L124">        } catch (BindingException e) {</span>
-<span class="fc" id="L125">          th = null;</span>
-<span class="fc" id="L126">        }</span>
-<span class="fc" id="L127">        typeHandlers[i] = th;</span>
-      }
-    }
-<span class="fc" id="L130">    return typeHandlers;</span>
+  private Entry&lt;String, KeyAssigner&gt; getAssignerForSingleParam(Configuration config, ResultSetMetaData rsmd,
+      int columnPosition, Map&lt;String, ?&gt; paramMap, String keyProperty, boolean omitParamName) {
+    // Assume 'keyProperty' to be a property of the single param.
+<span class="fc" id="L187">    String singleParamName = nameOfSingleParam(paramMap);</span>
+<span class="fc bfc" id="L188" title="All 2 branches covered.">    String argParamName = omitParamName ? null : singleParamName;</span>
+<span class="fc" id="L189">    return entry(singleParamName, new KeyAssigner(config, rsmd, columnPosition, argParamName, keyProperty));</span>
   }
 
-  private void populateKeys(ResultSet rs, MetaObject metaParam, String[] keyProperties, TypeHandler&lt;?&gt;[] typeHandlers) throws SQLException {
-<span class="fc bfc" id="L134" title="All 2 branches covered.">    for (int i = 0; i &lt; keyProperties.length; i++) {</span>
-<span class="fc" id="L135">      String property = keyProperties[i];</span>
-<span class="fc" id="L136">      TypeHandler&lt;?&gt; th = typeHandlers[i];</span>
-<span class="fc bfc" id="L137" title="All 2 branches covered.">      if (th != null) {</span>
-<span class="fc" id="L138">        Object value = th.getResult(rs, i + 1);</span>
-<span class="fc" id="L139">        metaParam.setValue(property, value);</span>
-      }
-    }
-<span class="fc" id="L142">  }</span>
+  private static String nameOfSingleParam(Map&lt;String, ?&gt; paramMap) {
+    // There is virtually one parameter, so any key works.
+<span class="fc" id="L194">    return paramMap.keySet().iterator().next();</span>
+  }
 
+  private static Collection&lt;?&gt; collectionize(Object param) {
+<span class="fc bfc" id="L198" title="All 2 branches covered.">    if (param instanceof Collection) {</span>
+<span class="fc" id="L199">      return (Collection&lt;?&gt;) param;</span>
+<span class="fc bfc" id="L200" title="All 2 branches covered.">    } else if (param instanceof Object[]) {</span>
+<span class="fc" id="L201">      return Arrays.asList((Object[]) param);</span>
+    } else {
+<span class="fc" id="L203">      return Arrays.asList(param);</span>
+    }
+  }
+
+  private static &lt;K, V&gt; Entry&lt;K, V&gt; entry(K key, V value) {
+    // Replace this with Map.entry(key, value) in Java 9.
+<span class="fc" id="L209">    return new AbstractMap.SimpleImmutableEntry&lt;&gt;(key, value);</span>
+  }
+
+  private class KeyAssigner {
+    private final Configuration configuration;
+    private final ResultSetMetaData rsmd;
+    private final TypeHandlerRegistry typeHandlerRegistry;
+    private final int columnPosition;
+    private final String paramName;
+    private final String propertyName;
+    private TypeHandler&lt;?&gt; typeHandler;
+
+    protected KeyAssigner(Configuration configuration, ResultSetMetaData rsmd, int columnPosition, String paramName,
+<span class="fc" id="L222">        String propertyName) {</span>
+<span class="fc" id="L223">      super();</span>
+<span class="fc" id="L224">      this.configuration = configuration;</span>
+<span class="fc" id="L225">      this.rsmd = rsmd;</span>
+<span class="fc" id="L226">      this.typeHandlerRegistry = configuration.getTypeHandlerRegistry();</span>
+<span class="fc" id="L227">      this.columnPosition = columnPosition;</span>
+<span class="fc" id="L228">      this.paramName = paramName;</span>
+<span class="fc" id="L229">      this.propertyName = propertyName;</span>
+<span class="fc" id="L230">    }</span>
+
+    protected void assign(ResultSet rs, Object param) {
+<span class="fc bfc" id="L233" title="All 2 branches covered.">      if (paramName != null) {</span>
+        // If paramName is set, param is ParamMap
+<span class="fc" id="L235">        param = ((ParamMap&lt;?&gt;) param).get(paramName);</span>
+      }
+<span class="fc" id="L237">      MetaObject metaParam = configuration.newMetaObject(param);</span>
+      try {
+<span class="fc bfc" id="L239" title="All 2 branches covered.">        if (typeHandler == null) {</span>
+<span class="fc bfc" id="L240" title="All 2 branches covered.">          if (metaParam.hasSetter(propertyName)) {</span>
+<span class="fc" id="L241">            Class&lt;?&gt; propertyType = metaParam.getSetterType(propertyName);</span>
+<span class="fc" id="L242">            typeHandler = typeHandlerRegistry.getTypeHandler(propertyType,</span>
+<span class="fc" id="L243">                JdbcType.forCode(rsmd.getColumnType(columnPosition)));</span>
+<span class="fc" id="L244">          } else {</span>
+<span class="fc" id="L245">            throw new ExecutorException(&quot;No setter found for the keyProperty '&quot; + propertyName + &quot;' in '&quot;</span>
+<span class="fc" id="L246">                + metaParam.getOriginalObject().getClass().getName() + &quot;'.&quot;);</span>
+          }
+        }
+<span class="pc bpc" id="L249" title="1 of 2 branches missed.">        if (typeHandler == null) {</span>
+          // Error?
+        } else {
+<span class="fc" id="L252">          Object value = typeHandler.getResult(rs, columnPosition);</span>
+<span class="fc" id="L253">          metaParam.setValue(propertyName, value);</span>
+        }
+<span class="pc" id="L255">      } catch (SQLException e) {</span>
+<span class="nc" id="L256">        throw new ExecutorException(&quot;Error getting generated key or setting result to parameter object. Cause: &quot; + e,</span>
+<span class="nc" id="L257">            e);</span>
+      }
+<span class="fc" id="L259">    }</span>
+  }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

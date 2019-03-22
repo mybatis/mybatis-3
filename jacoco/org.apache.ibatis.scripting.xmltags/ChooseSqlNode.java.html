@@ -35,7 +35,7 @@ public class ChooseSqlNode implements SqlNode {
 <span class="fc bfc" id="L35" title="All 2 branches covered.">      if (sqlNode.apply(context)) {</span>
 <span class="fc" id="L36">        return true;</span>
       }
-<span class="fc" id="L38">    }</span>
+    }
 <span class="pc bpc" id="L39" title="1 of 2 branches missed.">    if (defaultSqlNode != null) {</span>
 <span class="fc" id="L40">      defaultSqlNode.apply(context);</span>
 <span class="fc" id="L41">      return true;</span>
@@ -43,4 +43,4 @@ public class ChooseSqlNode implements SqlNode {
 <span class="nc" id="L43">    return false;</span>
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

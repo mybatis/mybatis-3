@@ -76,11 +76,11 @@ public abstract class BaseWrapper implements ObjectWrapper {
   protected void setCollectionValue(PropertyTokenizer prop, Object collection, Object value) {
 <span class="fc bfc" id="L77" title="All 2 branches covered.">    if (collection instanceof Map) {</span>
 <span class="fc" id="L78">      ((Map) collection).put(prop.getIndex(), value);</span>
-    } else {
+<span class="fc" id="L79">    } else {</span>
 <span class="fc" id="L80">      int i = Integer.parseInt(prop.getIndex());</span>
 <span class="pc bpc" id="L81" title="1 of 2 branches missed.">      if (collection instanceof List) {</span>
 <span class="fc" id="L82">        ((List) collection).set(i, value);</span>
-<span class="nc bnc" id="L83" title="All 2 branches missed.">      } else if (collection instanceof Object[]) {</span>
+<span class="pc bnc" id="L83" title="All 2 branches missed.">      } else if (collection instanceof Object[]) {</span>
 <span class="nc" id="L84">        ((Object[]) collection)[i] = value;</span>
 <span class="nc bnc" id="L85" title="All 2 branches missed.">      } else if (collection instanceof char[]) {</span>
 <span class="nc" id="L86">        ((char[]) collection)[i] = (Character) value;</span>
@@ -98,11 +98,11 @@ public abstract class BaseWrapper implements ObjectWrapper {
 <span class="nc" id="L98">        ((long[]) collection)[i] = (Long) value;</span>
 <span class="nc bnc" id="L99" title="All 2 branches missed.">      } else if (collection instanceof short[]) {</span>
 <span class="nc" id="L100">        ((short[]) collection)[i] = (Short) value;</span>
-      } else {
+<span class="nc" id="L101">      } else {</span>
 <span class="nc" id="L102">        throw new ReflectionException(&quot;The '&quot; + prop.getName() + &quot;' property of &quot; + collection + &quot; is not a List or Array.&quot;);</span>
       }
     }
 <span class="fc" id="L105">  }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

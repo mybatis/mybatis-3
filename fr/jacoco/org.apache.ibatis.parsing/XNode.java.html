@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>XNode.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.parsing</a> &gt; <span class="el_source">XNode.java</span></div><h1>XNode.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
@@ -87,12 +87,12 @@ public class XNode {
 <span class="fc" id="L87">        value = value.replace('.', '_');</span>
 <span class="fc" id="L88">        builder.insert(0, &quot;]&quot;);</span>
 <span class="fc" id="L89">        builder.insert(0,</span>
-            value);
+<span class="fc" id="L90">            value);</span>
 <span class="fc" id="L91">        builder.insert(0, &quot;[&quot;);</span>
       }
 <span class="fc" id="L93">      builder.insert(0, current.getName());</span>
 <span class="fc" id="L94">      current = current.getParent();</span>
-<span class="fc" id="L95">    }</span>
+    }
 <span class="fc" id="L96">    return builder.toString();</span>
   }
 
@@ -288,7 +288,7 @@ public class XNode {
   }
 
   public List&lt;XNode&gt; getChildren() {
-<span class="fc" id="L291">    List&lt;XNode&gt; children = new ArrayList&lt;XNode&gt;();</span>
+<span class="fc" id="L291">    List&lt;XNode&gt; children = new ArrayList&lt;&gt;();</span>
 <span class="fc" id="L292">    NodeList nodeList = node.getChildNodes();</span>
 <span class="pc bpc" id="L293" title="1 of 2 branches missed.">    if (nodeList != null) {</span>
 <span class="fc bfc" id="L294" title="All 2 branches covered.">      for (int i = 0, n = nodeList.getLength(); i &lt; n; i++) {</span>
@@ -309,7 +309,7 @@ public class XNode {
 <span class="pc bpc" id="L309" title="2 of 4 branches missed.">      if (name != null &amp;&amp; value != null) {</span>
 <span class="fc" id="L310">        properties.setProperty(name, value);</span>
       }
-<span class="fc" id="L312">    }</span>
+    }
 <span class="fc" id="L313">    return properties;</span>
   }
 
@@ -324,13 +324,13 @@ public class XNode {
 <span class="nc" id="L324">      builder.append(&quot;=\&quot;&quot;);</span>
 <span class="nc" id="L325">      builder.append(entry.getValue());</span>
 <span class="nc" id="L326">      builder.append(&quot;\&quot;&quot;);</span>
-<span class="nc" id="L327">    }</span>
+    }
 <span class="fc" id="L328">    List&lt;XNode&gt; children = getChildren();</span>
 <span class="pc bpc" id="L329" title="1 of 2 branches missed.">    if (!children.isEmpty()) {</span>
 <span class="nc" id="L330">      builder.append(&quot;&gt;\n&quot;);</span>
 <span class="nc bnc" id="L331" title="All 2 branches missed.">      for (XNode node : children) {</span>
 <span class="nc" id="L332">        builder.append(node.toString());</span>
-<span class="nc" id="L333">      }</span>
+      }
 <span class="nc" id="L334">      builder.append(&quot;&lt;/&quot;);</span>
 <span class="nc" id="L335">      builder.append(name);</span>
 <span class="nc" id="L336">      builder.append(&quot;&gt;&quot;);</span>
@@ -340,7 +340,7 @@ public class XNode {
 <span class="fc" id="L340">      builder.append(&quot;&lt;/&quot;);</span>
 <span class="fc" id="L341">      builder.append(name);</span>
 <span class="fc" id="L342">      builder.append(&quot;&gt;&quot;);</span>
-    } else {
+<span class="fc" id="L343">    } else {</span>
 <span class="nc" id="L344">      builder.append(&quot;/&gt;&quot;);</span>
     }
 <span class="fc" id="L346">    builder.append(&quot;\n&quot;);</span>
@@ -364,10 +364,10 @@ public class XNode {
 <span class="fc" id="L364">    String data = getBodyData(node);</span>
 <span class="fc bfc" id="L365" title="All 2 branches covered.">    if (data == null) {</span>
 <span class="fc" id="L366">      NodeList children = node.getChildNodes();</span>
-<span class="pc bfc" id="L367" title="All 2 branches covered.">      for (int i = 0; i &lt; children.getLength(); i++) {</span>
+<span class="fc bfc" id="L367" title="All 2 branches covered.">      for (int i = 0; i &lt; children.getLength(); i++) {</span>
 <span class="fc" id="L368">        Node child = children.item(i);</span>
 <span class="fc" id="L369">        data = getBodyData(child);</span>
-<span class="pc bpc" id="L370" title="1 of 2 branches missed.">        if (data != null) {</span>
+<span class="fc bfc" id="L370" title="All 2 branches covered.">        if (data != null) {</span>
 <span class="fc" id="L371">          break;</span>
         }
       }
@@ -386,4 +386,4 @@ public class XNode {
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

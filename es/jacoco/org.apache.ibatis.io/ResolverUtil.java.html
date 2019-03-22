@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ResolverUtil.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.io</a> &gt; <span class="el_source">ResolverUtil.java</span></div><h1>ResolverUtil.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
@@ -66,7 +66,7 @@ import org.apache.ibatis.logging.LogFactory;
    * A simple interface that specifies how to test classes to determine if they
    * are to be included in the results produced by the ResolverUtil.
    */
-  public static interface Test {
+  public interface Test {
     /**
      * Will be called repeatedly with candidate classes. Must return True if a class
      * is to be included in the results, false otherwise.
@@ -123,7 +123,7 @@ import org.apache.ibatis.logging.LogFactory;
   }
 
   /** The set of matches being accumulated. */
-<span class="fc" id="L126">  private Set&lt;Class&lt;? extends T&gt;&gt; matches = new HashSet&lt;Class&lt;? extends T&gt;&gt;();</span>
+<span class="fc" id="L126">  private Set&lt;Class&lt;? extends T&gt;&gt; matches = new HashSet&lt;&gt;();</span>
 
   /**
    * The ClassLoader to use when looking for classes. If null then the ClassLoader returned
@@ -222,10 +222,10 @@ import org.apache.ibatis.logging.LogFactory;
 <span class="fc bfc" id="L222" title="All 2 branches covered.">        if (child.endsWith(&quot;.class&quot;)) {</span>
 <span class="fc" id="L223">          addIfMatching(test, child);</span>
         }
-<span class="fc" id="L225">      }</span>
-<span class="nc" id="L226">    } catch (IOException ioe) {</span>
+      }
+<span class="pc" id="L226">    } catch (IOException ioe) {</span>
 <span class="nc" id="L227">      log.error(&quot;Could not read package: &quot; + packageName, ioe);</span>
-<span class="fc" id="L228">    }</span>
+    }
 
 <span class="fc" id="L230">    return this;</span>
   }
@@ -233,7 +233,7 @@ import org.apache.ibatis.logging.LogFactory;
   /**
    * Converts a Java package name to a path that can be looked up with a call to
    * {@link ClassLoader#getResources(String)}.
-   * 
+   *
    * @param packageName The Java package name to convert to a path
    */
   protected String getPackagePath(String packageName) {
@@ -260,10 +260,10 @@ import org.apache.ibatis.logging.LogFactory;
 <span class="fc bfc" id="L260" title="All 2 branches covered.">      if (test.matches(type)) {</span>
 <span class="fc" id="L261">        matches.add((Class&lt;T&gt;) type);</span>
       }
-<span class="nc" id="L263">    } catch (Throwable t) {</span>
+<span class="pc" id="L263">    } catch (Throwable t) {</span>
 <span class="nc" id="L264">      log.warn(&quot;Could not examine class '&quot; + fqn + &quot;'&quot; + &quot; due to a &quot; +</span>
 <span class="nc" id="L265">          t.getClass().getName() + &quot; with message: &quot; + t.getMessage());</span>
-<span class="fc" id="L266">    }</span>
+    }
 <span class="fc" id="L267">  }</span>
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -7,13 +7,13 @@
 <body>
 <div id="overview"><a href="../../../../../../../testapidocs/org/apache/ibatis/submitted/keycolumn/InsertTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2015 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2019 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_javadoccomment"> *    You may obtain a copy of the License at</em>
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2." target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.</a>0</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_javadoccomment"> *    Unless required by applicable law or agreed to in writing, software</em>
 <a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_javadoccomment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
@@ -23,102 +23,114 @@
 <a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">package</strong> org.apache.ibatis.submitted.keycolumn;
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  
-<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.Assert.assertEquals;
-<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.Assert.assertNotNull;
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.jupiter.api.Assertions.assertEquals;
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.jupiter.api.Assertions.assertNotNull;
 <a class="jxr_linenumber" name="L20" href="#L20">20</a>  
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> java.io.Reader;
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> java.util.List;
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>  
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.executor.BatchResult;
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.io.Resources;
-<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.session.ExecutorType;
-<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.session.SqlSession;
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.session.SqlSessionFactory;
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.session.SqlSessionFactoryBuilder;
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> org.junit.Ignore;
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> org.junit.Test;
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>  
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <em class="jxr_comment"> * This class contains tests for issue #84 - where the Jdbc3KeyGenerator</em>
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <em class="jxr_comment"> * needs to know the key column name because it is not the first column</em>
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <em class="jxr_comment"> * in the resultset returned from getGeneratedKeys().</em>
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <em class="jxr_comment"> *</em>
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <em class="jxr_comment"> * If PostgreSQL is setup as described in setupdb.txt, then remove</em>
-<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <em class="jxr_comment"> * the @Ignore annotation to enable the tests.</em>
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>  
-<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <em class="jxr_comment"> * @author Jeff Butler</em>
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <em class="jxr_comment"> */</em>
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>  @Ignore(<span class="jxr_string">"See setupdb.txt for instructions on how to run the tests in this class"</span>)
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../org/apache/ibatis/submitted/keycolumn/InsertTest.html">InsertTest</a> {
-<a class="jxr_linenumber" name="L45" href="#L45">45</a>  
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>    @Test
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testInsertAnnotated() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>      Reader reader = Resources.getResourceAsReader(<span class="jxr_string">"org/apache/ibatis/submitted/keycolumn/MapperConfig.xml"</span>);
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>      SqlSessionFactory sqlSessionFactory = <strong class="jxr_keyword">new</strong> SqlSessionFactoryBuilder().build(reader);
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>      SqlSession sqlSession = sqlSessionFactory.openSession();
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>        <a href="../../../../../org/apache/ibatis/submitted/keycolumn/InsertMapper.html">InsertMapper</a> mapper = sqlSession.getMapper(InsertMapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L53" href="#L53">53</a>        <a href="../../../../../org/apache/ibatis/submitted/keycolumn/Name.html">Name</a> name = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/submitted/keycolumn/Name.html">Name</a>();
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>        name.setFirstName(<span class="jxr_string">"Fred"</span>);
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>        name.setLastName(<span class="jxr_string">"Flintstone"</span>);
-<a class="jxr_linenumber" name="L56" href="#L56">56</a>  
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>        <strong class="jxr_keyword">int</strong> rows = mapper.insertNameAnnotated(name);
-<a class="jxr_linenumber" name="L58" href="#L58">58</a>  
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>        assertNotNull(name.getId());
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>        assertEquals(1, rows);
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>      } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>        sqlSession.close();
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>      }
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>    }
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>  
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>    @Test
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testInsertMapped() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>      Reader reader = Resources.getResourceAsReader(<span class="jxr_string">"org/apache/ibatis/submitted/keycolumn/MapperConfig.xml"</span>);
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>      SqlSessionFactory sqlSessionFactory = <strong class="jxr_keyword">new</strong> SqlSessionFactoryBuilder().build(reader);
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>      SqlSession sqlSession = sqlSessionFactory.openSession();
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>        <a href="../../../../../org/apache/ibatis/submitted/keycolumn/InsertMapper.html">InsertMapper</a> mapper = sqlSession.getMapper(InsertMapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>        <a href="../../../../../org/apache/ibatis/submitted/keycolumn/Name.html">Name</a> name = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/submitted/keycolumn/Name.html">Name</a>();
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>        name.setFirstName(<span class="jxr_string">"Fred"</span>);
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>        name.setLastName(<span class="jxr_string">"Flintstone"</span>);
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>  
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>        <strong class="jxr_keyword">int</strong> rows = mapper.insertNameMapped(name);
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>  
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>        assertNotNull(name.getId());
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>        assertEquals(1, rows);
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>      } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>        sqlSession.close();
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>      }
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>    }
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>  
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>    @Ignore <em class="jxr_comment">// Not supported yet in PostgreSQL</em>
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>    @Test
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testInsertMappedBatch() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>      Reader reader = Resources.getResourceAsReader(<span class="jxr_string">"org/apache/ibatis/submitted/keycolumn/MapperConfig.xml"</span>);
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>      SqlSessionFactory sqlSessionFactory = <strong class="jxr_keyword">new</strong> SqlSessionFactoryBuilder().build(reader);
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>      SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>        <a href="../../../../../org/apache/ibatis/submitted/keycolumn/InsertMapper.html">InsertMapper</a> mapper = sqlSession.getMapper(InsertMapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>        <a href="../../../../../org/apache/ibatis/submitted/keycolumn/Name.html">Name</a> name = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/submitted/keycolumn/Name.html">Name</a>();
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>        name.setFirstName(<span class="jxr_string">"Fred"</span>);
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>        name.setLastName(<span class="jxr_string">"Flintstone"</span>);
-<a class="jxr_linenumber" name="L97" href="#L97">97</a>        mapper.insertNameMapped(name);
-<a class="jxr_linenumber" name="L98" href="#L98">98</a>        <a href="../../../../../org/apache/ibatis/submitted/keycolumn/Name.html">Name</a> name2 = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/submitted/keycolumn/Name.html">Name</a>();
-<a class="jxr_linenumber" name="L99" href="#L99">99</a>        name2.setFirstName(<span class="jxr_string">"Wilma"</span>);
-<a class="jxr_linenumber" name="L100" href="#L100">100</a>       name2.setLastName(<span class="jxr_string">"Flintstone"</span>);
-<a class="jxr_linenumber" name="L101" href="#L101">101</a>       mapper.insertNameMapped(name2);
-<a class="jxr_linenumber" name="L102" href="#L102">102</a>       List&lt;BatchResult&gt; batchResults = sqlSession.flushStatements();
-<a class="jxr_linenumber" name="L103" href="#L103">103</a>       assertNotNull(name.getId());
-<a class="jxr_linenumber" name="L104" href="#L104">104</a>       assertNotNull(name2.getId());
-<a class="jxr_linenumber" name="L105" href="#L105">105</a>       assertEquals(1, batchResults.size());
-<a class="jxr_linenumber" name="L106" href="#L106">106</a>     } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="L107" href="#L107">107</a>       sqlSession.close();
-<a class="jxr_linenumber" name="L108" href="#L108">108</a>     }
-<a class="jxr_linenumber" name="L109" href="#L109">109</a>   }
-<a class="jxr_linenumber" name="L110" href="#L110">110</a> 
-<a class="jxr_linenumber" name="L111" href="#L111">111</a> }
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> java.nio.file.Paths;
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> java.util.Collections;
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> java.util.List;
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.BaseDataTest;
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.executor.BatchResult;
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.mapping.Environment;
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.session.Configuration;
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.session.ExecutorType;
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.session.SqlSession;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.session.SqlSessionFactory;
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.session.SqlSessionFactoryBuilder;
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.api.AfterAll;
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.api.BeforeAll;
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.api.Tag;
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.api.Test;
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <strong class="jxr_keyword">import</strong> ru.yandex.qatools.embed.postgresql.EmbeddedPostgres;
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <strong class="jxr_keyword">import</strong> ru.yandex.qatools.embed.postgresql.util.SocketUtil;
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  <em class="jxr_javadoccomment"> * @author Jeff Butler</em>
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>  @Tag(<span class="jxr_string">"EmbeddedPostgresqlTests"</span>)
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  <strong class="jxr_keyword">class</strong> <a name="InsertTest" href="../../../../../org/apache/ibatis/submitted/keycolumn/InsertTest.html#InsertTest">InsertTest</a> {
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>  
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> EmbeddedPostgres postgres = <strong class="jxr_keyword">new</strong> EmbeddedPostgres();
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>  
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> SqlSessionFactory sqlSessionFactory;
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>  
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>    @BeforeAll
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>    <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> setUp() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>      <em class="jxr_comment">// Launch PostgreSQL server. Download / unarchive if necessary.</em>
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>      String url = postgres.start(EmbeddedPostgres.cachedRuntimeConfig(Paths.get(System.getProperty(<span class="jxr_string">"java.io.tmpdir"</span>), <span class="jxr_string">"pgembed"</span>)), <span class="jxr_string">"localhost"</span>, SocketUtil.findFreePort(), <span class="jxr_string">"keycolumn"</span>, <span class="jxr_string">"postgres"</span>, <span class="jxr_string">"root"</span>, Collections.emptyList());
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>  
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>      Configuration configuration = <strong class="jxr_keyword">new</strong> Configuration();
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>      Environment environment = <strong class="jxr_keyword">new</strong> Environment(<span class="jxr_string">"development"</span>, <strong class="jxr_keyword">new</strong> JdbcTransactionFactory(), <strong class="jxr_keyword">new</strong> UnpooledDataSource(
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>          <span class="jxr_string">"org.postgresql.Driver"</span>, url, <strong class="jxr_keyword">null</strong>));
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>      configuration.setEnvironment(environment);
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>      configuration.addMapper(InsertMapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>      sqlSessionFactory = <strong class="jxr_keyword">new</strong> SqlSessionFactoryBuilder().build(configuration);
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>  
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>      BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>          <span class="jxr_string">"org/apache/ibatis/submitted/keycolumn/CreateDB.sql"</span>);
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>    }
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>  
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>    @AfterAll
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>    <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> tearDown() {
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>      postgres.stop();
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>    }
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>  
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>    @Test
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>    <strong class="jxr_keyword">void</strong> testInsertAnnotated() {
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>        <a name="InsertMapper" href="../../../../../org/apache/ibatis/submitted/keycolumn/InsertMapper.html#InsertMapper">InsertMapper</a> mapper = sqlSession.getMapper(InsertMapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>        <a name="Name" href="../../../../../org/apache/ibatis<a name="Name" href="../../../../../org/apache/ibatis/submitted/keycolumn/Name.html#Name">Name</a>mitted/keycolumn/Name.html#Name">Name</a> name = <strong class="jxr_keyword">new</strong> <a name="Name" href="../../../../../org/apache/ibatis/submitted/keycolumn/Name.html#Name">Name</a>();
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>        name.setFirstName(<span class="jxr_string">"Fred"</span>);
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>        name.setLastName(<span class="jxr_string">"Flintstone"</span>);
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>  
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>        <strong class="jxr_keyword">int</strong> rows = mapper.insertNameAnnotated(name);
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>  
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>        assertNotNull(name.getId());
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>        assertEquals(1, rows);
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>      }
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>    }
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>  
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>    @Test
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>    <strong class="jxr_keyword">void</strong> testInsertMapped() {
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>        <a name="InsertMapper" href="../../../../../org/apache/ibatis/submitted/keycolumn/InsertMapper.html#InsertMapper">InsertMapper</a> mapper = sqlSession.getMapper(InsertMapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>        <a name="Name" href="../../../../../org/apache/ibatis<a name="Name" href="../../../../../org/apache/ibatis/submitted/keycolumn/Name.html#Name">Name</a>mitted/keycolumn/Name.html#Name">Name</a> name = <strong class="jxr_keyword">new</strong> <a name="Name" href="../../../../../org/apache/ibatis/submitted/keycolumn/Name.html#Name">Name</a>();
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>        name.setFirstName(<span class="jxr_string">"Fred"</span>);
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>        name.setLastName(<span class="jxr_string">"Flintstone"</span>);
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>  
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>        <strong class="jxr_keyword">int</strong> rows = mapper.insertNameMapped(name);
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>  
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>        assertNotNull(name.getId());
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>       assertEquals(1, rows);
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>     }
+<a class="jxr_linenumber" name="L102" href="#L102">102</a>   }
+<a class="jxr_linenumber" name="L103" href="#L103">103</a> 
+<a class="jxr_linenumber" name="L104" href="#L104">104</a>   @Test
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>   <strong class="jxr_keyword">void</strong> testInsertMappedBatch() {
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH)) {
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>       <a name="InsertMapper" href="../../../../../org/apache/ibatis/submitted/keycolumn/InsertMapper.html#InsertMapper">InsertMapper</a> mapper = sqlSession.getMapper(InsertMapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>       <a name="Name" href="../../../../../org/apache/ibatis<a name="Name" href="../../../../../org/apache/ibatis/submitted/keycolumn/Name.html#Name">Name</a>mitted/keycolumn/Name.html#Name">Name</a> name = <strong class="jxr_keyword">new</strong> <a name="Name" href="../../../../../org/apache/ibatis/submitted/keycolumn/Name.html#Name">Name</a>();
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>       name.setFirstName(<span class="jxr_string">"Fred"</span>);
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>       name.setLastName(<span class="jxr_string">"Flintstone"</span>);
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>       mapper.insertNameMapped(name);
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>       <a name="Name" href="../../../../../org/apache/ibatis/<a name="Name" href="../../../../../org/apache/ibatis/submitted/keycolumn/Name.html#Name">Name</a>itted/keycolumn/Name.html#Name">Name</a> name2 = <strong class="jxr_keyword">new</strong> <a name="Name" href="../../../../../org/apache/ibatis/submitted/keycolumn/Name.html#Name">Name</a>();
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>       name2.setFirstName(<span class="jxr_string">"Wilma"</span>);
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>       name2.setLastName(<span class="jxr_string">"Flintstone"</span>);
+<a class="jxr_linenumber" name="L115" href="#L115">115</a>       mapper.insertNameMapped(name2);
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>       List&lt;BatchResult&gt; batchResults = sqlSession.flushStatements();
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>       assertNotNull(name.getId());
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>       assertNotNull(name2.getId());
+<a class="jxr_linenumber" name="L119" href="#L119">119</a>       assertEquals(1, batchResults.size());
+<a class="jxr_linenumber" name="L120" href="#L120">120</a>     }
+<a class="jxr_linenumber" name="L121" href="#L121">121</a>   }
+<a class="jxr_linenumber" name="L122" href="#L122">122</a> 
+<a class="jxr_linenumber" name="L123" href="#L123">123</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2017 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2019 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

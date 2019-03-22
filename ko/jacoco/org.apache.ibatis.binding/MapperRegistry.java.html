@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MapperRegistry.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.binding</a> &gt; <span class="el_source">MapperRegistry.java</span></div><h1>MapperRegistry.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
@@ -15,16 +15,16 @@
  */
 package org.apache.ibatis.binding;
 
-import org.apache.ibatis.builder.annotation.MapperAnnotationBuilder;
-import org.apache.ibatis.io.ResolverUtil;
-import org.apache.ibatis.session.Configuration;
-import org.apache.ibatis.session.SqlSession;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import org.apache.ibatis.builder.annotation.MapperAnnotationBuilder;
+import org.apache.ibatis.io.ResolverUtil;
+import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.SqlSession;
 
 /**
  * @author Clinton Begin
@@ -34,7 +34,7 @@ import java.util.Set;
 public class MapperRegistry {
 
   private final Configuration config;
-<span class="fc" id="L37">  private final Map&lt;Class&lt;?&gt;, MapperProxyFactory&lt;?&gt;&gt; knownMappers = new HashMap&lt;Class&lt;?&gt;, MapperProxyFactory&lt;?&gt;&gt;();</span>
+<span class="fc" id="L37">  private final Map&lt;Class&lt;?&gt;, MapperProxyFactory&lt;?&gt;&gt; knownMappers = new HashMap&lt;&gt;();</span>
 
 <span class="fc" id="L39">  public MapperRegistry(Configuration config) {</span>
 <span class="fc" id="L40">    this.config = config;</span>
@@ -52,7 +52,7 @@ public class MapperRegistry {
 <span class="nc" id="L52">      throw new BindingException(&quot;Error getting mapper instance. Cause: &quot; + e, e);</span>
     }
   }
-  
+
   public &lt;T&gt; boolean hasMapper(Class&lt;T&gt; type) {
 <span class="fc" id="L57">    return knownMappers.containsKey(type);</span>
   }
@@ -64,16 +64,16 @@ public class MapperRegistry {
       }
 <span class="fc" id="L65">      boolean loadCompleted = false;</span>
       try {
-<span class="fc" id="L67">        knownMappers.put(type, new MapperProxyFactory&lt;T&gt;(type));</span>
+<span class="fc" id="L67">        knownMappers.put(type, new MapperProxyFactory&lt;&gt;(type));</span>
         // It's important that the type is added before the parser is run
         // otherwise the binding may automatically be attempted by the
         // mapper parser. If the type is already known, it won't try.
 <span class="fc" id="L71">        MapperAnnotationBuilder parser = new MapperAnnotationBuilder(config, type);</span>
 <span class="fc" id="L72">        parser.parse();</span>
 <span class="fc" id="L73">        loadCompleted = true;</span>
-      } finally {
-<span class="pc bpc" id="L75" title="2 of 4 branches missed.">        if (!loadCompleted) {</span>
-<span class="pc" id="L76">          knownMappers.remove(type);</span>
+<span class="fc" id="L74">      } finally {</span>
+<span class="fc bfc" id="L75" title="All 2 branches covered.">        if (!loadCompleted) {</span>
+<span class="fc" id="L76">          knownMappers.remove(type);</span>
         }
       }
     }
@@ -90,12 +90,12 @@ public class MapperRegistry {
    * @since 3.2.2
    */
   public void addMappers(String packageName, Class&lt;?&gt; superType) {
-<span class="fc" id="L93">    ResolverUtil&lt;Class&lt;?&gt;&gt; resolverUtil = new ResolverUtil&lt;Class&lt;?&gt;&gt;();</span>
+<span class="fc" id="L93">    ResolverUtil&lt;Class&lt;?&gt;&gt; resolverUtil = new ResolverUtil&lt;&gt;();</span>
 <span class="fc" id="L94">    resolverUtil.find(new ResolverUtil.IsA(superType), packageName);</span>
 <span class="fc" id="L95">    Set&lt;Class&lt;? extends Class&lt;?&gt;&gt;&gt; mapperSet = resolverUtil.getClasses();</span>
 <span class="fc bfc" id="L96" title="All 2 branches covered.">    for (Class&lt;?&gt; mapperClass : mapperSet) {</span>
 <span class="fc" id="L97">      addMapper(mapperClass);</span>
-<span class="fc" id="L98">    }</span>
+    }
 <span class="fc" id="L99">  }</span>
 
   /**
@@ -104,6 +104,6 @@ public class MapperRegistry {
   public void addMappers(String packageName) {
 <span class="fc" id="L105">    addMappers(packageName, Object.class);</span>
 <span class="fc" id="L106">  }</span>
-  
+
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

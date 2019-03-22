@@ -7,13 +7,13 @@
 <body>
 <div id="overview"><a href="../../../../../apidocs/org/apache/ibatis/jdbc/AbstractSQL.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2017 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2018 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_javadoccomment"> *    You may obtain a copy of the License at</em>
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2." target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.</a>0</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_javadoccomment"> *    Unless required by applicable law or agreed to in writing, software</em>
 <a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_javadoccomment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
@@ -39,7 +39,7 @@
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String AND = <span class="jxr_string">") \nAND ("</span>;
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String OR = <span class="jxr_string">") \nOR ("</span>;
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>  
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../org/apache/ibatis/jdbc/AbstractSQL.html">SQLStatement</a> sql = <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/jdbc/AbstractSQL.html">SQLStatement</a>();
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> SQLStatement sql = <strong class="jxr_keyword">new</strong> SQLStatement();
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>  
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">abstract</strong> T getSelf();
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>  
@@ -270,7 +270,7 @@
 <a class="jxr_linenumber" name="L262" href="#L262">262</a>     <strong class="jxr_keyword">return</strong> getSelf();
 <a class="jxr_linenumber" name="L263" href="#L263">263</a>   }
 <a class="jxr_linenumber" name="L264" href="#L264">264</a> 
-<a class="jxr_linenumber" name="L265" href="#L265">265</a>   <strong class="jxr_keyword">private</strong> <a href="../../../../org/apache/ibatis/jdbc/AbstractSQL.html">SQLStatement</a> sql() {
+<a class="jxr_linenumber" name="L265" href="#L265">265</a>   <strong class="jxr_keyword">private</strong> SQLStatement sql() {
 <a class="jxr_linenumber" name="L266" href="#L266">266</a>     <strong class="jxr_keyword">return</strong> sql;
 <a class="jxr_linenumber" name="L267" href="#L267">267</a>   }
 <a class="jxr_linenumber" name="L268" href="#L268">268</a> 
@@ -286,16 +286,16 @@
 <a class="jxr_linenumber" name="L278" href="#L278">278</a>     <strong class="jxr_keyword">return</strong> sb.toString();
 <a class="jxr_linenumber" name="L279" href="#L279">279</a>   }
 <a class="jxr_linenumber" name="L280" href="#L280">280</a> 
-<a class="jxr_linenumber" name="L281" href="#L281">281</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/apache/ibatis/jdbc/AbstractSQL.html">SafeAppendable</a> {
+<a class="jxr_linenumber" name="L281" href="#L281">281</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> SafeAppendable {
 <a class="jxr_linenumber" name="L282" href="#L282">282</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Appendable a;
 <a class="jxr_linenumber" name="L283" href="#L283">283</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> empty = <strong class="jxr_keyword">true</strong>;
 <a class="jxr_linenumber" name="L284" href="#L284">284</a> 
-<a class="jxr_linenumber" name="L285" href="#L285">285</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/jdbc/AbstractSQL.html">SafeAppendable</a>(Appendable a) {
+<a class="jxr_linenumber" name="L285" href="#L285">285</a>     <strong class="jxr_keyword">public</strong> SafeAppendable(Appendable a) {
 <a class="jxr_linenumber" name="L286" href="#L286">286</a>       <strong class="jxr_keyword">super</strong>();
 <a class="jxr_linenumber" name="L287" href="#L287">287</a>       <strong class="jxr_keyword">this</strong>.a = a;
 <a class="jxr_linenumber" name="L288" href="#L288">288</a>     }
 <a class="jxr_linenumber" name="L289" href="#L289">289</a> 
-<a class="jxr_linenumber" name="L290" href="#L290">290</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/jdbc/AbstractSQL.html">SafeAppendable</a> append(CharSequence s) {
+<a class="jxr_linenumber" name="L290" href="#L290">290</a>     <strong class="jxr_keyword">public</strong> SafeAppendable append(CharSequence s) {
 <a class="jxr_linenumber" name="L291" href="#L291">291</a>       <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L292" href="#L292">292</a>         <strong class="jxr_keyword">if</strong> (empty &amp;&amp; s.length() &gt; 0) {
 <a class="jxr_linenumber" name="L293" href="#L293">293</a>           empty = false;
@@ -313,35 +313,35 @@
 <a class="jxr_linenumber" name="L305" href="#L305">305</a> 
 <a class="jxr_linenumber" name="L306" href="#L306">306</a>   }
 <a class="jxr_linenumber" name="L307" href="#L307">307</a> 
-<a class="jxr_linenumber" name="L308" href="#L308">308</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/apache/ibatis/jdbc/AbstractSQL.html">SQLStatement</a> {
+<a class="jxr_linenumber" name="L308" href="#L308">308</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> SQLStatement {
 <a class="jxr_linenumber" name="L309" href="#L309">309</a> 
-<a class="jxr_linenumber" name="L310" href="#L310">310</a>     <strong class="jxr_keyword">public</strong> enum <a href="../../../../org/apache/ibatis/jdbc/AbstractSQL.html">StatementType</a> {
+<a class="jxr_linenumber" name="L310" href="#L310">310</a>     <strong class="jxr_keyword">public</strong> enum StatementType {
 <a class="jxr_linenumber" name="L311" href="#L311">311</a>       DELETE, INSERT, SELECT, UPDATE
 <a class="jxr_linenumber" name="L312" href="#L312">312</a>     }
 <a class="jxr_linenumber" name="L313" href="#L313">313</a> 
-<a class="jxr_linenumber" name="L314" href="#L314">314</a>     <a href="../../../../org/apache/ibatis/jdbc/AbstractSQL.html">StatementType</a> statementType;
-<a class="jxr_linenumber" name="L315" href="#L315">315</a>     List&lt;String&gt; sets = <strong class="jxr_keyword">new</strong> ArrayList&lt;String&gt;();
-<a class="jxr_linenumber" name="L316" href="#L316">316</a>     List&lt;String&gt; select = <strong class="jxr_keyword">new</strong> ArrayList&lt;String&gt;();
-<a class="jxr_linenumber" name="L317" href="#L317">317</a>     List&lt;String&gt; tables = <strong class="jxr_keyword">new</strong> ArrayList&lt;String&gt;();
-<a class="jxr_linenumber" name="L318" href="#L318">318</a>     List&lt;String&gt; join = <strong class="jxr_keyword">new</strong> ArrayList&lt;String&gt;();
-<a class="jxr_linenumber" name="L319" href="#L319">319</a>     List&lt;String&gt; innerJoin = <strong class="jxr_keyword">new</strong> ArrayList&lt;String&gt;();
-<a class="jxr_linenumber" name="L320" href="#L320">320</a>     List&lt;String&gt; outerJoin = <strong class="jxr_keyword">new</strong> ArrayList&lt;String&gt;();
-<a class="jxr_linenumber" name="L321" href="#L321">321</a>     List&lt;String&gt; leftOuterJoin = <strong class="jxr_keyword">new</strong> ArrayList&lt;String&gt;();
-<a class="jxr_linenumber" name="L322" href="#L322">322</a>     List&lt;String&gt; rightOuterJoin = <strong class="jxr_keyword">new</strong> ArrayList&lt;String&gt;();
-<a class="jxr_linenumber" name="L323" href="#L323">323</a>     List&lt;String&gt; where = <strong class="jxr_keyword">new</strong> ArrayList&lt;String&gt;();
-<a class="jxr_linenumber" name="L324" href="#L324">324</a>     List&lt;String&gt; having = <strong class="jxr_keyword">new</strong> ArrayList&lt;String&gt;();
-<a class="jxr_linenumber" name="L325" href="#L325">325</a>     List&lt;String&gt; groupBy = <strong class="jxr_keyword">new</strong> ArrayList&lt;String&gt;();
-<a class="jxr_linenumber" name="L326" href="#L326">326</a>     List&lt;String&gt; orderBy = <strong class="jxr_keyword">new</strong> ArrayList&lt;String&gt;();
-<a class="jxr_linenumber" name="L327" href="#L327">327</a>     List&lt;String&gt; lastList = <strong class="jxr_keyword">new</strong> ArrayList&lt;String&gt;();
-<a class="jxr_linenumber" name="L328" href="#L328">328</a>     List&lt;String&gt; columns = <strong class="jxr_keyword">new</strong> ArrayList&lt;String&gt;();
-<a class="jxr_linenumber" name="L329" href="#L329">329</a>     List&lt;String&gt; values = <strong class="jxr_keyword">new</strong> ArrayList&lt;String&gt;();
+<a class="jxr_linenumber" name="L314" href="#L314">314</a>     StatementType statementType;
+<a class="jxr_linenumber" name="L315" href="#L315">315</a>     List&lt;String&gt; sets = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
+<a class="jxr_linenumber" name="L316" href="#L316">316</a>     List&lt;String&gt; select = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
+<a class="jxr_linenumber" name="L317" href="#L317">317</a>     List&lt;String&gt; tables = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
+<a class="jxr_linenumber" name="L318" href="#L318">318</a>     List&lt;String&gt; join = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
+<a class="jxr_linenumber" name="L319" href="#L319">319</a>     List&lt;String&gt; innerJoin = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
+<a class="jxr_linenumber" name="L320" href="#L320">320</a>     List&lt;String&gt; outerJoin = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
+<a class="jxr_linenumber" name="L321" href="#L321">321</a>     List&lt;String&gt; leftOuterJoin = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
+<a class="jxr_linenumber" name="L322" href="#L322">322</a>     List&lt;String&gt; rightOuterJoin = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
+<a class="jxr_linenumber" name="L323" href="#L323">323</a>     List&lt;String&gt; where = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
+<a class="jxr_linenumber" name="L324" href="#L324">324</a>     List&lt;String&gt; having = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
+<a class="jxr_linenumber" name="L325" href="#L325">325</a>     List&lt;String&gt; groupBy = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
+<a class="jxr_linenumber" name="L326" href="#L326">326</a>     List&lt;String&gt; orderBy = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
+<a class="jxr_linenumber" name="L327" href="#L327">327</a>     List&lt;String&gt; lastList = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
+<a class="jxr_linenumber" name="L328" href="#L328">328</a>     List&lt;String&gt; columns = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
+<a class="jxr_linenumber" name="L329" href="#L329">329</a>     List&lt;String&gt; values = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
 <a class="jxr_linenumber" name="L330" href="#L330">330</a>     <strong class="jxr_keyword">boolean</strong> distinct;
 <a class="jxr_linenumber" name="L331" href="#L331">331</a> 
-<a class="jxr_linenumber" name="L332" href="#L332">332</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/jdbc/AbstractSQL.html">SQLStatement</a>() {
+<a class="jxr_linenumber" name="L332" href="#L332">332</a>     <strong class="jxr_keyword">public</strong> SQLStatement() {
 <a class="jxr_linenumber" name="L333" href="#L333">333</a>         <em class="jxr_comment">// Prevent Synthetic Access</em>
 <a class="jxr_linenumber" name="L334" href="#L334">334</a>     }
 <a class="jxr_linenumber" name="L335" href="#L335">335</a> 
-<a class="jxr_linenumber" name="L336" href="#L336">336</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> sqlClause(<a href="../../../../org/apache/ibatis/jdbc/AbstractSQL.html">SafeAppendable</a> builder, String keyword, List&lt;String&gt; parts, String open, String close,
+<a class="jxr_linenumber" name="L336" href="#L336">336</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> sqlClause(SafeAppendable builder, String keyword, List&lt;String&gt; parts, String open, String close,
 <a class="jxr_linenumber" name="L337" href="#L337">337</a>                            String conjunction) {
 <a class="jxr_linenumber" name="L338" href="#L338">338</a>       <strong class="jxr_keyword">if</strong> (!parts.isEmpty()) {
 <a class="jxr_linenumber" name="L339" href="#L339">339</a>         <strong class="jxr_keyword">if</strong> (!builder.isEmpty()) {
@@ -363,7 +363,7 @@
 <a class="jxr_linenumber" name="L355" href="#L355">355</a>       }
 <a class="jxr_linenumber" name="L356" href="#L356">356</a>     }
 <a class="jxr_linenumber" name="L357" href="#L357">357</a> 
-<a class="jxr_linenumber" name="L358" href="#L358">358</a>     <strong class="jxr_keyword">private</strong> String selectSQL(<a href="../../../../org/apache/ibatis/jdbc/AbstractSQL.html">SafeAppendable</a> builder) {
+<a class="jxr_linenumber" name="L358" href="#L358">358</a>     <strong class="jxr_keyword">private</strong> String selectSQL(SafeAppendable builder) {
 <a class="jxr_linenumber" name="L359" href="#L359">359</a>       <strong class="jxr_keyword">if</strong> (distinct) {
 <a class="jxr_linenumber" name="L360" href="#L360">360</a>         sqlClause(builder, <span class="jxr_string">"SELECT DISTINCT"</span>, select, <span class="jxr_string">""</span>, <span class="jxr_string">""</span>, <span class="jxr_string">", "</span>);
 <a class="jxr_linenumber" name="L361" href="#L361">361</a>       } <strong class="jxr_keyword">else</strong> {
@@ -379,7 +379,7 @@
 <a class="jxr_linenumber" name="L371" href="#L371">371</a>       <strong class="jxr_keyword">return</strong> builder.toString();
 <a class="jxr_linenumber" name="L372" href="#L372">372</a>     }
 <a class="jxr_linenumber" name="L373" href="#L373">373</a> 
-<a class="jxr_linenumber" name="L374" href="#L374">374</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> joins(<a href="../../../../org/apache/ibatis/jdbc/AbstractSQL.html">SafeAppendable</a> builder) {
+<a class="jxr_linenumber" name="L374" href="#L374">374</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> joins(SafeAppendable builder) {
 <a class="jxr_linenumber" name="L375" href="#L375">375</a>       sqlClause(builder, <span class="jxr_string">"JOIN"</span>, join, <span class="jxr_string">""</span>, <span class="jxr_string">""</span>, <span class="jxr_string">"\nJOIN "</span>);
 <a class="jxr_linenumber" name="L376" href="#L376">376</a>       sqlClause(builder, <span class="jxr_string">"INNER JOIN"</span>, innerJoin, <span class="jxr_string">""</span>, <span class="jxr_string">""</span>, <span class="jxr_string">"\nINNER JOIN "</span>);
 <a class="jxr_linenumber" name="L377" href="#L377">377</a>       sqlClause(builder, <span class="jxr_string">"OUTER JOIN"</span>, outerJoin, <span class="jxr_string">""</span>, <span class="jxr_string">""</span>, <span class="jxr_string">"\nOUTER JOIN "</span>);
@@ -387,20 +387,20 @@
 <a class="jxr_linenumber" name="L379" href="#L379">379</a>       sqlClause(builder, <span class="jxr_string">"RIGHT OUTER JOIN"</span>, rightOuterJoin, <span class="jxr_string">""</span>, <span class="jxr_string">""</span>, <span class="jxr_string">"\nRIGHT OUTER JOIN "</span>);
 <a class="jxr_linenumber" name="L380" href="#L380">380</a>     }
 <a class="jxr_linenumber" name="L381" href="#L381">381</a> 
-<a class="jxr_linenumber" name="L382" href="#L382">382</a>     <strong class="jxr_keyword">private</strong> String insertSQL(<a href="../../../../org/apache/ibatis/jdbc/AbstractSQL.html">SafeAppendable</a> builder) {
+<a class="jxr_linenumber" name="L382" href="#L382">382</a>     <strong class="jxr_keyword">private</strong> String insertSQL(SafeAppendable builder) {
 <a class="jxr_linenumber" name="L383" href="#L383">383</a>       sqlClause(builder, <span class="jxr_string">"INSERT INTO"</span>, tables, <span class="jxr_string">""</span>, <span class="jxr_string">""</span>, <span class="jxr_string">""</span>);
 <a class="jxr_linenumber" name="L384" href="#L384">384</a>       sqlClause(builder, <span class="jxr_string">""</span>, columns, <span class="jxr_string">"("</span>, <span class="jxr_string">")"</span>, <span class="jxr_string">", "</span>);
 <a class="jxr_linenumber" name="L385" href="#L385">385</a>       sqlClause(builder, <span class="jxr_string">"VALUES"</span>, values, <span class="jxr_string">"("</span>, <span class="jxr_string">")"</span>, <span class="jxr_string">", "</span>);
 <a class="jxr_linenumber" name="L386" href="#L386">386</a>       <strong class="jxr_keyword">return</strong> builder.toString();
 <a class="jxr_linenumber" name="L387" href="#L387">387</a>     }
 <a class="jxr_linenumber" name="L388" href="#L388">388</a> 
-<a class="jxr_linenumber" name="L389" href="#L389">389</a>     <strong class="jxr_keyword">private</strong> String deleteSQL(<a href="../../../../org/apache/ibatis/jdbc/AbstractSQL.html">SafeAppendable</a> builder) {
+<a class="jxr_linenumber" name="L389" href="#L389">389</a>     <strong class="jxr_keyword">private</strong> String deleteSQL(SafeAppendable builder) {
 <a class="jxr_linenumber" name="L390" href="#L390">390</a>       sqlClause(builder, <span class="jxr_string">"DELETE FROM"</span>, tables, <span class="jxr_string">""</span>, <span class="jxr_string">""</span>, <span class="jxr_string">""</span>);
 <a class="jxr_linenumber" name="L391" href="#L391">391</a>       sqlClause(builder, <span class="jxr_string">"WHERE"</span>, where, <span class="jxr_string">"("</span>, <span class="jxr_string">")"</span>, <span class="jxr_string">" AND "</span>);
 <a class="jxr_linenumber" name="L392" href="#L392">392</a>       <strong class="jxr_keyword">return</strong> builder.toString();
 <a class="jxr_linenumber" name="L393" href="#L393">393</a>     }
 <a class="jxr_linenumber" name="L394" href="#L394">394</a> 
-<a class="jxr_linenumber" name="L395" href="#L395">395</a>     <strong class="jxr_keyword">private</strong> String updateSQL(<a href="../../../../org/apache/ibatis/jdbc/AbstractSQL.html">SafeAppendable</a> builder) {
+<a class="jxr_linenumber" name="L395" href="#L395">395</a>     <strong class="jxr_keyword">private</strong> String updateSQL(SafeAppendable builder) {
 <a class="jxr_linenumber" name="L396" href="#L396">396</a>       sqlClause(builder, <span class="jxr_string">"UPDATE"</span>, tables, <span class="jxr_string">""</span>, <span class="jxr_string">""</span>, <span class="jxr_string">""</span>);
 <a class="jxr_linenumber" name="L397" href="#L397">397</a>       joins(builder);
 <a class="jxr_linenumber" name="L398" href="#L398">398</a>       sqlClause(builder, <span class="jxr_string">"SET"</span>, sets, <span class="jxr_string">""</span>, <span class="jxr_string">""</span>, <span class="jxr_string">", "</span>);
@@ -409,7 +409,7 @@
 <a class="jxr_linenumber" name="L401" href="#L401">401</a>     }
 <a class="jxr_linenumber" name="L402" href="#L402">402</a> 
 <a class="jxr_linenumber" name="L403" href="#L403">403</a>     <strong class="jxr_keyword">public</strong> String sql(Appendable a) {
-<a class="jxr_linenumber" name="L404" href="#L404">404</a>       <a href="../../../../org/apache/ibatis/jdbc/AbstractSQL.html">SafeAppendable</a> builder = <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/jdbc/AbstractSQL.html">SafeAppendable</a>(a);
+<a class="jxr_linenumber" name="L404" href="#L404">404</a>       SafeAppendable builder = <strong class="jxr_keyword">new</strong> SafeAppendable(a);
 <a class="jxr_linenumber" name="L405" href="#L405">405</a>       <strong class="jxr_keyword">if</strong> (statementType == <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L406" href="#L406">406</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L407" href="#L407">407</a>       }
@@ -443,6 +443,6 @@
 <a class="jxr_linenumber" name="L435" href="#L435">435</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2018 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2019 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

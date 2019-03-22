@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CacheKey.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.cache</a> &gt; <span class="el_source">CacheKey.java</span></div><h1>CacheKey.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package org.apache.ibatis.cache;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
 import org.apache.ibatis.reflection.ArrayUtil;
 
@@ -28,102 +29,103 @@ public class CacheKey implements Cloneable, Serializable {
 
   private static final long serialVersionUID = 1146682552656046210L;
 
-<span class="fc" id="L31">  public static final CacheKey NULL_CACHE_KEY = new NullCacheKey();</span>
+<span class="fc" id="L32">  public static final CacheKey NULL_CACHE_KEY = new NullCacheKey();</span>
 
   private static final int DEFAULT_MULTIPLYER = 37;
-  private static final int DEFAULT_HASHCODE = 17;
+<span class="fc" id="L35">  private static final int DEFAULT_HASHCODE = 17;</span>
 
   private final int multiplier;
   private int hashcode;
   private long checksum;
   private int count;
-  private transient List&lt;Object&gt; updateList;
+  // 8/21/2017 - Sonarlint flags this as needing to be marked transient.  While true if content is not serializable, this is not always true and thus should not be marked transient.
+  private List&lt;Object&gt; updateList;
 
-<span class="fc" id="L42">  public CacheKey() {</span>
-<span class="fc" id="L43">    this.hashcode = DEFAULT_HASHCODE;</span>
-<span class="fc" id="L44">    this.multiplier = DEFAULT_MULTIPLYER;</span>
-<span class="fc" id="L45">    this.count = 0;</span>
-<span class="fc" id="L46">    this.updateList = new ArrayList&lt;Object&gt;();</span>
-<span class="fc" id="L47">  }</span>
+<span class="fc" id="L44">  public CacheKey() {</span>
+<span class="fc" id="L45">    this.hashcode = DEFAULT_HASHCODE;</span>
+<span class="fc" id="L46">    this.multiplier = DEFAULT_MULTIPLYER;</span>
+<span class="fc" id="L47">    this.count = 0;</span>
+<span class="fc" id="L48">    this.updateList = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L49">  }</span>
 
   public CacheKey(Object[] objects) {
-<span class="fc" id="L50">    this();</span>
-<span class="fc" id="L51">    updateAll(objects);</span>
-<span class="fc" id="L52">  }</span>
+<span class="fc" id="L52">    this();</span>
+<span class="fc" id="L53">    updateAll(objects);</span>
+<span class="fc" id="L54">  }</span>
 
   public int getUpdateCount() {
-<span class="fc" id="L55">    return updateList.size();</span>
+<span class="fc" id="L57">    return updateList.size();</span>
   }
 
   public void update(Object object) {
-<span class="fc bfc" id="L59" title="All 2 branches covered.">    int baseHashCode = object == null ? 1 : ArrayUtil.hashCode(object); </span>
+<span class="fc bfc" id="L61" title="All 2 branches covered.">    int baseHashCode = object == null ? 1 : ArrayUtil.hashCode(object);</span>
 
-<span class="fc" id="L61">    count++;</span>
-<span class="fc" id="L62">    checksum += baseHashCode;</span>
-<span class="fc" id="L63">    baseHashCode *= count;</span>
+<span class="fc" id="L63">    count++;</span>
+<span class="fc" id="L64">    checksum += baseHashCode;</span>
+<span class="fc" id="L65">    baseHashCode *= count;</span>
 
-<span class="fc" id="L65">    hashcode = multiplier * hashcode + baseHashCode;</span>
+<span class="fc" id="L67">    hashcode = multiplier * hashcode + baseHashCode;</span>
 
-<span class="fc" id="L67">    updateList.add(object);</span>
-<span class="fc" id="L68">  }</span>
+<span class="fc" id="L69">    updateList.add(object);</span>
+<span class="fc" id="L70">  }</span>
 
   public void updateAll(Object[] objects) {
-<span class="fc bfc" id="L71" title="All 2 branches covered.">    for (Object o : objects) {</span>
-<span class="fc" id="L72">      update(o);</span>
+<span class="fc bfc" id="L73" title="All 2 branches covered.">    for (Object o : objects) {</span>
+<span class="fc" id="L74">      update(o);</span>
     }
-<span class="fc" id="L74">  }</span>
+<span class="fc" id="L76">  }</span>
 
   @Override
   public boolean equals(Object object) {
-<span class="pc bpc" id="L78" title="1 of 2 branches missed.">    if (this == object) {</span>
-<span class="nc" id="L79">      return true;</span>
+<span class="pc bpc" id="L80" title="1 of 2 branches missed.">    if (this == object) {</span>
+<span class="nc" id="L81">      return true;</span>
     }
-<span class="pc bpc" id="L81" title="1 of 2 branches missed.">    if (!(object instanceof CacheKey)) {</span>
-<span class="nc" id="L82">      return false;</span>
-    }
-
-<span class="fc" id="L85">    final CacheKey cacheKey = (CacheKey) object;</span>
-
-<span class="fc bfc" id="L87" title="All 2 branches covered.">    if (hashcode != cacheKey.hashcode) {</span>
-<span class="fc" id="L88">      return false;</span>
-    }
-<span class="pc bpc" id="L90" title="1 of 2 branches missed.">    if (checksum != cacheKey.checksum) {</span>
-<span class="nc" id="L91">      return false;</span>
-    }
-<span class="pc bpc" id="L93" title="1 of 2 branches missed.">    if (count != cacheKey.count) {</span>
-<span class="nc" id="L94">      return false;</span>
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">    if (!(object instanceof CacheKey)) {</span>
+<span class="nc" id="L84">      return false;</span>
     }
 
-<span class="fc bfc" id="L97" title="All 2 branches covered.">    for (int i = 0; i &lt; updateList.size(); i++) {</span>
-<span class="fc" id="L98">      Object thisObject = updateList.get(i);</span>
-<span class="fc" id="L99">      Object thatObject = cacheKey.updateList.get(i);</span>
-<span class="pc bpc" id="L100" title="1 of 2 branches missed.">      if (!ArrayUtil.equals(thisObject, thatObject)) {</span>
-<span class="nc" id="L101">        return false;</span>
+<span class="fc" id="L87">    final CacheKey cacheKey = (CacheKey) object;</span>
+
+<span class="fc bfc" id="L89" title="All 2 branches covered.">    if (hashcode != cacheKey.hashcode) {</span>
+<span class="fc" id="L90">      return false;</span>
+    }
+<span class="pc bpc" id="L92" title="1 of 2 branches missed.">    if (checksum != cacheKey.checksum) {</span>
+<span class="nc" id="L93">      return false;</span>
+    }
+<span class="pc bpc" id="L95" title="1 of 2 branches missed.">    if (count != cacheKey.count) {</span>
+<span class="nc" id="L96">      return false;</span>
+    }
+
+<span class="fc bfc" id="L99" title="All 2 branches covered.">    for (int i = 0; i &lt; updateList.size(); i++) {</span>
+<span class="fc" id="L100">      Object thisObject = updateList.get(i);</span>
+<span class="fc" id="L101">      Object thatObject = cacheKey.updateList.get(i);</span>
+<span class="pc bpc" id="L102" title="1 of 2 branches missed.">      if (!ArrayUtil.equals(thisObject, thatObject)) {</span>
+<span class="nc" id="L103">        return false;</span>
       }
     }
-<span class="fc" id="L104">    return true;</span>
+<span class="fc" id="L106">    return true;</span>
   }
 
   @Override
   public int hashCode() {
-<span class="fc" id="L109">    return hashcode;</span>
+<span class="fc" id="L111">    return hashcode;</span>
   }
 
   @Override
   public String toString() {
-<span class="fc" id="L114">    StringBuilder returnValue = new StringBuilder().append(hashcode).append(':').append(checksum);</span>
-<span class="fc bfc" id="L115" title="All 2 branches covered.">    for (Object object : updateList) {</span>
-<span class="fc" id="L116">      returnValue.append(':').append(ArrayUtil.toString(object));</span>
-<span class="fc" id="L117">    }</span>
-<span class="fc" id="L118">    return returnValue.toString();</span>
+<span class="fc" id="L116">    StringJoiner returnValue = new StringJoiner(&quot;:&quot;);</span>
+<span class="fc" id="L117">    returnValue.add(String.valueOf(hashcode));</span>
+<span class="fc" id="L118">    returnValue.add(String.valueOf(checksum));</span>
+<span class="fc" id="L119">    updateList.stream().map(ArrayUtil::toString).forEach(returnValue::add);</span>
+<span class="fc" id="L120">    return returnValue.toString();</span>
   }
 
   @Override
   public CacheKey clone() throws CloneNotSupportedException {
-<span class="fc" id="L123">    CacheKey clonedCacheKey = (CacheKey) super.clone();</span>
-<span class="fc" id="L124">    clonedCacheKey.updateList = new ArrayList&lt;Object&gt;(updateList);</span>
-<span class="fc" id="L125">    return clonedCacheKey;</span>
+<span class="fc" id="L125">    CacheKey clonedCacheKey = (CacheKey) super.clone();</span>
+<span class="fc" id="L126">    clonedCacheKey.updateList = new ArrayList&lt;&gt;(updateList);</span>
+<span class="fc" id="L127">    return clonedCacheKey;</span>
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

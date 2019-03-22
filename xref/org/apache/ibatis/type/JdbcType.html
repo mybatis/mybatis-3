@@ -7,13 +7,13 @@
 <body>
 <div id="overview"><a href="../../../../../apidocs/org/apache/ibatis/type/JdbcType.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2015 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2018 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_javadoccomment"> *    You may obtain a copy of the License at</em>
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2." target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.</a>0</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_javadoccomment"> *    Unless required by applicable law or agreed to in writing, software</em>
 <a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_javadoccomment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
@@ -30,7 +30,7 @@
 <a class="jxr_linenumber" name="L22" href="#L22">22</a>  <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L23" href="#L23">23</a>  <em class="jxr_javadoccomment"> * @author Clinton Begin</em>
 <a class="jxr_linenumber" name="L24" href="#L24">24</a>  <em class="jxr_javadoccomment"> */</em>
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">public</strong> enum <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> {
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">public</strong> enum <a name="JdbcType" href="../../../../org/apache/ibatis/type/JdbcType.html#JdbcType">JdbcType</a> {
 <a class="jxr_linenumber" name="L26" href="#L26">26</a>    <em class="jxr_comment">/*</em>
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>  <em class="jxr_comment">   * This is added to enable basic support for the</em>
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>  <em class="jxr_comment">   * ARRAY data type - but a custom type handler is still required</em>
@@ -73,28 +73,30 @@
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>    ROWID(Types.ROWID), <em class="jxr_comment">// JDK6</em>
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>    LONGNVARCHAR(Types.LONGNVARCHAR), <em class="jxr_comment">// JDK6</em>
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>    SQLXML(Types.SQLXML), <em class="jxr_comment">// JDK6</em>
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>    DATETIMEOFFSET(-155); <em class="jxr_comment">// SQL Server 2008</em>
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>  
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> TYPE_CODE;
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> Map&lt;Integer,JdbcType&gt; codeLookup = <strong class="jxr_keyword">new</strong> HashMap&lt;Integer,JdbcType&gt;();
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>  
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>    <strong class="jxr_keyword">static</strong> {
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>      <strong class="jxr_keyword">for</strong> (JdbcType type : JdbcType.values()) {
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>        codeLookup.put(type.TYPE_CODE, type);
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>      }
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>    }
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>  
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>    <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a>(<strong class="jxr_keyword">int</strong> code) {
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>      <strong class="jxr_keyword">this</strong>.TYPE_CODE = code;
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>    }
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>  
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> forCode(<strong class="jxr_keyword">int</strong> code)  {
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>      <strong class="jxr_keyword">return</strong> codeLookup.get(code);
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>    }
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>  
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>  }
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>    DATETIMEOFFSET(-155), <em class="jxr_comment">// SQL Server 2008</em>
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>    TIME_WITH_TIMEZONE(Types.TIME_WITH_TIMEZONE), <em class="jxr_comment">// JDBC 4.2 JDK8</em>
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>    TIMESTAMP_WITH_TIMEZONE(Types.TIMESTAMP_WITH_TIMEZONE); <em class="jxr_comment">// JDBC 4.2 JDK8</em>
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>  
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> TYPE_CODE;
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> Map&lt;Integer,JdbcType&gt; codeLookup = <strong class="jxr_keyword">new</strong> HashMap&lt;&gt;();
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>  
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>    <strong class="jxr_keyword">static</strong> {
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>      <strong class="jxr_keyword">for</strong> (<a name="JdbcType" href="../../../../org/apache/ibatis/type/JdbcType.html#JdbcType">JdbcType</a> type : JdbcType.values()) {
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>        codeLookup.put(type.TYPE_CODE, type);
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>      }
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>    }
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>  
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>    <a name="JdbcType" href="../../../../org/apache/ibatis/type/JdbcType.html#JdbcType">JdbcType</a>(<strong class="jxr_keyword">int</strong> code) {
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>      <strong class="jxr_keyword">this</strong>.TYPE_CODE = code;
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>    }
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>  
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <a name="JdbcType" href="../../../../org/apache/ibatis/type/JdbcType.html#JdbcType">JdbcType</a> forCode(<strong class="jxr_keyword">int</strong> code)  {
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>      <strong class="jxr_keyword">return</strong> codeLookup.get(code);
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>    }
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>  
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2018 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2019 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ReuseExecutor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.executor</a> &gt; <span class="el_source">ReuseExecutor.java</span></div><h1>ReuseExecutor.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ import org.apache.ibatis.transaction.Transaction;
  */
 public class ReuseExecutor extends BaseExecutor {
 
-<span class="fc" id="L41">  private final Map&lt;String, Statement&gt; statementMap = new HashMap&lt;String, Statement&gt;();</span>
+<span class="fc" id="L41">  private final Map&lt;String, Statement&gt; statementMap = new HashMap&lt;&gt;();</span>
 
   public ReuseExecutor(Configuration configuration, Transaction transaction) {
 <span class="fc" id="L44">    super(configuration, transaction);</span>
@@ -57,7 +57,7 @@ public class ReuseExecutor extends BaseExecutor {
 <span class="fc" id="L57">    Configuration configuration = ms.getConfiguration();</span>
 <span class="fc" id="L58">    StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, resultHandler, boundSql);</span>
 <span class="fc" id="L59">    Statement stmt = prepareStatement(handler, ms.getStatementLog());</span>
-<span class="fc" id="L60">    return handler.&lt;E&gt;query(stmt, resultHandler);</span>
+<span class="fc" id="L60">    return handler.query(stmt, resultHandler);</span>
   }
 
   @Override
@@ -65,14 +65,14 @@ public class ReuseExecutor extends BaseExecutor {
 <span class="nc" id="L65">    Configuration configuration = ms.getConfiguration();</span>
 <span class="nc" id="L66">    StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, null, boundSql);</span>
 <span class="nc" id="L67">    Statement stmt = prepareStatement(handler, ms.getStatementLog());</span>
-<span class="nc" id="L68">    return handler.&lt;E&gt;queryCursor(stmt);</span>
+<span class="nc" id="L68">    return handler.queryCursor(stmt);</span>
   }
 
   @Override
-  public List&lt;BatchResult&gt; doFlushStatements(boolean isRollback) throws SQLException {
+  public List&lt;BatchResult&gt; doFlushStatements(boolean isRollback) {
 <span class="fc bfc" id="L73" title="All 2 branches covered.">    for (Statement stmt : statementMap.values()) {</span>
 <span class="fc" id="L74">      closeStatement(stmt);</span>
-<span class="fc" id="L75">    }</span>
+    }
 <span class="fc" id="L76">    statementMap.clear();</span>
 <span class="fc" id="L77">    return Collections.emptyList();</span>
   }
@@ -84,7 +84,7 @@ public class ReuseExecutor extends BaseExecutor {
 <span class="pc bpc" id="L84" title="1 of 2 branches missed.">    if (hasStatementFor(sql)) {</span>
 <span class="nc" id="L85">      stmt = getStatement(sql);</span>
 <span class="nc" id="L86">      applyTransactionTimeout(stmt);</span>
-    } else {
+<span class="nc" id="L87">    } else {</span>
 <span class="fc" id="L88">      Connection connection = getConnection(statementLog);</span>
 <span class="fc" id="L89">      stmt = handler.prepare(connection, transaction.getTimeout());</span>
 <span class="fc" id="L90">      putStatement(sql, stmt);</span>
@@ -110,4 +110,4 @@ public class ReuseExecutor extends BaseExecutor {
 <span class="fc" id="L110">  }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

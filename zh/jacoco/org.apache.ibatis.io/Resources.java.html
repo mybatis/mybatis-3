@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Resources.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.io</a> &gt; <span class="el_source">Resources.java</span></div><h1>Resources.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
@@ -34,16 +34,16 @@ public class Resources {
 
 <span class="fc" id="L35">  private static ClassLoaderWrapper classLoaderWrapper = new ClassLoaderWrapper();</span>
 
-  /*
+  /**
    * Charset to use when calling getResourceAsReader.
    * null means use the system default.
    */
-  private static Charset charset;
+<span class="fc" id="L41">  private static Charset charset;</span>
 
 <span class="fc" id="L43">  Resources() {</span>
 <span class="fc" id="L44">  }</span>
 
-  /*
+  /**
    * Returns the default classloader (may be null).
    *
    * @return The default classloader
@@ -52,7 +52,7 @@ public class Resources {
 <span class="fc" id="L52">    return classLoaderWrapper.defaultClassLoader;</span>
   }
 
-  /*
+  /**
    * Sets the default classloader
    *
    * @param defaultClassLoader - the new default ClassLoader
@@ -61,7 +61,7 @@ public class Resources {
 <span class="fc" id="L61">    classLoaderWrapper.defaultClassLoader = defaultClassLoader;</span>
 <span class="fc" id="L62">  }</span>
 
-  /*
+  /**
    * Returns the URL of the resource on the classpath
    *
    * @param resource The resource to find
@@ -73,7 +73,7 @@ public class Resources {
 <span class="fc" id="L73">      return getResourceURL(null, resource);</span>
   }
 
-  /*
+  /**
    * Returns the URL of the resource on the classpath
    *
    * @param loader   The classloader used to fetch the resource
@@ -89,7 +89,7 @@ public class Resources {
 <span class="fc" id="L89">    return url;</span>
   }
 
-  /*
+  /**
    * Returns a resource on the classpath as a Stream object
    *
    * @param resource The resource to find
@@ -100,7 +100,7 @@ public class Resources {
 <span class="fc" id="L100">    return getResourceAsStream(null, resource);</span>
   }
 
-  /*
+  /**
    * Returns a resource on the classpath as a Stream object
    *
    * @param loader   The classloader used to fetch the resource
@@ -116,7 +116,7 @@ public class Resources {
 <span class="fc" id="L116">    return in;</span>
   }
 
-  /*
+  /**
    * Returns a resource on the classpath as a Properties object
    *
    * @param resource The resource to find
@@ -125,13 +125,13 @@ public class Resources {
    */
   public static Properties getResourceAsProperties(String resource) throws IOException {
 <span class="fc" id="L127">    Properties props = new Properties();</span>
-<span class="fc" id="L128">    InputStream in = getResourceAsStream(resource);</span>
-<span class="fc" id="L129">    props.load(in);</span>
-<span class="fc" id="L130">    in.close();</span>
+<span class="fc" id="L128">    try (InputStream in = getResourceAsStream(resource)) {</span>
+<span class="fc" id="L129">      props.load(in);</span>
+    }
 <span class="fc" id="L131">    return props;</span>
   }
 
-  /*
+  /**
    * Returns a resource on the classpath as a Properties object
    *
    * @param loader   The classloader used to fetch the resource
@@ -141,13 +141,13 @@ public class Resources {
    */
   public static Properties getResourceAsProperties(ClassLoader loader, String resource) throws IOException {
 <span class="fc" id="L143">    Properties props = new Properties();</span>
-<span class="fc" id="L144">    InputStream in = getResourceAsStream(loader, resource);</span>
-<span class="fc" id="L145">    props.load(in);</span>
-<span class="fc" id="L146">    in.close();</span>
+<span class="fc" id="L144">    try (InputStream in = getResourceAsStream(loader, resource)) {</span>
+<span class="fc" id="L145">      props.load(in);</span>
+    }
 <span class="fc" id="L147">    return props;</span>
   }
 
-  /*
+  /**
    * Returns a resource on the classpath as a Reader object
    *
    * @param resource The resource to find
@@ -158,13 +158,13 @@ public class Resources {
     Reader reader;
 <span class="fc bfc" id="L159" title="All 2 branches covered.">    if (charset == null) {</span>
 <span class="fc" id="L160">      reader = new InputStreamReader(getResourceAsStream(resource));</span>
-    } else {
+<span class="fc" id="L161">    } else {</span>
 <span class="fc" id="L162">      reader = new InputStreamReader(getResourceAsStream(resource), charset);</span>
     }
 <span class="fc" id="L164">    return reader;</span>
   }
 
-  /*
+  /**
    * Returns a resource on the classpath as a Reader object
    *
    * @param loader   The classloader used to fetch the resource
@@ -176,13 +176,13 @@ public class Resources {
     Reader reader;
 <span class="fc bfc" id="L177" title="All 2 branches covered.">    if (charset == null) {</span>
 <span class="fc" id="L178">      reader = new InputStreamReader(getResourceAsStream(loader, resource));</span>
-    } else {
+<span class="fc" id="L179">    } else {</span>
 <span class="fc" id="L180">      reader = new InputStreamReader(getResourceAsStream(loader, resource), charset);</span>
     }
 <span class="fc" id="L182">    return reader;</span>
   }
 
-  /*
+  /**
    * Returns a resource on the classpath as a File object
    *
    * @param resource The resource to find
@@ -193,7 +193,7 @@ public class Resources {
 <span class="fc" id="L193">    return new File(getResourceURL(resource).getFile());</span>
   }
 
-  /*
+  /**
    * Returns a resource on the classpath as a File object
    *
    * @param loader   - the classloader used to fetch the resource
@@ -205,7 +205,7 @@ public class Resources {
 <span class="fc" id="L205">    return new File(getResourceURL(loader, resource).getFile());</span>
   }
 
-  /*
+  /**
    * Gets a URL as an input stream
    *
    * @param urlString - the URL to get
@@ -218,7 +218,7 @@ public class Resources {
 <span class="fc" id="L218">    return conn.getInputStream();</span>
   }
 
-  /*
+  /**
    * Gets a URL as a Reader
    *
    * @param urlString - the URL to get
@@ -229,13 +229,13 @@ public class Resources {
     Reader reader;
 <span class="pc bpc" id="L230" title="1 of 2 branches missed.">    if (charset == null) {</span>
 <span class="nc" id="L231">      reader = new InputStreamReader(getUrlAsStream(urlString));</span>
-    } else {
+<span class="nc" id="L232">    } else {</span>
 <span class="fc" id="L233">      reader = new InputStreamReader(getUrlAsStream(urlString), charset);</span>
     }
 <span class="fc" id="L235">    return reader;</span>
   }
 
-  /*
+  /**
    * Gets a URL as a Properties object
    *
    * @param urlString - the URL to get
@@ -244,13 +244,13 @@ public class Resources {
    */
   public static Properties getUrlAsProperties(String urlString) throws IOException {
 <span class="fc" id="L246">    Properties props = new Properties();</span>
-<span class="fc" id="L247">    InputStream in = getUrlAsStream(urlString);</span>
-<span class="fc" id="L248">    props.load(in);</span>
-<span class="fc" id="L249">    in.close();</span>
+<span class="fc" id="L247">    try (InputStream in = getUrlAsStream(urlString)) {</span>
+<span class="fc" id="L248">      props.load(in);</span>
+    }
 <span class="fc" id="L250">    return props;</span>
   }
 
-  /*
+  /**
    * Loads a class
    *
    * @param className - the class to fetch
@@ -270,4 +270,4 @@ public class Resources {
 <span class="fc" id="L270">  }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

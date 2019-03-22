@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SetSqlNode.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.scripting.xmltags</a> &gt; <span class="el_source">SetSqlNode.java</span></div><h1>SetSqlNode.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.scripting.xmltags;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.ibatis.session.Configuration;
@@ -25,11 +25,11 @@ import org.apache.ibatis.session.Configuration;
  */
 public class SetSqlNode extends TrimSqlNode {
 
-<span class="fc" id="L28">  private static List&lt;String&gt; suffixList = Arrays.asList(&quot;,&quot;);</span>
+<span class="fc" id="L28">  private static final List&lt;String&gt; COMMA = Collections.singletonList(&quot;,&quot;);</span>
 
   public SetSqlNode(Configuration configuration,SqlNode contents) {
-<span class="fc" id="L31">    super(configuration, contents, &quot;SET&quot;, null, null, suffixList);</span>
+<span class="fc" id="L31">    super(configuration, contents, &quot;SET&quot;, COMMA, null, COMMA);</span>
 <span class="fc" id="L32">  }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

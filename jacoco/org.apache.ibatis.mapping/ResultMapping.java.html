@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ResultMapping.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.mapping</a> &gt; <span class="el_source">ResultMapping.java</span></div><h1>ResultMapping.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
@@ -67,8 +67,8 @@ public class ResultMapping {
 <span class="fc" id="L67">    public Builder(Configuration configuration, String property) {</span>
 <span class="fc" id="L68">      resultMapping.configuration = configuration;</span>
 <span class="fc" id="L69">      resultMapping.property = property;</span>
-<span class="fc" id="L70">      resultMapping.flags = new ArrayList&lt;ResultFlag&gt;();</span>
-<span class="fc" id="L71">      resultMapping.composites = new ArrayList&lt;ResultMapping&gt;();</span>
+<span class="fc" id="L70">      resultMapping.flags = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L71">      resultMapping.composites = new ArrayList&lt;&gt;();</span>
 <span class="fc" id="L72">      resultMapping.lazy = configuration.isLazyLoadingEnabled();</span>
 <span class="fc" id="L73">    }</span>
 
@@ -131,7 +131,7 @@ public class ResultMapping {
 <span class="fc" id="L131">      resultMapping.lazy = lazy;</span>
 <span class="fc" id="L132">      return this;</span>
     }
-    
+
     public ResultMapping build() {
       // lock down collections
 <span class="fc" id="L137">      resultMapping.flags = Collections.unmodifiableList(resultMapping.flags);</span>
@@ -168,7 +168,7 @@ public class ResultMapping {
         }
       }
 <span class="fc" id="L170">    }</span>
-    
+
     private void resolveTypeHandler() {
 <span class="fc bfc" id="L173" title="All 4 branches covered.">      if (resultMapping.typeHandler == null &amp;&amp; resultMapping.javaType != null) {</span>
 <span class="fc" id="L174">        Configuration configuration = resultMapping.configuration;</span>
@@ -250,7 +250,7 @@ public class ResultMapping {
   public void setLazy(boolean lazy) {
 <span class="nc" id="L251">    this.lazy = lazy;</span>
 <span class="nc" id="L252">  }</span>
-  
+
   @Override
   public boolean equals(Object o) {
 <span class="fc bfc" id="L256" title="All 2 branches covered.">    if (this == o) {</span>
@@ -303,4 +303,4 @@ public class ResultMapping {
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

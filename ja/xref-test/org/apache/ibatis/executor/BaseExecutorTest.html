@@ -7,13 +7,13 @@
 <body>
 <div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/executor/BaseExecutorTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2015 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2019 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_javadoccomment"> *    You may obtain a copy of the License at</em>
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2." target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.</a>0</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_javadoccomment"> *    Unless required by applicable law or agreed to in writing, software</em>
 <a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_javadoccomment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
@@ -23,10 +23,10 @@
 <a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">package</strong> org.apache.ibatis.executor;
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  
-<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.Assert.assertEquals;
-<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.Assert.assertNotNull;
-<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.Assert.assertNull;
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.Assert.assertTrue;
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.jupiter.api.Assertions.assertEquals;
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.jupiter.api.Assertions.assertNotNull;
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.jupiter.api.Assertions.assertNull;
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.jupiter.api.Assertions.assertTrue;
 <a class="jxr_linenumber" name="L22" href="#L22">22</a>  
 <a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> java.util.HashMap;
 <a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> java.util.List;
@@ -46,19 +46,19 @@
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.session.RowBounds;
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.transaction.Transaction;
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.transaction.jdbc.JdbcTransaction;
-<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <strong class="jxr_keyword">import</strong> org.junit.BeforeClass;
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <strong class="jxr_keyword">import</strong> org.junit.Test;
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.api.BeforeAll;
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.api.Test;
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>  
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/apache/ibatis/executor/BaseExecutorTest.html">BaseExecutorTest</a> <strong class="jxr_keyword">extends</strong> <a href="../../../../org/apache/ibatis/BaseDataTest.html">BaseDataTest</a> {
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  <strong class="jxr_keyword">class</strong> <a name="BaseExecutorTest" href="../../../../org/apache/ibatis/executor/BaseExecutorTest.html#BaseExecutorTest">BaseExecutorTest</a> <strong class="jxr_keyword">extends</strong> <a name="BaseDataTest" href="../../../../org/apache/ibatis/BaseDataTest.html#BaseDataTest">BaseDataTest</a> {
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>    <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">final</strong> Configuration config;
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>    <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">static</strong> DataSource ds;
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> DataSource ds;
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>  
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>    @BeforeClass
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> setup() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>    @BeforeAll
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>    <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> setup() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>      ds = createBlogDataSource();
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>    }
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>  
-<a class="jxr_linenumber" name="L53" href="#L53">53</a>    <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/executor/BaseExecutorTest.html">BaseExecutorTest</a>() {
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>    <a name="BaseExecutorTest" href="../../../../org/apache/ibatis/executor/BaseExecutorTest.html#BaseExecutorTest">BaseExecutorTest</a>() {
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>      config = <strong class="jxr_keyword">new</strong> Configuration();
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>      config.setLazyLoadingEnabled(<strong class="jxr_keyword">true</strong>);
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>      config.setUseGeneratedKeys(false);
@@ -69,11 +69,11 @@
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>    }
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>  
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>    @Test
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldInsertNewAuthorWithBeforeAutoKey() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>      
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>    <strong class="jxr_keyword">void</strong> shouldInsertNewAuthorWithBeforeAutoKey() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>  
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>      Executor executor = createExecutor(<strong class="jxr_keyword">new</strong> JdbcTransaction(ds, <strong class="jxr_keyword">null</strong>, false));
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>        <a href="../../../../org/apache/ibatis/domain/blog/Author.html">Author</a> author = <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/domain/blog/Author.html">Author</a>(-1, <span class="jxr_string">"someone"</span>, <span class="jxr_string">"******"</span>, <span class="jxr_string">"someone@apache.org"</span>, <strong class="jxr_keyword">null</strong>, Section.NEWS);
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>        <a name="Author" href="../../../../org/apache/ibatis/doma<a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>g/Author.html#Author">Author</a> author = <strong class="jxr_keyword">new</strong> <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>(-1, <span class="jxr_string">"someone"</span>, <span class="jxr_string">"******"</span>, <span class="jxr_string">"someone@apache.org"</span>, <strong class="jxr_keyword">null</strong>, Section.NEWS);
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>        MappedStatement insertStatement = ExecutorTestHelper.prepareInsertAuthorMappedStatementWithBeforeAutoKey(config);
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>        MappedStatement selectStatement = ExecutorTestHelper.prepareSelectOneAuthorMappedStatement(config);
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>        <strong class="jxr_keyword">int</strong> rows = executor.update(insertStatement, author);
@@ -96,11 +96,11 @@
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>    }
 <a class="jxr_linenumber" name="L89" href="#L89">89</a>  
 <a class="jxr_linenumber" name="L90" href="#L90">90</a>    @Test
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldInsertNewAuthor() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>      
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>    <strong class="jxr_keyword">void</strong> shouldInsertNewAuthor() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>  
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>      Executor executor = createExecutor(<strong class="jxr_keyword">new</strong> JdbcTransaction(ds, <strong class="jxr_keyword">null</strong>, false));
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>        <a href="../../../../org/apache/ibatis/domain/blog/Author.html">Author</a> author = <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/domain/blog/Author.html">Author</a>(99, <span class="jxr_string">"someone"</span>, <span class="jxr_string">"******"</span>, <span class="jxr_string">"someone@apache.org"</span>, <strong class="jxr_keyword">null</strong>, Section.NEWS);
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>        <a name="Author" href="../../../../org/apache/ibatis/doma<a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>g/Author.html#Author">Author</a> author = <strong class="jxr_keyword">new</strong> <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>(99, <span class="jxr_string">"someone"</span>, <span class="jxr_string">"******"</span>, <span class="jxr_string">"someone@apache.org"</span>, <strong class="jxr_keyword">null</strong>, Section.NEWS);
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>        MappedStatement insertStatement = ExecutorTestHelper.prepareInsertAuthorMappedStatement(config);
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>        MappedStatement selectStatement = ExecutorTestHelper.prepareSelectOneAuthorMappedStatement(config);
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>        <strong class="jxr_keyword">int</strong> rows = executor.update(insertStatement, author);
@@ -117,14 +117,14 @@
 <a class="jxr_linenumber" name="L109" href="#L109">109</a>   }
 <a class="jxr_linenumber" name="L110" href="#L110">110</a> 
 <a class="jxr_linenumber" name="L111" href="#L111">111</a>   @Test
-<a class="jxr_linenumber" name="L112" href="#L112">112</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldSelectAllAuthorsAutoMapped() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L113" href="#L113">113</a>     
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>   <strong class="jxr_keyword">void</strong> shouldSelectAllAuthorsAutoMapped() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L113" href="#L113">113</a> 
 <a class="jxr_linenumber" name="L114" href="#L114">114</a>     Executor executor = createExecutor(<strong class="jxr_keyword">new</strong> JdbcTransaction(ds, <strong class="jxr_keyword">null</strong>, false));
 <a class="jxr_linenumber" name="L115" href="#L115">115</a>     <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L116" href="#L116">116</a>       MappedStatement selectStatement = ExecutorTestHelper.prepareSelectAllAuthorsAutoMappedStatement(config);
 <a class="jxr_linenumber" name="L117" href="#L117">117</a>       List&lt;Author&gt; authors = executor.query(selectStatement, <strong class="jxr_keyword">null</strong>, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
 <a class="jxr_linenumber" name="L118" href="#L118">118</a>       assertEquals(2, authors.size());
-<a class="jxr_linenumber" name="L119" href="#L119">119</a>       <a href="../../../../org/apache/ibatis/domain/blog/Author.html">Author</a> author = authors.get(0);
+<a class="jxr_linenumber" name="L119" href="#L119">119</a>       <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a> author = authors.get(0);
 <a class="jxr_linenumber" name="L120" href="#L120">120</a>       <em class="jxr_comment">// id,username, password, email, bio, favourite_section</em>
 <a class="jxr_linenumber" name="L121" href="#L121">121</a>       <em class="jxr_comment">// (101,'jim','********','jim@ibatis.apache.org','','NEWS');</em>
 <a class="jxr_linenumber" name="L122" href="#L122">122</a>       assertEquals(101, author.getId());
@@ -139,11 +139,11 @@
 <a class="jxr_linenumber" name="L131" href="#L131">131</a>   }
 <a class="jxr_linenumber" name="L132" href="#L132">132</a> 
 <a class="jxr_linenumber" name="L133" href="#L133">133</a>   @Test
-<a class="jxr_linenumber" name="L134" href="#L134">134</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldInsertNewAuthorWithAutoKey() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L135" href="#L135">135</a>     
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>   <strong class="jxr_keyword">void</strong> shouldInsertNewAuthorWithAutoKey() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L135" href="#L135">135</a> 
 <a class="jxr_linenumber" name="L136" href="#L136">136</a>     Executor executor = createExecutor(<strong class="jxr_keyword">new</strong> JdbcTransaction(ds, <strong class="jxr_keyword">null</strong>, false));
 <a class="jxr_linenumber" name="L137" href="#L137">137</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L138" href="#L138">138</a>       <a href="../../../../org/apache/ibatis/domain/blog/Author.html">Author</a> author = <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/domain/blog/Author.html">Author</a>(-1, <span class="jxr_string">"someone"</span>, <span class="jxr_string">"******"</span>, <span class="jxr_string">"someone@apache.org"</span>, <strong class="jxr_keyword">null</strong>, Section.NEWS);
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>       <a name="Author" href="../../../../org/apache/ibatis/doma<a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>g/Author.html#Author">Author</a> author = <strong class="jxr_keyword">new</strong> <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>(-1, <span class="jxr_string">"someone"</span>, <span class="jxr_string">"******"</span>, <span class="jxr_string">"someone@apache.org"</span>, <strong class="jxr_keyword">null</strong>, Section.NEWS);
 <a class="jxr_linenumber" name="L139" href="#L139">139</a>       MappedStatement insertStatement = ExecutorTestHelper.prepareInsertAuthorMappedStatementWithAutoKey(config);
 <a class="jxr_linenumber" name="L140" href="#L140">140</a>       MappedStatement selectStatement = ExecutorTestHelper.prepareSelectOneAuthorMappedStatement(config);
 <a class="jxr_linenumber" name="L141" href="#L141">141</a>       <strong class="jxr_keyword">int</strong> rows = executor.update(insertStatement, author);
@@ -166,11 +166,11 @@
 <a class="jxr_linenumber" name="L158" href="#L158">158</a>   }
 <a class="jxr_linenumber" name="L159" href="#L159">159</a> 
 <a class="jxr_linenumber" name="L160" href="#L160">160</a>   @Test
-<a class="jxr_linenumber" name="L161" href="#L161">161</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldInsertNewAuthorByProc() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L162" href="#L162">162</a>     
+<a class="jxr_linenumber" name="L161" href="#L161">161</a>   <strong class="jxr_keyword">void</strong> shouldInsertNewAuthorByProc() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L162" href="#L162">162</a> 
 <a class="jxr_linenumber" name="L163" href="#L163">163</a>     Executor executor = createExecutor(<strong class="jxr_keyword">new</strong> JdbcTransaction(ds, <strong class="jxr_keyword">null</strong>, false));
 <a class="jxr_linenumber" name="L164" href="#L164">164</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L165" href="#L165">165</a>       <a href="../../../../org/apache/ibatis/domain/blog/Author.html">Author</a> author = <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/domain/blog/Author.html">Author</a>(97, <span class="jxr_string">"someone"</span>, <span class="jxr_string">"******"</span>, <span class="jxr_string">"someone@apache.org"</span>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L165" href="#L165">165</a>       <a name="Author" href="../../../../org/apache/ibatis/doma<a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>g/Author.html#Author">Author</a> author = <strong class="jxr_keyword">new</strong> <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>(97, <span class="jxr_string">"someone"</span>, <span class="jxr_string">"******"</span>, <span class="jxr_string">"someone@apache.org"</span>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>);
 <a class="jxr_linenumber" name="L166" href="#L166">166</a>       MappedStatement insertStatement = ExecutorTestHelper.prepareInsertAuthorProc(config);
 <a class="jxr_linenumber" name="L167" href="#L167">167</a>       MappedStatement selectStatement = ExecutorTestHelper.prepareSelectOneAuthorMappedStatement(config);
 <a class="jxr_linenumber" name="L168" href="#L168">168</a>       <strong class="jxr_keyword">int</strong> rows = executor.update(insertStatement, author);
@@ -186,11 +186,11 @@
 <a class="jxr_linenumber" name="L178" href="#L178">178</a>   }
 <a class="jxr_linenumber" name="L179" href="#L179">179</a> 
 <a class="jxr_linenumber" name="L180" href="#L180">180</a>   @Test
-<a class="jxr_linenumber" name="L181" href="#L181">181</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldInsertNewAuthorUsingSimpleNonPreparedStatements() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L182" href="#L182">182</a>     
+<a class="jxr_linenumber" name="L181" href="#L181">181</a>   <strong class="jxr_keyword">void</strong> shouldInsertNewAuthorUsingSimpleNonPreparedStatements() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L182" href="#L182">182</a> 
 <a class="jxr_linenumber" name="L183" href="#L183">183</a>     Executor executor = createExecutor(<strong class="jxr_keyword">new</strong> JdbcTransaction(ds, <strong class="jxr_keyword">null</strong>, false));
 <a class="jxr_linenumber" name="L184" href="#L184">184</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L185" href="#L185">185</a>       <a href="../../../../org/apache/ibatis/domain/blog/Author.html">Author</a> author = <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/domain/blog/Author.html">Author</a>(99, <span class="jxr_string">"someone"</span>, <span class="jxr_string">"******"</span>, <span class="jxr_string">"someone@apache.org"</span>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L185" href="#L185">185</a>       <a name="Author" href="../../../../org/apache/ibatis/doma<a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>g/Author.html#Author">Author</a> author = <strong class="jxr_keyword">new</strong> <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>(99, <span class="jxr_string">"someone"</span>, <span class="jxr_string">"******"</span>, <span class="jxr_string">"someone@apache.org"</span>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>);
 <a class="jxr_linenumber" name="L186" href="#L186">186</a>       MappedStatement insertStatement = ExecutorTestHelper.createInsertAuthorWithIDof99MappedStatement(config);
 <a class="jxr_linenumber" name="L187" href="#L187">187</a>       MappedStatement selectStatement = ExecutorTestHelper.createSelectAuthorWithIDof99MappedStatement(config);
 <a class="jxr_linenumber" name="L188" href="#L188">188</a>       <strong class="jxr_keyword">int</strong> rows = executor.update(insertStatement, <strong class="jxr_keyword">null</strong>);
@@ -207,11 +207,11 @@
 <a class="jxr_linenumber" name="L199" href="#L199">199</a>   }
 <a class="jxr_linenumber" name="L200" href="#L200">200</a> 
 <a class="jxr_linenumber" name="L201" href="#L201">201</a>   @Test
-<a class="jxr_linenumber" name="L202" href="#L202">202</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldUpdateAuthor() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L203" href="#L203">203</a>     
+<a class="jxr_linenumber" name="L202" href="#L202">202</a>   <strong class="jxr_keyword">void</strong> shouldUpdateAuthor() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L203" href="#L203">203</a> 
 <a class="jxr_linenumber" name="L204" href="#L204">204</a>     Executor executor = createExecutor(<strong class="jxr_keyword">new</strong> JdbcTransaction(ds, <strong class="jxr_keyword">null</strong>, false));
 <a class="jxr_linenumber" name="L205" href="#L205">205</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L206" href="#L206">206</a>       <a href="../../../../org/apache/ibatis/domain/blog/Author.html">Author</a> author = <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/domain/blog/Author.html">Author</a>(101, <span class="jxr_string">"someone"</span>, <span class="jxr_string">"******"</span>, <span class="jxr_string">"someone@apache.org"</span>, <strong class="jxr_keyword">null</strong>, Section.NEWS);
+<a class="jxr_linenumber" name="L206" href="#L206">206</a>       <a name="Author" href="../../../../org/apache/ibatis/doma<a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>g/Author.html#Author">Author</a> author = <strong class="jxr_keyword">new</strong> <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>(101, <span class="jxr_string">"someone"</span>, <span class="jxr_string">"******"</span>, <span class="jxr_string">"someone@apache.org"</span>, <strong class="jxr_keyword">null</strong>, Section.NEWS);
 <a class="jxr_linenumber" name="L207" href="#L207">207</a>       MappedStatement updateStatement = ExecutorTestHelper.prepareUpdateAuthorMappedStatement(config);
 <a class="jxr_linenumber" name="L208" href="#L208">208</a>       MappedStatement selectStatement = ExecutorTestHelper.prepareSelectOneAuthorMappedStatement(config);
 <a class="jxr_linenumber" name="L209" href="#L209">209</a>       <strong class="jxr_keyword">int</strong> rows = executor.update(updateStatement, author);
@@ -228,11 +228,11 @@
 <a class="jxr_linenumber" name="L220" href="#L220">220</a>   }
 <a class="jxr_linenumber" name="L221" href="#L221">221</a> 
 <a class="jxr_linenumber" name="L222" href="#L222">222</a>   @Test
-<a class="jxr_linenumber" name="L223" href="#L223">223</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldDeleteAuthor() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L224" href="#L224">224</a>     
+<a class="jxr_linenumber" name="L223" href="#L223">223</a>   <strong class="jxr_keyword">void</strong> shouldDeleteAuthor() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L224" href="#L224">224</a> 
 <a class="jxr_linenumber" name="L225" href="#L225">225</a>     Executor executor = createExecutor(<strong class="jxr_keyword">new</strong> JdbcTransaction(ds, <strong class="jxr_keyword">null</strong>, false));
 <a class="jxr_linenumber" name="L226" href="#L226">226</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L227" href="#L227">227</a>       <a href="../../../../org/apache/ibatis/domain/blog/Author.html">Author</a> author = <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/domain/blog/Author.html">Author</a>(101, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L227" href="#L227">227</a>       <a name="Author" href="../../../../org/apache/ibatis/doma<a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>g/Author.html#Author">Author</a> author = <strong class="jxr_keyword">new</strong> <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>(101, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>);
 <a class="jxr_linenumber" name="L228" href="#L228">228</a>       MappedStatement deleteStatement = ExecutorTestHelper.prepareDeleteAuthorMappedStatement(config);
 <a class="jxr_linenumber" name="L229" href="#L229">229</a>       MappedStatement selectStatement = ExecutorTestHelper.prepareSelectOneAuthorMappedStatement(config);
 <a class="jxr_linenumber" name="L230" href="#L230">230</a>       <strong class="jxr_keyword">int</strong> rows = executor.update(deleteStatement, author);
@@ -248,8 +248,8 @@
 <a class="jxr_linenumber" name="L240" href="#L240">240</a>   }
 <a class="jxr_linenumber" name="L241" href="#L241">241</a> 
 <a class="jxr_linenumber" name="L242" href="#L242">242</a>   @Test
-<a class="jxr_linenumber" name="L243" href="#L243">243</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldSelectDiscriminatedPost() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L244" href="#L244">244</a>     
+<a class="jxr_linenumber" name="L243" href="#L243">243</a>   <strong class="jxr_keyword">void</strong> shouldSelectDiscriminatedPost() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L244" href="#L244">244</a> 
 <a class="jxr_linenumber" name="L245" href="#L245">245</a>     Executor executor = createExecutor(<strong class="jxr_keyword">new</strong> JdbcTransaction(ds, <strong class="jxr_keyword">null</strong>, false));
 <a class="jxr_linenumber" name="L246" href="#L246">246</a>     <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L247" href="#L247">247</a>       MappedStatement selectStatement = ExecutorTestHelper.prepareSelectDiscriminatedPost(config);
@@ -268,8 +268,8 @@
 <a class="jxr_linenumber" name="L260" href="#L260">260</a>   }
 <a class="jxr_linenumber" name="L261" href="#L261">261</a> 
 <a class="jxr_linenumber" name="L262" href="#L262">262</a>   @Test
-<a class="jxr_linenumber" name="L263" href="#L263">263</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldSelect2DiscriminatedPosts() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L264" href="#L264">264</a>     
+<a class="jxr_linenumber" name="L263" href="#L263">263</a>   <strong class="jxr_keyword">void</strong> shouldSelect2DiscriminatedPosts() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L264" href="#L264">264</a> 
 <a class="jxr_linenumber" name="L265" href="#L265">265</a>     Executor executor = createExecutor(<strong class="jxr_keyword">new</strong> JdbcTransaction(ds, <strong class="jxr_keyword">null</strong>, false));
 <a class="jxr_linenumber" name="L266" href="#L266">266</a>     <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L267" href="#L267">267</a>       MappedStatement selectStatement = ExecutorTestHelper.prepareSelectDiscriminatedPost(config);
@@ -289,7 +289,7 @@
 <a class="jxr_linenumber" name="L281" href="#L281">281</a>   }
 <a class="jxr_linenumber" name="L282" href="#L282">282</a> 
 <a class="jxr_linenumber" name="L283" href="#L283">283</a>   @Test
-<a class="jxr_linenumber" name="L284" href="#L284">284</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldSelectTwoSetsOfAuthorsViaProc() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L284" href="#L284">284</a>   <strong class="jxr_keyword">void</strong> shouldSelectTwoSetsOfAuthorsViaProc() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L285" href="#L285">285</a>     Executor executor = createExecutor(<strong class="jxr_keyword">new</strong> JdbcTransaction(ds, <strong class="jxr_keyword">null</strong>, false));
 <a class="jxr_linenumber" name="L286" href="#L286">286</a>     <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L287" href="#L287">287</a>       MappedStatement selectStatement = ExecutorTestHelper.prepareSelectTwoSetsOfAuthorsProc(config);
@@ -303,7 +303,7 @@
 <a class="jxr_linenumber" name="L295" href="#L295">295</a>       <strong class="jxr_keyword">for</strong> (List&lt;Author&gt; authors : authorSets) {
 <a class="jxr_linenumber" name="L296" href="#L296">296</a>         assertEquals(2, authors.size());
 <a class="jxr_linenumber" name="L297" href="#L297">297</a>         <strong class="jxr_keyword">for</strong> (Object author : authors) {
-<a class="jxr_linenumber" name="L298" href="#L298">298</a>           assertTrue(author instanceof <a href="../../../../org/apache/ibatis/domain/blog/Author.html">Author</a>);
+<a class="jxr_linenumber" name="L298" href="#L298">298</a>           assertTrue(author instanceof <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>);
 <a class="jxr_linenumber" name="L299" href="#L299">299</a>         }
 <a class="jxr_linenumber" name="L300" href="#L300">300</a>       }
 <a class="jxr_linenumber" name="L301" href="#L301">301</a>     } <strong class="jxr_keyword">finally</strong> {
@@ -312,18 +312,18 @@
 <a class="jxr_linenumber" name="L304" href="#L304">304</a>     }
 <a class="jxr_linenumber" name="L305" href="#L305">305</a>   }
 <a class="jxr_linenumber" name="L306" href="#L306">306</a> 
-<a class="jxr_linenumber" name="L307" href="#L307">307</a>   @Test 
-<a class="jxr_linenumber" name="L308" href="#L308">308</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldSelectAuthorViaOutParams() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L309" href="#L309">309</a>     
+<a class="jxr_linenumber" name="L307" href="#L307">307</a>   @Test
+<a class="jxr_linenumber" name="L308" href="#L308">308</a>   <strong class="jxr_keyword">void</strong> shouldSelectAuthorViaOutParams() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L309" href="#L309">309</a> 
 <a class="jxr_linenumber" name="L310" href="#L310">310</a>     Executor executor = createExecutor(<strong class="jxr_keyword">new</strong> JdbcTransaction(ds, <strong class="jxr_keyword">null</strong>, false));
 <a class="jxr_linenumber" name="L311" href="#L311">311</a>     <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L312" href="#L312">312</a>       MappedStatement selectStatement = ExecutorTestHelper.prepareSelectAuthorViaOutParams(config);
-<a class="jxr_linenumber" name="L313" href="#L313">313</a>       <a href="../../../../org/apache/ibatis/domain/blog/Author.html">Author</a> author = <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/domain/blog/Author.html">Author</a>(102, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L313" href="#L313">313</a>       <a name="Author" href="../../../../org/apache/ibatis/doma<a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>g/Author.html#Author">Author</a> author = <strong class="jxr_keyword">new</strong> <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>(102, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>);
 <a class="jxr_linenumber" name="L314" href="#L314">314</a>       executor.query(selectStatement, author, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
 <a class="jxr_linenumber" name="L315" href="#L315">315</a>       assertEquals(<span class="jxr_string">"sally"</span>, author.getUsername());
 <a class="jxr_linenumber" name="L316" href="#L316">316</a>       assertEquals(<span class="jxr_string">"********"</span>, author.getPassword());
 <a class="jxr_linenumber" name="L317" href="#L317">317</a>       assertEquals(<span class="jxr_string">"sally@ibatis.apache.org"</span>, author.getEmail());
-<a class="jxr_linenumber" name="L318" href="#L318">318</a>       assertEquals(<strong class="jxr_keyword">null</strong>, author.getBio());
+<a class="jxr_linenumber" name="L318" href="#L318">318</a>       assertNull(author.getBio());
 <a class="jxr_linenumber" name="L319" href="#L319">319</a>     } <strong class="jxr_keyword">catch</strong> (ExecutorException e) {
 <a class="jxr_linenumber" name="L320" href="#L320">320</a>       <strong class="jxr_keyword">if</strong> (executor instanceof CachingExecutor) {
 <a class="jxr_linenumber" name="L321" href="#L321">321</a>         <em class="jxr_comment">// TODO see issue #464. Fail is OK.</em>
@@ -338,8 +338,8 @@
 <a class="jxr_linenumber" name="L330" href="#L330">330</a>   }
 <a class="jxr_linenumber" name="L331" href="#L331">331</a> 
 <a class="jxr_linenumber" name="L332" href="#L332">332</a>   @Test
-<a class="jxr_linenumber" name="L333" href="#L333">333</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldFetchPostsForBlog() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L334" href="#L334">334</a>     
+<a class="jxr_linenumber" name="L333" href="#L333">333</a>   <strong class="jxr_keyword">void</strong> shouldFetchPostsForBlog() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L334" href="#L334">334</a> 
 <a class="jxr_linenumber" name="L335" href="#L335">335</a>     Executor executor = createExecutor(<strong class="jxr_keyword">new</strong> JdbcTransaction(ds, <strong class="jxr_keyword">null</strong>, false));
 <a class="jxr_linenumber" name="L336" href="#L336">336</a>     <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L337" href="#L337">337</a>       MappedStatement selectBlog = ExecutorTestHelper.prepareComplexSelectBlogMappedStatement(config);
@@ -360,8 +360,8 @@
 <a class="jxr_linenumber" name="L352" href="#L352">352</a>   }
 <a class="jxr_linenumber" name="L353" href="#L353">353</a> 
 <a class="jxr_linenumber" name="L354" href="#L354">354</a>   @Test
-<a class="jxr_linenumber" name="L355" href="#L355">355</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldFetchOneOrphanedPostWithNoBlog() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L356" href="#L356">356</a>     
+<a class="jxr_linenumber" name="L355" href="#L355">355</a>   <strong class="jxr_keyword">void</strong> shouldFetchOneOrphanedPostWithNoBlog() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L356" href="#L356">356</a> 
 <a class="jxr_linenumber" name="L357" href="#L357">357</a>     Executor executor = createExecutor(<strong class="jxr_keyword">new</strong> JdbcTransaction(ds, <strong class="jxr_keyword">null</strong>, false));
 <a class="jxr_linenumber" name="L358" href="#L358">358</a>     <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L359" href="#L359">359</a>       MappedStatement selectBlog = ExecutorTestHelper.prepareComplexSelectBlogMappedStatement(config);
@@ -372,7 +372,7 @@
 <a class="jxr_linenumber" name="L364" href="#L364">364</a>       executor.flushStatements();
 <a class="jxr_linenumber" name="L365" href="#L365">365</a>       executor.rollback(<strong class="jxr_keyword">true</strong>);
 <a class="jxr_linenumber" name="L366" href="#L366">366</a>       assertEquals(1, posts.size());
-<a class="jxr_linenumber" name="L367" href="#L367">367</a>       <a href="../../../../org/apache/ibatis/domain/blog/Post.html">Post</a> post = posts.get(0);
+<a class="jxr_linenumber" name="L367" href="#L367">367</a>       <a name="Post" href="../../../../org/apache/ibatis/domain/blog/Post.html#Post">Post</a> post = posts.get(0);
 <a class="jxr_linenumber" name="L368" href="#L368">368</a>       assertNull(post.getBlog());
 <a class="jxr_linenumber" name="L369" href="#L369">369</a>     } <strong class="jxr_keyword">finally</strong> {
 <a class="jxr_linenumber" name="L370" href="#L370">370</a>       executor.rollback(<strong class="jxr_keyword">true</strong>);
@@ -382,7 +382,7 @@
 <a class="jxr_linenumber" name="L374" href="#L374">374</a> 
 <a class="jxr_linenumber" name="L375" href="#L375">375</a>   @Test
 <a class="jxr_linenumber" name="L376" href="#L376">376</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldFetchPostWithBlogWithCompositeKey() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L377" href="#L377">377</a>     
+<a class="jxr_linenumber" name="L377" href="#L377">377</a> 
 <a class="jxr_linenumber" name="L378" href="#L378">378</a>     Executor executor = createExecutor(<strong class="jxr_keyword">new</strong> JdbcTransaction(ds, <strong class="jxr_keyword">null</strong>, false));
 <a class="jxr_linenumber" name="L379" href="#L379">379</a>     <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L380" href="#L380">380</a>       MappedStatement selectBlog = ExecutorTestHelper.prepareSelectBlogByIdAndAuthor(config);
@@ -392,7 +392,7 @@
 <a class="jxr_linenumber" name="L384" href="#L384">384</a>       List&lt;Post&gt; posts = executor.query(selectPost, 2, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
 <a class="jxr_linenumber" name="L385" href="#L385">385</a>       executor.flushStatements();
 <a class="jxr_linenumber" name="L386" href="#L386">386</a>       assertEquals(1, posts.size());
-<a class="jxr_linenumber" name="L387" href="#L387">387</a>       <a href="../../../../org/apache/ibatis/domain/blog/Post.html">Post</a> post = posts.get(0);
+<a class="jxr_linenumber" name="L387" href="#L387">387</a>       <a name="Post" href="../../../../org/apache/ibatis/domain/blog/Post.html#Post">Post</a> post = posts.get(0);
 <a class="jxr_linenumber" name="L388" href="#L388">388</a>       assertNotNull(post.getBlog());
 <a class="jxr_linenumber" name="L389" href="#L389">389</a>       assertEquals(101, post.getBlog().getAuthor().getId());
 <a class="jxr_linenumber" name="L390" href="#L390">390</a>       executor.rollback(<strong class="jxr_keyword">true</strong>);
@@ -403,8 +403,8 @@
 <a class="jxr_linenumber" name="L395" href="#L395">395</a>   }
 <a class="jxr_linenumber" name="L396" href="#L396">396</a> 
 <a class="jxr_linenumber" name="L397" href="#L397">397</a>   @Test
-<a class="jxr_linenumber" name="L398" href="#L398">398</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldFetchComplexBlogs() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L399" href="#L399">399</a>     
+<a class="jxr_linenumber" name="L398" href="#L398">398</a>   <strong class="jxr_keyword">void</strong> shouldFetchComplexBlogs() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L399" href="#L399">399</a> 
 <a class="jxr_linenumber" name="L400" href="#L400">400</a>     Executor executor = createExecutor(<strong class="jxr_keyword">new</strong> JdbcTransaction(ds, <strong class="jxr_keyword">null</strong>, false));
 <a class="jxr_linenumber" name="L401" href="#L401">401</a>     <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L402" href="#L402">402</a>       MappedStatement selectBlog = ExecutorTestHelper.prepareComplexSelectBlogMappedStatement(config);
@@ -425,8 +425,8 @@
 <a class="jxr_linenumber" name="L417" href="#L417">417</a>   }
 <a class="jxr_linenumber" name="L418" href="#L418">418</a> 
 <a class="jxr_linenumber" name="L419" href="#L419">419</a>   @Test
-<a class="jxr_linenumber" name="L420" href="#L420">420</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldMapConstructorResults() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L421" href="#L421">421</a>     
+<a class="jxr_linenumber" name="L420" href="#L420">420</a>   <strong class="jxr_keyword">void</strong> shouldMapConstructorResults() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L421" href="#L421">421</a> 
 <a class="jxr_linenumber" name="L422" href="#L422">422</a>     Executor executor = createExecutor(<strong class="jxr_keyword">new</strong> JdbcTransaction(ds, <strong class="jxr_keyword">null</strong>, false));
 <a class="jxr_linenumber" name="L423" href="#L423">423</a>     <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L424" href="#L424">424</a>       MappedStatement selectStatement = ExecutorTestHelper.prepareSelectOneAuthorMappedStatementWithConstructorResults(config);
@@ -435,7 +435,7 @@
 <a class="jxr_linenumber" name="L427" href="#L427">427</a>       executor.rollback(<strong class="jxr_keyword">true</strong>);
 <a class="jxr_linenumber" name="L428" href="#L428">428</a>       assertEquals(1, authors.size());
 <a class="jxr_linenumber" name="L429" href="#L429">429</a> 
-<a class="jxr_linenumber" name="L430" href="#L430">430</a>       <a href="../../../../org/apache/ibatis/domain/blog/Author.html">Author</a> author = authors.get(0);
+<a class="jxr_linenumber" name="L430" href="#L430">430</a>       <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a> author = authors.get(0);
 <a class="jxr_linenumber" name="L431" href="#L431">431</a>       assertEquals(102, author.getId());
 <a class="jxr_linenumber" name="L432" href="#L432">432</a>     } <strong class="jxr_keyword">finally</strong> {
 <a class="jxr_linenumber" name="L433" href="#L433">433</a>       executor.rollback(<strong class="jxr_keyword">true</strong>);
@@ -444,8 +444,8 @@
 <a class="jxr_linenumber" name="L436" href="#L436">436</a>   }
 <a class="jxr_linenumber" name="L437" href="#L437">437</a> 
 <a class="jxr_linenumber" name="L438" href="#L438">438</a>   @Test
-<a class="jxr_linenumber" name="L439" href="#L439">439</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldClearDeferredLoads() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L440" href="#L440">440</a>     
+<a class="jxr_linenumber" name="L439" href="#L439">439</a>   <strong class="jxr_keyword">void</strong> shouldClearDeferredLoads() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L440" href="#L440">440</a> 
 <a class="jxr_linenumber" name="L441" href="#L441">441</a>     Executor executor = createExecutor(<strong class="jxr_keyword">new</strong> JdbcTransaction(ds, <strong class="jxr_keyword">null</strong>, false));
 <a class="jxr_linenumber" name="L442" href="#L442">442</a>     <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L443" href="#L443">443</a>       MappedStatement selectBlog = ExecutorTestHelper.prepareComplexSelectBlogMappedStatement(config);
@@ -455,10 +455,10 @@
 <a class="jxr_linenumber" name="L447" href="#L447">447</a>       MappedStatement selectAuthor = ExecutorTestHelper.prepareSelectOneAuthorMappedStatement(config);
 <a class="jxr_linenumber" name="L448" href="#L448">448</a>       MappedStatement insertAuthor = ExecutorTestHelper.prepareInsertAuthorMappedStatement(config);
 <a class="jxr_linenumber" name="L449" href="#L449">449</a> 
-<a class="jxr_linenumber" name="L450" href="#L450">450</a>       <em class="jxr_comment">//generate DeferredLoads</em>
+<a class="jxr_linenumber" name="L450" href="#L450">450</a>       <em class="jxr_comment">// generate DeferredLoads</em>
 <a class="jxr_linenumber" name="L451" href="#L451">451</a>       executor.query(selectPosts, 1, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
 <a class="jxr_linenumber" name="L452" href="#L452">452</a> 
-<a class="jxr_linenumber" name="L453" href="#L453">453</a>       <a href="../../../../org/apache/ibatis/domain/blog/Author.html">Author</a> author = <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/domain/blog/Author.html">Author</a>(-1, <span class="jxr_string">"someone"</span>, <span class="jxr_string">"******"</span>, <span class="jxr_string">"someone@apache.org"</span>, <strong class="jxr_keyword">null</strong>, Section.NEWS);
+<a class="jxr_linenumber" name="L453" href="#L453">453</a>       <a name="Author" href="../../../../org/apache/ibatis/doma<a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>g/Author.html#Author">Author</a> author = <strong class="jxr_keyword">new</strong> <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>(-1, <span class="jxr_string">"someone"</span>, <span class="jxr_string">"******"</span>, <span class="jxr_string">"someone@apache.org"</span>, <strong class="jxr_keyword">null</strong>, Section.NEWS);
 <a class="jxr_linenumber" name="L454" href="#L454">454</a>       executor.update(insertAuthor, author);
 <a class="jxr_linenumber" name="L455" href="#L455">455</a>       executor.query(selectAuthor, -1, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
 <a class="jxr_linenumber" name="L456" href="#L456">456</a>       executor.flushStatements();
@@ -470,12 +470,12 @@
 <a class="jxr_linenumber" name="L462" href="#L462">462</a>   }
 <a class="jxr_linenumber" name="L463" href="#L463">463</a> 
 <a class="jxr_linenumber" name="L464" href="#L464">464</a>   <strong class="jxr_keyword">protected</strong> Executor createExecutor(Transaction transaction) {
-<a class="jxr_linenumber" name="L465" href="#L465">465</a>     <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> SimpleExecutor(config,transaction);
+<a class="jxr_linenumber" name="L465" href="#L465">465</a>     <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> SimpleExecutor(config, transaction);
 <a class="jxr_linenumber" name="L466" href="#L466">466</a>   }
 <a class="jxr_linenumber" name="L467" href="#L467">467</a> 
 <a class="jxr_linenumber" name="L468" href="#L468">468</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2018 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2019 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

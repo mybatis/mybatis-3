@@ -7,13 +7,13 @@
 <body>
 <div id="overview"><a href="../../../../../../apidocs/org/apache/ibatis/type/TypeAliasRegistry.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2015 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2019 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_javadoccomment"> *    You may obtain a copy of the License at</em>
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2." target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.</a>0</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_javadoccomment"> *    Unless required by applicable law or agreed to in writing, software</em>
 <a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_javadoccomment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
@@ -43,11 +43,11 @@
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>  <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>  <em class="jxr_javadoccomment"> * @author Clinton Begin</em>
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>  <em class="jxr_javadoccomment"> */</em>
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/apache/ibatis/type/TypeAliasRegistry.html">TypeAliasRegistry</a> {
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="TypeAliasRegistry" href="../../../../org/apache/ibatis/type/TypeAliasRegistry.html#TypeAliasRegistry">TypeAliasRegistry</a> {
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>  
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Map&lt;String, Class&lt;?&gt;&gt; TYPE_ALIASES = <strong class="jxr_keyword">new</strong> HashMap&lt;String, Class&lt;?&gt;&gt;();
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Map&lt;String, Class&lt;?&gt;&gt; typeAliases = <strong class="jxr_keyword">new</strong> HashMap&lt;&gt;();
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>  
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>    <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/type/TypeAliasRegistry.html">TypeAliasRegistry</a>() {
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>    <strong class="jxr_keyword">public</strong> <a name="TypeAliasRegistry" href="../../../../org/apache/ibatis/type/TypeAliasRegistry.html#TypeAliasRegistry">TypeAliasRegistry</a>() {
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>      registerAlias(<span class="jxr_string">"string"</span>, String.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>  
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>      registerAlias(<span class="jxr_string">"byte"</span>, Byte.<strong class="jxr_keyword">class</strong>);
@@ -118,26 +118,26 @@
 <a class="jxr_linenumber" name="L110" href="#L110">110</a>       <em class="jxr_comment">// issue #748</em>
 <a class="jxr_linenumber" name="L111" href="#L111">111</a>       String key = string.toLowerCase(Locale.ENGLISH);
 <a class="jxr_linenumber" name="L112" href="#L112">112</a>       Class&lt;T&gt; value;
-<a class="jxr_linenumber" name="L113" href="#L113">113</a>       <strong class="jxr_keyword">if</strong> (TYPE_ALIASES.containsKey(key)) {
-<a class="jxr_linenumber" name="L114" href="#L114">114</a>         value = (Class&lt;T&gt;) TYPE_ALIASES.get(key);
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>       <strong class="jxr_keyword">if</strong> (typeAliases.containsKey(key)) {
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>         value = (Class&lt;T&gt;) typeAliases.get(key);
 <a class="jxr_linenumber" name="L115" href="#L115">115</a>       } <strong class="jxr_keyword">else</strong> {
 <a class="jxr_linenumber" name="L116" href="#L116">116</a>         value = (Class&lt;T&gt;) Resources.classForName(string);
 <a class="jxr_linenumber" name="L117" href="#L117">117</a>       }
 <a class="jxr_linenumber" name="L118" href="#L118">118</a>       <strong class="jxr_keyword">return</strong> value;
 <a class="jxr_linenumber" name="L119" href="#L119">119</a>     } <strong class="jxr_keyword">catch</strong> (ClassNotFoundException e) {
-<a class="jxr_linenumber" name="L120" href="#L120">120</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/TypeException.html">TypeException</a>(<span class="jxr_string">"Could not resolve type alias '"</span> + string + <span class="jxr_string">"'.  Cause: "</span> + e, e);
+<a class="jxr_linenumber" name="L120" href="#L120">120</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="TypeException" href="../../../../org/apache/ibatis/type/TypeException.html#TypeException">TypeException</a>(<span class="jxr_string">"Could not resolve type alias '"</span> + string + <span class="jxr_string">"'.  Cause: "</span> + e, e);
 <a class="jxr_linenumber" name="L121" href="#L121">121</a>     }
 <a class="jxr_linenumber" name="L122" href="#L122">122</a>   }
 <a class="jxr_linenumber" name="L123" href="#L123">123</a> 
-<a class="jxr_linenumber" name="L124" href="#L124">124</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> registerAliases(String packageName){
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> registerAliases(String packageName) {
 <a class="jxr_linenumber" name="L125" href="#L125">125</a>     registerAliases(packageName, Object.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L126" href="#L126">126</a>   }
 <a class="jxr_linenumber" name="L127" href="#L127">127</a> 
-<a class="jxr_linenumber" name="L128" href="#L128">128</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> registerAliases(String packageName, Class&lt;?&gt; superType){
-<a class="jxr_linenumber" name="L129" href="#L129">129</a>     ResolverUtil&lt;Class&lt;?&gt;&gt; resolverUtil = <strong class="jxr_keyword">new</strong> ResolverUtil&lt;Class&lt;?&gt;&gt;();
+<a class="jxr_linenumber" name="L128" href="#L128">128</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> registerAliases(String packageName, Class&lt;?&gt; superType) {
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>     ResolverUtil&lt;Class&lt;?&gt;&gt; resolverUtil = <strong class="jxr_keyword">new</strong> ResolverUtil&lt;&gt;();
 <a class="jxr_linenumber" name="L130" href="#L130">130</a>     resolverUtil.find(<strong class="jxr_keyword">new</strong> ResolverUtil.IsA(superType), packageName);
 <a class="jxr_linenumber" name="L131" href="#L131">131</a>     Set&lt;Class&lt;? <strong class="jxr_keyword">extends</strong> Class&lt;?&gt;&gt;&gt; typeSet = resolverUtil.getClasses();
-<a class="jxr_linenumber" name="L132" href="#L132">132</a>     <strong class="jxr_keyword">for</strong>(Class&lt;?&gt; type : typeSet){
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>     <strong class="jxr_keyword">for</strong> (Class&lt;?&gt; type : typeSet) {
 <a class="jxr_linenumber" name="L133" href="#L133">133</a>       <em class="jxr_comment">// Ignore inner classes and interfaces (including package-info.java)</em>
 <a class="jxr_linenumber" name="L134" href="#L134">134</a>       <em class="jxr_comment">// Skip also inner classes. See issue #6</em>
 <a class="jxr_linenumber" name="L135" href="#L135">135</a>       <strong class="jxr_keyword">if</strong> (!type.isAnonymousClass() &amp;&amp; !type.isInterface() &amp;&amp; !type.isMemberClass()) {
@@ -148,43 +148,43 @@
 <a class="jxr_linenumber" name="L140" href="#L140">140</a> 
 <a class="jxr_linenumber" name="L141" href="#L141">141</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> registerAlias(Class&lt;?&gt; type) {
 <a class="jxr_linenumber" name="L142" href="#L142">142</a>     String alias = type.getSimpleName();
-<a class="jxr_linenumber" name="L143" href="#L143">143</a>     <a href="../../../../org/apache/ibatis/type/Alias.html">Alias</a> aliasAnnotation = type.getAnnotation(Alias.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>     <a name="Alias" href="../../../../org/apache/ibatis/type/Alias.html#Alias">Alias</a> aliasAnnotation = type.getAnnotation(Alias.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L144" href="#L144">144</a>     <strong class="jxr_keyword">if</strong> (aliasAnnotation != <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L145" href="#L145">145</a>       alias = aliasAnnotation.value();
-<a class="jxr_linenumber" name="L146" href="#L146">146</a>     } 
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>     }
 <a class="jxr_linenumber" name="L147" href="#L147">147</a>     registerAlias(alias, type);
 <a class="jxr_linenumber" name="L148" href="#L148">148</a>   }
 <a class="jxr_linenumber" name="L149" href="#L149">149</a> 
 <a class="jxr_linenumber" name="L150" href="#L150">150</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> registerAlias(String alias, Class&lt;?&gt; value) {
 <a class="jxr_linenumber" name="L151" href="#L151">151</a>     <strong class="jxr_keyword">if</strong> (alias == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L152" href="#L152">152</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/TypeException.html">TypeException</a>(<span class="jxr_string">"The parameter alias cannot be null"</span>);
+<a class="jxr_linenumber" name="L152" href="#L152">152</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="TypeException" href="../../../../org/apache/ibatis/type/TypeException.html#TypeException">TypeException</a>(<span class="jxr_string">"The parameter alias cannot be null"</span>);
 <a class="jxr_linenumber" name="L153" href="#L153">153</a>     }
 <a class="jxr_linenumber" name="L154" href="#L154">154</a>     <em class="jxr_comment">// issue #748</em>
 <a class="jxr_linenumber" name="L155" href="#L155">155</a>     String key = alias.toLowerCase(Locale.ENGLISH);
-<a class="jxr_linenumber" name="L156" href="#L156">156</a>     <strong class="jxr_keyword">if</strong> (TYPE_ALIASES.containsKey(key) &amp;&amp; TYPE_ALIASES.get(key) != <strong class="jxr_keyword">null</strong> &amp;&amp; !TYPE_ALIASES.get(key).equals(value)) {
-<a class="jxr_linenumber" name="L157" href="#L157">157</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/TypeException.html">TypeException</a>(<span class="jxr_string">"The alias '"</span> + alias + <span class="jxr_string">"' is already mapped to the value '"</span> + TYPE_ALIASES.get(key).getName() + <span class="jxr_string">"'."</span>);
+<a class="jxr_linenumber" name="L156" href="#L156">156</a>     <strong class="jxr_keyword">if</strong> (typeAliases.containsKey(key) &amp;&amp; typeAliases.get(key) != <strong class="jxr_keyword">null</strong> &amp;&amp; !typeAliases.get(key).equals(value)) {
+<a class="jxr_linenumber" name="L157" href="#L157">157</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="TypeException" href="../../../../org/apache/ibatis/type/TypeException.html#TypeException">TypeException</a>(<span class="jxr_string">"The alias '"</span> + alias + <span class="jxr_string">"' is already mapped to the value '"</span> + typeAliases.get(key).getName() + <span class="jxr_string">"'."</span>);
 <a class="jxr_linenumber" name="L158" href="#L158">158</a>     }
-<a class="jxr_linenumber" name="L159" href="#L159">159</a>     TYPE_ALIASES.put(key, value);
+<a class="jxr_linenumber" name="L159" href="#L159">159</a>     typeAliases.put(key, value);
 <a class="jxr_linenumber" name="L160" href="#L160">160</a>   }
 <a class="jxr_linenumber" name="L161" href="#L161">161</a> 
 <a class="jxr_linenumber" name="L162" href="#L162">162</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> registerAlias(String alias, String value) {
 <a class="jxr_linenumber" name="L163" href="#L163">163</a>     <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L164" href="#L164">164</a>       registerAlias(alias, Resources.classForName(value));
 <a class="jxr_linenumber" name="L165" href="#L165">165</a>     } <strong class="jxr_keyword">catch</strong> (ClassNotFoundException e) {
-<a class="jxr_linenumber" name="L166" href="#L166">166</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/TypeException.html">TypeException</a>(<span class="jxr_string">"Error registering type alias "</span>+alias+<span class="jxr_string">" for "</span>+value+<span class="jxr_string">". Cause: "</span> + e, e);
+<a class="jxr_linenumber" name="L166" href="#L166">166</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="TypeException" href="../../../../org/apache/ibatis/type/TypeException.html#TypeException">TypeException</a>(<span class="jxr_string">"Error registering type alias "</span> + alias + <span class="jxr_string">" for "</span> + value + <span class="jxr_string">". Cause: "</span> + e, e);
 <a class="jxr_linenumber" name="L167" href="#L167">167</a>     }
 <a class="jxr_linenumber" name="L168" href="#L168">168</a>   }
-<a class="jxr_linenumber" name="L169" href="#L169">169</a>   
+<a class="jxr_linenumber" name="L169" href="#L169">169</a> 
 <a class="jxr_linenumber" name="L170" href="#L170">170</a>   <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L171" href="#L171">171</a> <em class="jxr_javadoccomment">   * @since 3.2.2</em>
 <a class="jxr_linenumber" name="L172" href="#L172">172</a> <em class="jxr_javadoccomment">   */</em>
 <a class="jxr_linenumber" name="L173" href="#L173">173</a>   <strong class="jxr_keyword">public</strong> Map&lt;String, Class&lt;?&gt;&gt; getTypeAliases() {
-<a class="jxr_linenumber" name="L174" href="#L174">174</a>     <strong class="jxr_keyword">return</strong> Collections.unmodifiableMap(TYPE_ALIASES);
+<a class="jxr_linenumber" name="L174" href="#L174">174</a>     <strong class="jxr_keyword">return</strong> Collections.unmodifiableMap(typeAliases);
 <a class="jxr_linenumber" name="L175" href="#L175">175</a>   }
 <a class="jxr_linenumber" name="L176" href="#L176">176</a> 
 <a class="jxr_linenumber" name="L177" href="#L177">177</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2018 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2019 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

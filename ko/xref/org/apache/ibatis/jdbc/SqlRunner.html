@@ -7,13 +7,13 @@
 <body>
 <div id="overview"><a href="../../../../../../apidocs/org/apache/ibatis/jdbc/SqlRunner.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2017 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2019 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_javadoccomment"> *    You may obtain a copy of the License at</em>
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2." target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.</a>0</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_javadoccomment"> *    Unless required by applicable law or agreed to in writing, software</em>
 <a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_javadoccomment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
@@ -43,31 +43,31 @@
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>  <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>  <em class="jxr_javadoccomment"> * @author Clinton Begin</em>
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>  <em class="jxr_javadoccomment"> */</em>
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/apache/ibatis/jdbc/SqlRunner.html">SqlRunner</a> {
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="SqlRunner" href="../../../../org/apache/ibatis/jdbc/SqlRunner.html#SqlRunner">SqlRunner</a> {
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>  
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> NO_GENERATED_KEY = Integer.MIN_VALUE + 1001;
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>  
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Connection connection;
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../org/apache/ibatis/type/TypeHandlerRegistry.html">TypeHandlerRegistry</a> typeHandlerRegistry;
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a name="TypeHandlerRegistry" href="../../../../org/apache/ibatis/type/TypeHandlerRegistry.html#TypeHandlerRegistry">TypeHandlerRegistry</a> typeHandlerRegistry;
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> useGeneratedKeySupport;
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>  
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>    <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/jdbc/SqlRunner.html">SqlRunner</a>(Connection connection) {
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>    <strong class="jxr_keyword">public</strong> <a name="SqlRunner" href="../../../../org/apache/ibatis/jdbc/SqlRunner.html#SqlRunner">SqlRunner</a>(Connection connection) {
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>      <strong class="jxr_keyword">this</strong>.connection = connection;
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>      <strong class="jxr_keyword">this</strong>.typeHandlerRegistry = <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/TypeHandlerRegistry.html">TypeHandlerRegistry</a>();
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>      <strong class="jxr_keyword">this</strong>.typeHandlerRegistry = <strong class="jxr_keyword">new</strong> <a name="TypeHandlerRegistry" href="../../../../org/apache/ibatis/type/TypeHandlerRegistry.html#TypeHandlerRegistry">TypeHandlerRegistry</a>();
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>    }
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>  
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setUseGeneratedKeySupport(<strong class="jxr_keyword">boolean</strong> useGeneratedKeySupport) {
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>      <strong class="jxr_keyword">this</strong>.useGeneratedKeySupport = useGeneratedKeySupport;
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>    }
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>  
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>    <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L56" href="#L56">56</a>  <em class="jxr_comment">   * Executes a SELECT statement that returns one row.</em>
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>  <em class="jxr_comment">   *</em>
-<a class="jxr_linenumber" name="L58" href="#L58">58</a>  <em class="jxr_comment">   * @param sql  The SQL</em>
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>  <em class="jxr_comment">   * @param args The arguments to be set on the statement.</em>
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>  <em class="jxr_comment">   * @return The row expected.</em>
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>  <em class="jxr_comment">   * @throws SQLException If less or more than one row is returned</em>
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>  <em class="jxr_comment">   */</em>
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>    <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>  <em class="jxr_javadoccomment">   * Executes a SELECT statement that returns one row.</em>
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>  <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>  <em class="jxr_javadoccomment">   * @param sql  The SQL</em>
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>  <em class="jxr_javadoccomment">   * @param args The arguments to be set on the statement.</em>
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>  <em class="jxr_javadoccomment">   * @return The row expected.</em>
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>  <em class="jxr_javadoccomment">   * @throws SQLException If less or more than one row is returned</em>
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>  <em class="jxr_javadoccomment">   */</em>
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>    <strong class="jxr_keyword">public</strong> Map&lt;String, Object&gt; selectOne(String sql, Object... args) <strong class="jxr_keyword">throws</strong> SQLException {
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>      List&lt;Map&lt;String, Object&gt;&gt; results = selectAll(sql, args);
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>      <strong class="jxr_keyword">if</strong> (results.size() != 1) {
@@ -76,14 +76,14 @@
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>      <strong class="jxr_keyword">return</strong> results.get(0);
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>    }
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>  
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>    <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>  <em class="jxr_comment">   * Executes a SELECT statement that returns multiple rows.</em>
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>  <em class="jxr_comment">   *</em>
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>  <em class="jxr_comment">   * @param sql  The SQL</em>
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>  <em class="jxr_comment">   * @param args The arguments to be set on the statement.</em>
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>  <em class="jxr_comment">   * @return The list of rows expected.</em>
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>  <em class="jxr_comment">   * @throws SQLException If statement preparation or execution fails</em>
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>  <em class="jxr_comment">   */</em>
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>    <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>  <em class="jxr_javadoccomment">   * Executes a SELECT statement that returns multiple rows.</em>
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>  <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>  <em class="jxr_javadoccomment">   * @param sql  The SQL</em>
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>  <em class="jxr_javadoccomment">   * @param args The arguments to be set on the statement.</em>
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>  <em class="jxr_javadoccomment">   * @return The list of rows expected.</em>
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>  <em class="jxr_javadoccomment">   * @throws SQLException If statement preparation or execution fails</em>
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>  <em class="jxr_javadoccomment">   */</em>
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>    <strong class="jxr_keyword">public</strong> List&lt;Map&lt;String, Object&gt;&gt; selectAll(String sql, Object... args) <strong class="jxr_keyword">throws</strong> SQLException {
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>      PreparedStatement ps = connection.prepareStatement(sql);
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>      <strong class="jxr_keyword">try</strong> {
@@ -99,14 +99,14 @@
 <a class="jxr_linenumber" name="L91" href="#L91">91</a>      }
 <a class="jxr_linenumber" name="L92" href="#L92">92</a>    }
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>  
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>    <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>  <em class="jxr_comment">   * Executes an INSERT statement.</em>
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>  <em class="jxr_comment">   *</em>
-<a class="jxr_linenumber" name="L97" href="#L97">97</a>  <em class="jxr_comment">   * @param sql  The SQL</em>
-<a class="jxr_linenumber" name="L98" href="#L98">98</a>  <em class="jxr_comment">   * @param args The arguments to be set on the statement.</em>
-<a class="jxr_linenumber" name="L99" href="#L99">99</a>  <em class="jxr_comment">   * @return The number of rows impacted or BATCHED_RESULTS if the statements are being batched.</em>
-<a class="jxr_linenumber" name="L100" href="#L100">100</a> <em class="jxr_comment">   * @throws SQLException If statement preparation or execution fails</em>
-<a class="jxr_linenumber" name="L101" href="#L101">101</a> <em class="jxr_comment">   */</em>
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>    <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>  <em class="jxr_javadoccomment">   * Executes an INSERT statement.</em>
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>  <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>  <em class="jxr_javadoccomment">   * @param sql  The SQL</em>
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>  <em class="jxr_javadoccomment">   * @param args The arguments to be set on the statement.</em>
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>  <em class="jxr_javadoccomment">   * @return The number of rows impacted or BATCHED_RESULTS if the statements are being batched.</em>
+<a class="jxr_linenumber" name="L100" href="#L100">100</a> <em class="jxr_javadoccomment">   * @throws SQLException If statement preparation or execution fails</em>
+<a class="jxr_linenumber" name="L101" href="#L101">101</a> <em class="jxr_javadoccomment">   */</em>
 <a class="jxr_linenumber" name="L102" href="#L102">102</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> insert(String sql, Object... args) <strong class="jxr_keyword">throws</strong> SQLException {
 <a class="jxr_linenumber" name="L103" href="#L103">103</a>     PreparedStatement ps;
 <a class="jxr_linenumber" name="L104" href="#L104">104</a>     <strong class="jxr_keyword">if</strong> (useGeneratedKeySupport) {
@@ -145,14 +145,14 @@
 <a class="jxr_linenumber" name="L137" href="#L137">137</a>     }
 <a class="jxr_linenumber" name="L138" href="#L138">138</a>   }
 <a class="jxr_linenumber" name="L139" href="#L139">139</a> 
-<a class="jxr_linenumber" name="L140" href="#L140">140</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L141" href="#L141">141</a> <em class="jxr_comment">   * Executes an UPDATE statement.</em>
-<a class="jxr_linenumber" name="L142" href="#L142">142</a> <em class="jxr_comment">   *</em>
-<a class="jxr_linenumber" name="L143" href="#L143">143</a> <em class="jxr_comment">   * @param sql  The SQL</em>
-<a class="jxr_linenumber" name="L144" href="#L144">144</a> <em class="jxr_comment">   * @param args The arguments to be set on the statement.</em>
-<a class="jxr_linenumber" name="L145" href="#L145">145</a> <em class="jxr_comment">   * @return The number of rows impacted or BATCHED_RESULTS if the statements are being batched.</em>
-<a class="jxr_linenumber" name="L146" href="#L146">146</a> <em class="jxr_comment">   * @throws SQLException If statement preparation or execution fails</em>
-<a class="jxr_linenumber" name="L147" href="#L147">147</a> <em class="jxr_comment">   */</em>
+<a class="jxr_linenumber" name="L140" href="#L140">140</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L141" href="#L141">141</a> <em class="jxr_javadoccomment">   * Executes an UPDATE statement.</em>
+<a class="jxr_linenumber" name="L142" href="#L142">142</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L143" href="#L143">143</a> <em class="jxr_javadoccomment">   * @param sql  The SQL</em>
+<a class="jxr_linenumber" name="L144" href="#L144">144</a> <em class="jxr_javadoccomment">   * @param args The arguments to be set on the statement.</em>
+<a class="jxr_linenumber" name="L145" href="#L145">145</a> <em class="jxr_javadoccomment">   * @return The number of rows impacted or BATCHED_RESULTS if the statements are being batched.</em>
+<a class="jxr_linenumber" name="L146" href="#L146">146</a> <em class="jxr_javadoccomment">   * @throws SQLException If statement preparation or execution fails</em>
+<a class="jxr_linenumber" name="L147" href="#L147">147</a> <em class="jxr_javadoccomment">   */</em>
 <a class="jxr_linenumber" name="L148" href="#L148">148</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> update(String sql, Object... args) <strong class="jxr_keyword">throws</strong> SQLException {
 <a class="jxr_linenumber" name="L149" href="#L149">149</a>     PreparedStatement ps = connection.prepareStatement(sql);
 <a class="jxr_linenumber" name="L150" href="#L150">150</a>     <strong class="jxr_keyword">try</strong> {
@@ -167,25 +167,25 @@
 <a class="jxr_linenumber" name="L159" href="#L159">159</a>     }
 <a class="jxr_linenumber" name="L160" href="#L160">160</a>   }
 <a class="jxr_linenumber" name="L161" href="#L161">161</a> 
-<a class="jxr_linenumber" name="L162" href="#L162">162</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L163" href="#L163">163</a> <em class="jxr_comment">   * Executes a DELETE statement.</em>
-<a class="jxr_linenumber" name="L164" href="#L164">164</a> <em class="jxr_comment">   *</em>
-<a class="jxr_linenumber" name="L165" href="#L165">165</a> <em class="jxr_comment">   * @param sql  The SQL</em>
-<a class="jxr_linenumber" name="L166" href="#L166">166</a> <em class="jxr_comment">   * @param args The arguments to be set on the statement.</em>
-<a class="jxr_linenumber" name="L167" href="#L167">167</a> <em class="jxr_comment">   * @return The number of rows impacted or BATCHED_RESULTS if the statements are being batched.</em>
-<a class="jxr_linenumber" name="L168" href="#L168">168</a> <em class="jxr_comment">   * @throws SQLException If statement preparation or execution fails</em>
-<a class="jxr_linenumber" name="L169" href="#L169">169</a> <em class="jxr_comment">   */</em>
+<a class="jxr_linenumber" name="L162" href="#L162">162</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L163" href="#L163">163</a> <em class="jxr_javadoccomment">   * Executes a DELETE statement.</em>
+<a class="jxr_linenumber" name="L164" href="#L164">164</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L165" href="#L165">165</a> <em class="jxr_javadoccomment">   * @param sql  The SQL</em>
+<a class="jxr_linenumber" name="L166" href="#L166">166</a> <em class="jxr_javadoccomment">   * @param args The arguments to be set on the statement.</em>
+<a class="jxr_linenumber" name="L167" href="#L167">167</a> <em class="jxr_javadoccomment">   * @return The number of rows impacted or BATCHED_RESULTS if the statements are being batched.</em>
+<a class="jxr_linenumber" name="L168" href="#L168">168</a> <em class="jxr_javadoccomment">   * @throws SQLException If statement preparation or execution fails</em>
+<a class="jxr_linenumber" name="L169" href="#L169">169</a> <em class="jxr_javadoccomment">   */</em>
 <a class="jxr_linenumber" name="L170" href="#L170">170</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> delete(String sql, Object... args) <strong class="jxr_keyword">throws</strong> SQLException {
 <a class="jxr_linenumber" name="L171" href="#L171">171</a>     <strong class="jxr_keyword">return</strong> update(sql, args);
 <a class="jxr_linenumber" name="L172" href="#L172">172</a>   }
 <a class="jxr_linenumber" name="L173" href="#L173">173</a> 
-<a class="jxr_linenumber" name="L174" href="#L174">174</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L175" href="#L175">175</a> <em class="jxr_comment">   * Executes any string as a JDBC Statement.</em>
-<a class="jxr_linenumber" name="L176" href="#L176">176</a> <em class="jxr_comment">   * Good for DDL</em>
-<a class="jxr_linenumber" name="L177" href="#L177">177</a> <em class="jxr_comment">   *</em>
-<a class="jxr_linenumber" name="L178" href="#L178">178</a> <em class="jxr_comment">   * @param sql The SQL</em>
-<a class="jxr_linenumber" name="L179" href="#L179">179</a> <em class="jxr_comment">   * @throws SQLException If statement preparation or execution fails</em>
-<a class="jxr_linenumber" name="L180" href="#L180">180</a> <em class="jxr_comment">   */</em>
+<a class="jxr_linenumber" name="L174" href="#L174">174</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L175" href="#L175">175</a> <em class="jxr_javadoccomment">   * Executes any string as a JDBC Statement.</em>
+<a class="jxr_linenumber" name="L176" href="#L176">176</a> <em class="jxr_javadoccomment">   * Good for DDL</em>
+<a class="jxr_linenumber" name="L177" href="#L177">177</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L178" href="#L178">178</a> <em class="jxr_javadoccomment">   * @param sql The SQL</em>
+<a class="jxr_linenumber" name="L179" href="#L179">179</a> <em class="jxr_javadoccomment">   * @throws SQLException If statement preparation or execution fails</em>
+<a class="jxr_linenumber" name="L180" href="#L180">180</a> <em class="jxr_javadoccomment">   */</em>
 <a class="jxr_linenumber" name="L181" href="#L181">181</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> run(String sql) <strong class="jxr_keyword">throws</strong> SQLException {
 <a class="jxr_linenumber" name="L182" href="#L182">182</a>     Statement stmt = connection.createStatement();
 <a class="jxr_linenumber" name="L183" href="#L183">183</a>     <strong class="jxr_keyword">try</strong> {
@@ -211,10 +211,10 @@
 <a class="jxr_linenumber" name="L203" href="#L203">203</a>     <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0, n = args.length; i &lt; n; i++) {
 <a class="jxr_linenumber" name="L204" href="#L204">204</a>       <strong class="jxr_keyword">if</strong> (args[i] == <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L205" href="#L205">205</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> SQLException(<span class="jxr_string">"SqlRunner requires an instance of Null to represent typed null values for JDBC compatibility"</span>);
-<a class="jxr_linenumber" name="L206" href="#L206">206</a>       } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (args[i] instanceof Null) {
-<a class="jxr_linenumber" name="L207" href="#L207">207</a>         ((<a href="../../../../org/apache/ibatis/jdbc/Null.html">Null</a>) args[i]).getTypeHandler().setParameter(ps, i + 1, <strong class="jxr_keyword">null</strong>, ((Null) args[i]).getJdbcType());
+<a class="jxr_linenumber" name="L206" href="#L206">206</a>       } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (args[i] instanceof <a name="Null" href="../../../../org/apache/ibatis/jdbc/Null.html#Null">Null</a>) {
+<a class="jxr_linenumber" name="L207" href="#L207">207</a>         ((<a name="Null" href="../../../../org/apache/ibatis/jdbc/Null.html#Null">Null</a>) args[i]).getTypeHan<a name="Null" href="../../../../org/apache/ibatis/jdbc/Null.html#Null">Null</a>().setParameter(ps, i + 1, <strong class="jxr_keyword">null</strong>, ((<a name="Null" href="../../../../org/apache/ibatis/jdbc/Null.html#Null">Null</a>) args[i]).getJdbcType());
 <a class="jxr_linenumber" name="L208" href="#L208">208</a>       } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L209" href="#L209">209</a>         <a href="../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a> typeHandler = typeHandlerRegistry.getTypeHandler(args[i].getClass());
+<a class="jxr_linenumber" name="L209" href="#L209">209</a>         <a name="TypeHandler" href="../../../../org/apache/ibatis/type/TypeHandler.html#TypeHandler">TypeHandler</a> typeHandler = typeHandlerRegistry.getTypeHandler(args[i].getClass());
 <a class="jxr_linenumber" name="L210" href="#L210">210</a>         <strong class="jxr_keyword">if</strong> (typeHandler == <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L211" href="#L211">211</a>           <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> SQLException(<span class="jxr_string">"SqlRunner could not find a TypeHandler instance for "</span> + args[i].getClass());
 <a class="jxr_linenumber" name="L212" href="#L212">212</a>         } <strong class="jxr_keyword">else</strong> {
@@ -226,9 +226,9 @@
 <a class="jxr_linenumber" name="L218" href="#L218">218</a> 
 <a class="jxr_linenumber" name="L219" href="#L219">219</a>   <strong class="jxr_keyword">private</strong> List&lt;Map&lt;String, Object&gt;&gt; getResults(ResultSet rs) <strong class="jxr_keyword">throws</strong> SQLException {
 <a class="jxr_linenumber" name="L220" href="#L220">220</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L221" href="#L221">221</a>       List&lt;Map&lt;String, Object&gt;&gt; list = <strong class="jxr_keyword">new</strong> ArrayList&lt;Map&lt;String, Object&gt;&gt;();
-<a class="jxr_linenumber" name="L222" href="#L222">222</a>       List&lt;String&gt; columns = <strong class="jxr_keyword">new</strong> ArrayList&lt;String&gt;();
-<a class="jxr_linenumber" name="L223" href="#L223">223</a>       List&lt;TypeHandler&lt;?&gt;&gt; typeHandlers = <strong class="jxr_keyword">new</strong> ArrayList&lt;TypeHandler&lt;?&gt;&gt;();
+<a class="jxr_linenumber" name="L221" href="#L221">221</a>       List&lt;Map&lt;String, Object&gt;&gt; list = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
+<a class="jxr_linenumber" name="L222" href="#L222">222</a>       List&lt;String&gt; columns = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
+<a class="jxr_linenumber" name="L223" href="#L223">223</a>       List&lt;TypeHandler&lt;?&gt;&gt; typeHandlers = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
 <a class="jxr_linenumber" name="L224" href="#L224">224</a>       ResultSetMetaData rsmd = rs.getMetaData();
 <a class="jxr_linenumber" name="L225" href="#L225">225</a>       <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0, n = rsmd.getColumnCount(); i &lt; n; i++) {
 <a class="jxr_linenumber" name="L226" href="#L226">226</a>         columns.add(rsmd.getColumnLabel(i + 1));
@@ -244,7 +244,7 @@
 <a class="jxr_linenumber" name="L236" href="#L236">236</a>         }
 <a class="jxr_linenumber" name="L237" href="#L237">237</a>       }
 <a class="jxr_linenumber" name="L238" href="#L238">238</a>       <strong class="jxr_keyword">while</strong> (rs.next()) {
-<a class="jxr_linenumber" name="L239" href="#L239">239</a>         Map&lt;String, Object&gt; row = <strong class="jxr_keyword">new</strong> HashMap&lt;String, Object&gt;();
+<a class="jxr_linenumber" name="L239" href="#L239">239</a>         Map&lt;String, Object&gt; row = <strong class="jxr_keyword">new</strong> HashMap&lt;&gt;();
 <a class="jxr_linenumber" name="L240" href="#L240">240</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0, n = columns.size(); i &lt; n; i++) {
 <a class="jxr_linenumber" name="L241" href="#L241">241</a>           String name = columns.get(i);
 <a class="jxr_linenumber" name="L242" href="#L242">242</a>           TypeHandler&lt;?&gt; handler = typeHandlers.get(i);
@@ -256,7 +256,7 @@
 <a class="jxr_linenumber" name="L248" href="#L248">248</a>     } <strong class="jxr_keyword">finally</strong> {
 <a class="jxr_linenumber" name="L249" href="#L249">249</a>       <strong class="jxr_keyword">if</strong> (rs != <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L250" href="#L250">250</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L251" href="#L251">251</a>             rs.close();
+<a class="jxr_linenumber" name="L251" href="#L251">251</a>           rs.close();
 <a class="jxr_linenumber" name="L252" href="#L252">252</a>         } <strong class="jxr_keyword">catch</strong> (Exception e) {
 <a class="jxr_linenumber" name="L253" href="#L253">253</a>           <em class="jxr_comment">// ignore</em>
 <a class="jxr_linenumber" name="L254" href="#L254">254</a>         }
@@ -267,6 +267,6 @@
 <a class="jxr_linenumber" name="L259" href="#L259">259</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2018 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2019 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

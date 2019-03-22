@@ -7,13 +7,13 @@
 <body>
 <div id="overview"><a href="../../../../../../../apidocs/org/apache/ibatis/reflection/wrapper/ObjectWrapper.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2015 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2019 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_javadoccomment"> *    You may obtain a copy of the License at</em>
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2." target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.</a>0</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_javadoccomment"> *    Unless required by applicable law or agreed to in writing, software</em>
 <a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_javadoccomment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
@@ -32,11 +32,11 @@
 <a class="jxr_linenumber" name="L24" href="#L24">24</a>  <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L25" href="#L25">25</a>  <em class="jxr_javadoccomment"> * @author Clinton Begin</em>
 <a class="jxr_linenumber" name="L26" href="#L26">26</a>  <em class="jxr_javadoccomment"> */</em>
-<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">interface</strong> <a href="../../../../../org/apache/ibatis/reflection/wrapper/ObjectWrapper.html">ObjectWrapper</a> {
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">interface</strong> <a name="ObjectWrapper" href="../../../../../org/apache/ibatis/reflection/wrapper/ObjectWrapper.html#ObjectWrapper">ObjectWrapper</a> {
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>  
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>    Object get(<a href="../../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html">PropertyTokenizer</a> prop);
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>    Object get(<a name="PropertyTokenizer" href="../../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a> prop);
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>  
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>    <strong class="jxr_keyword">void</strong> set(<a href="../../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html">PropertyTokenizer</a> prop, Object value);
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>    <strong class="jxr_keyword">void</strong> set(<a name="PropertyTokenizer" href="../../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a> prop, Object value);
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>  
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>    String findProperty(String name, <strong class="jxr_keyword">boolean</strong> useCamelCaseMapping);
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>  
@@ -52,17 +52,17 @@
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>  
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>    <strong class="jxr_keyword">boolean</strong> hasGetter(String name);
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>  
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>    <a href="../../../../../org/apache/ibatis/reflection/MetaObject.html">MetaObject</a> instantiatePropertyValue(String name, <a href="../../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html">PropertyTokenizer</a> prop, <a href="../../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html">ObjectFactory</a> objectFactory);
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>    
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>    <a name="MetaObject" href="../../../../../org/apache/ibatis/reflection/MetaObject.html#MetaObject">MetaObject</a> instantiatePropertyValue(String name, <a name="PropertyTokenizer" href="../../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a> prop, <a name="ObjectFactory" href="../../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html#ObjectFactory">ObjectFactory</a> objectFactory);
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>  
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>    <strong class="jxr_keyword">boolean</strong> isCollection();
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>    
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>  
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>    <strong class="jxr_keyword">void</strong> add(Object element);
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>    
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>  
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>    &lt;E&gt; <strong class="jxr_keyword">void</strong> addAll(List&lt;E&gt; element);
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>  
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2018 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2019 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

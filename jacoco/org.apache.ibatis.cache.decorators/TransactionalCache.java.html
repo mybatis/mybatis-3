@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TransactionalCache.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.cache.decorators</a> &gt; <span class="el_source">TransactionalCache.java</span></div><h1>TransactionalCache.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
@@ -27,12 +27,12 @@ import org.apache.ibatis.logging.LogFactory;
 
 /**
  * The 2nd level cache transactional buffer.
- * 
+ * &lt;p&gt;
  * This class holds all cache entries that are to be added to the 2nd level cache during a Session.
- * Entries are sent to the cache when commit is called or discarded if the Session is rolled back. 
- * Blocking cache support has been added. Therefore any get() that returns a cache miss 
- * will be followed by a put() so any lock associated with the key can be released. 
- * 
+ * Entries are sent to the cache when commit is called or discarded if the Session is rolled back.
+ * Blocking cache support has been added. Therefore any get() that returns a cache miss
+ * will be followed by a put() so any lock associated with the key can be released.
+ *
  * @author Clinton Begin
  * @author Eduardo Macarron
  */
@@ -48,8 +48,8 @@ public class TransactionalCache implements Cache {
 <span class="fc" id="L48">  public TransactionalCache(Cache delegate) {</span>
 <span class="fc" id="L49">    this.delegate = delegate;</span>
 <span class="fc" id="L50">    this.clearOnCommit = false;</span>
-<span class="fc" id="L51">    this.entriesToAddOnCommit = new HashMap&lt;Object, Object&gt;();</span>
-<span class="fc" id="L52">    this.entriesMissedInCache = new HashSet&lt;Object&gt;();</span>
+<span class="fc" id="L51">    this.entriesToAddOnCommit = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L52">    this.entriesMissedInCache = new HashSet&lt;&gt;();</span>
 <span class="fc" id="L53">  }</span>
 
   @Override
@@ -120,24 +120,24 @@ public class TransactionalCache implements Cache {
   private void flushPendingEntries() {
 <span class="fc bfc" id="L121" title="All 2 branches covered.">    for (Map.Entry&lt;Object, Object&gt; entry : entriesToAddOnCommit.entrySet()) {</span>
 <span class="fc" id="L122">      delegate.putObject(entry.getKey(), entry.getValue());</span>
-<span class="fc" id="L123">    }</span>
+    }
 <span class="fc bfc" id="L124" title="All 2 branches covered.">    for (Object entry : entriesMissedInCache) {</span>
 <span class="fc bfc" id="L125" title="All 2 branches covered.">      if (!entriesToAddOnCommit.containsKey(entry)) {</span>
 <span class="fc" id="L126">        delegate.putObject(entry, null);</span>
       }
-<span class="fc" id="L128">    }</span>
+    }
 <span class="fc" id="L129">  }</span>
 
   private void unlockMissedEntries() {
 <span class="fc bfc" id="L132" title="All 2 branches covered.">    for (Object entry : entriesMissedInCache) {</span>
       try {
 <span class="fc" id="L134">        delegate.removeObject(entry);</span>
-<span class="nc" id="L135">      } catch (Exception e) {</span>
+<span class="pc" id="L135">      } catch (Exception e) {</span>
 <span class="nc" id="L136">        log.warn(&quot;Unexpected exception while notifiying a rollback to the cache adapter.&quot;</span>
-            + &quot;Consider upgrading your cache adapter to the latest version.  Cause: &quot; + e);
-<span class="fc" id="L138">      }</span>
-<span class="fc" id="L139">    }</span>
+<span class="nc" id="L137">            + &quot;Consider upgrading your cache adapter to the latest version.  Cause: &quot; + e);</span>
+      }
+    }
 <span class="fc" id="L140">  }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

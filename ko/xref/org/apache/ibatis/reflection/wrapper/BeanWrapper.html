@@ -13,7 +13,7 @@
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_javadoccomment"> *    You may obtain a copy of the License at</em>
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2." target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.</a>0</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_javadoccomment"> *    Unless required by applicable law or agreed to in writing, software</em>
 <a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_javadoccomment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
@@ -37,19 +37,19 @@
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>  <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>  <em class="jxr_javadoccomment"> * @author Clinton Begin</em>
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>  <em class="jxr_javadoccomment"> */</em>
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../org/apache/ibatis/reflection/wrapper/BeanWrapper.html">BeanWrapper</a> <strong class="jxr_keyword">extends</strong> <a href="../../../../../org/apache/ibatis/reflection/wrapper/BaseWrapper.html">BaseWrapper</a> {
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="BeanWrapper" href="../../../../../org/apache/ibatis/reflection/wrapper/BeanWrapper.html#BeanWrapper">BeanWrapper</a> <strong class="jxr_keyword">extends</strong> <a name="BaseWrapper" href="../../../../../org/apache/ibatis/reflection/wrapper/BaseWrapper.html#BaseWrapper">BaseWrapper</a> {
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>  
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Object object;
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../../org/apache/ibatis/reflection/MetaClass.html">MetaClass</a> metaClass;
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a name="MetaClass" href="../../../../../org/apache/ibatis/reflection/MetaClass.html#MetaClass">MetaClass</a> metaClass;
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>  
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>    <strong class="jxr_keyword">public</strong> <a href="../../../../../org/apache/ibatis/reflection/wrapper/BeanWrapper.html">BeanWrapper</a>(<a href="../../../../../org/apache/ibatis/reflection/MetaObject.html">MetaObject</a> metaObject, Object object) {
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>    <strong class="jxr_keyword">public</strong> <a name="BeanWrapper" href="../../../../../org/apache/ibatis/reflection/wrapper/BeanWrapper.html#BeanWrapper">BeanWrapper</a>(<a name="MetaObject" href="../../../../../org/apache/ibatis/reflection/MetaObject.html#MetaObject">MetaObject</a> metaObject, Object object) {
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>      <strong class="jxr_keyword">super</strong>(metaObject);
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>      <strong class="jxr_keyword">this</strong>.object = object;
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>      <strong class="jxr_keyword">this</strong>.metaClass = MetaClass.forClass(object.getClass(), metaObject.getReflectorFactory());
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>    }
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>  
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>    @Override
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>    <strong class="jxr_keyword">public</strong> Object get(<a href="../../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html">PropertyTokenizer</a> prop) {
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>    <strong class="jxr_keyword">public</strong> Object get(<a name="PropertyTokenizer" href="../../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a> prop) {
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>      <strong class="jxr_keyword">if</strong> (prop.getIndex() != <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>        Object collection = resolveCollection(prop, object);
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>        <strong class="jxr_keyword">return</strong> getCollectionValue(prop, collection);
@@ -59,7 +59,7 @@
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>    }
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>  
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>    @Override
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> set(<a href="../../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html">PropertyTokenizer</a> prop, Object value) {
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> set(<a name="PropertyTokenizer" href="../../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a> prop, Object value) {
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>      <strong class="jxr_keyword">if</strong> (prop.getIndex() != <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>        Object collection = resolveCollection(prop, object);
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>        setCollectionValue(prop, collection, value);
@@ -85,9 +85,9 @@
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>  
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>    @Override
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>    <strong class="jxr_keyword">public</strong> Class&lt;?&gt; getSetterType(String name) {
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>      <a href="../../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html">PropertyTokenizer</a> prop = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html">PropertyTokenizer</a>(name);
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>      <a name="PropertyTokenizer" href="../../../../../org/apache/ibatis<a name="PropertyTokenizer" href="../../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a>rty/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a> prop = <strong class="jxr_keyword">new</strong> <a name="PropertyTokenizer" href="../../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a>(name);
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>      <strong class="jxr_keyword">if</strong> (prop.hasNext()) {
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>        <a href="../../../../../org/apache/ibatis/reflection/MetaObject.html">MetaObject</a> metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>        <a name="MetaObject" href="../../../../../org/apache/ibatis/reflection/MetaObject.html#MetaObject">MetaObject</a> metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>        <strong class="jxr_keyword">if</strong> (metaValue == SystemMetaObject.NULL_META_OBJECT) {
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>          <strong class="jxr_keyword">return</strong> metaClass.getSetterType(name);
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>        } <strong class="jxr_keyword">else</strong> {
@@ -100,9 +100,9 @@
 <a class="jxr_linenumber" name="L92" href="#L92">92</a>  
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>    @Override
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>    <strong class="jxr_keyword">public</strong> Class&lt;?&gt; getGetterType(String name) {
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>      <a href="../../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html">PropertyTokenizer</a> prop = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html">PropertyTokenizer</a>(name);
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>      <a name="PropertyTokenizer" href="../../../../../org/apache/ibatis<a name="PropertyTokenizer" href="../../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a>rty/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a> prop = <strong class="jxr_keyword">new</strong> <a name="PropertyTokenizer" href="../../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a>(name);
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>      <strong class="jxr_keyword">if</strong> (prop.hasNext()) {
-<a class="jxr_linenumber" name="L97" href="#L97">97</a>        <a href="../../../../../org/apache/ibatis/reflection/MetaObject.html">MetaObject</a> metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>        <a name="MetaObject" href="../../../../../org/apache/ibatis/reflection/MetaObject.html#MetaObject">MetaObject</a> metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>        <strong class="jxr_keyword">if</strong> (metaValue == SystemMetaObject.NULL_META_OBJECT) {
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>          <strong class="jxr_keyword">return</strong> metaClass.getGetterType(name);
 <a class="jxr_linenumber" name="L100" href="#L100">100</a>       } <strong class="jxr_keyword">else</strong> {
@@ -115,10 +115,10 @@
 <a class="jxr_linenumber" name="L107" href="#L107">107</a> 
 <a class="jxr_linenumber" name="L108" href="#L108">108</a>   @Override
 <a class="jxr_linenumber" name="L109" href="#L109">109</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hasSetter(String name) {
-<a class="jxr_linenumber" name="L110" href="#L110">110</a>     <a href="../../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html">PropertyTokenizer</a> prop = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html">PropertyTokenizer</a>(name);
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>     <a name="PropertyTokenizer" href="../../../../../org/apache/ibatis<a name="PropertyTokenizer" href="../../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a>rty/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a> prop = <strong class="jxr_keyword">new</strong> <a name="PropertyTokenizer" href="../../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a>(name);
 <a class="jxr_linenumber" name="L111" href="#L111">111</a>     <strong class="jxr_keyword">if</strong> (prop.hasNext()) {
 <a class="jxr_linenumber" name="L112" href="#L112">112</a>       <strong class="jxr_keyword">if</strong> (metaClass.hasSetter(prop.getIndexedName())) {
-<a class="jxr_linenumber" name="L113" href="#L113">113</a>         <a href="../../../../../org/apache/ibatis/reflection/MetaObject.html">MetaObject</a> metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>         <a name="MetaObject" href="../../../../../org/apache/ibatis/reflection/MetaObject.html#MetaObject">MetaObject</a> metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
 <a class="jxr_linenumber" name="L114" href="#L114">114</a>         <strong class="jxr_keyword">if</strong> (metaValue == SystemMetaObject.NULL_META_OBJECT) {
 <a class="jxr_linenumber" name="L115" href="#L115">115</a>           <strong class="jxr_keyword">return</strong> metaClass.hasSetter(name);
 <a class="jxr_linenumber" name="L116" href="#L116">116</a>         } <strong class="jxr_keyword">else</strong> {
@@ -134,10 +134,10 @@
 <a class="jxr_linenumber" name="L126" href="#L126">126</a> 
 <a class="jxr_linenumber" name="L127" href="#L127">127</a>   @Override
 <a class="jxr_linenumber" name="L128" href="#L128">128</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hasGetter(String name) {
-<a class="jxr_linenumber" name="L129" href="#L129">129</a>     <a href="../../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html">PropertyTokenizer</a> prop = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html">PropertyTokenizer</a>(name);
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>     <a name="PropertyTokenizer" href="../../../../../org/apache/ibatis<a name="PropertyTokenizer" href="../../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a>rty/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a> prop = <strong class="jxr_keyword">new</strong> <a name="PropertyTokenizer" href="../../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a>(name);
 <a class="jxr_linenumber" name="L130" href="#L130">130</a>     <strong class="jxr_keyword">if</strong> (prop.hasNext()) {
 <a class="jxr_linenumber" name="L131" href="#L131">131</a>       <strong class="jxr_keyword">if</strong> (metaClass.hasGetter(prop.getIndexedName())) {
-<a class="jxr_linenumber" name="L132" href="#L132">132</a>         <a href="../../../../../org/apache/ibatis/reflection/MetaObject.html">MetaObject</a> metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>         <a name="MetaObject" href="../../../../../org/apache/ibatis/reflection/MetaObject.html#MetaObject">MetaObject</a> metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
 <a class="jxr_linenumber" name="L133" href="#L133">133</a>         <strong class="jxr_keyword">if</strong> (metaValue == SystemMetaObject.NULL_META_OBJECT) {
 <a class="jxr_linenumber" name="L134" href="#L134">134</a>           <strong class="jxr_keyword">return</strong> metaClass.hasGetter(name);
 <a class="jxr_linenumber" name="L135" href="#L135">135</a>         } <strong class="jxr_keyword">else</strong> {
@@ -152,22 +152,22 @@
 <a class="jxr_linenumber" name="L144" href="#L144">144</a>   }
 <a class="jxr_linenumber" name="L145" href="#L145">145</a> 
 <a class="jxr_linenumber" name="L146" href="#L146">146</a>   @Override
-<a class="jxr_linenumber" name="L147" href="#L147">147</a>   <strong class="jxr_keyword">public</strong> <a href="../../../../../org/apache/ibatis/reflection/MetaObject.html">MetaObject</a> instantiatePropertyValue(String name, <a href="../../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html">PropertyTokenizer</a> prop, <a href="../../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html">ObjectFactory</a> objectFactory) {
-<a class="jxr_linenumber" name="L148" href="#L148">148</a>     <a href="../../../../../org/apache/ibatis/reflection/MetaObject.html">MetaObject</a> metaValue;
+<a class="jxr_linenumber" name="L147" href="#L147">147</a>   <strong class="jxr_keyword">public</strong> <a name="MetaObject" href="../../../../../org/apache/ibatis/reflection/MetaObject.html#MetaObject">MetaObject</a> instantiatePropertyValue(String name, <a name="PropertyTokenizer" href="../../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a> prop, <a name="ObjectFactory" href="../../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html#ObjectFactory">ObjectFactory</a> objectFactory) {
+<a class="jxr_linenumber" name="L148" href="#L148">148</a>     <a name="MetaObject" href="../../../../../org/apache/ibatis/reflection/MetaObject.html#MetaObject">MetaObject</a> metaValue;
 <a class="jxr_linenumber" name="L149" href="#L149">149</a>     Class&lt;?&gt; type = getSetterType(prop.getName());
 <a class="jxr_linenumber" name="L150" href="#L150">150</a>     <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L151" href="#L151">151</a>       Object newObject = objectFactory.create(type);
 <a class="jxr_linenumber" name="L152" href="#L152">152</a>       metaValue = MetaObject.forObject(newObject, metaObject.getObjectFactory(), metaObject.getObjectWrapperFactory(), metaObject.getReflectorFactory());
 <a class="jxr_linenumber" name="L153" href="#L153">153</a>       set(prop, newObject);
 <a class="jxr_linenumber" name="L154" href="#L154">154</a>     } <strong class="jxr_keyword">catch</strong> (Exception e) {
-<a class="jxr_linenumber" name="L155" href="#L155">155</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/reflection/ReflectionException.html">ReflectionException</a>(<span class="jxr_string">"Cannot set value of property '"</span> + name + <span class="jxr_string">"' because '"</span> + name + <span class="jxr_string">"' is null and cannot be instantiated on instance of "</span> + type.getName() + <span class="jxr_string">". Cause:"</span> + e.toString(), e);
+<a class="jxr_linenumber" name="L155" href="#L155">155</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="ReflectionException" href="../../../../../org/apache/ibatis/reflection/ReflectionException.html#ReflectionException">ReflectionException</a>(<span class="jxr_string">"Cannot set value of property '"</span> + name + <span class="jxr_string">"' because '"</span> + name + <span class="jxr_string">"' is null and cannot be instantiated on instance of "</span> + type.getName() + <span class="jxr_string">". Cause:"</span> + e.toString(), e);
 <a class="jxr_linenumber" name="L156" href="#L156">156</a>     }
 <a class="jxr_linenumber" name="L157" href="#L157">157</a>     <strong class="jxr_keyword">return</strong> metaValue;
 <a class="jxr_linenumber" name="L158" href="#L158">158</a>   }
 <a class="jxr_linenumber" name="L159" href="#L159">159</a> 
-<a class="jxr_linenumber" name="L160" href="#L160">160</a>   <strong class="jxr_keyword">private</strong> Object getBeanProperty(<a href="../../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html">PropertyTokenizer</a> prop, Object object) {
+<a class="jxr_linenumber" name="L160" href="#L160">160</a>   <strong class="jxr_keyword">private</strong> Object getBeanProperty(<a name="PropertyTokenizer" href="../../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a> prop, Object object) {
 <a class="jxr_linenumber" name="L161" href="#L161">161</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L162" href="#L162">162</a>       <a href="../../../../../org/apache/ibatis/reflection/invoker/Invoker.html">Invoker</a> method = metaClass.getGetInvoker(prop.getName());
+<a class="jxr_linenumber" name="L162" href="#L162">162</a>       <a name="Invoker" href="../../../../../org/apache/ibatis/reflection/invoker/Invoker.html#Invoker">Invoker</a> method = metaClass.getGetInvoker(prop.getName());
 <a class="jxr_linenumber" name="L163" href="#L163">163</a>       <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L164" href="#L164">164</a>         <strong class="jxr_keyword">return</strong> method.invoke(object, NO_ARGUMENTS);
 <a class="jxr_linenumber" name="L165" href="#L165">165</a>       } <strong class="jxr_keyword">catch</strong> (Throwable t) {
@@ -176,13 +176,13 @@
 <a class="jxr_linenumber" name="L168" href="#L168">168</a>     } <strong class="jxr_keyword">catch</strong> (RuntimeException e) {
 <a class="jxr_linenumber" name="L169" href="#L169">169</a>       <strong class="jxr_keyword">throw</strong> e;
 <a class="jxr_linenumber" name="L170" href="#L170">170</a>     } <strong class="jxr_keyword">catch</strong> (Throwable t) {
-<a class="jxr_linenumber" name="L171" href="#L171">171</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/reflection/ReflectionException.html">ReflectionException</a>(<span class="jxr_string">"Could not get property '"</span> + prop.getName() + <span class="jxr_string">"' from "</span> + object.getClass() + <span class="jxr_string">".  Cause: "</span> + t.toString(), t);
+<a class="jxr_linenumber" name="L171" href="#L171">171</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="ReflectionException" href="../../../../../org/apache/ibatis/reflection/ReflectionException.html#ReflectionException">ReflectionException</a>(<span class="jxr_string">"Could not get property '"</span> + prop.getName() + <span class="jxr_string">"' from "</span> + object.getClass() + <span class="jxr_string">".  Cause: "</span> + t.toString(), t);
 <a class="jxr_linenumber" name="L172" href="#L172">172</a>     }
 <a class="jxr_linenumber" name="L173" href="#L173">173</a>   }
 <a class="jxr_linenumber" name="L174" href="#L174">174</a> 
-<a class="jxr_linenumber" name="L175" href="#L175">175</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> setBeanProperty(<a href="../../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html">PropertyTokenizer</a> prop, Object object, Object value) {
+<a class="jxr_linenumber" name="L175" href="#L175">175</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> setBeanProperty(<a name="PropertyTokenizer" href="../../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a> prop, Object object, Object value) {
 <a class="jxr_linenumber" name="L176" href="#L176">176</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L177" href="#L177">177</a>       <a href="../../../../../org/apache/ibatis/reflection/invoker/Invoker.html">Invoker</a> method = metaClass.getSetInvoker(prop.getName());
+<a class="jxr_linenumber" name="L177" href="#L177">177</a>       <a name="Invoker" href="../../../../../org/apache/ibatis/reflection/invoker/Invoker.html#Invoker">Invoker</a> method = metaClass.getSetInvoker(prop.getName());
 <a class="jxr_linenumber" name="L178" href="#L178">178</a>       Object[] params = {value};
 <a class="jxr_linenumber" name="L179" href="#L179">179</a>       <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L180" href="#L180">180</a>         method.invoke(object, params);
@@ -190,7 +190,7 @@
 <a class="jxr_linenumber" name="L182" href="#L182">182</a>         <strong class="jxr_keyword">throw</strong> ExceptionUtil.unwrapThrowable(t);
 <a class="jxr_linenumber" name="L183" href="#L183">183</a>       }
 <a class="jxr_linenumber" name="L184" href="#L184">184</a>     } <strong class="jxr_keyword">catch</strong> (Throwable t) {
-<a class="jxr_linenumber" name="L185" href="#L185">185</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/reflection/ReflectionException.html">ReflectionException</a>(<span class="jxr_string">"Could not set property '"</span> + prop.getName() + <span class="jxr_string">"' of '"</span> + object.getClass() + <span class="jxr_string">"' with value '"</span> + value + <span class="jxr_string">"' Cause: "</span> + t.toString(), t);
+<a class="jxr_linenumber" name="L185" href="#L185">185</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="ReflectionException" href="../../../../../org/apache/ibatis/reflection/ReflectionException.html#ReflectionException">ReflectionException</a>(<span class="jxr_string">"Could not set property '"</span> + prop.getName() + <span class="jxr_string">"' of '"</span> + object.getClass() + <span class="jxr_string">"' with value '"</span> + value + <span class="jxr_string">"' Cause: "</span> + t.toString(), t);
 <a class="jxr_linenumber" name="L186" href="#L186">186</a>     }
 <a class="jxr_linenumber" name="L187" href="#L187">187</a>   }
 <a class="jxr_linenumber" name="L188" href="#L188">188</a> 
@@ -212,6 +212,6 @@
 <a class="jxr_linenumber" name="L204" href="#L204">204</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2018 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2019 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

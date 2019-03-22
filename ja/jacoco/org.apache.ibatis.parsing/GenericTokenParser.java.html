@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ja"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GenericTokenParser.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.parsing</a> &gt; <span class="el_source">GenericTokenParser.java</span></div><h1>GenericTokenParser.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ public class GenericTokenParser {
 <span class="fc" id="L35">      return &quot;&quot;;</span>
     }
     // search open token
-<span class="fc" id="L38">    int start = text.indexOf(openToken, 0);</span>
+<span class="fc" id="L38">    int start = text.indexOf(openToken);</span>
 <span class="fc bfc" id="L39" title="All 2 branches covered.">    if (start == -1) {</span>
 <span class="fc" id="L40">      return text;</span>
     }
@@ -48,11 +48,11 @@ public class GenericTokenParser {
         // this open token is escaped. remove the backslash and continue.
 <span class="fc" id="L49">        builder.append(src, offset, start - offset - 1).append(openToken);</span>
 <span class="fc" id="L50">        offset = start + openToken.length();</span>
-      } else {
+<span class="fc" id="L51">      } else {</span>
         // found open token. let's search close token.
 <span class="fc bfc" id="L53" title="All 2 branches covered.">        if (expression == null) {</span>
 <span class="fc" id="L54">          expression = new StringBuilder();</span>
-        } else {
+<span class="fc" id="L55">        } else {</span>
 <span class="fc" id="L56">          expression.setLength(0);</span>
         }
 <span class="fc" id="L58">        builder.append(src, offset, start - offset);</span>
@@ -64,7 +64,7 @@ public class GenericTokenParser {
 <span class="fc" id="L64">            expression.append(src, offset, end - offset - 1).append(closeToken);</span>
 <span class="fc" id="L65">            offset = end + closeToken.length();</span>
 <span class="fc" id="L66">            end = text.indexOf(closeToken, offset);</span>
-          } else {
+<span class="fc" id="L67">          } else {</span>
 <span class="fc" id="L68">            expression.append(src, offset, end - offset);</span>
 <span class="fc" id="L69">            offset = end + closeToken.length();</span>
 <span class="fc" id="L70">            break;</span>
@@ -74,7 +74,7 @@ public class GenericTokenParser {
           // close token was not found.
 <span class="fc" id="L75">          builder.append(src, start, src.length - start);</span>
 <span class="fc" id="L76">          offset = src.length;</span>
-        } else {
+<span class="fc" id="L77">        } else {</span>
 <span class="fc" id="L78">          builder.append(handler.handleToken(expression.toString()));</span>
 <span class="fc" id="L79">          offset = end + closeToken.length();</span>
         }
@@ -87,4 +87,4 @@ public class GenericTokenParser {
 <span class="fc" id="L87">    return builder.toString();</span>
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -7,13 +7,13 @@
 <body>
 <div id="overview"><a href="../../../../../../apidocs/org/apache/ibatis/io/DefaultVFS.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2015 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2019 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_javadoccomment"> *    You may obtain a copy of the License at</em>
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2." target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.</a>0</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_javadoccomment"> *    Unless required by applicable law or agreed to in writing, software</em>
 <a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_javadoccomment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
@@ -44,11 +44,11 @@
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>  
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>  <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>  <em class="jxr_javadoccomment"> * A default implementation of {@link VFS} that works for most application servers.</em>
-<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <em class="jxr_javadoccomment"> * </em>
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>  <em class="jxr_javadoccomment"> * @author Ben Gunter</em>
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>  <em class="jxr_javadoccomment"> */</em>
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/apache/ibatis/io/DefaultVFS.html">DefaultVFS</a> <strong class="jxr_keyword">extends</strong> <a href="../../../../org/apache/ibatis/io/VFS.html">VFS</a> {
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../org/apache/ibatis/logging/Log.html">Log</a> log = LogFactory.getLog(DefaultVFS.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="DefaultVFS" href="../../../../org/apache/ibatis/io/DefaultVFS.html#DefaultVFS">DefaultVFS</a> <strong class="jxr_keyword">extends</strong> <a name="VFS" href="../../../../org/apache/ibatis/io/VFS.html#VFS">VFS</a> {
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a name="Log" href="../../../../org/apache/ibatis/logging/Log.html#Log">Log</a> log = LogFactory.getLog(DefaultVFS.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>  
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>    <em class="jxr_javadoccomment">/** The magic header that indicates a JAR (ZIP) file. */</em>
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> byte[] JAR_MAGIC = { 'P', 'K', 3, 4 };
@@ -62,7 +62,7 @@
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>    <strong class="jxr_keyword">public</strong> List&lt;String&gt; list(URL url, String path) <strong class="jxr_keyword">throws</strong> IOException {
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>      InputStream is = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>        List&lt;String&gt; resources = <strong class="jxr_keyword">new</strong> ArrayList&lt;String&gt;();
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>        List&lt;String&gt; resources = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>  
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>        <em class="jxr_comment">// First, try to find the URL of a JAR file containing the requested resource. If a JAR</em>
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>        <em class="jxr_comment">// file is found, then we'll list child resources by reading the JAR.</em>
@@ -75,23 +75,23 @@
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>          resources = listResources(<strong class="jxr_keyword">new</strong> JarInputStream(is), path);
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>        }
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>        <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>          List&lt;String&gt; children = <strong class="jxr_keyword">new</strong> ArrayList&lt;String&gt;();
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>          List&lt;String&gt; children = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>          <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>            <strong class="jxr_keyword">if</strong> (isJar(url)) {
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>              <em class="jxr_comment">// Some versions of JBoss VFS might give a JAR stream even if the resource</em>
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>              <em class="jxr_comment">// referenced by the URL isn't actually a JAR</em>
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>              is = url.openStream();
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>              JarInputStream jarInput = <strong class="jxr_keyword">new</strong> JarInputStream(is);
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>              <strong class="jxr_keyword">if</strong> (log.isDebugEnabled()) {
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>                log.debug(<span class="jxr_string">"Listing "</span> + url);
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>              }
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>              <strong class="jxr_keyword">for</strong> (JarEntry entry; (entry = jarInput.getNextJarEntry()) != <strong class="jxr_keyword">null</strong>;) {
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>                <strong class="jxr_keyword">if</strong> (log.isDebugEnabled()) {
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>                  log.debug(<span class="jxr_string">"Jar entry: "</span> + entry.getName());
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>                }
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>                children.add(entry.getName());
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>              }
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>              jarInput.close();
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>              <strong class="jxr_keyword">try</strong> (JarInputStream jarInput = <strong class="jxr_keyword">new</strong> JarInputStream(is)) {
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>                <strong class="jxr_keyword">if</strong> (log.isDebugEnabled()) {
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>                  log.debug(<span class="jxr_string">"Listing "</span> + url);
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>                }
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>                <strong class="jxr_keyword">for</strong> (JarEntry entry; (entry = jarInput.getNextJarEntry()) != <strong class="jxr_keyword">null</strong>; ) {
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>                  <strong class="jxr_keyword">if</strong> (log.isDebugEnabled()) {
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>                    log.debug(<span class="jxr_string">"Jar entry: "</span> + entry.getName());
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>                  }
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>                  children.add(entry.getName());
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>                }
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>              }
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>            }
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>            <strong class="jxr_keyword">else</strong> {
 <a class="jxr_linenumber" name="L89" href="#L89">89</a>              <em class="jxr_comment">/*</em>
@@ -104,7 +104,7 @@
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>  <em class="jxr_comment">             */</em>
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>              is = url.openStream();
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>              BufferedReader reader = <strong class="jxr_keyword">new</strong> BufferedReader(<strong class="jxr_keyword">new</strong> InputStreamReader(is));
-<a class="jxr_linenumber" name="L99" href="#L99">99</a>              List&lt;String&gt; lines = <strong class="jxr_keyword">new</strong> ArrayList&lt;String&gt;();
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>              List&lt;String&gt; lines = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
 <a class="jxr_linenumber" name="L100" href="#L100">100</a>             <strong class="jxr_keyword">for</strong> (String line; (line = reader.readLine()) != <strong class="jxr_keyword">null</strong>;) {
 <a class="jxr_linenumber" name="L101" href="#L101">101</a>               <strong class="jxr_keyword">if</strong> (log.isDebugEnabled()) {
 <a class="jxr_linenumber" name="L102" href="#L102">102</a>                 log.debug(<span class="jxr_string">"Reader entry: "</span> + line);
@@ -177,7 +177,7 @@
 <a class="jxr_linenumber" name="L169" href="#L169">169</a>   <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L170" href="#L170">170</a> <em class="jxr_javadoccomment">   * List the names of the entries in the given {@link JarInputStream} that begin with the</em>
 <a class="jxr_linenumber" name="L171" href="#L171">171</a> <em class="jxr_javadoccomment">   * specified {@code path}. Entries will match with or without a leading slash.</em>
-<a class="jxr_linenumber" name="L172" href="#L172">172</a> <em class="jxr_javadoccomment">   * </em>
+<a class="jxr_linenumber" name="L172" href="#L172">172</a> <em class="jxr_javadoccomment">   *</em>
 <a class="jxr_linenumber" name="L173" href="#L173">173</a> <em class="jxr_javadoccomment">   * @param jar The JAR input stream</em>
 <a class="jxr_linenumber" name="L174" href="#L174">174</a> <em class="jxr_javadoccomment">   * @param path The leading path to match</em>
 <a class="jxr_linenumber" name="L175" href="#L175">175</a> <em class="jxr_javadoccomment">   * @return The names of all the matching entries</em>
@@ -193,17 +193,17 @@
 <a class="jxr_linenumber" name="L185" href="#L185">185</a>     }
 <a class="jxr_linenumber" name="L186" href="#L186">186</a> 
 <a class="jxr_linenumber" name="L187" href="#L187">187</a>     <em class="jxr_comment">// Iterate over the entries and collect those that begin with the requested path</em>
-<a class="jxr_linenumber" name="L188" href="#L188">188</a>     List&lt;String&gt; resources = <strong class="jxr_keyword">new</strong> ArrayList&lt;String&gt;();
+<a class="jxr_linenumber" name="L188" href="#L188">188</a>     List&lt;String&gt; resources = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
 <a class="jxr_linenumber" name="L189" href="#L189">189</a>     <strong class="jxr_keyword">for</strong> (JarEntry entry; (entry = jar.getNextJarEntry()) != <strong class="jxr_keyword">null</strong>;) {
 <a class="jxr_linenumber" name="L190" href="#L190">190</a>       <strong class="jxr_keyword">if</strong> (!entry.isDirectory()) {
 <a class="jxr_linenumber" name="L191" href="#L191">191</a>         <em class="jxr_comment">// Add leading slash if it's missing</em>
-<a class="jxr_linenumber" name="L192" href="#L192">192</a>         String name = entry.getName();
-<a class="jxr_linenumber" name="L193" href="#L193">193</a>         <strong class="jxr_keyword">if</strong> (!name.startsWith(<span class="jxr_string">"/"</span>)) {
-<a class="jxr_linenumber" name="L194" href="#L194">194</a>           name = <span class="jxr_string">"/"</span> + name;
+<a class="jxr_linenumber" name="L192" href="#L192">192</a>         StringBuilder name = <strong class="jxr_keyword">new</strong> StringBuilder(entry.getName());
+<a class="jxr_linenumber" name="L193" href="#L193">193</a>         <strong class="jxr_keyword">if</strong> (name.charAt(0) != '/') {
+<a class="jxr_linenumber" name="L194" href="#L194">194</a>           name.insert(0, '/');
 <a class="jxr_linenumber" name="L195" href="#L195">195</a>         }
 <a class="jxr_linenumber" name="L196" href="#L196">196</a> 
 <a class="jxr_linenumber" name="L197" href="#L197">197</a>         <em class="jxr_comment">// Check file name</em>
-<a class="jxr_linenumber" name="L198" href="#L198">198</a>         <strong class="jxr_keyword">if</strong> (name.startsWith(path)) {
+<a class="jxr_linenumber" name="L198" href="#L198">198</a>         <strong class="jxr_keyword">if</strong> (name.indexOf(path) == 0) {
 <a class="jxr_linenumber" name="L199" href="#L199">199</a>           <strong class="jxr_keyword">if</strong> (log.isDebugEnabled()) {
 <a class="jxr_linenumber" name="L200" href="#L200">200</a>             log.debug(<span class="jxr_string">"Found resource: "</span> + name);
 <a class="jxr_linenumber" name="L201" href="#L201">201</a>           }
@@ -220,7 +220,7 @@
 <a class="jxr_linenumber" name="L212" href="#L212">212</a> <em class="jxr_javadoccomment">   * by the URL. That is, assuming the URL references a JAR entry, this method will return a URL</em>
 <a class="jxr_linenumber" name="L213" href="#L213">213</a> <em class="jxr_javadoccomment">   * that references the JAR file containing the entry. If the JAR cannot be located, then this</em>
 <a class="jxr_linenumber" name="L214" href="#L214">214</a> <em class="jxr_javadoccomment">   * method returns null.</em>
-<a class="jxr_linenumber" name="L215" href="#L215">215</a> <em class="jxr_javadoccomment">   * </em>
+<a class="jxr_linenumber" name="L215" href="#L215">215</a> <em class="jxr_javadoccomment">   *</em>
 <a class="jxr_linenumber" name="L216" href="#L216">216</a> <em class="jxr_javadoccomment">   * @param url The URL of the JAR entry.</em>
 <a class="jxr_linenumber" name="L217" href="#L217">217</a> <em class="jxr_javadoccomment">   * @return The URL of the JAR file, if one is found. Null if not.</em>
 <a class="jxr_linenumber" name="L218" href="#L218">218</a> <em class="jxr_javadoccomment">   * @throws MalformedURLException</em>
@@ -304,7 +304,7 @@
 <a class="jxr_linenumber" name="L296" href="#L296">296</a>   <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L297" href="#L297">297</a> <em class="jxr_javadoccomment">   * Converts a Java package name to a path that can be looked up with a call to</em>
 <a class="jxr_linenumber" name="L298" href="#L298">298</a> <em class="jxr_javadoccomment">   * {@link ClassLoader#getResources(String)}.</em>
-<a class="jxr_linenumber" name="L299" href="#L299">299</a> <em class="jxr_javadoccomment">   * </em>
+<a class="jxr_linenumber" name="L299" href="#L299">299</a> <em class="jxr_javadoccomment">   *</em>
 <a class="jxr_linenumber" name="L300" href="#L300">300</a> <em class="jxr_javadoccomment">   * @param packageName The Java package name to convert to a path</em>
 <a class="jxr_linenumber" name="L301" href="#L301">301</a> <em class="jxr_javadoccomment">   */</em>
 <a class="jxr_linenumber" name="L302" href="#L302">302</a>   <strong class="jxr_keyword">protected</strong> String getPackagePath(String packageName) {
@@ -313,7 +313,7 @@
 <a class="jxr_linenumber" name="L305" href="#L305">305</a> 
 <a class="jxr_linenumber" name="L306" href="#L306">306</a>   <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L307" href="#L307">307</a> <em class="jxr_javadoccomment">   * Returns true if the resource located at the given URL is a JAR file.</em>
-<a class="jxr_linenumber" name="L308" href="#L308">308</a> <em class="jxr_javadoccomment">   * </em>
+<a class="jxr_linenumber" name="L308" href="#L308">308</a> <em class="jxr_javadoccomment">   *</em>
 <a class="jxr_linenumber" name="L309" href="#L309">309</a> <em class="jxr_javadoccomment">   * @param url The URL of the resource to test.</em>
 <a class="jxr_linenumber" name="L310" href="#L310">310</a> <em class="jxr_javadoccomment">   */</em>
 <a class="jxr_linenumber" name="L311" href="#L311">311</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">boolean</strong> isJar(URL url) {
@@ -322,7 +322,7 @@
 <a class="jxr_linenumber" name="L314" href="#L314">314</a> 
 <a class="jxr_linenumber" name="L315" href="#L315">315</a>   <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L316" href="#L316">316</a> <em class="jxr_javadoccomment">   * Returns true if the resource located at the given URL is a JAR file.</em>
-<a class="jxr_linenumber" name="L317" href="#L317">317</a> <em class="jxr_javadoccomment">   * </em>
+<a class="jxr_linenumber" name="L317" href="#L317">317</a> <em class="jxr_javadoccomment">   *</em>
 <a class="jxr_linenumber" name="L318" href="#L318">318</a> <em class="jxr_javadoccomment">   * @param url The URL of the resource to test.</em>
 <a class="jxr_linenumber" name="L319" href="#L319">319</a> <em class="jxr_javadoccomment">   * @param buffer A buffer into which the first few bytes of the resource are read. The buffer</em>
 <a class="jxr_linenumber" name="L320" href="#L320">320</a> <em class="jxr_javadoccomment">   *            must be at least the size of {@link #JAR_MAGIC}. (The same buffer may be reused</em>
@@ -356,6 +356,6 @@
 <a class="jxr_linenumber" name="L348" href="#L348">348</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2018 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2019 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

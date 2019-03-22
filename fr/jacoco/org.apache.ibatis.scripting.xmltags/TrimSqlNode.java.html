@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TrimSqlNode.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.scripting.xmltags</a> &gt; <span class="el_source">TrimSqlNode.java</span></div><h1>TrimSqlNode.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ public class TrimSqlNode implements SqlNode {
   private static List&lt;String&gt; parseOverrides(String overrides) {
 <span class="fc bfc" id="L61" title="All 2 branches covered.">    if (overrides != null) {</span>
 <span class="fc" id="L62">      final StringTokenizer parser = new StringTokenizer(overrides, &quot;|&quot;, false);</span>
-<span class="fc" id="L63">      final List&lt;String&gt; list = new ArrayList&lt;String&gt;(parser.countTokens());</span>
+<span class="fc" id="L63">      final List&lt;String&gt; list = new ArrayList&lt;&gt;(parser.countTokens());</span>
 <span class="fc bfc" id="L64" title="All 2 branches covered.">      while (parser.hasMoreTokens()) {</span>
 <span class="fc" id="L65">        list.add(parser.nextToken().toUpperCase(Locale.ENGLISH));</span>
       }
@@ -121,13 +121,13 @@ public class TrimSqlNode implements SqlNode {
     private void applyPrefix(StringBuilder sql, String trimmedUppercaseSql) {
 <span class="pc bpc" id="L122" title="1 of 2 branches missed.">      if (!prefixApplied) {</span>
 <span class="fc" id="L123">        prefixApplied = true;</span>
-<span class="fc bfc" id="L124" title="All 2 branches covered.">        if (prefixesToOverride != null) {</span>
+<span class="pc bpc" id="L124" title="1 of 2 branches missed.">        if (prefixesToOverride != null) {</span>
 <span class="fc bfc" id="L125" title="All 2 branches covered.">          for (String toRemove : prefixesToOverride) {</span>
 <span class="fc bfc" id="L126" title="All 2 branches covered.">            if (trimmedUppercaseSql.startsWith(toRemove)) {</span>
 <span class="fc" id="L127">              sql.delete(0, toRemove.trim().length());</span>
 <span class="fc" id="L128">              break;</span>
             }
-<span class="fc" id="L130">          }</span>
+          }
         }
 <span class="pc bpc" id="L132" title="1 of 2 branches missed.">        if (prefix != null) {</span>
 <span class="fc" id="L133">          sql.insert(0, &quot; &quot;);</span>
@@ -141,17 +141,17 @@ public class TrimSqlNode implements SqlNode {
 <span class="fc" id="L141">        suffixApplied = true;</span>
 <span class="fc bfc" id="L142" title="All 2 branches covered.">        if (suffixesToOverride != null) {</span>
 <span class="fc bfc" id="L143" title="All 2 branches covered.">          for (String toRemove : suffixesToOverride) {</span>
-<span class="pc bpc" id="L144" title="3 of 4 branches missed.">            if (trimmedUppercaseSql.endsWith(toRemove) || trimmedUppercaseSql.endsWith(toRemove.trim())) {</span>
+<span class="pc bpc" id="L144" title="1 of 4 branches missed.">            if (trimmedUppercaseSql.endsWith(toRemove) || trimmedUppercaseSql.endsWith(toRemove.trim())) {</span>
 <span class="fc" id="L145">              int start = sql.length() - toRemove.trim().length();</span>
 <span class="fc" id="L146">              int end = sql.length();</span>
 <span class="fc" id="L147">              sql.delete(start, end);</span>
 <span class="fc" id="L148">              break;</span>
             }
-<span class="nc" id="L150">          }</span>
+          }
         }
-<span class="pc bpc" id="L152" title="1 of 2 branches missed.">        if (suffix != null) {</span>
-<span class="nc" id="L153">          sql.append(&quot; &quot;);</span>
-<span class="nc" id="L154">          sql.append(suffix);</span>
+<span class="fc bfc" id="L152" title="All 2 branches covered.">        if (suffix != null) {</span>
+<span class="fc" id="L153">          sql.append(&quot; &quot;);</span>
+<span class="fc" id="L154">          sql.append(suffix);</span>
         }
       }
 <span class="fc" id="L157">    }</span>
@@ -159,4 +159,4 @@ public class TrimSqlNode implements SqlNode {
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

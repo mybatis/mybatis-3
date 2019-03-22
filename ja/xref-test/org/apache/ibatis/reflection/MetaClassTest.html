@@ -7,13 +7,13 @@
 <body>
 <div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/reflection/MetaClassTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2017 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2019 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_javadoccomment"> *    You may obtain a copy of the License at</em>
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2." target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.</a>0</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_javadoccomment"> *    Unless required by applicable law or agreed to in writing, software</em>
 <a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_javadoccomment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
@@ -23,41 +23,41 @@
 <a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">package</strong> org.apache.ibatis.reflection;
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  
-<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.Assert.assertEquals;
-<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.Assert.assertFalse;
-<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.Assert.assertTrue;
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.jupiter.api.Assertions.assertEquals;
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.jupiter.api.Assertions.assertFalse;
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.jupiter.api.Assertions.assertTrue;
 <a class="jxr_linenumber" name="L21" href="#L21">21</a>  
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> java.util.HashMap;
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> java.util.List;
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> java.util.Map;
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>  
-<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.domain.misc.RichType;
-<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.domain.misc.generics.GenericConcrete;
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> org.junit.Test;
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>  
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/apache/ibatis/reflection/MetaClassTest.html">MetaClassTest</a> {
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>  
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>    <strong class="jxr_keyword">private</strong> <a href="../../../../org/apache/ibatis/domain/misc/RichType.html">RichType</a> rich = <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/domain/misc/RichType.html">RichType</a>();
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>    Map&lt;String,RichType&gt; map = <strong class="jxr_keyword">new</strong> HashMap&lt;String,RichType&gt;() {
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>      {
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>        put(<span class="jxr_string">"richType"</span>, rich);
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>      }
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>    };
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> java.util.List;
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> java.util.Map;
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.domain.misc.RichType;
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.domain.misc.generics.GenericConcrete;
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.api.Test;
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">class</strong> <a name="MetaClassTest" href="../../../../org/apache/ibatis/reflection/MetaClassTest.html#MetaClassTest">MetaClassTest</a> {
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>    @Test
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>    <strong class="jxr_keyword">void</strong> shouldTestDataTypeOfGenericMethod() {
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>      ReflectorFactory reflectorFactory = <strong class="jxr_keyword">new</strong> DefaultReflectorFactory();
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>      MetaClass meta = MetaClass.forClass(GenericConcrete.<strong class="jxr_keyword">class</strong>, reflectorFactory);
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>      assertEquals(Long.<strong class="jxr_keyword">class</strong>, meta.getGetterType(<span class="jxr_string">"id"</span>));
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>      assertEquals(Long.<strong class="jxr_keyword">class</strong>, meta.getSetterType(<span class="jxr_string">"id"</span>));
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>    }
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>  
-<a class="jxr_linenumber" name="L39" href="#L39">39</a>    <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/reflection/MetaClassTest.html">MetaClassTest</a>() {
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>      rich.setRichType(<strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/domain/misc/RichType.html">RichType</a>());
-<a class="jxr_linenumber" name="L41" href="#L41">41</a>    }
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>  
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>    @Test
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldTestDataTypeOfGenericMethod() {
-<a class="jxr_linenumber" name="L45" href="#L45">45</a>      ReflectorFactory reflectorFactory = <strong class="jxr_keyword">new</strong> DefaultReflectorFactory();
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>      MetaClass meta = MetaClass.forClass(GenericConcrete.<strong class="jxr_keyword">class</strong>, reflectorFactory);
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>      assertEquals(Long.<strong class="jxr_keyword">class</strong>, meta.getGetterType(<span class="jxr_string">"id"</span>));
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>      assertEquals(Long.<strong class="jxr_keyword">class</strong>, meta.getSetterType(<span class="jxr_string">"id"</span>));
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>    @Test
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>    <strong class="jxr_keyword">void</strong> shouldThrowReflectionExceptionGetGetterType() {
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>      <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>        ReflectorFactory reflectorFactory = <strong class="jxr_keyword">new</strong> DefaultReflectorFactory();
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>        MetaClass meta = MetaClass.forClass(RichType.<strong class="jxr_keyword">class</strong>, reflectorFactory);
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>        meta.getGetterType(<span class="jxr_string">"aString"</span>);
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>        org.junit.jupiter.api.Assertions.fail(<span class="jxr_string">"should have thrown ReflectionException"</span>);
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>      } <strong class="jxr_keyword">catch</strong> (ReflectionException expected) {
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>        assertEquals(<span class="jxr_string">"There is no getter for property named \'aString\' in \'class org.apache.ibatis.domain.misc.RichType\'"</span>, expected.getMessage());
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>      }
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>    }
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>  
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>    @Test
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldCheckGetterExistance() {
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>    <strong class="jxr_keyword">void</strong> shouldCheckGetterExistance() {
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>      ReflectorFactory reflectorFactory = <strong class="jxr_keyword">new</strong> DefaultReflectorFactory();
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>      MetaClass meta = MetaClass.forClass(RichType.<strong class="jxr_keyword">class</strong>, reflectorFactory);
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>      assertTrue(meta.hasGetter(<span class="jxr_string">"richField"</span>));
@@ -79,7 +79,7 @@
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>    }
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>  
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>    @Test
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldCheckSetterExistance() {
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>    <strong class="jxr_keyword">void</strong> shouldCheckSetterExistance() {
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>      ReflectorFactory reflectorFactory = <strong class="jxr_keyword">new</strong> DefaultReflectorFactory();
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>      MetaClass meta = MetaClass.forClass(RichType.<strong class="jxr_keyword">class</strong>, reflectorFactory);
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>      assertTrue(meta.hasSetter(<span class="jxr_string">"richField"</span>));
@@ -99,7 +99,7 @@
 <a class="jxr_linenumber" name="L91" href="#L91">91</a>    }
 <a class="jxr_linenumber" name="L92" href="#L92">92</a>  
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>    @Test
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldCheckTypeForEachGetter() {
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>    <strong class="jxr_keyword">void</strong> shouldCheckTypeForEachGetter() {
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>      ReflectorFactory reflectorFactory = <strong class="jxr_keyword">new</strong> DefaultReflectorFactory();
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>      MetaClass meta = MetaClass.forClass(RichType.<strong class="jxr_keyword">class</strong>, reflectorFactory);
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>      assertEquals(String.<strong class="jxr_keyword">class</strong>, meta.getGetterType(<span class="jxr_string">"richField"</span>));
@@ -117,7 +117,7 @@
 <a class="jxr_linenumber" name="L109" href="#L109">109</a>   }
 <a class="jxr_linenumber" name="L110" href="#L110">110</a> 
 <a class="jxr_linenumber" name="L111" href="#L111">111</a>   @Test
-<a class="jxr_linenumber" name="L112" href="#L112">112</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldCheckTypeForEachSetter() {
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>   <strong class="jxr_keyword">void</strong> shouldCheckTypeForEachSetter() {
 <a class="jxr_linenumber" name="L113" href="#L113">113</a>     ReflectorFactory reflectorFactory = <strong class="jxr_keyword">new</strong> DefaultReflectorFactory();
 <a class="jxr_linenumber" name="L114" href="#L114">114</a>     MetaClass meta = MetaClass.forClass(RichType.<strong class="jxr_keyword">class</strong>, reflectorFactory);
 <a class="jxr_linenumber" name="L115" href="#L115">115</a>     assertEquals(String.<strong class="jxr_keyword">class</strong>, meta.getSetterType(<span class="jxr_string">"richField"</span>));
@@ -135,7 +135,7 @@
 <a class="jxr_linenumber" name="L127" href="#L127">127</a>   }
 <a class="jxr_linenumber" name="L128" href="#L128">128</a> 
 <a class="jxr_linenumber" name="L129" href="#L129">129</a>   @Test
-<a class="jxr_linenumber" name="L130" href="#L130">130</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldCheckGetterAndSetterNames() {
+<a class="jxr_linenumber" name="L130" href="#L130">130</a>   <strong class="jxr_keyword">void</strong> shouldCheckGetterAndSetterNames() {
 <a class="jxr_linenumber" name="L131" href="#L131">131</a>     ReflectorFactory reflectorFactory = <strong class="jxr_keyword">new</strong> DefaultReflectorFactory();
 <a class="jxr_linenumber" name="L132" href="#L132">132</a>     MetaClass meta = MetaClass.forClass(RichType.<strong class="jxr_keyword">class</strong>, reflectorFactory);
 <a class="jxr_linenumber" name="L133" href="#L133">133</a>     assertEquals(5, meta.getGetterNames().length);
@@ -143,7 +143,7 @@
 <a class="jxr_linenumber" name="L135" href="#L135">135</a>   }
 <a class="jxr_linenumber" name="L136" href="#L136">136</a> 
 <a class="jxr_linenumber" name="L137" href="#L137">137</a>   @Test
-<a class="jxr_linenumber" name="L138" href="#L138">138</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldFindPropertyName() {
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>   <strong class="jxr_keyword">void</strong> shouldFindPropertyName() {
 <a class="jxr_linenumber" name="L139" href="#L139">139</a>     ReflectorFactory reflectorFactory = <strong class="jxr_keyword">new</strong> DefaultReflectorFactory();
 <a class="jxr_linenumber" name="L140" href="#L140">140</a>     MetaClass meta = MetaClass.forClass(RichType.<strong class="jxr_keyword">class</strong>, reflectorFactory);
 <a class="jxr_linenumber" name="L141" href="#L141">141</a>     assertEquals(<span class="jxr_string">"richField"</span>, meta.findProperty(<span class="jxr_string">"RICHfield"</span>));
@@ -152,6 +152,6 @@
 <a class="jxr_linenumber" name="L144" href="#L144">144</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2018 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2019 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

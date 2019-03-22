@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TypeAliasRegistry.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.type</a> &gt; <span class="el_source">TypeAliasRegistry.java</span></div><h1>TypeAliasRegistry.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ import org.apache.ibatis.io.Resources;
  */
 public class TypeAliasRegistry {
 
-<span class="fc" id="L40">  private final Map&lt;String, Class&lt;?&gt;&gt; TYPE_ALIASES = new HashMap&lt;String, Class&lt;?&gt;&gt;();</span>
+<span class="fc" id="L40">  private final Map&lt;String, Class&lt;?&gt;&gt; typeAliases = new HashMap&lt;&gt;();</span>
 
 <span class="fc" id="L42">  public TypeAliasRegistry() {</span>
 <span class="fc" id="L43">    registerAlias(&quot;string&quot;, String.class);</span>
@@ -110,9 +110,9 @@ public class TypeAliasRegistry {
       // issue #748
 <span class="fc" id="L111">      String key = string.toLowerCase(Locale.ENGLISH);</span>
       Class&lt;T&gt; value;
-<span class="fc bfc" id="L113" title="All 2 branches covered.">      if (TYPE_ALIASES.containsKey(key)) {</span>
-<span class="fc" id="L114">        value = (Class&lt;T&gt;) TYPE_ALIASES.get(key);</span>
-      } else {
+<span class="fc bfc" id="L113" title="All 2 branches covered.">      if (typeAliases.containsKey(key)) {</span>
+<span class="fc" id="L114">        value = (Class&lt;T&gt;) typeAliases.get(key);</span>
+<span class="fc" id="L115">      } else {</span>
 <span class="fc" id="L116">        value = (Class&lt;T&gt;) Resources.classForName(string);</span>
       }
 <span class="fc" id="L118">      return value;</span>
@@ -121,21 +121,21 @@ public class TypeAliasRegistry {
     }
   }
 
-  public void registerAliases(String packageName){
+  public void registerAliases(String packageName) {
 <span class="fc" id="L125">    registerAliases(packageName, Object.class);</span>
 <span class="fc" id="L126">  }</span>
 
-  public void registerAliases(String packageName, Class&lt;?&gt; superType){
-<span class="fc" id="L129">    ResolverUtil&lt;Class&lt;?&gt;&gt; resolverUtil = new ResolverUtil&lt;Class&lt;?&gt;&gt;();</span>
+  public void registerAliases(String packageName, Class&lt;?&gt; superType) {
+<span class="fc" id="L129">    ResolverUtil&lt;Class&lt;?&gt;&gt; resolverUtil = new ResolverUtil&lt;&gt;();</span>
 <span class="fc" id="L130">    resolverUtil.find(new ResolverUtil.IsA(superType), packageName);</span>
 <span class="fc" id="L131">    Set&lt;Class&lt;? extends Class&lt;?&gt;&gt;&gt; typeSet = resolverUtil.getClasses();</span>
-<span class="fc bfc" id="L132" title="All 2 branches covered.">    for(Class&lt;?&gt; type : typeSet){</span>
+<span class="fc bfc" id="L132" title="All 2 branches covered.">    for (Class&lt;?&gt; type : typeSet) {</span>
       // Ignore inner classes and interfaces (including package-info.java)
       // Skip also inner classes. See issue #6
 <span class="pc bpc" id="L135" title="2 of 6 branches missed.">      if (!type.isAnonymousClass() &amp;&amp; !type.isInterface() &amp;&amp; !type.isMemberClass()) {</span>
 <span class="fc" id="L136">        registerAlias(type);</span>
       }
-<span class="fc" id="L138">    }</span>
+    }
 <span class="fc" id="L139">  }</span>
 
   public void registerAlias(Class&lt;?&gt; type) {
@@ -143,7 +143,7 @@ public class TypeAliasRegistry {
 <span class="fc" id="L143">    Alias aliasAnnotation = type.getAnnotation(Alias.class);</span>
 <span class="fc bfc" id="L144" title="All 2 branches covered.">    if (aliasAnnotation != null) {</span>
 <span class="fc" id="L145">      alias = aliasAnnotation.value();</span>
-    } 
+    }
 <span class="fc" id="L147">    registerAlias(alias, type);</span>
 <span class="fc" id="L148">  }</span>
 
@@ -153,26 +153,26 @@ public class TypeAliasRegistry {
     }
     // issue #748
 <span class="fc" id="L155">    String key = alias.toLowerCase(Locale.ENGLISH);</span>
-<span class="fc bfc" id="L156" title="All 6 branches covered.">    if (TYPE_ALIASES.containsKey(key) &amp;&amp; TYPE_ALIASES.get(key) != null &amp;&amp; !TYPE_ALIASES.get(key).equals(value)) {</span>
-<span class="fc" id="L157">      throw new TypeException(&quot;The alias '&quot; + alias + &quot;' is already mapped to the value '&quot; + TYPE_ALIASES.get(key).getName() + &quot;'.&quot;);</span>
+<span class="fc bfc" id="L156" title="All 6 branches covered.">    if (typeAliases.containsKey(key) &amp;&amp; typeAliases.get(key) != null &amp;&amp; !typeAliases.get(key).equals(value)) {</span>
+<span class="fc" id="L157">      throw new TypeException(&quot;The alias '&quot; + alias + &quot;' is already mapped to the value '&quot; + typeAliases.get(key).getName() + &quot;'.&quot;);</span>
     }
-<span class="fc" id="L159">    TYPE_ALIASES.put(key, value);</span>
+<span class="fc" id="L159">    typeAliases.put(key, value);</span>
 <span class="fc" id="L160">  }</span>
 
   public void registerAlias(String alias, String value) {
     try {
 <span class="fc" id="L164">      registerAlias(alias, Resources.classForName(value));</span>
-<span class="nc" id="L165">    } catch (ClassNotFoundException e) {</span>
-<span class="nc" id="L166">      throw new TypeException(&quot;Error registering type alias &quot;+alias+&quot; for &quot;+value+&quot;. Cause: &quot; + e, e);</span>
-<span class="fc" id="L167">    }</span>
+<span class="pc" id="L165">    } catch (ClassNotFoundException e) {</span>
+<span class="nc" id="L166">      throw new TypeException(&quot;Error registering type alias &quot; + alias + &quot; for &quot; + value + &quot;. Cause: &quot; + e, e);</span>
+    }
 <span class="fc" id="L168">  }</span>
-  
+
   /**
    * @since 3.2.2
    */
   public Map&lt;String, Class&lt;?&gt;&gt; getTypeAliases() {
-<span class="fc" id="L174">    return Collections.unmodifiableMap(TYPE_ALIASES);</span>
+<span class="fc" id="L174">    return Collections.unmodifiableMap(typeAliases);</span>
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

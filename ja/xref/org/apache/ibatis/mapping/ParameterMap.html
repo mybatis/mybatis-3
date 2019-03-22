@@ -13,7 +13,7 @@
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_javadoccomment"> *    You may obtain a copy of the License at</em>
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2." target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.</a>0</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_javadoccomment"> *    Unless required by applicable law or agreed to in writing, software</em>
 <a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_javadoccomment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
@@ -31,19 +31,19 @@
 <a class="jxr_linenumber" name="L23" href="#L23">23</a>  <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L24" href="#L24">24</a>  <em class="jxr_javadoccomment"> * @author Clinton Begin</em>
 <a class="jxr_linenumber" name="L25" href="#L25">25</a>  <em class="jxr_javadoccomment"> */</em>
-<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/apache/ibatis/mapping/ParameterMap.html">ParameterMap</a> {
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="ParameterMap" href="../../../../org/apache/ibatis/mapping/ParameterMap.html#ParameterMap">ParameterMap</a> {
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>  
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>    <strong class="jxr_keyword">private</strong> String id;
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>    <strong class="jxr_keyword">private</strong> Class&lt;?&gt; type;
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>    <strong class="jxr_keyword">private</strong> List&lt;ParameterMapping&gt; parameterMappings;
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>  
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>    <strong class="jxr_keyword">private</strong> <a href="../../../../org/apache/ibatis/mapping/ParameterMap.html">ParameterMap</a>() {
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>    <strong class="jxr_keyword">private</strong> <a name="ParameterMap" href="../../../../org/apache/ibatis/mapping/ParameterMap.html#ParameterMap">ParameterMap</a>() {
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>    }
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>  
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/apache/ibatis/mapping/ParameterMapping.html">Builder</a> {
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../org/apache/ibatis/mapping/ParameterMap.html">ParameterMap</a> parameterMap = <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/mapping/ParameterMap.html">ParameterMap</a>();
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> Builder {
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>      <strong class="jxr_keyword">private</strong> <a name="ParameterMap" href="../../../../org/apache/ibatis/mapping/Pa<a name="ParameterMap" href="../../../../org/apache/ibatis/mapping/ParameterMap.html#ParameterMap">ParameterMap</a>tml#ParameterMap">ParameterMap</a> parameterMap = <strong class="jxr_keyword">new</strong> <a name="ParameterMap" href="../../../../org/apache/ibatis/mapping/ParameterMap.html#ParameterMap">ParameterMap</a>();
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>  
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>      <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/mapping/ParameterMapping.html">Builder</a>(<a href="../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration, String id, Class&lt;?&gt; type, List&lt;ParameterMapping&gt; parameterMappings) {
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>      <strong class="jxr_keyword">public</strong> Builder(<a name="Configuration" href="../../../../org/apache/ibatis/session/Configuration.html#Configuration">Configuration</a> configuration, String id, Class&lt;?&gt; type, List&lt;ParameterMapping&gt; parameterMappings) {
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>        parameterMap.id = id;
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>        parameterMap.type = type;
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>        parameterMap.parameterMappings = parameterMappings;
@@ -53,7 +53,7 @@
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>        <strong class="jxr_keyword">return</strong> parameterMap.type;
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>      }
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>  
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>      <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/mapping/ParameterMap.html">ParameterMap</a> build() {
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>      <strong class="jxr_keyword">public</strong> <a name="ParameterMap" href="../../../../org/apache/ibatis/mapping/ParameterMap.html#ParameterMap">ParameterMap</a> build() {
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>        <em class="jxr_comment">//lock down collections</em>
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>        parameterMap.parameterMappings = Collections.unmodifiableList(parameterMap.parameterMappings);
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>        <strong class="jxr_keyword">return</strong> parameterMap;
@@ -75,6 +75,6 @@
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2018 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2019 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

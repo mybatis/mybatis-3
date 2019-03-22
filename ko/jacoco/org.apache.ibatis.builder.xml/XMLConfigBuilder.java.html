@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>XMLConfigBuilder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.builder.xml</a> &gt; <span class="el_source">XMLConfigBuilder.java</span></div><h1>XMLConfigBuilder.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
@@ -45,7 +45,6 @@ import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.LocalCacheScope;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.type.JdbcType;
-import org.apache.ibatis.type.TypeHandler;
 
 /**
  * @author Clinton Begin
@@ -56,56 +55,57 @@ public class XMLConfigBuilder extends BaseBuilder {
   private boolean parsed;
   private final XPathParser parser;
   private String environment;
-<span class="fc" id="L59">  private final ReflectorFactory localReflectorFactory = new DefaultReflectorFactory();</span>
+<span class="fc" id="L58">  private final ReflectorFactory localReflectorFactory = new DefaultReflectorFactory();</span>
 
   public XMLConfigBuilder(Reader reader) {
-<span class="fc" id="L62">    this(reader, null, null);</span>
-<span class="fc" id="L63">  }</span>
+<span class="fc" id="L61">    this(reader, null, null);</span>
+<span class="fc" id="L62">  }</span>
 
   public XMLConfigBuilder(Reader reader, String environment) {
-<span class="nc" id="L66">    this(reader, environment, null);</span>
-<span class="nc" id="L67">  }</span>
+<span class="nc" id="L65">    this(reader, environment, null);</span>
+<span class="nc" id="L66">  }</span>
 
   public XMLConfigBuilder(Reader reader, String environment, Properties props) {
-<span class="fc" id="L70">    this(new XPathParser(reader, true, props, new XMLMapperEntityResolver()), environment, props);</span>
-<span class="fc" id="L71">  }</span>
+<span class="fc" id="L69">    this(new XPathParser(reader, true, props, new XMLMapperEntityResolver()), environment, props);</span>
+<span class="fc" id="L70">  }</span>
 
   public XMLConfigBuilder(InputStream inputStream) {
-<span class="fc" id="L74">    this(inputStream, null, null);</span>
-<span class="fc" id="L75">  }</span>
+<span class="fc" id="L73">    this(inputStream, null, null);</span>
+<span class="fc" id="L74">  }</span>
 
   public XMLConfigBuilder(InputStream inputStream, String environment) {
-<span class="nc" id="L78">    this(inputStream, environment, null);</span>
-<span class="nc" id="L79">  }</span>
+<span class="nc" id="L77">    this(inputStream, environment, null);</span>
+<span class="nc" id="L78">  }</span>
 
   public XMLConfigBuilder(InputStream inputStream, String environment, Properties props) {
-<span class="fc" id="L82">    this(new XPathParser(inputStream, true, props, new XMLMapperEntityResolver()), environment, props);</span>
-<span class="fc" id="L83">  }</span>
+<span class="fc" id="L81">    this(new XPathParser(inputStream, true, props, new XMLMapperEntityResolver()), environment, props);</span>
+<span class="fc" id="L82">  }</span>
 
   private XMLConfigBuilder(XPathParser parser, String environment, Properties props) {
-<span class="fc" id="L86">    super(new Configuration());</span>
-<span class="fc" id="L87">    ErrorContext.instance().resource(&quot;SQL Mapper Configuration&quot;);</span>
-<span class="fc" id="L88">    this.configuration.setVariables(props);</span>
-<span class="fc" id="L89">    this.parsed = false;</span>
-<span class="fc" id="L90">    this.environment = environment;</span>
-<span class="fc" id="L91">    this.parser = parser;</span>
-<span class="fc" id="L92">  }</span>
+<span class="fc" id="L85">    super(new Configuration());</span>
+<span class="fc" id="L86">    ErrorContext.instance().resource(&quot;SQL Mapper Configuration&quot;);</span>
+<span class="fc" id="L87">    this.configuration.setVariables(props);</span>
+<span class="fc" id="L88">    this.parsed = false;</span>
+<span class="fc" id="L89">    this.environment = environment;</span>
+<span class="fc" id="L90">    this.parser = parser;</span>
+<span class="fc" id="L91">  }</span>
 
   public Configuration parse() {
-<span class="fc bfc" id="L95" title="All 2 branches covered.">    if (parsed) {</span>
-<span class="fc" id="L96">      throw new BuilderException(&quot;Each XMLConfigBuilder can only be used once.&quot;);</span>
+<span class="fc bfc" id="L94" title="All 2 branches covered.">    if (parsed) {</span>
+<span class="fc" id="L95">      throw new BuilderException(&quot;Each XMLConfigBuilder can only be used once.&quot;);</span>
     }
-<span class="fc" id="L98">    parsed = true;</span>
-<span class="fc" id="L99">    parseConfiguration(parser.evalNode(&quot;/configuration&quot;));</span>
-<span class="fc" id="L100">    return configuration;</span>
+<span class="fc" id="L97">    parsed = true;</span>
+<span class="fc" id="L98">    parseConfiguration(parser.evalNode(&quot;/configuration&quot;));</span>
+<span class="fc" id="L99">    return configuration;</span>
   }
 
   private void parseConfiguration(XNode root) {
     try {
       //issue #117 read properties first
-<span class="fc" id="L106">      propertiesElement(root.evalNode(&quot;properties&quot;));</span>
-<span class="fc" id="L107">      Properties settings = settingsAsProperties(root.evalNode(&quot;settings&quot;));</span>
-<span class="fc" id="L108">      loadCustomVfs(settings);</span>
+<span class="fc" id="L105">      propertiesElement(root.evalNode(&quot;properties&quot;));</span>
+<span class="fc" id="L106">      Properties settings = settingsAsProperties(root.evalNode(&quot;settings&quot;));</span>
+<span class="fc" id="L107">      loadCustomVfs(settings);</span>
+<span class="fc" id="L108">      loadCustomLogImpl(settings);</span>
 <span class="fc" id="L109">      typeAliasesElement(root.evalNode(&quot;typeAliases&quot;));</span>
 <span class="fc" id="L110">      pluginElement(root.evalNode(&quot;plugins&quot;));</span>
 <span class="fc" id="L111">      objectFactoryElement(root.evalNode(&quot;objectFactory&quot;));</span>
@@ -119,7 +119,7 @@ public class XMLConfigBuilder extends BaseBuilder {
 <span class="fc" id="L119">      mapperElement(root.evalNode(&quot;mappers&quot;));</span>
 <span class="fc" id="L120">    } catch (Exception e) {</span>
 <span class="fc" id="L121">      throw new BuilderException(&quot;Error parsing SQL Mapper Configuration. Cause: &quot; + e, e);</span>
-<span class="fc" id="L122">    }</span>
+    }
 <span class="fc" id="L123">  }</span>
 
   private Properties settingsAsProperties(XNode context) {
@@ -133,7 +133,7 @@ public class XMLConfigBuilder extends BaseBuilder {
 <span class="fc bfc" id="L133" title="All 2 branches covered.">      if (!metaConfig.hasSetter(String.valueOf(key))) {</span>
 <span class="fc" id="L134">        throw new BuilderException(&quot;The setting &quot; + key + &quot; is not known.  Make sure you spelled it correctly (case sensitive).&quot;);</span>
       }
-<span class="fc" id="L136">    }</span>
+    }
 <span class="fc" id="L137">    return props;</span>
   }
 
@@ -151,120 +151,120 @@ public class XMLConfigBuilder extends BaseBuilder {
     }
 <span class="fc" id="L152">  }</span>
 
+  private void loadCustomLogImpl(Properties props) {
+<span class="fc" id="L155">    Class&lt;? extends Log&gt; logImpl = resolveClass(props.getProperty(&quot;logImpl&quot;));</span>
+<span class="fc" id="L156">    configuration.setLogImpl(logImpl);</span>
+<span class="fc" id="L157">  }</span>
+
   private void typeAliasesElement(XNode parent) {
-<span class="fc bfc" id="L155" title="All 2 branches covered.">    if (parent != null) {</span>
-<span class="fc bfc" id="L156" title="All 2 branches covered.">      for (XNode child : parent.getChildren()) {</span>
-<span class="fc bfc" id="L157" title="All 2 branches covered.">        if (&quot;package&quot;.equals(child.getName())) {</span>
-<span class="fc" id="L158">          String typeAliasPackage = child.getStringAttribute(&quot;name&quot;);</span>
-<span class="fc" id="L159">          configuration.getTypeAliasRegistry().registerAliases(typeAliasPackage);</span>
-<span class="fc" id="L160">        } else {</span>
-<span class="fc" id="L161">          String alias = child.getStringAttribute(&quot;alias&quot;);</span>
-<span class="fc" id="L162">          String type = child.getStringAttribute(&quot;type&quot;);</span>
+<span class="fc bfc" id="L160" title="All 2 branches covered.">    if (parent != null) {</span>
+<span class="fc bfc" id="L161" title="All 2 branches covered.">      for (XNode child : parent.getChildren()) {</span>
+<span class="fc bfc" id="L162" title="All 2 branches covered.">        if (&quot;package&quot;.equals(child.getName())) {</span>
+<span class="fc" id="L163">          String typeAliasPackage = child.getStringAttribute(&quot;name&quot;);</span>
+<span class="fc" id="L164">          configuration.getTypeAliasRegistry().registerAliases(typeAliasPackage);</span>
+<span class="fc" id="L165">        } else {</span>
+<span class="fc" id="L166">          String alias = child.getStringAttribute(&quot;alias&quot;);</span>
+<span class="fc" id="L167">          String type = child.getStringAttribute(&quot;type&quot;);</span>
           try {
-<span class="fc" id="L164">            Class&lt;?&gt; clazz = Resources.classForName(type);</span>
-<span class="fc bfc" id="L165" title="All 2 branches covered.">            if (alias == null) {</span>
-<span class="fc" id="L166">              typeAliasRegistry.registerAlias(clazz);</span>
-            } else {
-<span class="fc" id="L168">              typeAliasRegistry.registerAlias(alias, clazz);</span>
+<span class="fc" id="L169">            Class&lt;?&gt; clazz = Resources.classForName(type);</span>
+<span class="fc bfc" id="L170" title="All 2 branches covered.">            if (alias == null) {</span>
+<span class="fc" id="L171">              typeAliasRegistry.registerAlias(clazz);</span>
+<span class="fc" id="L172">            } else {</span>
+<span class="fc" id="L173">              typeAliasRegistry.registerAlias(alias, clazz);</span>
             }
-<span class="fc" id="L170">          } catch (ClassNotFoundException e) {</span>
-<span class="fc" id="L171">            throw new BuilderException(&quot;Error registering typeAlias for '&quot; + alias + &quot;'. Cause: &quot; + e, e);</span>
-<span class="fc" id="L172">          }</span>
+<span class="fc" id="L175">          } catch (ClassNotFoundException e) {</span>
+<span class="fc" id="L176">            throw new BuilderException(&quot;Error registering typeAlias for '&quot; + alias + &quot;'. Cause: &quot; + e, e);</span>
+          }
         }
-<span class="fc" id="L174">      }</span>
+      }
     }
-<span class="fc" id="L176">  }</span>
+<span class="fc" id="L181">  }</span>
 
   private void pluginElement(XNode parent) throws Exception {
-<span class="fc bfc" id="L179" title="All 2 branches covered.">    if (parent != null) {</span>
-<span class="fc bfc" id="L180" title="All 2 branches covered.">      for (XNode child : parent.getChildren()) {</span>
-<span class="fc" id="L181">        String interceptor = child.getStringAttribute(&quot;interceptor&quot;);</span>
-<span class="fc" id="L182">        Properties properties = child.getChildrenAsProperties();</span>
-<span class="fc" id="L183">        Interceptor interceptorInstance = (Interceptor) resolveClass(interceptor).newInstance();</span>
-<span class="fc" id="L184">        interceptorInstance.setProperties(properties);</span>
-<span class="fc" id="L185">        configuration.addInterceptor(interceptorInstance);</span>
-<span class="fc" id="L186">      }</span>
+<span class="fc bfc" id="L184" title="All 2 branches covered.">    if (parent != null) {</span>
+<span class="fc bfc" id="L185" title="All 2 branches covered.">      for (XNode child : parent.getChildren()) {</span>
+<span class="fc" id="L186">        String interceptor = child.getStringAttribute(&quot;interceptor&quot;);</span>
+<span class="fc" id="L187">        Properties properties = child.getChildrenAsProperties();</span>
+<span class="fc" id="L188">        Interceptor interceptorInstance = (Interceptor) resolveClass(interceptor).newInstance();</span>
+<span class="fc" id="L189">        interceptorInstance.setProperties(properties);</span>
+<span class="fc" id="L190">        configuration.addInterceptor(interceptorInstance);</span>
+      }
     }
-<span class="fc" id="L188">  }</span>
+<span class="fc" id="L193">  }</span>
 
   private void objectFactoryElement(XNode context) throws Exception {
-<span class="fc bfc" id="L191" title="All 2 branches covered.">    if (context != null) {</span>
-<span class="fc" id="L192">      String type = context.getStringAttribute(&quot;type&quot;);</span>
-<span class="fc" id="L193">      Properties properties = context.getChildrenAsProperties();</span>
-<span class="fc" id="L194">      ObjectFactory factory = (ObjectFactory) resolveClass(type).newInstance();</span>
-<span class="fc" id="L195">      factory.setProperties(properties);</span>
-<span class="fc" id="L196">      configuration.setObjectFactory(factory);</span>
+<span class="fc bfc" id="L196" title="All 2 branches covered.">    if (context != null) {</span>
+<span class="fc" id="L197">      String type = context.getStringAttribute(&quot;type&quot;);</span>
+<span class="fc" id="L198">      Properties properties = context.getChildrenAsProperties();</span>
+<span class="fc" id="L199">      ObjectFactory factory = (ObjectFactory) resolveClass(type).newInstance();</span>
+<span class="fc" id="L200">      factory.setProperties(properties);</span>
+<span class="fc" id="L201">      configuration.setObjectFactory(factory);</span>
     }
-<span class="fc" id="L198">  }</span>
+<span class="fc" id="L203">  }</span>
 
   private void objectWrapperFactoryElement(XNode context) throws Exception {
-<span class="fc bfc" id="L201" title="All 2 branches covered.">    if (context != null) {</span>
-<span class="fc" id="L202">      String type = context.getStringAttribute(&quot;type&quot;);</span>
-<span class="fc" id="L203">      ObjectWrapperFactory factory = (ObjectWrapperFactory) resolveClass(type).newInstance();</span>
-<span class="fc" id="L204">      configuration.setObjectWrapperFactory(factory);</span>
+<span class="fc bfc" id="L206" title="All 2 branches covered.">    if (context != null) {</span>
+<span class="fc" id="L207">      String type = context.getStringAttribute(&quot;type&quot;);</span>
+<span class="fc" id="L208">      ObjectWrapperFactory factory = (ObjectWrapperFactory) resolveClass(type).newInstance();</span>
+<span class="fc" id="L209">      configuration.setObjectWrapperFactory(factory);</span>
     }
-<span class="fc" id="L206">  }</span>
+<span class="fc" id="L211">  }</span>
 
   private void reflectorFactoryElement(XNode context) throws Exception {
-<span class="fc bfc" id="L209" title="All 2 branches covered.">    if (context != null) {</span>
-<span class="fc" id="L210">       String type = context.getStringAttribute(&quot;type&quot;);</span>
-<span class="fc" id="L211">       ReflectorFactory factory = (ReflectorFactory) resolveClass(type).newInstance();</span>
-<span class="fc" id="L212">       configuration.setReflectorFactory(factory);</span>
+<span class="fc bfc" id="L214" title="All 2 branches covered.">    if (context != null) {</span>
+<span class="fc" id="L215">      String type = context.getStringAttribute(&quot;type&quot;);</span>
+<span class="fc" id="L216">      ReflectorFactory factory = (ReflectorFactory) resolveClass(type).newInstance();</span>
+<span class="fc" id="L217">      configuration.setReflectorFactory(factory);</span>
     }
-<span class="fc" id="L214">  }</span>
+<span class="fc" id="L219">  }</span>
 
   private void propertiesElement(XNode context) throws Exception {
-<span class="fc bfc" id="L217" title="All 2 branches covered.">    if (context != null) {</span>
-<span class="fc" id="L218">      Properties defaults = context.getChildrenAsProperties();</span>
-<span class="fc" id="L219">      String resource = context.getStringAttribute(&quot;resource&quot;);</span>
-<span class="fc" id="L220">      String url = context.getStringAttribute(&quot;url&quot;);</span>
-<span class="fc bfc" id="L221" title="All 4 branches covered.">      if (resource != null &amp;&amp; url != null) {</span>
-<span class="fc" id="L222">        throw new BuilderException(&quot;The properties element cannot specify both a URL and a resource based property file reference.  Please specify one or the other.&quot;);</span>
+<span class="fc bfc" id="L222" title="All 2 branches covered.">    if (context != null) {</span>
+<span class="fc" id="L223">      Properties defaults = context.getChildrenAsProperties();</span>
+<span class="fc" id="L224">      String resource = context.getStringAttribute(&quot;resource&quot;);</span>
+<span class="fc" id="L225">      String url = context.getStringAttribute(&quot;url&quot;);</span>
+<span class="fc bfc" id="L226" title="All 4 branches covered.">      if (resource != null &amp;&amp; url != null) {</span>
+<span class="fc" id="L227">        throw new BuilderException(&quot;The properties element cannot specify both a URL and a resource based property file reference.  Please specify one or the other.&quot;);</span>
       }
-<span class="fc bfc" id="L224" title="All 2 branches covered.">      if (resource != null) {</span>
-<span class="fc" id="L225">        defaults.putAll(Resources.getResourceAsProperties(resource));</span>
-<span class="fc bfc" id="L226" title="All 2 branches covered.">      } else if (url != null) {</span>
-<span class="fc" id="L227">        defaults.putAll(Resources.getUrlAsProperties(url));</span>
+<span class="fc bfc" id="L229" title="All 2 branches covered.">      if (resource != null) {</span>
+<span class="fc" id="L230">        defaults.putAll(Resources.getResourceAsProperties(resource));</span>
+<span class="fc bfc" id="L231" title="All 2 branches covered.">      } else if (url != null) {</span>
+<span class="fc" id="L232">        defaults.putAll(Resources.getUrlAsProperties(url));</span>
       }
-<span class="fc" id="L229">      Properties vars = configuration.getVariables();</span>
-<span class="fc bfc" id="L230" title="All 2 branches covered.">      if (vars != null) {</span>
-<span class="fc" id="L231">        defaults.putAll(vars);</span>
+<span class="fc" id="L234">      Properties vars = configuration.getVariables();</span>
+<span class="fc bfc" id="L235" title="All 2 branches covered.">      if (vars != null) {</span>
+<span class="fc" id="L236">        defaults.putAll(vars);</span>
       }
-<span class="fc" id="L233">      parser.setVariables(defaults);</span>
-<span class="fc" id="L234">      configuration.setVariables(defaults);</span>
+<span class="fc" id="L238">      parser.setVariables(defaults);</span>
+<span class="fc" id="L239">      configuration.setVariables(defaults);</span>
     }
-<span class="fc" id="L236">  }</span>
+<span class="fc" id="L241">  }</span>
 
-  private void settingsElement(Properties props) throws Exception {
-<span class="fc" id="L239">    configuration.setAutoMappingBehavior(AutoMappingBehavior.valueOf(props.getProperty(&quot;autoMappingBehavior&quot;, &quot;PARTIAL&quot;)));</span>
-<span class="fc" id="L240">    configuration.setAutoMappingUnknownColumnBehavior(AutoMappingUnknownColumnBehavior.valueOf(props.getProperty(&quot;autoMappingUnknownColumnBehavior&quot;, &quot;NONE&quot;)));</span>
-<span class="fc" id="L241">    configuration.setCacheEnabled(booleanValueOf(props.getProperty(&quot;cacheEnabled&quot;), true));</span>
-<span class="fc" id="L242">    configuration.setProxyFactory((ProxyFactory) createInstance(props.getProperty(&quot;proxyFactory&quot;)));</span>
-<span class="fc" id="L243">    configuration.setLazyLoadingEnabled(booleanValueOf(props.getProperty(&quot;lazyLoadingEnabled&quot;), false));</span>
-<span class="fc" id="L244">    configuration.setAggressiveLazyLoading(booleanValueOf(props.getProperty(&quot;aggressiveLazyLoading&quot;), false));</span>
-<span class="fc" id="L245">    configuration.setMultipleResultSetsEnabled(booleanValueOf(props.getProperty(&quot;multipleResultSetsEnabled&quot;), true));</span>
-<span class="fc" id="L246">    configuration.setUseColumnLabel(booleanValueOf(props.getProperty(&quot;useColumnLabel&quot;), true));</span>
-<span class="fc" id="L247">    configuration.setUseGeneratedKeys(booleanValueOf(props.getProperty(&quot;useGeneratedKeys&quot;), false));</span>
-<span class="fc" id="L248">    configuration.setDefaultExecutorType(ExecutorType.valueOf(props.getProperty(&quot;defaultExecutorType&quot;, &quot;SIMPLE&quot;)));</span>
-<span class="fc" id="L249">    configuration.setDefaultStatementTimeout(integerValueOf(props.getProperty(&quot;defaultStatementTimeout&quot;), null));</span>
-<span class="fc" id="L250">    configuration.setDefaultFetchSize(integerValueOf(props.getProperty(&quot;defaultFetchSize&quot;), null));</span>
-<span class="fc" id="L251">    configuration.setMapUnderscoreToCamelCase(booleanValueOf(props.getProperty(&quot;mapUnderscoreToCamelCase&quot;), false));</span>
-<span class="fc" id="L252">    configuration.setSafeRowBoundsEnabled(booleanValueOf(props.getProperty(&quot;safeRowBoundsEnabled&quot;), false));</span>
-<span class="fc" id="L253">    configuration.setLocalCacheScope(LocalCacheScope.valueOf(props.getProperty(&quot;localCacheScope&quot;, &quot;SESSION&quot;)));</span>
-<span class="fc" id="L254">    configuration.setJdbcTypeForNull(JdbcType.valueOf(props.getProperty(&quot;jdbcTypeForNull&quot;, &quot;OTHER&quot;)));</span>
-<span class="fc" id="L255">    configuration.setLazyLoadTriggerMethods(stringSetValueOf(props.getProperty(&quot;lazyLoadTriggerMethods&quot;), &quot;equals,clone,hashCode,toString&quot;));</span>
-<span class="fc" id="L256">    configuration.setSafeResultHandlerEnabled(booleanValueOf(props.getProperty(&quot;safeResultHandlerEnabled&quot;), true));</span>
-<span class="fc" id="L257">    configuration.setDefaultScriptingLanguage(resolveClass(props.getProperty(&quot;defaultScriptingLanguage&quot;)));</span>
-    @SuppressWarnings(&quot;unchecked&quot;)
-<span class="fc" id="L259">    Class&lt;? extends TypeHandler&gt; typeHandler = (Class&lt;? extends TypeHandler&gt;)resolveClass(props.getProperty(&quot;defaultEnumTypeHandler&quot;));</span>
-<span class="fc" id="L260">    configuration.setDefaultEnumTypeHandler(typeHandler);</span>
-<span class="fc" id="L261">    configuration.setCallSettersOnNulls(booleanValueOf(props.getProperty(&quot;callSettersOnNulls&quot;), false));</span>
-<span class="fc" id="L262">    configuration.setUseActualParamName(booleanValueOf(props.getProperty(&quot;useActualParamName&quot;), true));</span>
-<span class="fc" id="L263">    configuration.setReturnInstanceForEmptyRow(booleanValueOf(props.getProperty(&quot;returnInstanceForEmptyRow&quot;), false));</span>
-<span class="fc" id="L264">    configuration.setLogPrefix(props.getProperty(&quot;logPrefix&quot;));</span>
-    @SuppressWarnings(&quot;unchecked&quot;)
-<span class="fc" id="L266">    Class&lt;? extends Log&gt; logImpl = (Class&lt;? extends Log&gt;)resolveClass(props.getProperty(&quot;logImpl&quot;));</span>
-<span class="fc" id="L267">    configuration.setLogImpl(logImpl);</span>
+  private void settingsElement(Properties props) {
+<span class="fc" id="L244">    configuration.setAutoMappingBehavior(AutoMappingBehavior.valueOf(props.getProperty(&quot;autoMappingBehavior&quot;, &quot;PARTIAL&quot;)));</span>
+<span class="fc" id="L245">    configuration.setAutoMappingUnknownColumnBehavior(AutoMappingUnknownColumnBehavior.valueOf(props.getProperty(&quot;autoMappingUnknownColumnBehavior&quot;, &quot;NONE&quot;)));</span>
+<span class="fc" id="L246">    configuration.setCacheEnabled(booleanValueOf(props.getProperty(&quot;cacheEnabled&quot;), true));</span>
+<span class="fc" id="L247">    configuration.setProxyFactory((ProxyFactory) createInstance(props.getProperty(&quot;proxyFactory&quot;)));</span>
+<span class="fc" id="L248">    configuration.setLazyLoadingEnabled(booleanValueOf(props.getProperty(&quot;lazyLoadingEnabled&quot;), false));</span>
+<span class="fc" id="L249">    configuration.setAggressiveLazyLoading(booleanValueOf(props.getProperty(&quot;aggressiveLazyLoading&quot;), false));</span>
+<span class="fc" id="L250">    configuration.setMultipleResultSetsEnabled(booleanValueOf(props.getProperty(&quot;multipleResultSetsEnabled&quot;), true));</span>
+<span class="fc" id="L251">    configuration.setUseColumnLabel(booleanValueOf(props.getProperty(&quot;useColumnLabel&quot;), true));</span>
+<span class="fc" id="L252">    configuration.setUseGeneratedKeys(booleanValueOf(props.getProperty(&quot;useGeneratedKeys&quot;), false));</span>
+<span class="fc" id="L253">    configuration.setDefaultExecutorType(ExecutorType.valueOf(props.getProperty(&quot;defaultExecutorType&quot;, &quot;SIMPLE&quot;)));</span>
+<span class="fc" id="L254">    configuration.setDefaultStatementTimeout(integerValueOf(props.getProperty(&quot;defaultStatementTimeout&quot;), null));</span>
+<span class="fc" id="L255">    configuration.setDefaultFetchSize(integerValueOf(props.getProperty(&quot;defaultFetchSize&quot;), null));</span>
+<span class="fc" id="L256">    configuration.setMapUnderscoreToCamelCase(booleanValueOf(props.getProperty(&quot;mapUnderscoreToCamelCase&quot;), false));</span>
+<span class="fc" id="L257">    configuration.setSafeRowBoundsEnabled(booleanValueOf(props.getProperty(&quot;safeRowBoundsEnabled&quot;), false));</span>
+<span class="fc" id="L258">    configuration.setLocalCacheScope(LocalCacheScope.valueOf(props.getProperty(&quot;localCacheScope&quot;, &quot;SESSION&quot;)));</span>
+<span class="fc" id="L259">    configuration.setJdbcTypeForNull(JdbcType.valueOf(props.getProperty(&quot;jdbcTypeForNull&quot;, &quot;OTHER&quot;)));</span>
+<span class="fc" id="L260">    configuration.setLazyLoadTriggerMethods(stringSetValueOf(props.getProperty(&quot;lazyLoadTriggerMethods&quot;), &quot;equals,clone,hashCode,toString&quot;));</span>
+<span class="fc" id="L261">    configuration.setSafeResultHandlerEnabled(booleanValueOf(props.getProperty(&quot;safeResultHandlerEnabled&quot;), true));</span>
+<span class="fc" id="L262">    configuration.setDefaultScriptingLanguage(resolveClass(props.getProperty(&quot;defaultScriptingLanguage&quot;)));</span>
+<span class="fc" id="L263">    configuration.setDefaultEnumTypeHandler(resolveClass(props.getProperty(&quot;defaultEnumTypeHandler&quot;)));</span>
+<span class="fc" id="L264">    configuration.setCallSettersOnNulls(booleanValueOf(props.getProperty(&quot;callSettersOnNulls&quot;), false));</span>
+<span class="fc" id="L265">    configuration.setUseActualParamName(booleanValueOf(props.getProperty(&quot;useActualParamName&quot;), true));</span>
+<span class="fc" id="L266">    configuration.setReturnInstanceForEmptyRow(booleanValueOf(props.getProperty(&quot;returnInstanceForEmptyRow&quot;), false));</span>
+<span class="fc" id="L267">    configuration.setLogPrefix(props.getProperty(&quot;logPrefix&quot;));</span>
 <span class="fc" id="L268">    configuration.setConfigurationFactory(resolveClass(props.getProperty(&quot;configurationFactory&quot;)));</span>
 <span class="fc" id="L269">  }</span>
 
@@ -284,7 +284,7 @@ public class XMLConfigBuilder extends BaseBuilder {
 <span class="fc" id="L284">              .dataSource(dataSource);</span>
 <span class="fc" id="L285">          configuration.setEnvironment(environmentBuilder.build());</span>
         }
-<span class="fc" id="L287">      }</span>
+      }
     }
 <span class="fc" id="L289">  }</span>
 
@@ -294,7 +294,7 @@ public class XMLConfigBuilder extends BaseBuilder {
 <span class="fc" id="L294">      String type = context.getStringAttribute(&quot;type&quot;);</span>
       // awful patch to keep backward compatibility
 <span class="pc bpc" id="L296" title="1 of 2 branches missed.">      if (&quot;VENDOR&quot;.equals(type)) {</span>
-<span class="nc" id="L297">          type = &quot;DB_VENDOR&quot;;</span>
+<span class="nc" id="L297">        type = &quot;DB_VENDOR&quot;;</span>
       }
 <span class="fc" id="L299">      Properties properties = context.getChildrenAsProperties();</span>
 <span class="fc" id="L300">      databaseIdProvider = (DatabaseIdProvider) resolveClass(type).newInstance();</span>
@@ -329,7 +329,7 @@ public class XMLConfigBuilder extends BaseBuilder {
 <span class="nc" id="L329">    throw new BuilderException(&quot;Environment declaration requires a DataSourceFactory.&quot;);</span>
   }
 
-  private void typeHandlerElement(XNode parent) throws Exception {
+  private void typeHandlerElement(XNode parent) {
 <span class="fc bfc" id="L333" title="All 2 branches covered.">    if (parent != null) {</span>
 <span class="fc bfc" id="L334" title="All 2 branches covered.">      for (XNode child : parent.getChildren()) {</span>
 <span class="fc bfc" id="L335" title="All 2 branches covered.">        if (&quot;package&quot;.equals(child.getName())) {</span>
@@ -345,14 +345,14 @@ public class XMLConfigBuilder extends BaseBuilder {
 <span class="fc bfc" id="L345" title="All 2 branches covered.">          if (javaTypeClass != null) {</span>
 <span class="fc bfc" id="L346" title="All 2 branches covered.">            if (jdbcType == null) {</span>
 <span class="fc" id="L347">              typeHandlerRegistry.register(javaTypeClass, typeHandlerClass);</span>
-            } else {
+<span class="fc" id="L348">            } else {</span>
 <span class="fc" id="L349">              typeHandlerRegistry.register(javaTypeClass, jdbcType, typeHandlerClass);</span>
             }
-          } else {
+<span class="fc" id="L351">          } else {</span>
 <span class="fc" id="L352">            typeHandlerRegistry.register(typeHandlerClass);</span>
           }
         }
-<span class="fc" id="L355">      }</span>
+      }
     }
 <span class="fc" id="L357">  }</span>
 
@@ -383,7 +383,7 @@ public class XMLConfigBuilder extends BaseBuilder {
 <span class="nc" id="L383">            throw new BuilderException(&quot;A mapper element may only specify a url, resource or class, but not more than one.&quot;);</span>
           }
         }
-<span class="fc" id="L386">      }</span>
+      }
     }
 <span class="fc" id="L388">  }</span>
 
@@ -399,4 +399,4 @@ public class XMLConfigBuilder extends BaseBuilder {
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

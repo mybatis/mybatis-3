@@ -7,13 +7,13 @@
 <body>
 <div id="overview"><a href="../../../../../../apidocs/org/apache/ibatis/jdbc/ScriptRunner.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2017 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2018 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_javadoccomment"> *    You may obtain a copy of the License at</em>
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2." target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.</a>0</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_javadoccomment"> *    Unless required by applicable law or agreed to in writing, software</em>
 <a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_javadoccomment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
@@ -38,7 +38,7 @@
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>  <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>  <em class="jxr_javadoccomment"> * @author Clinton Begin</em>
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>  <em class="jxr_javadoccomment"> */</em>
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/apache/ibatis/jdbc/ScriptRunner.html">ScriptRunner</a> {
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="ScriptRunner" href="../../../../org/apache/ibatis/jdbc/ScriptRunner.html#ScriptRunner">ScriptRunner</a> {
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>  
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String LINE_SEPARATOR = System.getProperty(<span class="jxr_string">"line.separator"</span>, <span class="jxr_string">"\n"</span>);
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>  
@@ -61,7 +61,7 @@
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>    <strong class="jxr_keyword">private</strong> String delimiter = DEFAULT_DELIMITER;
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> fullLineDelimiter;
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>  
-<a class="jxr_linenumber" name="L56" href="#L56">56</a>    <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/jdbc/ScriptRunner.html">ScriptRunner</a>(Connection connection) {
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>    <strong class="jxr_keyword">public</strong> <a name="ScriptRunner" href="../../../../org/apache/ibatis/jdbc/ScriptRunner.html#ScriptRunner">ScriptRunner</a>(Connection connection) {
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>      <strong class="jxr_keyword">this</strong>.connection = connection;
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>    }
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>  
@@ -138,7 +138,7 @@
 <a class="jxr_linenumber" name="L130" href="#L130">130</a>     } <strong class="jxr_keyword">catch</strong> (Exception e) {
 <a class="jxr_linenumber" name="L131" href="#L131">131</a>       String message = <span class="jxr_string">"Error executing: "</span> + script + <span class="jxr_string">".  Cause: "</span> + e;
 <a class="jxr_linenumber" name="L132" href="#L132">132</a>       printlnError(message);
-<a class="jxr_linenumber" name="L133" href="#L133">133</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/jdbc/RuntimeSqlException.html">RuntimeSqlException</a>(message, e);
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="RuntimeSqlException" href="../../../../org/apache/ibatis/jdbc/RuntimeSqlException.html#RuntimeSqlException">RuntimeSqlException</a>(message, e);
 <a class="jxr_linenumber" name="L134" href="#L134">134</a>     }
 <a class="jxr_linenumber" name="L135" href="#L135">135</a>   }
 <a class="jxr_linenumber" name="L136" href="#L136">136</a> 
@@ -155,7 +155,7 @@
 <a class="jxr_linenumber" name="L147" href="#L147">147</a>     } <strong class="jxr_keyword">catch</strong> (Exception e) {
 <a class="jxr_linenumber" name="L148" href="#L148">148</a>       String message = <span class="jxr_string">"Error executing: "</span> + command + <span class="jxr_string">".  Cause: "</span> + e;
 <a class="jxr_linenumber" name="L149" href="#L149">149</a>       printlnError(message);
-<a class="jxr_linenumber" name="L150" href="#L150">150</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/jdbc/RuntimeSqlException.html">RuntimeSqlException</a>(message, e);
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="RuntimeSqlException" href="../../../../org/apache/ibatis/jdbc/RuntimeSqlException.html#RuntimeSqlException">RuntimeSqlException</a>(message, e);
 <a class="jxr_linenumber" name="L151" href="#L151">151</a>     }
 <a class="jxr_linenumber" name="L152" href="#L152">152</a>   }
 <a class="jxr_linenumber" name="L153" href="#L153">153</a> 
@@ -173,7 +173,7 @@
 <a class="jxr_linenumber" name="L165" href="#L165">165</a>         connection.setAutoCommit(autoCommit);
 <a class="jxr_linenumber" name="L166" href="#L166">166</a>       }
 <a class="jxr_linenumber" name="L167" href="#L167">167</a>     } <strong class="jxr_keyword">catch</strong> (Throwable t) {
-<a class="jxr_linenumber" name="L168" href="#L168">168</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/jdbc/RuntimeSqlException.html">RuntimeSqlException</a>(<span class="jxr_string">"Could not set AutoCommit to "</span> + autoCommit + <span class="jxr_string">". Cause: "</span> + t, t);
+<a class="jxr_linenumber" name="L168" href="#L168">168</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="RuntimeSqlException" href="../../../../org/apache/ibatis/jdbc/RuntimeSqlException.html#RuntimeSqlException">RuntimeSqlException</a>(<span class="jxr_string">"Could not set AutoCommit to "</span> + autoCommit + <span class="jxr_string">". Cause: "</span> + t, t);
 <a class="jxr_linenumber" name="L169" href="#L169">169</a>     }
 <a class="jxr_linenumber" name="L170" href="#L170">170</a>   }
 <a class="jxr_linenumber" name="L171" href="#L171">171</a> 
@@ -183,7 +183,7 @@
 <a class="jxr_linenumber" name="L175" href="#L175">175</a>         connection.commit();
 <a class="jxr_linenumber" name="L176" href="#L176">176</a>       }
 <a class="jxr_linenumber" name="L177" href="#L177">177</a>     } <strong class="jxr_keyword">catch</strong> (Throwable t) {
-<a class="jxr_linenumber" name="L178" href="#L178">178</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/jdbc/RuntimeSqlException.html">RuntimeSqlException</a>(<span class="jxr_string">"Could not commit transaction. Cause: "</span> + t, t);
+<a class="jxr_linenumber" name="L178" href="#L178">178</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="RuntimeSqlException" href="../../../../org/apache/ibatis/jdbc/RuntimeSqlException.html#RuntimeSqlException">RuntimeSqlException</a>(<span class="jxr_string">"Could not commit transaction. Cause: "</span> + t, t);
 <a class="jxr_linenumber" name="L179" href="#L179">179</a>     }
 <a class="jxr_linenumber" name="L180" href="#L180">180</a>   }
 <a class="jxr_linenumber" name="L181" href="#L181">181</a> 
@@ -199,7 +199,7 @@
 <a class="jxr_linenumber" name="L191" href="#L191">191</a> 
 <a class="jxr_linenumber" name="L192" href="#L192">192</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> checkForMissingLineTerminator(StringBuilder command) {
 <a class="jxr_linenumber" name="L193" href="#L193">193</a>     <strong class="jxr_keyword">if</strong> (command != <strong class="jxr_keyword">null</strong> &amp;&amp; command.toString().trim().length() &gt; 0) {
-<a class="jxr_linenumber" name="L194" href="#L194">194</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/jdbc/RuntimeSqlException.html">RuntimeSqlException</a>(<span class="jxr_string">"Line missing end-of-line terminator ("</span> + delimiter + <span class="jxr_string">") =&gt; "</span> + command);
+<a class="jxr_linenumber" name="L194" href="#L194">194</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="RuntimeSqlException" href="../../../../org/apache/ibatis/jdbc/RuntimeSqlException.html#RuntimeSqlException">RuntimeSqlException</a>(<span class="jxr_string">"Line missing end-of-line terminator ("</span> + delimiter + <span class="jxr_string">") =&gt; "</span> + command);
 <a class="jxr_linenumber" name="L195" href="#L195">195</a>     }
 <a class="jxr_linenumber" name="L196" href="#L196">196</a>   }
 <a class="jxr_linenumber" name="L197" href="#L197">197</a> 
@@ -233,89 +233,100 @@
 <a class="jxr_linenumber" name="L225" href="#L225">225</a>   }
 <a class="jxr_linenumber" name="L226" href="#L226">226</a> 
 <a class="jxr_linenumber" name="L227" href="#L227">227</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> executeStatement(String command) <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L228" href="#L228">228</a>     <strong class="jxr_keyword">boolean</strong> hasResults = false;
-<a class="jxr_linenumber" name="L229" href="#L229">229</a>     Statement statement = connection.createStatement();
-<a class="jxr_linenumber" name="L230" href="#L230">230</a>     statement.setEscapeProcessing(escapeProcessing);
-<a class="jxr_linenumber" name="L231" href="#L231">231</a>     String sql = command;
-<a class="jxr_linenumber" name="L232" href="#L232">232</a>     <strong class="jxr_keyword">if</strong> (removeCRs) {
-<a class="jxr_linenumber" name="L233" href="#L233">233</a>       sql = sql.replaceAll(<span class="jxr_string">"\r\n"</span>, <span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L234" href="#L234">234</a>     }
-<a class="jxr_linenumber" name="L235" href="#L235">235</a>     <strong class="jxr_keyword">if</strong> (stopOnError) {
-<a class="jxr_linenumber" name="L236" href="#L236">236</a>       hasResults = statement.execute(sql);
-<a class="jxr_linenumber" name="L237" href="#L237">237</a>       <strong class="jxr_keyword">if</strong> (throwWarning) {
-<a class="jxr_linenumber" name="L238" href="#L238">238</a>         <em class="jxr_comment">// In Oracle, CRATE PROCEDURE, FUNCTION, etc. returns warning</em>
-<a class="jxr_linenumber" name="L239" href="#L239">239</a>         <em class="jxr_comment">// instead of throwing exception if there is compilation error.</em>
-<a class="jxr_linenumber" name="L240" href="#L240">240</a>         SQLWarning warning = statement.getWarnings();
-<a class="jxr_linenumber" name="L241" href="#L241">241</a>         <strong class="jxr_keyword">if</strong> (warning != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L242" href="#L242">242</a>           <strong class="jxr_keyword">throw</strong> warning;
-<a class="jxr_linenumber" name="L243" href="#L243">243</a>         }
-<a class="jxr_linenumber" name="L244" href="#L244">244</a>       }
-<a class="jxr_linenumber" name="L245" href="#L245">245</a>     } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L246" href="#L246">246</a>       <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L247" href="#L247">247</a>         hasResults = statement.execute(sql);
-<a class="jxr_linenumber" name="L248" href="#L248">248</a>       } <strong class="jxr_keyword">catch</strong> (SQLException e) {
-<a class="jxr_linenumber" name="L249" href="#L249">249</a>         String message = <span class="jxr_string">"Error executing: "</span> + command + <span class="jxr_string">".  Cause: "</span> + e;
-<a class="jxr_linenumber" name="L250" href="#L250">250</a>         printlnError(message);
+<a class="jxr_linenumber" name="L228" href="#L228">228</a>     Statement statement = connection.createStatement();
+<a class="jxr_linenumber" name="L229" href="#L229">229</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L230" href="#L230">230</a>       statement.setEscapeProcessing(escapeProcessing);
+<a class="jxr_linenumber" name="L231" href="#L231">231</a>       String sql = command;
+<a class="jxr_linenumber" name="L232" href="#L232">232</a>       <strong class="jxr_keyword">if</strong> (removeCRs) {
+<a class="jxr_linenumber" name="L233" href="#L233">233</a>         sql = sql.replaceAll(<span class="jxr_string">"\r\n"</span>, <span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L234" href="#L234">234</a>       }
+<a class="jxr_linenumber" name="L235" href="#L235">235</a>       <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L236" href="#L236">236</a>         <strong class="jxr_keyword">boolean</strong> hasResults = statement.execute(sql);
+<a class="jxr_linenumber" name="L237" href="#L237">237</a>         <strong class="jxr_keyword">while</strong> (!(!hasResults &amp;&amp; statement.getUpdateCount() == -1)) {
+<a class="jxr_linenumber" name="L238" href="#L238">238</a>           checkWarnings(statement);
+<a class="jxr_linenumber" name="L239" href="#L239">239</a>           printResults(statement, hasResults);
+<a class="jxr_linenumber" name="L240" href="#L240">240</a>           hasResults = statement.getMoreResults();
+<a class="jxr_linenumber" name="L241" href="#L241">241</a>         }
+<a class="jxr_linenumber" name="L242" href="#L242">242</a>       } <strong class="jxr_keyword">catch</strong> (SQLWarning e) {
+<a class="jxr_linenumber" name="L243" href="#L243">243</a>         <strong class="jxr_keyword">throw</strong> e;
+<a class="jxr_linenumber" name="L244" href="#L244">244</a>       } <strong class="jxr_keyword">catch</strong> (SQLException e) {
+<a class="jxr_linenumber" name="L245" href="#L245">245</a>         <strong class="jxr_keyword">if</strong> (stopOnError) {
+<a class="jxr_linenumber" name="L246" href="#L246">246</a>           <strong class="jxr_keyword">throw</strong> e;
+<a class="jxr_linenumber" name="L247" href="#L247">247</a>         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L248" href="#L248">248</a>           String message = <span class="jxr_string">"Error executing: "</span> + command + <span class="jxr_string">".  Cause: "</span> + e;
+<a class="jxr_linenumber" name="L249" href="#L249">249</a>           printlnError(message);
+<a class="jxr_linenumber" name="L250" href="#L250">250</a>         }
 <a class="jxr_linenumber" name="L251" href="#L251">251</a>       }
-<a class="jxr_linenumber" name="L252" href="#L252">252</a>     }
-<a class="jxr_linenumber" name="L253" href="#L253">253</a>     printResults(statement, hasResults);
-<a class="jxr_linenumber" name="L254" href="#L254">254</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L255" href="#L255">255</a>       statement.close();
-<a class="jxr_linenumber" name="L256" href="#L256">256</a>     } <strong class="jxr_keyword">catch</strong> (Exception e) {
-<a class="jxr_linenumber" name="L257" href="#L257">257</a>       <em class="jxr_comment">// Ignore to workaround a bug in some connection pools</em>
-<a class="jxr_linenumber" name="L258" href="#L258">258</a>     }
-<a class="jxr_linenumber" name="L259" href="#L259">259</a>   }
-<a class="jxr_linenumber" name="L260" href="#L260">260</a> 
-<a class="jxr_linenumber" name="L261" href="#L261">261</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> printResults(Statement statement, <strong class="jxr_keyword">boolean</strong> hasResults) {
-<a class="jxr_linenumber" name="L262" href="#L262">262</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L263" href="#L263">263</a>       <strong class="jxr_keyword">if</strong> (hasResults) {
-<a class="jxr_linenumber" name="L264" href="#L264">264</a>         ResultSet rs = statement.getResultSet();
-<a class="jxr_linenumber" name="L265" href="#L265">265</a>         <strong class="jxr_keyword">if</strong> (rs != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L266" href="#L266">266</a>           ResultSetMetaData md = rs.getMetaData();
-<a class="jxr_linenumber" name="L267" href="#L267">267</a>           <strong class="jxr_keyword">int</strong> cols = md.getColumnCount();
-<a class="jxr_linenumber" name="L268" href="#L268">268</a>           <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; cols; i++) {
-<a class="jxr_linenumber" name="L269" href="#L269">269</a>             String name = md.getColumnLabel(i + 1);
-<a class="jxr_linenumber" name="L270" href="#L270">270</a>             print(name + <span class="jxr_string">"\t"</span>);
-<a class="jxr_linenumber" name="L271" href="#L271">271</a>           }
-<a class="jxr_linenumber" name="L272" href="#L272">272</a>           println(<span class="jxr_string">""</span>);
-<a class="jxr_linenumber" name="L273" href="#L273">273</a>           <strong class="jxr_keyword">while</strong> (rs.next()) {
-<a class="jxr_linenumber" name="L274" href="#L274">274</a>             <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; cols; i++) {
-<a class="jxr_linenumber" name="L275" href="#L275">275</a>               String value = rs.getString(i + 1);
-<a class="jxr_linenumber" name="L276" href="#L276">276</a>               print(value + <span class="jxr_string">"\t"</span>);
-<a class="jxr_linenumber" name="L277" href="#L277">277</a>             }
-<a class="jxr_linenumber" name="L278" href="#L278">278</a>             println(<span class="jxr_string">""</span>);
-<a class="jxr_linenumber" name="L279" href="#L279">279</a>           }
-<a class="jxr_linenumber" name="L280" href="#L280">280</a>         }
-<a class="jxr_linenumber" name="L281" href="#L281">281</a>       }
-<a class="jxr_linenumber" name="L282" href="#L282">282</a>     } <strong class="jxr_keyword">catch</strong> (SQLException e) {
-<a class="jxr_linenumber" name="L283" href="#L283">283</a>       printlnError(<span class="jxr_string">"Error printing results: "</span> + e.getMessage());
-<a class="jxr_linenumber" name="L284" href="#L284">284</a>     }
-<a class="jxr_linenumber" name="L285" href="#L285">285</a>   }
-<a class="jxr_linenumber" name="L286" href="#L286">286</a> 
-<a class="jxr_linenumber" name="L287" href="#L287">287</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> print(Object o) {
-<a class="jxr_linenumber" name="L288" href="#L288">288</a>     <strong class="jxr_keyword">if</strong> (logWriter != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L289" href="#L289">289</a>       logWriter.print(o);
-<a class="jxr_linenumber" name="L290" href="#L290">290</a>       logWriter.flush();
-<a class="jxr_linenumber" name="L291" href="#L291">291</a>     }
-<a class="jxr_linenumber" name="L292" href="#L292">292</a>   }
-<a class="jxr_linenumber" name="L293" href="#L293">293</a> 
-<a class="jxr_linenumber" name="L294" href="#L294">294</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> println(Object o) {
-<a class="jxr_linenumber" name="L295" href="#L295">295</a>     <strong class="jxr_keyword">if</strong> (logWriter != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L296" href="#L296">296</a>       logWriter.println(o);
-<a class="jxr_linenumber" name="L297" href="#L297">297</a>       logWriter.flush();
-<a class="jxr_linenumber" name="L298" href="#L298">298</a>     }
-<a class="jxr_linenumber" name="L299" href="#L299">299</a>   }
-<a class="jxr_linenumber" name="L300" href="#L300">300</a> 
-<a class="jxr_linenumber" name="L301" href="#L301">301</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> printlnError(Object o) {
-<a class="jxr_linenumber" name="L302" href="#L302">302</a>     <strong class="jxr_keyword">if</strong> (errorLogWriter != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L303" href="#L303">303</a>       errorLogWriter.println(o);
-<a class="jxr_linenumber" name="L304" href="#L304">304</a>       errorLogWriter.flush();
-<a class="jxr_linenumber" name="L305" href="#L305">305</a>     }
-<a class="jxr_linenumber" name="L306" href="#L306">306</a>   }
-<a class="jxr_linenumber" name="L307" href="#L307">307</a> 
-<a class="jxr_linenumber" name="L308" href="#L308">308</a> }
+<a class="jxr_linenumber" name="L252" href="#L252">252</a>     } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="L253" href="#L253">253</a>       <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L254" href="#L254">254</a>         statement.close();
+<a class="jxr_linenumber" name="L255" href="#L255">255</a>       } <strong class="jxr_keyword">catch</strong> (Exception e) {
+<a class="jxr_linenumber" name="L256" href="#L256">256</a>         <em class="jxr_comment">// Ignore to workaround a bug in some connection pools</em>
+<a class="jxr_linenumber" name="L257" href="#L257">257</a>         <em class="jxr_comment">// (Does anyone know the details of the bug?)</em>
+<a class="jxr_linenumber" name="L258" href="#L258">258</a>       }
+<a class="jxr_linenumber" name="L259" href="#L259">259</a>     }
+<a class="jxr_linenumber" name="L260" href="#L260">260</a>   }
+<a class="jxr_linenumber" name="L261" href="#L261">261</a> 
+<a class="jxr_linenumber" name="L262" href="#L262">262</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> checkWarnings(Statement statement) <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L263" href="#L263">263</a>     <strong class="jxr_keyword">if</strong> (!throwWarning) {
+<a class="jxr_linenumber" name="L264" href="#L264">264</a>       <strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="L265" href="#L265">265</a>     }
+<a class="jxr_linenumber" name="L266" href="#L266">266</a>     <em class="jxr_comment">// In Oracle, CREATE PROCEDURE, FUNCTION, etc. returns warning</em>
+<a class="jxr_linenumber" name="L267" href="#L267">267</a>     <em class="jxr_comment">// instead of throwing exception if there is compilation error.</em>
+<a class="jxr_linenumber" name="L268" href="#L268">268</a>     SQLWarning warning = statement.getWarnings();
+<a class="jxr_linenumber" name="L269" href="#L269">269</a>     <strong class="jxr_keyword">if</strong> (warning != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L270" href="#L270">270</a>       <strong class="jxr_keyword">throw</strong> warning;
+<a class="jxr_linenumber" name="L271" href="#L271">271</a>     }
+<a class="jxr_linenumber" name="L272" href="#L272">272</a>   }
+<a class="jxr_linenumber" name="L273" href="#L273">273</a> 
+<a class="jxr_linenumber" name="L274" href="#L274">274</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> printResults(Statement statement, <strong class="jxr_keyword">boolean</strong> hasResults) {
+<a class="jxr_linenumber" name="L275" href="#L275">275</a>     <strong class="jxr_keyword">if</strong> (!hasResults) {
+<a class="jxr_linenumber" name="L276" href="#L276">276</a>       <strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="L277" href="#L277">277</a>     }
+<a class="jxr_linenumber" name="L278" href="#L278">278</a>     <strong class="jxr_keyword">try</strong> (ResultSet rs = statement.getResultSet()) {
+<a class="jxr_linenumber" name="L279" href="#L279">279</a>       ResultSetMetaData md = rs.getMetaData();
+<a class="jxr_linenumber" name="L280" href="#L280">280</a>       <strong class="jxr_keyword">int</strong> cols = md.getColumnCount();
+<a class="jxr_linenumber" name="L281" href="#L281">281</a>       <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; cols; i++) {
+<a class="jxr_linenumber" name="L282" href="#L282">282</a>         String name = md.getColumnLabel(i + 1);
+<a class="jxr_linenumber" name="L283" href="#L283">283</a>         print(name + <span class="jxr_string">"\t"</span>);
+<a class="jxr_linenumber" name="L284" href="#L284">284</a>       }
+<a class="jxr_linenumber" name="L285" href="#L285">285</a>       println(<span class="jxr_string">""</span>);
+<a class="jxr_linenumber" name="L286" href="#L286">286</a>       <strong class="jxr_keyword">while</strong> (rs.next()) {
+<a class="jxr_linenumber" name="L287" href="#L287">287</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; cols; i++) {
+<a class="jxr_linenumber" name="L288" href="#L288">288</a>           String value = rs.getString(i + 1);
+<a class="jxr_linenumber" name="L289" href="#L289">289</a>           print(value + <span class="jxr_string">"\t"</span>);
+<a class="jxr_linenumber" name="L290" href="#L290">290</a>         }
+<a class="jxr_linenumber" name="L291" href="#L291">291</a>         println(<span class="jxr_string">""</span>);
+<a class="jxr_linenumber" name="L292" href="#L292">292</a>       }
+<a class="jxr_linenumber" name="L293" href="#L293">293</a>     } <strong class="jxr_keyword">catch</strong> (SQLException e) {
+<a class="jxr_linenumber" name="L294" href="#L294">294</a>       printlnError(<span class="jxr_string">"Error printing results: "</span> + e.getMessage());
+<a class="jxr_linenumber" name="L295" href="#L295">295</a>     }
+<a class="jxr_linenumber" name="L296" href="#L296">296</a>   }
+<a class="jxr_linenumber" name="L297" href="#L297">297</a> 
+<a class="jxr_linenumber" name="L298" href="#L298">298</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> print(Object o) {
+<a class="jxr_linenumber" name="L299" href="#L299">299</a>     <strong class="jxr_keyword">if</strong> (logWriter != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L300" href="#L300">300</a>       logWriter.print(o);
+<a class="jxr_linenumber" name="L301" href="#L301">301</a>       logWriter.flush();
+<a class="jxr_linenumber" name="L302" href="#L302">302</a>     }
+<a class="jxr_linenumber" name="L303" href="#L303">303</a>   }
+<a class="jxr_linenumber" name="L304" href="#L304">304</a> 
+<a class="jxr_linenumber" name="L305" href="#L305">305</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> println(Object o) {
+<a class="jxr_linenumber" name="L306" href="#L306">306</a>     <strong class="jxr_keyword">if</strong> (logWriter != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L307" href="#L307">307</a>       logWriter.println(o);
+<a class="jxr_linenumber" name="L308" href="#L308">308</a>       logWriter.flush();
+<a class="jxr_linenumber" name="L309" href="#L309">309</a>     }
+<a class="jxr_linenumber" name="L310" href="#L310">310</a>   }
+<a class="jxr_linenumber" name="L311" href="#L311">311</a> 
+<a class="jxr_linenumber" name="L312" href="#L312">312</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> printlnError(Object o) {
+<a class="jxr_linenumber" name="L313" href="#L313">313</a>     <strong class="jxr_keyword">if</strong> (errorLogWriter != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L314" href="#L314">314</a>       errorLogWriter.println(o);
+<a class="jxr_linenumber" name="L315" href="#L315">315</a>       errorLogWriter.flush();
+<a class="jxr_linenumber" name="L316" href="#L316">316</a>     }
+<a class="jxr_linenumber" name="L317" href="#L317">317</a>   }
+<a class="jxr_linenumber" name="L318" href="#L318">318</a> 
+<a class="jxr_linenumber" name="L319" href="#L319">319</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2018 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2019 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

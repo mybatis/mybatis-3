@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ResultMap.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.mapping</a> &gt; <span class="el_source">ResultMap.java</span></div><h1>ResultMap.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -29,7 +28,6 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
-import org.apache.ibatis.reflection.Jdk;
 import org.apache.ibatis.reflection.ParamNameUtil;
 import org.apache.ibatis.session.Configuration;
 
@@ -52,157 +50,159 @@ public class ResultMap {
   private boolean hasNestedQueries;
   private Boolean autoMapping;
 
-<span class="fc" id="L55">  private ResultMap() {</span>
-<span class="fc" id="L56">  }</span>
+  private ResultMap() {
+  }
 
   public static class Builder {
-<span class="fc" id="L59">    private static final Log log = LogFactory.getLog(Builder.class);</span>
+<span class="fc" id="L57">    private static final Log log = LogFactory.getLog(Builder.class);</span>
 
-<span class="fc" id="L61">    private ResultMap resultMap = new ResultMap();</span>
+<span class="fc" id="L59">    private ResultMap resultMap = new ResultMap();</span>
 
     public Builder(Configuration configuration, String id, Class&lt;?&gt; type, List&lt;ResultMapping&gt; resultMappings) {
-<span class="fc" id="L64">      this(configuration, id, type, resultMappings, null);</span>
-<span class="fc" id="L65">    }</span>
+<span class="fc" id="L62">      this(configuration, id, type, resultMappings, null);</span>
+<span class="fc" id="L63">    }</span>
 
-<span class="fc" id="L67">    public Builder(Configuration configuration, String id, Class&lt;?&gt; type, List&lt;ResultMapping&gt; resultMappings, Boolean autoMapping) {</span>
-<span class="fc" id="L68">      resultMap.configuration = configuration;</span>
-<span class="fc" id="L69">      resultMap.id = id;</span>
-<span class="fc" id="L70">      resultMap.type = type;</span>
-<span class="fc" id="L71">      resultMap.resultMappings = resultMappings;</span>
-<span class="fc" id="L72">      resultMap.autoMapping = autoMapping;</span>
-<span class="fc" id="L73">    }</span>
+<span class="fc" id="L65">    public Builder(Configuration configuration, String id, Class&lt;?&gt; type, List&lt;ResultMapping&gt; resultMappings, Boolean autoMapping) {</span>
+<span class="fc" id="L66">      resultMap.configuration = configuration;</span>
+<span class="fc" id="L67">      resultMap.id = id;</span>
+<span class="fc" id="L68">      resultMap.type = type;</span>
+<span class="fc" id="L69">      resultMap.resultMappings = resultMappings;</span>
+<span class="fc" id="L70">      resultMap.autoMapping = autoMapping;</span>
+<span class="fc" id="L71">    }</span>
 
     public Builder discriminator(Discriminator discriminator) {
-<span class="fc" id="L76">      resultMap.discriminator = discriminator;</span>
-<span class="fc" id="L77">      return this;</span>
+<span class="fc" id="L74">      resultMap.discriminator = discriminator;</span>
+<span class="fc" id="L75">      return this;</span>
     }
 
     public Class&lt;?&gt; type() {
-<span class="nc" id="L81">      return resultMap.type;</span>
+<span class="nc" id="L79">      return resultMap.type;</span>
     }
 
     public ResultMap build() {
-<span class="pc bpc" id="L85" title="1 of 2 branches missed.">      if (resultMap.id == null) {</span>
-<span class="nc" id="L86">        throw new IllegalArgumentException(&quot;ResultMaps must have an id&quot;);</span>
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">      if (resultMap.id == null) {</span>
+<span class="nc" id="L84">        throw new IllegalArgumentException(&quot;ResultMaps must have an id&quot;);</span>
       }
-<span class="fc" id="L88">      resultMap.mappedColumns = new HashSet&lt;String&gt;();</span>
-<span class="fc" id="L89">      resultMap.mappedProperties = new HashSet&lt;String&gt;();</span>
-<span class="fc" id="L90">      resultMap.idResultMappings = new ArrayList&lt;ResultMapping&gt;();</span>
-<span class="fc" id="L91">      resultMap.constructorResultMappings = new ArrayList&lt;ResultMapping&gt;();</span>
-<span class="fc" id="L92">      resultMap.propertyResultMappings = new ArrayList&lt;ResultMapping&gt;();</span>
-<span class="fc" id="L93">      final List&lt;String&gt; constructorArgNames = new ArrayList&lt;String&gt;();</span>
-<span class="fc bfc" id="L94" title="All 2 branches covered.">      for (ResultMapping resultMapping : resultMap.resultMappings) {</span>
-<span class="fc bfc" id="L95" title="All 4 branches covered.">        resultMap.hasNestedQueries = resultMap.hasNestedQueries || resultMapping.getNestedQueryId() != null;</span>
-<span class="fc bfc" id="L96" title="All 6 branches covered.">        resultMap.hasNestedResultMaps = resultMap.hasNestedResultMaps || (resultMapping.getNestedResultMapId() != null &amp;&amp; resultMapping.getResultSet() == null);</span>
-<span class="fc" id="L97">        final String column = resultMapping.getColumn();</span>
-<span class="fc bfc" id="L98" title="All 2 branches covered.">        if (column != null) {</span>
-<span class="fc" id="L99">          resultMap.mappedColumns.add(column.toUpperCase(Locale.ENGLISH));</span>
-<span class="fc bfc" id="L100" title="All 2 branches covered.">        } else if (resultMapping.isCompositeResult()) {</span>
-<span class="fc bfc" id="L101" title="All 2 branches covered.">          for (ResultMapping compositeResultMapping : resultMapping.getComposites()) {</span>
-<span class="fc" id="L102">            final String compositeColumn = compositeResultMapping.getColumn();</span>
-<span class="pc bpc" id="L103" title="1 of 2 branches missed.">            if (compositeColumn != null) {</span>
-<span class="fc" id="L104">              resultMap.mappedColumns.add(compositeColumn.toUpperCase(Locale.ENGLISH));</span>
+<span class="fc" id="L86">      resultMap.mappedColumns = new HashSet&lt;&gt;();</span>
+<span class="fc" id="L87">      resultMap.mappedProperties = new HashSet&lt;&gt;();</span>
+<span class="fc" id="L88">      resultMap.idResultMappings = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L89">      resultMap.constructorResultMappings = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L90">      resultMap.propertyResultMappings = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L91">      final List&lt;String&gt; constructorArgNames = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L92" title="All 2 branches covered.">      for (ResultMapping resultMapping : resultMap.resultMappings) {</span>
+<span class="fc bfc" id="L93" title="All 4 branches covered.">        resultMap.hasNestedQueries = resultMap.hasNestedQueries || resultMapping.getNestedQueryId() != null;</span>
+<span class="fc bfc" id="L94" title="All 6 branches covered.">        resultMap.hasNestedResultMaps = resultMap.hasNestedResultMaps || (resultMapping.getNestedResultMapId() != null &amp;&amp; resultMapping.getResultSet() == null);</span>
+<span class="fc" id="L95">        final String column = resultMapping.getColumn();</span>
+<span class="fc bfc" id="L96" title="All 2 branches covered.">        if (column != null) {</span>
+<span class="fc" id="L97">          resultMap.mappedColumns.add(column.toUpperCase(Locale.ENGLISH));</span>
+<span class="fc bfc" id="L98" title="All 2 branches covered.">        } else if (resultMapping.isCompositeResult()) {</span>
+<span class="fc bfc" id="L99" title="All 2 branches covered.">          for (ResultMapping compositeResultMapping : resultMapping.getComposites()) {</span>
+<span class="fc" id="L100">            final String compositeColumn = compositeResultMapping.getColumn();</span>
+<span class="pc bpc" id="L101" title="1 of 2 branches missed.">            if (compositeColumn != null) {</span>
+<span class="fc" id="L102">              resultMap.mappedColumns.add(compositeColumn.toUpperCase(Locale.ENGLISH));</span>
             }
-<span class="fc" id="L106">          }</span>
-        }
-<span class="fc" id="L108">        final String property = resultMapping.getProperty();</span>
-<span class="fc bfc" id="L109" title="All 2 branches covered.">        if(property != null) {</span>
-<span class="fc" id="L110">          resultMap.mappedProperties.add(property);</span>
-        }
-<span class="fc bfc" id="L112" title="All 2 branches covered.">        if (resultMapping.getFlags().contains(ResultFlag.CONSTRUCTOR)) {</span>
-<span class="fc" id="L113">          resultMap.constructorResultMappings.add(resultMapping);</span>
-<span class="fc bfc" id="L114" title="All 2 branches covered.">          if (resultMapping.getProperty() != null) {</span>
-<span class="fc" id="L115">            constructorArgNames.add(resultMapping.getProperty());</span>
           }
-        } else {
-<span class="fc" id="L118">          resultMap.propertyResultMappings.add(resultMapping);</span>
         }
-<span class="fc bfc" id="L120" title="All 2 branches covered.">        if (resultMapping.getFlags().contains(ResultFlag.ID)) {</span>
-<span class="fc" id="L121">          resultMap.idResultMappings.add(resultMapping);</span>
+<span class="fc" id="L106">        final String property = resultMapping.getProperty();</span>
+<span class="fc bfc" id="L107" title="All 2 branches covered.">        if (property != null) {</span>
+<span class="fc" id="L108">          resultMap.mappedProperties.add(property);</span>
         }
-<span class="fc" id="L123">      }</span>
-<span class="fc bfc" id="L124" title="All 2 branches covered.">      if (resultMap.idResultMappings.isEmpty()) {</span>
-<span class="fc" id="L125">        resultMap.idResultMappings.addAll(resultMap.resultMappings);</span>
+<span class="fc bfc" id="L110" title="All 2 branches covered.">        if (resultMapping.getFlags().contains(ResultFlag.CONSTRUCTOR)) {</span>
+<span class="fc" id="L111">          resultMap.constructorResultMappings.add(resultMapping);</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">          if (resultMapping.getProperty() != null) {</span>
+<span class="fc" id="L113">            constructorArgNames.add(resultMapping.getProperty());</span>
+          }
+<span class="fc" id="L115">        } else {</span>
+<span class="fc" id="L116">          resultMap.propertyResultMappings.add(resultMapping);</span>
+        }
+<span class="fc bfc" id="L118" title="All 2 branches covered.">        if (resultMapping.getFlags().contains(ResultFlag.ID)) {</span>
+<span class="fc" id="L119">          resultMap.idResultMappings.add(resultMapping);</span>
+        }
       }
-<span class="fc bfc" id="L127" title="All 2 branches covered.">      if (!constructorArgNames.isEmpty()) {</span>
-<span class="fc" id="L128">        final List&lt;String&gt; actualArgNames = argNamesOfMatchingConstructor(constructorArgNames);</span>
-<span class="fc bfc" id="L129" title="All 2 branches covered.">        if (actualArgNames == null) {</span>
-<span class="fc" id="L130">          throw new BuilderException(&quot;Error in result map '&quot; + resultMap.id</span>
-              + &quot;'. Failed to find a constructor in '&quot;
-<span class="fc" id="L132">              + resultMap.getType().getName() + &quot;' by arg names &quot; + constructorArgNames</span>
-              + &quot;. There might be more info in debug log.&quot;);
+<span class="fc bfc" id="L122" title="All 2 branches covered.">      if (resultMap.idResultMappings.isEmpty()) {</span>
+<span class="fc" id="L123">        resultMap.idResultMappings.addAll(resultMap.resultMappings);</span>
+      }
+<span class="fc bfc" id="L125" title="All 2 branches covered.">      if (!constructorArgNames.isEmpty()) {</span>
+<span class="fc" id="L126">        final List&lt;String&gt; actualArgNames = argNamesOfMatchingConstructor(constructorArgNames);</span>
+<span class="fc bfc" id="L127" title="All 2 branches covered.">        if (actualArgNames == null) {</span>
+<span class="fc" id="L128">          throw new BuilderException(&quot;Error in result map '&quot; + resultMap.id</span>
+<span class="fc" id="L129">              + &quot;'. Failed to find a constructor in '&quot;</span>
+<span class="fc" id="L130">              + resultMap.getType().getName() + &quot;' by arg names &quot; + constructorArgNames</span>
+<span class="fc" id="L131">              + &quot;. There might be more info in debug log.&quot;);</span>
         }
-<span class="fc" id="L135">        Collections.sort(resultMap.constructorResultMappings, new Comparator&lt;ResultMapping&gt;() {</span>
-          @Override
-          public int compare(ResultMapping o1, ResultMapping o2) {
-<span class="fc" id="L138">            int paramIdx1 = actualArgNames.indexOf(o1.getProperty());</span>
-<span class="fc" id="L139">            int paramIdx2 = actualArgNames.indexOf(o2.getProperty());</span>
-<span class="fc" id="L140">            return paramIdx1 - paramIdx2;</span>
-          }
+<span class="fc" id="L133">        resultMap.constructorResultMappings.sort((o1, o2) -&gt; {</span>
+<span class="fc" id="L134">          int paramIdx1 = actualArgNames.indexOf(o1.getProperty());</span>
+<span class="fc" id="L135">          int paramIdx2 = actualArgNames.indexOf(o2.getProperty());</span>
+<span class="fc" id="L136">          return paramIdx1 - paramIdx2;</span>
         });
       }
       // lock down collections
-<span class="fc" id="L145">      resultMap.resultMappings = Collections.unmodifiableList(resultMap.resultMappings);</span>
-<span class="fc" id="L146">      resultMap.idResultMappings = Collections.unmodifiableList(resultMap.idResultMappings);</span>
-<span class="fc" id="L147">      resultMap.constructorResultMappings = Collections.unmodifiableList(resultMap.constructorResultMappings);</span>
-<span class="fc" id="L148">      resultMap.propertyResultMappings = Collections.unmodifiableList(resultMap.propertyResultMappings);</span>
-<span class="fc" id="L149">      resultMap.mappedColumns = Collections.unmodifiableSet(resultMap.mappedColumns);</span>
-<span class="fc" id="L150">      return resultMap;</span>
+<span class="fc" id="L140">      resultMap.resultMappings = Collections.unmodifiableList(resultMap.resultMappings);</span>
+<span class="fc" id="L141">      resultMap.idResultMappings = Collections.unmodifiableList(resultMap.idResultMappings);</span>
+<span class="fc" id="L142">      resultMap.constructorResultMappings = Collections.unmodifiableList(resultMap.constructorResultMappings);</span>
+<span class="fc" id="L143">      resultMap.propertyResultMappings = Collections.unmodifiableList(resultMap.propertyResultMappings);</span>
+<span class="fc" id="L144">      resultMap.mappedColumns = Collections.unmodifiableSet(resultMap.mappedColumns);</span>
+<span class="fc" id="L145">      return resultMap;</span>
     }
 
     private List&lt;String&gt; argNamesOfMatchingConstructor(List&lt;String&gt; constructorArgNames) {
-<span class="fc" id="L154">      Constructor&lt;?&gt;[] constructors = resultMap.type.getDeclaredConstructors();</span>
-<span class="fc bfc" id="L155" title="All 2 branches covered.">      for (Constructor&lt;?&gt; constructor : constructors) {</span>
-<span class="fc" id="L156">        Class&lt;?&gt;[] paramTypes = constructor.getParameterTypes();</span>
-<span class="fc bfc" id="L157" title="All 2 branches covered.">        if (constructorArgNames.size() == paramTypes.length) {</span>
-<span class="fc" id="L158">          List&lt;String&gt; paramNames = getArgNames(constructor);</span>
-<span class="fc bfc" id="L159" title="All 2 branches covered.">          if (constructorArgNames.containsAll(paramNames)</span>
-<span class="fc bfc" id="L160" title="All 2 branches covered.">              &amp;&amp; argTypesMatch(constructorArgNames, paramTypes, paramNames)) {</span>
-<span class="fc" id="L161">            return paramNames;</span>
+<span class="fc" id="L149">      Constructor&lt;?&gt;[] constructors = resultMap.type.getDeclaredConstructors();</span>
+<span class="fc bfc" id="L150" title="All 2 branches covered.">      for (Constructor&lt;?&gt; constructor : constructors) {</span>
+<span class="fc" id="L151">        Class&lt;?&gt;[] paramTypes = constructor.getParameterTypes();</span>
+<span class="fc bfc" id="L152" title="All 2 branches covered.">        if (constructorArgNames.size() == paramTypes.length) {</span>
+<span class="fc" id="L153">          List&lt;String&gt; paramNames = getArgNames(constructor);</span>
+<span class="fc bfc" id="L154" title="All 2 branches covered.">          if (constructorArgNames.containsAll(paramNames)</span>
+<span class="fc bfc" id="L155" title="All 2 branches covered.">              &amp;&amp; argTypesMatch(constructorArgNames, paramTypes, paramNames)) {</span>
+<span class="fc" id="L156">            return paramNames;</span>
           }
         }
       }
-<span class="fc" id="L165">      return null;</span>
+<span class="fc" id="L160">      return null;</span>
     }
 
     private boolean argTypesMatch(final List&lt;String&gt; constructorArgNames,
         Class&lt;?&gt;[] paramTypes, List&lt;String&gt; paramNames) {
-<span class="fc bfc" id="L170" title="All 2 branches covered.">      for (int i = 0; i &lt; constructorArgNames.size(); i++) {</span>
-<span class="fc" id="L171">        Class&lt;?&gt; actualType = paramTypes[paramNames.indexOf(constructorArgNames.get(i))];</span>
-<span class="fc" id="L172">        Class&lt;?&gt; specifiedType = resultMap.constructorResultMappings.get(i).getJavaType();</span>
-<span class="fc bfc" id="L173" title="All 2 branches covered.">        if (!actualType.equals(specifiedType)) {</span>
-<span class="pc bpc" id="L174" title="1 of 2 branches missed.">          if (log.isDebugEnabled()) {</span>
-<span class="nc" id="L175">            log.debug(&quot;While building result map '&quot; + resultMap.id</span>
-                + &quot;', found a constructor with arg names &quot; + constructorArgNames
-<span class="nc" id="L177">                + &quot;, but the type of '&quot; + constructorArgNames.get(i)</span>
-<span class="nc" id="L178">                + &quot;' did not match. Specified: [&quot; + specifiedType.getName() + &quot;] Declared: [&quot;</span>
-<span class="nc" id="L179">                + actualType.getName() + &quot;]&quot;);</span>
+<span class="fc bfc" id="L165" title="All 2 branches covered.">      for (int i = 0; i &lt; constructorArgNames.size(); i++) {</span>
+<span class="fc" id="L166">        Class&lt;?&gt; actualType = paramTypes[paramNames.indexOf(constructorArgNames.get(i))];</span>
+<span class="fc" id="L167">        Class&lt;?&gt; specifiedType = resultMap.constructorResultMappings.get(i).getJavaType();</span>
+<span class="fc bfc" id="L168" title="All 2 branches covered.">        if (!actualType.equals(specifiedType)) {</span>
+<span class="pc bpc" id="L169" title="1 of 2 branches missed.">          if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L170">            log.debug(&quot;While building result map '&quot; + resultMap.id</span>
+<span class="nc" id="L171">                + &quot;', found a constructor with arg names &quot; + constructorArgNames</span>
+<span class="nc" id="L172">                + &quot;, but the type of '&quot; + constructorArgNames.get(i)</span>
+<span class="nc" id="L173">                + &quot;' did not match. Specified: [&quot; + specifiedType.getName() + &quot;] Declared: [&quot;</span>
+<span class="nc" id="L174">                + actualType.getName() + &quot;]&quot;);</span>
           }
-<span class="fc" id="L181">          return false;</span>
+<span class="fc" id="L176">          return false;</span>
         }
       }
-<span class="fc" id="L184">      return true;</span>
+<span class="fc" id="L179">      return true;</span>
     }
 
     private List&lt;String&gt; getArgNames(Constructor&lt;?&gt; constructor) {
-<span class="pc bpc" id="L188" title="1 of 4 branches missed.">      if (resultMap.configuration.isUseActualParamName() &amp;&amp; Jdk.parameterExists) {</span>
-<span class="fc" id="L189">        return ParamNameUtil.getParamNames(constructor);</span>
-      } else {
-<span class="fc" id="L191">        List&lt;String&gt; paramNames = new ArrayList&lt;String&gt;();</span>
-<span class="fc" id="L192">        final Annotation[][] paramAnnotations = constructor.getParameterAnnotations();</span>
-<span class="fc" id="L193">        int paramCount = paramAnnotations.length;</span>
-<span class="fc bfc" id="L194" title="All 2 branches covered.">        for (int paramIndex = 0; paramIndex &lt; paramCount; paramIndex++) {</span>
-<span class="fc" id="L195">          String name = null;</span>
-<span class="pc bpc" id="L196" title="1 of 2 branches missed.">          for (Annotation annotation : paramAnnotations[paramIndex]) {</span>
-<span class="pc bpc" id="L197" title="1 of 2 branches missed.">            if (annotation instanceof Param) {</span>
-<span class="fc" id="L198">              name = ((Param) annotation).value();</span>
-<span class="fc" id="L199">              break;</span>
-            }
+<span class="fc" id="L183">      List&lt;String&gt; paramNames = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L184">      List&lt;String&gt; actualParamNames = null;</span>
+<span class="fc" id="L185">      final Annotation[][] paramAnnotations = constructor.getParameterAnnotations();</span>
+<span class="fc" id="L186">      int paramCount = paramAnnotations.length;</span>
+<span class="fc bfc" id="L187" title="All 2 branches covered.">      for (int paramIndex = 0; paramIndex &lt; paramCount; paramIndex++) {</span>
+<span class="fc" id="L188">        String name = null;</span>
+<span class="pc bfc" id="L189" title="All 2 branches covered.">        for (Annotation annotation : paramAnnotations[paramIndex]) {</span>
+<span class="pc bpc" id="L190" title="1 of 2 branches missed.">          if (annotation instanceof Param) {</span>
+<span class="fc" id="L191">            name = ((Param) annotation).value();</span>
+<span class="fc" id="L192">            break;</span>
           }
-<span class="pc bpc" id="L202" title="1 of 2 branches missed.">          paramNames.add(name != null ? name : &quot;arg&quot; + paramIndex);</span>
         }
-<span class="fc" id="L204">        return paramNames;</span>
+<span class="pc bpc" id="L195" title="1 of 4 branches missed.">        if (name == null &amp;&amp; resultMap.configuration.isUseActualParamName()) {</span>
+<span class="pc bpc" id="L196" title="1 of 2 branches missed.">          if (actualParamNames == null) {</span>
+<span class="fc" id="L197">            actualParamNames = ParamNameUtil.getParamNames(constructor);</span>
+          }
+<span class="pc bpc" id="L199" title="1 of 2 branches missed.">          if (actualParamNames.size() &gt; paramIndex) {</span>
+<span class="fc" id="L200">            name = actualParamNames.get(paramIndex);</span>
+          }
+        }
+<span class="pc bpc" id="L203" title="1 of 2 branches missed.">        paramNames.add(name != null ? name : &quot;arg&quot; + paramIndex);</span>
       }
+<span class="fc" id="L205">      return paramNames;</span>
     }
   }
 
@@ -253,10 +253,10 @@ public class ResultMap {
   public void forceNestedResultMaps() {
 <span class="fc" id="L254">    hasNestedResultMaps = true;</span>
 <span class="fc" id="L255">  }</span>
-  
+
   public Boolean getAutoMapping() {
 <span class="fc" id="L258">    return autoMapping;</span>
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

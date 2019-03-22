@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultObjectFactory.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.reflection.factory</a> &gt; <span class="el_source">DefaultObjectFactory.java</span></div><h1>DefaultObjectFactory.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
@@ -19,98 +19,102 @@ import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import org.apache.ibatis.reflection.ReflectionException;
+import org.apache.ibatis.reflection.Reflector;
 
 /**
  * @author Clinton Begin
  */
-<span class="fc" id="L36">public class DefaultObjectFactory implements ObjectFactory, Serializable {</span>
+<span class="fc" id="L40">public class DefaultObjectFactory implements ObjectFactory, Serializable {</span>
 
   private static final long serialVersionUID = -8855120656740914948L;
 
   @Override
   public &lt;T&gt; T create(Class&lt;T&gt; type) {
-<span class="fc" id="L42">    return create(type, null, null);</span>
+<span class="fc" id="L46">    return create(type, null, null);</span>
   }
 
   @SuppressWarnings(&quot;unchecked&quot;)
   @Override
   public &lt;T&gt; T create(Class&lt;T&gt; type, List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs) {
-<span class="fc" id="L48">    Class&lt;?&gt; classToCreate = resolveInterface(type);</span>
+<span class="fc" id="L52">    Class&lt;?&gt; classToCreate = resolveInterface(type);</span>
     // we know types are assignable
-<span class="fc" id="L50">    return (T) instantiateClass(classToCreate, constructorArgTypes, constructorArgs);</span>
+<span class="fc" id="L54">    return (T) instantiateClass(classToCreate, constructorArgTypes, constructorArgs);</span>
   }
 
   @Override
   public void setProperties(Properties properties) {
     // no props for default
-<span class="fc" id="L56">  }</span>
+<span class="fc" id="L60">  }</span>
 
-  &lt;T&gt; T instantiateClass(Class&lt;T&gt; type, List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs) {
+  private  &lt;T&gt; T instantiateClass(Class&lt;T&gt; type, List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs) {
     try {
       Constructor&lt;T&gt; constructor;
-<span class="pc bpc" id="L61" title="1 of 4 branches missed.">      if (constructorArgTypes == null || constructorArgs == null) {</span>
-<span class="fc" id="L62">        constructor = type.getDeclaredConstructor();</span>
-<span class="pc bpc" id="L63" title="1 of 2 branches missed.">        if (!constructor.isAccessible()) {</span>
-<span class="fc" id="L64">          constructor.setAccessible(true);</span>
+<span class="pc bpc" id="L65" title="1 of 4 branches missed.">      if (constructorArgTypes == null || constructorArgs == null) {</span>
+<span class="fc" id="L66">        constructor = type.getDeclaredConstructor();</span>
+        try {
+<span class="fc" id="L68">          return constructor.newInstance();</span>
+<span class="fc" id="L69">        } catch (IllegalAccessException e) {</span>
+<span class="pc bpc" id="L70" title="1 of 2 branches missed.">          if (Reflector.canControlMemberAccessible()) {</span>
+<span class="fc" id="L71">            constructor.setAccessible(true);</span>
+<span class="fc" id="L72">            return constructor.newInstance();</span>
+          } else {
+<span class="nc" id="L74">            throw e;</span>
+          }
         }
-<span class="fc" id="L66">        return constructor.newInstance();</span>
       }
-<span class="fc" id="L68">      constructor = type.getDeclaredConstructor(constructorArgTypes.toArray(new Class[constructorArgTypes.size()]));</span>
-<span class="pc bpc" id="L69" title="1 of 2 branches missed.">      if (!constructor.isAccessible()) {</span>
-<span class="fc" id="L70">        constructor.setAccessible(true);</span>
+<span class="fc" id="L78">      constructor = type.getDeclaredConstructor(constructorArgTypes.toArray(new Class[constructorArgTypes.size()]));</span>
+      try {
+<span class="fc" id="L80">        return constructor.newInstance(constructorArgs.toArray(new Object[constructorArgs.size()]));</span>
+<span class="fc" id="L81">      } catch (IllegalAccessException e) {</span>
+<span class="pc bpc" id="L82" title="1 of 2 branches missed.">        if (Reflector.canControlMemberAccessible()) {</span>
+<span class="fc" id="L83">          constructor.setAccessible(true);</span>
+<span class="fc" id="L84">          return constructor.newInstance(constructorArgs.toArray(new Object[constructorArgs.size()]));</span>
+        } else {
+<span class="nc" id="L86">          throw e;</span>
+        }
       }
-<span class="fc" id="L72">      return constructor.newInstance(constructorArgs.toArray(new Object[constructorArgs.size()]));</span>
-<span class="fc" id="L73">    } catch (Exception e) {</span>
-<span class="fc" id="L74">      StringBuilder argTypes = new StringBuilder();</span>
-<span class="pc bpc" id="L75" title="2 of 4 branches missed.">      if (constructorArgTypes != null &amp;&amp; !constructorArgTypes.isEmpty()) {</span>
-<span class="fc bfc" id="L76" title="All 2 branches covered.">        for (Class&lt;?&gt; argType : constructorArgTypes) {</span>
-<span class="fc" id="L77">          argTypes.append(argType.getSimpleName());</span>
-<span class="fc" id="L78">          argTypes.append(&quot;,&quot;);</span>
-<span class="fc" id="L79">        }</span>
-<span class="fc" id="L80">        argTypes.deleteCharAt(argTypes.length() - 1); // remove trailing ,</span>
-      }
-<span class="fc" id="L82">      StringBuilder argValues = new StringBuilder();</span>
-<span class="pc bpc" id="L83" title="2 of 4 branches missed.">      if (constructorArgs != null &amp;&amp; !constructorArgs.isEmpty()) {</span>
-<span class="fc bfc" id="L84" title="All 2 branches covered.">        for (Object argValue : constructorArgs) {</span>
-<span class="fc" id="L85">          argValues.append(String.valueOf(argValue));</span>
-<span class="fc" id="L86">          argValues.append(&quot;,&quot;);</span>
-<span class="fc" id="L87">        }</span>
-<span class="fc" id="L88">        argValues.deleteCharAt(argValues.length() - 1); // remove trailing ,</span>
-      }
-<span class="fc" id="L90">      throw new ReflectionException(&quot;Error instantiating &quot; + type + &quot; with invalid types (&quot; + argTypes + &quot;) or values (&quot; + argValues + &quot;). Cause: &quot; + e, e);</span>
+<span class="fc" id="L89">    } catch (Exception e) {</span>
+<span class="fc" id="L90">      String argTypes = Optional.ofNullable(constructorArgTypes).orElseGet(Collections::emptyList)</span>
+<span class="fc" id="L91">          .stream().map(Class::getSimpleName).collect(Collectors.joining(&quot;,&quot;));</span>
+<span class="fc" id="L92">      String argValues = Optional.ofNullable(constructorArgs).orElseGet(Collections::emptyList)</span>
+<span class="fc" id="L93">          .stream().map(String::valueOf).collect(Collectors.joining(&quot;,&quot;));</span>
+<span class="fc" id="L94">      throw new ReflectionException(&quot;Error instantiating &quot; + type + &quot; with invalid types (&quot; + argTypes + &quot;) or values (&quot; + argValues + &quot;). Cause: &quot; + e, e);</span>
     }
   }
 
   protected Class&lt;?&gt; resolveInterface(Class&lt;?&gt; type) {
     Class&lt;?&gt; classToCreate;
-<span class="pc bpc" id="L96" title="2 of 6 branches missed.">    if (type == List.class || type == Collection.class || type == Iterable.class) {</span>
-<span class="fc" id="L97">      classToCreate = ArrayList.class;</span>
-<span class="fc bfc" id="L98" title="All 2 branches covered.">    } else if (type == Map.class) {</span>
-<span class="fc" id="L99">      classToCreate = HashMap.class;</span>
-<span class="pc bpc" id="L100" title="1 of 2 branches missed.">    } else if (type == SortedSet.class) { // issue #510 Collections Support</span>
-<span class="nc" id="L101">      classToCreate = TreeSet.class;</span>
-<span class="fc bfc" id="L102" title="All 2 branches covered.">    } else if (type == Set.class) {</span>
-<span class="fc" id="L103">      classToCreate = HashSet.class;</span>
-    } else {
-<span class="fc" id="L105">      classToCreate = type;</span>
+<span class="fc bfc" id="L100" title="All 6 branches covered.">    if (type == List.class || type == Collection.class || type == Iterable.class) {</span>
+<span class="fc" id="L101">      classToCreate = ArrayList.class;</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">    } else if (type == Map.class) {</span>
+<span class="fc" id="L103">      classToCreate = HashMap.class;</span>
+<span class="fc bfc" id="L104" title="All 2 branches covered.">    } else if (type == SortedSet.class) { // issue #510 Collections Support</span>
+<span class="fc" id="L105">      classToCreate = TreeSet.class;</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">    } else if (type == Set.class) {</span>
+<span class="fc" id="L107">      classToCreate = HashSet.class;</span>
+<span class="fc" id="L108">    } else {</span>
+<span class="fc" id="L109">      classToCreate = type;</span>
     }
-<span class="fc" id="L107">    return classToCreate;</span>
+<span class="fc" id="L111">    return classToCreate;</span>
   }
 
   @Override
   public &lt;T&gt; boolean isCollection(Class&lt;T&gt; type) {
-<span class="fc" id="L112">    return Collection.class.isAssignableFrom(type);</span>
+<span class="fc" id="L116">    return Collection.class.isAssignableFrom(type);</span>
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

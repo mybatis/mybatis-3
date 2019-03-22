@@ -151,9 +151,9 @@ public class BeanWrapper extends BaseWrapper {
 <span class="fc" id="L151">      Object newObject = objectFactory.create(type);</span>
 <span class="fc" id="L152">      metaValue = MetaObject.forObject(newObject, metaObject.getObjectFactory(), metaObject.getObjectWrapperFactory(), metaObject.getReflectorFactory());</span>
 <span class="fc" id="L153">      set(prop, newObject);</span>
-<span class="nc" id="L154">    } catch (Exception e) {</span>
+<span class="pc" id="L154">    } catch (Exception e) {</span>
 <span class="nc" id="L155">      throw new ReflectionException(&quot;Cannot set value of property '&quot; + name + &quot;' because '&quot; + name + &quot;' is null and cannot be instantiated on instance of &quot; + type.getName() + &quot;. Cause:&quot; + e.toString(), e);</span>
-<span class="fc" id="L156">    }</span>
+    }
 <span class="fc" id="L157">    return metaValue;</span>
   }
 
@@ -178,12 +178,12 @@ public class BeanWrapper extends BaseWrapper {
 <span class="fc" id="L178">      Object[] params = {value};</span>
       try {
 <span class="fc" id="L180">        method.invoke(object, params);</span>
-<span class="nc" id="L181">      } catch (Throwable t) {</span>
+<span class="pc" id="L181">      } catch (Throwable t) {</span>
 <span class="nc" id="L182">        throw ExceptionUtil.unwrapThrowable(t);</span>
-<span class="fc" id="L183">      }</span>
+      }
 <span class="nc" id="L184">    } catch (Throwable t) {</span>
 <span class="nc" id="L185">      throw new ReflectionException(&quot;Could not set property '&quot; + prop.getName() + &quot;' of '&quot; + object.getClass() + &quot;' with value '&quot; + value + &quot;' Cause: &quot; + t.toString(), t);</span>
-<span class="fc" id="L186">    }</span>
+    }
 <span class="fc" id="L187">  }</span>
 
   @Override
@@ -202,4 +202,4 @@ public class BeanWrapper extends BaseWrapper {
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ja"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JBoss6VFS.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.io</a> &gt; <span class="el_source">JBoss6VFS.java</span></div><h1>JBoss6VFS.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import org.apache.ibatis.logging.LogFactory;
 
 /**
  * A {@link VFS} implementation that works with the VFS API provided by JBoss 6.
- * 
+ *
  * @author Ben Gunter
  */
 <span class="fc" id="L33">public class JBoss6VFS extends VFS {</span>
@@ -56,10 +56,10 @@ import org.apache.ibatis.logging.LogFactory;
 
     List&lt;VirtualFile&gt; getChildren() throws IOException {
 <span class="nc" id="L58">      List&lt;?&gt; objects = invoke(getChildrenRecursively, virtualFile);</span>
-<span class="nc" id="L59">      List&lt;VirtualFile&gt; children = new ArrayList&lt;VirtualFile&gt;(objects.size());</span>
+<span class="nc" id="L59">      List&lt;VirtualFile&gt; children = new ArrayList&lt;&gt;(objects.size());</span>
 <span class="nc bnc" id="L60" title="All 2 branches missed.">      for (Object object : objects) {</span>
 <span class="nc" id="L61">        children.add(new VirtualFile(object));</span>
-<span class="nc" id="L62">      }</span>
+      }
 <span class="nc" id="L63">      return children;</span>
     }
   }
@@ -69,9 +69,9 @@ import org.apache.ibatis.logging.LogFactory;
     static Class&lt;?&gt; VFS;
     static Method getChild;
 
-<span class="nc" id="L72">    private VFS() {</span>
+    private VFS() {
       // Prevent Instantiation
-<span class="nc" id="L74">    }</span>
+    }
 
     static VirtualFile getChild(URL url) throws IOException {
 <span class="nc" id="L77">      Object o = invoke(getChild, VFS, url);</span>
@@ -95,9 +95,9 @@ import org.apache.ibatis.logging.LogFactory;
       // Look up and verify required methods
 <span class="fc" id="L96">      VFS.getChild = checkNotNull(getMethod(VFS.VFS, &quot;getChild&quot;, URL.class));</span>
 <span class="fc" id="L97">      VirtualFile.getChildrenRecursively = checkNotNull(getMethod(VirtualFile.VirtualFile,</span>
-          &quot;getChildrenRecursively&quot;));
+<span class="fc" id="L98">          &quot;getChildrenRecursively&quot;));</span>
 <span class="fc" id="L99">      VirtualFile.getPathNameRelativeTo = checkNotNull(getMethod(VirtualFile.VirtualFile,</span>
-          &quot;getPathNameRelativeTo&quot;, VirtualFile.VirtualFile));
+<span class="fc" id="L100">          &quot;getPathNameRelativeTo&quot;, VirtualFile.VirtualFile));</span>
 
       // Verify that the API has not changed
 <span class="fc" id="L103">      checkReturnType(VFS.getChild, VirtualFile.VirtualFile);</span>
@@ -109,7 +109,7 @@ import org.apache.ibatis.logging.LogFactory;
   /**
    * Verifies that the provided object reference is null. If it is null, then this VFS is marked
    * as invalid for the current environment.
-   * 
+   *
    * @param object The object reference to check for null.
    */
   protected static &lt;T&gt; T checkNotNull(T object) {
@@ -122,7 +122,7 @@ import org.apache.ibatis.logging.LogFactory;
   /**
    * Verifies that the return type of a method is what it is expected to be. If it is not, then
    * this VFS is marked as invalid for the current environment.
-   * 
+   *
    * @param method The method whose return type is to be checked.
    * @param expected A type to which the method's return type must be assignable.
    * @see Class#isAssignableFrom(Class)
@@ -166,12 +166,12 @@ import org.apache.ibatis.logging.LogFactory;
     }
 
 <span class="nc" id="L168">    List&lt;VirtualFile&gt; children = directory.getChildren();</span>
-<span class="nc" id="L169">    List&lt;String&gt; names = new ArrayList&lt;String&gt;(children.size());</span>
+<span class="nc" id="L169">    List&lt;String&gt; names = new ArrayList&lt;&gt;(children.size());</span>
 <span class="nc bnc" id="L170" title="All 2 branches missed.">    for (VirtualFile vf : children) {</span>
 <span class="nc" id="L171">      names.add(path + vf.getPathNameRelativeTo(directory));</span>
-<span class="nc" id="L172">    }</span>
+    }
 
 <span class="nc" id="L174">    return names;</span>
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

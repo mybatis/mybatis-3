@@ -29,11 +29,11 @@ public final class SystemMetaObject {
 <span class="fc" id="L29">  public static final ObjectWrapperFactory DEFAULT_OBJECT_WRAPPER_FACTORY = new DefaultObjectWrapperFactory();</span>
 <span class="fc" id="L30">  public static final MetaObject NULL_META_OBJECT = MetaObject.forObject(NullObject.class, DEFAULT_OBJECT_FACTORY, DEFAULT_OBJECT_WRAPPER_FACTORY, new DefaultReflectorFactory());</span>
 
-<span class="nc" id="L32">  private SystemMetaObject() {</span>
+  private SystemMetaObject() {
     // Prevent Instantiation of Static Class
-<span class="nc" id="L34">  }</span>
+  }
 
-<span class="nc" id="L36">  private static class NullObject {</span>
+  private static class NullObject {
   }
 
   public static MetaObject forObject(Object object) {
@@ -41,4 +41,4 @@ public final class SystemMetaObject {
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

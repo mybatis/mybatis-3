@@ -7,13 +7,13 @@
 <body>
 <div id="overview"><a href="../../../../../testapidocs/org/apache/ibatis/BaseDataTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2015 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2018 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_javadoccomment"> *    You may obtain a copy of the License at</em>
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2." target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.</a>0</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_javadoccomment"> *    Unless required by applicable law or agreed to in writing, software</em>
 <a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_javadoccomment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
@@ -35,7 +35,7 @@
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> java.sql.SQLException;
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> java.util.Properties;
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>  
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">abstract</strong> <strong class="jxr_keyword">class</strong> <a href="../../../org/apache/ibatis/BaseDataTest.html">BaseDataTest</a> {
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">abstract</strong> <strong class="jxr_keyword">class</strong> <a name="BaseDataTest" href="../../../org/apache/ibatis/BaseDataTest.html#BaseDataTest">BaseDataTest</a> {
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>  
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String BLOG_PROPERTIES = <span class="jxr_string">"org/apache/ibatis/databases/blog/blog-derby.properties"</span>;
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String BLOG_DDL = <span class="jxr_string">"org/apache/ibatis/databases/blog/blog-derby-schema.sql"</span>;
@@ -66,44 +66,38 @@
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>    }
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>  
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> runScript(DataSource ds, String resource) <strong class="jxr_keyword">throws</strong> IOException, SQLException {
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>      Connection connection = ds.getConnection();
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>        ScriptRunner runner = <strong class="jxr_keyword">new</strong> ScriptRunner(connection);
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>        runner.setAutoCommit(<strong class="jxr_keyword">true</strong>);
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>        runner.setStopOnError(false);
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>        runner.setLogWriter(<strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>        runner.setErrorLogWriter(<strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>        runScript(runner, resource);
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>      } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>        connection.close();
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>      }
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>    }
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>  
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> runScript(ScriptRunner runner, String resource) <strong class="jxr_keyword">throws</strong> IOException, SQLException {
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>      Reader reader = Resources.getResourceAsReader(resource);
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>        runner.runScript(reader);
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>      } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>        reader.close();
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>      }
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>    }
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>  
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> DataSource createBlogDataSource() <strong class="jxr_keyword">throws</strong> IOException, SQLException {
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>      DataSource ds = createUnpooledDataSource(BLOG_PROPERTIES);
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>      runScript(ds, BLOG_DDL);
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>      runScript(ds, BLOG_DATA);
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>      <strong class="jxr_keyword">return</strong> ds;
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>    }
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>  
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> DataSource createJPetstoreDataSource() <strong class="jxr_keyword">throws</strong> IOException, SQLException {
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>      DataSource ds = createUnpooledDataSource(JPETSTORE_PROPERTIES);
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>      runScript(ds, JPETSTORE_DDL);
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>      runScript(ds, JPETSTORE_DATA);
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>      <strong class="jxr_keyword">return</strong> ds;
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>    }
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>  }
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>      <strong class="jxr_keyword">try</strong> (Connection connection = ds.getConnection()) {
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>        ScriptRunner runner = <strong class="jxr_keyword">new</strong> ScriptRunner(connection);
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>        runner.setAutoCommit(<strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>        runner.setStopOnError(false);
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>        runner.setLogWriter(<strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>        runner.setErrorLogWriter(<strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>        runScript(runner, resource);
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>      }
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>    }
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>  
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> runScript(ScriptRunner runner, String resource) <strong class="jxr_keyword">throws</strong> IOException, SQLException {
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>      <strong class="jxr_keyword">try</strong> (Reader reader = Resources.getResourceAsReader(resource)) {
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>        runner.runScript(reader);
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>      }
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>    }
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>  
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> DataSource createBlogDataSource() <strong class="jxr_keyword">throws</strong> IOException, SQLException {
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>      DataSource ds = createUnpooledDataSource(BLOG_PROPERTIES);
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>      runScript(ds, BLOG_DDL);
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>      runScript(ds, BLOG_DATA);
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>      <strong class="jxr_keyword">return</strong> ds;
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>    }
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>  
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> DataSource createJPetstoreDataSource() <strong class="jxr_keyword">throws</strong> IOException, SQLException {
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>      DataSource ds = createUnpooledDataSource(JPETSTORE_PROPERTIES);
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>      runScript(ds, JPETSTORE_DDL);
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>      runScript(ds, JPETSTORE_DATA);
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>      <strong class="jxr_keyword">return</strong> ds;
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>    }
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2018 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2019 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

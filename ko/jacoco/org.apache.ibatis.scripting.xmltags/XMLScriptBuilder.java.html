@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>XMLScriptBuilder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.scripting.xmltags</a> &gt; <span class="el_source">XMLScriptBuilder.java</span></div><h1>XMLScriptBuilder.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
@@ -37,68 +37,68 @@ public class XMLScriptBuilder extends BaseBuilder {
   private final XNode context;
   private boolean isDynamic;
   private final Class&lt;?&gt; parameterType;
+<span class="fc" id="L40">  private final Map&lt;String, NodeHandler&gt; nodeHandlerMap = new HashMap&lt;&gt;();</span>
 
   public XMLScriptBuilder(Configuration configuration, XNode context) {
-<span class="nc" id="L42">    this(configuration, context, null);</span>
-<span class="nc" id="L43">  }</span>
+<span class="nc" id="L43">    this(configuration, context, null);</span>
+<span class="nc" id="L44">  }</span>
 
   public XMLScriptBuilder(Configuration configuration, XNode context, Class&lt;?&gt; parameterType) {
-<span class="fc" id="L46">    super(configuration);</span>
-<span class="fc" id="L47">    this.context = context;</span>
-<span class="fc" id="L48">    this.parameterType = parameterType;</span>
-<span class="fc" id="L49">  }</span>
+<span class="fc" id="L47">    super(configuration);</span>
+<span class="fc" id="L48">    this.context = context;</span>
+<span class="fc" id="L49">    this.parameterType = parameterType;</span>
+<span class="fc" id="L50">    initNodeHandlerMap();</span>
+<span class="fc" id="L51">  }</span>
+
+
+  private void initNodeHandlerMap() {
+<span class="fc" id="L55">    nodeHandlerMap.put(&quot;trim&quot;, new TrimHandler());</span>
+<span class="fc" id="L56">    nodeHandlerMap.put(&quot;where&quot;, new WhereHandler());</span>
+<span class="fc" id="L57">    nodeHandlerMap.put(&quot;set&quot;, new SetHandler());</span>
+<span class="fc" id="L58">    nodeHandlerMap.put(&quot;foreach&quot;, new ForEachHandler());</span>
+<span class="fc" id="L59">    nodeHandlerMap.put(&quot;if&quot;, new IfHandler());</span>
+<span class="fc" id="L60">    nodeHandlerMap.put(&quot;choose&quot;, new ChooseHandler());</span>
+<span class="fc" id="L61">    nodeHandlerMap.put(&quot;when&quot;, new IfHandler());</span>
+<span class="fc" id="L62">    nodeHandlerMap.put(&quot;otherwise&quot;, new OtherwiseHandler());</span>
+<span class="fc" id="L63">    nodeHandlerMap.put(&quot;bind&quot;, new BindHandler());</span>
+<span class="fc" id="L64">  }</span>
 
   public SqlSource parseScriptNode() {
-<span class="fc" id="L52">    List&lt;SqlNode&gt; contents = parseDynamicTags(context);</span>
-<span class="fc" id="L53">    MixedSqlNode rootSqlNode = new MixedSqlNode(contents);</span>
-<span class="fc" id="L54">    SqlSource sqlSource = null;</span>
-<span class="fc bfc" id="L55" title="All 2 branches covered.">    if (isDynamic) {</span>
-<span class="fc" id="L56">      sqlSource = new DynamicSqlSource(configuration, rootSqlNode);</span>
-    } else {
-<span class="fc" id="L58">      sqlSource = new RawSqlSource(configuration, rootSqlNode, parameterType);</span>
+<span class="fc" id="L67">    MixedSqlNode rootSqlNode = parseDynamicTags(context);</span>
+    SqlSource sqlSource;
+<span class="fc bfc" id="L69" title="All 2 branches covered.">    if (isDynamic) {</span>
+<span class="fc" id="L70">      sqlSource = new DynamicSqlSource(configuration, rootSqlNode);</span>
+<span class="fc" id="L71">    } else {</span>
+<span class="fc" id="L72">      sqlSource = new RawSqlSource(configuration, rootSqlNode, parameterType);</span>
     }
-<span class="fc" id="L60">    return sqlSource;</span>
+<span class="fc" id="L74">    return sqlSource;</span>
   }
 
-  List&lt;SqlNode&gt; parseDynamicTags(XNode node) {
-<span class="fc" id="L64">    List&lt;SqlNode&gt; contents = new ArrayList&lt;SqlNode&gt;();</span>
-<span class="fc" id="L65">    NodeList children = node.getNode().getChildNodes();</span>
-<span class="fc bfc" id="L66" title="All 2 branches covered.">    for (int i = 0; i &lt; children.getLength(); i++) {</span>
-<span class="fc" id="L67">      XNode child = node.newXNode(children.item(i));</span>
-<span class="fc bfc" id="L68" title="All 4 branches covered.">      if (child.getNode().getNodeType() == Node.CDATA_SECTION_NODE || child.getNode().getNodeType() == Node.TEXT_NODE) {</span>
-<span class="fc" id="L69">        String data = child.getStringBody(&quot;&quot;);</span>
-<span class="fc" id="L70">        TextSqlNode textSqlNode = new TextSqlNode(data);</span>
-<span class="fc bfc" id="L71" title="All 2 branches covered.">        if (textSqlNode.isDynamic()) {</span>
-<span class="fc" id="L72">          contents.add(textSqlNode);</span>
-<span class="fc" id="L73">          isDynamic = true;</span>
-        } else {
-<span class="fc" id="L75">          contents.add(new StaticTextSqlNode(data));</span>
+  protected MixedSqlNode parseDynamicTags(XNode node) {
+<span class="fc" id="L78">    List&lt;SqlNode&gt; contents = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L79">    NodeList children = node.getNode().getChildNodes();</span>
+<span class="fc bfc" id="L80" title="All 2 branches covered.">    for (int i = 0; i &lt; children.getLength(); i++) {</span>
+<span class="fc" id="L81">      XNode child = node.newXNode(children.item(i));</span>
+<span class="fc bfc" id="L82" title="All 4 branches covered.">      if (child.getNode().getNodeType() == Node.CDATA_SECTION_NODE || child.getNode().getNodeType() == Node.TEXT_NODE) {</span>
+<span class="fc" id="L83">        String data = child.getStringBody(&quot;&quot;);</span>
+<span class="fc" id="L84">        TextSqlNode textSqlNode = new TextSqlNode(data);</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">        if (textSqlNode.isDynamic()) {</span>
+<span class="fc" id="L86">          contents.add(textSqlNode);</span>
+<span class="fc" id="L87">          isDynamic = true;</span>
+<span class="fc" id="L88">        } else {</span>
+<span class="fc" id="L89">          contents.add(new StaticTextSqlNode(data));</span>
         }
-<span class="pc bpc" id="L77" title="1 of 2 branches missed.">      } else if (child.getNode().getNodeType() == Node.ELEMENT_NODE) { // issue #628</span>
-<span class="fc" id="L78">        String nodeName = child.getNode().getNodeName();</span>
-<span class="fc" id="L79">        NodeHandler handler = nodeHandlers(nodeName);</span>
-<span class="pc bpc" id="L80" title="1 of 2 branches missed.">        if (handler == null) {</span>
-<span class="nc" id="L81">          throw new BuilderException(&quot;Unknown element &lt;&quot; + nodeName + &quot;&gt; in SQL statement.&quot;);</span>
+<span class="pc bpc" id="L91" title="1 of 2 branches missed.">      } else if (child.getNode().getNodeType() == Node.ELEMENT_NODE) { // issue #628</span>
+<span class="fc" id="L92">        String nodeName = child.getNode().getNodeName();</span>
+<span class="fc" id="L93">        NodeHandler handler = nodeHandlerMap.get(nodeName);</span>
+<span class="pc bpc" id="L94" title="1 of 2 branches missed.">        if (handler == null) {</span>
+<span class="nc" id="L95">          throw new BuilderException(&quot;Unknown element &lt;&quot; + nodeName + &quot;&gt; in SQL statement.&quot;);</span>
         }
-<span class="fc" id="L83">        handler.handleNode(child, contents);</span>
-<span class="fc" id="L84">        isDynamic = true;</span>
+<span class="fc" id="L97">        handler.handleNode(child, contents);</span>
+<span class="fc" id="L98">        isDynamic = true;</span>
       }
     }
-<span class="fc" id="L87">    return contents;</span>
-  }
-
-  NodeHandler nodeHandlers(String nodeName) {
-<span class="fc" id="L91">    Map&lt;String, NodeHandler&gt; map = new HashMap&lt;String, NodeHandler&gt;();</span>
-<span class="fc" id="L92">    map.put(&quot;trim&quot;, new TrimHandler());</span>
-<span class="fc" id="L93">    map.put(&quot;where&quot;, new WhereHandler());</span>
-<span class="fc" id="L94">    map.put(&quot;set&quot;, new SetHandler());</span>
-<span class="fc" id="L95">    map.put(&quot;foreach&quot;, new ForEachHandler());</span>
-<span class="fc" id="L96">    map.put(&quot;if&quot;, new IfHandler());</span>
-<span class="fc" id="L97">    map.put(&quot;choose&quot;, new ChooseHandler());</span>
-<span class="fc" id="L98">    map.put(&quot;when&quot;, new IfHandler());</span>
-<span class="fc" id="L99">    map.put(&quot;otherwise&quot;, new OtherwiseHandler());</span>
-<span class="fc" id="L100">    map.put(&quot;bind&quot;, new BindHandler());</span>
-<span class="fc" id="L101">    return map.get(nodeName);</span>
+<span class="fc" id="L101">    return new MixedSqlNode(contents);</span>
   }
 
   private interface NodeHandler {
@@ -126,131 +126,125 @@ public class XMLScriptBuilder extends BaseBuilder {
 
     @Override
     public void handleNode(XNode nodeToHandle, List&lt;SqlNode&gt; targetContents) {
-<span class="fc" id="L129">      List&lt;SqlNode&gt; contents = parseDynamicTags(nodeToHandle);</span>
-<span class="fc" id="L130">      MixedSqlNode mixedSqlNode = new MixedSqlNode(contents);</span>
-<span class="fc" id="L131">      String prefix = nodeToHandle.getStringAttribute(&quot;prefix&quot;);</span>
-<span class="fc" id="L132">      String prefixOverrides = nodeToHandle.getStringAttribute(&quot;prefixOverrides&quot;);</span>
-<span class="fc" id="L133">      String suffix = nodeToHandle.getStringAttribute(&quot;suffix&quot;);</span>
-<span class="fc" id="L134">      String suffixOverrides = nodeToHandle.getStringAttribute(&quot;suffixOverrides&quot;);</span>
-<span class="fc" id="L135">      TrimSqlNode trim = new TrimSqlNode(configuration, mixedSqlNode, prefix, prefixOverrides, suffix, suffixOverrides);</span>
-<span class="fc" id="L136">      targetContents.add(trim);</span>
-<span class="fc" id="L137">    }</span>
+<span class="fc" id="L129">      MixedSqlNode mixedSqlNode = parseDynamicTags(nodeToHandle);</span>
+<span class="fc" id="L130">      String prefix = nodeToHandle.getStringAttribute(&quot;prefix&quot;);</span>
+<span class="fc" id="L131">      String prefixOverrides = nodeToHandle.getStringAttribute(&quot;prefixOverrides&quot;);</span>
+<span class="fc" id="L132">      String suffix = nodeToHandle.getStringAttribute(&quot;suffix&quot;);</span>
+<span class="fc" id="L133">      String suffixOverrides = nodeToHandle.getStringAttribute(&quot;suffixOverrides&quot;);</span>
+<span class="fc" id="L134">      TrimSqlNode trim = new TrimSqlNode(configuration, mixedSqlNode, prefix, prefixOverrides, suffix, suffixOverrides);</span>
+<span class="fc" id="L135">      targetContents.add(trim);</span>
+<span class="fc" id="L136">    }</span>
   }
 
   private class WhereHandler implements NodeHandler {
-<span class="fc" id="L141">    public WhereHandler() {</span>
+<span class="fc" id="L140">    public WhereHandler() {</span>
       // Prevent Synthetic Access
-<span class="fc" id="L143">    }</span>
+<span class="fc" id="L142">    }</span>
 
     @Override
     public void handleNode(XNode nodeToHandle, List&lt;SqlNode&gt; targetContents) {
-<span class="fc" id="L147">      List&lt;SqlNode&gt; contents = parseDynamicTags(nodeToHandle);</span>
-<span class="fc" id="L148">      MixedSqlNode mixedSqlNode = new MixedSqlNode(contents);</span>
-<span class="fc" id="L149">      WhereSqlNode where = new WhereSqlNode(configuration, mixedSqlNode);</span>
-<span class="fc" id="L150">      targetContents.add(where);</span>
-<span class="fc" id="L151">    }</span>
+<span class="fc" id="L146">      MixedSqlNode mixedSqlNode = parseDynamicTags(nodeToHandle);</span>
+<span class="fc" id="L147">      WhereSqlNode where = new WhereSqlNode(configuration, mixedSqlNode);</span>
+<span class="fc" id="L148">      targetContents.add(where);</span>
+<span class="fc" id="L149">    }</span>
   }
 
   private class SetHandler implements NodeHandler {
-<span class="fc" id="L155">    public SetHandler() {</span>
+<span class="fc" id="L153">    public SetHandler() {</span>
       // Prevent Synthetic Access
-<span class="fc" id="L157">    }</span>
+<span class="fc" id="L155">    }</span>
 
     @Override
     public void handleNode(XNode nodeToHandle, List&lt;SqlNode&gt; targetContents) {
-<span class="fc" id="L161">      List&lt;SqlNode&gt; contents = parseDynamicTags(nodeToHandle);</span>
-<span class="fc" id="L162">      MixedSqlNode mixedSqlNode = new MixedSqlNode(contents);</span>
-<span class="fc" id="L163">      SetSqlNode set = new SetSqlNode(configuration, mixedSqlNode);</span>
-<span class="fc" id="L164">      targetContents.add(set);</span>
-<span class="fc" id="L165">    }</span>
+<span class="fc" id="L159">      MixedSqlNode mixedSqlNode = parseDynamicTags(nodeToHandle);</span>
+<span class="fc" id="L160">      SetSqlNode set = new SetSqlNode(configuration, mixedSqlNode);</span>
+<span class="fc" id="L161">      targetContents.add(set);</span>
+<span class="fc" id="L162">    }</span>
   }
 
   private class ForEachHandler implements NodeHandler {
-<span class="fc" id="L169">    public ForEachHandler() {</span>
+<span class="fc" id="L166">    public ForEachHandler() {</span>
       // Prevent Synthetic Access
-<span class="fc" id="L171">    }</span>
+<span class="fc" id="L168">    }</span>
 
     @Override
     public void handleNode(XNode nodeToHandle, List&lt;SqlNode&gt; targetContents) {
-<span class="fc" id="L175">      List&lt;SqlNode&gt; contents = parseDynamicTags(nodeToHandle);</span>
-<span class="fc" id="L176">      MixedSqlNode mixedSqlNode = new MixedSqlNode(contents);</span>
-<span class="fc" id="L177">      String collection = nodeToHandle.getStringAttribute(&quot;collection&quot;);</span>
-<span class="fc" id="L178">      String item = nodeToHandle.getStringAttribute(&quot;item&quot;);</span>
-<span class="fc" id="L179">      String index = nodeToHandle.getStringAttribute(&quot;index&quot;);</span>
-<span class="fc" id="L180">      String open = nodeToHandle.getStringAttribute(&quot;open&quot;);</span>
-<span class="fc" id="L181">      String close = nodeToHandle.getStringAttribute(&quot;close&quot;);</span>
-<span class="fc" id="L182">      String separator = nodeToHandle.getStringAttribute(&quot;separator&quot;);</span>
-<span class="fc" id="L183">      ForEachSqlNode forEachSqlNode = new ForEachSqlNode(configuration, mixedSqlNode, collection, index, item, open, close, separator);</span>
-<span class="fc" id="L184">      targetContents.add(forEachSqlNode);</span>
-<span class="fc" id="L185">    }</span>
+<span class="fc" id="L172">      MixedSqlNode mixedSqlNode = parseDynamicTags(nodeToHandle);</span>
+<span class="fc" id="L173">      String collection = nodeToHandle.getStringAttribute(&quot;collection&quot;);</span>
+<span class="fc" id="L174">      String item = nodeToHandle.getStringAttribute(&quot;item&quot;);</span>
+<span class="fc" id="L175">      String index = nodeToHandle.getStringAttribute(&quot;index&quot;);</span>
+<span class="fc" id="L176">      String open = nodeToHandle.getStringAttribute(&quot;open&quot;);</span>
+<span class="fc" id="L177">      String close = nodeToHandle.getStringAttribute(&quot;close&quot;);</span>
+<span class="fc" id="L178">      String separator = nodeToHandle.getStringAttribute(&quot;separator&quot;);</span>
+<span class="fc" id="L179">      ForEachSqlNode forEachSqlNode = new ForEachSqlNode(configuration, mixedSqlNode, collection, index, item, open, close, separator);</span>
+<span class="fc" id="L180">      targetContents.add(forEachSqlNode);</span>
+<span class="fc" id="L181">    }</span>
   }
 
   private class IfHandler implements NodeHandler {
-<span class="fc" id="L189">    public IfHandler() {</span>
+<span class="fc" id="L185">    public IfHandler() {</span>
       // Prevent Synthetic Access
-<span class="fc" id="L191">    }</span>
+<span class="fc" id="L187">    }</span>
 
     @Override
     public void handleNode(XNode nodeToHandle, List&lt;SqlNode&gt; targetContents) {
-<span class="fc" id="L195">      List&lt;SqlNode&gt; contents = parseDynamicTags(nodeToHandle);</span>
-<span class="fc" id="L196">      MixedSqlNode mixedSqlNode = new MixedSqlNode(contents);</span>
-<span class="fc" id="L197">      String test = nodeToHandle.getStringAttribute(&quot;test&quot;);</span>
-<span class="fc" id="L198">      IfSqlNode ifSqlNode = new IfSqlNode(mixedSqlNode, test);</span>
-<span class="fc" id="L199">      targetContents.add(ifSqlNode);</span>
-<span class="fc" id="L200">    }</span>
+<span class="fc" id="L191">      MixedSqlNode mixedSqlNode = parseDynamicTags(nodeToHandle);</span>
+<span class="fc" id="L192">      String test = nodeToHandle.getStringAttribute(&quot;test&quot;);</span>
+<span class="fc" id="L193">      IfSqlNode ifSqlNode = new IfSqlNode(mixedSqlNode, test);</span>
+<span class="fc" id="L194">      targetContents.add(ifSqlNode);</span>
+<span class="fc" id="L195">    }</span>
   }
 
   private class OtherwiseHandler implements NodeHandler {
-<span class="fc" id="L204">    public OtherwiseHandler() {</span>
+<span class="fc" id="L199">    public OtherwiseHandler() {</span>
       // Prevent Synthetic Access
-<span class="fc" id="L206">    }</span>
+<span class="fc" id="L201">    }</span>
 
     @Override
     public void handleNode(XNode nodeToHandle, List&lt;SqlNode&gt; targetContents) {
-<span class="fc" id="L210">      List&lt;SqlNode&gt; contents = parseDynamicTags(nodeToHandle);</span>
-<span class="fc" id="L211">      MixedSqlNode mixedSqlNode = new MixedSqlNode(contents);</span>
-<span class="fc" id="L212">      targetContents.add(mixedSqlNode);</span>
-<span class="fc" id="L213">    }</span>
+<span class="fc" id="L205">      MixedSqlNode mixedSqlNode = parseDynamicTags(nodeToHandle);</span>
+<span class="fc" id="L206">      targetContents.add(mixedSqlNode);</span>
+<span class="fc" id="L207">    }</span>
   }
 
   private class ChooseHandler implements NodeHandler {
-<span class="fc" id="L217">    public ChooseHandler() {</span>
+<span class="fc" id="L211">    public ChooseHandler() {</span>
       // Prevent Synthetic Access
-<span class="fc" id="L219">    }</span>
+<span class="fc" id="L213">    }</span>
 
     @Override
     public void handleNode(XNode nodeToHandle, List&lt;SqlNode&gt; targetContents) {
-<span class="fc" id="L223">      List&lt;SqlNode&gt; whenSqlNodes = new ArrayList&lt;SqlNode&gt;();</span>
-<span class="fc" id="L224">      List&lt;SqlNode&gt; otherwiseSqlNodes = new ArrayList&lt;SqlNode&gt;();</span>
-<span class="fc" id="L225">      handleWhenOtherwiseNodes(nodeToHandle, whenSqlNodes, otherwiseSqlNodes);</span>
-<span class="fc" id="L226">      SqlNode defaultSqlNode = getDefaultSqlNode(otherwiseSqlNodes);</span>
-<span class="fc" id="L227">      ChooseSqlNode chooseSqlNode = new ChooseSqlNode(whenSqlNodes, defaultSqlNode);</span>
-<span class="fc" id="L228">      targetContents.add(chooseSqlNode);</span>
-<span class="fc" id="L229">    }</span>
+<span class="fc" id="L217">      List&lt;SqlNode&gt; whenSqlNodes = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L218">      List&lt;SqlNode&gt; otherwiseSqlNodes = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L219">      handleWhenOtherwiseNodes(nodeToHandle, whenSqlNodes, otherwiseSqlNodes);</span>
+<span class="fc" id="L220">      SqlNode defaultSqlNode = getDefaultSqlNode(otherwiseSqlNodes);</span>
+<span class="fc" id="L221">      ChooseSqlNode chooseSqlNode = new ChooseSqlNode(whenSqlNodes, defaultSqlNode);</span>
+<span class="fc" id="L222">      targetContents.add(chooseSqlNode);</span>
+<span class="fc" id="L223">    }</span>
 
     private void handleWhenOtherwiseNodes(XNode chooseSqlNode, List&lt;SqlNode&gt; ifSqlNodes, List&lt;SqlNode&gt; defaultSqlNodes) {
-<span class="fc" id="L232">      List&lt;XNode&gt; children = chooseSqlNode.getChildren();</span>
-<span class="fc bfc" id="L233" title="All 2 branches covered.">      for (XNode child : children) {</span>
-<span class="fc" id="L234">        String nodeName = child.getNode().getNodeName();</span>
-<span class="fc" id="L235">        NodeHandler handler = nodeHandlers(nodeName);</span>
-<span class="fc bfc" id="L236" title="All 2 branches covered.">        if (handler instanceof IfHandler) {</span>
-<span class="fc" id="L237">          handler.handleNode(child, ifSqlNodes);</span>
-<span class="pc bpc" id="L238" title="1 of 2 branches missed.">        } else if (handler instanceof OtherwiseHandler) {</span>
-<span class="fc" id="L239">          handler.handleNode(child, defaultSqlNodes);</span>
+<span class="fc" id="L226">      List&lt;XNode&gt; children = chooseSqlNode.getChildren();</span>
+<span class="fc bfc" id="L227" title="All 2 branches covered.">      for (XNode child : children) {</span>
+<span class="fc" id="L228">        String nodeName = child.getNode().getNodeName();</span>
+<span class="fc" id="L229">        NodeHandler handler = nodeHandlerMap.get(nodeName);</span>
+<span class="fc bfc" id="L230" title="All 2 branches covered.">        if (handler instanceof IfHandler) {</span>
+<span class="fc" id="L231">          handler.handleNode(child, ifSqlNodes);</span>
+<span class="pc bpc" id="L232" title="1 of 2 branches missed.">        } else if (handler instanceof OtherwiseHandler) {</span>
+<span class="fc" id="L233">          handler.handleNode(child, defaultSqlNodes);</span>
         }
-<span class="fc" id="L241">      }</span>
-<span class="fc" id="L242">    }</span>
+      }
+<span class="fc" id="L236">    }</span>
 
     private SqlNode getDefaultSqlNode(List&lt;SqlNode&gt; defaultSqlNodes) {
-<span class="fc" id="L245">      SqlNode defaultSqlNode = null;</span>
-<span class="pc bpc" id="L246" title="1 of 2 branches missed.">      if (defaultSqlNodes.size() == 1) {</span>
-<span class="fc" id="L247">        defaultSqlNode = defaultSqlNodes.get(0);</span>
-<span class="nc bnc" id="L248" title="All 2 branches missed.">      } else if (defaultSqlNodes.size() &gt; 1) {</span>
-<span class="nc" id="L249">        throw new BuilderException(&quot;Too many default (otherwise) elements in choose statement.&quot;);</span>
+<span class="fc" id="L239">      SqlNode defaultSqlNode = null;</span>
+<span class="pc bpc" id="L240" title="1 of 2 branches missed.">      if (defaultSqlNodes.size() == 1) {</span>
+<span class="fc" id="L241">        defaultSqlNode = defaultSqlNodes.get(0);</span>
+<span class="pc bnc" id="L242" title="All 2 branches missed.">      } else if (defaultSqlNodes.size() &gt; 1) {</span>
+<span class="nc" id="L243">        throw new BuilderException(&quot;Too many default (otherwise) elements in choose statement.&quot;);</span>
       }
-<span class="fc" id="L251">      return defaultSqlNode;</span>
+<span class="fc" id="L245">      return defaultSqlNode;</span>
     }
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

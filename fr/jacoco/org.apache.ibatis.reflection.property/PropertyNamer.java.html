@@ -24,16 +24,16 @@ import org.apache.ibatis.reflection.ReflectionException;
  */
 public final class PropertyNamer {
 
-<span class="nc" id="L27">  private PropertyNamer() {</span>
+  private PropertyNamer() {
     // Prevent Instantiation of Static Class
-<span class="nc" id="L29">  }</span>
+  }
 
   public static String methodToProperty(String name) {
 <span class="fc bfc" id="L32" title="All 2 branches covered.">    if (name.startsWith(&quot;is&quot;)) {</span>
 <span class="fc" id="L33">      name = name.substring(2);</span>
 <span class="pc bpc" id="L34" title="1 of 4 branches missed.">    } else if (name.startsWith(&quot;get&quot;) || name.startsWith(&quot;set&quot;)) {</span>
 <span class="fc" id="L35">      name = name.substring(3);</span>
-    } else {
+<span class="fc" id="L36">    } else {</span>
 <span class="nc" id="L37">      throw new ReflectionException(&quot;Error parsing property name '&quot; + name + &quot;'.  Didn't start with 'is', 'get' or 'set'.&quot;);</span>
     }
 
@@ -57,4 +57,4 @@ public final class PropertyNamer {
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

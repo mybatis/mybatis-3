@@ -13,7 +13,7 @@
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_javadoccomment"> *    You may obtain a copy of the License at</em>
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2." target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.</a>0</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_javadoccomment"> *    Unless required by applicable law or agreed to in writing, software</em>
 <a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_javadoccomment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
@@ -35,7 +35,7 @@
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>  
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Class&lt;E&gt; type;
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>  
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>    <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/type/EnumTypeHandler.html">EnumTypeHandler</a>(Class&lt;E&gt; type) {
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>    <strong class="jxr_keyword">public</strong> <a name="EnumTypeHandler" href="../../../../org/apache/ibatis/type/EnumTypeHandler.html#EnumTypeHandler">EnumTypeHandler</a>(Class&lt;E&gt; type) {
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>      <strong class="jxr_keyword">if</strong> (type == <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>        <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(<span class="jxr_string">"Type argument cannot be null"</span>);
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>      }
@@ -43,7 +43,7 @@
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>    }
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>  
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>    @Override
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setNonNullParameter(PreparedStatement ps, <strong class="jxr_keyword">int</strong> i, E parameter, <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType) <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setNonNullParameter(PreparedStatement ps, <strong class="jxr_keyword">int</strong> i, E parameter, <a name="JdbcType" href="../../../../org/apache/ibatis/type/JdbcType.html#JdbcType">JdbcType</a> jdbcType) <strong class="jxr_keyword">throws</strong> SQLException {
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>      <strong class="jxr_keyword">if</strong> (jdbcType == <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>        ps.setString(i, parameter.name());
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>      } <strong class="jxr_keyword">else</strong> {
@@ -71,6 +71,6 @@
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2018 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2019 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

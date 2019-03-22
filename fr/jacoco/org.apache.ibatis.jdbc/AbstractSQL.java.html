@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractSQL.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.jdbc</a> &gt; <span class="el_source">AbstractSQL.java</span></div><h1>AbstractSQL.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
@@ -293,9 +293,9 @@ import java.util.List;
 <span class="fc" id="L293">          empty = false;</span>
         }
 <span class="fc" id="L295">        a.append(s);</span>
-<span class="nc" id="L296">      } catch (IOException e) {</span>
+<span class="pc" id="L296">      } catch (IOException e) {</span>
 <span class="nc" id="L297">        throw new RuntimeException(e);</span>
-<span class="fc" id="L298">      }</span>
+      }
 <span class="fc" id="L299">      return this;</span>
     }
 
@@ -307,26 +307,26 @@ import java.util.List;
 
   private static class SQLStatement {
 
-<span class="pc" id="L310">    public enum StatementType {</span>
+<span class="fc" id="L310">    public enum StatementType {</span>
 <span class="fc" id="L311">      DELETE, INSERT, SELECT, UPDATE</span>
     }
 
     StatementType statementType;
-<span class="fc" id="L315">    List&lt;String&gt; sets = new ArrayList&lt;String&gt;();</span>
-<span class="fc" id="L316">    List&lt;String&gt; select = new ArrayList&lt;String&gt;();</span>
-<span class="fc" id="L317">    List&lt;String&gt; tables = new ArrayList&lt;String&gt;();</span>
-<span class="fc" id="L318">    List&lt;String&gt; join = new ArrayList&lt;String&gt;();</span>
-<span class="fc" id="L319">    List&lt;String&gt; innerJoin = new ArrayList&lt;String&gt;();</span>
-<span class="fc" id="L320">    List&lt;String&gt; outerJoin = new ArrayList&lt;String&gt;();</span>
-<span class="fc" id="L321">    List&lt;String&gt; leftOuterJoin = new ArrayList&lt;String&gt;();</span>
-<span class="fc" id="L322">    List&lt;String&gt; rightOuterJoin = new ArrayList&lt;String&gt;();</span>
-<span class="fc" id="L323">    List&lt;String&gt; where = new ArrayList&lt;String&gt;();</span>
-<span class="fc" id="L324">    List&lt;String&gt; having = new ArrayList&lt;String&gt;();</span>
-<span class="fc" id="L325">    List&lt;String&gt; groupBy = new ArrayList&lt;String&gt;();</span>
-<span class="fc" id="L326">    List&lt;String&gt; orderBy = new ArrayList&lt;String&gt;();</span>
-<span class="fc" id="L327">    List&lt;String&gt; lastList = new ArrayList&lt;String&gt;();</span>
-<span class="fc" id="L328">    List&lt;String&gt; columns = new ArrayList&lt;String&gt;();</span>
-<span class="fc" id="L329">    List&lt;String&gt; values = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L315">    List&lt;String&gt; sets = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L316">    List&lt;String&gt; select = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L317">    List&lt;String&gt; tables = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L318">    List&lt;String&gt; join = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L319">    List&lt;String&gt; innerJoin = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L320">    List&lt;String&gt; outerJoin = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L321">    List&lt;String&gt; leftOuterJoin = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L322">    List&lt;String&gt; rightOuterJoin = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L323">    List&lt;String&gt; where = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L324">    List&lt;String&gt; having = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L325">    List&lt;String&gt; groupBy = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L326">    List&lt;String&gt; orderBy = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L327">    List&lt;String&gt; lastList = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L328">    List&lt;String&gt; columns = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L329">    List&lt;String&gt; values = new ArrayList&lt;&gt;();</span>
     boolean distinct;
 
 <span class="fc" id="L332">    public SQLStatement() {</span>
@@ -358,7 +358,7 @@ import java.util.List;
     private String selectSQL(SafeAppendable builder) {
 <span class="fc bfc" id="L359" title="All 2 branches covered.">      if (distinct) {</span>
 <span class="fc" id="L360">        sqlClause(builder, &quot;SELECT DISTINCT&quot;, select, &quot;&quot;, &quot;&quot;, &quot;, &quot;);</span>
-      } else {
+<span class="fc" id="L361">      } else {</span>
 <span class="fc" id="L362">        sqlClause(builder, &quot;SELECT&quot;, select, &quot;&quot;, &quot;&quot;, &quot;, &quot;);</span>
       }
 
@@ -433,4 +433,4 @@ import java.util.List;
     }
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

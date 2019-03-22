@@ -23,9 +23,9 @@ import java.lang.reflect.UndeclaredThrowableException;
  */
 public class ExceptionUtil {
 
-<span class="nc" id="L26">  private ExceptionUtil() {</span>
+  private ExceptionUtil() {
     // Prevent Instantiation
-<span class="nc" id="L28">  }</span>
+  }
 
   public static Throwable unwrapThrowable(Throwable wrapped) {
 <span class="fc" id="L31">    Throwable unwrapped = wrapped;</span>
@@ -34,11 +34,11 @@ public class ExceptionUtil {
 <span class="fc" id="L34">        unwrapped = ((InvocationTargetException) unwrapped).getTargetException();</span>
 <span class="fc bfc" id="L35" title="All 2 branches covered.">      } else if (unwrapped instanceof UndeclaredThrowableException) {</span>
 <span class="fc" id="L36">        unwrapped = ((UndeclaredThrowableException) unwrapped).getUndeclaredThrowable();</span>
-      } else {
+<span class="fc" id="L37">      } else {</span>
 <span class="fc" id="L38">        return unwrapped;</span>
       }
     }
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

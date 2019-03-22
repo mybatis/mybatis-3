@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UnpooledDataSource.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.datasource.unpooled</a> &gt; <span class="el_source">UnpooledDataSource.java</span></div><h1>UnpooledDataSource.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
@@ -36,10 +36,10 @@ import org.apache.ibatis.io.Resources;
  * @author Eduardo Macarron
  */
 public class UnpooledDataSource implements DataSource {
-  
+
   private ClassLoader driverClassLoader;
   private Properties driverProperties;
-<span class="fc" id="L42">  private static Map&lt;String, Driver&gt; registeredDrivers = new ConcurrentHashMap&lt;String, Driver&gt;();</span>
+<span class="fc" id="L42">  private static Map&lt;String, Driver&gt; registeredDrivers = new ConcurrentHashMap&lt;&gt;();</span>
 
   private String driver;
   private String url;
@@ -54,7 +54,7 @@ public class UnpooledDataSource implements DataSource {
 <span class="fc bfc" id="L54" title="All 2 branches covered.">    while (drivers.hasMoreElements()) {</span>
 <span class="fc" id="L55">      Driver driver = drivers.nextElement();</span>
 <span class="fc" id="L56">      registeredDrivers.put(driver.getClass().getName(), driver);</span>
-<span class="fc" id="L57">    }</span>
+    }
 <span class="fc" id="L58">  }</span>
 
 <span class="fc" id="L60">  public UnpooledDataSource() {</span>
@@ -99,22 +99,22 @@ public class UnpooledDataSource implements DataSource {
   }
 
   @Override
-  public void setLoginTimeout(int loginTimeout) throws SQLException {
+  public void setLoginTimeout(int loginTimeout) {
 <span class="nc" id="L103">    DriverManager.setLoginTimeout(loginTimeout);</span>
 <span class="nc" id="L104">  }</span>
 
   @Override
-  public int getLoginTimeout() throws SQLException {
+  public int getLoginTimeout() {
 <span class="nc" id="L108">    return DriverManager.getLoginTimeout();</span>
   }
 
   @Override
-  public void setLogWriter(PrintWriter logWriter) throws SQLException {
+  public void setLogWriter(PrintWriter logWriter) {
 <span class="nc" id="L113">    DriverManager.setLogWriter(logWriter);</span>
 <span class="nc" id="L114">  }</span>
 
   @Override
-  public PrintWriter getLogWriter() throws SQLException {
+  public PrintWriter getLogWriter() {
 <span class="nc" id="L118">    return DriverManager.getLogWriter();</span>
   }
 
@@ -209,7 +209,7 @@ public class UnpooledDataSource implements DataSource {
       try {
 <span class="pc bpc" id="L210" title="1 of 2 branches missed.">        if (driverClassLoader != null) {</span>
 <span class="nc" id="L211">          driverType = Class.forName(driver, true, driverClassLoader);</span>
-        } else {
+<span class="nc" id="L212">        } else {</span>
 <span class="fc" id="L213">          driverType = Resources.classForName(driver);</span>
         }
         // DriverManager requires the driver to be loaded via the system ClassLoader.
@@ -217,9 +217,9 @@ public class UnpooledDataSource implements DataSource {
 <span class="fc" id="L217">        Driver driverInstance = (Driver)driverType.newInstance();</span>
 <span class="fc" id="L218">        DriverManager.registerDriver(new DriverProxy(driverInstance));</span>
 <span class="fc" id="L219">        registeredDrivers.put(driver, driverInstance);</span>
-<span class="nc" id="L220">      } catch (Exception e) {</span>
+<span class="pc" id="L220">      } catch (Exception e) {</span>
 <span class="nc" id="L221">        throw new SQLException(&quot;Error setting driver on UnpooledDataSource. Cause: &quot; + e);</span>
-<span class="fc" id="L222">      }</span>
+      }
     }
 <span class="fc" id="L224">  }</span>
 
@@ -292,4 +292,4 @@ public class UnpooledDataSource implements DataSource {
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

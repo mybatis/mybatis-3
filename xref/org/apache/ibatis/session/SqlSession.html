@@ -7,13 +7,13 @@
 <body>
 <div id="overview"><a href="../../../../../apidocs/org/apache/ibatis/session/SqlSession.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2016 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2019 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_javadoccomment"> *    You may obtain a copy of the License at</em>
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2." target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.</a>0</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_javadoccomment"> *    Unless required by applicable law or agreed to in writing, software</em>
 <a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_javadoccomment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
@@ -37,10 +37,10 @@
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>  <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>  <em class="jxr_javadoccomment"> * @author Clinton Begin</em>
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>  <em class="jxr_javadoccomment"> */</em>
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">interface</strong> <a href="../../../../org/apache/ibatis/session/SqlSession.html">SqlSession</a> <strong class="jxr_keyword">extends</strong> Closeable {
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">interface</strong> <a name="SqlSession" href="../../../../org/apache/ibatis/session/SqlSession.html#SqlSession">SqlSession</a> <strong class="jxr_keyword">extends</strong> Closeable {
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>  
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>    <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <em class="jxr_javadoccomment">   * Retrieve a single row mapped from the statement key</em>
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <em class="jxr_javadoccomment">   * Retrieve a single row mapped from the statement key.</em>
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>  <em class="jxr_javadoccomment">   * @param &lt;T&gt; the returned object type</em>
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>  <em class="jxr_javadoccomment">   * @param statement</em>
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>  <em class="jxr_javadoccomment">   * @return Mapped object</em>
@@ -82,7 +82,7 @@
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>  <em class="jxr_javadoccomment">   * @param rowBounds  Bounds to limit object retrieval</em>
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>  <em class="jxr_javadoccomment">   * @return List of mapped object</em>
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>  <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>    &lt;E&gt; List&lt;E&gt; selectList(String statement, Object parameter, <a href="../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds);
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>    &lt;E&gt; List&lt;E&gt; selectList(String statement, Object parameter, <a name="RowBounds" href="../../../../org/apache/ibatis/session/RowBounds.html#RowBounds">RowBounds</a> rowBounds);
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>  
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>    <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>  <em class="jxr_javadoccomment">   * The selectMap is a special case in that it is designed to convert a list</em>
@@ -122,7 +122,7 @@
 <a class="jxr_linenumber" name="L114" href="#L114">114</a> <em class="jxr_javadoccomment">   * @param rowBounds  Bounds to limit object retrieval</em>
 <a class="jxr_linenumber" name="L115" href="#L115">115</a> <em class="jxr_javadoccomment">   * @return Map containing key pair data.</em>
 <a class="jxr_linenumber" name="L116" href="#L116">116</a> <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L117" href="#L117">117</a>   &lt;K, V&gt; Map&lt;K, V&gt; selectMap(String statement, Object parameter, String mapKey, <a href="../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds);
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>   &lt;K, V&gt; Map&lt;K, V&gt; selectMap(String statement, Object parameter, String mapKey, <a name="RowBounds" href="../../../../org/apache/ibatis/session/RowBounds.html#RowBounds">RowBounds</a> rowBounds);
 <a class="jxr_linenumber" name="L118" href="#L118">118</a> 
 <a class="jxr_linenumber" name="L119" href="#L119">119</a>   <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L120" href="#L120">120</a> <em class="jxr_javadoccomment">   * A Cursor offers the same results as a List, except it fetches data lazily using an Iterator.</em>
@@ -149,7 +149,7 @@
 <a class="jxr_linenumber" name="L141" href="#L141">141</a> <em class="jxr_javadoccomment">   * @param rowBounds  Bounds to limit object retrieval</em>
 <a class="jxr_linenumber" name="L142" href="#L142">142</a> <em class="jxr_javadoccomment">   * @return Cursor of mapped objects</em>
 <a class="jxr_linenumber" name="L143" href="#L143">143</a> <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L144" href="#L144">144</a>   &lt;T&gt; Cursor&lt;T&gt; selectCursor(String statement, Object parameter, <a href="../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds);
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>   &lt;T&gt; Cursor&lt;T&gt; selectCursor(String statement, Object parameter, <a name="RowBounds" href="../../../../org/apache/ibatis/session/RowBounds.html#RowBounds">RowBounds</a> rowBounds);
 <a class="jxr_linenumber" name="L145" href="#L145">145</a> 
 <a class="jxr_linenumber" name="L146" href="#L146">146</a>   <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L147" href="#L147">147</a> <em class="jxr_javadoccomment">   * Retrieve a single row mapped from the statement key and parameter</em>
@@ -158,7 +158,7 @@
 <a class="jxr_linenumber" name="L150" href="#L150">150</a> <em class="jxr_javadoccomment">   * @param parameter A parameter object to pass to the statement.</em>
 <a class="jxr_linenumber" name="L151" href="#L151">151</a> <em class="jxr_javadoccomment">   * @param handler ResultHandler that will handle each retrieved row</em>
 <a class="jxr_linenumber" name="L152" href="#L152">152</a> <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L153" href="#L153">153</a>   <strong class="jxr_keyword">void</strong> select(String statement, Object parameter, <a href="../../../../org/apache/ibatis/session/ResultHandler.html">ResultHandler</a> handler);
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>   <strong class="jxr_keyword">void</strong> select(String statement, Object parameter, <a name="ResultHandler" href="../../../../org/apache/ibatis/session/ResultHandler.html#ResultHandler">ResultHandler</a> handler);
 <a class="jxr_linenumber" name="L154" href="#L154">154</a> 
 <a class="jxr_linenumber" name="L155" href="#L155">155</a>   <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L156" href="#L156">156</a> <em class="jxr_javadoccomment">   * Retrieve a single row mapped from the statement</em>
@@ -166,16 +166,16 @@
 <a class="jxr_linenumber" name="L158" href="#L158">158</a> <em class="jxr_javadoccomment">   * @param statement Unique identifier matching the statement to use.</em>
 <a class="jxr_linenumber" name="L159" href="#L159">159</a> <em class="jxr_javadoccomment">   * @param handler ResultHandler that will handle each retrieved row</em>
 <a class="jxr_linenumber" name="L160" href="#L160">160</a> <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L161" href="#L161">161</a>   <strong class="jxr_keyword">void</strong> select(String statement, <a href="../../../../org/apache/ibatis/session/ResultHandler.html">ResultHandler</a> handler);
+<a class="jxr_linenumber" name="L161" href="#L161">161</a>   <strong class="jxr_keyword">void</strong> select(String statement, <a name="ResultHandler" href="../../../../org/apache/ibatis/session/ResultHandler.html#ResultHandler">ResultHandler</a> handler);
 <a class="jxr_linenumber" name="L162" href="#L162">162</a> 
 <a class="jxr_linenumber" name="L163" href="#L163">163</a>   <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L164" href="#L164">164</a> <em class="jxr_javadoccomment">   * Retrieve a single row mapped from the statement key and parameter</em>
-<a class="jxr_linenumber" name="L165" href="#L165">165</a> <em class="jxr_javadoccomment">   * using a {@code ResultHandler} and {@code RowBounds}</em>
+<a class="jxr_linenumber" name="L165" href="#L165">165</a> <em class="jxr_javadoccomment">   * using a {@code ResultHandler} and {@code RowBounds}.</em>
 <a class="jxr_linenumber" name="L166" href="#L166">166</a> <em class="jxr_javadoccomment">   * @param statement Unique identifier matching the statement to use.</em>
 <a class="jxr_linenumber" name="L167" href="#L167">167</a> <em class="jxr_javadoccomment">   * @param rowBounds RowBound instance to limit the query results</em>
 <a class="jxr_linenumber" name="L168" href="#L168">168</a> <em class="jxr_javadoccomment">   * @param handler ResultHandler that will handle each retrieved row</em>
 <a class="jxr_linenumber" name="L169" href="#L169">169</a> <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L170" href="#L170">170</a>   <strong class="jxr_keyword">void</strong> select(String statement, Object parameter, <a href="../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds, <a href="../../../../org/apache/ibatis/session/ResultHandler.html">ResultHandler</a> handler);
+<a class="jxr_linenumber" name="L170" href="#L170">170</a>   <strong class="jxr_keyword">void</strong> select(String statement, Object parameter, <a name="RowBounds" href="../../../../org/apache/ibatis/session/RowBounds.html#RowBounds">RowBounds</a> rowBounds, <a name="ResultHandler" href="../../../../org/apache/ibatis/session/ResultHandler.html#ResultHandler">ResultHandler</a> handler);
 <a class="jxr_linenumber" name="L171" href="#L171">171</a> 
 <a class="jxr_linenumber" name="L172" href="#L172">172</a>   <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L173" href="#L173">173</a> <em class="jxr_javadoccomment">   * Execute an insert statement.</em>
@@ -259,21 +259,21 @@
 <a class="jxr_linenumber" name="L251" href="#L251">251</a>   List&lt;BatchResult&gt; flushStatements();
 <a class="jxr_linenumber" name="L252" href="#L252">252</a> 
 <a class="jxr_linenumber" name="L253" href="#L253">253</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L254" href="#L254">254</a> <em class="jxr_javadoccomment">   * Closes the session</em>
+<a class="jxr_linenumber" name="L254" href="#L254">254</a> <em class="jxr_javadoccomment">   * Closes the session.</em>
 <a class="jxr_linenumber" name="L255" href="#L255">255</a> <em class="jxr_javadoccomment">   */</em>
 <a class="jxr_linenumber" name="L256" href="#L256">256</a>   @Override
 <a class="jxr_linenumber" name="L257" href="#L257">257</a>   <strong class="jxr_keyword">void</strong> close();
 <a class="jxr_linenumber" name="L258" href="#L258">258</a> 
 <a class="jxr_linenumber" name="L259" href="#L259">259</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L260" href="#L260">260</a> <em class="jxr_javadoccomment">   * Clears local session cache</em>
+<a class="jxr_linenumber" name="L260" href="#L260">260</a> <em class="jxr_javadoccomment">   * Clears local session cache.</em>
 <a class="jxr_linenumber" name="L261" href="#L261">261</a> <em class="jxr_javadoccomment">   */</em>
 <a class="jxr_linenumber" name="L262" href="#L262">262</a>   <strong class="jxr_keyword">void</strong> clearCache();
 <a class="jxr_linenumber" name="L263" href="#L263">263</a> 
 <a class="jxr_linenumber" name="L264" href="#L264">264</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L265" href="#L265">265</a> <em class="jxr_javadoccomment">   * Retrieves current configuration</em>
+<a class="jxr_linenumber" name="L265" href="#L265">265</a> <em class="jxr_javadoccomment">   * Retrieves current configuration.</em>
 <a class="jxr_linenumber" name="L266" href="#L266">266</a> <em class="jxr_javadoccomment">   * @return Configuration</em>
 <a class="jxr_linenumber" name="L267" href="#L267">267</a> <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L268" href="#L268">268</a>   <a href="../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> getConfiguration();
+<a class="jxr_linenumber" name="L268" href="#L268">268</a>   <a name="Configuration" href="../../../../org/apache/ibatis/session/Configuration.html#Configuration">Configuration</a> getConfiguration();
 <a class="jxr_linenumber" name="L269" href="#L269">269</a> 
 <a class="jxr_linenumber" name="L270" href="#L270">270</a>   <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L271" href="#L271">271</a> <em class="jxr_javadoccomment">   * Retrieves a mapper.</em>
@@ -284,13 +284,13 @@
 <a class="jxr_linenumber" name="L276" href="#L276">276</a>   &lt;T&gt; T getMapper(Class&lt;T&gt; type);
 <a class="jxr_linenumber" name="L277" href="#L277">277</a> 
 <a class="jxr_linenumber" name="L278" href="#L278">278</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L279" href="#L279">279</a> <em class="jxr_javadoccomment">   * Retrieves inner database connection</em>
+<a class="jxr_linenumber" name="L279" href="#L279">279</a> <em class="jxr_javadoccomment">   * Retrieves inner database connection.</em>
 <a class="jxr_linenumber" name="L280" href="#L280">280</a> <em class="jxr_javadoccomment">   * @return Connection</em>
 <a class="jxr_linenumber" name="L281" href="#L281">281</a> <em class="jxr_javadoccomment">   */</em>
 <a class="jxr_linenumber" name="L282" href="#L282">282</a>   Connection getConnection();
 <a class="jxr_linenumber" name="L283" href="#L283">283</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2018 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2019 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

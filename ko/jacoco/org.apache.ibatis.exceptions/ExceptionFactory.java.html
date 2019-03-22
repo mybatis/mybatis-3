@@ -22,13 +22,13 @@ import org.apache.ibatis.executor.ErrorContext;
  */
 public class ExceptionFactory {
 
-<span class="nc" id="L25">  private ExceptionFactory() {</span>
+  private ExceptionFactory() {
     // Prevent Instantiation
-<span class="nc" id="L27">  }</span>
+  }
 
   public static RuntimeException wrapException(String message, Exception e) {
 <span class="fc" id="L30">    return new PersistenceException(ErrorContext.instance().message(message).cause(e).toString(), e);</span>
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

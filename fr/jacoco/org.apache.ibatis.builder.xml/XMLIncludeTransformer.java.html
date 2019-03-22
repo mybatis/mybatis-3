@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>XMLIncludeTransformer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.builder.xml</a> &gt; <span class="el_source">XMLIncludeTransformer.java</span></div><h1>XMLIncludeTransformer.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package org.apache.ibatis.builder.xml;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 
 import org.apache.ibatis.builder.BuilderException;
@@ -25,6 +26,7 @@ import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.apache.ibatis.parsing.PropertyParser;
 import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.session.Configuration;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -36,17 +38,15 @@ public class XMLIncludeTransformer {
   private final Configuration configuration;
   private final MapperBuilderAssistant builderAssistant;
 
-<span class="fc" id="L39">  public XMLIncludeTransformer(Configuration configuration, MapperBuilderAssistant builderAssistant) {</span>
-<span class="fc" id="L40">    this.configuration = configuration;</span>
-<span class="fc" id="L41">    this.builderAssistant = builderAssistant;</span>
-<span class="fc" id="L42">  }</span>
+<span class="fc" id="L41">  public XMLIncludeTransformer(Configuration configuration, MapperBuilderAssistant builderAssistant) {</span>
+<span class="fc" id="L42">    this.configuration = configuration;</span>
+<span class="fc" id="L43">    this.builderAssistant = builderAssistant;</span>
+<span class="fc" id="L44">  }</span>
 
   public void applyIncludes(Node source) {
-<span class="fc" id="L45">    Properties variablesContext = new Properties();</span>
-<span class="fc" id="L46">    Properties configurationVariables = configuration.getVariables();</span>
-<span class="fc bfc" id="L47" title="All 2 branches covered.">    if (configurationVariables != null) {</span>
-<span class="fc" id="L48">      variablesContext.putAll(configurationVariables);</span>
-    }
+<span class="fc" id="L47">    Properties variablesContext = new Properties();</span>
+<span class="fc" id="L48">    Properties configurationVariables = configuration.getVariables();</span>
+<span class="fc" id="L49">    Optional.ofNullable(configurationVariables).ifPresent(variablesContext::putAll);</span>
 <span class="fc" id="L50">    applyIncludes(source, variablesContext, false);</span>
 <span class="fc" id="L51">  }</span>
 
@@ -69,63 +69,71 @@ public class XMLIncludeTransformer {
       }
 <span class="fc" id="L70">      toInclude.getParentNode().removeChild(toInclude);</span>
 <span class="fc bfc" id="L71" title="All 2 branches covered.">    } else if (source.getNodeType() == Node.ELEMENT_NODE) {</span>
-<span class="fc" id="L72">      NodeList children = source.getChildNodes();</span>
-<span class="fc bfc" id="L73" title="All 2 branches covered.">      for (int i = 0; i &lt; children.getLength(); i++) {</span>
-<span class="fc" id="L74">        applyIncludes(children.item(i), variablesContext, included);</span>
+<span class="fc bfc" id="L72" title="All 4 branches covered.">      if (included &amp;&amp; !variablesContext.isEmpty()) {</span>
+        // replace variables in attribute values
+<span class="fc" id="L74">        NamedNodeMap attributes = source.getAttributes();</span>
+<span class="fc bfc" id="L75" title="All 2 branches covered.">        for (int i = 0; i &lt; attributes.getLength(); i++) {</span>
+<span class="fc" id="L76">          Node attr = attributes.item(i);</span>
+<span class="fc" id="L77">          attr.setNodeValue(PropertyParser.parse(attr.getNodeValue(), variablesContext));</span>
+        }
       }
-<span class="fc bfc" id="L76" title="All 4 branches covered.">    } else if (included &amp;&amp; source.getNodeType() == Node.TEXT_NODE</span>
-<span class="fc bfc" id="L77" title="All 2 branches covered.">        &amp;&amp; !variablesContext.isEmpty()) {</span>
-      // replace variables ins all text nodes
-<span class="fc" id="L79">      source.setNodeValue(PropertyParser.parse(source.getNodeValue(), variablesContext));</span>
+<span class="fc" id="L80">      NodeList children = source.getChildNodes();</span>
+<span class="fc bfc" id="L81" title="All 2 branches covered.">      for (int i = 0; i &lt; children.getLength(); i++) {</span>
+<span class="fc" id="L82">        applyIncludes(children.item(i), variablesContext, included);</span>
+      }
+<span class="fc bfc" id="L84" title="All 4 branches covered.">    } else if (included &amp;&amp; source.getNodeType() == Node.TEXT_NODE</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">        &amp;&amp; !variablesContext.isEmpty()) {</span>
+      // replace variables in text node
+<span class="fc" id="L87">      source.setNodeValue(PropertyParser.parse(source.getNodeValue(), variablesContext));</span>
     }
-<span class="fc" id="L81">  }</span>
+<span class="fc" id="L89">  }</span>
 
   private Node findSqlFragment(String refid, Properties variables) {
-<span class="fc" id="L84">    refid = PropertyParser.parse(refid, variables);</span>
-<span class="fc" id="L85">    refid = builderAssistant.applyCurrentNamespace(refid, true);</span>
+<span class="fc" id="L92">    refid = PropertyParser.parse(refid, variables);</span>
+<span class="fc" id="L93">    refid = builderAssistant.applyCurrentNamespace(refid, true);</span>
     try {
-<span class="fc" id="L87">      XNode nodeToInclude = configuration.getSqlFragments().get(refid);</span>
-<span class="fc" id="L88">      return nodeToInclude.getNode().cloneNode(true);</span>
-<span class="fc" id="L89">    } catch (IllegalArgumentException e) {</span>
-<span class="fc" id="L90">      throw new IncompleteElementException(&quot;Could not find SQL statement to include with refid '&quot; + refid + &quot;'&quot;, e);</span>
+<span class="fc" id="L95">      XNode nodeToInclude = configuration.getSqlFragments().get(refid);</span>
+<span class="fc" id="L96">      return nodeToInclude.getNode().cloneNode(true);</span>
+<span class="fc" id="L97">    } catch (IllegalArgumentException e) {</span>
+<span class="fc" id="L98">      throw new IncompleteElementException(&quot;Could not find SQL statement to include with refid '&quot; + refid + &quot;'&quot;, e);</span>
     }
   }
 
   private String getStringAttribute(Node node, String name) {
-<span class="fc" id="L95">    return node.getAttributes().getNamedItem(name).getNodeValue();</span>
+<span class="fc" id="L103">    return node.getAttributes().getNamedItem(name).getNodeValue();</span>
   }
 
   /**
-   * Read placeholders and their values from include node definition. 
+   * Read placeholders and their values from include node definition.
    * @param node Include node instance
    * @param inheritedVariablesContext Current context used for replace variables in new variables values
    * @return variables context from include instance (no inherited values)
    */
   private Properties getVariablesContext(Node node, Properties inheritedVariablesContext) {
-<span class="fc" id="L105">    Map&lt;String, String&gt; declaredProperties = null;</span>
-<span class="fc" id="L106">    NodeList children = node.getChildNodes();</span>
-<span class="fc bfc" id="L107" title="All 2 branches covered.">    for (int i = 0; i &lt; children.getLength(); i++) {</span>
-<span class="fc" id="L108">      Node n = children.item(i);</span>
-<span class="fc bfc" id="L109" title="All 2 branches covered.">      if (n.getNodeType() == Node.ELEMENT_NODE) {</span>
-<span class="fc" id="L110">        String name = getStringAttribute(n, &quot;name&quot;);</span>
+<span class="fc" id="L113">    Map&lt;String, String&gt; declaredProperties = null;</span>
+<span class="fc" id="L114">    NodeList children = node.getChildNodes();</span>
+<span class="fc bfc" id="L115" title="All 2 branches covered.">    for (int i = 0; i &lt; children.getLength(); i++) {</span>
+<span class="fc" id="L116">      Node n = children.item(i);</span>
+<span class="fc bfc" id="L117" title="All 2 branches covered.">      if (n.getNodeType() == Node.ELEMENT_NODE) {</span>
+<span class="fc" id="L118">        String name = getStringAttribute(n, &quot;name&quot;);</span>
         // Replace variables inside
-<span class="fc" id="L112">        String value = PropertyParser.parse(getStringAttribute(n, &quot;value&quot;), inheritedVariablesContext);</span>
-<span class="fc bfc" id="L113" title="All 2 branches covered.">        if (declaredProperties == null) {</span>
-<span class="fc" id="L114">          declaredProperties = new HashMap&lt;String, String&gt;();</span>
+<span class="fc" id="L120">        String value = PropertyParser.parse(getStringAttribute(n, &quot;value&quot;), inheritedVariablesContext);</span>
+<span class="fc bfc" id="L121" title="All 2 branches covered.">        if (declaredProperties == null) {</span>
+<span class="fc" id="L122">          declaredProperties = new HashMap&lt;&gt;();</span>
         }
-<span class="fc bfc" id="L116" title="All 2 branches covered.">        if (declaredProperties.put(name, value) != null) {</span>
-<span class="fc" id="L117">          throw new BuilderException(&quot;Variable &quot; + name + &quot; defined twice in the same include definition&quot;);</span>
+<span class="fc bfc" id="L124" title="All 2 branches covered.">        if (declaredProperties.put(name, value) != null) {</span>
+<span class="fc" id="L125">          throw new BuilderException(&quot;Variable &quot; + name + &quot; defined twice in the same include definition&quot;);</span>
         }
       }
     }
-<span class="fc bfc" id="L121" title="All 2 branches covered.">    if (declaredProperties == null) {</span>
-<span class="fc" id="L122">      return inheritedVariablesContext;</span>
+<span class="fc bfc" id="L129" title="All 2 branches covered.">    if (declaredProperties == null) {</span>
+<span class="fc" id="L130">      return inheritedVariablesContext;</span>
     } else {
-<span class="fc" id="L124">      Properties newProperties = new Properties();</span>
-<span class="fc" id="L125">      newProperties.putAll(inheritedVariablesContext);</span>
-<span class="fc" id="L126">      newProperties.putAll(declaredProperties);</span>
-<span class="fc" id="L127">      return newProperties;</span>
+<span class="fc" id="L132">      Properties newProperties = new Properties();</span>
+<span class="fc" id="L133">      newProperties.putAll(inheritedVariablesContext);</span>
+<span class="fc" id="L134">      newProperties.putAll(declaredProperties);</span>
+<span class="fc" id="L135">      return newProperties;</span>
     }
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

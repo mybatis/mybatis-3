@@ -7,13 +7,13 @@
 <body>
 <div id="overview"><a href="../../../../../testapidocs/org/apache/ibatis/exceptions/GeneralExceptionsTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2015 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2019 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_javadoccomment"> *    You may obtain a copy of the License at</em>
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2." target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.</a>0</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_javadoccomment"> *    Unless required by applicable law or agreed to in writing, software</em>
 <a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_javadoccomment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
@@ -23,8 +23,8 @@
 <a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">package</strong> org.apache.ibatis.exceptions;
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  
-<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.Assert.assertEquals;
-<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.Assert.assertTrue;
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.jupiter.api.Assertions.assertEquals;
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.jupiter.api.Assertions.assertTrue;
 <a class="jxr_linenumber" name="L20" href="#L20">20</a>  
 <a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> java.lang.reflect.InvocationTargetException;
 <a class="jxr_linenumber" name="L22" href="#L22">22</a>  
@@ -41,22 +41,22 @@
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.session.SqlSessionException;
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.transaction.TransactionException;
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.type.TypeException;
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">import</strong> org.junit.Test;
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.api.Test;
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>  
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/apache/ibatis/exceptions/GeneralExceptionsTest.html">GeneralExceptionsTest</a> {
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <strong class="jxr_keyword">class</strong> <a name="GeneralExceptionsTest" href="../../../../org/apache/ibatis/exceptions/GeneralExceptionsTest.html#GeneralExceptionsTest">GeneralExceptionsTest</a> {
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>  
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String EXPECTED_MESSAGE = <span class="jxr_string">"Test Message"</span>;
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> Exception EXPECTED_CAUSE = <strong class="jxr_keyword">new</strong> Exception(<span class="jxr_string">"Nested Exception"</span>);
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>  
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>    @Test
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> should() {
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>    <strong class="jxr_keyword">void</strong> should() {
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>      RuntimeException thrown = ExceptionFactory.wrapException(EXPECTED_MESSAGE, EXPECTED_CAUSE);
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>      assertTrue(<span class="jxr_string">"Exception should be wrapped in RuntimeSqlException."</span>, thrown instanceof PersistenceException);
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>      assertTrue(thrown instanceof PersistenceException, <span class="jxr_string">"Exception should be wrapped in RuntimeSqlException."</span>);
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>      testThrowException(thrown);
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>    }
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>  
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>    @Test
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldInstantiateAndThrowAllCustomExceptions() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>    <strong class="jxr_keyword">void</strong> shouldInstantiateAndThrowAllCustomExceptions() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>      Class&lt;?&gt;[] exceptionTypes = {
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>          BindingException.<strong class="jxr_keyword">class</strong>,
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>          CacheException.<strong class="jxr_keyword">class</strong>,
@@ -70,7 +70,7 @@
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>          PersistenceException.<strong class="jxr_keyword">class</strong>,
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>          SqlSessionException.<strong class="jxr_keyword">class</strong>,
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>          TransactionException.<strong class="jxr_keyword">class</strong>,
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>          TypeException.<strong class="jxr_keyword">class</strong>, 
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>          TypeException.<strong class="jxr_keyword">class</strong>,
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>          ScriptingException.<strong class="jxr_keyword">class</strong>
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>      };
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>      <strong class="jxr_keyword">for</strong> (Class&lt;?&gt; exceptionType : exceptionTypes) {
@@ -102,6 +102,6 @@
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2018 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2019 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>
