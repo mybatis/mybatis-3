@@ -515,7 +515,11 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         via the <code>ProviderContext</code>(available since MyBatis 3.4.5 or later) as method argument.
         (In MyBatis 3.4 or later, it's allow multiple parameters)
         Attributes: <code>type</code>, <code>method</code>. The <code>type</code> attribute is a class.
-        The <code>method</code> is the name of the method on that class. <span class="label important">NOTE</span>
+        The <code>method</code> is the name of the method on that class
+        (Since 3.5.1, you can omit <code>method</code> attribute, the MyBatis will resolve a target method via the
+        <code>ProviderMethodResolver</code> interface.
+        If not resolve by it, the MyBatis use the reserved fallback method that named <code>provideSql</code>).
+        <span class="label important">NOTE</span>
         Following this section is a discussion about the class, which can help build dynamic SQL in a cleaner, easier to read way.</td>
       </tr>
       <tr>
@@ -648,6 +652,26 @@ class UserSqlBuilder {
     }}.toString();
   }
 }]]></source>
+
+    <p>This example shows usage the default implementation of <code>ProviderMethodResolver</code>(available since MyBatis 3.5.1 or later):</p>
+    <source><![CDATA[@SelectProvider(type = UserSqlProvider.class)
+List<User> getUsersByName(String name);
+
+// Implements the ProviderMethodResolver on your provider class
+class UserSqlProvider implements ProviderMethodResolver {
+  // In default implementation, it will resolve a method that method name is matched with mapper method
+  public static String getUsersByName(final String name) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      if (name != null) {
+        WHERE("name like #{value} || '%'");
+      }
+      ORDER_BY("id");
+    }}.toString();
+  }
+}]]></source>
+
   </subsection>
 
   </section>

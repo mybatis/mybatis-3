@@ -62,16 +62,21 @@ public class ProviderSqlSource implements SqlSource {
       this.providerType = (Class<?>) provider.getClass().getMethod("type").invoke(provider);
       providerMethodName = (String) provider.getClass().getMethod("method").invoke(provider);
 
-      for (Method m : this.providerType.getMethods()) {
-        if (providerMethodName.equals(m.getName()) && CharSequence.class.isAssignableFrom(m.getReturnType())) {
-          if (providerMethod != null) {
-            throw new BuilderException("Error creating SqlSource for SqlProvider. Method '"
-                    + providerMethodName + "' is found multiple in SqlProvider '" + this.providerType.getName()
-                    + "'. Sql provider method can not overload.");
+      if (providerMethodName.length() == 0 && ProviderMethodResolver.class.isAssignableFrom(this.providerType)) {
+        this.providerMethod = ((ProviderMethodResolver) this.providerType.getDeclaredConstructor().newInstance())
+            .resolveMethod(new ProviderContext(mapperType, mapperMethod));
+      }
+      if (this.providerMethod == null) {
+        providerMethodName = providerMethodName.length() == 0 ? "provideSql" : providerMethodName;
+        for (Method m : this.providerType.getMethods()) {
+          if (providerMethodName.equals(m.getName()) && CharSequence.class.isAssignableFrom(m.getReturnType())) {
+            if (this.providerMethod != null) {
+              throw new BuilderException("Error creating SqlSource for SqlProvider. Method '"
+                  + providerMethodName + "' is found multiple in SqlProvider '" + this.providerType.getName()
+                  + "'. Sql provider method can not overload.");
+            }
+            this.providerMethod = m;
           }
-          this.providerMethod = m;
-          this.providerMethodArgumentNames = new ParamNameResolver(configuration, m).getNames();
-          this.providerMethodParameterTypes = m.getParameterTypes();
         }
       }
     } catch (BuilderException e) {
@@ -83,6 +88,8 @@ public class ProviderSqlSource implements SqlSource {
       throw new BuilderException("Error creating SqlSource for SqlProvider. Method '"
           + providerMethodName + "' not found in SqlProvider '" + this.providerType.getName() + "'.");
     }
+    this.providerMethodArgumentNames = new ParamNameResolver(configuration, this.providerMethod).getNames();
+    this.providerMethodParameterTypes = this.providerMethod.getParameterTypes();
     for (int i = 0; i < this.providerMethodParameterTypes.length; i++) {
       Class<?> parameterType = this.providerMethodParameterTypes[i];
       if (parameterType == ProviderContext.class) {
