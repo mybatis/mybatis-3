@@ -49,7 +49,7 @@ public @interface DeleteProvider {
    *   </li>
    *   <li>
    *     If cannot resolve a method by {@link org.apache.ibatis.builder.annotation.ProviderMethodResolver}(= not implement it or it was returned {@code null}),
-   *     the MyBatis will search and use a fallback method that named {@code resolveSql} from specified type
+   *     the MyBatis will search and use a fallback method that named {@code provideSql} from specified type
    *   </li>
    * </ul>
    *
