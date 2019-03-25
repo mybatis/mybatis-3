@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 
-       Copyright 2009-2017 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -38,7 +38,20 @@
 				<property name="username" value="sa" />
 			</dataSource>
 		</environment>
+		<environment id="development-derby">
+			<transactionManager type="JDBC" />
+			<dataSource type="UNPOOLED">
+				<property name="driver" value="org.apache.derby.jdbc.EmbeddedDriver" />
+				<property name="url" value="jdbc:derby:target/derby/sqlprovider;create=true" />
+				<property name="username" value="" />
+			</dataSource>
+		</environment>
 	</environments>
+
+	<databaseIdProvider type="DB_VENDOR">
+		<property name="HSQL Database Engine" value="hsql"/>
+		<property name="Apache Derby" value="derby"/>
+	</databaseIdProvider>
 
 	<mappers>
 		<mapper class="org.apache.ibatis.submitted.sqlprovider.Mapper" />

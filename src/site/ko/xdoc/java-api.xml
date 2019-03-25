@@ -598,7 +598,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         </td>
         <td>실행시 SQL 을 리턴할 클래스 과 메소드명을 명시하도록 해주는 대체수단의 애노테이션이다 (Since 3.4.6, you can specify the <code>CharSequence</code> instead of <code>String</code> as a method return type).
 		매핑된 구문을 실행할 때 마이바티스는 클래스의 인스턴스를 만들고 메소드를 실행한다.
-    Mapper 메서드의 인수인 "Mapper interface type" 과 <code>ProviderContext</code>(Mybatis 3.4.5 부터) 를 이용한 "Mapper method" 로 전달 된 객체를 메서드 매개변수로 전달할 수 있다.(마이바티스 3.4이상에서는 복수 파라미터를 허용한다.)
+    Mapper 메서드의 인수인 "Mapper interface type" and "Database ID" 과 <code>ProviderContext</code>(Mybatis 3.4.5 부터) 를 이용한 "Mapper method" 로 전달 된 객체를 메서드 매개변수로 전달할 수 있다.(마이바티스 3.4이상에서는 복수 파라미터를 허용한다.)
 		사용가능한 속성들 : type, method.
 		type 속성은 클래스.
 		method 속성은 메소드명이다
