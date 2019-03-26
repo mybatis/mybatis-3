@@ -73,4 +73,8 @@ public class BoundSql {
   public Object getAdditionalParameter(String name) {
     return metaParameters.getValue(name);
   }
+
+  public Map<String, Object> getAdditionalParameters() {
+    return additionalParameters;
+  }
 }
