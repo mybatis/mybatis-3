@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,8 +15,8 @@
  */
 package org.apache.ibatis.submitted.blobtest;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.Reader;
 import java.util.List;
@@ -26,14 +26,14 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-public class BlobTest {
+class BlobTest {
     private static SqlSessionFactory sqlSessionFactory;
 
-    @BeforeClass
-    public static void initDatabase() throws Exception {
+    @BeforeAll
+    static void initDatabase() throws Exception {
         try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/blobtest/MapperConfig.xml")) {
             sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
         }
@@ -47,10 +47,10 @@ public class BlobTest {
      * This test demonstrates the use of type aliases for primitive types
      * in constructor based result maps
      */
-    public void testInsertBlobThenSelectAll() {
+    void testInsertBlobThenSelectAll() {
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             BlobMapper blobMapper = sqlSession.getMapper(BlobMapper.class);
-            
+
             byte[] myblob = new byte[] {1, 2, 3, 4, 5};
             BlobRecord blobRecord = new BlobRecord(1, myblob);
             int rows = blobMapper.insert(blobRecord);
@@ -71,7 +71,7 @@ public class BlobTest {
      * This test demonstrates the use of type aliases for primitive types
      * in constructor based result maps
      */
-    public void testInsertBlobObjectsThenSelectAll() {
+    void testInsertBlobObjectsThenSelectAll() {
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             BlobMapper blobMapper = sqlSession.getMapper(BlobMapper.class);
 
@@ -90,7 +90,7 @@ public class BlobTest {
         }
     }
 
-    public static boolean blobsAreEqual(byte[] blob1, byte[] blob2) {
+    static boolean blobsAreEqual(byte[] blob1, byte[] blob2) {
         if (blob1 == null) {
             return blob2 == null;
         }

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ public class Reflector {
 
   private final Class<?> type;
   private final String[] readablePropertyNames;
-  private final String[] writeablePropertyNames;
+  private final String[] writablePropertyNames;
   private final Map<String, Invoker> setMethods = new HashMap<>();
   private final Map<String, Invoker> getMethods = new HashMap<>();
   private final Map<String, Class<?>> setTypes = new HashMap<>();
@@ -68,11 +68,11 @@ public class Reflector {
     addSetMethods(clazz);
     addFields(clazz);
     readablePropertyNames = getMethods.keySet().toArray(new String[getMethods.keySet().size()]);
-    writeablePropertyNames = setMethods.keySet().toArray(new String[setMethods.keySet().size()]);
+    writablePropertyNames = setMethods.keySet().toArray(new String[setMethods.keySet().size()]);
     for (String propName : readablePropertyNames) {
       caseInsensitivePropertyMap.put(propName.toUpperCase(Locale.ENGLISH), propName);
     }
-    for (String propName : writeablePropertyNames) {
+    for (String propName : writablePropertyNames) {
       caseInsensitivePropertyMap.put(propName.toUpperCase(Locale.ENGLISH), propName);
     }
   }
@@ -81,16 +81,7 @@ public class Reflector {
     Constructor<?>[] consts = clazz.getDeclaredConstructors();
     for (Constructor<?> constructor : consts) {
       if (constructor.getParameterTypes().length == 0) {
-        if (canControlMemberAccessible()) {
-          try {
-            constructor.setAccessible(true);
-          } catch (Exception e) {
-            // Ignored. This is only a final precaution, nothing we can do.
-          }
-        }
-        if (constructor.isAccessible()) {
-          this.defaultConstructor = constructor;
-        }
+        this.defaultConstructor = constructor;
       }
     }
   }
@@ -231,7 +222,7 @@ public class Reflector {
         result = Array.newInstance((Class<?>) componentType, 0).getClass();
       } else {
         Class<?> componentClass = typeToClass(componentType);
-        result = Array.newInstance((Class<?>) componentClass, 0).getClass();
+        result = Array.newInstance(componentClass, 0).getClass();
       }
     }
     if (result == null) {
@@ -243,26 +234,17 @@ public class Reflector {
   private void addFields(Class<?> clazz) {
     Field[] fields = clazz.getDeclaredFields();
     for (Field field : fields) {
-      if (canControlMemberAccessible()) {
-        try {
-          field.setAccessible(true);
-        } catch (Exception e) {
-          // Ignored. This is only a final precaution, nothing we can do.
+      if (!setMethods.containsKey(field.getName())) {
+        // issue #379 - removed the check for final because JDK 1.5 allows
+        // modification of final fields through reflection (JSR-133). (JGB)
+        // pr #16 - final static can only be set by the classloader
+        int modifiers = field.getModifiers();
+        if (!(Modifier.isFinal(modifiers) && Modifier.isStatic(modifiers))) {
+          addSetField(field);
         }
       }
-      if (field.isAccessible()) {
-        if (!setMethods.containsKey(field.getName())) {
-          // issue #379 - removed the check for final because JDK 1.5 allows
-          // modification of final fields through reflection (JSR-133). (JGB)
-          // pr #16 - final static can only be set by the classloader
-          int modifiers = field.getModifiers();
-          if (!(Modifier.isFinal(modifiers) && Modifier.isStatic(modifiers))) {
-            addSetField(field);
-          }
-        }
-        if (!getMethods.containsKey(field.getName())) {
-          addGetField(field);
-        }
+      if (!getMethods.containsKey(field.getName())) {
+        addGetField(field);
       }
     }
     if (clazz.getSuperclass() != null) {
@@ -293,7 +275,7 @@ public class Reflector {
   /**
    * This method returns an array containing all methods
    * declared in this class and any superclass.
-   * We use this method, instead of the simpler Class.getMethods(),
+   * We use this method, instead of the simpler <code>Class.getMethods()</code>,
    * because we want to look for private methods as well.
    *
    * @param cls The class
@@ -328,14 +310,6 @@ public class Reflector {
         // if it is known, then an extended class must have
         // overridden a method
         if (!uniqueMethods.containsKey(signature)) {
-          if (canControlMemberAccessible()) {
-            try {
-              currentMethod.setAccessible(true);
-            } catch (Exception e) {
-              // Ignored. This is only a final precaution, nothing we can do.
-            }
-          }
-
           uniqueMethods.put(signature, currentMethod);
         }
       }
@@ -380,7 +354,7 @@ public class Reflector {
   }
 
   /**
-   * Gets the name of the class the instance provides information for
+   * Gets the name of the class the instance provides information for.
    *
    * @return The class name
    */
@@ -419,10 +393,10 @@ public class Reflector {
   }
 
   /**
-   * Gets the type for a property setter
+   * Gets the type for a property setter.
    *
    * @param propertyName - the name of the property
-   * @return The Class of the propery setter
+   * @return The Class of the property setter
    */
   public Class<?> getSetterType(String propertyName) {
     ambiguousSetters.throwIfPresent(propertyName);
@@ -434,10 +408,10 @@ public class Reflector {
   }
 
   /**
-   * Gets the type for a property getter
+   * Gets the type for a property getter.
    *
    * @param propertyName - the name of the property
-   * @return The Class of the propery getter
+   * @return The Class of the property getter
    */
   public Class<?> getGetterType(String propertyName) {
     ambiguousGetters.throwIfPresent(propertyName);
@@ -449,7 +423,7 @@ public class Reflector {
   }
 
   /**
-   * Gets an array of the readable properties for an object
+   * Gets an array of the readable properties for an object.
    *
    * @return The array
    */
@@ -458,19 +432,19 @@ public class Reflector {
   }
 
   /**
-   * Gets an array of the writeable properties for an object
+   * Gets an array of the writable properties for an object.
    *
    * @return The array
    */
   public String[] getSetablePropertyNames() {
-    return writeablePropertyNames;
+    return writablePropertyNames;
   }
 
   /**
-   * Check to see if a class has a writeable property by name
+   * Check to see if a class has a writable property by name.
    *
    * @param propertyName - the name of the property to check
-   * @return True if the object has a writeable property by the name
+   * @return True if the object has a writable property by the name
    */
   public boolean hasSetter(String propertyName) {
     ambiguousSetters.throwIfPresent(propertyName);
@@ -478,7 +452,7 @@ public class Reflector {
   }
 
   /**
-   * Check to see if a class has a readable property by name
+   * Check to see if a class has a readable property by name.
    *
    * @param propertyName - the name of the property to check
    * @return True if the object has a readable property by the name

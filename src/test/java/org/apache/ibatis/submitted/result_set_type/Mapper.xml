@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+       Copyright 2009-2018 the original author or authors.
+
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
+-->
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.apache.ibatis.submitted.result_set_type.Mapper">
+
+  <select id="getUserWithStatementAndUnset" resultType="org.apache.ibatis.submitted.result_set_type.User"
+          statementType="STATEMENT">
+		select * from users order by id
+	</select>
+  <select id="getUserWithStatementAndDefault" resultType="org.apache.ibatis.submitted.result_set_type.User"
+          statementType="STATEMENT" resultSetType="DEFAULT">
+		select * from users order by id
+	</select>
+  <select id="getUserWithStatementAndForwardOnly" resultType="org.apache.ibatis.submitted.result_set_type.User"
+          statementType="STATEMENT" resultSetType="FORWARD_ONLY">
+		select * from users order by id
+	</select>
+  <select id="getUserWithStatementAndScrollInsensitive" resultType="org.apache.ibatis.submitted.result_set_type.User"
+          statementType="STATEMENT" resultSetType="SCROLL_INSENSITIVE">
+		select * from users order by id
+	</select>
+  <select id="getUserWithStatementAndScrollSensitive" resultType="org.apache.ibatis.submitted.result_set_type.User"
+          statementType="STATEMENT" resultSetType="SCROLL_SENSITIVE">
+		select * from users order by id
+	</select>
+
+  <select id="getUserWithPreparedAndUnset" resultType="org.apache.ibatis.submitted.result_set_type.User"
+          statementType="PREPARED">
+		select * from users order by id
+	</select>
+  <select id="getUserWithPreparedAndDefault" resultType="org.apache.ibatis.submitted.result_set_type.User"
+          statementType="PREPARED" resultSetType="DEFAULT">
+		select * from users order by id
+	</select>
+  <select id="getUserWithPreparedAndForwardOnly" resultType="org.apache.ibatis.submitted.result_set_type.User"
+          statementType="PREPARED" resultSetType="FORWARD_ONLY">
+		select * from users order by id
+	</select>
+  <select id="getUserWithPreparedAndScrollInsensitive" resultType="org.apache.ibatis.submitted.result_set_type.User"
+          statementType="PREPARED" resultSetType="SCROLL_INSENSITIVE">
+		select * from users order by id
+	</select>
+  <select id="getUserWithPreparedAndScrollSensitive" resultType="org.apache.ibatis.submitted.result_set_type.User"
+          statementType="PREPARED" resultSetType="SCROLL_SENSITIVE">
+		select * from users order by id
+	</select>
+
+  <select id="getUserWithCallableAndUnset" resultType="org.apache.ibatis.submitted.result_set_type.User"
+          statementType="CALLABLE">
+		{call getusers()}
+	</select>
+  <select id="getUserWithCallableAndDefault" resultType="org.apache.ibatis.submitted.result_set_type.User"
+          statementType="CALLABLE" resultSetType="DEFAULT">
+		{call getusers()}
+	</select>
+  <select id="getUserWithCallableAndForwardOnly" resultType="org.apache.ibatis.submitted.result_set_type.User"
+          statementType="CALLABLE" resultSetType="FORWARD_ONLY">
+		{call getusers()}
+	</select>
+  <select id="getUserWithCallableAndScrollInsensitive" resultType="org.apache.ibatis.submitted.result_set_type.User"
+          statementType="CALLABLE" resultSetType="SCROLL_INSENSITIVE">
+		{call getusers()}
+	</select>
+  <select id="getUserWithCallableAndScrollSensitive" resultType="org.apache.ibatis.submitted.result_set_type.User"
+          statementType="CALLABLE" resultSetType="SCROLL_SENSITIVE">
+		{call getusers()}
+	</select>
+
+</mapper>

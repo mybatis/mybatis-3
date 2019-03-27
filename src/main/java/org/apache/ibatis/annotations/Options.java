@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ public @interface Options {
    * The options for the {@link Options#flushCache()}.
    * The default is {@link FlushCachePolicy#DEFAULT}
    */
-  public enum FlushCachePolicy {
+  enum FlushCachePolicy {
     /** <code>false</code> for select statement; <code>true</code> for insert/update/delete statement. */
     DEFAULT,
     /** Flushes cache regardless of the statement type. */
@@ -48,7 +48,7 @@ public @interface Options {
 
   FlushCachePolicy flushCache() default FlushCachePolicy.DEFAULT;
 
-  ResultSetType resultSetType() default ResultSetType.FORWARD_ONLY;
+  ResultSetType resultSetType() default ResultSetType.DEFAULT;
 
   StatementType statementType() default StatementType.PREPARED;
 
@@ -61,6 +61,6 @@ public @interface Options {
   String keyProperty() default "";
 
   String keyColumn() default "";
-  
+
   String resultSets() default "";
 }

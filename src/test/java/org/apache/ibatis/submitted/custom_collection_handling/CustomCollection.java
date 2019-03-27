@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,8 +18,8 @@ package org.apache.ibatis.submitted.custom_collection_handling;
 import java.util.*;
 
 public class CustomCollection<T> {
-    
-    private List<T> data = new ArrayList<T>();
+
+    private List<T> data = new ArrayList<>();
 
     public <K> K[] toArray(K[] a) {
         return data.toArray(a);
@@ -123,5 +123,5 @@ public class CustomCollection<T> {
     public boolean add(T e) {
         return data.add(e);
     }
-    
+
 }

@@ -57,7 +57,7 @@ public class ReuseExecutor extends BaseExecutor {
     Configuration configuration = ms.getConfiguration();
     StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, resultHandler, boundSql);
     Statement stmt = prepareStatement(handler, ms.getStatementLog());
-    return handler.<E>query(stmt, resultHandler);
+    return handler.query(stmt, resultHandler);
   }
 
   @Override
@@ -65,11 +65,11 @@ public class ReuseExecutor extends BaseExecutor {
     Configuration configuration = ms.getConfiguration();
     StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, null, boundSql);
     Statement stmt = prepareStatement(handler, ms.getStatementLog());
-    return handler.<E>queryCursor(stmt);
+    return handler.queryCursor(stmt);
   }
 
   @Override
-  public List<BatchResult> doFlushStatements(boolean isRollback) throws SQLException {
+  public List<BatchResult> doFlushStatements(boolean isRollback) {
     for (Statement stmt : statementMap.values()) {
       closeStatement(stmt);
     }

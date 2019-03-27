@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.mapping;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -23,16 +23,16 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.Configuration;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class BoundSqlTest {
+class BoundSqlTest {
 
   @Test
-  public void testHasAdditionalParameter() throws Exception {
+  void testHasAdditionalParameter() {
     List<ParameterMapping> params = Collections.emptyList();
     BoundSql boundSql = new BoundSql(new Configuration(), "some sql", params, new Object());
 
-    Map<String, String> map = new HashMap<String, String>();
+    Map<String, String> map = new HashMap<>();
     map.put("key1", "value1");
     boundSql.setAdditionalParameter("map", map);
 
@@ -48,14 +48,14 @@ public class BoundSqlTest {
 
     assertTrue(boundSql.hasAdditionalParameter("map"));
     assertTrue(boundSql.hasAdditionalParameter("map.key1"));
-    assertTrue("should return true even if the child property does not exists.", boundSql.hasAdditionalParameter("map.key2"));
+    assertTrue(boundSql.hasAdditionalParameter("map.key2"), "should return true even if the child property does not exists.");
 
     assertTrue(boundSql.hasAdditionalParameter("person"));
     assertTrue(boundSql.hasAdditionalParameter("person.id"));
-    assertTrue("should return true even if the child property does not exists.", boundSql.hasAdditionalParameter("person.name"));
+    assertTrue(boundSql.hasAdditionalParameter("person.name"), "should return true even if the child property does not exists.");
 
     assertTrue(boundSql.hasAdditionalParameter("array[0]"));
-    assertTrue("should return true even if the element does not exists.", boundSql.hasAdditionalParameter("array[99]"));
+    assertTrue(boundSql.hasAdditionalParameter("array[99]"), "should return true even if the element does not exists.");
   }
 
   public static class Person {

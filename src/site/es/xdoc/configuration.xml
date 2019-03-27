@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2018 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -70,7 +70,7 @@
   <property name="username" value="${username}"/>
   <property name="password" value="${password}"/>
 </dataSource>]]></source>
-        <p>El usuario y password de este ejemplo se reemplazarán por los valores de los elementos de tipo property. El driver y la url se reemplazarán por los valores contenidos en el fichero config.properties.  Esto aumenta mucho las posibilidades de configuración. 
+        <p>El usuario y password de este ejemplo se reemplazarán por los valores de los elementos de tipo property. El driver y la url se reemplazarán por los valores contenidos en el fichero config.properties.  Esto aumenta mucho las posibilidades de configuración.
         </p>
         <p>Las propiedades también pueden pasarse como parámetro al método SqlSessionFactoryBuilder.build(). Por ejemplo:
         </p>
@@ -228,7 +228,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               <td>
                 autoMappingBehavior
               </td>
-              <td>Especifica cómo deben mapearse de forma automática las columnas a los campos/propiedades. NONE desactiva el mapeo automático. PARTIAL sólo mapea automáticamente los resultados que no contienen result maps anidados en su interior. FULL mapea resultados de cualquier complejidad (contengan anidados o no). 
+              <td>Especifica cómo deben mapearse de forma automática las columnas a los campos/propiedades. NONE desactiva el mapeo automático. PARTIAL sólo mapea automáticamente los resultados que no contienen result maps anidados en su interior. FULL mapea resultados de cualquier complejidad (contengan anidados o no).
               </td>
               <td>
                 NONE, PARTIAL, FULL
@@ -346,7 +346,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               </td>
               <td>
               	MyBatis usa una cache local para evitar dependencias circulares y acelerar ejecuciones repeticas de queries anidadas.
-              	Por defecto (SESSION) todas las queries ejecutadas en una sesión se cachean. Si localCacheScope=STATEMENT 
+              	Por defecto (SESSION) todas las queries ejecutadas en una sesión se cachean. Si localCacheScope=STATEMENT
               	la sesión local solo se usará durante la ejecución de un statement, no se comparten datos entre distintas llamadas
               	a SqlSession.
               </td>
@@ -362,7 +362,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 jdbcTypeForNull
               </td>
               <td>
-                Permite especificar el tipo JDBC que 
+                Permite especificar el tipo JDBC que
                 Especifica el tipo JDBC para valores nulos cuando no se ha especificado un tipo concreto para el parámetro.
                 Algunos drivers requieren que se indique el tipo JDBC de la columna pero otros permite valores genéricos como NULL, VARCHAR or OTHER.
               </td>
@@ -582,7 +582,7 @@ A continuación se muestra un ejemplo del elemento settings al completo:
         <p>
         Cada bean encontrado en <code>domain.blog</code>, en caso de que no contenga ninguna anotación,
         se registrará como alias usando su nombre no cualificado en minúsculas. Es decir, <code>domain.blog.Author</code>
-        se registrará como will be registered as <code>author</code>. 
+        se registrará como will be registered as <code>author</code>.
         Si se encuentra la anotación <code>@Alias</code> se usará su valor como alias. Mira el ejemplo a continuación:
         </p>
         <source><![CDATA[@Alias("author")
@@ -875,7 +875,7 @@ public class Author {
                 <code>java.lang.Short</code>, <code>short</code>
               </td>
               <td>
-                Cualquiera compatible con <code>NUMERIC</code> o <code>SHORT INTEGER</code>
+                Cualquiera compatible con <code>NUMERIC</code> o <code>SMALLINT</code>
               </td>
             </tr>
             <tr>
@@ -897,7 +897,7 @@ public class Author {
                 <code>java.lang.Long</code>, <code>long</code>
               </td>
               <td>
-                Cualquiera compatible con <code>NUMERIC</code> o <code>LONG INTEGER</code>
+                Cualquiera compatible con <code>NUMERIC</code> o <code>BIGINT</code>
               </td>
             </tr>
             <tr>
@@ -1106,7 +1106,7 @@ public class Author {
                 Enumeration Type
               </td>
               <td>
-                <code>VARCHAR</code> Cualquiera compatible con string porque se guarda el código (no el índice).       
+                <code>VARCHAR</code> Cualquiera compatible con string porque se guarda el código (no el índice).
               </td>
             </tr>
             <tr>
@@ -1255,9 +1255,9 @@ public class Author {
           </tbody>
         </table>
         <p>
-        Es posible sobrescribir los TypeHanders o crear TypeHanders personalizados para tratar tipos no soportados o no estándares. 
-        Para ello, debes implementar la interfaz <code>org.apache.ibatis.type.TypeHandler</code> o extender 
-        la clase de ayuda <code>org.apache.ibatis.type.BaseTypeHandler</code> y opcionalmente mapear el TypeHandler a un tipo JDBC. 
+        Es posible sobrescribir los TypeHanders o crear TypeHanders personalizados para tratar tipos no soportados o no estándares.
+        Para ello, debes implementar la interfaz <code>org.apache.ibatis.type.TypeHandler</code> o extender
+        la clase de ayuda <code>org.apache.ibatis.type.BaseTypeHandler</code> y opcionalmente mapear el TypeHandler a un tipo JDBC.
         Por ejemplo:
         </p>
 
@@ -1299,7 +1299,7 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
         </p>
         <ul>
           <li>Añadir un atributo <code>javaType</code> al elemento typeHandler (por ejemplo: <code>javaType="String"</code>)
-          </li> 
+          </li>
           <li>Añadir una anotación <code>@MappedTypes</code> a tu clase TypeHandler especificando la lista de tipos java a la que asociarlo.
           Esta anotación será ignorada si se ha especificado también un atributo <code>javaType</code>.
           </li>
@@ -1311,7 +1311,7 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
           <li>
            Añadiendo un atributo <code>jdbcType</code> al lemento typeHandler (por ejemplo: <code>jdbcType="VARCHAR"</code>).
           </li>
-          <li>Añadiendo una anotación <code>@MappedJdbcTypes</code> a tu clase TypeHandler especificando la lista de tipos JDBC a la que asociarlo. 
+          <li>Añadiendo una anotación <code>@MappedJdbcTypes</code> a tu clase TypeHandler especificando la lista de tipos JDBC a la que asociarlo.
 		   Esta anotación será ignorada si se ha especificado también un atributo <code>jdbcType</code>.
           </li>
         </ul>
@@ -1325,7 +1325,7 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
           TypeHandler available for use in a <code>ResultMap</code>, set <code>includeNullJdbcType=true</code>
           on the <code>@MappedJdbcTypes</code> annotation. Since Mybatis 3.4.0 however, if a <b>single</b>
           TypeHandler is registered to handle a Java type, it will be used by default in <code>ResultMap</code>s
-          using this Java type (i.e. even without <code>includeNullJdbcType=true</code>). 
+          using this Java type (i.e. even without <code>includeNullJdbcType=true</code>).
         </p>
 
         <p>Y finalmente puedes hacer que MyBatis busque tus TypeHandlers:</p>
@@ -1357,30 +1357,30 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
   ...
 ]]></source>
 
-		<p><code>EnumTypeHandler</code> y <code>EnumOrdinalTypeHandler</code> son TypeHandlers genéricos. 
-		Conoceremos más sobre ellos en la próxima sección. 
+		<p><code>EnumTypeHandler</code> y <code>EnumOrdinalTypeHandler</code> son TypeHandlers genéricos.
+		Conoceremos más sobre ellos en la próxima sección.
 		</p>
 
       </subsection>
-      
+
       <subsection name="Handling Enums">
       	<p>
-      	Si quires mapear un <code>Enum</code>, debes usar bien un 
-      	<code>EnumTypeHandler</code> o un <code>EnumOrdinalTypeHandler</code>. 
+      	Si quires mapear un <code>Enum</code>, debes usar bien un
+      	<code>EnumTypeHandler</code> o un <code>EnumOrdinalTypeHandler</code>.
       	</p>
-      	
+
       	<p>Por ejemplo, digamos que quieres guardar el modo de reondeo que debe
       	usarse con un número determinado que debe redondearse. Por defecto MyBatis
       	usa un <code>EnumTypeHandler</code> para comvertir los valores del  <code>Enum</code>
       	a sus nombres.
       	</p>
-      	
-      	<b>Observa que el <code>EnumTypeHandler</code> es un handler especial en el sentido de que 
-      	no maneja una clase específica, como los demás handlers sino cualquier clase que extiende 
+
+      	<b>Observa que el <code>EnumTypeHandler</code> es un handler especial en el sentido de que
+      	no maneja una clase específica, como los demás handlers sino cualquier clase que extiende
       	de <code>Enum</code></b>
 
       	<p>
-      	Sin embargo, puede que no queramos guardar nombres. Nuestro DBA puede insistir en que 
+      	Sin embargo, puede que no queramos guardar nombres. Nuestro DBA puede insistir en que
       	usemos un entero en su lugar. Muy sencillo: añade un <code>EnumOrdinalTypeHandler</code>
       	a las sección de <code>typeHandlers</code> de tu fichero de configuración y ahora todos los
       	<code>RoundingMode</code> se mapearán a un entero usando su valor ordinal.
@@ -1391,12 +1391,12 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
 </typeHandlers>
 ]]></source>
 		<p>
-		  Pero ¿y si quieres mapear el mismo <code>Enum</code> a un string en un sitio pero a un entero en otro? 
+		  Pero ¿y si quieres mapear el mismo <code>Enum</code> a un string en un sitio pero a un entero en otro?
 		</p>
       	<p>
       	  El mapeo automático siempre usará <code>EnumOrdinalTypeHandler</code>,
-      	  así que si queremos usar el clásico <code>EnumTypeHandler</code>, 
-      	  debemos indicarlo establiencidolo esplícitamente su uso en los statements. 
+      	  así que si queremos usar el clásico <code>EnumTypeHandler</code>,
+      	  debemos indicarlo establiencidolo esplícitamente su uso en los statements.
       	</p>
       	<p>
       	  Los mappers no se tratarán hasta la sección siguiente asi que si esta es tu primera lectura de
@@ -1422,7 +1422,7 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
 	    	#{id}, #{name}, #{funkyNumber}, #{roundingMode}
 	    )
 	</insert>
-	
+
 	<resultMap type="org.apache.ibatis.submitted.rounding.User" id="usermap2">
 		<id column="id" property="id"/>
 		<result column="name" property="name"/>
@@ -1441,7 +1441,7 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
 </mapper>
 ]]></source>
 		<p>
-		  Observa que esto nos fuerza a usar un <code>resultMap</code> 
+		  Observa que esto nos fuerza a usar un <code>resultMap</code>
 		  en lugar de un <code>resultType</code> en nuestros statements tipo select.
 		</p>
       </subsection>
@@ -1579,7 +1579,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
           <li>La configuración del TransactionManager (ej. type=”JDBC”)</li>
           <li>La configuración del DataSource (ej. type=”POOLED”)</li>
         </ul>
-        <p>El ID del entorno por defecto y de los entornos existentes son auto-explicativos. Puedes nombrarlos como más te guste, tan sólo asegúrate de que el valor por defecto coincide con un entorno existente. 
+        <p>El ID del entorno por defecto y de los entornos existentes son auto-explicativos. Puedes nombrarlos como más te guste, tan sólo asegúrate de que el valor por defecto coincide con un entorno existente.
         </p>
         <p>
           <strong>transactionManager</strong>
@@ -1587,9 +1587,9 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
         <p>MyBatis incluye dos tipos de TransactionManager (ej. type=”[JDBC|MANAGED]”):
         </p>
         <ul>
-          <li>JDBC – Este TransactionManager simplemente hace uso del las capacidades de commit y rollback de JDBC.  Utiliza la conexión obtenida del DataSource para gestionar la transacción.  
+          <li>JDBC – Este TransactionManager simplemente hace uso del las capacidades de commit y rollback de JDBC.  Utiliza la conexión obtenida del DataSource para gestionar la transacción.
           </li>
-          <li>MANAGED  – Este TransactionManager no hace nada. No hace commit ni rollback sobre la conexión. En su lugar, permite que el contenedor gestione el ciclo de vida completo de la transacción (ej. Spring o un servidor de aplicaciones JEE).  Por defecto cierra la conexión. Sin embargo, algunos contenedores no esperan que la conexión se cierre y por tanto, si necesitas cambiar este comportamiento, informa la propiedad closeConnection a false. Por ejemplo: 
+          <li>MANAGED  – Este TransactionManager no hace nada. No hace commit ni rollback sobre la conexión. En su lugar, permite que el contenedor gestione el ciclo de vida completo de la transacción (ej. Spring o un servidor de aplicaciones JEE).  Por defecto cierra la conexión. Sin embargo, algunos contenedores no esperan que la conexión se cierre y por tanto, si necesitas cambiar este comportamiento, informa la propiedad closeConnection a false. Por ejemplo:
 <source><![CDATA[<transactionManager type="MANAGED">
   <property name="closeConnection" value="false"/>
 </transactionManager>]]></source>
@@ -1603,9 +1603,9 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
         <p>Ninguno de estos TransactionManagers necesita ninguna propiedad. Sin embargo ambos son Type Aliases, es decir, en lugar de usarlos puedes informar el nombre totalmente cualificado o el Type Alias de tu propia implementación del interfaz TransactionFactory:
         </p>
         <source><![CDATA[public interface TransactionFactory {
-  void setProperties(Properties props);  
+  void setProperties(Properties props);
   Transaction newTransaction(Connection conn);
-  Transaction newTransaction(DataSource dataSource, TransactionIsolationLevel level, boolean autoCommit);  
+  Transaction newTransaction(DataSource dataSource, TransactionIsolationLevel level, boolean autoCommit);
 }]]></source>
         <p>Todas las propiedades que configures en el XML se pasarán al método setProperties() tras la instanciación de la clase. Tu implementación debe crear una implementación de Transaction, que a su vez es también un interfaz muy sencillo:
         </p>
@@ -1646,7 +1646,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
           <li><code>driver.encoding=UTF8</code></li>
         </ul>
         <p>
-          Esto pasaría la propiedad “encoding” con el valor “UTF8” al driver de base datos mediante el método DriverManager.getConnection(url, driverProperties).  
+          Esto pasaría la propiedad “encoding” con el valor “UTF8” al driver de base datos mediante el método DriverManager.getConnection(url, driverProperties).
         </p>
         <p>
           <strong>POOLED</strong> – Esta implementación de DataSource hace usa un pool de conexiones para evitar el tiempo necesario en realizar la conexión y autenticación cada vez que se solicita una nueva instancia de conexión. Este es un enfoque habitual en aplicaciones Web concurrentes para obtener el mejor tiempo de respuesta posible.</p>
@@ -1705,13 +1705,13 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
 }]]></source>
 
         <p>
-		  The <code>org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory</code> puede extenderse para crear nuevos 
-		  adaptadores. Por ejemplo, este es el código necesario para integrar C3P0: 
+		  The <code>org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory</code> puede extenderse para crear nuevos
+		  adaptadores. Por ejemplo, este es el código necesario para integrar C3P0:
 		</p>
 
         <source><![CDATA[import org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
-        
+
 public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
 
   public C3P0DataSourceFactory() {
@@ -1720,7 +1720,7 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
 }]]></source>
 
         <p>Para configurarlo, añade una propiedad por cada método al que quieres que llame MyBatis.
-        A continuación se muestra una configuración de ejemplo para conectar con una base de datos PostgresSQL:</p>        
+        A continuación se muestra una configuración de ejemplo para conectar con una base de datos PostgresSQL:</p>
 
         <source><![CDATA[<dataSource type="org.myproject.C3P0DataSourceFactory">
   <property name="driver" value="org.postgresql.Driver"/>
@@ -1729,42 +1729,42 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
   <property name="password" value="root"/>
 </dataSource>
 ]]></source>
-        
+
       </subsection>
-      
+
       <subsection name="databaseIdProvider">
         <p>
           MyBatis puede ejeutar sentencias distintas en función del fabricante (vendor) de tu base de datos.
           El soporte de múltiples bases de datos se basa en el atributo de <code>databaseId</code> de los mapped statements.
-          MyBatis cargará todos los statements que no tengan atributo <code>databaseId</code> attribute o aquellos 
-          cuyo <code>databaseId</code> coincida con el valor en curso. Si se encuentra un statement con y sin atributo 
-          <code>databaseId</code> el último se descartará.  
+          MyBatis cargará todos los statements que no tengan atributo <code>databaseId</code> attribute o aquellos
+          cuyo <code>databaseId</code> coincida con el valor en curso. Si se encuentra un statement con y sin atributo
+          <code>databaseId</code> el último se descartará.
           Para activar el soporte de multi vendor añade un <code>databaseIdProvider</code>
           al fichero mybatis-config.xml file de la siguiente forma:
         </p>
-        
+
         <source><![CDATA[<databaseIdProvider type="DB_VENDOR" />
 ]]></source>
 
-		<p> 
-		  La implementación DB_VENDOR del databaseIdProvider establece como databaseId el String devuelto por 
-		  <code>DatabaseMetaData#getDatabaseProductName()</code>. 
+		<p>
+		  La implementación DB_VENDOR del databaseIdProvider establece como databaseId el String devuelto por
+		  <code>DatabaseMetaData#getDatabaseProductName()</code>.
 		  Como normalmente este string es demasiado largo, y además, distintas versiones del mismo producto devuelven valores
 		  similares, puedes traducirlo a un valor más corto añadiendo propiedades de la siguente forma:
 		</p>
-		
+
         <source><![CDATA[<databaseIdProvider type="DB_VENDOR">
   <property name="SQL Server" value="sqlserver"/>
-  <property name="DB2" value="db2"/>        
+  <property name="DB2" value="db2"/>
   <property name="Oracle" value="oracle" />
 </databaseIdProvider>]]></source>
 
-		<p> 
+		<p>
 		  Cuando se añaden propiedades, el databaseIdProvider DB_VENDOR devuelve el primer valor que corresponde a la primera clave
 		  encontrada en el nombre devuelto por <code>DatabaseMetaData#getDatabaseProductName()</code> o "null" si no se encuentra ninguna.
-		  En este caso, si <code>getDatabaseProductName()</code> devuelve "Oracle (DataDirect)" el databaseId se informará con "oracle".  
+		  En este caso, si <code>getDatabaseProductName()</code> devuelve "Oracle (DataDirect)" el databaseId se informará con "oracle".
 		</p>
-		
+
 		<p>
 		  Puedes construir tu propio DatabaseIdProvider implementando la interfaz <code>org.apache.ibatis.mapping.DatabaseIdProvider</code>
 		  y registrandolo en el fichero mybatis-config.xml:
@@ -1776,7 +1776,7 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
 }]]></source>
 
       </subsection>
-      
+
       <subsection name="mappers">
         <p>
           Ahora que se ha configurado el comportamiento de MyBatis con todos los elementos de configuración comentados estamos listos para definir los SQL mapped statements (sentencias SQL mapeadas). Primeramente necesitaremos indicarle a MyBatis dónde encontrarlos. Java no ofrece muchas posibilidades de auto-descubrimiento así que la mejor forma es simplemente decirle a MyBatis donde encontrar los ficheros de mapeo. Puedes utilizar referencias tipo classpath, o tipo path o referencias url completamente cualificadas (incluyendo file:///) . Por ejemplo:

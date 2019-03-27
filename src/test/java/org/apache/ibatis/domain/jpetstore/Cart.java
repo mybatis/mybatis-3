@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -23,8 +23,8 @@ public class Cart implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
-  private final Map<String, CartItem> itemMap = Collections.synchronizedMap(new HashMap<String, CartItem>());
-  private final List<CartItem> itemList = new ArrayList<CartItem>();
+  private final Map<String, CartItem> itemMap = Collections.synchronizedMap(new HashMap<>());
+  private final List<CartItem> itemList = new ArrayList<>();
 
   public Iterator<CartItem> getCartItems() {
     return itemList.iterator();
@@ -54,7 +54,6 @@ public class Cart implements Serializable {
     }
     cartItem.incrementQuantity();
   }
-
 
   public Item removeItemById(String itemId) {
     CartItem cartItem = (CartItem) itemMap.remove(itemId);

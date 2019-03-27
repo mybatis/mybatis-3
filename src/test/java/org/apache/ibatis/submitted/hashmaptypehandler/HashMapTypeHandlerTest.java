@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -23,16 +23,16 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-public class HashMapTypeHandlerTest {
+class HashMapTypeHandlerTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
-  public static void setUp() throws Exception {
+  @BeforeAll
+  static void setUp() throws Exception {
     // create an SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/hashmaptypehandler/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -44,42 +44,42 @@ public class HashMapTypeHandlerTest {
   }
 
   @Test
-  public void shouldNotApplyTypeHandlerToParamMap() {
+  void shouldNotApplyTypeHandlerToParamMap() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUser(1, "User1");
-      Assert.assertEquals("User1", user.getName());
+      Assertions.assertEquals("User1", user.getName());
     }
   }
 
   @Test
-  public void shouldNotApplyTypeHandlerToParamMapXml() {
+  void shouldNotApplyTypeHandlerToParamMapXml() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUserXml(1, "User1");
-      Assert.assertEquals("User1", user.getName());
+      Assertions.assertEquals("User1", user.getName());
     }
   }
 
   @Test
-  public void shouldApplyHashMapTypeHandler() {
+  void shouldApplyHashMapTypeHandler() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
-      HashMap<String, String> map = new HashMap<String, String>();
+      HashMap<String, String> map = new HashMap<>();
       map.put("name", "User1");
       User user = mapper.getUserWithTypeHandler(map);
-      Assert.assertNotNull(user);
+      Assertions.assertNotNull(user);
     }
   }
 
   @Test
-  public void shouldApplyHashMapTypeHandlerXml() {
+  void shouldApplyHashMapTypeHandlerXml() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
-      HashMap<String, String> map = new HashMap<String, String>();
+      HashMap<String, String> map = new HashMap<>();
       map.put("name", "User1");
       User user = mapper.getUserWithTypeHandlerXml(map);
-      Assert.assertNotNull(user);
+      Assertions.assertNotNull(user);
     }
   }
 }

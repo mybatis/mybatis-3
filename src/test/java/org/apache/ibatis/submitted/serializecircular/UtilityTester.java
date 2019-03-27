@@ -22,8 +22,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 public class UtilityTester {
-  
-  public static void serializeAndDeserializeObject(Object myObject){
+
+  public static void serializeAndDeserializeObject(Object myObject) {
 
     try {
       deserialzeObject(serializeObject(myObject));

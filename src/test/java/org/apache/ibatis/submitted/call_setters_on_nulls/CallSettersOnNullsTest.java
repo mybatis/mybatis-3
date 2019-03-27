@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,20 +20,20 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.io.Reader;
 import java.util.List;
 import java.util.Map;
 
-public class CallSettersOnNullsTest {
+class CallSettersOnNullsTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
-  public static void setUp() throws Exception {
+  @BeforeAll
+  static void setUp() throws Exception {
     // create a SqlSessionFactory
     try (Reader reader = Resources
         .getResourceAsReader("org/apache/ibatis/submitted/call_setters_on_nulls/mybatis-config.xml")) {
@@ -46,56 +46,56 @@ public class CallSettersOnNullsTest {
   }
 
   @Test
-  public void shouldCallNullOnMappedProperty() {
+  void shouldCallNullOnMappedProperty() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUserMapped(1);
-      Assert.assertTrue(user.nullReceived);
+      Assertions.assertTrue(user.nullReceived);
     }
   }
 
   @Test
-  public void shouldCallNullOnAutomaticMapping() {
+  void shouldCallNullOnAutomaticMapping() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUserUnmapped(1);
-      Assert.assertTrue(user.nullReceived);
+      Assertions.assertTrue(user.nullReceived);
     }
   }
 
   @Test
-  public void shouldCallNullOnMap() {
+  void shouldCallNullOnMap() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Map user = mapper.getUserInMap(1);
-      Assert.assertTrue(user.containsKey("NAME"));
+      Assertions.assertTrue(user.containsKey("NAME"));
     }
   }
 
   @Test
-  public void shouldCallNullOnMapForSingleColumn() {
+  void shouldCallNullOnMapForSingleColumn() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<Map<String, Object>> oneColumns = mapper.getNameOnly();
       // When callSetterOnNull is true, setters are called with null values
       // but if all the values for an object are null
       // the object itself should be null (same as default behaviour)
-      Assert.assertNull(oneColumns.get(1));
+      Assertions.assertNull(oneColumns.get(1));
     }
   }
 
   @Test
-  public void shouldCallNullOnMapForSingleColumnWithResultMap() {
+  void shouldCallNullOnMapForSingleColumnWithResultMap() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<Map<String, Object>> oneColumns = mapper.getNameOnlyMapped();
-//      Assert.assertNotNull(oneColumns.get(1));
+      // Assertions.assertNotNull(oneColumns.get(1));
       // TEST changed after fix for #307
       // When callSetterOnNull is true, setters are called with null values
       // but if all the values for an object are null
       // the object itself should be null (same as default behaviour)
-      Assert.assertNull(oneColumns.get(1));
+      Assertions.assertNull(oneColumns.get(1));
     }
   }
-  
+
 }

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,16 +24,16 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-public class UUIDTest {
+class UUIDTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
-  public static void setUp() throws Exception {
+  @BeforeAll
+  static void setUp() throws Exception {
     // create an SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/uuid_test/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -44,17 +44,16 @@ public class UUIDTest {
             "org/apache/ibatis/submitted/uuid_test/CreateDB.sql");
   }
 
-  @Test(expected=PersistenceException.class)
-  public void shouldGetAUser() {
+  @Test
+  void shouldGetAUser() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
-      User user = mapper.getUser(UUID.fromString("38400000-8cf0-11bd-b23e-10b96e4ef00d"));
-      Assert.assertEquals("User1", user.getName());
+      Assertions.assertThrows(PersistenceException.class, () -> mapper.getUser(UUID.fromString("38400000-8cf0-11bd-b23e-10b96e4ef00d")));
     }
   }
 
   @Test
-  public void shouldInsertAUser() {
+  void shouldInsertAUser() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = new User();

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -23,17 +23,16 @@ import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-public class BatchTest
-{
+class BatchTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
-  public static void setUp() throws Exception {
+  @BeforeAll
+  static void setUp() throws Exception {
     // create an SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/batch_test/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -45,7 +44,7 @@ public class BatchTest
   }
 
   @Test
-  public void shouldGetAUserNoException() {
+  void shouldGetAUserNoException() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH,false)) {
       try {
         Mapper mapper = sqlSession.getMapper(Mapper.class);
@@ -55,18 +54,13 @@ public class BatchTest
         user.setId(2);
         user.setName("User2");
         mapper.insertUser(user);
-        Assert.assertEquals("Dept1", mapper.getUser(2).getDept().getName());
+        Assertions.assertEquals("Dept1", mapper.getUser(2).getDept().getName());
       } finally {
         sqlSession.commit();
       }
-    }
-    catch (Exception e)
-    {
-      Assert.fail(e.getMessage());
-
+    } catch (Exception e) {
+      Assertions.fail(e.getMessage());
     }
   }
-
-
 
 }

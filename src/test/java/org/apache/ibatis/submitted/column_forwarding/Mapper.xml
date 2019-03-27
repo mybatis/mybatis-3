@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
 	<select id="getUser" parameterType="map" resultMap="userResult">
 		select * from users where id=#{id}
 	</select>
-	
+
 	<select id="getGroup" parameterType="map" resultMap="groupResult">
 		select * from groups where id=#{id} and state=#{state}
 	</select>
@@ -37,10 +37,10 @@
 		<result column="state" property="state" />
 		<association property="group" column="{id=group_id,state=state}" select="getGroup" javaType="org.apache.ibatis.submitted.column_forwarding.Group" />
 	</resultMap>
-	
+
 	<resultMap id="groupResult"
 		type="org.apache.ibatis.submitted.column_forwarding.Group">
 		<id column="id" property="id" />
-		<result column="state" property="state" />	
+		<result column="state" property="state" />
 	</resultMap>
 </mapper>

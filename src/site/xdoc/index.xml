@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -64,7 +64,7 @@
         <ul class="i18n">
           <li class="en"><a href="./getting-started.html">English</a></li>
           <li class="es"><a href="./es/index.html">Español</a></li>
-<!--      <li class="fr"><a href="./fr/index.html">Français</a></li> -->      
+<!--      <li class="fr"><a href="./fr/index.html">Français</a></li> -->
           <li class="ja"><a href="./ja/index.html">日本語</a></li>
           <li class="ko"><a href="./ko/index.html">한국어</a></li>
           <li class="zh"><a href="./zh/index.html">简体中文</a></li>
