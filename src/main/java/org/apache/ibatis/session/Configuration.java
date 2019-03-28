@@ -110,6 +110,13 @@ public class Configuration {
   protected boolean useActualParamName = true;
   protected boolean returnInstanceForEmptyRow;
 
+  /**
+   * whether to check mappedStatement exist related to mapper method when app startup
+   * in order to find bugs as soon as possible
+   * false as default value ,not to check in order to compatible with early version
+   */
+  private boolean checkMapperMethodRelatedMappedStatementExist = false ;
+
   protected String logPrefix;
   protected Class <? extends Log> logImpl;
   protected Class <? extends VFS> vfsImpl;
@@ -507,6 +514,14 @@ public class Configuration {
 
   public void setObjectWrapperFactory(ObjectWrapperFactory objectWrapperFactory) {
     this.objectWrapperFactory = objectWrapperFactory;
+  }
+
+  public boolean isCheckMapperMethodRelatedMappedStatementExist() {
+    return checkMapperMethodRelatedMappedStatementExist;
+  }
+
+  public void setCheckMapperMethodRelatedMappedStatementExist(boolean checkMapperMethodRelatedMappedStatementExist) {
+    this.checkMapperMethodRelatedMappedStatementExist = checkMapperMethodRelatedMappedStatementExist;
   }
 
   /**

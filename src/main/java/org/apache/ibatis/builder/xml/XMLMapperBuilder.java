@@ -17,6 +17,8 @@ package org.apache.ibatis.builder.xml;
 
 import java.io.InputStream;
 import java.io.Reader;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -32,9 +34,13 @@ import org.apache.ibatis.builder.CacheRefResolver;
 import org.apache.ibatis.builder.IncompleteElementException;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.apache.ibatis.builder.ResultMapResolver;
+import org.apache.ibatis.builder.annotation.MapperAnnotationBuilder;
 import org.apache.ibatis.cache.Cache;
+import org.apache.ibatis.exceptions.MappedStatementNotFoundException;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.mapping.Discriminator;
 import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.mapping.ParameterMode;
@@ -56,6 +62,8 @@ public class XMLMapperBuilder extends BaseBuilder {
   private final MapperBuilderAssistant builderAssistant;
   private final Map<String, XNode> sqlFragments;
   private final String resource;
+
+  private static final Log log = LogFactory.getLog(XMLMapperBuilder.class);
 
   @Deprecated
   public XMLMapperBuilder(Reader reader, Configuration configuration, String resource, Map<String, XNode> sqlFragments, String namespace) {
@@ -92,11 +100,56 @@ public class XMLMapperBuilder extends BaseBuilder {
       configurationElement(parser.evalNode("/mapper"));
       configuration.addLoadedResource(resource);
       bindMapperForNamespace();
+      if (configuration.isCheckMapperMethodRelatedMappedStatementExist()){
+        doCheckMapperMethodRelatedMappedStatementExist();
+      }
     }
 
     parsePendingResultMaps();
     parsePendingCacheRefs();
     parsePendingStatements();
+  }
+
+  private void doCheckMapperMethodRelatedMappedStatementExist() {
+    String namespace = builderAssistant.getCurrentNamespace();
+    if (namespace != null) {
+      Class<?> boundType = null;
+      try {
+        boundType = Resources.classForName(namespace);
+      } catch (ClassNotFoundException e) {
+        log.warn(String.format("can not find class : %s", namespace));
+      }
+
+      if (boundType == null) {
+        return;
+      }
+
+      Method[] methods = boundType.getDeclaredMethods();
+      for (Method method : methods) {
+        MapperAnnotationBuilder mab = new MapperAnnotationBuilder(builderAssistant.getConfiguration(), boundType);
+        Class<? extends Annotation> sqlAnnotationType = mab.getSqlAnnotationType(method);
+        /**
+         * this method has sql annotation
+         */
+        if (sqlAnnotationType != null) {
+          continue;
+        }
+
+        Class<? extends Annotation> sqlProviderAnnotationType = mab.getSqlProviderAnnotationType(method);
+        /**
+         * this method has sql provider annotation
+         */
+        if (sqlProviderAnnotationType != null) {
+          continue;
+        }
+
+        String mappedStatementId = namespace + "." + method.getName();
+        boolean hasStatement = configuration.hasStatement(mappedStatementId);
+        if (!hasStatement) {
+          throw new MappedStatementNotFoundException(String.format("mappedStatementId (%s) related mappedStatement not fund ", mappedStatementId));
+        }
+      }
+    }
   }
 
   public XNode getSqlFragment(String refid) {

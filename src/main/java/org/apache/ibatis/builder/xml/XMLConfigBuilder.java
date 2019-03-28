@@ -266,6 +266,7 @@ public class XMLConfigBuilder extends BaseBuilder {
     Class<? extends Log> logImpl = (Class<? extends Log>)resolveClass(props.getProperty("logImpl"));
     configuration.setLogImpl(logImpl);
     configuration.setConfigurationFactory(resolveClass(props.getProperty("configurationFactory")));
+    configuration.setCheckMapperMethodRelatedMappedStatementExist(booleanValueOf(props.getProperty("checkMapperMethodRelatedMappedStatementExist"), false));
   }
 
   private void environmentsElement(XNode context) throws Exception {
