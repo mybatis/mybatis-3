@@ -24,6 +24,7 @@ import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Rule;
 import org.apache.ibatis.type.TypeHandler;
 import org.junit.Test;
@@ -195,5 +196,20 @@ public class XmlMapperBuilderTest {
 //    XMLMapperBuilder builder2 = new XMLMapperBuilder(inputStream2, configuration, "name2", configuration.getSqlFragments());
 //    builder2.parse();
 //  }
+
+  @Test
+  public void testParse() {
+    boolean noExceptionThrow = true;
+    try {
+      String resource = "org/apache/ibatis/builder/UserMapperConfig.xml";
+      InputStream inputStream = Resources.getResourceAsStream(resource);
+      new SqlSessionFactoryBuilder().build(inputStream);
+    } catch (Exception exp) {
+      assertThat(exp.getMessage().contains("MappedStatementNotFoundException")).isTrue();
+      noExceptionThrow = false;
+    }
+    assertThat(noExceptionThrow).isFalse();
+
+  }
 
 }
