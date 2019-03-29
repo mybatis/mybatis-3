@@ -66,7 +66,7 @@ public class CallableStatementHandler extends BaseStatementHandler {
   public <E> List<E> query(Statement statement, ResultHandler resultHandler) throws SQLException {
     CallableStatement cs = (CallableStatement) statement;
     cs.execute();
-    List<E> resultList = resultSetHandler.<E>handleResultSets(cs);
+    List<E> resultList = resultSetHandler.handleResultSets(cs);
     resultSetHandler.handleOutputParameters(cs);
     return resultList;
   }
@@ -75,7 +75,7 @@ public class CallableStatementHandler extends BaseStatementHandler {
   public <E> Cursor<E> queryCursor(Statement statement) throws SQLException {
     CallableStatement cs = (CallableStatement) statement;
     cs.execute();
-    Cursor<E> resultList = resultSetHandler.<E>handleCursorResultSets(cs);
+    Cursor<E> resultList = resultSetHandler.handleCursorResultSets(cs);
     resultSetHandler.handleOutputParameters(cs);
     return resultList;
   }

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package org.apache.ibatis.builder.xml;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 
 import org.apache.ibatis.builder.BuilderException;
@@ -45,9 +46,7 @@ public class XMLIncludeTransformer {
   public void applyIncludes(Node source) {
     Properties variablesContext = new Properties();
     Properties configurationVariables = configuration.getVariables();
-    if (configurationVariables != null) {
-      variablesContext.putAll(configurationVariables);
-    }
+    Optional.ofNullable(configurationVariables).ifPresent(variablesContext::putAll);
     applyIncludes(source, variablesContext, false);
   }
 
@@ -105,7 +104,7 @@ public class XMLIncludeTransformer {
   }
 
   /**
-   * Read placeholders and their values from include node definition. 
+   * Read placeholders and their values from include node definition.
    * @param node Include node instance
    * @param inheritedVariablesContext Current context used for replace variables in new variables values
    * @return variables context from include instance (no inherited values)

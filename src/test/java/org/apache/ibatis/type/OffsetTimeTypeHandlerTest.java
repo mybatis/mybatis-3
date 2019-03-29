@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,32 +15,30 @@
  */
 package org.apache.ibatis.type;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import java.sql.Time;
 import java.time.OffsetTime;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class OffsetTimeTypeHandlerTest extends BaseTypeHandlerTest {
+class OffsetTimeTypeHandlerTest extends BaseTypeHandlerTest {
 
   private static final TypeHandler<OffsetTime> TYPE_HANDLER = new OffsetTimeTypeHandler();
-  // java.sql.Time doesn't contain millis, so set nano to 0
-  private static final OffsetTime OFFSET_TIME = OffsetTime.now().withNano(0);
-  private static final Time TIME = Time.valueOf(OFFSET_TIME.toLocalTime());
+
+  private static final OffsetTime OFFSET_TIME = OffsetTime.now();
 
   @Override
   @Test
   public void shouldSetParameter() throws Exception {
     TYPE_HANDLER.setParameter(ps, 1, OFFSET_TIME, null);
-    verify(ps).setTime(1, TIME);
+    verify(ps).setObject(1, OFFSET_TIME);
   }
 
   @Override
   @Test
   public void shouldGetResultFromResultSetByName() throws Exception {
-    when(rs.getTime("column")).thenReturn(TIME);
+    when(rs.getObject("column", OffsetTime.class)).thenReturn(OFFSET_TIME);
     assertEquals(OFFSET_TIME, TYPE_HANDLER.getResult(rs, "column"));
     verify(rs, never()).wasNull();
   }
@@ -48,7 +46,7 @@ public class OffsetTimeTypeHandlerTest extends BaseTypeHandlerTest {
   @Override
   @Test
   public void shouldGetResultNullFromResultSetByName() throws Exception {
-    when(rs.getTime("column")).thenReturn(null);
+    when(rs.getObject("column", OffsetTime.class)).thenReturn(null);
     assertNull(TYPE_HANDLER.getResult(rs, "column"));
     verify(rs, never()).wasNull();
   }
@@ -56,7 +54,7 @@ public class OffsetTimeTypeHandlerTest extends BaseTypeHandlerTest {
   @Override
   @Test
   public void shouldGetResultFromResultSetByPosition() throws Exception {
-    when(rs.getTime(1)).thenReturn(TIME);
+    when(rs.getObject(1, OffsetTime.class)).thenReturn(OFFSET_TIME);
     assertEquals(OFFSET_TIME, TYPE_HANDLER.getResult(rs, 1));
     verify(rs, never()).wasNull();
   }
@@ -64,7 +62,7 @@ public class OffsetTimeTypeHandlerTest extends BaseTypeHandlerTest {
   @Override
   @Test
   public void shouldGetResultNullFromResultSetByPosition() throws Exception {
-    when(rs.getTime(1)).thenReturn(null);
+    when(rs.getObject(1, OffsetTime.class)).thenReturn(null);
     assertNull(TYPE_HANDLER.getResult(rs, 1));
     verify(rs, never()).wasNull();
   }
@@ -72,7 +70,7 @@ public class OffsetTimeTypeHandlerTest extends BaseTypeHandlerTest {
   @Override
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
-    when(cs.getTime(1)).thenReturn(TIME);
+    when(cs.getObject(1, OffsetTime.class)).thenReturn(OFFSET_TIME);
     assertEquals(OFFSET_TIME, TYPE_HANDLER.getResult(cs, 1));
     verify(cs, never()).wasNull();
   }
@@ -80,7 +78,7 @@ public class OffsetTimeTypeHandlerTest extends BaseTypeHandlerTest {
   @Override
   @Test
   public void shouldGetResultNullFromCallableStatement() throws Exception {
-    when(cs.getTime(1)).thenReturn(null);
+    when(cs.getObject(1, OffsetTime.class)).thenReturn(null);
     assertNull(TYPE_HANDLER.getResult(cs, 1));
     verify(cs, never()).wasNull();
   }

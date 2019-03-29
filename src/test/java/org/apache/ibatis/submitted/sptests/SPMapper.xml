@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2017 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@
     <result column="ID" property="id"/>
     <result column="ITEM" property="item"/>
   </resultMap>
-  
+
   <parameterMap type="map" id="testParameterMap">
     <parameter property="addend1" jdbcType="INTEGER" mode="IN"/>
     <parameter property="addend2" jdbcType="INTEGER" mode="IN"/>
@@ -64,9 +64,9 @@
        the procedure returns a result set. IMPORTANT: Oracle ref
        cursors are usually returned as parameters, NOT directly
        from the stored proc.  So with ref cursors, resultMap
-       and/or resultType is usually not used.  
+       and/or resultType is usually not used.
    -->
-   
+
   <select id="adderAsSelect" parameterType="org.apache.ibatis.submitted.sptests.Parameter" statementType="CALLABLE">
     {call sptest.adder(
       #{addend1,jdbcType=INTEGER,mode=IN},
@@ -82,7 +82,7 @@
       #{sum,jdbcType=INTEGER,mode=OUT}
     )}
   </update>
-  
+
   <update id="adderWithParameterMap" parameterMap="testParameterMap" statementType="CALLABLE">
     {call sptest.adder(?, ?, ?)}
   </update>
@@ -112,7 +112,7 @@
     resultMap="nameResult,itemResult">
     {call sptest.getnamesanditems()}
   </select>
-  
+
   <select id="getNamesAndItemsLinked" statementType="CALLABLE" resultSets="names,items" resultMap="nameResultLinked">
     {call sptest.getnamesanditems()}
   </select>

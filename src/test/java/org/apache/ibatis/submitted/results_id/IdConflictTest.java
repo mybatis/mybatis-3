@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,15 +16,15 @@
 package org.apache.ibatis.submitted.results_id;
 
 import org.apache.ibatis.session.Configuration;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static com.googlecode.catchexception.apis.BDDCatchException.*;
 import static org.assertj.core.api.BDDAssertions.then;
 
-public class IdConflictTest {
+class IdConflictTest {
 
   @Test
-  public void shouldFailOnDuplicatedId() throws Exception {
+  void shouldFailOnDuplicatedId() {
     Configuration configuration = new Configuration();
     when(configuration).addMapper(IdConflictMapper.class);
     then(caughtException()).isInstanceOf(RuntimeException.class)

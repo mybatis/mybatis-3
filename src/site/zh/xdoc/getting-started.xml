@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2018 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@
 
   <body>
     <section name="入门">
-    
+
     <subsection name="安装">
       <p>要使用 MyBatis， 只需将
       <a href="https://github.com/mybatis/mybatis-3/releases">mybatis-x.x.x.jar</a>
@@ -40,8 +40,8 @@
   <artifactId>mybatis</artifactId>
   <version>x.x.x</version>
 </dependency>]]></source>
-    </subsection>    
-    
+    </subsection>
+
     <subsection name="从 XML 中构建 SqlSessionFactory">
       <p>
         每个基于 MyBatis 的应用都是以一个 SqlSessionFactory

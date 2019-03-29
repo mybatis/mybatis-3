@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.submitted.empty_row;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.Reader;
 import java.util.Map;
@@ -25,16 +25,16 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-public class ReturnInstanceForEmptyRowTest {
+class ReturnInstanceForEmptyRowTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
-  public static void setUp() throws Exception {
+  @BeforeAll
+  static void setUp() throws Exception {
     // create an SqlSessionFactory
     try (Reader reader = Resources
         .getResourceAsReader("org/apache/ibatis/submitted/empty_row/mybatis-config.xml")) {
@@ -46,13 +46,13 @@ public class ReturnInstanceForEmptyRowTest {
             "org/apache/ibatis/submitted/empty_row/CreateDB.sql");
   }
 
-  @Before
-  public void resetCallSettersOnNulls() {
+  @BeforeEach
+  void resetCallSettersOnNulls() {
     sqlSessionFactory.getConfiguration().setCallSettersOnNulls(false);
   }
 
   @Test
-  public void shouldSimpleTypeBeNull() {
+  void shouldSimpleTypeBeNull() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       String result = mapper.getString();
@@ -61,7 +61,7 @@ public class ReturnInstanceForEmptyRowTest {
   }
 
   @Test
-  public void shouldObjectTypeNotBeNull() {
+  void shouldObjectTypeNotBeNull() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Parent parent = mapper.getBean(1);
@@ -70,7 +70,7 @@ public class ReturnInstanceForEmptyRowTest {
   }
 
   @Test
-  public void shouldMapBeEmpty() {
+  void shouldMapBeEmpty() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Map<String, String> map = mapper.getMap(1);
@@ -80,7 +80,7 @@ public class ReturnInstanceForEmptyRowTest {
   }
 
   @Test
-  public void shouldMapHaveColumnNamesIfCallSettersOnNullsEnabled() {
+  void shouldMapHaveColumnNamesIfCallSettersOnNullsEnabled() {
     sqlSessionFactory.getConfiguration().setCallSettersOnNulls(true);
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
@@ -92,7 +92,7 @@ public class ReturnInstanceForEmptyRowTest {
   }
 
   @Test
-  public void shouldAssociationNotBeNull() {
+  void shouldAssociationNotBeNull() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Parent parent = mapper.getAssociation(1);
@@ -101,7 +101,7 @@ public class ReturnInstanceForEmptyRowTest {
   }
 
   @Test
-  public void shouldAssociationBeNullIfNotNullColumnSpecified() {
+  void shouldAssociationBeNullIfNotNullColumnSpecified() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Parent parent = mapper.getAssociationWithNotNullColumn(1);
@@ -111,7 +111,7 @@ public class ReturnInstanceForEmptyRowTest {
   }
 
   @Test
-  public void shouldNestedAssociationNotBeNull() {
+  void shouldNestedAssociationNotBeNull() {
     // #420
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
@@ -121,7 +121,7 @@ public class ReturnInstanceForEmptyRowTest {
   }
 
   @Test
-  public void testCollection() {
+  void testCollection() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Parent parent = mapper.getCollection(1);
@@ -131,7 +131,7 @@ public class ReturnInstanceForEmptyRowTest {
   }
 
   @Test
-  public void shouldSquashMultipleEmptyResults() {
+  void shouldSquashMultipleEmptyResults() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Parent parent = mapper.getTwoCollections(2);

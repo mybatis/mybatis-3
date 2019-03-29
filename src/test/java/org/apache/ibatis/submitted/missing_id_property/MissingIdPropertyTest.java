@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -22,16 +22,16 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-public class MissingIdPropertyTest {
+class MissingIdPropertyTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
-  public static void setUp() throws Exception {
+  @BeforeAll
+  static void setUp() throws Exception {
     // create a SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/missing_id_property/MapperConfig.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -43,13 +43,13 @@ public class MissingIdPropertyTest {
   }
 
   @Test
-  public void shouldMapResultsWithoutActuallyWritingIdProperties() {
+  void shouldMapResultsWithoutActuallyWritingIdProperties() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       CarMapper carMapper = sqlSession.getMapper(CarMapper.class);
       Car car = carMapper.getCarsInfo(1L);
-      Assert.assertNotNull(car.getName());
-      Assert.assertNotNull(car.getCarParts());
-      Assert.assertEquals(3, car.getCarParts().size());
+      Assertions.assertNotNull(car.getName());
+      Assertions.assertNotNull(car.getCarParts());
+      Assertions.assertEquals(3, car.getCarParts().size());
     }
   }
 

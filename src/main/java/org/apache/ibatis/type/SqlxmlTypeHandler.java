@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-
 package org.apache.ibatis.type;
 
 import java.sql.CallableStatement;
@@ -24,7 +23,7 @@ import java.sql.SQLXML;
 
 /**
  * Convert <code>String</code> to/from <code>SQLXML</code>.
- * 
+ *
  * @since 3.5.0
  * @author Iwao AVE!
  */

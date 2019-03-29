@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@
       </case>
     </discriminator>
   </resultMap>
-    
+
   <resultMap id="blogWithPosts" type="Blog">
     <id property="id" column="id"/>
     <result property="title" column="title"/>
@@ -60,7 +60,7 @@
     <association property="author" column="author_id" select="org.apache.ibatis.domain.blog.mappers.AuthorMapper.selectAuthorWithInlineParams" fetchType="lazy"/>
     <collection property="posts" column="id" select="selectPostsForBlog" fetchType="lazy"/>
   </resultMap>
-  
+
   <select id="selectBlogWithPostsUsingSubSelectLazily" parameterType="int" resultMap="blogWithPostsLazy">
     select * from Blog where id = #{id}
   </select>

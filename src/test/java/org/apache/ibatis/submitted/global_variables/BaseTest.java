@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,16 +24,16 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-public class BaseTest {
+class BaseTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
-  public static void setUp() throws Exception {
+  @BeforeAll
+  static void setUp() throws Exception {
     // create an SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/global_variables/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -45,32 +45,32 @@ public class BaseTest {
   }
 
   @Test
-  public void shouldGetAUser() {
+  void shouldGetAUser() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUser(1);
       CustomCache customCache = unwrap(sqlSessionFactory.getConfiguration().getCache(Mapper.class.getName()));
-      Assert.assertEquals("User1", user.getName());
-      Assert.assertEquals("foo", customCache.getStringValue());
-      Assert.assertEquals(10, customCache.getIntegerValue().intValue());
-      Assert.assertEquals(1000, customCache.getLongValue());
+      Assertions.assertEquals("User1", user.getName());
+      Assertions.assertEquals("foo", customCache.getStringValue());
+      Assertions.assertEquals(10, customCache.getIntegerValue().intValue());
+      Assertions.assertEquals(1000, customCache.getLongValue());
     }
   }
 
   @Test
-  public void shouldGetAUserFromAnnotation() {
+  void shouldGetAUserFromAnnotation() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       AnnotationMapper mapper = sqlSession.getMapper(AnnotationMapper.class);
       User user = mapper.getUser(1);
       CustomCache customCache = unwrap(sqlSessionFactory.getConfiguration().getCache(Mapper.class.getName()));
-      Assert.assertEquals("User1", user.getName());
-      Assert.assertEquals("foo", customCache.getStringValue());
-      Assert.assertEquals(10, customCache.getIntegerValue().intValue());
-      Assert.assertEquals(1000, customCache.getLongValue());
+      Assertions.assertEquals("User1", user.getName());
+      Assertions.assertEquals("foo", customCache.getStringValue());
+      Assertions.assertEquals(10, customCache.getIntegerValue().intValue());
+      Assertions.assertEquals(1000, customCache.getLongValue());
     }
   }
 
-  private CustomCache unwrap(Cache cache){
+  private CustomCache unwrap(Cache cache) {
     Field field;
     try {
       field = cache.getClass().getDeclaredField("delegate");
@@ -79,12 +79,12 @@ public class BaseTest {
     }
     try {
       field.setAccessible(true);
-      return (CustomCache)field.get(cache);
+      return (CustomCache) field.get(cache);
     } catch (IllegalAccessException e) {
       throw new IllegalStateException(e);
     } finally {
       field.setAccessible(false);
     }
   }
-  
+
 }

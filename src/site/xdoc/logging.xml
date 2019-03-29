@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -76,7 +76,7 @@
   </settings>
 </configuration>]]>
       </source>
-      <p>Valid values are SLF4J, LOG4J, LOG4J2, JDK_LOGGING, COMMONS_LOGGING, STDOUT_LOGGING, NO_LOGGING or 
+      <p>Valid values are SLF4J, LOG4J, LOG4J2, JDK_LOGGING, COMMONS_LOGGING, STDOUT_LOGGING, NO_LOGGING or
       a full qualified class name that implements <code>org.apache.ibatis.logging.Log</code> and gets
       an string as a constructor parameter.
       </p>
@@ -118,7 +118,7 @@ org.apache.ibatis.logging.LogFactory.useStdOutLogging();]]></source>
       </ul>
       <subsection name="Logging Configuration">
         <p>To see MyBatis logging statements you may enable logging on a
-          package, a mapper fully qualified class name, a namespace 
+          package, a mapper fully qualified class name, a namespace
           o a fully qualified statement name.
         </p>
         <p>Again, how you do this is dependent on the logging implementation
@@ -153,7 +153,7 @@ public interface BlogMapper {
   @Select("SELECT * FROM blog WHERE id = #{id}")
   Blog selectBlog(int id);
 }]]></source>
-        <p>Create a file called <code>log4j.properties</code> 
+        <p>Create a file called <code>log4j.properties</code>
         as shown below and place it in your classpath:
         </p>
         <source><![CDATA[# Global logging configuration
@@ -165,32 +165,32 @@ log4j.appender.stdout=org.apache.log4j.ConsoleAppender
 log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
 log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n]]></source>
         <p>
-          The above file will cause log4J to report detailed logging for 
+          The above file will cause log4J to report detailed logging for
           <code>org.mybatis.example.BlogMapper</code>
           and just errors for the rest of the classes of your application.
         </p>
         <p>
-          If you want to tune the logging at a finer level you can turn logging 
-          on for specific statements instead of the whole mapper file. 
-          The following line will enable logging just for the <code>selectBlog</code> 
+          If you want to tune the logging at a finer level you can turn logging
+          on for specific statements instead of the whole mapper file.
+          The following line will enable logging just for the <code>selectBlog</code>
           statement:
         </p>
 
         <source>log4j.logger.org.mybatis.example.BlogMapper.selectBlog=TRACE</source>
-        
-        <p>By the contrary you may want want to enable logging for a group of mappers. 
+
+        <p>By the contrary you may want want to enable logging for a group of mappers.
         In that case you should add as a logger the root package where your mappers reside:</p>
 
         <source>log4j.logger.org.mybatis.example=TRACE</source>
-        
-        <p>There are queries that can return huge result sets. In that cases you may want to see the 
+
+        <p>There are queries that can return huge result sets. In that cases you may want to see the
         SQL statement but not the results. For that purpose SQL statements are logged at the DEBUG level
         (FINE in JDK logging) and results at the TRACE level (FINER in JDK logging), so in case
         you want to see the statement but not the result, set the level to DEBUG.
         </p>
 
         <source>log4j.logger.org.mybatis.example=DEBUG</source>
-        
+
         <p>But what about if you are not using mapper interfaces but mapper XML files like this one?
         </p>
 
@@ -213,7 +213,7 @@ log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n]]></source>
 
         <source>log4j.logger.org.mybatis.example.BlogMapper.selectBlog=TRACE</source>
 
-		<p>Yes, as you may have noticed, there is no difference in configuring 
+		<p>Yes, as you may have noticed, there is no difference in configuring
 		logging for mapper interfaces or for XML mapper files.</p>
 
         <p><span class="label important">NOTE</span> If you are using SLF4J or Log4j 2 MyBatis will call it using the marker MYBATIS.</p>
@@ -224,7 +224,7 @@ log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n]]></source>
           website (URL above). Or, you could simply experiment with it to see
           what effects the different configuration options have.
         </p>
-                
+
       </subsection>
     </section>
   </body>

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,9 +17,9 @@ package org.apache.ibatis.scripting.xmltags;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.StringJoiner;
 
 import ognl.OgnlContext;
-import ognl.OgnlException;
 import ognl.OgnlRuntime;
 import ognl.PropertyAccessor;
 
@@ -39,7 +39,7 @@ public class DynamicContext {
   }
 
   private final ContextMap bindings;
-  private final StringBuilder sqlBuilder = new StringBuilder();
+  private final StringJoiner sqlBuilder = new StringJoiner(" ");
   private int uniqueNumber = 0;
 
   public DynamicContext(Configuration configuration, Object parameterObject) {
@@ -62,8 +62,7 @@ public class DynamicContext {
   }
 
   public void appendSql(String sql) {
-    sqlBuilder.append(sql);
-    sqlBuilder.append(" ");
+    sqlBuilder.add(sql);
   }
 
   public String getSql() {
@@ -78,6 +77,7 @@ public class DynamicContext {
     private static final long serialVersionUID = 2977601501966151582L;
 
     private MetaObject parameterMetaObject;
+
     public ContextMap(MetaObject parameterMetaObject) {
       this.parameterMetaObject = parameterMetaObject;
     }
@@ -101,8 +101,7 @@ public class DynamicContext {
   static class ContextAccessor implements PropertyAccessor {
 
     @Override
-    public Object getProperty(Map context, Object target, Object name)
-        throws OgnlException {
+    public Object getProperty(Map context, Object target, Object name) {
       Map map = (Map) target;
 
       Object result = map.get(name);
@@ -119,8 +118,7 @@ public class DynamicContext {
     }
 
     @Override
-    public void setProperty(Map context, Object target, Object name, Object value)
-        throws OgnlException {
+    public void setProperty(Map context, Object target, Object name, Object value) {
       Map<Object, Object> map = (Map<Object, Object>) target;
       map.put(name, value);
     }

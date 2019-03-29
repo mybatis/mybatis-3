@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -21,9 +21,9 @@ import org.apache.ibatis.io.Resources;
 /**
  * Custom ognl {@code ClassResolver} which behaves same like ognl's
  * {@code DefaultClassResolver}. But uses the {@code Resources}
- * utility class to find the target class instead of {@code Class#forName(String)}. 
+ * utility class to find the target class instead of {@code Class#forName(String)}.
  *
- * @author Daniel Guggi 
+ * @author Daniel Guggi
  *
  * @see <a href='https://github.com/mybatis/mybatis-3/issues/161'>Issue 161</a>
  */
