@@ -25,7 +25,6 @@ import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Rule;
 import org.apache.ibatis.type.TypeHandler;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -175,6 +174,7 @@ class XmlMapperBuilderTest {
     Configuration configuration = new Configuration();
     String resource = "org/apache/ibatis/builder/ProblemMapper.xml";
     try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
+
       XMLMapperBuilder builder = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
       Exception exception = Assertions.assertThrows(BuilderException.class, builder::parse);
       Assertions.assertTrue(exception.getMessage().contains("Error parsing Mapper XML. The XML location is 'org/apache/ibatis/builder/ProblemMapper.xml'"));
