@@ -478,6 +478,7 @@ class SqlProviderTest {
     void multipleProviderContext();
   }
 
+  @SuppressWarnings("unused")
   public static class ErrorSqlBuilder {
     public void methodNotFound() {
       throw new UnsupportedOperationException("methodNotFound");
@@ -516,6 +517,7 @@ class SqlProviderTest {
     @SelectProvider(type = SqlProvider.class, method = "oneArgumentAndProviderContext")
     String oneArgumentAndProviderContext(Integer value);
 
+    @SuppressWarnings("unused")
     class SqlProvider {
 
       public static String noArgument() {
@@ -547,27 +549,22 @@ class SqlProviderTest {
   }
 
   @Test
-  public void shouldInsertUserSelective() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  void shouldInsertUserSelective() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = new User();
       user.setId(999);
       mapper.insertSelective(user);
 
       User loadedUser = mapper.getUser(999);
-      assertEquals(null, loadedUser.getName());
-
-    } finally {
-      sqlSession.close();
+      assertNull(loadedUser.getName());
     }
   }
 
 
   @Test
-  public void shouldUpdateUserSelective() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  void shouldUpdateUserSelective() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = new User();
       user.setId(999);
@@ -579,16 +576,12 @@ class SqlProviderTest {
 
       User loadedUser = mapper.getUser(999);
       assertEquals("MyBatis", loadedUser.getName());
-
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
-  public void mapperGetByEntity() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  void mapperGetByEntity() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User query = new User();
       query.setName("User4");
@@ -600,8 +593,6 @@ class SqlProviderTest {
       query.setId(1);
       query.setName("User4");
       assertEquals(0, mapper.getByEntity(query).size());
-    } finally {
-      sqlSession.close();
     }
   }
 
@@ -621,6 +612,7 @@ class SqlProviderTest {
     @SelectProvider(type = SqlProvider.class)
     String selectDatabaseId();
 
+    @SuppressWarnings("unused")
     class SqlProvider {
       public static String provideSql(ProviderContext context) {
         if ("hsql".equals(context.getDatabaseId())) {
