@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2018 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -30,13 +30,13 @@
     <section name="简介">
       <subsection name="什么是 MyBatis？">
         <p>MyBatis 是一款优秀的持久层框架，它支持自定义 SQL、存储过程以及高级映射。MyBatis
-        免除了几乎所有的 JDBC 代码以及参数设置和结果集获取的工作。MyBatis
-        可以通过简单的 XML 或注解来配置和映射原生类型、接口和 Java POJO（Plain Old
+        免除了几乎所有的 JDBC 代码以及设置参数和获取结果集的工作。MyBatis
+        可以通过简单的 XML 或注解来配置和映射原始类型、接口和 Java POJO（Plain Old
         Java Objects，普通老式 Java 对象）为数据库中的记录。</p>
       </subsection>
 
       <subsection name="帮助改进文档...">
-        <p>如果你发现文档有任何遗漏，或者缺少某一个功能点的说明，最好的解决办法是先自己学习，然后为遗漏的部份补上相应的文档。</p>
+        <p>如果你发现文档有任何的遗漏，或缺少某一个功能点的说明，最好的解决办法是先自己学习，然后为遗漏的部份补上相应的文档。</p>
         <p>该文档 xdoc 格式的源码文件可通过<a
         href="https://github.com/mybatis/mybatis-3/tree/master/src/site">项目的
         Git 代码库</a>来获取。复刻该源码库，作出更新，并提交 Pull Request 吧。</p>
