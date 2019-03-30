@@ -221,7 +221,7 @@ class XmlConfigBuilderTest {
 
       assertThat(config.getDatabaseId()).isEqualTo("derby");
 
-      assertThat(config.getMapperRegistry().getMappers().size()).isEqualTo(4);
+      assertThat(config.getMapperRegistry().getMappers().size()).isEqualTo(5);
       assertThat(config.getMapperRegistry().hasMapper(CachedAuthorMapper.class)).isTrue();
       assertThat(config.getMapperRegistry().hasMapper(CustomMapper.class)).isTrue();
       assertThat(config.getMapperRegistry().hasMapper(BlogMapper.class)).isTrue();
