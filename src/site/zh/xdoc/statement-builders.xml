@@ -20,7 +20,7 @@
   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
 
   <properties>
-    <title>MyBatis 3 | SQL语句构建器</title>
+    <title>MyBatis 3 | SQL 语句构建器</title>
     <author email="clinton.begin@gmail.com">Clinton Begin</author>
     <author email="nanlei1987@gmail.com">Nan Lei</author>
   </properties>
@@ -72,7 +72,7 @@ private String selectPersonSql() {
 }
 ]]></source>
 
-      <p>这个例子有什么特别的地方吗？仔细看一下你会发现，你不用担心可能会重复出现的 "AND" 关键字，或者要做出拼接 "WHERE" 还是 "AND" 还是不拼接的选择。SQL 类已经为你处理了哪里应该插入 "WHERE"、哪里应该使用 "AND" 的问题，并帮你完成所有的字符串拼接工作。
+      <p>这个例子有什么特别的地方吗？仔细看一下你会发现，你不用担心可能会重复出现的 "AND" 关键字，或者要做出用 "WHERE" 还是 "AND" 还是不用拼接的选择。SQL 类已经为你处理了哪里应该插入 "WHERE"、哪里应该使用 "AND" 的问题，并帮你完成所有的字符串拼接工作。
         </p>
 
       </subsection>
@@ -520,7 +520,7 @@ public String selectPersonsWithFetchFirstSql() {
 
       <subsection name="SqlBuilder 和 SelectBuilder (已经废弃)">
         <p>
-          在版本 3.2 之前，我们采取了不太一样的措施，通过使用 ThreadLocal 变量来掩盖一些对 Java DSL 不太友好的语言限制。这种方式已被废弃，在这个领域中，人们已经对现代框架使用的构建器类型和匿名内部类习以为常。因此，SelectBuilder 和 SqlBuilder 类都被废弃了。
+          在版本 3.2 之前，我们采取了不太一样的措施，通过使用 ThreadLocal 变量来掩盖一些对 Java DSL 不太友好的语言限制。这种方式已被废弃，在这个领域，人们已经对现代框架使用的构建器模式和匿名内部类模式习以为常了。因此，SelectBuilder 和 SqlBuilder 类都被废弃了。
         </p>
         <p>
           下面的方法仅仅适用于废弃的 SqlBuilder 和 SelectBuilder 类。
