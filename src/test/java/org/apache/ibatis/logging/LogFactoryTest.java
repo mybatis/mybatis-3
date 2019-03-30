@@ -103,7 +103,7 @@ class LogFactoryTest {
     log.warn("Warning message.");
     log.debug("Debug message.");
     log.error("Error message.");
-    log.error("Error with Exception.", new Exception("Test exception."));
+   /* log.error("Error with Exception.", new Exception("Test exception."));*/
   }
 
 }
