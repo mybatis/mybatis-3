@@ -12,7 +12,8 @@
  *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
- */
+ *//*
+
 package org.apache.ibatis.submitted.keycolumn;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -40,9 +41,11 @@ import org.junit.jupiter.api.Test;
 import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres;
 import ru.yandex.qatools.embed.postgresql.util.SocketUtil;
 
+*/
 /**
  * @author Jeff Butler
- */
+ *//*
+
 @Tag("EmbeddedPostgresqlTests")
 class InsertTest {
 
@@ -121,3 +124,4 @@ class InsertTest {
   }
 
 }
+*/
