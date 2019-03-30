@@ -12,7 +12,8 @@
  *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
- */
+ *//*
+
 package org.apache.ibatis.submitted.multiple_resultsets;
 
 import java.io.IOException;
@@ -37,10 +38,12 @@ import org.junit.jupiter.api.Test;
 import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres;
 import ru.yandex.qatools.embed.postgresql.util.SocketUtil;
 
+*/
 /*
  * This class contains tests for multiple results.
  * It is based on Jeff's ref cursor tests.
- */
+ *//*
+
 @Tag("EmbeddedPostgresqlTests")
 class MultipleResultTest {
 
@@ -124,3 +127,4 @@ class MultipleResultTest {
     }
   }
 }
+*/
