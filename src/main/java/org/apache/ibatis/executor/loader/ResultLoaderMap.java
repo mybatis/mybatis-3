@@ -224,6 +224,19 @@ public class ResultLoaderMap {
         throw new ExecutorException("Cannot get Configuration as configuration factory was not set.");
       }
 
+      Object configurationObject = getConfigurationObject();
+
+      if (!(configurationObject instanceof Configuration)) {
+        throw new ExecutorException("Cannot get Configuration as factory method ["
+                + this.configurationFactory + "]#["
+                + FACTORY_METHOD + "] didn't return [" + Configuration.class + "] but ["
+                + (configurationObject == null ? "null" : configurationObject.getClass()) + "].");
+      }
+
+      return Configuration.class.cast(configurationObject);
+    }
+
+    private Object getConfigurationObject() {
       Object configurationObject;
       try {
         final Method factoryMethod = this.configurationFactory.getDeclaredMethod(FACTORY_METHOD);
@@ -260,15 +273,7 @@ public class ResultLoaderMap {
                 + this.configurationFactory + "]#["
                 + FACTORY_METHOD + "] threw an exception.", ex);
       }
-
-      if (!(configurationObject instanceof Configuration)) {
-        throw new ExecutorException("Cannot get Configuration as factory method ["
-                + this.configurationFactory + "]#["
-                + FACTORY_METHOD + "] didn't return [" + Configuration.class + "] but ["
-                + (configurationObject == null ? "null" : configurationObject.getClass()) + "].");
-      }
-
-      return Configuration.class.cast(configurationObject);
+      return configurationObject;
     }
 
     private Log getLogger() {
