@@ -26,6 +26,7 @@ import java.util.Optional;
 
 import org.apache.ibatis.annotations.Flush;
 import org.apache.ibatis.annotations.MapKey;
+import org.apache.ibatis.builder.annotation.MapperAnnotationBuilder;
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
@@ -222,9 +223,9 @@ public class MapperMethod {
     private final SqlCommandType type;
 
     public SqlCommand(Configuration configuration, Class<?> mapperInterface, Method method) {
-      final String methodName = method.getName();
+      final String localId = MapperAnnotationBuilder.getLocalId(method);
       final Class<?> declaringClass = method.getDeclaringClass();
-      MappedStatement ms = resolveMappedStatement(mapperInterface, methodName, declaringClass,
+      MappedStatement ms = resolveMappedStatement(mapperInterface, localId, declaringClass,
           configuration);
       if (ms == null) {
         if (method.getAnnotation(Flush.class) != null) {
@@ -232,7 +233,7 @@ public class MapperMethod {
           type = SqlCommandType.FLUSH;
         } else {
           throw new BindingException("Invalid bound statement (not found): "
-              + mapperInterface.getName() + "." + methodName);
+              + mapperInterface.getName() + "." + localId);
         }
       } else {
         name = ms.getId();
@@ -251,9 +252,9 @@ public class MapperMethod {
       return type;
     }
 
-    private MappedStatement resolveMappedStatement(Class<?> mapperInterface, String methodName,
+    private MappedStatement resolveMappedStatement(Class<?> mapperInterface, String localId,
         Class<?> declaringClass, Configuration configuration) {
-      String statementId = mapperInterface.getName() + "." + methodName;
+      String statementId = mapperInterface.getName() + "." + localId;
       if (configuration.hasStatement(statementId)) {
         return configuration.getMappedStatement(statementId);
       } else if (mapperInterface.equals(declaringClass)) {
@@ -261,7 +262,7 @@ public class MapperMethod {
       }
       for (Class<?> superInterface : mapperInterface.getInterfaces()) {
         if (declaringClass.isAssignableFrom(superInterface)) {
-          MappedStatement ms = resolveMappedStatement(superInterface, methodName,
+          MappedStatement ms = resolveMappedStatement(superInterface, localId,
               declaringClass, configuration);
           if (ms != null) {
             return ms;

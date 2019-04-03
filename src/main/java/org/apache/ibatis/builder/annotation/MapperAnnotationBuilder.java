@@ -21,6 +21,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -56,6 +57,7 @@ import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectKey;
 import org.apache.ibatis.annotations.SelectProvider;
+import org.apache.ibatis.annotations.StatementId;
 import org.apache.ibatis.annotations.TypeDiscriminator;
 import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.annotations.UpdateProvider;
@@ -82,6 +84,7 @@ import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.parsing.PropertyParser;
+import org.apache.ibatis.reflection.ArrayUtil;
 import org.apache.ibatis.reflection.TypeParameterResolver;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
@@ -302,7 +305,7 @@ public class MapperAnnotationBuilder {
     SqlSource sqlSource = getSqlSourceFromAnnotations(method, parameterTypeClass, languageDriver);
     if (sqlSource != null) {
       Options options = method.getAnnotation(Options.class);
-      final String mappedStatementId = type.getName() + "." + method.getName();
+      final String mappedStatementId = type.getName() + "." + getAndValidateLocalId(method);
       Integer fetchSize = null;
       Integer timeout = null;
       StatementType statementType = StatementType.PREPARED;
@@ -379,6 +382,40 @@ public class MapperAnnotationBuilder {
           // ResultSets
           options != null ? nullOrEmpty(options.resultSets()) : null);
     }
+  }
+
+  private String getAndValidateLocalId(Method method) {
+    String localId = getLocalId(method);
+    if (localId.isEmpty()) {
+      throw new BuilderException(
+          String.format("Statement ID cannot be an empty string. Check @StatementId on %s#%s with parameter(s) %s",
+              type.getName(), method.getName(), ArrayUtil.toString(method.getParameters())));
+    }
+    if (localId.indexOf('.') > -1) {
+      throw new BuilderException(
+          String.format("Dots are not allowed in statement ID. Check @StatementId on %s#%s with parameter(s) %s",
+              type.getName(), method.getName(), ArrayUtil.toString(method.getParameters())));
+    }
+    return localId;
+  }
+
+  public static String getLocalId(Method method) {
+    StatementId statementIdAnno = method.getAnnotation(StatementId.class);
+    String methodName = method.getName();
+    if (statementIdAnno == null) {
+      return methodName;
+    }
+    String annoValue = statementIdAnno.value();
+    if (StatementId.APPEND_PARAM_TYPES.equals(annoValue)) {
+      // Calculate ID from the method signature
+      StringBuilder buffer = new StringBuilder(methodName);
+      Parameter[] params = method.getParameters();
+      for (int i = 0; i < params.length; i++) {
+        buffer.append(i == 0 ? '#' : '_').append(params[i].getType().getSimpleName());
+      }
+      return buffer.toString();
+    }
+    return annoValue;
   }
 
   private LanguageDriver getLanguageDriver(Method method) {

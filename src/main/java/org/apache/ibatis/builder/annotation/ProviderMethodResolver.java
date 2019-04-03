@@ -49,8 +49,9 @@ public interface ProviderMethodResolver {
    * @throws BuilderException Throws when cannot resolve a target method
    */
   default Method resolveMethod(ProviderContext context) {
+    String localId = MapperAnnotationBuilder.getLocalId(context.getMapperMethod());
     List<Method> sameNameMethods = Arrays.stream(getClass().getMethods())
-        .filter(m -> m.getName().equals(context.getMapperMethod().getName()))
+        .filter(m -> m.getName().equals(localId))
         .collect(Collectors.toList());
     if (sameNameMethods.isEmpty()) {
       throw new BuilderException("Cannot resolve the provider method because '"
