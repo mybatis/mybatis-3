@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.submitted.results_id;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.Reader;
 import java.util.List;
@@ -25,15 +25,15 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-public class ResultsIdTest {
+class ResultsIdTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
-  public static void setUp() throws Exception {
+  @BeforeAll
+  static void setUp() throws Exception {
     // create an SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/results_id/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -45,7 +45,7 @@ public class ResultsIdTest {
   }
 
   @Test
-  public void testNamingResults() {
+  void testNamingResults() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUserByName("User2");
@@ -55,7 +55,7 @@ public class ResultsIdTest {
   }
 
   @Test
-  public void testResultsOnlyForNaming() {
+  void testResultsOnlyForNaming() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUserByNameConstructor("User2");
@@ -65,7 +65,7 @@ public class ResultsIdTest {
   }
 
   @Test
-  public void testReuseNamedResultsFromAnotherMapper() {
+  void testReuseNamedResultsFromAnotherMapper() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       AnotherMapper mapper = sqlSession.getMapper(AnotherMapper.class);
       List<User> users = mapper.getUsers();
@@ -78,7 +78,7 @@ public class ResultsIdTest {
   }
 
   @Test
-  public void testReuseNamedResultsFromXmlMapper() {
+  void testReuseNamedResultsFromXmlMapper() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       AnotherMapper mapper = sqlSession.getMapper(AnotherMapper.class);
       User user = mapper.getUser(1);

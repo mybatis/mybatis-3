@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -26,11 +26,11 @@ import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.reflection.ExceptionUtil;
 
 /**
- * PreparedStatement proxy to add logging
- * 
+ * PreparedStatement proxy to add logging.
+ *
  * @author Clinton Begin
  * @author Eduardo Macarron
- * 
+ *
  */
 public final class PreparedStatementLogger extends BaseJdbcLogger implements InvocationHandler {
 
@@ -46,7 +46,7 @@ public final class PreparedStatementLogger extends BaseJdbcLogger implements Inv
     try {
       if (Object.class.equals(method.getDeclaringClass())) {
         return method.invoke(this, params);
-      }          
+      }
       if (EXECUTE_METHODS.contains(method.getName())) {
         if (isDebugEnabled()) {
           debug("Parameters: " + getParameterValueString(), true);
@@ -83,7 +83,7 @@ public final class PreparedStatementLogger extends BaseJdbcLogger implements Inv
   }
 
   /**
-   * Creates a logging version of a PreparedStatement
+   * Creates a logging version of a PreparedStatement.
    *
    * @param stmt - the statement
    * @param statementLog - the statement log
@@ -97,7 +97,7 @@ public final class PreparedStatementLogger extends BaseJdbcLogger implements Inv
   }
 
   /**
-   * Return the wrapped prepared statement
+   * Return the wrapped prepared statement.
    *
    * @return the PreparedStatement
    */

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -150,7 +150,7 @@ public class PooledDataSource implements DataSource {
   }
 
   /**
-   * The maximum number of active connections
+   * The maximum number of active connections.
    *
    * @param poolMaximumActiveConnections The maximum number of active connections
    */
@@ -160,7 +160,7 @@ public class PooledDataSource implements DataSource {
   }
 
   /**
-   * The maximum number of idle connections
+   * The maximum number of idle connections.
    *
    * @param poolMaximumIdleConnections The maximum number of idle connections
    */
@@ -171,7 +171,7 @@ public class PooledDataSource implements DataSource {
 
   /**
    * The maximum number of tolerance for bad connection happens in one thread
-    * which are applying for new {@link PooledConnection}
+   * which are applying for new {@link PooledConnection}.
    *
    * @param poolMaximumLocalBadConnectionTolerance
    * max tolerance for bad connection happens in one thread
@@ -195,7 +195,7 @@ public class PooledDataSource implements DataSource {
   }
 
   /**
-   * The time to wait before retrying to get a connection
+   * The time to wait before retrying to get a connection.
    *
    * @param poolTimeToWait The time to wait
    */
@@ -205,7 +205,7 @@ public class PooledDataSource implements DataSource {
   }
 
   /**
-   * The query to be used to check a connection
+   * The query to be used to check a connection.
    *
    * @param poolPingQuery The query
    */
@@ -295,8 +295,8 @@ public class PooledDataSource implements DataSource {
     return poolPingConnectionsNotUsedFor;
   }
 
-  /*
-   * Closes all active and idle connections in the pool
+  /**
+   * Closes all active and idle connections in the pool.
    */
   public void forceCloseAll() {
     synchronized (state) {
@@ -427,7 +427,7 @@ public class PooledDataSource implements DataSource {
                      connection. At the end of this loop, bad {@link @conn} will be set as null.
                    */
                   log.debug("Bad connection. Could not roll back");
-                }  
+                }
               }
               conn = new PooledConnection(oldestActiveConnection.getRealConnection(), this);
               conn.setCreatedTimestamp(oldestActiveConnection.getCreatedTimestamp());
@@ -580,7 +580,7 @@ public class PooledDataSource implements DataSource {
   }
 
   public Logger getParentLogger() {
-    return Logger.getLogger(Logger.GLOBAL_LOGGER_NAME); // requires JDK version 1.6
+    return Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
   }
 
 }

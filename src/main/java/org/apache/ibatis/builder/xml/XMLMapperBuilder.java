@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -91,7 +91,7 @@ public class XMLMapperBuilder extends BaseBuilder {
 
   public void parse() {
     if (!configuration.isResourceLoaded(resource)) {
-      configurationElement(parser.evalNode("*[local-name()='mapper']"));
+      configurationElement(parser.evalNode("/mapper"));
       configuration.addLoadedResource(resource);
       bindMapperForNamespace();
     }
@@ -112,12 +112,12 @@ public class XMLMapperBuilder extends BaseBuilder {
         throw new BuilderException("Mapper's namespace cannot be empty");
       }
       builderAssistant.setCurrentNamespace(namespace);
-      cacheRefElement(context.evalNode("*[local-name()='cache-ref']"));
-      cacheElement(context.evalNode("*[local-name()='cache']"));
-      parameterMapElement(context.evalNodes("*[local-name()='parameterMap']"));
-      resultMapElements(context.evalNodes("*[local-name()='resultMap']"));
-      sqlElement(context.evalNodes("*[local-name()='sql']"));
-      buildStatementFromContext(context.evalNodes("*[local-name()='select' or local-name()='insert' or local-name()='update' or local-name()='delete']"));
+      cacheRefElement(context.evalNode("cache-ref"));
+      cacheElement(context.evalNode("cache"));
+      parameterMapElement(context.evalNodes("/mapper/parameterMap"));
+      resultMapElements(context.evalNodes("/mapper/resultMap"));
+      sqlElement(context.evalNodes("/mapper/sql"));
+      buildStatementFromContext(context.evalNodes("select|insert|update|delete"));
     } catch (Exception e) {
       throw new BuilderException("Error parsing Mapper XML. The XML location is '" + resource + "'. Cause: " + e, e);
     }
@@ -218,7 +218,7 @@ public class XMLMapperBuilder extends BaseBuilder {
       String id = parameterMapNode.getStringAttribute("id");
       String type = parameterMapNode.getStringAttribute("type");
       Class<?> parameterClass = resolveClass(type);
-      List<XNode> parameterNodes = parameterMapNode.evalNodes("*[local-name()='parameter']");
+      List<XNode> parameterNodes = parameterMapNode.evalNodes("parameter");
       List<ParameterMapping> parameterMappings = new ArrayList<>();
       for (XNode parameterNode : parameterNodes) {
         String property = parameterNode.getStringAttribute("property");
@@ -250,19 +250,15 @@ public class XMLMapperBuilder extends BaseBuilder {
   }
 
   private ResultMap resultMapElement(XNode resultMapNode) throws Exception {
-    return resultMapElement(resultMapNode, Collections.<ResultMapping> emptyList(), null);
+    return resultMapElement(resultMapNode, Collections.emptyList(), null);
   }
 
   private ResultMap resultMapElement(XNode resultMapNode, List<ResultMapping> additionalResultMappings, Class<?> enclosingType) throws Exception {
     ErrorContext.instance().activity("processing " + resultMapNode.getValueBasedIdentifier());
-    String id = resultMapNode.getStringAttribute("id",
-        resultMapNode.getValueBasedIdentifier());
     String type = resultMapNode.getStringAttribute("type",
         resultMapNode.getStringAttribute("ofType",
             resultMapNode.getStringAttribute("resultType",
                 resultMapNode.getStringAttribute("javaType"))));
-    String extend = resultMapNode.getStringAttribute("extends");
-    Boolean autoMapping = resultMapNode.getBooleanAttribute("autoMapping");
     Class<?> typeClass = resolveClass(type);
     if (typeClass == null) {
       typeClass = inheritEnclosingType(resultMapNode, enclosingType);
@@ -284,6 +280,10 @@ public class XMLMapperBuilder extends BaseBuilder {
         resultMappings.add(buildResultMappingFromContext(resultChild, typeClass, flags));
       }
     }
+    String id = resultMapNode.getStringAttribute("id",
+            resultMapNode.getValueBasedIdentifier());
+    String extend = resultMapNode.getStringAttribute("extends");
+    Boolean autoMapping = resultMapNode.getBooleanAttribute("autoMapping");
     ResultMapResolver resultMapResolver = new ResultMapResolver(builderAssistant, id, typeClass, extend, discriminator, resultMappings, autoMapping);
     try {
       return resultMapResolver.resolve();
@@ -352,7 +352,7 @@ public class XMLMapperBuilder extends BaseBuilder {
       }
     }
   }
-  
+
   private boolean databaseIdMatchesCurrent(String id, String databaseId, String requiredDatabaseId) {
     if (requiredDatabaseId != null) {
       if (!requiredDatabaseId.equals(databaseId)) {
@@ -385,7 +385,7 @@ public class XMLMapperBuilder extends BaseBuilder {
     String jdbcType = context.getStringAttribute("jdbcType");
     String nestedSelect = context.getStringAttribute("select");
     String nestedResultMap = context.getStringAttribute("resultMap",
-        processNestedResultMappings(context, Collections.<ResultMapping> emptyList(), resultType));
+        processNestedResultMappings(context, Collections.emptyList(), resultType));
     String notNullColumn = context.getStringAttribute("notNullColumn");
     String columnPrefix = context.getStringAttribute("columnPrefix");
     String typeHandler = context.getStringAttribute("typeHandler");
@@ -413,12 +413,12 @@ public class XMLMapperBuilder extends BaseBuilder {
 
   protected void validateCollection(XNode context, Class<?> enclosingType) {
     if ("collection".equals(context.getName()) && context.getStringAttribute("resultMap") == null
-      && context.getStringAttribute("resultType") == null) {
+        && context.getStringAttribute("javaType") == null) {
       MetaClass metaResultType = MetaClass.forClass(enclosingType, configuration.getReflectorFactory());
       String property = context.getStringAttribute("property");
       if (!metaResultType.hasSetter(property)) {
         throw new BuilderException(
-          "Ambiguous collection type for property '" + property + "'. You must specify 'resultType' or 'resultMap'.");
+          "Ambiguous collection type for property '" + property + "'. You must specify 'javaType' or 'resultMap'.");
       }
     }
   }

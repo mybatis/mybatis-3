@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.submitted.xml_external_ref;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -33,33 +33,34 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-public class XmlExternalRefTest {
+class XmlExternalRefTest {
 
   @Test
-  public void testCrossReferenceXmlConfig() throws Exception {
+  void testCrossReferenceXmlConfig() throws Exception {
     testCrossReference(getSqlSessionFactoryXmlConfig());
   }
 
   @Test
-  public void testCrossReferenceJavaConfig() throws Exception {
+  void testCrossReferenceJavaConfig() throws Exception {
     testCrossReference(getSqlSessionFactoryJavaConfig());
   }
 
-  @Test(expected = BuilderException.class)
-  public void testFailFastOnBuildAll() throws Exception {
+  @Test
+  void testFailFastOnBuildAll() {
     Configuration configuration = new Configuration();
     try {
       configuration.addMapper(InvalidMapper.class);
     } catch (Exception e) {
       fail("No exception should be thrown before parsing statement nodes.");
     }
-    configuration.getMappedStatementNames();
+    Assertions.assertThrows(BuilderException.class, configuration::getMappedStatementNames);
   }
-  
-  @Test(expected = BuilderException.class)
-  public void testFailFastOnBuildAllWithInsert() throws Exception {
+
+  @Test
+  void testFailFastOnBuildAllWithInsert() {
     Configuration configuration = new Configuration();
     try {
       configuration.addMapper(InvalidWithInsertMapper.class);
@@ -67,11 +68,11 @@ public class XmlExternalRefTest {
     } catch (Exception e) {
       fail("No exception should be thrown before parsing statement nodes.");
     }
-    configuration.getMappedStatementNames();
+    Assertions.assertThrows(BuilderException.class, configuration::getMappedStatementNames);
   }
 
   @Test
-  public void testMappedStatementCache() throws Exception {
+  void testMappedStatementCache() throws Exception {
     try (Reader configReader = Resources.getResourceAsReader("org/apache/ibatis/submitted/xml_external_ref/MapperConfig.xml")) {
       SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configReader);
 
@@ -90,9 +91,9 @@ public class XmlExternalRefTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
       Person person = personMapper.select(1);
-      assertEquals((Integer)1, person.getId());
+      assertEquals((Integer) 1, person.getId());
       assertEquals(2, person.getPets().size());
-      assertEquals((Integer)2, person.getPets().get(1).getId());
+      assertEquals((Integer) 2, person.getPets().get(1).getId());
 
       Pet pet = personMapper.selectPet(1);
       assertEquals(Integer.valueOf(1), pet.getId());

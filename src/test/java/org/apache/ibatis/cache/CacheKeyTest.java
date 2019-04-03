@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,25 +15,22 @@
  */
 package org.apache.ibatis.cache;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Date;
 
-public class CacheKeyTest {
+class CacheKeyTest {
 
   @Test
-  public void shouldTestCacheKeysEqual() {
+  void shouldTestCacheKeysEqual() {
     Date date = new Date();
     CacheKey key1 = new CacheKey(new Object[] { 1, "hello", null, new Date(date.getTime()) });
     CacheKey key2 = new CacheKey(new Object[] { 1, "hello", null, new Date(date.getTime()) });
@@ -44,7 +41,7 @@ public class CacheKeyTest {
   }
 
   @Test
-  public void shouldTestCacheKeysNotEqualDueToDateDifference() throws Exception {
+  void shouldTestCacheKeysNotEqualDueToDateDifference() throws Exception {
     CacheKey key1 = new CacheKey(new Object[] { 1, "hello", null, new Date() });
     Thread.sleep(1000);
     CacheKey key2 = new CacheKey(new Object[] { 1, "hello", null, new Date() });
@@ -55,7 +52,7 @@ public class CacheKeyTest {
   }
 
   @Test
-  public void shouldTestCacheKeysNotEqualDueToOrder() throws Exception {
+  void shouldTestCacheKeysNotEqualDueToOrder() throws Exception {
     CacheKey key1 = new CacheKey(new Object[] { 1, "hello", null });
     Thread.sleep(1000);
     CacheKey key2 = new CacheKey(new Object[] { 1, null, "hello" });
@@ -66,7 +63,7 @@ public class CacheKeyTest {
   }
 
   @Test
-  public void shouldDemonstrateEmptyAndNullKeysAreEqual() {
+  void shouldDemonstrateEmptyAndNullKeysAreEqual() {
     CacheKey key1 = new CacheKey();
     CacheKey key2 = new CacheKey();
     assertEquals(key1, key2);
@@ -82,7 +79,7 @@ public class CacheKeyTest {
   }
 
   @Test
-  public void shouldTestCacheKeysWithBinaryArrays() throws Exception {
+  void shouldTestCacheKeysWithBinaryArrays() {
     byte[] array1 = new byte[] { 1 };
     byte[] array2 = new byte[] { 1 };
     CacheKey key1 = new CacheKey(new Object[] { array1 });
@@ -90,18 +87,20 @@ public class CacheKeyTest {
     assertTrue(key1.equals(key2));
   }
 
-  @Test (expected = NotSerializableException.class)
-  public void serializationExceptionTest() throws Exception {
+  @Test
+  void serializationExceptionTest() {
     CacheKey cacheKey = new CacheKey();
     cacheKey.update(new Object());
-    serialize(cacheKey);
+    Assertions.assertThrows(NotSerializableException.class, () -> {
+      serialize(cacheKey);
+    });
   }
 
   @Test
-  public void serializationTest() throws Exception {
+  void serializationTest() throws Exception {
     CacheKey cacheKey = new CacheKey();
     cacheKey.update("serializable");
-    Assert.assertEquals(cacheKey, serialize(cacheKey));
+    Assertions.assertEquals(cacheKey, serialize(cacheKey));
   }
 
   private static <T> T serialize(T object) throws Exception {

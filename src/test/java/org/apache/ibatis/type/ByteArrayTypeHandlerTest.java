@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,14 +15,14 @@
  */
 package org.apache.ibatis.type;
 
-import static org.junit.Assert.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ByteArrayTypeHandlerTest extends BaseTypeHandlerTest {
+class ByteArrayTypeHandlerTest extends BaseTypeHandlerTest {
 
   private static final TypeHandler<byte[]> TYPE_HANDLER = new ByteArrayTypeHandler();
 
@@ -70,6 +70,6 @@ public class ByteArrayTypeHandlerTest extends BaseTypeHandlerTest {
   @Override
   public void shouldGetResultNullFromCallableStatement() throws Exception {
     // Unnecessary
- }
+  }
 
 }

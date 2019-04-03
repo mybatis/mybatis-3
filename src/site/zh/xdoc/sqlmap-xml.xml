@@ -28,7 +28,7 @@
 
   <body>
     <section name="XML 映射文件">
-      <p>MyBatis 的真正强大在于它的映射语句，这是它的魔力所在。由于它的异常强大，映射器的 
+      <p>MyBatis 的真正强大在于它的映射语句，这是它的魔力所在。由于它的异常强大，映射器的
       XML 文件就显得相对简单。如果拿它跟具有相同功能的 JDBC 代码进行对比，你会立即发现省掉了将近
       95% 的代码。MyBatis 为聚焦于 SQL 而构建，以尽可能地为你减少麻烦。</p>
       <p>SQL 映射文件只有很少的几个顶级元素（按照应被定义的顺序列出）：</p>
@@ -390,7 +390,7 @@ ps.setInt(1,id);]]></source>
           这里有一个简单（甚至很傻）的示例，它可以生成一个随机 ID（你最好不要这么做，但这里展示了
           MyBatis 处理问题的灵活性及其所关心的广度）：
         </p>
-        
+
         <source><![CDATA[<insert id="insertAuthor">
   <selectKey keyProperty="id" resultType="int" order="BEFORE">
     select CAST(RANDOM()*1000000 as INTEGER) a from SYSIBM.SYSDUMMY1
@@ -611,6 +611,39 @@ ps.setInt(1,id);]]></source>
         <p>这里 MyBatis 不会修改或转义字符串。</p>
 
         <p>
+          当 SQL 语句中的元数据（如表名或列名）是动态生成的时候，字符串替换将会非常有用。
+          举个例子，如果你想通过任何一列从表中 <code>select</code> 数据时，不需要像下面这样写：
+          <source><![CDATA[
+@Select("select * from user where id = #{id}")
+User findById(@Param("id") long id);
+
+@Select("select * from user where name = #{name}")
+User findByName(@Param("name") String name);
+
+@Select("select * from user where email = #{email}")
+User findByEmail(@Param("email") String email);
+
+// and more "findByXxx" method
+]]></source>
+          可以只写这样一个方法：
+          <source><![CDATA[
+@Select("select * from user where ${column} = #{value}")
+User findByColumn(@Param("column") String column, @Param("value") String value);
+]]></source>
+          其中 <code>${column}</code> 会被直接替换，而 <code>#{value}</code> 会被使用 <code>?</code> 预处理。
+          因此你就可以像下面这样来达到上述功能：
+          <source><![CDATA[
+User userOfId1 = userMapper.findByColumn("id", 1L);
+User userOfNameKid = userMapper.findByColumn("name", "kid");
+User userOfEmail = userMapper.findByColumn("email", "noone@nowhere.com");
+]]></source>
+        </p>
+
+        <p>
+          这个想法也同样适用于用来替换表名的情况。
+        </p>
+
+        <p>
           <span class="label important">提示</span>
           用这种方式接受用户的输入，并将其用于语句中的参数是不安全的，会导致潜在的 SQL
           注入攻击，因此要么不允许用户输入这些字段，要么自行转义并检验。
@@ -644,7 +677,7 @@ public class User {
   private int id;
   private String username;
   private String hashedPassword;
-  
+
   public int getId() {
     return id;
   }
@@ -879,21 +912,21 @@ public class User {
             <tr>
               <td><code>type</code></td>
               <td>
-                类的完全限定名, 或者一个类型别名（关于内置的类型别名，可以参考上面的表格）。 
+                类的完全限定名, 或者一个类型别名（关于内置的类型别名，可以参考上面的表格）。
               </td>
             </tr>
             <tr>
               <td><code>autoMapping</code></td>
               <td>
                 如果设置这个属性，MyBatis将会为本结果映射开启或者关闭自动映射。
-                这个属性会覆盖全局的属性 autoMappingBehavior。默认值：未设置（unset）。 
+                这个属性会覆盖全局的属性 autoMappingBehavior。默认值：未设置（unset）。
               </td>
             </tr>
           </tbody>
         </table>
 
         <p>
-          <span class="label important">最佳实践</span> 
+          <span class="label important">最佳实践</span>
           最好一步步地建立结果映射。单元测试可以在这个过程中起到很大帮助。
           如果你尝试一次创建一个像上面示例那样的巨大的结果映射，那么很可能会出现错误而且很难去使用它来完成工作。
           从最简单的形态开始，逐步迭代。而且别忘了单元测试！
@@ -1355,7 +1388,7 @@ public class User {
                 你可以在这个属性上指定非空的列来改变默认行为，指定后，Mybatis
                 将只在这些列非空时才创建一个子对象。可以使用逗号分隔来指定多个列。默认值：未设置（unset）。
               </td>
-            </tr>            
+            </tr>
             <tr>
               <td><code>autoMapping</code></td>
               <td>
@@ -1486,7 +1519,7 @@ public class User {
     resultMap="authorResult"
     columnPrefix="co_" />
 </resultMap>]]></source>
-        
+
         <h4>关联的多结果集（ResultSet）</h4>
 
         <table>
@@ -1518,9 +1551,9 @@ public class User {
             </tr>
           </tbody>
         </table>
-        
+
         <p>从版本 3.2.3 开始，MyBatis 提供了另一种解决 N+1 查询问题的方法。</p>
-         
+
         <p>
           某些数据库允许存储过程返回多个结果集，或一次性执行多个语句，每个语句返回一个结果集。
           我们可以利用这个特性，在不使用连接的情况下，只访问数据库一次就能获得相关数据。
@@ -1678,7 +1711,7 @@ SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
 </resultMap>]]></source>
 
         <h4>集合的多结果集（ResultSet）</h4>
-        
+
         <p>
           像关联元素那样，我们可以通过执行存储过程实现，它会执行两个查询并返回两个结果集，一个是博客的结果集，另一个是文章的结果集：
         </p>
@@ -1692,7 +1725,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         <source><![CDATA[<select id="selectBlog" resultSets="blogs,posts" resultMap="blogResult">
   {call getBlogsAndPosts(#{id,jdbcType=INTEGER,mode=IN})}
 </select>]]></source>
-        
+
         <p>我们指定 “posts” 集合将会使用存储在 “posts” 结果集中的数据进行填充： </p>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
@@ -1710,7 +1743,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
           对关联或集合的映射，并没有深度、广度或组合上的要求。但在映射时要留意性能问题。
           在探索最佳实践的过程中，应用的单元测试和性能测试会是你的好帮手。
           而 MyBatis 的好处在于，可以在不对你的代码引入重大变更（如果有）的情况下，允许你之后改变你的想法。
-        </p>        
+        </p>
 
         <p>
           高级关联和集合映射是一个深度话题。文档的介绍只能到此为止。配合少许的实践，你会很快了解全部的用法。
@@ -1813,7 +1846,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         </p>
 
       </subsection>
-      
+
       <subsection name="自动映射" id="Auto-mapping">
 
         <p>
@@ -1833,7 +1866,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
            属性一般遵循驼峰命名法约定。为了在这两种命名方式之间启用自动映射，需要将
            <code>mapUnderscoreToCamelCase</code> 设置为 true。
         </p>
-        
+
         <p>
            甚至在提供了结果映射后，自动映射也能工作。在这种情况下，对于每一个结果映射，在
            ResultSet 出现的列，如果没有设置手动映射，将被自动映射。在自动映射处理完毕后，再处理手动映射。
@@ -1855,7 +1888,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         <p>
           有三种自动映射等级：
         </p>
-        
+
         <ul>
           <li>
             <code>NONE</code> - 禁用自动映射。仅对手动映射的属性进行映射。
@@ -1873,7 +1906,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
           <code>FULL</code> 时，连接查询会在同一行中获取多个不同实体的数据，因此可能导致非预期的映射。
           下面的例子将展示这种风险：
         </p>
-        
+
         <source><![CDATA[<select id="selectBlog" resultMap="blogResult">
   select
     B.id,
@@ -1890,7 +1923,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
 <resultMap id="authorResult" type="Author">
   <result property="username" column="author_username"/>
 </resultMap>]]></source>
-        
+
         <p>
           在该结果映射中，<i>Blog</i> 和 <i>Author</i> 均将被自动映射。但是注意
           <i>Author</i> 有一个 <i>id</i> 属性，在 ResultSet 中也有一个名为 <i>id</i>
@@ -1906,9 +1939,9 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         <source><![CDATA[<resultMap id="userResultMap" type="User" autoMapping="false">
   <result property="password" column="hashed_password"/>
 </resultMap>]]></source>
-              
+
       </subsection>
-      
+
       <subsection name="缓存" id="cache">
         <p>
           MyBatis 内置了一个强大的事务性查询缓存机制，它可以非常方便地配置和定制。
@@ -1990,7 +2023,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
           因此这些对象不能被修改。这就提供了可观的性能提升。而可读写的缓存会（通过序列化）返回缓存对象的拷贝。
           速度上会慢一些，但是更安全，因此默认值是 false。
         </p>
-        
+
         <p>
           <span class="label important">提示</span>
           二级缓存是事务性的。这意味着，当 SqlSession 完成并提交时，或是完成并回滚，但没有执行

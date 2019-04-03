@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package org.apache.ibatis.cache;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
 import org.apache.ibatis.reflection.ArrayUtil;
 
@@ -57,7 +58,7 @@ public class CacheKey implements Cloneable, Serializable {
   }
 
   public void update(Object object) {
-    int baseHashCode = object == null ? 1 : ArrayUtil.hashCode(object); 
+    int baseHashCode = object == null ? 1 : ArrayUtil.hashCode(object);
 
     count++;
     checksum += baseHashCode;
@@ -112,10 +113,10 @@ public class CacheKey implements Cloneable, Serializable {
 
   @Override
   public String toString() {
-    StringBuilder returnValue = new StringBuilder().append(hashcode).append(':').append(checksum);
-    for (Object object : updateList) {
-      returnValue.append(':').append(ArrayUtil.toString(object));
-    }
+    StringJoiner returnValue = new StringJoiner(":");
+    returnValue.add(String.valueOf(hashcode));
+    returnValue.add(String.valueOf(checksum));
+    updateList.stream().map(ArrayUtil::toString).forEach(returnValue::add);
     return returnValue.toString();
   }
 

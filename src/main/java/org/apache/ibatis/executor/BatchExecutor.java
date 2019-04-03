@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -62,7 +62,7 @@ public class BatchExecutor extends BaseExecutor {
       int last = statementList.size() - 1;
       stmt = statementList.get(last);
       applyTransactionTimeout(stmt);
-     handler.parameterize(stmt);//fix Issues 322
+      handler.parameterize(stmt);//fix Issues 322
       BatchResult batchResult = batchResultList.get(last);
       batchResult.addParameterObject(parameterObject);
     } else {
@@ -74,7 +74,6 @@ public class BatchExecutor extends BaseExecutor {
       statementList.add(stmt);
       batchResultList.add(new BatchResult(ms, sql, parameterObject));
     }
-  // handler.parameterize(stmt);
     handler.batch(stmt);
     return BATCH_UPDATE_RETURN_VALUE;
   }

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,20 +20,19 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.mapping.StatementType;
-import org.apache.ibatis.parsing.XPathParser;
 import org.apache.ibatis.session.Configuration;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
-
-public class XmlMapperBuilderTest {
+@Disabled("We'll try a different approach. See #1393")
+class XmlMapperBuilderTest {
 
   @Test
-  public void mappedStatementWithOptions() throws Exception {
-    System.setProperty(XPathParser.KEY_USE_XSD, "true");
+  void mappedStatementWithOptions() throws Exception {
+    // System.setProperty(XPathParser.KEY_USE_XSD, "true");
     Configuration configuration = new Configuration();
     String resource = "org/apache/ibatis/builder/xsd/AuthorMapper.xml";
     try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
@@ -41,14 +40,14 @@ public class XmlMapperBuilderTest {
       builder.parse();
 
       MappedStatement mappedStatement = configuration.getMappedStatement("selectWithOptions");
-      assertThat(mappedStatement.getFetchSize(), is(200));
-      assertThat(mappedStatement.getTimeout(), is(10));
-      assertThat(mappedStatement.getStatementType(), is(StatementType.PREPARED));
-      assertThat(mappedStatement.getResultSetType(), is(ResultSetType.SCROLL_SENSITIVE));
-      assertThat(mappedStatement.isFlushCacheRequired(), is(false));
-      assertThat(mappedStatement.isUseCache(), is(false));
+      Assertions.assertEquals(Integer.valueOf(200), mappedStatement.getFetchSize());
+      Assertions.assertEquals(Integer.valueOf(10), mappedStatement.getTimeout());
+      Assertions.assertEquals(StatementType.PREPARED, mappedStatement.getStatementType());
+      Assertions.assertEquals(ResultSetType.SCROLL_SENSITIVE, mappedStatement.getResultSetType());
+      Assertions.assertFalse(mappedStatement.isFlushCacheRequired());
+      Assertions.assertFalse(mappedStatement.isUseCache());
     } finally {
-      System.clearProperty(XPathParser.KEY_USE_XSD);
+      // System.clearProperty(XPathParser.KEY_USE_XSD);
     }
   }
 

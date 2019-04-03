@@ -157,7 +157,7 @@ ps.setInt(1,id);]]></source>
             <tr>
               <td><code>parameterType</code></td>
               <td>The fully qualified class name or alias for the parameter that will be passed into this
-                statement. This attribute is optional because MyBatis can calculate the TypeHandler to use out of 
+                statement. This attribute is optional because MyBatis can calculate the TypeHandler to use out of
                 the actual parameter passed to the statement. Default is <code>unset</code>.
               </td>
             </tr>
@@ -225,7 +225,7 @@ ps.setInt(1,id);]]></source>
             </tr>
             <tr>
               <td><code>databaseId</code></td>
-              <td>In case there is a configured databaseIdProvider, MyBatis will load all statements with no <code>databaseId</code> 
+              <td>In case there is a configured databaseIdProvider, MyBatis will load all statements with no <code>databaseId</code>
               attribute or with a <code>databaseId</code> that matches the current one. If case the same statement
               if found with and without the <code>databaseId</code> the latter will be discarded.
               </td>
@@ -241,10 +241,10 @@ ps.setInt(1,id);]]></source>
             </tr>
             <tr>
               <td><code>resultSets</code></td>
-              <td>This is only applicable for multiple result sets. It lists the result sets that will 
-                be returned by the statement and gives a name to each one. Names are separated by commas. 
+              <td>This is only applicable for multiple result sets. It lists the result sets that will
+                be returned by the statement and gives a name to each one. Names are separated by commas.
               </td>
-            </tr>         
+            </tr>
           </tbody>
         </table>
       </subsection>
@@ -293,7 +293,7 @@ ps.setInt(1,id);]]></source>
             <tr>
               <td><code>parameterType</code></td>
               <td>The fully qualified class name or alias for the parameter that will be passed into this
-                statement. This attribute is optional because MyBatis can calculate the TypeHandler to use out of 
+                statement. This attribute is optional because MyBatis can calculate the TypeHandler to use out of
                 the actual parameter passed to the statement. Default is <code>unset</code>.
               </td>
             </tr>
@@ -351,7 +351,7 @@ ps.setInt(1,id);]]></source>
             </tr>
             <tr>
               <td><code>databaseId</code></td>
-              <td>In case there is a configured databaseIdProvider, MyBatis will load all statements with no <code>databaseId</code> 
+              <td>In case there is a configured databaseIdProvider, MyBatis will load all statements with no <code>databaseId</code>
               attribute or with a <code>databaseId</code> that matches the current one. If case the same statement
               if found with and without the <code>databaseId</code> the latter will be discarded.
               </td>
@@ -513,11 +513,11 @@ ps.setInt(1,id);]]></source>
   from some_table t1
     cross join some_table t2
 </select>]]></source>
-          
+
         <p>
           Property value can be also used in include refid attribute or property values inside include clause, for example:
         </p>
-        
+
         <source><![CDATA[<sql id="sometable">
   ${prefix}Table
 </sql>
@@ -654,6 +654,39 @@ ps.setInt(1,id);]]></source>
         </p>
 
         <p>
+          String Substitution can be very useful when the metadata(i.e. table name or column name) in the sql statement is dynamic,
+          for example, if you want to <code>select</code> from a table by any one of its columns, instead of writing code like:
+          <source><![CDATA[
+@Select("select * from user where id = #{id}")
+User findById(@Param("id") long id);
+
+@Select("select * from user where name = #{name}")
+User findByName(@Param("name") String name);
+
+@Select("select * from user where email = #{email}")
+User findByEmail(@Param("email") String email);
+
+// and more "findByXxx" method
+]]></source>
+          you can just write:
+          <source><![CDATA[
+@Select("select * from user where ${column} = #{value}")
+User findByColumn(@Param("column") String column, @Param("value") String value);
+]]></source>
+          in which the <code>${column}</code> will be substituted directly and the <code>#{value}</code> will be "prepared".
+          Thus you can just do the same work by:
+          <source><![CDATA[
+User userOfId1 = userMapper.findByColumn("id", 1L);
+User userOfNameKid = userMapper.findByColumn("name", "kid");
+User userOfEmail = userMapper.findByColumn("email", "noone@nowhere.com");
+]]></source>
+        </p>
+
+        <p>
+          This idea can be applied to substitute the table name as well.
+        </p>
+
+        <p>
           <span class="label important">NOTE</span> It's not safe to accept input from a user and supply
           it to a statement unmodified in this way. This leads to potential SQL Injection attacks and
           therefore you should either disallow user input in these fields, or always perform your own escapes
@@ -694,7 +727,7 @@ public class User {
   private int id;
   private String username;
   private String hashedPassword;
-  
+
   public int getId() {
     return id;
   }
@@ -747,7 +780,7 @@ public class User {
 
         <p>
           In these cases MyBatis is automatically creating a <code>ResultMap</code> behind the scenes to auto-map the columns to
-          the JavaBean properties based on name. 
+          the JavaBean properties based on name.
           If the column names did not match exactly, you could employ
           select clause aliases (a standard SQL feature) on the column names to make the labels match. For
           example:
@@ -933,13 +966,13 @@ public class User {
             </tr>
             <tr>
               <td><code>type</code></td>
-              <td>A fully qualified Java class name, or a type alias (see the table above for the list of built-in type aliases). 
+              <td>A fully qualified Java class name, or a type alias (see the table above for the list of built-in type aliases).
               </td>
             </tr>
             <tr>
               <td><code>autoMapping</code></td>
-              <td>If present, MyBatis will enable or disable the automapping for this ResultMap. 
-                This attribute overrides the global autoMappingBehavior. Default: unset. 
+              <td>If present, MyBatis will enable or disable the automapping for this ResultMap.
+                This attribute overrides the global autoMappingBehavior. Default: unset.
               </td>
             </tr>
           </tbody>
@@ -1313,8 +1346,8 @@ public class User {
             <tr>
               <td><code>column</code></td>
               <td>
-                The column name from the database, or the aliased column label that holds the value that will be passed to the nested 
-                statement as an input parameter. 
+                The column name from the database, or the aliased column label that holds the value that will be passed to the nested
+                statement as an input parameter.
                 This is the same string that would normally be passed to <code>resultSet.getString(columnName)</code>.
                 Note: To deal with composite keys, you can specify multiple column names to pass to the
                 nested select statement by using the syntax <code>column="{prop1=col1,prop2=col2}"</code>. This will
@@ -1431,12 +1464,12 @@ public class User {
             <tr>
               <td><code>notNullColumn</code></td>
               <td>
-                By default a child object is created only if at least one of the columns mapped to the child's properties 
+                By default a child object is created only if at least one of the columns mapped to the child's properties
                 is non null. With this attribute you can change this behaviour by specifiying which columns must have a value
-                so MyBatis will create a child object only if any of those columns is not null. Multiple column names can be 
+                so MyBatis will create a child object only if any of those columns is not null. Multiple column names can be
                 specified using a comma as a separator. Default value: unset.
               </td>
-            </tr>                        
+            </tr>
             <tr>
               <td><code>autoMapping</code></td>
               <td>If present, MyBatis will enable or disable automapping when mapping the result to this property.
@@ -1591,8 +1624,8 @@ public class User {
             <tr>
               <td><code>foreignColumn</code></td>
               <td>
-                Identifies the name of the columns that contains the foreign keys which values will be matched against the 
-                values of the columns specified in the <code>column</code> attibute of the parent type. 
+                Identifies the name of the columns that contains the foreign keys which values will be matched against the
+                values of the columns specified in the <code>column</code> attibute of the parent type.
               </td>
             </tr>
             <tr>
@@ -1603,11 +1636,11 @@ public class User {
             </tr>
           </tbody>
         </table>
-        
+
         <p>Starting from version 3.2.3 MyBatis provides yet another way to solve the N+1 problem.</p>
-         
-        <p>Some databases allow stored procedures to return more than one resultset or execute more than one statement 
-         at once and return a resultset per each one. This can be used to hit the database just once 
+
+        <p>Some databases allow stored procedures to return more than one resultset or execute more than one statement
+         at once and return a resultset per each one. This can be used to hit the database just once
          and return related data without using a join.</p>
 
         <p>In the example, the stored procedure executes the following queries and returns two result sets.
@@ -1617,7 +1650,7 @@ public class User {
 
 SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
 
-        <p>A name must be given to each result set by adding a 
+        <p>A name must be given to each result set by adding a
         <code>resultSets</code> attribute to the mapped statement with a list of names separated by commas.</p>
 
         <source><![CDATA[<select id="selectBlog" resultSets="blogs,authors" resultMap="blogResult" statementType="CALLABLE">
@@ -1769,7 +1802,7 @@ SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
 </resultMap>]]></source>
 
         <h4>Multiple ResultSets for Collection</h4>
-        
+
         <p>
           As we did for the association, we can call a stored procedure that executes two queries and returns two result sets, one with Blogs
           and another with Posts:
@@ -1779,13 +1812,13 @@ SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
 
 SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
 
-        <p>A name must be given to each result set by adding a 
+        <p>A name must be given to each result set by adding a
         <code>resultSets</code> attribute to the mapped statement with a list of names separated by commas.</p>
 
         <source><![CDATA[<select id="selectBlog" resultSets="blogs,posts" resultMap="blogResult">
   {call getBlogsAndPosts(#{id,jdbcType=INTEGER,mode=IN})}
 </select>]]></source>
-        
+
         <p>We specify that the "posts" collection will be filled out of data contained in the result set named "posts":</p>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
@@ -1799,13 +1832,13 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
 </resultMap>]]></source>
 
         <p>
-          <span class="label important">NOTE</span> There's no limit to the depth, breadth or 
-          combinations of the associations and collections that you map. 
+          <span class="label important">NOTE</span> There's no limit to the depth, breadth or
+          combinations of the associations and collections that you map.
           You should keep performance in mind when mapping them. Unit testing and performance
           testing of your application goes a long way toward discovering the best approach for your
           application. The nice thing is that MyBatis lets you change your mind later, with very little (if
           any) impact to your code.
-        </p>        
+        </p>
 
         <p>
           Advanced association and collection mapping is a deep subject. Documentation can only get you so
@@ -1912,30 +1945,30 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
           than they really need to be. That said, most databases are kind of complex and it's unlikely that
           we'll be able to depend on that for all cases.
         </p>
-         
+
       </subsection>
       <subsection name="Auto-mapping">
 
         <p>
-          As you have already seen in the previous sections, in simple cases MyBatis can auto-map the results for you 
-          and in others you will need to build a result map. 
-          But as you will see in this section you can also mix both strategies. 
-          Let's have a deeper look at how auto-mapping works. 
+          As you have already seen in the previous sections, in simple cases MyBatis can auto-map the results for you
+          and in others you will need to build a result map.
+          But as you will see in this section you can also mix both strategies.
+          Let's have a deeper look at how auto-mapping works.
         </p>
 
         <p>
           When auto-mapping results MyBatis will get the column name and look for a property with the same name ignoring case. That means that if
-          a column named <i>ID</i> and property named <i>id</i> are found, MyBatis will set the <i>id</i> property with the <i>ID</i> column value. 
+          a column named <i>ID</i> and property named <i>id</i> are found, MyBatis will set the <i>id</i> property with the <i>ID</i> column value.
         </p>
 
         <p>
-          Usually database columns are named using uppercase letters and underscores between words and java properties often follow the camelcase 
+          Usually database columns are named using uppercase letters and underscores between words and java properties often follow the camelcase
           naming covention. To enable the auto-mapping between them set the setting <code>mapUnderscoreToCamelCase</code> to true.
         </p>
-        
+
         <p>
           Auto-mapping works even when there is an specific result map. When this happens, for each result map, all columns that are present in the
-          ResultSet that have not a manual mapping will be auto-mapped, then manual mappings will be processed. 
+          ResultSet that have not a manual mapping will be auto-mapped, then manual mappings will be processed.
           In the following sample <i>id</i> and <i>userName</i> columns will be auto-mapped and <i>hashed_password</i> column will be mapped.</p>
 
         <source><![CDATA[<select id="selectUsers" resultMap="userResultMap">
@@ -1954,7 +1987,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         <p>
           There are three auto-mapping levels:
         </p>
-        
+
         <ul>
           <li>
             <code>NONE</code> - disables auto-mapping. Only manually mapped properties will be set.
@@ -1969,10 +2002,10 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
 
         <p>
           The default value is <code>PARTIAL</code>, and it is so for a reason. When <code>FULL</code> is used auto-mapping will
-          be performed when processing join results and joins retrieve data of several different entities in the same row 
+          be performed when processing join results and joins retrieve data of several different entities in the same row
           hence this may result in undesired mappings. To understand the risk have a look at the following sample:
         </p>
-        
+
         <source><![CDATA[<select id="selectBlog" resultMap="blogResult">
   select
     B.id,
@@ -1989,10 +2022,10 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
 <resultMap id="authorResult" type="Author">
   <result property="username" column="author_username"/>
 </resultMap>]]></source>
-        
+
         <p>
-          With this result map both <i>Blog</i> and <i>Author</i> will be auto-mapped. But note that <i>Author</i> has an <i>id</i> 
-          property and there is a column named <i>id</i> in the ResultSet so Author's id will be filled with Blog's id, and that is not 
+          With this result map both <i>Blog</i> and <i>Author</i> will be auto-mapped. But note that <i>Author</i> has an <i>id</i>
+          property and there is a column named <i>id</i> in the ResultSet so Author's id will be filled with Blog's id, and that is not
           what you were expecting. So use the <code>FULL</code> option with caution.
         </p>
 
@@ -2004,15 +2037,15 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         <source><![CDATA[<resultMap id="userResultMap" type="User" autoMapping="false">
   <result property="password" column="hashed_password"/>
 </resultMap>]]></source>
-       
+
       </subsection>
       <subsection name="cache">
         <p>
-          MyBatis includes a powerful transactional query caching feature which is very configurable and customizable. 
+          MyBatis includes a powerful transactional query caching feature which is very configurable and customizable.
           A lot of changes have been made in the MyBatis 3 cache implementation to make it both more powerful and far easier to configure.
         </p>
 
-        <p>          
+        <p>
           By default, just local session caching is enabled that is used solely to cache data for the duration of a session.
           To enable a global second level of caching you simply need to add one line to your SQL Mapping file:
         </p>
@@ -2103,7 +2136,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         </p>
 
         <p>
-          <span class="label important">NOTE</span> Second level cache is transactional. That means that it is updated 
+          <span class="label important">NOTE</span> Second level cache is transactional. That means that it is updated
           when a SqlSession finishes with commit or when it finishes with rollback but no inserts/deletes/updates
           with flushCache=true where executed.
         </p>
@@ -2120,7 +2153,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
 
         <p>
           This example demonstrates how to use a custom cache implementation. The class specified in the type
-          attribute must implement the org.apache.ibatis.cache.Cache interface and provide a constructor that gets 
+          attribute must implement the org.apache.ibatis.cache.Cache interface and provide a constructor that gets
           an String id as an argument. This interface is one of the more complex in the MyBatis framework, but simple given what it does.
         </p>
 

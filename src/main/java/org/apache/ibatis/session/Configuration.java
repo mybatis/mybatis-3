@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.function.BiFunction;
 
 import org.apache.ibatis.binding.MapperRegistry;
 import org.apache.ibatis.builder.CacheRefResolver;
@@ -113,8 +114,8 @@ public class Configuration {
   protected boolean returnInstanceForEmptyRow;
 
   protected String logPrefix;
-  protected Class <? extends Log> logImpl;
-  protected Class <? extends VFS> vfsImpl;
+  protected Class<? extends Log> logImpl;
+  protected Class<? extends VFS> vfsImpl;
   protected LocalCacheScope localCacheScope = LocalCacheScope.SESSION;
   protected JdbcType jdbcTypeForNull = JdbcType.OTHER;
   protected Set<String> lazyLoadTriggerMethods = new HashSet<>(Arrays.asList("equals", "clone", "hashCode", "toString"));
@@ -147,7 +148,9 @@ public class Configuration {
   protected final TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
   protected final LanguageDriverRegistry languageRegistry = new LanguageDriverRegistry();
 
-  protected final Map<String, MappedStatement> mappedStatements = new StrictMap<>("Mapped Statements collection");
+  protected final Map<String, MappedStatement> mappedStatements = new StrictMap<MappedStatement>("Mapped Statements collection")
+      .conflictMessageProducer((savedValue, targetValue) ->
+          ". please check " + savedValue.getResource() + " and " + targetValue.getResource());
   protected final Map<String, Cache> caches = new StrictMap<>("Caches collection");
   protected final Map<String, ResultMap> resultMaps = new StrictMap<>("Result Maps collection");
   protected final Map<String, ParameterMap> parameterMaps = new StrictMap<>("Parameter Maps collection");
@@ -488,11 +491,11 @@ public class Configuration {
   }
 
   public ReflectorFactory getReflectorFactory() {
-	  return reflectorFactory;
+    return reflectorFactory;
   }
 
   public void setReflectorFactory(ReflectorFactory reflectorFactory) {
-	  this.reflectorFactory = reflectorFactory;
+    this.reflectorFactory = reflectorFactory;
   }
 
   public ObjectFactory getObjectFactory() {
@@ -533,7 +536,20 @@ public class Configuration {
     return languageRegistry.getDefaultDriver();
   }
 
-  /** @deprecated Use {@link #getDefaultScriptingLanguageInstance()} */
+  /**
+   * @since 3.5.1
+   */
+  public LanguageDriver getLanguageDriver(Class<? extends LanguageDriver> langClass) {
+    if (langClass == null) {
+      return languageRegistry.getDefaultDriver();
+    }
+    languageRegistry.register(langClass);
+    return languageRegistry.getDriver(langClass);
+  }
+
+  /**
+   * @deprecated Use {@link #getDefaultScriptingLanguageInstance()}
+   */
   @Deprecated
   public LanguageDriver getDefaultScriptingLanuageInstance() {
     return getDefaultScriptingLanguageInstance();
@@ -817,13 +833,13 @@ public class Configuration {
         }
       } while (resolved);
       if (!incompleteResultMaps.isEmpty() && ex != null) {
-        // At least one result map is unresolvable. 
+        // At least one result map is unresolvable.
         throw ex;
       }
     }
   }
 
-  /*
+  /**
    * Extracts namespace from fully qualified statement id.
    *
    * @param statementId
@@ -872,6 +888,7 @@ public class Configuration {
 
     private static final long serialVersionUID = -4950446264854982944L;
     private final String name;
+    private BiFunction<V, V, String> conflictMessageProducer;
 
     public StrictMap(String name, int initialCapacity, float loadFactor) {
       super(initialCapacity, loadFactor);
@@ -893,10 +910,24 @@ public class Configuration {
       this.name = name;
     }
 
+    /**
+     * Assign a function for producing a conflict error message when contains value with the same key.
+     * <p>
+     * function arguments are 1st is saved value and 2nd is target value.
+     * @param conflictMessageProducer A function for producing a conflict error message
+     * @return a conflict error message
+     * @since 3.5.0
+     */
+    public StrictMap<V> conflictMessageProducer(BiFunction<V, V, String> conflictMessageProducer) {
+      this.conflictMessageProducer = conflictMessageProducer;
+      return this;
+    }
+
     @SuppressWarnings("unchecked")
     public V put(String key, V value) {
       if (containsKey(key)) {
-        throw new IllegalArgumentException(name + " already contains value for " + key);
+        throw new IllegalArgumentException(name + " already contains value for " + key
+            + (conflictMessageProducer == null ? "" : conflictMessageProducer.apply(super.get(key), value)));
       }
       if (key.contains(".")) {
         final String shortKey = getShortName(key);
@@ -921,11 +952,6 @@ public class Configuration {
       return value;
     }
 
-    private String getShortName(String key) {
-      final String[] keyParts = key.split("\\.");
-      return keyParts[keyParts.length - 1];
-    }
-
     protected static class Ambiguity {
       final private String subject;
 
@@ -936,6 +962,11 @@ public class Configuration {
       public String getSubject() {
         return subject;
       }
+    }
+
+    private String getShortName(String key) {
+      final String[] keyParts = key.split("\\.");
+      return keyParts[keyParts.length - 1];
     }
   }
 

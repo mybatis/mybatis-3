@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ public class DefaultReflectorFactory implements ReflectorFactory {
   @Override
   public Reflector findForClass(Class<?> type) {
     if (classCacheEnabled) {
-            // synchronized (type) removed see issue #461
+      // synchronized (type) removed see issue #461
       return reflectorMap.computeIfAbsent(type, Reflector::new);
     } else {
       return new Reflector(type);

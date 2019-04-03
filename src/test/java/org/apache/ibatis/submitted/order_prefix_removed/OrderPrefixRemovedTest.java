@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.submitted.order_prefix_removed;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.Reader;
 
@@ -25,15 +25,15 @@ import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-public class OrderPrefixRemoved {
+class OrderPrefixRemovedTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
-  public static void initDatabase() throws Exception {
+  @BeforeAll
+  static void initDatabase() throws Exception {
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/order_prefix_removed/ibatisConfig.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
@@ -43,14 +43,14 @@ public class OrderPrefixRemoved {
   }
 
   @Test
-  public void testOrderPrefixNotRemoved() {
+  void testOrderPrefixNotRemoved() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.SIMPLE)) {
       PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
 
-      Person person = personMapper.select(new String("slow"));
+      Person person = personMapper.select("slow");
 
       assertNotNull(person);
-      
+
       sqlSession.commit();
     }
   }

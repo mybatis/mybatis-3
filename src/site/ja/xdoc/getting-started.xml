@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@
 
   <body>
     <section name="スタートガイド">
-    
+
     <subsection name="Installation">
       <p>
         MyBatis を使うためには、ダウンロードした
@@ -43,8 +43,8 @@
   <artifactId>mybatis</artifactId>
   <version>x.x.x</version>
 </dependency>]]></source>
-    </subsection>    
-     
+    </subsection>
+
       <subsection name="XML 形式の設定ファイルを使って SqlSessionFactory を生成する">
         <p>
           MyBatis アプリケーションは、SqlSessionFactory のインスタンスを中心に構成されています。<br />

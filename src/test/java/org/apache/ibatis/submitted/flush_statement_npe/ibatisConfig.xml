@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@
     <typeAliases>
         <typeAlias alias="Person" type="org.apache.ibatis.submitted.flush_statement_npe.Person"/>
     </typeAliases>
-    
+
     <environments default="test">
         <environment id="test">
             <transactionManager type="JDBC"></transactionManager>
@@ -35,7 +35,7 @@
             </dataSource>
         </environment>
     </environments>
-    
+
     <mappers>
         <mapper resource="org/apache/ibatis/submitted/flush_statement_npe/Person.xml"/>
     </mappers>

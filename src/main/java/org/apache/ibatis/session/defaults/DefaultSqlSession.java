@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -40,7 +40,6 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 
 /**
- *
  * The default implementation for {@link SqlSession}.
  * Note that this class is not Thread-Safe.
  *
@@ -68,7 +67,7 @@ public class DefaultSqlSession implements SqlSession {
 
   @Override
   public <T> T selectOne(String statement) {
-    return this.<T>selectOne(statement, null);
+    return this.selectOne(statement, null);
   }
 
   @Override
@@ -289,7 +288,7 @@ public class DefaultSqlSession implements SqlSession {
 
   @Override
   public <T> T getMapper(Class<T> type) {
-    return configuration.<T>getMapper(type, this);
+    return configuration.getMapper(type, this);
   }
 
   @Override

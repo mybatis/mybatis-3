@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -95,28 +95,28 @@ public class XMLConfigBuilder extends BaseBuilder {
       throw new BuilderException("Each XMLConfigBuilder can only be used once.");
     }
     parsed = true;
-    parseConfiguration(parser.evalNode("*[local-name()='configuration']"));
+    parseConfiguration(parser.evalNode("/configuration"));
     return configuration;
   }
 
   private void parseConfiguration(XNode root) {
     try {
       //issue #117 read properties first
-      propertiesElement(root.evalNode("*[local-name()='properties']"));
-      Properties settings = settingsAsProperties(root.evalNode("*[local-name()='settings']"));
+      propertiesElement(root.evalNode("properties"));
+      Properties settings = settingsAsProperties(root.evalNode("settings"));
       loadCustomVfs(settings);
       loadCustomLogImpl(settings);
-      typeAliasesElement(root.evalNode("*[local-name()='typeAliases']"));
-      pluginElement(root.evalNode("*[local-name()='plugins']"));
-      objectFactoryElement(root.evalNode("*[local-name()='objectFactory']"));
-      objectWrapperFactoryElement(root.evalNode("*[local-name()='objectWrapperFactory']"));
-      reflectorFactoryElement(root.evalNode("*[local-name()='reflectorFactory']"));
+      typeAliasesElement(root.evalNode("typeAliases"));
+      pluginElement(root.evalNode("plugins"));
+      objectFactoryElement(root.evalNode("objectFactory"));
+      objectWrapperFactoryElement(root.evalNode("objectWrapperFactory"));
+      reflectorFactoryElement(root.evalNode("reflectorFactory"));
       settingsElement(settings);
       // read it after objectFactory and objectWrapperFactory issue #631
-      environmentsElement(root.evalNode("*[local-name()='environments']"));
-      databaseIdProviderElement(root.evalNode("*[local-name()='databaseIdProvider']"));
-      typeHandlerElement(root.evalNode("*[local-name()='typeHandlers']"));
-      mapperElement(root.evalNode("*[local-name()='mappers']"));
+      environmentsElement(root.evalNode("environments"));
+      databaseIdProviderElement(root.evalNode("databaseIdProvider"));
+      typeHandlerElement(root.evalNode("typeHandlers"));
+      mapperElement(root.evalNode("mappers"));
     } catch (Exception e) {
       throw new BuilderException("Error parsing SQL Mapper Configuration. Cause: " + e, e);
     }
@@ -212,9 +212,9 @@ public class XMLConfigBuilder extends BaseBuilder {
 
   private void reflectorFactoryElement(XNode context) throws Exception {
     if (context != null) {
-       String type = context.getStringAttribute("type");
-       ReflectorFactory factory = (ReflectorFactory) resolveClass(type).newInstance();
-       configuration.setReflectorFactory(factory);
+      String type = context.getStringAttribute("type");
+      ReflectorFactory factory = (ReflectorFactory) resolveClass(type).newInstance();
+      configuration.setReflectorFactory(factory);
     }
   }
 
@@ -276,8 +276,8 @@ public class XMLConfigBuilder extends BaseBuilder {
       for (XNode child : context.getChildren()) {
         String id = child.getStringAttribute("id");
         if (isSpecifiedEnvironment(id)) {
-          TransactionFactory txFactory = transactionManagerElement(child.evalNode("*[local-name()='transactionManager']"));
-          DataSourceFactory dsFactory = dataSourceElement(child.evalNode("*[local-name()='dataSource']"));
+          TransactionFactory txFactory = transactionManagerElement(child.evalNode("transactionManager"));
+          DataSourceFactory dsFactory = dataSourceElement(child.evalNode("dataSource"));
           DataSource dataSource = dsFactory.getDataSource();
           Environment.Builder environmentBuilder = new Environment.Builder(id)
               .transactionFactory(txFactory)
@@ -294,7 +294,7 @@ public class XMLConfigBuilder extends BaseBuilder {
       String type = context.getStringAttribute("type");
       // awful patch to keep backward compatibility
       if ("VENDOR".equals(type)) {
-          type = "DB_VENDOR";
+        type = "DB_VENDOR";
       }
       Properties properties = context.getChildrenAsProperties();
       databaseIdProvider = (DatabaseIdProvider) resolveClass(type).newInstance();
