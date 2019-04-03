@@ -4,6 +4,10 @@ jdk:
   - oraclejdk11
   - oraclejdk8
 
+cache:
+  directories:
+    - $HOME/.m2
+
 before_install:
   - echo "MAVEN_OPTS='-Dlicense.skip=true'" > ~/.mavenrc
 
