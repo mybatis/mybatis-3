@@ -31,6 +31,21 @@ import java.util.Arrays;
 public class TypeParameterResolver {
 
   /**
+   * @return The generic {@link Type}s of the mapper interface which the method is declare.<br>
+   *         If mapper interface have generic types in the declaration,<br>
+   *         they will be resolved to the actual runtime {@link Type}s.
+   */
+  public static Type[] resolveMapperTypes(Method method, Type srcType) {
+    Class<?> declaringClass = method.getDeclaringClass();
+    TypeVariable<? extends Class<?>>[] typeParameters = declaringClass.getTypeParameters();
+    Type[] result = new Type[typeParameters.length];
+    for (int i = 0; i < typeParameters.length; i++) {
+      result[i] = resolveType(typeParameters[i], srcType, declaringClass);
+    }
+    return result;
+  }
+
+  /**
    * @return The field type as {@link Type}. If it has type parameters in the declaration,<br>
    *         they will be resolved to the actual runtime {@link Type}s.
    */
