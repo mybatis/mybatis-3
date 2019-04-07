@@ -403,6 +403,7 @@
                                 <li><a href="org/apache/ibatis/domain/jpetstore/LineItem.html#LineItem" target="classFrame">LineItem</a></li>
                                 <li><a href="org/apache/ibatis/type/LocalDateTimeTypeHandlerTest.html#LocalDateTimeTypeHandlerTest" target="classFrame">LocalDateTimeTypeHandlerTest</a></li>
                                 <li><a href="org/apache/ibatis/type/LocalDateTypeHandlerTest.html#LocalDateTypeHandlerTest" target="classFrame">LocalDateTypeHandlerTest</a></li>
+                                <li><a href="org/apache/ibatis/submitted/localtime/LocalTimeTest.html#LocalTimeTest" target="classFrame">LocalTimeTest</a></li>
                                 <li><a href="org/apache/ibatis/type/LocalTimeTypeHandlerTest.html#LocalTimeTypeHandlerTest" target="classFrame">LocalTimeTypeHandlerTest</a></li>
                                 <li><a href="org/apache/ibatis/logging/LogFactoryTest.html#LogFactoryTest" target="classFrame">LogFactoryTest</a></li>
                                 <li><a href="org/apache/ibatis/type/LongTypeHandlerTest.html#LongTypeHandlerTest" target="classFrame">LongTypeHandlerTest</a></li>
@@ -443,6 +444,7 @@
                                 <li><a href="org/apache/ibatis/submitted/lazy_deserialize/Mapper.html#Mapper" target="classFrame">Mapper</a></li>
                                 <li><a href="org/apache/ibatis/submitted/lazy_properties/Mapper.html#Mapper" target="classFrame">Mapper</a></li>
                                 <li><a href="org/apache/ibatis/submitted/lazyload_proxyfactory_comparison/Mapper.html#Mapper" target="classFrame">Mapper</a></li>
+                                <li><a href="org/apache/ibatis/submitted/localtime/Mapper.html#Mapper" target="classFrame">Mapper</a></li>
                                 <li><a href="org/apache/ibatis/submitted/mapper_extend/Mapper.html#Mapper" target="classFrame">Mapper</a></li>
                                 <li><a href="org/apache/ibatis/submitted/maptypehandler/Mapper.html#Mapper" target="classFrame">Mapper</a></li>
                                 <li><a href="org/apache/ibatis/submitted/multiple_resultsets/Mapper.html#Mapper" target="classFrame">Mapper</a></li>
@@ -469,6 +471,7 @@
                                 <li><a href="org/apache/ibatis/submitted/sqlprovider/Mapper.html#Mapper" target="classFrame">Mapper</a></li>
                                 <li><a href="org/apache/ibatis/submitted/stringlist/Mapper.html#Mapper" target="classFrame">Mapper</a></li>
                                 <li><a href="org/apache/ibatis/submitted/timestamp_with_timezone/Mapper.html#Mapper" target="classFrame">Mapper</a></li>
+                                <li><a href="org/apache/ibatis/submitted/timezone_edge_case/Mapper.html#Mapper" target="classFrame">Mapper</a></li>
                                 <li><a href="org/apache/ibatis/submitted/typehandler/Mapper.html#Mapper" target="classFrame">Mapper</a></li>
                                 <li><a href="org/apache/ibatis/submitted/typehandlerinjection/Mapper.html#Mapper" target="classFrame">Mapper</a></li>
                                 <li><a href="org/apache/ibatis/submitted/unknownobject/Mapper.html#Mapper" target="classFrame">Mapper</a></li>
@@ -669,11 +672,27 @@
                                 <li><a href="org/apache/ibatis/submitted/propertiesinmapperfiles/PropertiesInMappersTest.html#PropertiesInMappersTest" target="classFrame">PropertiesInMappersTest</a></li>
                                 <li><a href="org/apache/ibatis/submitted/complex_type/Property.html#Property" target="classFrame">Property</a></li>
                                 <li><a href="org/apache/ibatis/parsing/PropertyParserTest.html#PropertyParserTest" target="classFrame">PropertyParserTest</a></li>
+                                <li><a href="org/apache/ibatis/submitted/sqlprovider/ProviderMethodResolutionTest.html#ProviderMethodResolutionTest" target="classFrame">ProviderMethodResolutionTest</a></li>
+                                <li><a href="org/apache/ibatis/submitted/sqlprovider/ProviderMethodResolutionTest.html#ProviderMethodResolutionTest.CustomProviderMethodResolver" target="classFrame">ProviderMethodResolutionTest.CustomProviderMethodResolver</a></li>
+                                <li><a href="org/apache/ibatis/submitted/sqlprovider/ProviderMethodResolutionTest.html#ProviderMethodResolutionTest.DefaultProvideMethodResolverMatchedMethodIsMultipleMapper" target="classFrame">ProviderMethodResolutionTest.DefaultProvideMethodResolverMatchedMethodIsMultipleMapper</a></li>
+                                <li><a href="org/apache/ibatis/submitted/sqlprovider/ProviderMethodResolutionTest.html#ProviderMethodResolutionTest.DefaultProvideMethodResolverMatchedMethodIsMultipleMapper.MethodResolverBasedSqlProvider" target="classFrame">ProviderMethodResolutionTest.DefaultProvideMethodResolverMatchedMethodIsMultipleMapper.MethodResolverBasedSqlProvider</a></li>
+                                <li><a href="org/apache/ibatis/submitted/sqlprovider/ProviderMethodResolutionTest.html#ProviderMethodResolutionTest.DefaultProvideMethodResolverMethodNameMatchedMethodIsNoneMapper" target="classFrame">ProviderMethodResolutionTest.DefaultProvideMethodResolverMethodNameMatchedMethodIsNoneMapper</a></li>
+                                <li><a href="org/apache/ibatis/submitted/sqlprovider/ProviderMethodResolutionTest.html#ProviderMethodResolutionTest.DefaultProvideMethodResolverMethodNameMatchedMethodIsNoneMapper.MethodResolverBasedSqlProvider" target="classFrame">ProviderMethodResolutionTest.DefaultProvideMethodResolverMethodNameMatchedMethodIsNoneMapper.MethodResolverBasedSqlProvider</a></li>
+                                <li><a href="org/apache/ibatis/submitted/sqlprovider/ProviderMethodResolutionTest.html#ProviderMethodResolutionTest.DefaultProvideMethodResolverReturnTypeMatchedMethodIsNoneMapper" target="classFrame">ProviderMethodResolutionTest.DefaultProvideMethodResolverReturnTypeMatchedMethodIsNoneMapper</a></li>
+                                <li><a href="org/apache/ibatis/submitted/sqlprovider/ProviderMethodResolutionTest.html#ProviderMethodResolutionTest.DefaultProvideMethodResolverReturnTypeMatchedMethodIsNoneMapper.MethodResolverBasedSqlProvider" target="classFrame">ProviderMethodResolutionTest.DefaultProvideMethodResolverReturnTypeMatchedMethodIsNoneMapper.MethodResolverBasedSqlProvider</a></li>
+                                <li><a href="org/apache/ibatis/submitted/sqlprovider/ProviderMethodResolutionTest.html#ProviderMethodResolutionTest.ProvideMethodResolverMapper" target="classFrame">ProviderMethodResolutionTest.ProvideMethodResolverMapper</a></li>
+                                <li><a href="org/apache/ibatis/submitted/sqlprovider/ProviderMethodResolutionTest.html#ProviderMethodResolutionTest.ProvideMethodResolverMapper.CustomMethodResolverBasedSqlProvider" target="classFrame">ProviderMethodResolutionTest.ProvideMethodResolverMapper.CustomMethodResolverBasedSqlProvider</a></li>
+                                <li><a href="org/apache/ibatis/submitted/sqlprovider/ProviderMethodResolutionTest.html#ProviderMethodResolutionTest.ProvideMethodResolverMapper.MethodResolverBasedSqlProvider" target="classFrame">ProviderMethodResolutionTest.ProvideMethodResolverMapper.MethodResolverBasedSqlProvider</a></li>
+                                <li><a href="org/apache/ibatis/submitted/sqlprovider/ProviderMethodResolutionTest.html#ProviderMethodResolutionTest.ProvideMethodResolverMapper.ReservedMethodNameBasedSqlProvider" target="classFrame">ProviderMethodResolutionTest.ProvideMethodResolverMapper.ReservedMethodNameBasedSqlProvider</a></li>
+                                <li><a href="org/apache/ibatis/submitted/sqlprovider/ProviderMethodResolutionTest.html#ProviderMethodResolutionTest.ReservedNameMethodIsNoneMapper" target="classFrame">ProviderMethodResolutionTest.ReservedNameMethodIsNoneMapper</a></li>
+                                <li><a href="org/apache/ibatis/submitted/sqlprovider/ProviderMethodResolutionTest.html#ProviderMethodResolutionTest.ReservedNameMethodIsNoneMapper.SqlProvider" target="classFrame">ProviderMethodResolutionTest.ReservedNameMethodIsNoneMapper.SqlProvider</a></li>
                                 <li><a href="org/apache/ibatis/submitted/multidb/ProviderTest.html#ProviderTest" target="classFrame">ProviderTest</a></li>
                                 <li><a href="org/apache/ibatis/submitted/quotedcolumnnames/QuotedColumnNamesTest.html#QuotedColumnNamesTest" target="classFrame">QuotedColumnNamesTest</a></li>
                                 <li><a href="org/apache/ibatis/submitted/raw_sql_source/RawSqlSourceTest.html#RawSqlSourceTest" target="classFrame">RawSqlSourceTest</a></li>
                                 <li><a href="org/apache/ibatis/submitted/integer_enum/Record.html#Record" target="classFrame">Record</a></li>
+                                <li><a href="org/apache/ibatis/submitted/localtime/Record.html#Record" target="classFrame">Record</a></li>
                                 <li><a href="org/apache/ibatis/submitted/timestamp_with_timezone/Record.html#Record" target="classFrame">Record</a></li>
+                                <li><a href="org/apache/ibatis/submitted/timezone_edge_case/Record.html#Record" target="classFrame">Record</a></li>
                                 <li><a href="org/apache/ibatis/submitted/refcursor/RefCursorTest.html#RefCursorTest" target="classFrame">RefCursorTest</a></li>
                                 <li><a href="org/apache/ibatis/submitted/refcursor/RefCursorTest.html#RefCursorTest.OrderResultHandler" target="classFrame">RefCursorTest.OrderResultHandler</a></li>
                                 <li><a href="org/apache/ibatis/submitted/refid_resolution/RefidResolutionTest.html#RefidResolutionTest" target="classFrame">RefidResolutionTest</a></li>
@@ -741,6 +760,8 @@
                                 <li><a href="org/apache/ibatis/type/SqlDateTypeHandlerTest.html#SqlDateTypeHandlerTest" target="classFrame">SqlDateTypeHandlerTest</a></li>
                                 <li><a href="org/apache/ibatis/submitted/selectkey/SqlProvider.html#SqlProvider" target="classFrame">SqlProvider</a></li>
                                 <li><a href="org/apache/ibatis/submitted/sqlprovider/SqlProviderTest.html#SqlProviderTest" target="classFrame">SqlProviderTest</a></li>
+                                <li><a href="org/apache/ibatis/submitted/sqlprovider/SqlProviderTest.html#SqlProviderTest.DatabaseIdMapper" target="classFrame">SqlProviderTest.DatabaseIdMapper</a></li>
+                                <li><a href="org/apache/ibatis/submitted/sqlprovider/SqlProviderTest.html#SqlProviderTest.DatabaseIdMapper.SqlProvider" target="classFrame">SqlProviderTest.DatabaseIdMapper.SqlProvider</a></li>
                                 <li><a href="org/apache/ibatis/submitted/sqlprovider/SqlProviderTest.html#SqlProviderTest.ErrorMapper" target="classFrame">SqlProviderTest.ErrorMapper</a></li>
                                 <li><a href="org/apache/ibatis/submitted/sqlprovider/SqlProviderTest.html#SqlProviderTest.ErrorSqlBuilder" target="classFrame">SqlProviderTest.ErrorSqlBuilder</a></li>
                                 <li><a href="org/apache/ibatis/submitted/sqlprovider/SqlProviderTest.html#SqlProviderTest.StaticMethodSqlProviderMapper" target="classFrame">SqlProviderTest.StaticMethodSqlProviderMapper</a></li>
@@ -784,6 +805,7 @@
                                 <li><a href="org/apache/ibatis/submitted/heavy_initial_load/ThingMapper.html#ThingMapper" target="classFrame">ThingMapper</a></li>
                                 <li><a href="org/apache/ibatis/type/TimeOnlyTypeHandlerTest.html#TimeOnlyTypeHandlerTest" target="classFrame">TimeOnlyTypeHandlerTest</a></li>
                                 <li><a href="org/apache/ibatis/submitted/timestamp_with_timezone/TimestampWithTimezoneTypeHandlerTest.html#TimestampWithTimezoneTypeHandlerTest" target="classFrame">TimestampWithTimezoneTypeHandlerTest</a></li>
+                                <li><a href="org/apache/ibatis/submitted/timezone_edge_case/TimezoneEdgeCaseTest.html#TimezoneEdgeCaseTest" target="classFrame">TimezoneEdgeCaseTest</a></li>
                                 <li><a href="org/apache/ibatis/submitted/emptycollection/TodoItem.html#TodoItem" target="classFrame">TodoItem</a></li>
                                 <li><a href="org/apache/ibatis/submitted/emptycollection/TodoLists.html#TodoLists" target="classFrame">TodoLists</a></li>
                                 <li><a href="org/apache/ibatis/submitted/discriminator/Truck.html#Truck" target="classFrame">Truck</a></li>
