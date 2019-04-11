@@ -88,6 +88,33 @@ public class ResultMap {
       resultMap.idResultMappings = new ArrayList<>();
       resultMap.constructorResultMappings = new ArrayList<>();
       resultMap.propertyResultMappings = new ArrayList<>();
+
+      final List<String> constructorArgNames = this.getConstructorArgNames();
+
+      if (!constructorArgNames.isEmpty()) {
+        final List<String> actualArgNames = argNamesOfMatchingConstructor(constructorArgNames);
+        if (actualArgNames == null) {
+          throw new BuilderException("Error in result map '" + resultMap.id
+              + "'. Failed to find a constructor in '"
+              + resultMap.getType().getName() + "' by arg names " + constructorArgNames
+              + ". There might be more info in debug log.");
+        }
+        resultMap.constructorResultMappings.sort((o1, o2) -> {
+          int paramIdx1 = actualArgNames.indexOf(o1.getProperty());
+          int paramIdx2 = actualArgNames.indexOf(o2.getProperty());
+          return paramIdx1 - paramIdx2;
+        });
+      }
+      // lock down collections
+      resultMap.resultMappings = Collections.unmodifiableList(resultMap.resultMappings);
+      resultMap.idResultMappings = Collections.unmodifiableList(resultMap.idResultMappings);
+      resultMap.constructorResultMappings = Collections.unmodifiableList(resultMap.constructorResultMappings);
+      resultMap.propertyResultMappings = Collections.unmodifiableList(resultMap.propertyResultMappings);
+      resultMap.mappedColumns = Collections.unmodifiableSet(resultMap.mappedColumns);
+      return resultMap;
+    }
+
+    private List<String> getConstructorArgNames() {
       final List<String> constructorArgNames = new ArrayList<>();
       for (ResultMapping resultMapping : resultMap.resultMappings) {
         resultMap.hasNestedQueries = resultMap.hasNestedQueries || resultMapping.getNestedQueryId() != null;
@@ -122,27 +149,7 @@ public class ResultMap {
       if (resultMap.idResultMappings.isEmpty()) {
         resultMap.idResultMappings.addAll(resultMap.resultMappings);
       }
-      if (!constructorArgNames.isEmpty()) {
-        final List<String> actualArgNames = argNamesOfMatchingConstructor(constructorArgNames);
-        if (actualArgNames == null) {
-          throw new BuilderException("Error in result map '" + resultMap.id
-              + "'. Failed to find a constructor in '"
-              + resultMap.getType().getName() + "' by arg names " + constructorArgNames
-              + ". There might be more info in debug log.");
-        }
-        resultMap.constructorResultMappings.sort((o1, o2) -> {
-          int paramIdx1 = actualArgNames.indexOf(o1.getProperty());
-          int paramIdx2 = actualArgNames.indexOf(o2.getProperty());
-          return paramIdx1 - paramIdx2;
-        });
-      }
-      // lock down collections
-      resultMap.resultMappings = Collections.unmodifiableList(resultMap.resultMappings);
-      resultMap.idResultMappings = Collections.unmodifiableList(resultMap.idResultMappings);
-      resultMap.constructorResultMappings = Collections.unmodifiableList(resultMap.constructorResultMappings);
-      resultMap.propertyResultMappings = Collections.unmodifiableList(resultMap.propertyResultMappings);
-      resultMap.mappedColumns = Collections.unmodifiableSet(resultMap.mappedColumns);
-      return resultMap;
+      return constructorArgNames;
     }
 
     private List<String> argNamesOfMatchingConstructor(List<String> constructorArgNames) {
