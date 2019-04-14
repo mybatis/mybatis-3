@@ -4,6 +4,9 @@ jdk:
   - oraclejdk11
   - oraclejdk8
 
+services:
+  - docker
+
 cache:
   directories:
     - $HOME/.m2

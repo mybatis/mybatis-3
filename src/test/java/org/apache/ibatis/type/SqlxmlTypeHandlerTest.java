@@ -16,13 +16,10 @@
 package org.apache.ibatis.type;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
-import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.SQLXML;
-import java.util.Collections;
 
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.annotations.Insert;
@@ -34,19 +31,21 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-
 import org.mockito.Mock;
-import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres;
-import ru.yandex.qatools.embed.postgresql.util.SocketUtil;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
-@Tag("EmbeddedPostgresqlTests")
+@Tag("TestcontainersTests")
+@Testcontainers
 class SqlxmlTypeHandlerTest extends BaseTypeHandlerTest {
   private static final TypeHandler<String> TYPE_HANDLER = new SqlxmlTypeHandler();
-  private static final EmbeddedPostgres postgres = new EmbeddedPostgres();
+  @Container
+  private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>().withDatabaseName("postgres_sqlxml")
+      .withUsername("u").withPassword("p");
 
   private static SqlSessionFactory sqlSessionFactory;
 
@@ -58,25 +57,16 @@ class SqlxmlTypeHandlerTest extends BaseTypeHandlerTest {
 
   @BeforeAll
   static void setUp() throws Exception {
-    // Launch PostgreSQL server. Download / unarchive if necessary.
-    String url = postgres.start(
-        EmbeddedPostgres.cachedRuntimeConfig(Paths.get(System.getProperty("java.io.tmpdir"), "pgembed")), "localhost",
-        SocketUtil.findFreePort(), "postgres_sqlxml", "postgres", "root", Collections.emptyList());
-
+    String url = postgres.getJdbcUrl();
     Configuration configuration = new Configuration();
-    Environment environment = new Environment("development", new JdbcTransactionFactory(), new UnpooledDataSource(
-        "org.postgresql.Driver", url, null));
+    Environment environment = new Environment("development", new JdbcTransactionFactory(),
+        new UnpooledDataSource("org.postgresql.Driver", url, "u", "p"));
     configuration.setEnvironment(environment);
     configuration.addMapper(Mapper.class);
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
 
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
             "org/apache/ibatis/type/SqlxmlTypeHandlerTest.sql");
-  }
-
-  @AfterAll
-  static void tearDown() {
-    postgres.stop();
   }
 
   @Override

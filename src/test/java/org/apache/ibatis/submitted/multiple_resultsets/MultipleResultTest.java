@@ -16,8 +16,6 @@
 package org.apache.ibatis.submitted.multiple_resultsets;
 
 import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.Collections;
 import java.util.List;
 
 import org.apache.ibatis.BaseDataTest;
@@ -28,34 +26,34 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-
-import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres;
-import ru.yandex.qatools.embed.postgresql.util.SocketUtil;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 /*
  * This class contains tests for multiple results.
  * It is based on Jeff's ref cursor tests.
  */
-@Tag("EmbeddedPostgresqlTests")
+@Tag("TestcontainersTests")
+@Testcontainers
 class MultipleResultTest {
 
-  private static final EmbeddedPostgres postgres = new EmbeddedPostgres();
+  @Container
+  private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>().withDatabaseName("multiple_resultsets")
+      .withUsername("u").withPassword("p");
 
   private static SqlSessionFactory sqlSessionFactory;
 
   @BeforeAll
   static void setUp() throws Exception {
-    // Launch PostgreSQL server. Download / unarchive if necessary.
-    String url = postgres.start(EmbeddedPostgres.cachedRuntimeConfig(Paths.get(System.getProperty("java.io.tmpdir"), "pgembed")), "localhost", SocketUtil.findFreePort(), "multiple_resultsets", "postgres", "root", Collections.emptyList());
-
+    String url = postgres.getJdbcUrl();
     Configuration configuration = new Configuration();
-    Environment environment = new Environment("development", new JdbcTransactionFactory(), new UnpooledDataSource(
-        "org.postgresql.Driver", url, null));
+    Environment environment = new Environment("development", new JdbcTransactionFactory(),
+        new UnpooledDataSource("org.postgresql.Driver", url, "u", "p"));
     configuration.setEnvironment(environment);
     configuration.setMapUnderscoreToCamelCase(true);
     configuration.addMapper(Mapper.class);
@@ -63,11 +61,6 @@ class MultipleResultTest {
 
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
         "org/apache/ibatis/submitted/multiple_resultsets/CreateDB.sql");
-  }
-
-  @AfterAll
-  static void tearDown() {
-    postgres.stop();
   }
 
   @Test
