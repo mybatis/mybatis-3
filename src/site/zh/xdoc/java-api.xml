@@ -162,7 +162,7 @@ SqlSessionFactory factory = builder.build(configuration);</source>
 SqlSession openSession(boolean autoCommit)
 SqlSession openSession(Connection connection)
 SqlSession openSession(TransactionIsolationLevel level)
-SqlSession openSession(ExecutorType execType,TransactionIsolationLevel level)
+SqlSession openSession(ExecutorType execType, TransactionIsolationLevel level)
 SqlSession openSession(ExecutorType execType)
 SqlSession openSession(ExecutorType execType, boolean autoCommit)
 SqlSession openSession(ExecutorType execType, Connection connection)
@@ -204,12 +204,6 @@ int update(String statement, Object parameter)
 int delete(String statement, Object parameter)]]></source>
   <p>selectOne 和 selectList 的不同仅仅是 selectOne 必须返回一个对象或 null 值。如果返回值多于一个，那么就会抛出异常。如果你不知道返回对象的数量，请使用 selectList。如果需要查看返回对象是否存在，可行的方案是返回一个值即可（0 或 1）。selectMap 稍微特殊一点，因为它会将返回的对象的其中一个属性作为 key 值，将对象作为 value 值，从而将多结果集转为 Map 类型值。因为并不是所有语句都需要参数，所以这些方法都重载成不需要参数的形式。
   </p>
-  <p>A Cursor offers the same results as a List, except it fetches data lazily using an Iterator.</p>
-  <source><![CDATA[try (Cursor<MyEntity> entities = session.selectCursor(statement, param)) {
-   for (MyEntity entity:entities) {
-      // process one entity
-   }
-}]]></source>
   <p>The value returned by the insert, update and delete methods indicate the number of rows affected by the statement.</p>
   <source><![CDATA[<T> T selectOne(String statement)
 <E> List<E> selectList(String statement)
@@ -218,6 +212,13 @@ int delete(String statement, Object parameter)]]></source>
 int insert(String statement)
 int update(String statement)
 int delete(String statement)]]></source>
+
+  <p>A Cursor offers the same results as a List, except it fetches data lazily using an Iterator.</p>
+  <source><![CDATA[try (Cursor<MyEntity> entities = session.selectCursor(statement, param)) {
+   for (MyEntity entity:entities) {
+      // process one entity
+   }
+}]]></source>
 
   <p>最后，还有 select 方法的三个高级版本，它们允许你限制返回行数的范围，或者提供自定义结果控制逻辑，这通常在数据集合庞大的情形下使用。
   </p>

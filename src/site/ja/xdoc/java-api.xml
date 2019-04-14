@@ -159,7 +159,7 @@ SqlSessionFactory factory = builder.build(configuration);</source>
 SqlSession openSession(boolean autoCommit)
 SqlSession openSession(Connection connection)
 SqlSession openSession(TransactionIsolationLevel level)
-SqlSession openSession(ExecutorType execType,TransactionIsolationLevel level)
+SqlSession openSession(ExecutorType execType, TransactionIsolationLevel level)
 SqlSession openSession(ExecutorType execType)
 SqlSession openSession(ExecutorType execType, boolean autoCommit)
 SqlSession openSession(ExecutorType execType, Connection connection)
@@ -196,12 +196,6 @@ int insert(String statement, Object parameter)
 int update(String statement, Object parameter)
 int delete(String statement, Object parameter)]]></source>
   <p>selectOne と selectList の違いは、selectOne は１つのオブジェクトまたは null を返さなくてはならないということです。複数のオブジェクトが返されると例外が発生します。結果のオブジェクト数が未知の場合は selectList を使用してください。オブジェクトが存在するかどうかを確認したいのなら、カウント結果（0 or 1）を返すようにした方が良いでしょう。selectMap は、結果のリストを mapKey で指定したプロパティに基づいたマップに格納して返す特殊なメソッドです。<br />ステートメントの引数は不要な場合もあるので、parameter オブジェクトの引数を持たないオーバーロードメソッドも用意されています。</p>
-  <p>A Cursor offers the same results as a List, except it fetches data lazily using an Iterator.</p>
-  <source><![CDATA[try (Cursor<MyEntity> entities = session.selectCursor(statement, param)) {
-   for (MyEntity entity:entities) {
-      // process one entity
-   }
-}]]></source>
   <p>insert, update, delete の各メソッドは、ステートメントの実行によって影響を受けた行数を返します。</p>
   <source><![CDATA[<T> T selectOne(String statement)
 <E> List<E> selectList(String statement)
@@ -210,6 +204,13 @@ int delete(String statement, Object parameter)]]></source>
 int insert(String statement)
 int update(String statement)
 int delete(String statement)]]></source>
+
+  <p>A Cursor offers the same results as a List, except it fetches data lazily using an Iterator.</p>
+  <source><![CDATA[try (Cursor<MyEntity> entities = session.selectCursor(statement, param)) {
+   for (MyEntity entity:entities) {
+      // process one entity
+   }
+}]]></source>
 
   <p>最後に、高度な処理を行うための select メソッドがあります。これらは主に非常に大きなデータセットを扱う場合に、返される行の範囲を限定したり、カスタムの ResultHandler を使って独自に結果処理を行うことができるようになっています。</p>
   <source><![CDATA[<E> List<E> selectList (String statement, Object parameter, RowBounds rowBounds)
