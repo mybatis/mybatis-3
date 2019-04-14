@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -262,6 +262,54 @@ public abstract class AbstractSQL<T> {
     return getSelf();
   }
 
+  /**
+   * Set the limit variable string(e.g. {@code "#{limit}"}).
+   *
+   * @param variable a limit variable string
+   * @return a self instance
+   * @since 3.5.2
+   */
+  public T LIMIT(String variable) {
+    sql().limit = variable;
+    return getSelf();
+  }
+
+  /**
+   * Set the limit value.
+   *
+   * @param value an offset value
+   * @return a self instance
+   * @since 3.5.2
+   */
+  public T LIMIT(int value) {
+    sql().limit = String.valueOf(value);
+    return getSelf();
+  }
+
+  /**
+   * Set the offset variable string(e.g. {@code "#{offset}"}).
+   *
+   * @param variable a offset variable string
+   * @return a self instance
+   * @since 3.5.2
+   */
+  public T OFFSET(String variable) {
+    sql().offset = variable;
+    return getSelf();
+  }
+
+  /**
+   * Set the offset value.
+   *
+   * @param value an offset value
+   * @return a self instance
+   * @since 3.5.2
+   */
+  public T OFFSET(long value) {
+    sql().offset = String.valueOf(value);
+    return getSelf();
+  }
+
   private SQLStatement sql() {
     return sql;
   }
@@ -328,6 +376,8 @@ public abstract class AbstractSQL<T> {
     List<String> columns = new ArrayList<>();
     List<String> values = new ArrayList<>();
     boolean distinct;
+    String offset;
+    String limit;
 
     public SQLStatement() {
         // Prevent Synthetic Access
@@ -368,6 +418,12 @@ public abstract class AbstractSQL<T> {
       sqlClause(builder, "GROUP BY", groupBy, "", "", ", ");
       sqlClause(builder, "HAVING", having, "(", ")", " AND ");
       sqlClause(builder, "ORDER BY", orderBy, "", "", ", ");
+      if (limit != null) {
+        builder.append(" LIMIT ").append(limit);
+      }
+      if (offset != null) {
+        builder.append(" OFFSET ").append(offset);
+      }
       return builder.toString();
     }
 
@@ -389,6 +445,9 @@ public abstract class AbstractSQL<T> {
     private String deleteSQL(SafeAppendable builder) {
       sqlClause(builder, "DELETE FROM", tables, "", "", "");
       sqlClause(builder, "WHERE", where, "(", ")", " AND ");
+      if (limit != null) {
+        builder.append(" LIMIT ").append(limit);
+      }
       return builder.toString();
     }
 
@@ -397,6 +456,9 @@ public abstract class AbstractSQL<T> {
       joins(builder);
       sqlClause(builder, "SET", sets, "", "", ", ");
       sqlClause(builder, "WHERE", where, "(", ")", " AND ");
+      if (limit != null) {
+        builder.append(" LIMIT ").append(limit);
+      }
       return builder.toString();
     }
 
