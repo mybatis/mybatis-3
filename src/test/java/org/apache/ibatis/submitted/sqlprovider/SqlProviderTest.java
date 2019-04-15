@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.BaseDataTest;
+import org.apache.ibatis.annotations.DeleteProvider;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.builder.BuilderException;
@@ -281,6 +282,32 @@ class SqlProviderTest {
   }
 
   @Test
+  void omitType() throws NoSuchMethodException {
+    try {
+      Class<?> mapperType = ErrorMapper.class;
+      Method mapperMethod = mapperType.getMethod("omitType");
+      new ProviderSqlSource(new Configuration(),
+          mapperMethod.getAnnotation(SelectProvider.class), mapperType, mapperMethod);
+      fail();
+    } catch (BuilderException e) {
+      assertTrue(e.getMessage().contains("Please specify either 'value' or 'type' attribute of @SelectProvider at the 'public abstract void org.apache.ibatis.submitted.sqlprovider.SqlProviderTest$ErrorMapper.omitType()'."));
+    }
+  }
+
+  @Test
+  void differentTypeAndValue() throws NoSuchMethodException {
+    try {
+      Class<?> mapperType = ErrorMapper.class;
+      Method mapperMethod = mapperType.getMethod("differentTypeAndValue");
+      new ProviderSqlSource(new Configuration(),
+          mapperMethod.getAnnotation(DeleteProvider.class), mapperType, mapperMethod);
+      fail();
+    } catch (BuilderException e) {
+      assertTrue(e.getMessage().contains("Cannot specify different class on 'value' and 'type' attribute of @DeleteProvider at the 'public abstract void org.apache.ibatis.submitted.sqlprovider.SqlProviderTest$ErrorMapper.differentTypeAndValue()'."));
+    }
+  }
+
+  @Test
   void multipleProviderContext() throws NoSuchMethodException {
     try {
       Class<?> mapperType = ErrorMapper.class;
@@ -476,6 +503,12 @@ class SqlProviderTest {
 
     @SelectProvider(type = ErrorSqlBuilder.class, method = "multipleProviderContext")
     void multipleProviderContext();
+
+    @SelectProvider
+    void omitType();
+
+    @DeleteProvider(value = String.class, type = Integer.class)
+    void differentTypeAndValue();
   }
 
   @SuppressWarnings("unused")

@@ -15,6 +15,8 @@
  */
 package org.apache.ibatis.builder.annotation;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Map;
@@ -59,7 +61,7 @@ public class ProviderSqlSource implements SqlSource {
       this.configuration = configuration;
       Lang lang = mapperMethod == null ? null : mapperMethod.getAnnotation(Lang.class);
       this.languageDriver = configuration.getLanguageDriver(lang == null ? null : lang.value());
-      this.providerType = (Class<?>) provider.getClass().getMethod("type").invoke(provider);
+      this.providerType = getProviderType(provider, mapperMethod);
       providerMethodName = (String) provider.getClass().getMethod("method").invoke(provider);
 
       if (providerMethodName.length() == 0 && ProviderMethodResolver.class.isAssignableFrom(this.providerType)) {
@@ -173,6 +175,23 @@ public class ProviderSqlSource implements SqlSource {
     }
     CharSequence sql = (CharSequence) providerMethod.invoke(targetObject, args);
     return sql != null ? sql.toString() : null;
+  }
+
+  private Class<?> getProviderType(Object providerAnnotation, Method mapperMethod)
+      throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    Class<?> type = (Class<?>) providerAnnotation.getClass().getMethod("type").invoke(providerAnnotation);
+    Class<?> value = (Class<?>) providerAnnotation.getClass().getMethod("value").invoke(providerAnnotation);
+    if (value == void.class && type == void.class) {
+      throw new BuilderException("Please specify either 'value' or 'type' attribute of @"
+          + ((Annotation) providerAnnotation).annotationType().getSimpleName()
+          + " at the '" + mapperMethod.toString() + "'.");
+    }
+    if (value != void.class && type != void.class && value != type) {
+      throw new BuilderException("Cannot specify different class on 'value' and 'type' attribute of @"
+          + ((Annotation) providerAnnotation).annotationType().getSimpleName()
+          + " at the '" + mapperMethod.toString() + "'.");
+    }
+    return value == void.class ? type : value;
   }
 
 }
