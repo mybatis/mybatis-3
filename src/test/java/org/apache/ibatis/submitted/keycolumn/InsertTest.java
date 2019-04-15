@@ -28,33 +28,26 @@ import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.apache.ibatis.testcontainers.PgContainer;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 /**
  * @author Jeff Butler
  */
 @Tag("TestcontainersTests")
-@Testcontainers
 class InsertTest {
-
-  @Container
-  private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>().withDatabaseName("keycolumn")
-      .withUsername("u").withPassword("p");
 
   private static SqlSessionFactory sqlSessionFactory;
 
   @BeforeAll
   static void setUp() throws Exception {
-    String url = postgres.getJdbcUrl();
+    String url = PgContainer.INSTANCE.getJdbcUrl();
     Configuration configuration = new Configuration();
     Environment environment = new Environment("development", new JdbcTransactionFactory(),
-        new UnpooledDataSource("org.postgresql.Driver", url, "u", "p"));
+        new UnpooledDataSource(PgContainer.DRIVER, url, PgContainer.USER, PgContainer.PW));
     configuration.setEnvironment(environment);
     configuration.addMapper(InsertMapper.class);
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
