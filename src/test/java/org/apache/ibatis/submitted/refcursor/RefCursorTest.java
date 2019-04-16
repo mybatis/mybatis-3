@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.BaseDataTest;
-import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultContext;
@@ -47,10 +46,9 @@ class RefCursorTest {
 
   @BeforeAll
   static void setUp() throws Exception {
-    String url = PgContainer.INSTANCE.getJdbcUrl();
     Configuration configuration = new Configuration();
     Environment environment = new Environment("development", new JdbcTransactionFactory(),
-        new UnpooledDataSource(PgContainer.DRIVER, url, PgContainer.USER, PgContainer.PW));
+        PgContainer.getUnpooledDataSource());
     configuration.setEnvironment(environment);
     configuration.addMapper(OrdersMapper.class);
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);

@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.util.List;
 
 import org.apache.ibatis.BaseDataTest;
-import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
@@ -43,10 +42,9 @@ class MultipleResultTest {
 
   @BeforeAll
   static void setUp() throws Exception {
-    String url = PgContainer.INSTANCE.getJdbcUrl();
     Configuration configuration = new Configuration();
     Environment environment = new Environment("development", new JdbcTransactionFactory(),
-        new UnpooledDataSource(PgContainer.DRIVER, url, PgContainer.USER, PgContainer.PW));
+        PgContainer.getUnpooledDataSource());
     configuration.setEnvironment(environment);
     configuration.setMapUnderscoreToCamelCase(true);
     configuration.addMapper(Mapper.class);
