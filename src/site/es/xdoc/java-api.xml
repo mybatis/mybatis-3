@@ -265,20 +265,8 @@ void rollback(boolean force)</source>
   <h5>Asegurarse de que la SqlSession se cierra</h5>
   <source>void close()</source>
   <p>El punto más importante del que debes asegurarte es que cierras todas las sesiones que abres. La mejor forma de asegurarse es usar el patrón mostrado a continuación:</p>
-  <source>SqlSession session = sqlSessionFactory.openSession();
-try {
+  <source>try (SqlSession session = sqlSessionFactory.openSession()) {
     // following 3 lines pseudocod for "doing some work"
-    session.insert(...);
-    session.update(...);
-    session.delete(...);
-    session.commit();
-} finally {
-    session.close();
-}</source>
-  <p>O, si usas jdk 1.7+ y MyBatis 3.2+, puedes utilizar la sentencia try-with-resources:</p>
-  <source>
-try (SqlSession session = sqlSessionFactory.openSession()) {
-    // following 3 lines pseudocode for "doing some work"
     session.insert(...);
     session.update(...);
     session.delete(...);
