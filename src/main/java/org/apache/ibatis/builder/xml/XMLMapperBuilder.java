@@ -34,6 +34,7 @@ import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.apache.ibatis.builder.ResultMapResolver;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.executor.ErrorContext;
+import org.apache.ibatis.io.Resource;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.Discriminator;
 import org.apache.ibatis.mapping.ParameterMapping;
@@ -79,6 +80,17 @@ public class XMLMapperBuilder extends BaseBuilder {
   public XMLMapperBuilder(InputStream inputStream, Configuration configuration, String resource, Map<String, XNode> sqlFragments) {
     this(new XPathParser(inputStream, true, configuration.getVariables(), new XMLMapperEntityResolver()),
         configuration, resource, sqlFragments);
+  }
+
+  public XMLMapperBuilder(Resource resource, Configuration configuration, Map<String, XNode> sqlFragments,
+      String namespace) {
+    this(resource, configuration, sqlFragments);
+    this.builderAssistant.setCurrentNamespace(namespace);
+  }
+
+  public XMLMapperBuilder(Resource resource, Configuration configuration, Map<String, XNode> sqlFragments) {
+    this(new XPathParser(resource, true, configuration.getVariables(), new XMLMapperEntityResolver()), configuration,
+        resource.getLocation(), sqlFragments);
   }
 
   private XMLMapperBuilder(XPathParser parser, Configuration configuration, String resource, Map<String, XNode> sqlFragments) {

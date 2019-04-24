@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.parsing;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -30,6 +32,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.ibatis.builder.BuilderException;
+import org.apache.ibatis.io.Resource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -45,7 +48,7 @@ import org.xml.sax.SAXParseException;
  */
 public class XPathParser {
 
-  private final Document document;
+  private Document document;
   private boolean validation;
   private EntityResolver entityResolver;
   private Properties variables;
@@ -53,7 +56,7 @@ public class XPathParser {
 
   public XPathParser(String xml) {
     commonConstructor(false, null, null);
-    this.document = createDocument(new InputSource(new StringReader(xml)));
+    this.document = createDocument(xml);
   }
 
   public XPathParser(Reader reader) {
@@ -73,7 +76,7 @@ public class XPathParser {
 
   public XPathParser(String xml, boolean validation) {
     commonConstructor(validation, null, null);
-    this.document = createDocument(new InputSource(new StringReader(xml)));
+    this.document = createDocument(xml);
   }
 
   public XPathParser(Reader reader, boolean validation) {
@@ -93,7 +96,7 @@ public class XPathParser {
 
   public XPathParser(String xml, boolean validation, Properties variables) {
     commonConstructor(validation, variables, null);
-    this.document = createDocument(new InputSource(new StringReader(xml)));
+    this.document = createDocument(xml);
   }
 
   public XPathParser(Reader reader, boolean validation, Properties variables) {
@@ -113,7 +116,7 @@ public class XPathParser {
 
   public XPathParser(String xml, boolean validation, Properties variables, EntityResolver entityResolver) {
     commonConstructor(validation, variables, entityResolver);
-    this.document = createDocument(new InputSource(new StringReader(xml)));
+    this.document = createDocument(xml);
   }
 
   public XPathParser(Reader reader, boolean validation, Properties variables, EntityResolver entityResolver) {
@@ -129,6 +132,32 @@ public class XPathParser {
   public XPathParser(Document document, boolean validation, Properties variables, EntityResolver entityResolver) {
     commonConstructor(validation, variables, entityResolver);
     this.document = document;
+  }
+
+  public XPathParser(Resource resource, boolean validation, Properties variables, EntityResolver entityResolver) {
+    commonConstructor(validation, variables, entityResolver);
+    BuilderException eDtd;
+    // Read with DTD first.
+    try (InputStream inputStream = resource.getInputStream()) {
+      this.document = createDocument(new InputSource(inputStream), false);
+      return;
+    } catch (IOException e) {
+      // Assuming exists() returned true, this won't happen.
+      throw new BuilderException(e);
+    } catch (BuilderException e) {
+      eDtd = e;
+    }
+    // DTD failed. Retry with XSD.
+    try (InputStream inputStream = resource.getInputStream()) {
+      this.document = createDocument(new InputSource(inputStream), true);
+    } catch (IOException e) {
+      // Assuming exists() returned true, this won't happen.
+      throw new BuilderException(e);
+    } catch (BuilderException e) {
+      // We don't know which exception is appropriate.
+      // Throwing DTD one for now.
+      throw eDtd;
+    }
   }
 
   public void setVariables(Properties variables) {
@@ -226,7 +255,29 @@ public class XPathParser {
     }
   }
 
+  private Document createDocument(String string) {
+    BuilderException eDtd;
+    // Read with DTD first.
+    try (StringReader reader = new StringReader(string)) {
+      return createDocument(new InputSource(reader), false);
+    } catch (BuilderException e) {
+      eDtd = e;
+    }
+    // DTD failed. Retry with XSD.
+    try (StringReader reader = new StringReader(string)) {
+      return createDocument(new InputSource(reader), true);
+    } catch (BuilderException e) {
+      // We don't know which exception is appropriate.
+      // Throwing DTD one for now.
+      throw eDtd;
+    }
+  }
+
   private Document createDocument(InputSource inputSource) {
+    return createDocument(inputSource, false);
+  }
+
+  private Document createDocument(InputSource inputSource, boolean useXsd) {
     // important: this must only be called AFTER common constructor
     try {
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -237,6 +288,11 @@ public class XPathParser {
       factory.setIgnoringElementContentWhitespace(false);
       factory.setCoalescing(false);
       factory.setExpandEntityReferences(true);
+
+      if (useXsd) {
+        factory.setNamespaceAware(true);
+        factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaLanguage", XMLConstants.W3C_XML_SCHEMA_NS_URI);
+      }
 
       DocumentBuilder builder = factory.newDocumentBuilder();
       builder.setEntityResolver(entityResolver);

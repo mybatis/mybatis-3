@@ -23,6 +23,7 @@ import java.util.Properties;
 import org.apache.ibatis.builder.xml.XMLConfigBuilder;
 import org.apache.ibatis.exceptions.ExceptionFactory;
 import org.apache.ibatis.executor.ErrorContext;
+import org.apache.ibatis.io.Resource;
 import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
 
 /**
@@ -85,6 +86,29 @@ public class SqlSessionFactoryBuilder {
       } catch (IOException e) {
         // Intentionally ignore. Prefer previous error.
       }
+    }
+  }
+
+  public SqlSessionFactory build(Resource resource) {
+    return build(resource, null, null);
+  }
+
+  public SqlSessionFactory build(Resource resource, String environment) {
+    return build(resource, environment, null);
+  }
+
+  public SqlSessionFactory build(Resource resource, Properties properties) {
+    return build(resource, null, properties);
+  }
+
+  public SqlSessionFactory build(Resource resource, String environment, Properties properties) {
+    try {
+      XMLConfigBuilder parser = new XMLConfigBuilder(resource, environment, properties);
+      return build(parser.parse());
+    } catch (Exception e) {
+      throw ExceptionFactory.wrapException("Error building SqlSession.", e);
+    } finally {
+      ErrorContext.instance().reset();
     }
   }
 

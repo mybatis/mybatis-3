@@ -27,6 +27,7 @@ import java.util.Properties;
 
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.executor.BatchResult;
+import org.apache.ibatis.io.Resource;
 import org.apache.ibatis.reflection.ExceptionUtil;
 
 /**
@@ -69,6 +70,18 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 
   public static SqlSessionManager newInstance(InputStream inputStream, Properties properties) {
     return new SqlSessionManager(new SqlSessionFactoryBuilder().build(inputStream, null, properties));
+  }
+
+  public static SqlSessionManager newInstance(Resource resource) {
+    return new SqlSessionManager(new SqlSessionFactoryBuilder().build(resource, null, null));
+  }
+
+  public static SqlSessionManager newInstance(Resource resource, String environment) {
+    return new SqlSessionManager(new SqlSessionFactoryBuilder().build(resource, environment, null));
+  }
+
+  public static SqlSessionManager newInstance(Resource resource, Properties properties) {
+    return new SqlSessionManager(new SqlSessionFactoryBuilder().build(resource, null, properties));
   }
 
   public static SqlSessionManager newInstance(SqlSessionFactory sqlSessionFactory) {
