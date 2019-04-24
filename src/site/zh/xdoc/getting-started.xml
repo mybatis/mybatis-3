@@ -127,11 +127,8 @@ SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(confi
         SqlSession 实例来直接执行已映射的 SQL 语句。例如：
       </p>
 
-      <source><![CDATA[SqlSession session = sqlSessionFactory.openSession();
-try {
+      <source><![CDATA[try (SqlSession session = sqlSessionFactory.openSession()) {
   Blog blog = (Blog) session.selectOne("org.mybatis.example.BlogMapper.selectBlog", 101);
-} finally {
-  session.close();
 }]]></source>
       <p>
         诚然，这种方式能够正常工作，并且对于使用旧版本 MyBatis
@@ -141,12 +138,9 @@ try {
 
       <p>例如：</p>
 
-      <source><![CDATA[SqlSession session = sqlSessionFactory.openSession();
-try {
+      <source><![CDATA[try (SqlSession session = sqlSessionFactory.openSession()) {
   BlogMapper mapper = session.getMapper(BlogMapper.class);
   Blog blog = mapper.selectBlog(101);
-} finally {
-  session.close();
 }]]></source>
       <p>现在我们来探究一下这里到底是怎么执行的。</p>
     </subsection>
@@ -291,11 +285,8 @@ public interface BlogMapper {
           这个关闭操作是很重要的，你应该把这个关闭操作放到 finally 块中以确保每次都能执行关闭。
           下面的示例就是一个确保 SqlSession 关闭的标准模式：
         </p>
-        <source><![CDATA[SqlSession session = sqlSessionFactory.openSession();
-try {
+        <source><![CDATA[try (SqlSession session = sqlSessionFactory.openSession()) {
   // 你的应用逻辑代码
-} finally {
-  session.close();
 }]]></source>
         <p>在你的所有的代码中一致地使用这种模式来保证所有数据库资源都能被正确地关闭。</p>
 
@@ -309,12 +300,9 @@ try {
           SqlSession 一样，在这个作用域上管理太多的资源的话会难于控制。
           为了避免这种复杂性，最好把映射器放在方法作用域内。下面的示例就展示了这个实践：
         </p>
-        <source><![CDATA[SqlSession session = sqlSessionFactory.openSession();
-try {
+        <source><![CDATA[try (SqlSession session = sqlSessionFactory.openSession()) {
   BlogMapper mapper = session.getMapper(BlogMapper.class);
   // 你的应用逻辑代码
-} finally {
-  session.close();
 }
 ]]></source>
 

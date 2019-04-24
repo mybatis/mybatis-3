@@ -338,19 +338,7 @@ void rollback(boolean force)</source>
   <source>void close()</source>
   <p>반드시 기억해야 하는 중요한 것은 당신이 열었던 세션을 닫아주는 것이다.
   확실히 하기 위해 가장 좋은 방법은 다음과 같은 형태로 개발하는 것이다.</p>
-  <source>SqlSession session = sqlSessionFactory.openSession();
-try {
-    // 다음의 3줄은 "어떤 작업을 하는"을 나타낸다.
-    session.insert(...);
-    session.update(...);
-    session.delete(...);
-    session.commit();
-} finally {
-    session.close();
-}</source>
-  <p>JDK 1.7이상과 마이바티스 3.2이상을 사용한다면 다음처럼 try-with-resources 구문을 사용할 수 있다. </p>
-  <source>
-try (SqlSession session = sqlSessionFactory.openSession()) {
+  <source>try (SqlSession session = sqlSessionFactory.openSession()) {
     // 다음의 3줄은 "어떤 작업을 하는"을 나타낸다.
     session.insert(...);
     session.update(...);

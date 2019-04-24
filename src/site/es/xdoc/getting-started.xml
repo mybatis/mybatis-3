@@ -156,11 +156,8 @@ SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(confi
 					base de datos. Puedes ejecutar mapped statements con la instancia de
 					SqlSession de la siguiente forma:
 				</p>
-				<source><![CDATA[SqlSession session = sqlSessionFactory.openSession();
-try {
+				<source><![CDATA[try (SqlSession session = sqlSessionFactory.openSession()) {
   Blog blog = (Blog) session.selectOne("org.mybatis.example.BlogMapper.selectBlog", 101);
-} finally {
-  session.close();
 }]]></source>
 				<p>
 					Aunque esta forma de trabajar con la SqlSession funciona correctamente y
@@ -174,12 +171,9 @@ try {
 				<p>
 					Por ejemplo:
 				</p>
-				<source><![CDATA[SqlSession session = sqlSessionFactory.openSession();
-try {
+				<source><![CDATA[try (SqlSession session = sqlSessionFactory.openSession()) {
   BlogMapper mapper = session.getMapper(BlogMapper.class);
   Blog blog = mapper.selectBlog(101);
-} finally {
-  session.close();
 }]]></source>
 				<p>
 					Vemos con detalle cómo funciona esto.
@@ -367,11 +361,8 @@ public interface BlogMapper {
 					Deberías asegurarte de que se cierra con un bloque finally. A
 					continuación se muestra el patrón estándar para asegurarse de que
 					las sesiones se cierran correctamente.</p>
-				<source><![CDATA[SqlSession session = sqlSessionFactory.openSession();
-try {
+				<source><![CDATA[try (SqlSession session = sqlSessionFactory.openSession()) {
   // do work
-} finally {
-  session.close();
 }]]></source>
 				<p>Usando este patrón en todo el código se asegura que los recursos
 					de base de datos se liberarán correctamente.</p>
@@ -389,12 +380,9 @@ try {
 					la situación se te vaya de las manos. Hazlo fácil (keep it simple)
 					y mantén los mappers en el ámbito de método. Este ejemplo muestra
 					esta práctica:</p>
-				<source><![CDATA[SqlSession session = sqlSessionFactory.openSession();
-try {
+				<source><![CDATA[try (SqlSession session = sqlSessionFactory.openSession()) {
   BlogMapper mapper = session.getMapper(BlogMapper.class);
   // do work
-} finally {
-  session.close();
 }
 ]]></source>
 
