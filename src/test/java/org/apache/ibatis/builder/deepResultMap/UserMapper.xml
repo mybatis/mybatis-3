@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.apache.ibatis.builder.mapper.UserMapper" >
+    <resultMap id="BaseResultMap" type="org.apache.ibatis.builder.model.UserDTO" extends="org.apache.ibatis.builder.mapper.PersonMapper.BaseResultMap">
+    </resultMap>
+
+    <select id="findUserListByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT * FROM CNT_USER WHERE name =#{name}
+    </select>
+
+</mapper>

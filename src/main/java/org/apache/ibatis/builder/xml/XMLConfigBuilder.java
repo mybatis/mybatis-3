@@ -17,11 +17,16 @@ package org.apache.ibatis.builder.xml;
 
 import java.io.InputStream;
 import java.io.Reader;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.Properties;
 import javax.sql.DataSource;
 
 import org.apache.ibatis.builder.BaseBuilder;
 import org.apache.ibatis.builder.BuilderException;
+import org.apache.ibatis.builder.IncompleteElementException;
+import org.apache.ibatis.builder.annotation.MapperAnnotationBuilder;
 import org.apache.ibatis.datasource.DataSourceFactory;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.executor.loader.ProxyFactory;
@@ -117,8 +122,50 @@ public class XMLConfigBuilder extends BaseBuilder {
       databaseIdProviderElement(root.evalNode("databaseIdProvider"));
       typeHandlerElement(root.evalNode("typeHandlers"));
       mapperElement(root.evalNode("mappers"));
+      checkMappersRelatedMappedStatementExist();
     } catch (Exception e) {
       throw new BuilderException("Error parsing SQL Mapper Configuration. Cause: " + e, e);
+    }
+  }
+
+  private void checkMappersRelatedMappedStatementExist() {
+    if (!configuration.isCheckMapperMethodRelatedMappedStatementExist()) {
+      return;
+    }
+
+    Collection<Class<?>> mapperClasses = configuration.getMapperRegistry().getMappers();
+    for (Class<?> mapperType : mapperClasses) {
+      doCheckMapperRelatedMappedStatementExist(mapperType);
+    }
+
+  }
+
+  private void doCheckMapperRelatedMappedStatementExist(Class<?> mapperType) {
+
+    Method[] methods = mapperType.getDeclaredMethods();
+    for (Method method : methods) {
+      MapperAnnotationBuilder mab = new MapperAnnotationBuilder(configuration, mapperType);
+      Class<? extends Annotation> sqlAnnotationType = mab.getSqlAnnotationType(method);
+      /**
+       * this method has sql annotation
+       */
+      if (sqlAnnotationType != null) {
+        continue;
+      }
+
+      Class<? extends Annotation> sqlProviderAnnotationType = mab.getSqlProviderAnnotationType(method);
+      /**
+       * this method has sql provider annotation
+       */
+      if (sqlProviderAnnotationType != null) {
+        continue;
+      }
+
+      String mappedStatementId = mapperType.getName() + "." + method.getName();
+      boolean hasStatement = configuration.hasStatement(mappedStatementId, false);
+      if (!hasStatement) {
+        throw new IncompleteElementException(String.format("mappedStatementId (%s) related mappedStatement not found ", mappedStatementId));
+      }
     }
   }
 
@@ -266,6 +313,8 @@ public class XMLConfigBuilder extends BaseBuilder {
     Class<? extends Log> logImpl = (Class<? extends Log>)resolveClass(props.getProperty("logImpl"));
     configuration.setLogImpl(logImpl);
     configuration.setConfigurationFactory(resolveClass(props.getProperty("configurationFactory")));
+    configuration.setCheckMapperMethodRelatedMappedStatementExist(booleanValueOf(props.getProperty("checkMapperMethodRelatedMappedStatementExist"), false));
+
   }
 
   private void environmentsElement(XNode context) throws Exception {

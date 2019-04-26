@@ -44,11 +44,7 @@ import org.apache.ibatis.logging.slf4j.Slf4jImpl;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.scripting.defaults.RawLanguageDriver;
 import org.apache.ibatis.scripting.xmltags.XMLLanguageDriver;
-import org.apache.ibatis.session.AutoMappingBehavior;
-import org.apache.ibatis.session.AutoMappingUnknownColumnBehavior;
-import org.apache.ibatis.session.Configuration;
-import org.apache.ibatis.session.ExecutorType;
-import org.apache.ibatis.session.LocalCacheScope;
+import org.apache.ibatis.session.*;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.EnumOrdinalTypeHandler;
@@ -299,6 +295,21 @@ public class XmlConfigBuilderTest {
     when(builder).parse();
     then(caughtException()).isInstanceOf(BuilderException.class)
       .hasMessageContaining("The properties element cannot specify both a URL and a resource based property file reference.  Please specify one or the other.");
+  }
+
+  @Test
+  public void testParse() {
+    boolean noExceptionThrow = true;
+    try {
+      String resource = "org/apache/ibatis/builder/UserMapperConfig.xml";
+      InputStream inputStream = Resources.getResourceAsStream(resource);
+      new SqlSessionFactoryBuilder().build(inputStream);
+    } catch (Exception exp) {
+      assertThat(exp.getMessage().contains("related mappedStatement not found")).isTrue();
+      noExceptionThrow = false;
+    }
+    assertThat(noExceptionThrow).isFalse();
+
   }
 
 }

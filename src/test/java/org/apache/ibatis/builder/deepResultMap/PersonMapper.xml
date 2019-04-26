@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.apache.ibatis.builder.mapper.PersonMapper" >
+    <resultMap id="BaseResultMap" type="org.apache.ibatis.builder.model.UserDTO" extends="org.apache.ibatis.builder.mapper.ManMapper.BaseResultMap">
+    </resultMap>
+
+</mapper>
