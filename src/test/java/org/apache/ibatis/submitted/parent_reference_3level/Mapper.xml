@@ -1,6 +1,6 @@
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -19,29 +19,29 @@
 
 <mapper namespace="org.apache.ibatis.submitted.parent_reference_3level.Mapper">
     <select id="selectBlogByPrimaryKey" parameterType="int" resultMap="BlogResultMap">
-        select 
+        select
             b.id as blog_id, b.title as blog_title,
             p.id as post_id, p.body as post_body,
             c.id as comment_id, c.comment
         from blog b
         left outer join post p on b.id = p.blog_id
-        left outer join comment c on p.id = c.post_id 
+        left outer join comment c on p.id = c.post_id
         where b.id = #{id}
     </select>
-    
+
     <resultMap id="BlogResultMap" type="Blog">
         <id column="blog_id" property="id" />
         <result column="blog_title" property="title"/>
         <collection property="posts" resultMap="PostResultMap"></collection>
     </resultMap>
-    
+
     <resultMap id="PostResultMap" type="Post">
         <id column="post_id" property="id" />
         <result column="post_body" property="body"/>
         <association property="blog" resultMap="BlogResultMap"></association>
         <collection property="comments" resultMap="CommentResultMap"></collection>
     </resultMap>
-    
+
     <resultMap id="CommentResultMap" type="Comment">
         <id column="comment_id" property="id" />
         <result column="comment" property="comment"/>
@@ -49,13 +49,13 @@
     </resultMap>
 
     <select id="selectBlogByPrimaryKeyColumnPrefix" parameterType="int" resultMap="BlogResultMapColumnPrefix">
-        select 
+        select
             b.id as blog_id, b.title as blog_title,
             p.id as post_id, p.body as post_body,
             c.id as post_comment_comment_id, c.comment as post_comment_comment
         from blog b
         left outer join post p on b.id = p.blog_id
-        left outer join comment c on p.id = c.post_id 
+        left outer join comment c on p.id = c.post_id
         where b.id = #{id}
     </select>
 

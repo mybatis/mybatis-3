@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -26,18 +26,18 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import static com.googlecode.catchexception.apis.BDDCatchException.*;
 import static org.assertj.core.api.BDDAssertions.then;
 
-public class InvalidNamedConstructorArgsTest {
+class InvalidNamedConstructorArgsTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
-  public static void setUp() throws Exception {
+  @BeforeAll
+  static void setUp() throws Exception {
     // create an SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader(
         "org/apache/ibatis/submitted/named_constructor_args/mybatis-config.xml")) {
@@ -58,7 +58,7 @@ public class InvalidNamedConstructorArgsTest {
   }
 
   @Test
-  public void noMatchingConstructorArgName() {
+  void noMatchingConstructorArgName() {
     Configuration configuration = sqlSessionFactory.getConfiguration();
     when(configuration).addMapper(NoMatchingConstructorMapper.class);
 
@@ -80,7 +80,7 @@ public class InvalidNamedConstructorArgsTest {
   }
 
   @Test
-  public void wrongJavaType() {
+  void wrongJavaType() {
     Configuration configuration = sqlSessionFactory.getConfiguration();
     when(configuration).addMapper(ConstructorWithWrongJavaType.class);
     then(caughtException()).isInstanceOf(BuilderException.class)
@@ -103,7 +103,7 @@ public class InvalidNamedConstructorArgsTest {
   }
 
   @Test
-  public void missingRequiredJavaType() {
+  void missingRequiredJavaType() {
     Configuration configuration = sqlSessionFactory.getConfiguration();
     when(configuration).addMapper(ConstructorMissingRequiresJavaType.class);
     then(caughtException()).isInstanceOf(BuilderException.class)

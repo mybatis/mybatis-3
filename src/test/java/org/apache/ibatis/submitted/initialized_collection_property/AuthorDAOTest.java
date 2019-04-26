@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,21 +20,21 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.io.Reader;
 import java.util.List;
 
-public class AuthorDAOTest {
+class AuthorDAOTest {
 
   private static SqlSessionFactory factory;
 
-  @BeforeClass
-  public static void testGetMessageForEmptyDatabase() throws Exception {
+  @BeforeAll
+  static void testGetMessageForEmptyDatabase() throws Exception {
     final String resource = "org/apache/ibatis/submitted/initialized_collection_property/mybatis-config.xml";
     try (Reader reader = Resources.getResourceAsReader(resource)) {
       factory = new SqlSessionFactoryBuilder().build(reader);
@@ -45,7 +45,7 @@ public class AuthorDAOTest {
   }
 
   @Test
-  public void shouldNotOverwriteCollectionOnNestedResultMap() {
+  void shouldNotOverwriteCollectionOnNestedResultMap() {
     try (SqlSession session = factory.openSession()) {
       List<Author> authors = session.selectList("getAllAuthors");
       assertEquals(1, authors.size());
@@ -53,9 +53,9 @@ public class AuthorDAOTest {
     }
   }
 
-  @Ignore // issue #75 nested selects overwrite collections
+  @Disabled // issue #75 nested selects overwrite collections
   @Test
-  public void shouldNotOverwriteCollectionOnNestedQuery() {
+  void shouldNotOverwriteCollectionOnNestedQuery() {
     try (SqlSession session = factory.openSession()) {
       List<Author> authors = session.selectList("getAllAuthorsNestedQuery");
       assertEquals(1, authors.size());

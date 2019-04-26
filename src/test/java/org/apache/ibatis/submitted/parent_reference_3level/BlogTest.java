@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.submitted.parent_reference_3level;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.Reader;
 
@@ -24,20 +24,20 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class BlogTest {
+class BlogTest {
 
   protected SqlSessionFactory sqlSessionFactory;
 
-  protected String getConfigPath() {
+  String getConfigPath() {
     return "org/apache/ibatis/submitted/parent_reference_3level/mybatis-config.xml";
   }
 
-  @Before
-  public void setUp() throws Exception {
+  @BeforeEach
+  void setUp() throws Exception {
     try (Reader reader = Resources.getResourceAsReader(getConfigPath())) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
@@ -47,58 +47,58 @@ public class BlogTest {
   }
 
   @Test
-  public void testSelectBlogWithPosts() {
+  void testSelectBlogWithPosts() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       Mapper mapper = session.getMapper(Mapper.class);
       Blog result = mapper.selectBlogByPrimaryKey(1);
       assertNotNull(result);
       assertEquals("Blog with posts", result.getTitle());
-      Assert.assertEquals(2, result.getPosts().size());
+      Assertions.assertEquals(2, result.getPosts().size());
       Post firstPost = result.getPosts().get(0);
-      Assert.assertEquals(1, firstPost.getBlog().getId());
-      Assert.assertEquals(2, firstPost.getComments().size());
+      Assertions.assertEquals(1, firstPost.getBlog().getId());
+      Assertions.assertEquals(2, firstPost.getComments().size());
       Post secondPost = result.getPosts().get(1);
-      Assert.assertEquals(1, secondPost.getComments().size());
-      Assert.assertEquals(2, secondPost.getComments().get(0).getPost().getId());
+      Assertions.assertEquals(1, secondPost.getComments().size());
+      Assertions.assertEquals(2, secondPost.getComments().get(0).getPost().getId());
     }
   }
 
   @Test
-  public void testSelectBlogWithoutPosts() {
+  void testSelectBlogWithoutPosts() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       Mapper mapper = session.getMapper(Mapper.class);
       Blog result = mapper.selectBlogByPrimaryKey(2);
       assertNotNull(result);
       assertEquals("Blog without posts", result.getTitle());
-      Assert.assertEquals(0, result.getPosts().size());
+      Assertions.assertEquals(0, result.getPosts().size());
     }
   }
 
   @Test
-  public void testSelectBlogWithPostsColumnPrefix() {
+  void testSelectBlogWithPostsColumnPrefix() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       Mapper mapper = session.getMapper(Mapper.class);
       Blog result = mapper.selectBlogByPrimaryKeyColumnPrefix(1);
       assertNotNull(result);
       assertEquals("Blog with posts", result.getTitle());
-      Assert.assertEquals(2, result.getPosts().size());
+      Assertions.assertEquals(2, result.getPosts().size());
       Post firstPost = result.getPosts().get(0);
-      Assert.assertEquals(1, firstPost.getBlog().getId());
-      Assert.assertEquals(2, firstPost.getComments().size());
+      Assertions.assertEquals(1, firstPost.getBlog().getId());
+      Assertions.assertEquals(2, firstPost.getComments().size());
       Post secondPost = result.getPosts().get(1);
-      Assert.assertEquals(1, secondPost.getComments().size());
-      Assert.assertEquals(2, secondPost.getComments().get(0).getPost().getId());
+      Assertions.assertEquals(1, secondPost.getComments().size());
+      Assertions.assertEquals(2, secondPost.getComments().get(0).getPost().getId());
     }
   }
 
   @Test
-  public void testSelectBlogWithoutPostsColumnPrefix() {
+  void testSelectBlogWithoutPostsColumnPrefix() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       Mapper mapper = session.getMapper(Mapper.class);
       Blog result = mapper.selectBlogByPrimaryKeyColumnPrefix(2);
       assertNotNull(result);
       assertEquals("Blog without posts", result.getTitle());
-      Assert.assertEquals(0, result.getPosts().size());
+      Assertions.assertEquals(0, result.getPosts().size());
     }
   }
 }

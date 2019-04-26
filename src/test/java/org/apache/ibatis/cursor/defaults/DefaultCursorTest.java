@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,15 +16,15 @@
 
 package org.apache.ibatis.cursor.defaults;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
 
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,28 +46,22 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.type.TypeHandlerRegistry;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class DefaultCursorTest {
+@ExtendWith(MockitoExtension.class)
+class DefaultCursorTest {
   @Spy
   private ImpatientResultSet rs;
   @Mock
   protected ResultSetMetaData rsmd;
-  @Mock
-  private Connection conn;
-  @Mock
-  private DatabaseMetaData dbmd;
-  @Mock
-  private Statement stmt;
 
   @SuppressWarnings("unchecked")
   @Test
-  public void shouldCloseImmediatelyIfResultSetIsClosed() throws Exception {
+  void shouldCloseImmediatelyIfResultSetIsClosed() throws Exception {
     final MappedStatement ms = getNestedAndOrderedMappedStatement();
     final ResultMap rm = ms.getResultMaps().get(0);
 
@@ -98,7 +92,7 @@ public class DefaultCursorTest {
       Iterator<?> iter = cursor.iterator();
       assertTrue(iter.hasNext());
       Map<String, Object> map = (Map<String, Object>) iter.next();
-      assertEquals(Integer.valueOf(1), map.get("id"));
+      assertEquals(1, map.get("id"));
       assertEquals("CEO", ((Map<String, Object>) map.get("roles")).get("role"));
 
       assertFalse(cursor.isConsumed());
@@ -150,7 +144,7 @@ public class DefaultCursorTest {
 
     protected ImpatientResultSet() {
       Map<String, Object> row = new HashMap<>();
-      row.put("id", Integer.valueOf(1));
+      row.put("id", 1);
       row.put("role", "CEO");
       rows.add(row);
     }
@@ -162,7 +156,7 @@ public class DefaultCursorTest {
     }
 
     @Override
-    public boolean isClosed() throws SQLException {
+    public boolean isClosed() {
       return rowIndex >= rows.size();
     }
 
@@ -185,7 +179,7 @@ public class DefaultCursorTest {
     }
 
     @Override
-    public ResultSetMetaData getMetaData() throws SQLException {
+    public ResultSetMetaData getMetaData() {
       return rsmd;
     }
 

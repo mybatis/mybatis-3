@@ -89,7 +89,7 @@ public class PoolState {
     builder.append("\n jdbcDriver                     ").append(dataSource.getDriver());
     builder.append("\n jdbcUrl                        ").append(dataSource.getUrl());
     builder.append("\n jdbcUsername                   ").append(dataSource.getUsername());
-    builder.append("\n jdbcPassword                   ").append((dataSource.getPassword() == null ? "NULL" : "************"));
+    builder.append("\n jdbcPassword                   ").append(dataSource.getPassword() == null ? "NULL" : "************");
     builder.append("\n poolMaxActiveConnections       ").append(dataSource.poolMaximumActiveConnections);
     builder.append("\n poolMaxIdleConnections         ").append(dataSource.poolMaximumIdleConnections);
     builder.append("\n poolMaxCheckoutTime            ").append(dataSource.poolMaximumCheckoutTime);

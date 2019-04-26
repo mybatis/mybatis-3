@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -68,8 +68,8 @@ public class UnknownTypeHandler extends BaseTypeHandler<Object> {
     return cs.getObject(columnIndex);
   }
 
-  private TypeHandler<? extends Object> resolveTypeHandler(Object parameter, JdbcType jdbcType) {
-    TypeHandler<? extends Object> handler;
+  private TypeHandler<?> resolveTypeHandler(Object parameter, JdbcType jdbcType) {
+    TypeHandler<?> handler;
     if (parameter == null) {
       handler = OBJECT_TYPE_HANDLER;
     } else {
@@ -88,7 +88,7 @@ public class UnknownTypeHandler extends BaseTypeHandler<Object> {
       columnIndexLookup = new HashMap<>();
       ResultSetMetaData rsmd = rs.getMetaData();
       int count = rsmd.getColumnCount();
-      for (int i=1; i <= count; i++) {
+      for (int i = 1; i <= count; i++) {
         String name = rsmd.getColumnName(i);
         columnIndexLookup.put(name,i);
       }

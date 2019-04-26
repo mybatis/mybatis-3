@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,7 +14,16 @@
  *    limitations under the License.
  */
 
-package org.apache.ibatis.test;
+package org.apache.ibatis.submitted.discriminator;
 
-public interface EmbeddedPostgresqlTests extends SlowTests {
+public class Truck extends Vehicle {
+  protected Float carryingCapacity;
+
+  public Float getCarryingCapacity() {
+    return carryingCapacity;
+  }
+
+  public void setCarryingCapacity(Float carryingCapacity) {
+    this.carryingCapacity = carryingCapacity;
+  }
 }

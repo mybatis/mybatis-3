@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-
 
 public class Order implements Serializable {
 
@@ -53,7 +52,7 @@ public class Order implements Serializable {
   private String cardType;
   private String locale;
   private String status;
-  private List<LineItem> lineItems = new ArrayList<LineItem>();
+  private List<LineItem> lineItems = new ArrayList<>();
 
   public int getOrderId() {
     return orderId;
@@ -303,7 +302,6 @@ public class Order implements Serializable {
     locale = "CA";
     status = "P";
 
-
     Iterator<CartItem> i = cart.getCartItems();
     while (i.hasNext()) {
       CartItem cartItem = (CartItem) i.next();
@@ -320,6 +318,5 @@ public class Order implements Serializable {
   public void addLineItem(LineItem lineItem) {
     lineItems.add(lineItem);
   }
-
 
 }

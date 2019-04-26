@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -34,21 +34,27 @@ public class UUIDTypeHandler extends BaseTypeHandler<UUID> {
   @Override
   public UUID getNullableResult(ResultSet rs, String columnName) throws SQLException {
     String value = rs.getString(columnName);
-    if (value != null) return UUID.fromString(value);
+    if (value != null) {
+      return UUID.fromString(value);
+    }
     return null;
   }
 
   @Override
   public UUID getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
     String value = rs.getString(columnIndex);
-    if (value != null) return UUID.fromString(value);
+    if (value != null) {
+      return UUID.fromString(value);
+    }
     return null;
   }
 
   @Override
   public UUID getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
     String value = cs.getString(columnIndex);
-    if (value != null) return UUID.fromString(value);
+    if (value != null) {
+      return UUID.fromString(value);
+    }
     return null;
   }
 

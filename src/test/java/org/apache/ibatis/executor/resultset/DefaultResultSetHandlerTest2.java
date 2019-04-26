@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,8 +15,8 @@
  */
 package org.apache.ibatis.executor.resultset;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -42,14 +42,14 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.type.TypeHandlerRegistry;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class DefaultResultSetHandlerTest2 {
+@ExtendWith(MockitoExtension.class)
+class DefaultResultSetHandlerTest2 {
 
   @Spy
   private ImpatientResultSet rs;
@@ -64,7 +64,7 @@ public class DefaultResultSetHandlerTest2 {
 
   @SuppressWarnings("serial")
   @Test
-  public void shouldNotCallNextOnClosedResultSet_SimpleResult() throws Exception {
+  void shouldNotCallNextOnClosedResultSet_SimpleResult() throws Exception {
     final Configuration config = new Configuration();
     final TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
     final MappedStatement ms = new MappedStatement.Builder(config, "testSelect",
@@ -102,7 +102,7 @@ public class DefaultResultSetHandlerTest2 {
 
   @SuppressWarnings("serial")
   @Test
-  public void shouldNotCallNextOnClosedResultSet_NestedResult() throws Exception {
+  void shouldNotCallNextOnClosedResultSet_NestedResult() throws Exception {
     final Configuration config = new Configuration();
     final TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
     final ResultMap nestedResultMap = new ResultMap.Builder(config, "roleMap", HashMap.class,
@@ -143,12 +143,6 @@ public class DefaultResultSetHandlerTest2 {
     when(rsmd.getColumnLabel(1)).thenReturn("id");
     when(rsmd.getColumnType(1)).thenReturn(Types.INTEGER);
     when(rsmd.getColumnClassName(1)).thenReturn(Integer.class.getCanonicalName());
-    when(rsmd.getColumnLabel(2)).thenReturn("role");
-    when(rsmd.getColumnType(2)).thenReturn(Types.VARCHAR);
-    when(rsmd.getColumnClassName(2)).thenReturn(String.class.getCanonicalName());
-    when(stmt.getConnection()).thenReturn(conn);
-    when(conn.getMetaData()).thenReturn(dbmd);
-    when(dbmd.supportsMultipleResultSets()).thenReturn(false); // for simplicity.
 
     final List<Object> results = resultSetHandler.handleResultSets(stmt);
     assertEquals(0, results.size());
@@ -163,7 +157,7 @@ public class DefaultResultSetHandlerTest2 {
 
     protected ImpatientResultSet() {
       Map<String, Object> row = new HashMap<>();
-      row.put("id", Integer.valueOf(1));
+      row.put("id", 1);
       row.put("role", "CEO");
       rows.add(row);
     }
@@ -175,7 +169,7 @@ public class DefaultResultSetHandlerTest2 {
     }
 
     @Override
-    public boolean isClosed() throws SQLException {
+    public boolean isClosed() {
       return rowIndex >= rows.size();
     }
 
@@ -198,7 +192,7 @@ public class DefaultResultSetHandlerTest2 {
     }
 
     @Override
-    public ResultSetMetaData getMetaData() throws SQLException {
+    public ResultSetMetaData getMetaData() {
       return rsmd;
     }
 

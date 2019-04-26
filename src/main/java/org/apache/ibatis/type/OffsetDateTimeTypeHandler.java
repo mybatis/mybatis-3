@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,9 +19,7 @@ import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.time.OffsetDateTime;
-import java.time.ZoneId;
 
 /**
  * @since 3.4.5
@@ -32,31 +30,22 @@ public class OffsetDateTimeTypeHandler extends BaseTypeHandler<OffsetDateTime> {
   @Override
   public void setNonNullParameter(PreparedStatement ps, int i, OffsetDateTime parameter, JdbcType jdbcType)
           throws SQLException {
-    ps.setTimestamp(i, Timestamp.from(parameter.toInstant()));
+    ps.setObject(i, parameter);
   }
 
   @Override
   public OffsetDateTime getNullableResult(ResultSet rs, String columnName) throws SQLException {
-    Timestamp timestamp = rs.getTimestamp(columnName);
-    return getOffsetDateTime(timestamp);
+    return rs.getObject(columnName, OffsetDateTime.class);
   }
 
   @Override
   public OffsetDateTime getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
-    Timestamp timestamp = rs.getTimestamp(columnIndex);
-    return getOffsetDateTime(timestamp);
+    return rs.getObject(columnIndex, OffsetDateTime.class);
   }
 
   @Override
   public OffsetDateTime getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
-    Timestamp timestamp = cs.getTimestamp(columnIndex);
-    return getOffsetDateTime(timestamp);
+    return cs.getObject(columnIndex, OffsetDateTime.class);
   }
 
-  private static OffsetDateTime getOffsetDateTime(Timestamp timestamp) {
-    if (timestamp != null) {
-      return OffsetDateTime.ofInstant(timestamp.toInstant(), ZoneId.systemDefault());
-    }
-    return null;
-  }
 }

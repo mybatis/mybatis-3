@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,35 +15,35 @@
  */
 package org.apache.ibatis.plugin;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-public class PluginTest {
+import static org.junit.jupiter.api.Assertions.*;
+
+class PluginTest {
 
   @Test
-  public void mapPluginShouldInterceptGet() {
+  void mapPluginShouldInterceptGet() {
     Map map = new HashMap();
     map = (Map) new AlwaysMapPlugin().plugin(map);
     assertEquals("Always", map.get("Anything"));
   }
 
   @Test
-  public void shouldNotInterceptToString() {
+  void shouldNotInterceptToString() {
     Map map = new HashMap();
     map = (Map) new AlwaysMapPlugin().plugin(map);
-    assertFalse("Always".equals(map.toString()));
+    assertNotEquals("Always", map.toString());
   }
 
   @Intercepts({
       @Signature(type = Map.class, method = "get", args = {Object.class})})
   public static class AlwaysMapPlugin implements Interceptor {
     @Override
-    public Object intercept(Invocation invocation) throws Throwable {
+    public Object intercept(Invocation invocation) {
       return "Always";
     }
 

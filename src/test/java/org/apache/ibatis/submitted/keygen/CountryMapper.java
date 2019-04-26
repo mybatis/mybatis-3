@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -32,6 +32,10 @@ public interface CountryMapper {
   @Options(useGeneratedKeys = true, keyProperty = "id")
   @Insert({ "insert into country (countryname,countrycode) values (#{country.countryname},#{country.countrycode})" })
   int insertNamedBean(@Param("country") Country country);
+
+  @Options(useGeneratedKeys = true, keyProperty = "country.id")
+  @Insert({ "insert into country (countryname,countrycode) values (#{country.countryname},#{country.countrycode})" })
+  int insertNamedBean_keyPropertyWithParamName(@Param("country") Country country);
 
   int insertList(List<Country> countries);
 
@@ -87,4 +91,13 @@ public interface CountryMapper {
   @Options(useGeneratedKeys = true, keyProperty = "planet.id,map.code")
   @Insert({ "insert into planet (name) values (#{planet.name})" })
   int insertAssignKeysToTwoParams(@Param("planet") Planet planet, @Param("map") Map<String, Object> map);
+
+
+  @Options(useGeneratedKeys = true, keyProperty = "id")
+  @Insert({ "insert into country (countryname,countrycode) values ('a','A'), ('b', 'B')" })
+  int tooManyGeneratedKeys(Country country);
+
+  @Options(useGeneratedKeys = true, keyProperty = "country.id")
+  @Insert({ "insert into country (countryname,countrycode) values ('a','A'), ('b', 'B')" })
+  int tooManyGeneratedKeysParamMap(@Param("country") Country country, @Param("someId") Integer someId);
 }

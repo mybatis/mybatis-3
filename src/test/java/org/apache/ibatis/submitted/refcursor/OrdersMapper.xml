@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2018 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -30,9 +30,9 @@
       <result property="description" column="ITEM_DESCRIPTION"/>
     </collection>
   </resultMap>
-  
+
   <update id="getOrder1" parameterType="map" statementType="CALLABLE">
-    { #{order,jdbcType=OTHER,mode=OUT,resultMap=OrderResult,javaType=java.sql.ResultSet} = 
+    { #{order,jdbcType=OTHER,mode=OUT,resultMap=OrderResult,javaType=java.sql.ResultSet} =
         call mbtest.get_order(#{orderId,jdbcType=INTEGER,mode=IN}) }
   </update>
 

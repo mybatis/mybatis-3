@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,21 +15,21 @@
  */
 package org.apache.ibatis.parsing;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.InputStream;
 
 import org.apache.ibatis.io.Resources;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class XPathParserTest {
+class XPathParserTest {
 
   @Test
-  public void shouldTestXPathParserMethods() throws Exception {
+  void shouldTestXPathParserMethods() throws Exception {
     String resource = "resources/nodelet_test.xml";
     try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
       XPathParser parser = new XPathParser(inputStream, false, null, null);
-      assertEquals((Long) 1970l, parser.evalLong("/employee/birth_date/year"));
+      assertEquals((Long) 1970L, parser.evalLong("/employee/birth_date/year"));
       assertEquals((short) 6, (short) parser.evalShort("/employee/birth_date/month"));
       assertEquals((Integer) 15, parser.evalInteger("/employee/birth_date/day"));
       assertEquals((Float) 5.8f, parser.evalFloat("/employee/height"));

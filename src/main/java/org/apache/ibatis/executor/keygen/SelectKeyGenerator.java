@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ import org.apache.ibatis.session.RowBounds;
  * @author Jeff Butler
  */
 public class SelectKeyGenerator implements KeyGenerator {
-  
+
   public static final String SELECT_KEY_SUFFIX = "!selectKey";
   private final boolean executeBefore;
   private final MappedStatement keyStatement;
@@ -67,7 +67,7 @@ public class SelectKeyGenerator implements KeyGenerator {
           Executor keyExecutor = configuration.newExecutor(executor.getTransaction(), ExecutorType.SIMPLE);
           List<Object> values = keyExecutor.query(keyStatement, parameter, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
           if (values.size() == 0) {
-            throw new ExecutorException("SelectKey returned no data.");            
+            throw new ExecutorException("SelectKey returned no data.");
           } else if (values.size() > 1) {
             throw new ExecutorException("SelectKey returned more than one value.");
           } else {
@@ -96,7 +96,7 @@ public class SelectKeyGenerator implements KeyGenerator {
   private void handleMultipleProperties(String[] keyProperties,
       MetaObject metaParam, MetaObject metaResult) {
     String[] keyColumns = keyStatement.getKeyColumns();
-      
+
     if (keyColumns == null || keyColumns.length == 0) {
       // no key columns specified, just use the property names
       for (String keyProperty : keyProperties) {
