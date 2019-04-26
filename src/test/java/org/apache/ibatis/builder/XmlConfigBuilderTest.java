@@ -156,6 +156,7 @@ class XmlConfigBuilderTest {
 
     @Test
     public void shouldSuccessfullyLoadXMLConfigFile() throws Exception {
+    
       String resource = "org/apache/ibatis/builder/CustomizedSettingsMapperConfig.xml";
       try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
         Properties props = new Properties();
