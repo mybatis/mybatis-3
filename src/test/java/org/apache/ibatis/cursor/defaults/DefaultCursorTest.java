@@ -80,7 +80,7 @@ public class DefaultCursorTest {
     final DefaultResultSetHandler resultSetHandler = new DefaultResultSetHandler(executor, ms, parameterHandler,
       resultHandler, boundSql, rowBounds);
 
-    when(stmt.getResultSet()).thenReturn(rs);
+   // when(stmt.getResultSet()).thenReturn(rs);
     when(rsmd.getColumnCount()).thenReturn(2);
     when(rsmd.getColumnLabel(1)).thenReturn("id");
     when(rsmd.getColumnType(1)).thenReturn(Types.INTEGER);
@@ -88,9 +88,9 @@ public class DefaultCursorTest {
     when(rsmd.getColumnLabel(2)).thenReturn("role");
     when(rsmd.getColumnType(2)).thenReturn(Types.VARCHAR);
     when(rsmd.getColumnClassName(2)).thenReturn(String.class.getCanonicalName());
-    when(stmt.getConnection()).thenReturn(conn);
-    when(conn.getMetaData()).thenReturn(dbmd);
-    when(dbmd.supportsMultipleResultSets()).thenReturn(false);
+   // when(stmt.getConnection()).thenReturn(conn);
+   // when(conn.getMetaData()).thenReturn(dbmd);
+   // when(dbmd.supportsMultipleResultSets()).thenReturn(false);
 
     final ResultSetWrapper rsw = new ResultSetWrapper(rs, ms.getConfiguration());
 
