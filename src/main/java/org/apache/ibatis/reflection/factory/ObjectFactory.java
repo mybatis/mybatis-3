@@ -29,7 +29,9 @@ public interface ObjectFactory {
    * Sets configuration properties.
    * @param properties configuration properties
    */
-  void setProperties(Properties properties);
+  default void setProperties(Properties properties) {
+    // NOP
+  }
 
   /**
    * Creates a new object with default constructor.

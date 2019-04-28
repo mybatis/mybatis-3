@@ -19,7 +19,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -47,14 +46,6 @@ class PluginTest {
       return "Always";
     }
 
-    @Override
-    public Object plugin(Object target) {
-      return Plugin.wrap(target, this);
-    }
-
-    @Override
-    public void setProperties(Properties properties) {
-    }
   }
 
 }

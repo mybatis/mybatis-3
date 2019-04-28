@@ -17,7 +17,6 @@ package org.apache.ibatis.cache.decorators;
 
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.concurrent.locks.ReadWriteLock;
 
 import org.apache.ibatis.cache.Cache;
 
@@ -72,11 +71,6 @@ public class FifoCache implements Cache {
   public void clear() {
     delegate.clear();
     keyList.clear();
-  }
-
-  @Override
-  public ReadWriteLock getReadWriteLock() {
-    return null;
   }
 
   private void cycleKeyList(Object key) {
