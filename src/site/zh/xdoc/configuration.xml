@@ -1657,7 +1657,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, propert
         <p>有三种内建的数据源类型（也就是 type=”[UNPOOLED|POOLED|JNDI]”）：</p>
         <p>
           <strong>UNPOOLED</strong>– 这个数据源的实现只是每次被请求时打开和关闭连接。虽然有点慢，但对于在数据库连接可用性方面没有太高要求的简单应用程序来说，是一个很好的选择。
-          不同的数据库在性能方面的表现也是不一样的，对于某些数据库来说，使用连接池并不重要，这个配置就很适合这种情形。UNPOOLED 类型的数据源仅仅需要配置以下 5 种属性：</p>
+          不同的数据库在性能方面的表现也是不一样的，对于某些数据库来说，使用连接池并不重要，这个配置就很适合这种情形。UNPOOLED 类型的数据源具有以下属性。：</p>
         <ul>
           <li><code>driver</code> – 这是 JDBC 驱动的 Java 类的完全限定名（并不是 JDBC 驱动中可能包含的数据源类）。
           </li>
@@ -1668,6 +1668,8 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, propert
           <li><code>password</code> – 登录数据库的密码。
           </li>
           <li><code>defaultTransactionIsolationLevel</code> – 默认的连接事务隔离级别。
+          </li>
+          <li><code>defaultNetworkTimeout</code> – The default network timeout value in milliseconds to wait for the database operation to complete. See the API documentation of <code>java.sql.Connection#setNetworkTimeout()</code> for details.
           </li>
         </ul>
         <p>作为可选项，你也可以传递属性给数据库驱动。只需在属性名加上“driver.”前缀即可，例如：

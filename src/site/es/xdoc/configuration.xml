@@ -1627,7 +1627,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
         </ul>
         <p>Hay tres tipos de dataSources pre-construidos (ej. type=”????”):</p>
         <p>
-          <strong>UNPOOLED</strong> – Esta implementación de DataSource abre y cierra una conexión JDBC cada vez que se solcita una conexión. Aunque es un poco lento, es una buena elección para aplicaciones que no necesitan la velocidad de tener conexiones abiertas de forma inmediata. Las bases de datos tienen un rendimiento distinto en cuanto al rendimiento que aportan con este tipo de DataSource, para algunas de ellas no es muy importante tener un pool y por tanto esta configuración es apropiada. El DataSource UNPOOLED tiene cinco opciones de configuración:
+          <strong>UNPOOLED</strong> – Esta implementación de DataSource abre y cierra una conexión JDBC cada vez que se solcita una conexión. Aunque es un poco lento, es una buena elección para aplicaciones que no necesitan la velocidad de tener conexiones abiertas de forma inmediata. Las bases de datos tienen un rendimiento distinto en cuanto al rendimiento que aportan con este tipo de DataSource, para algunas de ellas no es muy importante tener un pool y por tanto esta configuración es apropiada. El DataSource UNPOOLED tiene las siguientes opciones de configuración:
           </p>
         <ul>
           <li><code>driver</code> – El nombre completamente cualificado de la clase java del driver JDBC (NO de la clase DataSource en el caso de que tu driver incluya una).</li>
@@ -1638,6 +1638,8 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
           <li><code>password</code> – La password de conexión.
           </li>
           <li><code>defaultTransactionIsolationLevel</code> – El nivel de aislamiento por defecto con el que se crearán las conexiones.
+          </li>
+          <li><code>defaultNetworkTimeout</code> – The default network timeout value in milliseconds to wait for the database operation to complete. See the API documentation of <code>java.sql.Connection#setNetworkTimeout()</code> for details.
           </li>
         </ul>
         <p>Opcionalmente, puedes también pasar propiedades al driver de la base de datos. Para ello prefija las propiedades con “driver.”, por ejemplo:
