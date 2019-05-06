@@ -1751,7 +1751,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
           Web アプリケーションでは応答速度向上のために良く使われる設定です。
         </p>
         <p>
-          POOLED データソースには、UNPOOLED の設定で見た５つの他に様々なプロパティを指定することができます。
+          POOLED データソースには、UNPOOLED に対して設定可能なプロパティに加えて以下を指定することができます。
         </p>
         <ul>
           <li>poolMaximumActiveConnections – 同時にプールされる接続数の最大値です。
