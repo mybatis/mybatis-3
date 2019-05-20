@@ -28,7 +28,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.ibatis.annotations.AutomapConstructor;
+import org.apache.ibatis.annotations.AutoMapConstructor;
 import org.apache.ibatis.binding.MapperMethod.ParamMap;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.cursor.Cursor;
@@ -682,7 +682,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     }
 
     for (final Constructor<?> constructor : constructors) {
-      if (constructor.isAnnotationPresent(AutomapConstructor.class)) {
+      if (constructor.isAnnotationPresent(AutoMapConstructor.class)) {
         return constructor;
       }
     }
