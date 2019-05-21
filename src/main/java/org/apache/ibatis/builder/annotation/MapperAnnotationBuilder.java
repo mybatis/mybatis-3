@@ -387,7 +387,7 @@ public class MapperAnnotationBuilder {
     if (lang != null) {
       langClass = lang.value();
     }
-    return assistant.getLanguageDriver(langClass);
+    return configuration.getLanguageDriver(langClass);
   }
 
   private Class<?> getParameterType(Method method) {

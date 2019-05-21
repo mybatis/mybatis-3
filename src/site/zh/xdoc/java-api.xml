@@ -162,7 +162,7 @@ SqlSessionFactory factory = builder.build(configuration);</source>
 SqlSession openSession(boolean autoCommit)
 SqlSession openSession(Connection connection)
 SqlSession openSession(TransactionIsolationLevel level)
-SqlSession openSession(ExecutorType execType,TransactionIsolationLevel level)
+SqlSession openSession(ExecutorType execType, TransactionIsolationLevel level)
 SqlSession openSession(ExecutorType execType)
 SqlSession openSession(ExecutorType execType, boolean autoCommit)
 SqlSession openSession(ExecutorType execType, Connection connection)
@@ -204,12 +204,6 @@ int update(String statement, Object parameter)
 int delete(String statement, Object parameter)]]></source>
   <p>selectOne 和 selectList 的不同仅仅是 selectOne 必须返回一个对象或 null 值。如果返回值多于一个，那么就会抛出异常。如果你不知道返回对象的数量，请使用 selectList。如果需要查看返回对象是否存在，可行的方案是返回一个值即可（0 或 1）。selectMap 稍微特殊一点，因为它会将返回的对象的其中一个属性作为 key 值，将对象作为 value 值，从而将多结果集转为 Map 类型值。因为并不是所有语句都需要参数，所以这些方法都重载成不需要参数的形式。
   </p>
-  <p>A Cursor offers the same results as a List, except it fetches data lazily using an Iterator.</p>
-  <source><![CDATA[try (Cursor<MyEntity> entities = session.selectCursor(statement, param)) {
-   for (MyEntity entity:entities) {
-      // process one entity
-   }
-}]]></source>
   <p>The value returned by the insert, update and delete methods indicate the number of rows affected by the statement.</p>
   <source><![CDATA[<T> T selectOne(String statement)
 <E> List<E> selectList(String statement)
@@ -218,6 +212,13 @@ int delete(String statement, Object parameter)]]></source>
 int insert(String statement)
 int update(String statement)
 int delete(String statement)]]></source>
+
+  <p>A Cursor offers the same results as a List, except it fetches data lazily using an Iterator.</p>
+  <source><![CDATA[try (Cursor<MyEntity> entities = session.selectCursor(statement, param)) {
+   for (MyEntity entity:entities) {
+      // process one entity
+   }
+}]]></source>
 
   <p>最后，还有 select 方法的三个高级版本，它们允许你限制返回行数的范围，或者提供自定义结果控制逻辑，这通常在数据集合庞大的情形下使用。
   </p>
@@ -275,20 +276,8 @@ void rollback(boolean force)</source>
   <h5>确保 SqlSession 被关闭</h5>
   <source>void close()</source>
   <p>你必须保证的最重要的事情是你要关闭所打开的任何 session。保证做到这点的最佳方式是下面的工作模式:</p>
-  <source>SqlSession session = sqlSessionFactory.openSession();
-try {
+  <source>try (SqlSession session = sqlSessionFactory.openSession()) {
     // following 3 lines pseudocod for "doing some work"
-    session.insert(...);
-    session.update(...);
-    session.delete(...);
-    session.commit();
-} finally {
-    session.close();
-}</source>
-  <p>还有，如果你正在使用jdk 1.7以上的版本还有MyBatis 3.2以上的版本，你可以使用try-with-resources语句：</p>
-  <source>
-try (SqlSession session = sqlSessionFactory.openSession()) {
-    // following 3 lines pseudocode for "doing some work"
     session.insert(...);
     session.update(...);
     session.delete(...);
@@ -465,7 +454,14 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
             <li><code>&lt;select&gt;</code></li>
           </ul>
         </td>
-        <td>允许构建动态 SQL。这些备选的 SQL 注解允许你指定类名和返回在运行时执行的 SQL 语句的方法。（自从MyBatis 3.4.6开始，你可以用 <code>CharSequence</code> 代替 <code>String</code> 来返回类型返回值了。）当执行映射语句的时候，MyBatis 会实例化类并执行方法，类和方法就是填入了注解的值。你可以把已经传递给映射方法了的对象作为参数，"Mapper interface type" 和 "Mapper method" 会经过 <code>ProviderContext</code> （仅在MyBatis 3.4.5及以上支持）作为参数值。（MyBatis 3.4及以上的版本，支持多参数传入）属性有： <code>type</code>, <code>method</code>。<code>type</code> 属性需填入类。<code>method</code> 需填入该类定义了的方法名。<span class="label important">注意</span> 接下来的小节将会讨论类，能帮助你更轻松地构建动态 SQL。</td>
+        <td>允许构建动态 SQL。这些备选的 SQL 注解允许你指定类名和返回在运行时执行的 SQL 语句的方法。（自从MyBatis 3.4.6开始，你可以用 <code>CharSequence</code> 代替 <code>String</code> 来返回类型返回值了。）当执行映射语句的时候，MyBatis 会实例化类并执行方法，类和方法就是填入了注解的值。你可以把已经传递给映射方法了的对象作为参数，"Mapper interface type" 和 "Mapper method" and "Database ID" 会经过 <code>ProviderContext</code> （仅在MyBatis 3.4.5及以上支持）作为参数值。（MyBatis 3.4及以上的版本，支持多参数传入）
+        属性有： <code>type</code>, <code>method</code>。
+        <code>type</code> 属性需填入类。
+        <code>method</code> 需填入该类定义了的方法名
+        (Since 3.5.1, you can omit <code>method</code> attribute, the MyBatis will resolve a target method via the
+        <code>ProviderMethodResolver</code> interface.
+        If not resolve by it, the MyBatis use the reserved fallback method that named <code>provideSql</code>)。
+        <span class="label important">注意</span> 接下来的小节将会讨论类，能帮助你更轻松地构建动态 SQL。</td>
       </tr>
       <tr>
         <td><code>@Param</code></td>
@@ -574,6 +570,25 @@ class UserSqlBuilder {
       FROM("users");
       WHERE("name like #{name} || '%'");
       ORDER_BY(orderByColumn);
+    }}.toString();
+  }
+}]]></source>
+
+    <p>This example shows usage the default implementation of <code>ProviderMethodResolver</code>(available since MyBatis 3.5.1 or later):</p>
+    <source><![CDATA[@SelectProvider(type = UserSqlProvider.class)
+List<User> getUsersByName(String name);
+
+// Implements the ProviderMethodResolver on your provider class
+class UserSqlProvider implements ProviderMethodResolver {
+  // In default implementation, it will resolve a method that method name is matched with mapper method
+  public static String getUsersByName(final String name) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      if (name != null) {
+        WHERE("name like #{value} || '%'");
+      }
+      ORDER_BY("id");
     }}.toString();
   }
 }]]></source>

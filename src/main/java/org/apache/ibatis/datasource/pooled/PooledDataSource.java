@@ -150,6 +150,18 @@ public class PooledDataSource implements DataSource {
   }
 
   /**
+   * Sets the default network timeout value to wait for the database operation to complete. See {@link Connection#setNetworkTimeout(java.util.concurrent.Executor, int)}
+   * 
+   * @param milliseconds
+   *          The time in milliseconds to wait for the database operation to complete.
+   * @since 3.5.2
+   */
+  public void setDefaultNetworkTimeout(Integer milliseconds) {
+    dataSource.setDefaultNetworkTimeout(milliseconds);
+    forceCloseAll();
+  }
+
+  /**
    * The maximum number of active connections.
    *
    * @param poolMaximumActiveConnections The maximum number of active connections
@@ -261,6 +273,13 @@ public class PooledDataSource implements DataSource {
 
   public Properties getDriverProperties() {
     return dataSource.getDriverProperties();
+  }
+
+  /**
+   * @since 3.5.2
+   */
+  public Integer getDefaultNetworkTimeout() {
+    return dataSource.getDefaultNetworkTimeout();
   }
 
   public int getPoolMaximumActiveConnections() {

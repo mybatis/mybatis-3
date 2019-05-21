@@ -54,6 +54,9 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
    */
   public static final Jdbc3KeyGenerator INSTANCE = new Jdbc3KeyGenerator();
 
+  private static final String MSG_TOO_MANY_KEYS = "Too many keys are generated. There are only %d target objects. "
+      + "You either specified a wrong 'keyProperty' or encountered a driver bug like #1523.";
+
   @Override
   public void processBefore(Executor executor, MappedStatement ms, Statement stmt, Object parameter) {
     // do nothing
@@ -110,6 +113,9 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
     }
     Iterator<?> iterator = params.iterator();
     while (rs.next()) {
+      if (!iterator.hasNext()) {
+        throw new ExecutorException(String.format(MSG_TOO_MANY_KEYS, params.size()));
+      }
       Object param = iterator.next();
       assignerList.forEach(x -> x.assign(rs, param));
     }
@@ -119,7 +125,11 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
       String[] keyProperties, ArrayList<ParamMap<?>> paramMapList) throws SQLException {
     Iterator<ParamMap<?>> iterator = paramMapList.iterator();
     List<KeyAssigner> assignerList = new ArrayList<>();
+    long counter = 0;
     while (rs.next()) {
+      if (!iterator.hasNext()) {
+        throw new ExecutorException(String.format(MSG_TOO_MANY_KEYS, counter));
+      }
       ParamMap<?> paramMap = iterator.next();
       if (assignerList.isEmpty()) {
         for (int i = 0; i < keyProperties.length; i++) {
@@ -129,6 +139,7 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
         }
       }
       assignerList.forEach(x -> x.assign(rs, paramMap));
+      counter++;
     }
   }
 
@@ -145,11 +156,16 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
           k -> entry(collectionize(paramMap.get(k)).iterator(), new ArrayList<>()));
       iteratorPair.getValue().add(entry.getValue());
     }
+    long counter = 0;
     while (rs.next()) {
       for (Entry<Iterator<?>, List<KeyAssigner>> pair : assignerMap.values()) {
+        if (!pair.getKey().hasNext()) {
+          throw new ExecutorException(String.format(MSG_TOO_MANY_KEYS, counter));
+        }
         Object param = pair.getKey().next();
         pair.getValue().forEach(x -> x.assign(rs, param));
       }
+      counter++;
     }
   }
 

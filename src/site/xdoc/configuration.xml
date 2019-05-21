@@ -1891,8 +1891,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, propert
           performance of immediately available connections. Different
           databases are also different in this performance area, so for some
           it may be less important to pool and this configuration will be
-          ideal. The UNPOOLED DataSource is configured with only five
-          properties:
+          ideal. The UNPOOLED DataSource has the following properties to configure:
         </p>
         <ul>
           <li><code>driver</code> – This is the fully qualified Java class of the JDBC
@@ -1906,6 +1905,8 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, propert
           </li>
           <li><code>defaultTransactionIsolationLevel</code> – The default transaction
             isolation level for connections.
+          </li>
+          <li><code>defaultNetworkTimeout</code> – The default network timeout value in milliseconds to wait for the database operation to complete. See the API documentation of <code>java.sql.Connection#setNetworkTimeout()</code> for details.
           </li>
         </ul>
         <p>

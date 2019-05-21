@@ -159,7 +159,7 @@ SqlSessionFactory factory = builder.build(configuration);</source>
 SqlSession openSession(boolean autoCommit)
 SqlSession openSession(Connection connection)
 SqlSession openSession(TransactionIsolationLevel level)
-SqlSession openSession(ExecutorType execType,TransactionIsolationLevel level)
+SqlSession openSession(ExecutorType execType, TransactionIsolationLevel level)
 SqlSession openSession(ExecutorType execType)
 SqlSession openSession(ExecutorType execType, boolean autoCommit)
 SqlSession openSession(ExecutorType execType, Connection connection)
@@ -196,12 +196,6 @@ int insert(String statement, Object parameter)
 int update(String statement, Object parameter)
 int delete(String statement, Object parameter)]]></source>
   <p>selectOne と selectList の違いは、selectOne は１つのオブジェクトまたは null を返さなくてはならないということです。複数のオブジェクトが返されると例外が発生します。結果のオブジェクト数が未知の場合は selectList を使用してください。オブジェクトが存在するかどうかを確認したいのなら、カウント結果（0 or 1）を返すようにした方が良いでしょう。selectMap は、結果のリストを mapKey で指定したプロパティに基づいたマップに格納して返す特殊なメソッドです。<br />ステートメントの引数は不要な場合もあるので、parameter オブジェクトの引数を持たないオーバーロードメソッドも用意されています。</p>
-  <p>A Cursor offers the same results as a List, except it fetches data lazily using an Iterator.</p>
-  <source><![CDATA[try (Cursor<MyEntity> entities = session.selectCursor(statement, param)) {
-   for (MyEntity entity:entities) {
-      // process one entity
-   }
-}]]></source>
   <p>insert, update, delete の各メソッドは、ステートメントの実行によって影響を受けた行数を返します。</p>
   <source><![CDATA[<T> T selectOne(String statement)
 <E> List<E> selectList(String statement)
@@ -210,6 +204,13 @@ int delete(String statement, Object parameter)]]></source>
 int insert(String statement)
 int update(String statement)
 int delete(String statement)]]></source>
+
+  <p>A Cursor offers the same results as a List, except it fetches data lazily using an Iterator.</p>
+  <source><![CDATA[try (Cursor<MyEntity> entities = session.selectCursor(statement, param)) {
+   for (MyEntity entity:entities) {
+      // process one entity
+   }
+}]]></source>
 
   <p>最後に、高度な処理を行うための select メソッドがあります。これらは主に非常に大きなデータセットを扱う場合に、返される行の範囲を限定したり、カスタムの ResultHandler を使って独自に結果処理を行うことができるようになっています。</p>
   <source><![CDATA[<E> List<E> selectList (String statement, Object parameter, RowBounds rowBounds)
@@ -265,19 +266,7 @@ void rollback(boolean force)</source>
   <h5>確実に SqlSession をクローズする</h5>
   <source>void close()</source>
   <p>最も重要なのは、オープンした session は必ずクローズする必要があるということです。そのためには次のようなパターンでコードを書くのが最も確実です。</p>
-  <source>SqlSession session = sqlSessionFactory.openSession();
-try {
-    // following 3 lines pseudocode for "doing some work"
-    session.insert(...);
-    session.update(...);
-    session.delete(...);
-    session.commit();
-} finally {
-    session.close();
-}</source>
-  <p>MyBatis 3.2 からは Java 1.7 で導入された try-with-resources 構文を使ってクローズ処理を省略することもできます。</p>
-  <source>
-try (SqlSession session = sqlSessionFactory.openSession()) {
+  <source>try (SqlSession session = sqlSessionFactory.openSession()) {
     // following 3 lines pseudocode for "doing some work"
     session.insert(...);
     session.update(...);
@@ -476,8 +465,11 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         </td>
         <td>これらのアノテーションは動的 SQL を生成するためのものです。実行時に指定されたメソッドが呼び出され、メソッドから返された SQL ステートメントが実行されます (MyBatis 3.4.6以降では、メソッドの返り値として <code>String</code> ではなく <code>CharSequence</code> を指定することができます)。
         マップドステートメントを実行する際、プロバイダーによって指定したクラスのインスタンスが作成され、指定されたメソッドが実行されます。
-        なお、メソッド引数にはMapperメソッドの引数に渡したオブジェクトに加え、<code>ProviderContext</code>(MyBatis 3.4.5以降で利用可能)を介して「Mapperインタフェースの型」と「Mapperメソッド」を渡すことができます。(MyBatis 3.4以降では、複数の引数を渡すことができます)
-        キー: <code>type</code>, <code>method</code>. <code>type</code> にはクラスオブジェクト、<code>method</code> にはメソッド名を指定します。 <span class="label important">NOTE</span> 次の章で、クリーンで可読性の高いコードで動的 SQL を構築するためのクラスについて説明します。
+        なお、メソッド引数にはMapperメソッドの引数に渡したオブジェクトに加え、<code>ProviderContext</code>(MyBatis 3.4.5以降で利用可能)を介して「Mapperインタフェースの型」「Mapperメソッド」「データベースID」を渡すことができます。(MyBatis 3.4以降では、複数の引数を渡すことができます)
+        キー: <code>type</code>, <code>method</code>. <code>type</code> にはクラスオブジェクト、<code>method</code> にはメソッド名を指定します
+        (MyBatis 3.5.1以降では、<code>method</code> 属性を省略することができます。その際MyBatisは、<code>ProviderMethodResolver</code> インタフェースを介して対象メソッドの解決を試み、
+        対象メソッドが解決できない場合は、<code>provideSql</code>という名前のメソッドを代替メソッドとして利用します)。
+        <span class="label important">NOTE</span> 次の章で、クリーンで可読性の高いコードで動的 SQL を構築するためのクラスについて説明します。
 </td>
       </tr>
       <tr>
@@ -591,6 +583,27 @@ class UserSqlBuilder {
       ORDER_BY(orderByColumn);
     }}.toString();
   }
+}]]></source>
+
+    <p>次のコードは、<code>ProviderMethodResolver</code>(MyBatis 3.5.1以降で利用可能)のデフォルト実装の利用例です。</p>
+    <source><![CDATA[@SelectProvider(type = UserSqlProvider.class)
+List<User> getUsersByName(String name);
+
+// SQLプロバイダクラスにProviderMethodResolverを実装する
+class UserSqlProvider implements ProviderMethodResolver {
+
+  // デフォルト実装では、マッパーメソッドと同名のメソッドが対象メソッドとして扱われます。
+  public static String getUsersByName(final String name) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      if (name != null) {
+        WHERE("name like #{value} || '%'");
+      }
+      ORDER_BY("id");
+    }}.toString();
+  }
+
 }]]></source>
 
   </subsection>
