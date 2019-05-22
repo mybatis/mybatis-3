@@ -20,6 +20,7 @@ import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 
 /**
  * @author Clinton Begin
@@ -31,8 +32,21 @@ public class ArrayTypeHandler extends BaseTypeHandler<Object> {
   }
 
   @Override
+  protected void setNullParameter(PreparedStatement ps, int i, JdbcType jdbcType) throws SQLException {
+    ps.setNull(i, Types.ARRAY);
+  }
+  
+  @Override
   public void setNonNullParameter(PreparedStatement ps, int i, Object parameter, JdbcType jdbcType) throws SQLException {
-    ps.setArray(i, (Array) parameter);
+    Array array = null;
+    if (parameter instanceof Array) {
+      array = (Array)parameter;
+    }
+    else {
+      Object[] values = (Object[])parameter;
+      array = ps.getConnection().createArrayOf(jdbcType.name(), values);
+    }
+    ps.setArray(i, array);
   }
 
   @Override

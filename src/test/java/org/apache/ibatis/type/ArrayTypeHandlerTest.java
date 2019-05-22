@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 import java.sql.Array;
+import java.sql.Types;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -37,6 +38,12 @@ class ArrayTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldSetParameter() throws Exception {
     TYPE_HANDLER.setParameter(ps, 1, mockArray, null);
     verify(ps).setArray(1, mockArray);
+  }
+  
+  @Test
+  public void shouldSetNullParameter() throws Exception {
+    TYPE_HANDLER.setParameter(ps, 1, null, JdbcType.ARRAY);
+    verify(ps).setNull(1, Types.ARRAY);
   }
 
   @Override
