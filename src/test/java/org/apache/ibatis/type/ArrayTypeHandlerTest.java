@@ -23,6 +23,7 @@ import java.sql.Types;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -46,6 +47,13 @@ class ArrayTypeHandlerTest extends BaseTypeHandlerTest {
     verify(ps).setNull(1, Types.ARRAY);
   }
 
+  @Test
+  public void shouldFailForNonArrayParameter() {
+    assertThrows(TypeException.class, () -> {
+      TYPE_HANDLER.setParameter(ps, 1, "unsupported parameter type", null);
+    });
+  }
+  
   @Override
   @Test
   public void shouldGetResultFromResultSetByName() throws Exception {

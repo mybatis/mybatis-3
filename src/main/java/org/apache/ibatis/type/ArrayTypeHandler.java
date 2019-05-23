@@ -43,6 +43,9 @@ public class ArrayTypeHandler extends BaseTypeHandler<Object> {
       array = (Array)parameter;
     }
     else {
+      if (!parameter.getClass().isArray()) {
+        throw new TypeException("ArrayType Handler requires SQL array or java array parameter and does not support type " + parameter.getClass());
+      }
       Object[] values = (Object[])parameter;
       array = ps.getConnection().createArrayOf(jdbcType.name(), values);
     }
