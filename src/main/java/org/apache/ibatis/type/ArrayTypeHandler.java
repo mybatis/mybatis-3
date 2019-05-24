@@ -50,6 +50,7 @@ public class ArrayTypeHandler extends BaseTypeHandler<Object> {
       array = ps.getConnection().createArrayOf(jdbcType.name(), values);
     }
     ps.setArray(i, array);
+    array.free();
   }
 
   @Override

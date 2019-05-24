@@ -39,6 +39,7 @@ class ArrayTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldSetParameter() throws Exception {
     TYPE_HANDLER.setParameter(ps, 1, mockArray, null);
     verify(ps).setArray(1, mockArray);
+    verify(mockArray).free();
   }
   
   @Test
