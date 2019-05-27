@@ -1,5 +1,5 @@
 /**
- *    Copyright 2019 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -28,20 +28,21 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class BaseTest {
+public class ArrayTypeHandlerTest {
 
   private SqlSessionFactory sqlSessionFactory;
 
   @BeforeEach
   public void setUp() throws Exception {
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/array_type_handler/mybatis-config.xml")) {
+    try (Reader reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/array_type_handler/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
-    
+
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
         "org/apache/ibatis/submitted/array_type_handler/CreateDB.sql");
   }
-  
+
   @Test
   public void shouldInsertArrayValue() throws Exception {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
@@ -49,19 +50,19 @@ public class BaseTest {
       user.setId(1);
       user.setName("User 1");
       user.setNicknames(new String[] { "User", "one" });
-      
+
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       mapper.insert(user);
       sqlSession.commit();
 
       int usersInDatabase = mapper.getUserCount();
       assertEquals(1, usersInDatabase);
-            
+
       Integer nicknameCount = mapper.getNicknameCount();
       assertEquals(2, nicknameCount);
     }
   }
-  
+
   @Test
   public void shouldInsertNullValue() throws Exception {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
@@ -69,7 +70,7 @@ public class BaseTest {
       user.setId(1);
       user.setName("User 1");
       // note how the user does not have nicknames
-      
+
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       mapper.insert(user);
       sqlSession.commit();
