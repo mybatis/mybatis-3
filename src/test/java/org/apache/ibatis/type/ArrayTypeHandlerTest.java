@@ -39,9 +39,8 @@ class ArrayTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldSetParameter() throws Exception {
     TYPE_HANDLER.setParameter(ps, 1, mockArray, null);
     verify(ps).setArray(1, mockArray);
-    verify(mockArray).free();
   }
-  
+    
   @Test
   public void shouldSetNullParameter() throws Exception {
     TYPE_HANDLER.setParameter(ps, 1, null, JdbcType.ARRAY);

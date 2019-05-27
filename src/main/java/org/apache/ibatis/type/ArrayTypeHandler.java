@@ -40,7 +40,9 @@ public class ArrayTypeHandler extends BaseTypeHandler<Object> {
   public void setNonNullParameter(PreparedStatement ps, int i, Object parameter, JdbcType jdbcType) throws SQLException {
     Array array = null;
     if (parameter instanceof Array) {
-      array = (Array)parameter;
+      // it's the user's responsibility to properly free() the Array instance
+      ps.setArray(i, (Array)parameter);
+      
     }
     else {
       if (!parameter.getClass().isArray()) {
@@ -48,9 +50,9 @@ public class ArrayTypeHandler extends BaseTypeHandler<Object> {
       }
       Object[] values = (Object[])parameter;
       array = ps.getConnection().createArrayOf(jdbcType.name(), values);
+      ps.setArray(i, array);
+      array.free();
     }
-    ps.setArray(i, array);
-    array.free();
   }
 
   @Override
