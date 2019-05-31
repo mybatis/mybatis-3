@@ -95,7 +95,7 @@ configuration.addMapper(BlogMapper.class);
 SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);]]></source>
       <p>이 설정에서 추가로 해야 할 일은 Mapper클래스를 추가하는 것이다.
 	  Mapper클래스는 SQL 매핑 애노테이션을 가진 자바 클래스이다.
-	  어쨌든 자바 애노테이션의 몇가지 제약과 몇가지 설정방법의 목잡함에도 불구하고 XML 매핑은 세부적인 매핑을 위해 언제든 필요하다.
+	  어쨌든 자바 애노테이션의 몇가지 제약과 몇가지 설정방법의 복잡함에도 불구하고 XML 매핑은 세부적인 매핑을 위해 언제든 필요하다.
 	  좀더 세부적인 내용은 조금 뒤 다시 보도록 하자.</p>
     </subsection>
     <subsection name="SqlSessionFactory 에서 SqlSession 만들기">
@@ -103,23 +103,17 @@ SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(confi
 	  SqlSession 은 데이터베이스에 대해 SQL명령어를 실행하기 위해 필요한 모든 메소드를 가지고 있다.
 	  그래서 SqlSession 인스턴스를 통해 직접 SQL 구문을 실행할 수 있다.
 	  예를 들면 :</p>
-      <source><![CDATA[SqlSession session = sqlSessionFactory.openSession();
-try {
+      <source><![CDATA[try (SqlSession session = sqlSessionFactory.openSession()) {
   Blog blog = session.selectOne("org.mybatis.example.BlogMapper.selectBlog", 101);
-} finally {
-  session.close();
 }]]></source>
       <p>이 방법이 마이바티스의 이전버전을 사용한 사람이라면 굉장히 친숙할 것이다.
 	  하지만 좀더 좋은 방법이 생겼다.
 	  주어진 SQL 구문의 파라미터와 리턴값을 설명하는 인터페이스(예를 들면, BlogMapper.class )를 사용하여
 	  문자열 처리 오류나 타입 캐스팅 오류 없이 좀더 타입에 안전하고 깔끔하게 실행할 수 있다.</p>
       <p>예를들면:</p>
-      <source><![CDATA[SqlSession session = sqlSessionFactory.openSession();
-try {
+      <source><![CDATA[try (SqlSession session = sqlSessionFactory.openSession()) {
   BlogMapper mapper = session.getMapper(BlogMapper.class);
   Blog blog = mapper.selectBlog(101);
-} finally {
-  session.close();
 }]]></source>
       <p>그럼 자세히 살펴보자.</p>
     </subsection>
@@ -234,11 +228,8 @@ public interface BlogMapper {
 		SqlSession 을 닫는 것은 중요하다.
 		언제나 finally 블록에서 닫아야만 한다.
 		다음은 SqlSession을 닫는 것을 확인하는 표준적인 형태다.</p>
-        <source><![CDATA[SqlSession session = sqlSessionFactory.openSession();
-try {
+        <source><![CDATA[try (SqlSession session = sqlSessionFactory.openSession()) {
   // do work
-} finally {
-  session.close();
 }]]></source>
         <p>코드전반에 이런 형태를 사용하는 것은 모든 데이터베이스 자원을 잘 닫는 것으로 보장하게 할 것이다.
         </p>
@@ -249,12 +240,9 @@ try {
 		어쨌든 mapper 인스턴스의 가장 좋은 스코프는 메소드 스코프이다.
 		사용할 메소드가 호출되면 생성되고 끝난다.
 		명시적으로 닫을 필요는 없다.</p>
-        <source><![CDATA[SqlSession session = sqlSessionFactory.openSession();
-try {
+        <source><![CDATA[try (SqlSession session = sqlSessionFactory.openSession()) {
   BlogMapper mapper = session.getMapper(BlogMapper.class);
   // do work
-} finally {
-  session.close();
 }
 ]]></source>
 

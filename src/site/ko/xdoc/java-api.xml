@@ -199,7 +199,7 @@ SqlSessionFactory factory = builder.build(configuration);</source>
 SqlSession openSession(boolean autoCommit)
 SqlSession openSession(Connection connection)
 SqlSession openSession(TransactionIsolationLevel level)
-SqlSession openSession(ExecutorType execType,TransactionIsolationLevel level)
+SqlSession openSession(ExecutorType execType, TransactionIsolationLevel level)
 SqlSession openSession(ExecutorType execType)
 SqlSession openSession(ExecutorType execType, boolean autoCommit)
 SqlSession openSession(ExecutorType execType, Connection connection)
@@ -260,12 +260,6 @@ int delete(String statement, Object parameter)]]></source>
   selectMap은 결과 목록을 Map으로 변환하기 위해 디자인된 특별한 경우이다.
   이 경우 결과 객체의 프로퍼티 중 하나를 키로 사용하게 된다.
   모든 구문이 파라미터를 필요로 하지는 않기 때문에 파라미터 객체를 요구하지 않는 형태로 오버로드되었다.</p>
-  <p>A Cursor offers the same results as a List, except it fetches data lazily using an Iterator.</p>
-  <source><![CDATA[try (Cursor<MyEntity> entities = session.selectCursor(statement, param)) {
-   for (MyEntity entity:entities) {
-      // process one entity
-   }
-}]]></source>
   <p>insert, update 그리고 delete 메소드에 의해 리턴되는 값은 실행된 구문에 의해 영향을 받은 레코드수를 표시한다. </p>
   <source><![CDATA[<T> T selectOne(String statement)
 <E> List<E> selectList(String statement)
@@ -274,6 +268,13 @@ int delete(String statement, Object parameter)]]></source>
 int insert(String statement)
 int update(String statement)
 int delete(String statement)]]></source>
+
+  <p>A Cursor offers the same results as a List, except it fetches data lazily using an Iterator.</p>
+  <source><![CDATA[try (Cursor<MyEntity> entities = session.selectCursor(statement, param)) {
+   for (MyEntity entity:entities) {
+      // process one entity
+   }
+}]]></source>
 
   <p>마지막으로 리턴되는 데이터의 범위를 제한하거나 결과를 핸들링 하는 로직을 부여할 수 있는 3개의 select 메소드가 있다.</p>
 
@@ -337,19 +338,7 @@ void rollback(boolean force)</source>
   <source>void close()</source>
   <p>반드시 기억해야 하는 중요한 것은 당신이 열었던 세션을 닫아주는 것이다.
   확실히 하기 위해 가장 좋은 방법은 다음과 같은 형태로 개발하는 것이다.</p>
-  <source>SqlSession session = sqlSessionFactory.openSession();
-try {
-    // 다음의 3줄은 "어떤 작업을 하는"을 나타낸다.
-    session.insert(...);
-    session.update(...);
-    session.delete(...);
-    session.commit();
-} finally {
-    session.close();
-}</source>
-  <p>JDK 1.7이상과 마이바티스 3.2이상을 사용한다면 다음처럼 try-with-resources 구문을 사용할 수 있다. </p>
-  <source>
-try (SqlSession session = sqlSessionFactory.openSession()) {
+  <source>try (SqlSession session = sqlSessionFactory.openSession()) {
     // 다음의 3줄은 "어떤 작업을 하는"을 나타낸다.
     session.insert(...);
     session.update(...);
@@ -598,10 +587,13 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         </td>
         <td>실행시 SQL 을 리턴할 클래스 과 메소드명을 명시하도록 해주는 대체수단의 애노테이션이다 (Since 3.4.6, you can specify the <code>CharSequence</code> instead of <code>String</code> as a method return type).
 		매핑된 구문을 실행할 때 마이바티스는 클래스의 인스턴스를 만들고 메소드를 실행한다.
-    Mapper 메서드의 인수인 "Mapper interface type" 과 <code>ProviderContext</code>(Mybatis 3.4.5 부터) 를 이용한 "Mapper method" 로 전달 된 객체를 메서드 매개변수로 전달할 수 있다.(마이바티스 3.4이상에서는 복수 파라미터를 허용한다.)
+    Mapper 메서드의 인수인 "Mapper interface type" and "Database ID" 과 <code>ProviderContext</code>(Mybatis 3.4.5 부터) 를 이용한 "Mapper method" 로 전달 된 객체를 메서드 매개변수로 전달할 수 있다.(마이바티스 3.4이상에서는 복수 파라미터를 허용한다.)
 		사용가능한 속성들 : type, method.
 		type 속성은 클래스.
-		method 속성은 메소드명이다.
+		method 속성은 메소드명이다
+    (Since 3.5.1, you can omit <code>method</code> attribute, the MyBatis will resolve a target method via the
+    <code>ProviderMethodResolver</code> interface.
+    If not resolve by it, the MyBatis use the reserved fallback method that named <code>provideSql</code>).
 		Note: 이 섹션은 클래스에 대한 설명으로 동적 SQL 을 좀더 깔끔하고 읽기 쉽게 만드는데 도움이 될 수 있다.</td>
       </tr>
       <tr>
@@ -730,6 +722,25 @@ class UserSqlBuilder {
       FROM("users");
       WHERE("name like #{name} || '%'");
       ORDER_BY(orderByColumn);
+    }}.toString();
+  }
+}]]></source>
+
+    <p>This example shows usage the default implementation of <code>ProviderMethodResolver</code>(available since MyBatis 3.5.1 or later):</p>
+    <source><![CDATA[@SelectProvider(type = UserSqlProvider.class)
+List<User> getUsersByName(String name);
+
+// Implements the ProviderMethodResolver on your provider class
+class UserSqlProvider implements ProviderMethodResolver {
+  // In default implementation, it will resolve a method that method name is matched with mapper method
+  public static String getUsersByName(final String name) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      if (name != null) {
+        WHERE("name like #{value} || '%'");
+      }
+      ORDER_BY("id");
     }}.toString();
   }
 }]]></source>

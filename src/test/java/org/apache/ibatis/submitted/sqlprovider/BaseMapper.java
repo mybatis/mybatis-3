@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,8 +15,12 @@
  */
 package org.apache.ibatis.submitted.sqlprovider;
 
+import org.apache.ibatis.annotations.Lang;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.SelectProvider;
+import org.apache.ibatis.annotations.UpdateProvider;
+import org.apache.ibatis.scripting.xmltags.XMLLanguageDriver;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -54,6 +58,16 @@ public interface BaseMapper<T> {
   @SelectProvider(type = OurSqlBuilder.class, method = "buildSelectByIdAndNameMultipleParamAndProviderContext")
   List<T> selectActiveByIdAndName(Integer id, String name);
 
+  @Lang(XMLLanguageDriver.class)
+  @InsertProvider(type = OurSqlBuilder.class, method = "buildInsertSelective")
+  void insertSelective(T entity);
+
+  @UpdateProvider(type= OurSqlBuilder.class, method= "buildUpdateSelective")
+  void updateSelective(T entity);
+
+  @SelectProvider(type = OurSqlBuilder.class, method = "buildGetByEntityQuery")
+  List<T> getByEntity(T entity);
+
   @Retention(RetentionPolicy.RUNTIME)
   @Target(ElementType.METHOD)
   @interface ContainsLogicalDelete {
@@ -64,6 +78,12 @@ public interface BaseMapper<T> {
   @Target(ElementType.TYPE)
   @interface Meta {
     String tableName();
+  }
+
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target(ElementType.FIELD)
+  @interface Column {
+    String value() default "";
   }
 
 }

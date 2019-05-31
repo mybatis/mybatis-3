@@ -512,4 +512,48 @@ class Jdbc3KeyGeneratorTest {
       }
     }
   }
+
+  @Test
+  void shouldFailIfTooManyGeneratedKeys() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      try {
+        CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
+        when(mapper).tooManyGeneratedKeys(new Country());
+        then(caughtException()).isInstanceOf(PersistenceException.class).hasMessageContaining(
+            "Too many keys are generated. There are only 1 target objects.");
+      } finally {
+        sqlSession.rollback();
+      }
+    }
+  }
+
+  @Test
+  void shouldFailIfTooManyGeneratedKeys_ParamMap() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      try {
+        CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
+        when(mapper).tooManyGeneratedKeysParamMap(new Country(), 1);
+        then(caughtException()).isInstanceOf(PersistenceException.class).hasMessageContaining(
+            "Too many keys are generated. There are only 1 target objects.");
+      } finally {
+        sqlSession.rollback();
+      }
+    }
+  }
+
+  @Test
+  void shouldFailIfTooManyGeneratedKeys_Batch() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH)) {
+      try {
+        CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
+        mapper.tooManyGeneratedKeysParamMap(new Country(), 1);
+        mapper.tooManyGeneratedKeysParamMap(new Country(), 1);
+        when(sqlSession).flushStatements();
+        then(caughtException()).isInstanceOf(PersistenceException.class).hasMessageContaining(
+            "Too many keys are generated. There are only 2 target objects.");
+      } finally {
+        sqlSession.rollback();
+      }
+    }
+  }
 }

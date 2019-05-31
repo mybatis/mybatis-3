@@ -1717,7 +1717,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
           少々遅いですが、即時の接続を必要としないシンプルなアプリケーションの場合は良い選択肢です。
           パフォーマンスに関しては、お使いのデータベースによっても変わってきます。
           接続プールの重要性が低いデータベースの場合はこの設定が最適となります。
-          UNPOOLED データソースは５つのプロパティで設定できます。
+          UNPOOLED データソースに対して設定可能なプロパティは下記の通りです。
         </p>
         <ul>
           <li>driver – JDBC ドライバーの完全修飾 Java クラス名（ドライバーに含まれているデータソースクラスではありません）
@@ -1729,6 +1729,8 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
           <li>password - データベース接続時のパスワード
           </li>
           <li>defaultTransactionIsolationLevel – デフォルトのトランザクション分離レベル
+          </li>
+          <li>defaultNetworkTimeout – 任意の要求に対するデータベースからの応答待機期限のデフォルト値（ミリ秒）。詳細は <code>java.sql.Connection#setNetworkTimeout()</code> の javadoc 参照。
           </li>
         </ul>
         <p>
@@ -1749,7 +1751,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
           Web アプリケーションでは応答速度向上のために良く使われる設定です。
         </p>
         <p>
-          POOLED データソースには、UNPOOLED の設定で見た５つの他に様々なプロパティを指定することができます。
+          POOLED データソースには、UNPOOLED に対して設定可能なプロパティに加えて以下を指定することができます。
         </p>
         <ul>
           <li>poolMaximumActiveConnections – 同時にプールされる接続数の最大値です。
