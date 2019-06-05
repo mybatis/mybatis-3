@@ -517,11 +517,11 @@ public class MapperAnnotationBuilder {
     return SqlCommandType.valueOf(type.getSimpleName().toUpperCase(Locale.ENGLISH));
   }
 
-  private Class<? extends Annotation> getSqlAnnotationType(Method method) {
+  public Class<? extends Annotation> getSqlAnnotationType(Method method) {
     return chooseAnnotationType(method, SQL_ANNOTATION_TYPES);
   }
 
-  private Class<? extends Annotation> getSqlProviderAnnotationType(Method method) {
+  public Class<? extends Annotation> getSqlProviderAnnotationType(Method method) {
     return chooseAnnotationType(method, SQL_PROVIDER_ANNOTATION_TYPES);
   }
 

@@ -164,6 +164,8 @@ public class Configuration {
   protected final Collection<ResultMapResolver> incompleteResultMaps = new LinkedList<>();
   protected final Collection<MethodResolver> incompleteMethods = new LinkedList<>();
 
+  private boolean checkMapperMethodRelatedMappedStatementExist = false ;
+
   /*
    * A map holds cache-ref relationship. The key is the namespace that
    * references a cache bound to another namespace and the value is the
@@ -216,6 +218,14 @@ public class Configuration {
 
   public void setLogPrefix(String logPrefix) {
     this.logPrefix = logPrefix;
+  }
+
+  public boolean isCheckMapperMethodRelatedMappedStatementExist() {
+    return checkMapperMethodRelatedMappedStatementExist;
+  }
+
+  public void setCheckMapperMethodRelatedMappedStatementExist(boolean checkMapperMethodRelatedMappedStatementExist) {
+    this.checkMapperMethodRelatedMappedStatementExist = checkMapperMethodRelatedMappedStatementExist;
   }
 
   public Class<? extends Log> getLogImpl() {
