@@ -39,7 +39,7 @@ public abstract class SerializableProxyTest {
 
   protected Author author = new Author(999, "someone", "!@#@!#!@#", "someone@somewhere.com", "blah", Section.NEWS);
 
-  ProxyFactory proxyFactory;
+  static ProxyFactory proxyFactory;
 
   @Test
   void shouldKeepGenericTypes() {
