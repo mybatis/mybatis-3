@@ -27,13 +27,15 @@ import org.apache.ibatis.executor.loader.cglib.CglibProxyFactory;
 import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
 import org.apache.ibatis.session.Configuration;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class CglibProxyTest extends SerializableProxyTest {
 
-  CglibProxyTest() {
+  @BeforeAll
+  static void createProxyFactory() {
     proxyFactory = new CglibProxyFactory();
   }
 

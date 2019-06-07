@@ -27,13 +27,15 @@ import org.apache.ibatis.executor.loader.javassist.JavassistProxyFactory;
 import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
 import org.apache.ibatis.session.Configuration;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class JavassistProxyTest extends SerializableProxyTest {
 
-  JavassistProxyTest() {
+  @BeforeAll
+  static void createProxyFactory() {
     proxyFactory = new JavassistProxyFactory();
   }
 
