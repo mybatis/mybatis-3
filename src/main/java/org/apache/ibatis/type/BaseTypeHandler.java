@@ -104,6 +104,9 @@ public abstract class BaseTypeHandler<T> extends TypeReference<T> implements Typ
 
   public abstract void setNonNullParameter(PreparedStatement ps, int i, T parameter, JdbcType jdbcType) throws SQLException;
 
+  /**
+   * @param columnName Colunm name, when configuration <code>useColumnLabel</code> is <code>false</code>
+   */
   public abstract T getNullableResult(ResultSet rs, String columnName) throws SQLException;
 
   public abstract T getNullableResult(ResultSet rs, int columnIndex) throws SQLException;
