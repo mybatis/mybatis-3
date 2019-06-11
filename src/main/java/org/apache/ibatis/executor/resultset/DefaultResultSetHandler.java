@@ -67,6 +67,7 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
  * @author Eduardo Macarron
  * @author Iwao AVE!
  * @author Kazuki Shimizu
+ * @author liebin.zheng
  */
 public class DefaultResultSetHandler implements ResultSetHandler {
 
@@ -492,7 +493,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         }
         final String property = metaObject.findProperty(propertyName, configuration.isMapUnderscoreToCamelCase());
         if (property != null && metaObject.hasSetter(property)) {
-          if (resultMap.getMappedProperties().contains(property)) {
+          if (!resultMap.getMappedProperties().contains(property)) {
             continue;
           }
           final Class<?> propertyType = metaObject.getSetterType(property);
