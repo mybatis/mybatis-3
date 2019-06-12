@@ -493,9 +493,9 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         }
         final String property = metaObject.findProperty(propertyName, configuration.isMapUnderscoreToCamelCase());
         if (property != null && metaObject.hasSetter(property)) {
-          if (!resultMap.getMappedProperties().contains(property)) {
-            continue;
-          }
+          //if (resultMap.getMappedProperties().contains(property)) {
+          //  continue;
+          //}
           final Class<?> propertyType = metaObject.getSetterType(property);
           if (typeHandlerRegistry.hasTypeHandler(propertyType, rsw.getJdbcType(columnName))) {
             final TypeHandler<?> typeHandler = rsw.getTypeHandler(propertyType, columnName);
