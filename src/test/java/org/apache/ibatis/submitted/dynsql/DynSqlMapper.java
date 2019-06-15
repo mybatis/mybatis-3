@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,6 +17,26 @@ package org.apache.ibatis.submitted.dynsql;
 
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 public interface DynSqlMapper {
   String selectDescription(@Param("p") String p);
+
+  List<String> selectDescriptionById(Integer id);
+  List<String> selectDescriptionByConditions(Conditions conditions);
+  List<String> selectDescriptionByConditions2(Conditions conditions);
+  List<String> selectDescriptionByConditions3(Conditions conditions);
+
+  class Conditions {
+    private Integer id;
+
+    public void setId(Integer id) {
+      this.id = id;
+    }
+
+    public Integer getId() {
+      return id;
+    }
+  }
+
 }

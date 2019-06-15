@@ -45,9 +45,10 @@ public class DynamicContext {
   public DynamicContext(Configuration configuration, Object parameterObject) {
     if (parameterObject != null && !(parameterObject instanceof Map)) {
       MetaObject metaObject = configuration.newMetaObject(parameterObject);
-      bindings = new ContextMap(metaObject);
+      boolean existsTypeHandler = configuration.getTypeHandlerRegistry().hasTypeHandler(parameterObject.getClass());
+      bindings = new ContextMap(metaObject, existsTypeHandler);
     } else {
-      bindings = new ContextMap(null);
+      bindings = new ContextMap(null, false);
     }
     bindings.put(PARAMETER_OBJECT_KEY, parameterObject);
     bindings.put(DATABASE_ID_KEY, configuration.getDatabaseId());
@@ -75,11 +76,12 @@ public class DynamicContext {
 
   static class ContextMap extends HashMap<String, Object> {
     private static final long serialVersionUID = 2977601501966151582L;
+    private final MetaObject parameterMetaObject;
+    private final boolean fallbackParameterObject;
 
-    private MetaObject parameterMetaObject;
-
-    public ContextMap(MetaObject parameterMetaObject) {
+    public ContextMap(MetaObject parameterMetaObject, boolean fallbackParameterObject) {
       this.parameterMetaObject = parameterMetaObject;
+      this.fallbackParameterObject = fallbackParameterObject;
     }
 
     @Override
@@ -89,12 +91,16 @@ public class DynamicContext {
         return super.get(strKey);
       }
 
-      if (parameterMetaObject != null) {
+      if (parameterMetaObject == null) {
+        return null;
+      }
+
+      if (fallbackParameterObject && !parameterMetaObject.hasGetter(strKey)) {
+        return parameterMetaObject.getOriginalObject();
+      } else {
         // issue #61 do not modify the context when reading
         return parameterMetaObject.getValue(strKey);
       }
-
-      return null;
     }
   }
 
