@@ -256,17 +256,6 @@ public class MapperMethod {
       String statementId = mapperInterface.getName() + "." + methodName;
       if (configuration.hasStatement(statementId)) {
         return configuration.getMappedStatement(statementId);
-      } else if (mapperInterface.equals(declaringClass)) {
-        return null;
-      }
-      for (Class<?> superInterface : mapperInterface.getInterfaces()) {
-        if (declaringClass.isAssignableFrom(superInterface)) {
-          MappedStatement ms = resolveMappedStatement(superInterface, methodName,
-              declaringClass, configuration);
-          if (ms != null) {
-            return ms;
-          }
-        }
       }
       return null;
     }

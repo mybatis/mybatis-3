@@ -15,6 +15,9 @@
  */
 package org.apache.ibatis.session;
 
+import java.lang.reflect.Method;
+import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -23,9 +26,11 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
 import org.apache.ibatis.binding.MapperRegistry;
 import org.apache.ibatis.builder.CacheRefResolver;
@@ -165,6 +170,7 @@ public class Configuration {
   protected final Collection<CacheRefResolver> incompleteCacheRefs = new LinkedList<>();
   protected final Collection<ResultMapResolver> incompleteResultMaps = new LinkedList<>();
   protected final Collection<MethodResolver> incompleteMethods = new LinkedList<>();
+  protected final List<Entry<Class<?>, Method>> unboundMethods = new ArrayList<>();
 
   /*
    * A map holds cache-ref relationship. The key is the namespace that
@@ -744,6 +750,11 @@ public class Configuration {
     return incompleteMethods;
   }
 
+  public void addUnboundMethod(Class<?> mapperClass, Method method) {
+    // TODO: Use Map.entry(key, value) in Java 9.
+    unboundMethods.add(new AbstractMap.SimpleImmutableEntry<>(mapperClass, method));
+  }
+
   public MappedStatement getMappedStatement(String id) {
     return this.getMappedStatement(id, true);
   }
@@ -826,6 +837,51 @@ public class Configuration {
         });
       }
     }
+    if (!unboundMethods.isEmpty()) {
+      synchronized (unboundMethods) {
+        unboundMethods.removeIf(x -> {
+          Class<?> mapperClass = x.getKey();
+          Method method = x.getValue();
+          String localId = method.getName();
+          Class<?> declaringClass = method.getDeclaringClass();
+          MappedStatement ms = searchInheritedStatement(mapperClass, localId, declaringClass);
+          if (ms != null) {
+            String statementId = mapperClass.getName() + "." + localId;
+            if (!statementId.equals(ms.getId())) {
+              mappedStatements.put(statementId, ms);
+            }
+            return true;
+          }
+          return false;
+        });
+        if (!unboundMethods.isEmpty()) {
+          throw new IncompleteElementException(
+              "No SQL statement bound to the methods: "
+                  + unboundMethods.stream().map(x -> x.getKey().getName() + "." + x.getValue().getName())
+                      .collect(Collectors.joining(", ")));
+        }
+      }
+    }
+  }
+
+  private MappedStatement searchInheritedStatement(Class<?> mapperInterface, String localId,
+      Class<?> declaringClass) {
+    String statementId = mapperInterface.getName() + "." + localId;
+    if (hasStatement(statementId, false)) {
+      return getMappedStatement(statementId, false);
+    } else if (mapperInterface.equals(declaringClass)) {
+      return null;
+    }
+    for (Class<?> superInterface : mapperInterface.getInterfaces()) {
+      if (declaringClass.isAssignableFrom(superInterface)) {
+        MappedStatement ms = searchInheritedStatement(superInterface, localId,
+            declaringClass);
+        if (ms != null) {
+          return ms;
+        }
+      }
+    }
+    return null;
   }
 
   private void parsePendingResultMaps() {

@@ -13,10 +13,14 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.submitted.mapper_extend;
+package org.apache.ibatis.submitted.unboundmethod;
 
-public interface GrandpaMapper {
+public interface Mapper {
 
-  User getUserByName(String name);
+  User getUser(Integer id);
+
+  int countUser();
+
+  void insertUser(User user);
 
 }
