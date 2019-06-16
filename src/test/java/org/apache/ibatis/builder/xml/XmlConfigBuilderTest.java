@@ -15,17 +15,13 @@
  */
 package org.apache.ibatis.builder.xml;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
 
-import org.apache.ibatis.builder.xml.mapper.UserMapper;
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class XmlConfigBuilderTest {
 
@@ -48,18 +44,6 @@ public class XmlConfigBuilderTest {
       noExceptionThrow = false;
     }
     assertThat(noExceptionThrow).isFalse();
-  }
-
-  @Test
-  public void testUpdateByName() throws Exception {
-    String resource = "org/apache/ibatis/builder/xml/UserMapperConfig.xml";
-    InputStream inputStream = Resources.getResourceAsStream(resource);
-    SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
-    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
-      int result = userMapper.updateByName("any param", 0);
-      assertEquals(result, 1);
-    }
   }
 
   /**

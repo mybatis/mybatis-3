@@ -163,7 +163,21 @@ public class XMLConfigBuilder extends BaseBuilder {
 
       String mappedStatementId = mapperType.getName() + "." + method.getName();
       boolean hasStatement = configuration.hasStatement(mappedStatementId, false);
-      if (!hasStatement) {
+
+      if (hasStatement){
+        continue;
+      }
+      boolean mapperMethodRelatedMappedStatementExist = false;
+      if (configuration.getIncompleteStatements() != null && configuration.getIncompleteStatements().size() > 0) {
+        for (XMLStatementBuilder xmlStatementBuilder : configuration.getIncompleteStatements()) {
+          if (mappedStatementId.equals(xmlStatementBuilder.getMappedStatementId())) {
+            mapperMethodRelatedMappedStatementExist = true;
+            break;
+          }
+        }
+      }
+
+      if (!mapperMethodRelatedMappedStatementExist) {
         throw new IncompleteElementException(String.format("mappedStatementId (%s) related mappedStatement not found ", mappedStatementId));
       }
     }

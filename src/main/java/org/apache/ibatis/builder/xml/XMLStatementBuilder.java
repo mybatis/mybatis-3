@@ -200,4 +200,8 @@ public class XMLStatementBuilder extends BaseBuilder {
     return configuration.getLanguageDriver(langClass);
   }
 
+  public String getMappedStatementId(){
+    return this.builderAssistant.getCurrentNamespace()+"."+this.context.getStringAttribute("id");
+  }
+
 }
