@@ -32,7 +32,7 @@
         <setting name="useGeneratedKeys" value="false"/>
         <setting name="defaultExecutorType" value="SIMPLE"/>
         <setting name="defaultStatementTimeout" value="25"/>
-        <setting name="checkMapperMethodRelatedMappedStatementExist" value="true"/>
+        <setting name="checkMapperMethodRelatedMappedStatementExist" value="false"/>
     </settings>
 
     <typeAliases>
