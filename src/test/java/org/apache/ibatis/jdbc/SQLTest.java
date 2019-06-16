@@ -293,8 +293,6 @@ class SQLTest {
       INSERT_INTO("TABLE_A").INTO_COLUMNS("a", "b").INTO_VALUES("#{a}", "#{b}");
     }}.toString();
 
-    System.out.println(sql);
-
     assertEquals("INSERT INTO TABLE_A\n (a, b)\nVALUES (#{a}, #{b})", sql);
   }
 
@@ -303,4 +301,50 @@ class SQLTest {
     final SQL sql = new SQL().UPDATE("table1 a").INNER_JOIN("table2 b USING (ID)").SET("a.value = b.value");
     assertThat(sql.toString()).isEqualTo("UPDATE table1 a\nINNER JOIN table2 b USING (ID)\nSET a.value = b.value");
   }
+
+  @Test
+  void selectUsingLimitVariableName() {
+    final String sql = new SQL() {{
+      SELECT("*").FROM("test").ORDER_BY("id").LIMIT("#{limit}");
+    }}.toString();
+
+    assertEquals("SELECT *\nFROM test\nORDER BY id LIMIT #{limit}", sql);
+  }
+
+  @Test
+  void selectUsingOffsetVariableName() {
+    final String sql = new SQL() {{
+      SELECT("*").FROM("test").ORDER_BY("id").OFFSET("#{offset}");
+    }}.toString();
+
+    assertEquals("SELECT *\nFROM test\nORDER BY id OFFSET #{offset}", sql);
+  }
+
+  @Test
+  void selectUsingLimitAndOffset() {
+    final String sql = new SQL() {{
+      SELECT("*").FROM("test").ORDER_BY("id").LIMIT(20).OFFSET(100);
+    }}.toString();
+
+    assertEquals("SELECT *\nFROM test\nORDER BY id LIMIT 20 OFFSET 100", sql);
+  }
+
+  @Test
+  void updateUsingLimit() {
+    final String sql = new SQL() {{
+      UPDATE("test").SET("status = #{updStatus}").WHERE("status = #{status}").LIMIT(20);
+    }}.toString();
+
+    assertEquals("UPDATE test\nSET status = #{updStatus}\nWHERE (status = #{status}) LIMIT 20", sql);
+  }
+
+  @Test
+  void deleteUsingLimit() {
+    final String sql = new SQL() {{
+      DELETE_FROM("test").WHERE("status = #{status}").LIMIT(20);
+    }}.toString();
+
+    assertEquals("DELETE FROM test\nWHERE (status = #{status}) LIMIT 20", sql);
+  }
+
 }
