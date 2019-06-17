@@ -174,7 +174,6 @@ class XPathParserTest {
       while ((temp = bufferedReader.readLine()) != null) {
         sb.append(temp);
       }
-      bufferedReader.close();
       return sb.toString();
     }
   }
