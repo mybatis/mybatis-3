@@ -66,6 +66,17 @@ class AutomappingTest {
   }
 
   @Test
+  void shouldGetAUserWhithFullName() {
+    sqlSessionFactory.getConfiguration().setAutoMappingBehavior(AutoMappingBehavior.NONE);
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      User user = mapper.getUserWithFullName(1);
+      Assertions.assertEquals("User1", user.getName());
+      Assertions.assertNotNull(user.getFullName());
+    }
+  }
+
+  @Test
   void shouldNotInheritAutoMappingInherited_InlineNestedResultMap() {
     sqlSessionFactory.getConfiguration().setAutoMappingBehavior(AutoMappingBehavior.NONE);
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {

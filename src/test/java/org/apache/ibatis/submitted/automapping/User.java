@@ -21,6 +21,7 @@ public class User {
 
   private Integer id;
   private String name;
+  private String fullName;
   private Long phone; // phone number of Long type
 
   private List<Pet> pets;
@@ -55,5 +56,13 @@ public class User {
 
   public void setPets(List<Pet> pets) {
     this.pets = pets;
+  }
+
+  public String getFullName() {
+    return fullName;
+  }
+
+  public void setFullName(String fullName) {
+    this.fullName = fullName;
   }
 }

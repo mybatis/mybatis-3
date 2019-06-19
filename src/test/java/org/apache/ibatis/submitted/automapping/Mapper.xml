@@ -30,12 +30,21 @@
 	</resultMap>
 
 	<select id="getUserWithPhoneNumber" resultMap="resultWithPhoneNumber">
-		select * from users where id = #{id}
+		select id, name, phone_number from users where id = #{id}
 	</select>
 
 	<resultMap type="org.apache.ibatis.submitted.automapping.User" id="resultWithPhoneNumber" autoMapping="true">
 		<result property="phone" column="phone_number"/>
 	</resultMap>
+
+    <select id="getUserWithFullName" resultMap="resultWithFullName">
+        select id, name, full_name as fullname, phone_number from users where id = #{id}
+    </select>
+
+    <resultMap type="org.apache.ibatis.submitted.automapping.User" id="resultWithFullName" autoMapping="true">
+        <result property="phone" column="phone_number"/>
+        <result property="fullName" column="full_name"/>
+    </resultMap>
 
 	<sql id="selectUserPetBreeder">
 		select users.id, users.name,

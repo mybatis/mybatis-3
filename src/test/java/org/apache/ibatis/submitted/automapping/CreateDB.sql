@@ -1,5 +1,5 @@
 --
---    Copyright 2009-2017 the original author or authors.
+--    Copyright 2009-2019 the original author or authors.
 --
 --    Licensed under the Apache License, Version 2.0 (the "License");
 --    you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ drop table books if exists;
 create table users (
   id int,
   name varchar(20),
+  full_name varchar(20),
   phone varchar(20),
   phone_number bigint
 );
@@ -43,8 +44,10 @@ create table breeder (
 );
 
 -- '+86 12345678901' can't be converted to a number
-insert into users (id, name, phone, phone_number) values(1, 'User1', '+86 12345678901', 12345678901);
-insert into users (id, name, phone, phone_number) values(2, 'User2', '+86 12345678902', 12345678902);
+-- The comments on the previous line is a mistake of table design, not a bug of mybatis. (issue #1562)
+-- A column name in a table with the same property name in a java bean ojbect, must has the compatible data type.(issue #1562) 
+insert into users (id, name, full_name, phone, phone_number) values(1, 'User1', 'Shan Zhang', '+86 12345678901', 12345678901);
+insert into users (id, name, full_name, phone, phone_number) values(2, 'User2', 'Shi Li', '+86 12345678902', 12345678902);
 
 insert into books (version, name) values(99, 'Learn Java');
 
