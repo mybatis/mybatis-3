@@ -35,20 +35,20 @@ public class ShortTypeHandler extends BaseTypeHandler<Short> {
   public Short getNullableResult(ResultSet rs, String columnName)
       throws SQLException {
     short result = rs.getShort(columnName);
-    return (result == 0 && rs.wasNull()) ? null : result;
+    return result == 0 && rs.wasNull() ? null : result;
   }
 
   @Override
   public Short getNullableResult(ResultSet rs, int columnIndex)
       throws SQLException {
     short result = rs.getShort(columnIndex);
-    return (result == 0 && rs.wasNull()) ? null : result;
+    return result == 0 && rs.wasNull() ? null : result;
   }
 
   @Override
   public Short getNullableResult(CallableStatement cs, int columnIndex)
       throws SQLException {
     short result = cs.getShort(columnIndex);
-    return (result == 0 && cs.wasNull()) ? null : result;
+    return result == 0 && cs.wasNull() ? null : result;
   }
 }

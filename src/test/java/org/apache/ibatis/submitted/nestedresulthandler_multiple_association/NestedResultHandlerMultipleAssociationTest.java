@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,16 +24,16 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-public class NestedResultHandlerMultipleAssociationTest {
+class NestedResultHandlerMultipleAssociationTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
-  public static void setUp() throws Exception {
+  @BeforeAll
+  static void setUp() throws Exception {
     // create an SqlSessionFactory
     try (Reader reader = Resources
         .getResourceAsReader("org/apache/ibatis/submitted/nestedresulthandler_multiple_association/mybatis-config.xml")) {
@@ -46,7 +46,7 @@ public class NestedResultHandlerMultipleAssociationTest {
   }
 
   @Test
-  public void failure() {
+  void failure() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 
       // Parents have child going from somewhere to somewhere, they are stored in
@@ -58,25 +58,25 @@ public class NestedResultHandlerMultipleAssociationTest {
       List<ParentBean> list = sqlSession.selectList("selectParentBeans");
       for (ParentBean pb : list) {
         for (Binome<ChildBean, ChildBean> childs : pb.getChilds()) {
-          Assert.assertNotNull(childs);
-          Assert.assertNotNull(childs.getOne());
-          Assert.assertNotNull(childs.getTwo());
+          Assertions.assertNotNull(childs);
+          Assertions.assertNotNull(childs.getOne());
+          Assertions.assertNotNull(childs.getTwo());
         }
       }
     }
   }
 
   @Test
-  public void success() {
+  void success() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 
       ParentBean parent = sqlSession.selectOne("selectParentBeanById", 2);
 
       // If you only select the Parent2 it works
       for (Binome<ChildBean, ChildBean> childs : parent.getChilds()) {
-        Assert.assertNotNull(childs);
-        Assert.assertNotNull(childs.getOne());
-        Assert.assertNotNull(childs.getTwo());
+        Assertions.assertNotNull(childs);
+        Assertions.assertNotNull(childs.getOne());
+        Assertions.assertNotNull(childs.getTwo());
       }
     }
   }

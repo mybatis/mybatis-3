@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.logging;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.Reader;
 
@@ -28,12 +28,12 @@ import org.apache.ibatis.logging.nologging.NoLoggingImpl;
 import org.apache.ibatis.logging.slf4j.Slf4jImpl;
 import org.apache.ibatis.logging.stdout.StdOutImpl;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class LogFactoryTest {
+class LogFactoryTest {
 
   @Test
-  public void shouldUseCommonsLogging() {
+  void shouldUseCommonsLogging() {
     LogFactory.useCommonsLogging();
     Log log = LogFactory.getLog(Object.class);
     logSomething(log);
@@ -41,7 +41,7 @@ public class LogFactoryTest {
   }
 
   @Test
-  public void shouldUseLog4J() {
+  void shouldUseLog4J() {
     LogFactory.useLog4JLogging();
     Log log = LogFactory.getLog(Object.class);
     logSomething(log);
@@ -49,15 +49,15 @@ public class LogFactoryTest {
   }
 
   @Test
-  public void shouldUseLog4J2() {
+  void shouldUseLog4J2() {
     LogFactory.useLog4J2Logging();
     Log log = LogFactory.getLog(Object.class);
     logSomething(log);
     assertEquals(log.getClass().getName(), Log4j2Impl.class.getName());
   }
-  
+
   @Test
-  public void shouldUseJdKLogging() {
+  void shouldUseJdKLogging() {
     LogFactory.useJdkLogging();
     Log log = LogFactory.getLog(Object.class);
     logSomething(log);
@@ -65,7 +65,7 @@ public class LogFactoryTest {
   }
 
   @Test
-  public void shouldUseSlf4j() {
+  void shouldUseSlf4j() {
     LogFactory.useSlf4jLogging();
     Log log = LogFactory.getLog(Object.class);
     logSomething(log);
@@ -73,7 +73,7 @@ public class LogFactoryTest {
   }
 
   @Test
-  public void shouldUseStdOut() {
+  void shouldUseStdOut() {
     LogFactory.useStdOutLogging();
     Log log = LogFactory.getLog(Object.class);
     logSomething(log);
@@ -81,7 +81,7 @@ public class LogFactoryTest {
   }
 
   @Test
-  public void shouldUseNoLogging() {
+  void shouldUseNoLogging() {
     LogFactory.useNoLogging();
     Log log = LogFactory.getLog(Object.class);
     logSomething(log);
@@ -89,7 +89,7 @@ public class LogFactoryTest {
   }
 
   @Test
-  public void shouldReadLogImplFromSettings() throws Exception {
+  void shouldReadLogImplFromSettings() throws Exception {
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/logging/mybatis-config.xml")) {
       new SqlSessionFactoryBuilder().build(reader);
     }

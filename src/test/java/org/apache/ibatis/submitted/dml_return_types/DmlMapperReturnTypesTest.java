@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,16 +20,17 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.io.Reader;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class DmlMapperReturnTypesTest {
+class DmlMapperReturnTypesTest {
 
   private static final String SQL = "org/apache/ibatis/submitted/dml_return_types/CreateDB.sql";
   private static final String XML = "org/apache/ibatis/submitted/dml_return_types/mybatis-config.xml";
@@ -39,8 +40,8 @@ public class DmlMapperReturnTypesTest {
   private SqlSession sqlSession;
   private Mapper mapper;
 
-  @BeforeClass
-  public static void setUp() throws Exception {
+  @BeforeAll
+  static void setUp() throws Exception {
     // create a SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader(XML)) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -51,56 +52,56 @@ public class DmlMapperReturnTypesTest {
 
   }
 
-  @Before
-  public void openSession() {
+  @BeforeEach
+  void openSession() {
     sqlSession = sqlSessionFactory.openSession();
     mapper = sqlSession.getMapper(Mapper.class);
   }
 
-  @After
-  public void closeSession() {
+  @AfterEach
+  void closeSession() {
     sqlSession.close();
   }
 
   @Test
-  public void updateShouldReturnVoid() {
-      mapper.updateReturnsVoid(new User(1, "updateShouldReturnVoid"));
+  void updateShouldReturnVoid() {
+    mapper.updateReturnsVoid(new User(1, "updateShouldReturnVoid"));
   }
 
   @Test
-  public void shouldReturnPrimitiveInteger() {
+  void shouldReturnPrimitiveInteger() {
     final int rows = mapper.updateReturnsPrimitiveInteger(new User(1, "shouldReturnPrimitiveInteger"));
     assertEquals(1, rows);
   }
 
   @Test
-  public void shouldReturnInteger() {
+  void shouldReturnInteger() {
     final Integer rows = mapper.updateReturnsInteger(new User(1, "shouldReturnInteger"));
     assertEquals(Integer.valueOf(1), rows);
   }
 
   @Test
-  public void shouldReturnPrimitiveLong() {
+  void shouldReturnPrimitiveLong() {
     final long rows = mapper.updateReturnsPrimitiveLong(new User(1, "shouldReturnPrimitiveLong"));
     assertEquals(1L, rows);
   }
 
   @Test
-  public void shouldReturnLong() {
+  void shouldReturnLong() {
     final Long rows = mapper.updateReturnsLong(new User(1, "shouldReturnLong"));
     assertEquals(Long.valueOf(1), rows);
   }
 
   @Test
-  public void shouldReturnPrimitiveBoolean() {
+  void shouldReturnPrimitiveBoolean() {
     final boolean rows = mapper.updateReturnsPrimitiveBoolean(new User(1, "shouldReturnPrimitiveBoolean"));
-    assertEquals(true, rows);
+    assertTrue(rows);
   }
 
   @Test
-  public void shouldReturnBoolean() {
+  void shouldReturnBoolean() {
     final Boolean rows = mapper.updateReturnsBoolean(new User(1, "shouldReturnBoolean"));
-    assertEquals(Boolean.TRUE, rows);
+    assertTrue(rows);
   }
 
 }

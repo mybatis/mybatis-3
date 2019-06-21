@@ -15,16 +15,15 @@
  */
 package org.apache.ibatis.jdbc;
 
-import org.assertj.core.api.AssertionsForClassTypes;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class SQLTest {
+class SQLTest {
 
   @Test
-  public void shouldDemonstrateProvidedStringBuilder() {
+  void shouldDemonstrateProvidedStringBuilder() {
     //You can pass in your own StringBuilder
     final StringBuilder sb = new StringBuilder();
     //From the tutorial
@@ -43,7 +42,7 @@ public class SQLTest {
   }
 
   @Test
-  public void shouldDemonstrateMixedStyle() {
+  void shouldDemonstrateMixedStyle() {
     //Mixed
     final String sql = new SQL() {{
       SELECT("id, name");
@@ -58,7 +57,7 @@ public class SQLTest {
   }
 
   @Test
-  public void shouldDemonstrateFluentStyle() {
+  void shouldDemonstrateFluentStyle() {
     //Fluent Style
     final String sql = new SQL()
         .SELECT("id, name").FROM("PERSON A")
@@ -72,7 +71,7 @@ public class SQLTest {
   }
 
   @Test
-  public void shouldProduceExpectedSimpleSelectStatement() {
+  void shouldProduceExpectedSimpleSelectStatement() {
     final String expected =
         "SELECT P.ID, P.USERNAME, P.PASSWORD, P.FIRST_NAME, P.LAST_NAME\n" +
             "FROM PERSON P\n" +
@@ -82,7 +81,7 @@ public class SQLTest {
   }
 
   @Test
-  public void shouldProduceExpectedSimpleSelectStatementMissingFirstParam() {
+  void shouldProduceExpectedSimpleSelectStatementMissingFirstParam() {
     final String expected =
         "SELECT P.ID, P.USERNAME, P.PASSWORD, P.FIRST_NAME, P.LAST_NAME\n" +
             "FROM PERSON P\n" +
@@ -92,7 +91,7 @@ public class SQLTest {
   }
 
   @Test
-  public void shouldProduceExpectedSimpleSelectStatementMissingFirstTwoParams() {
+  void shouldProduceExpectedSimpleSelectStatementMissingFirstTwoParams() {
     final String expected =
         "SELECT P.ID, P.USERNAME, P.PASSWORD, P.FIRST_NAME, P.LAST_NAME\n" +
             "FROM PERSON P\n" +
@@ -102,7 +101,7 @@ public class SQLTest {
   }
 
   @Test
-  public void shouldProduceExpectedSimpleSelectStatementMissingAllParams() {
+  void shouldProduceExpectedSimpleSelectStatementMissingAllParams() {
     final String expected =
         "SELECT P.ID, P.USERNAME, P.PASSWORD, P.FIRST_NAME, P.LAST_NAME\n" +
             "FROM PERSON P\n" +
@@ -111,7 +110,7 @@ public class SQLTest {
   }
 
   @Test
-  public void shouldProduceExpectedComplexSelectStatement() {
+  void shouldProduceExpectedComplexSelectStatement() {
     final String expected =
         "SELECT P.ID, P.USERNAME, P.PASSWORD, P.FULL_NAME, P.LAST_NAME, P.CREATED_ON, P.UPDATED_ON\n" +
             "FROM PERSON P, ACCOUNT A\n" +
@@ -166,7 +165,7 @@ public class SQLTest {
 
 
   @Test
-  public void variableLengthArgumentOnSelect() {
+  void variableLengthArgumentOnSelect() {
     final String sql = new SQL() {{
       SELECT("P.ID", "P.USERNAME");
     }}.toString();
@@ -175,7 +174,7 @@ public class SQLTest {
   }
 
   @Test
-  public void variableLengthArgumentOnSelectDistinct() {
+  void variableLengthArgumentOnSelectDistinct() {
     final String sql = new SQL() {{
       SELECT_DISTINCT("P.ID", "P.USERNAME");
     }}.toString();
@@ -184,7 +183,7 @@ public class SQLTest {
   }
 
   @Test
-  public void variableLengthArgumentOnFrom() {
+  void variableLengthArgumentOnFrom() {
     final String sql = new SQL() {{
       SELECT().FROM("TABLE_A a", "TABLE_B b");
     }}.toString();
@@ -193,7 +192,7 @@ public class SQLTest {
   }
 
   @Test
-  public void variableLengthArgumentOnJoin() {
+  void variableLengthArgumentOnJoin() {
     final String sql = new SQL() {{
       SELECT().JOIN("TABLE_A b ON b.id = a.id", "TABLE_C c ON c.id = a.id");
     }}.toString();
@@ -203,7 +202,7 @@ public class SQLTest {
   }
 
   @Test
-  public void variableLengthArgumentOnInnerJoin() {
+  void variableLengthArgumentOnInnerJoin() {
     final String sql = new SQL() {{
       SELECT().INNER_JOIN("TABLE_A b ON b.id = a.id", "TABLE_C c ON c.id = a.id");
     }}.toString();
@@ -213,7 +212,7 @@ public class SQLTest {
   }
 
   @Test
-  public void variableLengthArgumentOnOuterJoin() {
+  void variableLengthArgumentOnOuterJoin() {
     final String sql = new SQL() {{
       SELECT().OUTER_JOIN("TABLE_A b ON b.id = a.id", "TABLE_C c ON c.id = a.id");
     }}.toString();
@@ -223,7 +222,7 @@ public class SQLTest {
   }
 
   @Test
-  public void variableLengthArgumentOnLeftOuterJoin() {
+  void variableLengthArgumentOnLeftOuterJoin() {
     final String sql = new SQL() {{
       SELECT().LEFT_OUTER_JOIN("TABLE_A b ON b.id = a.id", "TABLE_C c ON c.id = a.id");
     }}.toString();
@@ -233,7 +232,7 @@ public class SQLTest {
   }
 
   @Test
-  public void variableLengthArgumentOnRightOuterJoin() {
+  void variableLengthArgumentOnRightOuterJoin() {
     final String sql = new SQL() {{
       SELECT().RIGHT_OUTER_JOIN("TABLE_A b ON b.id = a.id", "TABLE_C c ON c.id = a.id");
     }}.toString();
@@ -243,7 +242,7 @@ public class SQLTest {
   }
 
   @Test
-  public void variableLengthArgumentOnWhere() {
+  void variableLengthArgumentOnWhere() {
     final String sql = new SQL() {{
       SELECT().WHERE("a = #{a}", "b = #{b}");
     }}.toString();
@@ -252,7 +251,7 @@ public class SQLTest {
   }
 
   @Test
-  public void variableLengthArgumentOnGroupBy() {
+  void variableLengthArgumentOnGroupBy() {
     final String sql = new SQL() {{
       SELECT().GROUP_BY("a", "b");
     }}.toString();
@@ -261,7 +260,7 @@ public class SQLTest {
   }
 
   @Test
-  public void variableLengthArgumentOnHaving() {
+  void variableLengthArgumentOnHaving() {
     final String sql = new SQL() {{
       SELECT().HAVING("a = #{a}", "b = #{b}");
     }}.toString();
@@ -270,7 +269,7 @@ public class SQLTest {
   }
 
   @Test
-  public void variableLengthArgumentOnOrderBy() {
+  void variableLengthArgumentOnOrderBy() {
     final String sql = new SQL() {{
       SELECT().ORDER_BY("a", "b");
     }}.toString();
@@ -279,7 +278,7 @@ public class SQLTest {
   }
 
   @Test
-  public void variableLengthArgumentOnSet() {
+  void variableLengthArgumentOnSet() {
     final String sql = new SQL() {{
       UPDATE("TABLE_A").SET("a = #{a}", "b = #{b}");
     }}.toString();
@@ -289,56 +288,100 @@ public class SQLTest {
   }
 
   @Test
-  public void variableLengthArgumentOnIntoColumnsAndValues() {
+  void variableLengthArgumentOnIntoColumnsAndValues() {
     final String sql = new SQL() {{
       INSERT_INTO("TABLE_A").INTO_COLUMNS("a", "b").INTO_VALUES("#{a}", "#{b}");
     }}.toString();
-
-    System.out.println(sql);
 
     assertEquals("INSERT INTO TABLE_A\n (a, b)\nVALUES (#{a}, #{b})", sql);
   }
 
   @Test
-  public void fixFor903UpdateJoins() {
+  void fixFor903UpdateJoins() {
     final SQL sql = new SQL().UPDATE("table1 a").INNER_JOIN("table2 b USING (ID)").SET("a.value = b.value");
     assertThat(sql.toString()).isEqualTo("UPDATE table1 a\nINNER JOIN table2 b USING (ID)\nSET a.value = b.value");
   }
 
   @Test
-  public void supportBatchInsert(){
+  void selectUsingLimitVariableName() {
+    final String sql = new SQL() {{
+      SELECT("*").FROM("test").ORDER_BY("id").LIMIT("#{limit}");
+    }}.toString();
 
-    final SQL sql =  new SQL(){{
+    assertEquals("SELECT *\nFROM test\nORDER BY id LIMIT #{limit}", sql);
+  }
+
+  @Test
+  void selectUsingOffsetVariableName() {
+    final String sql = new SQL() {{
+      SELECT("*").FROM("test").ORDER_BY("id").OFFSET("#{offset}");
+    }}.toString();
+
+    assertEquals("SELECT *\nFROM test\nORDER BY id OFFSET #{offset}", sql);
+  }
+
+  @Test
+  void selectUsingLimitAndOffset() {
+    final String sql = new SQL() {{
+      SELECT("*").FROM("test").ORDER_BY("id").LIMIT(20).OFFSET(100);
+    }}.toString();
+
+    assertEquals("SELECT *\nFROM test\nORDER BY id LIMIT 20 OFFSET 100", sql);
+  }
+
+  @Test
+  void updateUsingLimit() {
+    final String sql = new SQL() {{
+      UPDATE("test").SET("status = #{updStatus}").WHERE("status = #{status}").LIMIT(20);
+    }}.toString();
+
+    assertEquals("UPDATE test\nSET status = #{updStatus}\nWHERE (status = #{status}) LIMIT 20", sql);
+  }
+
+  @Test
+  void deleteUsingLimit() {
+    final String sql = new SQL() {{
+      DELETE_FROM("test").WHERE("status = #{status}").LIMIT(20);
+    }}.toString();
+
+    assertEquals("DELETE FROM test\nWHERE (status = #{status}) LIMIT 20", sql);
+  }
+
+  @Test
+  void supportBatchInsert(){
+    final String sql =  new SQL(){{
       INSERT_INTO("table1 a");
       INTO_COLUMNS("col1,col2");
       INTO_VALUES("val1","val2");
       ADD_ROW();
       INTO_VALUES("val1","val2");
-    }};
-    assertThat(sql.toString()).isEqualToIgnoringWhitespace("INSERT INTO table1 a (col1,col2) VALUES (val1,val2), (val1,val2)");
+    }}.toString();
+
+    assertThat(sql).isEqualToIgnoringWhitespace("INSERT INTO table1 a (col1,col2) VALUES (val1,val2), (val1,val2)");
   }
 
   @Test
-  public void singleInsert() {
-    final SQL sql = new SQL() {{
+  void singleInsert() {
+    final String sql = new SQL() {{
       INSERT_INTO("table1 a");
       INTO_COLUMNS("col1,col2");
       INTO_VALUES("val1", "val2");
-    }};
-    assertThat(sql.toString()).isEqualToIgnoringWhitespace("INSERT INTO table1 a (col1,col2) VALUES (val1,val2)");
+    }}.toString();
+
+    assertThat(sql).isEqualToIgnoringWhitespace("INSERT INTO table1 a (col1,col2) VALUES (val1,val2)");
   }
 
   @Test
-  public void singleInsertWithMultipleInsertValues() {
+  void singleInsertWithMultipleInsertValues() {
     final String sql = new SQL() {{
       INSERT_INTO("TABLE_A").INTO_COLUMNS("a", "b").INTO_VALUES("#{a}").INTO_VALUES("#{b}");
     }}.toString();
-    System.out.println(sql);
+
     assertThat(sql).isEqualToIgnoringWhitespace("INSERT INTO TABLE_A (a, b) VALUES (#{a}, #{b})");
   }
 
   @Test
-  public void batchInsertWithMultipleInsertValues() {
+  void batchInsertWithMultipleInsertValues() {
     final String sql = new SQL() {{
       INSERT_INTO("TABLE_A");
       INTO_COLUMNS("a", "b");
@@ -348,18 +391,18 @@ public class SQLTest {
       INTO_VALUES("#{a2}");
       INTO_VALUES("#{b2}");
     }}.toString();
-    System.out.println(sql);
+
     assertThat(sql).isEqualToIgnoringWhitespace("INSERT INTO TABLE_A (a, b) VALUES (#{a1}, #{b1}), (#{a2}, #{b2})");
   }
 
-
   @Test
-  public void testValues() {
-    final SQL sql = new SQL() {{
+  void testValues() {
+    final String sql = new SQL() {{
       INSERT_INTO("PERSON");
       VALUES("ID, FIRST_NAME", "#{id}, #{firstName}");
       VALUES("LAST_NAME", "#{lastName}");
-    }};
-    AssertionsForClassTypes.assertThat(sql.toString()).isEqualToIgnoringWhitespace("INSERT INTO PERSON (ID, FIRST_NAME, LAST_NAME) VALUES (#{id}, #{firstName}, #{lastName})");
+    }}.toString();
+
+    assertThat(sql).isEqualToIgnoringWhitespace("INSERT INTO PERSON (ID, FIRST_NAME, LAST_NAME) VALUES (#{id}, #{firstName}, #{lastName})");
   }
 }

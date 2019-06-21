@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.scripting.defaults.RawLanguageDriver;
 import org.apache.ibatis.session.Configuration;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static com.googlecode.catchexception.apis.BDDCatchException.*;
 import static org.assertj.core.api.BDDAssertions.then;
@@ -32,12 +32,12 @@ import static org.assertj.core.api.BDDAssertions.then;
 /**
  * @author Kazuki Shimizu
  */
-public class LanguageDriverRegistryTest {
+class LanguageDriverRegistryTest {
 
   private LanguageDriverRegistry registry = new LanguageDriverRegistry();
 
   @Test
-  public void registerByType() {
+  void registerByType() {
     registry.register(RawLanguageDriver.class);
     LanguageDriver driver = registry.getDriver(RawLanguageDriver.class);
 
@@ -45,7 +45,7 @@ public class LanguageDriverRegistryTest {
   }
 
   @Test
-  public void registerByTypeSameType() {
+  void registerByTypeSameType() {
     registry.register(RawLanguageDriver.class);
     LanguageDriver driver = registry.getDriver(RawLanguageDriver.class);
 
@@ -55,21 +55,21 @@ public class LanguageDriverRegistryTest {
   }
 
   @Test
-  public void registerByTypeNull() {
+  void registerByTypeNull() {
     when(registry).register((Class<? extends LanguageDriver>) null);
     then(caughtException()).isInstanceOf(IllegalArgumentException.class)
       .hasMessage("null is not a valid Language Driver");
   }
 
   @Test
-  public void registerByTypeDoesNotCreateNewInstance() {
+  void registerByTypeDoesNotCreateNewInstance() {
     when(registry).register(PrivateLanguageDriver.class);
     then(caughtException()).isInstanceOf(ScriptingException.class)
       .hasMessage("Failed to load language driver for org.apache.ibatis.scripting.LanguageDriverRegistryTest$PrivateLanguageDriver");
   }
 
   @Test
-  public void registerByInstance() {
+  void registerByInstance() {
     registry.register(new PrivateLanguageDriver());
     LanguageDriver driver = registry.getDriver(PrivateLanguageDriver.class);
 
@@ -77,7 +77,7 @@ public class LanguageDriverRegistryTest {
   }
 
   @Test
-  public void registerByInstanceSameType() {
+  void registerByInstanceSameType() {
     registry.register(new PrivateLanguageDriver());
     LanguageDriver driver = registry.getDriver(PrivateLanguageDriver.class);
 
@@ -87,14 +87,14 @@ public class LanguageDriverRegistryTest {
   }
 
   @Test
-  public void registerByInstanceNull() {
+  void registerByInstanceNull() {
     when(registry).register((LanguageDriver) null);
     then(caughtException()).isInstanceOf(IllegalArgumentException.class)
       .hasMessage("null is not a valid Language Driver");
   }
 
   @Test
-  public void setDefaultDriverClass() {
+  void setDefaultDriverClass() {
     registry.setDefaultDriverClass(RawLanguageDriver.class);
     assertThat(registry.getDefaultDriverClass() == RawLanguageDriver.class).isTrue();
     assertThat(registry.getDefaultDriver()).isInstanceOf(RawLanguageDriver.class);

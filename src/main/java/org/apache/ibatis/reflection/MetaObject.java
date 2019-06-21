@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -74,7 +74,7 @@ public class MetaObject {
   }
 
   public ReflectorFactory getReflectorFactory() {
-	return reflectorFactory;
+    return reflectorFactory;
   }
 
   public Object getOriginalObject() {
@@ -128,7 +128,7 @@ public class MetaObject {
     if (prop.hasNext()) {
       MetaObject metaValue = metaObjectForProperty(prop.getIndexedName());
       if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
-        if (value == null && prop.getChildren() != null) {
+        if (value == null) {
           // don't instantiate child path if value is null
           return;
         } else {

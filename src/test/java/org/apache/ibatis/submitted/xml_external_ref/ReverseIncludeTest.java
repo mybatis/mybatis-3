@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.submitted.xml_external_ref;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -30,17 +30,17 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ReverseIncludeTest {
+class ReverseIncludeTest {
 
   @Test
-  public void testReverseIncludeXmlConfig() throws Exception {
+  void testReverseIncludeXmlConfig() throws Exception {
     testReverseIncludes(getSqlSessionFactoryXmlConfig());
   }
 
   @Test
-  public void testReverseIncludeJavaConfig() throws Exception {
+  void testReverseIncludeJavaConfig() throws Exception {
     testReverseIncludes(getSqlSessionFactoryJavaConfig());
   }
 
@@ -48,7 +48,7 @@ public class ReverseIncludeTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       ReverseIncludePersonMapper personMapper = sqlSession.getMapper(ReverseIncludePersonMapper.class);
       Person person = personMapper.select(1);
-      assertEquals((Integer)1, person.getId());
+      assertEquals((Integer) 1, person.getId());
       assertEquals("John", person.getName());
     }
   }

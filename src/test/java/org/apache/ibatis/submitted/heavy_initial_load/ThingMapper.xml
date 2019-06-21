@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -27,8 +27,8 @@
   </resultMap>
 
   <select id="selectByCode" resultMap="thingMap" parameterType="String">
-  
-    SELECT  
+
+    SELECT
 		<if test="@org.apache.ibatis.submitted.heavy_initial_load.Code@_1.equals(code)">1</if>
 		<if test="@org.apache.ibatis.submitted.heavy_initial_load.Code@_2.equals(code)">2</if>
 		<if test="@org.apache.ibatis.submitted.heavy_initial_load.Code@_3.equals(code)">3</if>

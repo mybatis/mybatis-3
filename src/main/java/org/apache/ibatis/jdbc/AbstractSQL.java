@@ -266,6 +266,54 @@ public abstract class AbstractSQL<T> {
     return getSelf();
   }
 
+  /**
+   * Set the limit variable string(e.g. {@code "#{limit}"}).
+   *
+   * @param variable a limit variable string
+   * @return a self instance
+   * @since 3.5.2
+   */
+  public T LIMIT(String variable) {
+    sql().limit = variable;
+    return getSelf();
+  }
+
+  /**
+   * Set the limit value.
+   *
+   * @param value an offset value
+   * @return a self instance
+   * @since 3.5.2
+   */
+  public T LIMIT(int value) {
+    sql().limit = String.valueOf(value);
+    return getSelf();
+  }
+
+  /**
+   * Set the offset variable string(e.g. {@code "#{offset}"}).
+   *
+   * @param variable a offset variable string
+   * @return a self instance
+   * @since 3.5.2
+   */
+  public T OFFSET(String variable) {
+    sql().offset = variable;
+    return getSelf();
+  }
+
+  /**
+   * Set the offset value.
+   *
+   * @param value an offset value
+   * @return a self instance
+   * @since 3.5.2
+   */
+  public T OFFSET(long value) {
+    sql().offset = String.valueOf(value);
+    return getSelf();
+  }
+
   public T ADD_ROW() {
     sql().values.add(new ArrayList<>());
     return getSelf();
@@ -321,22 +369,24 @@ public abstract class AbstractSQL<T> {
     }
 
     StatementType statementType;
-    List<String> sets = new ArrayList<String>();
-    List<String> select = new ArrayList<String>();
-    List<String> tables = new ArrayList<String>();
-    List<String> join = new ArrayList<String>();
-    List<String> innerJoin = new ArrayList<String>();
-    List<String> outerJoin = new ArrayList<String>();
-    List<String> leftOuterJoin = new ArrayList<String>();
-    List<String> rightOuterJoin = new ArrayList<String>();
-    List<String> where = new ArrayList<String>();
-    List<String> having = new ArrayList<String>();
-    List<String> groupBy = new ArrayList<String>();
-    List<String> orderBy = new ArrayList<String>();
-    List<String> lastList = new ArrayList<String>();
-    List<String> columns = new ArrayList<String>();
+    List<String> sets = new ArrayList<>();
+    List<String> select = new ArrayList<>();
+    List<String> tables = new ArrayList<>();
+    List<String> join = new ArrayList<>();
+    List<String> innerJoin = new ArrayList<>();
+    List<String> outerJoin = new ArrayList<>();
+    List<String> leftOuterJoin = new ArrayList<>();
+    List<String> rightOuterJoin = new ArrayList<>();
+    List<String> where = new ArrayList<>();
+    List<String> having = new ArrayList<>();
+    List<String> groupBy = new ArrayList<>();
+    List<String> orderBy = new ArrayList<>();
+    List<String> lastList = new ArrayList<>();
+    List<String> columns = new ArrayList<>();
     List<List<String>> values = new ArrayList<>();
     boolean distinct;
+    String offset;
+    String limit;
 
     public SQLStatement() {
       // Prevent Synthetic Access
@@ -378,6 +428,12 @@ public abstract class AbstractSQL<T> {
       sqlClause(builder, "GROUP BY", groupBy, "", "", ", ");
       sqlClause(builder, "HAVING", having, "(", ")", " AND ");
       sqlClause(builder, "ORDER BY", orderBy, "", "", ", ");
+      if (limit != null) {
+        builder.append(" LIMIT ").append(limit);
+      }
+      if (offset != null) {
+        builder.append(" OFFSET ").append(offset);
+      }
       return builder.toString();
     }
 
@@ -401,6 +457,9 @@ public abstract class AbstractSQL<T> {
     private String deleteSQL(SafeAppendable builder) {
       sqlClause(builder, "DELETE FROM", tables, "", "", "");
       sqlClause(builder, "WHERE", where, "(", ")", " AND ");
+      if (limit != null) {
+        builder.append(" LIMIT ").append(limit);
+      }
       return builder.toString();
     }
 
@@ -409,6 +468,9 @@ public abstract class AbstractSQL<T> {
       joins(builder);
       sqlClause(builder, "SET", sets, "", "", ", ");
       sqlClause(builder, "WHERE", where, "(", ")", " AND ");
+      if (limit != null) {
+        builder.append(" LIMIT ").append(limit);
+      }
       return builder.toString();
     }
 

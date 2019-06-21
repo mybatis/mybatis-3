@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,8 +15,8 @@
  */
 package org.apache.ibatis.exceptions;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -33,22 +33,22 @@ import org.apache.ibatis.scripting.ScriptingException;
 import org.apache.ibatis.session.SqlSessionException;
 import org.apache.ibatis.transaction.TransactionException;
 import org.apache.ibatis.type.TypeException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class GeneralExceptionsTest {
+class GeneralExceptionsTest {
 
   private static final String EXPECTED_MESSAGE = "Test Message";
   private static final Exception EXPECTED_CAUSE = new Exception("Nested Exception");
 
   @Test
-  public void should() {
+  void should() {
     RuntimeException thrown = ExceptionFactory.wrapException(EXPECTED_MESSAGE, EXPECTED_CAUSE);
-    assertTrue("Exception should be wrapped in RuntimeSqlException.", thrown instanceof PersistenceException);
+    assertTrue(thrown instanceof PersistenceException, "Exception should be wrapped in RuntimeSqlException.");
     testThrowException(thrown);
   }
 
   @Test
-  public void shouldInstantiateAndThrowAllCustomExceptions() throws Exception {
+  void shouldInstantiateAndThrowAllCustomExceptions() throws Exception {
     Class<?>[] exceptionTypes = {
         BindingException.class,
         CacheException.class,
@@ -62,7 +62,7 @@ public class GeneralExceptionsTest {
         PersistenceException.class,
         SqlSessionException.class,
         TransactionException.class,
-        TypeException.class, 
+        TypeException.class,
         ScriptingException.class
     };
     for (Class<?> exceptionType : exceptionTypes) {

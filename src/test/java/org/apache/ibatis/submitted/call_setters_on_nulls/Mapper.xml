@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@
 	<select id="getUserMapped" resultMap="userMap">
 		select * from users
 	</select>
-	
+
 	<resultMap type="org.apache.ibatis.submitted.call_setters_on_nulls.User" id="userMap">
 		<id property="id" column="id" />
 		<result property="name" column="name" />
@@ -46,7 +46,7 @@
     <select id="getNameOnlyMapped" resultMap="mapResult">
         select name from users2
     </select>
-    
+
     <resultMap type="map" id="mapResult">
     	<result column="name" property="name" />
     </resultMap>

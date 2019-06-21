@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,6 +17,8 @@ package org.apache.ibatis.reflection.property;
 
 import java.lang.reflect.Field;
 
+import org.apache.ibatis.reflection.Reflector;
+
 /**
  * @author Clinton Begin
  */
@@ -30,10 +32,18 @@ public final class PropertyCopier {
     Class<?> parent = type;
     while (parent != null) {
       final Field[] fields = parent.getDeclaredFields();
-      for(Field field : fields) {
+      for (Field field : fields) {
         try {
-          field.setAccessible(true);
-          field.set(destinationBean, field.get(sourceBean));
+          try {
+            field.set(destinationBean, field.get(sourceBean));
+          } catch (IllegalAccessException e) {
+            if (Reflector.canControlMemberAccessible()) {
+              field.setAccessible(true);
+              field.set(destinationBean, field.get(sourceBean));
+            } else {
+              throw e;
+            }
+          }
         } catch (Exception e) {
           // Nothing useful to do, will only fail on final fields, which will be ignored.
         }

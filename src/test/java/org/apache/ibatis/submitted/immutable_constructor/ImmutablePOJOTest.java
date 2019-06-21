@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,20 +24,21 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-public final class ImmutablePOJOTest {
+final class ImmutablePOJOTest {
 
   private static final Integer POJO_ID = 1;
   private static final String POJO_DESCRIPTION = "Description of immutable";
 
   private static SqlSessionFactory factory;
 
-  @BeforeClass
-  public static void setupClass() throws Exception {
+  @BeforeAll
+  static void setupClass() throws Exception {
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/immutable_constructor/ibatisConfig.xml")) {
       factory = new SqlSessionFactoryBuilder().build(reader);
     }
@@ -47,7 +48,7 @@ public final class ImmutablePOJOTest {
   }
 
   @Test
-  public void shouldLoadImmutablePOJOBySignature() {
+  void shouldLoadImmutablePOJOBySignature() {
     try (SqlSession session = factory.openSession()) {
       final ImmutablePOJOMapper mapper = session.getMapper(ImmutablePOJOMapper.class);
       final ImmutablePOJO pojo = mapper.getImmutablePOJO(POJO_ID);
@@ -57,13 +58,12 @@ public final class ImmutablePOJOTest {
     }
   }
 
-
-  @Test(expected=PersistenceException.class)
-  public void shouldFailLoadingImmutablePOJO() {
+  @Test
+  void shouldFailLoadingImmutablePOJO() {
     try (SqlSession session = factory.openSession()) {
       final ImmutablePOJOMapper mapper = session.getMapper(ImmutablePOJOMapper.class);
-      mapper.getImmutablePOJONoMatchingConstructor(POJO_ID);
+      Assertions.assertThrows(PersistenceException.class, () -> mapper.getImmutablePOJONoMatchingConstructor(POJO_ID));
     }
   }
-  
+
 }
