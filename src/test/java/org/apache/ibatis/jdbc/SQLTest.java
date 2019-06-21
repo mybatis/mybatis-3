@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.jdbc;
 
+import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -349,5 +350,16 @@ public class SQLTest {
     }}.toString();
     System.out.println(sql);
     assertThat(sql).isEqualToIgnoringWhitespace("INSERT INTO TABLE_A (a, b) VALUES (#{a1}, #{b1}), (#{a2}, #{b2})");
+  }
+
+
+  @Test
+  public void testValues() {
+    final SQL sql = new SQL() {{
+      INSERT_INTO("PERSON");
+      VALUES("ID, FIRST_NAME", "#{id}, #{firstName}");
+      VALUES("LAST_NAME", "#{lastName}");
+    }};
+    AssertionsForClassTypes.assertThat(sql.toString()).isEqualToIgnoringWhitespace("INSERT INTO PERSON (ID, FIRST_NAME, LAST_NAME) VALUES (#{id}, #{firstName}, #{lastName})");
   }
 }

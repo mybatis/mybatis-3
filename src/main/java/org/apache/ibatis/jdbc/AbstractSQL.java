@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package org.apache.ibatis.jdbc;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -62,8 +61,8 @@ public abstract class AbstractSQL<T> {
   }
 
   public T VALUES(String columns, String values) {
-    sql().columns.add(columns);
-    sql().values.add(Collections.singletonList(values));
+    INTO_COLUMNS(columns);
+    INTO_VALUES(values);
     return getSelf();
   }
 
@@ -79,15 +78,12 @@ public abstract class AbstractSQL<T> {
    * @since 3.4.2
    */
   public T INTO_VALUES(String... values) {
-      List<List<String>> list = sql().values;
-      if(list.isEmpty()){
-          list.add(new ArrayList<>());
-      }
-      int index = list.size() - 1;
-      for (String value : values) {
-          list.get(index).add(value);
-      }
-      return getSelf();
+    List<List<String>> list = sql().values;
+    int index = list.size() - 1;
+    for (String value : values) {
+      list.get(index).add(value);
+    }
+    return getSelf();
   }
 
   public T SELECT(String columns) {
@@ -270,7 +266,7 @@ public abstract class AbstractSQL<T> {
     return getSelf();
   }
 
-  public T ADD_ROW(){
+  public T ADD_ROW() {
     sql().values.add(new ArrayList<>());
     return getSelf();
   }
@@ -343,7 +339,8 @@ public abstract class AbstractSQL<T> {
     boolean distinct;
 
     public SQLStatement() {
-        // Prevent Synthetic Access
+      // Prevent Synthetic Access
+      values.add(new ArrayList<>());
     }
 
     private void sqlClause(SafeAppendable builder, String keyword, List<String> parts, String open, String close,
@@ -395,17 +392,9 @@ public abstract class AbstractSQL<T> {
     private String insertSQL(SafeAppendable builder) {
       sqlClause(builder, "INSERT INTO", tables, "", "", "");
       sqlClause(builder, "", columns, "(", ")", ", ");
-        for (int i = 0; i < values.size(); i++) {
-            String keyword = "";
-            String close = "),";
-            if(i == 0){
-                keyword = "VALUES";
-            }
-            if(i == values.size() - 1){
-                close = ")";
-            }
-            sqlClause(builder, keyword, values.get(i), "(", close, ", ");
-        }
+      for (int i = 0 ; i < values.size(); i++) {
+        sqlClause(builder, i > 0 ? "," : "VALUES", values.get(i), "(", ")", ", ");
+      }
       return builder.toString();
     }
 
