@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -27,28 +27,28 @@ import java.time.Month;
  * @author Björn Raupach
  */
 public class MonthTypeHandler extends BaseTypeHandler<Month> {
-    
-    @Override
-    public void setNonNullParameter(PreparedStatement ps, int i, Month month, JdbcType type) throws SQLException {
-        ps.setInt(i, month.getValue());
-    }
 
-    @Override
-    public Month getNullableResult(ResultSet rs, String columnName) throws SQLException {
-        int month = rs.getInt(columnName);
-        return (month == 0 && rs.wasNull()) ? null : Month.of(month);
-    }
+  @Override
+  public void setNonNullParameter(PreparedStatement ps, int i, Month month, JdbcType type) throws SQLException {
+    ps.setInt(i, month.getValue());
+  }
 
-    @Override
-    public Month getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
-        int month = rs.getInt(columnIndex);
-        return (month == 0 && rs.wasNull()) ? null : Month.of(month);
-    }
+  @Override
+  public Month getNullableResult(ResultSet rs, String columnName) throws SQLException {
+    int month = rs.getInt(columnName);
+    return month == 0 && rs.wasNull() ? null : Month.of(month);
+  }
 
-    @Override
-    public Month getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
-        int month = cs.getInt(columnIndex);
-        return (month == 0 && cs.wasNull()) ? null : Month.of(month);
-    }
-    
+  @Override
+  public Month getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
+    int month = rs.getInt(columnIndex);
+    return month == 0 && rs.wasNull() ? null : Month.of(month);
+  }
+
+  @Override
+  public Month getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
+    int month = cs.getInt(columnIndex);
+    return month == 0 && cs.wasNull() ? null : Month.of(month);
+  }
+
 }

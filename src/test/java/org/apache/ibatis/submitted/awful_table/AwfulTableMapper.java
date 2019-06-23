@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,15 +17,15 @@ package org.apache.ibatis.submitted.awful_table;
 
 public interface AwfulTableMapper {
 
-    int deleteByPrimaryKey(Integer customerId);
+  int deleteByPrimaryKey(Integer customerId);
 
-    int insert(AwfulTable record);
+  int insert(AwfulTable record);
 
-    int insertSelective(AwfulTable record);
+  int insertSelective(AwfulTable record);
 
-    AwfulTable selectByPrimaryKey(Integer customerId);
+  AwfulTable selectByPrimaryKey(Integer customerId);
 
-    int updateByPrimaryKeySelective(AwfulTable record);
+  int updateByPrimaryKeySelective(AwfulTable record);
 
-    int updateByPrimaryKey(AwfulTable record);
+  int updateByPrimaryKey(AwfulTable record);
 }

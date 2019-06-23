@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -35,17 +35,29 @@
   <resultMap type="org.apache.ibatis.submitted.associationtest.Brakes" id="brakesResult">
     <result column="brakesType" property="type"/>
   </resultMap>
-  
+
   <select id="getCars" resultMap="carResult">
     select * from cars
   </select>
 
-  <select id="getCarsNonUnique" resultMap="carResult">
-    select 1 as carid, cartype, enginetype, enginecylinders, brakestype from cars
-  </select>
-  
   <select id="getCars2" resultMap="carResult">
     select 1 as carid, cartype, enginetype, enginecylinders, brakestype from cars where carid in (1,2)
   </select>
-  
+
+  <resultMap type="org.apache.ibatis.submitted.associationtest.Car" id="carResultTypeDetect">
+    <id column="carid" property="id"/>
+    <result column="cartype" property="type"/>
+    <association property="engine">
+      <result column="enginetype" property="type"/>
+      <result column="enginecylinders" property="cylinders"/>
+    </association>
+    <association property="brakes">
+      <result column="brakesType" property="type"/>
+    </association>
+  </resultMap>
+
+  <select id="getCarsAndDetectAssociationType" resultMap="carResultTypeDetect">
+    select * from cars
+  </select>
+
 </mapper>

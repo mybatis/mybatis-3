@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -26,14 +26,14 @@
 		<id column="id" property="id" />
 		<association column="nr_department" property="department" javaType="org.apache.ibatis.submitted.serializecircular.Department" select="org.apache.ibatis.submitted.serializecircular.DepartmentMapper.getById"/>
 	</resultMap>
-	
+
 	<sql id="columns">
 		person.id,
 		person.nr_department
 	</sql>
-	
+
 	<sql id="table">person</sql>
-		
+
 	<select id="getById" parameterType="Integer" resultMap="map">
         SELECT
         	person.id,
@@ -43,5 +43,5 @@
         WHERE
         	id = #{id}
     </select>
-	
+
 </mapper>

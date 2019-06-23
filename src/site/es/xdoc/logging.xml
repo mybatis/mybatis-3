@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -64,7 +64,7 @@
       un string como parametro de constructor.
       </p>
       <p>Tambien puedes seleccionar el método de logging llamando a uno de los siguientes métodos:
-      </p>      
+      </p>
       <source><![CDATA[org.apache.ibatis.logging.LogFactory.useSlf4jLogging();
 org.apache.ibatis.logging.LogFactory.useLog4JLogging();
 org.apache.ibatis.logging.LogFactory.useLog4J2Logging();
@@ -108,7 +108,7 @@ public interface BlogMapper {
   @Select("SELECT * FROM blog WHERE id = #{id}")
   Blog selectBlog(int id);
 }]]></source>
-        <p>Crea un fichero con nombre <code>log4j.properties</code> 
+        <p>Crea un fichero con nombre <code>log4j.properties</code>
         como el que se muestra a continuación y colocalo en tu classpath:
         </p>
         <source><![CDATA[# Global logging configuration
@@ -123,15 +123,15 @@ log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n]]></source>
         <p>Si quieres activar un nivel más fino de logging puedes activar el logging para statements específicos en lugar de para todo un mapper. La siguiente línea activa el logging sólo para el statement <code>selectBlog</code>:</p>
 
         <source>log4j.logger.org.mybatis.example.BlogMapper.selectBlog=TRACE</source>
-        
+
         <p>Si por el contrario quieres activar el log para un grupo de mappers debes añadir un logger para el paquete raiz donde residen tus mappers:</p>
 
         <source>log4j.logger.org.mybatis.example=TRACE</source>
-        
+
         <p>Hay consultas que pueden devolver una gran cantidad de datos. En esos casos puedes querer ver las sentencias SQL pero no los datos. Para conseguirlo las sentencias se loguean con nivel DEBUG (FINE en JDK) y los resultados con TRACE (FINER en JDK), por tanto si quieres ver la sentencia pero no el resultado establece el nivel a DEBUG</p>
 
         <source>log4j.logger.org.mybatis.example=DEBUG</source>
-        
+
         <p>Y si estás usando ficheros XML como este?</p>
 
       <source><![CDATA[<?xml version="1.0" encoding="UTF-8" ?>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2017 the original author or authors.
+       Copyright 2009-2018 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -133,7 +133,7 @@ ps.setInt(1,id);]]></source>
   resultMap="personResultMap"
   flushCache="false"
   useCache="true"
-  timeout="10000"
+  timeout="10"
   fetchSize="256"
   statementType="PREPARED"
   resultSetType="FORWARD_ONLY">]]></source>
@@ -213,7 +213,7 @@ ps.setInt(1,id);]]></source>
             <tr>
               <td><code>resultSetType</code></td>
               <td>
-                <code>FORWARD_ONLY</code>, <code>SCROLL_SENSITIVE</code>, <code>SCROLL_INSENSITIVE</code> のいずれかを指定します。デフォルトは未指定（ドライバー依存）です。
+                <code>FORWARD_ONLY</code>, <code>SCROLL_SENSITIVE</code>, <code>SCROLL_INSENSITIVE</code>, <code>DEFAULT</code>(未指定と同じ) のいずれかを指定します。デフォルトは未指定（ドライバー依存）です。
               </td>
             </tr>
             <tr>
@@ -599,6 +599,41 @@ ps.setInt(1,id);]]></source>
         </p>
 
         <p>
+          文字列代入は、メタ情報(例：テーブル名やカラム名など)をSQLステートメントへ動的に埋め込みたい場合に非常に便利な仕組みです。
+          例えば、任意のカラム値に一致するレコードを取得する場合に、以下のようにカラム毎にメソッドを用意するのではなく、
+          <source><![CDATA[
+@Select("select * from user where id = #{id}")
+User findById(@Param("id") long id);
+
+@Select("select * from user where name = #{name}")
+User findByName(@Param("name") String name);
+
+@Select("select * from user where email = #{email}")
+User findByEmail(@Param("email") String email);
+
+// and more "findByXxx" method
+]]></source>
+
+          指定したカラムの値に一致するレコードを取得するメソッドを一つ用意するだけで、同じことを実現することができます。
+
+          <source><![CDATA[
+@Select("select * from user where ${column} = #{value}")
+User findByColumn(@Param("column") String column, @Param("value") String value);
+]]></source>
+          <code>${column}</code> は指定した文字列(カラム名)が直接代入され、<code>#{value}</code> はバインド変数として扱われるため、
+          以下のように使用することができます。
+          <source><![CDATA[
+User userOfId1 = userMapper.findByColumn("id", 1L);
+User userOfNameKid = userMapper.findByColumn("name", "kid");
+User userOfEmail = userMapper.findByColumn("email", "noone@nowhere.com");
+]]></source>
+        </p>
+
+        <p>
+          この考え方はテーブル名にも適用することができます。
+        </p>
+
+        <p>
           <span class="label important">重要</span> この方法を使って、ユーザーが入力した文字列を直接 SQL 文に代入するのは危険です。SQL インジェクションの原因となる可能性がありますので、ユーザーによる入力を受け付けないようにしておくか、常にプログラム側で独自にエスケープやチェックの処理を行うようにしてください。
         </p>
       </subsection>
@@ -632,7 +667,7 @@ public class User {
   private int id;
   private String username;
   private String hashedPassword;
-  
+
   public int getId() {
     return id;
   }
@@ -1318,7 +1353,7 @@ public class User {
               <td>
                 ネストされた結果をマッピングする際、デフォルトでは子オブジェクトのプロパティに対応する列のうち一つでも null でない値がセットされているものがあれば子オブジェクトが生成されます。notNullColumn に列名（複数可）を指定しておくと、指定された列に null 以外の値がセットされた場合にのみ子オブジェクトが生成されます。デフォルト：未指定
               </td>
-            </tr>            
+            </tr>
             <tr>
               <td><code>autoMapping</code></td>
               <td>このプロパティに結果をマッピングする際、自動マッピングを使用するかどうかを true / false で指定します。ここでの指定はグローバルな設定（autoMappingBehavior）より優先されます。この設定は別の場所で定義されている ResultMap には適用されませんので、<code>select</code> や <code>resultMap</code> が指定されている場合は無効となります。デフォルト：未指定
@@ -1467,9 +1502,9 @@ public class User {
             </tr>
           </tbody>
         </table>
-        
+
         <p>バージョン 3.2.3 から、N+1 セレクト問題を解決する新しい方法が追加されました。</p>
-         
+
         <p>データベースによってはストアドプロシージャから複数の ResultSet を返すことができます。この機能を利用すると、テーブルの結合（Join）を使わず一度の問い合わせで互いに関連する複数のデータを取得することができます。</p>
 
         <p>以下の例では、ストアドプロシージャが２つの ResultSet を返します。１つめの ResultSet には複数の Blog のデータが含まれており、２つめの ResultSet には複数の Author のデータが含まれています。</p>
@@ -1621,7 +1656,7 @@ SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
 </resultMap>]]></source>
 
         <h4>複数の ResultSets を collection にマッピングする</h4>
-        
+
         <p>
           association で説明したのと同様に、２つの ResultSet を返すストアドプロシージャを呼び出すことができます。１つ目の ResultSet には Blog のリスト、２つ目の ResultSet には Post のリストが含まれているものとします。
         </p>
@@ -1635,7 +1670,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         <source><![CDATA[<select id="selectBlog" resultSets="blogs,posts" resultMap="blogResult">
   {call getBlogsAndPosts(#{id,jdbcType=INTEGER,mode=IN})}
 </select>]]></source>
-        
+
         <p>以下の resultMap では、posts に含まれる Post が、対応する Blog にマッピングされます。</p>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
@@ -1777,7 +1812,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
           通常、データベースの列名は英数字と単語を区切るアンダースコアで定義され、Java のプロパティはキャメルケースで定義されるのが一般的です。
           <code>mapUnderscoreToCamelCase</code> に true に設定すると、この一般的な命名規則に基づいて自動マッピングを適用することができます。
         </p>
-        
+
         <p>
           Result Map が指定されている場合でも自動マッピングは動作します。この場合、ResultSet に含まれる列のうち、各 Result Map で明示的にマッピングが指定されていない列が自動マッピングの対象となります。
           次の例では、<i>hashed_password</i> 列が password プロパティにマップされ、<i>id</i> と <i>userName</i> 列が自動マッピングの対象となります。
@@ -1799,7 +1834,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         <p>
           自動マッピングには３つのレベルがあります。
         </p>
-        
+
         <ul>
           <li>
             <code>NONE</code> - 自動マッピングを無効化します。明示的にマッピングが指定されたプロパティにのみ値がセットされます。
@@ -1817,7 +1852,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
           <code>FULL</code> が指定されていると、JOIN 句によって複数のエンティティに対する結果が一行に結合されているような場合に自動マッピングによって意図しないマッピングが実行されてしまう場合があります。
           次の例を見てください。
         </p>
-        
+
         <source><![CDATA[<select id="selectBlog" resultMap="blogResult">
   select
     B.id,
@@ -1834,7 +1869,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
 <resultMap id="authorResult" type="Author">
   <result property="username" column="author_username"/>
 </resultMap>]]></source>
-        
+
         <p>
           この Result Map では、<i>Blog</i> と <i>Author</i> の両方が自動マッピングの対象となりますが、<i>Author</i> に <i>id</i> というプロパティがあり、ResultSet に <i>id</i> という列が含まれているため、Author の id に Blog の id がセットされることになります。
           自動マッピングで <code>FULL</code> を指定する場合は、こうした意図しないマッピングが行われないように注意する必要があります。
@@ -1847,7 +1882,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         <source><![CDATA[<resultMap id="userResultMap" type="User" autoMapping="false">
   <result property="password" column="hashed_password"/>
 </resultMap>]]></source>
-              
+
       </subsection>
 
       <subsection name="cache">

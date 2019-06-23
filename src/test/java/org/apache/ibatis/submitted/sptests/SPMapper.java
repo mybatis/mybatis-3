@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ public interface SPMapper {
   Object adderAsSelect(Parameter parameter);
 
   void adderAsUpdate(Parameter parameter);
-  
+
   void adderWithParameterMap(Map<String, Object> parameter);
 
   Name getName(Integer id);
@@ -44,11 +44,11 @@ public interface SPMapper {
   List<List<?>> getNamesAndItems();
 
   List<Name> getNamesAndItemsLinked();
-  
+
   List<Name> getNamesAndItemsLinkedById(int id);
 
   Object echoDate(Map<String, Object> parameter);  // issue #145
-  
+
   // annotated
   @Select({ "{call sptest.adder(", "#{addend1,jdbcType=INTEGER,mode=IN},", "#{addend2,jdbcType=INTEGER,mode=IN},", "#{sum,jdbcType=INTEGER,mode=OUT})}" })
   @Options(statementType = StatementType.CALLABLE)
@@ -82,7 +82,7 @@ public interface SPMapper {
   @ResultMap("nameResult")
   @Options(statementType = StatementType.CALLABLE)
   List<Name> getNamesAnnotatedLowHighWithXMLResultMap(@Param("lowestId") int lowestId, @Param("highestId") int highestId);
-  
+
   @Select({ "{call sptest.arraytest(", "#{ids,mode=IN,jdbcType=ARRAY},", "#{requestedRows,jdbcType=INTEGER,mode=OUT},", "#{returnedIds,mode=OUT,jdbcType=ARRAY})}" })
   @Results({ @Result(column = "ID", property = "id"), @Result(column = "FIRST_NAME", property = "firstName"), @Result(column = "LAST_NAME", property = "lastName") })
   @Options(statementType = StatementType.CALLABLE)
@@ -97,7 +97,7 @@ public interface SPMapper {
   @ResultMap("nameResult,itemResult")
   @Options(statementType = StatementType.CALLABLE)
   List<List<?>> getNamesAndItemsAnnotatedWithXMLResultMap();
-  
+
   @Select("{call sptest.getnamesanditems()}")
   @ResultMap({"nameResult","itemResult"})
   @Options(statementType = StatementType.CALLABLE)

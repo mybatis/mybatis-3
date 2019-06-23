@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -303,6 +303,38 @@ public String updatePersonSql() {
             </tr>
             <tr>
               <td>
+                <ul>
+                  <li>
+                    <code>LIMIT(String)</code>
+                  </li>
+                  <li>
+                    <code>LIMIT(int)</code>
+                  </li>
+                </ul>
+              </td>
+              <td>
+                <code>LIMIT</code> 句を追加します。
+                このメソッドは SELECT(), UPDATE(), DELETE() と一緒に使うと有効になります。 (3.5.2以降で利用可能)
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <ul>
+                  <li>
+                    <code>OFFSET(String)</code>
+                  </li>
+                  <li>
+                    <code>OFFSET(long)</code>
+                  </li>
+                </ul>
+              </td>
+              <td>
+                <code>OFFSET</code> 句を追加します。
+                このメソッドは SELECT() と一緒に使うと有効になります。(3.5.2以降で利用可能)
+              </td>
+            </tr>
+            <tr>
+              <td>
                 <code>DELETE_FROM(String)</code>
               </td>
               <td>対象となるテーブルを指定して delete ステートメントを開始します。通常、この後に WHERE メソッドの呼び出しが続きます。
@@ -363,6 +395,15 @@ public String updatePersonSql() {
           </tbody>
         </table>
 
+        <p>
+          <span class="label important">NOTE</span>
+          <code>LIMIT</code> と <code>OFFSET</code> 句は生成されたステートメントにそのまま書き込むという点に注意することが重要です。
+          言い換えると、<code>LIMIT</code> と <code>OFFSET</code> 句をサポートしていないデータベースに対して、
+          そのデータベースで解釈可能な表現へ変換することはしません。
+          そのため、利用するデータベースが<code>LIMIT</code> と <code>OFFSET</code> 句をサポートしているか否かを把握しておくことが重要になります。
+          もし、利用するデータベースが<code>LIMIT</code> と <code>OFFSET</code> 句をサポートしていない場合は、
+          SQL実行時にエラーになります。
+        </p>
 
         <p>バージョン3.4.2以降では、次のように可変長引数を使うことができます。</p>
 

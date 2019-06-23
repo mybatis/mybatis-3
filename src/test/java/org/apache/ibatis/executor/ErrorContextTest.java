@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,14 +15,14 @@
  */
 package org.apache.ibatis.executor;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ErrorContextTest {
+class ErrorContextTest {
 
   @Test
-  public void shouldShowProgressiveErrorContextBuilding() {
+  void shouldShowProgressiveErrorContextBuilding() {
     ErrorContext context = ErrorContext.instance();
     context.resource("somefile.xml").activity("some activity").object("some object").message("Here's more info.");
     context.toString().startsWith("### The error occurred in somefile.xml.");
@@ -47,7 +47,7 @@ public class ErrorContextTest {
   }
 
   @Test
-  public void verifyStoreRecall() throws Exception {
+  void verifyStoreRecall() throws Exception {
     ErrorContext outer = ErrorContext.instance();
     ErrorContext inner = ErrorContext.instance().store();
     assertEquals(inner, ErrorContext.instance());

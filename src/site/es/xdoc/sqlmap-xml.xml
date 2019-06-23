@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2017 the original author or authors.
+       Copyright 2009-2018 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@
 
   <body>
     <section name="Ficheros XML de mapeo">
-      <p>La potencia de MyBatis reside en los Mapped Statements. Aquí es donde está la magia. Para lo potentes que son, los ficheros XML de mapeo son relativamente simples. Sin duda, si los comparas con el código JDBC equivalente comprobarás que ahorras el 95% del código. 
+      <p>La potencia de MyBatis reside en los Mapped Statements. Aquí es donde está la magia. Para lo potentes que son, los ficheros XML de mapeo son relativamente simples. Sin duda, si los comparas con el código JDBC equivalente comprobarás que ahorras el 95% del código.
       </p>
       <p>Los ficheros XML de mapeos SQL solo tienen unos pocos elementos de alto nivel (en el orden en el que deberían definirse):
       </p>
@@ -42,12 +42,12 @@
         </li>
         <li>
           <code>resultMap</code>
-          – El elemento más complejo y potente que describe como cargar tus objetos a partir de los ResultSets. 
+          – El elemento más complejo y potente que describe como cargar tus objetos a partir de los ResultSets.
         </li>
         <li>
           <strike>
             <code>parameterMap</code>
-            – Deprecada!  Antigua forma de mapear parámetros. Se recomienda el uso de parámetros en línea. Este elemento puede ser eliminado en futuras versiones. No se ha documentado en este manual. 
+            – Deprecada!  Antigua forma de mapear parámetros. Se recomienda el uso de parámetros en línea. Este elemento puede ser eliminado en futuras versiones. No se ha documentado en este manual.
           </strike>
         </li>
         <li>
@@ -112,7 +112,7 @@ ps.setInt(1,id);]]></source>
   resultMap="personResultMap"
   flushCache="false"
   useCache="true"
-  timeout="10000"
+  timeout="10"
   fetchSize="256"
   statementType="PREPARED"
   resultSetType="FORWARD_ONLY">]]></source>
@@ -182,13 +182,13 @@ ps.setInt(1,id);]]></source>
             </tr>
             <tr>
               <td><code>resultSetType</code></td>
-              <td>Puede valer FORWARD_ONLY|SCROLL_SENSITIVE|SCROLL_INSENSITIVE.  Por defecto: no informado (depende del driver de base de datos).
+              <td>Puede valer FORWARD_ONLY|SCROLL_SENSITIVE|SCROLL_INSENSITIVE|DEFAULT(same as unset).  Por defecto: no informado (depende del driver de base de datos).
               </td>
             </tr>
             <tr>
               <td><code>databaseId</code></td>
-              <td>Si hay un DatabaseIdProvider configurado. MyBatis cargará todos los statements sin el atributo <code>databaseId</code> 
-              o aquellos con un <code>databaseId</code> que coincide con el actual. Si se encuentra un statement con y sin 
+              <td>Si hay un DatabaseIdProvider configurado. MyBatis cargará todos los statements sin el atributo <code>databaseId</code>
+              o aquellos con un <code>databaseId</code> que coincide con el actual. Si se encuentra un statement con y sin
               <code>databaseId</code> el último se descartará.
               </td>
             </tr>
@@ -196,8 +196,8 @@ ps.setInt(1,id);]]></source>
               <td><code>resultOrdered</code></td>
               <td>De aplicación exclusiva para select anidadas. Si es true, se asume que los resultados anidados están
                 agrupados de forma que cuando se lee un nuevo resultado principal nuevo, no habrá más referencias
-                a resultados principales anteriores. De esta forma los resultados anidados se rellenarán de 
-                una manera mucho ás eficiente en términos de memoria. Defecto: 
+                a resultados principales anteriores. De esta forma los resultados anidados se rellenarán de
+                una manera mucho ás eficiente en términos de memoria. Defecto:
                 <code>false</code>.
               </td>
             </tr>
@@ -254,7 +254,7 @@ ps.setInt(1,id);]]></source>
             <tr>
               <td>
                 <strike><code>parameterMap</code></strike>
-              </td>	
+              </td>
               <td>
                 <strike>Método deprecado de referirse a un parameterMap externo. Usa mapeos inline y el atributo paramterType.</strike>
               </td>
@@ -285,14 +285,14 @@ ps.setInt(1,id);]]></source>
             </tr>
             <tr>
               <td><code>keyColumn</code></td>
-              <td>(solo en insert y update) Indica el nombre de la columna en tabla con clave generada. Solo se requiere en algunas bases de datos (como PostgreSQL) donde la 
+              <td>(solo en insert y update) Indica el nombre de la columna en tabla con clave generada. Solo se requiere en algunas bases de datos (como PostgreSQL) donde la
               columna clave no es la primera de la tabla. Puede contener una lista de nombres seperados por comas en el caso de que se esperen varios valores autogenerados.
               </td>
             </tr>
             <tr>
               <td><code>databaseId</code></td>
-              <td>Si hay un DatabaseIdProvider configurado. MyBatis cargará todos los statements sin el atributo <code>databaseId</code> 
-              o aquellos con un <code>databaseId</code> que coincide con el actual. Si se encuentra un statement con y sin 
+              <td>Si hay un DatabaseIdProvider configurado. MyBatis cargará todos los statements sin el atributo <code>databaseId</code>
+              o aquellos con un <code>databaseId</code> que coincide con el actual. Si se encuentra un statement con y sin
               <code>databaseId</code> el último se descartará.
               </td>
             </tr>
@@ -385,7 +385,7 @@ Por ejemplo, si la columna id de la tabla Author del ejemplo siguiente fuera aut
             </tr>
             <tr>
               <td><code>keyColumn</code></td>
-              <td>Los nombres de columnas en el ResultSet que corresponden con las propiedades. Puede contener una lista de nombres seperados por comas en el caso de que se esperen varios valores autogenerados. 
+              <td>Los nombres de columnas en el ResultSet que corresponden con las propiedades. Puede contener una lista de nombres seperados por comas en el caso de que se esperen varios valores autogenerados.
               </td>
             </tr>
             <tr>
@@ -528,6 +528,39 @@ Por ejemplo, si la columna id de la tabla Author del ejemplo siguiente fuera aut
         </p>
 
         <p>
+          String Substitution can be very useful when the metadata(i.e. table name or column name) in the sql statement is dynamic,
+          for example, if you want to <code>select</code> from a table by any one of its columns, instead of writing code like:
+          <source><![CDATA[
+@Select("select * from user where id = #{id}")
+User findById(@Param("id") long id);
+
+@Select("select * from user where name = #{name}")
+User findByName(@Param("name") String name);
+
+@Select("select * from user where email = #{email}")
+User findByEmail(@Param("email") String email);
+
+// and more "findByXxx" method
+]]></source>
+          you can just write:
+          <source><![CDATA[
+@Select("select * from user where ${column} = #{value}")
+User findByColumn(@Param("column") String column, @Param("value") String value);
+]]></source>
+          in which the <code>${column}</code> will be substituted directly and the <code>#{value}</code> will be "prepared".
+          Thus you can just do the same work by:
+          <source><![CDATA[
+User userOfId1 = userMapper.findByColumn("id", 1L);
+User userOfNameKid = userMapper.findByColumn("name", "kid");
+User userOfEmail = userMapper.findByColumn("email", "noone@nowhere.com");
+]]></source>
+        </p>
+
+        <p>
+          This idea can be applied to substitute the table name as well.
+        </p>
+
+        <p>
           <span class="label important">NOTA</span> No es seguro recoger un texto introducido por el usuario e inyectarlo en una sentencia SQL. Esto permite ataques de inyección de SQL y por tanto debes impedir que estos campos se informen con la entrada del usuario, o realizar tus propias comprobaciones o escapes.
         </p>
       </subsection>
@@ -554,7 +587,7 @@ public class User {
   private int id;
   private String username;
   private String hashedPassword;
-  
+
   public int getId() {
     return id;
   }
@@ -682,7 +715,7 @@ public class User {
   where B.id = #{id}
 </select>]]></source>
 
-        <p>Posiblemente te gustaría mapearlo a un modelo de objetos formado por un Blog que ha sido escrito por un Autor, y tiene varios Posts, cada uno de ellos puede tener cero o varios comentarios y tags. A continuación puede observarse un ResultMap complejo (asumimos que Author, Blog, Post, Comments y Tags son typeAliases). Échale un vistazo, pero no te preocupes, iremos paso a paso. Aunque parece enorme, es en realidad, bastante sencillo. 
+        <p>Posiblemente te gustaría mapearlo a un modelo de objetos formado por un Blog que ha sido escrito por un Autor, y tiene varios Posts, cada uno de ellos puede tener cero o varios comentarios y tags. A continuación puede observarse un ResultMap complejo (asumimos que Author, Blog, Post, Comments y Tags son typeAliases). Échale un vistazo, pero no te preocupes, iremos paso a paso. Aunque parece enorme, es en realidad, bastante sencillo.
         </p>
 
         <source><![CDATA[<!-- Very Complex Result Map -->
@@ -796,7 +829,7 @@ public class User {
 <result property="subject" column="post_subject"/>]]></source>
 
         <p>
-          Estos son los ResultMaps más sencillos. Ambos id, y result mapean una columna con una propiedad o campo de un tipo de dato simple (String, int, double, Date, etc.).  
+          Estos son los ResultMaps más sencillos. Ambos id, y result mapean una columna con una propiedad o campo de un tipo de dato simple (String, int, double, Date, etc.).
         </p>
 
         <p>
@@ -1120,7 +1153,7 @@ public class User {
           <tbody>
             <tr>
               <td><code>resultMap</code></td>
-              <td>El id de un resultmap que puede mapear los resultados anidados de esta asociación al grafo de objetos apropiado. Es una alternativa a llamar a otro select statement. Permite hacer join de varias tablas en un solo ResultSet. Un ResultSet de este tipo puede contener bloques repetidos de datos que deben ser descompuestos y mapeados apropiadamente a un árbol de objetos (object graph). MyBatis te permite encadenar RestultMaps para tratar resultados anidados.  A continuación se muestra un ejemplo detallado. 
+              <td>El id de un resultmap que puede mapear los resultados anidados de esta asociación al grafo de objetos apropiado. Es una alternativa a llamar a otro select statement. Permite hacer join de varias tablas en un solo ResultSet. Un ResultSet de este tipo puede contener bloques repetidos de datos que deben ser descompuestos y mapeados apropiadamente a un árbol de objetos (object graph). MyBatis te permite encadenar RestultMaps para tratar resultados anidados.  A continuación se muestra un ejemplo detallado.
               </td>
             </tr>
             <tr>
@@ -1137,7 +1170,7 @@ public class User {
                 Con este atributo se puede modificar este comportamiento especificando qué columnas deben tener un valor de forma que MyBatis
                 sólo creará un objeto hijo si alguna de estas columnas no es nula. Pueden indicarse una lista de columnas usando la coma como separador.
               </td>
-            </tr>            
+            </tr>
             <tr>
               <td><code>autoMapping</code></td>
               <td>If present, MyBatis will enable or disable automapping when mapping the result to this property.
@@ -1268,7 +1301,7 @@ public class User {
             <tr>
               <td><code>column</code></td>
               <td>
-                Cuando se usan result sets multiples este atributo especifica las columnas (separadas por comas) que se 
+                Cuando se usan result sets multiples este atributo especifica las columnas (separadas por comas) que se
                 correlarán con las indicadas en <code>foreignColumn</code> para identificar al padre y e hijo de una relación.
               </td>
             </tr>
@@ -1287,13 +1320,13 @@ public class User {
             </tr>
           </tbody>
         </table>
-        
+
         <p>Desce la versión 3.2.3 MyBatis proporciona otra forma más de resolver el problema del N+1.</p>
-         
-        <p>Algunas bases de datos permiten que un procedimiento almacenado devuelva más de un resultset o 
+
+        <p>Algunas bases de datos permiten que un procedimiento almacenado devuelva más de un resultset o
         ejecutar más de una sentencia a la vez y obtener de vuelta un resultset por cada. Esto se puede usar
         para acceder una sola vez a la base de datos y obtener datos relacionados sin usar una join.</p>
-        
+
         <p>En el ejemplo, el procedimiento almacenado deolverá dos result sets. El primero contendrá
         Blogs y el segundo Authors.</p>
 
@@ -1301,7 +1334,7 @@ public class User {
 
 SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
 
-        <p>Se debe proporcionar un nombre a cada resultset informando el atributo 
+        <p>Se debe proporcionar un nombre a cada resultset informando el atributo
         <code>resultSets</code> del mapped statement con una lista de nombres separados por comas.</p>
 
         <source><![CDATA[<select id="selectBlog" resultSets="blogs,authors" resultMap="blogResult" statementType="CALLABLE">
@@ -1429,9 +1462,9 @@ SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
 </resultMap>]]></source>
 
         <h4>ResultSets múltiples en Collection</h4>
-        
+
         <p>
-          De la misma forma que hicimos en la association, podemos llamar a un procedimiento almacenado que devuelva 
+          De la misma forma que hicimos en la association, podemos llamar a un procedimiento almacenado que devuelva
           dos resultsets, uno con Blogs y otro con Posts:
         </p>
 
@@ -1439,13 +1472,13 @@ SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
 
 SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
 
-        <p>Se debe proporcionar un nombre a cada resultset informando el atributo 
+        <p>Se debe proporcionar un nombre a cada resultset informando el atributo
         <code>resultSets</code> del mapped statement con una lista de nombres separados por comas.</p>
 
         <source><![CDATA[<select id="selectBlog" resultSets="blogs,posts" resultMap="blogResult">
   {call getBlogsAndPosts(#{id,jdbcType=INTEGER,mode=IN})}
 </select>]]></source>
-        
+
         <p>Especificamos que la collection "posts" se rellenará con datos contenidos en el resultset llamado "posts":</p>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
@@ -1545,15 +1578,15 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
       <subsection name="Auto-mapeo">
 
         <p>
-          Como ya has visto en las secciones previas, en los casos simples MyBatis puede auto-mapear los resultados por ti y en el resto de los casos 
-          es posible que tengas que crear un result map. Pero, como verás en esta sección también puedes combinar ambas estrategias. 
-          Veamos en detalle cómo funciona el auto-mapeo. 
+          Como ya has visto en las secciones previas, en los casos simples MyBatis puede auto-mapear los resultados por ti y en el resto de los casos
+          es posible que tengas que crear un result map. Pero, como verás en esta sección también puedes combinar ambas estrategias.
+          Veamos en detalle cómo funciona el auto-mapeo.
         </p>
 
         <p>
-          Al auto-mapear resultados MyBatis obtiene el nombre de columna y busca una propiedad con el mismo nombre sin tener en cuenta las mayúsculas. 
-          Es decir, si se encuentra una columna <i>ID</i> y una propiedad <i>id</i>, MyBatis informará la propiedad <i>id</i> con el valor de la columna 
-          <i>ID</i>. 
+          Al auto-mapear resultados MyBatis obtiene el nombre de columna y busca una propiedad con el mismo nombre sin tener en cuenta las mayúsculas.
+          Es decir, si se encuentra una columna <i>ID</i> y una propiedad <i>id</i>, MyBatis informará la propiedad <i>id</i> con el valor de la columna
+          <i>ID</i>.
         </p>
 
         <p>
@@ -1561,9 +1594,9 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
           java se nombran habitualmente siguiendo la notación tipo camelcase. Para habilitar el auto-mapeo entre ellas informa el parámetro de configuración
           <code>mapUnderscoreToCamelCase</code> a true.
         </p>
-        
+
         <p>
-          El auto-mapeo funciona incluso cuando hay un result map específico. Cuando esto sucede, para cada result map, todas las columnas que están 
+          El auto-mapeo funciona incluso cuando hay un result map específico. Cuando esto sucede, para cada result map, todas las columnas que están
           presentes en el ResultSet y que no tienen un mapeo manual se auto-mapearán. Posteriormente se procesarán los mapeos manuales.
           En el siguiente ejemplo las columnas <i>id</i> y <i>userName</i> se auto-mapearán y la columna <i>hashed_password</i> se mapeará manualmente.</p>
 
@@ -1583,7 +1616,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         <p>
           Hay tres niveles de auto-mapeo:
         </p>
-        
+
         <ul>
           <li>
             <code>NONE</code> - desactiva el auto-mapeo. Solo las propiedades mapeadas manaulmente se informarán.
@@ -1597,11 +1630,11 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         </ul>
 
         <p>
-          El valor por defecto es <code>PARTIAL</code>, y hay una razón para ello. Cuandos se utiliza <code>FULL</code> el auto-mapeo se 
-          realiza cuando se están procesando resultados de joins y las joins obtienen datos de distintas entidades en la misma fila 
+          El valor por defecto es <code>PARTIAL</code>, y hay una razón para ello. Cuandos se utiliza <code>FULL</code> el auto-mapeo se
+          realiza cuando se están procesando resultados de joins y las joins obtienen datos de distintas entidades en la misma fila
           por lo tanto podrían producirse mapeos automáticos indeseados. Para comprender el riesgo observa el siguiente ejemplo:
         </p>
-        
+
         <source><![CDATA[<select id="selectBlog" resultMap="blogResult">
   select
     B.id,
@@ -1618,7 +1651,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
 <resultMap id="authorResult" type="Author">
   <result property="username" column="author_username"/>
 </resultMap>]]></source>
-        
+
         <p>
           Con este result map ambos <i>Blog</i> y <i>Author</i> se auto-mapearán. Pero fíjate que <i>Author</i> tiene un <i>id</i> y que hay una
           columna con nombre <i>id</i> en el ResultSet por lo que el id de Author se rellenará con el id de Blog, y eso no era lo que esperabas.
@@ -1633,15 +1666,15 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         <source><![CDATA[<resultMap id="userResultMap" type="User" autoMapping="false">
   <result property="password" column="hashed_password"/>
 </resultMap>]]></source>
-       
-       
+
+
       </subsection>
       <subsection name="cache">
         <p>MyBatis incluye una funcionalidad de caché transaccional de segundo nivel muy potente que es ampliamente configurable y personalizable. Se han realizado muchos cambios en la caché de MyBatis 3 para hacer la a la vez más potente y más sencilla de configurar.
         </p>
 
         <p>
-           Por defecto la única caché activa es la caché local de sesión que se utiliza únicamente durante la duración de una sesión.  
+           Por defecto la única caché activa es la caché local de sesión que se utiliza únicamente durante la duración de una sesión.
            Para habilitar la caché de segundo nivel global simplemente necesitas añadir una línea en tu fichero de mapping:
         </p>
 
@@ -1706,14 +1739,14 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         </p>
 
         <p>
-          <span class="label important">NOTA</span> La caché de segundo nivel es transaccional. Esto significa que solo es actualizada cuando 
-          una sessión acaba con commit o cuando acaba con rollback pero no se ha ejecutado ninguna sentencia insert/delete/update 
+          <span class="label important">NOTA</span> La caché de segundo nivel es transaccional. Esto significa que solo es actualizada cuando
+          una sessión acaba con commit o cuando acaba con rollback pero no se ha ejecutado ninguna sentencia insert/delete/update
           con el parámetro flushCache=true.
         </p>
 
         <h4>Como usar una caché personalizada</h4>
 
-        <p>Además de poder personalizar la caché de las formas indicadas, puedes sustituir el sistema de caché por completo y proporcionar tu propia caché, o crear un adaptador para cachés de terceros. 
+        <p>Además de poder personalizar la caché de las formas indicadas, puedes sustituir el sistema de caché por completo y proporcionar tu propia caché, o crear un adaptador para cachés de terceros.
         </p>
 
         <source><![CDATA[<cache type="com.domain.something.MyCustomCache"/>]]></source>
@@ -1756,7 +1789,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         <p><span class="label important">NOTE</span>
           Los parametros de configuración de la cache (eviction, read write..etc.) explicados anteriormente no aplican cuando se usa
           una caché personalizada.
-        </p>        
+        </p>
 
         <p>Es importante recordar que la configuración de la caches y la instancia de caché está asociadas al namespace del fichero SQL Map. Y por tanto, a todas las sentencias del mismo namespace dado que la cache está asociada a él. Los statements pueden modificar cómo interactúan con la caché, o excluirse a sí mismos completamente utilizando dos atributos simples. Por defecto los statements están configurados así:
         </p>

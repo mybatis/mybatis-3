@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@
 
   <body>
     <section name="スタートガイド">
-    
+
     <subsection name="Installation">
       <p>
         MyBatis を使うためには、ダウンロードした
@@ -43,8 +43,8 @@
   <artifactId>mybatis</artifactId>
   <version>x.x.x</version>
 </dependency>]]></source>
-    </subsection>    
-     
+    </subsection>
+
       <subsection name="XML 形式の設定ファイルを使って SqlSessionFactory を生成する">
         <p>
           MyBatis アプリケーションは、SqlSessionFactory のインスタンスを中心に構成されています。<br />
@@ -121,11 +121,8 @@ SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(confi
           SqlSession のインスタンスに対して、マップされた SQL 文を直接指定して実行することができます。<br />
           例えば下記のようなコードになります。
         </p>
-        <source><![CDATA[SqlSession session = sqlSessionFactory.openSession();
-try {
+        <source><![CDATA[try (SqlSession session = sqlSessionFactory.openSession()) {
   Blog blog = (Blog) session.selectOne("org.mybatis.example.BlogMapper.selectBlog", 101);
-} finally {
-  session.close();
 }]]></source>
         <p>
           この方法は期待通りに動作しますし、旧バージョンの MyBatis に慣れている方には分かりやすいと思いますが、
@@ -133,12 +130,9 @@ try {
           実行する SQL 文にマッチするように引数と戻り値がきちんと定義されたインターフェイスを使えば、ミスしがちな文字列やキャストなしで、より美しく、型に安全なコードを使って SQL を実行することができます。
         </p>
         <p>例：</p>
-        <source><![CDATA[SqlSession session = sqlSessionFactory.openSession();
-try {
+        <source><![CDATA[try (SqlSession session = sqlSessionFactory.openSession()) {
   BlogMapper mapper = session.getMapper(BlogMapper.class);
   Blog blog = mapper.selectBlog(101);
-} finally {
-  session.close();
 }]]></source>
         <p>では、実際にどのような処理が行われているのかを見て行きましょう。</p>
       </subsection>
@@ -271,11 +265,8 @@ public interface BlogMapper {
           間違いがないよう、常に finally ブロックの中でセッションをクローズするようにした方が良いでしょう。
           SqlSession を確実にクローズするための一般的なパターンは下記のようなものです。
         </p>
-        <source><![CDATA[SqlSession session = sqlSessionFactory.openSession();
-try {
+        <source><![CDATA[try (SqlSession session = sqlSessionFactory.openSession()) {
   // do work
-} finally {
-  session.close();
 }]]></source>
         <p>
           常にこのパターンに従っておけば、すべてのデータベースリソースを確実にクローズすることができます。
@@ -292,12 +283,9 @@ try {
           単純化のため、Mapper はメソッドスコープの中で使うようにしてください。
           このプラクティスを実践したのが次のサンプルになります。
         </p>
-        <source><![CDATA[SqlSession session = sqlSessionFactory.openSession();
-try {
+        <source><![CDATA[try (SqlSession session = sqlSessionFactory.openSession()) {
   BlogMapper mapper = session.getMapper(BlogMapper.class);
   // do work
-} finally {
-  session.close();
 }
 ]]></source>
       </subsection>

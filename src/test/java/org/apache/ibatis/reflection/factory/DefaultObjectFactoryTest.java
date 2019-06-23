@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -28,72 +28,70 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.apache.ibatis.reflection.ReflectionException;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * DefaultObjectFactoryTest
  *
  * @author Ryan Lamore
  */
-public class DefaultObjectFactoryTest {
+class DefaultObjectFactoryTest {
 
   @Test
-  public void createClass() throws Exception {
+  void createClass() {
     DefaultObjectFactory defaultObjectFactory = new DefaultObjectFactory();
     TestClass testClass = defaultObjectFactory.create(TestClass.class,
-        Arrays.<Class<?>>asList(String.class, Integer.class), Arrays.<Object>asList("foo", 0));
+        Arrays.asList(String.class, Integer.class), Arrays.asList("foo", 0));
 
-    Assert.assertEquals("myInteger didn't match expected", (Integer) 0, testClass.myInteger);
-    Assert.assertEquals("myString didn't match expected", "foo", testClass.myString);
+    Assertions.assertEquals((Integer) 0, testClass.myInteger, "myInteger didn't match expected");
+    Assertions.assertEquals("foo", testClass.myString, "myString didn't match expected");
   }
 
   @Test
-  public void createClassThrowsProperErrorMsg() {
+  void createClassThrowsProperErrorMsg() {
     DefaultObjectFactory defaultObjectFactory = new DefaultObjectFactory();
     try {
-      defaultObjectFactory.create(TestClass.class, Collections.<Class<?>>singletonList(String.class), Collections.<Object>singletonList("foo"));
-      Assert.fail("Should have thrown ReflectionException");
+      defaultObjectFactory.create(TestClass.class, Collections.singletonList(String.class), Collections.singletonList("foo"));
+      Assertions.fail("Should have thrown ReflectionException");
     } catch (Exception e) {
-      Assert.assertTrue("Should be ReflectionException", e instanceof ReflectionException);
-      Assert.assertTrue("Should not have trailing commas in types list", e.getMessage().contains("(String)"));
-      Assert.assertTrue("Should not have trailing commas in values list", e.getMessage().contains("(foo)"));
+      Assertions.assertTrue(e instanceof ReflectionException, "Should be ReflectionException");
+      Assertions.assertTrue(e.getMessage().contains("(String)"), "Should not have trailing commas in types list");
+      Assertions.assertTrue(e.getMessage().contains("(foo)"), "Should not have trailing commas in values list");
     }
   }
 
   @Test
-  public void creatHashMap() throws  Exception{
+  void creatHashMap() {
      DefaultObjectFactory defaultObjectFactory=new DefaultObjectFactory();
      Map  map= defaultObjectFactory.create(Map.class,null,null);
-     Assert.assertTrue("Should be HashMap",map instanceof HashMap);
+     Assertions.assertTrue(map instanceof HashMap, "Should be HashMap");
   }
 
   @Test
-  public void createArrayList() throws Exception {
+  void createArrayList() {
     DefaultObjectFactory defaultObjectFactory = new DefaultObjectFactory();
     List list = defaultObjectFactory.create(List.class);
-    Assert.assertTrue(" list should be ArrayList", list instanceof ArrayList);
+    Assertions.assertTrue(list instanceof ArrayList, " list should be ArrayList");
 
     Collection collection = defaultObjectFactory.create(Collection.class);
-    Assert.assertTrue(" collection should be ArrayList", collection instanceof ArrayList);
+    Assertions.assertTrue(collection instanceof ArrayList, " collection should be ArrayList");
 
     Iterable iterable = defaultObjectFactory.create(Iterable.class);
-    Assert.assertTrue(" iterable should be ArrayList", iterable instanceof ArrayList);
+    Assertions.assertTrue(iterable instanceof ArrayList, " iterable should be ArrayList");
   }
 
-
   @Test
-  public void createTreeSet() throws Exception {
+  void createTreeSet() {
     DefaultObjectFactory defaultObjectFactory = new DefaultObjectFactory();
     SortedSet sortedSet = defaultObjectFactory.create(SortedSet.class);
-    Assert.assertTrue(" sortedSet should be TreeSet", sortedSet instanceof TreeSet);
+    Assertions.assertTrue(sortedSet instanceof TreeSet, " sortedSet should be TreeSet");
   }
 
-
   @Test
-  public void createHashSet() throws Exception {
+  void createHashSet() {
     DefaultObjectFactory defaultObjectFactory = new DefaultObjectFactory();
     Set set = defaultObjectFactory.create(Set.class);
-    Assert.assertTrue(" set should be HashSet", set instanceof HashSet);
+    Assertions.assertTrue(set instanceof HashSet, " set should be HashSet");
   }
 }
