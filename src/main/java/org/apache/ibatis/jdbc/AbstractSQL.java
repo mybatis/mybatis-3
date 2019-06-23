@@ -78,10 +78,9 @@ public abstract class AbstractSQL<T> {
    * @since 3.4.2
    */
   public T INTO_VALUES(String... values) {
-    List<List<String>> list = sql().values;
-    int index = list.size() - 1;
+    List<String> list = sql().valueList.get(sql().valueList.size() - 1);
     for (String value : values) {
-      list.get(index).add(value);
+      list.add(value);
     }
     return getSelf();
   }
@@ -266,8 +265,13 @@ public abstract class AbstractSQL<T> {
     return getSelf();
   }
 
+  /**
+   * @Since 3.5.2
+   * used to add a new inserted row while
+   * do multi-row insert
+   */
   public T ADD_ROW() {
-    sql().values.add(new ArrayList<>());
+    sql().valueList.add(new ArrayList<>());
     return getSelf();
   }
 
@@ -335,12 +339,12 @@ public abstract class AbstractSQL<T> {
     List<String> orderBy = new ArrayList<String>();
     List<String> lastList = new ArrayList<String>();
     List<String> columns = new ArrayList<String>();
-    List<List<String>> values = new ArrayList<>();
+    List<List<String>> valueList = new ArrayList<>();
     boolean distinct;
 
     public SQLStatement() {
       // Prevent Synthetic Access
-      values.add(new ArrayList<>());
+      valueList.add(new ArrayList<>());
     }
 
     private void sqlClause(SafeAppendable builder, String keyword, List<String> parts, String open, String close,
@@ -392,8 +396,8 @@ public abstract class AbstractSQL<T> {
     private String insertSQL(SafeAppendable builder) {
       sqlClause(builder, "INSERT INTO", tables, "", "", "");
       sqlClause(builder, "", columns, "(", ")", ", ");
-      for (int i = 0 ; i < values.size(); i++) {
-        sqlClause(builder, i > 0 ? "," : "VALUES", values.get(i), "(", ")", ", ");
+      for (int i = 0; i < valueList.size(); i++) {
+        sqlClause(builder, i > 0 ? "," : "VALUES", valueList.get(i), "(", ")", ", ");
       }
       return builder.toString();
     }
