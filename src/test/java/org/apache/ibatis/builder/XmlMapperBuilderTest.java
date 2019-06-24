@@ -191,4 +191,14 @@ class XmlMapperBuilderTest {
 //    builder2.parse();
 //  }
 
+   @Test
+   public void erorrResultMapLocation() throws Exception {
+     Configuration configuration = new Configuration();
+     String resource = "org/apache/ibatis/builder/ProblemResultMapper.xml";
+     try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
+       XMLMapperBuilder builder = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
+       builder.parse();
+       MappedStatement mappedStatement = configuration.getMappedStatement("findProblemTypeTest");
+     }
+   }
 }
