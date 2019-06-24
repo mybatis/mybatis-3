@@ -78,7 +78,7 @@ public abstract class AbstractSQL<T> {
    * @since 3.4.2
    */
   public T INTO_VALUES(String... values) {
-    List<String> list = sql().valueList.get(sql().valueList.size() - 1);
+    List<String> list = sql().valuesList.get(sql().valuesList.size() - 1);
     for (String value : values) {
       list.add(value);
     }
@@ -266,11 +266,6 @@ public abstract class AbstractSQL<T> {
   }
 
   /**
-   * @Since 3.5.2
-   * used to add a new inserted row while
-   * do multi-row insert
-   */
-  /**
    * Set the limit variable string(e.g. {@code "#{limit}"}).
    *
    * @param variable a limit variable string
@@ -318,8 +313,13 @@ public abstract class AbstractSQL<T> {
     return getSelf();
   }
 
+  /**
+   * used to add a new inserted row while do multi-row insert.
+   *
+   * @since 3.5.2
+   */
   public T ADD_ROW() {
-    sql().valueList.add(new ArrayList<>());
+    sql().valuesList.add(new ArrayList<>());
     return getSelf();
   }
 
@@ -387,14 +387,14 @@ public abstract class AbstractSQL<T> {
     List<String> orderBy = new ArrayList<String>();
     List<String> lastList = new ArrayList<String>();
     List<String> columns = new ArrayList<String>();
-    List<List<String>> valueList = new ArrayList<>();
+    List<List<String>> valuesList = new ArrayList<>();
     boolean distinct;
     String offset;
     String limit;
 
     public SQLStatement() {
       // Prevent Synthetic Access
-      valueList.add(new ArrayList<>());
+      valuesList.add(new ArrayList<>());
     }
 
     private void sqlClause(SafeAppendable builder, String keyword, List<String> parts, String open, String close,
@@ -452,8 +452,8 @@ public abstract class AbstractSQL<T> {
     private String insertSQL(SafeAppendable builder) {
       sqlClause(builder, "INSERT INTO", tables, "", "", "");
       sqlClause(builder, "", columns, "(", ")", ", ");
-      for (int i = 0; i < valueList.size(); i++) {
-        sqlClause(builder, i > 0 ? "," : "VALUES", valueList.get(i), "(", ")", ", ");
+      for (int i = 0; i < valuesList.size(); i++) {
+        sqlClause(builder, i > 0 ? "," : "VALUES", valuesList.get(i), "(", ")", ", ");
       }
       return builder.toString();
     }
