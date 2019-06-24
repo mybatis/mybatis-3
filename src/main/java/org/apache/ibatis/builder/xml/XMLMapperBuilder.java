@@ -355,22 +355,17 @@ public class XMLMapperBuilder extends BaseBuilder {
 
   private boolean databaseIdMatchesCurrent(String id, String databaseId, String requiredDatabaseId) {
     if (requiredDatabaseId != null) {
-      if (!requiredDatabaseId.equals(databaseId)) {
-        return false;
-      }
-    } else {
-      if (databaseId != null) {
-        return false;
-      }
-      // skip this fragment if there is a previous one with a not null databaseId
-      if (this.sqlFragments.containsKey(id)) {
-        XNode context = this.sqlFragments.get(id);
-        if (context.getStringAttribute("databaseId") != null) {
-          return false;
-        }
-      }
+      return requiredDatabaseId.equals(databaseId);
     }
-    return true;
+    if (databaseId != null) {
+      return false;
+    }
+    if (!this.sqlFragments.containsKey(id)) {
+      return true;
+    }
+    // skip this fragment if there is a previous one with a not null databaseId
+    XNode context = this.sqlFragments.get(id);
+    return context.getStringAttribute("databaseId") == null;
   }
 
   private ResultMapping buildResultMappingFromContext(XNode context, Class<?> resultType, List<ResultFlag> flags) throws Exception {
