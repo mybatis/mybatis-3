@@ -198,7 +198,14 @@ class XmlMapperBuilderTest {
      try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
        XMLMapperBuilder builder = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
        builder.parse();
-       MappedStatement mappedStatement = configuration.getMappedStatement("findProblemTypeTest");
+       String resultMapName = "java.lang.String";
+       // namespace + "." + id
+       String statementId = "org.mybatis.spring.ErrorProblemMapper" + "." + "findProblemResultMapTest";
+       // same as MapperBuilderAssistant.getStatementResultMaps Exception message
+       String message = "Could not find result map '" + resultMapName + "' referenced from '" + statementId + "'";
+       IncompleteElementException exception = Assertions.assertThrows(IncompleteElementException.class,
+         ()-> configuration.getMappedStatement("findProblemTypeTest"));
+       assertThat(exception.getMessage()).isEqualTo(message);
      }
    }
 }
