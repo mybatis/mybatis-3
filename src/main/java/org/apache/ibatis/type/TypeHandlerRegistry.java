@@ -146,17 +146,17 @@ public final class TypeHandlerRegistry {
 
     register(String.class, JdbcType.SQLXML, new SqlxmlTypeHandler());
 
-    register(Instant.class, InstantTypeHandler.class);
-    register(LocalDateTime.class, LocalDateTimeTypeHandler.class);
-    register(LocalDate.class, LocalDateTypeHandler.class);
-    register(LocalTime.class, LocalTimeTypeHandler.class);
-    register(OffsetDateTime.class, OffsetDateTimeTypeHandler.class);
-    register(OffsetTime.class, OffsetTimeTypeHandler.class);
-    register(ZonedDateTime.class, ZonedDateTimeTypeHandler.class);
-    register(Month.class, MonthTypeHandler.class);
-    register(Year.class, YearTypeHandler.class);
-    register(YearMonth.class, YearMonthTypeHandler.class);
-    register(JapaneseDate.class, JapaneseDateTypeHandler.class);
+    register(Instant.class, new InstantTypeHandler());
+    register(LocalDateTime.class, new LocalDateTimeTypeHandler());
+    register(LocalDate.class, new LocalDateTypeHandler());
+    register(LocalTime.class, new LocalTimeTypeHandler());
+    register(OffsetDateTime.class, new OffsetDateTimeTypeHandler());
+    register(OffsetTime.class, new OffsetTimeTypeHandler());
+    register(ZonedDateTime.class, new ZonedDateTimeTypeHandler());
+    register(Month.class, new MonthTypeHandler());
+    register(Year.class, new YearTypeHandler());
+    register(YearMonth.class, new YearMonthTypeHandler());
+    register(JapaneseDate.class, new JapaneseDateTypeHandler());
 
     // issue #273
     register(Character.class, new CharacterTypeHandler());
