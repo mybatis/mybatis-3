@@ -292,7 +292,6 @@ public class UnpooledDataSource implements DataSource {
       return this.driver.jdbcCompliant();
     }
 
-    // @Override only valid jdk7+
     @Override
     public Logger getParentLogger() {
       return Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
@@ -309,7 +308,6 @@ public class UnpooledDataSource implements DataSource {
     return false;
   }
 
-  // @Override only valid jdk7+
   @Override
   public Logger getParentLogger() {
     // requires JDK version 1.6

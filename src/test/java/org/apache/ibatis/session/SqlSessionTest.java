@@ -583,7 +583,7 @@ class SqlSessionTest extends BaseDataTest {
     Configuration configuration = new Configuration(sqlMapper.getConfiguration().getEnvironment());
     configuration.addMapper(AuthorMapperWithMultipleHandlers.class);
     SqlSessionFactory sqlMapperWithMultipleHandlers = new DefaultSqlSessionFactory(configuration);
-    try (SqlSession sqlSession = sqlMapperWithMultipleHandlers.openSession()) {
+    try (SqlSession sqlSession = sqlMapperWithMultipleHandlers.openSession();) {
       DefaultResultHandler handler1 = new DefaultResultHandler();
       DefaultResultHandler handler2 = new DefaultResultHandler();
       AuthorMapperWithMultipleHandlers mapper = sqlSession.getMapper(AuthorMapperWithMultipleHandlers.class);
@@ -596,7 +596,7 @@ class SqlSessionTest extends BaseDataTest {
     Configuration configuration = new Configuration(sqlMapper.getConfiguration().getEnvironment());
     configuration.addMapper(AuthorMapperWithRowBounds.class);
     SqlSessionFactory sqlMapperWithMultipleHandlers = new DefaultSqlSessionFactory(configuration);
-    try (SqlSession sqlSession = sqlMapperWithMultipleHandlers.openSession()) {
+    try (SqlSession sqlSession = sqlMapperWithMultipleHandlers.openSession();) {
       RowBounds bounds1 = new RowBounds(0, 1);
       RowBounds bounds2 = new RowBounds(0, 1);
       AuthorMapperWithRowBounds mapper = sqlSession.getMapper(AuthorMapperWithRowBounds.class);
