@@ -17,7 +17,7 @@ package org.apache.ibatis.submitted.parent_reference_3level;
 
 public interface Mapper {
 
-  public Blog selectBlogByPrimaryKey(int aId);
+  Blog selectBlogByPrimaryKey(int aId);
 
-  public Blog selectBlogByPrimaryKeyColumnPrefix(int aId);
+  Blog selectBlogByPrimaryKeyColumnPrefix(int aId);
 }

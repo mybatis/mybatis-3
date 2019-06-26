@@ -24,5 +24,5 @@ import org.apache.ibatis.annotations.Select;
 public interface PersonMapper {
 
   @Select("select id, firstname, lastname from person")
-  public List<Person> findAll();
+  List<Person> findAll();
 }

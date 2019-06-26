@@ -43,7 +43,7 @@ public interface BaseMapper<S, T> {
   @UpdateProvider(type = StatementProvider.class, method = "provideUpdate")
   int update(S param);
 
-  public class StatementProvider {
+  class StatementProvider {
     public String provideSelect(Object param) {
       StringBuilder sql = new StringBuilder("select * from ");
       if (param == null || param instanceof Person) {
