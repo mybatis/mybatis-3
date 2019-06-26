@@ -16,5 +16,5 @@
 package org.apache.ibatis.submitted.serializecircular;
 
 public interface DepartmentMapper {
-  public Department getById(Integer anId);
+  Department getById(Integer anId);
 }
