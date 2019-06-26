@@ -347,4 +347,31 @@ class SQLTest {
     assertEquals("DELETE FROM test\nWHERE (status = #{status}) LIMIT 20", sql);
   }
 
+  @Test
+  void selectUsingFetchFirstRowsOnlyVariableName() {
+    final String sql = new SQL() {{
+      SELECT("*").FROM("test").ORDER_BY("id").FETCH_FIRST_ROWS_ONLY("#{fetchFirstRows}");
+    }}.toString();
+
+    assertEquals("SELECT *\nFROM test\nORDER BY id FETCH FIRST #{fetchFirstRows} ROWS ONLY", sql);
+  }
+
+  @Test
+  void selectUsingOffsetRowsVariableName() {
+    final String sql = new SQL() {{
+      SELECT("*").FROM("test").ORDER_BY("id").OFFSET_ROWS("#{offsetRows}");
+    }}.toString();
+
+    assertEquals("SELECT *\nFROM test\nORDER BY id OFFSET #{offsetRows} ROWS", sql);
+  }
+
+  @Test
+  void selectUsingOffsetRowsAndFetchFirstRowsOnly() {
+    final String sql = new SQL() {{
+      SELECT("*").FROM("test").ORDER_BY("id").OFFSET_ROWS(100).FETCH_FIRST_ROWS_ONLY(20);
+    }}.toString();
+
+    assertEquals("SELECT *\nFROM test\nORDER BY id OFFSET 100 ROWS FETCH FIRST 20 ROWS ONLY", sql);
+  }
+
 }

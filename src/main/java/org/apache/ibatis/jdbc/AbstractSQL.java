@@ -267,10 +267,12 @@ public abstract class AbstractSQL<T> {
    *
    * @param variable a limit variable string
    * @return a self instance
+   * @see #OFFSET(String)
    * @since 3.5.2
    */
   public T LIMIT(String variable) {
     sql().limit = variable;
+    sql().limitingRowsStrategy = SQLStatement.LimitingRowsStrategy.OFFSET_LIMIT;
     return getSelf();
   }
 
@@ -279,10 +281,12 @@ public abstract class AbstractSQL<T> {
    *
    * @param value an offset value
    * @return a self instance
+   * @see #OFFSET(long)
    * @since 3.5.2
    */
   public T LIMIT(int value) {
     sql().limit = String.valueOf(value);
+    sql().limitingRowsStrategy = SQLStatement.LimitingRowsStrategy.OFFSET_LIMIT;
     return getSelf();
   }
 
@@ -291,10 +295,12 @@ public abstract class AbstractSQL<T> {
    *
    * @param variable a offset variable string
    * @return a self instance
+   * @see #LIMIT(String)
    * @since 3.5.2
    */
   public T OFFSET(String variable) {
     sql().offset = variable;
+    sql().limitingRowsStrategy = SQLStatement.LimitingRowsStrategy.OFFSET_LIMIT;
     return getSelf();
   }
 
@@ -303,10 +309,68 @@ public abstract class AbstractSQL<T> {
    *
    * @param value an offset value
    * @return a self instance
+   * @see #LIMIT(int)
    * @since 3.5.2
    */
   public T OFFSET(long value) {
     sql().offset = String.valueOf(value);
+    sql().limitingRowsStrategy = SQLStatement.LimitingRowsStrategy.OFFSET_LIMIT;
+    return getSelf();
+  }
+
+  /**
+   * Set the fetch first rows variable string(e.g. {@code "#{fetchFirstRows}"}).
+   *
+   * @param variable a fetch first rows variable string
+   * @return a self instance
+   * @see #OFFSET_ROWS(String)
+   * @since 3.5.2
+   */
+  public T FETCH_FIRST_ROWS_ONLY(String variable) {
+    sql().limit = variable;
+    sql().limitingRowsStrategy = SQLStatement.LimitingRowsStrategy.ISO;
+    return getSelf();
+  }
+
+  /**
+   * Set the fetch first rows value.
+   *
+   * @param value a fetch first rows value
+   * @return a self instance
+   * @see #OFFSET_ROWS(long)
+   * @since 3.5.2
+   */
+  public T FETCH_FIRST_ROWS_ONLY(int value) {
+    sql().limit = String.valueOf(value);
+    sql().limitingRowsStrategy = SQLStatement.LimitingRowsStrategy.ISO;
+    return getSelf();
+  }
+
+  /**
+   * Set the offset rows variable string(e.g. {@code "#{offset}"}).
+   *
+   * @param variable a offset rows variable string
+   * @return a self instance
+   * @see #FETCH_FIRST_ROWS_ONLY(String)
+   * @since 3.5.2
+   */
+  public T OFFSET_ROWS(String variable) {
+    sql().offset = variable;
+    sql().limitingRowsStrategy = SQLStatement.LimitingRowsStrategy.ISO;
+    return getSelf();
+  }
+
+  /**
+   * Set the offset rows value.
+   *
+   * @param value an offset rows value
+   * @return a self instance
+   * @see #FETCH_FIRST_ROWS_ONLY(int)
+   * @since 3.5.2
+   */
+  public T OFFSET_ROWS(long value) {
+    sql().offset = String.valueOf(value);
+    sql().limitingRowsStrategy = SQLStatement.LimitingRowsStrategy.ISO;
     return getSelf();
   }
 
@@ -359,6 +423,40 @@ public abstract class AbstractSQL<T> {
       DELETE, INSERT, SELECT, UPDATE
     }
 
+    private enum LimitingRowsStrategy {
+      NOP {
+        @Override
+        protected void appendClause(SafeAppendable builder, String offset, String limit) {
+          // NOP
+        }
+      },
+      ISO {
+        @Override
+        protected void appendClause(SafeAppendable builder, String offset, String limit) {
+          if (offset != null) {
+            builder.append(" OFFSET ").append(offset).append(" ROWS");
+          }
+          if (limit != null) {
+            builder.append(" FETCH FIRST ").append(limit).append(" ROWS ONLY");
+          }
+        }
+      },
+      OFFSET_LIMIT {
+        @Override
+        protected void appendClause(SafeAppendable builder, String offset, String limit) {
+          if (limit != null) {
+            builder.append(" LIMIT ").append(limit);
+          }
+          if (offset != null) {
+            builder.append(" OFFSET ").append(offset);
+          }
+        }
+      };
+
+      protected abstract void appendClause(SafeAppendable builder, String offset, String limit);
+
+    }
+
     StatementType statementType;
     List<String> sets = new ArrayList<>();
     List<String> select = new ArrayList<>();
@@ -378,6 +476,7 @@ public abstract class AbstractSQL<T> {
     boolean distinct;
     String offset;
     String limit;
+    LimitingRowsStrategy limitingRowsStrategy = LimitingRowsStrategy.NOP;
 
     public SQLStatement() {
         // Prevent Synthetic Access
@@ -418,12 +517,7 @@ public abstract class AbstractSQL<T> {
       sqlClause(builder, "GROUP BY", groupBy, "", "", ", ");
       sqlClause(builder, "HAVING", having, "(", ")", " AND ");
       sqlClause(builder, "ORDER BY", orderBy, "", "", ", ");
-      if (limit != null) {
-        builder.append(" LIMIT ").append(limit);
-      }
-      if (offset != null) {
-        builder.append(" OFFSET ").append(offset);
-      }
+      limitingRowsStrategy.appendClause(builder, offset, limit);
       return builder.toString();
     }
 
@@ -445,9 +539,7 @@ public abstract class AbstractSQL<T> {
     private String deleteSQL(SafeAppendable builder) {
       sqlClause(builder, "DELETE FROM", tables, "", "", "");
       sqlClause(builder, "WHERE", where, "(", ")", " AND ");
-      if (limit != null) {
-        builder.append(" LIMIT ").append(limit);
-      }
+      limitingRowsStrategy.appendClause(builder, null, limit);
       return builder.toString();
     }
 
@@ -456,9 +548,7 @@ public abstract class AbstractSQL<T> {
       joins(builder);
       sqlClause(builder, "SET", sets, "", "", ", ");
       sqlClause(builder, "WHERE", where, "(", ")", " AND ");
-      if (limit != null) {
-        builder.append(" LIMIT ").append(limit);
-      }
+      limitingRowsStrategy.appendClause(builder, null, limit);
       return builder.toString();
     }
 
