@@ -23,7 +23,7 @@ package org.apache.ibatis.jdbc;
 @Deprecated
 public class SelectBuilder {
 
-  private static final ThreadLocal<SQL> localSQL = new ThreadLocal<>();
+  private static final ThreadLocal<SQL> LOCAL_SQL = new ThreadLocal<>();
 
   static {
     BEGIN();
@@ -38,7 +38,7 @@ public class SelectBuilder {
   }
 
   public static void RESET() {
-    localSQL.set(new SQL());
+    LOCAL_SQL.set(new SQL());
   }
 
   public static void SELECT(String columns) {
@@ -106,7 +106,7 @@ public class SelectBuilder {
   }
 
   private static SQL sql() {
-    return localSQL.get();
+    return LOCAL_SQL.get();
   }
 
 }

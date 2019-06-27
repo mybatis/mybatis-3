@@ -34,7 +34,7 @@ public final class OgnlCache {
 
   private static final OgnlMemberAccess MEMBER_ACCESS = new OgnlMemberAccess();
   private static final OgnlClassResolver CLASS_RESOLVER = new OgnlClassResolver();
-  private static final Map<String, Object> expressionCache = new ConcurrentHashMap<>();
+  private static final Map<String, Object> EXPRESSION_CACHE = new ConcurrentHashMap<>();
 
   private OgnlCache() {
     // Prevent Instantiation of Static Class
@@ -50,10 +50,10 @@ public final class OgnlCache {
   }
 
   private static Object parseExpression(String expression) throws OgnlException {
-    Object node = expressionCache.get(expression);
+    Object node = EXPRESSION_CACHE.get(expression);
     if (node == null) {
       node = Ognl.parseExpression(expression);
-      expressionCache.put(expression, node);
+      EXPRESSION_CACHE.put(expression, node);
     }
     return node;
   }

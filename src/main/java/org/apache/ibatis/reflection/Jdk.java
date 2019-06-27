@@ -27,7 +27,7 @@ public class Jdk {
    * @deprecated Since 3.5.0, Will remove this field at feature(next major version up)
    */
   @Deprecated
-  public static final boolean parameterExists;
+  public static final boolean PARAMETER_EXISTS;
 
   static {
     boolean available = false;
@@ -37,14 +37,14 @@ public class Jdk {
     } catch (ClassNotFoundException e) {
       // ignore
     }
-    parameterExists = available;
+    PARAMETER_EXISTS = available;
   }
 
   /**
    * @deprecated Since 3.5.0, Will remove this field at feature(next major version up)
    */
   @Deprecated
-  public static final boolean dateAndTimeApiExists;
+  public static final boolean DATE_AND_TIME_API_EXISTS;
 
   static {
     boolean available = false;
@@ -54,14 +54,14 @@ public class Jdk {
     } catch (ClassNotFoundException e) {
       // ignore
     }
-    dateAndTimeApiExists = available;
+    DATE_AND_TIME_API_EXISTS = available;
   }
 
   /**
    * @deprecated Since 3.5.0, Will remove this field at feature(next major version up)
    */
   @Deprecated
-  public static final boolean optionalExists;
+  public static final boolean OPTIONAL_EXISTS;
 
   static {
     boolean available = false;
@@ -71,7 +71,7 @@ public class Jdk {
     } catch (ClassNotFoundException e) {
       // ignore
     }
-    optionalExists = available;
+    OPTIONAL_EXISTS = available;
   }
 
   private Jdk() {

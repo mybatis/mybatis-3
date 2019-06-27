@@ -22,7 +22,7 @@ package org.apache.ibatis.jdbc;
  */
 public class SqlBuilder {
 
-  private static final ThreadLocal<SQL> localSQL = new ThreadLocal<>();
+  private static final ThreadLocal<SQL> LOCAL_SQL = new ThreadLocal<>();
 
   static {
     BEGIN();
@@ -37,7 +37,7 @@ public class SqlBuilder {
   }
 
   public static void RESET() {
-    localSQL.set(new SQL());
+    LOCAL_SQL.set(new SQL());
   }
 
   public static void UPDATE(String table) {
@@ -125,7 +125,7 @@ public class SqlBuilder {
   }
 
   private static SQL sql() {
-    return localSQL.get();
+    return LOCAL_SQL.get();
   }
 
 }

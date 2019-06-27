@@ -42,7 +42,7 @@ import org.apache.ibatis.reflection.factory.ObjectFactory;
 public abstract class AbstractSerialStateHolder implements Externalizable {
 
   private static final long serialVersionUID = 8940388717901644661L;
-  private static final ThreadLocal<ObjectOutputStream> stream = new ThreadLocal<>();
+  private static final ThreadLocal<ObjectOutputStream> STREAM_THREAD_LOCAL = new ThreadLocal<>();
   private byte[] userBeanBytes = new byte[0];
   private Object userBean;
   private Map<String, ResultLoaderMap.LoadPair> unloadedProperties;
@@ -70,11 +70,11 @@ public abstract class AbstractSerialStateHolder implements Externalizable {
   public final void writeExternal(final ObjectOutput out) throws IOException {
     boolean firstRound = false;
     final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    ObjectOutputStream os = stream.get();
+    ObjectOutputStream os = STREAM_THREAD_LOCAL.get();
     if (os == null) {
       os = new ObjectOutputStream(baos);
       firstRound = true;
-      stream.set(os);
+      STREAM_THREAD_LOCAL.set(os);
     }
 
     os.writeObject(this.userBean);
@@ -87,7 +87,7 @@ public abstract class AbstractSerialStateHolder implements Externalizable {
     out.writeObject(bytes);
 
     if (firstRound) {
-      stream.remove();
+      STREAM_THREAD_LOCAL.remove();
     }
   }
 
@@ -132,7 +132,7 @@ public abstract class AbstractSerialStateHolder implements Externalizable {
           List<Class<?>> constructorArgTypes, List<Object> constructorArgs);
 
   private static class LookAheadObjectInputStream extends ObjectInputStream {
-    private static final List<String> blacklist = Arrays.asList(
+    private static final List<String> BLACKLIST = Arrays.asList(
         "org.apache.commons.beanutils.BeanComparator",
         "org.apache.commons.collections.functors.InvokerTransformer",
         "org.apache.commons.collections.functors.InstantiateTransformer",
@@ -151,7 +151,7 @@ public abstract class AbstractSerialStateHolder implements Externalizable {
     @Override
     protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException {
       String className = desc.getName();
-      if (blacklist.contains(className)) {
+      if (BLACKLIST.contains(className)) {
         throw new InvalidClassException(className, "Deserialization is not allowed for security reasons. "
             + "It is strongly recommended to configure the deserialization filter provided by JDK. "
             + "See http://openjdk.java.net/jeps/290 for the details.");
