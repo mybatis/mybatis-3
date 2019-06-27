@@ -45,15 +45,15 @@ public final class PropertyNamer {
   }
 
   public static boolean isProperty(String name) {
-    return name.startsWith("get") || name.startsWith("set") || name.startsWith("is");
+    return isGetter(name) || isSetter(name);
   }
 
   public static boolean isGetter(String name) {
-    return name.startsWith("get") || name.startsWith("is");
+    return (name.startsWith("get") && name.length() > 3) || (name.startsWith("is") && name.length() > 2);
   }
 
   public static boolean isSetter(String name) {
-    return name.startsWith("set");
+    return name.startsWith("set") && name.length() > 3;
   }
 
 }
