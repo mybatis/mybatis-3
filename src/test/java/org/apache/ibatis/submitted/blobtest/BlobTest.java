@@ -96,7 +96,7 @@ class BlobTest {
         }
 
         if (blob2 == null) {
-            return blob1 == null;
+            return false;
         }
 
         boolean rc = blob1.length == blob2.length;

@@ -245,7 +245,7 @@ public class OurSqlBuilder {
       BaseMapper.Column column = field.getAnnotation(BaseMapper.Column.class);
       if (column != null) {
         String columnName = column.value();
-        if (columnName == null || columnName.length() == 0) {
+        if (columnName.length() == 0) {
           columnName = field.getName();
         }
         columnMap.put(columnName, field.getName());
