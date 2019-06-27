@@ -285,9 +285,7 @@ public abstract class AbstractSQL<T> {
    * @since 3.5.2
    */
   public T LIMIT(int value) {
-    sql().limit = String.valueOf(value);
-    sql().limitingRowsStrategy = SQLStatement.LimitingRowsStrategy.OFFSET_LIMIT;
-    return getSelf();
+    return LIMIT(String.valueOf(value));
   }
 
   /**
@@ -313,9 +311,7 @@ public abstract class AbstractSQL<T> {
    * @since 3.5.2
    */
   public T OFFSET(long value) {
-    sql().offset = String.valueOf(value);
-    sql().limitingRowsStrategy = SQLStatement.LimitingRowsStrategy.OFFSET_LIMIT;
-    return getSelf();
+    return OFFSET(String.valueOf(value));
   }
 
   /**
@@ -341,9 +337,7 @@ public abstract class AbstractSQL<T> {
    * @since 3.5.2
    */
   public T FETCH_FIRST_ROWS_ONLY(int value) {
-    sql().limit = String.valueOf(value);
-    sql().limitingRowsStrategy = SQLStatement.LimitingRowsStrategy.ISO;
-    return getSelf();
+    return FETCH_FIRST_ROWS_ONLY(String.valueOf(value));
   }
 
   /**
@@ -369,9 +363,7 @@ public abstract class AbstractSQL<T> {
    * @since 3.5.2
    */
   public T OFFSET_ROWS(long value) {
-    sql().offset = String.valueOf(value);
-    sql().limitingRowsStrategy = SQLStatement.LimitingRowsStrategy.ISO;
-    return getSelf();
+    return OFFSET_ROWS(String.valueOf(value));
   }
 
   private SQLStatement sql() {
