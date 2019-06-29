@@ -373,20 +373,20 @@ public abstract class AbstractSQL<T> {
     }
 
     StatementType statementType;
-    List<String> sets = new ArrayList<String>();
-    List<String> select = new ArrayList<String>();
-    List<String> tables = new ArrayList<String>();
-    List<String> join = new ArrayList<String>();
-    List<String> innerJoin = new ArrayList<String>();
-    List<String> outerJoin = new ArrayList<String>();
-    List<String> leftOuterJoin = new ArrayList<String>();
-    List<String> rightOuterJoin = new ArrayList<String>();
-    List<String> where = new ArrayList<String>();
-    List<String> having = new ArrayList<String>();
-    List<String> groupBy = new ArrayList<String>();
-    List<String> orderBy = new ArrayList<String>();
-    List<String> lastList = new ArrayList<String>();
-    List<String> columns = new ArrayList<String>();
+    List<String> sets = new ArrayList<>();
+    List<String> select = new ArrayList<>();
+    List<String> tables = new ArrayList<>();
+    List<String> join = new ArrayList<>();
+    List<String> innerJoin = new ArrayList<>();
+    List<String> outerJoin = new ArrayList<>();
+    List<String> leftOuterJoin = new ArrayList<>();
+    List<String> rightOuterJoin = new ArrayList<>();
+    List<String> where = new ArrayList<>();
+    List<String> having = new ArrayList<>();
+    List<String> groupBy = new ArrayList<>();
+    List<String> orderBy = new ArrayList<>();
+    List<String> lastList = new ArrayList<>();
+    List<String> columns = new ArrayList<>();
     List<List<String>> valuesList = new ArrayList<>();
     boolean distinct;
     String offset;
