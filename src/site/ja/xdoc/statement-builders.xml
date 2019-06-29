@@ -477,7 +477,7 @@ public String updatePersonSql() {
 }
 ]]></source>
 
-        <p>バージョン3.4.2以降では、次のように一括挿入用のステートメントを作成することができます。</p>
+        <p>バージョン3.5.2以降では、次のように一括挿入用のステートメントを作成することができます。</p>
 
         <source><![CDATA[
 public String insertPersonsSql() {
@@ -489,6 +489,32 @@ public String insertPersonsSql() {
     .INTO_VALUES("#{mainPerson.id}", "#{mainPerson.fullName}")
     .ADD_ROW()
     .INTO_VALUES("#{subPerson.id}", "#{subPerson.fullName}")
+    .toString();
+}
+]]></source>
+
+        <p>バージョン3.5.2以降では、次のように検索結果行を制限するための検索ステートメントを作成することができます。</p>
+
+        <source><![CDATA[
+public String selectPersonsWithOffsetLimitSql() {
+  // SELECT id, name FROM PERSON
+  //     LIMIT #{limit} OFFSET #{offset}
+  return new SQL()
+    .SELECT("id", "name")
+    .FROM("PERSON")
+    .LIMIT("#{limit}")
+    .OFFSET("#{offset}")
+    .toString();
+}
+
+public String selectPersonsWithFetchFirstSql() {
+  // SELECT id, name FROM PERSON
+  //     OFFSET #{offset} ROWS FETCH FIRST #{limit} ROWS ONLY
+  return new SQL()
+    .SELECT("id", "name")
+    .FROM("PERSON")
+    .OFFSET_ROWS("#{offset}")
+    .FETCH_FIRST_ROWS_ONLY("#{limit}")
     .toString();
 }
 ]]></source>
