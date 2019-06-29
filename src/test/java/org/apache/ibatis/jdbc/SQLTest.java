@@ -374,4 +374,62 @@ class SQLTest {
     assertEquals("SELECT *\nFROM test\nORDER BY id OFFSET 100 ROWS FETCH FIRST 20 ROWS ONLY", sql);
   }
 
+  @Test
+  void supportBatchInsert(){
+    final String sql =  new SQL(){{
+      INSERT_INTO("table1 a");
+      INTO_COLUMNS("col1,col2");
+      INTO_VALUES("val1","val2");
+      ADD_ROW();
+      INTO_VALUES("val1","val2");
+    }}.toString();
+
+    assertThat(sql).isEqualToIgnoringWhitespace("INSERT INTO table1 a (col1,col2) VALUES (val1,val2), (val1,val2)");
+  }
+
+  @Test
+  void singleInsert() {
+    final String sql = new SQL() {{
+      INSERT_INTO("table1 a");
+      INTO_COLUMNS("col1,col2");
+      INTO_VALUES("val1", "val2");
+    }}.toString();
+
+    assertThat(sql).isEqualToIgnoringWhitespace("INSERT INTO table1 a (col1,col2) VALUES (val1,val2)");
+  }
+
+  @Test
+  void singleInsertWithMultipleInsertValues() {
+    final String sql = new SQL() {{
+      INSERT_INTO("TABLE_A").INTO_COLUMNS("a", "b").INTO_VALUES("#{a}").INTO_VALUES("#{b}");
+    }}.toString();
+
+    assertThat(sql).isEqualToIgnoringWhitespace("INSERT INTO TABLE_A (a, b) VALUES (#{a}, #{b})");
+  }
+
+  @Test
+  void batchInsertWithMultipleInsertValues() {
+    final String sql = new SQL() {{
+      INSERT_INTO("TABLE_A");
+      INTO_COLUMNS("a", "b");
+      INTO_VALUES("#{a1}");
+      INTO_VALUES("#{b1}");
+      ADD_ROW();
+      INTO_VALUES("#{a2}");
+      INTO_VALUES("#{b2}");
+    }}.toString();
+
+    assertThat(sql).isEqualToIgnoringWhitespace("INSERT INTO TABLE_A (a, b) VALUES (#{a1}, #{b1}), (#{a2}, #{b2})");
+  }
+
+  @Test
+  void testValues() {
+    final String sql = new SQL() {{
+      INSERT_INTO("PERSON");
+      VALUES("ID, FIRST_NAME", "#{id}, #{firstName}");
+      VALUES("LAST_NAME", "#{lastName}");
+    }}.toString();
+
+    assertThat(sql).isEqualToIgnoringWhitespace("INSERT INTO PERSON (ID, FIRST_NAME, LAST_NAME) VALUES (#{id}, #{firstName}, #{lastName})");
+  }
 }

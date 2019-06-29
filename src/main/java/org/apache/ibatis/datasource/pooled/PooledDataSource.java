@@ -585,19 +585,23 @@ public class PooledDataSource implements DataSource {
     return conn;
   }
 
+  @Override
   protected void finalize() throws Throwable {
     forceCloseAll();
     super.finalize();
   }
 
+  @Override
   public <T> T unwrap(Class<T> iface) throws SQLException {
     throw new SQLException(getClass().getName() + " is not a wrapper.");
   }
 
+  @Override
   public boolean isWrapperFor(Class<?> iface) {
     return false;
   }
 
+  @Override
   public Logger getParentLogger() {
     return Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
   }

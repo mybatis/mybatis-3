@@ -30,7 +30,7 @@ public interface Mapper {
     return getUserById((Integer) args[0]);
   }
 
-  static interface SubMapper extends Mapper {
+  interface SubMapper extends Mapper {
     default User defaultGetUser(Object... args) {
       return getUserByIdAndName((String) args[0], (Integer) args[1]);
     }

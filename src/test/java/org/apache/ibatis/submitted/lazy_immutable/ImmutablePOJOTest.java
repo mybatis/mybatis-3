@@ -51,7 +51,7 @@ final class ImmutablePOJOTest {
 
             assertEquals(POJO_ID, pojo.getId());
             assertNotNull(pojo.getDescription(), "Description should not be null.");
-            assertFalse(pojo.getDescription().length() == 0, "Description should not be empty.");
+          assertNotEquals(0, pojo.getDescription().length(), "Description should not be empty.");
         }
     }
 
