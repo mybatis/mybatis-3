@@ -61,8 +61,8 @@ public abstract class AbstractSQL<T> {
   }
 
   public T VALUES(String columns, String values) {
-    sql().columns.add(columns);
-    sql().values.add(values);
+    INTO_COLUMNS(columns);
+    INTO_VALUES(values);
     return getSelf();
   }
 
@@ -78,7 +78,10 @@ public abstract class AbstractSQL<T> {
    * @since 3.4.2
    */
   public T INTO_VALUES(String... values) {
-    sql().values.addAll(Arrays.asList(values));
+    List<String> list = sql().valuesList.get(sql().valuesList.size() - 1);
+    for (String value : values) {
+      list.add(value);
+    }
     return getSelf();
   }
 
@@ -310,6 +313,16 @@ public abstract class AbstractSQL<T> {
     return getSelf();
   }
 
+  /**
+   * used to add a new inserted row while do multi-row insert.
+   *
+   * @since 3.5.2
+   */
+  public T ADD_ROW() {
+    sql().valuesList.add(new ArrayList<>());
+    return getSelf();
+  }
+
   private SQLStatement sql() {
     return sql;
   }
@@ -374,13 +387,14 @@ public abstract class AbstractSQL<T> {
     List<String> orderBy = new ArrayList<>();
     List<String> lastList = new ArrayList<>();
     List<String> columns = new ArrayList<>();
-    List<String> values = new ArrayList<>();
+    List<List<String>> valuesList = new ArrayList<>();
     boolean distinct;
     String offset;
     String limit;
 
     public SQLStatement() {
-        // Prevent Synthetic Access
+      // Prevent Synthetic Access
+      valuesList.add(new ArrayList<>());
     }
 
     private void sqlClause(SafeAppendable builder, String keyword, List<String> parts, String open, String close,
@@ -438,7 +452,9 @@ public abstract class AbstractSQL<T> {
     private String insertSQL(SafeAppendable builder) {
       sqlClause(builder, "INSERT INTO", tables, "", "", "");
       sqlClause(builder, "", columns, "(", ")", ", ");
-      sqlClause(builder, "VALUES", values, "(", ")", ", ");
+      for (int i = 0; i < valuesList.size(); i++) {
+        sqlClause(builder, i > 0 ? "," : "VALUES", valuesList.get(i), "(", ")", ", ");
+      }
       return builder.toString();
     }
 
