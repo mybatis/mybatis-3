@@ -485,6 +485,14 @@ public String updatePersonSql() {
                 This should be call INTO_COLUMNS() with together.
               </td>
             </tr>
+            <tr>
+              <td>
+                <code>ADD_ROW()</code>
+              </td>
+              <td>
+                Add new row for bulk insert. (Available since 3.5.2)
+              </td>
+            </tr>
           </tbody>
         </table>
 
@@ -525,6 +533,23 @@ public String updatePersonSql() {
     .toString();
 }
 ]]></source>
+
+        <p>Since version 3.5.2, you can create insert statement for bulk insert as follow:</p>
+
+        <source><![CDATA[
+public String insertPersonsSql() {
+  // INSERT INTO PERSON (ID, FULL_NAME)
+  //     VALUES (#{mainPerson.id}, #{mainPerson.fullName}) , (#{subPerson.id}, #{subPerson.fullName})
+  return new SQL()
+    .INSERT_INTO("PERSON")
+    .INTO_COLUMNS("ID", "FULL_NAME")
+    .INTO_VALUES("#{mainPerson.id}", "#{mainPerson.fullName}")
+    .ADD_ROW()
+    .INTO_VALUES("#{subPerson.id}", "#{subPerson.fullName}")
+    .toString();
+}
+]]></source>
+
 
       </subsection>
 
