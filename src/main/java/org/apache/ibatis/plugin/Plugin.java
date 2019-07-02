@@ -40,12 +40,13 @@ public class Plugin implements InvocationHandler {
     this.signatureMap = signatureMap;
   }
 
-  public static Object wrap(Object target, Interceptor interceptor) {
+  @SuppressWarnings("unchecked")
+  public static <T> T wrap(T target, Interceptor interceptor) {
     Map<Class<?>, Set<Method>> signatureMap = getSignatureMap(interceptor);
     Class<?> type = target.getClass();
     Class<?>[] interfaces = getAllInterfaces(type, signatureMap);
     if (interfaces.length > 0) {
-      return Proxy.newProxyInstance(
+      return (T) Proxy.newProxyInstance(
           type.getClassLoader(),
           interfaces,
           new Plugin(target, interceptor, signatureMap));
