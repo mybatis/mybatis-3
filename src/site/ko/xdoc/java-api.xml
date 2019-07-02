@@ -674,8 +674,8 @@ User getUserById(Integer id);
 
 @Results(id = "companyResults")
 @ConstructorArgs({
-  @Arg(property = "id", column = "cid", id = <strong>true</strong>),
-  @Arg(property = "name", column = "name")
+  @Arg(column = "cid", javaType = Integer.class, id = <strong>true</strong>),
+  @Arg(column = "name", javaType = String.class)
 })
 @Select("select * from company where id = #{id}")
 Company getCompanyById(Integer id);</source>
