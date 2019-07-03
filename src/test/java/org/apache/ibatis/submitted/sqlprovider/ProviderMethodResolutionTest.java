@@ -135,7 +135,7 @@ class ProviderMethodResolutionTest {
 
   interface ProvideMethodResolverMapper {
 
-    @SelectProvider(type = MethodResolverBasedSqlProvider.class)
+    @SelectProvider(MethodResolverBasedSqlProvider.class)
     int select();
 
     @SelectProvider(type = MethodResolverBasedSqlProvider.class, method = "provideSelect2Sql")
@@ -147,7 +147,7 @@ class ProviderMethodResolutionTest {
     @SelectProvider(type = CustomMethodResolverBasedSqlProvider.class)
     int select4();
 
-    @DeleteProvider(type = ReservedMethodNameBasedSqlProvider.class)
+    @DeleteProvider(ReservedMethodNameBasedSqlProvider.class)
     int delete();
 
     class MethodResolverBasedSqlProvider implements ProviderMethodResolver {
@@ -211,7 +211,7 @@ class ProviderMethodResolutionTest {
 
   interface DefaultProvideMethodResolverReturnTypeMatchedMethodIsNoneMapper {
 
-    @InsertProvider(type = MethodResolverBasedSqlProvider.class)
+    @InsertProvider(MethodResolverBasedSqlProvider.class)
     int insert();
 
     class MethodResolverBasedSqlProvider implements ProviderMethodResolver {
@@ -224,7 +224,7 @@ class ProviderMethodResolutionTest {
 
   interface DefaultProvideMethodResolverMatchedMethodIsMultipleMapper {
 
-    @UpdateProvider(type = MethodResolverBasedSqlProvider.class)
+    @UpdateProvider(MethodResolverBasedSqlProvider.class)
     int update();
 
     class MethodResolverBasedSqlProvider implements ProviderMethodResolver {

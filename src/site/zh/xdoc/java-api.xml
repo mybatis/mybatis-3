@@ -455,8 +455,8 @@ void rollback(boolean force)</source>
           </ul>
         </td>
         <td>允许构建动态 SQL。这些备选的 SQL 注解允许你指定类名和返回在运行时执行的 SQL 语句的方法。（自从MyBatis 3.4.6开始，你可以用 <code>CharSequence</code> 代替 <code>String</code> 来返回类型返回值了。）当执行映射语句的时候，MyBatis 会实例化类并执行方法，类和方法就是填入了注解的值。你可以把已经传递给映射方法了的对象作为参数，"Mapper interface type" 和 "Mapper method" and "Database ID" 会经过 <code>ProviderContext</code> （仅在MyBatis 3.4.5及以上支持）作为参数值。（MyBatis 3.4及以上的版本，支持多参数传入）
-        属性有： <code>type</code>, <code>method</code>。
-        <code>type</code> 属性需填入类。
+        属性有： <code>value</code>, <code>type</code>, <code>method</code>。
+        <code>value</code> and <code>type</code> 属性需填入类(The <code>type</code> attribute is alias for <code>value</code>, you must be specify either one)。
         <code>method</code> 需填入该类定义了的方法名
         (Since 3.5.1, you can omit <code>method</code> attribute, the MyBatis will resolve a target method via the
         <code>ProviderMethodResolver</code> interface.
