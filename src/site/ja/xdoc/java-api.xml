@@ -589,7 +589,7 @@ class UserSqlBuilder {
 }]]></source>
 
     <p>次のコードは、<code>ProviderMethodResolver</code>(MyBatis 3.5.1以降で利用可能)のデフォルト実装の利用例です。</p>
-    <source><![CDATA[@SelectProvider(type = UserSqlProvider.class)
+    <source><![CDATA[@SelectProvider(UserSqlProvider.class)
 List<User> getUsersByName(String name);
 
 // SQLプロバイダクラスにProviderMethodResolverを実装する

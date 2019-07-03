@@ -644,7 +644,7 @@ class UserSqlBuilder {
 }]]></source>
 
     <p>This example shows usage the default implementation of <code>ProviderMethodResolver</code>(available since MyBatis 3.5.1 or later):</p>
-    <source><![CDATA[@SelectProvider(type = UserSqlProvider.class)
+    <source><![CDATA[@SelectProvider(UserSqlProvider.class)
 List<User> getUsersByName(String name);
 
 // Implements the ProviderMethodResolver on your provider class
