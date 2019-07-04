@@ -14,7 +14,7 @@
 --    limitations under the License.
 --
 
-DROP SCHEMA IF EXISTS mbtest;
+DROP SCHEMA IF EXISTS mbtest CASCADE;
 
 CREATE SCHEMA mbtest;
 
