@@ -93,6 +93,8 @@ public interface Cache {
    *
    * @return A ReadWriteLock
    */
-  ReadWriteLock getReadWriteLock();
+  default ReadWriteLock getReadWriteLock() {
+    return null;
+  }
 
 }

@@ -454,7 +454,9 @@ void rollback(boolean force)</source>
         <td>Estas anotaciones SQL alternativas te permiten especificar un nombre de clases y un método que devolverán la SQL que debe ejecutarse (Since 3.4.6, you can specify the <code>CharSequence</code> instead of <code>String</code> as a method return type).
           Cuando se ejecute el método MyBatis instanciará la clase y ejecutará el método especificados en el provider. You can pass objects that passed to arguments of a mapper method, "Mapper interface type", "Mapper method" and "Database ID"
           via the <code>ProviderContext</code>(available since MyBatis 3.4.5 or later) as method argument.(In MyBatis 3.4 or later, it's allow multiple parameters)
-          Atributos: type, method.  El atributo type es el nombre completamente cualificado de una clase.
+          Atributos: value, type y method.
+          El atributo value y type es el nombre completamente cualificado de una clase
+          (The <code>type</code> attribute is alias for <code>value</code>, you must be specify either one).
           El method es el nombre un método de dicha clase
           (Since 3.5.1, you can omit <code>method</code> attribute, the MyBatis will resolve a target method via the
           <code>ProviderMethodResolver</code> interface.
@@ -526,8 +528,8 @@ User getUserById(Integer id);
 
 @Results(id = "companyResults")
 @ConstructorArgs({
-  @Arg(property = "id", column = "cid", id = <strong>true</strong>),
-  @Arg(property = "name", column = "name")
+  @Arg(column = "cid", javaType = Integer.class, id = <strong>true</strong>),
+  @Arg(column = "name", javaType = String.class)
 })
 @Select("select * from company where id = #{id}")
 Company getCompanyById(Integer id);</source>
@@ -598,7 +600,7 @@ class UserSqlProvider implements ProviderMethodResolver {
 }]]></source>
 
     <p>This example shows usage the default implementation of <code>ProviderMethodResolver</code>(available since MyBatis 3.5.1 or later):</p>
-    <source><![CDATA[@SelectProvider(type = UserSqlProvider.class)
+    <source><![CDATA[@SelectProvider(UserSqlProvider.class)
 List<User> getUsersByName(String name);
 
 // Implements the ProviderMethodResolver on your provider class

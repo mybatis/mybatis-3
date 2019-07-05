@@ -502,7 +502,9 @@ void rollback(boolean force)</source>
         You can pass objects that passed to arguments of a mapper method, "Mapper interface type", "Mapper method" and "Database ID"
         via the <code>ProviderContext</code>(available since MyBatis 3.4.5 or later) as method argument.
         (In MyBatis 3.4 or later, it's allow multiple parameters)
-        Attributes: <code>type</code>, <code>method</code>. The <code>type</code> attribute is a class.
+        Attributes: <code>value</code>, <code>type</code> and <code>method</code>.
+        The <code>value</code> and <code>type</code> attribute is a class
+        (The <code>type</code> attribute is alias for <code>value</code>, you must be specify either one).
         The <code>method</code> is the name of the method on that class
         (Since 3.5.1, you can omit <code>method</code> attribute, the MyBatis will resolve a target method via the
         <code>ProviderMethodResolver</code> interface.
@@ -589,8 +591,8 @@ User getUserById(Integer id);
 
 @Results(id = "companyResults")
 @ConstructorArgs({
-  @Arg(property = "id", column = "cid", id = <strong>true</strong>),
-  @Arg(property = "name", column = "name")
+  @Arg(column = "cid", javaType = Integer.class, id = <strong>true</strong>),
+  @Arg(column = "name", javaType = String.class)
 })
 @Select("select * from company where id = #{id}")
 Company getCompanyById(Integer id);</source>
@@ -642,7 +644,7 @@ class UserSqlBuilder {
 }]]></source>
 
     <p>This example shows usage the default implementation of <code>ProviderMethodResolver</code>(available since MyBatis 3.5.1 or later):</p>
-    <source><![CDATA[@SelectProvider(type = UserSqlProvider.class)
+    <source><![CDATA[@SelectProvider(UserSqlProvider.class)
 List<User> getUsersByName(String name);
 
 // Implements the ProviderMethodResolver on your provider class

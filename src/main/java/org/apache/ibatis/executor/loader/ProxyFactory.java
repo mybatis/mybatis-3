@@ -26,7 +26,9 @@ import org.apache.ibatis.session.Configuration;
  */
 public interface ProxyFactory {
 
-  void setProperties(Properties properties);
+  default void setProperties(Properties properties) {
+    // NOP
+  }
 
   Object createProxy(Object target, ResultLoaderMap lazyLoader, Configuration configuration, ObjectFactory objectFactory, List<Class<?>> constructorArgTypes, List<Object> constructorArgs);
 

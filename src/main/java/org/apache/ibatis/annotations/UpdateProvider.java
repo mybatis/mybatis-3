@@ -33,8 +33,21 @@ public @interface UpdateProvider {
    * Specify a type that implements an SQL provider method.
    *
    * @return a type that implements an SQL provider method
+   * @since 3.5.2
+   * @see #type()
    */
-  Class<?> type();
+  Class<?> value() default void.class;
+
+  /**
+   * Specify a type that implements an SQL provider method.
+   * <p>
+   * This attribute is alias of {@link #value()}.
+   * </p>
+   *
+   * @return a type that implements an SQL provider method
+   * @see #value()
+   */
+  Class<?> type() default void.class;
 
   /**
    * Specify a method for providing an SQL.
