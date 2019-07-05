@@ -26,7 +26,8 @@
     <id column="carid" property="id"/>
     <result column="cartype" property="type"/>
     <association property="engine" resultMap="engineResult"/>
-    <association property="brakes" resultMap="brakesResult"/>
+    <!-- the bogus 'column' below is to assert gh-1590 -->
+    <association property="brakes" resultMap="brakesResult" column="{carid=carid}" />
   </resultMap>
   <resultMap type="org.apache.ibatis.submitted.associationtest.Engine" id="engineResult">
     <result column="enginetype" property="type"/>
