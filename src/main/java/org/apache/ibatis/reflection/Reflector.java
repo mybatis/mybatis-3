@@ -25,6 +25,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.ReflectPermission;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -63,8 +64,8 @@ public class Reflector {
     addGetMethods(clazz);
     addSetMethods(clazz);
     addFields(clazz);
-    readablePropertyNames = getMethods.keySet().toArray(new String[getMethods.keySet().size()]);
-    writablePropertyNames = setMethods.keySet().toArray(new String[setMethods.keySet().size()]);
+    readablePropertyNames = getMethods.keySet().toArray(new String[0]);
+    writablePropertyNames = setMethods.keySet().toArray(new String[0]);
     for (String propName : readablePropertyNames) {
       caseInsensitivePropertyMap.put(propName.toUpperCase(Locale.ENGLISH), propName);
     }
@@ -74,28 +75,16 @@ public class Reflector {
   }
 
   private void addDefaultConstructor(Class<?> clazz) {
-    Constructor<?>[] consts = clazz.getDeclaredConstructors();
-    for (Constructor<?> constructor : consts) {
-      if (constructor.getParameterTypes().length == 0) {
-        this.defaultConstructor = constructor;
-      }
-    }
+    Constructor<?>[] constructors = clazz.getDeclaredConstructors();
+    Arrays.stream(constructors).filter(constructor -> constructor.getParameterTypes().length == 0)
+      .findAny().ifPresent(constructor -> this.defaultConstructor = constructor);
   }
 
-  private void addGetMethods(Class<?> cls) {
+  private void addGetMethods(Class<?> clazz) {
     Map<String, List<Method>> conflictingGetters = new HashMap<>();
-    Method[] methods = getClassMethods(cls);
-    for (Method method : methods) {
-      if (method.getParameterTypes().length > 0) {
-        continue;
-      }
-      String name = method.getName();
-      if ((name.startsWith("get") && name.length() > 3)
-          || (name.startsWith("is") && name.length() > 2)) {
-        name = PropertyNamer.methodToProperty(name);
-        addMethodConflict(conflictingGetters, name, method);
-      }
-    }
+    Method[] methods = getClassMethods(clazz);
+    Arrays.stream(methods).filter(m -> m.getParameterTypes().length == 0 && PropertyNamer.isGetter(m.getName()))
+      .forEach(m -> addMethodConflict(conflictingGetters, PropertyNamer.methodToProperty(m.getName()), m));
     resolveGetterConflicts(conflictingGetters);
   }
 
@@ -142,18 +131,11 @@ public class Reflector {
     }
   }
 
-  private void addSetMethods(Class<?> cls) {
+  private void addSetMethods(Class<?> clazz) {
     Map<String, List<Method>> conflictingSetters = new HashMap<>();
-    Method[] methods = getClassMethods(cls);
-    for (Method method : methods) {
-      String name = method.getName();
-      if (name.startsWith("set") && name.length() > 3) {
-        if (method.getParameterTypes().length == 1) {
-          name = PropertyNamer.methodToProperty(name);
-          addMethodConflict(conflictingSetters, name, method);
-        }
-      }
-    }
+    Method[] methods = getClassMethods(clazz);
+    Arrays.stream(methods).filter(m -> m.getParameterTypes().length == 1 && PropertyNamer.isSetter(m.getName()))
+      .forEach(m -> addMethodConflict(conflictingSetters, PropertyNamer.methodToProperty(m.getName()), m));
     resolveSetterConflicts(conflictingSetters);
   }
 
@@ -169,8 +151,7 @@ public class Reflector {
       Method match = null;
       ReflectionException exception = null;
       for (Method setter : setters) {
-        Class<?> paramType = setter.getParameterTypes()[0];
-        if (paramType.equals(getterType)) {
+        if (setter.getParameterTypes()[0].equals(getterType)) {
           // should be the best match
           match = setter;
           break;
@@ -285,12 +266,12 @@ public class Reflector {
    * We use this method, instead of the simpler <code>Class.getMethods()</code>,
    * because we want to look for private methods as well.
    *
-   * @param cls The class
+   * @param clazz The class
    * @return An array containing all methods in this class
    */
-  private Method[] getClassMethods(Class<?> cls) {
+  private Method[] getClassMethods(Class<?> clazz) {
     Map<String, Method> uniqueMethods = new HashMap<>();
-    Class<?> currentClass = cls;
+    Class<?> currentClass = clazz;
     while (currentClass != null && currentClass != Object.class) {
       addUniqueMethods(uniqueMethods, currentClass.getDeclaredMethods());
 
@@ -306,7 +287,7 @@ public class Reflector {
 
     Collection<Method> methods = uniqueMethods.values();
 
-    return methods.toArray(new Method[methods.size()]);
+    return methods.toArray(new Method[0]);
   }
 
   private void addUniqueMethods(Map<String, Method> uniqueMethods, Method[] methods) {
@@ -332,12 +313,7 @@ public class Reflector {
     sb.append(method.getName());
     Class<?>[] parameters = method.getParameterTypes();
     for (int i = 0; i < parameters.length; i++) {
-      if (i == 0) {
-        sb.append(':');
-      } else {
-        sb.append(',');
-      }
-      sb.append(parameters[i].getName());
+      sb.append(i == 0 ? ':' : ',').append(parameters[i].getName());
     }
     return sb.toString();
   }
