@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2015 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
        limitations under the License.
 
 -->
-
 <!DOCTYPE mapper
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
@@ -30,4 +29,36 @@
       WHERE id = 3
     </if>
   </select>
+  <select id="selectDescriptionById" resultType="string">
+    SELECT description
+    FROM ibtest.names
+    <if test="id != null">
+      WHERE id = #{id}
+    </if>
+  </select>
+  <!-- Specify a property name as variable name (Valid always) -->
+  <select id="selectDescriptionByConditions" resultType="string">
+    SELECT description
+    FROM ibtest.names
+    <if test="id != null">
+      WHERE id = #{id}
+    </if>
+  </select>
+  <!-- Specify a any name(object name) as variable name (Valid if exists type handler) -->
+  <select id="selectDescriptionByConditions2" resultType="string">
+    SELECT description
+    FROM ibtest.names
+    <if test="conditions != null">
+      WHERE id = #{conditions}
+    </if>
+  </select>
+  <!-- Specify a any name(object name) and nested property name (Valid if exists type handler) -->
+  <select id="selectDescriptionByConditions3" resultType="string">
+    SELECT description
+    FROM ibtest.names
+    <if test="conditions != null and conditions.id != null">
+      WHERE id = #{conditions.id}
+    </if>
+  </select>
+
 </mapper>

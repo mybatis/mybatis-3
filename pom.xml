@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2018 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -22,12 +22,12 @@
   <parent>
     <groupId>org.mybatis</groupId>
     <artifactId>mybatis-parent</artifactId>
-    <version>31-SNAPSHOT</version>
+    <version>31</version>
     <relativePath />
   </parent>
 
   <artifactId>mybatis</artifactId>
-  <version>3.5.0-SNAPSHOT</version>
+  <version>3.5.2-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>mybatis</name>
@@ -131,40 +131,44 @@
   </distributionManagement>
 
   <properties>
+    <clirr.comparisonVersion>3.4.6</clirr.comparisonVersion>
+    <excludedGroups>TestcontainersTests</excludedGroups>
     <maven.compiler.testCompilerArgument>-parameters</maven.compiler.testCompilerArgument>
-    <clirr.comparisonVersion>3.3.1</clirr.comparisonVersion>
-    <spotbugs.onlyAnalyze>org.apache.ibatis.*</spotbugs.onlyAnalyze>
+    <module.name>org.mybatis</module.name>
     <osgi.export>org.apache.ibatis.*;version=${project.version};-noimport:=true</osgi.export>
     <osgi.import>*;resolution:=optional</osgi.import>
     <osgi.dynamicImport>*</osgi.dynamicImport>
-    <maven.surefire.excludeGroups>org.apache.ibatis.test.SlowTests</maven.surefire.excludeGroups>
+    <spotbugs.onlyAnalyze>org.apache.ibatis.*</spotbugs.onlyAnalyze>
+
+    <!-- Remove after parent 32 (support for jdk 13) -->
+    <jacoco.version>0.8.4</jacoco.version>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>ognl</groupId>
       <artifactId>ognl</artifactId>
-      <version>3.2.6</version>
+      <version>3.2.10</version>
       <scope>compile</scope>
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>org.javassist</groupId>
       <artifactId>javassist</artifactId>
-      <version>3.22.0-GA</version>
+      <version>3.24.1-GA</version>
       <scope>compile</scope>
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>1.7.25</version>
+      <version>1.7.26</version>
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
-      <version>1.7.25</version>
+      <version>1.7.26</version>
       <optional>true</optional>
     </dependency>
     <dependency>
@@ -176,7 +180,7 @@
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-core</artifactId>
-      <version>2.11.0</version>
+      <version>2.11.2</version>
       <optional>true</optional>
     </dependency>
     <dependency>
@@ -188,39 +192,45 @@
     <dependency>
       <groupId>cglib</groupId>
       <artifactId>cglib</artifactId>
-      <version>3.2.6</version>
+      <version>3.2.10</version>
       <optional>true</optional>
     </dependency>
 
     <!-- Test dependencies -->
     <dependency>
-      <groupId>org.junit.vintage</groupId>
-      <artifactId>junit-vintage-engine</artifactId>
-      <version>${junit-engine.version}</version>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <version>5.5.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
-      <version>2.4.0</version>
+      <version>2.4.1</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
+    <dependency> <!-- 10.15+ need Java 9+ -->
       <groupId>org.apache.derby</groupId>
       <artifactId>derby</artifactId>
-      <version>10.14.1.0</version>
+      <version>10.14.2.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>2.16.0</version>
+      <version>2.25.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-junit-jupiter</artifactId>
+      <version>2.25.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-dbcp2</artifactId>
-      <version>2.2.0</version>
+      <version>2.6.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -231,21 +241,21 @@
     </dependency>
     <dependency>
       <groupId>org.apache.velocity</groupId>
-      <artifactId>velocity</artifactId>
-      <version>1.7</version>
+      <artifactId>velocity-engine-core</artifactId>
+      <version>2.0</version>
       <scope>test</scope>
     </dependency>
     <!-- postgresql driver is required to run the refcursor tests -->
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
-      <version>42.2.1</version>
+      <version>42.2.5</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-      <version>3.9.1</version>
+      <version>3.12.2</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -255,9 +265,15 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>ru.yandex.qatools.embed</groupId>
-      <artifactId>postgresql-embedded</artifactId>
-      <version>2.8</version>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>1.11.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>1.11.2</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -275,7 +291,6 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
-          <excludedGroups>${maven.surefire.excludeGroups}</excludedGroups>
           <argLine>${argLine} -Xmx2048m</argLine>
           <systemProperties>
             <property>
@@ -370,13 +385,19 @@
     </testResources>
   </build>
 
-  <repositories>
-    <!-- Adding for mybatis-parent 31-SNAPSHOT -->
-    <repository>
-      <id>sonatype-oss-snapshots</id>
-      <name>Sonatype OSS Snapshots Repository</name>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-    </repository>
-  </repositories>
+  <profiles>
+    <profile>
+      <!-- Run slow tests only on travis ci, to force run otherwise use -D"env.TRAVIS" -->
+      <id>travis-ci</id>
+      <activation>
+        <property>
+          <name>env.TRAVIS</name>
+        </property>
+      </activation>
+      <properties>
+        <excludedGroups />
+      </properties>
+    </profile>
+  </profiles>
 
 </project>

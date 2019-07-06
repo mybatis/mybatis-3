@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,13 +18,13 @@ package org.apache.ibatis.cache;
 import org.apache.ibatis.cache.decorators.SerializedCache;
 import org.apache.ibatis.cache.decorators.SoftCache;
 import org.apache.ibatis.cache.impl.PerpetualCache;
-import static org.junit.Assert.*;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
-public class SoftCacheTest {
+class SoftCacheTest {
 
   @Test
-  public void shouldDemonstrateObjectsBeingCollectedAsNeeded() throws Exception {
+  void shouldDemonstrateObjectsBeingCollectedAsNeeded() {
     final int N = 3000000;
     SoftCache cache = new SoftCache(new PerpetualCache("default"));
     for (int i = 0; i < N; i++) {
@@ -40,9 +40,8 @@ public class SoftCacheTest {
     assertTrue(cache.getSize() < N);
   }
 
-
   @Test
-  public void shouldDemonstrateCopiesAreEqual() {
+  void shouldDemonstrateCopiesAreEqual() {
     Cache cache = new SoftCache(new PerpetualCache("default"));
     cache = new SerializedCache(cache);
     for (int i = 0; i < 1000; i++) {
@@ -53,7 +52,7 @@ public class SoftCacheTest {
   }
 
   @Test
-  public void shouldRemoveItemOnDemand() {
+  void shouldRemoveItemOnDemand() {
     Cache cache = new SoftCache(new PerpetualCache("default"));
     cache.putObject(0, 0);
     assertNotNull(cache.getObject(0));
@@ -62,7 +61,7 @@ public class SoftCacheTest {
   }
 
   @Test
-  public void shouldFlushAllItemsOnDemand() {
+  void shouldFlushAllItemsOnDemand() {
     Cache cache = new SoftCache(new PerpetualCache("default"));
     for (int i = 0; i < 5; i++) {
       cache.putObject(i, i);

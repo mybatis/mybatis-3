@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -22,14 +22,15 @@ import java.util.Properties;
 
 public class ExampleObjectFactory extends DefaultObjectFactory {
   private Properties properties;
+
   @Override
   public <T> T create(Class<T> type) {
-    return super.<T>create(type);
+    return super.<T> create(type);
   }
 
   @Override
   public <T> T create(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
-    return super.<T>create(type, constructorArgTypes, constructorArgs);
+    return super.<T> create(type, constructorArgTypes, constructorArgs);
   }
 
   @Override

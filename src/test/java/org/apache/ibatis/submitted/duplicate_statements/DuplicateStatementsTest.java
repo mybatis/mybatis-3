@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,17 +24,17 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
-public class DuplicateStatementsTest {
+class DuplicateStatementsTest {
 
   private SqlSessionFactory sqlSessionFactory;
 
-  @Before
-  public void setupDb() throws Exception {
+  @BeforeEach
+  void setupDb() throws Exception {
       // create a SqlSessionFactory
       try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/duplicate_statements/mybatis-config.xml")) {
         sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -46,47 +46,48 @@ public class DuplicateStatementsTest {
   }
 
   @Test
-  public void shouldGetAllUsers() {
+  void shouldGetAllUsers() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<User> users = mapper.getAllUsers();
-      Assert.assertEquals(10, users.size());
+      Assertions.assertEquals(10, users.size());
     }
   }
 
   @Test
-  public void shouldGetFirstFourUsers() {
+  void shouldGetFirstFourUsers() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<User> users = mapper.getAllUsers(new RowBounds(0, 4));
-      Assert.assertEquals(4, users.size());
+      Assertions.assertEquals(4, users.size());
     }
   }
 
   @Test
-  @Ignore("fails currently - issue 507")
-  public void shouldGetAllUsers_Annotated() {
+  @Disabled("fails currently - issue 507")
+  void shouldGetAllUsers_Annotated() {
     sqlSessionFactory.getConfiguration().addMapper(AnnotatedMapper.class);
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       AnnotatedMapper mapper = sqlSession.getMapper(AnnotatedMapper.class);
       List<User> users = mapper.getAllUsers();
-      Assert.assertEquals(10, users.size());
+      Assertions.assertEquals(10, users.size());
     }
   }
 
   @Test
-  @Ignore("fails currently - issue 507")
-  public void shouldGetFirstFourUsers_Annotated() {
+  @Disabled("fails currently - issue 507")
+  void shouldGetFirstFourUsers_Annotated() {
     sqlSessionFactory.getConfiguration().addMapper(AnnotatedMapper.class);
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       AnnotatedMapper mapper = sqlSession.getMapper(AnnotatedMapper.class);
       List<User> users = mapper.getAllUsers(new RowBounds(0, 4));
-      Assert.assertEquals(4, users.size());
+      Assertions.assertEquals(4, users.size());
     }
   }
 
-  @Test(expected=IllegalArgumentException.class)
-  public void shouldFailForDuplicateMethod() {
-    sqlSessionFactory.getConfiguration().addMapper(AnnotatedMapperExtended.class);
+  @Test
+  void shouldFailForDuplicateMethod() {
+    Assertions.assertThrows(IllegalArgumentException.class,
+        () -> sqlSessionFactory.getConfiguration().addMapper(AnnotatedMapperExtended.class));
   }
 }

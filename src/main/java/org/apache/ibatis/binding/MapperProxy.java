@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.Map;
 
 import org.apache.ibatis.reflection.ExceptionUtil;
@@ -48,7 +47,7 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
     try {
       if (Object.class.equals(method.getDeclaringClass())) {
         return method.invoke(this, args);
-      } else if (isDefaultMethod(method)) {
+      } else if (method.isDefault()) {
         return invokeDefaultMethod(proxy, method, args);
       }
     } catch (Throwable t) {
@@ -75,14 +74,5 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
             MethodHandles.Lookup.PRIVATE | MethodHandles.Lookup.PROTECTED
                 | MethodHandles.Lookup.PACKAGE | MethodHandles.Lookup.PUBLIC)
         .unreflectSpecial(method, declaringClass).bindTo(proxy).invokeWithArguments(args);
-  }
-
-  /**
-   * Backport of java.lang.reflect.Method#isDefault()
-   */
-  private boolean isDefaultMethod(Method method) {
-    return (method.getModifiers()
-        & (Modifier.ABSTRACT | Modifier.PUBLIC | Modifier.STATIC)) == Modifier.PUBLIC
-        && method.getDeclaringClass().isInterface();
   }
 }

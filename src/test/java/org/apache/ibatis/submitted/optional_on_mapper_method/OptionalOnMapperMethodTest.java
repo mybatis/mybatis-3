@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,18 +20,14 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.io.Reader;
 import java.util.Optional;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 /**
@@ -40,12 +36,12 @@ import static org.mockito.Mockito.*;
  * @since 3.5.0
  * @author Kazuki Shimizu
  */
-public class OptionalOnMapperMethodTest {
+class OptionalOnMapperMethodTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
-  public static void setUp() throws Exception {
+  @BeforeAll
+  static void setUp() throws Exception {
     // create an SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader(
         "org/apache/ibatis/submitted/optional_on_mapper_method/mybatis-config.xml")) {
@@ -58,17 +54,17 @@ public class OptionalOnMapperMethodTest {
   }
 
   @Test
-  public void returnNotNullOnAnnotation() {
+  void returnNotNullOnAnnotation() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Optional<User> user = mapper.getUserUsingAnnotation(1);
       assertTrue(user.isPresent());
-      assertThat(user.get().getName(), is("User1"));
+      assertEquals("User1", user.get().getName());
     }
   }
 
   @Test
-  public void returnNullOnAnnotation() {
+  void returnNullOnAnnotation() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Optional<User> user = mapper.getUserUsingAnnotation(3);
@@ -77,17 +73,17 @@ public class OptionalOnMapperMethodTest {
   }
 
   @Test
-  public void returnNotNullOnXml() {
+  void returnNotNullOnXml() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Optional<User> user = mapper.getUserUsingXml(2);
       assertTrue(user.isPresent());
-      assertThat(user.get().getName(), is("User2"));
+      assertEquals("User2", user.get().getName());
     }
   }
 
   @Test
-  public void returnNullOnXml() {
+  void returnNullOnXml() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Optional<User> user = mapper.getUserUsingXml(3);
@@ -96,8 +92,8 @@ public class OptionalOnMapperMethodTest {
   }
 
   @Test
-  public void returnOptionalFromSqlSession() {
-    try (SqlSession sqlSession = Mockito.spy(sqlSessionFactory.openSession());) {
+  void returnOptionalFromSqlSession() {
+    try (SqlSession sqlSession = Mockito.spy(sqlSessionFactory.openSession())) {
       User mockUser = new User();
       mockUser.setName("mock user");
       Optional<User> optionalMockUser = Optional.of(mockUser);
@@ -105,7 +101,7 @@ public class OptionalOnMapperMethodTest {
 
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Optional<User> user = mapper.getUserUsingAnnotation(3);
-      assertTrue(user == optionalMockUser);
+      assertSame(optionalMockUser, user);
     }
   }
 

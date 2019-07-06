@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -13,45 +13,45 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.submitted.order_prefix_removed;
-
-import static org.junit.Assert.assertNotNull;
+package org.apache.ibatis.submitted.resolution.cacherefs;
 
 import java.io.Reader;
 
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.apache.ibatis.submitted.resolution.User;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-public class OrderPrefixRemoved {
+class CacheRefsTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
-  public static void initDatabase() throws Exception {
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/order_prefix_removed/ibatisConfig.xml")) {
+  @BeforeAll
+  static void setUp() throws Exception {
+    // create an SqlSessionFactory
+    try (Reader reader = Resources
+      .getResourceAsReader("org/apache/ibatis/submitted/resolution/cacherefs/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
+    // populate in-memory database
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/order_prefix_removed/CreateDB.sql");
+      "org/apache/ibatis/submitted/resolution/CreateDB.sql");
   }
 
   @Test
-  public void testOrderPrefixNotRemoved() {
-    try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.SIMPLE)) {
-      PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
-
-      Person person = personMapper.select(new String("slow"));
-
-      assertNotNull(person);
-      
-      sqlSession.commit();
+  void shouldGetAUser() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      MapperB mapper = sqlSession.getMapper(MapperB.class);
+      User user = mapper.getUser(1);
+      Assertions.assertEquals(Integer.valueOf(1), user.getId());
+      Assertions.assertEquals("User1", user.getName());
     }
   }
+
 }

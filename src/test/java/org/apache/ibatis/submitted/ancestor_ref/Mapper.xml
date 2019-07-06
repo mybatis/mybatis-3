@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -72,7 +72,7 @@
     <association property="blog" resultMap="blogResult" />
     <association property="reputation" resultMap="reputationResult" />
   </resultMap>
-  
+
   <resultMap type="org.apache.ibatis.submitted.ancestor_ref.Reputation"
     id="reputationResult">
     <id property="value" column="reputation" />
@@ -80,8 +80,8 @@
   </resultMap>
 
   <select id="selectBlog" resultMap="blogResult"><![CDATA[
-    select id, title, a.id author_id, a.name author_name, a.reputation author_reputation, 
-      ca.id co_author_id, ca.name co_author_name, ca.reputation co_author_reputation 
+    select id, title, a.id author_id, a.name author_name, a.reputation author_reputation,
+      ca.id co_author_id, ca.name co_author_name, ca.reputation co_author_reputation
     from blog b
     left join author a on a.id = b.author_id
     left join author ca on ca.id = b.co_author_id

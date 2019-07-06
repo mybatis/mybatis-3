@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -38,12 +38,12 @@
 
 	<select id="getParents" resultMap="ParentMap">
 		select
-		p.Id as p_Id, 
-		p.Name as p_Name, 
+		p.Id as p_Id,
+		p.Name as p_Name,
 		p.SurName as p_SurName,
-		c.Id as c_Id, 
-		c.Name as c_Name, 
-		c.SurName as c_SurName, 
+		c.Id as c_Id,
+		c.Name as c_Name,
+		c.SurName as c_SurName,
 		c.Age as c_Age
 		from Parent p
 		left outer join Child c on p.Id = c.ParentId

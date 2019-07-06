@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2018 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@
       /web.xml</pre>
   <p>Remember, these are preferences, not requirements, but others will thank you for using a common directory structure.</p>
   <p>The rest of the examples in this section will assume you're following this directory structure.</p>
-  </subsection>  
+  </subsection>
 
   <subsection name="SqlSessions" id="sqlSessions">
   <p>The primary Java interface for working with MyBatis is the SqlSession. Through this interface you can execute commands, get mappers and manage transactions. We'll talk more about SqlSession itself shortly, but first we have to learn how to acquire an instance of SqlSession. SqlSessions are created by a SqlSessionFactory instance. The SqlSessionFactory contains methods for creating instances of SqlSessions all different ways. The SqlSessionFactory itself is created by the SqlSessionFactoryBuilder that can create the SqlSessonFactory from XML, Annotations or hand coded Java configuration.</p>
@@ -70,7 +70,7 @@
 SqlSessionFactory build(InputStream inputStream, String environment)
 SqlSessionFactory build(InputStream inputStream, Properties properties)
 SqlSessionFactory build(InputStream inputStream, String env, Properties props)
-SqlSessionFactory build(Configuration config)</source>  
+SqlSessionFactory build(Configuration config)</source>
 
   <p>The first four methods are the most common, as they take an InputStream instance that refers to an XML document, or more specifically, the mybatis-config.xml file discussed above. The optional parameters are environment and properties. Environment determines which environment to load, including the datasource and transaction manager. For example:</p>
 
@@ -87,8 +87,8 @@ SqlSessionFactory build(Configuration config)</source>
     <dataSource type="JNDI">
         ...
   </environment>
-</environments>]]></source>  
-  <p>If you call a build method that takes the environment parameter, then MyBatis will use the configuration for that environment. Of course, if you specify an invalid environment, you will receive an error. If you call one of the build methods that does not take the environment parameter, then the default environment is uses (which is specified as default="development" in the example above).</p>  
+</environments>]]></source>
+  <p>If you call a build method that takes the environment parameter, then MyBatis will use the configuration for that environment. Of course, if you specify an invalid environment, you will receive an error. If you call one of the build methods that does not take the environment parameter, then the default environment is used (which is specified as default="development" in the example above).</p>
   <p>If you call a method that takes a properties instance, then MyBatis will load those properties and make them available to your configuration. Those properties can be used in place of most values in the configuration using the syntax:  ${propName}</p>
   <p>Recall that properties can also be referenced from the mybatis-config.xml file, or specified directly within it. Therefore it's important to understand the priority. We mentioned it earlier in this document, but here it is again for easy reference:</p>
 
@@ -101,14 +101,14 @@ SqlSessionFactory build(Configuration config)</source>
   </ul>
   <p>Thus, the highest priority properties are those passed in as a method parameter, followed by resource/url attributes and finally the properties specified in the body of the properties element.</p>
   <hr/>
-  
-  <p>So to summarize, the first four methods are largely the same, but with overrides to allow you to optionally specify the environment and/or properties. Here is an example of building a SqlSessionFactory from an mybatis-config.xml file. </p>  
+
+  <p>So to summarize, the first four methods are largely the same, but with overrides to allow you to optionally specify the environment and/or properties. Here is an example of building a SqlSessionFactory from an mybatis-config.xml file. </p>
 
   <source>String <strong>resource</strong> = "org/mybatis/builder/mybatis-config.xml";
 InputStream <strong>inputStream</strong> = Resources.getResourceAsStream(resource);
 SqlSessionFactoryBuilder <strong>builder</strong> = new SqlSessionFactoryBuilder();
-SqlSessionFactory <strong>factory</strong> = builder.build(inputStream);</source>  
-  
+SqlSessionFactory <strong>factory</strong> = builder.build(inputStream);</source>
+
   <p>Notice that we're making use of the Resources utility class, which lives in the org.apache.ibatis.io package. The Resources class, as its name implies, helps you load resources from the classpath, filesystem or even a web URL. A quick look at the class source code or inspection through your IDE will reveal its fairly obvious set of useful methods. Here's a quick list:</p>
   <source>URL getResourceURL(String resource)
 URL getResourceURL(ClassLoader loader, String resource)
@@ -157,7 +157,7 @@ SqlSessionFactory factory = builder.build(configuration);</source>
 SqlSession openSession(boolean autoCommit)
 SqlSession openSession(Connection connection)
 SqlSession openSession(TransactionIsolationLevel level)
-SqlSession openSession(ExecutorType execType,TransactionIsolationLevel level)
+SqlSession openSession(ExecutorType execType, TransactionIsolationLevel level)
 SqlSession openSession(ExecutorType execType)
 SqlSession openSession(ExecutorType execType, boolean autoCommit)
 SqlSession openSession(ExecutorType execType, Connection connection)
@@ -201,13 +201,6 @@ int insert(String statement, Object parameter)
 int update(String statement, Object parameter)
 int delete(String statement, Object parameter)]]></source>
   <p>The difference between selectOne and selectList is only in that selectOne must return exactly one object or null (none). If any more than one, an exception will be thrown. If you don't' know how many objects are expected, use selectList. If you want to check for the existence of an object, you're better off returning a count (0 or 1). The selectMap is a special case in that it is designed to convert a list of results into a Map based on one of the properties in the resulting objects. Because not all statements require a parameter, these methods are overloaded with versions that do not require the parameter object.</p>
-  <p>A Cursor offers the same results as a List, except it fetches data lazily using an Iterator.</p>
-  <source><![CDATA[try (Cursor<MyEntity> entities = session.selectCursor(statement, param)) {
-   for (MyEntity entity:entities) {
-      // process one entity
-   }
-}]]></source>
-
   <p>The value returned by the insert, update and delete methods indicate the number of rows affected by the statement.</p>
   <source><![CDATA[<T> T selectOne(String statement)
 <E> List<E> selectList(String statement)
@@ -216,7 +209,14 @@ int delete(String statement, Object parameter)]]></source>
 int insert(String statement)
 int update(String statement)
 int delete(String statement)]]></source>
-
+  
+  <p>A Cursor offers the same results as a List, except it fetches data lazily using an Iterator.</p>
+  <source><![CDATA[try (Cursor<MyEntity> entities = session.selectCursor(statement, param)) {
+   for (MyEntity entity:entities) {
+      // process one entity
+   }
+}]]></source>
+  
   <p>Finally, there are three advanced versions of the select methods that allow you to restrict the range of rows to return, or provide custom result handling logic, usually for very large data sets.</p>
   <source><![CDATA[<E> List<E> selectList (String statement, Object parameter, RowBounds rowBounds)
 <T> Cursor<T> selectCursor(String statement, Object parameter, RowBounds rowBounds)
@@ -224,7 +224,7 @@ int delete(String statement)]]></source>
 void select (String statement, Object parameter, ResultHandler<T> handler)
 void select (String statement, Object parameter, RowBounds rowBounds, ResultHandler<T> handler)]]></source>
 
-  <p>The RowBounds parameter causes MyBatis to skip the number of records specified, as well as limit the number of results returned to some number. The RowBounds class has a constructor to take both the offset and limit, and is otherwise immutable.</p> 
+  <p>The RowBounds parameter causes MyBatis to skip the number of records specified, as well as limit the number of results returned to some number. The RowBounds class has a constructor to take both the offset and limit, and is otherwise immutable.</p>
   <source>int offset = 100;
 int limit = 25;
 RowBounds rowBounds = new RowBounds(offset, limit);</source>
@@ -232,16 +232,16 @@ RowBounds rowBounds = new RowBounds(offset, limit);</source>
   <p>Different drivers are able to achieve different levels of efficiency in this regard. For the best performance, use result set types of SCROLL_SENSITIVE or SCROLL_INSENSITIVE (in other words: not FORWARD_ONLY).</p>
   <p>The ResultHandler parameter allows you to handle each row however you like. You can add it to a List, create a Map, Set, or throw each result away and instead keep only rolled up totals of calculations. You can do pretty much anything with the ResultHandler, and it's what MyBatis uses internally itself to build result set lists.</p>
   <p>Since 3.4.6, ResultHandler passed to a CALLABLE statement is used on every REFCURSOR output parameter of the stored procedure if there is any.</p>
-  <p>The interface is very simple.</p>  
+  <p>The interface is very simple.</p>
   <source><![CDATA[package org.apache.ibatis.session;
 public interface ResultHandler<T> {
   void handleResult(ResultContext<? extends T> context);
 }]]></source>
 
   <p>The ResultContext parameter gives you access to the result object itself, a count of the number of result objects created, and a Boolean stop() method that you can use to stop MyBatis from loading any more results.</p>
-  
+
   <p>Using a ResultHandler has two limitations that you should be aware of:</p>
-  
+
   <ul>
   <li>Data got from a method called with a ResultHandler will not be cached.</li>
   <li>When using advanced resultmaps MyBatis will probably require several rows to build an object. If a ResultHandler is used you may be given an object whose associations or collections are not yet filled.</li>
@@ -271,19 +271,7 @@ void rollback(boolean force)</source>
   <h5>Ensuring that SqlSession is Closed</h5>
   <source>void close()</source>
   <p>The most important thing you must ensure is that you close any sessions that you open. The best way to ensure this is to use the following unit of work pattern:</p>
-  <source>SqlSession session = sqlSessionFactory.openSession();
-try {
-    // following 3 lines pseudocode for "doing some work"
-    session.insert(...);
-    session.update(...);
-    session.delete(...);
-    session.commit();
-} finally {
-    session.close();
-}</source>
-  <p>Or, If you are using jdk 1.7+ and MyBatis 3.2+, you can use the try-with-resources statement:</p>
-  <source>
-try (SqlSession session = sqlSessionFactory.openSession()) {
+  <source>try (SqlSession session = sqlSessionFactory.openSession()) {
     // following 3 lines pseudocode for "doing some work"
     session.insert(...);
     session.update(...);
@@ -294,12 +282,12 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
   <source>Configuration getConfiguration()</source>
 
   <h5>Using Mappers</h5>
-  <source><![CDATA[<T> T getMapper(Class<T> type)]]></source>  
+  <source><![CDATA[<T> T getMapper(Class<T> type)]]></source>
   <p>While the various insert, update, delete and select methods above are powerful, they are also very verbose, not type safe and not as helpful to your IDE or unit tests as they could be. We've already seen an example of using Mappers in the Getting Started section above.</p>
   <p>Therefore, a more common way to execute mapped statements is to use Mapper classes. A mapper class is simply an interface with method definitions that match up against the SqlSession methods. The following example class demonstrates some method signatures and how they map to the SqlSession.</p>
   <source><![CDATA[public interface AuthorMapper {
   // (Author) selectOne("selectAuthor", 5);
-  Author selectAuthor(int id); 
+  Author selectAuthor(int id);
   // (List<Author>) selectList("selectAuthors")
   List<Author> selectAuthors();
   // (Map<Integer,Author>) selectMap("selectAuthors", "id")
@@ -312,7 +300,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
   // delete("deleteAuthor", 5)
   int deleteAuthor(int id);
 }]]></source>
-  <p>In a nutshell, each Mapper method signature should match that of the SqlSession method that it's associated to, but without the String parameter ID. Instead, the method name must match the mapped statement ID.</p> 
+  <p>In a nutshell, each Mapper method signature should match that of the SqlSession method that it's associated to, but without the String parameter ID. Instead, the method name must match the mapped statement ID.</p>
   <p>In addition, the return type must match that of the expected result type for single results or an array or collection for multiple results or Cursor. All of the usual types are supported, including: Primitives, Maps, POJOs and JavaBeans.</p>
   <p><span class="label important">NOTE</span> Mapper interfaces do not need to implement any interface or extend any class. As long as the method signature can be used to uniquely identify a corresponding mapped statement.</p>
   <p><span class="label important">NOTE</span> Mapper interfaces can extend other interfaces. Be sure that you have the statements in the appropriate namespace when using XML binding to Mapper interfaces. Also, the only limitation is that you cannot have the same method signature in two interfaces in a hierarchy (a bad idea anyway).</p>
@@ -426,7 +414,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td>A mapping to a single property value of a complex type. Attributes: <code>select</code>, which is the fully
         qualified name of a mapped statement (i.e. mapper method) that can load an instance of the appropriate type,
         <code>fetchType</code>, which supersedes the global configuration parameter <code>lazyLoadingEnabled</code> for this
-        mapping. 
+        mapping.
         <span class="label important">NOTE</span> You will notice that join mapping is not supported via the Annotations API.
         This is due to the limitation in Java Annotations that does not allow for circular references.</td>
       </tr>
@@ -511,11 +499,17 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         a method name that will return the SQL to run at execution time
         (Since 3.4.6, you can specify the <code>CharSequence</code> instead of <code>String</code> as a method return type).
         Upon executing the mapped statement, MyBatis will instantiate the class, and execute the method, as specified by the provider.
-        You can pass objects that passed to arguments of a mapper method, "Mapper interface type" and "Mapper method"
+        You can pass objects that passed to arguments of a mapper method, "Mapper interface type", "Mapper method" and "Database ID"
         via the <code>ProviderContext</code>(available since MyBatis 3.4.5 or later) as method argument.
         (In MyBatis 3.4 or later, it's allow multiple parameters)
-        Attributes: <code>type</code>, <code>method</code>. The <code>type</code> attribute is a class.
-        The <code>method</code> is the name of the method on that class. <span class="label important">NOTE</span>
+        Attributes: <code>value</code>, <code>type</code> and <code>method</code>.
+        The <code>value</code> and <code>type</code> attribute is a class
+        (The <code>type</code> attribute is alias for <code>value</code>, you must be specify either one).
+        The <code>method</code> is the name of the method on that class
+        (Since 3.5.1, you can omit <code>method</code> attribute, the MyBatis will resolve a target method via the
+        <code>ProviderMethodResolver</code> interface.
+        If not resolve by it, the MyBatis use the reserved fallback method that named <code>provideSql</code>).
+        <span class="label important">NOTE</span>
         Following this section is a discussion about the class, which can help build dynamic SQL in a cleaner, easier to read way.</td>
       </tr>
       <tr>
@@ -597,8 +591,8 @@ User getUserById(Integer id);
 
 @Results(id = "companyResults")
 @ConstructorArgs({
-  @Arg(property = "id", column = "cid", id = <strong>true</strong>),
-  @Arg(property = "name", column = "name")
+  @Arg(column = "cid", javaType = Integer.class, id = <strong>true</strong>),
+  @Arg(column = "name", javaType = String.class)
 })
 @Select("select * from company where id = #{id}")
 Company getCompanyById(Integer id);</source>
@@ -648,6 +642,26 @@ class UserSqlBuilder {
     }}.toString();
   }
 }]]></source>
+
+    <p>This example shows usage the default implementation of <code>ProviderMethodResolver</code>(available since MyBatis 3.5.1 or later):</p>
+    <source><![CDATA[@SelectProvider(UserSqlProvider.class)
+List<User> getUsersByName(String name);
+
+// Implements the ProviderMethodResolver on your provider class
+class UserSqlProvider implements ProviderMethodResolver {
+  // In default implementation, it will resolve a method that method name is matched with mapper method
+  public static String getUsersByName(final String name) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      if (name != null) {
+        WHERE("name like #{value} || '%'");
+      }
+      ORDER_BY("id");
+    }}.toString();
+  }
+}]]></source>
+
   </subsection>
 
   </section>

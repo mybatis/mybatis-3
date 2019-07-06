@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,28 +15,28 @@
  */
 package org.apache.ibatis.submitted.duplicate_resource_loaded;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.Reader;
 import java.util.List;
 import java.util.Map;
 
-public class DuplicateResourceTest extends BaseDataTest {
+class DuplicateResourceTest extends BaseDataTest {
 
-  @Before
-  public void setup() throws Exception {
+  @BeforeEach
+  void setup() throws Exception {
     BaseDataTest.createBlogDataSource();
   }
 
   @Test
-  public void shouldDemonstrateDuplicateResourceIssue() throws Exception {
+  void shouldDemonstrateDuplicateResourceIssue() throws Exception {
     final String resource = "org/apache/ibatis/submitted/duplicate_resource_loaded/Config.xml";
     final Reader reader = Resources.getResourceAsReader(resource);
     final SqlSessionFactoryBuilder builder = new SqlSessionFactoryBuilder();
@@ -44,7 +44,7 @@ public class DuplicateResourceTest extends BaseDataTest {
     try (SqlSession sqlSession = factory.openSession()) {
       final Mapper mapper = sqlSession.getMapper(Mapper.class);
       final List<Map<String, Object>> list = mapper.selectAllBlogs();
-      Assert.assertEquals(2,list.size());
+      Assertions.assertEquals(2,list.size());
     }
   }
 }

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,24 +15,27 @@
  */
 package org.apache.ibatis.io;
 
-import org.junit.Assert;
-import org.junit.Test;
+import java.io.IOException;
+import java.lang.reflect.Method;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit test for VFS getInstance method in multi-thread environment
- * 
- * @author: jasonleaster
+ *
+ * @author jasonleaster
  */
-public class VFSTest {
+class VFSTest {
 
   @Test
-  public void getInstanceShouldNotBeNull() throws Exception {
+  void getInstanceShouldNotBeNull() {
     VFS vsf = VFS.getInstance();
-    Assert.assertNotNull(vsf);
+    Assertions.assertNotNull(vsf);
   }
 
   @Test
-  public void getInstanceShouldNotBeNullInMultiThreadEnv() throws InterruptedException {
+  void getInstanceShouldNotBeNullInMultiThreadEnv() throws InterruptedException {
     final int threadCount = 3;
 
     Thread[] threads = new Thread[threadCount];
@@ -55,8 +58,42 @@ public class VFSTest {
 
     // All caller got must be the same instance
     for (int i = 0; i < threadCount - 1; i++) {
-      Assert.assertEquals(procedures[i].instanceGot, procedures[i + 1].instanceGot);
+      Assertions.assertEquals(procedures[i].instanceGot, procedures[i + 1].instanceGot);
     }
+  }
+
+  @Test
+  void getExistMethod() {
+    Method method = VFS.getMethod(VFS.class, "list", String.class);
+    Assertions.assertNotNull(method);
+  }
+
+  @Test
+  void getNotExistMethod() {
+    Method method = VFS.getMethod(VFS.class, "listXxx", String.class);
+    Assertions.assertNull(method);
+  }
+
+  @Test
+  void invoke() throws IOException, NoSuchMethodException {
+    VFS vfs = VFS.invoke(VFS.class.getMethod("getInstance"), VFS.class);
+    Assertions.assertEquals(vfs, VFS.getInstance());
+
+    Assertions.assertThrows(RuntimeException.class, () -> {
+      //java.lang.IllegalArgumentException: wrong number of arguments
+      VFS.invoke(VFS.class.getMethod("getInstance"), VFS.class, "unnecessaryArgument");
+    });
+
+    Assertions.assertThrows(IOException.class, () -> {
+      //InvocationTargetException.getTargetException -> IOException
+      VFS.invoke(Resources.class.getMethod("getResourceAsProperties", String.class), Resources.class, "invalidResource");
+    });
+
+    Assertions.assertThrows(RuntimeException.class, () -> {
+      //Other InvocationTargetException
+      VFS.invoke(Integer.class.getMethod("valueOf", String.class), Resources.class, "InvalidIntegerNumber");
+    });
+
   }
 
   private class InstanceGetterProcedure implements Runnable {

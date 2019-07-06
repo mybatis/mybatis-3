@@ -35,20 +35,20 @@ public class FloatTypeHandler extends BaseTypeHandler<Float> {
   public Float getNullableResult(ResultSet rs, String columnName)
       throws SQLException {
     float result = rs.getFloat(columnName);
-    return (result == 0 && rs.wasNull()) ? null : result;
+    return result == 0 && rs.wasNull() ? null : result;
   }
 
   @Override
   public Float getNullableResult(ResultSet rs, int columnIndex)
       throws SQLException {
     float result = rs.getFloat(columnIndex);
-    return (result == 0 && rs.wasNull()) ? null : result;
+    return result == 0 && rs.wasNull() ? null : result;
   }
 
   @Override
   public Float getNullableResult(CallableStatement cs, int columnIndex)
       throws SQLException {
     float result = cs.getFloat(columnIndex);
-    return (result == 0 && cs.wasNull()) ? null : result;
+    return result == 0 && cs.wasNull() ? null : result;
   }
 }

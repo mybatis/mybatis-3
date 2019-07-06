@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.ReflectPermission;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -48,7 +49,7 @@ public class Reflector {
 
   private final Class<?> type;
   private final String[] readablePropertyNames;
-  private final String[] writeablePropertyNames;
+  private final String[] writablePropertyNames;
   private final Map<String, Invoker> setMethods = new HashMap<>();
   private final Map<String, Invoker> getMethods = new HashMap<>();
   private final Map<String, Class<?>> setTypes = new HashMap<>();
@@ -63,48 +64,27 @@ public class Reflector {
     addGetMethods(clazz);
     addSetMethods(clazz);
     addFields(clazz);
-    readablePropertyNames = getMethods.keySet().toArray(new String[getMethods.keySet().size()]);
-    writeablePropertyNames = setMethods.keySet().toArray(new String[setMethods.keySet().size()]);
+    readablePropertyNames = getMethods.keySet().toArray(new String[0]);
+    writablePropertyNames = setMethods.keySet().toArray(new String[0]);
     for (String propName : readablePropertyNames) {
       caseInsensitivePropertyMap.put(propName.toUpperCase(Locale.ENGLISH), propName);
     }
-    for (String propName : writeablePropertyNames) {
+    for (String propName : writablePropertyNames) {
       caseInsensitivePropertyMap.put(propName.toUpperCase(Locale.ENGLISH), propName);
     }
   }
 
   private void addDefaultConstructor(Class<?> clazz) {
-    Constructor<?>[] consts = clazz.getDeclaredConstructors();
-    for (Constructor<?> constructor : consts) {
-      if (constructor.getParameterTypes().length == 0) {
-        if (canControlMemberAccessible()) {
-          try {
-            constructor.setAccessible(true);
-          } catch (Exception e) {
-            // Ignored. This is only a final precaution, nothing we can do.
-          }
-        }
-        if (constructor.isAccessible()) {
-          this.defaultConstructor = constructor;
-        }
-      }
-    }
+    Constructor<?>[] constructors = clazz.getDeclaredConstructors();
+    Arrays.stream(constructors).filter(constructor -> constructor.getParameterTypes().length == 0)
+      .findAny().ifPresent(constructor -> this.defaultConstructor = constructor);
   }
 
-  private void addGetMethods(Class<?> cls) {
+  private void addGetMethods(Class<?> clazz) {
     Map<String, List<Method>> conflictingGetters = new HashMap<>();
-    Method[] methods = getClassMethods(cls);
-    for (Method method : methods) {
-      if (method.getParameterTypes().length > 0) {
-        continue;
-      }
-      String name = method.getName();
-      if ((name.startsWith("get") && name.length() > 3)
-          || (name.startsWith("is") && name.length() > 2)) {
-        name = PropertyNamer.methodToProperty(name);
-        addMethodConflict(conflictingGetters, name, method);
-      }
-    }
+    Method[] methods = getClassMethods(clazz);
+    Arrays.stream(methods).filter(m -> m.getParameterTypes().length == 0 && PropertyNamer.isGetter(m.getName()))
+      .forEach(m -> addMethodConflict(conflictingGetters, PropertyNamer.methodToProperty(m.getName()), m));
     resolveGetterConflicts(conflictingGetters);
   }
 
@@ -151,18 +131,11 @@ public class Reflector {
     }
   }
 
-  private void addSetMethods(Class<?> cls) {
+  private void addSetMethods(Class<?> clazz) {
     Map<String, List<Method>> conflictingSetters = new HashMap<>();
-    Method[] methods = getClassMethods(cls);
-    for (Method method : methods) {
-      String name = method.getName();
-      if (name.startsWith("set") && name.length() > 3) {
-        if (method.getParameterTypes().length == 1) {
-          name = PropertyNamer.methodToProperty(name);
-          addMethodConflict(conflictingSetters, name, method);
-        }
-      }
-    }
+    Method[] methods = getClassMethods(clazz);
+    Arrays.stream(methods).filter(m -> m.getParameterTypes().length == 1 && PropertyNamer.isSetter(m.getName()))
+      .forEach(m -> addMethodConflict(conflictingSetters, PropertyNamer.methodToProperty(m.getName()), m));
     resolveSetterConflicts(conflictingSetters);
   }
 
@@ -178,8 +151,7 @@ public class Reflector {
       Method match = null;
       ReflectionException exception = null;
       for (Method setter : setters) {
-        Class<?> paramType = setter.getParameterTypes()[0];
-        if (paramType.equals(getterType)) {
+        if (setter.getParameterTypes()[0].equals(getterType)) {
           // should be the best match
           match = setter;
           break;
@@ -238,7 +210,7 @@ public class Reflector {
         result = Array.newInstance((Class<?>) componentType, 0).getClass();
       } else {
         Class<?> componentClass = typeToClass(componentType);
-        result = Array.newInstance((Class<?>) componentClass, 0).getClass();
+        result = Array.newInstance(componentClass, 0).getClass();
       }
     }
     if (result == null) {
@@ -250,26 +222,17 @@ public class Reflector {
   private void addFields(Class<?> clazz) {
     Field[] fields = clazz.getDeclaredFields();
     for (Field field : fields) {
-      if (canControlMemberAccessible()) {
-        try {
-          field.setAccessible(true);
-        } catch (Exception e) {
-          // Ignored. This is only a final precaution, nothing we can do.
+      if (!setMethods.containsKey(field.getName())) {
+        // issue #379 - removed the check for final because JDK 1.5 allows
+        // modification of final fields through reflection (JSR-133). (JGB)
+        // pr #16 - final static can only be set by the classloader
+        int modifiers = field.getModifiers();
+        if (!(Modifier.isFinal(modifiers) && Modifier.isStatic(modifiers))) {
+          addSetField(field);
         }
       }
-      if (field.isAccessible()) {
-        if (!setMethods.containsKey(field.getName())) {
-          // issue #379 - removed the check for final because JDK 1.5 allows
-          // modification of final fields through reflection (JSR-133). (JGB)
-          // pr #16 - final static can only be set by the classloader
-          int modifiers = field.getModifiers();
-          if (!(Modifier.isFinal(modifiers) && Modifier.isStatic(modifiers))) {
-            addSetField(field);
-          }
-        }
-        if (!getMethods.containsKey(field.getName())) {
-          addGetField(field);
-        }
+      if (!getMethods.containsKey(field.getName())) {
+        addGetField(field);
       }
     }
     if (clazz.getSuperclass() != null) {
@@ -300,15 +263,15 @@ public class Reflector {
   /**
    * This method returns an array containing all methods
    * declared in this class and any superclass.
-   * We use this method, instead of the simpler Class.getMethods(),
+   * We use this method, instead of the simpler <code>Class.getMethods()</code>,
    * because we want to look for private methods as well.
    *
-   * @param cls The class
+   * @param clazz The class
    * @return An array containing all methods in this class
    */
-  private Method[] getClassMethods(Class<?> cls) {
+  private Method[] getClassMethods(Class<?> clazz) {
     Map<String, Method> uniqueMethods = new HashMap<>();
-    Class<?> currentClass = cls;
+    Class<?> currentClass = clazz;
     while (currentClass != null && currentClass != Object.class) {
       addUniqueMethods(uniqueMethods, currentClass.getDeclaredMethods());
 
@@ -324,7 +287,7 @@ public class Reflector {
 
     Collection<Method> methods = uniqueMethods.values();
 
-    return methods.toArray(new Method[methods.size()]);
+    return methods.toArray(new Method[0]);
   }
 
   private void addUniqueMethods(Map<String, Method> uniqueMethods, Method[] methods) {
@@ -335,14 +298,6 @@ public class Reflector {
         // if it is known, then an extended class must have
         // overridden a method
         if (!uniqueMethods.containsKey(signature)) {
-          if (canControlMemberAccessible()) {
-            try {
-              currentMethod.setAccessible(true);
-            } catch (Exception e) {
-              // Ignored. This is only a final precaution, nothing we can do.
-            }
-          }
-
           uniqueMethods.put(signature, currentMethod);
         }
       }
@@ -358,12 +313,7 @@ public class Reflector {
     sb.append(method.getName());
     Class<?>[] parameters = method.getParameterTypes();
     for (int i = 0; i < parameters.length; i++) {
-      if (i == 0) {
-        sb.append(':');
-      } else {
-        sb.append(',');
-      }
-      sb.append(parameters[i].getName());
+      sb.append(i == 0 ? ':' : ',').append(parameters[i].getName());
     }
     return sb.toString();
   }
@@ -387,7 +337,7 @@ public class Reflector {
   }
 
   /**
-   * Gets the name of the class the instance provides information for
+   * Gets the name of the class the instance provides information for.
    *
    * @return The class name
    */
@@ -424,7 +374,7 @@ public class Reflector {
   }
 
   /**
-   * Gets the type for a property setter
+   * Gets the type for a property setter.
    *
    * @param propertyName - the name of the property
    * @return The Class of the property setter
@@ -438,7 +388,7 @@ public class Reflector {
   }
 
   /**
-   * Gets the type for a property getter
+   * Gets the type for a property getter.
    *
    * @param propertyName - the name of the property
    * @return The Class of the property getter
@@ -452,7 +402,7 @@ public class Reflector {
   }
 
   /**
-   * Gets an array of the readable properties for an object
+   * Gets an array of the readable properties for an object.
    *
    * @return The array
    */
@@ -461,16 +411,16 @@ public class Reflector {
   }
 
   /**
-   * Gets an array of the writable properties for an object
+   * Gets an array of the writable properties for an object.
    *
    * @return The array
    */
   public String[] getSetablePropertyNames() {
-    return writeablePropertyNames;
+    return writablePropertyNames;
   }
 
   /**
-   * Check to see if a class has a writable property by name
+   * Check to see if a class has a writable property by name.
    *
    * @param propertyName - the name of the property to check
    * @return True if the object has a writable property by the name
@@ -480,7 +430,7 @@ public class Reflector {
   }
 
   /**
-   * Check to see if a class has a readable property by name
+   * Check to see if a class has a readable property by name.
    *
    * @param propertyName - the name of the property to check
    * @return True if the object has a readable property by the name

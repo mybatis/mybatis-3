@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2017 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -28,14 +28,14 @@
   <body>
     <section name="SQL Builder 클래스">
       <subsection name="문제점">
-        <p>자바코드에서 SQL을 작성하는 작업은 자바 개발자를 가장 힘들게 하는 것중 하나이다. 
-		대개는 동적 SQL을 작성해야 하지만 종종 파일이나 저장프로시저에 작성해야 할수도 있다. 
-		이미 본것처럼 마이바티스는 XML매핑 기능으로 동적 SQL을 처리하는 강력한 기능을 제공한다. 
-		하지만 종종 자바 코드를 사용해서 SQL구문을 만들어야 할수도 있다. 
-		마이바티스는 이런 경우를 위한 기능도 제공한다. 
-		더하기 기호나 따옴표, 개행처리, 포매팅 그리고 콤마나 문자열을 합치는 등의 다양한 조건을 처리하지 않아도 되도록 해준다. 
-		정말 자바코드에서 SQL을 동적으로 만드는 것은 악몽과 같다. 
-		예를들어보자. 
+        <p>자바코드에서 SQL을 작성하는 작업은 자바 개발자를 가장 힘들게 하는 것중 하나이다.
+		대개는 동적 SQL을 작성해야 하지만 종종 파일이나 저장프로시저에 작성해야 할수도 있다.
+		이미 본것처럼 마이바티스는 XML매핑 기능으로 동적 SQL을 처리하는 강력한 기능을 제공한다.
+		하지만 종종 자바 코드를 사용해서 SQL구문을 만들어야 할수도 있다.
+		마이바티스는 이런 경우를 위한 기능도 제공한다.
+		더하기 기호나 따옴표, 개행처리, 포매팅 그리고 콤마나 문자열을 합치는 등의 다양한 조건을 처리하지 않아도 되도록 해준다.
+		정말 자바코드에서 SQL을 동적으로 만드는 것은 악몽과 같다.
+		예를들어보자.
         </p>
 
         <source><![CDATA[
@@ -53,9 +53,9 @@ String sql = "SELECT P.ID, P.USERNAME, P.PASSWORD, P.FULL_NAME, "
 ]]></source>
       </subsection>
       <subsection name="해결방법">
-      <p>마이바티스 3은 이런 문제를 해결하기 위해 편리한 클래스를 제공한다. 
-	  SQL클래스를 사용해서 인스턴스를 만들고 SQL구문을 만드는 메소드를 호출하자. 
-	  위 문제가 되는 예제를 SQL클래스를 사용해서 재작성하면 다음과 같다. 
+      <p>마이바티스 3은 이런 문제를 해결하기 위해 편리한 클래스를 제공한다.
+	  SQL클래스를 사용해서 인스턴스를 만들고 SQL구문을 만드는 메소드를 호출하자.
+	  위 문제가 되는 예제를 SQL클래스를 사용해서 재작성하면 다음과 같다.
       </p>
 
       <source><![CDATA[
@@ -81,10 +81,10 @@ private String selectPersonSql() {
 }
 ]]></source>
 
-      <p>이 예제가 특별한게 뭘까? 자 조금더 자세히 보자. 
-	  "AND" 키워드가 중복으로 나오는 것이나 "WHERE"과 "AND"를 선택하는데 걱정할 필요가 없다. 
-	  SQL클래스는 "WHERE"가 필요한 위치를 이해하고 처리한다. 
-	  그리고 "AND"를 사용하고 문자열을 합쳐야 하는 부분에 대해서도 알고 처리한다. 
+      <p>이 예제가 특별한게 뭘까? 자 조금더 자세히 보자.
+	  "AND" 키워드가 중복으로 나오는 것이나 "WHERE"과 "AND"를 선택하는데 걱정할 필요가 없다.
+	  SQL클래스는 "WHERE"가 필요한 위치를 이해하고 처리한다.
+	  그리고 "AND"를 사용하고 문자열을 합쳐야 하는 부분에 대해서도 알고 처리한다.
         </p>
 
       </subsection>
@@ -175,7 +175,7 @@ public String updatePersonSql() {
               </td>
               <td><code>SELECT</code>절로 시작하거나 덧붙이기.
 			  한번 이상 호출할 수 있고 파라미터는 <code>SELECT</code>절에 덧붙일것이다.
-			  파라미터는 칼럼과 별칭의 목록을 콤마를 구분자로 나열하지만 드라이버에 따라 처리가 안될수도 있다. 
+			  파라미터는 칼럼과 별칭의 목록을 콤마를 구분자로 나열하지만 드라이버에 따라 처리가 안될수도 있다.
               </td>
             </tr>
             <tr>
@@ -190,9 +190,9 @@ public String updatePersonSql() {
                 </ul>
               </td>
               <td><code>SELECT</code>절로 시작하거나 덧붙이기.
-			  생성된 쿼리에 <code>DISTINCT</code>를 추가한다. 
+			  생성된 쿼리에 <code>DISTINCT</code>를 추가한다.
 			  한번 이상 호출할 수 있고 파라미터는 <code>SELECT</code>절에 덧붙일것이다.
-			  파라미터는 칼럼과 별칭의 목록을 콤마를 구분자로 나열하지만 드라이버에 따라 처리가 안될수도 있다. 
+			  파라미터는 칼럼과 별칭의 목록을 콤마를 구분자로 나열하지만 드라이버에 따라 처리가 안될수도 있다.
               </td>
             </tr>
             <tr>
@@ -208,7 +208,7 @@ public String updatePersonSql() {
               </td>
               <td><code>FROM</code>절로 시작하거나 덧붙이기.
 			  한번 이상 호출할 수 있고 파라미터는 <code>FROM</code>절에 덧붙일것이다.
-			  파라미터는 테이블명과 별칭이지만 드라이버에 따라 처리가 안될수도 있다. 
+			  파라미터는 테이블명과 별칭이지만 드라이버에 따라 처리가 안될수도 있다.
               </td>
             </tr>
             <tr>
@@ -241,8 +241,8 @@ public String updatePersonSql() {
                 </ul>
               </td>
               <td>새로운 적절한 타입의 <code>JOIN</code>절을 추가.
-			  타입은 호출하는 메소드에 따라 다르다. 
-			  파라미터는 조인을 구성하는 칼럼과 조건이다. 
+			  타입은 호출하는 메소드에 따라 다르다.
+			  파라미터는 조인을 구성하는 칼럼과 조건이다.
               </td>
             </tr>
             <tr>
@@ -256,27 +256,27 @@ public String updatePersonSql() {
                   </li>
                 </ul>
               </td>
-              <td>새로운 <code>WHERE</code>절과 <code>AND</code>로 합친 조건을 덧붙인다. 
-			  여러번 호출할 수 있고 <code>AND</code>를 사용할때마다 새로운 조건을 합친다. 
-			  <code>OR</code>로 분리하려면 <code>OR()</code>를 사용하자. 
+              <td>새로운 <code>WHERE</code>절과 <code>AND</code>로 합친 조건을 덧붙인다.
+			  여러번 호출할 수 있고 <code>AND</code>를 사용할때마다 새로운 조건을 합친다.
+			  <code>OR</code>로 분리하려면 <code>OR()</code>를 사용하자.
               </td>
             </tr>
             <tr>
               <td>
                 <code>OR()</code>
               </td>
-              <td><code>OR</code>를 사용해서 <code>WHERE</code>조건절을 분리한다. 
-			  여러번 호출할 수 있지만 한개의 로우에 여러번 호출할 경우 에러를 가진 <code>SQL</code>을 만들수도 있다. 
+              <td><code>OR</code>를 사용해서 <code>WHERE</code>조건절을 분리한다.
+			  여러번 호출할 수 있지만 한개의 로우에 여러번 호출할 경우 에러를 가진 <code>SQL</code>을 만들수도 있다.
               </td>
             </tr>
             <tr>
               <td>
                 <code>AND()</code>
               </td>
-              <td><code>AND</code>를 가진 <code>WHERE</code>절을 분리한다. 
-			  여러번 호출할 수 있지만 여러번 호출할 경우 에러를 가진 <code>SQL</code>을 만들수도 있다. 
-			  <code>WHERE</code>와 <code>HAVING</code> 두가지는 <code>AND</code>를 자동으로 붙이기 때문에 
-			  흔하게 사용하지 않고 필요할때만 사용한다. 
+              <td><code>AND</code>를 가진 <code>WHERE</code>절을 분리한다.
+			  여러번 호출할 수 있지만 여러번 호출할 경우 에러를 가진 <code>SQL</code>을 만들수도 있다.
+			  <code>WHERE</code>와 <code>HAVING</code> 두가지는 <code>AND</code>를 자동으로 붙이기 때문에
+			  흔하게 사용하지 않고 필요할때만 사용한다.
               </td>
             </tr>
             <tr>
@@ -290,8 +290,8 @@ public String updatePersonSql() {
                   </li>
                 </ul>
               </td>
-              <td>새로운 <code>GROUP BY</code>절을 콤마를 더해서 덧붙인다. 
-			  여러번 호출할 수 있고 개별 조건을 콤마를 붙여서 합칠 수 있다. 
+              <td>새로운 <code>GROUP BY</code>절을 콤마를 더해서 덧붙인다.
+			  여러번 호출할 수 있고 개별 조건을 콤마를 붙여서 합칠 수 있다.
               </td>
             </tr>
             <tr>
@@ -305,9 +305,9 @@ public String updatePersonSql() {
                   </li>
                 </ul>
               </td>
-              <td>새로운 <code>HAVING</code>절을 AND를 더해서 덧붙인다. 
-			  여러번 호출할 수 있고 개별 조건을 <code>AND</code>를 붙여서 합칠 수 있다. 
-			  <code>OR</code>로 분리하기 위해서는 <code>OR</code>를 사용하자. 
+              <td>새로운 <code>HAVING</code>절을 AND를 더해서 덧붙인다.
+			  여러번 호출할 수 있고 개별 조건을 <code>AND</code>를 붙여서 합칠 수 있다.
+			  <code>OR</code>로 분리하기 위해서는 <code>OR</code>를 사용하자.
               </td>
             </tr>
             <tr>
@@ -321,23 +321,91 @@ public String updatePersonSql() {
                   </li>
                 </ul>
               </td>
-              <td>새로운 <code>ORDER BY</code>절을 콤마를 더해서 덧붙인다. 
-			  여러번 호출할 수 있고 개별조건을 콤마를 붙여서 합칠수 있다. 
+              <td>새로운 <code>ORDER BY</code>절을 콤마를 더해서 덧붙인다.
+			  여러번 호출할 수 있고 개별조건을 콤마를 붙여서 합칠수 있다.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <ul>
+                  <li>
+                    <code>LIMIT(String)</code>
+                  </li>
+                  <li>
+                    <code>LIMIT(int)</code>
+                  </li>
+                </ul>
+              </td>
+              <td>
+                Appends a <code>LIMIT</code> clause.
+                This method valid when use together with SELECT(), UPDATE() and DELETE().
+                And this method is designed to use together with OFFSET() when use SELECT(). (Available since 3.5.2)
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <ul>
+                  <li>
+                    <code>OFFSET(String)</code>
+                  </li>
+                  <li>
+                    <code>OFFSET(long)</code>
+                  </li>
+                </ul>
+              </td>
+              <td>
+                Appends a <code>OFFSET</code> clause.
+                This method valid when use together with SELECT().
+                And this method is designed to use together with LIMIT(). (Available since 3.5.2)
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <ul>
+                  <li>
+                    <code>OFFSET_ROWS(String)</code>
+                  </li>
+                  <li>
+                    <code>OFFSET_ROWS(long)</code>
+                  </li>
+                </ul>
+              </td>
+              <td>
+                Appends a <code>OFFSET n ROWS</code> clause.
+                This method valid when use together with SELECT().
+                And this method is designed to use together with FETCH_FIRST_ROWS_ONLY(). (Available since 3.5.2)
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <ul>
+                  <li>
+                    <code>FETCH_FIRST_ROWS_ONLY(String)</code>
+                  </li>
+                  <li>
+                    <code>FETCH_FIRST_ROWS_ONLY(int)</code>
+                  </li>
+                </ul>
+              </td>
+              <td>
+                Appends a <code>FETCH FIRST n ROWS ONLY</code> clause.
+                This method valid when use together with SELECT().
+                And this method is designed to use together with OFFSET_ROWS(). (Available since 3.5.2)
               </td>
             </tr>
             <tr>
               <td>
                 <code>DELETE_FROM(String)</code>
               </td>
-              <td>delete구문을 시작하고 삭제할 테이블을 명시한다. 
-			  대개는 WHERE구문이 뒤에 붙여서 삭제한 대상 조건을 명시한다. 
+              <td>delete구문을 시작하고 삭제할 테이블을 명시한다.
+			  대개는 WHERE구문이 뒤에 붙여서 삭제한 대상 조건을 명시한다.
               </td>
             </tr>
             <tr>
               <td>
                 <code>INSERT_INTO(String)</code>
               </td>
-              <td>insert구문을 시작하고 입력한 테이블을 명시한다. 
+              <td>insert구문을 시작하고 입력한 테이블을 명시한다.
 			  VALUES() or INTO_COLUMNS() and INTO_VALUES() 메소드 호출은 여러번 해서 입력한 칼럼과 값을 명시한다.
               </td>
             </tr>
@@ -358,16 +426,16 @@ public String updatePersonSql() {
               <td>
                 <code>UPDATE(String)</code>
               </td>
-              <td>update구문을 시작하고 update수정할 테이블을 명시한다. 
-			  수정할 칼럼과 값을 명시하기 위해 SET()메소드 호출을 여러번 할수 있고 대개 수정할 대상 데이터를 한정하기 위해 WHERE()메소드도 호출한다. 
+              <td>update구문을 시작하고 update수정할 테이블을 명시한다.
+			  수정할 칼럼과 값을 명시하기 위해 SET()메소드 호출을 여러번 할수 있고 대개 수정할 대상 데이터를 한정하기 위해 WHERE()메소드도 호출한다.
               </td>
             </tr>
             <tr>
               <td>
                 <code>VALUES(String, String)</code>
               </td>
-              <td>insert구문에 덧붙인다. 
-			  첫번째 파라미터는 입력한 칼럼이고 두번째 파라미터는 입력할 값이다. 
+              <td>insert구문에 덧붙인다.
+			  첫번째 파라미터는 입력한 칼럼이고 두번째 파라미터는 입력할 값이다.
               </td>
             </tr>
             <tr>
@@ -388,8 +456,24 @@ public String updatePersonSql() {
                 반드시 INTO_COLUMNS()와 함께 호출되어야 한다.
               </td>
             </tr>
+            <tr>
+              <td>
+                <code>ADD_ROW()</code>
+              </td>
+              <td>
+                Add new row for bulk insert. (Available since 3.5.2)
+              </td>
+            </tr>
           </tbody>
         </table>
+
+        <p>
+          <span class="label important">NOTE</span>
+          It is important to note that SQL class writes <code>LIMIT</code>, <code>OFFSET</code>, <code>OFFSET n ROWS</code> and <code>FETCH FIRST n ROWS ONLY</code> clauses into the generated statement as is.
+          In other words, the library does not attempt to normalize those values for databases that don’t support these clauses directly.
+          Therefore, it is very important for users to understand whether or not the target database supports these clauses.
+          If the target database does not support these clauses, then it is likely that using this support will create SQL that has runtime errors.
+        </p>
 
         <p>3.4.2 버전부터, variable-length 매개변수를 아래와 같이 사용할 수 있습니다.</p>
 
@@ -421,17 +505,59 @@ public String updatePersonSql() {
 }
 ]]></source>
 
+        <p>Since version 3.5.2, you can create insert statement for bulk insert as follow:</p>
+
+        <source><![CDATA[
+public String insertPersonsSql() {
+  // INSERT INTO PERSON (ID, FULL_NAME)
+  //     VALUES (#{mainPerson.id}, #{mainPerson.fullName}) , (#{subPerson.id}, #{subPerson.fullName})
+  return new SQL()
+    .INSERT_INTO("PERSON")
+    .INTO_COLUMNS("ID", "FULL_NAME")
+    .INTO_VALUES("#{mainPerson.id}", "#{mainPerson.fullName}")
+    .ADD_ROW()
+    .INTO_VALUES("#{subPerson.id}", "#{subPerson.fullName}")
+    .toString();
+}
+]]></source>
+
+        <p>Since version 3.5.2, you can create select statement for limiting search result rows clause as follow:</p>
+
+        <source><![CDATA[
+public String selectPersonsWithOffsetLimitSql() {
+  // SELECT id, name FROM PERSON
+  //     LIMIT #{limit} OFFSET #{offset}
+  return new SQL()
+    .SELECT("id", "name")
+    .FROM("PERSON")
+    .LIMIT("#{limit}")
+    .OFFSET("#{offset}")
+    .toString();
+}
+
+public String selectPersonsWithFetchFirstSql() {
+  // SELECT id, name FROM PERSON
+  //     OFFSET #{offset} ROWS FETCH FIRST #{limit} ROWS ONLY
+  return new SQL()
+    .SELECT("id", "name")
+    .FROM("PERSON")
+    .OFFSET_ROWS("#{offset}")
+    .FETCH_FIRST_ROWS_ONLY("#{limit}")
+    .toString();
+}
+]]></source>
+
       </subsection>
 
       <subsection name="SqlBuilder 와 SelectBuilder (향후 제거예정)">
-        <p>3.2버전 이전에는 다른 방법을 사용했다. 
-		자바 DSL을 다루기 힘든 언어의 제한점을 가리기 위해 ThreadLocal변수를 사용했다. 
-		하지만 이 방법은 이제 사용하지 않길 바란다. 
-		최근에는 빌더 타입의 패턴과 익명 내부 클래스를 사용하는 추세이다. 
-		그러므로 SelectBuilder 와 SqlBuilder는 향후 제거할 예정이다. 
+        <p>3.2버전 이전에는 다른 방법을 사용했다.
+		자바 DSL을 다루기 힘든 언어의 제한점을 가리기 위해 ThreadLocal변수를 사용했다.
+		하지만 이 방법은 이제 사용하지 않길 바란다.
+		최근에는 빌더 타입의 패턴과 익명 내부 클래스를 사용하는 추세이다.
+		그러므로 SelectBuilder 와 SqlBuilder는 향후 제거할 예정이다.
         </p>
         <p>
-        다음에 나열된 메소드는 SqlBuilder 와 SelectBuilder클래스에서만 사용할 수 있다. 
+        다음에 나열된 메소드는 SqlBuilder 와 SelectBuilder클래스에서만 사용할 수 있다.
         </p>
         <table>
         <thead>
@@ -447,9 +573,9 @@ public String updatePersonSql() {
             /
             <code>RESET()</code>
           </td>
-          <td>이 메소드는 SelectBuilder클래스의 ThreadLocal상태를 지우고 새로운 구문을 만들 준비를 한다. 
-		  <code>BEGIN()</code>은 새로운 구문을 시작할때 사용하는게 좋다. 
-		  <code>RESET()</code>은 처리중인 구문의 상태를 몇가지 사유로 지워야 할때 사용하는게 좋다. 
+          <td>이 메소드는 SelectBuilder클래스의 ThreadLocal상태를 지우고 새로운 구문을 만들 준비를 한다.
+		  <code>BEGIN()</code>은 새로운 구문을 시작할때 사용하는게 좋다.
+		  <code>RESET()</code>은 처리중인 구문의 상태를 몇가지 사유로 지워야 할때 사용하는게 좋다.
 		  (아마도 몇가지 사유로 완전히 다른 구문을 실행해야 할때 사용할것이다.)
           </td>
         </tr>
@@ -457,17 +583,17 @@ public String updatePersonSql() {
           <td>
             <code>SQL()</code>
           </td>
-          <td>생성된 <code>SQL()</code>를 리턴하고 <code>SelectBuilder</code>상태를 재설정(마치 <code>BEGIN()</code>이나 <code>RESET()</code>을 호출한것처럼)한다. 
-		  이 메소드는 한번만 호출할 수 있다. 
+          <td>생성된 <code>SQL()</code>를 리턴하고 <code>SelectBuilder</code>상태를 재설정(마치 <code>BEGIN()</code>이나 <code>RESET()</code>을 호출한것처럼)한다.
+		  이 메소드는 한번만 호출할 수 있다.
           </td>
         </tr>
         </tbody>
         </table>
 
         <p>
-		SelectBuilder와 SqlBuilder클래스가 신기하지는 않지만 이 클래스가 동작하는 방식을 아는게 중요하다. 
-		SelectBuilder와 SqlBuilder는 문법을 명확히 처리하기 위해 Static Imports와 ThreadLocal변수의 조합을 사용한다. 
-		이 두가지 클래스를 사용하기 위해 다음처럼 정적인 방법으로 import할 필요가 있다. 
+		SelectBuilder와 SqlBuilder클래스가 신기하지는 않지만 이 클래스가 동작하는 방식을 아는게 중요하다.
+		SelectBuilder와 SqlBuilder는 문법을 명확히 처리하기 위해 Static Imports와 ThreadLocal변수의 조합을 사용한다.
+		이 두가지 클래스를 사용하기 위해 다음처럼 정적인 방법으로 import할 필요가 있다.
         </p>
 
         <source>import static org.apache.ibatis.jdbc.SelectBuilder.*;</source>

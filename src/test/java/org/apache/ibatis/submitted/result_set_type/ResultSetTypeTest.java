@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -22,20 +22,20 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.io.Reader;
 import java.util.List;
 import java.util.function.Function;
 
-public class ResultSetTypeTest {
+class ResultSetTypeTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
-  public static void setUp() throws Exception {
+  @BeforeAll
+  static void setUp() throws Exception {
     // create an SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/result_set_type/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -50,7 +50,7 @@ public class ResultSetTypeTest {
   }
 
   @Test
-  public void testWithStatement() {
+  void testWithStatement() {
     test(mapper -> mapper.getUserWithStatementAndUnset(new RowBounds(5, 3)), 0);
     test(mapper -> mapper.getUserWithStatementAndDefault(new RowBounds(4, 3)), 1);
     test(mapper -> mapper.getUserWithStatementAndForwardOnly(new RowBounds(3, 3)), 2);
@@ -59,7 +59,7 @@ public class ResultSetTypeTest {
   }
 
   @Test
-  public void testWithPrepared() {
+  void testWithPrepared() {
     test(mapper -> mapper.getUserWithPreparedAndUnset(new RowBounds(5, 3)), 0);
     test(mapper -> mapper.getUserWithPreparedAndDefault(new RowBounds(4, 3)), 1);
     test(mapper -> mapper.getUserWithPreparedAndForwardOnly(new RowBounds(3, 3)), 2);
@@ -68,7 +68,7 @@ public class ResultSetTypeTest {
   }
 
   @Test
-  public void testWithCallable() {
+  void testWithCallable() {
     test(mapper -> mapper.getUserWithCallableAndUnset(new RowBounds(5, 3)), 0);
     test(mapper -> mapper.getUserWithCallableAndDefault(new RowBounds(4, 3)), 1);
     test(mapper -> mapper.getUserWithCallableAndForwardOnly(new RowBounds(3, 3)), 2);
@@ -80,7 +80,7 @@ public class ResultSetTypeTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<User> users = usersSupplier.apply(mapper);
-      Assert.assertEquals(expectedSize, users.size());
+      Assertions.assertEquals(expectedSize, users.size());
     }
   }
 

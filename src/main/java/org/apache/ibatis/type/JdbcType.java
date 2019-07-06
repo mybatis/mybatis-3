@@ -65,7 +65,9 @@ public enum JdbcType {
   ROWID(Types.ROWID), // JDK6
   LONGNVARCHAR(Types.LONGNVARCHAR), // JDK6
   SQLXML(Types.SQLXML), // JDK6
-  DATETIMEOFFSET(-155); // SQL Server 2008
+  DATETIMEOFFSET(-155), // SQL Server 2008
+  TIME_WITH_TIMEZONE(Types.TIME_WITH_TIMEZONE), // JDBC 4.2 JDK8
+  TIMESTAMP_WITH_TIMEZONE(Types.TIMESTAMP_WITH_TIMEZONE); // JDBC 4.2 JDK8
 
   public final int TYPE_CODE;
   private static Map<Integer,JdbcType> codeLookup = new HashMap<>();

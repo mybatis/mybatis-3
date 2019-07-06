@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -21,20 +21,20 @@ import org.apache.ibatis.exceptions.PersistenceException;
  * @author Ryan Lamore
  */
 public class ResultMapException extends PersistenceException {
-    private static final long serialVersionUID = 3270932060569707623L;
+  private static final long serialVersionUID = 3270932060569707623L;
 
-    public ResultMapException() {
-    }
+  public ResultMapException() {
+  }
 
-    public ResultMapException(String message) {
-        super(message);
-    }
+  public ResultMapException(String message) {
+    super(message);
+  }
 
-    public ResultMapException(String message, Throwable cause) {
-        super(message, cause);
-    }
+  public ResultMapException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-    public ResultMapException(Throwable cause) {
-        super(cause);
-    }
+  public ResultMapException(Throwable cause) {
+    super(cause);
+  }
 }

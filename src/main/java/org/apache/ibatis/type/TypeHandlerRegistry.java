@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -53,10 +53,10 @@ import org.apache.ibatis.io.Resources;
  */
 public final class TypeHandlerRegistry {
 
-  private final Map<JdbcType, TypeHandler<?>> JDBC_TYPE_HANDLER_MAP = new EnumMap<>(JdbcType.class);
-  private final Map<Type, Map<JdbcType, TypeHandler<?>>> TYPE_HANDLER_MAP = new ConcurrentHashMap<>();
-  private final TypeHandler<Object> UNKNOWN_TYPE_HANDLER = new UnknownTypeHandler(this);
-  private final Map<Class<?>, TypeHandler<?>> ALL_TYPE_HANDLERS_MAP = new HashMap<>();
+  private final Map<JdbcType, TypeHandler<?>>  jdbcTypeHandlerMap = new EnumMap<>(JdbcType.class);
+  private final Map<Type, Map<JdbcType, TypeHandler<?>>> typeHandlerMap = new ConcurrentHashMap<>();
+  private final TypeHandler<Object> unknownTypeHandler = new UnknownTypeHandler(this);
+  private final Map<Class<?>, TypeHandler<?>> allTypeHandlersMap = new HashMap<>();
 
   private static final Map<JdbcType, TypeHandler<?>> NULL_TYPE_HANDLER_MAP = Collections.emptyMap();
 
@@ -96,14 +96,14 @@ public final class TypeHandlerRegistry {
     register(String.class, JdbcType.CHAR, new StringTypeHandler());
     register(String.class, JdbcType.CLOB, new ClobTypeHandler());
     register(String.class, JdbcType.VARCHAR, new StringTypeHandler());
-    register(String.class, JdbcType.LONGVARCHAR, new ClobTypeHandler());
+    register(String.class, JdbcType.LONGVARCHAR, new StringTypeHandler());
     register(String.class, JdbcType.NVARCHAR, new NStringTypeHandler());
     register(String.class, JdbcType.NCHAR, new NStringTypeHandler());
     register(String.class, JdbcType.NCLOB, new NClobTypeHandler());
     register(JdbcType.CHAR, new StringTypeHandler());
     register(JdbcType.VARCHAR, new StringTypeHandler());
     register(JdbcType.CLOB, new ClobTypeHandler());
-    register(JdbcType.LONGVARCHAR, new ClobTypeHandler());
+    register(JdbcType.LONGVARCHAR, new StringTypeHandler());
     register(JdbcType.NVARCHAR, new NStringTypeHandler());
     register(JdbcType.NCHAR, new NStringTypeHandler());
     register(JdbcType.NCLOB, new NClobTypeHandler());
@@ -129,9 +129,9 @@ public final class TypeHandlerRegistry {
     register(JdbcType.LONGVARBINARY, new BlobTypeHandler());
     register(JdbcType.BLOB, new BlobTypeHandler());
 
-    register(Object.class, UNKNOWN_TYPE_HANDLER);
-    register(Object.class, JdbcType.OTHER, UNKNOWN_TYPE_HANDLER);
-    register(JdbcType.OTHER, UNKNOWN_TYPE_HANDLER);
+    register(Object.class, unknownTypeHandler);
+    register(Object.class, JdbcType.OTHER, unknownTypeHandler);
+    register(JdbcType.OTHER, unknownTypeHandler);
 
     register(Date.class, new DateTypeHandler());
     register(Date.class, JdbcType.DATE, new DateOnlyTypeHandler());
@@ -146,17 +146,17 @@ public final class TypeHandlerRegistry {
 
     register(String.class, JdbcType.SQLXML, new SqlxmlTypeHandler());
 
-    register(Instant.class, InstantTypeHandler.class);
-    register(LocalDateTime.class, LocalDateTimeTypeHandler.class);
-    register(LocalDate.class, LocalDateTypeHandler.class);
-    register(LocalTime.class, LocalTimeTypeHandler.class);
-    register(OffsetDateTime.class, OffsetDateTimeTypeHandler.class);
-    register(OffsetTime.class, OffsetTimeTypeHandler.class);
-    register(ZonedDateTime.class, ZonedDateTimeTypeHandler.class);
-    register(Month.class, MonthTypeHandler.class);
-    register(Year.class, YearTypeHandler.class);
-    register(YearMonth.class, YearMonthTypeHandler.class);
-    register(JapaneseDate.class, JapaneseDateTypeHandler.class);
+    register(Instant.class, new InstantTypeHandler());
+    register(LocalDateTime.class, new LocalDateTimeTypeHandler());
+    register(LocalDate.class, new LocalDateTypeHandler());
+    register(LocalTime.class, new LocalTimeTypeHandler());
+    register(OffsetDateTime.class, new OffsetDateTimeTypeHandler());
+    register(OffsetTime.class, new OffsetTimeTypeHandler());
+    register(ZonedDateTime.class, new ZonedDateTimeTypeHandler());
+    register(Month.class, new MonthTypeHandler());
+    register(Year.class, new YearTypeHandler());
+    register(YearMonth.class, new YearMonthTypeHandler());
+    register(JapaneseDate.class, new JapaneseDateTypeHandler());
 
     // issue #273
     register(Character.class, new CharacterTypeHandler());
@@ -190,7 +190,7 @@ public final class TypeHandlerRegistry {
   }
 
   public TypeHandler<?> getMappingTypeHandler(Class<? extends TypeHandler<?>> handlerType) {
-    return ALL_TYPE_HANDLERS_MAP.get(handlerType);
+    return allTypeHandlersMap.get(handlerType);
   }
 
   public <T> TypeHandler<T> getTypeHandler(Class<T> type) {
@@ -202,7 +202,7 @@ public final class TypeHandlerRegistry {
   }
 
   public TypeHandler<?> getTypeHandler(JdbcType jdbcType) {
-    return JDBC_TYPE_HANDLER_MAP.get(jdbcType);
+    return jdbcTypeHandlerMap.get(jdbcType);
   }
 
   public <T> TypeHandler<T> getTypeHandler(Class<T> type, JdbcType jdbcType) {
@@ -235,29 +235,30 @@ public final class TypeHandlerRegistry {
   }
 
   private Map<JdbcType, TypeHandler<?>> getJdbcHandlerMap(Type type) {
-    Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = TYPE_HANDLER_MAP.get(type);
+    Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = typeHandlerMap.get(type);
     if (NULL_TYPE_HANDLER_MAP.equals(jdbcHandlerMap)) {
       return null;
     }
     if (jdbcHandlerMap == null && type instanceof Class) {
       Class<?> clazz = (Class<?>) type;
-      if (clazz.isEnum()) {
-        jdbcHandlerMap = getJdbcHandlerMapForEnumInterfaces(clazz, clazz);
+      if (Enum.class.isAssignableFrom(clazz)) {
+        Class<?> enumClass = clazz.isAnonymousClass() ? clazz.getSuperclass() : clazz;
+        jdbcHandlerMap = getJdbcHandlerMapForEnumInterfaces(enumClass, enumClass);
         if (jdbcHandlerMap == null) {
-          register(clazz, getInstance(clazz, defaultEnumTypeHandler));
-          return TYPE_HANDLER_MAP.get(clazz);
+          register(enumClass, getInstance(enumClass, defaultEnumTypeHandler));
+          return typeHandlerMap.get(enumClass);
         }
       } else {
         jdbcHandlerMap = getJdbcHandlerMapForSuperclass(clazz);
       }
     }
-    TYPE_HANDLER_MAP.put(type, jdbcHandlerMap == null ? NULL_TYPE_HANDLER_MAP : jdbcHandlerMap);
+    typeHandlerMap.put(type, jdbcHandlerMap == null ? NULL_TYPE_HANDLER_MAP : jdbcHandlerMap);
     return jdbcHandlerMap;
   }
 
   private Map<JdbcType, TypeHandler<?>> getJdbcHandlerMapForEnumInterfaces(Class<?> clazz, Class<?> enumClazz) {
     for (Class<?> iface : clazz.getInterfaces()) {
-      Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = TYPE_HANDLER_MAP.get(iface);
+      Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = typeHandlerMap.get(iface);
       if (jdbcHandlerMap == null) {
         jdbcHandlerMap = getJdbcHandlerMapForEnumInterfaces(iface, enumClazz);
       }
@@ -279,7 +280,7 @@ public final class TypeHandlerRegistry {
     if (superclass == null || Object.class.equals(superclass)) {
       return null;
     }
-    Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = TYPE_HANDLER_MAP.get(superclass);
+    Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = typeHandlerMap.get(superclass);
     if (jdbcHandlerMap != null) {
       return jdbcHandlerMap;
     } else {
@@ -301,11 +302,11 @@ public final class TypeHandlerRegistry {
   }
 
   public TypeHandler<Object> getUnknownTypeHandler() {
-    return UNKNOWN_TYPE_HANDLER;
+    return unknownTypeHandler;
   }
 
   public void register(JdbcType jdbcType, TypeHandler<?> handler) {
-    JDBC_TYPE_HANDLER_MAP.put(jdbcType, handler);
+    jdbcTypeHandlerMap.put(jdbcType, handler);
   }
 
   //
@@ -371,14 +372,14 @@ public final class TypeHandlerRegistry {
 
   private void register(Type javaType, JdbcType jdbcType, TypeHandler<?> handler) {
     if (javaType != null) {
-      Map<JdbcType, TypeHandler<?>> map = TYPE_HANDLER_MAP.get(javaType);
+      Map<JdbcType, TypeHandler<?>> map = typeHandlerMap.get(javaType);
       if (map == null || map == NULL_TYPE_HANDLER_MAP) {
         map = new HashMap<>();
-        TYPE_HANDLER_MAP.put(javaType, map);
+        typeHandlerMap.put(javaType, map);
       }
       map.put(jdbcType, handler);
     }
-    ALL_TYPE_HANDLERS_MAP.put(handler.getClass(), handler);
+    allTypeHandlersMap.put(handler.getClass(), handler);
   }
 
   //
@@ -452,14 +453,14 @@ public final class TypeHandlerRegistry {
       }
     }
   }
-  
+
   // get information
-  
+
   /**
    * @since 3.2.2
    */
   public Collection<TypeHandler<?>> getTypeHandlers() {
-    return Collections.unmodifiableCollection(ALL_TYPE_HANDLERS_MAP.values());
+    return Collections.unmodifiableCollection(allTypeHandlersMap.values());
   }
-  
+
 }

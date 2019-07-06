@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.submitted.constructor_columnprefix;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.Reader;
 import java.util.List;
@@ -25,15 +25,15 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-public class ConstructorColumnPrefixTest {
+class ConstructorColumnPrefixTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
-  public static void setUp() throws Exception {
+  @BeforeAll
+  static void setUp() throws Exception {
     // create an SqlSessionFactory
     try (Reader reader = Resources
         .getResourceAsReader("org/apache/ibatis/submitted/constructor_columnprefix/mybatis-config.xml")) {
@@ -46,7 +46,7 @@ public class ConstructorColumnPrefixTest {
   }
 
   @Test
-  public void shouldGetArticles() {
+  void shouldGetArticles() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<Article> articles = mapper.getArticles();
@@ -55,7 +55,7 @@ public class ConstructorColumnPrefixTest {
   }
 
   @Test
-  public void shouldGetArticlesAnno() {
+  void shouldGetArticlesAnno() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<Article> articles = mapper.getArticlesAnno();
@@ -63,7 +63,7 @@ public class ConstructorColumnPrefixTest {
     }
   }
 
-  protected void assertArticles(List<Article> articles) {
+  void assertArticles(List<Article> articles) {
     assertEquals(2, articles.size());
     Article article1 = articles.get(0);
     assertEquals(Integer.valueOf(1), article1.getId().getId());

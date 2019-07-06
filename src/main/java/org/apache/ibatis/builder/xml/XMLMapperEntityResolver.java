@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -25,8 +25,8 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * Offline entity resolver for the MyBatis DTDs
- * 
+ * Offline entity resolver for the MyBatis DTDs.
+ *
  * @author Clinton Begin
  * @author Eduardo Macarron
  */
@@ -41,12 +41,12 @@ public class XMLMapperEntityResolver implements EntityResolver {
   private static final String MYBATIS_MAPPER_DTD = "org/apache/ibatis/builder/xml/mybatis-3-mapper.dtd";
 
   /**
-   * Converts a public DTD into a local one
-   * 
+   * Converts a public DTD into a local one.
+   *
    * @param publicId The public id that is what comes after "PUBLIC"
    * @param systemId The system id that is what comes after the public id.
    * @return The InputSource for the DTD
-   * 
+   *
    * @throws org.xml.sax.SAXException If anything goes wrong
    */
   @Override
@@ -73,7 +73,7 @@ public class XMLMapperEntityResolver implements EntityResolver {
         InputStream in = Resources.getResourceAsStream(path);
         source = new InputSource(in);
         source.setPublicId(publicId);
-        source.setSystemId(systemId);        
+        source.setSystemId(systemId);
       } catch (IOException e) {
         // ignore, null is ok
       }

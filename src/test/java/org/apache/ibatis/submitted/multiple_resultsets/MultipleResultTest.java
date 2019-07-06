@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,47 +16,35 @@
 package org.apache.ibatis.submitted.multiple_resultsets;
 
 import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.Collections;
 import java.util.List;
 
 import org.apache.ibatis.BaseDataTest;
-import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.apache.ibatis.test.EmbeddedPostgresqlTests;
+import org.apache.ibatis.testcontainers.PgContainer;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
-
-import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres;
-import ru.yandex.qatools.embed.postgresql.util.SocketUtil;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 /*
- * This class contains tests for multiple results.  
+ * This class contains tests for multiple results.
  * It is based on Jeff's ref cursor tests.
  */
-@Category(EmbeddedPostgresqlTests.class)
-public class MultipleResultTest {
-
-  private static final EmbeddedPostgres postgres = new EmbeddedPostgres();
+@Tag("TestcontainersTests")
+class MultipleResultTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
-  public static void setUp() throws Exception {
-    // Launch PostgreSQL server. Download / unarchive if necessary.
-    String url = postgres.start(EmbeddedPostgres.cachedRuntimeConfig(Paths.get(System.getProperty("java.io.tmpdir"), "pgembed")), "localhost", SocketUtil.findFreePort(), "multiple_resultsets", "postgres", "root", Collections.emptyList());
-
+  @BeforeAll
+  static void setUp() throws Exception {
     Configuration configuration = new Configuration();
-    Environment environment = new Environment("development", new JdbcTransactionFactory(), new UnpooledDataSource(
-        "org.postgresql.Driver", url, null));
+    Environment environment = new Environment("development", new JdbcTransactionFactory(),
+        PgContainer.getUnpooledDataSource());
     configuration.setEnvironment(environment);
     configuration.setMapUnderscoreToCamelCase(true);
     configuration.addMapper(Mapper.class);
@@ -66,59 +54,54 @@ public class MultipleResultTest {
         "org/apache/ibatis/submitted/multiple_resultsets/CreateDB.sql");
   }
 
-  @AfterClass
-  public static void tearDown() {
-    postgres.stop();
-  }
-
   @Test
-  public void shouldGetMultipleResultSetsWithOneStatement() throws IOException {
+  void shouldGetMultipleResultSetsWithOneStatement() throws IOException {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<List<?>> results = mapper.getUsersAndGroups();
-      Assert.assertEquals(2, results.size());
+      Assertions.assertEquals(2, results.size());
 
-      Assert.assertEquals(6, results.get(0).size());
+      Assertions.assertEquals(6, results.get(0).size());
       OrderDetail detail = (OrderDetail)results.get(0).get(0);
-      Assert.assertEquals(1, detail.getOrderId());
-      Assert.assertEquals(1, detail.getLineNumber());
-      Assert.assertEquals(1, detail.getQuantity());
-      Assert.assertEquals("Pen", detail.getItemDescription());
+      Assertions.assertEquals(1, detail.getOrderId());
+      Assertions.assertEquals(1, detail.getLineNumber());
+      Assertions.assertEquals(1, detail.getQuantity());
+      Assertions.assertEquals("Pen", detail.getItemDescription());
 
-      Assert.assertEquals(2, results.get(1).size());
+      Assertions.assertEquals(2, results.get(1).size());
       OrderHeader header = (OrderHeader)results.get(1).get(0);
-      Assert.assertEquals(1, header.getOrderId());
-      Assert.assertEquals("Fred", header.getCustName());
+      Assertions.assertEquals(1, header.getOrderId());
+      Assertions.assertEquals("Fred", header.getCustName());
     }
   }
 
   @Test
-  public void shouldSkipNullResultSet() {
+  void shouldSkipNullResultSet() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       try {
         Mapper mapper = sqlSession.getMapper(Mapper.class);
         List<List<?>> results = mapper.multiResultsWithUpdate();
-        Assert.assertEquals(2, results.size());
+        Assertions.assertEquals(2, results.size());
 
-        Assert.assertEquals(6, results.get(0).size());
+        Assertions.assertEquals(6, results.get(0).size());
         OrderDetail detail = (OrderDetail) results.get(0).get(0);
-        Assert.assertEquals(1, detail.getOrderId());
-        Assert.assertEquals(1, detail.getLineNumber());
-        Assert.assertEquals(1, detail.getQuantity());
-        Assert.assertEquals("Pen", detail.getItemDescription());
+        Assertions.assertEquals(1, detail.getOrderId());
+        Assertions.assertEquals(1, detail.getLineNumber());
+        Assertions.assertEquals(1, detail.getQuantity());
+        Assertions.assertEquals("Pen", detail.getItemDescription());
 
-        Assert.assertEquals(2, results.get(1).size());
+        Assertions.assertEquals(2, results.get(1).size());
         OrderHeader header = (OrderHeader) results.get(1).get(0);
-        Assert.assertEquals(1, header.getOrderId());
-        Assert.assertEquals("Fred", header.getCustName());
+        Assertions.assertEquals(1, header.getOrderId());
+        Assertions.assertEquals("Fred", header.getCustName());
 
         results = mapper.getUsersAndGroups();
-        Assert.assertEquals(7, results.get(0).size());
+        Assertions.assertEquals(7, results.get(0).size());
         detail = (OrderDetail) results.get(0).get(6);
-        Assert.assertEquals(2, detail.getOrderId());
-        Assert.assertEquals(4, detail.getLineNumber());
-        Assert.assertEquals(5, detail.getQuantity());
-        Assert.assertEquals("Eraser", detail.getItemDescription());
+        Assertions.assertEquals(2, detail.getOrderId());
+        Assertions.assertEquals(4, detail.getLineNumber());
+        Assertions.assertEquals(5, detail.getQuantity());
+        Assertions.assertEquals("Eraser", detail.getItemDescription());
       } finally {
         sqlSession.rollback(true);
       }
