@@ -57,8 +57,8 @@ public class ProviderSqlSource implements SqlSource {
       { put(char.class,    Character.class); }
     };
 
-  private static boolean isAssignableFrom(Class<?> from, Class<?> to) {
-    if (from.isAssignableFrom(to)) {
+  private static boolean isAssignableFrom(Class<?> to, Class<?> from) {
+    if (to.isAssignableFrom(from)) {
       return true;
     }
     if (from.isPrimitive()) {
