@@ -15,12 +15,6 @@
  */
 package org.apache.ibatis.builder.annotation;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.Map;
-
 import org.apache.ibatis.annotations.Lang;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.mapping.BoundSql;
@@ -28,6 +22,12 @@ import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.reflection.ParamNameResolver;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Clinton Begin
@@ -43,6 +43,35 @@ public class ProviderSqlSource implements SqlSource {
   private Class<?>[] providerMethodParameterTypes;
   private ProviderContext providerContext;
   private Integer providerContextIndex;
+
+  private static final Map<Class<?>, Class<?>> primitiveBoxingMap =
+    new HashMap<Class<?>, Class<?>>() {
+      { put(byte.class,    Byte.class); }
+      { put(short.class,   Short.class); }
+      { put(int.class,     Integer.class); }
+      { put(long.class,    Long.class); }
+      { put(float.class,   Float.class); }
+      { put(double.class,  Double.class); }
+      { put(boolean.class, Boolean.class); }
+      { put(char.class,    Character.class); }
+    };
+
+  private static boolean isAssignableFrom(Class<?> from, Class<?> to) {
+    if (from.isAssignableFrom(to)) {
+      return true;
+    }
+    if (from.isPrimitive()) {
+      return isBoxingType(to, from);
+    }
+    return false;
+  }
+
+  private static boolean isBoxingType(Class<?> target, Class<?> primitive) {
+    if (!primitive.isPrimitive()) {
+      throw new IllegalArgumentException("primitive type must be given");
+    }
+    return primitiveBoxingMap.get(primitive) == target;
+  }
 
   /**
    * @deprecated Please use the {@link #ProviderSqlSource(Configuration, Object, Class, Method)} instead of this.
@@ -121,7 +150,7 @@ public class ProviderSqlSource implements SqlSource {
       } else if (bindParameterCount == 0) {
         sql = invokeProviderMethod(providerContext);
       } else if (bindParameterCount == 1
-           && (parameterObject == null || providerMethodParameterTypes[providerContextIndex == null || providerContextIndex == 1 ? 0 : 1].isAssignableFrom(parameterObject.getClass()))) {
+           && (parameterObject == null || isAssignableFrom(providerMethodParameterTypes[providerContextIndex == null || providerContextIndex == 1 ? 0 : 1], parameterObject.getClass()))) {
         sql = invokeProviderMethod(extractProviderMethodArguments(parameterObject));
       } else if (parameterObject instanceof Map) {
         @SuppressWarnings("unchecked")

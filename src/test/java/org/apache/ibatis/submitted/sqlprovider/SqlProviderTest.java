@@ -465,6 +465,15 @@ class SqlProviderTest {
   }
 
   @Test
+  void staticMethodOnePrimitiveArgument() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      StaticMethodSqlProviderMapper mapper =
+        sqlSession.getMapper(StaticMethodSqlProviderMapper.class);
+      assertEquals(10, mapper.onePrimitiveArgument(10));
+    }
+  }
+
+  @Test
   void staticMethodMultipleArgument() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       StaticMethodSqlProviderMapper mapper =
@@ -541,6 +550,9 @@ class SqlProviderTest {
     @SelectProvider(type = SqlProvider.class, method = "oneArgument")
     int oneArgument(Integer value);
 
+    @SelectProvider(type = SqlProvider.class, method = "onePrimitiveArgument")
+    int onePrimitiveArgument(int value);
+
     @SelectProvider(type = SqlProvider.class, method = "multipleArgument")
     int multipleArgument(@Param("value1") Integer value1, @Param("value2") Integer value2);
 
@@ -560,6 +572,11 @@ class SqlProviderTest {
       public static StringBuilder oneArgument(Integer value) {
         return new StringBuilder().append("SELECT ").append(value)
             .append(" FROM INFORMATION_SCHEMA.SYSTEM_USERS");
+      }
+
+      public static StringBuilder onePrimitiveArgument(int value) {
+        return new StringBuilder().append("SELECT ").append(value)
+          .append(" FROM INFORMATION_SCHEMA.SYSTEM_USERS");
       }
 
       public static CharSequence multipleArgument(@Param("value1") Integer value1,
