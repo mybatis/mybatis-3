@@ -61,8 +61,8 @@ public class ProviderSqlSource implements SqlSource {
     if (to.isAssignableFrom(from)) {
       return true;
     }
-    if (from.isPrimitive()) {
-      return isBoxingType(to, from);
+    if (to.isPrimitive()) {
+      return isBoxingType(from, to);
     }
     return false;
   }
