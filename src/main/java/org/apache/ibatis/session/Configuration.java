@@ -434,14 +434,14 @@ public class Configuration {
   }
 
   /**
-   * @since 3.5.0
+   * @since 3.5.2
    */
   public ResultSetType getDefaultResultSetType() {
     return defaultResultSetType;
   }
 
   /**
-   * @since 3.5.0
+   * @since 3.5.2
    */
   public void setDefaultResultSetType(ResultSetType defaultResultSetType) {
     this.defaultResultSetType = defaultResultSetType;
