@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,28 +19,19 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.builder.annotation.MapperAnnotationBuilder;
-import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
-import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.session.Configuration;
-import org.apache.ibatis.type.TypeHandler;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
-import java.util.regex.Pattern;
-
-import static com.googlecode.catchexception.apis.BDDCatchException.caughtException;
-import static com.googlecode.catchexception.apis.BDDCatchException.when;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.BDDAssertions.then;
 
-public class AnnotationMapperBuilderTest {
+class AnnotationMapperBuilderTest {
 
   @Test
-  public void withOptions() throws Exception {
+  void withOptions() {
     Configuration configuration = new Configuration();
     MapperAnnotationBuilder builder = new MapperAnnotationBuilder(configuration, Mapper.class);
     builder.parse();
@@ -61,7 +52,7 @@ public class AnnotationMapperBuilderTest {
   }
 
   @Test
-  public void withOptionsAndWithoutOptionsAttributesWhenSpecifyDefaultValue() throws Exception {
+  void withOptionsAndWithoutOptionsAttributesWhenSpecifyDefaultValue() {
     Configuration configuration = new Configuration();
     configuration.setDefaultResultSetType(ResultSetType.SCROLL_INSENSITIVE);
     MapperAnnotationBuilder builder = new MapperAnnotationBuilder(configuration, Mapper.class);
@@ -73,7 +64,7 @@ public class AnnotationMapperBuilderTest {
 
 
   @Test
-  public void withOptionsAndWithoutOptionsAttributesWhenNotSpecifyDefaultValue() throws Exception {
+  void withOptionsAndWithoutOptionsAttributesWhenNotSpecifyDefaultValue() {
     Configuration configuration = new Configuration();
     MapperAnnotationBuilder builder = new MapperAnnotationBuilder(configuration, Mapper.class);
     builder.parse();
@@ -83,7 +74,7 @@ public class AnnotationMapperBuilderTest {
   }
 
   @Test
-  public void withoutOptionsWhenSpecifyDefaultValue() throws Exception {
+  void withoutOptionsWhenSpecifyDefaultValue() {
     Configuration configuration = new Configuration();
     configuration.setDefaultResultSetType(ResultSetType.SCROLL_INSENSITIVE);
     MapperAnnotationBuilder builder = new MapperAnnotationBuilder(configuration, Mapper.class);
@@ -94,7 +85,7 @@ public class AnnotationMapperBuilderTest {
   }
 
   @Test
-  public void withoutOptionsWhenNotSpecifyDefaultValue() throws Exception {
+  void withoutOptionsWhenNotSpecifyDefaultValue() {
     Configuration configuration = new Configuration();
     MapperAnnotationBuilder builder = new MapperAnnotationBuilder(configuration, Mapper.class);
     builder.parse();
@@ -103,7 +94,7 @@ public class AnnotationMapperBuilderTest {
     assertThat(mappedStatement.getResultSetType()).isEqualTo(ResultSetType.DEFAULT);
   }
 
-  public interface Mapper {
+  interface Mapper {
 
     @Insert("insert into test (name) values(#{name})")
     @Options(useGeneratedKeys = true, keyColumn = "key_column", keyProperty = "keyProperty")
