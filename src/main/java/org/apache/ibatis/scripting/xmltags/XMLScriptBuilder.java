@@ -81,7 +81,7 @@ public class XMLScriptBuilder extends BaseBuilder {
       XNode child = node.newXNode(children.item(i));
       if (child.getNode().getNodeType() == Node.CDATA_SECTION_NODE || child.getNode().getNodeType() == Node.TEXT_NODE) {
         String data = child.getStringBody("");
-        TextSqlNode textSqlNode = new TextSqlNode(data);
+        TextSqlNode textSqlNode = new TextSqlNode(data, configuration.getOgnlClassResolver());
         if (textSqlNode.isDynamic()) {
           contents.add(textSqlNode);
           isDynamic = true;
@@ -114,7 +114,7 @@ public class XMLScriptBuilder extends BaseBuilder {
     public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
       final String name = nodeToHandle.getStringAttribute("name");
       final String expression = nodeToHandle.getStringAttribute("value");
-      final VarDeclSqlNode node = new VarDeclSqlNode(name, expression);
+      final VarDeclSqlNode node = new VarDeclSqlNode(name, expression, configuration.getOgnlClassResolver());
       targetContents.add(node);
     }
   }
@@ -190,7 +190,7 @@ public class XMLScriptBuilder extends BaseBuilder {
     public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
       MixedSqlNode mixedSqlNode = parseDynamicTags(nodeToHandle);
       String test = nodeToHandle.getStringAttribute("test");
-      IfSqlNode ifSqlNode = new IfSqlNode(mixedSqlNode, test);
+      IfSqlNode ifSqlNode = new IfSqlNode(mixedSqlNode, test, configuration.getOgnlClassResolver());
       targetContents.add(ifSqlNode);
     }
   }

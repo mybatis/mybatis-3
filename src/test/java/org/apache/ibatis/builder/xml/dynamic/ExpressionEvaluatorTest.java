@@ -22,11 +22,15 @@ import java.util.HashMap;
 import org.apache.ibatis.domain.blog.Author;
 import org.apache.ibatis.domain.blog.Section;
 import org.apache.ibatis.scripting.xmltags.ExpressionEvaluator;
+import org.apache.ibatis.scripting.xmltags.OgnlClassResolver;
+import org.apache.ibatis.type.TypeAliasRegistry;
 import org.junit.jupiter.api.Test;
 
 class ExpressionEvaluatorTest {
 
-  private ExpressionEvaluator evaluator = new ExpressionEvaluator();
+  private TypeAliasRegistry registry = new TypeAliasRegistry();
+  private OgnlClassResolver classResolver = new OgnlClassResolver(registry);
+  private ExpressionEvaluator evaluator = new ExpressionEvaluator(classResolver);
 
   @Test
   void shouldCompareStringsReturnTrue() {
@@ -85,5 +89,37 @@ class ExpressionEvaluatorTest {
     }
   }
 
+
+  @Test
+  void shouldResolveClassUsingTypeAlias() {
+    registry.registerAlias(Constant.class);
+    registry.registerAlias(Utils.class);
+    class Bean {
+      @SuppressWarnings("unused")
+      public String flag = Constant.ON;
+    }
+    assertTrue(evaluator.evaluateBoolean("flag == @Constant@ON", new Bean()));
+    assertFalse(evaluator.evaluateBoolean("flag == @Constant@OFF", new Bean()));
+    class Bean2 {
+      @SuppressWarnings("unused")
+      public String value = "1,2,3";
+    }
+    final Iterable<?> iterable = evaluator.evaluateIterable("@Utils@split(value)", new Bean2());
+    int i = 0;
+    for (Object o : iterable) {
+      assertEquals(String.valueOf(++i), o);
+    }
+  }
+
+  static class Constant {
+    public static final String OFF = "0";
+    public static final String ON = "1";
+  }
+
+  static class Utils {
+    public static String[] split(String value) {
+      return value.split(",");
+    }
+  }
 
 }

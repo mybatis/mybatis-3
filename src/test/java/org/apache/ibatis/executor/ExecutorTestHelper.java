@@ -48,6 +48,7 @@ import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.scripting.xmltags.DynamicSqlSource;
+import org.apache.ibatis.scripting.xmltags.OgnlClassResolver;
 import org.apache.ibatis.scripting.xmltags.TextSqlNode;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
@@ -638,7 +639,7 @@ class ExecutorTestHelper {
         })
         .build();
     config.addMappedStatement(kms);
-    return new MappedStatement.Builder(config, "insertAuthor", new DynamicSqlSource(config, new TextSqlNode("INSERT INTO author (id,username,password,email,bio,favourite_section) values(#{id},#{username},#{password},#{email},#{bio:VARCHAR},#{favouriteSection})")), SqlCommandType.INSERT)
+    return new MappedStatement.Builder(config, "insertAuthor", new DynamicSqlSource(config, new TextSqlNode("INSERT INTO author (id,username,password,email,bio,favourite_section) values(#{id},#{username},#{password},#{email},#{bio:VARCHAR},#{favouriteSection})", new OgnlClassResolver())), SqlCommandType.INSERT)
         .parameterMap(
             new ParameterMap.Builder(config, "defaultParameterMap", Author.class, new ArrayList<ParameterMapping>() {
               {

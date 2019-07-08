@@ -86,6 +86,7 @@ import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.scripting.LanguageDriverRegistry;
 import org.apache.ibatis.scripting.defaults.RawLanguageDriver;
+import org.apache.ibatis.scripting.xmltags.OgnlClassResolver;
 import org.apache.ibatis.scripting.xmltags.XMLLanguageDriver;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
@@ -148,6 +149,7 @@ public class Configuration {
   protected final InterceptorChain interceptorChain = new InterceptorChain();
   protected final TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry();
   protected final TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
+  protected final OgnlClassResolver ognlClassResolver = new OgnlClassResolver(typeAliasRegistry);
   protected final LanguageDriverRegistry languageRegistry = new LanguageDriverRegistry();
 
   protected final Map<String, MappedStatement> mappedStatements = new StrictMap<MappedStatement>("Mapped Statements collection")
@@ -497,6 +499,16 @@ public class Configuration {
 
   public TypeAliasRegistry getTypeAliasRegistry() {
     return typeAliasRegistry;
+  }
+
+  /**
+   * Get a class resolver for OGNL.
+
+   * @return a class resolver for OGNL
+   * @since 3.5.2
+   */
+  public OgnlClassResolver getOgnlClassResolver() {
+    return ognlClassResolver;
   }
 
   /**

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ public class XMLLanguageDriver implements LanguageDriver {
     } else {
       // issue #127
       script = PropertyParser.parse(script, configuration.getVariables());
-      TextSqlNode textSqlNode = new TextSqlNode(script);
+      TextSqlNode textSqlNode = new TextSqlNode(script, configuration.getOgnlClassResolver());
       if (textSqlNode.isDynamic()) {
         return new DynamicSqlSource(configuration, textSqlNode);
       } else {

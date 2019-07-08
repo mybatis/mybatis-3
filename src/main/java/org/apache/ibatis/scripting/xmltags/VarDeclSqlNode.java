@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -22,15 +22,28 @@ public class VarDeclSqlNode implements SqlNode {
 
   private final String name;
   private final String expression;
+  private final OgnlClassResolver classResolver;
 
+  /**
+   * @deprecated Since 3.5.2, please use the {@link #VarDeclSqlNode(String, String, OgnlClassResolver)}
+   */
+  @Deprecated
   public VarDeclSqlNode(String var, String exp) {
-    name = var;
-    expression = exp;
+    this(var, exp, null);
+  }
+
+  /**
+   * @since 3.5.2
+   */
+  public VarDeclSqlNode(String var, String exp, OgnlClassResolver classResolver) {
+    this.name = var;
+    this.expression = exp;
+    this.classResolver = classResolver;
   }
 
   @Override
   public boolean apply(DynamicContext context) {
-    final Object value = OgnlCache.getValue(expression, context.getBindings());
+    final Object value = OgnlCache.getValue(expression, context.getBindings(), classResolver);
     context.bind(name, value);
     return true;
   }
