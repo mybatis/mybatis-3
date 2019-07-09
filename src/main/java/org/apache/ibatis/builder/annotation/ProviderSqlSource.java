@@ -15,13 +15,6 @@
  */
 package org.apache.ibatis.builder.annotation;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.ibatis.annotations.Lang;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.mapping.BoundSql;
@@ -29,6 +22,12 @@ import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.reflection.ParamNameResolver;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Clinton Begin
@@ -45,17 +44,17 @@ public class ProviderSqlSource implements SqlSource {
   private ProviderContext providerContext;
   private Integer providerContextIndex;
 
-  private static final Map<Class<?>, Class<?>> primitiveWrapperMap =
-    new HashMap<Class<?>, Class<?>>() {
-      { put(byte.class,    Byte.class); }
-      { put(short.class,   Short.class); }
-      { put(int.class,     Integer.class); }
-      { put(long.class,    Long.class); }
-      { put(float.class,   Float.class); }
-      { put(double.class,  Double.class); }
-      { put(boolean.class, Boolean.class); }
-      { put(char.class,    Character.class); }
-    };
+  private static final Map<Class<?>, Class<?>> primitiveWrapperMap = new HashMap<>();
+  static {
+    primitiveWrapperMap.put(byte.class, Byte.class);
+    primitiveWrapperMap.put(short.class, Short.class);
+    primitiveWrapperMap.put(int.class, Integer.class);
+    primitiveWrapperMap.put(long.class, Long.class);
+    primitiveWrapperMap.put(float.class, Float.class);
+    primitiveWrapperMap.put(double.class, Double.class);
+    primitiveWrapperMap.put(boolean.class, Boolean.class);
+    primitiveWrapperMap.put(char.class, Character.class);
+  }
 
   private static boolean isAssignableFrom(Class<?> to, Class<?> from) {
     if (to.isAssignableFrom(from)) {
