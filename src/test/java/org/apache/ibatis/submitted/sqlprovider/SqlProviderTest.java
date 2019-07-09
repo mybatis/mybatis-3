@@ -503,6 +503,78 @@ class SqlProviderTest {
   }
 
   @Test
+  void staticMethodOnePrimitiveByteArgument() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      StaticMethodSqlProviderMapper mapper =
+        sqlSession.getMapper(StaticMethodSqlProviderMapper.class);
+      assertEquals((byte) 10, mapper.onePrimitiveByteArgument((byte) 10));
+    }
+  }
+
+  @Test
+  void staticMethodOnePrimitiveShortArgument() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      StaticMethodSqlProviderMapper mapper =
+        sqlSession.getMapper(StaticMethodSqlProviderMapper.class);
+      assertEquals((short) 10, mapper.onePrimitiveShortArgument((short) 10));
+    }
+  }
+
+  @Test
+  void staticMethodOnePrimitiveIntArgument() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      StaticMethodSqlProviderMapper mapper =
+        sqlSession.getMapper(StaticMethodSqlProviderMapper.class);
+      assertEquals(10, mapper.onePrimitiveIntArgument(10));
+    }
+  }
+
+  @Test
+  void staticMethodOnePrimitiveLongArgument() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      StaticMethodSqlProviderMapper mapper =
+        sqlSession.getMapper(StaticMethodSqlProviderMapper.class);
+      assertEquals(10L, mapper.onePrimitiveLongArgument(10L));
+    }
+  }
+
+  @Test
+  void staticMethodOnePrimitiveFloatArgument() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      StaticMethodSqlProviderMapper mapper =
+        sqlSession.getMapper(StaticMethodSqlProviderMapper.class);
+      assertEquals(10.1F, mapper.onePrimitiveFloatArgument(10.1F));
+    }
+  }
+
+  @Test
+  void staticMethodOnePrimitiveDoubleArgument() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      StaticMethodSqlProviderMapper mapper =
+        sqlSession.getMapper(StaticMethodSqlProviderMapper.class);
+      assertEquals(10.1D, mapper.onePrimitiveDoubleArgument(10.1D));
+    }
+  }
+
+  @Test
+  void staticMethodOnePrimitiveBooleanArgument() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      StaticMethodSqlProviderMapper mapper =
+        sqlSession.getMapper(StaticMethodSqlProviderMapper.class);
+      assertTrue(mapper.onePrimitiveBooleanArgument(true));
+    }
+  }
+
+  @Test
+  void staticMethodOnePrimitiveCharArgument() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      StaticMethodSqlProviderMapper mapper =
+        sqlSession.getMapper(StaticMethodSqlProviderMapper.class);
+      assertEquals('A', mapper.onePrimitiveCharArgument('A'));
+    }
+  }
+
+  @Test
   void staticMethodMultipleArgument() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       StaticMethodSqlProviderMapper mapper =
@@ -587,6 +659,30 @@ class SqlProviderTest {
     @SelectProvider(type = SqlProvider.class, method = "oneArgument")
     int oneArgument(Integer value);
 
+    @SelectProvider(type = SqlProvider.class, method = "onePrimitiveByteArgument")
+    byte onePrimitiveByteArgument(byte value);
+
+    @SelectProvider(type = SqlProvider.class, method = "onePrimitiveShortArgument")
+    short onePrimitiveShortArgument(short value);
+
+    @SelectProvider(type = SqlProvider.class, method = "onePrimitiveIntArgument")
+    int onePrimitiveIntArgument(int value);
+
+    @SelectProvider(type = SqlProvider.class, method = "onePrimitiveLongArgument")
+    long onePrimitiveLongArgument(long value);
+
+    @SelectProvider(type = SqlProvider.class, method = "onePrimitiveFloatArgument")
+    float onePrimitiveFloatArgument(float value);
+
+    @SelectProvider(type = SqlProvider.class, method = "onePrimitiveDoubleArgument")
+    double onePrimitiveDoubleArgument(double value);
+
+    @SelectProvider(type = SqlProvider.class, method = "onePrimitiveBooleanArgument")
+    boolean onePrimitiveBooleanArgument(boolean value);
+
+    @SelectProvider(type = SqlProvider.class, method = "onePrimitiveCharArgument")
+    char onePrimitiveCharArgument(char value);
+
     @SelectProvider(type = SqlProvider.class, method = "multipleArgument")
     int multipleArgument(@Param("value1") Integer value1, @Param("value2") Integer value2);
 
@@ -606,6 +702,46 @@ class SqlProviderTest {
       public static StringBuilder oneArgument(Integer value) {
         return new StringBuilder().append("SELECT ").append(value)
             .append(" FROM INFORMATION_SCHEMA.SYSTEM_USERS");
+      }
+
+      public static StringBuilder onePrimitiveByteArgument(byte value) {
+        return new StringBuilder().append("SELECT ").append(value)
+          .append(" FROM INFORMATION_SCHEMA.SYSTEM_USERS");
+      }
+
+      public static StringBuilder onePrimitiveShortArgument(short value) {
+        return new StringBuilder().append("SELECT ").append(value)
+          .append(" FROM INFORMATION_SCHEMA.SYSTEM_USERS");
+      }
+
+      public static StringBuilder onePrimitiveIntArgument(int value) {
+        return new StringBuilder().append("SELECT ").append(value)
+          .append(" FROM INFORMATION_SCHEMA.SYSTEM_USERS");
+      }
+
+      public static StringBuilder onePrimitiveLongArgument(long value) {
+        return new StringBuilder().append("SELECT ").append(value)
+          .append(" FROM INFORMATION_SCHEMA.SYSTEM_USERS");
+      }
+
+      public static StringBuilder onePrimitiveFloatArgument(float value) {
+        return new StringBuilder().append("SELECT ").append(value)
+          .append(" FROM INFORMATION_SCHEMA.SYSTEM_USERS");
+      }
+
+      public static StringBuilder onePrimitiveDoubleArgument(double value) {
+        return new StringBuilder().append("SELECT ").append(value)
+          .append(" FROM INFORMATION_SCHEMA.SYSTEM_USERS");
+      }
+
+      public static StringBuilder onePrimitiveBooleanArgument(boolean value) {
+        return new StringBuilder().append("SELECT ").append(value ? 1 : 0)
+          .append(" FROM INFORMATION_SCHEMA.SYSTEM_USERS");
+      }
+
+      public static StringBuilder onePrimitiveCharArgument(char value) {
+        return new StringBuilder().append("SELECT '").append(value)
+          .append("' FROM INFORMATION_SCHEMA.SYSTEM_USERS");
       }
 
       public static CharSequence multipleArgument(@Param("value1") Integer value1,
