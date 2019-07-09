@@ -95,24 +95,24 @@ public class DefaultVFS extends VFS {
              * then we assume the current resource is not a directory.
              */
             is = url.openStream();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-            List<String> lines = new ArrayList<>();
-            for (String line; (line = reader.readLine()) != null;) {
-              if (log.isDebugEnabled()) {
-                log.debug("Reader entry: " + line);
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
+              List<String> lines = new ArrayList<>();
+              for (String line; (line = reader.readLine()) != null;) {
+                if (log.isDebugEnabled()) {
+                  log.debug("Reader entry: " + line);
+                }
+                lines.add(line);
+                if (getResources(path + "/" + line).isEmpty()) {
+                  lines.clear();
+                  break;
+                }
               }
-              lines.add(line);
-              if (getResources(path + "/" + line).isEmpty()) {
-                lines.clear();
-                break;
+              if (!lines.isEmpty()) {
+                if (log.isDebugEnabled()) {
+                  log.debug("Listing " + url);
+                }
+                children.addAll(lines);
               }
-            }
-
-            if (!lines.isEmpty()) {
-              if (log.isDebugEnabled()) {
-                log.debug("Listing " + url);
-              }
-              children.addAll(lines);
             }
           }
         } catch (FileNotFoundException e) {
