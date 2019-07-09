@@ -45,7 +45,7 @@ public class ProviderSqlSource implements SqlSource {
   private ProviderContext providerContext;
   private Integer providerContextIndex;
 
-  private static final Map<Class<?>, Class<?>> primitiveBoxingMap =
+  private static final Map<Class<?>, Class<?>> primitiveWrapperMap =
     new HashMap<Class<?>, Class<?>>() {
       { put(byte.class,    Byte.class); }
       { put(short.class,   Short.class); }
@@ -71,7 +71,7 @@ public class ProviderSqlSource implements SqlSource {
     if (!primitive.isPrimitive()) {
       throw new IllegalArgumentException("primitive type must be given");
     }
-    return primitiveBoxingMap.get(primitive) == target;
+    return primitiveWrapperMap.get(primitive) == target;
   }
 
   /**
