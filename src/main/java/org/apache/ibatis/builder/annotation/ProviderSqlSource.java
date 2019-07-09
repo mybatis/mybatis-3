@@ -61,16 +61,9 @@ public class ProviderSqlSource implements SqlSource {
       return true;
     }
     if (to.isPrimitive()) {
-      return isBoxingType(from, to);
+      return from == primitiveWrapperMap.get(to);
     }
     return false;
-  }
-
-  private static boolean isBoxingType(Class<?> target, Class<?> primitive) {
-    if (!primitive.isPrimitive()) {
-      throw new IllegalArgumentException("primitive type must be given");
-    }
-    return primitiveWrapperMap.get(primitive) == target;
   }
 
   /**
