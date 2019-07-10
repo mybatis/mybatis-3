@@ -403,6 +403,32 @@ class Jdbc3KeyGeneratorTest {
   }
 
   @Test
+  void shouldAssignMultipleGeneratedKeysToBeansInAMap() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      try {
+        CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
+        Planet planet1 = new Planet();
+        planet1.setName("pluto");
+        Planet planet2 = new Planet();
+        planet2.setName("neptune");
+        List<Planet> planets = Arrays.asList(planet1, planet2);
+        
+        String statement = "insert into planet (name) values (#{records[0].name}), (#{records[1].name})";
+        
+        Map<String, Object> parameter = new HashMap<>();
+        parameter.put("statement", statement);
+        parameter.put("records", planets);
+        
+        mapper.insertPlanetsWithMap(parameter);
+        assertEquals("pluto-" + planet1.getId(), planet1.getCode());
+        assertEquals("neptune-" + planet2.getId(), planet2.getCode());
+      } finally {
+        sqlSession.rollback();
+      }
+    }
+  }
+
+  @Test
   void shouldAssignMultipleGeneratedKeysToABean_MultiParams() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       try {

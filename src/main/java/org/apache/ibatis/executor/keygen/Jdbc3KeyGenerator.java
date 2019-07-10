@@ -88,8 +88,8 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
   @SuppressWarnings("unchecked")
   private void assignKeys(Configuration configuration, ResultSet rs, ResultSetMetaData rsmd, String[] keyProperties,
       Object parameter) throws SQLException {
-    if (parameter instanceof ParamMap || parameter instanceof StrictMap) {
-      // Multi-param or single param with @Param
+    if (parameter instanceof Map) {
+      // Multi-param or single param with @Param or user created Map as a parameter
       assignKeysToParamMap(configuration, rs, rsmd, keyProperties, (Map<String, ?>) parameter);
     } else if (parameter instanceof ArrayList && !((ArrayList<?>) parameter).isEmpty()
         && ((ArrayList<?>) parameter).get(0) instanceof ParamMap) {

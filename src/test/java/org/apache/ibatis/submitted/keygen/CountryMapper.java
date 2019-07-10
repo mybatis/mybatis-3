@@ -100,4 +100,10 @@ public interface CountryMapper {
   @Options(useGeneratedKeys = true, keyProperty = "country.id")
   @Insert({ "insert into country (countryname,countrycode) values ('a','A'), ('b', 'B')" })
   int tooManyGeneratedKeysParamMap(@Param("country") Country country, @Param("someId") Integer someId);
+  
+  @Options(useGeneratedKeys = true, keyProperty = "records.id,records.code")
+  @Insert({
+      "${statement}"
+  })
+  int insertPlanetsWithMap(Map<String, Object> parameter);
 }
