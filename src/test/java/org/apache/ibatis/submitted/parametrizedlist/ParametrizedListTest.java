@@ -47,7 +47,7 @@ class ParametrizedListTest {
   void testShouldDetectUsersAsParameterInsideAList() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
-      List<User<String>> list = mapper.getAListOfUsers();
+      List<User> list = mapper.getAListOfUsers();
       Assertions.assertEquals(User.class, list.get(0).getClass());
     }
   }
@@ -56,7 +56,7 @@ class ParametrizedListTest {
   void testShouldDetectUsersAsParameterInsideAMap() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
-      Map<Integer, User<String>> map = mapper.getAMapOfUsers();
+      Map<Integer, User> map = mapper.getAMapOfUsers();
       Assertions.assertEquals(User.class, map.get(1).getClass());
     }
   }
