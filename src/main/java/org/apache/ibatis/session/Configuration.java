@@ -15,18 +15,6 @@
  */
 package org.apache.ibatis.session;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.function.BiFunction;
-
 import org.apache.ibatis.binding.MapperRegistry;
 import org.apache.ibatis.builder.CacheRefResolver;
 import org.apache.ibatis.builder.IncompleteElementException;
@@ -42,11 +30,7 @@ import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.apache.ibatis.datasource.jndi.JndiDataSourceFactory;
 import org.apache.ibatis.datasource.pooled.PooledDataSourceFactory;
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory;
-import org.apache.ibatis.executor.BatchExecutor;
-import org.apache.ibatis.executor.CachingExecutor;
-import org.apache.ibatis.executor.Executor;
-import org.apache.ibatis.executor.ReuseExecutor;
-import org.apache.ibatis.executor.SimpleExecutor;
+import org.apache.ibatis.executor.*;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.executor.loader.ProxyFactory;
 import org.apache.ibatis.executor.loader.cglib.CglibProxyFactory;
@@ -66,13 +50,7 @@ import org.apache.ibatis.logging.log4j2.Log4j2Impl;
 import org.apache.ibatis.logging.nologging.NoLoggingImpl;
 import org.apache.ibatis.logging.slf4j.Slf4jImpl;
 import org.apache.ibatis.logging.stdout.StdOutImpl;
-import org.apache.ibatis.mapping.BoundSql;
-import org.apache.ibatis.mapping.Environment;
-import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.mapping.ParameterMap;
-import org.apache.ibatis.mapping.ResultMap;
-import org.apache.ibatis.mapping.ResultSetType;
-import org.apache.ibatis.mapping.VendorDatabaseIdProvider;
+import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.plugin.InterceptorChain;
@@ -95,6 +73,9 @@ import org.apache.ibatis.type.TypeAliasRegistry;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
+import java.util.*;
+import java.util.function.BiFunction;
+
 /**
  * @author Clinton Begin
  */
@@ -113,6 +94,7 @@ public class Configuration {
   protected boolean callSettersOnNulls;
   protected boolean useActualParamName = true;
   protected boolean returnInstanceForEmptyRow;
+  protected boolean userShortKey= true;
 
   protected String logPrefix;
   protected Class<? extends Log> logImpl;
@@ -150,16 +132,16 @@ public class Configuration {
   protected final TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
   protected final LanguageDriverRegistry languageRegistry = new LanguageDriverRegistry();
 
-  protected final Map<String, MappedStatement> mappedStatements = new StrictMap<MappedStatement>("Mapped Statements collection")
+  protected final Map<String, MappedStatement> mappedStatements = new StrictMap<MappedStatement>(this, "Mapped Statements collection")
       .conflictMessageProducer((savedValue, targetValue) ->
           ". please check " + savedValue.getResource() + " and " + targetValue.getResource());
-  protected final Map<String, Cache> caches = new StrictMap<>("Caches collection");
-  protected final Map<String, ResultMap> resultMaps = new StrictMap<>("Result Maps collection");
-  protected final Map<String, ParameterMap> parameterMaps = new StrictMap<>("Parameter Maps collection");
-  protected final Map<String, KeyGenerator> keyGenerators = new StrictMap<>("Key Generators collection");
+  protected final Map<String, Cache> caches = new StrictMap<>(this, "Caches collection");
+  protected final Map<String, ResultMap> resultMaps = new StrictMap<>(this, "Result Maps collection");
+  protected final Map<String, ParameterMap> parameterMaps = new StrictMap<>(this, "Parameter Maps collection");
+  protected final Map<String, KeyGenerator> keyGenerators = new StrictMap<>(this, "Key Generators collection");
 
   protected final Set<String> loadedResources = new HashSet<>();
-  protected final Map<String, XNode> sqlFragments = new StrictMap<>("XML fragments parsed from previous mappers");
+  protected final Map<String, XNode> sqlFragments = new StrictMap<>(this, "XML fragments parsed from previous mappers");
 
   protected final Collection<XMLStatementBuilder> incompleteStatements = new LinkedList<>();
   protected final Collection<CacheRefResolver> incompleteCacheRefs = new LinkedList<>();
@@ -264,6 +246,14 @@ public class Configuration {
 
   public void setReturnInstanceForEmptyRow(boolean returnEmptyInstance) {
     this.returnInstanceForEmptyRow = returnEmptyInstance;
+  }
+
+  public boolean isUserShortKey() {
+    return userShortKey;
+  }
+
+  public void setUserShortKey(boolean userShortKey) {
+    this.userShortKey = userShortKey;
   }
 
   public String getDatabaseId() {
@@ -905,6 +895,7 @@ public class Configuration {
     private static final long serialVersionUID = -4950446264854982944L;
     private final String name;
     private BiFunction<V, V, String> conflictMessageProducer;
+    private Configuration configuration;
 
     public StrictMap(String name, int initialCapacity, float loadFactor) {
       super(initialCapacity, loadFactor);
@@ -924,6 +915,26 @@ public class Configuration {
     public StrictMap(String name, Map<String, ? extends V> m) {
       super(m);
       this.name = name;
+    }
+
+    public StrictMap(Configuration configuration, String name, int initialCapacity, float loadFactor) {
+      this(name, initialCapacity, loadFactor);
+      this.configuration = configuration;
+    }
+
+    public StrictMap(Configuration configuration, String name, int initialCapacity) {
+      this(name, initialCapacity);
+      this.configuration = configuration;
+    }
+
+    public StrictMap(Configuration configuration, String name) {
+      this(name);
+      this.configuration = configuration;
+    }
+
+    public StrictMap(Configuration configuration, String name, Map<String, ? extends V> m) {
+      this(name, m);
+      this.configuration = configuration;
     }
 
     /**
@@ -946,12 +957,14 @@ public class Configuration {
         throw new IllegalArgumentException(name + " already contains value for " + key
             + (conflictMessageProducer == null ? "" : conflictMessageProducer.apply(super.get(key), value)));
       }
-      if (key.contains(".")) {
-        final String shortKey = getShortName(key);
-        if (super.get(shortKey) == null) {
-          super.put(shortKey, value);
-        } else {
-          super.put(shortKey, (V) new Ambiguity(shortKey));
+      if (configuration == null || configuration.isUserShortKey()) {
+        if (key.contains(".")) {
+          final String shortKey = getShortName(key);
+          if (super.get(shortKey) == null) {
+            super.put(shortKey, value);
+          } else {
+            super.put(shortKey, (V) new Ambiguity(shortKey));
+          }
         }
       }
       return super.put(key, value);
