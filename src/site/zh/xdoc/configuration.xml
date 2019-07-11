@@ -480,6 +480,23 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
             </tr>
             <tr>
               <td>
+                userShortKey
+              </td>
+              <td>
+                当我们为每一个映射文件生成<code>mappedStatements</code>，<code>resultMaps</code>，<code>sqlFragments</code>等映射关系时，
+                为了方便操作，会同步生成简短的key（此时集合中会存在两个key同时指向同一个对象）。
+                但是如果我们进行多个映射文件解析，那么这些简短的key所对应的对象则有可能是以Ambiguity形式存在。
+                因此我们可以禁用该功能，用以生成唯一映射关系的集合。
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                true
+              </td>
+            </tr>
+            <tr>
+              <td>
                 logPrefix
               </td>
               <td>
