@@ -24,11 +24,11 @@ import org.apache.ibatis.annotations.Select;
 public interface Mapper {
 
   @Select("select id, name from users")
-  List<User> getAListOfUsers();
+  List<User<String>> getAListOfUsers();
 
   @Select("select id, name from users")
   @MapKey("id")
-  Map<Integer, User> getAMapOfUsers();
+  Map<Integer, User<String>> getAMapOfUsers();
 
   @Select("select id, name from users where id=1")
   Map<String, Object> getUserAsAMap();

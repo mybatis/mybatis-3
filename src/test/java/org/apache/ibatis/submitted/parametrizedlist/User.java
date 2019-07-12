@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.submitted.parametrizedlist;
 
-public class User {
+public class User<T> {
   private Integer id;
   private String name;
 
