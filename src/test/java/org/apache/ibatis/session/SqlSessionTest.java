@@ -189,11 +189,9 @@ class SqlSessionTest extends BaseDataTest {
 
   @Test
   void shouldEnsureThatBothEarlyAndLateResolutionOfNesteDiscriminatorsResolesToUseNestedResultSetHandler() {
-    try (SqlSession session = sqlMapper.openSession()) {
       Configuration configuration = sqlMapper.getConfiguration();
       assertTrue(configuration.getResultMap("org.apache.ibatis.domain.blog.mappers.BlogMapper.earlyNestedDiscriminatorPost").hasNestedResultMaps());
       assertTrue(configuration.getResultMap("org.apache.ibatis.domain.blog.mappers.BlogMapper.lateNestedDiscriminatorPost").hasNestedResultMaps());
-    }
   }
 
   @Test
