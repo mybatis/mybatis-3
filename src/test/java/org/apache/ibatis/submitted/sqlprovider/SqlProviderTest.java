@@ -165,6 +165,30 @@ class SqlProviderTest {
     }
   }
 
+  @Test
+  void shouldGetUsersByCriteriaMapWithParam() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      {
+        Map<String, Object> criteria = new HashMap<>();
+        criteria.put("id", 1);
+        List<User> users = mapper.getUsersByCriteriaMapWithParam(criteria);
+        assertEquals(1, users.size());
+        assertEquals("User1", users.get(0).getName());
+      }
+      {
+        Map<String, Object> criteria = new HashMap<>();
+        criteria.put("name", "User");
+        List<User> users = mapper.getUsersByCriteriaMapWithParam(criteria);
+        assertEquals(4, users.size());
+        assertEquals("User1", users.get(0).getName());
+        assertEquals("User2", users.get(1).getName());
+        assertEquals("User3", users.get(2).getName());
+        assertEquals("User4", users.get(3).getName());
+      }
+    }
+  }
+
   // Test for multiple parameter without @Param
   @Test
   void shouldGetUsersByName() {
@@ -330,7 +354,7 @@ class SqlProviderTest {
               .getBoundSql(new Object());
       fail();
     } catch (BuilderException e) {
-      assertTrue(e.getMessage().contains("Error invoking SqlProvider method (org.apache.ibatis.submitted.sqlprovider.OurSqlBuilder.buildGetUsersByNameQuery). Cannot invoke a method that holds multiple arguments using a specifying parameterObject. In this case, please specify a 'java.util.Map' object."));
+      assertTrue(e.getMessage().contains("Error invoking SqlProvider method 'public java.lang.String org.apache.ibatis.submitted.sqlprovider.OurSqlBuilder.buildGetUsersByNameQuery(java.lang.String,java.lang.String)' with specify parameter 'class java.lang.Object'.  Cause: java.lang.IllegalArgumentException: wrong number of arguments"));
     }
   }
 
@@ -344,7 +368,7 @@ class SqlProviderTest {
               .getBoundSql(new Object());
       fail();
     } catch (BuilderException e) {
-      assertTrue(e.getMessage().contains("Error invoking SqlProvider method (org.apache.ibatis.submitted.sqlprovider.OurSqlBuilder.buildGetUsersByNameWithParamNameQuery). Cannot invoke a method that holds named argument(@Param) using a specifying parameterObject. In this case, please specify a 'java.util.Map' object."));
+      assertTrue(e.getMessage().contains("Error invoking SqlProvider method 'public java.lang.String org.apache.ibatis.submitted.sqlprovider.OurSqlBuilder.buildGetUsersByNameWithParamNameQuery(java.lang.String)' with specify parameter 'class java.lang.Object'.  Cause: java.lang.IllegalArgumentException: argument type mismatch"));
     }
   }
 
@@ -358,7 +382,21 @@ class SqlProviderTest {
               .getBoundSql(new Object());
       fail();
     } catch (BuilderException e) {
-      assertTrue(e.getMessage().contains("Error invoking SqlProvider method (org.apache.ibatis.submitted.sqlprovider.SqlProviderTest$ErrorSqlBuilder.invokeError).  Cause: java.lang.reflect.InvocationTargetException"));
+      assertTrue(e.getMessage().contains("Error invoking SqlProvider method 'public java.lang.String org.apache.ibatis.submitted.sqlprovider.SqlProviderTest$ErrorSqlBuilder.invokeError()' with specify parameter 'class java.lang.Object'.  Cause: java.lang.UnsupportedOperationException: invokeError"));
+    }
+  }
+
+  @Test
+  void invalidArgumentsCombination() throws NoSuchMethodException {
+    try {
+      Class<?> mapperType = ErrorMapper.class;
+      Method mapperMethod = mapperType.getMethod("invalidArgumentsCombination", String.class);
+      new ProviderSqlSource(new Configuration(),
+        mapperMethod.getAnnotation(DeleteProvider.class), mapperType, mapperMethod)
+        .getBoundSql("foo");
+      fail();
+    } catch (BuilderException e) {
+      assertTrue(e.getMessage().contains("Cannot invoke SqlProvider method 'public java.lang.String org.apache.ibatis.submitted.sqlprovider.SqlProviderTest$ErrorSqlBuilder.invalidArgumentsCombination(org.apache.ibatis.builder.annotation.ProviderContext,java.lang.String,java.lang.String)' with specify parameter 'class java.lang.String' because SqlProvider method arguments for 'public abstract void org.apache.ibatis.submitted.sqlprovider.SqlProviderTest$ErrorMapper.invalidArgumentsCombination(java.lang.String)' is an invalid combination."));
     }
   }
 
@@ -509,6 +547,10 @@ class SqlProviderTest {
 
     @DeleteProvider(value = String.class, type = Integer.class)
     void differentTypeAndValue();
+
+    @DeleteProvider(type = ErrorSqlBuilder.class, method = "invalidArgumentsCombination")
+    void invalidArgumentsCombination(String value);
+
   }
 
   @SuppressWarnings("unused")
@@ -531,6 +573,10 @@ class SqlProviderTest {
 
     public String multipleProviderContext(ProviderContext providerContext1, ProviderContext providerContext2) {
       throw new UnsupportedOperationException("multipleProviderContext");
+    }
+
+    public String invalidArgumentsCombination(ProviderContext providerContext, String value, String unnecessaryArgument) {
+      return "";
     }
   }
 

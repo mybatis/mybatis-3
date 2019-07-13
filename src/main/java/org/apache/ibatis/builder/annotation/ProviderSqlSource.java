@@ -38,6 +38,7 @@ public class ProviderSqlSource implements SqlSource {
   private final Configuration configuration;
   private final Class<?> providerType;
   private final LanguageDriver languageDriver;
+  private final Method mapperMethod;
   private Method providerMethod;
   private String[] providerMethodArgumentNames;
   private Class<?>[] providerMethodParameterTypes;
@@ -59,6 +60,7 @@ public class ProviderSqlSource implements SqlSource {
     String providerMethodName;
     try {
       this.configuration = configuration;
+      this.mapperMethod = mapperMethod;
       Lang lang = mapperMethod == null ? null : mapperMethod.getAnnotation(Lang.class);
       this.languageDriver = configuration.getLanguageDriver(lang == null ? null : lang.value());
       this.providerType = getProviderType(provider, mapperMethod);
@@ -116,33 +118,45 @@ public class ProviderSqlSource implements SqlSource {
     try {
       int bindParameterCount = providerMethodParameterTypes.length - (providerContext == null ? 0 : 1);
       String sql;
-      if (providerMethodParameterTypes.length == 0) {
+      if (parameterObject instanceof Map) {
+        if (bindParameterCount == 1 && providerMethodParameterTypes[0] == Map.class) {
+          sql = invokeProviderMethod(extractProviderMethodArguments(parameterObject));
+        } else {
+          @SuppressWarnings("unchecked")
+          Map<String, Object> params = (Map<String, Object>) parameterObject;
+          sql = invokeProviderMethod(extractProviderMethodArguments(params, providerMethodArgumentNames));
+        }
+      } else if (providerMethodParameterTypes.length == 0) {
         sql = invokeProviderMethod();
-      } else if (bindParameterCount == 0) {
-        sql = invokeProviderMethod(providerContext);
-      } else if (bindParameterCount == 1
-           && (parameterObject == null || providerMethodParameterTypes[providerContextIndex == null || providerContextIndex == 1 ? 0 : 1].isAssignableFrom(parameterObject.getClass()))) {
+      } else if (providerMethodParameterTypes.length == 1) {
+        if (providerContext == null) {
+          sql = invokeProviderMethod(parameterObject);
+        } else {
+          sql = invokeProviderMethod(providerContext);
+        }
+      } else if (providerMethodParameterTypes.length == 2) {
         sql = invokeProviderMethod(extractProviderMethodArguments(parameterObject));
-      } else if (parameterObject instanceof Map) {
-        @SuppressWarnings("unchecked")
-        Map<String, Object> params = (Map<String, Object>) parameterObject;
-        sql = invokeProviderMethod(extractProviderMethodArguments(params, providerMethodArgumentNames));
       } else {
-        throw new BuilderException("Error invoking SqlProvider method ("
-                + providerType.getName() + "." + providerMethod.getName()
-                + "). Cannot invoke a method that holds "
-                + (bindParameterCount == 1 ? "named argument(@Param)" : "multiple arguments")
-                + " using a specifying parameterObject. In this case, please specify a 'java.util.Map' object.");
+        throw new BuilderException("Cannot invoke SqlProvider method '" + providerMethod
+          + "' with specify parameter '" + (parameterObject == null ? null : parameterObject.getClass())
+          + "' because SqlProvider method arguments for '" + mapperMethod + "' is an invalid combination.");
       }
       Class<?> parameterType = parameterObject == null ? Object.class : parameterObject.getClass();
       return languageDriver.createSqlSource(configuration, sql, parameterType);
     } catch (BuilderException e) {
       throw e;
     } catch (Exception e) {
-      throw new BuilderException("Error invoking SqlProvider method ("
-          + providerType.getName() + "." + providerMethod.getName()
-          + ").  Cause: " + e, e);
+      throw new BuilderException("Error invoking SqlProvider method '" + providerMethod
+          + "' with specify parameter '" + (parameterObject == null ? null : parameterObject.getClass()) + "'.  Cause: " + extractRootCause(e), e);
     }
+  }
+
+  private Throwable extractRootCause(Exception e) {
+    Throwable cause = e;
+    while(cause.getCause() != null) {
+      cause = e.getCause();
+    }
+    return cause;
   }
 
   private Object[] extractProviderMethodArguments(Object parameterObject) {
