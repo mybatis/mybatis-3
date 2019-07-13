@@ -575,6 +575,24 @@ class SqlProviderTest {
   }
 
   @Test
+  void boxing() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      StaticMethodSqlProviderMapper mapper =
+        sqlSession.getMapper(StaticMethodSqlProviderMapper.class);
+      assertEquals(10, mapper.boxing(10));
+    }
+  }
+
+  @Test
+  void unboxing() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      StaticMethodSqlProviderMapper mapper =
+        sqlSession.getMapper(StaticMethodSqlProviderMapper.class);
+      assertEquals(100, mapper.unboxing(100));
+    }
+  }
+
+  @Test
   void staticMethodMultipleArgument() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       StaticMethodSqlProviderMapper mapper =
@@ -683,6 +701,12 @@ class SqlProviderTest {
     @SelectProvider(type = SqlProvider.class, method = "onePrimitiveCharArgument")
     char onePrimitiveCharArgument(char value);
 
+    @SelectProvider(type = SqlProvider.class, method = "boxing")
+    int boxing(int value);
+
+    @SelectProvider(type = SqlProvider.class, method = "unboxing")
+    int unboxing(Integer value);
+
     @SelectProvider(type = SqlProvider.class, method = "multipleArgument")
     int multipleArgument(@Param("value1") Integer value1, @Param("value2") Integer value2);
 
@@ -740,6 +764,16 @@ class SqlProviderTest {
       }
 
       public static StringBuilder onePrimitiveCharArgument(char value) {
+        return new StringBuilder().append("SELECT '").append(value)
+          .append("' FROM INFORMATION_SCHEMA.SYSTEM_USERS");
+      }
+
+      public static StringBuilder boxing(Integer value) {
+        return new StringBuilder().append("SELECT '").append(value)
+          .append("' FROM INFORMATION_SCHEMA.SYSTEM_USERS");
+      }
+
+      public static StringBuilder unboxing(int value) {
         return new StringBuilder().append("SELECT '").append(value)
           .append("' FROM INFORMATION_SCHEMA.SYSTEM_USERS");
       }
