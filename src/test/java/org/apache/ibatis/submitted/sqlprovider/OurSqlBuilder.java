@@ -84,6 +84,19 @@ public class OurSqlBuilder {
     }}.toString();
   }
 
+  public String buildGetUsersByCriteriaMapWithParamQuery(@Param("id") Integer id, @Param("name") String name) {
+    return new SQL() {{
+      SELECT("*");
+      FROM("users");
+      if (id != null) {
+        WHERE("id = #{id}");
+      }
+      if (name != null) {
+        WHERE("name like #{name} || '%'");
+      }
+    }}.toString();
+  }
+
   public String buildGetUsersByNameQuery(final String name, final String orderByColumn) {
     return new SQL(){{
       SELECT("*");
