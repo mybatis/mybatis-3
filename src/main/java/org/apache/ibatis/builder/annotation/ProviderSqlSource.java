@@ -116,10 +116,11 @@ public class ProviderSqlSource implements SqlSource {
 
   private SqlSource createSqlSource(Object parameterObject) {
     try {
-      int bindParameterCount = providerMethodParameterTypes.length - (providerContext == null ? 0 : 1);
       String sql;
       if (parameterObject instanceof Map) {
-        if (bindParameterCount == 1 && providerMethodParameterTypes[0] == Map.class) {
+        int bindParameterCount = providerMethodParameterTypes.length - (providerContext == null ? 0 : 1);
+        if (bindParameterCount == 1 &&
+          (providerMethodParameterTypes[Integer.valueOf(0).equals(providerContextIndex) ? 1 : 0].isAssignableFrom(parameterObject.getClass()))) {
           sql = invokeProviderMethod(extractProviderMethodArguments(parameterObject));
         } else {
           @SuppressWarnings("unchecked")

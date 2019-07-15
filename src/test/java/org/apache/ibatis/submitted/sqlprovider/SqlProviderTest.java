@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import java.io.Reader;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,7 @@ import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.annotations.DeleteProvider;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.SelectProvider;
+import org.apache.ibatis.binding.MapperMethod;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.builder.annotation.ProviderContext;
 import org.apache.ibatis.builder.annotation.ProviderSqlSource;
@@ -619,6 +621,33 @@ class SqlProviderTest {
     }
   }
 
+  @Test
+  void mapAndProviderContext() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      StaticMethodSqlProviderMapper mapper =
+        sqlSession.getMapper(StaticMethodSqlProviderMapper.class);
+      assertEquals("mybatis", mapper.mapAndProviderContext("mybatis"));
+    }
+  }
+
+  @Test
+  void multipleMap() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      StaticMethodSqlProviderMapper mapper =
+        sqlSession.getMapper(StaticMethodSqlProviderMapper.class);
+      assertEquals("123456", mapper.multipleMap(Collections.singletonMap("value", "123"), Collections.singletonMap("value", "456")));
+    }
+  }
+
+  @Test
+  void providerContextAndMap() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      StaticMethodSqlProviderMapper mapper =
+        sqlSession.getMapper(StaticMethodSqlProviderMapper.class);
+      assertEquals("mybatis", mapper.providerContextAndParamMap("mybatis"));
+    }
+  }
+
   public interface ErrorMapper {
     @SelectProvider(type = ErrorSqlBuilder.class, method = "methodNotFound")
     void methodNotFound();
@@ -716,6 +745,15 @@ class SqlProviderTest {
     @SelectProvider(type = SqlProvider.class, method = "oneArgumentAndProviderContext")
     String oneArgumentAndProviderContext(Integer value);
 
+    @SelectProvider(type = SqlProvider.class, method = "mapAndProviderContext")
+    String mapAndProviderContext(@Param("value") String value);
+
+    @SelectProvider(type = SqlProvider.class, method = "providerContextAndParamMap")
+    String providerContextAndParamMap(@Param("value") String value);
+
+    @SelectProvider(type = SqlProvider.class, method = "multipleMap")
+    String multipleMap(@Param("map1") Map<String, Object> map1, @Param("map2") Map<String, Object> map2);
+
     @SuppressWarnings("unused")
     class SqlProvider {
 
@@ -791,6 +829,18 @@ class SqlProviderTest {
       public static String oneArgumentAndProviderContext(Integer value, ProviderContext context) {
         return "SELECT '" + context.getMapperMethod().getName() + " " + value
             + "' FROM INFORMATION_SCHEMA.SYSTEM_USERS";
+      }
+
+      public static String mapAndProviderContext(Map<String, Object> map, ProviderContext context) {
+        return "SELECT '" + map.get("value") + "' FROM INFORMATION_SCHEMA.SYSTEM_USERS";
+      }
+
+      public static String providerContextAndParamMap(ProviderContext context, MapperMethod.ParamMap<Object> map) {
+        return "SELECT '" + map.get("value") + "' FROM INFORMATION_SCHEMA.SYSTEM_USERS";
+      }
+
+      public static String multipleMap(@Param("map1") Map<String, Object> map1, @Param("map2") Map<String, Object> map2) {
+        return "SELECT '" + map1.get("value") + map2.get("value") + "' FROM INFORMATION_SCHEMA.SYSTEM_USERS";
       }
 
     }
