@@ -87,9 +87,9 @@ public class XMLStatementBuilder extends BaseBuilder {
 <span class="fc" id="L87">    keyStatementId = builderAssistant.applyCurrentNamespace(keyStatementId, true);</span>
 <span class="fc bfc" id="L88" title="All 2 branches covered.">    if (configuration.hasKeyGenerator(keyStatementId)) {</span>
 <span class="fc" id="L89">      keyGenerator = configuration.getKeyGenerator(keyStatementId);</span>
-<span class="fc" id="L90">    } else {</span>
-<span class="fc" id="L91">      keyGenerator = context.getBooleanAttribute(&quot;useGeneratedKeys&quot;,</span>
-<span class="fc bfc" id="L92" title="All 6 branches covered.">          configuration.isUseGeneratedKeys() &amp;&amp; SqlCommandType.INSERT.equals(sqlCommandType))</span>
+    } else {
+<span class="fc bfc" id="L91" title="All 2 branches covered.">      keyGenerator = context.getBooleanAttribute(&quot;useGeneratedKeys&quot;,</span>
+<span class="fc bfc" id="L92" title="All 4 branches covered.">          configuration.isUseGeneratedKeys() &amp;&amp; SqlCommandType.INSERT.equals(sqlCommandType))</span>
 <span class="fc" id="L93">          ? Jdbc3KeyGenerator.INSTANCE : NoKeyGenerator.INSTANCE;</span>
     }
 
@@ -103,102 +103,100 @@ public class XMLStatementBuilder extends BaseBuilder {
 <span class="fc" id="L103">    String resultMap = context.getStringAttribute(&quot;resultMap&quot;);</span>
 <span class="fc" id="L104">    String resultSetType = context.getStringAttribute(&quot;resultSetType&quot;);</span>
 <span class="fc" id="L105">    ResultSetType resultSetTypeEnum = resolveResultSetType(resultSetType);</span>
-<span class="fc" id="L106">    String keyProperty = context.getStringAttribute(&quot;keyProperty&quot;);</span>
-<span class="fc" id="L107">    String keyColumn = context.getStringAttribute(&quot;keyColumn&quot;);</span>
-<span class="fc" id="L108">    String resultSets = context.getStringAttribute(&quot;resultSets&quot;);</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">    if (resultSetTypeEnum == null) {</span>
+<span class="fc" id="L107">      resultSetTypeEnum = configuration.getDefaultResultSetType();</span>
+    }
+<span class="fc" id="L109">    String keyProperty = context.getStringAttribute(&quot;keyProperty&quot;);</span>
+<span class="fc" id="L110">    String keyColumn = context.getStringAttribute(&quot;keyColumn&quot;);</span>
+<span class="fc" id="L111">    String resultSets = context.getStringAttribute(&quot;resultSets&quot;);</span>
 
-<span class="fc" id="L110">    builderAssistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType,</span>
-<span class="fc" id="L111">        fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,</span>
-<span class="fc" id="L112">        resultSetTypeEnum, flushCache, useCache, resultOrdered,</span>
-<span class="fc" id="L113">        keyGenerator, keyProperty, keyColumn, databaseId, langDriver, resultSets);</span>
-<span class="fc" id="L114">  }</span>
+<span class="fc" id="L113">    builderAssistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType,</span>
+        fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,
+        resultSetTypeEnum, flushCache, useCache, resultOrdered,
+        keyGenerator, keyProperty, keyColumn, databaseId, langDriver, resultSets);
+<span class="fc" id="L117">  }</span>
 
   private void processSelectKeyNodes(String id, Class&lt;?&gt; parameterTypeClass, LanguageDriver langDriver) {
-<span class="fc" id="L117">    List&lt;XNode&gt; selectKeyNodes = context.evalNodes(&quot;selectKey&quot;);</span>
-<span class="fc bfc" id="L118" title="All 2 branches covered.">    if (configuration.getDatabaseId() != null) {</span>
-<span class="fc" id="L119">      parseSelectKeyNodes(id, selectKeyNodes, parameterTypeClass, langDriver, configuration.getDatabaseId());</span>
+<span class="fc" id="L120">    List&lt;XNode&gt; selectKeyNodes = context.evalNodes(&quot;selectKey&quot;);</span>
+<span class="fc bfc" id="L121" title="All 2 branches covered.">    if (configuration.getDatabaseId() != null) {</span>
+<span class="fc" id="L122">      parseSelectKeyNodes(id, selectKeyNodes, parameterTypeClass, langDriver, configuration.getDatabaseId());</span>
     }
-<span class="fc" id="L121">    parseSelectKeyNodes(id, selectKeyNodes, parameterTypeClass, langDriver, null);</span>
-<span class="fc" id="L122">    removeSelectKeyNodes(selectKeyNodes);</span>
-<span class="fc" id="L123">  }</span>
+<span class="fc" id="L124">    parseSelectKeyNodes(id, selectKeyNodes, parameterTypeClass, langDriver, null);</span>
+<span class="fc" id="L125">    removeSelectKeyNodes(selectKeyNodes);</span>
+<span class="fc" id="L126">  }</span>
 
   private void parseSelectKeyNodes(String parentId, List&lt;XNode&gt; list, Class&lt;?&gt; parameterTypeClass, LanguageDriver langDriver, String skRequiredDatabaseId) {
-<span class="fc bfc" id="L126" title="All 2 branches covered.">    for (XNode nodeToHandle : list) {</span>
-<span class="fc" id="L127">      String id = parentId + SelectKeyGenerator.SELECT_KEY_SUFFIX;</span>
-<span class="fc" id="L128">      String databaseId = nodeToHandle.getStringAttribute(&quot;databaseId&quot;);</span>
-<span class="fc bfc" id="L129" title="All 2 branches covered.">      if (databaseIdMatchesCurrent(id, databaseId, skRequiredDatabaseId)) {</span>
-<span class="fc" id="L130">        parseSelectKeyNode(id, nodeToHandle, parameterTypeClass, langDriver, databaseId);</span>
+<span class="fc bfc" id="L129" title="All 2 branches covered.">    for (XNode nodeToHandle : list) {</span>
+<span class="fc" id="L130">      String id = parentId + SelectKeyGenerator.SELECT_KEY_SUFFIX;</span>
+<span class="fc" id="L131">      String databaseId = nodeToHandle.getStringAttribute(&quot;databaseId&quot;);</span>
+<span class="fc bfc" id="L132" title="All 2 branches covered.">      if (databaseIdMatchesCurrent(id, databaseId, skRequiredDatabaseId)) {</span>
+<span class="fc" id="L133">        parseSelectKeyNode(id, nodeToHandle, parameterTypeClass, langDriver, databaseId);</span>
       }
-    }
-<span class="fc" id="L133">  }</span>
+<span class="fc" id="L135">    }</span>
+<span class="fc" id="L136">  }</span>
 
   private void parseSelectKeyNode(String id, XNode nodeToHandle, Class&lt;?&gt; parameterTypeClass, LanguageDriver langDriver, String databaseId) {
-<span class="fc" id="L136">    String resultType = nodeToHandle.getStringAttribute(&quot;resultType&quot;);</span>
-<span class="fc" id="L137">    Class&lt;?&gt; resultTypeClass = resolveClass(resultType);</span>
-<span class="fc" id="L138">    StatementType statementType = StatementType.valueOf(nodeToHandle.getStringAttribute(&quot;statementType&quot;, StatementType.PREPARED.toString()));</span>
-<span class="fc" id="L139">    String keyProperty = nodeToHandle.getStringAttribute(&quot;keyProperty&quot;);</span>
-<span class="fc" id="L140">    String keyColumn = nodeToHandle.getStringAttribute(&quot;keyColumn&quot;);</span>
-<span class="fc" id="L141">    boolean executeBefore = &quot;BEFORE&quot;.equals(nodeToHandle.getStringAttribute(&quot;order&quot;, &quot;AFTER&quot;));</span>
+<span class="fc" id="L139">    String resultType = nodeToHandle.getStringAttribute(&quot;resultType&quot;);</span>
+<span class="fc" id="L140">    Class&lt;?&gt; resultTypeClass = resolveClass(resultType);</span>
+<span class="fc" id="L141">    StatementType statementType = StatementType.valueOf(nodeToHandle.getStringAttribute(&quot;statementType&quot;, StatementType.PREPARED.toString()));</span>
+<span class="fc" id="L142">    String keyProperty = nodeToHandle.getStringAttribute(&quot;keyProperty&quot;);</span>
+<span class="fc" id="L143">    String keyColumn = nodeToHandle.getStringAttribute(&quot;keyColumn&quot;);</span>
+<span class="fc" id="L144">    boolean executeBefore = &quot;BEFORE&quot;.equals(nodeToHandle.getStringAttribute(&quot;order&quot;, &quot;AFTER&quot;));</span>
 
     //defaults
-<span class="fc" id="L144">    boolean useCache = false;</span>
-<span class="fc" id="L145">    boolean resultOrdered = false;</span>
-<span class="fc" id="L146">    KeyGenerator keyGenerator = NoKeyGenerator.INSTANCE;</span>
-<span class="fc" id="L147">    Integer fetchSize = null;</span>
-<span class="fc" id="L148">    Integer timeout = null;</span>
-<span class="fc" id="L149">    boolean flushCache = false;</span>
-<span class="fc" id="L150">    String parameterMap = null;</span>
-<span class="fc" id="L151">    String resultMap = null;</span>
-<span class="fc" id="L152">    ResultSetType resultSetTypeEnum = null;</span>
+<span class="fc" id="L147">    boolean useCache = false;</span>
+<span class="fc" id="L148">    boolean resultOrdered = false;</span>
+<span class="fc" id="L149">    KeyGenerator keyGenerator = NoKeyGenerator.INSTANCE;</span>
+<span class="fc" id="L150">    Integer fetchSize = null;</span>
+<span class="fc" id="L151">    Integer timeout = null;</span>
+<span class="fc" id="L152">    boolean flushCache = false;</span>
+<span class="fc" id="L153">    String parameterMap = null;</span>
+<span class="fc" id="L154">    String resultMap = null;</span>
+<span class="fc" id="L155">    ResultSetType resultSetTypeEnum = null;</span>
 
-<span class="fc" id="L154">    SqlSource sqlSource = langDriver.createSqlSource(configuration, nodeToHandle, parameterTypeClass);</span>
-<span class="fc" id="L155">    SqlCommandType sqlCommandType = SqlCommandType.SELECT;</span>
+<span class="fc" id="L157">    SqlSource sqlSource = langDriver.createSqlSource(configuration, nodeToHandle, parameterTypeClass);</span>
+<span class="fc" id="L158">    SqlCommandType sqlCommandType = SqlCommandType.SELECT;</span>
 
-<span class="fc" id="L157">    builderAssistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType,</span>
-<span class="fc" id="L158">        fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,</span>
-<span class="fc" id="L159">        resultSetTypeEnum, flushCache, useCache, resultOrdered,</span>
-<span class="fc" id="L160">        keyGenerator, keyProperty, keyColumn, databaseId, langDriver, null);</span>
+<span class="fc" id="L160">    builderAssistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType,</span>
+        fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,
+        resultSetTypeEnum, flushCache, useCache, resultOrdered,
+        keyGenerator, keyProperty, keyColumn, databaseId, langDriver, null);
 
-<span class="fc" id="L162">    id = builderAssistant.applyCurrentNamespace(id, false);</span>
+<span class="fc" id="L165">    id = builderAssistant.applyCurrentNamespace(id, false);</span>
 
-<span class="fc" id="L164">    MappedStatement keyStatement = configuration.getMappedStatement(id, false);</span>
-<span class="fc" id="L165">    configuration.addKeyGenerator(id, new SelectKeyGenerator(keyStatement, executeBefore));</span>
-<span class="fc" id="L166">  }</span>
+<span class="fc" id="L167">    MappedStatement keyStatement = configuration.getMappedStatement(id, false);</span>
+<span class="fc" id="L168">    configuration.addKeyGenerator(id, new SelectKeyGenerator(keyStatement, executeBefore));</span>
+<span class="fc" id="L169">  }</span>
 
   private void removeSelectKeyNodes(List&lt;XNode&gt; selectKeyNodes) {
-<span class="fc bfc" id="L169" title="All 2 branches covered.">    for (XNode nodeToHandle : selectKeyNodes) {</span>
-<span class="fc" id="L170">      nodeToHandle.getParent().getNode().removeChild(nodeToHandle.getNode());</span>
-    }
-<span class="fc" id="L172">  }</span>
+<span class="fc bfc" id="L172" title="All 2 branches covered.">    for (XNode nodeToHandle : selectKeyNodes) {</span>
+<span class="fc" id="L173">      nodeToHandle.getParent().getNode().removeChild(nodeToHandle.getNode());</span>
+<span class="fc" id="L174">    }</span>
+<span class="fc" id="L175">  }</span>
 
   private boolean databaseIdMatchesCurrent(String id, String databaseId, String requiredDatabaseId) {
-<span class="fc bfc" id="L175" title="All 2 branches covered.">    if (requiredDatabaseId != null) {</span>
-<span class="fc bfc" id="L176" title="All 2 branches covered.">      if (!requiredDatabaseId.equals(databaseId)) {</span>
-<span class="fc" id="L177">        return false;</span>
-      }
-    } else {
-<span class="fc bfc" id="L180" title="All 2 branches covered.">      if (databaseId != null) {</span>
-<span class="fc" id="L181">        return false;</span>
-      }
-      // skip this statement if there is a previous one with a not null databaseId
-<span class="fc" id="L184">      id = builderAssistant.applyCurrentNamespace(id, false);</span>
-<span class="fc bfc" id="L185" title="All 2 branches covered.">      if (this.configuration.hasStatement(id, false)) {</span>
-<span class="fc" id="L186">        MappedStatement previous = this.configuration.getMappedStatement(id, false); // issue #2</span>
-<span class="pc bpc" id="L187" title="1 of 2 branches missed.">        if (previous.getDatabaseId() != null) {</span>
-<span class="fc" id="L188">          return false;</span>
-        }
-      }
+<span class="fc bfc" id="L178" title="All 2 branches covered.">    if (requiredDatabaseId != null) {</span>
+<span class="fc" id="L179">      return requiredDatabaseId.equals(databaseId);</span>
     }
-<span class="fc" id="L192">    return true;</span>
+<span class="fc bfc" id="L181" title="All 2 branches covered.">    if (databaseId != null) {</span>
+<span class="fc" id="L182">      return false;</span>
+    }
+<span class="fc" id="L184">    id = builderAssistant.applyCurrentNamespace(id, false);</span>
+<span class="fc bfc" id="L185" title="All 2 branches covered.">    if (!this.configuration.hasStatement(id, false)) {</span>
+<span class="fc" id="L186">      return true;</span>
+    }
+    // skip this statement if there is a previous one with a not null databaseId
+<span class="fc" id="L189">    MappedStatement previous = this.configuration.getMappedStatement(id, false); // issue #2</span>
+<span class="pc bpc" id="L190" title="1 of 2 branches missed.">    return previous.getDatabaseId() == null;</span>
   }
 
   private LanguageDriver getLanguageDriver(String lang) {
-<span class="fc" id="L196">    Class&lt;? extends LanguageDriver&gt; langClass = null;</span>
-<span class="fc bfc" id="L197" title="All 2 branches covered.">    if (lang != null) {</span>
-<span class="fc" id="L198">      langClass = resolveClass(lang);</span>
+<span class="fc" id="L194">    Class&lt;? extends LanguageDriver&gt; langClass = null;</span>
+<span class="fc bfc" id="L195" title="All 2 branches covered.">    if (lang != null) {</span>
+<span class="fc" id="L196">      langClass = resolveClass(lang);</span>
     }
-<span class="fc" id="L200">    return configuration.getLanguageDriver(langClass);</span>
+<span class="fc" id="L198">    return configuration.getLanguageDriver(langClass);</span>
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

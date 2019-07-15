@@ -53,12 +53,12 @@ public abstract class AbstractSerialStateHolder implements Externalizable {
 <span class="fc" id="L53">  public AbstractSerialStateHolder() {</span>
 <span class="fc" id="L54">  }</span>
 
-<span class="fc" id="L56">  public AbstractSerialStateHolder(</span>
+  public AbstractSerialStateHolder(
           final Object userBean,
           final Map&lt;String, ResultLoaderMap.LoadPair&gt; unloadedProperties,
           final ObjectFactory objectFactory,
           List&lt;Class&lt;?&gt;&gt; constructorArgTypes,
-          List&lt;Object&gt; constructorArgs) {
+<span class="fc" id="L61">          List&lt;Object&gt; constructorArgs) {</span>
 <span class="fc" id="L62">    this.userBean = userBean;</span>
 <span class="fc" id="L63">    this.unloadedProperties = new HashMap&lt;&gt;(unloadedProperties);</span>
 <span class="fc" id="L64">    this.objectFactory = objectFactory;</span>
@@ -96,7 +96,7 @@ public abstract class AbstractSerialStateHolder implements Externalizable {
 <span class="fc" id="L96">    final Object data = in.readObject();</span>
 <span class="fc bfc" id="L97" title="All 2 branches covered.">    if (data.getClass().isArray()) {</span>
 <span class="fc" id="L98">      this.userBeanBytes = (byte[]) data;</span>
-<span class="fc" id="L99">    } else {</span>
+    } else {
 <span class="fc" id="L100">      this.userBean = data;</span>
     }
 <span class="fc" id="L102">  }</span>
@@ -119,7 +119,7 @@ public abstract class AbstractSerialStateHolder implements Externalizable {
 <span class="nc" id="L119">      throw (ObjectStreamException) new StreamCorruptedException().initCause(ex);</span>
 <span class="nc" id="L120">    } catch (final ClassNotFoundException ex) {</span>
 <span class="nc" id="L121">      throw (ObjectStreamException) new InvalidClassException(ex.getLocalizedMessage()).initCause(ex);</span>
-    }
+<span class="fc" id="L122">    }</span>
 
 <span class="fc" id="L124">    final Map&lt;String, ResultLoaderMap.LoadPair&gt; arrayProps = new HashMap&lt;&gt;(this.unloadedProperties);</span>
 <span class="fc" id="L125">    final List&lt;Class&lt;?&gt;&gt; arrayTypes = Arrays.asList(this.constructorArgTypes);</span>
@@ -133,16 +133,16 @@ public abstract class AbstractSerialStateHolder implements Externalizable {
 
   private static class LookAheadObjectInputStream extends ObjectInputStream {
 <span class="fc" id="L135">    private static final List&lt;String&gt; blacklist = Arrays.asList(</span>
-<span class="fc" id="L136">        &quot;org.apache.commons.beanutils.BeanComparator&quot;,</span>
-<span class="fc" id="L137">        &quot;org.apache.commons.collections.functors.InvokerTransformer&quot;,</span>
-<span class="fc" id="L138">        &quot;org.apache.commons.collections.functors.InstantiateTransformer&quot;,</span>
-<span class="fc" id="L139">        &quot;org.apache.commons.collections4.functors.InvokerTransformer&quot;,</span>
-<span class="fc" id="L140">        &quot;org.apache.commons.collections4.functors.InstantiateTransformer&quot;,</span>
-<span class="fc" id="L141">        &quot;org.codehaus.groovy.runtime.ConvertedClosure&quot;,</span>
-<span class="fc" id="L142">        &quot;org.codehaus.groovy.runtime.MethodClosure&quot;,</span>
-<span class="fc" id="L143">        &quot;org.springframework.beans.factory.ObjectFactory&quot;,</span>
-<span class="fc" id="L144">        &quot;org.springframework.transaction.jta.JtaTransactionManager&quot;,</span>
-<span class="fc" id="L145">        &quot;com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl&quot;);</span>
+        &quot;org.apache.commons.beanutils.BeanComparator&quot;,
+        &quot;org.apache.commons.collections.functors.InvokerTransformer&quot;,
+        &quot;org.apache.commons.collections.functors.InstantiateTransformer&quot;,
+        &quot;org.apache.commons.collections4.functors.InvokerTransformer&quot;,
+        &quot;org.apache.commons.collections4.functors.InstantiateTransformer&quot;,
+        &quot;org.codehaus.groovy.runtime.ConvertedClosure&quot;,
+        &quot;org.codehaus.groovy.runtime.MethodClosure&quot;,
+        &quot;org.springframework.beans.factory.ObjectFactory&quot;,
+        &quot;org.springframework.transaction.jta.JtaTransactionManager&quot;,
+        &quot;com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl&quot;);
 
     public LookAheadObjectInputStream(InputStream in) throws IOException {
 <span class="fc" id="L148">      super(in);</span>
@@ -160,4 +160,4 @@ public abstract class AbstractSerialStateHolder implements Externalizable {
     }
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

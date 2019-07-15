@@ -112,7 +112,7 @@ public class TypeAliasRegistry {
       Class&lt;T&gt; value;
 <span class="fc bfc" id="L113" title="All 2 branches covered.">      if (typeAliases.containsKey(key)) {</span>
 <span class="fc" id="L114">        value = (Class&lt;T&gt;) typeAliases.get(key);</span>
-<span class="fc" id="L115">      } else {</span>
+      } else {
 <span class="fc" id="L116">        value = (Class&lt;T&gt;) Resources.classForName(string);</span>
       }
 <span class="fc" id="L118">      return value;</span>
@@ -135,7 +135,7 @@ public class TypeAliasRegistry {
 <span class="pc bpc" id="L135" title="2 of 6 branches missed.">      if (!type.isAnonymousClass() &amp;&amp; !type.isInterface() &amp;&amp; !type.isMemberClass()) {</span>
 <span class="fc" id="L136">        registerAlias(type);</span>
       }
-    }
+<span class="fc" id="L138">    }</span>
 <span class="fc" id="L139">  }</span>
 
   public void registerAlias(Class&lt;?&gt; type) {
@@ -162,9 +162,9 @@ public class TypeAliasRegistry {
   public void registerAlias(String alias, String value) {
     try {
 <span class="fc" id="L164">      registerAlias(alias, Resources.classForName(value));</span>
-<span class="pc" id="L165">    } catch (ClassNotFoundException e) {</span>
+<span class="nc" id="L165">    } catch (ClassNotFoundException e) {</span>
 <span class="nc" id="L166">      throw new TypeException(&quot;Error registering type alias &quot; + alias + &quot; for &quot; + value + &quot;. Cause: &quot; + e, e);</span>
-    }
+<span class="fc" id="L167">    }</span>
 <span class="fc" id="L168">  }</span>
 
   /**
@@ -175,4 +175,4 @@ public class TypeAliasRegistry {
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

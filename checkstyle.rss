@@ -27,7 +27,7 @@ under the License.
     <item>
       <title>File: 399,
              Errors: 0,
-             Warnings: 1160,
+             Warnings: 1191,
              Infos: 0
       </title>
             <link>http://www.mybatis.org/mybatis-3/checkstyle.html</link>
@@ -1900,7 +1900,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  5
+                  9
                 </td>
                 <td>
                   0
@@ -2054,7 +2054,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  34
+                  36
                 </td>
                 <td>
                   0
@@ -2166,7 +2166,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  17
+                  18
                 </td>
                 <td>
                   0
@@ -2684,7 +2684,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  6
+                  8
                 </td>
                 <td>
                   0
@@ -3160,7 +3160,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  12
+                  14
                 </td>
                 <td>
                   0
@@ -3448,20 +3448,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#target.classes.META-INF.maven.org.mybatis.mybatis.pom.properties">target/classes/META-INF/maven/org.mybatis/mybatis/pom.properties</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.executor.statement.CallableStatementHandler.java">org/apache/ibatis/executor/statement/CallableStatementHandler.java</a>
                 </td>
                 <td>
@@ -3706,7 +3692,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  1
+                  2
                 </td>
                 <td>
                   0
@@ -3818,7 +3804,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  7
+                  8
                 </td>
                 <td>
                   0
@@ -5002,6 +4988,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#target.ibderby.service.properties">target/ibderby/service.properties</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.executor.keygen.package-info.java">org/apache/ibatis/executor/keygen/package-info.java</a>
                 </td>
                 <td>
@@ -5366,20 +5366,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#target.maven-archiver.pom.properties">target/maven-archiver/pom.properties</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.parsing.XNode.java">org/apache/ibatis/parsing/XNode.java</a>
                 </td>
                 <td>
@@ -5387,6 +5373,20 @@ under the License.
                 </td>
                 <td>
                   20
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#target.target.derby.sqlprovider.service.properties">target/target/derby/sqlprovider/service.properties</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
                 </td>
                 <td>
                   0
@@ -5442,7 +5442,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  98
+                  116
                 </td>
                 <td>
                   0

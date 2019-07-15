@@ -37,10 +37,10 @@ public class SetFieldInvoker implements Invoker {
 <span class="pc bpc" id="L37" title="1 of 2 branches missed.">      if (Reflector.canControlMemberAccessible()) {</span>
 <span class="fc" id="L38">        field.setAccessible(true);</span>
 <span class="fc" id="L39">        field.set(target, args[0]);</span>
-<span class="fc" id="L40">      } else {</span>
+      } else {
 <span class="nc" id="L41">        throw e;</span>
       }
-    }
+<span class="fc" id="L43">    }</span>
 <span class="fc" id="L44">    return null;</span>
   }
 
@@ -49,4 +49,4 @@ public class SetFieldInvoker implements Invoker {
 <span class="nc" id="L49">    return field.getType();</span>
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

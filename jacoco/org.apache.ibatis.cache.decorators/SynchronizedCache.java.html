@@ -15,8 +15,6 @@
  */
 package org.apache.ibatis.cache.decorators;
 
-import java.util.concurrent.locks.ReadWriteLock;
-
 import org.apache.ibatis.cache.Cache;
 
 /**
@@ -26,54 +24,49 @@ public class SynchronizedCache implements Cache {
 
   private final Cache delegate;
 
-<span class="fc" id="L29">  public SynchronizedCache(Cache delegate) {</span>
-<span class="fc" id="L30">    this.delegate = delegate;</span>
-<span class="fc" id="L31">  }</span>
+<span class="fc" id="L27">  public SynchronizedCache(Cache delegate) {</span>
+<span class="fc" id="L28">    this.delegate = delegate;</span>
+<span class="fc" id="L29">  }</span>
 
   @Override
   public String getId() {
-<span class="fc" id="L35">    return delegate.getId();</span>
+<span class="fc" id="L33">    return delegate.getId();</span>
   }
 
   @Override
   public synchronized int getSize() {
-<span class="fc" id="L40">    return delegate.getSize();</span>
+<span class="fc" id="L38">    return delegate.getSize();</span>
   }
 
   @Override
   public synchronized void putObject(Object key, Object object) {
-<span class="fc" id="L45">    delegate.putObject(key, object);</span>
-<span class="fc" id="L46">  }</span>
+<span class="fc" id="L43">    delegate.putObject(key, object);</span>
+<span class="fc" id="L44">  }</span>
 
   @Override
   public synchronized Object getObject(Object key) {
-<span class="fc" id="L50">    return delegate.getObject(key);</span>
+<span class="fc" id="L48">    return delegate.getObject(key);</span>
   }
 
   @Override
   public synchronized Object removeObject(Object key) {
-<span class="fc" id="L55">    return delegate.removeObject(key);</span>
+<span class="fc" id="L53">    return delegate.removeObject(key);</span>
   }
 
   @Override
   public synchronized void clear() {
-<span class="fc" id="L60">    delegate.clear();</span>
-<span class="fc" id="L61">  }</span>
+<span class="fc" id="L58">    delegate.clear();</span>
+<span class="fc" id="L59">  }</span>
 
   @Override
   public int hashCode() {
-<span class="fc" id="L65">    return delegate.hashCode();</span>
+<span class="fc" id="L63">    return delegate.hashCode();</span>
   }
 
   @Override
   public boolean equals(Object obj) {
-<span class="fc" id="L70">    return delegate.equals(obj);</span>
-  }
-
-  @Override
-  public ReadWriteLock getReadWriteLock() {
-<span class="nc" id="L75">    return null;</span>
+<span class="fc" id="L68">    return delegate.equals(obj);</span>
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

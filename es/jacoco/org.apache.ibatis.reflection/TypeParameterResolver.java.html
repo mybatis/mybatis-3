@@ -104,7 +104,7 @@ public class TypeParameterResolver {
 <span class="fc" id="L104">        args[i] = resolveParameterizedType((ParameterizedType) typeArgs[i], srcType, declaringClass);</span>
 <span class="fc bfc" id="L105" title="All 2 branches covered.">      } else if (typeArgs[i] instanceof WildcardType) {</span>
 <span class="fc" id="L106">        args[i] = resolveWildcardType((WildcardType) typeArgs[i], srcType, declaringClass);</span>
-<span class="fc" id="L107">      } else {</span>
+      } else {
 <span class="fc" id="L108">        args[i] = typeArgs[i];</span>
       }
     }
@@ -126,7 +126,7 @@ public class TypeParameterResolver {
 <span class="nc" id="L126">        result[i] = resolveParameterizedType((ParameterizedType) bounds[i], srcType, declaringClass);</span>
 <span class="pc bpc" id="L127" title="1 of 2 branches missed.">      } else if (bounds[i] instanceof WildcardType) {</span>
 <span class="nc" id="L128">        result[i] = resolveWildcardType((WildcardType) bounds[i], srcType, declaringClass);</span>
-<span class="nc" id="L129">      } else {</span>
+      } else {
 <span class="fc" id="L130">        result[i] = bounds[i];</span>
       }
     }
@@ -207,7 +207,7 @@ public class TypeParameterResolver {
 <span class="fc" id="L207">            newParentArgs[i] = srcTypeArgs[j];</span>
           }
         }
-<span class="fc" id="L210">      } else {</span>
+      } else {
 <span class="fc" id="L211">        newParentArgs[i] = parentTypeArgs[i];</span>
       }
     }
@@ -289,4 +289,4 @@ public class TypeParameterResolver {
     }
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

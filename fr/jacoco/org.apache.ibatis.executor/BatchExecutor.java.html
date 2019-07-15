@@ -129,11 +129,11 @@ public class BatchExecutor extends BaseExecutor {
 <span class="fc bfc" id="L129" title="All 2 branches covered.">          } else if (!NoKeyGenerator.class.equals(keyGenerator.getClass())) { //issue #141</span>
 <span class="fc bfc" id="L130" title="All 2 branches covered.">            for (Object parameter : parameterObjects) {</span>
 <span class="fc" id="L131">              keyGenerator.processAfter(this, ms, stmt, parameter);</span>
-            }
+<span class="fc" id="L132">            }</span>
           }
           // Close statement to close cursor #1109
 <span class="fc" id="L135">          closeStatement(stmt);</span>
-<span class="pc" id="L136">        } catch (BatchUpdateException e) {</span>
+<span class="nc" id="L136">        } catch (BatchUpdateException e) {</span>
 <span class="nc" id="L137">          StringBuilder message = new StringBuilder();</span>
 <span class="nc" id="L138">          message.append(batchResult.getMappedStatement().getId())</span>
 <span class="nc" id="L139">              .append(&quot; (batch index #&quot;)</span>
@@ -146,14 +146,14 @@ public class BatchExecutor extends BaseExecutor {
 <span class="nc" id="L146">                .append(&quot; prior sub executor(s) completed successfully, but will be rolled back.&quot;);</span>
           }
 <span class="nc" id="L148">          throw new BatchExecutorException(message.toString(), e, results, batchResult);</span>
-        }
+<span class="fc" id="L149">        }</span>
 <span class="fc" id="L150">        results.add(batchResult);</span>
       }
 <span class="fc" id="L152">      return results;</span>
     } finally {
 <span class="fc bfc" id="L154" title="All 2 branches covered.">      for (Statement stmt : statementList) {</span>
 <span class="fc" id="L155">        closeStatement(stmt);</span>
-      }
+<span class="fc" id="L156">      }</span>
 <span class="fc" id="L157">      currentSql = null;</span>
 <span class="fc" id="L158">      statementList.clear();</span>
 <span class="fc" id="L159">      batchResultList.clear();</span>
@@ -161,4 +161,4 @@ public class BatchExecutor extends BaseExecutor {
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

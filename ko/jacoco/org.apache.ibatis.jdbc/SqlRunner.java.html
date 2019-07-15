@@ -85,9 +85,9 @@ public class SqlRunner {
     } finally {
       try {
 <span class="fc" id="L87">        ps.close();</span>
-<span class="pc" id="L88">      } catch (SQLException e) {</span>
+<span class="nc" id="L88">      } catch (SQLException e) {</span>
         //ignore
-      }
+<span class="fc" id="L90">      }</span>
     }
   }
 
@@ -103,7 +103,7 @@ public class SqlRunner {
     PreparedStatement ps;
 <span class="pc bpc" id="L104" title="1 of 2 branches missed.">    if (useGeneratedKeySupport) {</span>
 <span class="fc" id="L105">      ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);</span>
-<span class="fc" id="L106">    } else {</span>
+    } else {
 <span class="nc" id="L107">      ps = connection.prepareStatement(sql);</span>
     }
 
@@ -131,9 +131,9 @@ public class SqlRunner {
     } finally {
       try {
 <span class="fc" id="L133">        ps.close();</span>
-<span class="pc" id="L134">      } catch (SQLException e) {</span>
+<span class="nc" id="L134">      } catch (SQLException e) {</span>
         //ignore
-      }
+<span class="fc" id="L136">      }</span>
     }
   }
 
@@ -153,9 +153,9 @@ public class SqlRunner {
     } finally {
       try {
 <span class="fc" id="L155">        ps.close();</span>
-<span class="pc" id="L156">      } catch (SQLException e) {</span>
+<span class="nc" id="L156">      } catch (SQLException e) {</span>
         //ignore
-      }
+<span class="fc" id="L158">      }</span>
     }
   }
 
@@ -182,12 +182,12 @@ public class SqlRunner {
 <span class="fc" id="L182">    Statement stmt = connection.createStatement();</span>
     try {
 <span class="fc" id="L184">      stmt.execute(sql);</span>
-<span class="fc" id="L185">    } finally {</span>
+    } finally {
       try {
 <span class="fc" id="L187">        stmt.close();</span>
-<span class="pc" id="L188">      } catch (SQLException e) {</span>
+<span class="nc" id="L188">      } catch (SQLException e) {</span>
         //ignore
-      }
+<span class="fc" id="L190">      }</span>
     }
 <span class="fc" id="L192">  }</span>
 
@@ -196,7 +196,7 @@ public class SqlRunner {
 <span class="nc" id="L196">      connection.close();</span>
 <span class="nc" id="L197">    } catch (SQLException e) {</span>
       //ignore
-    }
+<span class="nc" id="L199">    }</span>
 <span class="nc" id="L200">  }</span>
 
   private void setParameters(PreparedStatement ps, Object... args) throws SQLException {
@@ -205,7 +205,7 @@ public class SqlRunner {
 <span class="nc" id="L205">        throw new SQLException(&quot;SqlRunner requires an instance of Null to represent typed null values for JDBC compatibility&quot;);</span>
 <span class="fc bfc" id="L206" title="All 2 branches covered.">      } else if (args[i] instanceof Null) {</span>
 <span class="fc" id="L207">        ((Null) args[i]).getTypeHandler().setParameter(ps, i + 1, null, ((Null) args[i]).getJdbcType());</span>
-<span class="fc" id="L208">      } else {</span>
+      } else {
 <span class="fc" id="L209">        TypeHandler typeHandler = typeHandlerRegistry.getTypeHandler(args[i].getClass());</span>
 <span class="pc bpc" id="L210" title="1 of 2 branches missed.">        if (typeHandler == null) {</span>
 <span class="nc" id="L211">          throw new SQLException(&quot;SqlRunner could not find a TypeHandler instance for &quot; + args[i].getClass());</span>
@@ -231,9 +231,9 @@ public class SqlRunner {
 <span class="fc" id="L231">            typeHandler = typeHandlerRegistry.getTypeHandler(Object.class);</span>
           }
 <span class="fc" id="L233">          typeHandlers.add(typeHandler);</span>
-<span class="pc" id="L234">        } catch (Exception e) {</span>
+<span class="nc" id="L234">        } catch (Exception e) {</span>
 <span class="nc" id="L235">          typeHandlers.add(typeHandlerRegistry.getTypeHandler(Object.class));</span>
-        }
+<span class="fc" id="L236">        }</span>
       }
 <span class="fc bfc" id="L238" title="All 2 branches covered.">      while (rs.next()) {</span>
 <span class="fc" id="L239">        Map&lt;String, Object&gt; row = new HashMap&lt;&gt;();</span>
@@ -243,18 +243,18 @@ public class SqlRunner {
 <span class="fc" id="L243">          row.put(name.toUpperCase(Locale.ENGLISH), handler.getResult(rs, name));</span>
         }
 <span class="fc" id="L245">        list.add(row);</span>
-      }
+<span class="fc" id="L246">      }</span>
 <span class="fc" id="L247">      return list;</span>
     } finally {
 <span class="pc bpc" id="L249" title="1 of 2 branches missed.">      if (rs != null) {</span>
         try {
 <span class="fc" id="L251">          rs.close();</span>
-<span class="pc" id="L252">        } catch (Exception e) {</span>
+<span class="nc" id="L252">        } catch (Exception e) {</span>
           // ignore
-        }
+<span class="fc" id="L254">        }</span>
       }
     }
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

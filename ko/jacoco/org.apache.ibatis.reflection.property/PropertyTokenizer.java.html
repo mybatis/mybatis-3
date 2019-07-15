@@ -31,7 +31,7 @@ public class PropertyTokenizer implements Iterator&lt;PropertyTokenizer&gt; {
 <span class="fc bfc" id="L31" title="All 2 branches covered.">    if (delim &gt; -1) {</span>
 <span class="fc" id="L32">      name = fullname.substring(0, delim);</span>
 <span class="fc" id="L33">      children = fullname.substring(delim + 1);</span>
-<span class="fc" id="L34">    } else {</span>
+    } else {
 <span class="fc" id="L35">      name = fullname;</span>
 <span class="fc" id="L36">      children = null;</span>
     }
@@ -74,4 +74,4 @@ public class PropertyTokenizer implements Iterator&lt;PropertyTokenizer&gt; {
 <span class="nc" id="L74">    throw new UnsupportedOperationException(&quot;Remove is not supported, as it has no meaning in the context of properties.&quot;);</span>
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

@@ -102,7 +102,7 @@ public class DefaultSqlSession implements SqlSession {
 <span class="fc bfc" id="L102" title="All 2 branches covered.">    for (V o : list) {</span>
 <span class="fc" id="L103">      context.nextResultObject(o);</span>
 <span class="fc" id="L104">      mapResultHandler.handleResult(context);</span>
-    }
+<span class="fc" id="L105">    }</span>
 <span class="fc" id="L106">    return mapResultHandler.getMappedResults();</span>
   }
 
@@ -222,7 +222,7 @@ public class DefaultSqlSession implements SqlSession {
     try {
 <span class="fc" id="L223">      executor.commit(isCommitOrRollbackRequired(force));</span>
 <span class="fc" id="L224">      dirty = false;</span>
-<span class="pc" id="L225">    } catch (Exception e) {</span>
+<span class="nc" id="L225">    } catch (Exception e) {</span>
 <span class="nc" id="L226">      throw ExceptionFactory.wrapException(&quot;Error committing transaction.  Cause: &quot; + e, e);</span>
     } finally {
 <span class="fc" id="L228">      ErrorContext.instance().reset();</span>
@@ -239,7 +239,7 @@ public class DefaultSqlSession implements SqlSession {
     try {
 <span class="fc" id="L240">      executor.rollback(isCommitOrRollbackRequired(force));</span>
 <span class="fc" id="L241">      dirty = false;</span>
-<span class="pc" id="L242">    } catch (Exception e) {</span>
+<span class="nc" id="L242">    } catch (Exception e) {</span>
 <span class="nc" id="L243">      throw ExceptionFactory.wrapException(&quot;Error rolling back transaction.  Cause: &quot; + e, e);</span>
     } finally {
 <span class="fc" id="L245">      ErrorContext.instance().reset();</span>
@@ -250,8 +250,8 @@ public class DefaultSqlSession implements SqlSession {
   public List&lt;BatchResult&gt; flushStatements() {
     try {
 <span class="fc" id="L252">      return executor.flushStatements();</span>
-<span class="nc" id="L253">    } catch (Exception e) {</span>
-<span class="nc" id="L254">      throw ExceptionFactory.wrapException(&quot;Error flushing statements.  Cause: &quot; + e, e);</span>
+<span class="fc" id="L253">    } catch (Exception e) {</span>
+<span class="fc" id="L254">      throw ExceptionFactory.wrapException(&quot;Error flushing statements.  Cause: &quot; + e, e);</span>
     } finally {
 <span class="fc" id="L256">      ErrorContext.instance().reset();</span>
     }
@@ -263,7 +263,7 @@ public class DefaultSqlSession implements SqlSession {
 <span class="fc" id="L263">      executor.close(isCommitOrRollbackRequired(false));</span>
 <span class="fc" id="L264">      closeCursors();</span>
 <span class="fc" id="L265">      dirty = false;</span>
-<span class="fc" id="L266">    } finally {</span>
+    } finally {
 <span class="fc" id="L267">      ErrorContext.instance().reset();</span>
     }
 <span class="fc" id="L269">  }</span>
@@ -273,10 +273,10 @@ public class DefaultSqlSession implements SqlSession {
 <span class="fc bfc" id="L273" title="All 2 branches covered.">      for (Cursor&lt;?&gt; cursor : cursorList) {</span>
         try {
 <span class="fc" id="L275">          cursor.close();</span>
-<span class="pc" id="L276">        } catch (IOException e) {</span>
+<span class="nc" id="L276">        } catch (IOException e) {</span>
 <span class="nc" id="L277">          throw ExceptionFactory.wrapException(&quot;Error closing cursor.  Cause: &quot; + e, e);</span>
-        }
-      }
+<span class="fc" id="L278">        }</span>
+<span class="fc" id="L279">      }</span>
 <span class="fc" id="L280">      cursorList.clear();</span>
     }
 <span class="fc" id="L282">  }</span>
@@ -347,4 +347,4 @@ public class DefaultSqlSession implements SqlSession {
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

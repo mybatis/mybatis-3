@@ -61,13 +61,13 @@ import org.apache.ibatis.logging.LogFactory;
 <span class="pc bpc" id="L61" title="1 of 4 branches missed.">          if (vfs == null || !vfs.isValid()) {</span>
 <span class="pc bpc" id="L62" title="1 of 2 branches missed.">            if (log.isDebugEnabled()) {</span>
 <span class="nc" id="L63">              log.debug(&quot;VFS implementation &quot; + impl.getName() +</span>
-<span class="nc" id="L64">                  &quot; is not valid in this environment.&quot;);</span>
+                  &quot; is not valid in this environment.&quot;);
             }
           }
 <span class="nc" id="L67">        } catch (InstantiationException | IllegalAccessException e) {</span>
 <span class="nc" id="L68">          log.error(&quot;Failed to instantiate &quot; + impl, e);</span>
 <span class="nc" id="L69">          return null;</span>
-        }
+<span class="fc" id="L70">        }</span>
       }
 
 <span class="pc bpc" id="L73" title="1 of 2 branches missed.">      if (log.isDebugEnabled()) {</span>
@@ -119,17 +119,17 @@ import org.apache.ibatis.logging.LogFactory;
    * @param parameterTypes The types of the parameters accepted by the method.
    */
   protected static Method getMethod(Class&lt;?&gt; clazz, String methodName, Class&lt;?&gt;... parameterTypes) {
-<span class="pc bpc" id="L122" title="1 of 2 branches missed.">    if (clazz == null) {</span>
+<span class="fc bfc" id="L122" title="All 2 branches covered.">    if (clazz == null) {</span>
 <span class="fc" id="L123">      return null;</span>
     }
     try {
-<span class="nc" id="L126">      return clazz.getMethod(methodName, parameterTypes);</span>
+<span class="fc" id="L126">      return clazz.getMethod(methodName, parameterTypes);</span>
 <span class="nc" id="L127">    } catch (SecurityException e) {</span>
 <span class="nc" id="L128">      log.error(&quot;Security exception looking for method &quot; + clazz.getName() + &quot;.&quot; + methodName + &quot;.  Cause: &quot; + e);</span>
 <span class="nc" id="L129">      return null;</span>
-<span class="nc" id="L130">    } catch (NoSuchMethodException e) {</span>
-<span class="nc" id="L131">      log.error(&quot;Method not found &quot; + clazz.getName() + &quot;.&quot; + methodName + &quot;.&quot; + methodName + &quot;.  Cause: &quot; + e);</span>
-<span class="nc" id="L132">      return null;</span>
+<span class="fc" id="L130">    } catch (NoSuchMethodException e) {</span>
+<span class="fc" id="L131">      log.error(&quot;Method not found &quot; + clazz.getName() + &quot;.&quot; + methodName + &quot;.&quot; + methodName + &quot;.  Cause: &quot; + e);</span>
+<span class="fc" id="L132">      return null;</span>
     }
   }
 
@@ -147,14 +147,14 @@ import org.apache.ibatis.logging.LogFactory;
   protected static &lt;T&gt; T invoke(Method method, Object object, Object... parameters)
       throws IOException, RuntimeException {
     try {
-<span class="nc" id="L150">      return (T) method.invoke(object, parameters);</span>
-<span class="nc" id="L151">    } catch (IllegalArgumentException | IllegalAccessException e) {</span>
-<span class="nc" id="L152">      throw new RuntimeException(e);</span>
-<span class="nc" id="L153">    } catch (InvocationTargetException e) {</span>
-<span class="nc bnc" id="L154" title="All 2 branches missed.">      if (e.getTargetException() instanceof IOException) {</span>
-<span class="nc" id="L155">        throw (IOException) e.getTargetException();</span>
+<span class="fc" id="L150">      return (T) method.invoke(object, parameters);</span>
+<span class="fc" id="L151">    } catch (IllegalArgumentException | IllegalAccessException e) {</span>
+<span class="fc" id="L152">      throw new RuntimeException(e);</span>
+<span class="fc" id="L153">    } catch (InvocationTargetException e) {</span>
+<span class="fc bfc" id="L154" title="All 2 branches covered.">      if (e.getTargetException() instanceof IOException) {</span>
+<span class="fc" id="L155">        throw (IOException) e.getTargetException();</span>
       } else {
-<span class="nc" id="L157">        throw new RuntimeException(e);</span>
+<span class="fc" id="L157">        throw new RuntimeException(e);</span>
       }
     }
   }
@@ -198,8 +198,8 @@ import org.apache.ibatis.logging.LogFactory;
 <span class="fc" id="L198">    List&lt;String&gt; names = new ArrayList&lt;&gt;();</span>
 <span class="fc bfc" id="L199" title="All 2 branches covered.">    for (URL url : getResources(path)) {</span>
 <span class="fc" id="L200">      names.addAll(list(url, path));</span>
-    }
+<span class="fc" id="L201">    }</span>
 <span class="fc" id="L202">    return names;</span>
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

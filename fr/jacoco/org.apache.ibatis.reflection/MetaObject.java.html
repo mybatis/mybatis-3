@@ -46,13 +46,13 @@ public class MetaObject {
 
 <span class="pc bpc" id="L47" title="1 of 2 branches missed.">    if (object instanceof ObjectWrapper) {</span>
 <span class="nc" id="L48">      this.objectWrapper = (ObjectWrapper) object;</span>
-<span class="pc bfc" id="L49" title="All 2 branches covered.">    } else if (objectWrapperFactory.hasWrapperFor(object)) {</span>
+<span class="fc bfc" id="L49" title="All 2 branches covered.">    } else if (objectWrapperFactory.hasWrapperFor(object)) {</span>
 <span class="fc" id="L50">      this.objectWrapper = objectWrapperFactory.getWrapperFor(this, object);</span>
 <span class="fc bfc" id="L51" title="All 2 branches covered.">    } else if (object instanceof Map) {</span>
 <span class="fc" id="L52">      this.objectWrapper = new MapWrapper(this, (Map) object);</span>
 <span class="fc bfc" id="L53" title="All 2 branches covered.">    } else if (object instanceof Collection) {</span>
 <span class="fc" id="L54">      this.objectWrapper = new CollectionWrapper(this, (Collection) object);</span>
-<span class="fc" id="L55">    } else {</span>
+    } else {
 <span class="fc" id="L56">      this.objectWrapper = new BeanWrapper(this, object);</span>
     }
 <span class="fc" id="L58">  }</span>
@@ -163,4 +163,4 @@ public class MetaObject {
 <span class="fc" id="L163">  }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

@@ -146,17 +146,17 @@ public final class TypeHandlerRegistry {
 
 <span class="fc" id="L147">    register(String.class, JdbcType.SQLXML, new SqlxmlTypeHandler());</span>
 
-<span class="fc" id="L149">    register(Instant.class, InstantTypeHandler.class);</span>
-<span class="fc" id="L150">    register(LocalDateTime.class, LocalDateTimeTypeHandler.class);</span>
-<span class="fc" id="L151">    register(LocalDate.class, LocalDateTypeHandler.class);</span>
-<span class="fc" id="L152">    register(LocalTime.class, LocalTimeTypeHandler.class);</span>
-<span class="fc" id="L153">    register(OffsetDateTime.class, OffsetDateTimeTypeHandler.class);</span>
-<span class="fc" id="L154">    register(OffsetTime.class, OffsetTimeTypeHandler.class);</span>
-<span class="fc" id="L155">    register(ZonedDateTime.class, ZonedDateTimeTypeHandler.class);</span>
-<span class="fc" id="L156">    register(Month.class, MonthTypeHandler.class);</span>
-<span class="fc" id="L157">    register(Year.class, YearTypeHandler.class);</span>
-<span class="fc" id="L158">    register(YearMonth.class, YearMonthTypeHandler.class);</span>
-<span class="fc" id="L159">    register(JapaneseDate.class, JapaneseDateTypeHandler.class);</span>
+<span class="fc" id="L149">    register(Instant.class, new InstantTypeHandler());</span>
+<span class="fc" id="L150">    register(LocalDateTime.class, new LocalDateTimeTypeHandler());</span>
+<span class="fc" id="L151">    register(LocalDate.class, new LocalDateTypeHandler());</span>
+<span class="fc" id="L152">    register(LocalTime.class, new LocalTimeTypeHandler());</span>
+<span class="fc" id="L153">    register(OffsetDateTime.class, new OffsetDateTimeTypeHandler());</span>
+<span class="fc" id="L154">    register(OffsetTime.class, new OffsetTimeTypeHandler());</span>
+<span class="fc" id="L155">    register(ZonedDateTime.class, new ZonedDateTimeTypeHandler());</span>
+<span class="fc" id="L156">    register(Month.class, new MonthTypeHandler());</span>
+<span class="fc" id="L157">    register(Year.class, new YearTypeHandler());</span>
+<span class="fc" id="L158">    register(YearMonth.class, new YearMonthTypeHandler());</span>
+<span class="fc" id="L159">    register(JapaneseDate.class, new JapaneseDateTypeHandler());</span>
 
     // issue #273
 <span class="fc" id="L162">    register(Character.class, new CharacterTypeHandler());</span>
@@ -248,7 +248,7 @@ public final class TypeHandlerRegistry {
 <span class="fc" id="L248">          register(enumClass, getInstance(enumClass, defaultEnumTypeHandler));</span>
 <span class="fc" id="L249">          return typeHandlerMap.get(enumClass);</span>
         }
-      } else {
+<span class="fc" id="L251">      } else {</span>
 <span class="fc" id="L252">        jdbcHandlerMap = getJdbcHandlerMapForSuperclass(clazz);</span>
       }
     }
@@ -268,7 +268,7 @@ public final class TypeHandlerRegistry {
 <span class="fc bfc" id="L268" title="All 2 branches covered.">        for (Entry&lt;JdbcType, TypeHandler&lt;?&gt;&gt; entry : jdbcHandlerMap.entrySet()) {</span>
           // Create a type handler instance with enum type as a constructor arg
 <span class="fc" id="L270">          newMap.put(entry.getKey(), getInstance(enumClazz, entry.getValue().getClass()));</span>
-        }
+<span class="fc" id="L271">        }</span>
 <span class="fc" id="L272">        return newMap;</span>
       }
     }
@@ -297,7 +297,7 @@ public final class TypeHandlerRegistry {
         // More than one type handlers registered.
 <span class="fc" id="L298">        return null;</span>
       }
-    }
+<span class="fc" id="L300">    }</span>
 <span class="fc" id="L301">    return soleHandler;</span>
   }
 
@@ -331,9 +331,9 @@ public final class TypeHandlerRegistry {
 <span class="fc" id="L331">        TypeReference&lt;T&gt; typeReference = (TypeReference&lt;T&gt;) typeHandler;</span>
 <span class="fc" id="L332">        register(typeReference.getRawType(), typeHandler);</span>
 <span class="fc" id="L333">        mappedTypeFound = true;</span>
-<span class="pc" id="L334">      } catch (Throwable t) {</span>
+<span class="nc" id="L334">      } catch (Throwable t) {</span>
         // maybe users define the TypeReference with a different type and are not assignable, so just ignore it
-      }
+<span class="fc" id="L336">      }</span>
     }
 <span class="fc bfc" id="L338" title="All 2 branches covered.">    if (!mappedTypeFound) {</span>
 <span class="fc" id="L339">      register((Class&lt;T&gt;) null, typeHandler);</span>
@@ -355,7 +355,7 @@ public final class TypeHandlerRegistry {
 <span class="pc bpc" id="L355" title="1 of 2 branches missed.">      if (mappedJdbcTypes.includeNullJdbcType()) {</span>
 <span class="fc" id="L356">        register(javaType, null, typeHandler);</span>
       }
-<span class="fc" id="L358">    } else {</span>
+    } else {
 <span class="fc" id="L359">      register(javaType, null, typeHandler);</span>
     }
 <span class="fc" id="L361">  }</span>
@@ -430,7 +430,7 @@ public final class TypeHandlerRegistry {
         // ignored
 <span class="nc" id="L431">      } catch (Exception e) {</span>
 <span class="nc" id="L432">        throw new TypeException(&quot;Failed invoking constructor for handler &quot; + typeHandlerClass, e);</span>
-      }
+<span class="fc" id="L433">      }</span>
     }
     try {
 <span class="fc" id="L436">      Constructor&lt;?&gt; c = typeHandlerClass.getConstructor();</span>
@@ -451,7 +451,7 @@ public final class TypeHandlerRegistry {
 <span class="pc bpc" id="L451" title="3 of 6 branches missed.">      if (!type.isAnonymousClass() &amp;&amp; !type.isInterface() &amp;&amp; !Modifier.isAbstract(type.getModifiers())) {</span>
 <span class="fc" id="L452">        register(type);</span>
       }
-    }
+<span class="fc" id="L454">    }</span>
 <span class="fc" id="L455">  }</span>
 
   // get information
@@ -464,4 +464,4 @@ public final class TypeHandlerRegistry {
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

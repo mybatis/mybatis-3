@@ -47,8 +47,8 @@ public class Plugin implements InvocationHandler {
 <span class="fc bfc" id="L47" title="All 2 branches covered.">    if (interfaces.length &gt; 0) {</span>
 <span class="fc" id="L48">      return Proxy.newProxyInstance(</span>
 <span class="fc" id="L49">          type.getClassLoader(),</span>
-<span class="fc" id="L50">          interfaces,</span>
-<span class="fc" id="L51">          new Plugin(target, interceptor, signatureMap));</span>
+          interfaces,
+          new Plugin(target, interceptor, signatureMap));
     }
 <span class="fc" id="L53">    return target;</span>
   }
@@ -79,9 +79,9 @@ public class Plugin implements InvocationHandler {
       try {
 <span class="fc" id="L80">        Method method = sig.type().getMethod(sig.method(), sig.args());</span>
 <span class="fc" id="L81">        methods.add(method);</span>
-<span class="pc" id="L82">      } catch (NoSuchMethodException e) {</span>
+<span class="nc" id="L82">      } catch (NoSuchMethodException e) {</span>
 <span class="nc" id="L83">        throw new PluginException(&quot;Could not find method on &quot; + sig.type() + &quot; named &quot; + sig.method() + &quot;. Cause: &quot; + e, e);</span>
-      }
+<span class="fc" id="L84">      }</span>
     }
 <span class="fc" id="L86">    return signatureMap;</span>
   }
@@ -100,4 +100,4 @@ public class Plugin implements InvocationHandler {
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

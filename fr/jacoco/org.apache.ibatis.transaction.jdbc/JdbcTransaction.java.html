@@ -101,13 +101,13 @@ public class JdbcTransaction implements Transaction {
         }
 <span class="fc" id="L102">        connection.setAutoCommit(desiredAutoCommit);</span>
       }
-<span class="pc" id="L104">    } catch (SQLException e) {</span>
+<span class="nc" id="L104">    } catch (SQLException e) {</span>
       // Only a very poorly implemented driver would fail here,
       // and there's not much we can do about that.
 <span class="nc" id="L107">      throw new TransactionException(&quot;Error configuring AutoCommit.  &quot;</span>
           + &quot;Your driver may not support getAutoCommit() or setAutoCommit(). &quot;
-<span class="nc" id="L109">          + &quot;Requested setting: &quot; + desiredAutoCommit + &quot;.  Cause: &quot; + e, e);</span>
-    }
+          + &quot;Requested setting: &quot; + desiredAutoCommit + &quot;.  Cause: &quot; + e, e);
+<span class="fc" id="L110">    }</span>
 <span class="fc" id="L111">  }</span>
 
   protected void resetAutoCommit() {
@@ -126,9 +126,9 @@ public class JdbcTransaction implements Transaction {
 <span class="fc" id="L126">    } catch (SQLException e) {</span>
 <span class="pc bpc" id="L127" title="1 of 2 branches missed.">      if (log.isDebugEnabled()) {</span>
 <span class="nc" id="L128">        log.debug(&quot;Error resetting autocommit to true &quot;</span>
-<span class="nc" id="L129">            + &quot;before closing the connection.  Cause: &quot; + e);</span>
+            + &quot;before closing the connection.  Cause: &quot; + e);
       }
-    }
+<span class="fc" id="L131">    }</span>
 <span class="fc" id="L132">  }</span>
 
   protected void openConnection() throws SQLException {
@@ -148,4 +148,4 @@ public class JdbcTransaction implements Transaction {
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

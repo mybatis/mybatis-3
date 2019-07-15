@@ -98,7 +98,7 @@ public class CacheBuilder {
 <span class="fc bfc" id="L98" title="All 2 branches covered.">      for (Class&lt;? extends Cache&gt; decorator : decorators) {</span>
 <span class="fc" id="L99">        cache = newCacheDecoratorInstance(decorator, cache);</span>
 <span class="fc" id="L100">        setCacheProperties(cache);</span>
-      }
+<span class="fc" id="L101">      }</span>
 <span class="fc" id="L102">      cache = setStandardDecorators(cache);</span>
 <span class="pc bpc" id="L103" title="1 of 2 branches missed.">    } else if (!LoggingCache.class.isAssignableFrom(cache.getClass())) {</span>
 <span class="fc" id="L104">      cache = new LoggingCache(cache);</span>
@@ -149,32 +149,32 @@ public class CacheBuilder {
 <span class="fc" id="L149">          Class&lt;?&gt; type = metaCache.getSetterType(name);</span>
 <span class="fc bfc" id="L150" title="All 2 branches covered.">          if (String.class == type) {</span>
 <span class="fc" id="L151">            metaCache.setValue(name, value);</span>
-<span class="fc bfc" id="L152" title="All 2 branches covered.">          } else if (int.class == type</span>
-<span class="fc bfc" id="L153" title="All 2 branches covered.">              || Integer.class == type) {</span>
+<span class="fc bfc" id="L152" title="All 4 branches covered.">          } else if (int.class == type</span>
+              || Integer.class == type) {
 <span class="fc" id="L154">            metaCache.setValue(name, Integer.valueOf(value));</span>
-<span class="fc bfc" id="L155" title="All 2 branches covered.">          } else if (long.class == type</span>
-<span class="fc bfc" id="L156" title="All 2 branches covered.">              || Long.class == type) {</span>
+<span class="fc bfc" id="L155" title="All 4 branches covered.">          } else if (long.class == type</span>
+              || Long.class == type) {
 <span class="fc" id="L157">            metaCache.setValue(name, Long.valueOf(value));</span>
-<span class="fc bfc" id="L158" title="All 2 branches covered.">          } else if (short.class == type</span>
-<span class="fc bfc" id="L159" title="All 2 branches covered.">              || Short.class == type) {</span>
+<span class="fc bfc" id="L158" title="All 4 branches covered.">          } else if (short.class == type</span>
+              || Short.class == type) {
 <span class="fc" id="L160">            metaCache.setValue(name, Short.valueOf(value));</span>
-<span class="fc bfc" id="L161" title="All 2 branches covered.">          } else if (byte.class == type</span>
-<span class="fc bfc" id="L162" title="All 2 branches covered.">              || Byte.class == type) {</span>
+<span class="fc bfc" id="L161" title="All 4 branches covered.">          } else if (byte.class == type</span>
+              || Byte.class == type) {
 <span class="fc" id="L163">            metaCache.setValue(name, Byte.valueOf(value));</span>
-<span class="fc bfc" id="L164" title="All 2 branches covered.">          } else if (float.class == type</span>
-<span class="fc bfc" id="L165" title="All 2 branches covered.">              || Float.class == type) {</span>
+<span class="fc bfc" id="L164" title="All 4 branches covered.">          } else if (float.class == type</span>
+              || Float.class == type) {
 <span class="fc" id="L166">            metaCache.setValue(name, Float.valueOf(value));</span>
-<span class="fc bfc" id="L167" title="All 2 branches covered.">          } else if (boolean.class == type</span>
-<span class="fc bfc" id="L168" title="All 2 branches covered.">              || Boolean.class == type) {</span>
+<span class="fc bfc" id="L167" title="All 4 branches covered.">          } else if (boolean.class == type</span>
+              || Boolean.class == type) {
 <span class="fc" id="L169">            metaCache.setValue(name, Boolean.valueOf(value));</span>
-<span class="fc bfc" id="L170" title="All 2 branches covered.">          } else if (double.class == type</span>
-<span class="fc bfc" id="L171" title="All 2 branches covered.">              || Double.class == type) {</span>
+<span class="fc bfc" id="L170" title="All 4 branches covered.">          } else if (double.class == type</span>
+              || Double.class == type) {
 <span class="fc" id="L172">            metaCache.setValue(name, Double.valueOf(value));</span>
-<span class="fc" id="L173">          } else {</span>
+          } else {
 <span class="fc" id="L174">            throw new CacheException(&quot;Unsupported property type for cache: '&quot; + name + &quot;' of type &quot; + type);</span>
           }
         }
-      }
+<span class="fc" id="L177">      }</span>
     }
 <span class="fc bfc" id="L179" title="All 2 branches covered.">    if (InitializingObject.class.isAssignableFrom(cache.getClass())) {</span>
       try {
@@ -182,7 +182,7 @@ public class CacheBuilder {
 <span class="fc" id="L182">      } catch (Exception e) {</span>
 <span class="fc" id="L183">        throw new CacheException(&quot;Failed cache initialization for '&quot;</span>
 <span class="fc" id="L184">          + cache.getId() + &quot;' on '&quot; + cache.getClass().getName() + &quot;'&quot;, e);</span>
-      }
+<span class="fc" id="L185">      }</span>
     }
 <span class="fc" id="L187">  }</span>
 
@@ -200,7 +200,7 @@ public class CacheBuilder {
 <span class="fc" id="L200">      return cacheClass.getConstructor(String.class);</span>
 <span class="nc" id="L201">    } catch (Exception e) {</span>
 <span class="nc" id="L202">      throw new CacheException(&quot;Invalid base cache implementation (&quot; + cacheClass + &quot;).  &quot;</span>
-<span class="nc" id="L203">        + &quot;Base cache implementations must have a constructor that takes a String id as a parameter.  Cause: &quot; + e, e);</span>
+        + &quot;Base cache implementations must have a constructor that takes a String id as a parameter.  Cause: &quot; + e, e);
     }
   }
 
@@ -218,8 +218,8 @@ public class CacheBuilder {
 <span class="fc" id="L218">      return cacheClass.getConstructor(Cache.class);</span>
 <span class="nc" id="L219">    } catch (Exception e) {</span>
 <span class="nc" id="L220">      throw new CacheException(&quot;Invalid cache decorator (&quot; + cacheClass + &quot;).  &quot;</span>
-<span class="nc" id="L221">        + &quot;Cache decorators must have a constructor that takes a Cache instance as a parameter.  Cause: &quot; + e, e);</span>
+        + &quot;Cache decorators must have a constructor that takes a Cache instance as a parameter.  Cause: &quot; + e, e);
     }
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

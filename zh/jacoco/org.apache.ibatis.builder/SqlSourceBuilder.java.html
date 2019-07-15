@@ -80,11 +80,11 @@ public class SqlSourceBuilder extends BaseBuilder {
 <span class="nc" id="L80">        propertyType = java.sql.ResultSet.class;</span>
 <span class="pc bpc" id="L81" title="1 of 4 branches missed.">      } else if (property == null || Map.class.isAssignableFrom(parameterType)) {</span>
 <span class="fc" id="L82">        propertyType = Object.class;</span>
-<span class="fc" id="L83">      } else {</span>
+      } else {
 <span class="fc" id="L84">        MetaClass metaClass = MetaClass.forClass(parameterType, configuration.getReflectorFactory());</span>
 <span class="fc bfc" id="L85" title="All 2 branches covered.">        if (metaClass.hasGetter(property)) {</span>
 <span class="fc" id="L86">          propertyType = metaClass.getGetterType(property);</span>
-<span class="fc" id="L87">        } else {</span>
+        } else {
 <span class="fc" id="L88">          propertyType = Object.class;</span>
         }
       }
@@ -105,7 +105,7 @@ public class SqlSourceBuilder extends BaseBuilder {
 <span class="nc" id="L105">          builder.numericScale(Integer.valueOf(value));</span>
 <span class="pc bpc" id="L106" title="1 of 2 branches missed.">        } else if (&quot;resultMap&quot;.equals(name)) {</span>
 <span class="nc" id="L107">          builder.resultMapId(value);</span>
-<span class="pc bfc" id="L108" title="All 2 branches covered.">        } else if (&quot;typeHandler&quot;.equals(name)) {</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">        } else if (&quot;typeHandler&quot;.equals(name)) {</span>
 <span class="fc" id="L109">          typeHandlerAlias = value;</span>
 <span class="pc bpc" id="L110" title="1 of 2 branches missed.">        } else if (&quot;jdbcTypeName&quot;.equals(name)) {</span>
 <span class="nc" id="L111">          builder.jdbcTypeName(value);</span>
@@ -116,7 +116,7 @@ public class SqlSourceBuilder extends BaseBuilder {
         } else {
 <span class="nc" id="L117">          throw new BuilderException(&quot;An invalid property '&quot; + name + &quot;' was found in mapping #{&quot; + content + &quot;}.  Valid properties are &quot; + PARAMETER_PROPERTIES);</span>
         }
-      }
+<span class="fc" id="L119">      }</span>
 <span class="fc bfc" id="L120" title="All 2 branches covered.">      if (typeHandlerAlias != null) {</span>
 <span class="fc" id="L121">        builder.typeHandler(resolveTypeHandler(javaType, typeHandlerAlias));</span>
       }
@@ -135,4 +135,4 @@ public class SqlSourceBuilder extends BaseBuilder {
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

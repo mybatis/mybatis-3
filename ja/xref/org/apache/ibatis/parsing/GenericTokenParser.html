@@ -74,27 +74,26 @@
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>              end = text.indexOf(closeToken, offset);
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>            } <strong class="jxr_keyword">else</strong> {
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>              expression.append(src, offset, end - offset);
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>              offset = end + closeToken.length();
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>              <strong class="jxr_keyword">break</strong>;
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>            }
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>          }
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>          <strong class="jxr_keyword">if</strong> (end == -1) {
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>            <em class="jxr_comment">// close token was not found.</em>
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>            builder.append(src, start, src.length - start);
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>            offset = src.length;
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>          } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>            builder.append(handler.handleToken(expression.toString()));
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>            offset = end + closeToken.length();
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>          }
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>        }
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>        start = text.indexOf(openToken, offset);
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>      }
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>      <strong class="jxr_keyword">if</strong> (offset &lt; src.length) {
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>        builder.append(src, offset, src.length - offset);
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>      }
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>      <strong class="jxr_keyword">return</strong> builder.toString();
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>    }
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>  }
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>              <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>            }
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>          }
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>          <strong class="jxr_keyword">if</strong> (end == -1) {
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>            <em class="jxr_comment">// close token was not found.</em>
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>            builder.append(src, start, src.length - start);
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>            offset = src.length;
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>          } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>            builder.append(handler.handleToken(expression.toString()));
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>            offset = end + closeToken.length();
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>          }
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>        }
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>        start = text.indexOf(openToken, offset);
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>      }
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>      <strong class="jxr_keyword">if</strong> (offset &lt; src.length) {
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>        builder.append(src, offset, src.length - offset);
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>      }
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>      <strong class="jxr_keyword">return</strong> builder.toString();
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>    }
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>  }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2019 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>

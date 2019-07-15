@@ -61,7 +61,7 @@ public final class PreparedStatementLogger extends BaseJdbcLogger implements Inv
 <span class="fc bfc" id="L61" title="All 2 branches covered.">      } else if (SET_METHODS.contains(method.getName())) {</span>
 <span class="fc bfc" id="L62" title="All 2 branches covered.">        if (&quot;setNull&quot;.equals(method.getName())) {</span>
 <span class="fc" id="L63">          setColumn(params[0], null);</span>
-<span class="fc" id="L64">        } else {</span>
+        } else {
 <span class="fc" id="L65">          setColumn(params[0], params[1]);</span>
         }
 <span class="fc" id="L67">        return method.invoke(statement, params);</span>
@@ -106,4 +106,4 @@ public final class PreparedStatementLogger extends BaseJdbcLogger implements Inv
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

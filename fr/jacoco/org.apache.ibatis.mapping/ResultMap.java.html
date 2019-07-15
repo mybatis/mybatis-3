@@ -101,7 +101,7 @@ public class ResultMap {
 <span class="pc bpc" id="L101" title="1 of 2 branches missed.">            if (compositeColumn != null) {</span>
 <span class="fc" id="L102">              resultMap.mappedColumns.add(compositeColumn.toUpperCase(Locale.ENGLISH));</span>
             }
-          }
+<span class="fc" id="L104">          }</span>
         }
 <span class="fc" id="L106">        final String property = resultMapping.getProperty();</span>
 <span class="fc bfc" id="L107" title="All 2 branches covered.">        if (property != null) {</span>
@@ -112,13 +112,13 @@ public class ResultMap {
 <span class="fc bfc" id="L112" title="All 2 branches covered.">          if (resultMapping.getProperty() != null) {</span>
 <span class="fc" id="L113">            constructorArgNames.add(resultMapping.getProperty());</span>
           }
-<span class="fc" id="L115">        } else {</span>
+        } else {
 <span class="fc" id="L116">          resultMap.propertyResultMappings.add(resultMapping);</span>
         }
 <span class="fc bfc" id="L118" title="All 2 branches covered.">        if (resultMapping.getFlags().contains(ResultFlag.ID)) {</span>
 <span class="fc" id="L119">          resultMap.idResultMappings.add(resultMapping);</span>
         }
-      }
+<span class="fc" id="L121">      }</span>
 <span class="fc bfc" id="L122" title="All 2 branches covered.">      if (resultMap.idResultMappings.isEmpty()) {</span>
 <span class="fc" id="L123">        resultMap.idResultMappings.addAll(resultMap.resultMappings);</span>
       }
@@ -126,9 +126,9 @@ public class ResultMap {
 <span class="fc" id="L126">        final List&lt;String&gt; actualArgNames = argNamesOfMatchingConstructor(constructorArgNames);</span>
 <span class="fc bfc" id="L127" title="All 2 branches covered.">        if (actualArgNames == null) {</span>
 <span class="fc" id="L128">          throw new BuilderException(&quot;Error in result map '&quot; + resultMap.id</span>
-<span class="fc" id="L129">              + &quot;'. Failed to find a constructor in '&quot;</span>
+              + &quot;'. Failed to find a constructor in '&quot;
 <span class="fc" id="L130">              + resultMap.getType().getName() + &quot;' by arg names &quot; + constructorArgNames</span>
-<span class="fc" id="L131">              + &quot;. There might be more info in debug log.&quot;);</span>
+              + &quot;. There might be more info in debug log.&quot;);
         }
 <span class="fc" id="L133">        resultMap.constructorResultMappings.sort((o1, o2) -&gt; {</span>
 <span class="fc" id="L134">          int paramIdx1 = actualArgNames.indexOf(o1.getProperty());</span>
@@ -168,7 +168,7 @@ public class ResultMap {
 <span class="fc bfc" id="L168" title="All 2 branches covered.">        if (!actualType.equals(specifiedType)) {</span>
 <span class="pc bpc" id="L169" title="1 of 2 branches missed.">          if (log.isDebugEnabled()) {</span>
 <span class="nc" id="L170">            log.debug(&quot;While building result map '&quot; + resultMap.id</span>
-<span class="nc" id="L171">                + &quot;', found a constructor with arg names &quot; + constructorArgNames</span>
+                + &quot;', found a constructor with arg names &quot; + constructorArgNames
 <span class="nc" id="L172">                + &quot;, but the type of '&quot; + constructorArgNames.get(i)</span>
 <span class="nc" id="L173">                + &quot;' did not match. Specified: [&quot; + specifiedType.getName() + &quot;] Declared: [&quot;</span>
 <span class="nc" id="L174">                + actualType.getName() + &quot;]&quot;);</span>
@@ -259,4 +259,4 @@ public class ResultMap {
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

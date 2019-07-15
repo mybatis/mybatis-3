@@ -56,14 +56,14 @@ public class ExternalResources {
     try {
 <span class="fc" id="L57">      migrationProperties.load(new FileInputStream(templatePath));</span>
 <span class="fc" id="L58">      templateName = migrationProperties.getProperty(templateProperty);</span>
-<span class="pc" id="L59">    } catch (FileNotFoundException e) {</span>
+<span class="nc" id="L59">    } catch (FileNotFoundException e) {</span>
 <span class="nc" id="L60">      throw e;</span>
 <span class="nc" id="L61">    } catch (Exception e) {</span>
 <span class="nc" id="L62">      log.error(&quot;&quot;, e);</span>
-    }
+<span class="fc" id="L63">    }</span>
 
 <span class="fc" id="L65">    return templateName;</span>
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

@@ -101,9 +101,11 @@
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>  <em class="jxr_javadoccomment">   *</em>
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>  <em class="jxr_javadoccomment">   * @return A ReadWriteLock</em>
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>  <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>    ReadWriteLock getReadWriteLock();
-<a class="jxr_linenumber" name="L97" href="#L97">97</a>  
-<a class="jxr_linenumber" name="L98" href="#L98">98</a>  }
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>    <strong class="jxr_keyword">default</strong> ReadWriteLock getReadWriteLock() {
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>      <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>    }
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>  
+<a class="jxr_linenumber" name="L100" href="#L100">100</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2019 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>

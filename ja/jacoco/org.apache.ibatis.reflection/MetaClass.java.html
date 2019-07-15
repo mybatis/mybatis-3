@@ -103,7 +103,7 @@ public class MetaClass {
 <span class="fc" id="L103">          returnType = actualTypeArguments[0];</span>
 <span class="pc bpc" id="L104" title="1 of 2 branches missed.">          if (returnType instanceof Class) {</span>
 <span class="fc" id="L105">            type = (Class&lt;?&gt;) returnType;</span>
-<span class="pc bnc" id="L106" title="All 2 branches missed.">          } else if (returnType instanceof ParameterizedType) {</span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">          } else if (returnType instanceof ParameterizedType) {</span>
 <span class="nc" id="L107">            type = (Class&lt;?&gt;) ((ParameterizedType) returnType).getRawType();</span>
           }
         }
@@ -127,7 +127,7 @@ public class MetaClass {
 <span class="fc" id="L127">        return TypeParameterResolver.resolveFieldType(field, reflector.getType());</span>
       }
 <span class="nc" id="L129">    } catch (NoSuchFieldException | IllegalAccessException ignored) {</span>
-    }
+<span class="nc" id="L130">    }</span>
 <span class="nc" id="L131">    return null;</span>
   }
 
@@ -191,4 +191,4 @@ public class MetaClass {
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

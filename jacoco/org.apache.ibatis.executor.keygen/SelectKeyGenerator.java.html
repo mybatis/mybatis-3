@@ -75,12 +75,12 @@ public class SelectKeyGenerator implements KeyGenerator {
 <span class="fc bfc" id="L75" title="All 2 branches covered.">            if (keyProperties.length == 1) {</span>
 <span class="fc bfc" id="L76" title="All 2 branches covered.">              if (metaResult.hasGetter(keyProperties[0])) {</span>
 <span class="fc" id="L77">                setValue(metaParam, keyProperties[0], metaResult.getValue(keyProperties[0]));</span>
-<span class="fc" id="L78">              } else {</span>
+              } else {
                 // no getter for the property - maybe just a single value object
                 // so try that
 <span class="fc" id="L81">                setValue(metaParam, keyProperties[0], values.get(0));</span>
               }
-<span class="fc" id="L83">            } else {</span>
+            } else {
 <span class="fc" id="L84">              handleMultipleProperties(keyProperties, metaParam, metaResult);</span>
             }
           }
@@ -90,7 +90,7 @@ public class SelectKeyGenerator implements KeyGenerator {
 <span class="fc" id="L90">      throw e;</span>
 <span class="fc" id="L91">    } catch (Exception e) {</span>
 <span class="fc" id="L92">      throw new ExecutorException(&quot;Error selecting key or setting result to parameter object. Cause: &quot; + e, e);</span>
-    }
+<span class="fc" id="L93">    }</span>
 <span class="fc" id="L94">  }</span>
 
   private void handleMultipleProperties(String[] keyProperties,
@@ -102,7 +102,7 @@ public class SelectKeyGenerator implements KeyGenerator {
 <span class="fc bfc" id="L102" title="All 2 branches covered.">      for (String keyProperty : keyProperties) {</span>
 <span class="fc" id="L103">        setValue(metaParam, keyProperty, metaResult.getValue(keyProperty));</span>
       }
-<span class="fc" id="L105">    } else {</span>
+    } else {
 <span class="pc bpc" id="L106" title="1 of 2 branches missed.">      if (keyColumns.length != keyProperties.length) {</span>
 <span class="nc" id="L107">        throw new ExecutorException(&quot;If SelectKey has key columns, the number must match the number of key properties.&quot;);</span>
       }
@@ -115,9 +115,9 @@ public class SelectKeyGenerator implements KeyGenerator {
   private void setValue(MetaObject metaParam, String property, Object value) {
 <span class="fc bfc" id="L116" title="All 2 branches covered.">    if (metaParam.hasSetter(property)) {</span>
 <span class="fc" id="L117">      metaParam.setValue(property, value);</span>
-<span class="fc" id="L118">    } else {</span>
+    } else {
 <span class="fc" id="L119">      throw new ExecutorException(&quot;No setter found for the keyProperty '&quot; + property + &quot;' in &quot; + metaParam.getOriginalObject().getClass().getName() + &quot;.&quot;);</span>
     }
 <span class="fc" id="L121">  }</span>
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

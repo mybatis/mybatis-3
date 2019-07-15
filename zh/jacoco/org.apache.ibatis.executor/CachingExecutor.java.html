@@ -57,10 +57,10 @@ public class CachingExecutor implements Executor {
       //issues #499, #524 and #573
 <span class="fc bfc" id="L58" title="All 2 branches covered.">      if (forceRollback) {</span>
 <span class="fc" id="L59">        tcm.rollback();</span>
-<span class="fc" id="L60">      } else {</span>
+      } else {
 <span class="fc" id="L61">        tcm.commit();</span>
       }
-<span class="fc" id="L63">    } finally {</span>
+    } finally {
 <span class="fc" id="L64">      delegate.close(forceRollback);</span>
     }
 <span class="fc" id="L66">  }</span>
@@ -124,7 +124,7 @@ public class CachingExecutor implements Executor {
   public void rollback(boolean required) throws SQLException {
     try {
 <span class="fc" id="L126">      delegate.rollback(required);</span>
-<span class="fc" id="L127">    } finally {</span>
+    } finally {
 <span class="fc bfc" id="L128" title="All 2 branches covered.">      if (required) {</span>
 <span class="fc" id="L129">        tcm.rollback();</span>
       }
@@ -137,7 +137,7 @@ public class CachingExecutor implements Executor {
 <span class="nc bnc" id="L137" title="All 2 branches missed.">        if (parameterMapping.getMode() != ParameterMode.IN) {</span>
 <span class="nc" id="L138">          throw new ExecutorException(&quot;Caching stored procedures with OUT params is not supported.  Please configure useCache=false in &quot; + ms.getId() + &quot; statement.&quot;);</span>
         }
-      }
+<span class="nc" id="L140">      }</span>
     }
 <span class="fc" id="L142">  }</span>
 
@@ -174,4 +174,4 @@ public class CachingExecutor implements Executor {
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

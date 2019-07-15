@@ -15,6 +15,8 @@
  */
 package org.apache.ibatis.builder.annotation;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Map;
@@ -36,6 +38,7 @@ public class ProviderSqlSource implements SqlSource {
   private final Configuration configuration;
   private final Class&lt;?&gt; providerType;
   private final LanguageDriver languageDriver;
+  private final Method mapperMethod;
   private Method providerMethod;
   private String[] providerMethodArgumentNames;
   private Class&lt;?&gt;[] providerMethodParameterTypes;
@@ -47,126 +50,164 @@ public class ProviderSqlSource implements SqlSource {
    */
   @Deprecated
   public ProviderSqlSource(Configuration configuration, Object provider) {
-<span class="nc" id="L50">    this(configuration, provider, null, null);</span>
-<span class="nc" id="L51">  }</span>
+<span class="nc" id="L53">    this(configuration, provider, null, null);</span>
+<span class="nc" id="L54">  }</span>
 
   /**
    * @since 3.4.5
    */
-<span class="fc" id="L56">  public ProviderSqlSource(Configuration configuration, Object provider, Class&lt;?&gt; mapperType, Method mapperMethod) {</span>
+<span class="fc" id="L59">  public ProviderSqlSource(Configuration configuration, Object provider, Class&lt;?&gt; mapperType, Method mapperMethod) {</span>
     String providerMethodName;
     try {
-<span class="fc" id="L59">      this.configuration = configuration;</span>
-<span class="fc bfc" id="L60" title="All 2 branches covered.">      Lang lang = mapperMethod == null ? null : mapperMethod.getAnnotation(Lang.class);</span>
-<span class="fc bfc" id="L61" title="All 2 branches covered.">      this.languageDriver = configuration.getLanguageDriver(lang == null ? null : lang.value());</span>
-<span class="fc" id="L62">      this.providerType = (Class&lt;?&gt;) provider.getClass().getMethod(&quot;type&quot;).invoke(provider);</span>
-<span class="fc" id="L63">      providerMethodName = (String) provider.getClass().getMethod(&quot;method&quot;).invoke(provider);</span>
+<span class="fc" id="L62">      this.configuration = configuration;</span>
+<span class="fc" id="L63">      this.mapperMethod = mapperMethod;</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">      Lang lang = mapperMethod == null ? null : mapperMethod.getAnnotation(Lang.class);</span>
+<span class="fc bfc" id="L65" title="All 2 branches covered.">      this.languageDriver = configuration.getLanguageDriver(lang == null ? null : lang.value());</span>
+<span class="fc" id="L66">      this.providerType = getProviderType(provider, mapperMethod);</span>
+<span class="fc" id="L67">      providerMethodName = (String) provider.getClass().getMethod(&quot;method&quot;).invoke(provider);</span>
 
-<span class="fc bfc" id="L65" title="All 2 branches covered.">      for (Method m : this.providerType.getMethods()) {</span>
-<span class="fc bfc" id="L66" title="All 4 branches covered.">        if (providerMethodName.equals(m.getName()) &amp;&amp; CharSequence.class.isAssignableFrom(m.getReturnType())) {</span>
-<span class="fc bfc" id="L67" title="All 2 branches covered.">          if (providerMethod != null) {</span>
-<span class="fc" id="L68">            throw new BuilderException(&quot;Error creating SqlSource for SqlProvider. Method '&quot;</span>
-<span class="fc" id="L69">                    + providerMethodName + &quot;' is found multiple in SqlProvider '&quot; + this.providerType.getName()</span>
-<span class="fc" id="L70">                    + &quot;'. Sql provider method can not overload.&quot;);</span>
+<span class="fc bfc" id="L69" title="All 4 branches covered.">      if (providerMethodName.length() == 0 &amp;&amp; ProviderMethodResolver.class.isAssignableFrom(this.providerType)) {</span>
+<span class="fc" id="L70">        this.providerMethod = ((ProviderMethodResolver) this.providerType.getDeclaredConstructor().newInstance())</span>
+<span class="fc" id="L71">            .resolveMethod(new ProviderContext(mapperType, mapperMethod, configuration.getDatabaseId()));</span>
+      }
+<span class="fc bfc" id="L73" title="All 2 branches covered.">      if (this.providerMethod == null) {</span>
+<span class="fc bfc" id="L74" title="All 2 branches covered.">        providerMethodName = providerMethodName.length() == 0 ? &quot;provideSql&quot; : providerMethodName;</span>
+<span class="fc bfc" id="L75" title="All 2 branches covered.">        for (Method m : this.providerType.getMethods()) {</span>
+<span class="fc bfc" id="L76" title="All 4 branches covered.">          if (providerMethodName.equals(m.getName()) &amp;&amp; CharSequence.class.isAssignableFrom(m.getReturnType())) {</span>
+<span class="fc bfc" id="L77" title="All 2 branches covered.">            if (this.providerMethod != null) {</span>
+<span class="fc" id="L78">              throw new BuilderException(&quot;Error creating SqlSource for SqlProvider. Method '&quot;</span>
+<span class="fc" id="L79">                  + providerMethodName + &quot;' is found multiple in SqlProvider '&quot; + this.providerType.getName()</span>
+                  + &quot;'. Sql provider method can not overload.&quot;);
+            }
+<span class="fc" id="L82">            this.providerMethod = m;</span>
           }
-<span class="fc" id="L72">          this.providerMethod = m;</span>
-<span class="fc" id="L73">          this.providerMethodArgumentNames = new ParamNameResolver(configuration, m).getNames();</span>
-<span class="fc" id="L74">          this.providerMethodParameterTypes = m.getParameterTypes();</span>
         }
       }
-<span class="fc" id="L77">    } catch (BuilderException e) {</span>
-<span class="fc" id="L78">      throw e;</span>
-<span class="fc" id="L79">    } catch (Exception e) {</span>
-<span class="fc" id="L80">      throw new BuilderException(&quot;Error creating SqlSource for SqlProvider.  Cause: &quot; + e, e);</span>
+<span class="fc" id="L86">    } catch (BuilderException e) {</span>
+<span class="fc" id="L87">      throw e;</span>
+<span class="fc" id="L88">    } catch (Exception e) {</span>
+<span class="fc" id="L89">      throw new BuilderException(&quot;Error creating SqlSource for SqlProvider.  Cause: &quot; + e, e);</span>
+<span class="fc" id="L90">    }</span>
+<span class="fc bfc" id="L91" title="All 2 branches covered.">    if (this.providerMethod == null) {</span>
+<span class="fc" id="L92">      throw new BuilderException(&quot;Error creating SqlSource for SqlProvider. Method '&quot;</span>
+<span class="fc" id="L93">          + providerMethodName + &quot;' not found in SqlProvider '&quot; + this.providerType.getName() + &quot;'.&quot;);</span>
     }
-<span class="fc bfc" id="L82" title="All 2 branches covered.">    if (this.providerMethod == null) {</span>
-<span class="fc" id="L83">      throw new BuilderException(&quot;Error creating SqlSource for SqlProvider. Method '&quot;</span>
-<span class="fc" id="L84">          + providerMethodName + &quot;' not found in SqlProvider '&quot; + this.providerType.getName() + &quot;'.&quot;);</span>
-    }
-<span class="fc bfc" id="L86" title="All 2 branches covered.">    for (int i = 0; i &lt; this.providerMethodParameterTypes.length; i++) {</span>
-<span class="fc" id="L87">      Class&lt;?&gt; parameterType = this.providerMethodParameterTypes[i];</span>
-<span class="fc bfc" id="L88" title="All 2 branches covered.">      if (parameterType == ProviderContext.class) {</span>
-<span class="fc bfc" id="L89" title="All 2 branches covered.">        if (this.providerContext != null) {</span>
-<span class="fc" id="L90">          throw new BuilderException(&quot;Error creating SqlSource for SqlProvider. ProviderContext found multiple in SqlProvider method (&quot;</span>
-<span class="fc" id="L91">              + this.providerType.getName() + &quot;.&quot; + providerMethod.getName()</span>
-<span class="fc" id="L92">              + &quot;). ProviderContext can not define multiple in SqlProvider method argument.&quot;);</span>
+<span class="fc" id="L95">    this.providerMethodArgumentNames = new ParamNameResolver(configuration, this.providerMethod).getNames();</span>
+<span class="fc" id="L96">    this.providerMethodParameterTypes = this.providerMethod.getParameterTypes();</span>
+<span class="fc bfc" id="L97" title="All 2 branches covered.">    for (int i = 0; i &lt; this.providerMethodParameterTypes.length; i++) {</span>
+<span class="fc" id="L98">      Class&lt;?&gt; parameterType = this.providerMethodParameterTypes[i];</span>
+<span class="fc bfc" id="L99" title="All 2 branches covered.">      if (parameterType == ProviderContext.class) {</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">        if (this.providerContext != null) {</span>
+<span class="fc" id="L101">          throw new BuilderException(&quot;Error creating SqlSource for SqlProvider. ProviderContext found multiple in SqlProvider method (&quot;</span>
+<span class="fc" id="L102">              + this.providerType.getName() + &quot;.&quot; + providerMethod.getName()</span>
+              + &quot;). ProviderContext can not define multiple in SqlProvider method argument.&quot;);
         }
-<span class="fc" id="L94">        this.providerContext = new ProviderContext(mapperType, mapperMethod);</span>
-<span class="fc" id="L95">        this.providerContextIndex = i;</span>
+<span class="fc" id="L105">        this.providerContext = new ProviderContext(mapperType, mapperMethod, configuration.getDatabaseId());</span>
+<span class="fc" id="L106">        this.providerContextIndex = i;</span>
       }
     }
-<span class="fc" id="L98">  }</span>
+<span class="fc" id="L109">  }</span>
 
   @Override
   public BoundSql getBoundSql(Object parameterObject) {
-<span class="fc" id="L102">    SqlSource sqlSource = createSqlSource(parameterObject);</span>
-<span class="fc" id="L103">    return sqlSource.getBoundSql(parameterObject);</span>
+<span class="fc" id="L113">    SqlSource sqlSource = createSqlSource(parameterObject);</span>
+<span class="fc" id="L114">    return sqlSource.getBoundSql(parameterObject);</span>
   }
 
   private SqlSource createSqlSource(Object parameterObject) {
     try {
-<span class="fc bfc" id="L108" title="All 2 branches covered.">      int bindParameterCount = providerMethodParameterTypes.length - (providerContext == null ? 0 : 1);</span>
       String sql;
-<span class="fc bfc" id="L110" title="All 2 branches covered.">      if (providerMethodParameterTypes.length == 0) {</span>
-<span class="fc" id="L111">        sql = invokeProviderMethod();</span>
-<span class="fc bfc" id="L112" title="All 2 branches covered.">      } else if (bindParameterCount == 0) {</span>
-<span class="fc" id="L113">        sql = invokeProviderMethod(providerContext);</span>
-<span class="fc bfc" id="L114" title="All 2 branches covered.">      } else if (bindParameterCount == 1</span>
-<span class="fc bfc" id="L115" title="All 8 branches covered.">           &amp;&amp; (parameterObject == null || providerMethodParameterTypes[providerContextIndex == null || providerContextIndex == 1 ? 0 : 1].isAssignableFrom(parameterObject.getClass()))) {</span>
-<span class="fc" id="L116">        sql = invokeProviderMethod(extractProviderMethodArguments(parameterObject));</span>
-<span class="fc bfc" id="L117" title="All 2 branches covered.">      } else if (parameterObject instanceof Map) {</span>
-        @SuppressWarnings(&quot;unchecked&quot;)
-<span class="fc" id="L119">        Map&lt;String, Object&gt; params = (Map&lt;String, Object&gt;) parameterObject;</span>
-<span class="fc" id="L120">        sql = invokeProviderMethod(extractProviderMethodArguments(params, providerMethodArgumentNames));</span>
-<span class="fc" id="L121">      } else {</span>
-<span class="fc" id="L122">        throw new BuilderException(&quot;Error invoking SqlProvider method (&quot;</span>
-<span class="fc" id="L123">                + providerType.getName() + &quot;.&quot; + providerMethod.getName()</span>
-<span class="fc" id="L124">                + &quot;). Cannot invoke a method that holds &quot;</span>
-<span class="fc bfc" id="L125" title="All 2 branches covered.">                + (bindParameterCount == 1 ? &quot;named argument(@Param)&quot; : &quot;multiple arguments&quot;)</span>
-<span class="fc" id="L126">                + &quot; using a specifying parameterObject. In this case, please specify a 'java.util.Map' object.&quot;);</span>
+<span class="fc bfc" id="L120" title="All 2 branches covered.">      if (parameterObject instanceof Map) {</span>
+<span class="fc bfc" id="L121" title="All 2 branches covered.">        int bindParameterCount = providerMethodParameterTypes.length - (providerContext == null ? 0 : 1);</span>
+<span class="fc bfc" id="L122" title="All 2 branches covered.">        if (bindParameterCount == 1 &amp;&amp;</span>
+<span class="fc bfc" id="L123" title="All 4 branches covered.">          (providerMethodParameterTypes[Integer.valueOf(0).equals(providerContextIndex) ? 1 : 0].isAssignableFrom(parameterObject.getClass()))) {</span>
+<span class="fc" id="L124">          sql = invokeProviderMethod(extractProviderMethodArguments(parameterObject));</span>
+        } else {
+          @SuppressWarnings(&quot;unchecked&quot;)
+<span class="fc" id="L127">          Map&lt;String, Object&gt; params = (Map&lt;String, Object&gt;) parameterObject;</span>
+<span class="fc" id="L128">          sql = invokeProviderMethod(extractProviderMethodArguments(params, providerMethodArgumentNames));</span>
+        }
+<span class="fc bfc" id="L130" title="All 2 branches covered.">      } else if (providerMethodParameterTypes.length == 0) {</span>
+<span class="fc" id="L131">        sql = invokeProviderMethod();</span>
+<span class="fc bfc" id="L132" title="All 2 branches covered.">      } else if (providerMethodParameterTypes.length == 1) {</span>
+<span class="fc bfc" id="L133" title="All 2 branches covered.">        if (providerContext == null) {</span>
+<span class="fc" id="L134">          sql = invokeProviderMethod(parameterObject);</span>
+        } else {
+<span class="fc" id="L136">          sql = invokeProviderMethod(providerContext);</span>
+        }
+<span class="fc bfc" id="L138" title="All 2 branches covered.">      } else if (providerMethodParameterTypes.length == 2) {</span>
+<span class="fc" id="L139">        sql = invokeProviderMethod(extractProviderMethodArguments(parameterObject));</span>
+      } else {
+<span class="fc" id="L141">        throw new BuilderException(&quot;Cannot invoke SqlProvider method '&quot; + providerMethod</span>
+<span class="pc bpc" id="L142" title="1 of 2 branches missed.">          + &quot;' with specify parameter '&quot; + (parameterObject == null ? null : parameterObject.getClass())</span>
+          + &quot;' because SqlProvider method arguments for '&quot; + mapperMethod + &quot;' is an invalid combination.&quot;);
       }
-<span class="fc bfc" id="L128" title="All 2 branches covered.">      Class&lt;?&gt; parameterType = parameterObject == null ? Object.class : parameterObject.getClass();</span>
-<span class="fc" id="L129">      return languageDriver.createSqlSource(configuration, sql, parameterType);</span>
-<span class="fc" id="L130">    } catch (BuilderException e) {</span>
-<span class="fc" id="L131">      throw e;</span>
-<span class="fc" id="L132">    } catch (Exception e) {</span>
-<span class="fc" id="L133">      throw new BuilderException(&quot;Error invoking SqlProvider method (&quot;</span>
-<span class="fc" id="L134">          + providerType.getName() + &quot;.&quot; + providerMethod.getName()</span>
-<span class="fc" id="L135">          + &quot;).  Cause: &quot; + e, e);</span>
+<span class="fc bfc" id="L145" title="All 2 branches covered.">      Class&lt;?&gt; parameterType = parameterObject == null ? Object.class : parameterObject.getClass();</span>
+<span class="fc" id="L146">      return languageDriver.createSqlSource(configuration, sql, parameterType);</span>
+<span class="fc" id="L147">    } catch (BuilderException e) {</span>
+<span class="fc" id="L148">      throw e;</span>
+<span class="fc" id="L149">    } catch (Exception e) {</span>
+<span class="fc" id="L150">      throw new BuilderException(&quot;Error invoking SqlProvider method '&quot; + providerMethod</span>
+<span class="pc bpc" id="L151" title="1 of 2 branches missed.">          + &quot;' with specify parameter '&quot; + (parameterObject == null ? null : parameterObject.getClass()) + &quot;'.  Cause: &quot; + extractRootCause(e), e);</span>
     }
   }
 
+  private Throwable extractRootCause(Exception e) {
+<span class="fc" id="L156">    Throwable cause = e;</span>
+<span class="fc bfc" id="L157" title="All 2 branches covered.">    while(cause.getCause() != null) {</span>
+<span class="fc" id="L158">      cause = e.getCause();</span>
+    }
+<span class="fc" id="L160">    return cause;</span>
+  }
+
   private Object[] extractProviderMethodArguments(Object parameterObject) {
-<span class="fc bfc" id="L140" title="All 2 branches covered.">    if (providerContext != null) {</span>
-<span class="fc" id="L141">      Object[] args = new Object[2];</span>
-<span class="fc bfc" id="L142" title="All 2 branches covered.">      args[providerContextIndex == 0 ? 1 : 0] = parameterObject;</span>
-<span class="fc" id="L143">      args[providerContextIndex] = providerContext;</span>
-<span class="fc" id="L144">      return args;</span>
+<span class="fc bfc" id="L164" title="All 2 branches covered.">    if (providerContext != null) {</span>
+<span class="fc" id="L165">      Object[] args = new Object[2];</span>
+<span class="fc bfc" id="L166" title="All 2 branches covered.">      args[providerContextIndex == 0 ? 1 : 0] = parameterObject;</span>
+<span class="fc" id="L167">      args[providerContextIndex] = providerContext;</span>
+<span class="fc" id="L168">      return args;</span>
     } else {
-<span class="fc" id="L146">      return new Object[] { parameterObject };</span>
+<span class="fc" id="L170">      return new Object[] { parameterObject };</span>
     }
   }
 
   private Object[] extractProviderMethodArguments(Map&lt;String, Object&gt; params, String[] argumentNames) {
-<span class="fc" id="L151">    Object[] args = new Object[argumentNames.length];</span>
-<span class="fc bfc" id="L152" title="All 2 branches covered.">    for (int i = 0; i &lt; args.length; i++) {</span>
-<span class="fc bfc" id="L153" title="All 4 branches covered.">      if (providerContextIndex != null &amp;&amp; providerContextIndex == i) {</span>
-<span class="fc" id="L154">        args[i] = providerContext;</span>
-<span class="fc" id="L155">      } else {</span>
-<span class="fc" id="L156">        args[i] = params.get(argumentNames[i]);</span>
+<span class="fc" id="L175">    Object[] args = new Object[argumentNames.length];</span>
+<span class="fc bfc" id="L176" title="All 2 branches covered.">    for (int i = 0; i &lt; args.length; i++) {</span>
+<span class="fc bfc" id="L177" title="All 4 branches covered.">      if (providerContextIndex != null &amp;&amp; providerContextIndex == i) {</span>
+<span class="fc" id="L178">        args[i] = providerContext;</span>
+      } else {
+<span class="fc" id="L180">        args[i] = params.get(argumentNames[i]);</span>
       }
     }
-<span class="fc" id="L159">    return args;</span>
+<span class="fc" id="L183">    return args;</span>
   }
 
   private String invokeProviderMethod(Object... args) throws Exception {
-<span class="fc" id="L163">    Object targetObject = null;</span>
-<span class="fc bfc" id="L164" title="All 2 branches covered.">    if (!Modifier.isStatic(providerMethod.getModifiers())) {</span>
-<span class="fc" id="L165">      targetObject = providerType.newInstance();</span>
+<span class="fc" id="L187">    Object targetObject = null;</span>
+<span class="fc bfc" id="L188" title="All 2 branches covered.">    if (!Modifier.isStatic(providerMethod.getModifiers())) {</span>
+<span class="fc" id="L189">      targetObject = providerType.newInstance();</span>
     }
-<span class="fc" id="L167">    CharSequence sql = (CharSequence) providerMethod.invoke(targetObject, args);</span>
-<span class="pc bpc" id="L168" title="1 of 2 branches missed.">    return sql != null ? sql.toString() : null;</span>
+<span class="fc" id="L191">    CharSequence sql = (CharSequence) providerMethod.invoke(targetObject, args);</span>
+<span class="pc bpc" id="L192" title="1 of 2 branches missed.">    return sql != null ? sql.toString() : null;</span>
+  }
+
+  private Class&lt;?&gt; getProviderType(Object providerAnnotation, Method mapperMethod)
+      throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+<span class="fc" id="L197">    Class&lt;?&gt; type = (Class&lt;?&gt;) providerAnnotation.getClass().getMethod(&quot;type&quot;).invoke(providerAnnotation);</span>
+<span class="fc" id="L198">    Class&lt;?&gt; value = (Class&lt;?&gt;) providerAnnotation.getClass().getMethod(&quot;value&quot;).invoke(providerAnnotation);</span>
+<span class="fc bfc" id="L199" title="All 4 branches covered.">    if (value == void.class &amp;&amp; type == void.class) {</span>
+<span class="fc" id="L200">      throw new BuilderException(&quot;Please specify either 'value' or 'type' attribute of @&quot;</span>
+<span class="fc" id="L201">          + ((Annotation) providerAnnotation).annotationType().getSimpleName()</span>
+<span class="fc" id="L202">          + &quot; at the '&quot; + mapperMethod.toString() + &quot;'.&quot;);</span>
+    }
+<span class="pc bpc" id="L204" title="1 of 6 branches missed.">    if (value != void.class &amp;&amp; type != void.class &amp;&amp; value != type) {</span>
+<span class="fc" id="L205">      throw new BuilderException(&quot;Cannot specify different class on 'value' and 'type' attribute of @&quot;</span>
+<span class="fc" id="L206">          + ((Annotation) providerAnnotation).annotationType().getSimpleName()</span>
+<span class="fc" id="L207">          + &quot; at the '&quot; + mapperMethod.toString() + &quot;'.&quot;);</span>
+    }
+<span class="fc bfc" id="L209" title="All 2 branches covered.">    return value == void.class ? type : value;</span>
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

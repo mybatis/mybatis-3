@@ -65,7 +65,7 @@ import org.apache.ibatis.logging.LogFactory;
 <span class="nc" id="L65">          log.debug(&quot;Listing &quot; + url);</span>
         }
 <span class="nc" id="L67">        resources = listResources(new JarInputStream(is), path);</span>
-<span class="nc" id="L68">      }</span>
+      }
       else {
 <span class="fc" id="L70">        List&lt;String&gt; children = new ArrayList&lt;&gt;();</span>
         try {
@@ -115,7 +115,7 @@ import org.apache.ibatis.logging.LogFactory;
 <span class="fc" id="L115">              children.addAll(lines);</span>
             }
           }
-<span class="pc" id="L118">        } catch (FileNotFoundException e) {</span>
+<span class="nc" id="L118">        } catch (FileNotFoundException e) {</span>
           /*
            * For file URLs the openStream() call might fail, depending on the servlet
            * container, because directories can't be opened for reading. If that happens,
@@ -137,7 +137,7 @@ import org.apache.ibatis.logging.LogFactory;
             // No idea where the exception came from so rethrow it
 <span class="nc" id="L138">            throw e;</span>
           }
-        }
+<span class="fc" id="L140">        }</span>
 
         // The URL prefix to use when recursively listing child resources
 <span class="fc" id="L143">        String prefix = url.toExternalForm();</span>
@@ -151,7 +151,7 @@ import org.apache.ibatis.logging.LogFactory;
 <span class="fc" id="L151">          resources.add(resourcePath);</span>
 <span class="fc" id="L152">          URL childUrl = new URL(prefix + child);</span>
 <span class="fc" id="L153">          resources.addAll(list(childUrl, resourcePath));</span>
-        }
+<span class="fc" id="L154">        }</span>
       }
 
 <span class="fc" id="L157">      return resources;</span>
@@ -159,9 +159,9 @@ import org.apache.ibatis.logging.LogFactory;
 <span class="pc bpc" id="L159" title="1 of 2 branches missed.">      if (is != null) {</span>
         try {
 <span class="fc" id="L161">          is.close();</span>
-<span class="pc" id="L162">        } catch (Exception e) {</span>
+<span class="nc" id="L162">        } catch (Exception e) {</span>
           // Ignore
-        }
+<span class="fc" id="L164">        }</span>
       }
     }
   }
@@ -202,7 +202,7 @@ import org.apache.ibatis.logging.LogFactory;
           // Trim leading slash
 <span class="nc" id="L203">          resources.add(name.substring(1));</span>
         }
-      }
+<span class="nc" id="L205">      }</span>
     }
 <span class="nc" id="L207">    return resources;</span>
   }
@@ -224,7 +224,7 @@ import org.apache.ibatis.logging.LogFactory;
 
     // If the file part of the URL is itself a URL, then that URL probably points to the JAR
     try {
-<span class="nc" id="L227">      for (;;) {</span>
+      for (;;) {
 <span class="nc" id="L228">        url = new URL(url.getFile());</span>
 <span class="nc bnc" id="L229" title="All 2 branches missed.">        if (log.isDebugEnabled()) {</span>
 <span class="nc" id="L230">          log.debug(&quot;Inner URL: &quot; + url);</span>
@@ -242,7 +242,7 @@ import org.apache.ibatis.logging.LogFactory;
 <span class="nc bnc" id="L242" title="All 2 branches missed.">      if (log.isDebugEnabled()) {</span>
 <span class="nc" id="L243">        log.debug(&quot;Extracted JAR URL: &quot; + jarUrl);</span>
       }
-<span class="nc" id="L245">    }</span>
+    }
     else {
 <span class="pc bpc" id="L247" title="1 of 2 branches missed.">      if (log.isDebugEnabled()) {</span>
 <span class="nc" id="L248">        log.debug(&quot;Not a JAR: &quot; + jarUrl);</span>
@@ -270,7 +270,7 @@ import org.apache.ibatis.logging.LogFactory;
 <span class="nc" id="L270">            file = new File(URLEncoder.encode(jarUrl.toString(), &quot;UTF-8&quot;));</span>
 <span class="nc" id="L271">          } catch (UnsupportedEncodingException e) {</span>
 <span class="nc" id="L272">            throw new RuntimeException(&quot;Unsupported encoding?  UTF-8?  That's unpossible.&quot;);</span>
-          }
+<span class="nc" id="L273">          }</span>
         }
 
 <span class="nc bnc" id="L276" title="All 2 branches missed.">        if (file.exists()) {</span>
@@ -285,7 +285,7 @@ import org.apache.ibatis.logging.LogFactory;
       }
 <span class="nc" id="L286">    } catch (MalformedURLException e) {</span>
 <span class="nc" id="L287">      log.warn(&quot;Invalid JAR URL: &quot; + jarUrl);</span>
-    }
+<span class="nc" id="L288">    }</span>
 
 <span class="nc bnc" id="L290" title="All 2 branches missed.">    if (log.isDebugEnabled()) {</span>
 <span class="nc" id="L291">      log.debug(&quot;Not a JAR: &quot; + jarUrl);</span>
@@ -337,13 +337,13 @@ import org.apache.ibatis.logging.LogFactory;
 <span class="pc bpc" id="L337" title="1 of 2 branches missed.">      if (is != null) {</span>
         try {
 <span class="fc" id="L339">          is.close();</span>
-<span class="pc" id="L340">        } catch (Exception e) {</span>
+<span class="nc" id="L340">        } catch (Exception e) {</span>
           // Ignore
-        }
+<span class="fc" id="L342">        }</span>
       }
     }
 
 <span class="fc" id="L346">    return false;</span>
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

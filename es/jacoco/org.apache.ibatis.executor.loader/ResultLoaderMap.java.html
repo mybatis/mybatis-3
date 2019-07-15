@@ -54,7 +54,7 @@ import org.apache.ibatis.session.RowBounds;
 <span class="pc bpc" id="L54" title="3 of 4 branches missed.">    if (!upperFirst.equalsIgnoreCase(property) &amp;&amp; loaderMap.containsKey(upperFirst)) {</span>
 <span class="nc" id="L55">      throw new ExecutorException(&quot;Nested lazy loaded result property '&quot; + property</span>
 <span class="nc" id="L56">              + &quot;' for query id '&quot; + resultLoader.mappedStatement.getId()</span>
-<span class="nc" id="L57">              + &quot; already exists in the result map. The leftmost property of all lazy loaded properties must be unique within a result map.&quot;);</span>
+              + &quot; already exists in the result map. The leftmost property of all lazy loaded properties must be unique within a result map.&quot;);
     }
 <span class="fc" id="L59">    loaderMap.put(upperFirst, new LoadPair(property, metaResultObject, resultLoader));</span>
 <span class="fc" id="L60">  }</span>
@@ -159,13 +159,13 @@ import org.apache.ibatis.session.RowBounds;
 <span class="fc" id="L159">          this.mappedParameter = (Serializable) mappedStatementParameter;</span>
 
 <span class="fc" id="L161">          this.configurationFactory = resultLoader.configuration.getConfigurationFactory();</span>
-<span class="fc" id="L162">        } else {</span>
+        } else {
 <span class="nc" id="L163">          Log log = this.getLogger();</span>
 <span class="nc bnc" id="L164" title="All 2 branches missed.">          if (log.isDebugEnabled()) {</span>
 <span class="nc" id="L165">            log.debug(&quot;Property [&quot; + this.property + &quot;] of [&quot;</span>
 <span class="nc" id="L166">                    + metaResultObject.getOriginalObject().getClass() + &quot;] cannot be loaded &quot;</span>
-<span class="nc" id="L167">                    + &quot;after deserialization. Make sure it's loaded before serializing &quot;</span>
-<span class="nc" id="L168">                    + &quot;forenamed object.&quot;);</span>
+                    + &quot;after deserialization. Make sure it's loaded before serializing &quot;
+                    + &quot;forenamed object.&quot;);
           }
         }
       }
@@ -188,8 +188,8 @@ import org.apache.ibatis.session.RowBounds;
 <span class="pc bpc" id="L188" title="1 of 4 branches missed.">      if (this.metaResultObject == null || this.resultLoader == null) {</span>
 <span class="fc bfc" id="L189" title="All 2 branches covered.">        if (this.mappedParameter == null) {</span>
 <span class="fc" id="L190">          throw new ExecutorException(&quot;Property [&quot; + this.property + &quot;] cannot be loaded because &quot;</span>
-<span class="fc" id="L191">                  + &quot;required parameter of mapped statement [&quot;</span>
-<span class="fc" id="L192">                  + this.mappedStatement + &quot;] is not serializable.&quot;);</span>
+                  + &quot;required parameter of mapped statement [&quot;
+                  + this.mappedStatement + &quot;] is not serializable.&quot;);
         }
 
 <span class="fc" id="L195">        final Configuration config = this.getConfiguration();</span>
@@ -197,8 +197,8 @@ import org.apache.ibatis.session.RowBounds;
 <span class="pc bpc" id="L197" title="1 of 2 branches missed.">        if (ms == null) {</span>
 <span class="nc" id="L198">          throw new ExecutorException(&quot;Cannot lazy load property [&quot; + this.property</span>
 <span class="nc" id="L199">                  + &quot;] of deserialized object [&quot; + userObject.getClass()</span>
-<span class="nc" id="L200">                  + &quot;] because configuration does not contain statement [&quot;</span>
-<span class="nc" id="L201">                  + this.mappedStatement + &quot;]&quot;);</span>
+                  + &quot;] because configuration does not contain statement [&quot;
+                  + this.mappedStatement + &quot;]&quot;);
         }
 
 <span class="fc" id="L204">        this.metaResultObject = config.newMetaObject(userObject);</span>
@@ -213,7 +213,7 @@ import org.apache.ibatis.session.RowBounds;
 <span class="fc bfc" id="L213" title="All 2 branches covered.">      if (this.serializationCheck == null) {</span>
 <span class="fc" id="L214">        final ResultLoader old = this.resultLoader;</span>
 <span class="fc" id="L215">        this.resultLoader = new ResultLoader(old.configuration, new ClosedExecutor(), old.mappedStatement,</span>
-<span class="fc" id="L216">                old.parameterObject, old.targetType, old.cacheKey, old.boundSql);</span>
+                old.parameterObject, old.targetType, old.cacheKey, old.boundSql);
       }
 
 <span class="fc" id="L219">      this.metaResultObject.setValue(property, this.resultLoader.loadResult());</span>
@@ -229,8 +229,8 @@ import org.apache.ibatis.session.RowBounds;
 <span class="fc" id="L229">        final Method factoryMethod = this.configurationFactory.getDeclaredMethod(FACTORY_METHOD);</span>
 <span class="pc bpc" id="L230" title="1 of 2 branches missed.">        if (!Modifier.isStatic(factoryMethod.getModifiers())) {</span>
 <span class="nc" id="L231">          throw new ExecutorException(&quot;Cannot get Configuration as factory method [&quot;</span>
-<span class="nc" id="L232">                  + this.configurationFactory + &quot;]#[&quot;</span>
-<span class="nc" id="L233">                  + FACTORY_METHOD + &quot;] is not static.&quot;);</span>
+                  + this.configurationFactory + &quot;]#[&quot;
+                  + FACTORY_METHOD + &quot;] is not static.&quot;);
         }
 
 <span class="pc bpc" id="L236" title="1 of 2 branches missed.">        if (!factoryMethod.isAccessible()) {</span>
@@ -242,29 +242,29 @@ import org.apache.ibatis.session.RowBounds;
 <span class="fc" id="L242">              factoryMethod.setAccessible(false);</span>
             }
           });
-<span class="fc" id="L245">        } else {</span>
+        } else {
 <span class="nc" id="L246">          configurationObject = factoryMethod.invoke(null);</span>
         }
 <span class="nc" id="L248">      } catch (final ExecutorException ex) {</span>
 <span class="nc" id="L249">        throw ex;</span>
 <span class="nc" id="L250">      } catch (final NoSuchMethodException ex) {</span>
 <span class="nc" id="L251">        throw new ExecutorException(&quot;Cannot get Configuration as factory class [&quot;</span>
-<span class="nc" id="L252">                + this.configurationFactory + &quot;] is missing factory method of name [&quot;</span>
-<span class="nc" id="L253">                + FACTORY_METHOD + &quot;].&quot;, ex);</span>
+                + this.configurationFactory + &quot;] is missing factory method of name [&quot;
+                + FACTORY_METHOD + &quot;].&quot;, ex);
 <span class="nc" id="L254">      } catch (final PrivilegedActionException ex) {</span>
 <span class="nc" id="L255">        throw new ExecutorException(&quot;Cannot get Configuration as factory method [&quot;</span>
-<span class="nc" id="L256">                + this.configurationFactory + &quot;]#[&quot;</span>
+                + this.configurationFactory + &quot;]#[&quot;
 <span class="nc" id="L257">                + FACTORY_METHOD + &quot;] threw an exception.&quot;, ex.getCause());</span>
 <span class="nc" id="L258">      } catch (final Exception ex) {</span>
 <span class="nc" id="L259">        throw new ExecutorException(&quot;Cannot get Configuration as factory method [&quot;</span>
-<span class="nc" id="L260">                + this.configurationFactory + &quot;]#[&quot;</span>
-<span class="nc" id="L261">                + FACTORY_METHOD + &quot;] threw an exception.&quot;, ex);</span>
-      }
+                + this.configurationFactory + &quot;]#[&quot;
+                + FACTORY_METHOD + &quot;] threw an exception.&quot;, ex);
+<span class="fc" id="L262">      }</span>
 
 <span class="pc bpc" id="L264" title="1 of 2 branches missed.">      if (!(configurationObject instanceof Configuration)) {</span>
 <span class="nc" id="L265">        throw new ExecutorException(&quot;Cannot get Configuration as factory method [&quot;</span>
-<span class="nc" id="L266">                + this.configurationFactory + &quot;]#[&quot;</span>
-<span class="nc" id="L267">                + FACTORY_METHOD + &quot;] didn't return [&quot; + Configuration.class + &quot;] but [&quot;</span>
+                + this.configurationFactory + &quot;]#[&quot;
+                + FACTORY_METHOD + &quot;] didn't return [&quot; + Configuration.class + &quot;] but [&quot;
 <span class="nc bnc" id="L268" title="All 2 branches missed.">                + (configurationObject == null ? &quot;null&quot; : configurationObject.getClass()) + &quot;].&quot;);</span>
       }
 
@@ -311,4 +311,4 @@ import org.apache.ibatis.session.RowBounds;
     }
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

@@ -37,7 +37,7 @@ import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
   }
 
   public SqlSessionFactory build(Reader reader, String environment) {
-<span class="nc" id="L40">    return build(reader, environment, null);</span>
+<span class="fc" id="L40">    return build(reader, environment, null);</span>
   }
 
   public SqlSessionFactory build(Reader reader, Properties properties) {
@@ -54,9 +54,9 @@ import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
 <span class="fc" id="L54">      ErrorContext.instance().reset();</span>
       try {
 <span class="fc" id="L56">        reader.close();</span>
-<span class="pc" id="L57">      } catch (IOException e) {</span>
+<span class="nc" id="L57">      } catch (IOException e) {</span>
         // Intentionally ignore. Prefer previous error.
-      }
+<span class="fc" id="L59">      }</span>
     }
   }
 
@@ -82,9 +82,9 @@ import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
 <span class="fc" id="L82">      ErrorContext.instance().reset();</span>
       try {
 <span class="fc" id="L84">        inputStream.close();</span>
-<span class="pc" id="L85">      } catch (IOException e) {</span>
+<span class="nc" id="L85">      } catch (IOException e) {</span>
         // Intentionally ignore. Prefer previous error.
-      }
+<span class="fc" id="L87">      }</span>
     }
   }
 
@@ -93,4 +93,4 @@ import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

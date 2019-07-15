@@ -106,10 +106,10 @@ public class ScriptRunner {
     try {
 <span class="fc bfc" id="L107" title="All 2 branches covered.">      if (sendFullScript) {</span>
 <span class="fc" id="L108">        executeFullScript(reader);</span>
-<span class="fc" id="L109">      } else {</span>
+      } else {
 <span class="fc" id="L110">        executeLineByLine(reader);</span>
       }
-<span class="fc" id="L112">    } finally {</span>
+    } finally {
 <span class="fc" id="L113">      rollbackConnection();</span>
     }
 <span class="fc" id="L115">  }</span>
@@ -127,11 +127,11 @@ public class ScriptRunner {
 <span class="fc" id="L127">      println(command);</span>
 <span class="fc" id="L128">      executeStatement(command);</span>
 <span class="fc" id="L129">      commitConnection();</span>
-<span class="pc" id="L130">    } catch (Exception e) {</span>
+<span class="nc" id="L130">    } catch (Exception e) {</span>
 <span class="nc" id="L131">      String message = &quot;Error executing: &quot; + script + &quot;.  Cause: &quot; + e;</span>
 <span class="nc" id="L132">      printlnError(message);</span>
 <span class="nc" id="L133">      throw new RuntimeSqlException(message, e);</span>
-    }
+<span class="fc" id="L134">    }</span>
 <span class="fc" id="L135">  }</span>
 
   private void executeLineByLine(Reader reader) {
@@ -148,7 +148,7 @@ public class ScriptRunner {
 <span class="fc" id="L148">      String message = &quot;Error executing: &quot; + command + &quot;.  Cause: &quot; + e;</span>
 <span class="fc" id="L149">      printlnError(message);</span>
 <span class="fc" id="L150">      throw new RuntimeSqlException(message, e);</span>
-    }
+<span class="fc" id="L151">    }</span>
 <span class="fc" id="L152">  }</span>
 
   public void closeConnection() {
@@ -156,7 +156,7 @@ public class ScriptRunner {
 <span class="nc" id="L156">      connection.close();</span>
 <span class="nc" id="L157">    } catch (Exception e) {</span>
       // ignore
-    }
+<span class="nc" id="L159">    }</span>
 <span class="nc" id="L160">  }</span>
 
   private void setAutoCommit() {
@@ -164,9 +164,9 @@ public class ScriptRunner {
 <span class="fc bfc" id="L164" title="All 2 branches covered.">      if (autoCommit != connection.getAutoCommit()) {</span>
 <span class="fc" id="L165">        connection.setAutoCommit(autoCommit);</span>
       }
-<span class="pc" id="L167">    } catch (Throwable t) {</span>
+<span class="nc" id="L167">    } catch (Throwable t) {</span>
 <span class="nc" id="L168">      throw new RuntimeSqlException(&quot;Could not set AutoCommit to &quot; + autoCommit + &quot;. Cause: &quot; + t, t);</span>
-    }
+<span class="fc" id="L169">    }</span>
 <span class="fc" id="L170">  }</span>
 
   private void commitConnection() {
@@ -174,9 +174,9 @@ public class ScriptRunner {
 <span class="fc bfc" id="L174" title="All 2 branches covered.">      if (!connection.getAutoCommit()) {</span>
 <span class="fc" id="L175">        connection.commit();</span>
       }
-<span class="pc" id="L177">    } catch (Throwable t) {</span>
+<span class="nc" id="L177">    } catch (Throwable t) {</span>
 <span class="nc" id="L178">      throw new RuntimeSqlException(&quot;Could not commit transaction. Cause: &quot; + t, t);</span>
-    }
+<span class="fc" id="L179">    }</span>
 <span class="fc" id="L180">  }</span>
 
   private void rollbackConnection() {
@@ -184,9 +184,9 @@ public class ScriptRunner {
 <span class="fc bfc" id="L184" title="All 2 branches covered.">      if (!connection.getAutoCommit()) {</span>
 <span class="fc" id="L185">        connection.rollback();</span>
       }
-<span class="pc" id="L187">    } catch (Throwable t) {</span>
+<span class="nc" id="L187">    } catch (Throwable t) {</span>
       // ignore
-    }
+<span class="fc" id="L189">    }</span>
 <span class="fc" id="L190">  }</span>
 
   private void checkForMissingLineTerminator(StringBuilder command) {
@@ -239,7 +239,7 @@ public class ScriptRunner {
 <span class="fc" id="L239">          printResults(statement, hasResults);</span>
 <span class="fc" id="L240">          hasResults = statement.getMoreResults();</span>
         }
-<span class="pc" id="L242">      } catch (SQLWarning e) {</span>
+<span class="nc" id="L242">      } catch (SQLWarning e) {</span>
 <span class="nc" id="L243">        throw e;</span>
 <span class="fc" id="L244">      } catch (SQLException e) {</span>
 <span class="pc bpc" id="L245" title="1 of 2 branches missed.">        if (stopOnError) {</span>
@@ -248,14 +248,14 @@ public class ScriptRunner {
 <span class="fc" id="L248">          String message = &quot;Error executing: &quot; + command + &quot;.  Cause: &quot; + e;</span>
 <span class="fc" id="L249">          printlnError(message);</span>
         }
-      }
-<span class="fc" id="L252">    } finally {</span>
+<span class="fc" id="L251">      }</span>
+    } finally {
       try {
 <span class="fc" id="L254">        statement.close();</span>
-<span class="pc" id="L255">      } catch (Exception e) {</span>
+<span class="nc" id="L255">      } catch (Exception e) {</span>
         // Ignore to workaround a bug in some connection pools
         // (Does anyone know the details of the bug?)
-      }
+<span class="fc" id="L258">      }</span>
     }
 <span class="fc" id="L260">  }</span>
 
@@ -292,7 +292,7 @@ public class ScriptRunner {
       }
 <span class="nc" id="L293">    } catch (SQLException e) {</span>
 <span class="nc" id="L294">      printlnError(&quot;Error printing results: &quot; + e.getMessage());</span>
-    }
+<span class="fc" id="L295">    }</span>
 <span class="fc" id="L296">  }</span>
 
   private void print(Object o) {
@@ -317,4 +317,4 @@ public class ScriptRunner {
 <span class="fc" id="L317">  }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

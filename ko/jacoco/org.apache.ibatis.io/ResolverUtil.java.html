@@ -94,7 +94,7 @@ import org.apache.ibatis.logging.LogFactory;
 
     @Override
     public String toString() {
-<span class="nc" id="L97">      return &quot;is assignable to &quot; + parent.getSimpleName();</span>
+<span class="fc" id="L97">      return &quot;is assignable to &quot; + parent.getSimpleName();</span>
     }
   }
 
@@ -106,19 +106,19 @@ import org.apache.ibatis.logging.LogFactory;
     private Class&lt;? extends Annotation&gt; annotation;
 
     /** Constructs an AnnotatedWith test for the specified annotation type. */
-<span class="nc" id="L109">    public AnnotatedWith(Class&lt;? extends Annotation&gt; annotation) {</span>
-<span class="nc" id="L110">      this.annotation = annotation;</span>
-<span class="nc" id="L111">    }</span>
+<span class="fc" id="L109">    public AnnotatedWith(Class&lt;? extends Annotation&gt; annotation) {</span>
+<span class="fc" id="L110">      this.annotation = annotation;</span>
+<span class="fc" id="L111">    }</span>
 
     /** Returns true if the type is annotated with the class provided to the constructor. */
     @Override
     public boolean matches(Class&lt;?&gt; type) {
-<span class="nc bnc" id="L116" title="All 4 branches missed.">      return type != null &amp;&amp; type.isAnnotationPresent(annotation);</span>
+<span class="pc bpc" id="L116" title="1 of 4 branches missed.">      return type != null &amp;&amp; type.isAnnotationPresent(annotation);</span>
     }
 
     @Override
     public String toString() {
-<span class="nc" id="L121">      return &quot;annotated with @&quot; + annotation.getSimpleName();</span>
+<span class="fc" id="L121">      return &quot;annotated with @&quot; + annotation.getSimpleName();</span>
     }
   }
 
@@ -148,7 +148,7 @@ import org.apache.ibatis.logging.LogFactory;
    * @return the ClassLoader that will be used to scan for classes
    */
   public ClassLoader getClassLoader() {
-<span class="pc bpc" id="L151" title="1 of 2 branches missed.">    return classloader == null ? Thread.currentThread().getContextClassLoader() : classloader;</span>
+<span class="fc bfc" id="L151" title="All 2 branches covered.">    return classloader == null ? Thread.currentThread().getContextClassLoader() : classloader;</span>
   }
 
   /**
@@ -158,8 +158,8 @@ import org.apache.ibatis.logging.LogFactory;
    * @param classloader a ClassLoader to use when scanning for classes
    */
   public void setClassLoader(ClassLoader classloader) {
-<span class="nc" id="L161">    this.classloader = classloader;</span>
-<span class="nc" id="L162">  }</span>
+<span class="fc" id="L161">    this.classloader = classloader;</span>
+<span class="fc" id="L162">  }</span>
 
   /**
    * Attempts to discover classes that are assignable to the type provided. In the case
@@ -171,16 +171,16 @@ import org.apache.ibatis.logging.LogFactory;
    * @param packageNames one or more package names to scan (including subpackages) for classes
    */
   public ResolverUtil&lt;T&gt; findImplementations(Class&lt;?&gt; parent, String... packageNames) {
-<span class="nc bnc" id="L174" title="All 2 branches missed.">    if (packageNames == null) {</span>
-<span class="nc" id="L175">      return this;</span>
+<span class="fc bfc" id="L174" title="All 2 branches covered.">    if (packageNames == null) {</span>
+<span class="fc" id="L175">      return this;</span>
     }
 
-<span class="nc" id="L178">    Test test = new IsA(parent);</span>
-<span class="nc bnc" id="L179" title="All 2 branches missed.">    for (String pkg : packageNames) {</span>
-<span class="nc" id="L180">      find(test, pkg);</span>
+<span class="fc" id="L178">    Test test = new IsA(parent);</span>
+<span class="fc bfc" id="L179" title="All 2 branches covered.">    for (String pkg : packageNames) {</span>
+<span class="fc" id="L180">      find(test, pkg);</span>
     }
 
-<span class="nc" id="L183">    return this;</span>
+<span class="fc" id="L183">    return this;</span>
   }
 
   /**
@@ -191,16 +191,16 @@ import org.apache.ibatis.logging.LogFactory;
    * @param packageNames one or more package names to scan (including subpackages) for classes
    */
   public ResolverUtil&lt;T&gt; findAnnotated(Class&lt;? extends Annotation&gt; annotation, String... packageNames) {
-<span class="nc bnc" id="L194" title="All 2 branches missed.">    if (packageNames == null) {</span>
-<span class="nc" id="L195">      return this;</span>
+<span class="fc bfc" id="L194" title="All 2 branches covered.">    if (packageNames == null) {</span>
+<span class="fc" id="L195">      return this;</span>
     }
 
-<span class="nc" id="L198">    Test test = new AnnotatedWith(annotation);</span>
-<span class="nc bnc" id="L199" title="All 2 branches missed.">    for (String pkg : packageNames) {</span>
-<span class="nc" id="L200">      find(test, pkg);</span>
+<span class="fc" id="L198">    Test test = new AnnotatedWith(annotation);</span>
+<span class="fc bfc" id="L199" title="All 2 branches covered.">    for (String pkg : packageNames) {</span>
+<span class="fc" id="L200">      find(test, pkg);</span>
     }
 
-<span class="nc" id="L203">    return this;</span>
+<span class="fc" id="L203">    return this;</span>
   }
 
   /**
@@ -222,10 +222,10 @@ import org.apache.ibatis.logging.LogFactory;
 <span class="fc bfc" id="L222" title="All 2 branches covered.">        if (child.endsWith(&quot;.class&quot;)) {</span>
 <span class="fc" id="L223">          addIfMatching(test, child);</span>
         }
-      }
-<span class="pc" id="L226">    } catch (IOException ioe) {</span>
+<span class="fc" id="L225">      }</span>
+<span class="nc" id="L226">    } catch (IOException ioe) {</span>
 <span class="nc" id="L227">      log.error(&quot;Could not read package: &quot; + packageName, ioe);</span>
-    }
+<span class="fc" id="L228">    }</span>
 
 <span class="fc" id="L230">    return this;</span>
   }
@@ -237,7 +237,7 @@ import org.apache.ibatis.logging.LogFactory;
    * @param packageName The Java package name to convert to a path
    */
   protected String getPackagePath(String packageName) {
-<span class="pc bpc" id="L240" title="1 of 2 branches missed.">    return packageName == null ? null : packageName.replace('.', '/');</span>
+<span class="fc bfc" id="L240" title="All 2 branches covered.">    return packageName == null ? null : packageName.replace('.', '/');</span>
   }
 
   /**
@@ -260,10 +260,10 @@ import org.apache.ibatis.logging.LogFactory;
 <span class="fc bfc" id="L260" title="All 2 branches covered.">      if (test.matches(type)) {</span>
 <span class="fc" id="L261">        matches.add((Class&lt;T&gt;) type);</span>
       }
-<span class="pc" id="L263">    } catch (Throwable t) {</span>
-<span class="nc" id="L264">      log.warn(&quot;Could not examine class '&quot; + fqn + &quot;'&quot; + &quot; due to a &quot; +</span>
-<span class="nc" id="L265">          t.getClass().getName() + &quot; with message: &quot; + t.getMessage());</span>
-    }
+<span class="fc" id="L263">    } catch (Throwable t) {</span>
+<span class="fc" id="L264">      log.warn(&quot;Could not examine class '&quot; + fqn + &quot;'&quot; + &quot; due to a &quot; +</span>
+<span class="fc" id="L265">          t.getClass().getName() + &quot; with message: &quot; + t.getMessage());</span>
+<span class="fc" id="L266">    }</span>
 <span class="fc" id="L267">  }</span>
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

@@ -55,7 +55,7 @@ public class SimpleStatementHandler extends BaseStatementHandler {
 <span class="nc" id="L55">      statement.execute(sql);</span>
 <span class="nc" id="L56">      rows = statement.getUpdateCount();</span>
 <span class="nc" id="L57">      keyGenerator.processAfter(executor, mappedStatement, statement, parameterObject);</span>
-<span class="nc" id="L58">    } else {</span>
+    } else {
 <span class="fc" id="L59">      statement.execute(sql);</span>
 <span class="fc" id="L60">      rows = statement.getUpdateCount();</span>
     }
@@ -97,4 +97,4 @@ public class SimpleStatementHandler extends BaseStatementHandler {
 <span class="fc" id="L97">  }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

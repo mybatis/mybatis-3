@@ -91,9 +91,9 @@ public final class LogFactory {
 <span class="fc bfc" id="L91" title="All 2 branches covered.">    if (logConstructor == null) {</span>
       try {
 <span class="fc" id="L93">        runnable.run();</span>
-<span class="pc" id="L94">      } catch (Throwable t) {</span>
+<span class="nc" id="L94">      } catch (Throwable t) {</span>
         // ignore
-      }
+<span class="fc" id="L96">      }</span>
     }
 <span class="fc" id="L98">  }</span>
 
@@ -105,10 +105,10 @@ public final class LogFactory {
 <span class="fc" id="L105">        log.debug(&quot;Logging initialized using '&quot; + implClass + &quot;' adapter.&quot;);</span>
       }
 <span class="fc" id="L107">      logConstructor = candidate;</span>
-<span class="pc" id="L108">    } catch (Throwable t) {</span>
+<span class="nc" id="L108">    } catch (Throwable t) {</span>
 <span class="nc" id="L109">      throw new LogException(&quot;Error setting Log implementation.  Cause: &quot; + t, t);</span>
-    }
+<span class="fc" id="L110">    }</span>
 <span class="fc" id="L111">  }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

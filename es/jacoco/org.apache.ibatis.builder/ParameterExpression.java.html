@@ -43,7 +43,7 @@ public class ParameterExpression extends HashMap&lt;String, String&gt; {
 <span class="fc" id="L43">    int p = skipWS(expression, 0);</span>
 <span class="fc bfc" id="L44" title="All 2 branches covered.">    if (expression.charAt(p) == '(') {</span>
 <span class="fc" id="L45">      expression(expression, p + 1);</span>
-<span class="fc" id="L46">    } else {</span>
+    } else {
 <span class="fc" id="L47">      property(expression, p);</span>
     }
 <span class="fc" id="L49">  }</span>
@@ -97,7 +97,7 @@ public class ParameterExpression extends HashMap&lt;String, String&gt; {
 <span class="fc" id="L97">        jdbcType(expression, p + 1);</span>
 <span class="fc bfc" id="L98" title="All 2 branches covered.">      } else if (expression.charAt(p) == ',') {</span>
 <span class="fc" id="L99">        option(expression, p + 1);</span>
-<span class="fc" id="L100">      } else {</span>
+      } else {
 <span class="fc" id="L101">        throw new BuilderException(&quot;Parsing error in {&quot; + expression + &quot;} in position &quot; + p);</span>
       }
     }
@@ -108,7 +108,7 @@ public class ParameterExpression extends HashMap&lt;String, String&gt; {
 <span class="fc" id="L108">    int right = skipUntil(expression, left, &quot;,&quot;);</span>
 <span class="fc bfc" id="L109" title="All 2 branches covered.">    if (right &gt; left) {</span>
 <span class="fc" id="L110">      put(&quot;jdbcType&quot;, trimmedStr(expression, left, right));</span>
-<span class="fc" id="L111">    } else {</span>
+    } else {
 <span class="fc" id="L112">      throw new BuilderException(&quot;Parsing error in {&quot; + expression + &quot;} in position &quot; + p);</span>
     }
 <span class="fc" id="L114">    option(expression, right + 1);</span>
@@ -138,4 +138,4 @@ public class ParameterExpression extends HashMap&lt;String, String&gt; {
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

@@ -51,19 +51,19 @@ public class DefaultCursor&lt;T&gt; implements Cursor&lt;T&gt; {
 
 <span class="fc" id="L52">  private enum CursorStatus {</span>
 
-<span class="fc" id="L54">    /**</span>
+    /**
      * A freshly created cursor, database ResultSet consuming has not started.
      */
 <span class="fc" id="L57">    CREATED,</span>
-<span class="fc" id="L58">    /**</span>
+    /**
      * A cursor currently in use, database ResultSet consuming has started.
      */
 <span class="fc" id="L61">    OPEN,</span>
-<span class="fc" id="L62">    /**</span>
+    /**
      * A closed cursor, not fully consumed.
      */
 <span class="fc" id="L65">    CLOSED,</span>
-<span class="fc" id="L66">    /**</span>
+    /**
      * A fully consumed cursor, a consumed cursor is always closed.
      */
 <span class="fc" id="L69">    CONSUMED</span>
@@ -114,7 +114,7 @@ public class DefaultCursor&lt;T&gt; implements Cursor&lt;T&gt; {
 <span class="pc bpc" id="L114" title="1 of 2 branches missed.">      if (rs != null) {</span>
 <span class="fc" id="L115">        rs.close();</span>
       }
-<span class="pc" id="L117">    } catch (SQLException e) {</span>
+<span class="nc" id="L117">    } catch (SQLException e) {</span>
       // ignore
     } finally {
 <span class="fc" id="L120">      status = CursorStatus.CLOSED;</span>
@@ -139,9 +139,9 @@ public class DefaultCursor&lt;T&gt; implements Cursor&lt;T&gt; {
 <span class="fc bfc" id="L139" title="All 2 branches covered.">      if (!rsw.getResultSet().isClosed()) {</span>
 <span class="fc" id="L140">        resultSetHandler.handleRowValues(rsw, resultMap, objectWrapperResultHandler, RowBounds.DEFAULT, null);</span>
       }
-<span class="pc" id="L142">    } catch (SQLException e) {</span>
+<span class="nc" id="L142">    } catch (SQLException e) {</span>
 <span class="nc" id="L143">      throw new RuntimeException(e);</span>
-    }
+<span class="fc" id="L144">    }</span>
 
 <span class="fc" id="L146">    T next = objectWrapperResultHandler.result;</span>
 <span class="fc bfc" id="L147" title="All 2 branches covered.">    if (next != null) {</span>
@@ -219,4 +219,4 @@ public class DefaultCursor&lt;T&gt; implements Cursor&lt;T&gt; {
     }
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

@@ -40,17 +40,17 @@ public final class PropertyCopier {
 <span class="pc bpc" id="L40" title="1 of 2 branches missed.">            if (Reflector.canControlMemberAccessible()) {</span>
 <span class="fc" id="L41">              field.setAccessible(true);</span>
 <span class="fc" id="L42">              field.set(destinationBean, field.get(sourceBean));</span>
-<span class="fc" id="L43">            } else {</span>
+            } else {
 <span class="nc" id="L44">              throw e;</span>
             }
-          }
+<span class="fc" id="L46">          }</span>
 <span class="fc" id="L47">        } catch (Exception e) {</span>
           // Nothing useful to do, will only fail on final fields, which will be ignored.
-        }
+<span class="fc" id="L49">        }</span>
       }
 <span class="fc" id="L51">      parent = parent.getSuperclass();</span>
-    }
+<span class="fc" id="L52">    }</span>
 <span class="fc" id="L53">  }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

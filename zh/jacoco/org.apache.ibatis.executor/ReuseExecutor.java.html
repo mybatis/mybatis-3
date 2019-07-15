@@ -72,7 +72,7 @@ public class ReuseExecutor extends BaseExecutor {
   public List&lt;BatchResult&gt; doFlushStatements(boolean isRollback) {
 <span class="fc bfc" id="L73" title="All 2 branches covered.">    for (Statement stmt : statementMap.values()) {</span>
 <span class="fc" id="L74">      closeStatement(stmt);</span>
-    }
+<span class="fc" id="L75">    }</span>
 <span class="fc" id="L76">    statementMap.clear();</span>
 <span class="fc" id="L77">    return Collections.emptyList();</span>
   }
@@ -84,7 +84,7 @@ public class ReuseExecutor extends BaseExecutor {
 <span class="pc bpc" id="L84" title="1 of 2 branches missed.">    if (hasStatementFor(sql)) {</span>
 <span class="nc" id="L85">      stmt = getStatement(sql);</span>
 <span class="nc" id="L86">      applyTransactionTimeout(stmt);</span>
-<span class="nc" id="L87">    } else {</span>
+    } else {
 <span class="fc" id="L88">      Connection connection = getConnection(statementLog);</span>
 <span class="fc" id="L89">      stmt = handler.prepare(connection, transaction.getTimeout());</span>
 <span class="fc" id="L90">      putStatement(sql, stmt);</span>
@@ -110,4 +110,4 @@ public class ReuseExecutor extends BaseExecutor {
 <span class="fc" id="L110">  }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

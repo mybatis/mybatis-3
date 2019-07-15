@@ -68,7 +68,7 @@ public class XMLScriptBuilder extends BaseBuilder {
     SqlSource sqlSource;
 <span class="fc bfc" id="L69" title="All 2 branches covered.">    if (isDynamic) {</span>
 <span class="fc" id="L70">      sqlSource = new DynamicSqlSource(configuration, rootSqlNode);</span>
-<span class="fc" id="L71">    } else {</span>
+    } else {
 <span class="fc" id="L72">      sqlSource = new RawSqlSource(configuration, rootSqlNode, parameterType);</span>
     }
 <span class="fc" id="L74">    return sqlSource;</span>
@@ -85,7 +85,7 @@ public class XMLScriptBuilder extends BaseBuilder {
 <span class="fc bfc" id="L85" title="All 2 branches covered.">        if (textSqlNode.isDynamic()) {</span>
 <span class="fc" id="L86">          contents.add(textSqlNode);</span>
 <span class="fc" id="L87">          isDynamic = true;</span>
-<span class="fc" id="L88">        } else {</span>
+        } else {
 <span class="fc" id="L89">          contents.add(new StaticTextSqlNode(data));</span>
         }
 <span class="pc bpc" id="L91" title="1 of 2 branches missed.">      } else if (child.getNode().getNodeType() == Node.ELEMENT_NODE) { // issue #628</span>
@@ -232,14 +232,14 @@ public class XMLScriptBuilder extends BaseBuilder {
 <span class="pc bpc" id="L232" title="1 of 2 branches missed.">        } else if (handler instanceof OtherwiseHandler) {</span>
 <span class="fc" id="L233">          handler.handleNode(child, defaultSqlNodes);</span>
         }
-      }
+<span class="fc" id="L235">      }</span>
 <span class="fc" id="L236">    }</span>
 
     private SqlNode getDefaultSqlNode(List&lt;SqlNode&gt; defaultSqlNodes) {
 <span class="fc" id="L239">      SqlNode defaultSqlNode = null;</span>
 <span class="pc bpc" id="L240" title="1 of 2 branches missed.">      if (defaultSqlNodes.size() == 1) {</span>
 <span class="fc" id="L241">        defaultSqlNode = defaultSqlNodes.get(0);</span>
-<span class="pc bnc" id="L242" title="All 2 branches missed.">      } else if (defaultSqlNodes.size() &gt; 1) {</span>
+<span class="nc bnc" id="L242" title="All 2 branches missed.">      } else if (defaultSqlNodes.size() &gt; 1) {</span>
 <span class="nc" id="L243">        throw new BuilderException(&quot;Too many default (otherwise) elements in choose statement.&quot;);</span>
       }
 <span class="fc" id="L245">      return defaultSqlNode;</span>
@@ -247,4 +247,4 @@ public class XMLScriptBuilder extends BaseBuilder {
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

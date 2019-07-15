@@ -43,8 +43,8 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 <span class="fc" id="L43">    this.sqlSessionFactory = sqlSessionFactory;</span>
 <span class="fc" id="L44">    this.sqlSessionProxy = (SqlSession) Proxy.newProxyInstance(</span>
 <span class="fc" id="L45">        SqlSessionFactory.class.getClassLoader(),</span>
-<span class="fc" id="L46">        new Class[]{SqlSession.class},</span>
-<span class="fc" id="L47">        new SqlSessionInterceptor());</span>
+        new Class[]{SqlSession.class},
+        new SqlSessionInterceptor());
 <span class="fc" id="L48">  }</span>
 
   public static SqlSessionManager newInstance(Reader reader) {
@@ -332,7 +332,7 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
     }
     try {
 <span class="fc" id="L334">      sqlSession.close();</span>
-<span class="fc" id="L335">    } finally {</span>
+    } finally {
 <span class="fc" id="L336">      localSqlSession.set(null);</span>
     }
 <span class="fc" id="L338">  }</span>
@@ -367,4 +367,4 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

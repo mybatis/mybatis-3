@@ -19,7 +19,6 @@ import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.concurrent.locks.ReadWriteLock;
 
 import org.apache.ibatis.cache.Cache;
 
@@ -35,86 +34,81 @@ public class WeakCache implements Cache {
   private final Cache delegate;
   private int numberOfHardLinks;
 
-<span class="fc" id="L38">  public WeakCache(Cache delegate) {</span>
-<span class="fc" id="L39">    this.delegate = delegate;</span>
-<span class="fc" id="L40">    this.numberOfHardLinks = 256;</span>
-<span class="fc" id="L41">    this.hardLinksToAvoidGarbageCollection = new LinkedList&lt;&gt;();</span>
-<span class="fc" id="L42">    this.queueOfGarbageCollectedEntries = new ReferenceQueue&lt;&gt;();</span>
-<span class="fc" id="L43">  }</span>
+<span class="fc" id="L37">  public WeakCache(Cache delegate) {</span>
+<span class="fc" id="L38">    this.delegate = delegate;</span>
+<span class="fc" id="L39">    this.numberOfHardLinks = 256;</span>
+<span class="fc" id="L40">    this.hardLinksToAvoidGarbageCollection = new LinkedList&lt;&gt;();</span>
+<span class="fc" id="L41">    this.queueOfGarbageCollectedEntries = new ReferenceQueue&lt;&gt;();</span>
+<span class="fc" id="L42">  }</span>
 
   @Override
   public String getId() {
-<span class="nc" id="L47">    return delegate.getId();</span>
+<span class="nc" id="L46">    return delegate.getId();</span>
   }
 
   @Override
   public int getSize() {
-<span class="fc" id="L52">    removeGarbageCollectedItems();</span>
-<span class="fc" id="L53">    return delegate.getSize();</span>
+<span class="fc" id="L51">    removeGarbageCollectedItems();</span>
+<span class="fc" id="L52">    return delegate.getSize();</span>
   }
 
   public void setSize(int size) {
-<span class="nc" id="L57">    this.numberOfHardLinks = size;</span>
-<span class="nc" id="L58">  }</span>
+<span class="nc" id="L56">    this.numberOfHardLinks = size;</span>
+<span class="nc" id="L57">  }</span>
 
   @Override
   public void putObject(Object key, Object value) {
-<span class="fc" id="L62">    removeGarbageCollectedItems();</span>
-<span class="fc" id="L63">    delegate.putObject(key, new WeakEntry(key, value, queueOfGarbageCollectedEntries));</span>
-<span class="fc" id="L64">  }</span>
+<span class="fc" id="L61">    removeGarbageCollectedItems();</span>
+<span class="fc" id="L62">    delegate.putObject(key, new WeakEntry(key, value, queueOfGarbageCollectedEntries));</span>
+<span class="fc" id="L63">  }</span>
 
   @Override
   public Object getObject(Object key) {
-<span class="fc" id="L68">    Object result = null;</span>
+<span class="fc" id="L67">    Object result = null;</span>
     @SuppressWarnings(&quot;unchecked&quot;) // assumed delegate cache is totally managed by this cache
-<span class="fc" id="L70">    WeakReference&lt;Object&gt; weakReference = (WeakReference&lt;Object&gt;) delegate.getObject(key);</span>
-<span class="fc bfc" id="L71" title="All 2 branches covered.">    if (weakReference != null) {</span>
-<span class="fc" id="L72">      result = weakReference.get();</span>
-<span class="pc bpc" id="L73" title="1 of 2 branches missed.">      if (result == null) {</span>
-<span class="nc" id="L74">        delegate.removeObject(key);</span>
-<span class="nc" id="L75">      } else {</span>
-<span class="fc" id="L76">        hardLinksToAvoidGarbageCollection.addFirst(result);</span>
-<span class="fc bfc" id="L77" title="All 2 branches covered.">        if (hardLinksToAvoidGarbageCollection.size() &gt; numberOfHardLinks) {</span>
-<span class="fc" id="L78">          hardLinksToAvoidGarbageCollection.removeLast();</span>
+<span class="fc" id="L69">    WeakReference&lt;Object&gt; weakReference = (WeakReference&lt;Object&gt;) delegate.getObject(key);</span>
+<span class="fc bfc" id="L70" title="All 2 branches covered.">    if (weakReference != null) {</span>
+<span class="fc" id="L71">      result = weakReference.get();</span>
+<span class="pc bpc" id="L72" title="1 of 2 branches missed.">      if (result == null) {</span>
+<span class="nc" id="L73">        delegate.removeObject(key);</span>
+      } else {
+<span class="fc" id="L75">        hardLinksToAvoidGarbageCollection.addFirst(result);</span>
+<span class="fc bfc" id="L76" title="All 2 branches covered.">        if (hardLinksToAvoidGarbageCollection.size() &gt; numberOfHardLinks) {</span>
+<span class="fc" id="L77">          hardLinksToAvoidGarbageCollection.removeLast();</span>
         }
       }
     }
-<span class="fc" id="L82">    return result;</span>
+<span class="fc" id="L81">    return result;</span>
   }
 
   @Override
   public Object removeObject(Object key) {
-<span class="fc" id="L87">    removeGarbageCollectedItems();</span>
-<span class="fc" id="L88">    return delegate.removeObject(key);</span>
+<span class="fc" id="L86">    removeGarbageCollectedItems();</span>
+<span class="fc" id="L87">    return delegate.removeObject(key);</span>
   }
 
   @Override
   public void clear() {
-<span class="fc" id="L93">    hardLinksToAvoidGarbageCollection.clear();</span>
-<span class="fc" id="L94">    removeGarbageCollectedItems();</span>
-<span class="fc" id="L95">    delegate.clear();</span>
-<span class="fc" id="L96">  }</span>
-
-  @Override
-  public ReadWriteLock getReadWriteLock() {
-<span class="nc" id="L100">    return null;</span>
-  }
+<span class="fc" id="L92">    hardLinksToAvoidGarbageCollection.clear();</span>
+<span class="fc" id="L93">    removeGarbageCollectedItems();</span>
+<span class="fc" id="L94">    delegate.clear();</span>
+<span class="fc" id="L95">  }</span>
 
   private void removeGarbageCollectedItems() {
     WeakEntry sv;
-<span class="fc bfc" id="L105" title="All 2 branches covered.">    while ((sv = (WeakEntry) queueOfGarbageCollectedEntries.poll()) != null) {</span>
-<span class="fc" id="L106">      delegate.removeObject(sv.key);</span>
+<span class="fc bfc" id="L99" title="All 2 branches covered.">    while ((sv = (WeakEntry) queueOfGarbageCollectedEntries.poll()) != null) {</span>
+<span class="fc" id="L100">      delegate.removeObject(sv.key);</span>
     }
-<span class="fc" id="L108">  }</span>
+<span class="fc" id="L102">  }</span>
 
   private static class WeakEntry extends WeakReference&lt;Object&gt; {
     private final Object key;
 
     private WeakEntry(Object key, Object value, ReferenceQueue&lt;Object&gt; garbageCollectionQueue) {
-<span class="fc" id="L114">      super(value, garbageCollectionQueue);</span>
-<span class="fc" id="L115">      this.key = key;</span>
-<span class="fc" id="L116">    }</span>
+<span class="fc" id="L108">      super(value, garbageCollectionQueue);</span>
+<span class="fc" id="L109">      this.key = key;</span>
+<span class="fc" id="L110">    }</span>
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

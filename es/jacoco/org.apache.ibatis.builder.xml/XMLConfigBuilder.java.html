@@ -119,7 +119,7 @@ public class XMLConfigBuilder extends BaseBuilder {
 <span class="fc" id="L119">      mapperElement(root.evalNode(&quot;mappers&quot;));</span>
 <span class="fc" id="L120">    } catch (Exception e) {</span>
 <span class="fc" id="L121">      throw new BuilderException(&quot;Error parsing SQL Mapper Configuration. Cause: &quot; + e, e);</span>
-    }
+<span class="fc" id="L122">    }</span>
 <span class="fc" id="L123">  }</span>
 
   private Properties settingsAsProperties(XNode context) {
@@ -133,7 +133,7 @@ public class XMLConfigBuilder extends BaseBuilder {
 <span class="fc bfc" id="L133" title="All 2 branches covered.">      if (!metaConfig.hasSetter(String.valueOf(key))) {</span>
 <span class="fc" id="L134">        throw new BuilderException(&quot;The setting &quot; + key + &quot; is not known.  Make sure you spelled it correctly (case sensitive).&quot;);</span>
       }
-    }
+<span class="fc" id="L136">    }</span>
 <span class="fc" id="L137">    return props;</span>
   }
 
@@ -169,14 +169,14 @@ public class XMLConfigBuilder extends BaseBuilder {
 <span class="fc" id="L169">            Class&lt;?&gt; clazz = Resources.classForName(type);</span>
 <span class="fc bfc" id="L170" title="All 2 branches covered.">            if (alias == null) {</span>
 <span class="fc" id="L171">              typeAliasRegistry.registerAlias(clazz);</span>
-<span class="fc" id="L172">            } else {</span>
+            } else {
 <span class="fc" id="L173">              typeAliasRegistry.registerAlias(alias, clazz);</span>
             }
 <span class="fc" id="L175">          } catch (ClassNotFoundException e) {</span>
 <span class="fc" id="L176">            throw new BuilderException(&quot;Error registering typeAlias for '&quot; + alias + &quot;'. Cause: &quot; + e, e);</span>
-          }
+<span class="fc" id="L177">          }</span>
         }
-      }
+<span class="fc" id="L179">      }</span>
     }
 <span class="fc" id="L181">  }</span>
 
@@ -188,7 +188,7 @@ public class XMLConfigBuilder extends BaseBuilder {
 <span class="fc" id="L188">        Interceptor interceptorInstance = (Interceptor) resolveClass(interceptor).newInstance();</span>
 <span class="fc" id="L189">        interceptorInstance.setProperties(properties);</span>
 <span class="fc" id="L190">        configuration.addInterceptor(interceptorInstance);</span>
-      }
+<span class="fc" id="L191">      }</span>
     }
 <span class="fc" id="L193">  }</span>
 
@@ -253,150 +253,151 @@ public class XMLConfigBuilder extends BaseBuilder {
 <span class="fc" id="L253">    configuration.setDefaultExecutorType(ExecutorType.valueOf(props.getProperty(&quot;defaultExecutorType&quot;, &quot;SIMPLE&quot;)));</span>
 <span class="fc" id="L254">    configuration.setDefaultStatementTimeout(integerValueOf(props.getProperty(&quot;defaultStatementTimeout&quot;), null));</span>
 <span class="fc" id="L255">    configuration.setDefaultFetchSize(integerValueOf(props.getProperty(&quot;defaultFetchSize&quot;), null));</span>
-<span class="fc" id="L256">    configuration.setMapUnderscoreToCamelCase(booleanValueOf(props.getProperty(&quot;mapUnderscoreToCamelCase&quot;), false));</span>
-<span class="fc" id="L257">    configuration.setSafeRowBoundsEnabled(booleanValueOf(props.getProperty(&quot;safeRowBoundsEnabled&quot;), false));</span>
-<span class="fc" id="L258">    configuration.setLocalCacheScope(LocalCacheScope.valueOf(props.getProperty(&quot;localCacheScope&quot;, &quot;SESSION&quot;)));</span>
-<span class="fc" id="L259">    configuration.setJdbcTypeForNull(JdbcType.valueOf(props.getProperty(&quot;jdbcTypeForNull&quot;, &quot;OTHER&quot;)));</span>
-<span class="fc" id="L260">    configuration.setLazyLoadTriggerMethods(stringSetValueOf(props.getProperty(&quot;lazyLoadTriggerMethods&quot;), &quot;equals,clone,hashCode,toString&quot;));</span>
-<span class="fc" id="L261">    configuration.setSafeResultHandlerEnabled(booleanValueOf(props.getProperty(&quot;safeResultHandlerEnabled&quot;), true));</span>
-<span class="fc" id="L262">    configuration.setDefaultScriptingLanguage(resolveClass(props.getProperty(&quot;defaultScriptingLanguage&quot;)));</span>
-<span class="fc" id="L263">    configuration.setDefaultEnumTypeHandler(resolveClass(props.getProperty(&quot;defaultEnumTypeHandler&quot;)));</span>
-<span class="fc" id="L264">    configuration.setCallSettersOnNulls(booleanValueOf(props.getProperty(&quot;callSettersOnNulls&quot;), false));</span>
-<span class="fc" id="L265">    configuration.setUseActualParamName(booleanValueOf(props.getProperty(&quot;useActualParamName&quot;), true));</span>
-<span class="fc" id="L266">    configuration.setReturnInstanceForEmptyRow(booleanValueOf(props.getProperty(&quot;returnInstanceForEmptyRow&quot;), false));</span>
-<span class="fc" id="L267">    configuration.setLogPrefix(props.getProperty(&quot;logPrefix&quot;));</span>
-<span class="fc" id="L268">    configuration.setConfigurationFactory(resolveClass(props.getProperty(&quot;configurationFactory&quot;)));</span>
-<span class="fc" id="L269">  }</span>
+<span class="fc" id="L256">    configuration.setDefaultResultSetType(resolveResultSetType(props.getProperty(&quot;defaultResultSetType&quot;)));</span>
+<span class="fc" id="L257">    configuration.setMapUnderscoreToCamelCase(booleanValueOf(props.getProperty(&quot;mapUnderscoreToCamelCase&quot;), false));</span>
+<span class="fc" id="L258">    configuration.setSafeRowBoundsEnabled(booleanValueOf(props.getProperty(&quot;safeRowBoundsEnabled&quot;), false));</span>
+<span class="fc" id="L259">    configuration.setLocalCacheScope(LocalCacheScope.valueOf(props.getProperty(&quot;localCacheScope&quot;, &quot;SESSION&quot;)));</span>
+<span class="fc" id="L260">    configuration.setJdbcTypeForNull(JdbcType.valueOf(props.getProperty(&quot;jdbcTypeForNull&quot;, &quot;OTHER&quot;)));</span>
+<span class="fc" id="L261">    configuration.setLazyLoadTriggerMethods(stringSetValueOf(props.getProperty(&quot;lazyLoadTriggerMethods&quot;), &quot;equals,clone,hashCode,toString&quot;));</span>
+<span class="fc" id="L262">    configuration.setSafeResultHandlerEnabled(booleanValueOf(props.getProperty(&quot;safeResultHandlerEnabled&quot;), true));</span>
+<span class="fc" id="L263">    configuration.setDefaultScriptingLanguage(resolveClass(props.getProperty(&quot;defaultScriptingLanguage&quot;)));</span>
+<span class="fc" id="L264">    configuration.setDefaultEnumTypeHandler(resolveClass(props.getProperty(&quot;defaultEnumTypeHandler&quot;)));</span>
+<span class="fc" id="L265">    configuration.setCallSettersOnNulls(booleanValueOf(props.getProperty(&quot;callSettersOnNulls&quot;), false));</span>
+<span class="fc" id="L266">    configuration.setUseActualParamName(booleanValueOf(props.getProperty(&quot;useActualParamName&quot;), true));</span>
+<span class="fc" id="L267">    configuration.setReturnInstanceForEmptyRow(booleanValueOf(props.getProperty(&quot;returnInstanceForEmptyRow&quot;), false));</span>
+<span class="fc" id="L268">    configuration.setLogPrefix(props.getProperty(&quot;logPrefix&quot;));</span>
+<span class="fc" id="L269">    configuration.setConfigurationFactory(resolveClass(props.getProperty(&quot;configurationFactory&quot;)));</span>
+<span class="fc" id="L270">  }</span>
 
   private void environmentsElement(XNode context) throws Exception {
-<span class="fc bfc" id="L272" title="All 2 branches covered.">    if (context != null) {</span>
-<span class="pc bpc" id="L273" title="1 of 2 branches missed.">      if (environment == null) {</span>
-<span class="fc" id="L274">        environment = context.getStringAttribute(&quot;default&quot;);</span>
+<span class="fc bfc" id="L273" title="All 2 branches covered.">    if (context != null) {</span>
+<span class="fc bfc" id="L274" title="All 2 branches covered.">      if (environment == null) {</span>
+<span class="fc" id="L275">        environment = context.getStringAttribute(&quot;default&quot;);</span>
       }
-<span class="fc bfc" id="L276" title="All 2 branches covered.">      for (XNode child : context.getChildren()) {</span>
-<span class="fc" id="L277">        String id = child.getStringAttribute(&quot;id&quot;);</span>
-<span class="pc bpc" id="L278" title="1 of 2 branches missed.">        if (isSpecifiedEnvironment(id)) {</span>
-<span class="fc" id="L279">          TransactionFactory txFactory = transactionManagerElement(child.evalNode(&quot;transactionManager&quot;));</span>
-<span class="fc" id="L280">          DataSourceFactory dsFactory = dataSourceElement(child.evalNode(&quot;dataSource&quot;));</span>
-<span class="fc" id="L281">          DataSource dataSource = dsFactory.getDataSource();</span>
-<span class="fc" id="L282">          Environment.Builder environmentBuilder = new Environment.Builder(id)</span>
-<span class="fc" id="L283">              .transactionFactory(txFactory)</span>
-<span class="fc" id="L284">              .dataSource(dataSource);</span>
-<span class="fc" id="L285">          configuration.setEnvironment(environmentBuilder.build());</span>
+<span class="fc bfc" id="L277" title="All 2 branches covered.">      for (XNode child : context.getChildren()) {</span>
+<span class="fc" id="L278">        String id = child.getStringAttribute(&quot;id&quot;);</span>
+<span class="fc bfc" id="L279" title="All 2 branches covered.">        if (isSpecifiedEnvironment(id)) {</span>
+<span class="fc" id="L280">          TransactionFactory txFactory = transactionManagerElement(child.evalNode(&quot;transactionManager&quot;));</span>
+<span class="fc" id="L281">          DataSourceFactory dsFactory = dataSourceElement(child.evalNode(&quot;dataSource&quot;));</span>
+<span class="fc" id="L282">          DataSource dataSource = dsFactory.getDataSource();</span>
+<span class="fc" id="L283">          Environment.Builder environmentBuilder = new Environment.Builder(id)</span>
+<span class="fc" id="L284">              .transactionFactory(txFactory)</span>
+<span class="fc" id="L285">              .dataSource(dataSource);</span>
+<span class="fc" id="L286">          configuration.setEnvironment(environmentBuilder.build());</span>
         }
-      }
+<span class="fc" id="L288">      }</span>
     }
-<span class="fc" id="L289">  }</span>
+<span class="fc" id="L290">  }</span>
 
   private void databaseIdProviderElement(XNode context) throws Exception {
-<span class="fc" id="L292">    DatabaseIdProvider databaseIdProvider = null;</span>
-<span class="fc bfc" id="L293" title="All 2 branches covered.">    if (context != null) {</span>
-<span class="fc" id="L294">      String type = context.getStringAttribute(&quot;type&quot;);</span>
+<span class="fc" id="L293">    DatabaseIdProvider databaseIdProvider = null;</span>
+<span class="fc bfc" id="L294" title="All 2 branches covered.">    if (context != null) {</span>
+<span class="fc" id="L295">      String type = context.getStringAttribute(&quot;type&quot;);</span>
       // awful patch to keep backward compatibility
-<span class="pc bpc" id="L296" title="1 of 2 branches missed.">      if (&quot;VENDOR&quot;.equals(type)) {</span>
-<span class="nc" id="L297">        type = &quot;DB_VENDOR&quot;;</span>
+<span class="pc bpc" id="L297" title="1 of 2 branches missed.">      if (&quot;VENDOR&quot;.equals(type)) {</span>
+<span class="nc" id="L298">        type = &quot;DB_VENDOR&quot;;</span>
       }
-<span class="fc" id="L299">      Properties properties = context.getChildrenAsProperties();</span>
-<span class="fc" id="L300">      databaseIdProvider = (DatabaseIdProvider) resolveClass(type).newInstance();</span>
-<span class="fc" id="L301">      databaseIdProvider.setProperties(properties);</span>
+<span class="fc" id="L300">      Properties properties = context.getChildrenAsProperties();</span>
+<span class="fc" id="L301">      databaseIdProvider = (DatabaseIdProvider) resolveClass(type).newInstance();</span>
+<span class="fc" id="L302">      databaseIdProvider.setProperties(properties);</span>
     }
-<span class="fc" id="L303">    Environment environment = configuration.getEnvironment();</span>
-<span class="fc bfc" id="L304" title="All 4 branches covered.">    if (environment != null &amp;&amp; databaseIdProvider != null) {</span>
-<span class="fc" id="L305">      String databaseId = databaseIdProvider.getDatabaseId(environment.getDataSource());</span>
-<span class="fc" id="L306">      configuration.setDatabaseId(databaseId);</span>
+<span class="fc" id="L304">    Environment environment = configuration.getEnvironment();</span>
+<span class="fc bfc" id="L305" title="All 4 branches covered.">    if (environment != null &amp;&amp; databaseIdProvider != null) {</span>
+<span class="fc" id="L306">      String databaseId = databaseIdProvider.getDatabaseId(environment.getDataSource());</span>
+<span class="fc" id="L307">      configuration.setDatabaseId(databaseId);</span>
     }
-<span class="fc" id="L308">  }</span>
+<span class="fc" id="L309">  }</span>
 
   private TransactionFactory transactionManagerElement(XNode context) throws Exception {
-<span class="pc bpc" id="L311" title="1 of 2 branches missed.">    if (context != null) {</span>
-<span class="fc" id="L312">      String type = context.getStringAttribute(&quot;type&quot;);</span>
-<span class="fc" id="L313">      Properties props = context.getChildrenAsProperties();</span>
-<span class="fc" id="L314">      TransactionFactory factory = (TransactionFactory) resolveClass(type).newInstance();</span>
-<span class="fc" id="L315">      factory.setProperties(props);</span>
-<span class="fc" id="L316">      return factory;</span>
+<span class="pc bpc" id="L312" title="1 of 2 branches missed.">    if (context != null) {</span>
+<span class="fc" id="L313">      String type = context.getStringAttribute(&quot;type&quot;);</span>
+<span class="fc" id="L314">      Properties props = context.getChildrenAsProperties();</span>
+<span class="fc" id="L315">      TransactionFactory factory = (TransactionFactory) resolveClass(type).newInstance();</span>
+<span class="fc" id="L316">      factory.setProperties(props);</span>
+<span class="fc" id="L317">      return factory;</span>
     }
-<span class="nc" id="L318">    throw new BuilderException(&quot;Environment declaration requires a TransactionFactory.&quot;);</span>
+<span class="nc" id="L319">    throw new BuilderException(&quot;Environment declaration requires a TransactionFactory.&quot;);</span>
   }
 
   private DataSourceFactory dataSourceElement(XNode context) throws Exception {
-<span class="pc bpc" id="L322" title="1 of 2 branches missed.">    if (context != null) {</span>
-<span class="fc" id="L323">      String type = context.getStringAttribute(&quot;type&quot;);</span>
-<span class="fc" id="L324">      Properties props = context.getChildrenAsProperties();</span>
-<span class="fc" id="L325">      DataSourceFactory factory = (DataSourceFactory) resolveClass(type).newInstance();</span>
-<span class="fc" id="L326">      factory.setProperties(props);</span>
-<span class="fc" id="L327">      return factory;</span>
+<span class="pc bpc" id="L323" title="1 of 2 branches missed.">    if (context != null) {</span>
+<span class="fc" id="L324">      String type = context.getStringAttribute(&quot;type&quot;);</span>
+<span class="fc" id="L325">      Properties props = context.getChildrenAsProperties();</span>
+<span class="fc" id="L326">      DataSourceFactory factory = (DataSourceFactory) resolveClass(type).newInstance();</span>
+<span class="fc" id="L327">      factory.setProperties(props);</span>
+<span class="fc" id="L328">      return factory;</span>
     }
-<span class="nc" id="L329">    throw new BuilderException(&quot;Environment declaration requires a DataSourceFactory.&quot;);</span>
+<span class="nc" id="L330">    throw new BuilderException(&quot;Environment declaration requires a DataSourceFactory.&quot;);</span>
   }
 
   private void typeHandlerElement(XNode parent) {
-<span class="fc bfc" id="L333" title="All 2 branches covered.">    if (parent != null) {</span>
-<span class="fc bfc" id="L334" title="All 2 branches covered.">      for (XNode child : parent.getChildren()) {</span>
-<span class="fc bfc" id="L335" title="All 2 branches covered.">        if (&quot;package&quot;.equals(child.getName())) {</span>
-<span class="fc" id="L336">          String typeHandlerPackage = child.getStringAttribute(&quot;name&quot;);</span>
-<span class="fc" id="L337">          typeHandlerRegistry.register(typeHandlerPackage);</span>
-<span class="fc" id="L338">        } else {</span>
-<span class="fc" id="L339">          String javaTypeName = child.getStringAttribute(&quot;javaType&quot;);</span>
-<span class="fc" id="L340">          String jdbcTypeName = child.getStringAttribute(&quot;jdbcType&quot;);</span>
-<span class="fc" id="L341">          String handlerTypeName = child.getStringAttribute(&quot;handler&quot;);</span>
-<span class="fc" id="L342">          Class&lt;?&gt; javaTypeClass = resolveClass(javaTypeName);</span>
-<span class="fc" id="L343">          JdbcType jdbcType = resolveJdbcType(jdbcTypeName);</span>
-<span class="fc" id="L344">          Class&lt;?&gt; typeHandlerClass = resolveClass(handlerTypeName);</span>
-<span class="fc bfc" id="L345" title="All 2 branches covered.">          if (javaTypeClass != null) {</span>
-<span class="fc bfc" id="L346" title="All 2 branches covered.">            if (jdbcType == null) {</span>
-<span class="fc" id="L347">              typeHandlerRegistry.register(javaTypeClass, typeHandlerClass);</span>
-<span class="fc" id="L348">            } else {</span>
-<span class="fc" id="L349">              typeHandlerRegistry.register(javaTypeClass, jdbcType, typeHandlerClass);</span>
+<span class="fc bfc" id="L334" title="All 2 branches covered.">    if (parent != null) {</span>
+<span class="fc bfc" id="L335" title="All 2 branches covered.">      for (XNode child : parent.getChildren()) {</span>
+<span class="fc bfc" id="L336" title="All 2 branches covered.">        if (&quot;package&quot;.equals(child.getName())) {</span>
+<span class="fc" id="L337">          String typeHandlerPackage = child.getStringAttribute(&quot;name&quot;);</span>
+<span class="fc" id="L338">          typeHandlerRegistry.register(typeHandlerPackage);</span>
+<span class="fc" id="L339">        } else {</span>
+<span class="fc" id="L340">          String javaTypeName = child.getStringAttribute(&quot;javaType&quot;);</span>
+<span class="fc" id="L341">          String jdbcTypeName = child.getStringAttribute(&quot;jdbcType&quot;);</span>
+<span class="fc" id="L342">          String handlerTypeName = child.getStringAttribute(&quot;handler&quot;);</span>
+<span class="fc" id="L343">          Class&lt;?&gt; javaTypeClass = resolveClass(javaTypeName);</span>
+<span class="fc" id="L344">          JdbcType jdbcType = resolveJdbcType(jdbcTypeName);</span>
+<span class="fc" id="L345">          Class&lt;?&gt; typeHandlerClass = resolveClass(handlerTypeName);</span>
+<span class="fc bfc" id="L346" title="All 2 branches covered.">          if (javaTypeClass != null) {</span>
+<span class="fc bfc" id="L347" title="All 2 branches covered.">            if (jdbcType == null) {</span>
+<span class="fc" id="L348">              typeHandlerRegistry.register(javaTypeClass, typeHandlerClass);</span>
+            } else {
+<span class="fc" id="L350">              typeHandlerRegistry.register(javaTypeClass, jdbcType, typeHandlerClass);</span>
             }
-<span class="fc" id="L351">          } else {</span>
-<span class="fc" id="L352">            typeHandlerRegistry.register(typeHandlerClass);</span>
+          } else {
+<span class="fc" id="L353">            typeHandlerRegistry.register(typeHandlerClass);</span>
           }
         }
-      }
+<span class="fc" id="L356">      }</span>
     }
-<span class="fc" id="L357">  }</span>
+<span class="fc" id="L358">  }</span>
 
   private void mapperElement(XNode parent) throws Exception {
-<span class="fc bfc" id="L360" title="All 2 branches covered.">    if (parent != null) {</span>
-<span class="fc bfc" id="L361" title="All 2 branches covered.">      for (XNode child : parent.getChildren()) {</span>
-<span class="fc bfc" id="L362" title="All 2 branches covered.">        if (&quot;package&quot;.equals(child.getName())) {</span>
-<span class="fc" id="L363">          String mapperPackage = child.getStringAttribute(&quot;name&quot;);</span>
-<span class="fc" id="L364">          configuration.addMappers(mapperPackage);</span>
-<span class="fc" id="L365">        } else {</span>
-<span class="fc" id="L366">          String resource = child.getStringAttribute(&quot;resource&quot;);</span>
-<span class="fc" id="L367">          String url = child.getStringAttribute(&quot;url&quot;);</span>
-<span class="fc" id="L368">          String mapperClass = child.getStringAttribute(&quot;class&quot;);</span>
-<span class="pc bpc" id="L369" title="2 of 6 branches missed.">          if (resource != null &amp;&amp; url == null &amp;&amp; mapperClass == null) {</span>
-<span class="fc" id="L370">            ErrorContext.instance().resource(resource);</span>
-<span class="fc" id="L371">            InputStream inputStream = Resources.getResourceAsStream(resource);</span>
-<span class="fc" id="L372">            XMLMapperBuilder mapperParser = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());</span>
-<span class="fc" id="L373">            mapperParser.parse();</span>
-<span class="pc bpc" id="L374" title="2 of 6 branches missed.">          } else if (resource == null &amp;&amp; url != null &amp;&amp; mapperClass == null) {</span>
-<span class="fc" id="L375">            ErrorContext.instance().resource(url);</span>
-<span class="fc" id="L376">            InputStream inputStream = Resources.getUrlAsStream(url);</span>
-<span class="fc" id="L377">            XMLMapperBuilder mapperParser = new XMLMapperBuilder(inputStream, configuration, url, configuration.getSqlFragments());</span>
-<span class="fc" id="L378">            mapperParser.parse();</span>
-<span class="pc bpc" id="L379" title="3 of 6 branches missed.">          } else if (resource == null &amp;&amp; url == null &amp;&amp; mapperClass != null) {</span>
-<span class="fc" id="L380">            Class&lt;?&gt; mapperInterface = Resources.classForName(mapperClass);</span>
-<span class="fc" id="L381">            configuration.addMapper(mapperInterface);</span>
-<span class="fc" id="L382">          } else {</span>
-<span class="nc" id="L383">            throw new BuilderException(&quot;A mapper element may only specify a url, resource or class, but not more than one.&quot;);</span>
+<span class="fc bfc" id="L361" title="All 2 branches covered.">    if (parent != null) {</span>
+<span class="fc bfc" id="L362" title="All 2 branches covered.">      for (XNode child : parent.getChildren()) {</span>
+<span class="fc bfc" id="L363" title="All 2 branches covered.">        if (&quot;package&quot;.equals(child.getName())) {</span>
+<span class="fc" id="L364">          String mapperPackage = child.getStringAttribute(&quot;name&quot;);</span>
+<span class="fc" id="L365">          configuration.addMappers(mapperPackage);</span>
+<span class="fc" id="L366">        } else {</span>
+<span class="fc" id="L367">          String resource = child.getStringAttribute(&quot;resource&quot;);</span>
+<span class="fc" id="L368">          String url = child.getStringAttribute(&quot;url&quot;);</span>
+<span class="fc" id="L369">          String mapperClass = child.getStringAttribute(&quot;class&quot;);</span>
+<span class="pc bpc" id="L370" title="2 of 6 branches missed.">          if (resource != null &amp;&amp; url == null &amp;&amp; mapperClass == null) {</span>
+<span class="fc" id="L371">            ErrorContext.instance().resource(resource);</span>
+<span class="fc" id="L372">            InputStream inputStream = Resources.getResourceAsStream(resource);</span>
+<span class="fc" id="L373">            XMLMapperBuilder mapperParser = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());</span>
+<span class="fc" id="L374">            mapperParser.parse();</span>
+<span class="pc bpc" id="L375" title="2 of 6 branches missed.">          } else if (resource == null &amp;&amp; url != null &amp;&amp; mapperClass == null) {</span>
+<span class="fc" id="L376">            ErrorContext.instance().resource(url);</span>
+<span class="fc" id="L377">            InputStream inputStream = Resources.getUrlAsStream(url);</span>
+<span class="fc" id="L378">            XMLMapperBuilder mapperParser = new XMLMapperBuilder(inputStream, configuration, url, configuration.getSqlFragments());</span>
+<span class="fc" id="L379">            mapperParser.parse();</span>
+<span class="pc bpc" id="L380" title="3 of 6 branches missed.">          } else if (resource == null &amp;&amp; url == null &amp;&amp; mapperClass != null) {</span>
+<span class="fc" id="L381">            Class&lt;?&gt; mapperInterface = Resources.classForName(mapperClass);</span>
+<span class="fc" id="L382">            configuration.addMapper(mapperInterface);</span>
+<span class="fc" id="L383">          } else {</span>
+<span class="nc" id="L384">            throw new BuilderException(&quot;A mapper element may only specify a url, resource or class, but not more than one.&quot;);</span>
           }
         }
-      }
+<span class="fc" id="L387">      }</span>
     }
-<span class="fc" id="L388">  }</span>
+<span class="fc" id="L389">  }</span>
 
   private boolean isSpecifiedEnvironment(String id) {
-<span class="pc bpc" id="L391" title="1 of 2 branches missed.">    if (environment == null) {</span>
-<span class="nc" id="L392">      throw new BuilderException(&quot;No environment specified.&quot;);</span>
-<span class="pc bpc" id="L393" title="1 of 2 branches missed.">    } else if (id == null) {</span>
-<span class="nc" id="L394">      throw new BuilderException(&quot;Environment requires an id attribute.&quot;);</span>
-<span class="pc bpc" id="L395" title="1 of 2 branches missed.">    } else if (environment.equals(id)) {</span>
-<span class="fc" id="L396">      return true;</span>
+<span class="pc bpc" id="L392" title="1 of 2 branches missed.">    if (environment == null) {</span>
+<span class="nc" id="L393">      throw new BuilderException(&quot;No environment specified.&quot;);</span>
+<span class="pc bpc" id="L394" title="1 of 2 branches missed.">    } else if (id == null) {</span>
+<span class="nc" id="L395">      throw new BuilderException(&quot;Environment requires an id attribute.&quot;);</span>
+<span class="fc bfc" id="L396" title="All 2 branches covered.">    } else if (environment.equals(id)) {</span>
+<span class="fc" id="L397">      return true;</span>
     }
-<span class="nc" id="L398">    return false;</span>
+<span class="fc" id="L399">    return false;</span>
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

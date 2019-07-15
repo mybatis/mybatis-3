@@ -106,10 +106,10 @@ public class CallableStatementHandler extends BaseStatementHandler {
         } else {
 <span class="pc bpc" id="L107" title="5 of 6 branches missed.">          if (parameterMapping.getNumericScale() != null &amp;&amp; (parameterMapping.getJdbcType() == JdbcType.NUMERIC || parameterMapping.getJdbcType() == JdbcType.DECIMAL)) {</span>
 <span class="nc" id="L108">            cs.registerOutParameter(i + 1, parameterMapping.getJdbcType().TYPE_CODE, parameterMapping.getNumericScale());</span>
-<span class="nc" id="L109">          } else {</span>
+          } else {
 <span class="pc bpc" id="L110" title="1 of 2 branches missed.">            if (parameterMapping.getJdbcTypeName() == null) {</span>
 <span class="fc" id="L111">              cs.registerOutParameter(i + 1, parameterMapping.getJdbcType().TYPE_CODE);</span>
-<span class="fc" id="L112">            } else {</span>
+            } else {
 <span class="nc" id="L113">              cs.registerOutParameter(i + 1, parameterMapping.getJdbcType().TYPE_CODE, parameterMapping.getJdbcTypeName());</span>
             }
           }
@@ -119,4 +119,4 @@ public class CallableStatementHandler extends BaseStatementHandler {
 <span class="fc" id="L119">  }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

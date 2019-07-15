@@ -38,7 +38,7 @@ public class Resources {
    * Charset to use when calling getResourceAsReader.
    * null means use the system default.
    */
-<span class="fc" id="L41">  private static Charset charset;</span>
+  private static Charset charset;
 
 <span class="fc" id="L43">  Resources() {</span>
 <span class="fc" id="L44">  }</span>
@@ -158,7 +158,7 @@ public class Resources {
     Reader reader;
 <span class="fc bfc" id="L159" title="All 2 branches covered.">    if (charset == null) {</span>
 <span class="fc" id="L160">      reader = new InputStreamReader(getResourceAsStream(resource));</span>
-<span class="fc" id="L161">    } else {</span>
+    } else {
 <span class="fc" id="L162">      reader = new InputStreamReader(getResourceAsStream(resource), charset);</span>
     }
 <span class="fc" id="L164">    return reader;</span>
@@ -176,7 +176,7 @@ public class Resources {
     Reader reader;
 <span class="fc bfc" id="L177" title="All 2 branches covered.">    if (charset == null) {</span>
 <span class="fc" id="L178">      reader = new InputStreamReader(getResourceAsStream(loader, resource));</span>
-<span class="fc" id="L179">    } else {</span>
+    } else {
 <span class="fc" id="L180">      reader = new InputStreamReader(getResourceAsStream(loader, resource), charset);</span>
     }
 <span class="fc" id="L182">    return reader;</span>
@@ -229,7 +229,7 @@ public class Resources {
     Reader reader;
 <span class="pc bpc" id="L230" title="1 of 2 branches missed.">    if (charset == null) {</span>
 <span class="nc" id="L231">      reader = new InputStreamReader(getUrlAsStream(urlString));</span>
-<span class="nc" id="L232">    } else {</span>
+    } else {
 <span class="fc" id="L233">      reader = new InputStreamReader(getUrlAsStream(urlString), charset);</span>
     }
 <span class="fc" id="L235">    return reader;</span>
@@ -270,4 +270,4 @@ public class Resources {
 <span class="fc" id="L270">  }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

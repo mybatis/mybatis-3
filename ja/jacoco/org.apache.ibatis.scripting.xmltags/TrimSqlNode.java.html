@@ -127,7 +127,7 @@ public class TrimSqlNode implements SqlNode {
 <span class="fc" id="L127">              sql.delete(0, toRemove.trim().length());</span>
 <span class="fc" id="L128">              break;</span>
             }
-          }
+<span class="fc" id="L130">          }</span>
         }
 <span class="pc bpc" id="L132" title="1 of 2 branches missed.">        if (prefix != null) {</span>
 <span class="fc" id="L133">          sql.insert(0, &quot; &quot;);</span>
@@ -147,7 +147,7 @@ public class TrimSqlNode implements SqlNode {
 <span class="fc" id="L147">              sql.delete(start, end);</span>
 <span class="fc" id="L148">              break;</span>
             }
-          }
+<span class="fc" id="L150">          }</span>
         }
 <span class="fc bfc" id="L152" title="All 2 branches covered.">        if (suffix != null) {</span>
 <span class="fc" id="L153">          sql.append(&quot; &quot;);</span>
@@ -159,4 +159,4 @@ public class TrimSqlNode implements SqlNode {
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

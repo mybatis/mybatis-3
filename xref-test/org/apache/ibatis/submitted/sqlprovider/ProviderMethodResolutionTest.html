@@ -143,7 +143,7 @@
 <a class="jxr_linenumber" name="L135" href="#L135">135</a> 
 <a class="jxr_linenumber" name="L136" href="#L136">136</a>   <strong class="jxr_keyword">interface</strong> ProvideMethodResolverMapper {
 <a class="jxr_linenumber" name="L137" href="#L137">137</a> 
-<a class="jxr_linenumber" name="L138" href="#L138">138</a>     @SelectProvider(type = MethodResolverBasedSqlProvider.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>     @SelectProvider(MethodResolverBasedSqlProvider.<strong class="jxr_keyword">class</strong>)
 <a class="jxr_linenumber" name="L139" href="#L139">139</a>     <strong class="jxr_keyword">int</strong> select();
 <a class="jxr_linenumber" name="L140" href="#L140">140</a> 
 <a class="jxr_linenumber" name="L141" href="#L141">141</a>     @SelectProvider(type = MethodResolverBasedSqlProvider.<strong class="jxr_keyword">class</strong>, method = <span class="jxr_string">"provideSelect2Sql"</span>)
@@ -155,7 +155,7 @@
 <a class="jxr_linenumber" name="L147" href="#L147">147</a>     @SelectProvider(type = CustomMethodResolverBasedSqlProvider.<strong class="jxr_keyword">class</strong>)
 <a class="jxr_linenumber" name="L148" href="#L148">148</a>     <strong class="jxr_keyword">int</strong> select4();
 <a class="jxr_linenumber" name="L149" href="#L149">149</a> 
-<a class="jxr_linenumber" name="L150" href="#L150">150</a>     @DeleteProvider(type = ReservedMethodNameBasedSqlProvider.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>     @DeleteProvider(ReservedMethodNameBasedSqlProvider.<strong class="jxr_keyword">class</strong>)
 <a class="jxr_linenumber" name="L151" href="#L151">151</a>     <strong class="jxr_keyword">int</strong> delete();
 <a class="jxr_linenumber" name="L152" href="#L152">152</a> 
 <a class="jxr_linenumber" name="L153" href="#L153">153</a>     <strong class="jxr_keyword">class</strong> MethodResolverBasedSqlProvider <strong class="jxr_keyword">implements</strong> ProviderMethodResolver {
@@ -219,7 +219,7 @@
 <a class="jxr_linenumber" name="L211" href="#L211">211</a> 
 <a class="jxr_linenumber" name="L212" href="#L212">212</a>   <strong class="jxr_keyword">interface</strong> DefaultProvideMethodResolverReturnTypeMatchedMethodIsNoneMapper {
 <a class="jxr_linenumber" name="L213" href="#L213">213</a> 
-<a class="jxr_linenumber" name="L214" href="#L214">214</a>     @InsertProvider(type = MethodResolverBasedSqlProvider.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="L214" href="#L214">214</a>     @InsertProvider(MethodResolverBasedSqlProvider.<strong class="jxr_keyword">class</strong>)
 <a class="jxr_linenumber" name="L215" href="#L215">215</a>     <strong class="jxr_keyword">int</strong> insert();
 <a class="jxr_linenumber" name="L216" href="#L216">216</a> 
 <a class="jxr_linenumber" name="L217" href="#L217">217</a>     <strong class="jxr_keyword">class</strong> MethodResolverBasedSqlProvider <strong class="jxr_keyword">implements</strong> ProviderMethodResolver {
@@ -232,7 +232,7 @@
 <a class="jxr_linenumber" name="L224" href="#L224">224</a> 
 <a class="jxr_linenumber" name="L225" href="#L225">225</a>   <strong class="jxr_keyword">interface</strong> DefaultProvideMethodResolverMatchedMethodIsMultipleMapper {
 <a class="jxr_linenumber" name="L226" href="#L226">226</a> 
-<a class="jxr_linenumber" name="L227" href="#L227">227</a>     @UpdateProvider(type = MethodResolverBasedSqlProvider.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="L227" href="#L227">227</a>     @UpdateProvider(MethodResolverBasedSqlProvider.<strong class="jxr_keyword">class</strong>)
 <a class="jxr_linenumber" name="L228" href="#L228">228</a>     <strong class="jxr_keyword">int</strong> update();
 <a class="jxr_linenumber" name="L229" href="#L229">229</a> 
 <a class="jxr_linenumber" name="L230" href="#L230">230</a>     <strong class="jxr_keyword">class</strong> MethodResolverBasedSqlProvider <strong class="jxr_keyword">implements</strong> ProviderMethodResolver {

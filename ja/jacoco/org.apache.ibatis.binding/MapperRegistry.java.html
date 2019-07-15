@@ -71,7 +71,7 @@ public class MapperRegistry {
 <span class="fc" id="L71">        MapperAnnotationBuilder parser = new MapperAnnotationBuilder(config, type);</span>
 <span class="fc" id="L72">        parser.parse();</span>
 <span class="fc" id="L73">        loadCompleted = true;</span>
-<span class="fc" id="L74">      } finally {</span>
+      } finally {
 <span class="fc bfc" id="L75" title="All 2 branches covered.">        if (!loadCompleted) {</span>
 <span class="fc" id="L76">          knownMappers.remove(type);</span>
         }
@@ -95,7 +95,7 @@ public class MapperRegistry {
 <span class="fc" id="L95">    Set&lt;Class&lt;? extends Class&lt;?&gt;&gt;&gt; mapperSet = resolverUtil.getClasses();</span>
 <span class="fc bfc" id="L96" title="All 2 branches covered.">    for (Class&lt;?&gt; mapperClass : mapperSet) {</span>
 <span class="fc" id="L97">      addMapper(mapperClass);</span>
-    }
+<span class="fc" id="L98">    }</span>
 <span class="fc" id="L99">  }</span>
 
   /**
@@ -106,4 +106,4 @@ public class MapperRegistry {
 <span class="fc" id="L106">  }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

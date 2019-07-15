@@ -61,17 +61,17 @@ import org.apache.ibatis.session.Configuration;
 <span class="fc" id="L61">        ps.setNull(i, jdbcType.TYPE_CODE);</span>
 <span class="fc" id="L62">      } catch (SQLException e) {</span>
 <span class="fc" id="L63">        throw new TypeException(&quot;Error setting null for parameter #&quot; + i + &quot; with JdbcType &quot; + jdbcType + &quot; . &quot;</span>
-<span class="fc" id="L64">              + &quot;Try setting a different JdbcType for this parameter or a different jdbcTypeForNull configuration property. &quot;</span>
-<span class="fc" id="L65">              + &quot;Cause: &quot; + e, e);</span>
-      }
+              + &quot;Try setting a different JdbcType for this parameter or a different jdbcTypeForNull configuration property. &quot;
+              + &quot;Cause: &quot; + e, e);
+<span class="fc" id="L66">      }</span>
     } else {
       try {
 <span class="fc" id="L69">        setNonNullParameter(ps, i, parameter, jdbcType);</span>
 <span class="fc" id="L70">      } catch (Exception e) {</span>
 <span class="fc" id="L71">        throw new TypeException(&quot;Error setting non null for parameter #&quot; + i + &quot; with JdbcType &quot; + jdbcType + &quot; . &quot;</span>
-<span class="fc" id="L72">              + &quot;Try setting a different JdbcType for this parameter or a different configuration property. &quot;</span>
-<span class="fc" id="L73">              + &quot;Cause: &quot; + e, e);</span>
-      }
+              + &quot;Try setting a different JdbcType for this parameter or a different configuration property. &quot;
+              + &quot;Cause: &quot; + e, e);
+<span class="fc" id="L74">      }</span>
     }
 <span class="fc" id="L76">  }</span>
 
@@ -104,6 +104,9 @@ import org.apache.ibatis.session.Configuration;
 
   public abstract void setNonNullParameter(PreparedStatement ps, int i, T parameter, JdbcType jdbcType) throws SQLException;
 
+  /**
+   * @param columnName Colunm name, when configuration &lt;code&gt;useColumnLabel&lt;/code&gt; is &lt;code&gt;false&lt;/code&gt;
+   */
   public abstract T getNullableResult(ResultSet rs, String columnName) throws SQLException;
 
   public abstract T getNullableResult(ResultSet rs, int columnIndex) throws SQLException;
@@ -111,4 +114,4 @@ import org.apache.ibatis.session.Configuration;
   public abstract T getNullableResult(CallableStatement cs, int columnIndex) throws SQLException;
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

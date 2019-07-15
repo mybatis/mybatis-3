@@ -58,7 +58,7 @@ public abstract class BaseJdbcLogger {
 <span class="fc" id="L58">    this.statementLog = log;</span>
 <span class="pc bpc" id="L59" title="1 of 2 branches missed.">    if (queryStack == 0) {</span>
 <span class="nc" id="L60">      this.queryStack = 1;</span>
-<span class="nc" id="L61">    } else {</span>
+    } else {
 <span class="fc" id="L62">      this.queryStack = queryStack;</span>
     }
 <span class="fc" id="L64">  }</span>
@@ -91,10 +91,10 @@ public abstract class BaseJdbcLogger {
 <span class="fc bfc" id="L91" title="All 2 branches covered.">    for (Object value : columnValues) {</span>
 <span class="fc bfc" id="L92" title="All 2 branches covered.">      if (value == null) {</span>
 <span class="fc" id="L93">        typeList.add(&quot;null&quot;);</span>
-<span class="fc" id="L94">      } else {</span>
+      } else {
 <span class="fc" id="L95">        typeList.add(objectValueString(value) + &quot;(&quot; + value.getClass().getSimpleName() + &quot;)&quot;);</span>
       }
-    }
+<span class="fc" id="L97">    }</span>
 <span class="fc" id="L98">    final String parameters = typeList.toString();</span>
 <span class="fc" id="L99">    return parameters.substring(1, parameters.length() - 1);</span>
   }
@@ -156,11 +156,11 @@ public abstract class BaseJdbcLogger {
 <span class="fc" id="L156">    buffer[queryStack * 2 + 1] = ' ';</span>
 <span class="fc bfc" id="L157" title="All 2 branches covered.">    if (isInput) {</span>
 <span class="fc" id="L158">      buffer[queryStack * 2] = '&gt;';</span>
-<span class="fc" id="L159">    } else {</span>
+    } else {
 <span class="fc" id="L160">      buffer[0] = '&lt;';</span>
     }
 <span class="fc" id="L162">    return new String(buffer);</span>
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

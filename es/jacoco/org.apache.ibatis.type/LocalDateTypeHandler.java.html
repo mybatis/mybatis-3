@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LocalDateTypeHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.type</a> &gt; <span class="el_source">LocalDateTypeHandler.java</span></div><h1>LocalDateTypeHandler.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 package org.apache.ibatis.type;
 
 import java.sql.CallableStatement;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,37 +25,27 @@ import java.time.LocalDate;
  * @since 3.4.5
  * @author Tomas Rohovsky
  */
-<span class="fc" id="L29">public class LocalDateTypeHandler extends BaseTypeHandler&lt;LocalDate&gt; {</span>
+<span class="fc" id="L28">public class LocalDateTypeHandler extends BaseTypeHandler&lt;LocalDate&gt; {</span>
 
   @Override
   public void setNonNullParameter(PreparedStatement ps, int i, LocalDate parameter, JdbcType jdbcType)
           throws SQLException {
-<span class="fc" id="L34">    ps.setDate(i, Date.valueOf(parameter));</span>
-<span class="fc" id="L35">  }</span>
+<span class="fc" id="L33">    ps.setObject(i, parameter);</span>
+<span class="fc" id="L34">  }</span>
 
   @Override
   public LocalDate getNullableResult(ResultSet rs, String columnName) throws SQLException {
-<span class="fc" id="L39">    Date date = rs.getDate(columnName);</span>
-<span class="fc" id="L40">    return getLocalDate(date);</span>
+<span class="fc" id="L38">    return rs.getObject(columnName, LocalDate.class);</span>
   }
 
   @Override
   public LocalDate getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
-<span class="fc" id="L45">    Date date = rs.getDate(columnIndex);</span>
-<span class="fc" id="L46">    return getLocalDate(date);</span>
+<span class="fc" id="L43">    return rs.getObject(columnIndex, LocalDate.class);</span>
   }
 
   @Override
   public LocalDate getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
-<span class="fc" id="L51">    Date date = cs.getDate(columnIndex);</span>
-<span class="fc" id="L52">    return getLocalDate(date);</span>
-  }
-
-  private static LocalDate getLocalDate(Date date) {
-<span class="fc bfc" id="L56" title="All 2 branches covered.">    if (date != null) {</span>
-<span class="fc" id="L57">      return date.toLocalDate();</span>
-    }
-<span class="fc" id="L59">    return null;</span>
+<span class="fc" id="L48">    return cs.getObject(columnIndex, LocalDate.class);</span>
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

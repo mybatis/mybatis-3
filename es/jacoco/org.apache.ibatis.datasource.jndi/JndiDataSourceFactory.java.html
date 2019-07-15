@@ -44,7 +44,7 @@ import org.apache.ibatis.datasource.DataSourceFactory;
 <span class="fc" id="L44">      Properties env = getEnvProperties(properties);</span>
 <span class="pc bpc" id="L45" title="1 of 2 branches missed.">      if (env == null) {</span>
 <span class="nc" id="L46">        initCtx = new InitialContext();</span>
-<span class="nc" id="L47">      } else {</span>
+      } else {
 <span class="fc" id="L48">        initCtx = new InitialContext(env);</span>
       }
 
@@ -58,7 +58,7 @@ import org.apache.ibatis.datasource.DataSourceFactory;
 
 <span class="nc" id="L59">    } catch (NamingException e) {</span>
 <span class="nc" id="L60">      throw new DataSourceException(&quot;There was an error configuring JndiDataSourceTransactionPool. Cause: &quot; + e, e);</span>
-    }
+<span class="fc" id="L61">    }</span>
 <span class="fc" id="L62">  }</span>
 
   @Override
@@ -78,9 +78,9 @@ import org.apache.ibatis.datasource.DataSourceFactory;
         }
 <span class="fc" id="L79">        contextProperties.put(key.substring(PREFIX.length()), value);</span>
       }
-    }
+<span class="fc" id="L81">    }</span>
 <span class="fc" id="L82">    return contextProperties;</span>
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

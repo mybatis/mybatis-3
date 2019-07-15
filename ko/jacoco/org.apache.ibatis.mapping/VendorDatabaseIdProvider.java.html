@@ -66,7 +66,7 @@ import org.apache.ibatis.logging.LogFactory;
 <span class="fc bfc" id="L66" title="All 2 branches covered.">        if (productName.contains((String) property.getKey())) {</span>
 <span class="fc" id="L67">          return (String) property.getValue();</span>
         }
-      }
+<span class="fc" id="L69">      }</span>
       // no match, return null
 <span class="fc" id="L71">      return null;</span>
     }
@@ -83,9 +83,9 @@ import org.apache.ibatis.logging.LogFactory;
 <span class="pc bpc" id="L83" title="1 of 2 branches missed.">      if (con != null) {</span>
         try {
 <span class="fc" id="L85">          con.close();</span>
-<span class="pc" id="L86">        } catch (SQLException e) {</span>
+<span class="nc" id="L86">        } catch (SQLException e) {</span>
           // ignored
-        }
+<span class="fc" id="L88">        }</span>
       }
     }
   }
@@ -95,4 +95,4 @@ import org.apache.ibatis.logging.LogFactory;
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

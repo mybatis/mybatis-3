@@ -112,7 +112,7 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
         // Failover to true, as most poor drivers
         // or databases won't support transactions
 <span class="nc" id="L114">        autoCommit = true;</span>
-      }
+<span class="nc" id="L115">      }</span>
 <span class="nc" id="L116">      final Environment environment = configuration.getEnvironment();</span>
 <span class="nc" id="L117">      final TransactionFactory transactionFactory = getTransactionFactoryFromEnvironment(environment);</span>
 <span class="nc" id="L118">      final Transaction tx = transactionFactory.newTransaction(connection);</span>
@@ -138,9 +138,9 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
 <span class="nc" id="L138">        tx.close();</span>
 <span class="nc" id="L139">      } catch (SQLException ignore) {</span>
         // Intentionally ignore. Prefer previous error.
-      }
+<span class="nc" id="L141">      }</span>
     }
 <span class="nc" id="L143">  }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

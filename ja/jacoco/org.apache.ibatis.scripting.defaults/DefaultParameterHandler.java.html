@@ -74,7 +74,7 @@ public class DefaultParameterHandler implements ParameterHandler {
 <span class="fc" id="L74">            value = null;</span>
 <span class="fc bfc" id="L75" title="All 2 branches covered.">          } else if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {</span>
 <span class="fc" id="L76">            value = parameterObject;</span>
-<span class="fc" id="L77">          } else {</span>
+          } else {
 <span class="fc" id="L78">            MetaObject metaObject = configuration.newMetaObject(parameterObject);</span>
 <span class="fc" id="L79">            value = metaObject.getValue(propertyName);</span>
           }
@@ -87,11 +87,11 @@ public class DefaultParameterHandler implements ParameterHandler {
 <span class="fc" id="L87">            typeHandler.setParameter(ps, i + 1, value, jdbcType);</span>
 <span class="fc" id="L88">          } catch (TypeException | SQLException e) {</span>
 <span class="fc" id="L89">            throw new TypeException(&quot;Could not set parameters for mapping: &quot; + parameterMapping + &quot;. Cause: &quot; + e, e);</span>
-          }
+<span class="fc" id="L90">          }</span>
         }
       }
     }
 <span class="fc" id="L94">  }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

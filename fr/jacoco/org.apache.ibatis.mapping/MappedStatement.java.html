@@ -100,7 +100,7 @@ public final class MappedStatement {
 <span class="fc" id="L100">      mappedStatement.resultMaps = resultMaps;</span>
 <span class="fc bfc" id="L101" title="All 2 branches covered.">      for (ResultMap resultMap : resultMaps) {</span>
 <span class="pc bpc" id="L102" title="1 of 4 branches missed.">        mappedStatement.hasNestedResultMaps = mappedStatement.hasNestedResultMaps || resultMap.hasNestedResultMaps();</span>
-      }
+<span class="fc" id="L103">      }</span>
 <span class="fc" id="L104">      return this;</span>
     }
 
@@ -309,7 +309,7 @@ public final class MappedStatement {
 <span class="nc" id="L309">          hasNestedResultMaps |= rm.hasNestedResultMaps();</span>
         }
       }
-    }
+<span class="fc" id="L312">    }</span>
 
 <span class="fc" id="L314">    return boundSql;</span>
   }
@@ -323,4 +323,4 @@ public final class MappedStatement {
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

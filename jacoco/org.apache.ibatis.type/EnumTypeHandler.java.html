@@ -38,7 +38,7 @@ public class EnumTypeHandler&lt;E extends Enum&lt;E&gt;&gt; extends BaseTypeHand
   public void setNonNullParameter(PreparedStatement ps, int i, E parameter, JdbcType jdbcType) throws SQLException {
 <span class="fc bfc" id="L39" title="All 2 branches covered.">    if (jdbcType == null) {</span>
 <span class="fc" id="L40">      ps.setString(i, parameter.name());</span>
-<span class="fc" id="L41">    } else {</span>
+    } else {
 <span class="fc" id="L42">      ps.setObject(i, parameter.name(), jdbcType.TYPE_CODE); // see r3589</span>
     }
 <span class="fc" id="L44">  }</span>
@@ -61,4 +61,4 @@ public class EnumTypeHandler&lt;E extends Enum&lt;E&gt;&gt; extends BaseTypeHand
 <span class="fc bfc" id="L61" title="All 2 branches covered.">    return s == null ? null : Enum.valueOf(type, s);</span>
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

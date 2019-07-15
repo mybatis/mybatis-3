@@ -31,9 +31,9 @@ public class ClassLoaderWrapper {
 <span class="fc" id="L31">  ClassLoaderWrapper() {</span>
     try {
 <span class="fc" id="L33">      systemClassLoader = ClassLoader.getSystemClassLoader();</span>
-<span class="pc" id="L34">    } catch (SecurityException ignored) {</span>
+<span class="nc" id="L34">    } catch (SecurityException ignored) {</span>
       // AccessControlException on Google App Engine
-    }
+<span class="fc" id="L36">    }</span>
 <span class="fc" id="L37">  }</span>
 
   /**
@@ -191,7 +191,7 @@ public class ClassLoaderWrapper {
 
 <span class="fc" id="L192">        } catch (ClassNotFoundException e) {</span>
           // we'll ignore this until all classloaders fail to locate the class
-        }
+<span class="nc" id="L194">        }</span>
 
       }
 
@@ -203,12 +203,12 @@ public class ClassLoaderWrapper {
 
   ClassLoader[] getClassLoaders(ClassLoader classLoader) {
 <span class="fc" id="L205">    return new ClassLoader[]{</span>
-<span class="fc" id="L206">        classLoader,</span>
-<span class="fc" id="L207">        defaultClassLoader,</span>
+        classLoader,
+        defaultClassLoader,
 <span class="fc" id="L208">        Thread.currentThread().getContextClassLoader(),</span>
 <span class="fc" id="L209">        getClass().getClassLoader(),</span>
-<span class="fc" id="L210">        systemClassLoader};</span>
+        systemClassLoader};
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

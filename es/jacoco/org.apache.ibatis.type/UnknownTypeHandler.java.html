@@ -72,7 +72,7 @@ public class UnknownTypeHandler extends BaseTypeHandler&lt;Object&gt; {
     TypeHandler&lt;?&gt; handler;
 <span class="pc bpc" id="L73" title="1 of 2 branches missed.">    if (parameter == null) {</span>
 <span class="nc" id="L74">      handler = OBJECT_TYPE_HANDLER;</span>
-<span class="nc" id="L75">    } else {</span>
+    } else {
 <span class="fc" id="L76">      handler = typeHandlerRegistry.getTypeHandler(parameter.getClass(), jdbcType);</span>
       // check if handler is null (issue #270)
 <span class="pc bpc" id="L78" title="2 of 4 branches missed.">      if (handler == null || handler instanceof UnknownTypeHandler) {</span>
@@ -112,7 +112,7 @@ public class UnknownTypeHandler extends BaseTypeHandler&lt;Object&gt; {
 <span class="fc" id="L112">    Class&lt;?&gt; javaType = safeGetClassForColumn(rsmd, columnIndex);</span>
 <span class="pc bpc" id="L113" title="2 of 4 branches missed.">    if (javaType != null &amp;&amp; jdbcType != null) {</span>
 <span class="fc" id="L114">      handler = typeHandlerRegistry.getTypeHandler(javaType, jdbcType);</span>
-<span class="pc bnc" id="L115" title="All 2 branches missed.">    } else if (javaType != null) {</span>
+<span class="nc bnc" id="L115" title="All 2 branches missed.">    } else if (javaType != null) {</span>
 <span class="nc" id="L116">      handler = typeHandlerRegistry.getTypeHandler(javaType);</span>
 <span class="nc bnc" id="L117" title="All 2 branches missed.">    } else if (jdbcType != null) {</span>
 <span class="nc" id="L118">      handler = typeHandlerRegistry.getTypeHandler(jdbcType);</span>
@@ -136,4 +136,4 @@ public class UnknownTypeHandler extends BaseTypeHandler&lt;Object&gt; {
     }
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

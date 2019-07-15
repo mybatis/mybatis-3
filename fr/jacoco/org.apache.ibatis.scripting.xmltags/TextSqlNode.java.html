@@ -71,7 +71,7 @@ public class TextSqlNode implements SqlNode {
 <span class="fc" id="L71">      Object parameter = context.getBindings().get(&quot;_parameter&quot;);</span>
 <span class="pc bpc" id="L72" title="1 of 2 branches missed.">      if (parameter == null) {</span>
 <span class="nc" id="L73">        context.getBindings().put(&quot;value&quot;, null);</span>
-<span class="pc bfc" id="L74" title="All 2 branches covered.">      } else if (SimpleTypeRegistry.isSimpleType(parameter.getClass())) {</span>
+<span class="fc bfc" id="L74" title="All 2 branches covered.">      } else if (SimpleTypeRegistry.isSimpleType(parameter.getClass())) {</span>
 <span class="fc" id="L75">        context.getBindings().put(&quot;value&quot;, parameter);</span>
       }
 <span class="fc" id="L77">      Object value = OgnlCache.getValue(content, context.getBindings());</span>
@@ -107,4 +107,4 @@ public class TextSqlNode implements SqlNode {
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

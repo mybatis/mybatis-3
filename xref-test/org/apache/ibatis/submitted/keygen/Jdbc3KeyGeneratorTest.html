@@ -520,7 +520,51 @@
 <a class="jxr_linenumber" name="L512" href="#L512">512</a>       }
 <a class="jxr_linenumber" name="L513" href="#L513">513</a>     }
 <a class="jxr_linenumber" name="L514" href="#L514">514</a>   }
-<a class="jxr_linenumber" name="L515" href="#L515">515</a> }
+<a class="jxr_linenumber" name="L515" href="#L515">515</a> 
+<a class="jxr_linenumber" name="L516" href="#L516">516</a>   @Test
+<a class="jxr_linenumber" name="L517" href="#L517">517</a>   <strong class="jxr_keyword">void</strong> shouldFailIfTooManyGeneratedKeys() {
+<a class="jxr_linenumber" name="L518" href="#L518">518</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+<a class="jxr_linenumber" name="L519" href="#L519">519</a>       <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L520" href="#L520">520</a>         <a name="CountryMapper" href="../../../../../org/apache/ibatis/submitted/keygen/CountryMapper.html#CountryMapper">CountryMapper</a> mapper = sqlSession.getMapper(CountryMapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L521" href="#L521">521</a>         when(mapper).tooManyGeneratedKeys(<strong class="jxr_keyword">new</strong> <a name="Country" href="../../../../../org/apache/ibatis/submitted/keygen/Country.html#Country">Country</a>());
+<a class="jxr_linenumber" name="L522" href="#L522">522</a>         then(caughtException()).isInstanceOf(PersistenceException.<strong class="jxr_keyword">class</strong>).hasMessageContaining(
+<a class="jxr_linenumber" name="L523" href="#L523">523</a>             <span class="jxr_string">"Too many keys are generated. There are only 1 target objects."</span>);
+<a class="jxr_linenumber" name="L524" href="#L524">524</a>       } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="L525" href="#L525">525</a>         sqlSession.rollback();
+<a class="jxr_linenumber" name="L526" href="#L526">526</a>       }
+<a class="jxr_linenumber" name="L527" href="#L527">527</a>     }
+<a class="jxr_linenumber" name="L528" href="#L528">528</a>   }
+<a class="jxr_linenumber" name="L529" href="#L529">529</a> 
+<a class="jxr_linenumber" name="L530" href="#L530">530</a>   @Test
+<a class="jxr_linenumber" name="L531" href="#L531">531</a>   <strong class="jxr_keyword">void</strong> shouldFailIfTooManyGeneratedKeys_ParamMap() {
+<a class="jxr_linenumber" name="L532" href="#L532">532</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+<a class="jxr_linenumber" name="L533" href="#L533">533</a>       <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L534" href="#L534">534</a>         <a name="CountryMapper" href="../../../../../org/apache/ibatis/submitted/keygen/CountryMapper.html#CountryMapper">CountryMapper</a> mapper = sqlSession.getMapper(CountryMapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L535" href="#L535">535</a>         when(mapper).tooManyGeneratedKeysParamMap(<strong class="jxr_keyword">new</strong> <a name="Country" href="../../../../../org/apache/ibatis/submitted/keygen/Country.html#Country">Country</a>(), 1);
+<a class="jxr_linenumber" name="L536" href="#L536">536</a>         then(caughtException()).isInstanceOf(PersistenceException.<strong class="jxr_keyword">class</strong>).hasMessageContaining(
+<a class="jxr_linenumber" name="L537" href="#L537">537</a>             <span class="jxr_string">"Too many keys are generated. There are only 1 target objects."</span>);
+<a class="jxr_linenumber" name="L538" href="#L538">538</a>       } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="L539" href="#L539">539</a>         sqlSession.rollback();
+<a class="jxr_linenumber" name="L540" href="#L540">540</a>       }
+<a class="jxr_linenumber" name="L541" href="#L541">541</a>     }
+<a class="jxr_linenumber" name="L542" href="#L542">542</a>   }
+<a class="jxr_linenumber" name="L543" href="#L543">543</a> 
+<a class="jxr_linenumber" name="L544" href="#L544">544</a>   @Test
+<a class="jxr_linenumber" name="L545" href="#L545">545</a>   <strong class="jxr_keyword">void</strong> shouldFailIfTooManyGeneratedKeys_Batch() {
+<a class="jxr_linenumber" name="L546" href="#L546">546</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH)) {
+<a class="jxr_linenumber" name="L547" href="#L547">547</a>       <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L548" href="#L548">548</a>         <a name="CountryMapper" href="../../../../../org/apache/ibatis/submitted/keygen/CountryMapper.html#CountryMapper">CountryMapper</a> mapper = sqlSession.getMapper(CountryMapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L549" href="#L549">549</a>         mapper.tooManyGeneratedKeysParamMap(<strong class="jxr_keyword">new</strong> <a name="Country" href="../../../../../org/apache/ibatis/submitted/keygen/Country.html#Country">Country</a>(), 1);
+<a class="jxr_linenumber" name="L550" href="#L550">550</a>         mapper.tooManyGeneratedKeysParamMap(<strong class="jxr_keyword">new</strong> <a name="Country" href="../../../../../org/apache/ibatis/submitted/keygen/Country.html#Country">Country</a>(), 1);
+<a class="jxr_linenumber" name="L551" href="#L551">551</a>         when(sqlSession).flushStatements();
+<a class="jxr_linenumber" name="L552" href="#L552">552</a>         then(caughtException()).isInstanceOf(PersistenceException.<strong class="jxr_keyword">class</strong>).hasMessageContaining(
+<a class="jxr_linenumber" name="L553" href="#L553">553</a>             <span class="jxr_string">"Too many keys are generated. There are only 2 target objects."</span>);
+<a class="jxr_linenumber" name="L554" href="#L554">554</a>       } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="L555" href="#L555">555</a>         sqlSession.rollback();
+<a class="jxr_linenumber" name="L556" href="#L556">556</a>       }
+<a class="jxr_linenumber" name="L557" href="#L557">557</a>     }
+<a class="jxr_linenumber" name="L558" href="#L558">558</a>   }
+<a class="jxr_linenumber" name="L559" href="#L559">559</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2019 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>

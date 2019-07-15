@@ -102,7 +102,7 @@ public class ResultSetWrapper {
 <span class="fc bfc" id="L102" title="All 2 branches covered.">    if (columnHandlers == null) {</span>
 <span class="fc" id="L103">      columnHandlers = new HashMap&lt;&gt;();</span>
 <span class="fc" id="L104">      typeHandlerMap.put(columnName, columnHandlers);</span>
-<span class="fc" id="L105">    } else {</span>
+    } else {
 <span class="fc" id="L106">      handler = columnHandlers.get(propertyType);</span>
     }
 <span class="fc bfc" id="L108" title="All 2 branches covered.">    if (handler == null) {</span>
@@ -115,7 +115,7 @@ public class ResultSetWrapper {
 <span class="fc" id="L115">        final Class&lt;?&gt; javaType = resolveClass(classNames.get(index));</span>
 <span class="pc bpc" id="L116" title="2 of 4 branches missed.">        if (javaType != null &amp;&amp; jdbcType != null) {</span>
 <span class="fc" id="L117">          handler = typeHandlerRegistry.getTypeHandler(javaType, jdbcType);</span>
-<span class="pc bnc" id="L118" title="All 2 branches missed.">        } else if (javaType != null) {</span>
+<span class="nc bnc" id="L118" title="All 2 branches missed.">        } else if (javaType != null) {</span>
 <span class="nc" id="L119">          handler = typeHandlerRegistry.getTypeHandler(javaType);</span>
 <span class="nc bnc" id="L120" title="All 2 branches missed.">        } else if (jdbcType != null) {</span>
 <span class="nc" id="L121">          handler = typeHandlerRegistry.getTypeHandler(jdbcType);</span>
@@ -137,7 +137,7 @@ public class ResultSetWrapper {
       }
 <span class="nc" id="L138">    } catch (ClassNotFoundException e) {</span>
       // ignore
-    }
+<span class="nc" id="L140">    }</span>
 <span class="nc" id="L141">    return null;</span>
   }
 
@@ -150,10 +150,10 @@ public class ResultSetWrapper {
 <span class="fc" id="L150">      final String upperColumnName = columnName.toUpperCase(Locale.ENGLISH);</span>
 <span class="fc bfc" id="L151" title="All 2 branches covered.">      if (mappedColumns.contains(upperColumnName)) {</span>
 <span class="fc" id="L152">        mappedColumnNames.add(upperColumnName);</span>
-<span class="fc" id="L153">      } else {</span>
+      } else {
 <span class="fc" id="L154">        unmappedColumnNames.add(columnName);</span>
       }
-    }
+<span class="fc" id="L156">    }</span>
 <span class="fc" id="L157">    mappedColumnNamesMap.put(getMapKey(resultMap, columnPrefix), mappedColumnNames);</span>
 <span class="fc" id="L158">    unMappedColumnNamesMap.put(getMapKey(resultMap, columnPrefix), unmappedColumnNames);</span>
 <span class="fc" id="L159">  }</span>
@@ -187,9 +187,9 @@ public class ResultSetWrapper {
 <span class="fc" id="L187">    final Set&lt;String&gt; prefixed = new HashSet&lt;&gt;();</span>
 <span class="fc bfc" id="L188" title="All 2 branches covered.">    for (String columnName : columnNames) {</span>
 <span class="fc" id="L189">      prefixed.add(prefix + columnName);</span>
-    }
+<span class="fc" id="L190">    }</span>
 <span class="fc" id="L191">    return prefixed;</span>
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

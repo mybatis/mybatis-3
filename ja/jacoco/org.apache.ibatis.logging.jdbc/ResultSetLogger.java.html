@@ -78,8 +78,8 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
 <span class="fc" id="L78">              printColumnHeaders(rsmd, columnCount);</span>
             }
 <span class="fc" id="L80">            printColumnValues(columnCount);</span>
-          }
-<span class="fc" id="L82">        } else {</span>
+<span class="fc" id="L81">          }</span>
+        } else {
 <span class="nc" id="L83">          debug(&quot;     Total: &quot; + rows, false);</span>
         }
       }
@@ -107,13 +107,13 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
       try {
 <span class="fc bfc" id="L108" title="All 2 branches covered.">        if (blobColumns.contains(i)) {</span>
 <span class="fc" id="L109">          row.add(&quot;&lt;&lt;BLOB&gt;&gt;&quot;);</span>
-<span class="fc" id="L110">        } else {</span>
+        } else {
 <span class="fc" id="L111">          row.add(rs.getString(i));</span>
         }
-<span class="pc" id="L113">      } catch (SQLException e) {</span>
+<span class="nc" id="L113">      } catch (SQLException e) {</span>
         // generally can't call getString() on a BLOB column
 <span class="nc" id="L115">        row.add(&quot;&lt;&lt;Cannot Display&gt;&gt;&quot;);</span>
-      }
+<span class="fc" id="L116">      }</span>
     }
 <span class="fc" id="L118">    trace(row.toString(), false);</span>
 <span class="fc" id="L119">  }</span>
@@ -140,4 +140,4 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
