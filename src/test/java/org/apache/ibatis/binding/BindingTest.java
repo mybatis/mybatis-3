@@ -331,6 +331,15 @@ class BindingTest {
   }
 
   @Test
+  void shouldSelectListOfPostsOneParameter() {
+    try (SqlSession session = sqlSessionFactory.openSession()) {
+      BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
+      List<Post> posts = mapper.selectPostsById(1);
+      assertEquals(1, posts.size());
+    }
+  }
+
+  @Test
   void shouldExecuteBoundSelectOneBlogStatement() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
