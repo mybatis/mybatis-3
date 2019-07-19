@@ -257,6 +257,20 @@ class XmlConfigBuilderTest {
   }
 
   @Test
+  void knownSettings() {
+    final String MAPPER_CONFIG = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
+      + "<!DOCTYPE configuration PUBLIC \"-//mybatis.org//DTD Config 3.0//EN\" \"http://mybatis.org/dtd/mybatis-3-config.dtd\">\n"
+      + "<configuration>\n"
+      + "  <settings>\n"
+      + "    <setting name=\"cacheEnabled\" value=\"false\"/>\n"
+      + "  </settings>\n"
+      + "</configuration>\n";
+    XMLConfigBuilder builder = new XMLConfigBuilder(new StringReader(MAPPER_CONFIG));
+    Configuration config = builder.parse();
+    assertNotNull(config);
+  }
+
+  @Test
   void unknownSettings() {
     final String MAPPER_CONFIG = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
             + "<!DOCTYPE configuration PUBLIC \"-//mybatis.org//DTD Config 3.0//EN\" \"http://mybatis.org/dtd/mybatis-3-config.dtd\">\n"
