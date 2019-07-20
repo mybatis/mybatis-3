@@ -15,11 +15,17 @@
  */
 package org.apache.ibatis.submitted.not_null_column;
 
+import org.apache.ibatis.annotations.ResultColumn;
+import org.apache.ibatis.annotations.ResultModel;
 import java.util.List;
 
 public class Father extends Base {
+  @ResultColumn
   private Integer id;
+  @ResultColumn
   private String name;
+  @ResultModel(id = "father_to_child", type = Child.class, columnPrefix = "child_")
+  @ResultColumn(notNullColumn = "id")
   private List<Child> children;
 
   public Integer getId() {

@@ -15,9 +15,14 @@
  */
 package org.apache.ibatis.submitted.not_null_column;
 
+import org.apache.ibatis.annotations.ResultColumn;
+
 public class Child extends Base {
+    @ResultColumn
     private Integer id;
+    @ResultColumn
     private Integer fatherId;
+    @ResultColumn
     private String name;
     public Integer getId() {
         return id;

@@ -18,12 +18,20 @@ package org.apache.ibatis.submitted.not_null_column;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.Reader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.BaseDataTest;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.ResultModel;
+import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.apache.ibatis.submitted.result_model.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -35,6 +43,7 @@ class NotNullColumnTest {
     static void initDatabase() throws Exception {
         try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/not_null_column/ibatisConfig.xml")) {
             sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+          sqlSessionFactory.getConfiguration().addMapper(SqlProviderMapper.class);
         }
 
         BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
@@ -136,4 +145,46 @@ class NotNullColumnTest {
           assertTrue(test.getChildren().isEmpty());
       }
     }
+
+    @Test
+    void testResultModelNotNullColumnWithChildrenNoFid() {
+      try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+        SqlProviderMapper fatherMapper = sqlSession.getMapper(SqlProviderMapper.class);
+
+        Father test = fatherMapper.selectByIdNoFid(1);
+        assertNotNull(test);
+        assertNotNull(test.getChildren());
+        assertEquals(2, test.getChildren().size());
+      }
+    }
+
+    @Test
+    void testResultModelNotNullColumnWithoutChildrenNoFid() {
+      try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+        FatherMapper fatherMapper = sqlSession.getMapper(FatherMapper.class);
+
+        Father test = fatherMapper.selectByIdNoFid(2);
+        assertNotNull(test);
+        assertNotNull(test.getChildren());
+        assertTrue(test.getChildren().isEmpty());
+      }
+    }
+
+  public interface SqlProviderMapper {
+
+    @SelectProvider(type = NotNullColumnTest.SqlProviderMapper.SqlProvider.class, method = "selectById")
+    @ResultModel(id = "selectByIdNoFid", type = Father.class)
+    Father selectByIdNoFid(@Param("id") int id);
+
+    @SuppressWarnings("unused")
+    class SqlProvider {
+      public static String selectById() {
+        return "" +
+            "SELECT id, name, Child.id AS child_id, Child.name AS child_name " +
+            "FROM Father " +
+            "LEFT JOIN Child ON Father.id = Child.father_id " +
+            "WHERE id = #{id} ";
+      }
+    }
+  }
 }
