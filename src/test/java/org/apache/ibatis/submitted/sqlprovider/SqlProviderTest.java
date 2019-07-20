@@ -298,12 +298,14 @@ class SqlProviderTest {
   }
 
   @Test
+  @SuppressWarnings("deprecation")
   void notSqlProvider() {
     try {
       new ProviderSqlSource(new Configuration(), new Object(), null, null);
       fail();
     } catch (BuilderException e) {
-      assertTrue(e.getMessage().contains("Error creating SqlSource for SqlProvider.  Cause: java.lang.NoSuchMethodException: java.lang.Object.type()"));
+      assertTrue(e.getMessage().contains("Error creating SqlSource for SqlProvider."));
+      assertTrue(e.getCause().getCause().getCause().getMessage().contains("java.lang.Object.type()"));
     }
   }
 
@@ -645,6 +647,41 @@ class SqlProviderTest {
       StaticMethodSqlProviderMapper mapper =
         sqlSession.getMapper(StaticMethodSqlProviderMapper.class);
       assertEquals("mybatis", mapper.providerContextAndParamMap("mybatis"));
+    }
+  }
+
+  @Test
+  @SuppressWarnings("deprecation")
+  void keepBackwardCompatibilityOnDeprecatedConstructor() throws NoSuchMethodException {
+    Class<?> mapperType = StaticMethodSqlProviderMapper.class;
+    Method mapperMethod = mapperType.getMethod("noArgument");
+    ProviderSqlSource sqlSource = new ProviderSqlSource(new Configuration(), new SqlProviderConfig(), mapperType, mapperMethod);
+    assertEquals("SELECT 1", sqlSource.getBoundSql(null).getSql());
+  }
+
+  @Test
+  @SuppressWarnings("deprecation")
+  void keepBackwardCompatibilityOnDeprecatedConstructorWithAnnotation() throws NoSuchMethodException {
+    Class<?> mapperType = StaticMethodSqlProviderMapper.class;
+    Method mapperMethod = mapperType.getMethod("noArgument");
+    ProviderSqlSource sqlSource = new ProviderSqlSource(new Configuration(), (Object)mapperMethod.getAnnotation(SelectProvider.class), mapperType, mapperMethod);
+    assertEquals("SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_USERS", sqlSource.getBoundSql(null).getSql());
+  }
+
+  public static class SqlProviderConfig {
+    public Class<?> type() {
+      return SqlProvider.class;
+    }
+    public Class<?> value() {
+      return void.class;
+    }
+    public String method() {
+      return "provideSql";
+    }
+    public static class SqlProvider {
+      public static String provideSql() {
+        return "SELECT 1";
+      }
     }
   }
 

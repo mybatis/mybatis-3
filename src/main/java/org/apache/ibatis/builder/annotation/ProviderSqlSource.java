@@ -19,9 +19,11 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Proxy;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Lang;
+import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.SqlSource;
@@ -46,7 +48,8 @@ public class ProviderSqlSource implements SqlSource {
   private Integer providerContextIndex;
 
   /**
-   * @deprecated Please use the {@link #ProviderSqlSource(Configuration, Object, Class, Method)} instead of this.
+   * @deprecated Since 3.5.3, Please use the {@link #ProviderSqlSource(Configuration, Annotation, Class, Method)} instead of this.
+   * This constructor will remove at a future version.
    */
   @Deprecated
   public ProviderSqlSource(Configuration configuration, Object provider) {
@@ -55,8 +58,26 @@ public class ProviderSqlSource implements SqlSource {
 
   /**
    * @since 3.4.5
+   * @deprecated Since 3.5.3, Please use the {@link #ProviderSqlSource(Configuration, Annotation, Class, Method)} instead of this.
+   * This constructor will remove at a future version.
    */
+  @Deprecated
   public ProviderSqlSource(Configuration configuration, Object provider, Class<?> mapperType, Method mapperMethod) {
+    this(configuration, provider instanceof Annotation ? (Annotation) provider :
+        (Annotation) Proxy.newProxyInstance(SelectProvider.class.getClassLoader(), new Class<?>[]{SelectProvider.class},
+          (proxy, method, args) -> {
+            if (method.getName().equals("annotationType")) {
+              return SelectProvider.class;
+            }
+            return provider.getClass().getMethod(method.getName()).invoke(provider);
+          }),
+      mapperType, mapperMethod);
+  }
+
+  /**
+   * @since 3.5.3
+   */
+  public ProviderSqlSource(Configuration configuration, Annotation provider, Class<?> mapperType, Method mapperMethod) {
     String providerMethodName;
     try {
       this.configuration = configuration;
@@ -64,7 +85,7 @@ public class ProviderSqlSource implements SqlSource {
       Lang lang = mapperMethod == null ? null : mapperMethod.getAnnotation(Lang.class);
       this.languageDriver = configuration.getLanguageDriver(lang == null ? null : lang.value());
       this.providerType = getProviderType(provider, mapperMethod);
-      providerMethodName = (String) provider.getClass().getMethod("method").invoke(provider);
+      providerMethodName = (String) provider.annotationType().getMethod("method").invoke(provider);
 
       if (providerMethodName.length() == 0 && ProviderMethodResolver.class.isAssignableFrom(this.providerType)) {
         this.providerMethod = ((ProviderMethodResolver) this.providerType.getDeclaredConstructor().newInstance())
@@ -192,18 +213,18 @@ public class ProviderSqlSource implements SqlSource {
     return sql != null ? sql.toString() : null;
   }
 
-  private Class<?> getProviderType(Object providerAnnotation, Method mapperMethod)
+  private Class<?> getProviderType(Annotation providerAnnotation, Method mapperMethod)
       throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-    Class<?> type = (Class<?>) providerAnnotation.getClass().getMethod("type").invoke(providerAnnotation);
-    Class<?> value = (Class<?>) providerAnnotation.getClass().getMethod("value").invoke(providerAnnotation);
+    Class<?> type = (Class<?>) providerAnnotation.annotationType().getMethod("type").invoke(providerAnnotation);
+    Class<?> value = (Class<?>) providerAnnotation.annotationType().getMethod("value").invoke(providerAnnotation);
     if (value == void.class && type == void.class) {
       throw new BuilderException("Please specify either 'value' or 'type' attribute of @"
-          + ((Annotation) providerAnnotation).annotationType().getSimpleName()
+          + providerAnnotation.annotationType().getSimpleName()
           + " at the '" + mapperMethod.toString() + "'.");
     }
     if (value != void.class && type != void.class && value != type) {
       throw new BuilderException("Cannot specify different class on 'value' and 'type' attribute of @"
-          + ((Annotation) providerAnnotation).annotationType().getSimpleName()
+          + providerAnnotation.annotationType().getSimpleName()
           + " at the '" + mapperMethod.toString() + "'.");
     }
     return value == void.class ? type : value;
