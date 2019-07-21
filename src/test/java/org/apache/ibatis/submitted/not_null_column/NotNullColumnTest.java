@@ -43,7 +43,7 @@ class NotNullColumnTest {
     static void initDatabase() throws Exception {
         try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/not_null_column/ibatisConfig.xml")) {
             sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-          sqlSessionFactory.getConfiguration().addMapper(SqlProviderMapper.class);
+            sqlSessionFactory.getConfiguration().addMapper(SqlProviderMapper.class);
         }
 
         BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
