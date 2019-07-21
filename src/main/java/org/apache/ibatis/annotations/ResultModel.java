@@ -18,6 +18,11 @@ package org.apache.ibatis.annotations;
 import org.apache.ibatis.session.AutoMappingBehavior;
 import java.lang.annotation.*;
 
+/**
+ * The annotation to construct result maps
+ *
+ * @author Masahiro Yamashita
+ */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.FIELD})

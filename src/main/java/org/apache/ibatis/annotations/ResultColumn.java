@@ -20,6 +20,11 @@ import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.UnknownTypeHandler;
 import java.lang.annotation.*;
 
+/**
+ * The annotation for mapping a column to a java property
+ *
+ * @author Masahiro Yamashita
+ */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
