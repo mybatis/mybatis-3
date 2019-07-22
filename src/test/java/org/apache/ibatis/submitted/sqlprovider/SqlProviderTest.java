@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.Reader;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -298,12 +299,14 @@ class SqlProviderTest {
   }
 
   @Test
-  void notSqlProvider() {
+  @SuppressWarnings("deprecation")
+  void notSqlProvider() throws NoSuchMethodException {
+    Object testAnnotation = getClass().getDeclaredMethod("notSqlProvider").getAnnotation(Test.class);
     try {
-      new ProviderSqlSource(new Configuration(), new Object(), null, null);
+      new ProviderSqlSource(new Configuration(), testAnnotation);
       fail();
     } catch (BuilderException e) {
-      assertTrue(e.getMessage().contains("Error creating SqlSource for SqlProvider.  Cause: java.lang.NoSuchMethodException: java.lang.Object.type()"));
+      assertTrue(e.getMessage().contains("Error creating SqlSource for SqlProvider.  Cause: java.lang.NoSuchMethodException: org.junit.jupiter.api.Test.type()"));
     }
   }
 
@@ -646,6 +649,15 @@ class SqlProviderTest {
         sqlSession.getMapper(StaticMethodSqlProviderMapper.class);
       assertEquals("mybatis", mapper.providerContextAndParamMap("mybatis"));
     }
+  }
+
+  @Test
+  @SuppressWarnings("deprecation")
+  void keepBackwardCompatibilityOnDeprecatedConstructorWithAnnotation() throws NoSuchMethodException {
+    Class<?> mapperType = StaticMethodSqlProviderMapper.class;
+    Method mapperMethod = mapperType.getMethod("noArgument");
+    ProviderSqlSource sqlSource = new ProviderSqlSource(new Configuration(), (Object)mapperMethod.getAnnotation(SelectProvider.class), mapperType, mapperMethod);
+    assertEquals("SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_USERS", sqlSource.getBoundSql(null).getSql());
   }
 
   public interface ErrorMapper {
