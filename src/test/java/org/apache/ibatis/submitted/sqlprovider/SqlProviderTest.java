@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.Reader;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -299,13 +300,13 @@ class SqlProviderTest {
 
   @Test
   @SuppressWarnings("deprecation")
-  void notSqlProvider() {
+  void notSqlProvider() throws NoSuchMethodException {
+    Object testAnnotation = getClass().getDeclaredMethod("notSqlProvider").getAnnotation(Test.class);
     try {
-      new ProviderSqlSource(new Configuration(), new Object(), null, null);
+      new ProviderSqlSource(new Configuration(), testAnnotation);
       fail();
     } catch (BuilderException e) {
-      assertTrue(e.getMessage().contains("Error creating SqlSource for SqlProvider."));
-      assertTrue(e.getCause().getCause().getCause().getMessage().contains("java.lang.Object.type()"));
+      assertTrue(e.getMessage().contains("Error creating SqlSource for SqlProvider.  Cause: java.lang.NoSuchMethodException: org.junit.jupiter.api.Test.type()"));
     }
   }
 
@@ -652,37 +653,11 @@ class SqlProviderTest {
 
   @Test
   @SuppressWarnings("deprecation")
-  void keepBackwardCompatibilityOnDeprecatedConstructor() throws NoSuchMethodException {
-    Class<?> mapperType = StaticMethodSqlProviderMapper.class;
-    Method mapperMethod = mapperType.getMethod("noArgument");
-    ProviderSqlSource sqlSource = new ProviderSqlSource(new Configuration(), new SqlProviderConfig(), mapperType, mapperMethod);
-    assertEquals("SELECT 1", sqlSource.getBoundSql(null).getSql());
-  }
-
-  @Test
-  @SuppressWarnings("deprecation")
   void keepBackwardCompatibilityOnDeprecatedConstructorWithAnnotation() throws NoSuchMethodException {
     Class<?> mapperType = StaticMethodSqlProviderMapper.class;
     Method mapperMethod = mapperType.getMethod("noArgument");
     ProviderSqlSource sqlSource = new ProviderSqlSource(new Configuration(), (Object)mapperMethod.getAnnotation(SelectProvider.class), mapperType, mapperMethod);
     assertEquals("SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_USERS", sqlSource.getBoundSql(null).getSql());
-  }
-
-  public static class SqlProviderConfig {
-    public Class<?> type() {
-      return SqlProvider.class;
-    }
-    public Class<?> value() {
-      return void.class;
-    }
-    public String method() {
-      return "provideSql";
-    }
-    public static class SqlProvider {
-      public static String provideSql() {
-        return "SELECT 1";
-      }
-    }
   }
 
   public interface ErrorMapper {

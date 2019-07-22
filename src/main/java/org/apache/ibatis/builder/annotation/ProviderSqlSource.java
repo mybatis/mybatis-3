@@ -19,11 +19,9 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.Proxy;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Lang;
-import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.SqlSource;
@@ -63,15 +61,7 @@ public class ProviderSqlSource implements SqlSource {
    */
   @Deprecated
   public ProviderSqlSource(Configuration configuration, Object provider, Class<?> mapperType, Method mapperMethod) {
-    this(configuration, provider instanceof Annotation ? (Annotation) provider :
-        (Annotation) Proxy.newProxyInstance(SelectProvider.class.getClassLoader(), new Class<?>[]{SelectProvider.class},
-          (proxy, method, args) -> {
-            if (method.getName().equals("annotationType")) {
-              return SelectProvider.class;
-            }
-            return provider.getClass().getMethod(method.getName()).invoke(provider);
-          }),
-      mapperType, mapperMethod);
+    this(configuration, (Annotation) provider , mapperType, mapperMethod);
   }
 
   /**
