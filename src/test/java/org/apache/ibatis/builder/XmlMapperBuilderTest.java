@@ -128,7 +128,7 @@ class XmlMapperBuilderTest {
     when(builder).createInstance("org.apache.ibatis.builder.BaseBuilder");
     then(caughtException())
       .isInstanceOf(BuilderException.class)
-      .hasMessage("Error creating instance. Cause: java.lang.InstantiationException: org.apache.ibatis.builder.BaseBuilder");
+      .hasMessage("Error creating instance. Cause: java.lang.NoSuchMethodException: org.apache.ibatis.builder.BaseBuilder.<init>()");
   }
 
   @Test

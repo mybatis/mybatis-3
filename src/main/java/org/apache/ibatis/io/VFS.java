@@ -57,14 +57,14 @@ public abstract class VFS {
       for (int i = 0; vfs == null || !vfs.isValid(); i++) {
         Class<? extends VFS> impl = impls.get(i);
         try {
-          vfs = impl.newInstance();
+          vfs = impl.getDeclaredConstructor().newInstance();
           if (vfs == null || !vfs.isValid()) {
             if (log.isDebugEnabled()) {
               log.debug("VFS implementation " + impl.getName() +
                   " is not valid in this environment.");
             }
           }
-        } catch (InstantiationException | IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
           log.error("Failed to instantiate " + impl, e);
           return null;
         }
