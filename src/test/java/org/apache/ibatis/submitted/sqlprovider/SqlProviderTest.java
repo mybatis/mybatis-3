@@ -22,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.Reader;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -392,6 +391,20 @@ class SqlProviderTest {
   }
 
   @Test
+  void invokeNestedError() throws NoSuchMethodException {
+    try {
+      Class<?> mapperType = ErrorMapper.class;
+      Method mapperMethod = mapperType.getMethod("invokeNestedError");
+      new ProviderSqlSource(new Configuration(),
+        mapperMethod.getAnnotation(SelectProvider.class), mapperType, mapperMethod)
+        .getBoundSql(new Object());
+      fail();
+    } catch (BuilderException e) {
+      assertTrue(e.getMessage().contains("Error invoking SqlProvider method 'public java.lang.String org.apache.ibatis.submitted.sqlprovider.SqlProviderTest$ErrorSqlBuilder.invokeNestedError()' with specify parameter 'class java.lang.Object'.  Cause: java.lang.UnsupportedOperationException: invokeNestedError"));
+    }
+  }
+
+  @Test
   void invalidArgumentsCombination() throws NoSuchMethodException {
     try {
       Class<?> mapperType = ErrorMapper.class;
@@ -670,6 +683,9 @@ class SqlProviderTest {
     @SelectProvider(type = ErrorSqlBuilder.class, method = "invokeError")
     void invokeError();
 
+    @SelectProvider(type = ErrorSqlBuilder.class, method = "invokeNestedError")
+    void invokeNestedError();
+
     @SelectProvider(type = ErrorSqlBuilder.class, method = "multipleProviderContext")
     void multipleProviderContext();
 
@@ -700,6 +716,10 @@ class SqlProviderTest {
 
     public String invokeError() {
       throw new UnsupportedOperationException("invokeError");
+    }
+
+    public String invokeNestedError() {
+      throw new IllegalStateException(new UnsupportedOperationException("invokeNestedError"));
     }
 
     public String multipleProviderContext(ProviderContext providerContext1, ProviderContext providerContext2) {
