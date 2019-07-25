@@ -72,7 +72,7 @@ class GeneralExceptionsTest {
   }
 
   private void testExceptionConstructors(Class<?> exceptionType) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-    Exception e = (Exception) exceptionType.newInstance();
+    Exception e = (Exception) exceptionType.getDeclaredConstructor().newInstance();
     testThrowException(e);
     e = (Exception) exceptionType.getConstructor(String.class).newInstance(EXPECTED_MESSAGE);
     testThrowException(e);
