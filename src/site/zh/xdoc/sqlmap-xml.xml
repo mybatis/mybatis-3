@@ -1982,7 +1982,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
   eviction="FIFO"
   flushInterval="60000"
   size="512"
-  readOnly="true"/>]]></source>
+  readWrite="true"/>]]></source>
 
         <p>
           这个更高级的配置创建了一个 FIFO 缓存，每隔 60 秒刷新，最多可以存储结果对象或列表的 512
@@ -2019,9 +2019,9 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         </p>
 
         <p>
-          readOnly（只读）属性可以被设置为 true 或 false。只读的缓存会给所有调用者返回缓存对象的相同实例。
-          因此这些对象不能被修改。这就提供了可观的性能提升。而可读写的缓存会（通过序列化）返回缓存对象的拷贝。
-          速度上会慢一些，但是更安全，因此默认值是 false。
+          readWrite（可读写）属性可以被设置为 true 或 false。只读的缓存会给所有调用者返回缓存对象的相同实例。
+          因此这些对象是共享的，不安全。这就提供了可观的性能提升。而可读写的缓存会（通过序列化）返回缓存对象的拷贝。
+          速度上会慢一些，但是更安全。
         </p>
 
         <p>
