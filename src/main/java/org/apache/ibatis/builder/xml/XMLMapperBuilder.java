@@ -34,6 +34,7 @@ import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.apache.ibatis.builder.ResultMapResolver;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.executor.ErrorContext;
+import org.apache.ibatis.io.Resource;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.Discriminator;
 import org.apache.ibatis.mapping.ParameterMapping;
@@ -81,6 +82,17 @@ public class XMLMapperBuilder extends BaseBuilder {
         configuration, resource, sqlFragments);
   }
 
+  public XMLMapperBuilder(Resource resource, Configuration configuration, Map<String, XNode> sqlFragments,
+      String namespace) {
+    this(resource, configuration, sqlFragments);
+    this.builderAssistant.setCurrentNamespace(namespace);
+  }
+
+  public XMLMapperBuilder(Resource resource, Configuration configuration, Map<String, XNode> sqlFragments) {
+    this(new XPathParser(resource, true, configuration.getVariables(), new XMLMapperEntityResolver()), configuration,
+        resource.getLocation(), sqlFragments);
+  }
+
   private XMLMapperBuilder(XPathParser parser, Configuration configuration, String resource, Map<String, XNode> sqlFragments) {
     super(configuration);
     this.builderAssistant = new MapperBuilderAssistant(configuration, resource);
@@ -91,7 +103,7 @@ public class XMLMapperBuilder extends BaseBuilder {
 
   public void parse() {
     if (!configuration.isResourceLoaded(resource)) {
-      configurationElement(parser.evalNode("/mapper"));
+      configurationElement(parser.evalNode("*[local-name()='mapper']"));
       configuration.addLoadedResource(resource);
       bindMapperForNamespace();
     }
@@ -112,12 +124,12 @@ public class XMLMapperBuilder extends BaseBuilder {
         throw new BuilderException("Mapper's namespace cannot be empty");
       }
       builderAssistant.setCurrentNamespace(namespace);
-      cacheRefElement(context.evalNode("cache-ref"));
-      cacheElement(context.evalNode("cache"));
-      parameterMapElement(context.evalNodes("/mapper/parameterMap"));
-      resultMapElements(context.evalNodes("/mapper/resultMap"));
-      sqlElement(context.evalNodes("/mapper/sql"));
-      buildStatementFromContext(context.evalNodes("select|insert|update|delete"));
+      cacheRefElement(context.evalNode("*[local-name()='cache-ref']"));
+      cacheElement(context.evalNode("*[local-name()='cache']"));
+      parameterMapElement(context.evalNodes("*[local-name()='parameterMap']"));
+      resultMapElements(context.evalNodes("*[local-name()='resultMap']"));
+      sqlElement(context.evalNodes("*[local-name()='sql']"));
+      buildStatementFromContext(context.evalNodes("*[local-name()='select' or local-name()='insert' or local-name()='update' or local-name()='delete']"));
     } catch (Exception e) {
       throw new BuilderException("Error parsing Mapper XML. The XML location is '" + resource + "'. Cause: " + e, e);
     }
@@ -218,7 +230,7 @@ public class XMLMapperBuilder extends BaseBuilder {
       String id = parameterMapNode.getStringAttribute("id");
       String type = parameterMapNode.getStringAttribute("type");
       Class<?> parameterClass = resolveClass(type);
-      List<XNode> parameterNodes = parameterMapNode.evalNodes("parameter");
+      List<XNode> parameterNodes = parameterMapNode.evalNodes("*[local-name()='parameter']");
       List<ParameterMapping> parameterMappings = new ArrayList<>();
       for (XNode parameterNode : parameterNodes) {
         String property = parameterNode.getStringAttribute("property");

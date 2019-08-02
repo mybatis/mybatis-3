@@ -25,7 +25,10 @@ import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.datasource.DataSourceFactory;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.executor.loader.ProxyFactory;
+import org.apache.ibatis.io.ClassLoaderResource;
+import org.apache.ibatis.io.Resource;
 import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.io.UrlResource;
 import org.apache.ibatis.io.VFS;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.mapping.DatabaseIdProvider;
@@ -80,6 +83,18 @@ public class XMLConfigBuilder extends BaseBuilder {
   public XMLConfigBuilder(InputStream inputStream, String environment, Properties props) {
     this(new XPathParser(inputStream, true, props, new XMLMapperEntityResolver()), environment, props);
   }
+  
+  public XMLConfigBuilder(Resource resource) {
+    this(resource, null, null);
+  }
+  
+  public XMLConfigBuilder(Resource resource, String environment) {
+    this(resource, environment, null);
+  }
+  
+  public XMLConfigBuilder(Resource resource, String environment, Properties props) {
+    this(new XPathParser(resource, true, props, new XMLMapperEntityResolver()), environment, props);
+  }
 
   private XMLConfigBuilder(XPathParser parser, String environment, Properties props) {
     super(new Configuration());
@@ -95,28 +110,28 @@ public class XMLConfigBuilder extends BaseBuilder {
       throw new BuilderException("Each XMLConfigBuilder can only be used once.");
     }
     parsed = true;
-    parseConfiguration(parser.evalNode("/configuration"));
+    parseConfiguration(parser.evalNode("*[local-name()='configuration']"));
     return configuration;
   }
 
   private void parseConfiguration(XNode root) {
     try {
       //issue #117 read properties first
-      propertiesElement(root.evalNode("properties"));
-      Properties settings = settingsAsProperties(root.evalNode("settings"));
+      propertiesElement(root.evalNode("*[local-name()='properties']"));
+      Properties settings = settingsAsProperties(root.evalNode("*[local-name()='settings']"));
       loadCustomVfs(settings);
       loadCustomLogImpl(settings);
-      typeAliasesElement(root.evalNode("typeAliases"));
-      pluginElement(root.evalNode("plugins"));
-      objectFactoryElement(root.evalNode("objectFactory"));
-      objectWrapperFactoryElement(root.evalNode("objectWrapperFactory"));
-      reflectorFactoryElement(root.evalNode("reflectorFactory"));
+      typeAliasesElement(root.evalNode("*[local-name()='typeAliases']"));
+      pluginElement(root.evalNode("*[local-name()='plugins']"));
+      objectFactoryElement(root.evalNode("*[local-name()='objectFactory']"));
+      objectWrapperFactoryElement(root.evalNode("*[local-name()='objectWrapperFactory']"));
+      reflectorFactoryElement(root.evalNode("*[local-name()='reflectorFactory']"));
       settingsElement(settings);
       // read it after objectFactory and objectWrapperFactory issue #631
-      environmentsElement(root.evalNode("environments"));
-      databaseIdProviderElement(root.evalNode("databaseIdProvider"));
-      typeHandlerElement(root.evalNode("typeHandlers"));
-      mapperElement(root.evalNode("mappers"));
+      environmentsElement(root.evalNode("*[local-name()='environments']"));
+      databaseIdProviderElement(root.evalNode("*[local-name()='databaseIdProvider']"));
+      typeHandlerElement(root.evalNode("*[local-name()='typeHandlers']"));
+      mapperElement(root.evalNode("*[local-name()='mappers']"));
     } catch (Exception e) {
       throw new BuilderException("Error parsing SQL Mapper Configuration. Cause: " + e, e);
     }
@@ -277,8 +292,8 @@ public class XMLConfigBuilder extends BaseBuilder {
       for (XNode child : context.getChildren()) {
         String id = child.getStringAttribute("id");
         if (isSpecifiedEnvironment(id)) {
-          TransactionFactory txFactory = transactionManagerElement(child.evalNode("transactionManager"));
-          DataSourceFactory dsFactory = dataSourceElement(child.evalNode("dataSource"));
+          TransactionFactory txFactory = transactionManagerElement(child.evalNode("*[local-name()='transactionManager']"));
+          DataSourceFactory dsFactory = dataSourceElement(child.evalNode("*[local-name()='dataSource']"));
           DataSource dataSource = dsFactory.getDataSource();
           Environment.Builder environmentBuilder = new Environment.Builder(id)
               .transactionFactory(txFactory)
@@ -369,13 +384,11 @@ public class XMLConfigBuilder extends BaseBuilder {
           String mapperClass = child.getStringAttribute("class");
           if (resource != null && url == null && mapperClass == null) {
             ErrorContext.instance().resource(resource);
-            InputStream inputStream = Resources.getResourceAsStream(resource);
-            XMLMapperBuilder mapperParser = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
+            XMLMapperBuilder mapperParser = new XMLMapperBuilder(new ClassLoaderResource(resource, null), configuration, configuration.getSqlFragments());
             mapperParser.parse();
           } else if (resource == null && url != null && mapperClass == null) {
             ErrorContext.instance().resource(url);
-            InputStream inputStream = Resources.getUrlAsStream(url);
-            XMLMapperBuilder mapperParser = new XMLMapperBuilder(inputStream, configuration, url, configuration.getSqlFragments());
+            XMLMapperBuilder mapperParser = new XMLMapperBuilder(new UrlResource(url), configuration, configuration.getSqlFragments());
             mapperParser.parse();
           } else if (resource == null && url == null && mapperClass != null) {
             Class<?> mapperInterface = Resources.classForName(mapperClass);
