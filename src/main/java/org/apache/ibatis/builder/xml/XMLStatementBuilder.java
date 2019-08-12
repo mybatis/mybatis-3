@@ -66,6 +66,7 @@ public class XMLStatementBuilder extends BaseBuilder {
     boolean isSelect = sqlCommandType == SqlCommandType.SELECT;
     boolean flushCache = context.getBooleanAttribute("flushCache", !isSelect);
     boolean useCache = context.getBooleanAttribute("useCache", isSelect);
+    boolean useLocalCache = context.getBooleanAttribute("useLocalCache", true);
     boolean resultOrdered = context.getBooleanAttribute("resultOrdered", false);
 
     // Include Fragments before parsing
@@ -112,7 +113,7 @@ public class XMLStatementBuilder extends BaseBuilder {
 
     builderAssistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType,
         fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,
-        resultSetTypeEnum, flushCache, useCache, resultOrdered,
+        resultSetTypeEnum, flushCache, useCache, useLocalCache, resultOrdered,
         keyGenerator, keyProperty, keyColumn, databaseId, langDriver, resultSets);
   }
 
@@ -145,6 +146,7 @@ public class XMLStatementBuilder extends BaseBuilder {
 
     //defaults
     boolean useCache = false;
+    boolean useLocalCache = false;
     boolean resultOrdered = false;
     KeyGenerator keyGenerator = NoKeyGenerator.INSTANCE;
     Integer fetchSize = null;
@@ -159,7 +161,7 @@ public class XMLStatementBuilder extends BaseBuilder {
 
     builderAssistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType,
         fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,
-        resultSetTypeEnum, flushCache, useCache, resultOrdered,
+        resultSetTypeEnum, flushCache, useCache, useLocalCache, resultOrdered,
         keyGenerator, keyProperty, keyColumn, databaseId, langDriver, null);
 
     id = builderAssistant.applyCurrentNamespace(id, false);

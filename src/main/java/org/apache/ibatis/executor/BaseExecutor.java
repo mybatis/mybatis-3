@@ -319,15 +319,21 @@ public abstract class BaseExecutor implements Executor {
 
   private <E> List<E> queryFromDatabase(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql) throws SQLException {
     List<E> list;
-    localCache.putObject(key, EXECUTION_PLACEHOLDER);
+    if (ms.isUseLocalCache()) {
+      localCache.putObject(key, EXECUTION_PLACEHOLDER);
+    }
     try {
       list = doQuery(ms, parameter, rowBounds, resultHandler, boundSql);
     } finally {
-      localCache.removeObject(key);
+      if (ms.isUseLocalCache()) {
+        localCache.removeObject(key);
+      }
     }
-    localCache.putObject(key, list);
-    if (ms.getStatementType() == StatementType.CALLABLE) {
-      localOutputParameterCache.putObject(key, parameter);
+    if (ms.isUseLocalCache()) {
+      localCache.putObject(key, list);
+      if (ms.getStatementType() == StatementType.CALLABLE) {
+        localOutputParameterCache.putObject(key, parameter);
+      }
     }
     return list;
   }

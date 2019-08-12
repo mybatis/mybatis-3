@@ -46,6 +46,14 @@ public @interface Options {
 
   boolean useCache() default true;
 
+  /**
+   * Set whether use the local cache.
+   *
+   * @return If use the local cache, return {@code true}
+   * @since 3.5.3
+   */
+  boolean useLocalCache() default true;
+
   FlushCachePolicy flushCache() default FlushCachePolicy.DEFAULT;
 
   ResultSetType resultSetType() default ResultSetType.DEFAULT;
