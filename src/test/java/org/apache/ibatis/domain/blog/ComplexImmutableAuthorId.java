@@ -15,6 +15,8 @@
  */
 package org.apache.ibatis.domain.blog;
 
+import java.util.Objects;
+
 public class ComplexImmutableAuthorId {
   protected final int id;
   protected final String email;
@@ -58,13 +60,13 @@ public class ComplexImmutableAuthorId {
     if (id != that.id) {
       return false;
     }
-    if (email != null ? !email.equals(that.email) : that.email != null) {
+    if (!Objects.equals(email, that.email)) {
       return false;
     }
-    if (password != null ? !password.equals(that.password) : that.password != null) {
+    if (!Objects.equals(password, that.password)) {
       return false;
     }
-    if (username != null ? !username.equals(that.username) : that.username != null) {
+    if (!Objects.equals(username, that.username)) {
       return false;
     }
 

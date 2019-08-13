@@ -15,6 +15,8 @@
  */
 package org.apache.ibatis.type;
 
+import java.util.stream.IntStream;
+
 /**
  * @author Clinton Begin
  */
@@ -33,10 +35,7 @@ class ByteArrayUtils {
   }
 
   static Byte[] convertToObjectArray(byte[] bytes) {
-    final Byte[] objects = new Byte[bytes.length];
-    for (int i = 0; i < bytes.length; i++) {
-      objects[i] = bytes[i];
-    }
+    final Byte[] objects = IntStream.range(0, bytes.length).mapToObj(i -> bytes[i]).toArray(Byte[]::new);
     return objects;
   }
 }
