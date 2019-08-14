@@ -118,9 +118,7 @@ public class Reflector {
           break;
         }
       }
-      if (winner != null) {
-        addGetMethod(propName, winner, isAmbiguous);
-      }
+      addGetMethod(propName, winner, isAmbiguous);
     }
   }
 
