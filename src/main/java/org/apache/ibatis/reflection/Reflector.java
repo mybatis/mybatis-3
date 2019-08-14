@@ -154,14 +154,19 @@ public class Reflector {
     for (String propName : conflictingSetters.keySet()) {
       List<Method> setters = conflictingSetters.get(propName);
       Class<?> getterType = getTypes.get(propName);
+      boolean isGetterAmbiguous = getMethods.get(propName) instanceof AmbiguousMethodInvoker;
+      boolean isSetterAmbiguous = false;
       Method match = null;
       for (Method setter : setters) {
-        if (setter.getParameterTypes()[0].equals(getterType)) {
+        if (!isGetterAmbiguous && setter.getParameterTypes()[0].equals(getterType)) {
           // should be the best match
           match = setter;
           break;
         }
-        match = pickBetterSetter(match, setter, propName);
+        if (!isSetterAmbiguous) {
+          match = pickBetterSetter(match, setter, propName);
+          isSetterAmbiguous = match == null;
+        }
       }
       if (match != null) {
         addSetMethod(propName, match);
