@@ -15,26 +15,6 @@
  */
 package org.apache.ibatis.builder.annotation;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Array;
-import java.lang.reflect.GenericArrayType;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.Set;
-
 import org.apache.ibatis.annotations.Arg;
 import org.apache.ibatis.annotations.CacheNamespace;
 import org.apache.ibatis.annotations.CacheNamespaceRef;
@@ -82,6 +62,7 @@ import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.parsing.PropertyParser;
+import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.reflection.TypeParameterResolver;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
@@ -90,6 +71,33 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.UnknownTypeHandler;
+import org.apache.logging.log4j.util.Strings;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.GenericArrayType;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Properties;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Clinton Begin
@@ -228,18 +236,67 @@ public class MapperAnnotationBuilder {
 
   private String parseResultMap(Method method) {
     Class<?> returnType = getReturnType(method);
-    ConstructorArgs args = method.getAnnotation(ConstructorArgs.class);
-    Results results = method.getAnnotation(Results.class);
+    ConstructorArgs args = findConstructorArgs(method, returnType);
+    ResultsData resultsData = findResultsData(method, returnType);
     TypeDiscriminator typeDiscriminator = method.getAnnotation(TypeDiscriminator.class);
-    String resultMapId = generateResultMapName(method);
-    applyResultMap(resultMapId, returnType, argsIf(args), resultsIf(results), typeDiscriminator);
+    String resultMapId = generateResultMapName(method, resultsData);
+    applyResultMap(resultMapId, returnType, argsIf(args), resultsIf(resultsData), typeDiscriminator);
     return resultMapId;
   }
 
-  private String generateResultMapName(Method method) {
-    Results results = method.getAnnotation(Results.class);
-    if (results != null && !results.id().isEmpty()) {
-      return type.getName() + "." + results.id();
+  private ConstructorArgs findConstructorArgs(Method mapperMethod, Class<?> returnType) {
+    ConstructorArgs args = mapperMethod.getAnnotation(ConstructorArgs.class);
+    if (args == null) {
+      List<Constructor> annotatedConstructors = Arrays.stream(returnType.getDeclaredConstructors())
+            .filter(constructor -> Modifier.isPublic(constructor.getModifiers()))
+            .filter(constructor -> constructor.isAnnotationPresent(ConstructorArgs.class))
+            .collect(Collectors.toList());
+      if (annotatedConstructors.size() > 1) {
+        throw new BuilderException(String.format(
+          "There are at least two constructor methods with ConstructorArgs annotation in %s while only one is allowed",
+          returnType.getCanonicalName())
+        );
+      }
+      if (!annotatedConstructors.isEmpty()) {
+        args = annotatedConstructors.iterator().next().getDeclaredAnnotation(ConstructorArgs.class);
+      }
+    }
+    return args;
+  }
+
+  private ResultsData findResultsData(Method method, Class<?> returnType) {
+    Results methodResults = method.getAnnotation(Results.class);
+    return methodResults != null ? new ResultsData(methodResults) : getResultsFromResultType(returnType);
+  }
+
+  private ResultsData getResultsFromResultType(Class<?> resultType) {
+    Class<?> currentType = resultType;
+    List<Field> resultTypeFields = new ArrayList<>();
+    while (isSuperclassTypeComputable(currentType)) {
+      MetaClass metaClass = MetaClass.forClass(currentType, configuration.getReflectorFactory());
+      List<Field> currentTypeFields = Arrays.stream(currentType.getDeclaredFields())
+                                            .filter(field -> !Modifier.isStatic(field.getModifiers()))
+                                            .filter(field -> metaClass.hasSetter(field.getName()))
+                                            .collect(Collectors.toList());
+      resultTypeFields.addAll(currentTypeFields);
+      currentType = currentType.getSuperclass();
+    }
+    ResultsData dataHandler = new ResultsData();
+    resultTypeFields.stream().filter(field -> field.isAnnotationPresent(Result.class)).forEach(field -> {
+      Result result = field.getAnnotation(Result.class);
+      String property = Strings.isBlank(result.property()) ? field.getName() : result.property();
+      dataHandler.addResult(property, result);
+    });
+    return dataHandler;
+  }
+
+  private boolean isSuperclassTypeComputable(Class<?> type) {
+    return type != null && !Object.class.equals(type) && !type.isPrimitive();
+  }
+
+  private String generateResultMapName(Method method, ResultsData resultsData) {
+    if (resultsData != null && !resultsData.getId().isEmpty()) {
+      return type.getName() + "." + resultsData.getId();
     }
     StringBuilder suffix = new StringBuilder();
     for (Class<?> c : method.getParameterTypes()) {
@@ -252,7 +309,11 @@ public class MapperAnnotationBuilder {
     return type.getName() + "." + method.getName() + suffix;
   }
 
-  private void applyResultMap(String resultMapId, Class<?> returnType, Arg[] args, Result[] results, TypeDiscriminator discriminator) {
+  private void applyResultMap(String resultMapId,
+                              Class<?> returnType,
+                              Arg[] args,
+                              List<ResultsData.ResultData> results,
+                              TypeDiscriminator discriminator) {
     List<ResultMapping> resultMappings = new ArrayList<>();
     applyConstructorArgs(args, returnType, resultMappings);
     applyResults(results, returnType, resultMappings);
@@ -269,7 +330,7 @@ public class MapperAnnotationBuilder {
         List<ResultMapping> resultMappings = new ArrayList<>();
         // issue #136
         applyConstructorArgs(c.constructArgs(), resultType, resultMappings);
-        applyResults(c.results(), resultType, resultMappings);
+        applyResults(new ResultsData(caseResultMapId, c.results()).getMappings(), resultType, resultMappings);
         // TODO add AutoMappingBehaviour
         assistant.addResultMap(caseResultMapId, c.type(), resultMapId, null, resultMappings, null);
       }
@@ -537,22 +598,24 @@ public class MapperAnnotationBuilder {
     return null;
   }
 
-  private void applyResults(Result[] results, Class<?> resultType, List<ResultMapping> resultMappings) {
-    for (Result result : results) {
+  private void applyResults(List<ResultsData.ResultData> results,
+                            Class<?> resultType,
+                            List<ResultMapping> resultMappings) {
+    for (ResultsData.ResultData result : results) {
       List<ResultFlag> flags = new ArrayList<>();
-      if (result.id()) {
+      if (result.getResult().id()) {
         flags.add(ResultFlag.ID);
       }
       @SuppressWarnings("unchecked")
       Class<? extends TypeHandler<?>> typeHandler = (Class<? extends TypeHandler<?>>)
-              ((result.typeHandler() == UnknownTypeHandler.class) ? null : result.typeHandler());
+              ((result.getResult().typeHandler() == UnknownTypeHandler.class) ? null : result.getResult().typeHandler());
       ResultMapping resultMapping = assistant.buildResultMapping(
           resultType,
-          nullOrEmpty(result.property()),
-          nullOrEmpty(result.column()),
-          result.javaType() == void.class ? null : result.javaType(),
-          result.jdbcType() == JdbcType.UNDEFINED ? null : result.jdbcType(),
-          hasNestedSelect(result) ? nestedSelectId(result) : null,
+          nullOrEmpty(result.getProperty()),
+          nullOrEmpty(result.getResult().column()),
+          result.getResult().javaType() == void.class ? null : result.getResult().javaType(),
+          result.getResult().jdbcType() == JdbcType.UNDEFINED ? null : result.getResult().jdbcType(),
+          hasNestedSelect(result.getResult()) ? nestedSelectId(result.getResult()) : null,
           null,
           null,
           null,
@@ -560,7 +623,7 @@ public class MapperAnnotationBuilder {
           flags,
           null,
           null,
-          isLazy(result));
+          isLazy(result.getResult()));
       resultMappings.add(resultMapping);
     }
   }
@@ -626,8 +689,12 @@ public class MapperAnnotationBuilder {
     return value == null || value.trim().length() == 0 ? null : value;
   }
 
-  private Result[] resultsIf(Results results) {
-    return results == null ? new Result[0] : results.value();
+  private List<ResultsData.ResultData> resultsIf(ResultsData resultsData) {
+    if (resultsData != null && resultsData.getMappings().size() > 0) {
+      return resultsData.getMappings();
+    } else {
+      return Collections.emptyList();
+    }
   }
 
   private Arg[] argsIf(ConstructorArgs args) {
