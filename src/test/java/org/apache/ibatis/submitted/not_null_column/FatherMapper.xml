@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@
         <result property="id" column="child_id"/>
         <result property="name" column="child_name"/>
     </resultMap>
-    
+
     <resultMap id="FatherMapNoFid" type="Father">
         <id property="id" column="id"/>
         <result property="name" column="name"/>
@@ -77,7 +77,7 @@
     	LEFT JOIN Child ON Father.id = Child.father_id
     	WHERE id = #{id}
     </select>
-    
+
     <resultMap id="ChildMapWithRefResultMap" type="Child">
         <result property="id" column="child_id"/>
         <result property="name" column="child_name"/>
@@ -113,7 +113,7 @@
     	LEFT JOIN Child ON Father.id = Child.father_id
     	WHERE id = #{id}
     </select>
-    
+
     <resultMap id="FatherMapFidMultipleNullColumnsAndBrackets" type="Father">
         <id property="id" column="id"/>
         <result property="name" column="name"/>
@@ -130,7 +130,7 @@
     	LEFT JOIN Child ON Father.id = Child.father_id
     	WHERE id = #{id}
     </select>
-    
+
     <resultMap id="FatherMapFidWorkaround" type="Father">
         <id property="id" column="id"/>
         <result property="name" column="name"/>

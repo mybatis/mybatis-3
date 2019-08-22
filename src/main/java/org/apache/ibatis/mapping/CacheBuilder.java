@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.ibatis.builder.InitializingObject;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheException;
 import org.apache.ibatis.cache.decorators.BlockingCache;
@@ -37,9 +38,9 @@ import org.apache.ibatis.reflection.SystemMetaObject;
  * @author Clinton Begin
  */
 public class CacheBuilder {
-  private String id;
+  private final String id;
   private Class<? extends Cache> implementation;
-  private List<Class<? extends Cache>> decorators;
+  private final List<Class<? extends Cache>> decorators;
   private Integer size;
   private Long clearInterval;
   private boolean readWrite;
@@ -48,7 +49,7 @@ public class CacheBuilder {
 
   public CacheBuilder(String id) {
     this.id = id;
-    this.decorators = new ArrayList<Class<? extends Cache>>();
+    this.decorators = new ArrayList<>();
   }
 
   public CacheBuilder implementation(Class<? extends Cache> implementation) {
@@ -82,7 +83,7 @@ public class CacheBuilder {
     this.blocking = blocking;
     return this;
   }
-  
+
   public CacheBuilder properties(Properties properties) {
     this.properties = properties;
     return this;
@@ -175,6 +176,14 @@ public class CacheBuilder {
         }
       }
     }
+    if (InitializingObject.class.isAssignableFrom(cache.getClass())) {
+      try {
+        ((InitializingObject) cache).initialize();
+      } catch (Exception e) {
+        throw new CacheException("Failed cache initialization for '"
+          + cache.getId() + "' on '" + cache.getClass().getName() + "'", e);
+      }
+    }
   }
 
   private Cache newBaseCacheInstance(Class<? extends Cache> cacheClass, String id) {
@@ -190,8 +199,8 @@ public class CacheBuilder {
     try {
       return cacheClass.getConstructor(String.class);
     } catch (Exception e) {
-      throw new CacheException("Invalid base cache implementation (" + cacheClass + ").  " +
-          "Base cache implementations must have a constructor that takes a String id as a parameter.  Cause: " + e, e);
+      throw new CacheException("Invalid base cache implementation (" + cacheClass + ").  "
+        + "Base cache implementations must have a constructor that takes a String id as a parameter.  Cause: " + e, e);
     }
   }
 
@@ -208,8 +217,8 @@ public class CacheBuilder {
     try {
       return cacheClass.getConstructor(Cache.class);
     } catch (Exception e) {
-      throw new CacheException("Invalid cache decorator (" + cacheClass + ").  " +
-          "Cache decorators must have a constructor that takes a Cache instance as a parameter.  Cause: " + e, e);
+      throw new CacheException("Invalid cache decorator (" + cacheClass + ").  "
+        + "Cache decorators must have a constructor that takes a Cache instance as a parameter.  Cause: " + e, e);
     }
   }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2017 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -21,29 +21,30 @@
     "http://mybatis.org/dtd/mybatis-3-config.dtd">
 
 <configuration>
-    <settings>
-        <setting name="lazyLoadingEnabled"      value="true"/>
-        <setting name="aggressiveLazyLoading"   value="false" />
-        <setting name="configurationFactory"    value="org.apache.ibatis.submitted.lazy_deserialize.LazyDeserializeTest" />
-    </settings>
+  <settings>
+    <setting name="lazyLoadingEnabled" value="true" />
+    <setting name="aggressiveLazyLoading" value="false" />
+  </settings>
 
-    <typeAliases>
-        <typeAlias alias="LazyFoo" type="org.apache.ibatis.submitted.lazy_deserialize.LazyObjectFoo"/>
-        <typeAlias alias="LazyBar" type="org.apache.ibatis.submitted.lazy_deserialize.LazyObjectBar"/>
-    </typeAliases>
+  <typeAliases>
+    <typeAlias alias="LazyFoo"
+      type="org.apache.ibatis.submitted.lazy_deserialize.LazyObjectFoo" />
+    <typeAlias alias="LazyBar"
+      type="org.apache.ibatis.submitted.lazy_deserialize.LazyObjectBar" />
+  </typeAliases>
 
-    <environments default="test">
-        <environment id="test">
-            <transactionManager type="JDBC"></transactionManager>
-            <dataSource type="UNPOOLED">
-                <property name="driver" value="org.hsqldb.jdbcDriver"/>
-                <property name="url" value="jdbc:hsqldb:mem:lazy_deserialize"/>
-                <property name="username" value="sa"/>
-            </dataSource>
-        </environment>
-    </environments>
+  <environments default="test">
+    <environment id="test">
+      <transactionManager type="JDBC"></transactionManager>
+      <dataSource type="UNPOOLED">
+        <property name="driver" value="org.hsqldb.jdbcDriver" />
+        <property name="url" value="jdbc:hsqldb:mem:lazy_deserialize" />
+        <property name="username" value="sa" />
+      </dataSource>
+    </environment>
+  </environments>
 
-    <mappers>
-        <mapper resource="org/apache/ibatis/submitted/lazy_deserialize/Mapper.xml"/>
-    </mappers>
+  <mappers>
+    <mapper resource="org/apache/ibatis/submitted/lazy_deserialize/Mapper.xml" />
+  </mappers>
 </configuration>

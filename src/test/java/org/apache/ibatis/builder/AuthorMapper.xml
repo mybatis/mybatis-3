@@ -139,5 +139,9 @@
 		where id=#{id}
 	</update>
 
+	<select id="selectWithOptions" resultType="org.apache.ibatis.domain.blog.Author"
+		fetchSize="200" timeout="10" statementType="PREPARED" resultSetType="SCROLL_SENSITIVE" flushCache="false" useCache="false">
+		select * from author
+	</select>
 
 </mapper>

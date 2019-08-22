@@ -1,11 +1,21 @@
 language: java
-sudo: false
 
 jdk:
+  - openjdk-ea
+  - openjdk13
+  - openjdk12
+  - openjdk11
   - oraclejdk8
-  - oraclejdk7
-  - openjdk7
-  - openjdk6
+
+services:
+  - docker
+
+cache:
+  directories:
+    - $HOME/.m2
+
+before_install:
+  - echo "MAVEN_OPTS='-Dlicense.skip=true'" > ~/.mavenrc
 
 after_success:
   - chmod -R 777 ./travis/after_success.sh

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -28,11 +28,11 @@ public interface AnnotatedMapper {
     @Insert("insert into table2 (name) values(#{name})")
     @SelectKey(statement="call identity()", keyProperty="nameId", before=false, resultType=int.class)
     int insertTable2(Name name);
-    
+
     @Insert("insert into table2 (name) values(#{name})")
     @Options(useGeneratedKeys=true, keyProperty="nameId,generatedName", keyColumn="ID,NAME_FRED")
     int insertTable2WithGeneratedKey(Name name);
-    
+
     int insertTable2WithGeneratedKeyXml(Name name);
 
     @Insert("insert into table2 (name) values(#{name})")

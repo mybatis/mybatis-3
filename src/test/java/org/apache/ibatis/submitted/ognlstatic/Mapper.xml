@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -26,14 +26,14 @@
 		SELECT 	*
 		FROM 	users
 		<trim prefix="WHERE" prefixOverrides="AND |OR ">
-			AND <foreach collection="{ (@org.apache.ibatis.submitted.ognlstatic.StaticClass@value) } " item="enum" 
+			AND <foreach collection="{ (@org.apache.ibatis.submitted.ognlstatic.StaticClass@value) } " item="enum"
 					open="name IN (" close=") " separator=", ">#{enum}</foreach>
-			AND id = #{id} 
-		</trim>			
+			AND id = #{id}
+		</trim>
 	</select>
 
 	<select id="getUserIfNode" resultType="org.apache.ibatis.submitted.ognlstatic.User">
-       select * from users 
+       select * from users
        <if test="value not in {null, ''}">
        where name = #{value}
        </if>

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import java.util.List;
  */
 public class InterceptorChain {
 
-  private final List<Interceptor> interceptors = new ArrayList<Interceptor>();
+  private final List<Interceptor> interceptors = new ArrayList<>();
 
   public Object pluginAll(Object target) {
     for (Interceptor interceptor : interceptors) {
@@ -36,7 +36,7 @@ public class InterceptorChain {
   public void addInterceptor(Interceptor interceptor) {
     interceptors.add(interceptor);
   }
-  
+
   public List<Interceptor> getInterceptors() {
     return Collections.unmodifiableList(interceptors);
   }

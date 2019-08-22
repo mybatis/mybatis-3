@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -25,12 +25,12 @@ import org.slf4j.spi.LocationAwareLogger;
  * @author Eduardo Macarron
  */
 class Slf4jLocationAwareLoggerImpl implements Log {
-  
-  private static Marker MARKER = MarkerFactory.getMarker(LogFactory.MARKER);
+
+  private static final Marker MARKER = MarkerFactory.getMarker(LogFactory.MARKER);
 
   private static final String FQCN = Slf4jImpl.class.getName();
 
-  private LocationAwareLogger logger;
+  private final LocationAwareLogger logger;
 
   Slf4jLocationAwareLoggerImpl(LocationAwareLogger logger) {
     this.logger = logger;

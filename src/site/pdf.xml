@@ -16,7 +16,6 @@
        limitations under the License.
 
 -->
-<!-- version: $Id$ -->
 <document xmlns="http://maven.apache.org/DOCUMENT/1.0.1"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/DOCUMENT/1.0.1 http://maven.apache.org/xsd/document-1.0.1.xsd"
@@ -43,7 +42,7 @@
     <coverSubTitle>v. ${project.version}</coverSubTitle>
     <coverType>User Guide</coverType>
     <projectName>${project.name}</projectName>
-    <projectLogo>http://www.mybatis.org/images/logo.png</projectLogo>
+    <projectLogo>http://mybatis.github.io/images/mybatis-logo.png</projectLogo>
     <companyName>${project.organization.name}</companyName>
   </cover>
 </document>

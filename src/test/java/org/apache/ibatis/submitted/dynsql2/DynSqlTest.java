@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,62 +15,39 @@
  */
 package org.apache.ibatis.submitted.dynsql2;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.Reader;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-
-public class DynSqlTest {
+class DynSqlTest {
 
   protected static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
-  public static void setUp() throws Exception {
-    Connection conn = null;
-
-    try {
-      Class.forName("org.hsqldb.jdbcDriver");
-      conn = DriverManager.getConnection("jdbc:hsqldb:mem:bname", "sa",
-          "");
-
-      Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/dynsql2/CreateDB.sql");
-
-      ScriptRunner runner = new ScriptRunner(conn);
-      runner.setLogWriter(null);
-      runner.setErrorLogWriter(null);
-      runner.runScript(reader);
-      conn.commit();
-      reader.close();
-
-      reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/dynsql2/MapperConfig.xml");
+  @BeforeAll
+  static void setUp() throws Exception {
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/dynsql2/MapperConfig.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-      reader.close();
-    } finally {
-      if (conn != null) {
-        conn.close();
-      }
     }
+
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+            "org/apache/ibatis/submitted/dynsql2/CreateDB.sql");
   }
 
   @Test
-  public void testDynamicSelectWithTypeHandler() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
-      List<Name> names = new ArrayList<Name>();
+  void testDynamicSelectWithTypeHandler() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      List<Name> names = new ArrayList<>();
 
       Name name = new Name();
       name.setFirstName("Fred");
@@ -87,24 +64,18 @@ public class DynSqlTest {
 
       List<Map<String, Object>> answer = sqlSession.selectList("org.apache.ibatis.submitted.dynsql2.dynamicSelectWithTypeHandler", parameter);
 
-      assertTrue(answer.size() == 2);
-    } finally {
-      sqlSession.close();
+      assertEquals(2, answer.size());
     }
   }
 
   @Test
-  @SuppressWarnings("unchecked")
-  public void testSimpleSelect() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
-      Map<String, Object> answer = (Map<String, Object>) sqlSession.selectOne("org.apache.ibatis.submitted.dynsql2.simpleSelect", 1);
+  void testSimpleSelect() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Map<String, Object> answer = sqlSession.selectOne("org.apache.ibatis.submitted.dynsql2.simpleSelect", 1);
 
       assertEquals(answer.get("ID"), 1);
       assertEquals(answer.get("FIRSTNAME"), "Fred");
       assertEquals(answer.get("LASTNAME"), "Flintstone");
-    } finally {
-      sqlSession.close();
     }
   }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -16,8 +16,6 @@
        limitations under the License.
 
 -->
-<!-- version: $Id$ -->
-
 <document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
 
@@ -54,7 +52,7 @@ String sql = "SELECT P.ID, P.USERNAME, P.PASSWORD, P.FULL_NAME, "
       </subsection>
       <subsection name="The Solution">
       <p>MyBatis 3 offers a convenient utility class to help with the problem.
-        With the SQL class, you simply create an instance lets you call methods against it to build a SQL statement
+        With the SQL class, you simply create an instance that lets you call methods against it to build a SQL statement
         one step at a time.  The example problem above would look like this when rewritten with the SQL class:
       </p>
 
@@ -164,7 +162,14 @@ public String updatePersonSql() {
           <tbody>
             <tr>
               <td>
-                <code>SELECT(String)</code>
+                <ul>
+                  <li>
+                    <code>SELECT(String)</code>
+                  </li>
+                  <li>
+                    <code>SELECT(String...)</code>
+                  </li>
+                </ul>
               </td>
               <td>Starts or appends to a
                 <code>SELECT</code>
@@ -177,7 +182,14 @@ public String updatePersonSql() {
             </tr>
             <tr>
               <td>
-                <code>SELECT_DISTINCT(String)</code>
+                <ul>
+                  <li>
+                    <code>SELECT_DISTINCT(String)</code>
+                  </li>
+                  <li>
+                    <code>SELECT_DISTINCT(String...)</code>
+                  </li>
+                </ul>
               </td>
               <td>Starts or appends to a
                 <code>SELECT</code>
@@ -192,7 +204,14 @@ public String updatePersonSql() {
             </tr>
             <tr>
               <td>
-                <code>FROM(String)</code>
+                <ul>
+                  <li>
+                    <code>FROM(String)</code>
+                  </li>
+                  <li>
+                    <code>FROM(String...)</code>
+                  </li>
+                </ul>
               </td>
               <td>Starts or appends to a
                 <code>FROM</code>
@@ -208,13 +227,25 @@ public String updatePersonSql() {
                     <code>JOIN(String)</code>
                   </li>
                   <li>
+                    <code>JOIN(String...)</code>
+                  </li>
+                  <li>
                     <code>INNER_JOIN(String)</code>
+                  </li>
+                  <li>
+                    <code>INNER_JOIN(String...)</code>
                   </li>
                   <li>
                     <code>LEFT_OUTER_JOIN(String)</code>
                   </li>
                   <li>
+                    <code>LEFT_OUTER_JOIN(String...)</code>
+                  </li>
+                  <li>
                     <code>RIGHT_OUTER_JOIN(String)</code>
+                  </li>
+                  <li>
+                    <code>RIGHT_OUTER_JOIN(String...)</code>
                   </li>
                 </ul>
               </td>
@@ -226,7 +257,14 @@ public String updatePersonSql() {
             </tr>
             <tr>
               <td>
-                <code>WHERE(String)</code>
+                <ul>
+                  <li>
+                    <code>WHERE(String)</code>
+                  </li>
+                  <li>
+                    <code>WHERE(String...)</code>
+                  </li>
+                </ul>
               </td>
               <td>Appends a new
                 <code>WHERE</code>
@@ -263,7 +301,14 @@ public String updatePersonSql() {
             </tr>
             <tr>
               <td>
-                <code>GROUP_BY(String)</code>
+                <ul>
+                  <li>
+                    <code>GROUP_BY(String)</code>
+                  </li>
+                  <li>
+                    <code>GROUP_BY(String...)</code>
+                  </li>
+                </ul>
               </td>
               <td>Appends a new
                 <code>GROUP BY</code>
@@ -273,7 +318,14 @@ public String updatePersonSql() {
             </tr>
             <tr>
               <td>
-                <code>HAVING(String)</code>
+                <ul>
+                  <li>
+                    <code>HAVING(String)</code>
+                  </li>
+                  <li>
+                    <code>HAVING(String...)</code>
+                  </li>
+                </ul>
               </td>
               <td>Appends a new
                 <code>HAVING</code>
@@ -285,12 +337,87 @@ public String updatePersonSql() {
             </tr>
             <tr>
               <td>
-                <code>ORDER_BY(String)</code>
+                <ul>
+                  <li>
+                    <code>ORDER_BY(String)</code>
+                  </li>
+                  <li>
+                    <code>ORDER_BY(String...)</code>
+                  </li>
+                </ul>
               </td>
               <td>Appends a new
                 <code>ORDER BY</code>
                 clause elements, concatenated by a comma. Can be called multiple times, which
                 causes it to concatenate the new conditions each time with a comma.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <ul>
+                  <li>
+                    <code>LIMIT(String)</code>
+                  </li>
+                  <li>
+                    <code>LIMIT(int)</code>
+                  </li>
+                </ul>
+              </td>
+              <td>
+                Appends a <code>LIMIT</code> clause.
+                This method valid when use together with SELECT(), UPDATE() and DELETE().
+                And this method is designed to use together with OFFSET() when use SELECT(). (Available since 3.5.2)
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <ul>
+                  <li>
+                    <code>OFFSET(String)</code>
+                  </li>
+                  <li>
+                    <code>OFFSET(long)</code>
+                  </li>
+                </ul>
+              </td>
+              <td>
+                Appends a <code>OFFSET</code> clause.
+                This method valid when use together with SELECT().
+                And this method is designed to use together with LIMIT(). (Available since 3.5.2)
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <ul>
+                  <li>
+                    <code>OFFSET_ROWS(String)</code>
+                  </li>
+                  <li>
+                    <code>OFFSET_ROWS(long)</code>
+                  </li>
+                </ul>
+              </td>
+              <td>
+                Appends a <code>OFFSET n ROWS</code> clause.
+                This method valid when use together with SELECT().
+                And this method is designed to use together with FETCH_FIRST_ROWS_ONLY(). (Available since 3.5.2)
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <ul>
+                  <li>
+                    <code>FETCH_FIRST_ROWS_ONLY(String)</code>
+                  </li>
+                  <li>
+                    <code>FETCH_FIRST_ROWS_ONLY(int)</code>
+                  </li>
+                </ul>
+              </td>
+              <td>
+                Appends a <code>FETCH FIRST n ROWS ONLY</code> clause.
+                This method valid when use together with SELECT().
+                And this method is designed to use together with OFFSET_ROWS(). (Available since 3.5.2)
               </td>
             </tr>
             <tr>
@@ -307,13 +434,19 @@ public String updatePersonSql() {
                 <code>INSERT_INTO(String)</code>
               </td>
               <td>Starts an insert statement and specifies the table to insert into. This should be followed by one or
-                more
-                VALUES() calls.
+                more VALUES() or INTO_COLUMNS() and INTO_VALUES() calls.
               </td>
             </tr>
             <tr>
               <td>
-                <code>SET(String)</code>
+                <ul>
+                  <li>
+                    <code>SET(String)</code>
+                  </li>
+                  <li>
+                    <code>SET(String...)</code>
+                  </li>
+                </ul>
               </td>
               <td>Appends to the "set" list for an update statement.</td>
             </tr>
@@ -334,8 +467,114 @@ public String updatePersonSql() {
                 the value(s).
               </td>
             </tr>
+            <tr>
+              <td>
+                <code>INTO_COLUMNS(String...)</code>
+              </td>
+              <td>
+                Appends columns phrase to an insert statement.
+                This should be call INTO_VALUES() with together.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>INTO_VALUES(String...)</code>
+              </td>
+              <td>
+                Appends values phrase to an insert statement.
+                This should be call INTO_COLUMNS() with together.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>ADD_ROW()</code>
+              </td>
+              <td>
+                Add new row for bulk insert. (Available since 3.5.2)
+              </td>
+            </tr>
           </tbody>
         </table>
+
+        <p>
+          <span class="label important">NOTE</span>
+          It is important to note that SQL class writes <code>LIMIT</code>, <code>OFFSET</code>, <code>OFFSET n ROWS</code> and <code>FETCH FIRST n ROWS ONLY</code> clauses into the generated statement as is.
+          In other words, the library does not attempt to normalize those values for databases that don’t support these clauses directly.
+          Therefore, it is very important for users to understand whether or not the target database supports these clauses.
+          If the target database does not support these clauses, then it is likely that using this support will create SQL that has runtime errors.
+        </p>
+
+        <p>Since version 3.4.2, you can use variable-length arguments as follows:</p>
+
+<source><![CDATA[
+public String selectPersonSql() {
+  return new SQL()
+    .SELECT("P.ID", "A.USERNAME", "A.PASSWORD", "P.FULL_NAME", "D.DEPARTMENT_NAME", "C.COMPANY_NAME")
+    .FROM("PERSON P", "ACCOUNT A")
+    .INNER_JOIN("DEPARTMENT D on D.ID = P.DEPARTMENT_ID", "COMPANY C on D.COMPANY_ID = C.ID")
+    .WHERE("P.ID = A.ID", "P.FULL_NAME like #{name}")
+    .ORDER_BY("P.ID", "P.FULL_NAME")
+    .toString();
+}
+
+public String insertPersonSql() {
+  return new SQL()
+    .INSERT_INTO("PERSON")
+    .INTO_COLUMNS("ID", "FULL_NAME")
+    .INTO_VALUES("#{id}", "#{fullName}")
+    .toString();
+}
+
+public String updatePersonSql() {
+  return new SQL()
+    .UPDATE("PERSON")
+    .SET("FULL_NAME = #{fullName}", "DATE_OF_BIRTH = #{dateOfBirth}")
+    .WHERE("ID = #{id}")
+    .toString();
+}
+]]></source>
+
+        <p>Since version 3.5.2, you can create insert statement for bulk insert as follow:</p>
+
+        <source><![CDATA[
+public String insertPersonsSql() {
+  // INSERT INTO PERSON (ID, FULL_NAME)
+  //     VALUES (#{mainPerson.id}, #{mainPerson.fullName}) , (#{subPerson.id}, #{subPerson.fullName})
+  return new SQL()
+    .INSERT_INTO("PERSON")
+    .INTO_COLUMNS("ID", "FULL_NAME")
+    .INTO_VALUES("#{mainPerson.id}", "#{mainPerson.fullName}")
+    .ADD_ROW()
+    .INTO_VALUES("#{subPerson.id}", "#{subPerson.fullName}")
+    .toString();
+}
+]]></source>
+
+        <p>Since version 3.5.2, you can create select statement for limiting search result rows clause as follow:</p>
+
+        <source><![CDATA[
+public String selectPersonsWithOffsetLimitSql() {
+  // SELECT id, name FROM PERSON
+  //     LIMIT #{limit} OFFSET #{offset}
+  return new SQL()
+    .SELECT("id", "name")
+    .FROM("PERSON")
+    .LIMIT("#{limit}")
+    .OFFSET("#{offset}")
+    .toString();
+}
+
+public String selectPersonsWithFetchFirstSql() {
+  // SELECT id, name FROM PERSON
+  //     OFFSET #{offset} ROWS FETCH FIRST #{limit} ROWS ONLY
+  return new SQL()
+    .SELECT("id", "name")
+    .FROM("PERSON")
+    .OFFSET_ROWS("#{offset}")
+    .FETCH_FIRST_ROWS_ONLY("#{limit}")
+    .toString();
+}
+]]></source>
 
       </subsection>
 

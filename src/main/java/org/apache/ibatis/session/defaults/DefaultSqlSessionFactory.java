@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -112,7 +112,7 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
         // Failover to true, as most poor drivers
         // or databases won't support transactions
         autoCommit = true;
-      }      
+      }
       final Environment environment = configuration.getEnvironment();
       final TransactionFactory transactionFactory = getTransactionFactoryFromEnvironment(environment);
       final Transaction tx = transactionFactory.newTransaction(connection);

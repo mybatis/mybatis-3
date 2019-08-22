@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -25,17 +25,15 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 import javax.sql.DataSource;
 import java.io.*;
 import java.sql.Blob;
 
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNull.nullValue;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -45,7 +43,7 @@ import static org.mockito.Mockito.when;
  * @since 3.4.0
  * @author Kazuki Shimizu
  */
-public class BlobInputStreamTypeHandlerTest extends BaseTypeHandlerTest {
+class BlobInputStreamTypeHandlerTest extends BaseTypeHandlerTest {
 
   private static final TypeHandler<InputStream> TYPE_HANDLER = new BlobInputStreamTypeHandler();
 
@@ -54,15 +52,17 @@ public class BlobInputStreamTypeHandlerTest extends BaseTypeHandlerTest {
   @Mock
   protected Blob blob;
 
-  @BeforeClass
-  public static void setupSqlSessionFactory() throws Exception {
+  @BeforeAll
+  static void setupSqlSessionFactory() throws Exception {
     DataSource dataSource = BaseDataTest.createUnpooledDataSource("org/apache/ibatis/type/jdbc.properties");
-    BaseDataTest.runScript(dataSource, "org/apache/ibatis/type/BlobInputStreamTypeHandlerTest.sql");
     TransactionFactory transactionFactory = new JdbcTransactionFactory();
     Environment environment = new Environment("Production", transactionFactory, dataSource);
     Configuration configuration = new Configuration(environment);
     configuration.addMapper(Mapper.class);
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
+
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+            "org/apache/ibatis/type/BlobInputStreamTypeHandlerTest.sql");
   }
 
   @Override
@@ -75,19 +75,35 @@ public class BlobInputStreamTypeHandlerTest extends BaseTypeHandlerTest {
 
   @Override
   @Test
-  public void shouldGetResultFromResultSet() throws Exception {
+  public void shouldGetResultFromResultSetByName() throws Exception {
     InputStream in = new ByteArrayInputStream("Hello".getBytes());
     when(rs.getBlob("column")).thenReturn(blob);
-    when(rs.getBlob(1)).thenReturn(blob);
-    when(rs.wasNull()).thenReturn(false);
     when(blob.getBinaryStream()).thenReturn(in);
-    assertThat(TYPE_HANDLER.getResult(rs, "column"), is(in));
-    assertThat(TYPE_HANDLER.getResult(rs, 1), is(in));
+    assertThat(TYPE_HANDLER.getResult(rs, "column")).isEqualTo(in);
 
+  }
+
+  @Override
+  @Test
+  public void shouldGetResultNullFromResultSetByName() throws Exception {
     when(rs.getBlob("column")).thenReturn(null);
+    assertThat(TYPE_HANDLER.getResult(rs, "column")).isNull();
+  }
+
+  @Override
+  @Test
+  public void shouldGetResultFromResultSetByPosition() throws Exception {
+    InputStream in = new ByteArrayInputStream("Hello".getBytes());
+    when(rs.getBlob(1)).thenReturn(blob);
+    when(blob.getBinaryStream()).thenReturn(in);
+    assertThat(TYPE_HANDLER.getResult(rs, 1)).isEqualTo(in);
+  }
+
+  @Override
+  @Test
+  public void shouldGetResultNullFromResultSetByPosition() throws Exception {
     when(rs.getBlob(1)).thenReturn(null);
-    assertThat(TYPE_HANDLER.getResult(rs, "column"), nullValue());
-    assertThat(TYPE_HANDLER.getResult(rs, 1), nullValue());
+    assertThat(TYPE_HANDLER.getResult(rs, 1)).isNull();
   }
 
   @Override
@@ -95,20 +111,20 @@ public class BlobInputStreamTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldGetResultFromCallableStatement() throws Exception {
     InputStream in = new ByteArrayInputStream("Hello".getBytes());
     when(cs.getBlob(1)).thenReturn(blob);
-    when(cs.wasNull()).thenReturn(false);
     when(blob.getBinaryStream()).thenReturn(in);
-    assertThat(TYPE_HANDLER.getResult(cs, 1), is(in));
+    assertThat(TYPE_HANDLER.getResult(cs, 1)).isEqualTo(in);
+  }
 
+  @Override
+  @Test
+  public void shouldGetResultNullFromCallableStatement() throws Exception {
     when(cs.getBlob(1)).thenReturn(null);
-    assertThat(TYPE_HANDLER.getResult(cs, 1), nullValue());
-
+    assertThat(TYPE_HANDLER.getResult(cs, 1)).isNull();
   }
 
   @Test
-  public void integrationTest() throws IOException {
-    SqlSession session = sqlSessionFactory.openSession();
-
-    try {
+  void integrationTest() throws IOException {
+    try (SqlSession session = sqlSessionFactory.openSession()) {
       Mapper mapper = session.getMapper(Mapper.class);
       // insert (InputStream -> Blob)
       {
@@ -121,10 +137,8 @@ public class BlobInputStreamTypeHandlerTest extends BaseTypeHandlerTest {
       // select (Blob -> InputStream)
       {
         BlobContent blobContent = mapper.findOne(1);
-        assertThat(new BufferedReader(new InputStreamReader(blobContent.getContent())).readLine(), is("Hello"));
+        assertThat(new BufferedReader(new InputStreamReader(blobContent.getContent())).readLine()).isEqualTo("Hello");
       }
-    } finally {
-      session.close();
     }
 
   }

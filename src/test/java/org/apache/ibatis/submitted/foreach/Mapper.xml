@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2017 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -71,4 +71,25 @@
     </foreach>
   </insert>
 
+  <select id="itemVariableConflict" resultType="_int">
+    select count(*) from users where id in
+    <foreach collection="ids" item="id" open="(" close=")" separator=",">
+      <foreach collection="ids2" item="id">
+        #{id},
+      </foreach>
+      #{id}
+    </foreach>
+    or id = #{id}
+  </select>
+
+  <select id="indexVariableConflict" resultType="_int">
+    select count(*) from users where id in
+    <foreach collection="idxs" index="idx" open="(" close=")" separator=",">
+      <foreach collection="idxs2" index="idx">
+        #{idx},
+      </foreach>
+      #{idx} + 2
+    </foreach>
+    or id = #{idx}
+  </select>
 </mapper>

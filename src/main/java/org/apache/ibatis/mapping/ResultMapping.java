@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -67,8 +67,8 @@ public class ResultMapping {
     public Builder(Configuration configuration, String property) {
       resultMapping.configuration = configuration;
       resultMapping.property = property;
-      resultMapping.flags = new ArrayList<ResultFlag>();
-      resultMapping.composites = new ArrayList<ResultMapping>();
+      resultMapping.flags = new ArrayList<>();
+      resultMapping.composites = new ArrayList<>();
       resultMapping.lazy = configuration.isLazyLoadingEnabled();
     }
 
@@ -131,7 +131,7 @@ public class ResultMapping {
       resultMapping.lazy = lazy;
       return this;
     }
-    
+
     public ResultMapping build() {
       // lock down collections
       resultMapping.flags = Collections.unmodifiableList(resultMapping.flags);
@@ -155,20 +155,20 @@ public class ResultMapping {
         throw new IllegalStateException("Mapping is missing column attribute for property " + resultMapping.property);
       }
       if (resultMapping.getResultSet() != null) {
-        int numColums = 0;
+        int numColumns = 0;
         if (resultMapping.column != null) {
-          numColums = resultMapping.column.split(",").length;
+          numColumns = resultMapping.column.split(",").length;
         }
         int numForeignColumns = 0;
         if (resultMapping.foreignColumn != null) {
           numForeignColumns = resultMapping.foreignColumn.split(",").length;
         }
-        if (numColums != numForeignColumns) {
+        if (numColumns != numForeignColumns) {
           throw new IllegalStateException("There should be the same number of columns and foreignColumns in property " + resultMapping.property);
         }
       }
     }
-    
+
     private void resolveTypeHandler() {
       if (resultMapping.typeHandler == null && resultMapping.javaType != null) {
         Configuration configuration = resultMapping.configuration;
@@ -250,7 +250,7 @@ public class ResultMapping {
   public void setLazy(boolean lazy) {
     this.lazy = lazy;
   }
-  
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,12 +17,11 @@ package org.apache.ibatis.cache.decorators;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.concurrent.locks.ReadWriteLock;
 
 import org.apache.ibatis.cache.Cache;
 
 /**
- * Lru (least recently used) cache decorator
+ * Lru (least recently used) cache decorator.
  *
  * @author Clinton Begin
  */
@@ -83,11 +82,6 @@ public class LruCache implements Cache {
   public void clear() {
     delegate.clear();
     keyMap.clear();
-  }
-
-  @Override
-  public ReadWriteLock getReadWriteLock() {
-    return null;
   }
 
   private void cycleKeyList(Object key) {

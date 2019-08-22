@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ class ByteArrayUtils {
   static byte[] convertToPrimitiveArray(Byte[] objects) {
     final byte[] bytes = new byte[objects.length];
     for (int i = 0; i < objects.length; i++) {
-      bytes[i] = objects[i].byteValue();
+      bytes[i] = objects[i];
     }
     return bytes;
   }
@@ -35,7 +35,7 @@ class ByteArrayUtils {
   static Byte[] convertToObjectArray(byte[] bytes) {
     final Byte[] objects = new Byte[bytes.length];
     for (int i = 0; i < bytes.length; i++) {
-      objects[i] = Byte.valueOf(bytes[i]);
+      objects[i] = bytes[i];
     }
     return objects;
   }

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,12 +20,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public abstract class BaseTypeHandlerTest {
+@ExtendWith(MockitoExtension.class)
+abstract class BaseTypeHandlerTest {
 
   @Mock
   protected ResultSet rs;
@@ -38,8 +38,15 @@ public abstract class BaseTypeHandlerTest {
 
   public abstract void shouldSetParameter() throws Exception;
 
-  public abstract void shouldGetResultFromResultSet() throws Exception;
+  public abstract void shouldGetResultFromResultSetByName() throws Exception;
+
+  public abstract void shouldGetResultNullFromResultSetByName() throws Exception;
+
+  public abstract void shouldGetResultFromResultSetByPosition() throws Exception;
+
+  public abstract void shouldGetResultNullFromResultSetByPosition() throws Exception;
 
   public abstract void shouldGetResultFromCallableStatement() throws Exception;
 
+  public abstract void shouldGetResultNullFromCallableStatement() throws Exception;
 }

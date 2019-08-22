@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -69,16 +69,17 @@ public final class MappedStatement {
       mappedStatement.id = id;
       mappedStatement.sqlSource = sqlSource;
       mappedStatement.statementType = StatementType.PREPARED;
-      mappedStatement.parameterMap = new ParameterMap.Builder(configuration, "defaultParameterMap", null, new ArrayList<ParameterMapping>()).build();
-      mappedStatement.resultMaps = new ArrayList<ResultMap>();
+      mappedStatement.resultSetType = ResultSetType.DEFAULT;
+      mappedStatement.parameterMap = new ParameterMap.Builder(configuration, "defaultParameterMap", null, new ArrayList<>()).build();
+      mappedStatement.resultMaps = new ArrayList<>();
       mappedStatement.sqlCommandType = sqlCommandType;
-      mappedStatement.keyGenerator = configuration.isUseGeneratedKeys() && SqlCommandType.INSERT.equals(sqlCommandType) ? new Jdbc3KeyGenerator() : new NoKeyGenerator();
+      mappedStatement.keyGenerator = configuration.isUseGeneratedKeys() && SqlCommandType.INSERT.equals(sqlCommandType) ? Jdbc3KeyGenerator.INSTANCE : NoKeyGenerator.INSTANCE;
       String logId = id;
       if (configuration.getLogPrefix() != null) {
         logId = configuration.getLogPrefix() + id;
       }
       mappedStatement.statementLog = LogFactory.getLog(logId);
-      mappedStatement.lang = configuration.getDefaultScriptingLanuageInstance();
+      mappedStatement.lang = configuration.getDefaultScriptingLanguageInstance();
     }
 
     public Builder resource(String resource) {
@@ -119,7 +120,7 @@ public final class MappedStatement {
     }
 
     public Builder resultSetType(ResultSetType resultSetType) {
-      mappedStatement.resultSetType = resultSetType;
+      mappedStatement.resultSetType = resultSetType == null ? ResultSetType.DEFAULT : resultSetType;
       return this;
     }
 
@@ -149,12 +150,12 @@ public final class MappedStatement {
     }
 
     public Builder keyProperty(String keyProperty) {
-      mappedStatement.keyProperties = delimitedStringtoArray(keyProperty);
+      mappedStatement.keyProperties = delimitedStringToArray(keyProperty);
       return this;
     }
 
     public Builder keyColumn(String keyColumn) {
-      mappedStatement.keyColumns = delimitedStringtoArray(keyColumn);
+      mappedStatement.keyColumns = delimitedStringToArray(keyColumn);
       return this;
     }
 
@@ -169,17 +170,19 @@ public final class MappedStatement {
     }
 
     public Builder resultSets(String resultSet) {
-      mappedStatement.resultSets = delimitedStringtoArray(resultSet);
+      mappedStatement.resultSets = delimitedStringToArray(resultSet);
       return this;
     }
 
-    /** @deprecated Use {@link #resultSets} */
+    /**
+     * @deprecated Use {@link #resultSets}
+     */
     @Deprecated
     public Builder resulSets(String resultSet) {
-      mappedStatement.resultSets = delimitedStringtoArray(resultSet);
+      mappedStatement.resultSets = delimitedStringToArray(resultSet);
       return this;
     }
-    
+
     public MappedStatement build() {
       assert mappedStatement.configuration != null;
       assert mappedStatement.id != null;
@@ -282,12 +285,14 @@ public final class MappedStatement {
     return resultSets;
   }
 
-  /** @deprecated Use {@link #getResultSets()} */
+  /**
+   * @deprecated Use {@link #getResultSets()}
+   */
   @Deprecated
   public String[] getResulSets() {
     return resultSets;
   }
-  
+
   public BoundSql getBoundSql(Object parameterObject) {
     BoundSql boundSql = sqlSource.getBoundSql(parameterObject);
     List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
@@ -309,7 +314,7 @@ public final class MappedStatement {
     return boundSql;
   }
 
-  private static String[] delimitedStringtoArray(String in) {
+  private static String[] delimitedStringToArray(String in) {
     if (in == null || in.trim().length() == 0) {
       return null;
     } else {

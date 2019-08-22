@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,13 +15,18 @@
  */
 package org.apache.ibatis.executor.resultset;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -41,14 +46,14 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class DefaultResultSetHandlerTest {
+@ExtendWith(MockitoExtension.class)
+class DefaultResultSetHandlerTest {
 
   @Mock
   private Statement stmt;
@@ -63,11 +68,11 @@ public class DefaultResultSetHandlerTest {
 
   /**
    * Contrary to the spec, some drivers require case-sensitive column names when getting result.
-   * 
+   *
    * @see <a href="http://code.google.com/p/mybatis/issues/detail?id=557">Issue 557</a>
    */
   @Test
-  public void shouldRetainColumnNameCase() throws Exception {
+  void shouldRetainColumnNameCase() throws Exception {
 
     final MappedStatement ms = getMappedStatement();
 
@@ -83,7 +88,6 @@ public class DefaultResultSetHandlerTest {
     when(rs.getType()).thenReturn(ResultSet.TYPE_FORWARD_ONLY);
     when(rs.next()).thenReturn(true).thenReturn(false);
     when(rs.getInt("CoLuMn1")).thenReturn(100);
-    when(rs.wasNull()).thenReturn(false);
     when(rsmd.getColumnCount()).thenReturn(1);
     when(rsmd.getColumnLabel(1)).thenReturn("CoLuMn1");
     when(rsmd.getColumnType(1)).thenReturn(Types.INTEGER);
@@ -94,11 +98,11 @@ public class DefaultResultSetHandlerTest {
 
     final List<Object> results = fastResultSetHandler.handleResultSets(stmt);
     assertEquals(1, results.size());
-    assertEquals(Integer.valueOf(100), ((HashMap) results.get(0)).get("cOlUmN1"));
+    assertEquals(100, ((HashMap) results.get(0)).get("cOlUmN1"));
   }
 
   @Test
-  public void shouldThrowExceptionWithColumnName() throws Exception {
+  void shouldThrowExceptionWithColumnName() throws Exception {
     final MappedStatement ms = getMappedStatement();
     final RowBounds rowBounds = new RowBounds(0, 100);
 
@@ -106,20 +110,22 @@ public class DefaultResultSetHandlerTest {
             null/*parameterHandler*/, null/*resultHandler*/, null/*boundSql*/, rowBounds);
 
     final ResultSetWrapper rsw = mock(ResultSetWrapper.class);
+    when(rsw.getResultSet()).thenReturn(mock(ResultSet.class));
 
     final ResultMapping resultMapping = mock(ResultMapping.class);
     final TypeHandler typeHandler = mock(TypeHandler.class);
+    when(resultMapping.getColumn()).thenReturn("column");
     when(resultMapping.getTypeHandler()).thenReturn(typeHandler);
-    when(typeHandler.getResult(any(ResultSet.class), anyString())).thenThrow(new SQLException("exception"));
+    when(typeHandler.getResult(any(ResultSet.class), any(String.class))).thenThrow(new SQLException("exception"));
     List<ResultMapping> constructorMappings = Collections.singletonList(resultMapping);
 
     try {
       defaultResultSetHandler.createParameterizedResultObject(rsw, null/*resultType*/, constructorMappings,
               null/*constructorArgTypes*/, null/*constructorArgs*/, null/*columnPrefix*/);
-      Assert.fail("Should have thrown ExecutorException");
+      Assertions.fail("Should have thrown ExecutorException");
     } catch (Exception e) {
-      Assert.assertTrue("Expected ExecutorException", e instanceof ExecutorException);
-      Assert.assertTrue("", e.getMessage().contains("mapping: " + resultMapping.toString()));
+      Assertions.assertTrue(e instanceof ExecutorException, "Expected ExecutorException");
+      Assertions.assertTrue(e.getMessage().contains("mapping: " + resultMapping.toString()));
     }
   }
 

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ import org.apache.ibatis.type.JdbcType;
  */
 public class SqlSourceBuilder extends BaseBuilder {
 
-  private static final String parameterProperties = "javaType,jdbcType,mode,numericScale,resultMap,typeHandler,jdbcTypeName";
+  private static final String PARAMETER_PROPERTIES = "javaType,jdbcType,mode,numericScale,resultMap,typeHandler,jdbcTypeName";
 
   public SqlSourceBuilder(Configuration configuration) {
     super(configuration);
@@ -48,7 +48,7 @@ public class SqlSourceBuilder extends BaseBuilder {
 
   private static class ParameterMappingTokenHandler extends BaseBuilder implements TokenHandler {
 
-    private List<ParameterMapping> parameterMappings = new ArrayList<ParameterMapping>();
+    private List<ParameterMapping> parameterMappings = new ArrayList<>();
     private Class<?> parameterType;
     private MetaObject metaParameters;
 
@@ -78,15 +78,15 @@ public class SqlSourceBuilder extends BaseBuilder {
         propertyType = parameterType;
       } else if (JdbcType.CURSOR.name().equals(propertiesMap.get("jdbcType"))) {
         propertyType = java.sql.ResultSet.class;
-      } else if (property != null) {
+      } else if (property == null || Map.class.isAssignableFrom(parameterType)) {
+        propertyType = Object.class;
+      } else {
         MetaClass metaClass = MetaClass.forClass(parameterType, configuration.getReflectorFactory());
         if (metaClass.hasGetter(property)) {
           propertyType = metaClass.getGetterType(property);
         } else {
           propertyType = Object.class;
         }
-      } else {
-        propertyType = Object.class;
       }
       ParameterMapping.Builder builder = new ParameterMapping.Builder(configuration, property, propertyType);
       Class<?> javaType = propertyType;
@@ -114,7 +114,7 @@ public class SqlSourceBuilder extends BaseBuilder {
         } else if ("expression".equals(name)) {
           throw new BuilderException("Expression based parameters are not supported yet");
         } else {
-          throw new BuilderException("An invalid property '" + name + "' was found in mapping #{" + content + "}.  Valid properties are " + parameterProperties);
+          throw new BuilderException("An invalid property '" + name + "' was found in mapping #{" + content + "}.  Valid properties are " + PARAMETER_PROPERTIES);
         }
       }
       if (typeHandlerAlias != null) {

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,13 +16,13 @@
 package org.apache.ibatis.jdbc;
 
 import static org.apache.ibatis.jdbc.SelectBuilder.*;
-import static org.junit.Assert.assertEquals;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
 
-public class SelectBuilderTest {
+class SelectBuilderTest {
 
   @Test
-  public void shouldProduceExpectedSimpleSelectStatement() {
+  void shouldProduceExpectedSimpleSelectStatement() {
     String expected =
         "SELECT P.ID, P.USERNAME, P.PASSWORD, P.FIRST_NAME, P.LAST_NAME\n" +
             "FROM PERSON P\n" +
@@ -32,7 +32,7 @@ public class SelectBuilderTest {
   }
 
   @Test
-  public void shouldProduceExpectedSimpleSelectStatementMissingFirstParam() {
+  void shouldProduceExpectedSimpleSelectStatementMissingFirstParam() {
     String expected =
         "SELECT P.ID, P.USERNAME, P.PASSWORD, P.FIRST_NAME, P.LAST_NAME\n" +
             "FROM PERSON P\n" +
@@ -42,7 +42,7 @@ public class SelectBuilderTest {
   }
 
   @Test
-  public void shouldProduceExpectedSimpleSelectStatementMissingFirstTwoParams() {
+  void shouldProduceExpectedSimpleSelectStatementMissingFirstTwoParams() {
     String expected =
         "SELECT P.ID, P.USERNAME, P.PASSWORD, P.FIRST_NAME, P.LAST_NAME\n" +
             "FROM PERSON P\n" +
@@ -52,7 +52,7 @@ public class SelectBuilderTest {
   }
 
   @Test
-  public void shouldProduceExpectedSimpleSelectStatementMissingAllParams() {
+  void shouldProduceExpectedSimpleSelectStatementMissingAllParams() {
     String expected =
         "SELECT P.ID, P.USERNAME, P.PASSWORD, P.FIRST_NAME, P.LAST_NAME\n" +
             "FROM PERSON P\n" +
@@ -61,7 +61,7 @@ public class SelectBuilderTest {
   }
 
   @Test
-  public void shouldProduceExpectedComplexSelectStatement() {
+  void shouldProduceExpectedComplexSelectStatement() {
     String expected =
         "SELECT P.ID, P.USERNAME, P.PASSWORD, P.FULL_NAME, P.LAST_NAME, P.CREATED_ON, P.UPDATED_ON\n" +
             "FROM PERSON P, ACCOUNT A\n" +

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,23 +15,28 @@
  */
 package org.apache.ibatis.executor.statement;
 
-import org.apache.ibatis.builder.StaticSqlSource;
-import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.session.Configuration;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Spy;
-import org.mockito.runners.MockitoJUnitRunner;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import static org.mockito.Mockito.*;
+import org.apache.ibatis.builder.StaticSqlSource;
+import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.session.Configuration;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class BaseStatementHandlerTest {
+@ExtendWith(MockitoExtension.class)
+class BaseStatementHandlerTest {
 
     @Spy
     Configuration configuration;
@@ -39,15 +44,20 @@ public class BaseStatementHandlerTest {
     @Mock
     Statement statement;
 
-    MappedStatement.Builder mappedStatementBuilder;
+    private MappedStatement.Builder mappedStatementBuilder;
 
-    @Before
-    public void setupMappedStatement() {
+    @BeforeEach
+    void setupMappedStatement() {
         this.mappedStatementBuilder = new MappedStatement.Builder(configuration, "id", new StaticSqlSource(configuration, "sql"), null);
     }
 
+    @AfterEach
+    void resetMocks() {
+        reset(configuration, statement);
+    }
+
     @Test
-    public void notSpecifyTimeout() throws SQLException {
+    void notSpecifyTimeout() throws SQLException {
         BaseStatementHandler handler = new SimpleStatementHandler(null, mappedStatementBuilder.build(), null, null, null, null);
         handler.setStatementTimeout(statement, null);
 
@@ -55,7 +65,7 @@ public class BaseStatementHandlerTest {
     }
 
     @Test
-    public void specifyMappedStatementTimeoutOnly() throws SQLException {
+    void specifyMappedStatementTimeoutOnly() throws SQLException {
         mappedStatementBuilder.timeout(10);
 
         BaseStatementHandler handler = new SimpleStatementHandler(null, mappedStatementBuilder.build(), null, null, null, null);
@@ -65,7 +75,7 @@ public class BaseStatementHandlerTest {
     }
 
     @Test
-    public void specifyDefaultTimeoutOnly() throws SQLException {
+    void specifyDefaultTimeoutOnly() throws SQLException {
         doReturn(20).when(configuration).getDefaultStatementTimeout();
 
         BaseStatementHandler handler = new SimpleStatementHandler(null, mappedStatementBuilder.build(), null, null, null, null);
@@ -75,7 +85,7 @@ public class BaseStatementHandlerTest {
     }
 
     @Test
-    public void specifyTransactionTimeout() throws SQLException {
+    void specifyTransactionTimeout() throws SQLException {
         BaseStatementHandler handler = new SimpleStatementHandler(null, mappedStatementBuilder.build(), null, null, null, null);
         handler.setStatementTimeout(statement, 5);
 
@@ -83,7 +93,7 @@ public class BaseStatementHandlerTest {
     }
 
     @Test
-    public void specifyQueryTimeoutZeroAndTransactionTimeout() throws SQLException {
+    void specifyQueryTimeoutZeroAndTransactionTimeout() throws SQLException {
         doReturn(0).when(configuration).getDefaultStatementTimeout();
 
         BaseStatementHandler handler = new SimpleStatementHandler(null, mappedStatementBuilder.build(), null, null, null, null);
@@ -93,7 +103,7 @@ public class BaseStatementHandlerTest {
     }
 
     @Test
-    public void specifyMappedStatementTimeoutAndDefaultTimeout() throws SQLException {
+    void specifyMappedStatementTimeoutAndDefaultTimeout() throws SQLException {
         doReturn(20).when(configuration).getDefaultStatementTimeout();
         mappedStatementBuilder.timeout(30);
 
@@ -101,10 +111,11 @@ public class BaseStatementHandlerTest {
         handler.setStatementTimeout(statement, null);
 
         verify(statement).setQueryTimeout(30); // apply a mapped statement timeout
+        verify(configuration, never()).getDefaultStatementTimeout();
     }
 
     @Test
-    public void specifyQueryTimeoutAndTransactionTimeoutMinIsQueryTimeout() throws SQLException {
+    void specifyQueryTimeoutAndTransactionTimeoutMinIsQueryTimeout() throws SQLException {
         doReturn(10).when(configuration).getDefaultStatementTimeout();
 
         BaseStatementHandler handler = new SimpleStatementHandler(null, mappedStatementBuilder.build(), null, null, null, null);
@@ -114,7 +125,7 @@ public class BaseStatementHandlerTest {
     }
 
     @Test
-    public void specifyQueryTimeoutAndTransactionTimeoutMinIsTransactionTimeout() throws SQLException {
+    void specifyQueryTimeoutAndTransactionTimeoutMinIsTransactionTimeout() throws SQLException {
         doReturn(10).when(configuration).getDefaultStatementTimeout();
 
         BaseStatementHandler handler = new SimpleStatementHandler(null, mappedStatementBuilder.build(), null, null, null, null);
@@ -125,7 +136,7 @@ public class BaseStatementHandlerTest {
     }
 
     @Test
-    public void specifyQueryTimeoutAndTransactionTimeoutWithSameValue() throws SQLException {
+    void specifyQueryTimeoutAndTransactionTimeoutWithSameValue() throws SQLException {
         doReturn(10).when(configuration).getDefaultStatementTimeout();
 
         BaseStatementHandler handler = new SimpleStatementHandler(null, mappedStatementBuilder.build(), null, null, null, null);

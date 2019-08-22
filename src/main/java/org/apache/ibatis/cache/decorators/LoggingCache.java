@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,8 +15,6 @@
  */
 package org.apache.ibatis.cache.decorators;
 
-import java.util.concurrent.locks.ReadWriteLock;
-
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
@@ -26,8 +24,8 @@ import org.apache.ibatis.logging.LogFactory;
  */
 public class LoggingCache implements Cache {
 
-  private Log log;  
-  private Cache delegate;
+  private final Log log;
+  private final Cache delegate;
   protected int requests = 0;
   protected int hits = 0;
 
@@ -72,11 +70,6 @@ public class LoggingCache implements Cache {
   @Override
   public void clear() {
     delegate.clear();
-  }
-
-  @Override
-  public ReadWriteLock getReadWriteLock() {
-    return null;
   }
 
   @Override
