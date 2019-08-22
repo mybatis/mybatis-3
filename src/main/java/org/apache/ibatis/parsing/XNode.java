@@ -316,35 +316,52 @@ public class XNode {
   @Override
   public String toString() {
     StringBuilder builder = new StringBuilder();
-    builder.append("<");
-    builder.append(name);
-    for (Map.Entry<Object, Object> entry : attributes.entrySet()) {
-      builder.append(" ");
-      builder.append(entry.getKey());
-      builder.append("=\"");
-      builder.append(entry.getValue());
-      builder.append("\"");
-    }
-    List<XNode> children = getChildren();
-    if (!children.isEmpty()) {
-      builder.append(">\n");
-      for (XNode node : children) {
-        builder.append(node.toString());
+	  this.toString(builder, 0);
+	  return builder.toString();
+  }
+  
+  private void toString(StringBuilder builder, int level) {
+      builder.append("<");
+      builder.append(name);
+      for (Map.Entry<Object, Object> entry : attributes.entrySet()) {
+          builder.append(" ");
+          builder.append(entry.getKey());
+          builder.append("=\"");
+          builder.append(entry.getValue());
+          builder.append("\"");
       }
-      builder.append("</");
-      builder.append(name);
-      builder.append(">");
-    } else if (body != null) {
-      builder.append(">");
-      builder.append(body);
-      builder.append("</");
-      builder.append(name);
-      builder.append(">");
-    } else {
-      builder.append("/>");
-    }
-    builder.append("\n");
-    return builder.toString();
+      List<XNode> children = getChildren();
+      if (!children.isEmpty()) {
+          level++;
+          builder.append(">\n");
+          for (int k = 0; k < children.size(); k++) {
+              this.applySpace(builder, level);
+              children.get(k).toString(builder, level);
+          }
+          level--;
+          this.applySpace(builder, level);
+          builder.append("</");
+          builder.append(name);
+          builder.append(">");
+      } else if (body != null) {
+          builder.append(">");
+          builder.append(body);
+          builder.append("</");
+          builder.append(name);
+          builder.append(">");
+      } else {
+          builder.append("/>");
+          this.applySpace(builder, level);
+      }
+      builder.append("\n");
+  }
+  
+  private StringBuilder applySpace(StringBuilder builder, int level) {
+      for (int i=0; i<level; i++) {
+          // append 4 space, each level retract 4 space base it's parent.
+          builder.append("    ");
+      }
+      return builder;
   }
 
   private Properties parseAttributes(Node n) {
