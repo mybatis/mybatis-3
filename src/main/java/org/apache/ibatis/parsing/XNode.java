@@ -329,6 +329,7 @@ public class XNode {
     if (!children.isEmpty()) {
       builder.append(">\n");
       for (XNode node : children) {
+        builder.append("\t");
         builder.append(node.toString());
       }
       builder.append("</");
@@ -336,6 +337,7 @@ public class XNode {
       builder.append(">");
     } else if (body != null) {
       builder.append(">");
+      builder.append("\t");
       builder.append(body);
       builder.append("</");
       builder.append(name);
