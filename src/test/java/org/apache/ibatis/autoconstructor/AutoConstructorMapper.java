@@ -33,5 +33,5 @@ public interface AutoConstructorMapper {
   List<BadSubject> getBadSubjects();
 
   @Select("SELECT * FROM extensive_subject")
-  List<ExtensiveSubject> getExtensiveSubject();
+  List<ExtensiveSubject> getExtensiveSubjects();
 }
