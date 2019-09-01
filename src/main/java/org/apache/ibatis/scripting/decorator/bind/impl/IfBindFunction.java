@@ -23,7 +23,7 @@ import org.w3c.dom.Element;
 import java.util.regex.Pattern;
 
 /**
- * if[.where]语法：([and|or] [like|llike|rlike|eq|ne|ge|gt|le|lt|>|>=|!=] column[|property] [true|false]){1,}
+ * if[.where]语法：([and|or] [like|eq|ne|ge|gt|le|lt|>|>=|!=] column[|property] [true|false]){1,}
  *
  * @author andyslin
  */
@@ -47,10 +47,11 @@ import java.util.regex.Pattern;
     StringBuilder xml = new StringBuilder();
     // 循环处理空格或逗号分隔的配置参数
     boolean addWhere = "where".equalsIgnoreCase(subName);
+    boolean isMySql = "mysql".equalsIgnoreCase(configuration.getDatabaseId());
     for (String arg : COMMA.split(bindValue)) {
       if (null != arg && 0 != arg.trim().length()) {
         Tuple tuple = parseTuple(configuration, arg);
-        xml.append(tuple.toXml());
+        xml.append(tuple.toXml(isMySql));
       }
     }
     if (addWhere) {
@@ -130,7 +131,7 @@ import java.util.regex.Pattern;
     private boolean isBoolean = false;
     private boolean booleanValue = true;
 
-    private String toXml() {
+    private String toXml(boolean isMySql) {
       StringBuilder xml = new StringBuilder();
       if (this.isBoolean) {
         xml.append("<if test=\"").append(this.booleanValue ? "" : "!").append(this.property).append("\">");
@@ -138,9 +139,12 @@ import java.util.regex.Pattern;
         xml.append("<if test=\"").append("null != ").append(this.property).append(" and '' != ").append(this.property).append("\">");
       }
       xml.append(" ").append(this.join).append(" ");
-      if ("like".equals(this.operate) || "llike".equals(this.operate) || "rlike".equals(this.operate)) {
-        // 这里使用了$like{}配置函数
-        xml.append(this.column).append(" $").append(this.operate).append("{#{").append(this.property).append(",jdbcType=VARCHAR}}");
+      if ("like".equals(this.operate)) {
+        if (isMySql) {
+          xml.append(this.column).append(" LIKE concat('%',#{").append(this.property).append(",jdbcType=VARCHAR},'%')");
+        } else {
+          xml.append(this.column).append(" LIKE '%'||#{").append(this.property).append(",jdbcType=VARCHAR}||'%'");
+        }
       } else if ("eq".equals(this.operate)) {
         xml.append(this.column).append(" = #{").append(this.property).append(",jdbcType=VARCHAR}");
       } else if ("ne".equals(this.operate)) {
