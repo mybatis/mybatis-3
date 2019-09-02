@@ -21,6 +21,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
@@ -56,11 +57,7 @@ public class JBoss6VFS extends VFS {
 
     List<VirtualFile> getChildren() throws IOException {
       List<?> objects = invoke(getChildrenRecursively, virtualFile);
-      List<VirtualFile> children = new ArrayList<>(objects.size());
-      for (Object object : objects) {
-        children.add(new VirtualFile(object));
-      }
-      return children;
+      return objects.stream().map(VirtualFile::new).collect(Collectors.toList());
     }
   }
 

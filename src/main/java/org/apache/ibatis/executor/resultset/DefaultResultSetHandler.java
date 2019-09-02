@@ -20,13 +20,7 @@ import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.ibatis.annotations.AutomapConstructor;
 import org.apache.ibatis.binding.MapperMethod.ParamMap;
@@ -681,12 +675,9 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       return constructors[0];
     }
 
-    for (final Constructor<?> constructor : constructors) {
-      if (constructor.isAnnotationPresent(AutomapConstructor.class)) {
-        return constructor;
-      }
-    }
-    return null;
+    return Arrays.stream(constructors)
+                  .filter(constructor -> constructor.isAnnotationPresent(AutomapConstructor.class))
+                  .findFirst().orElse(null);
   }
 
   private boolean allowedConstructorUsingTypeHandlers(final Constructor<?> constructor, final List<JdbcType> jdbcTypes) {
