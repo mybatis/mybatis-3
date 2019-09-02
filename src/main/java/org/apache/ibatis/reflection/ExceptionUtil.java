@@ -29,15 +29,12 @@ public class ExceptionUtil {
 
   public static Throwable unwrapThrowable(Throwable wrapped) {
     Throwable unwrapped = wrapped;
-    while (true) {
       if (unwrapped instanceof InvocationTargetException) {
-        unwrapped = ((InvocationTargetException) unwrapped).getTargetException();
+        return ((InvocationTargetException) unwrapped).getTargetException();
       } else if (unwrapped instanceof UndeclaredThrowableException) {
-        unwrapped = ((UndeclaredThrowableException) unwrapped).getUndeclaredThrowable();
-      } else {
-        return unwrapped;
+       return ((UndeclaredThrowableException) unwrapped).getUndeclaredThrowable();
       }
-    }
+    return unwrapped;
   }
 
 }
