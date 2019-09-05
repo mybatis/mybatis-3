@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -34,35 +34,49 @@ public class UnpooledDataSourceFactory implements DataSourceFactory {
 
   protected DataSource dataSource;
 
+  private Properties dataSourceProperties = new Properties();
+  private Properties driverProperties = new Properties();
+
   public UnpooledDataSourceFactory() {
-    this.dataSource = new UnpooledDataSource();
   }
 
   @Override
   public void setProperties(Properties properties) {
-    Properties driverProperties = new Properties();
-    MetaObject metaDataSource = SystemMetaObject.forObject(dataSource);
     for (Object key : properties.keySet()) {
       String propertyName = (String) key;
       if (propertyName.startsWith(DRIVER_PROPERTY_PREFIX)) {
         String value = properties.getProperty(propertyName);
         driverProperties.setProperty(propertyName.substring(DRIVER_PROPERTY_PREFIX_LENGTH), value);
-      } else if (metaDataSource.hasSetter(propertyName)) {
-        String value = (String) properties.get(propertyName);
+      } else {
+        dataSourceProperties.put(key, properties.get(key));
+      }
+    }
+  }
+
+  @Override
+  public DataSource getDataSource() {
+    dataSource = initDataSource();
+    MetaObject metaDataSource = SystemMetaObject.forObject(dataSource);
+
+    for (Object key : dataSourceProperties.keySet()) {
+      String propertyName = (String) key;
+      if (metaDataSource.hasSetter(propertyName)) {
+        String value = (String) dataSourceProperties.get(propertyName);
         Object convertedValue = convertValue(metaDataSource, propertyName, value);
         metaDataSource.setValue(propertyName, convertedValue);
       } else {
         throw new DataSourceException("Unknown DataSource property: " + propertyName);
       }
     }
+
     if (driverProperties.size() > 0) {
       metaDataSource.setValue("driverProperties", driverProperties);
     }
+    return dataSource;
   }
 
-  @Override
-  public DataSource getDataSource() {
-    return dataSource;
+  protected DataSource initDataSource() {
+    return new UnpooledDataSource();
   }
 
   private Object convertValue(MetaObject metaDataSource, String propertyName, String value) {

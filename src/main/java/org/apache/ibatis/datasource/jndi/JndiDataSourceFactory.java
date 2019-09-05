@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -36,34 +36,38 @@ public class JndiDataSourceFactory implements DataSourceFactory {
   public static final String ENV_PREFIX = "env.";
 
   private DataSource dataSource;
+  private Properties properties;
+  private InitialContext initCtx;
 
   @Override
   public void setProperties(Properties properties) {
     try {
-      InitialContext initCtx;
+      this.properties = properties;
       Properties env = getEnvProperties(properties);
       if (env == null) {
-        initCtx = new InitialContext();
+        this.initCtx = new InitialContext();
       } else {
-        initCtx = new InitialContext(env);
+        this.initCtx = new InitialContext(env);
       }
-
-      if (properties.containsKey(INITIAL_CONTEXT)
-          && properties.containsKey(DATA_SOURCE)) {
-        Context ctx = (Context) initCtx.lookup(properties.getProperty(INITIAL_CONTEXT));
-        dataSource = (DataSource) ctx.lookup(properties.getProperty(DATA_SOURCE));
-      } else if (properties.containsKey(DATA_SOURCE)) {
-        dataSource = (DataSource) initCtx.lookup(properties.getProperty(DATA_SOURCE));
-      }
-
     } catch (NamingException e) {
-      throw new DataSourceException("There was an error configuring JndiDataSourceTransactionPool. Cause: " + e, e);
+      throw new DataSourceException("There was an error configuring JndiDataSourceFactory. Cause: " + e, e);
     }
   }
 
   @Override
   public DataSource getDataSource() {
-    return dataSource;
+    try {
+      if (properties.containsKey(INITIAL_CONTEXT)
+        && properties.containsKey(DATA_SOURCE)) {
+        Context ctx = (Context) initCtx.lookup(properties.getProperty(INITIAL_CONTEXT));
+        dataSource = (DataSource) ctx.lookup(properties.getProperty(DATA_SOURCE));
+      } else if (properties.containsKey(DATA_SOURCE)) {
+        dataSource = (DataSource) initCtx.lookup(properties.getProperty(DATA_SOURCE));
+      }
+      return dataSource;
+    } catch (NamingException e) {
+      throw new DataSourceException("There was an error getting DataSource from JndiDataSourceFactory. Cause: " + e, e);
+    }
   }
 
   private static Properties getEnvProperties(Properties allProps) {
