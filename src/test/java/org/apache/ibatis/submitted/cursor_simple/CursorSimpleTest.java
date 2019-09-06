@@ -15,6 +15,11 @@
  */
 package org.apache.ibatis.submitted.cursor_simple;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.io.Resources;
@@ -387,4 +392,85 @@ class CursorSimpleTest {
 
   }
 
+  @Test
+  void shouldNullItemNotStopIteration() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      Cursor<User> cursor = mapper.getNullUsers(new RowBounds());
+      Iterator<User> iterator = cursor.iterator();
+
+      assertFalse(cursor.isOpen());
+
+      // Cursor is just created, current index is -1
+      assertEquals(-1, cursor.getCurrentIndex());
+
+      // Check if hasNext, fetching is started
+      assertTrue(iterator.hasNext());
+      // Re-invoking hasNext() should not fetch the next row
+      assertTrue(iterator.hasNext());
+      assertTrue(cursor.isOpen());
+      assertFalse(cursor.isConsumed());
+
+      // next() has not been called, index is still -1
+      assertEquals(-1, cursor.getCurrentIndex());
+
+      User user;
+      user = iterator.next();
+      assertNull(user);
+      assertEquals(0, cursor.getCurrentIndex());
+
+      assertTrue(iterator.hasNext());
+      user = iterator.next();
+      assertEquals("Kate", user.getName());
+      assertEquals(1, cursor.getCurrentIndex());
+
+      assertTrue(iterator.hasNext());
+      user = iterator.next();
+      assertNull(user);
+      assertEquals(2, cursor.getCurrentIndex());
+
+      assertTrue(iterator.hasNext());
+      user = iterator.next();
+      assertNull(user);
+      assertEquals(3, cursor.getCurrentIndex());
+
+      // Check no more elements
+      assertFalse(iterator.hasNext());
+      assertFalse(cursor.isOpen());
+      assertTrue(cursor.isConsumed());
+    }
+  }
+
+  @Test
+  void shouldRowBoundsCountNullItem() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      Cursor<User> cursor = mapper.getNullUsers(new RowBounds(1, 2));
+      Iterator<User> iterator = cursor.iterator();
+
+      assertFalse(cursor.isOpen());
+
+      // Check if hasNext, fetching is started
+      assertTrue(iterator.hasNext());
+      // Re-invoking hasNext() should not fetch the next row
+      assertTrue(iterator.hasNext());
+      assertTrue(cursor.isOpen());
+      assertFalse(cursor.isConsumed());
+
+      User user;
+      user = iterator.next();
+      assertEquals("Kate", user.getName());
+      assertEquals(1, cursor.getCurrentIndex());
+
+      assertTrue(iterator.hasNext());
+      user = iterator.next();
+      assertNull(user);
+      assertEquals(2, cursor.getCurrentIndex());
+
+      // Check no more elements
+      assertFalse(iterator.hasNext());
+      assertFalse(cursor.isOpen());
+      assertTrue(cursor.isConsumed());
+    }
+  }
 }
