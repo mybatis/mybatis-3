@@ -1751,7 +1751,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
 
         <source><![CDATA[<cache type="com.domain.something.MyCustomCache"/>]]></source>
 
-        <p>Este ejemplo muestra cómo usar una caché personalizada. La clase especificada en el atributo type debe implementar el interfaz org.mybatis.cache.Cache y proporcionar un constructor que recibe como parámetro un String id. Este es uno de los interfaces más complejos de MyBatis pero su funcionalidad es simple.
+        <p>Este ejemplo muestra cómo usar una caché personalizada. La clase especificada en el atributo type debe implementar el interfaz org.apache.ibatis.cache.Cache y proporcionar un constructor que recibe como parámetro un String id. Este es uno de los interfaces más complejos de MyBatis pero su funcionalidad es simple.
         </p>
 
         <source><![CDATA[public interface Cache {
