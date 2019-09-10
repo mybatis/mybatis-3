@@ -269,7 +269,7 @@ public class DefaultSqlSession implements SqlSession {
   }
 
   private void closeCursors() {
-    if (cursorList != null && cursorList.size() != 0) {
+    if (cursorList != null && !cursorList.isEmpty()) {
       for (Cursor<?> cursor : cursorList) {
         try {
           cursor.close();
