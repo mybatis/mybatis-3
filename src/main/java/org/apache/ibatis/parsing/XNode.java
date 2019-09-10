@@ -337,7 +337,6 @@ public class XNode {
       builder.append(">");
     } else if (body != null) {
       builder.append(">");
-      builder.append("\t");
       builder.append(body);
       builder.append("</");
       builder.append(name);
