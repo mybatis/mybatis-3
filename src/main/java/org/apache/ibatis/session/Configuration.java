@@ -871,13 +871,10 @@ public class Configuration {
     if (rm.hasNestedResultMaps()) {
       for (Map.Entry<String, ResultMap> entry : resultMaps.entrySet()) {
         ResultMap value = entry.getValue();
-        if (value != null) {
-          ResultMap entryResultMap = value;
-          if (!entryResultMap.hasNestedResultMaps() && entryResultMap.getDiscriminator() != null) {
-            Collection<String> discriminatedResultMapNames = entryResultMap.getDiscriminator().getDiscriminatorMap().values();
-            if (discriminatedResultMapNames.contains(rm.getId())) {
-              entryResultMap.forceNestedResultMaps();
-            }
+        if (value != null && !value.hasNestedResultMaps() && value.getDiscriminator() != null) {
+          Collection<String> discriminatedResultMapNames = value.getDiscriminator().getDiscriminatorMap().values();
+          if (discriminatedResultMapNames.contains(rm.getId())) {
+            value.forceNestedResultMaps();
           }
         }
       }
