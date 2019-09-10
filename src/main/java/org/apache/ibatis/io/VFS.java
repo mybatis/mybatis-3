@@ -58,7 +58,7 @@ public abstract class VFS {
         Class<? extends VFS> impl = impls.get(i);
         try {
           vfs = impl.getDeclaredConstructor().newInstance();
-          if (vfs == null || !vfs.isValid()) {
+          if (!vfs.isValid()) {
             if (log.isDebugEnabled()) {
               log.debug("VFS implementation " + impl.getName() +
                   " is not valid in this environment.");
