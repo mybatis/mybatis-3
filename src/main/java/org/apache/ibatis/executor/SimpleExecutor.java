@@ -71,8 +71,9 @@ public class SimpleExecutor extends BaseExecutor {
     Configuration configuration = ms.getConfiguration();
     StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, null, boundSql);
     Statement stmt = prepareStatement(handler, ms.getStatementLog());
+    Cursor<E> cursor = handler.queryCursor(stmt);
     stmt.closeOnCompletion();
-    return handler.queryCursor(stmt);
+    return cursor;
   }
 
   @Override
