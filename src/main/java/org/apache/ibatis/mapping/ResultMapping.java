@@ -262,11 +262,7 @@ public class ResultMapping {
 
     ResultMapping that = (ResultMapping) o;
 
-    if (property == null || !property.equals(that.property)) {
-      return false;
-    }
-
-    return true;
+    return property != null && property.equals(that.property);
   }
 
   @Override
