@@ -161,7 +161,7 @@ AND title like ‘someTitle’]]></source>
         <p>到此我们已经完成了涉及 XML 配置文件和 XML 映射文件的讨论。下一章将详细探讨 Java API，这样就能提高已创建的映射文件的利用效率。</p>
       </subsection>
   <subsection name="script">
-  <p>For using dynamic SQL in annotated mapper class, <em>script</em> element can be used. For example:</p>
+  <p>要在带注解的映射器接口类中使用动态 SQL，可以使用 <em>script</em> 元素。比如:</p>
   <source><![CDATA[
     @Update({"<script>",
       "update Author",
