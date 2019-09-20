@@ -40,7 +40,7 @@ public class CacheKey implements Cloneable, Serializable {
     }
   };
 
-  private static final int DEFAULT_MULTIPLYER = 37;
+  private static final int DEFAULT_MULTIPLIER = 37;
   private static final int DEFAULT_HASHCODE = 17;
 
   private final int multiplier;
@@ -52,7 +52,7 @@ public class CacheKey implements Cloneable, Serializable {
 
   public CacheKey() {
     this.hashcode = DEFAULT_HASHCODE;
-    this.multiplier = DEFAULT_MULTIPLYER;
+    this.multiplier = DEFAULT_MULTIPLIER;
     this.count = 0;
     this.updateList = new ArrayList<>();
   }
