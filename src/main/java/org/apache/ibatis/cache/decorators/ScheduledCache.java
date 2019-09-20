@@ -28,7 +28,7 @@ public class ScheduledCache implements Cache {
 
   public ScheduledCache(Cache delegate) {
     this.delegate = delegate;
-    this.clearInterval = 60 * 60 * 1000; // 1 hour
+    this.clearInterval = 60 * 60 * 1_000L; // 1 hour
     this.lastClear = System.currentTimeMillis();
   }
 
