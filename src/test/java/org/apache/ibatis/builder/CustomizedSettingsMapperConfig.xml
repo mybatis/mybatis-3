@@ -40,6 +40,7 @@
     <setting name="defaultExecutorType" value="BATCH"/>
     <setting name="defaultStatementTimeout" value="10"/>
     <setting name="defaultFetchSize" value="100"/>
+    <setting name="defaultResultSetType" value="SCROLL_INSENSITIVE"/>
     <setting name="mapUnderscoreToCamelCase" value="true"/>
     <setting name="safeRowBoundsEnabled" value="true"/>
     <setting name="localCacheScope" value="STATEMENT"/>

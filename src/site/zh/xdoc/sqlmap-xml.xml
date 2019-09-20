@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2018 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -2040,7 +2040,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
 
         <p>
           这个示例展示了如何使用一个自定义的缓存实现。type 属性指定的类必须实现
-          org.mybatis.cache.Cache 接口，且提供一个接受 String 参数作为 id 的构造器。
+          org.apache.ibatis.cache.Cache 接口，且提供一个接受 String 参数作为 id 的构造器。
           这个接口是 MyBatis 框架中许多复杂的接口之一，但是行为却非常简单。
         </p>
 

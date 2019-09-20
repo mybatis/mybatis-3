@@ -83,7 +83,7 @@ class AutoConstructorTest {
   void extensiveSubject() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       final AutoConstructorMapper mapper = sqlSession.getMapper(AutoConstructorMapper.class);
-      verifySubjects(mapper.getExtensiveSubject());
+      verifySubjects(mapper.getExtensiveSubjects());
     }
   }
 

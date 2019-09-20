@@ -66,7 +66,7 @@
   <p>El interfaz principal para trabajar con MyBatis es el SqlSession. A través de este interfaz puedes ejecutar comandos, obtener mappers y gestionar transacciones. Hablaremos más sobre el propio SqlSession en breve, pero primero veamos cómo obtener una instancia de SqlSession. Las SqlSessions se crean por una instancia de SqlSessionFactory. La SqlSessionFactory contiene métodos para crear instancias de SqlSessions de distintas formas. La SqlSessionFactory en si misma se crea por la SqlSessionFactoryBuilder que puede crear una SqlSessionFactory a partir de XML, anotaciones o un objeto Configuration creado por código.</p>
   <p><span class="label important">NOTE</span> When using MyBatis with a dependency injection framework like Spring or Guice, SqlSessions are created and injected by the DI framework so you don't need to use the SqlSessionFactoryBuilder or SqlSessionFactory and can go directly to the SqlSession section. Please refer to the MyBatis-Spring or MyBatis-Guice manuals for further info.</p>
   <h4>SqlSessionFactoryBuilder</h4>
-  <p>El SqlSessionFactoryBuilder tiene cinco métodos build(), cada cual permite construir una SqlSession desde un origen distinto.</p>
+  <p>El SqlSessionFactoryBuilder tiene cinco métodos build(), cada cual permite construir una SqlSessionFactory desde un origen distinto.</p>
   <source>SqlSessionFactory build(InputStream inputStream)
 SqlSessionFactory build(InputStream inputStream, String environment)
 SqlSessionFactory build(InputStream inputStream, Properties properties)

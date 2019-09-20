@@ -13,28 +13,24 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.cache;
 
-/**
- * @author Clinton Begin
- * @deprecated Since 3.5.3, This class never used and will be removed future version.
- */
-@Deprecated
-public final class NullCacheKey extends CacheKey {
+package org.apache.ibatis.reflection.invoker;
 
-  private static final long serialVersionUID = 3704229911977019465L;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
-  public NullCacheKey() {
-    super();
+import org.apache.ibatis.reflection.ReflectionException;
+
+public class AmbiguousMethodInvoker extends MethodInvoker {
+  private final String exceptionMessage;
+
+  public AmbiguousMethodInvoker(Method method, String exceptionMessage) {
+    super(method);
+    this.exceptionMessage = exceptionMessage;
   }
 
   @Override
-  public void update(Object object) {
-    throw new CacheException("Not allowed to update a NullCacheKey instance.");
-  }
-
-  @Override
-  public void updateAll(Object[] objects) {
-    throw new CacheException("Not allowed to update a NullCacheKey instance.");
+  public Object invoke(Object target, Object[] args) throws IllegalAccessException, InvocationTargetException {
+    throw new ReflectionException(exceptionMessage);
   }
 }

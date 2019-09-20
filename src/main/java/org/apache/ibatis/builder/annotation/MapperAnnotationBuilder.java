@@ -306,7 +306,7 @@ public class MapperAnnotationBuilder {
       Integer fetchSize = null;
       Integer timeout = null;
       StatementType statementType = StatementType.PREPARED;
-      ResultSetType resultSetType = null;
+      ResultSetType resultSetType = configuration.getDefaultResultSetType();
       SqlCommandType sqlCommandType = getSqlCommandType(method);
       boolean isSelect = sqlCommandType == SqlCommandType.SELECT;
       boolean flushCache = !isSelect;
@@ -342,7 +342,9 @@ public class MapperAnnotationBuilder {
         fetchSize = options.fetchSize() > -1 || options.fetchSize() == Integer.MIN_VALUE ? options.fetchSize() : null; //issue #348
         timeout = options.timeout() > -1 ? options.timeout() : null;
         statementType = options.statementType();
-        resultSetType = options.resultSetType();
+        if (options.resultSetType() != ResultSetType.DEFAULT) {
+          resultSetType = options.resultSetType();
+        }
       }
 
       String resultMapId = null;

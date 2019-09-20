@@ -64,6 +64,20 @@ class XmlMapperBuilderTest {
   }
 
   @Test
+  void mappedStatementWithoutOptionsWhenSpecifyDefaultValue() throws Exception {
+    Configuration configuration = new Configuration();
+    configuration.setDefaultResultSetType(ResultSetType.SCROLL_INSENSITIVE);
+    String resource = "org/apache/ibatis/builder/AuthorMapper.xml";
+    InputStream inputStream = Resources.getResourceAsStream(resource);
+    XMLMapperBuilder builder = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
+    builder.parse();
+    inputStream.close();
+
+    MappedStatement mappedStatement = configuration.getMappedStatement("selectAuthor");
+    assertThat(mappedStatement.getResultSetType()).isEqualTo(ResultSetType.SCROLL_INSENSITIVE);
+  }
+
+  @Test
   void parseExpression() {
     BaseBuilder builder = new BaseBuilder(new Configuration()){{}};
     {
@@ -114,7 +128,7 @@ class XmlMapperBuilderTest {
     when(builder).createInstance("org.apache.ibatis.builder.BaseBuilder");
     then(caughtException())
       .isInstanceOf(BuilderException.class)
-      .hasMessage("Error creating instance. Cause: java.lang.InstantiationException: org.apache.ibatis.builder.BaseBuilder");
+      .hasMessage("Error creating instance. Cause: java.lang.NoSuchMethodException: org.apache.ibatis.builder.BaseBuilder.<init>()");
   }
 
   @Test

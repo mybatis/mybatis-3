@@ -66,7 +66,7 @@
   <p>MyBatis の最も良く使う Java インターフェイスは SqlSession です。コマンドの実行、Mapper の取得、トランザクション管理はこのインターフェイスを通して行うことができます。SqlSession については、後で詳しく説明しますが、その前に SqlSession のインスタンスを取得する方法について学ばなくてはなりません。SqlSession は SqlSessionFactory のインスタンスによって作成されます。SqlSessionFactory には、様々な方法で SqlSession を作成するメソッドが含まれています。SqlSessionFactory 自身は SqlSessionFactoryBuilder によって作られますが、作成される SqlSessionFactory は XML、アノテーション、ハードコードされた Java コンフィグレーションのいずれかの方法で設定することができます。</p>
   <p><span class="label important">NOTE</span> MyBatis を Spring や Guice といった依存性注入（DI = Dependency Injection）フレームワークと組み合わせて使う場合、SqlSession は DI フレームワークによって作成・注入されます。SqlSessionFactoryBuilder や SqlSessionFactory を使う必要はありませんので、SqlSession の章まで飛ばして構いません。DIフレームワークとの組み合わせについては MyBatis-Spring および MyBatis-Guice のマニュアルを参照してください。</p>
   <h4>SqlSessionFactoryBuilder</h4>
-  <p>SqlSessionFactoryBuilder には５つの build() メソッドがあり、それぞれ異なるソースから SqlSession をビルドすることができるようになっています。</p>
+  <p>SqlSessionFactoryBuilder には５つの build() メソッドがあり、それぞれ異なるソースから SqlSessionFactory をビルドすることができるようになっています。</p>
   <source>SqlSessionFactory build(InputStream inputStream)
 SqlSessionFactory build(InputStream inputStream, String environment)
 SqlSessionFactory build(InputStream inputStream, Properties properties)
