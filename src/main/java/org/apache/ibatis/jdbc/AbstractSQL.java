@@ -18,6 +18,7 @@ package org.apache.ibatis.jdbc;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -79,9 +80,7 @@ public abstract class AbstractSQL<T> {
    */
   public T INTO_VALUES(String... values) {
     List<String> list = sql().valuesList.get(sql().valuesList.size() - 1);
-    for (String value : values) {
-      list.add(value);
-    }
+    Collections.addAll(list, values);
     return getSelf();
   }
 
