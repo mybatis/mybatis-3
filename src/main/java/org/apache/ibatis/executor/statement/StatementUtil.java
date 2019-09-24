@@ -45,9 +45,7 @@ public class StatementUtil {
       return;
     }
     Integer timeToLiveOfQuery = null;
-    if (queryTimeout == null || queryTimeout == 0) {
-      timeToLiveOfQuery = transactionTimeout;
-    } else if (transactionTimeout < queryTimeout) {
+    if (queryTimeout == null || queryTimeout == 0 || transactionTimeout < queryTimeout) {
       timeToLiveOfQuery = transactionTimeout;
     }
     if (timeToLiveOfQuery != null) {
