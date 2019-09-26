@@ -41,15 +41,8 @@ public class StatementUtil {
    * @throws SQLException if a database access error occurs, this method is called on a closed <code>Statement</code>
    */
   public static void applyTransactionTimeout(Statement statement, Integer queryTimeout, Integer transactionTimeout) throws SQLException {
-    if (transactionTimeout == null){
-      return;
-    }
-    Integer timeToLiveOfQuery = null;
-    if (queryTimeout == null || queryTimeout == 0 || transactionTimeout < queryTimeout) {
-      timeToLiveOfQuery = transactionTimeout;
-    }
-    if (timeToLiveOfQuery != null) {
-      statement.setQueryTimeout(timeToLiveOfQuery);
+    if (transactionTimeout != null && queryTimeout == null || queryTimeout == 0 || transactionTimeout < queryTimeout) {
+      statement.setQueryTimeout(transactionTimeout);
     }
   }
 
