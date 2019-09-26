@@ -1908,7 +1908,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, propert
           Most MyBatis applications will configure a dataSource as in the
           example. However, it’s not required. Realize though, that to
           facilitate Lazy Loading, this dataSource is required.
-        <p>
+        </p>
         <p>There are three built-in dataSource types (i.e. type="[UNPOOLED|POOLED|JNDI]"):
         </p>
         <p>
