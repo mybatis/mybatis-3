@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ public class StatementUtil {
    */
   public static void applyTransactionTimeout(Statement statement, Integer queryTimeout, Integer transactionTimeout) throws SQLException {
     if (transactionTimeout == null) {
-        return;
+      return;
     }
     if (queryTimeout == null || queryTimeout == 0 || transactionTimeout < queryTimeout) {
       statement.setQueryTimeout(transactionTimeout);
