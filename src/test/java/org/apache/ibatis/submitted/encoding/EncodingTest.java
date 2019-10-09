@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,82 +15,55 @@
  */
 package org.apache.ibatis.submitted.encoding;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.Reader;
 import java.nio.charset.Charset;
-import java.sql.Connection;
-import java.sql.DriverManager;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-public class EncodingTest {
+class EncodingTest {
 
   protected static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
-  public static void setUp() throws Exception {
-    Connection conn = null;
+  @BeforeAll
+  static void setUp() throws Exception {
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/encoding/EncodingConfig.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    }
 
-    // save charset
     Charset charset = Resources.getCharset();
-
     try {
-      Class.forName("org.hsqldb.jdbcDriver");
-      conn = DriverManager.getConnection("jdbc:hsqldb:mem:encoding", "sa", "");
-
       // make sure that the SQL file has been saved in UTF-8!
       Resources.setCharset(Charset.forName("utf-8"));
-      Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/encoding/CreateDB.sql");
-
-      ScriptRunner runner = new ScriptRunner(conn);
-      runner.setLogWriter(null);
-      runner.setErrorLogWriter(null);
-      runner.runScript(reader);
-      conn.commit();
-      reader.close();
-
-      reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/encoding/EncodingConfig.xml");
-      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-      reader.close();
-
+      BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+              "org/apache/ibatis/submitted/encoding/CreateDB.sql");
     } finally {
-      // restore charset
       Resources.setCharset(charset);
-      
-      if (conn != null) {
-        conn.close();
-      }
     }
   }
 
   @Test
-  public void testEncoding1() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  void testEncoding1() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       EncodingMapper mapper = sqlSession.getMapper(EncodingMapper.class);
       String answer = mapper.select1();
       assertEquals("Mara\u00f1\u00f3n", answer);
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
-  public void testEncoding2() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  void testEncoding2() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       EncodingMapper mapper = sqlSession.getMapper(EncodingMapper.class);
       String answer = mapper.select2();
       assertEquals("Mara\u00f1\u00f3n", answer);
-    } finally {
-      sqlSession.close();
     }
   }
 }

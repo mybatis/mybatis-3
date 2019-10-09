@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -22,8 +22,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 public class UtilityTester {
-  
-  public static void serializeAndDeserializeObject(Object myObject){
+
+  public static void serializeAndDeserializeObject(Object myObject) {
 
     try {
       deserialzeObject(serializeObject(myObject));
@@ -37,9 +37,9 @@ public class UtilityTester {
       ByteArrayOutputStream myByteArrayOutputStream = new ByteArrayOutputStream();
 
       // Serialize to a byte array
-      ObjectOutputStream myObjectOutputStream = new ObjectOutputStream(myByteArrayOutputStream) ;
-      myObjectOutputStream.writeObject(myObject);
-      myObjectOutputStream.close();
+      try (ObjectOutputStream myObjectOutputStream = new ObjectOutputStream(myByteArrayOutputStream)) {
+        myObjectOutputStream.writeObject(myObject);
+      }
 
       // Get the bytes of the serialized object
       byte[] myResult = myByteArrayOutputStream.toByteArray();
@@ -50,14 +50,11 @@ public class UtilityTester {
   }
 
   private static Object deserialzeObject(byte[] aSerializedObject) {
-    try {
-      // Deserialize from a byte array
-      ObjectInputStream myObjectInputStream = new ObjectInputStream(new ByteArrayInputStream(aSerializedObject));
-      Object myResult = myObjectInputStream.readObject();
-      myObjectInputStream.close();
-
-      return myResult;
-    } catch (Exception anException) {
+    // Deserialize from a byte array
+    try (ObjectInputStream myObjectInputStream = new ObjectInputStream(new ByteArrayInputStream(aSerializedObject))) {
+      return myObjectInputStream.readObject();
+    }
+    catch (Exception anException) {
       throw new RuntimeException("Problem deserializing", anException);
     }
   }

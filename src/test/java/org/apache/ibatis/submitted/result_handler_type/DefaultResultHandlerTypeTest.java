@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,95 +15,64 @@
  */
 package org.apache.ibatis.submitted.result_handler_type;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.IOException;
 import java.io.Reader;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class DefaultResultHandlerTypeTest {
+class DefaultResultHandlerTypeTest {
 
   @Test
-  public void testSelectList() throws Exception {
+  void testSelectList() throws Exception {
     String xmlConfig = "org/apache/ibatis/submitted/result_handler_type/MapperConfig.xml";
     SqlSessionFactory sqlSessionFactory = getSqlSessionFactoryXmlConfig(xmlConfig);
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       List<Person> list = sqlSession
           .selectList("org.apache.ibatis.submitted.result_handler_type.PersonMapper.doSelect");
       assertEquals(list.size(), 2);
       assertEquals("java.util.LinkedList", list.getClass().getCanonicalName());
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
-  public void testSelectMap() throws Exception {
+  void testSelectMap() throws Exception {
     String xmlConfig = "org/apache/ibatis/submitted/result_handler_type/MapperConfig.xml";
     SqlSessionFactory sqlSessionFactory = getSqlSessionFactoryXmlConfig(xmlConfig);
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Map<Integer, Person> map = sqlSession.selectMap(
           "org.apache.ibatis.submitted.result_handler_type.PersonMapper.doSelect", "id");
       assertEquals(map.size(), 2);
       assertEquals("java.util.LinkedHashMap", map.getClass().getCanonicalName());
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
-  public void testSelectMapAnnotation() throws Exception {
+  void testSelectMapAnnotation() throws Exception {
     String xmlConfig = "org/apache/ibatis/submitted/result_handler_type/MapperConfig.xml";
     SqlSessionFactory sqlSessionFactory = getSqlSessionFactoryXmlConfig(xmlConfig);
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       PersonMapper mapper = sqlSession.getMapper(PersonMapper.class);
       Map<Integer, Person> map = mapper.selectAsMap();
       assertEquals(map.size(), 2);
       assertEquals("java.util.LinkedHashMap", map.getClass().getCanonicalName());
-    } finally {
-      sqlSession.close();
     }
   }
 
   private SqlSessionFactory getSqlSessionFactoryXmlConfig(String resource) throws Exception {
-    Reader configReader = Resources.getResourceAsReader(resource);
-    SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configReader);
-    configReader.close();
+    try (Reader configReader = Resources.getResourceAsReader(resource)) {
+      SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configReader);
+      BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+            "org/apache/ibatis/submitted/result_handler_type/CreateDB.sql");
 
-    Connection conn = sqlSessionFactory.getConfiguration().getEnvironment().getDataSource().getConnection();
-    initDb(conn);
-    conn.close();
-
-    return sqlSessionFactory;
-  }
-
-  private static void initDb(Connection conn) throws IOException, SQLException {
-    try {
-      Reader scriptReader = Resources
-          .getResourceAsReader("org/apache/ibatis/submitted/result_handler_type/CreateDB.sql");
-      ScriptRunner runner = new ScriptRunner(conn);
-      runner.setLogWriter(null);
-      runner.setErrorLogWriter(null);
-      runner.runScript(scriptReader);
-      conn.commit();
-      scriptReader.close();
-    } finally {
-      if (conn != null) {
-        conn.close();
-      }
+      return sqlSessionFactory;
     }
   }
 

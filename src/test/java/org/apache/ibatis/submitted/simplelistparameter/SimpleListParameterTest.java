@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,81 +16,64 @@
 package org.apache.ibatis.submitted.simplelistparameter;
 
 import java.io.Reader;
-import java.sql.Connection;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-public class SimpleListParameterTest {
+class SimpleListParameterTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
-  public static void setUp() throws Exception {
+  @BeforeAll
+  static void setUp() throws Exception {
     // create a SqlSessionFactory
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/simplelistparameter/mybatis-config.xml");
-    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    reader.close();
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/simplelistparameter/mybatis-config.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    }
 
     // populate in-memory database
-    SqlSession session = sqlSessionFactory.openSession();
-    Connection conn = session.getConnection();
-    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/simplelistparameter/CreateDB.sql");
-    ScriptRunner runner = new ScriptRunner(conn);
-    runner.setLogWriter(null);
-    runner.runScript(reader);
-    conn.close();
-    reader.close();
-    session.close();
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+            "org/apache/ibatis/submitted/simplelistparameter/CreateDB.sql");
   }
 
   @Test
-  public void shouldGetACar() throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  void shouldGetACar() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       CarMapper carMapper = sqlSession.getMapper(CarMapper.class);
       Car car = new Car();
-      car.setDoors(Arrays.asList(new String[] {"2", "4"}));
+      car.setDoors(Arrays.asList("2", "4"));
       List<Car> cars = carMapper.getCar(car);
-      Assert.assertNotNull(cars);
-    } finally {
-      sqlSession.close();
+      Assertions.assertNotNull(cars);
     }
   }
 
   @Test
-  public void shouldResolveGenericFieldGetterType() throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  void shouldResolveGenericFieldGetterType() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       CarMapper carMapper = sqlSession.getMapper(CarMapper.class);
       Rv rv = new Rv();
-      rv.doors1 = Arrays.asList(new String[] {"2", "4"});
+      rv.doors1 = Arrays.asList("2", "4");
       List<Rv> rvs = carMapper.getRv1(rv);
-      Assert.assertNotNull(rvs);
-    } finally {
-      sqlSession.close();
+      Assertions.assertNotNull(rvs);
     }
   }
 
   @Test
-  public void shouldResolveGenericMethodGetterType() throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  void shouldResolveGenericMethodGetterType() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       CarMapper carMapper = sqlSession.getMapper(CarMapper.class);
       Rv rv = new Rv();
-      rv.setDoors2(Arrays.asList(new String[] {"2", "4"}));
+      rv.setDoors2(Arrays.asList("2", "4"));
       List<Rv> rvs = carMapper.getRv2(rv);
-      Assert.assertNotNull(rvs);
-    } finally {
-      sqlSession.close();
+      Assertions.assertNotNull(rvs);
     }
   }
 }

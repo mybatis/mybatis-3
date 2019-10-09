@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,35 +15,26 @@
  */
 package org.apache.ibatis.submitted.primitive_result_type;
 
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
-import org.apache.ibatis.session.SqlSession;
-import static org.junit.Assert.assertTrue;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.apache.ibatis.BaseDataTest;
 
-import java.io.Reader;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
 import java.math.BigDecimal;
-import java.sql.Connection;
 import java.util.List;
 
-public class PrimitiveResultTypeTest {
+class PrimitiveResultTypeTest {
 
-  @BeforeClass
-  public static void setup() throws Exception {
-    SqlSession session = IbatisConfig.getSession();
-    Connection conn = session.getConnection();
-    ScriptRunner runner = new ScriptRunner(conn);
-    runner.setLogWriter(null);
-    runner.setErrorLogWriter(null);
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/primitive_result_type/create.sql");
-    runner.runScript(reader);
-    conn.close();
-    reader.close();
+  @BeforeAll
+  static void setup() throws Exception {
+    BaseDataTest.runScript(IbatisConfig.getSqlSessionFactory().getConfiguration().getEnvironment().getDataSource(),
+            "org/apache/ibatis/submitted/primitive_result_type/create.sql");
   }
 
   @Test
-  public void shouldReturnProperPrimitiveType() {
+  void shouldReturnProperPrimitiveType() {
     List<Integer> codes = ProductDAO.selectProductCodes();
     for (Object code : codes) {
       assertTrue(code instanceof Integer);
@@ -58,8 +49,8 @@ public class PrimitiveResultTypeTest {
     }
   }
   @Test
-  public void noErrorThrowOut(){
+  void noErrorThrowOut(){
       List<Product> products=ProductDAO.selectAllProducts();
-      assertTrue("should return 4 results", 4==products.size());
+    assertEquals(4, products.size(), "should return 4 results");
   }
 }

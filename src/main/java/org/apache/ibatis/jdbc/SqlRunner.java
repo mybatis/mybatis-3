@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ public class SqlRunner {
     this.useGeneratedKeySupport = useGeneratedKeySupport;
   }
 
-  /*
+  /**
    * Executes a SELECT statement that returns one row.
    *
    * @param sql  The SQL
@@ -68,7 +68,7 @@ public class SqlRunner {
     return results.get(0);
   }
 
-  /*
+  /**
    * Executes a SELECT statement that returns multiple rows.
    *
    * @param sql  The SQL
@@ -91,7 +91,7 @@ public class SqlRunner {
     }
   }
 
-  /*
+  /**
    * Executes an INSERT statement.
    *
    * @param sql  The SQL
@@ -137,7 +137,7 @@ public class SqlRunner {
     }
   }
 
-  /*
+  /**
    * Executes an UPDATE statement.
    *
    * @param sql  The SQL
@@ -159,7 +159,7 @@ public class SqlRunner {
     }
   }
 
-  /*
+  /**
    * Executes a DELETE statement.
    *
    * @param sql  The SQL
@@ -171,7 +171,7 @@ public class SqlRunner {
     return update(sql, args);
   }
 
-  /*
+  /**
    * Executes any string as a JDBC Statement.
    * Good for DDL
    *
@@ -218,9 +218,9 @@ public class SqlRunner {
 
   private List<Map<String, Object>> getResults(ResultSet rs) throws SQLException {
     try {
-      List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-      List<String> columns = new ArrayList<String>();
-      List<TypeHandler<?>> typeHandlers = new ArrayList<TypeHandler<?>>();
+      List<Map<String, Object>> list = new ArrayList<>();
+      List<String> columns = new ArrayList<>();
+      List<TypeHandler<?>> typeHandlers = new ArrayList<>();
       ResultSetMetaData rsmd = rs.getMetaData();
       for (int i = 0, n = rsmd.getColumnCount(); i < n; i++) {
         columns.add(rsmd.getColumnLabel(i + 1));
@@ -236,7 +236,7 @@ public class SqlRunner {
         }
       }
       while (rs.next()) {
-        Map<String, Object> row = new HashMap<String, Object>();
+        Map<String, Object> row = new HashMap<>();
         for (int i = 0, n = columns.size(); i < n; i++) {
           String name = columns.get(i);
           TypeHandler<?> handler = typeHandlers.get(i);
@@ -248,7 +248,7 @@ public class SqlRunner {
     } finally {
       if (rs != null) {
         try {
-            rs.close();
+          rs.close();
         } catch (Exception e) {
           // ignore
         }

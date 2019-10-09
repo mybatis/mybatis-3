@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,92 +15,64 @@
  */
 package org.apache.ibatis.submitted.substitution_in_annots;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.io.Reader;
-import java.sql.Connection;
-import java.sql.DriverManager;
-
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-
-public class SubstitutionInAnnotsTest {
+class SubstitutionInAnnotsTest {
 
   protected static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
-  public static void setUp() throws Exception {
-    Class.forName("org.hsqldb.jdbcDriver");
-    Connection c = DriverManager.getConnection("jdbc:hsqldb:mem:annots", "sa", "");
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/substitution_in_annots/CreateDB.sql");
-    ScriptRunner runner = new ScriptRunner(c);
-    runner.setLogWriter(null);
-    runner.setErrorLogWriter(null);
-    runner.runScript(reader);
-    c.commit();
-    reader.close();
-
+  @BeforeAll
+  static void setUp() throws Exception {
     Configuration configuration = new Configuration();
     Environment environment = new Environment("test", new JdbcTransactionFactory(), new UnpooledDataSource("org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:annots", null));
     configuration.setEnvironment(environment);
-
     configuration.addMapper(SubstitutionInAnnotsMapper.class);
-
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
-    c.close();
+
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+            "org/apache/ibatis/submitted/substitution_in_annots/CreateDB.sql");
   }
 
   @Test
-  public void testSubstitutionWithXml() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  void testSubstitutionWithXml() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SubstitutionInAnnotsMapper mapper = sqlSession.getMapper(SubstitutionInAnnotsMapper.class);
       assertEquals("Barney", mapper.getPersonNameByIdWithXml(4));
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
-  public void testSubstitutionWithAnnotsValue() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  void testSubstitutionWithAnnotsValue() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SubstitutionInAnnotsMapper mapper = sqlSession.getMapper(SubstitutionInAnnotsMapper.class);
       assertEquals("Barney", mapper.getPersonNameByIdWithAnnotsValue(4));
-    } finally {
-      sqlSession.close();
-    }
-  }
-  
-  @Test
-  public void testSubstitutionWithAnnotsParameter() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
-      SubstitutionInAnnotsMapper mapper = sqlSession.getMapper(SubstitutionInAnnotsMapper.class);
-      assertEquals("Barney", mapper.getPersonNameByIdWithAnnotsParameter(4));
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
-  public void testSubstitutionWithAnnotsParamAnnot() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  void testSubstitutionWithAnnotsParameter() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      SubstitutionInAnnotsMapper mapper = sqlSession.getMapper(SubstitutionInAnnotsMapper.class);
+      assertEquals("Barney", mapper.getPersonNameByIdWithAnnotsParameter(4));
+    }
+  }
+
+  @Test
+  void testSubstitutionWithAnnotsParamAnnot() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SubstitutionInAnnotsMapper mapper = sqlSession.getMapper(SubstitutionInAnnotsMapper.class);
       assertEquals("Barney", mapper.getPersonNameByIdWithAnnotsParamAnnot(4));
-    } finally {
-      sqlSession.close();
     }
   }
 

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -25,11 +25,11 @@ import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.reflection.ExceptionUtil;
 
 /**
- * Statement proxy to add logging
- * 
+ * Statement proxy to add logging.
+ *
  * @author Clinton Begin
  * @author Eduardo Macarron
- * 
+ *
  */
 public final class StatementLogger extends BaseJdbcLogger implements InvocationHandler {
 
@@ -45,7 +45,7 @@ public final class StatementLogger extends BaseJdbcLogger implements InvocationH
     try {
       if (Object.class.equals(method.getDeclaringClass())) {
         return method.invoke(this, params);
-      }    
+      }
       if (EXECUTE_METHODS.contains(method.getName())) {
         if (isDebugEnabled()) {
           debug(" Executing: " + removeBreakingWhitespace((String) params[0]), true);
@@ -67,8 +67,8 @@ public final class StatementLogger extends BaseJdbcLogger implements InvocationH
     }
   }
 
-  /*
-   * Creates a logging version of a Statement
+  /**
+   * Creates a logging version of a Statement.
    *
    * @param stmt - the statement
    * @return - the proxy
@@ -79,8 +79,8 @@ public final class StatementLogger extends BaseJdbcLogger implements InvocationH
     return (Statement) Proxy.newProxyInstance(cl, new Class[]{Statement.class}, handler);
   }
 
-  /*
-   * return the wrapped statement
+  /**
+   * return the wrapped statement.
    *
    * @return the statement
    */

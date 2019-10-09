@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.jdbc;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -29,13 +29,13 @@ import java.util.concurrent.TimeUnit;
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.datasource.pooled.PooledDataSource;
 import org.hsqldb.jdbc.JDBCConnection;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
-public class PooledDataSourceTest extends BaseDataTest {
+class PooledDataSourceTest extends BaseDataTest {
 
   @Test
-  public void shouldProperlyMaintainPoolOf3ActiveAnd2IdleConnections() throws Exception {
+  void shouldProperlyMaintainPoolOf3ActiveAnd2IdleConnections() throws Exception {
     PooledDataSource ds = createPooledDataSource(JPETSTORE_PROPERTIES);
     try {
       runScript(ds, JPETSTORE_DDL);
@@ -54,7 +54,7 @@ public class PooledDataSourceTest extends BaseDataTest {
       ds.setPoolPingQuery("SELECT * FROM PRODUCT");
       ds.setPoolTimeToWait(10000);
       ds.setLogWriter(null);
-      List<Connection> connections = new ArrayList<Connection>();
+      List<Connection> connections = new ArrayList<>();
       for (int i = 0; i < 3; i++) {
         connections.add(ds.getConnection());
       }
@@ -76,24 +76,24 @@ public class PooledDataSourceTest extends BaseDataTest {
   }
 
   @Test
-  public void shouldNotFailCallingToStringOverAnInvalidConnection() throws Exception {
+  void shouldNotFailCallingToStringOverAnInvalidConnection() throws Exception {
     PooledDataSource ds = createPooledDataSource(JPETSTORE_PROPERTIES);
     Connection c = ds.getConnection();
     c.close();
     c.toString();
   }
-  
+
   @Test
-  public void ShouldReturnRealConnection() throws Exception {
+  void ShouldReturnRealConnection() throws Exception {
     PooledDataSource ds = createPooledDataSource(JPETSTORE_PROPERTIES);
     Connection c = ds.getConnection();
     JDBCConnection realConnection = (JDBCConnection) PooledDataSource.unwrapConnection(c);
     c.close();
   }
 
-  @Ignore("See the comments")
+  @Disabled("See the comments")
   @Test
-  public void shouldReconnectWhenServerKilledLeakedConnection() throws Exception {
+  void shouldReconnectWhenServerKilledLeakedConnection() throws Exception {
     // See #748
     // Requirements:
     // 1. MySQL JDBC driver dependency.
@@ -137,12 +137,11 @@ public class PooledDataSourceTest extends BaseDataTest {
   }
 
   private void exexuteQuery(Connection con) throws SQLException {
-    PreparedStatement st = con.prepareStatement("select 1");
-    ResultSet rs = st.executeQuery();
-    while (rs.next()) {
-      assertEquals(1, rs.getInt(1));
+    try (PreparedStatement st = con.prepareStatement("select 1");
+         ResultSet rs = st.executeQuery()) {
+      while (rs.next()) {
+        assertEquals(1, rs.getInt(1));
+      }
     }
-    rs.close();
-    st.close();
   }
 }

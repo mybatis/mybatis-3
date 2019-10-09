@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,57 +16,43 @@
 package org.apache.ibatis.submitted.blocking_cache;
 
 import java.io.Reader;
-import java.sql.Connection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 // issue #524
-public class BlockingCacheTest {
+class BlockingCacheTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @Before
-  public void setUp() throws Exception {
+  @BeforeEach
+  void setUp() throws Exception {
     // create a SqlSessionFactory
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/blocking_cache/mybatis-config.xml");
-    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    reader.close();
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/blocking_cache/mybatis-config.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    }
 
     // populate in-memory database
-    SqlSession session = sqlSessionFactory.openSession();
-    Connection conn = session.getConnection();
-    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/blocking_cache/CreateDB.sql");
-    ScriptRunner runner = new ScriptRunner(conn);
-    runner.setLogWriter(null);
-    runner.runScript(reader);
-    conn.close();
-    reader.close();
-    session.close();
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+            "org/apache/ibatis/submitted/blocking_cache/CreateDB.sql");
   }
 
   @Test
-  public void testBlockingCache() {
+  void testBlockingCache() {
     ExecutorService defaultThreadPool = Executors.newFixedThreadPool(2);
 
     long init = System.currentTimeMillis();
 
     for (int i = 0; i < 2; i++) {
-      defaultThreadPool.execute(new Runnable() {
-
-        @Override
-        public void run() {
-          accessDB();
-        }
-      });
+      defaultThreadPool.execute(this::accessDB);
     }
 
     defaultThreadPool.shutdown();
@@ -75,21 +61,18 @@ public class BlockingCacheTest {
     }
 
     long totalTime = System.currentTimeMillis() - init;
-    Assert.assertTrue(totalTime > 1000);
+    Assertions.assertTrue(totalTime > 1000);
   }
 
   private void accessDB() {
-    SqlSession sqlSession1 = sqlSessionFactory.openSession();
-    try {
-      PersonMapper pm = sqlSession1.getMapper(PersonMapper.class);
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      PersonMapper pm = sqlSession.getMapper(PersonMapper.class);
       pm.findAll();
       try {
         Thread.sleep(500);
       } catch (InterruptedException e) {
-        Assert.fail(e.getMessage());
+        Assertions.fail(e.getMessage());
       }
-    } finally {
-      sqlSession1.close();
     }
   }
 

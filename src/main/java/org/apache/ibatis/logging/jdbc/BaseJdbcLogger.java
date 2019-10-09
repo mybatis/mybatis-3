@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,9 @@
  */
 package org.apache.ibatis.logging.jdbc;
 
+import java.lang.reflect.Method;
 import java.sql.Array;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,28 +27,29 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.stream.Collectors;
 
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.reflection.ArrayUtil;
 
 /**
- * Base class for proxies to do logging
- * 
+ * Base class for proxies to do logging.
+ *
  * @author Clinton Begin
  * @author Eduardo Macarron
  */
 public abstract class BaseJdbcLogger {
 
-  protected static final Set<String> SET_METHODS = new HashSet<String>();
-  protected static final Set<String> EXECUTE_METHODS = new HashSet<String>();
+  protected static final Set<String> SET_METHODS;
+  protected static final Set<String> EXECUTE_METHODS = new HashSet<>();
 
-  private final Map<Object, Object> columnMap = new HashMap<Object, Object>();
+  private final Map<Object, Object> columnMap = new HashMap<>();
 
-  private final List<Object> columnNames = new ArrayList<Object>();
-  private final List<Object> columnValues = new ArrayList<Object>();
+  private final List<Object> columnNames = new ArrayList<>();
+  private final List<Object> columnValues = new ArrayList<>();
 
-  protected Log statementLog;
-  protected int queryStack;
+  protected final Log statementLog;
+  protected final int queryStack;
 
   /*
    * Default constructor
@@ -61,30 +64,11 @@ public abstract class BaseJdbcLogger {
   }
 
   static {
-    SET_METHODS.add("setString");
-    SET_METHODS.add("setNString");
-    SET_METHODS.add("setInt");
-    SET_METHODS.add("setByte");
-    SET_METHODS.add("setShort");
-    SET_METHODS.add("setLong");
-    SET_METHODS.add("setDouble");
-    SET_METHODS.add("setFloat");
-    SET_METHODS.add("setTimestamp");
-    SET_METHODS.add("setDate");
-    SET_METHODS.add("setTime");
-    SET_METHODS.add("setArray");
-    SET_METHODS.add("setBigDecimal");
-    SET_METHODS.add("setAsciiStream");
-    SET_METHODS.add("setBinaryStream");
-    SET_METHODS.add("setBlob");
-    SET_METHODS.add("setBoolean");
-    SET_METHODS.add("setBytes");
-    SET_METHODS.add("setCharacterStream");
-    SET_METHODS.add("setNCharacterStream");
-    SET_METHODS.add("setClob");
-    SET_METHODS.add("setNClob");
-    SET_METHODS.add("setObject");
-    SET_METHODS.add("setNull");
+    SET_METHODS = Arrays.stream(PreparedStatement.class.getDeclaredMethods())
+            .filter(method -> method.getName().startsWith("set"))
+            .filter(method -> method.getParameterCount() > 1)
+            .map(Method::getName)
+            .collect(Collectors.toSet());
 
     EXECUTE_METHODS.add("execute");
     EXECUTE_METHODS.add("executeUpdate");
@@ -103,7 +87,7 @@ public abstract class BaseJdbcLogger {
   }
 
   protected String getParameterValueString() {
-    List<Object> typeList = new ArrayList<Object>(columnValues.size());
+    List<Object> typeList = new ArrayList<>(columnValues.size());
     for (Object value : columnValues) {
       if (value == null) {
         typeList.add("null");

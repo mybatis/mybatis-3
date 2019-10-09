@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,55 +15,38 @@
  */
 package org.apache.ibatis.submitted.inline_association_with_dot;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.Reader;
-import java.sql.Connection;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
-public class InlineCollectionWithDotTest {
+class InlineCollectionWithDotTest {
 
   private SqlSession sqlSession;
 
   public void openSession(String aConfig) throws Exception {
 
     final String resource = "org/apache/ibatis/submitted/inline_association_with_dot/ibatis-" + aConfig + ".xml";
-    Reader batisConfigReader = Resources.getResourceAsReader(resource);
+    try (Reader batisConfigReader = Resources.getResourceAsReader(resource)) {
 
-    SqlSessionFactory sqlSessionFactory;
-    try {
-      sqlSessionFactory = new SqlSessionFactoryBuilder().build(batisConfigReader);
-    } catch(Exception anException) {
-      batisConfigReader.close();
-      throw new RuntimeException("Mapper configuration failed, expected this to work: " + anException.getMessage(), anException);
+      SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(batisConfigReader);
+
+      BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+              "org/apache/ibatis/submitted/inline_association_with_dot/create.sql");
+
+      sqlSession = sqlSessionFactory.openSession();
     }
-
-    batisConfigReader.close();
-
-    SqlSession session = sqlSessionFactory.openSession();
-
-    Connection conn = session.getConnection();
-    ScriptRunner runner = new ScriptRunner(conn);
-    runner.setLogWriter(null);
-    runner.setErrorLogWriter(null);
-    Reader createScriptReader = Resources.getResourceAsReader("org/apache/ibatis/submitted/inline_association_with_dot/create.sql");
-    runner.runScript(createScriptReader);
-    createScriptReader.close();
-    conn.close();
-    session.close();
-
-    sqlSession = sqlSessionFactory.openSession();
   }
 
-  @After
-  public void closeSession() {
+  @AfterEach
+  void closeSession() {
     if (sqlSession != null) {
       sqlSession.close();
     }
@@ -74,7 +57,7 @@ public class InlineCollectionWithDotTest {
    * possible bij using an inline 'association' map.
    */
   @Test
-  public void selectElementValueInContainerUsingInline()
+  void selectElementValueInContainerUsingInline()
   throws Exception {
     openSession("inline");
 
@@ -88,7 +71,7 @@ public class InlineCollectionWithDotTest {
    * possible bij using an sub-'association' map.
    */
   @Test
-  public void selectElementValueInContainerUsingSubMap() throws Exception {
+  void selectElementValueInContainerUsingSubMap() throws Exception {
    openSession("submap");
 
    Element myElement = sqlSession.getMapper(ElementMapperUsingSubMap.class).selectElement();

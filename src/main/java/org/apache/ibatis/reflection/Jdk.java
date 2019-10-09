@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-
 package org.apache.ibatis.reflection;
 
 import org.apache.ibatis.io.Resources;
@@ -25,7 +24,9 @@ public class Jdk {
 
   /**
    * <code>true</code> if <code>java.lang.reflect.Parameter</code> is available.
+   * @deprecated Since 3.5.0, Will remove this field at feature(next major version up)
    */
+  @Deprecated
   public static final boolean parameterExists;
 
   static {
@@ -39,6 +40,10 @@ public class Jdk {
     parameterExists = available;
   }
 
+  /**
+   * @deprecated Since 3.5.0, Will remove this field at feature(next major version up)
+   */
+  @Deprecated
   public static final boolean dateAndTimeApiExists;
 
   static {
@@ -50,6 +55,23 @@ public class Jdk {
       // ignore
     }
     dateAndTimeApiExists = available;
+  }
+
+  /**
+   * @deprecated Since 3.5.0, Will remove this field at feature(next major version up)
+   */
+  @Deprecated
+  public static final boolean optionalExists;
+
+  static {
+    boolean available = false;
+    try {
+      Resources.classForName("java.util.Optional");
+      available = true;
+    } catch (ClassNotFoundException e) {
+      // ignore
+    }
+    optionalExists = available;
   }
 
   private Jdk() {

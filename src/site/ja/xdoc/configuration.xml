@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2017 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -322,6 +322,20 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               </td>
               <td>
                 正の整数
+              </td>
+              <td>
+                なし (null)
+              </td>
+            </tr>
+            <tr>
+              <td>
+                defaultResultSetType
+              </td>
+              <td>
+                ステートメント毎の設定を省略した場合のスクロール方法を指定します。 (導入されたバージョン: 3.5.2)
+              </td>
+              <td>
+                FORWARD_ONLY | SCROLL_SENSITIVE | SCROLL_INSENSITIVE | DEFAULT(指定しない時と同じ動作)
               </td>
               <td>
                 なし (null)
@@ -920,7 +934,7 @@ public class Author {
                 Short, short
               </td>
               <td>
-                NUMERIC または SHORT INTEGER 互換の型
+                NUMERIC または SMALLINT 互換の型
               </td>
             </tr>
             <tr>
@@ -942,7 +956,7 @@ public class Author {
                 Long, long
               </td>
               <td>
-                NUMERIC または LONG INTEGER 互換の型
+                NUMERIC または BIGINT 互換の型
               </td>
             </tr>
             <tr>
@@ -1163,6 +1177,17 @@ public class Author {
               </td>
               <td>
                 コードではなく位置（ordinal）が保存されるので、NUMERIC または DOUBLE 互換の型
+              </td>
+            </tr>
+            <tr>
+              <td>
+                SqlxmlTypeHandler
+              </td>
+              <td>
+                java.lang.String
+              </td>
+              <td>
+                SQLXML
               </td>
             </tr>
             <tr>
@@ -1391,16 +1416,16 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
         </p>
 
       </subsection>
-      
+
       <subsection name="Handling Enums">
         <p>
           <code>Enum</code> （列挙型）をマップする場合、
           <code>EnumTypeHandler</code> または <code>EnumOrdinalTypeHandler</code> のどちらかを使うことになります。
         </p>
-        
+
         <p>例えば数値の丸めモード（java.math.RoundingMode）を格納する場合、デフォルトでは <code>EnumTypeHandler</code> が使われ、各 <code>Enum</code> は名前の文字列（DOWN, HALF_UP, etc.）に変換されます。
         </p>
-        
+
         <b>他の TypeHandler が特定のクラスを対象としているのに対し、<code>EnumTypeHandler</code> は <code>Enum</code> を継承した任意のクラスを対象とする特別な TypeHandler です。</b>
 
         <p>では名前以外の値を格納したい場合、例えばデータベース管理者が数値で格納して欲しいと言ってきた場合はどうすれば良いのでしょうか。
@@ -1441,7 +1466,7 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
 	    	#{id}, #{name}, #{funkyNumber}, #{roundingMode}
 	    )
 	</insert>
-	
+
 	<resultMap type="org.apache.ibatis.submitted.rounding.User" id="usermap2">
 		<id column="id" property="id"/>
 		<result column="name" property="name"/>
@@ -1540,13 +1565,15 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
   method = "update",
   args = {MappedStatement.class,Object.class})})
 public class ExamplePlugin implements Interceptor {
+  private Properties properties = new Properties();
   public Object intercept(Invocation invocation) throws Throwable {
-    return invocation.proceed();
-  }
-  public Object plugin(Object target) {
-    return Plugin.wrap(target, this);
+    // implement pre processing if need
+    Object returnObject = invocation.proceed();
+    // implement post processing if need
+    return returnObject;
   }
   public void setProperties(Properties properties) {
+    this.properties = properties;
   }
 }]]></source>
 
@@ -1668,7 +1695,9 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
           トランザクションマネージャーに必須のプロパティはありませんが、これらはともにタイプエイリアスです。つまり、TransactionFactory インターフェイスの実装クラスの完全修飾クラス名を指定すれば、MyBatis が用意した二種類のトランザクションマネージャーの代わりに独自に実装したトランザクションマネージャーを利用することが可能です。
         </p>
         <source><![CDATA[public interface TransactionFactory {
-  void setProperties(Properties props);
+  default void setProperties(Properties props) { // Since 3.5.2, change to default method
+    // NOP
+  }
   Transaction newTransaction(Connection conn);
   Transaction newTransaction(DataSource dataSource, TransactionIsolationLevel level, boolean autoCommit);
 }]]></source>
@@ -1706,7 +1735,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
           少々遅いですが、即時の接続を必要としないシンプルなアプリケーションの場合は良い選択肢です。
           パフォーマンスに関しては、お使いのデータベースによっても変わってきます。
           接続プールの重要性が低いデータベースの場合はこの設定が最適となります。
-          UNPOOLED データソースは５つのプロパティで設定できます。
+          UNPOOLED データソースに対して設定可能なプロパティは下記の通りです。
         </p>
         <ul>
           <li>driver – JDBC ドライバーの完全修飾 Java クラス名（ドライバーに含まれているデータソースクラスではありません）
@@ -1718,6 +1747,8 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
           <li>password - データベース接続時のパスワード
           </li>
           <li>defaultTransactionIsolationLevel – デフォルトのトランザクション分離レベル
+          </li>
+          <li>defaultNetworkTimeout – 任意の要求に対するデータベースからの応答待機期限のデフォルト値（ミリ秒）。詳細は <code>java.sql.Connection#setNetworkTimeout()</code> の javadoc 参照。
           </li>
         </ul>
         <p>
@@ -1738,7 +1769,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
           Web アプリケーションでは応答速度向上のために良く使われる設定です。
         </p>
         <p>
-          POOLED データソースには、UNPOOLED の設定で見た５つの他に様々なプロパティを指定することができます。
+          POOLED データソースには、UNPOOLED に対して設定可能なプロパティに加えて以下を指定することができます。
         </p>
         <ul>
           <li>poolMaximumActiveConnections – 同時にプールされる接続数の最大値です。
@@ -1794,7 +1825,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
         <p>
           上記のように指定すると、"encoding=UTF8" というプロパティが InitialContext のインスタンス生成時にコンストラクタに渡されます。
         </p>
-        
+
         <p>
           上記以外の DataSource を利用する場合は <code>org.apache.ibatis.datasource.DataSourceFactory</code> インターフェイスを実装したアダプタを作成します。
         </p>
@@ -1811,7 +1842,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
 
         <source><![CDATA[import org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
-        
+
 public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
 
   public C3P0DataSourceFactory() {
@@ -1831,7 +1862,7 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
   <property name="password" value="root"/>
 </dataSource>
 ]]></source>
-        
+
       </subsection>
 
       <subsection name="databaseIdProvider">
@@ -1867,7 +1898,9 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
     </p>
 
         <source><![CDATA[public interface DatabaseIdProvider {
-  void setProperties(Properties p);
+  default void setProperties(Properties p) { // Since 3.5.2, change to default method
+    // NOP
+  }
   String getDatabaseId(DataSource dataSource) throws SQLException;
 }]]></source>
 

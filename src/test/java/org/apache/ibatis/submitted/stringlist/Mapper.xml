@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -23,9 +23,9 @@
 <mapper namespace="org.apache.ibatis.submitted.stringlist.Mapper">
 
 	<select id="getUsersAndGroups" resultMap="results">
-		select * from users
+		select * from users where id = #{id}
 	</select>
-	
+
 	<resultMap type="org.apache.ibatis.submitted.stringlist.User" id="results">
 		<id column="id" property="id"/>
 		<collection property="groups" ofType="string">
@@ -35,5 +35,19 @@
 			<result column="rol_id"/>
 		</collection>
 	</resultMap>
+
+	<select id="getUsersAndGroupsMap" resultMap="mapResults">
+		select * from users where id = #{id}
+	</select>
+
+	<resultMap type="map" id="mapResults">
+		<id column="id" property="id" />
+		<collection property="groups" ofType="string" javaType="list">
+			<result column="group_id" />
+		</collection>
+		<collection property="roles" ofType="string" javaType="list">
+			<result column="rol_id"/>
+		</collection>
+  </resultMap>
 
 </mapper>

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -21,83 +21,70 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.io.Reader;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class NestedQueryCacheTest extends BaseDataTest {
+class NestedQueryCacheTest extends BaseDataTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
-  public static void setUp() throws Exception {
+  @BeforeAll
+  static void setUp() throws Exception {
     // create a SqlSessionFactory
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/nested_query_cache/MapperConfig.xml");
-    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    reader.close();
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/nested_query_cache/MapperConfig.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    }
 
     createBlogDataSource();
   }
 
   @Test
-  public void testThatNestedQueryItemsAreRetrievedFromCache() throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
+  void testThatNestedQueryItemsAreRetrievedFromCache() {
     final Author author;
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       final AuthorMapper authorMapper = sqlSession.getMapper(AuthorMapper.class);
       author = authorMapper.selectAuthor(101);
-      
+
       // ensure that author is cached
       final Author cachedAuthor = authorMapper.selectAuthor(101);
       assertThat(author).isSameAs(cachedAuthor);
-    } finally {
-      sqlSession.close();
     }
 
     // open a new session
-    sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       final BlogMapper blogMapper = sqlSession.getMapper(BlogMapper.class);
 
       // ensure that nested author within blog is cached
       assertThat(blogMapper.selectBlog(1).getAuthor()).isSameAs(author);
       assertThat(blogMapper.selectBlogUsingConstructor(1).getAuthor()).isSameAs(author);
-    } finally {
-      sqlSession.close();
     }
   }
-  
+
   @Test
-  public void testThatNestedQueryItemsAreRetrievedIfNotInCache() throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    Author author = null;
-    try {
+  void testThatNestedQueryItemsAreRetrievedIfNotInCache() {
+    Author author;
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       final BlogMapper blogMapper = sqlSession.getMapper(BlogMapper.class);
       author = blogMapper.selectBlog(1).getAuthor();
-      
+
       // ensure that nested author within blog is cached
-      assertNotNull("blog author", blogMapper.selectBlog(1).getAuthor());
-      assertNotNull("blog author", blogMapper.selectBlogUsingConstructor(1).getAuthor());
-    } finally {
-      sqlSession.close();
+      assertNotNull(blogMapper.selectBlog(1).getAuthor(), "blog author");
+      assertNotNull(blogMapper.selectBlogUsingConstructor(1).getAuthor(), "blog author");
     }
 
     // open a new session
-    sqlSession = sqlSessionFactory.openSession();    
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       final AuthorMapper authorMapper = sqlSession.getMapper(AuthorMapper.class);
       Author cachedAuthor = authorMapper.selectAuthor(101);
 
       // ensure that nested author within blog is cached
       assertThat(cachedAuthor).isSameAs(author);
-      
-    } finally {
-      sqlSession.close();
     }
-    
-  }  
+
+  }
 }

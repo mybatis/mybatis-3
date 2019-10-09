@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,81 +15,55 @@
  */
 package org.apache.ibatis.submitted.immutable_constructor;
 
-import java.io.PrintWriter;
 import java.io.Reader;
-import java.sql.Connection;
-import java.sql.DriverManager;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-public final class ImmutablePOJOTest {
+final class ImmutablePOJOTest {
 
   private static final Integer POJO_ID = 1;
   private static final String POJO_DESCRIPTION = "Description of immutable";
 
   private static SqlSessionFactory factory;
 
-  @BeforeClass
-  public static void setupClass() throws Exception {
-    Connection conn = null;
-
-    try {
-      Class.forName("org.hsqldb.jdbcDriver");
-      conn = DriverManager.getConnection("jdbc:hsqldb:mem:immutable_constructor", "sa", "");
-
-      Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/immutable_constructor/CreateDB.sql");
-
-      ScriptRunner runner = new ScriptRunner(conn);
-      runner.setLogWriter(null);
-      runner.setErrorLogWriter(new PrintWriter(System.err));
-      runner.runScript(reader);
-      conn.commit();
-      reader.close();
-
-      reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/immutable_constructor/ibatisConfig.xml");
+  @BeforeAll
+  static void setupClass() throws Exception {
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/immutable_constructor/ibatisConfig.xml")) {
       factory = new SqlSessionFactoryBuilder().build(reader);
-      reader.close();
-    } finally {
-      if (conn != null) {
-        conn.close();
-      }
     }
+
+    BaseDataTest.runScript(factory.getConfiguration().getEnvironment().getDataSource(),
+            "org/apache/ibatis/submitted/immutable_constructor/CreateDB.sql");
   }
 
   @Test
-  public void shouldLoadImmutablePOJOBySignature() {
-    final SqlSession session = factory.openSession();
-    try {
+  void shouldLoadImmutablePOJOBySignature() {
+    try (SqlSession session = factory.openSession()) {
       final ImmutablePOJOMapper mapper = session.getMapper(ImmutablePOJOMapper.class);
       final ImmutablePOJO pojo = mapper.getImmutablePOJO(POJO_ID);
 
       assertEquals(POJO_ID, pojo.getImmutableId());
       assertEquals(POJO_DESCRIPTION, pojo.getImmutableDescription());
-    } finally {
-      session.close();
     }
   }
 
-
-  @Test(expected=PersistenceException.class)
-  public void shouldFailLoadingImmutablePOJO() {
-    final SqlSession session = factory.openSession();
-    try {
+  @Test
+  void shouldFailLoadingImmutablePOJO() {
+    try (SqlSession session = factory.openSession()) {
       final ImmutablePOJOMapper mapper = session.getMapper(ImmutablePOJOMapper.class);
-      mapper.getImmutablePOJONoMatchingConstructor(POJO_ID);
-    } finally {
-      session.close();
+      Assertions.assertThrows(PersistenceException.class, () -> mapper.getImmutablePOJONoMatchingConstructor(POJO_ID));
     }
   }
-  
+
 }

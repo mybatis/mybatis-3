@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,8 +24,8 @@ import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.apache.log4j.spi.LoggingEvent;
 import org.apache.log4j.varia.NullAppender;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import javax.sql.DataSource;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -38,7 +38,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @since 3.4.0
  * @author Kazuki Shimizu
  */
-public class AutoMappingUnknownColumnBehaviorTest {
+class AutoMappingUnknownColumnBehaviorTest {
 
     interface Mapper {
         @Select({
@@ -90,8 +90,8 @@ public class AutoMappingUnknownColumnBehaviorTest {
 
     private static SqlSessionFactory sqlSessionFactory;
 
-    @BeforeClass
-    public static void setup() throws Exception {
+    @BeforeAll
+    static void setup() throws Exception {
         DataSource dataSource = BaseDataTest.createBlogDataSource();
         TransactionFactory transactionFactory = new JdbcTransactionFactory();
         Environment environment = new Environment("Production", transactionFactory, dataSource);
@@ -101,55 +101,38 @@ public class AutoMappingUnknownColumnBehaviorTest {
     }
 
     @Test
-    public void none() {
+    void none() {
         sqlSessionFactory.getConfiguration().setAutoMappingUnknownColumnBehavior(AutoMappingUnknownColumnBehavior.NONE);
-        SqlSession session = sqlSessionFactory.openSession();
-        try {
+        try (SqlSession session = sqlSessionFactory.openSession()) {
             Mapper mapper = session.getMapper(Mapper.class);
             Author author = mapper.selectAuthor(101);
             assertThat(author.getId()).isEqualTo(101);
             assertThat(author.getUsername()).isNull();
-        } finally {
-            session.close();
         }
-
     }
 
     @Test
-    public void warningCauseByUnknownPropertyType() {
+    void warningCauseByUnknownPropertyType() {
         sqlSessionFactory.getConfiguration().setAutoMappingUnknownColumnBehavior(AutoMappingUnknownColumnBehavior.WARNING);
-
-        SqlSession session = sqlSessionFactory.openSession();
-
-        try {
+        try (SqlSession session = sqlSessionFactory.openSession()) {
             Mapper mapper = session.getMapper(Mapper.class);
             SimpleAuthor author = mapper.selectSimpleAuthor(101);
             assertThat(author.getId()).isNull();
             assertThat(author.getUsername()).isEqualTo("jim");
             assertThat(LastEventSavedAppender.event.getMessage().toString()).isEqualTo("Unknown column is detected on 'org.apache.ibatis.session.AutoMappingUnknownColumnBehaviorTest$Mapper.selectSimpleAuthor' auto-mapping. Mapping parameters are [columnName=ID,propertyName=id,propertyType=java.util.concurrent.atomic.AtomicInteger]");
-
-        } finally {
-            session.close();
         }
-
     }
 
     @Test
-    public void failingCauseByUnknownColumn() {
+    void failingCauseByUnknownColumn() {
         sqlSessionFactory.getConfiguration().setAutoMappingUnknownColumnBehavior(AutoMappingUnknownColumnBehavior.FAILING);
-
-        SqlSession session = sqlSessionFactory.openSession();
-
-        try {
+        try (SqlSession session = sqlSessionFactory.openSession()) {
             Mapper mapper = session.getMapper(Mapper.class);
             mapper.selectAuthor(101);
         } catch (PersistenceException e) {
             assertThat(e.getCause()).isInstanceOf(SqlSessionException.class);
             assertThat(e.getCause().getMessage()).isEqualTo("Unknown column is detected on 'org.apache.ibatis.session.AutoMappingUnknownColumnBehaviorTest$Mapper.selectAuthor' auto-mapping. Mapping parameters are [columnName=USERNAMEEEE,propertyName=USERNAMEEEE,propertyType=null]");
-        } finally {
-            session.close();
         }
-
     }
 
 }

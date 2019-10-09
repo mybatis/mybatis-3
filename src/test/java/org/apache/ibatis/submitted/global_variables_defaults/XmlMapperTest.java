@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -31,7 +31,7 @@ import java.util.Properties;
 public class XmlMapperTest {
 
   @Test
-  public void applyDefaultValueOnXmlMapper() throws IOException {
+  void applyDefaultValueOnXmlMapper() throws IOException {
 
     Properties props = new Properties();
     props.setProperty(PropertyParser.KEY_ENABLE_DEFAULT_VALUE, "true");
@@ -44,22 +44,18 @@ public class XmlMapperTest {
 
     Assertions.assertThat(cache.getName()).isEqualTo("default");
 
-    SqlSession sqlSession = factory.openSession();
-    try {
+    try (SqlSession sqlSession = factory.openSession()) {
       XmlMapper mapper = sqlSession.getMapper(XmlMapper.class);
 
       Assertions.assertThat(mapper.ping()).isEqualTo("Hello");
       Assertions.assertThat(mapper.selectOne()).isEqualTo("1");
       Assertions.assertThat(mapper.selectFromVariable()).isEqualTo("9999");
-
-    } finally {
-      sqlSession.close();
     }
 
   }
 
   @Test
-  public void applyPropertyValueOnXmlMapper() throws IOException {
+  void applyPropertyValueOnXmlMapper() throws IOException {
 
     Properties props = new Properties();
     props.setProperty(PropertyParser.KEY_ENABLE_DEFAULT_VALUE, "true");
@@ -75,16 +71,12 @@ public class XmlMapperTest {
 
     Assertions.assertThat(cache.getName()).isEqualTo("custom");
 
-    SqlSession sqlSession = factory.openSession();
-    try {
+    try (SqlSession sqlSession = factory.openSession()) {
       XmlMapper mapper = sqlSession.getMapper(XmlMapper.class);
 
       Assertions.assertThat(mapper.ping()).isEqualTo("Hi");
       Assertions.assertThat(mapper.selectOne()).isEqualTo("1");
       Assertions.assertThat(mapper.selectFromVariable()).isEqualTo("5555");
-
-    } finally {
-      sqlSession.close();
     }
 
   }

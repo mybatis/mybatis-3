@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,99 +15,67 @@
  */
 package org.apache.ibatis.submitted.parametrizedlist;
 
-import java.io.PrintWriter;
 import java.io.Reader;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Assert;
+import org.apache.ibatis.BaseDataTest;
+import org.junit.jupiter.api.Assertions;
 
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class ParametrizedListTest {
+class ParametrizedListTest {
 
   private SqlSessionFactory sqlSessionFactory;
 
-  @Before
-  public void setUp() throws Exception {
-    Connection conn = null;
-
-    try {
-      Class.forName("org.hsqldb.jdbcDriver");
-      conn = DriverManager.getConnection("jdbc:hsqldb:mem:parametrizedlist", "sa", "");
-
-      Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/parametrizedlist/CreateDB.sql");
-
-      ScriptRunner runner = new ScriptRunner(conn);
-      runner.setLogWriter(null);
-      runner.setErrorLogWriter(new PrintWriter(System.err));
-      runner.runScript(reader);
-      conn.commit();
-      reader.close();
-
-      reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/parametrizedlist/Config.xml");
+  @BeforeEach
+  void setUp() throws Exception {
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/parametrizedlist/Config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-      reader.close();
-    } finally {
-      if (conn != null) {
-        conn.close();
-      }
     }
+
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+            "org/apache/ibatis/submitted/parametrizedlist/CreateDB.sql");
   }
 
   @Test
-  public void testShouldDetectUsersAsParameterInsideAList() throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  void testShouldDetectUsersAsParameterInsideAList() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<User<String>> list = mapper.getAListOfUsers();
-      Assert.assertEquals(User.class, list.get(0).getClass());
-    } finally {
-      sqlSession.close();
+      Assertions.assertEquals(User.class, list.get(0).getClass());
     }
   }
 
   @Test
-  public void testShouldDetectUsersAsParameterInsideAMap() throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  void testShouldDetectUsersAsParameterInsideAMap() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Map<Integer, User<String>> map = mapper.getAMapOfUsers();
-      Assert.assertEquals(User.class, map.get(1).getClass());
-    } finally {
-      sqlSession.close();
+      Assertions.assertEquals(User.class, map.get(1).getClass());
     }
   }
 
   @Test
-  public void testShouldGetAUserAsAMap() throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  void testShouldGetAUserAsAMap() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Map<String, Object> map = mapper.getUserAsAMap();
-      Assert.assertEquals(1, map.get("ID"));
-    } finally {
-      sqlSession.close();
+      Assertions.assertEquals(1, map.get("ID"));
     }
   }
 
   @Test
-  public void testShouldGetAListOfMaps() throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  void testShouldGetAListOfMaps() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<Map<String, Object>> map = mapper.getAListOfMaps();
-      Assert.assertEquals(1, map.get(0).get("ID"));
-    } finally {
-      sqlSession.close();
+      Assertions.assertEquals(1, map.get(0).get("ID"));
     }
   }
 

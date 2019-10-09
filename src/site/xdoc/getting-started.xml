@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@
 
   <body>
     <section name="Getting started">
-    
+
     <subsection name="Installation">
       <p>
         To use MyBatis you just need to include the
@@ -42,9 +42,9 @@
   <artifactId>mybatis</artifactId>
   <version>x.x.x</version>
 </dependency>]]></source>
-    </subsection>    
-    
-    <subsection name="Building SqlSessionFactory from XML">    
+    </subsection>
+
+    <subsection name="Building SqlSessionFactory from XML">
       <p>
         Every MyBatis application centers around an instance of
         SqlSessionFactory. A SqlSessionFactory instance can be acquired by
@@ -149,12 +149,9 @@ SqlSessionFactory sqlSessionFactory =
         the SqlSession instance. For
         example:
       </p>
-      <source><![CDATA[SqlSession session = sqlSessionFactory.openSession();
-try {
+      <source><![CDATA[try (SqlSession session = sqlSessionFactory.openSession()) {
   Blog blog = session.selectOne(
     "org.mybatis.example.BlogMapper.selectBlog", 101);
-} finally {
-  session.close();
 }]]></source>
       <p>
         While this approach works, and is familiar to users of previous
@@ -168,12 +165,9 @@ try {
       <p>
         For example:
       </p>
-      <source><![CDATA[SqlSession session = sqlSessionFactory.openSession();
-try {
+      <source><![CDATA[try (SqlSession session = sqlSessionFactory.openSession()) {
   BlogMapper mapper = session.getMapper(BlogMapper.class);
   Blog blog = mapper.selectBlog(101);
-} finally {
-  session.close();
 }]]></source>
       <p>
         Now let's explore what exactly is being executed here.
@@ -304,19 +298,19 @@ public interface BlogMapper {
         classes we've discussed so far. Using them incorrectly can cause
         severe concurrency problems.
       </p>
-      
+
       <hr/>
       <p><span class="label important">NOTE</span>
         <strong>Object lifecycle and Dependency Injection Frameworks</strong>
       </p>
       <p>
-        Dependency Injection frameworks can create thread safe, transactional SqlSessions and mappers 
-        and inject them directly into your beans so you can just forget about their lifecycle. 
+        Dependency Injection frameworks can create thread safe, transactional SqlSessions and mappers
+        and inject them directly into your beans so you can just forget about their lifecycle.
         You may want to have a look at MyBatis-Spring or
         MyBatis-Guice sub-projects to know more about using MyBatis with DI frameworks.
       </p>
       <hr/>
-      
+
       <h4>SqlSessionFactoryBuilder</h4>
         <p>
           This class can be instantiated, used and thrown away. There is no need
@@ -355,11 +349,8 @@ public interface BlogMapper {
           closed within a finally block. The following is the standard
           pattern for ensuring that SqlSessions are closed:
         </p>
-        <source><![CDATA[SqlSession session = sqlSessionFactory.openSession();
-try {
+        <source><![CDATA[try (SqlSession session = sqlSessionFactory.openSession()) {
   // do work
-} finally {
-  session.close();
 }]]></source>
         <p>
           Using this pattern consistently throughout your code will ensure that
@@ -380,12 +371,9 @@ try {
           it simple, keep Mappers in the method scope. The following example
           demonstrates this practice.
         </p>
-        <source><![CDATA[SqlSession session = sqlSessionFactory.openSession();
-try {
+        <source><![CDATA[try (SqlSession session = sqlSessionFactory.openSession()) {
   BlogMapper mapper = session.getMapper(BlogMapper.class);
   // do work
-} finally {
-  session.close();
 }
 ]]></source>
 

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,13 +20,13 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import org.junit.Test;
-import org.junit.Before;
-import org.junit.After;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class ExternalResourcesTest {
+class ExternalResourcesTest {
 
   private File sourceFile;
   private File destFile;
@@ -36,8 +36,8 @@ public class ExternalResourcesTest {
   /*
    * @throws java.lang.Exception
    */
-  @Before
-  public void setUp() throws Exception {
+  @BeforeEach
+  void setUp() throws Exception {
     tempFile = File.createTempFile("migration", "properties");
     tempFile.canWrite();
     sourceFile = File.createTempFile("test1", "sql");
@@ -45,7 +45,7 @@ public class ExternalResourcesTest {
   }
 
   @Test
-  public void testcopyExternalResource() {
+  void testcopyExternalResource() {
 
     try {
       ExternalResources.copyExternalResource(sourceFile, destFile);
@@ -55,7 +55,7 @@ public class ExternalResourcesTest {
   }
 
   @Test
-  public void testcopyExternalResource_fileNotFound() {
+  void testcopyExternalResource_fileNotFound() {
 
     try {
       badFile = new File("/tmp/nofile.sql");
@@ -67,7 +67,7 @@ public class ExternalResourcesTest {
   }
 
   @Test
-  public void testcopyExternalResource_emptyStringAsFile() {
+  void testcopyExternalResource_emptyStringAsFile() {
 
     try {
       badFile = new File(" ");
@@ -79,14 +79,12 @@ public class ExternalResourcesTest {
   }
 
   @Test
-  public void testGetConfiguredTemplate() {
+  void testGetConfiguredTemplate() {
     String templateName = "";
 
-    try {
-      FileWriter fileWriter = new FileWriter(tempFile);
+    try (FileWriter fileWriter = new FileWriter(tempFile)) {
       fileWriter.append("new_command.template=templates/col_new_template_migration.sql");
       fileWriter.flush();
-      fileWriter.close();
       templateName = ExternalResources.getConfiguredTemplate(tempFile.getAbsolutePath(), "new_command.template");
       assertEquals("templates/col_new_template_migration.sql", templateName);
     } catch (Exception e) {
@@ -94,8 +92,8 @@ public class ExternalResourcesTest {
     }
   }
 
-  @After
-  public void cleanUp() {
+  @AfterEach
+  void cleanUp() {
     sourceFile.delete();
     destFile.delete();
     tempFile.delete();

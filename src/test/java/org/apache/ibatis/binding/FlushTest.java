@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,20 +24,20 @@ import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.session.*;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class FlushTest {
     private static SqlSessionFactory sqlSessionFactory;
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws Exception {
         DataSource dataSource = BaseDataTest.createBlogDataSource();
         TransactionFactory transactionFactory = new JdbcTransactionFactory();
@@ -52,14 +52,11 @@ public class FlushTest {
 
     @Test
     public void invokeFlushStatementsViaMapper() {
-
-        SqlSession session = sqlSessionFactory.openSession();
-
-        try {
+        try (SqlSession session = sqlSessionFactory.openSession()) {
 
             BoundAuthorMapper mapper = session.getMapper(BoundAuthorMapper.class);
             Author author = new Author(-1, "cbegin", "******", "cbegin@nowhere.com", "N/A", Section.NEWS);
-            List<Integer> ids = new ArrayList<Integer>();
+            List<Integer> ids = new ArrayList<>();
             mapper.insertAuthor(author);
             ids.add(author.getId());
             mapper.insertAuthor(author);
@@ -79,12 +76,10 @@ public class FlushTest {
 
             for (int id : ids) {
                 Author selectedAuthor = mapper.selectAuthor(id);
-                assertNotNull(id + " is not found.", selectedAuthor);
+                assertNotNull(selectedAuthor, id + " is not found.");
             }
 
             session.rollback();
-        } finally {
-            session.close();
         }
 
     }

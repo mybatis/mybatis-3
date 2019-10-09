@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ public class Post {
   public void setBlog(Blog blog) {
     if (this.blog != null) {
       throw new RuntimeException("Setter called twice");
-    }    
+    }
     this.blog = blog;
   }
 
@@ -50,7 +50,7 @@ public class Post {
   public void setBody(String body) {
     if (this.body != null) {
       throw new RuntimeException("Setter called twice");
-    }    
+    }
     this.body = body;
   }
 
@@ -61,7 +61,7 @@ public class Post {
   public void setComments(List<Comment> comments) {
     if (this.comments != null) {
       throw new RuntimeException("Setter called twice");
-    }    
+    }
     this.comments = comments;
   }
 }

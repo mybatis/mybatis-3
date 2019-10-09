@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,47 +16,37 @@
 package org.apache.ibatis.submitted.named_constructor_args;
 
 import java.io.Reader;
-import java.sql.Connection;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.annotations.Arg;
 import org.apache.ibatis.annotations.ConstructorArgs;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.Configuration;
-import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import static com.googlecode.catchexception.apis.BDDCatchException.*;
 import static org.assertj.core.api.BDDAssertions.then;
 
-public class InvalidNamedConstructorArgsTest {
+class InvalidNamedConstructorArgsTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
-  public static void setUp() throws Exception {
+  @BeforeAll
+  static void setUp() throws Exception {
     // create an SqlSessionFactory
-    Reader reader = Resources.getResourceAsReader(
-        "org/apache/ibatis/submitted/named_constructor_args/mybatis-config.xml");
-    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    reader.close();
+    try (Reader reader = Resources.getResourceAsReader(
+        "org/apache/ibatis/submitted/named_constructor_args/mybatis-config.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    }
 
     // populate in-memory database
-    SqlSession session = sqlSessionFactory.openSession();
-    Connection conn = session.getConnection();
-    reader = Resources
-        .getResourceAsReader("org/apache/ibatis/submitted/named_constructor_args/CreateDB.sql");
-    ScriptRunner runner = new ScriptRunner(conn);
-    runner.setLogWriter(null);
-    runner.runScript(reader);
-    conn.close();
-    reader.close();
-    session.close();
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+            "org/apache/ibatis/submitted/named_constructor_args/CreateDB.sql");
   }
 
   interface NoMatchingConstructorMapper {
@@ -68,7 +58,7 @@ public class InvalidNamedConstructorArgsTest {
   }
 
   @Test
-  public void noMatchingConstructorArgName() {
+  void noMatchingConstructorArgName() {
     Configuration configuration = sqlSessionFactory.getConfiguration();
     when(configuration).addMapper(NoMatchingConstructorMapper.class);
 
@@ -90,7 +80,7 @@ public class InvalidNamedConstructorArgsTest {
   }
 
   @Test
-  public void wrongJavaType() {
+  void wrongJavaType() {
     Configuration configuration = sqlSessionFactory.getConfiguration();
     when(configuration).addMapper(ConstructorWithWrongJavaType.class);
     then(caughtException()).isInstanceOf(BuilderException.class)
@@ -113,7 +103,7 @@ public class InvalidNamedConstructorArgsTest {
   }
 
   @Test
-  public void missingRequiredJavaType() {
+  void missingRequiredJavaType() {
     Configuration configuration = sqlSessionFactory.getConfiguration();
     when(configuration).addMapper(ConstructorMissingRequiresJavaType.class);
     then(caughtException()).isInstanceOf(BuilderException.class)

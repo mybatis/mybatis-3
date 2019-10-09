@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -32,12 +32,12 @@ public class TextSqlNode implements SqlNode {
   public TextSqlNode(String text) {
     this(text, null);
   }
-  
+
   public TextSqlNode(String text, Pattern injectionFilter) {
     this.text = text;
     this.injectionFilter = injectionFilter;
   }
-  
+
   public boolean isDynamic() {
     DynamicCheckerTokenParser checker = new DynamicCheckerTokenParser();
     GenericTokenParser parser = createParser(checker);
@@ -51,7 +51,7 @@ public class TextSqlNode implements SqlNode {
     context.appendSql(parser.parse(text));
     return true;
   }
-  
+
   private GenericTokenParser createParser(TokenHandler handler) {
     return new GenericTokenParser("${", "}", handler);
   }
@@ -75,7 +75,7 @@ public class TextSqlNode implements SqlNode {
         context.getBindings().put("value", parameter);
       }
       Object value = OgnlCache.getValue(content, context.getBindings());
-      String srtValue = (value == null ? "" : String.valueOf(value)); // issue #274 return "" instead of "null"
+      String srtValue = value == null ? "" : String.valueOf(value); // issue #274 return "" instead of "null"
       checkInjection(srtValue);
       return srtValue;
     }
@@ -86,7 +86,7 @@ public class TextSqlNode implements SqlNode {
       }
     }
   }
-  
+
   private static class DynamicCheckerTokenParser implements TokenHandler {
 
     private boolean isDynamic;
@@ -105,5 +105,5 @@ public class TextSqlNode implements SqlNode {
       return null;
     }
   }
-  
+
 }

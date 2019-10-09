@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,7 +17,9 @@ package org.apache.ibatis.cache;
 
 /**
  * @author Clinton Begin
+ * @deprecated Since 3.5.3, This class never used and will be removed future version.
  */
+@Deprecated
 public final class NullCacheKey extends CacheKey {
 
   private static final long serialVersionUID = 3704229911977019465L;

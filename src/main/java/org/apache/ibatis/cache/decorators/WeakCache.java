@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,14 +19,13 @@ import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.concurrent.locks.ReadWriteLock;
 
 import org.apache.ibatis.cache.Cache;
 
 /**
  * Weak Reference cache decorator.
  * Thanks to Dr. Heinz Kabutz for his guidance here.
- * 
+ *
  * @author Clinton Begin
  */
 public class WeakCache implements Cache {
@@ -38,8 +37,8 @@ public class WeakCache implements Cache {
   public WeakCache(Cache delegate) {
     this.delegate = delegate;
     this.numberOfHardLinks = 256;
-    this.hardLinksToAvoidGarbageCollection = new LinkedList<Object>();
-    this.queueOfGarbageCollectedEntries = new ReferenceQueue<Object>();
+    this.hardLinksToAvoidGarbageCollection = new LinkedList<>();
+    this.queueOfGarbageCollectedEntries = new ReferenceQueue<>();
   }
 
   @Override
@@ -93,11 +92,6 @@ public class WeakCache implements Cache {
     hardLinksToAvoidGarbageCollection.clear();
     removeGarbageCollectedItems();
     delegate.clear();
-  }
-
-  @Override
-  public ReadWriteLock getReadWriteLock() {
-    return null;
   }
 
   private void removeGarbageCollectedItems() {

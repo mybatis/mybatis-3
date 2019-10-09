@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,14 +15,13 @@
  */
 package org.apache.ibatis.submitted.typehandler;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.Reader;
-import java.sql.Connection;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -30,31 +29,25 @@ import org.apache.ibatis.submitted.typehandler.Product.ConstantProductIdTypeHand
 import org.apache.ibatis.submitted.typehandler.Product.ProductId;
 import org.apache.ibatis.submitted.typehandler.Product.ProductIdTypeHandler;
 import org.apache.ibatis.type.JdbcType;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class TypeHandlerTest {
+class TypeHandlerTest {
 
   private SqlSessionFactory sqlSessionFactory;
 
-  @Before
-  public void setUp() throws Exception {
+  @BeforeEach
+  void setUp() throws Exception {
     // create a SqlSessionFactory
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/typehandler/mybatis-config.xml");
-    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    reader.close();
-    sqlSessionFactory.getConfiguration().getTypeHandlerRegistry().register(StringTrimmingTypeHandler.class);
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/typehandler/mybatis-config.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+      sqlSessionFactory.getConfiguration().getTypeHandlerRegistry().register(StringTrimmingTypeHandler.class);
+    }
 
     // populate in-memory database
-    SqlSession session = sqlSessionFactory.openSession();
-    Connection conn = session.getConnection();
-    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/typehandler/CreateDB.sql");
-    ScriptRunner runner = new ScriptRunner(conn);
-    runner.setLogWriter(null);
-    runner.runScript(reader);
-    conn.close();
-    reader.close();
-    session.close();
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+            "org/apache/ibatis/submitted/typehandler/CreateDB.sql");
   }
 
   // Some tests need to register additional type handler
@@ -64,123 +57,99 @@ public class TypeHandlerTest {
   }
 
   @Test
-  public void shouldGetAUser() {
+  void shouldGetAUser() {
     addMapper();
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUser(1);
       assertEquals("User1", user.getName());
       assertEquals("Carmel", user.getCity());
       assertEquals("IN", user.getState());
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
-  public void shouldApplyTypeHandlerOnGeneratedKey() {
+  void shouldApplyTypeHandlerOnGeneratedKey() {
     addMapper();
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Product product = new Product();
       product.setName("new product");
       mapper.insertProduct(product);
       assertNotNull(product.getId());
       assertNotNull(product.getId().getValue());
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
-  public void shouldApplyTypeHandlerWithJdbcTypeSpecified() throws Exception {
+  void shouldApplyTypeHandlerWithJdbcTypeSpecified() {
     addMapper();
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Product product = mapper.getProductByName("iPad");
       assertEquals(Integer.valueOf(2), product.getId().getValue());
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
-  public void shouldApplyTypeHandlerUsingConstructor() throws Exception {
+  void shouldApplyTypeHandlerUsingConstructor() {
     addMapper();
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Product product = mapper.getProductByName("iPad");
       assertEquals(Integer.valueOf(2), product.getId().getValue());
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
-  public void shouldApplyTypeHandlerOnReturnTypeWithJdbcTypeSpecified() throws Exception {
+  void shouldApplyTypeHandlerOnReturnTypeWithJdbcTypeSpecified() {
     addMapper();
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       ProductId productId = mapper.getProductIdByName("iPad");
       assertEquals(Integer.valueOf(2), productId.getValue());
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
-  public void shouldPickSoleTypeHandlerOnXmlResultMap() throws Exception {
+  void shouldPickSoleTypeHandlerOnXmlResultMap() {
     addMapper();
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Product product = mapper.getProductByNameXml("iPad");
       assertEquals(Integer.valueOf(2), product.getId().getValue());
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
-  public void shouldPickSameTypeHandlerMappedToDifferentJdbcTypes() throws Exception {
+  void shouldPickSameTypeHandlerMappedToDifferentJdbcTypes() {
     sqlSessionFactory.getConfiguration().getTypeHandlerRegistry().register(ProductId.class, JdbcType.BIGINT, ProductIdTypeHandler.class);
     addMapper();
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Product product = mapper.getProductByNameXml("iPad");
       assertEquals(Integer.valueOf(2), product.getId().getValue());
-    } finally {
-      sqlSession.close();
     }
   }
 
-  @Test(expected = BuilderException.class)
-  public void shouldFailIfMultipleHandlerMappedToAType() throws Exception {
+  @Test
+  void shouldFailIfMultipleHandlerMappedToAType() {
     sqlSessionFactory.getConfiguration().getTypeHandlerRegistry().register(ProductId.class, JdbcType.BIGINT, ConstantProductIdTypeHandler.class);
     // multiple type handlers are mapped to ProductId and
     // none of them are mapped to null jdbcType.
-    addMapper();
+    Assertions.assertThrows(BuilderException.class, this::addMapper);
   }
 
   @Test
-  public void shouldPickHandlerForNull() throws Exception {
+  void shouldPickHandlerForNull() {
     sqlSessionFactory.getConfiguration().getTypeHandlerRegistry().register(ProductId.class, null, ConstantProductIdTypeHandler.class);
     // multiple type handlers are mapped to ProductId and
     // one of them are mapped to null jdbcType.
     addMapper();
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Product product = mapper.getProductByNameXml("iPad");
       assertEquals(Integer.valueOf(999), product.getId().getValue());
-    } finally {
-      sqlSession.close();
     }
   }
 }

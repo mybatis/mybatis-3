@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,154 +16,126 @@
 package org.apache.ibatis.submitted.foreach;
 
 import java.io.Reader;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import static com.googlecode.catchexception.apis.BDDCatchException.*;
 import static org.assertj.core.api.BDDAssertions.then;
 
-public class ForEachTest {
+class ForEachTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
-  public static void setUp() throws Exception {
+  @BeforeAll
+  static void setUp() throws Exception {
     // create a SqlSessionFactory
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/foreach/mybatis-config.xml");
-    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    reader.close();
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/foreach/mybatis-config.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    }
 
     // populate in-memory database
-    SqlSession session = sqlSessionFactory.openSession();
-    Connection conn = session.getConnection();
-    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/foreach/CreateDB.sql");
-    ScriptRunner runner = new ScriptRunner(conn);
-    runner.setLogWriter(null);
-    runner.runScript(reader);
-    conn.close();
-    reader.close();
-    session.close();
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+            "org/apache/ibatis/submitted/foreach/CreateDB.sql");
   }
 
   @Test
-  public void shouldGetAUser() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  void shouldGetAUser() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User testProfile = new User();
       testProfile.setId(2);
       User friendProfile = new User();
       friendProfile.setId(6);
-      List<User> friendList = new ArrayList<User>();
+      List<User> friendList = new ArrayList<>();
       friendList.add(friendProfile);
       testProfile.setFriendList(friendList);
       User user = mapper.getUser(testProfile);
-      Assert.assertEquals("User6", user.getName());
-    } finally {
-      sqlSession.close();
+      Assertions.assertEquals("User6", user.getName());
     }
   }
 
   @Test
-  public void shouldHandleComplexNullItem() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  void shouldHandleComplexNullItem() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user1 = new User();
       user1.setId(2);
       user1.setName("User2");
-      List<User> users = new ArrayList<User>();
+      List<User> users = new ArrayList<>();
       users.add(user1);
       users.add(null);
       int count = mapper.countByUserList(users);
-      Assert.assertEquals(1, count);
-    } finally {
-      sqlSession.close();
+      Assertions.assertEquals(1, count);
     }
   }
 
   @Test
-  public void shouldHandleMoreComplexNullItem() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  void shouldHandleMoreComplexNullItem() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user1 = new User();
       User bestFriend = new User();
       bestFriend.setId(5);
       user1.setBestFriend(bestFriend);
-      List<User> users = new ArrayList<User>();
+      List<User> users = new ArrayList<>();
       users.add(user1);
       users.add(null);
       int count = mapper.countByBestFriend(users);
-      Assert.assertEquals(1, count);
-    } finally {
-      sqlSession.close();
+      Assertions.assertEquals(1, count);
     }
   }
 
   @Test
-  public void nullItemInContext() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  void nullItemInContext() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user1 = new User();
       user1.setId(3);
-      List<User> users = new ArrayList<User>();
+      List<User> users = new ArrayList<>();
       users.add(user1);
       users.add(null);
       String name = mapper.selectWithNullItemCheck(users);
-      Assert.assertEquals("User3", name);
-    } finally {
-      sqlSession.close();
+      Assertions.assertEquals("User3", name);
     }
   }
 
   @Test
-  public void shouldReportMissingPropertyName() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  void shouldReportMissingPropertyName() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
-      when(mapper).typoInItemProperty(Arrays.asList(new User()));
+      when(mapper).typoInItemProperty(Collections.singletonList(new User()));
       then(caughtException()).isInstanceOf(PersistenceException.class)
         .hasMessageContaining("There is no getter for property named 'idd' in 'class org.apache.ibatis.submitted.foreach.User'");
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
-  public void shouldRemoveItemVariableInTheContext() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  void shouldRemoveItemVariableInTheContext() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       int result = mapper.itemVariableConflict(5, Arrays.asList(1, 2), Arrays.asList(3, 4));
-      Assert.assertEquals(5, result);
-    } finally {
-      sqlSession.close();
+      Assertions.assertEquals(5, result);
     }
   }
 
   @Test
-  public void shouldRemoveIndexVariableInTheContext() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  void shouldRemoveIndexVariableInTheContext() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       int result = mapper.indexVariableConflict(4, Arrays.asList(6, 7), Arrays.asList(8, 9));
-      Assert.assertEquals(4, result);
-    } finally {
-      sqlSession.close();
+      Assertions.assertEquals(4, result);
     }
   }
 

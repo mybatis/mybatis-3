@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -28,16 +28,16 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.type.JdbcType;
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Properties;
 
-public class CustomizationTest {
+class CustomizationTest {
 
   @Test
-  public void applyDefaultValueWhenCustomizeDefaultValueSeparator() throws IOException {
+  void applyDefaultValueWhenCustomizeDefaultValueSeparator() throws IOException {
 
     Properties props = new Properties();
     props.setProperty(PropertyParser.KEY_ENABLE_DEFAULT_VALUE, "true");
@@ -58,18 +58,15 @@ public class CustomizationTest {
         .isEqualTo("default");
     Assertions.assertThat(cache.getName()).isEqualTo("default");
 
-    SqlSession sqlSession = factory.openSession();
-    try {
+    try (SqlSession sqlSession = factory.openSession()) {
       CustomDefaultValueSeparatorMapper mapper = sqlSession.getMapper(CustomDefaultValueSeparatorMapper.class);
       Assertions.assertThat(mapper.selectValue(null)).isEqualTo("default");
-    } finally {
-      sqlSession.close();
     }
 
   }
 
   @Test
-  public void applyPropertyValueWhenCustomizeDefaultValueSeparator() throws IOException {
+  void applyPropertyValueWhenCustomizeDefaultValueSeparator() throws IOException {
 
     Properties props = new Properties();
     props.setProperty(PropertyParser.KEY_ENABLE_DEFAULT_VALUE, "true");
@@ -95,12 +92,9 @@ public class CustomizationTest {
          .isEqualTo("customObjectFactory");
     Assertions.assertThat(cache.getName()).isEqualTo("customCache");
 
-    SqlSession sqlSession = factory.openSession();
-    try {
+    try (SqlSession sqlSession = factory.openSession()) {
       CustomDefaultValueSeparatorMapper mapper = sqlSession.getMapper(CustomDefaultValueSeparatorMapper.class);
       Assertions.assertThat(mapper.selectValue("3333")).isEqualTo("3333");
-    } finally {
-      sqlSession.close();
     }
 
   }

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,104 +16,81 @@
 package org.apache.ibatis.submitted.nestedresulthandler;
 
 import java.io.Reader;
-import java.sql.Connection;
 import java.util.List;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
-import org.apache.ibatis.session.ResultContext;
-import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-public class NestedResultHandlerTest {
+class NestedResultHandlerTest {
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
-  public static void setUp() throws Exception {
+  @BeforeAll
+  static void setUp() throws Exception {
     // create a SqlSessionFactory
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/nestedresulthandler/mybatis-config.xml");
-    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    reader.close();
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/nestedresulthandler/mybatis-config.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    }
 
     // populate in-memory database
-    SqlSession session = sqlSessionFactory.openSession();
-    Connection conn = session.getConnection();
-    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/nestedresulthandler/CreateDB.sql");
-    ScriptRunner runner = new ScriptRunner(conn);
-    runner.setLogWriter(null);
-    runner.runScript(reader);
-    conn.close();
-    reader.close();
-    session.close();
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+            "org/apache/ibatis/submitted/nestedresulthandler/CreateDB.sql");
   }
 
   @Test
-  public void testGetPerson() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  void testGetPerson() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
 
       List<Person> persons = mapper.getPersons();
 
       Person person = persons.get(0);
-      Assert.assertEquals("grandma", person.getName());
-      Assert.assertTrue(person.owns("book"));
-      Assert.assertTrue(person.owns("tv"));
-      Assert.assertEquals(2, person.getItems().size());
+      Assertions.assertEquals("grandma", person.getName());
+      Assertions.assertTrue(person.owns("book"));
+      Assertions.assertTrue(person.owns("tv"));
+      Assertions.assertEquals(2, person.getItems().size());
 
       person = persons.get(1);
-      Assert.assertEquals("sister", person.getName());
-      Assert.assertTrue(person.owns("phone"));
-      Assert.assertTrue(person.owns("shoes"));
-      Assert.assertEquals(2, person.getItems().size());
+      Assertions.assertEquals("sister", person.getName());
+      Assertions.assertTrue(person.owns("phone"));
+      Assertions.assertTrue(person.owns("shoes"));
+      Assertions.assertEquals(2, person.getItems().size());
 
       person = persons.get(2);
-      Assert.assertEquals("brother", person.getName());
-      Assert.assertTrue(person.owns("car"));
-      Assert.assertEquals(1, person.getItems().size());
-    } finally {
-      sqlSession.close();
+      Assertions.assertEquals("brother", person.getName());
+      Assertions.assertTrue(person.owns("car"));
+      Assertions.assertEquals(1, person.getItems().size());
     }
   }
 
   @Test
   // issue #542
-  public void testGetPersonWithHandler() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
-      sqlSession.select("getPersons", new ResultHandler() {
-        public void handleResult(ResultContext context) {
-          Person person = (Person) context.getResultObject();
-          if ("grandma".equals(person.getName())) {
-            Assert.assertEquals(2, person.getItems().size());
-          }
+  void testGetPersonWithHandler() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      sqlSession.select("getPersons", context -> {
+        Person person = (Person) context.getResultObject();
+        if ("grandma".equals(person.getName())) {
+          Assertions.assertEquals(2, person.getItems().size());
         }
       });
-    } finally {
-      sqlSession.close();
     }
   }
 
-  @Test(expected=PersistenceException.class)
-  public void testUnorderedGetPersonWithHandler() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
-      sqlSession.select("getPersonsWithItemsOrdered", new ResultHandler() {
-        public void handleResult(ResultContext context) {
-          Person person = (Person) context.getResultObject();
-          if ("grandma".equals(person.getName())) {
-            Assert.assertEquals(2, person.getItems().size());
-          }
+  @Test
+  void testUnorderedGetPersonWithHandler() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Assertions.assertThrows(PersistenceException.class, () -> sqlSession.select("getPersonsWithItemsOrdered", context -> {
+        Person person = (Person) context.getResultObject();
+        if ("grandma".equals(person.getName())) {
+          person.getItems().size();
         }
-      });
-    } finally {
-      sqlSession.close();
+      }));
     }
   }
 
@@ -123,51 +100,45 @@ public class NestedResultHandlerTest {
    * duplicates instead.
    */
   @Test
-  public void testGetPersonOrderedByItem() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  void testGetPersonOrderedByItem() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
 
       List<Person> persons = mapper.getPersonsWithItemsOrdered();
 
       Person person = persons.get(0);
-      Assert.assertEquals("grandma", person.getName());
-      Assert.assertTrue(person.owns("book"));
-      Assert.assertTrue(person.owns("tv"));
-      Assert.assertEquals(2, person.getItems().size());
+      Assertions.assertEquals("grandma", person.getName());
+      Assertions.assertTrue(person.owns("book"));
+      Assertions.assertTrue(person.owns("tv"));
+      Assertions.assertEquals(2, person.getItems().size());
 
       person = persons.get(1);
-      Assert.assertEquals("brother", person.getName());
-      Assert.assertTrue(person.owns("car"));
-      Assert.assertEquals(1, person.getItems().size());
+      Assertions.assertEquals("brother", person.getName());
+      Assertions.assertTrue(person.owns("car"));
+      Assertions.assertEquals(1, person.getItems().size());
 
       person = persons.get(2);
-      Assert.assertEquals("sister", person.getName());
-      Assert.assertTrue(person.owns("phone"));
-      Assert.assertTrue(person.owns("shoes"));
-      Assert.assertEquals(2, person.getItems().size());
-    } finally {
-      sqlSession.close();
+      Assertions.assertEquals("sister", person.getName());
+      Assertions.assertTrue(person.owns("phone"));
+      Assertions.assertTrue(person.owns("shoes"));
+      Assertions.assertEquals(2, person.getItems().size());
     }
   }
 
   @Test //reopen issue 39? (not a bug?)
-  public void testGetPersonItemPairs(){
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try{
+  void testGetPersonItemPairs(){
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<PersonItemPair> pairs = mapper.getPersonItemPairs();
 
-      Assert.assertNotNull( pairs );
+      Assertions.assertNotNull( pairs );
 //      System.out.println( new StringBuilder().append("selected pairs: ").append(pairs) );
 
-      Assert.assertEquals(5, pairs.size() );
-      Assert.assertNotNull(pairs.get(0).getPerson());
-      Assert.assertEquals(pairs.get(0).getPerson().getId(), Integer.valueOf(1));
-      Assert.assertNotNull(pairs.get(0).getItem());
-      Assert.assertEquals( pairs.get(0).getItem().getId(), Integer.valueOf(1));
-    } finally{
-      sqlSession.close();
+      Assertions.assertEquals(5, pairs.size() );
+      Assertions.assertNotNull(pairs.get(0).getPerson());
+      Assertions.assertEquals(pairs.get(0).getPerson().getId(), Integer.valueOf(1));
+      Assertions.assertNotNull(pairs.get(0).getItem());
+      Assertions.assertEquals( pairs.get(0).getItem().getId(), Integer.valueOf(1));
     }
   }
 
