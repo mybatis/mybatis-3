@@ -40,14 +40,29 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
+ * XML解析
+ * XPathParser解析出的XML元素统一封装为一个XNode对象
+ *
+ * 当构造XNode对象时，会自动解析出元素的元素名、元素的属性等。
+ * 此外XNode中提供了获取子元素、获取父元素等行为，由于持有XPathParser对象，
+ * XNode中还提供了定位信息的方法。
+ *
+ * mybatis中，获取根元素只需这样写
+ * XNode root = xPathParser.evalNode("/configuration");
+ * 之后获取configuration元素下的mappers是这样写
+ * root.evalNode("mappers")
+ *
  * @author Clinton Begin
  */
 public class XPathParser {
 
+  // 我们的XML文件
   private final Document document;
   private boolean validation;
+  // 实体解析器，用于XML的校验
   private EntityResolver entityResolver;
   private Properties variables;
+  // Java提供的XPath类，用于获取XML元素十分好用
   private XPath xpath;
 
   public XPathParser(String xml) {
@@ -224,7 +239,10 @@ public class XPathParser {
       throw new BuilderException("Error evaluating XPath.  Cause: " + e, e);
     }
   }
-
+  
+  /**
+   * 创建一个 Document 对象
+   */
   private Document createDocument(InputSource inputSource) {
     // important: this must only be called AFTER common constructor
     try {
@@ -238,7 +256,7 @@ public class XPathParser {
       factory.setExpandEntityReferences(true);
 
       DocumentBuilder builder = factory.newDocumentBuilder();
-      builder.setEntityResolver(entityResolver);
+      builder.setEntityResolver(entityResolver); // 设置实体解析器
       builder.setErrorHandler(new ErrorHandler() {
         @Override
         public void error(SAXParseException exception) throws SAXException {

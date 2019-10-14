@@ -48,12 +48,16 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 
 /**
+ * 专门用来解析 IUserMapper.xml 文件的
  * @author Clinton Begin
  */
 public class XMLMapperBuilder extends BaseBuilder {
 
+  // 解析的工具类
   private final XPathParser parser;
+  // Mapper的构建助手
   private final MapperBuilderAssistant builderAssistant;
+  // <命名空间.[<sql>标签中的id]，XNode> 如：com.cck.mapper.IUserMapper.columns
   private final Map<String, XNode> sqlFragments;
   private final String resource;
 
@@ -88,7 +92,10 @@ public class XMLMapperBuilder extends BaseBuilder {
   }
 
   public void parse() {
+    
+    // 如果没加载过这个资源 com/cck/mapper/IUserMapper.xml
     if (!configuration.isResourceLoaded(resource)) {
+      // 解析IUserMapper.xml的根元素mapper获的XNode，然后开始解析
       configurationElement(parser.evalNode("/mapper"));
       configuration.addLoadedResource(resource);
       bindMapperForNamespace();
@@ -105,16 +112,28 @@ public class XMLMapperBuilder extends BaseBuilder {
 
   private void configurationElement(XNode context) {
     try {
+      // 拿到mapper的属性 namespace 如：com.cck.mapper.IUserMapper
       String namespace = context.getStringAttribute("namespace");
       if (namespace == null || namespace.equals("")) {
         throw new BuilderException("Mapper's namespace cannot be empty");
       }
       builderAssistant.setCurrentNamespace(namespace);
+      
+      // 多个Mapper共用一个Cache缓存对象（cache-ref节点配置），这个是二级缓存的配置
       cacheRefElement(context.evalNode("cache-ref"));
+      
+      // 解析Mapper 的 Cache 缓存配置，这个也是二级缓存的配置
       cacheElement(context.evalNode("cache"));
+      
       parameterMapElement(context.evalNodes("/mapper/parameterMap"));
+      
+      // 解析resultMap
       resultMapElements(context.evalNodes("/mapper/resultMap"));
+      
+      // 解析<sql></sql>元素
       sqlElement(context.evalNodes("/mapper/sql"));
+      
+      // 解析配置的SQL
       buildStatementFromContext(context.evalNodes("select|insert|update|delete"));
     } catch (Exception e) {
       throw new BuilderException("Error parsing Mapper XML. The XML location is '" + resource + "'. Cause: " + e, e);
@@ -200,7 +219,7 @@ public class XMLMapperBuilder extends BaseBuilder {
     if (context != null) {
       String type = context.getStringAttribute("type", "PERPETUAL");
       Class<? extends Cache> typeClass = typeAliasRegistry.resolveAlias(type);
-      String eviction = context.getStringAttribute("eviction", "LRU");
+      String eviction = context.getStringAttribute("eviction", "LRU");  // 置换策略 默认最少使用原则
       Class<? extends Cache> evictionClass = typeAliasRegistry.resolveAlias(eviction);
       Long flushInterval = context.getLongAttribute("flushInterval");
       Integer size = context.getIntAttribute("size");
@@ -254,18 +273,31 @@ public class XMLMapperBuilder extends BaseBuilder {
 
   private ResultMap resultMapElement(XNode resultMapNode, List<ResultMapping> additionalResultMappings) throws Exception {
     ErrorContext.instance().activity("processing " + resultMapNode.getValueBasedIdentifier());
-    String id = resultMapNode.getStringAttribute("id",
-        resultMapNode.getValueBasedIdentifier());
+    
+    // 拿id属性 <resultMap type="com.cck.bean.User" id="resultMap">
+    String id = resultMapNode.getStringAttribute("id", resultMapNode.getValueBasedIdentifier());
+  
+    // 拿type属性 <resultMap type="com.cck.bean.User" id="resultMap">
     String type = resultMapNode.getStringAttribute("type",
         resultMapNode.getStringAttribute("ofType",
             resultMapNode.getStringAttribute("resultType",
                 resultMapNode.getStringAttribute("javaType"))));
+    
     String extend = resultMapNode.getStringAttribute("extends");
     Boolean autoMapping = resultMapNode.getBooleanAttribute("autoMapping");
+    // 加载类
     Class<?> typeClass = resolveClass(type);
     Discriminator discriminator = null;
     List<ResultMapping> resultMappings = new ArrayList<ResultMapping>();
     resultMappings.addAll(additionalResultMappings);
+    
+    // 开始解析那些字段 id result
+    /**
+     *  <resultMap type="com.cck.bean.User" id="resultMap">
+     *      <id     property="userId" column="user_id" />
+     *      <result property="name"   column="name" />
+     *  </resultMap>
+     */
     List<XNode> resultChildren = resultMapNode.getChildren();
     for (XNode resultChild : resultChildren) {
       if ("constructor".equals(resultChild.getName())) {
@@ -277,6 +309,7 @@ public class XMLMapperBuilder extends BaseBuilder {
         if ("id".equals(resultChild.getName())) {
           flags.add(ResultFlag.ID);
         }
+        // 构造一个 ResultMapping 对象，并添加到 resultMappings 中
         resultMappings.add(buildResultMappingFromContext(resultChild, typeClass, flags));
       }
     }
@@ -325,11 +358,20 @@ public class XMLMapperBuilder extends BaseBuilder {
     }
     sqlElement(list, null);
   }
-
+  
+  /**
+   * 解析
+   * <sql id="columns">
+   *     user_id
+   *   , name
+   * </sql>
+   */
   private void sqlElement(List<XNode> list, String requiredDatabaseId) throws Exception {
     for (XNode context : list) {
       String databaseId = context.getStringAttribute("databaseId");
+      // 拿到 id
       String id = context.getStringAttribute("id");
+      // 在id前加上命名空间 如：com.cck.mapper.IUserMapper.columns
       id = builderAssistant.applyCurrentNamespace(id, false);
       if (databaseIdMatchesCurrent(id, databaseId, requiredDatabaseId)) {
         sqlFragments.put(id, context);

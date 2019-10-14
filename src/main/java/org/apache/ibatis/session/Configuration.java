@@ -147,11 +147,14 @@ public class Configuration {
 
   // <接口全路径.方法名, MappedStatement对象>
   protected final Map<String, MappedStatement> mappedStatements = new StrictMap<MappedStatement>("Mapped Statements collection");
+  // <命名空间namespace, Cache> 二级缓存的Map
   protected final Map<String, Cache> caches = new StrictMap<Cache>("Caches collection");
+  // <接口全路径.[resultMap的id]，ResultMap> Xml中的resultMap元素
   protected final Map<String, ResultMap> resultMaps = new StrictMap<ResultMap>("Result Maps collection");
   protected final Map<String, ParameterMap> parameterMaps = new StrictMap<ParameterMap>("Parameter Maps collection");
   protected final Map<String, KeyGenerator> keyGenerators = new StrictMap<KeyGenerator>("Key Generators collection");
 
+  // 存储加载过的资源 com/cck/mapper/IUserMapper.xml
   protected final Set<String> loadedResources = new HashSet<String>();
   protected final Map<String, XNode> sqlFragments = new StrictMap<XNode>("XML fragments parsed from previous mappers");
 

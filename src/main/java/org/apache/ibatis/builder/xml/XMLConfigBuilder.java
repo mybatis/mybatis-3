@@ -48,6 +48,9 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 
 /**
+ * 在父类BaseBuilder维护了Configuration 对象
+ * 这里解析完就设置到 Configuration 对象中，
+ * 最终将Configuration 对象返回出去，XMLConfigBuilder使命完成
  * @author Clinton Begin
  * @author Kazuki Shimizu
  */
@@ -116,7 +119,7 @@ public class XMLConfigBuilder extends BaseBuilder {
       environmentsElement(root.evalNode("environments"));
       databaseIdProviderElement(root.evalNode("databaseIdProvider"));
       typeHandlerElement(root.evalNode("typeHandlers"));
-      mapperElement(root.evalNode("mappers"));
+      mapperElement(root.evalNode("mappers")); // 这里就是去解析 mappers 节点
     } catch (Exception e) {
       throw new BuilderException("Error parsing SQL Mapper Configuration. Cause: " + e, e);
     }
@@ -355,22 +358,35 @@ public class XMLConfigBuilder extends BaseBuilder {
       }
     }
   }
-
+  
+  /**
+   * 解析 mappers ， 如：
+   * <mappers>
+   * 	<mapper resource="com/cck/mapper/IUserMapper.xml" />
+   * </mappers>
+   */
   private void mapperElement(XNode parent) throws Exception {
     if (parent != null) {
+      // for 循环child，每个次循环都是对一个 mapper 元素进行处理
       for (XNode child : parent.getChildren()) {
         if ("package".equals(child.getName())) {
           String mapperPackage = child.getStringAttribute("name");
           configuration.addMappers(mapperPackage);
         } else {
+          // 拿属性resource的值 如：com/cck/mapper/IUserMapper.xml
           String resource = child.getStringAttribute("resource");
           String url = child.getStringAttribute("url");
           String mapperClass = child.getStringAttribute("class");
+  
+          // 一般都进这个
           if (resource != null && url == null && mapperClass == null) {
-            ErrorContext.instance().resource(resource);
-            InputStream inputStream = Resources.getResourceAsStream(resource);
+            
+            ErrorContext.instance().resource(resource); // 当前解析到这里，存储下堆栈信息
+            InputStream inputStream = Resources.getResourceAsStream(resource); // 读IUserMapper.xml
+            // 解析IUserMapper.xml，里边还是用XPathParser去解析，XPathParser是通用的
             XMLMapperBuilder mapperParser = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
             mapperParser.parse();
+            
           } else if (resource == null && url != null && mapperClass == null) {
             ErrorContext.instance().resource(url);
             InputStream inputStream = Resources.getUrlAsStream(url);

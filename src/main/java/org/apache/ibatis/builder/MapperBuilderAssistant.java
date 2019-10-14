@@ -180,6 +180,8 @@ public class MapperBuilderAssistant extends BaseBuilder {
       Discriminator discriminator,
       List<ResultMapping> resultMappings,
       Boolean autoMapping) {
+    
+    // 接口全路径.[resultMap的id] 如：com.cck.mapper.IUserMapper.resultMap
     id = applyCurrentNamespace(id, false);
     extend = applyCurrentNamespace(extend, true);
 

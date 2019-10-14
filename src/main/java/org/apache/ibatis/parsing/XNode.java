@@ -27,10 +27,13 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
+ * 封装了Node对象
+ * 提供了获取子元素、父元素的功能
  * @author Clinton Begin
  */
 public class XNode {
 
+  // 对应一个XML元素
   private final Node node;
   private final String name;
   private final String body;
