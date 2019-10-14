@@ -29,18 +29,19 @@ import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
 
 /**
+ * 存放SQL语句
  * @author Clinton Begin
  */
 public final class MappedStatement {
 
   private String resource;
   private Configuration configuration;
-  private String id;
+  private String id; // 接口全路径.方法名
   private Integer fetchSize;
   private Integer timeout;
-  private StatementType statementType;
+  private StatementType statementType; // SQL类型
   private ResultSetType resultSetType;
-  private SqlSource sqlSource;
+  private SqlSource sqlSource; // 存放SQL
   private Cache cache;
   private ParameterMap parameterMap;
   private List<ResultMap> resultMaps;

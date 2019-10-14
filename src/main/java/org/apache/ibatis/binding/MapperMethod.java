@@ -42,7 +42,9 @@ import java.util.*;
  */
 public class MapperMethod {
 
+  // 方法对应的SQL信息，真正的SQL在MappedStatement
   private final SqlCommand command;
+  // 方法的签名（参数、返回值等）
   private final MethodSignature method;
 
   public MapperMethod(Class<?> mapperInterface, Method method, Configuration config) {
@@ -216,8 +218,8 @@ public class MapperMethod {
     public SqlCommand(Configuration configuration, Class<?> mapperInterface, Method method) {
       final String methodName = method.getName();
       final Class<?> declaringClass = method.getDeclaringClass();
-      MappedStatement ms = resolveMappedStatement(mapperInterface, methodName, declaringClass,
-          configuration);
+      // 拿到一个 MappedStatement 对象，对应一条SQL，MappedStatement在Configuration中有缓存，在解析XML时就缓存好了
+      MappedStatement ms = resolveMappedStatement(mapperInterface, methodName, declaringClass,configuration);
       if (ms == null) {
         if (method.getAnnotation(Flush.class) != null) {
           name = null;
@@ -227,8 +229,8 @@ public class MapperMethod {
               + mapperInterface.getName() + "." + methodName);
         }
       } else {
-        name = ms.getId();
-        type = ms.getSqlCommandType();
+        name = ms.getId(); // 接口全路径.方法名 如：com.cck.mapper.IUserMapper.findById
+        type = ms.getSqlCommandType(); // // SQL类型 如：SELECT INSERT
         if (type == SqlCommandType.UNKNOWN) {
           throw new BindingException("Unknown execution method for: " + name);
         }

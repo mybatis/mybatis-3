@@ -28,6 +28,9 @@ import org.apache.ibatis.reflection.ExceptionUtil;
 import org.apache.ibatis.session.SqlSession;
 
 /**
+ * 使用SqlSession.getMapper(Class<T> type)最后返回的都是这个代理类的对象
+ * mybatis使用动态代理，代理对象的作用只是获取调用的方法，然后用这个方法
+ * 拿到MapperMethod，再进行以后的处理。
  * @author Clinton Begin
  * @author Eduardo Macarron
  */
@@ -47,20 +50,22 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
   @Override
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
     try {
-      if (Object.class.equals(method.getDeclaringClass())) {
+      if (Object.class.equals(method.getDeclaringClass())) {  // 如果是Object类提供的方法，如toString，则直接调用
         return method.invoke(this, args);
-      } else if (isDefaultMethod(method)) {
+      } else if (isDefaultMethod(method)) {  // 判断是否是默认方法
         return invokeDefaultMethod(proxy, method, args);
       }
     } catch (Throwable t) {
       throw ExceptionUtil.unwrapThrowable(t);
     }
+    
+    // 根据方法获取对应的MapperMethod对象
     final MapperMethod mapperMethod = cachedMapperMethod(method);
     return mapperMethod.execute(sqlSession, args);
   }
 
   private MapperMethod cachedMapperMethod(Method method) {
-    MapperMethod mapperMethod = methodCache.get(method);
+    MapperMethod mapperMethod = methodCache.get(method);  // methodCache-->Map<Method, MapperMethod>
     if (mapperMethod == null) {
       mapperMethod = new MapperMethod(mapperInterface, method, sqlSession.getConfiguration());
       methodCache.put(method, mapperMethod);
@@ -86,6 +91,7 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
 
   /**
    * Backport of java.lang.reflect.Method#isDefault()
+   * 判断是否是默认方法，JDK8中直接使用Method#isDefault()
    */
   private boolean isDefaultMethod(Method method) {
     return (method.getModifiers()
