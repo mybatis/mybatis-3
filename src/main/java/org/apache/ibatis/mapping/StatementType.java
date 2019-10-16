@@ -16,8 +16,14 @@
 package org.apache.ibatis.mapping;
 
 /**
+ *
+ * <delete id="deleteById" statementType="STATEMENT">
+ *     ...
+ * </delete>
  * @author Clinton Begin
  */
 public enum StatementType {
-  STATEMENT, PREPARED, CALLABLE
+  STATEMENT,  // 不进行预编译，直接操作SQL，入参需要使用${}，不能使用#{}  --> Statement
+  PREPARED,  // 预编译（默认） --> PreparedStatement
+  CALLABLE  // 执行存储过程 --> CallableStatement
 }
