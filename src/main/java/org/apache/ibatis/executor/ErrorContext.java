@@ -131,7 +131,7 @@ public class ErrorContext {
       description.append(activity);
     }
 
-    // activity
+    // sql
     if (sql != null) {
       description.append(LINE_SEPARATOR);
       description.append("### SQL: ");
