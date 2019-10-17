@@ -284,8 +284,10 @@ public class MapperAnnotationBuilder {
   }
 
   void parseStatement(Method method) {
+    // 拿到方法的参数类型，没参数->null 单个参数->该参数类型 多个参数->ParamMap.class
     Class<?> parameterTypeClass = getParameterType(method);
     LanguageDriver languageDriver = getLanguageDriver(method);
+    // 从方法的注解上获取SQL
     SqlSource sqlSource = getSqlSourceFromAnnotations(method, parameterTypeClass, languageDriver);
     if (sqlSource != null) {
       Options options = method.getAnnotation(Options.class);
@@ -384,7 +386,10 @@ public class MapperAnnotationBuilder {
     }
     return assistant.getLanguageDriver(langClass);
   }
-
+  
+  /**
+   * 获取方法的参数类型
+   */
   private Class<?> getParameterType(Method method) {
     Class<?> parameterType = null;
     Class<?>[] parameterTypes = method.getParameterTypes();

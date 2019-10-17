@@ -152,9 +152,13 @@ public class Configuration {
   // <接口全路径.[resultMap的id]，ResultMap> Xml中的resultMap元素
   protected final Map<String, ResultMap> resultMaps = new StrictMap<ResultMap>("Result Maps collection");
   protected final Map<String, ParameterMap> parameterMaps = new StrictMap<ParameterMap>("Parameter Maps collection");
+  // <命令空间namespace.[mapper的id属性]!selectKey，KeyGenerator> 和keyProperty一起使用 数据主键是自增的，插入数据后可以获取到自增的值
   protected final Map<String, KeyGenerator> keyGenerators = new StrictMap<KeyGenerator>("Key Generators collection");
 
-  // 存储加载过的资源 com/cck/mapper/IUserMapper.xml
+  // 存储加载过的资源
+  // com/cck/mapper/IUserMapper.xml 解析xml时put进去的
+  // namespace:com.cck.mapper.IUserMapper bindMapperForNamespace时加进去的，可能是用注解的方式使用mybatis
+  // interface com.cck.mapper.IUserMapper bindMapperForNamespace时加进去的，可能是用注解的方式使用mybatis
   protected final Set<String> loadedResources = new HashSet<String>();
   protected final Map<String, XNode> sqlFragments = new StrictMap<XNode>("XML fragments parsed from previous mappers");
 

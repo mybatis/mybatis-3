@@ -95,9 +95,16 @@ public class XMLMapperBuilder extends BaseBuilder {
     
     // 如果没加载过这个资源 com/cck/mapper/IUserMapper.xml
     if (!configuration.isResourceLoaded(resource)) {
+      
       // 解析IUserMapper.xml的根元素mapper获的XNode，然后开始解析
       configurationElement(parser.evalNode("/mapper"));
+      
+      // 解析了这个资源，在configuration中注册
       configuration.addLoadedResource(resource);
+      
+      // 之前只是解析了sql语句，封装了MappedStatement，put进configuration而已
+      // 这里在 configuration 的 mapperRegistry 中注册Mapper
+      // 还有就是解析接口，可能是XML和接口混合使用
       bindMapperForNamespace();
     }
 
@@ -451,7 +458,9 @@ public class XMLMapperBuilder extends BaseBuilder {
           // Spring may not know the real resource name so we set a flag
           // to prevent loading again this resource from the mapper interface
           // look at MapperAnnotationBuilder#loadXmlResource
+          // 注册 namespace:com.cck.mapper.IUserMapper
           configuration.addLoadedResource("namespace:" + namespace);
+          // 在 mapperRegistry 中注册Mapper
           configuration.addMapper(boundType);
         }
       }

@@ -34,22 +34,22 @@ import org.apache.ibatis.session.Configuration;
  */
 public final class MappedStatement {
 
-  private String resource;
+  private String resource; // com/cck/mapper/IUserMapper.xml
   private Configuration configuration;
-  private String id; // 接口全路径.方法名
+  private String id; // 接口全路径.方法名 com.cck.mapper.IUserMapper.findById
   private Integer fetchSize;
   private Integer timeout;
-  private StatementType statementType; // SQL类型
+  private StatementType statementType; // STATEMENT PREPARED这些
   private ResultSetType resultSetType;
   private SqlSource sqlSource; // 存放SQL
   private Cache cache;
-  private ParameterMap parameterMap;
-  private List<ResultMap> resultMaps;
+  private ParameterMap parameterMap; // TODO 这个不知道干嘛的
+  private List<ResultMap> resultMaps; // resultMaps
   private boolean flushCacheRequired;
-  private boolean useCache;
+  private boolean useCache; // 一级缓存，SELECT语句 默认开启
   private boolean resultOrdered;
   private SqlCommandType sqlCommandType;
-  private KeyGenerator keyGenerator;
+  private KeyGenerator keyGenerator; // useGeneratedKeys 属性相关，是否返回生产的id
   private String[] keyProperties;
   private String[] keyColumns;
   private boolean hasNestedResultMaps;

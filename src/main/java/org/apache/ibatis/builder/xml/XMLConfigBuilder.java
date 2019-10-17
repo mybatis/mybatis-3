@@ -114,7 +114,7 @@ public class XMLConfigBuilder extends BaseBuilder {
       objectFactoryElement(root.evalNode("objectFactory"));
       objectWrapperFactoryElement(root.evalNode("objectWrapperFactory"));
       reflectorFactoryElement(root.evalNode("reflectorFactory"));
-      settingsElement(settings);
+      settingsElement(settings); // 设置全局配置
       // read it after objectFactory and objectWrapperFactory issue #631
       environmentsElement(root.evalNode("environments"));
       databaseIdProviderElement(root.evalNode("databaseIdProvider"));
@@ -237,7 +237,10 @@ public class XMLConfigBuilder extends BaseBuilder {
       configuration.setVariables(defaults);
     }
   }
-
+  
+  /**
+   * 一些默认的全局配置
+   */
   private void settingsElement(Properties props) throws Exception {
     configuration.setAutoMappingBehavior(AutoMappingBehavior.valueOf(props.getProperty("autoMappingBehavior", "PARTIAL")));
     configuration.setAutoMappingUnknownColumnBehavior(AutoMappingUnknownColumnBehavior.valueOf(props.getProperty("autoMappingUnknownColumnBehavior", "NONE")));
@@ -247,6 +250,7 @@ public class XMLConfigBuilder extends BaseBuilder {
     configuration.setAggressiveLazyLoading(booleanValueOf(props.getProperty("aggressiveLazyLoading"), false));
     configuration.setMultipleResultSetsEnabled(booleanValueOf(props.getProperty("multipleResultSetsEnabled"), true));
     configuration.setUseColumnLabel(booleanValueOf(props.getProperty("useColumnLabel"), true));
+    // useGeneratedKeys 默认是false
     configuration.setUseGeneratedKeys(booleanValueOf(props.getProperty("useGeneratedKeys"), false));
     configuration.setDefaultExecutorType(ExecutorType.valueOf(props.getProperty("defaultExecutorType", "SIMPLE")));
     configuration.setDefaultStatementTimeout(integerValueOf(props.getProperty("defaultStatementTimeout"), null));
@@ -383,7 +387,7 @@ public class XMLConfigBuilder extends BaseBuilder {
             
             ErrorContext.instance().resource(resource); // 当前解析到这里，存储下堆栈信息
             InputStream inputStream = Resources.getResourceAsStream(resource); // 读IUserMapper.xml
-            // 解析IUserMapper.xml，里边还是用XPathParser去解析，XPathParser是通用的
+            // 解析IUserMapper.xml，里边还是用XPathParser去解析，解析XML都是用XPathParser
             XMLMapperBuilder mapperParser = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
             mapperParser.parse();
             

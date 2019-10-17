@@ -103,16 +103,25 @@ public class XMLStatementBuilder extends BaseBuilder {
     String keyProperty = context.getStringAttribute("keyProperty");
     String keyColumn = context.getStringAttribute("keyColumn");
     KeyGenerator keyGenerator;
+    // id 就是mapper标签上的id + "!selectKey"
     String keyStatementId = id + SelectKeyGenerator.SELECT_KEY_SUFFIX;
+    // 命名空间.keyStatementId 如：com.cck.mapper.IUserMapper.findById!selectKey
     keyStatementId = builderAssistant.applyCurrentNamespace(keyStatementId, true);
     if (configuration.hasKeyGenerator(keyStatementId)) {
       keyGenerator = configuration.getKeyGenerator(keyStatementId);
     } else {
-      keyGenerator = context.getBooleanAttribute("useGeneratedKeys",
-          configuration.isUseGeneratedKeys() && SqlCommandType.INSERT.equals(sqlCommandType))
+        // 获取KeyGenerator对象，是否返回自增id
+      keyGenerator =
+              // useGeneratedKeys有配置的话使用配置的值
+              // useGeneratedKeys没配置，使用全局配置（默认false），要求语句是INSERT语句
+              context.getBooleanAttribute(
+                      "useGeneratedKeys",
+                      configuration.isUseGeneratedKeys() && SqlCommandType.INSERT.equals(sqlCommandType))
+                      
           ? Jdbc3KeyGenerator.INSTANCE : NoKeyGenerator.INSTANCE;
     }
 
+    // 构建一个 MappedStatement 对象，并存储到configuration中
     builderAssistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType,
         fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,
         resultSetTypeEnum, flushCache, useCache, resultOrdered, 
