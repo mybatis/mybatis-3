@@ -25,9 +25,9 @@ under the License.
     <language>en-us</language>
     <copyright>&#169;2009 - 2019 MyBatis.org</copyright>
     <item>
-      <title>File: 399,
+      <title>File: 392,
              Errors: 0,
-             Warnings: 1191,
+             Warnings: 1205,
              Infos: 0
       </title>
             <link>http://www.mybatis.org/mybatis-3/checkstyle.html</link>
@@ -347,34 +347,6 @@ under the License.
                 </td>
                 <td>
                   4
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#target.test-classes.org.apache.ibatis.type.jdbc.properties">target/test-classes/org/apache/ibatis/type/jdbc.properties</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#target.test-classes.org.apache.ibatis.databases.jpetstore.jpetstore-hsqldb.properties">target/test-classes/org/apache/ibatis/databases/jpetstore/jpetstore-hsqldb.properties</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
                 </td>
                 <td>
                   0
@@ -878,7 +850,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  2
+                  1
                 </td>
                 <td>
                   0
@@ -1824,20 +1796,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#target.test-classes.org.apache.ibatis.databases.blog.blog-derby.properties">target/test-classes/org/apache/ibatis/databases/blog/blog-derby.properties</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.jdbc.SQL.java">org/apache/ibatis/jdbc/SQL.java</a>
                 </td>
                 <td>
@@ -1900,7 +1858,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  9
+                  18
                 </td>
                 <td>
                   0
@@ -2040,7 +1998,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  4
+                  3
                 </td>
                 <td>
                   0
@@ -2152,7 +2110,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  5
+                  6
                 </td>
                 <td>
                   0
@@ -2502,7 +2460,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  2
+                  3
                 </td>
                 <td>
                   0
@@ -2978,7 +2936,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  11
+                  12
                 </td>
                 <td>
                   0
@@ -3342,7 +3300,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  2
+                  3
                 </td>
                 <td>
                   0
@@ -3398,7 +3356,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  5
+                  7
                 </td>
                 <td>
                   0
@@ -3455,20 +3413,6 @@ under the License.
                 </td>
                 <td>
                   6
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#target.test-classes.org.apache.ibatis.builder.jdbc.properties">target/test-classes/org/apache/ibatis/builder/jdbc.properties</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
                 </td>
                 <td>
                   0
@@ -3735,20 +3679,6 @@ under the License.
                 </td>
                 <td>
                   1
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#target.test-classes.org.apache.ibatis.submitted.nested_query_cache.mapper.properties">target/test-classes/org/apache/ibatis/submitted/nested_query_cache/mapper.properties</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
                 </td>
                 <td>
                   0
@@ -4988,20 +4918,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#target.ibderby.service.properties">target/ibderby/service.properties</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.executor.keygen.package-info.java">org/apache/ibatis/executor/keygen/package-info.java</a>
                 </td>
                 <td>
@@ -5254,20 +5170,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#target.test-classes.log4j.properties">target/test-classes/log4j.properties</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.executor.statement.package-info.java">org/apache/ibatis/executor/statement/package-info.java</a>
                 </td>
                 <td>
@@ -5358,7 +5260,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  7
+                  8
                 </td>
                 <td>
                   0
@@ -5373,20 +5275,6 @@ under the License.
                 </td>
                 <td>
                   20
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#target.target.derby.sqlprovider.service.properties">target/target/derby/sqlprovider/service.properties</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
                 </td>
                 <td>
                   0
@@ -5457,6 +5345,20 @@ under the License.
                 </td>
                 <td>
                   6
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.reflection.invoker.AmbiguousMethodInvoker.java">org/apache/ibatis/reflection/invoker/AmbiguousMethodInvoker.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
                 </td>
                 <td>
                   0

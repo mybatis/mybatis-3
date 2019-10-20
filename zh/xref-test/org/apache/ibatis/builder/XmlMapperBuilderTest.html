@@ -136,7 +136,7 @@
 <a class="jxr_linenumber" name="L128" href="#L128">128</a>     when(builder).createInstance(<span class="jxr_string">"org.apache.ibatis.builder.BaseBuilder"</span>);
 <a class="jxr_linenumber" name="L129" href="#L129">129</a>     then(caughtException())
 <a class="jxr_linenumber" name="L130" href="#L130">130</a>       .isInstanceOf(BuilderException.<strong class="jxr_keyword">class</strong>)
-<a class="jxr_linenumber" name="L131" href="#L131">131</a>       .hasMessage(<span class="jxr_string">"Error creating instance. Cause: java.lang.InstantiationException: org.apache.ibatis.builder.BaseBuilder"</span>);
+<a class="jxr_linenumber" name="L131" href="#L131">131</a>       .hasMessage(<span class="jxr_string">"Error creating instance. Cause: java.lang.NoSuchMethodException: org.apache.ibatis.builder.BaseBuilder.&lt;init&gt;()"</span>);
 <a class="jxr_linenumber" name="L132" href="#L132">132</a>   }
 <a class="jxr_linenumber" name="L133" href="#L133">133</a> 
 <a class="jxr_linenumber" name="L134" href="#L134">134</a>   @Test

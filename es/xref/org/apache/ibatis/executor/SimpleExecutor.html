@@ -79,24 +79,25 @@
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>      <a name="Configuration" href="../../../../org/apache/ibatis/session/Configuration.html#Configuration">Configuration</a> configuration = ms.getConfiguration();
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>      <a name="StatementHandler" href="../../../../org/apache/ibatis/executor/statement/StatementHandler.html#StatementHandler">StatementHandler</a> handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, <strong class="jxr_keyword">null</strong>, boundSql);
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>      Statement stmt = prepareStatement(handler, ms.getStatementLog());
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>      stmt.closeOnCompletion();
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>      <strong class="jxr_keyword">return</strong> handler.queryCursor(stmt);
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>    }
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>  
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>    @Override
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>    <strong class="jxr_keyword">public</strong> List&lt;BatchResult&gt; doFlushStatements(<strong class="jxr_keyword">boolean</strong> isRollback) {
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>      <strong class="jxr_keyword">return</strong> Collections.emptyList();
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>    }
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>  
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>    <strong class="jxr_keyword">private</strong> Statement prepareStatement(<a name="StatementHandler" href="../../../../org/apache/ibatis/executor/statement/StatementHandler.html#StatementHandler">StatementHandler</a> handler, <a name="Log" href="../../../../org/apache/ibatis/logging/Log.html#Log">Log</a> statementLog) <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>      Statement stmt;
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>      Connection connection = getConnection(statementLog);
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>      stmt = handler.prepare(connection, transaction.getTimeout());
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>      handler.parameterize(stmt);
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>      <strong class="jxr_keyword">return</strong> stmt;
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>    }
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>  
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>  }
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>      Cursor&lt;E&gt; cursor = handler.queryCursor(stmt);
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>      stmt.closeOnCompletion();
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>      <strong class="jxr_keyword">return</strong> cursor;
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>    }
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>  
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>    @Override
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>    <strong class="jxr_keyword">public</strong> List&lt;BatchResult&gt; doFlushStatements(<strong class="jxr_keyword">boolean</strong> isRollback) {
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>      <strong class="jxr_keyword">return</strong> Collections.emptyList();
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>    }
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>  
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>    <strong class="jxr_keyword">private</strong> Statement prepareStatement(<a name="StatementHandler" href="../../../../org/apache/ibatis/executor/statement/StatementHandler.html#StatementHandler">StatementHandler</a> handler, <a name="Log" href="../../../../org/apache/ibatis/logging/Log.html#Log">Log</a> statementLog) <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>      Statement stmt;
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>      Connection connection = getConnection(statementLog);
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>      stmt = handler.prepare(connection, transaction.getTimeout());
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>      handler.parameterize(stmt);
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>      <strong class="jxr_keyword">return</strong> stmt;
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>    }
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>  
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>  }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2019 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>

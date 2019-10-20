@@ -270,47 +270,43 @@
 <a class="jxr_linenumber" name="L262" href="#L262">262</a> 
 <a class="jxr_linenumber" name="L263" href="#L263">263</a>     <a name="ResultMapping<a name="ResultMapping" href="../../../../org/apache/ibatis/mapping/ResultMapping.html#ResultMapping">ResultMapping</a>/../../org/apache/ibatis/mapping/ResultMapping.html#ResultMapping">ResultMapping</a> that = (<a name="ResultMapping" href="../../../../org/apache/ibatis/mapping/ResultMapping.html#ResultMapping">ResultMapping</a>) o;
 <a class="jxr_linenumber" name="L264" href="#L264">264</a> 
-<a class="jxr_linenumber" name="L265" href="#L265">265</a>     <strong class="jxr_keyword">if</strong> (property == <strong class="jxr_keyword">null</strong> || !property.equals(that.property)) {
-<a class="jxr_linenumber" name="L266" href="#L266">266</a>       <strong class="jxr_keyword">return</strong> false;
-<a class="jxr_linenumber" name="L267" href="#L267">267</a>     }
-<a class="jxr_linenumber" name="L268" href="#L268">268</a> 
-<a class="jxr_linenumber" name="L269" href="#L269">269</a>     <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">true</strong>;
-<a class="jxr_linenumber" name="L270" href="#L270">270</a>   }
-<a class="jxr_linenumber" name="L271" href="#L271">271</a> 
-<a class="jxr_linenumber" name="L272" href="#L272">272</a>   @Override
-<a class="jxr_linenumber" name="L273" href="#L273">273</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> hashCode() {
-<a class="jxr_linenumber" name="L274" href="#L274">274</a>     <strong class="jxr_keyword">if</strong> (property != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L275" href="#L275">275</a>       <strong class="jxr_keyword">return</strong> property.hashCode();
-<a class="jxr_linenumber" name="L276" href="#L276">276</a>     } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (column != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L277" href="#L277">277</a>       <strong class="jxr_keyword">return</strong> column.hashCode();
-<a class="jxr_linenumber" name="L278" href="#L278">278</a>     } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L279" href="#L279">279</a>       <strong class="jxr_keyword">return</strong> 0;
-<a class="jxr_linenumber" name="L280" href="#L280">280</a>     }
-<a class="jxr_linenumber" name="L281" href="#L281">281</a>   }
-<a class="jxr_linenumber" name="L282" href="#L282">282</a> 
-<a class="jxr_linenumber" name="L283" href="#L283">283</a>   @Override
-<a class="jxr_linenumber" name="L284" href="#L284">284</a>   <strong class="jxr_keyword">public</strong> String toString() {
-<a class="jxr_linenumber" name="L285" href="#L285">285</a>     <strong class="jxr_keyword">final</strong> StringBuilder sb = <strong class="jxr_keyword">new</strong> StringBuilder(<span class="jxr_string">"ResultMapping{"</span>);
-<a class="jxr_linenumber" name="L286" href="#L286">286</a>     <em class="jxr_comment">//sb.append("configuration=").append(configuration); // configuration doesn't have a useful .toString()</em>
-<a class="jxr_linenumber" name="L287" href="#L287">287</a>     sb.append(<span class="jxr_string">"property='"</span>).append(property).append('\'');
-<a class="jxr_linenumber" name="L288" href="#L288">288</a>     sb.append(<span class="jxr_string">", column='"</span>).append(column).append('\'');
-<a class="jxr_linenumber" name="L289" href="#L289">289</a>     sb.append(<span class="jxr_string">", javaType="</span>).append(javaType);
-<a class="jxr_linenumber" name="L290" href="#L290">290</a>     sb.append(<span class="jxr_string">", jdbcType="</span>).append(jdbcType);
-<a class="jxr_linenumber" name="L291" href="#L291">291</a>     <em class="jxr_comment">//sb.append(", typeHandler=").append(typeHandler); // typeHandler also doesn't have a useful .toString()</em>
-<a class="jxr_linenumber" name="L292" href="#L292">292</a>     sb.append(<span class="jxr_string">", nestedResultMapId='"</span>).append(nestedResultMapId).append('\'');
-<a class="jxr_linenumber" name="L293" href="#L293">293</a>     sb.append(<span class="jxr_string">", nestedQueryId='"</span>).append(nestedQueryId).append('\'');
-<a class="jxr_linenumber" name="L294" href="#L294">294</a>     sb.append(<span class="jxr_string">", notNullColumns="</span>).append(notNullColumns);
-<a class="jxr_linenumber" name="L295" href="#L295">295</a>     sb.append(<span class="jxr_string">", columnPrefix='"</span>).append(columnPrefix).append('\'');
-<a class="jxr_linenumber" name="L296" href="#L296">296</a>     sb.append(<span class="jxr_string">", flags="</span>).append(flags);
-<a class="jxr_linenumber" name="L297" href="#L297">297</a>     sb.append(<span class="jxr_string">", composites="</span>).append(composites);
-<a class="jxr_linenumber" name="L298" href="#L298">298</a>     sb.append(<span class="jxr_string">", resultSet='"</span>).append(resultSet).append('\'');
-<a class="jxr_linenumber" name="L299" href="#L299">299</a>     sb.append(<span class="jxr_string">", foreignColumn='"</span>).append(foreignColumn).append('\'');
-<a class="jxr_linenumber" name="L300" href="#L300">300</a>     sb.append(<span class="jxr_string">", lazy="</span>).append(lazy);
-<a class="jxr_linenumber" name="L301" href="#L301">301</a>     sb.append('}');
-<a class="jxr_linenumber" name="L302" href="#L302">302</a>     <strong class="jxr_keyword">return</strong> sb.toString();
-<a class="jxr_linenumber" name="L303" href="#L303">303</a>   }
-<a class="jxr_linenumber" name="L304" href="#L304">304</a> 
-<a class="jxr_linenumber" name="L305" href="#L305">305</a> }
+<a class="jxr_linenumber" name="L265" href="#L265">265</a>     <strong class="jxr_keyword">return</strong> property != <strong class="jxr_keyword">null</strong> &amp;&amp; property.equals(that.property);
+<a class="jxr_linenumber" name="L266" href="#L266">266</a>   }
+<a class="jxr_linenumber" name="L267" href="#L267">267</a> 
+<a class="jxr_linenumber" name="L268" href="#L268">268</a>   @Override
+<a class="jxr_linenumber" name="L269" href="#L269">269</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> hashCode() {
+<a class="jxr_linenumber" name="L270" href="#L270">270</a>     <strong class="jxr_keyword">if</strong> (property != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L271" href="#L271">271</a>       <strong class="jxr_keyword">return</strong> property.hashCode();
+<a class="jxr_linenumber" name="L272" href="#L272">272</a>     } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (column != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L273" href="#L273">273</a>       <strong class="jxr_keyword">return</strong> column.hashCode();
+<a class="jxr_linenumber" name="L274" href="#L274">274</a>     } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L275" href="#L275">275</a>       <strong class="jxr_keyword">return</strong> 0;
+<a class="jxr_linenumber" name="L276" href="#L276">276</a>     }
+<a class="jxr_linenumber" name="L277" href="#L277">277</a>   }
+<a class="jxr_linenumber" name="L278" href="#L278">278</a> 
+<a class="jxr_linenumber" name="L279" href="#L279">279</a>   @Override
+<a class="jxr_linenumber" name="L280" href="#L280">280</a>   <strong class="jxr_keyword">public</strong> String toString() {
+<a class="jxr_linenumber" name="L281" href="#L281">281</a>     <strong class="jxr_keyword">final</strong> StringBuilder sb = <strong class="jxr_keyword">new</strong> StringBuilder(<span class="jxr_string">"ResultMapping{"</span>);
+<a class="jxr_linenumber" name="L282" href="#L282">282</a>     <em class="jxr_comment">//sb.append("configuration=").append(configuration); // configuration doesn't have a useful .toString()</em>
+<a class="jxr_linenumber" name="L283" href="#L283">283</a>     sb.append(<span class="jxr_string">"property='"</span>).append(property).append('\'');
+<a class="jxr_linenumber" name="L284" href="#L284">284</a>     sb.append(<span class="jxr_string">", column='"</span>).append(column).append('\'');
+<a class="jxr_linenumber" name="L285" href="#L285">285</a>     sb.append(<span class="jxr_string">", javaType="</span>).append(javaType);
+<a class="jxr_linenumber" name="L286" href="#L286">286</a>     sb.append(<span class="jxr_string">", jdbcType="</span>).append(jdbcType);
+<a class="jxr_linenumber" name="L287" href="#L287">287</a>     <em class="jxr_comment">//sb.append(", typeHandler=").append(typeHandler); // typeHandler also doesn't have a useful .toString()</em>
+<a class="jxr_linenumber" name="L288" href="#L288">288</a>     sb.append(<span class="jxr_string">", nestedResultMapId='"</span>).append(nestedResultMapId).append('\'');
+<a class="jxr_linenumber" name="L289" href="#L289">289</a>     sb.append(<span class="jxr_string">", nestedQueryId='"</span>).append(nestedQueryId).append('\'');
+<a class="jxr_linenumber" name="L290" href="#L290">290</a>     sb.append(<span class="jxr_string">", notNullColumns="</span>).append(notNullColumns);
+<a class="jxr_linenumber" name="L291" href="#L291">291</a>     sb.append(<span class="jxr_string">", columnPrefix='"</span>).append(columnPrefix).append('\'');
+<a class="jxr_linenumber" name="L292" href="#L292">292</a>     sb.append(<span class="jxr_string">", flags="</span>).append(flags);
+<a class="jxr_linenumber" name="L293" href="#L293">293</a>     sb.append(<span class="jxr_string">", composites="</span>).append(composites);
+<a class="jxr_linenumber" name="L294" href="#L294">294</a>     sb.append(<span class="jxr_string">", resultSet='"</span>).append(resultSet).append('\'');
+<a class="jxr_linenumber" name="L295" href="#L295">295</a>     sb.append(<span class="jxr_string">", foreignColumn='"</span>).append(foreignColumn).append('\'');
+<a class="jxr_linenumber" name="L296" href="#L296">296</a>     sb.append(<span class="jxr_string">", lazy="</span>).append(lazy);
+<a class="jxr_linenumber" name="L297" href="#L297">297</a>     sb.append('}');
+<a class="jxr_linenumber" name="L298" href="#L298">298</a>     <strong class="jxr_keyword">return</strong> sb.toString();
+<a class="jxr_linenumber" name="L299" href="#L299">299</a>   }
+<a class="jxr_linenumber" name="L300" href="#L300">300</a> 
+<a class="jxr_linenumber" name="L301" href="#L301">301</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2019 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>

@@ -65,14 +65,14 @@
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>        <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; vfs == <strong class="jxr_keyword">null</strong> || !vfs.isValid(); i++) {
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>          Class&lt;? <strong class="jxr_keyword">extends</strong> VFS&gt; impl = impls.get(i);
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>          <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>            vfs = impl.newInstance();
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>            <strong class="jxr_keyword">if</strong> (vfs == <strong class="jxr_keyword">null</strong> || !vfs.isValid()) {
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>            vfs = impl.getDeclaredConstructor().newInstance();
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>            <strong class="jxr_keyword">if</strong> (!vfs.isValid()) {
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>              <strong class="jxr_keyword">if</strong> (log.isDebugEnabled()) {
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>                log.debug(<span class="jxr_string">"VFS implementation "</span> + impl.getName() +
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>                    <span class="jxr_string">" is not valid in this environment."</span>);
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>              }
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>            }
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>          } <strong class="jxr_keyword">catch</strong> (InstantiationException | IllegalAccessException e) {
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>          } <strong class="jxr_keyword">catch</strong> (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>            log.error(<span class="jxr_string">"Failed to instantiate "</span> + impl, e);
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>            <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>          }

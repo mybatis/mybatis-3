@@ -80,7 +80,7 @@
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>    }
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>  
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> testExceptionConstructors(Class&lt;?&gt; exceptionType) <strong class="jxr_keyword">throws</strong> InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>      Exception e = (Exception) exceptionType.newInstance();
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>      Exception e = (Exception) exceptionType.getDeclaredConstructor().newInstance();
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>      testThrowException(e);
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>      e = (Exception) exceptionType.getConstructor(String.<strong class="jxr_keyword">class</strong>).newInstance(EXPECTED_MESSAGE);
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>      testThrowException(e);

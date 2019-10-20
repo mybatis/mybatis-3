@@ -144,7 +144,7 @@
 <a class="jxr_linenumber" name="L136" href="#L136">136</a>     <strong class="jxr_keyword">this</strong>.driverProperties = driverProperties;
 <a class="jxr_linenumber" name="L137" href="#L137">137</a>   }
 <a class="jxr_linenumber" name="L138" href="#L138">138</a> 
-<a class="jxr_linenumber" name="L139" href="#L139">139</a>   <strong class="jxr_keyword">public</strong> String getDriver() {
+<a class="jxr_linenumber" name="L139" href="#L139">139</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">synchronized</strong> String getDriver() {
 <a class="jxr_linenumber" name="L140" href="#L140">140</a>     <strong class="jxr_keyword">return</strong> driver;
 <a class="jxr_linenumber" name="L141" href="#L141">141</a>   }
 <a class="jxr_linenumber" name="L142" href="#L142">142</a> 
@@ -201,7 +201,7 @@
 <a class="jxr_linenumber" name="L193" href="#L193">193</a> 
 <a class="jxr_linenumber" name="L194" href="#L194">194</a>   <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L195" href="#L195">195</a> <em class="jxr_javadoccomment">   * Sets the default network timeout value to wait for the database operation to complete. See {@link Connection#setNetworkTimeout(java.util.concurrent.Executor, int)}</em>
-<a class="jxr_linenumber" name="L196" href="#L196">196</a> <em class="jxr_javadoccomment">   * </em>
+<a class="jxr_linenumber" name="L196" href="#L196">196</a> <em class="jxr_javadoccomment">   *</em>
 <a class="jxr_linenumber" name="L197" href="#L197">197</a> <em class="jxr_javadoccomment">   * @param defaultNetworkTimeout</em>
 <a class="jxr_linenumber" name="L198" href="#L198">198</a> <em class="jxr_javadoccomment">   *          The time in milliseconds to wait for the database operation to complete.</em>
 <a class="jxr_linenumber" name="L199" href="#L199">199</a> <em class="jxr_javadoccomment">   * @since 3.5.2</em>
@@ -242,7 +242,7 @@
 <a class="jxr_linenumber" name="L234" href="#L234">234</a>         }
 <a class="jxr_linenumber" name="L235" href="#L235">235</a>         <em class="jxr_comment">// DriverManager requires the driver to be loaded via the system ClassLoader.</em>
 <a class="jxr_linenumber" name="L236" href="#L236">236</a>         <em class="jxr_comment">// http://www.kfu.com/~nsayer/Java/dyn-jdbc.html</em>
-<a class="jxr_linenumber" name="L237" href="#L237">237</a>         Driver driverInstance = (Driver)driverType.newInstance();
+<a class="jxr_linenumber" name="L237" href="#L237">237</a>         Driver driverInstance = (Driver)driverType.getDeclaredConstructor().newInstance();
 <a class="jxr_linenumber" name="L238" href="#L238">238</a>         DriverManager.registerDriver(<strong class="jxr_keyword">new</strong> DriverProxy(driverInstance));
 <a class="jxr_linenumber" name="L239" href="#L239">239</a>         registeredDrivers.put(driver, driverInstance);
 <a class="jxr_linenumber" name="L240" href="#L240">240</a>       } <strong class="jxr_keyword">catch</strong> (Exception e) {

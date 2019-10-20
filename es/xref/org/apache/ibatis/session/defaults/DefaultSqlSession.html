@@ -277,7 +277,7 @@
 <a class="jxr_linenumber" name="L269" href="#L269">269</a>   }
 <a class="jxr_linenumber" name="L270" href="#L270">270</a> 
 <a class="jxr_linenumber" name="L271" href="#L271">271</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> closeCursors() {
-<a class="jxr_linenumber" name="L272" href="#L272">272</a>     <strong class="jxr_keyword">if</strong> (cursorList != <strong class="jxr_keyword">null</strong> &amp;&amp; cursorList.size() != 0) {
+<a class="jxr_linenumber" name="L272" href="#L272">272</a>     <strong class="jxr_keyword">if</strong> (cursorList != <strong class="jxr_keyword">null</strong> &amp;&amp; !cursorList.isEmpty()) {
 <a class="jxr_linenumber" name="L273" href="#L273">273</a>       <strong class="jxr_keyword">for</strong> (Cursor&lt;?&gt; cursor : cursorList) {
 <a class="jxr_linenumber" name="L274" href="#L274">274</a>         <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L275" href="#L275">275</a>           cursor.close();

@@ -69,7 +69,7 @@
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>      }
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>      @Test
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>      <strong class="jxr_keyword">void</strong> testMultipleDiscriminatorLoop() {
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>          Assertions.assertTimeout(Duration.ofMillis(20), () -&gt; {
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>          Assertions.assertTimeout(Duration.ofMillis(20000), () -&gt; {
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>            <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>              <a name="PersonMapper" href="../../../../../org/apache/ibatis/submitted/multiple_discriminator/PersonMapper.html#PersonMapper">PersonMapper</a> personMapper = sqlSession.getMapper(PersonMapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>              personMapper.getLoop();

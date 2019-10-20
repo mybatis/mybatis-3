@@ -193,7 +193,7 @@
 <a class="jxr_linenumber" name="L185" href="#L185">185</a>       <strong class="jxr_keyword">for</strong> (<a name="XNode" href="../../../../../org/apache/ibatis/parsing/XNode.html#XNode">XNode</a> child : parent.getChildren()) {
 <a class="jxr_linenumber" name="L186" href="#L186">186</a>         String interceptor = child.getStringAttribute(<span class="jxr_string">"interceptor"</span>);
 <a class="jxr_linenumber" name="L187" href="#L187">187</a>         Properties properties = child.getChildrenAsProperties();
-<a class="jxr_linenumber" name="L188" href="#L188">188</a>         <a name="Interceptor" href="../../.<a name="Interceptor" href="../../../../../org/apache/ibatis/plugin/Interceptor.html#Interceptor">Interceptor</a>/apache/ibatis/plugin/Interceptor.html#Interceptor">Interceptor</a> interceptorInstance = (<a name="Interceptor" href="../../../../../org/apache/ibatis/plugin/Interceptor.html#Interceptor">Interceptor</a>) resolveClass(interceptor).newInstance();
+<a class="jxr_linenumber" name="L188" href="#L188">188</a>         <a name="Interceptor" href="../../.<a name="Interceptor" href="../../../../../org/apache/ibatis/plugin/Interceptor.html#Interceptor">Interceptor</a>/apache/ibatis/plugin/Interceptor.html#Interceptor">Interceptor</a> interceptorInstance = (<a name="Interceptor" href="../../../../../org/apache/ibatis/plugin/Interceptor.html#Interceptor">Interceptor</a>) resolveClass(interceptor).getDeclaredConstructor().newInstance();
 <a class="jxr_linenumber" name="L189" href="#L189">189</a>         interceptorInstance.setProperties(properties);
 <a class="jxr_linenumber" name="L190" href="#L190">190</a>         configuration.addInterceptor(interceptorInstance);
 <a class="jxr_linenumber" name="L191" href="#L191">191</a>       }
@@ -204,7 +204,7 @@
 <a class="jxr_linenumber" name="L196" href="#L196">196</a>     <strong class="jxr_keyword">if</strong> (context != <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L197" href="#L197">197</a>       String type = context.getStringAttribute(<span class="jxr_string">"type"</span>);
 <a class="jxr_linenumber" name="L198" href="#L198">198</a>       Properties properties = context.getChildrenAsProperties();
-<a class="jxr_linenumber" name="L199" href="#L199">199</a>       <a name="ObjectFactory" h<a name="ObjectFactory" href="../../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html#ObjectFactory">ObjectFactory</a>/../../org/apache/ibatis/reflection/factory/ObjectFactory.html#ObjectFactory">ObjectFactory</a> factory = (<a name="ObjectFactory" href="../../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html#ObjectFactory">ObjectFactory</a>) resolveClass(type).newInstance();
+<a class="jxr_linenumber" name="L199" href="#L199">199</a>       <a name="ObjectFactory" h<a name="ObjectFactory" href="../../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html#ObjectFactory">ObjectFactory</a>/../../org/apache/ibatis/reflection/factory/ObjectFactory.html#ObjectFactory">ObjectFactory</a> factory = (<a name="ObjectFactory" href="../../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html#ObjectFactory">ObjectFactory</a>) resolveClass(type).getDeclaredConstructor().newInstance();
 <a class="jxr_linenumber" name="L200" href="#L200">200</a>       factory.setProperties(properties);
 <a class="jxr_linenumber" name="L201" href="#L201">201</a>       configuration.setObjectFactory(factory);
 <a class="jxr_linenumber" name="L202" href="#L202">202</a>     }
@@ -213,7 +213,7 @@
 <a class="jxr_linenumber" name="L205" href="#L205">205</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> objectWrapperFactoryElement(<a name="XNode" href="../../../../../org/apache/ibatis/parsing/XNode.html#XNode">XNode</a> context) <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L206" href="#L206">206</a>     <strong class="jxr_keyword">if</strong> (context != <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L207" href="#L207">207</a>       String type = context.getStringAttribute(<span class="jxr_string">"type"</span>);
-<a class="jxr_linenumber" name="L208" href="#L208">208</a>       <a name="ObjectWrapperFactory" h<a name="ObjectWrapperFactory" href="../../../../../org/apache/ibatis/reflection/wrapper/ObjectWrapperFactory.html#ObjectWrapperFactory">ObjectWrapperFactory</a>org/apache/ibatis/reflection/wrapper/ObjectWrapperFactory.html#ObjectWrapperFactory">ObjectWrapperFactory</a> factory = (<a name="ObjectWrapperFactory" href="../../../../../org/apache/ibatis/reflection/wrapper/ObjectWrapperFactory.html#ObjectWrapperFactory">ObjectWrapperFactory</a>) resolveClass(type).newInstance();
+<a class="jxr_linenumber" name="L208" href="#L208">208</a>       <a name="ObjectWrapperFactory" h<a name="ObjectWrapperFactory" href="../../../../../org/apache/ibatis/reflection/wrapper/ObjectWrapperFactory.html#ObjectWrapperFactory">ObjectWrapperFactory</a>org/apache/ibatis/reflection/wrapper/ObjectWrapperFactory.html#ObjectWrapperFactory">ObjectWrapperFactory</a> factory = (<a name="ObjectWrapperFactory" href="../../../../../org/apache/ibatis/reflection/wrapper/ObjectWrapperFactory.html#ObjectWrapperFactory">ObjectWrapperFactory</a>) resolveClass(type).getDeclaredConstructor().newInstance();
 <a class="jxr_linenumber" name="L209" href="#L209">209</a>       configuration.setObjectWrapperFactory(factory);
 <a class="jxr_linenumber" name="L210" href="#L210">210</a>     }
 <a class="jxr_linenumber" name="L211" href="#L211">211</a>   }
@@ -221,7 +221,7 @@
 <a class="jxr_linenumber" name="L213" href="#L213">213</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> reflectorFactoryElement(<a name="XNode" href="../../../../../org/apache/ibatis/parsing/XNode.html#XNode">XNode</a> context) <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L214" href="#L214">214</a>     <strong class="jxr_keyword">if</strong> (context != <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L215" href="#L215">215</a>       String type = context.getStringAttribute(<span class="jxr_string">"type"</span>);
-<a class="jxr_linenumber" name="L216" href="#L216">216</a>       <a name="ReflectorFactory" h<a name="ReflectorFactory" href="../../../../../org/apache/ibatis/reflection/ReflectorFactory.html#ReflectorFactory">ReflectorFactory</a>/../org/apache/ibatis/reflection/ReflectorFactory.html#ReflectorFactory">ReflectorFactory</a> factory = (<a name="ReflectorFactory" href="../../../../../org/apache/ibatis/reflection/ReflectorFactory.html#ReflectorFactory">ReflectorFactory</a>) resolveClass(type).newInstance();
+<a class="jxr_linenumber" name="L216" href="#L216">216</a>       <a name="ReflectorFactory" h<a name="ReflectorFactory" href="../../../../../org/apache/ibatis/reflection/ReflectorFactory.html#ReflectorFactory">ReflectorFactory</a>/../org/apache/ibatis/reflection/ReflectorFactory.html#ReflectorFactory">ReflectorFactory</a> factory = (<a name="ReflectorFactory" href="../../../../../org/apache/ibatis/reflection/ReflectorFactory.html#ReflectorFactory">ReflectorFactory</a>) resolveClass(type).getDeclaredConstructor().newInstance();
 <a class="jxr_linenumber" name="L217" href="#L217">217</a>       configuration.setReflectorFactory(factory);
 <a class="jxr_linenumber" name="L218" href="#L218">218</a>     }
 <a class="jxr_linenumber" name="L219" href="#L219">219</a>   }
@@ -306,7 +306,7 @@
 <a class="jxr_linenumber" name="L298" href="#L298">298</a>         type = <span class="jxr_string">"DB_VENDOR"</span>;
 <a class="jxr_linenumber" name="L299" href="#L299">299</a>       }
 <a class="jxr_linenumber" name="L300" href="#L300">300</a>       Properties properties = context.getChildrenAsProperties();
-<a class="jxr_linenumber" name="L301" href="#L301">301</a>       databaseIdProvider = (<a name="DatabaseIdProvider" href="../../../../../org/apache/ibatis/mapping/DatabaseIdProvider.html#DatabaseIdProvider">DatabaseIdProvider</a>) resolveClass(type).newInstance();
+<a class="jxr_linenumber" name="L301" href="#L301">301</a>       databaseIdProvider = (<a name="DatabaseIdProvider" href="../../../../../org/apache/ibatis/mapping/DatabaseIdProvider.html#DatabaseIdProvider">DatabaseIdProvider</a>) resolveClass(type).getDeclaredConstructor().newInstance();
 <a class="jxr_linenumber" name="L302" href="#L302">302</a>       databaseIdProvider.setProperties(properties);
 <a class="jxr_linenumber" name="L303" href="#L303">303</a>     }
 <a class="jxr_linenumber" name="L304" href="#L304">304</a>     <a name="Environment" href="../../../../../org/apache/ibatis/mapping/Environment.html#Environment">Environment</a> environment = configuration.getEnvironment();
@@ -320,7 +320,7 @@
 <a class="jxr_linenumber" name="L312" href="#L312">312</a>     <strong class="jxr_keyword">if</strong> (context != <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L313" href="#L313">313</a>       String type = context.getStringAttribute(<span class="jxr_string">"type"</span>);
 <a class="jxr_linenumber" name="L314" href="#L314">314</a>       Properties props = context.getChildrenAsProperties();
-<a class="jxr_linenumber" name="L315" href="#L315">315</a>       <a name="TransactionFactory" h<a name="TransactionFactory" href="../../../../../org/apache/ibatis/transaction/TransactionFactory.html#TransactionFactory">TransactionFactory</a>./org/apache/ibatis/transaction/TransactionFactory.html#TransactionFactory">TransactionFactory</a> factory = (<a name="TransactionFactory" href="../../../../../org/apache/ibatis/transaction/TransactionFactory.html#TransactionFactory">TransactionFactory</a>) resolveClass(type).newInstance();
+<a class="jxr_linenumber" name="L315" href="#L315">315</a>       <a name="TransactionFactory" h<a name="TransactionFactory" href="../../../../../org/apache/ibatis/transaction/TransactionFactory.html#TransactionFactory">TransactionFactory</a>./org/apache/ibatis/transaction/TransactionFactory.html#TransactionFactory">TransactionFactory</a> factory = (<a name="TransactionFactory" href="../../../../../org/apache/ibatis/transaction/TransactionFactory.html#TransactionFactory">TransactionFactory</a>) resolveClass(type).getDeclaredConstructor().newInstance();
 <a class="jxr_linenumber" name="L316" href="#L316">316</a>       factory.setProperties(props);
 <a class="jxr_linenumber" name="L317" href="#L317">317</a>       <strong class="jxr_keyword">return</strong> factory;
 <a class="jxr_linenumber" name="L318" href="#L318">318</a>     }
@@ -331,7 +331,7 @@
 <a class="jxr_linenumber" name="L323" href="#L323">323</a>     <strong class="jxr_keyword">if</strong> (context != <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L324" href="#L324">324</a>       String type = context.getStringAttribute(<span class="jxr_string">"type"</span>);
 <a class="jxr_linenumber" name="L325" href="#L325">325</a>       Properties props = context.getChildrenAsProperties();
-<a class="jxr_linenumber" name="L326" href="#L326">326</a>       <a name="DataSourceFactory" h<a name="DataSourceFactory" href="../../../../../org/apache/ibatis/datasource/DataSourceFactory.html#DataSourceFactory">DataSourceFactory</a>../org/apache/ibatis/datasource/DataSourceFactory.html#DataSourceFactory">DataSourceFactory</a> factory = (<a name="DataSourceFactory" href="../../../../../org/apache/ibatis/datasource/DataSourceFactory.html#DataSourceFactory">DataSourceFactory</a>) resolveClass(type).newInstance();
+<a class="jxr_linenumber" name="L326" href="#L326">326</a>       <a name="DataSourceFactory" h<a name="DataSourceFactory" href="../../../../../org/apache/ibatis/datasource/DataSourceFactory.html#DataSourceFactory">DataSourceFactory</a>../org/apache/ibatis/datasource/DataSourceFactory.html#DataSourceFactory">DataSourceFactory</a> factory = (<a name="DataSourceFactory" href="../../../../../org/apache/ibatis/datasource/DataSourceFactory.html#DataSourceFactory">DataSourceFactory</a>) resolveClass(type).getDeclaredConstructor().newInstance();
 <a class="jxr_linenumber" name="L327" href="#L327">327</a>       factory.setProperties(props);
 <a class="jxr_linenumber" name="L328" href="#L328">328</a>       <strong class="jxr_keyword">return</strong> factory;
 <a class="jxr_linenumber" name="L329" href="#L329">329</a>     }
