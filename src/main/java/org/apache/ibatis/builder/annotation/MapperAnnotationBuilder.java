@@ -311,6 +311,7 @@ public class MapperAnnotationBuilder {
       boolean isSelect = sqlCommandType == SqlCommandType.SELECT;
       boolean flushCache = !isSelect;
       boolean useCache = isSelect;
+      boolean useLocalCache = true;
 
       KeyGenerator keyGenerator;
       String keyProperty = null;
@@ -339,6 +340,7 @@ public class MapperAnnotationBuilder {
           flushCache = false;
         }
         useCache = options.useCache();
+        useLocalCache = options.useLocalCache();
         fetchSize = options.fetchSize() > -1 || options.fetchSize() == Integer.MIN_VALUE ? options.fetchSize() : null; //issue #348
         timeout = options.timeout() > -1 ? options.timeout() : null;
         statementType = options.statementType();
@@ -370,6 +372,7 @@ public class MapperAnnotationBuilder {
           resultSetType,
           flushCache,
           useCache,
+          useLocalCache,
           // TODO gcode issue #577
           false,
           keyGenerator,
@@ -644,6 +647,7 @@ public class MapperAnnotationBuilder {
 
     // defaults
     boolean useCache = false;
+    boolean useLocalCache = false;
     KeyGenerator keyGenerator = NoKeyGenerator.INSTANCE;
     Integer fetchSize = null;
     Integer timeout = null;
@@ -656,7 +660,7 @@ public class MapperAnnotationBuilder {
     SqlCommandType sqlCommandType = SqlCommandType.SELECT;
 
     assistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType, fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass, resultSetTypeEnum,
-        flushCache, useCache, false,
+        flushCache, useCache, useLocalCache, false,
         keyGenerator, keyProperty, keyColumn, null, languageDriver, null);
 
     id = assistant.applyCurrentNamespace(id, false);

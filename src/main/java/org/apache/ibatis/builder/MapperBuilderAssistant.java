@@ -255,6 +255,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       ResultSetType resultSetType,
       boolean flushCache,
       boolean useCache,
+      boolean useLocalCache,
       boolean resultOrdered,
       KeyGenerator keyGenerator,
       String keyProperty,
@@ -286,6 +287,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
         .resultSetType(resultSetType)
         .flushCacheRequired(valueOrDefault(flushCache, !isSelect))
         .useCache(valueOrDefault(useCache, isSelect))
+        .useLocalCache(useLocalCache)
         .cache(currentCache);
 
     ParameterMap statementParameterMap = getStatementParameterMap(parameterMap, parameterType, id);
@@ -480,7 +482,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
     return addMappedStatement(
       id, sqlSource, statementType, sqlCommandType, fetchSize, timeout,
       parameterMap, parameterType, resultMap, resultType, resultSetType,
-      flushCache, useCache, resultOrdered, keyGenerator, keyProperty,
+      flushCache, useCache, true, resultOrdered, keyGenerator, keyProperty,
       keyColumn, databaseId, lang, null);
   }
 

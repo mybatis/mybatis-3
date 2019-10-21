@@ -46,6 +46,7 @@ public final class MappedStatement {
   private List<ResultMap> resultMaps;
   private boolean flushCacheRequired;
   private boolean useCache;
+  private boolean useLocalCache;
   private boolean resultOrdered;
   private SqlCommandType sqlCommandType;
   private KeyGenerator keyGenerator;
@@ -136,6 +137,18 @@ public final class MappedStatement {
 
     public Builder useCache(boolean useCache) {
       mappedStatement.useCache = useCache;
+      return this;
+    }
+
+    /**
+     * Set whether use the local cache.
+     *
+     * @param useLocalCache if use the local cache, set {@code true}
+     * @return a self
+     * @since 3.5.3
+     */
+    public Builder useLocalCache(boolean useLocalCache) {
+      mappedStatement.useLocalCache = useLocalCache;
       return this;
     }
 
@@ -255,6 +268,16 @@ public final class MappedStatement {
 
   public boolean isUseCache() {
     return useCache;
+  }
+
+  /**
+   * Get whether use the local cache.
+   *
+   * @return if use the local cache, return {@code true}
+   * @since 3.5.3
+   */
+  public boolean isUseLocalCache() {
+    return useLocalCache;
   }
 
   public boolean isResultOrdered() {
