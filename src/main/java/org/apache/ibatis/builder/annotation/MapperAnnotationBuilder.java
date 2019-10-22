@@ -19,26 +19,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.ibatis.annotations.Arg;
 import org.apache.ibatis.annotations.CacheNamespace;
 import org.apache.ibatis.annotations.CacheNamespaceRef;
 import org.apache.ibatis.annotations.Case;
+import org.apache.ibatis.annotations.ResultColumn;
 import org.apache.ibatis.annotations.ConstructorArgs;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.DeleteProvider;
@@ -51,6 +43,7 @@ import org.apache.ibatis.annotations.Options.FlushCachePolicy;
 import org.apache.ibatis.annotations.Property;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.ResultMap;
+import org.apache.ibatis.annotations.ResultModel;
 import org.apache.ibatis.annotations.ResultType;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
@@ -84,12 +77,14 @@ import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.parsing.PropertyParser;
 import org.apache.ibatis.reflection.TypeParameterResolver;
 import org.apache.ibatis.scripting.LanguageDriver;
+import org.apache.ibatis.session.AutoMappingBehavior;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.UnknownTypeHandler;
+import org.apache.logging.log4j.util.Strings;
 
 /**
  * @author Clinton Begin
@@ -228,6 +223,10 @@ public class MapperAnnotationBuilder {
 
   private String parseResultMap(Method method) {
     Class<?> returnType = getReturnType(method);
+    ResultModel resultModel = method.getAnnotation(ResultModel.class);
+    if (resultModel != null) {
+      return applyResultModels(resultModel, returnType, method);
+    }
     ConstructorArgs args = method.getAnnotation(ConstructorArgs.class);
     Results results = method.getAnnotation(Results.class);
     TypeDiscriminator typeDiscriminator = method.getAnnotation(TypeDiscriminator.class);
@@ -665,6 +664,79 @@ public class MapperAnnotationBuilder {
     SelectKeyGenerator answer = new SelectKeyGenerator(keyStatement, executeBefore);
     configuration.addKeyGenerator(id, answer);
     return answer;
+  }
+
+  private String applyResultModels(final ResultModel resultModel, final Class<?> resultType, final Object annotatedMethodOrField) {
+    String id = nullOrEmpty(resultModel.id());
+    if (id == null) {
+      id = generateResultModelName(annotatedMethodOrField);
+    }
+    if (configuration.hasResultMap(id)) {
+      return id;
+    }
+
+    List<ResultMapping> resultMappings = new ArrayList<>();
+    final Class<?> modelClass = resultModel.type();
+    final String resultSet = null;
+    final String foreignColumn = null;
+    final Boolean autoMapping = resultModel.autoMapping() == AutoMappingBehavior.NONE
+      ? null : resultModel.autoMapping().equals(AutoMappingBehavior.FULL);
+    for (Field field: modelClass.getDeclaredFields()) {
+      final ResultColumn resultColumn = field.getAnnotation(ResultColumn.class);
+      if (resultColumn != null) {
+        final ResultModel childModel = field.getAnnotation(ResultModel.class);
+        String nestedResultMap = null;
+        String columnPrefix = null;
+        if (childModel != null) {
+          columnPrefix = nullOrEmpty(childModel.columnPrefix());
+          final Class<?> childJavaType = childModel.type();
+          nestedResultMap = applyResultModels(childModel, childJavaType, field);
+        }
+
+        final String property = field.getName();
+        final String columnValue = nullOrEmpty(resultColumn.column());
+        final String column = columnValue == null ? field.getName() : columnValue;
+        final Class<?> javaType = field.getType();
+        final JdbcType jdbcType = resultColumn.jdbcType() == JdbcType.UNDEFINED ? null : resultColumn.jdbcType();
+        final String nestedSelect = null;
+
+        final String notNullColumn = nullOrEmpty(resultColumn.notNullColumn());
+        @SuppressWarnings("unchecked")
+        final Class<? extends TypeHandler<?>> typeHandler = (Class<? extends TypeHandler<?>>)
+          ((resultColumn.typeHandler() == UnknownTypeHandler.class) ? null : resultColumn.typeHandler());
+        List<ResultFlag> flags = new ArrayList<>();
+        if (resultColumn.id()) {
+          flags.add(ResultFlag.ID);
+        }
+        final boolean lazy = false;
+        final ResultMapping resultMapping = assistant.buildResultMapping(
+          resultType, property, column, javaType, jdbcType, nestedSelect, nestedResultMap, notNullColumn, columnPrefix, typeHandler, flags, resultSet, foreignColumn, lazy
+        );
+        resultMappings.add(resultMapping);
+      }
+    }
+    final org.apache.ibatis.mapping.ResultMap resultMap = assistant.addResultMap(id, resultType, null, null, resultMappings, autoMapping);
+    return resultMap.getId();
+  }
+
+  private String generateResultModelName(Object annotatedMethodOrField) {
+    if (annotatedMethodOrField instanceof Method) {
+      final Method method = (Method) annotatedMethodOrField;
+      StringBuilder suffix = new StringBuilder();
+      for (Class<?> c : method.getParameterTypes()) {
+        suffix.append("-");
+        suffix.append(c.getSimpleName());
+      }
+      if (suffix.length() < 1) {
+        suffix.append("-void");
+      }
+      return type.getName() + "." + method.getName() + suffix;
+    } else if (annotatedMethodOrField instanceof Field) {
+      final Field field = (Field) annotatedMethodOrField;
+      return type.getName() + "." + field.getDeclaringClass().getSimpleName() + "-" + field.getType().getSimpleName() + "-" + field.getName();
+    }
+    throw new IllegalArgumentException("unreachable code");
+
   }
 
 }

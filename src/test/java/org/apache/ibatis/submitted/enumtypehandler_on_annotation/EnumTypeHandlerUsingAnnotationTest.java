@@ -125,4 +125,23 @@ class EnumTypeHandlerUsingAnnotationTest {
         }
     }
 
+    @Test
+    void testForResultModel() {
+        PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
+        {
+            Person person = personMapper.findOneByResultModel(1);
+            assertThat(person.getId()).isEqualTo(1);
+            assertThat(person.getFirstName()).isEqualTo("John");
+            assertThat(person.getLastName()).isEqualTo("Smith");
+            assertThat(person.getPersonType()).isEqualTo(Person.PersonType.PERSON); // important
+        }
+        {
+            Person employee = personMapper.findOneByResultModel(2);
+            assertThat(employee.getId()).isEqualTo(2);
+            assertThat(employee.getFirstName()).isEqualTo("Mike");
+            assertThat(employee.getLastName()).isEqualTo("Jordan");
+            assertThat(employee.getPersonType()).isEqualTo(Person.PersonType.EMPLOYEE); // important
+        }
+    }
+
 }

@@ -15,6 +15,9 @@
  */
 package org.apache.ibatis.submitted.enumtypehandler_on_annotation;
 
+import org.apache.ibatis.annotations.ResultColumn;
+import org.apache.ibatis.type.EnumOrdinalTypeHandler;
+
 /**
  * @since #444
  * @author Kazuki Shimizu
@@ -26,9 +29,13 @@ public class Person {
         EMPLOYEE
     }
 
+    @ResultColumn
     private Integer id;
+    @ResultColumn
     private String firstName;
+    @ResultColumn
     private String lastName;
+    @ResultColumn(typeHandler = EnumOrdinalTypeHandler.class)
     private PersonType personType;
 
     public Person() {

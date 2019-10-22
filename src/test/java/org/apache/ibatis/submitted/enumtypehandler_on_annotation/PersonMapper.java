@@ -53,4 +53,8 @@ public interface PersonMapper {
     @Select("SELECT id, firstName, lastName, personType FROM person WHERE id = #{id}")
     Person findOneUsingTypeDiscriminator(int id);
 
+    @ResultModel(id = "findOneByResultModel", type = Person.class)
+    @Select("SELECT id, firstName, lastName, personType FROM person WHERE id = #{id}")
+    Person findOneByResultModel(int id);
+
 }
