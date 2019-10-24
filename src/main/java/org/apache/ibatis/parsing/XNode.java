@@ -316,6 +316,11 @@ public class XNode {
   @Override
   public String toString() {
     StringBuilder builder = new StringBuilder();
+    toString(builder, 0);
+    return builder.toString();
+  }
+
+  private void toString(StringBuilder builder, int level) {
     builder.append("<");
     builder.append(name);
     for (Map.Entry<Object, Object> entry : attributes.entrySet()) {
@@ -328,9 +333,11 @@ public class XNode {
     List<XNode> children = getChildren();
     if (!children.isEmpty()) {
       builder.append(">\n");
-      for (XNode node : children) {
-        builder.append(node.toString());
+      for (int k = 0; k < children.size(); k++) {
+        indent(builder, level + 1);
+        children.get(k).toString(builder, level + 1);
       }
+      indent(builder, level);
       builder.append("</");
       builder.append(name);
       builder.append(">");
@@ -342,9 +349,15 @@ public class XNode {
       builder.append(">");
     } else {
       builder.append("/>");
+      indent(builder, level);
     }
     builder.append("\n");
-    return builder.toString();
+  }
+
+  private void indent(StringBuilder builder, int level) {
+    for (int i = 0; i < level; i++) {
+      builder.append("    ");
+    }
   }
 
   private Properties parseAttributes(Node n) {

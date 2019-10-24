@@ -83,7 +83,7 @@
   추가적인 정보는 MyBatis-Spring이나 MyBatis-Guice를 참고하길 바란다. </p>
   <h4>SqlSessionFactoryBuilder</h4>
   <p>SqlSessionFactoryBuilder는 5개의 build() 메소드를 가진다.
-  각각은 서로 다른 소스에서 SqlSession을 빌드한다.</p>
+  각각은 서로 다른 소스에서 SqlSessionFactory을 빌드한다.</p>
   <source>SqlSessionFactory build(InputStream inputStream)
 SqlSessionFactory build(InputStream inputStream, String environment)
 SqlSessionFactory build(InputStream inputStream, Properties properties)

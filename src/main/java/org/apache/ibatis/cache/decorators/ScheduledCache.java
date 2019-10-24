@@ -17,6 +17,8 @@ package org.apache.ibatis.cache.decorators;
 
 import org.apache.ibatis.cache.Cache;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author Clinton Begin
  */
@@ -28,7 +30,7 @@ public class ScheduledCache implements Cache {
 
   public ScheduledCache(Cache delegate) {
     this.delegate = delegate;
-    this.clearInterval = 60 * 60 * 1000; // 1 hour
+    this.clearInterval = TimeUnit.HOURS.toMillis(1);
     this.lastClear = System.currentTimeMillis();
   }
 
