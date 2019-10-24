@@ -232,7 +232,7 @@ class PooledConnection implements InvocationHandler {
   @Override
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
     String methodName = method.getName();
-    if (CLOSE.hashCode() == methodName.hashCode() && CLOSE.equals(methodName)) {
+    if (CLOSE.equals(methodName)) {
       dataSource.pushConnection(this);
       return null;
     }
