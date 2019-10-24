@@ -46,6 +46,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.ibatis.binding.MapperMethod.ParamMap;
 import org.apache.ibatis.io.ResolverUtil;
 import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.Configuration;
 
 /**
  * @author Clinton Begin
@@ -55,14 +56,29 @@ public final class TypeHandlerRegistry {
 
   private final Map<JdbcType, TypeHandler<?>>  jdbcTypeHandlerMap = new EnumMap<>(JdbcType.class);
   private final Map<Type, Map<JdbcType, TypeHandler<?>>> typeHandlerMap = new ConcurrentHashMap<>();
-  private final TypeHandler<Object> unknownTypeHandler = new UnknownTypeHandler(this);
+  private final TypeHandler<Object> unknownTypeHandler;
   private final Map<Class<?>, TypeHandler<?>> allTypeHandlersMap = new HashMap<>();
 
   private static final Map<JdbcType, TypeHandler<?>> NULL_TYPE_HANDLER_MAP = Collections.emptyMap();
 
   private Class<? extends TypeHandler> defaultEnumTypeHandler = EnumTypeHandler.class;
 
+  /**
+   * The default constructor.
+   */
   public TypeHandlerRegistry() {
+    this(new Configuration());
+  }
+
+  /**
+   * The constructor that pass the MyBatis configuration.
+   *
+   * @param configuration a MyBatis configuration
+   * @since 3.5.4
+   */
+  public TypeHandlerRegistry(Configuration configuration) {
+    this.unknownTypeHandler = new UnknownTypeHandler(configuration);
+
     register(Boolean.class, new BooleanTypeHandler());
     register(boolean.class, new BooleanTypeHandler());
     register(JdbcType.BOOLEAN, new BooleanTypeHandler());
