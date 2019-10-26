@@ -33,7 +33,8 @@ import org.apache.ibatis.session.Configuration;
 public class UnknownTypeHandler extends BaseTypeHandler<Object> {
 
   private static final ObjectTypeHandler OBJECT_TYPE_HANDLER = new ObjectTypeHandler();
-  private final Configuration configuration;
+  // TODO Rename to 'configuration' after removing the 'configuration' property(deprecated property) on parent class
+  private final Configuration config;
   private final Supplier<TypeHandlerRegistry> typeHandlerRegistrySupplier;
 
   /**
@@ -43,7 +44,7 @@ public class UnknownTypeHandler extends BaseTypeHandler<Object> {
    * @since 3.5.4
    */
   public UnknownTypeHandler(Configuration configuration) {
-    this.configuration = configuration;
+    this.config = configuration;
     this.typeHandlerRegistrySupplier = configuration::getTypeHandlerRegistry;
   }
 
@@ -55,7 +56,7 @@ public class UnknownTypeHandler extends BaseTypeHandler<Object> {
    */
   @Deprecated
   public UnknownTypeHandler(TypeHandlerRegistry typeHandlerRegistry) {
-    this.configuration = new Configuration();
+    this.config = new Configuration();
     this.typeHandlerRegistrySupplier = () -> typeHandlerRegistry;
   }
 
@@ -109,7 +110,7 @@ public class UnknownTypeHandler extends BaseTypeHandler<Object> {
       columnIndexLookup = new HashMap<>();
       ResultSetMetaData rsmd = rs.getMetaData();
       int count = rsmd.getColumnCount();
-      boolean useColumnLabel = configuration.isUseColumnLabel();
+      boolean useColumnLabel = config.isUseColumnLabel();
       for (int i = 1; i <= count; i++) {
         String name = useColumnLabel ? rsmd.getColumnLabel(i) : rsmd.getColumnName(i);
         columnIndexLookup.put(name,i);
