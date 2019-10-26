@@ -24,11 +24,18 @@ import java.lang.annotation.Target;
 import org.apache.ibatis.scripting.LanguageDriver;
 
 /**
+ * The annotation that specify a {@link LanguageDriver} to use.
+ *
  * @author Clinton Begin
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Lang {
+  /**
+   * Returns the {@link LanguageDriver} implementation type to use.
+   *
+   * @return the {@link LanguageDriver} implementation type
+   */
   Class<? extends LanguageDriver> value();
 }

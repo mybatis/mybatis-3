@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -22,6 +22,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * The annotation that be grouping mapping definitions for property.
+ *
  * @author Clinton Begin
  */
 @Documented
@@ -29,8 +31,16 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface Results {
   /**
-   * The name of the result map.
+   * Returns the id of this result map.
+   *
+   * @return the id of this result map
    */
   String id() default "";
+
+  /**
+   * Returns mapping definitions for property.
+   *
+   * @return mapping definitions
+   */
   Result[] value() default {};
 }
