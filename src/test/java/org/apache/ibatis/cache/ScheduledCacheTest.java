@@ -24,18 +24,6 @@ import org.junit.jupiter.api.Test;
 class ScheduledCacheTest {
 
   @Test
-  public void shouldDemonstrateHowAllObjectsAreFlushedAfterBasedOnTimeSimple() throws Exception {
-    Cache cache = new ScheduledCache(new PerpetualCache("DefaultCache"));
-    for (int i = 0; i < 5; i++) {
-      cache.putObject(i, i);
-    }
-    ((ScheduledCache) cache).setClearInterval(2500);
-    assertEquals(0, cache.getObject(0));
-    Thread.sleep(3000);
-    assertNull(cache.getObject(0));
-  }
-
-  @Test
   void shouldDemonstrateHowAllObjectsAreFlushedAfterBasedOnTime() throws Exception {
     Cache cache = new PerpetualCache("DefaultCache");
     cache = new ScheduledCache(cache);
