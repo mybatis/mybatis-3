@@ -34,5 +34,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface ResultType {
+  /**
+   * Returns the return type.
+   *
+   * @return the return type
+   */
   Class<?> value();
 }
