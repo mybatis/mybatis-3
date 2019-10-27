@@ -25,6 +25,8 @@ import org.apache.ibatis.mapping.FetchType;
 /**
  * The annotation that specify the nested statement for retrieving single object.
  *
+ * @see Result
+ * @see Results
  * @author Clinton Begin
  */
 @Documented

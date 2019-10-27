@@ -24,6 +24,14 @@ import java.lang.annotation.Target;
 /**
  * The annotation that specify the parameter name.
  *
+ * <p><br>
+ * <b>How to use:</b>
+ * <pre>
+ * public interface UserMapper {
+ *   &#064;Select("SELECT id, name FROM users WHERE name = #{name}")
+ *   User selectById(&#064;Param("name") String value);
+ * }
+ * </pre>
  * @author Clinton Begin
  */
 @Documented

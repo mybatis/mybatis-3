@@ -27,6 +27,7 @@ import org.apache.ibatis.type.UnknownTypeHandler;
 /**
  * The annotation that specify a mapping definition for the constructor argument.
  *
+ * @see ConstructorArgs
  * @author Clinton Begin
  */
 @Documented

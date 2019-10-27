@@ -26,6 +26,15 @@ import org.apache.ibatis.mapping.StatementType;
 /**
  * The annotation that specify an SQL for retrieving a key value.
  *
+ * <p><br>
+ * <b>How to use:</b>
+ * <pre>
+ * public interface UserMapper {
+ *   &#064;SelectKey(statement = "SELECT identity('users')", keyProperty = "id", before = true, resultType = int.class)
+ *   &#064;Insert("INSERT INTO users (id, name) VALUES(#{id}, #{name})")
+ *   boolean insert(User user);
+ * }
+ * </pre>
  * @author Clinton Begin
  */
 @Documented

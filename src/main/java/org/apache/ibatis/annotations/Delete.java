@@ -24,6 +24,14 @@ import java.lang.annotation.Target;
 /**
  * The annotation that specify an SQL for deleting record(s).
  *
+ * <p><br>
+ * <b>How to use:</b>
+ * <pre>
+ * public interface UserMapper {
+ *   &#064;Delete("DELETE FROM users WHERE id = #{id}")
+ *   boolean deleteById(int id);
+ * }
+ * </pre>
  * @author Clinton Begin
  */
 @Documented

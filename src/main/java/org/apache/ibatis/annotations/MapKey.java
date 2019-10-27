@@ -24,6 +24,15 @@ import java.lang.annotation.Target;
 /**
  * The annotation that specify the property name(or column name) for a key value of {@link java.util.Map}.
  *
+ * <p><br>
+ * <b>How to use:</b>
+ * <pre>
+ * public interface UserMapper {
+ *   &#064;MapKey("id")
+ *   &#064;Select("SELECT id, name FROM users WHERE name LIKE #{name} || '%")
+ *   Map&lt;Integer, User&gt; selectByStartingWithName(String name);
+ * }
+ * </pre>
  * @author Clinton Begin
  */
 @Documented
