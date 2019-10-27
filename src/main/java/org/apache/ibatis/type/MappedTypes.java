@@ -24,6 +24,14 @@ import java.lang.annotation.Target;
 /**
  * The annotation that specify java types to map {@link TypeHandler}.
  *
+ * <p><br>
+ * <b>How to use:</b>
+ * <pre>
+ * &#064;MappedTypes(String.class)
+ * public class StringTrimmingTypeHandler implements TypeHandler&lt;String&gt; {
+ *   // ...
+ * }
+ * </pre>
  * @author Eduardo Macarron
  */
 @Documented

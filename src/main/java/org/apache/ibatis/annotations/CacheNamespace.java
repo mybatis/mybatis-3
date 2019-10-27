@@ -28,6 +28,18 @@ import org.apache.ibatis.cache.impl.PerpetualCache;
 /**
  * The annotation that specify to use cache on namespace(e.g. mapper interface).
  *
+ * <p><br>
+ * <b>How to use:</b>
+ * <pre>
+ * &#064;acheNamespace(implementation = CustomCache.class, properties = {
+ *   &#064;Property(name = "host", value = "${mybatis.cache.host}"),
+ *   &#064;Property(name = "port", value = "${mybatis.cache.port}"),
+ *   &#064;Property(name = "name", value = "usersCache")
+ * })
+ * public interface UserMapper {
+ *   // ...
+ * }
+ * </pre>
  * @author Clinton Begin
  * @author Kazuki Shimizu
  */

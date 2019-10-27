@@ -27,6 +27,15 @@ import org.apache.ibatis.mapping.StatementType;
 /**
  * The annotation that specify options for customizing default behaviors.
  *
+ * <p><br>
+ * <b>How to use:</b>
+ * <pre>
+ * public interface UserMapper {
+ *   &#064;Option(useGeneratedKeys = true, keyProperty = "id")
+ *   &#064;Insert("INSERT INTO users (name) VALUES(#{name})")
+ *   boolean insert(User user);
+ * }
+ * </pre>
  * @author Clinton Begin
  */
 @Documented

@@ -24,6 +24,19 @@ import java.lang.annotation.Target;
 /**
  * The annotation that be grouping mapping definitions for constructor.
  *
+ * <p><br>
+ * <b>How to use:</b>
+ * <pre>
+ * public interface UserMapper {
+ *   &#064;ConstructorArgs({
+ *     &#064;Arg(column = "id", javaType = int.class, id = true),
+ *     &#064;Arg(column = "name", javaType = String.class),
+ *     &#064;Arg(javaType = UserEmail.class, select = "selectUserEmailById", column = "id")
+ *   })
+ *   &#064;Select("SELECT id, name FROM users WHERE id = #{id}")
+ *   User selectById(int id);
+ * }
+ * </pre>
  * @author Clinton Begin
  */
 @Documented

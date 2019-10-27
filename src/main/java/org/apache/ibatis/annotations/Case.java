@@ -23,6 +23,11 @@ import java.lang.annotation.Target;
 /**
  * The annotation that conditional mapping definition for {@link TypeDiscriminator}.
  *
+ * @see TypeDiscriminator
+ * @see Result
+ * @see Arg
+ * @see Results
+ * @see ConstructorArgs
  * @author Clinton Begin
  */
 @Documented

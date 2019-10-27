@@ -24,6 +24,14 @@ import java.lang.annotation.Target;
 /**
  * The annotation that specify an SQL for retrieving record(s).
  *
+ * <p><br>
+ * <b>How to use:</b>
+ * <pre>
+ * public interface UserMapper {
+ *   &#064;Select("SELECT id, name FROM users WHERE id = #{id}")
+ *   User selectById(int id);
+ * }
+ * </pre>
  * @author Clinton Begin
  */
 @Documented

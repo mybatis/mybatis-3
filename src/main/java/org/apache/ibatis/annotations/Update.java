@@ -24,6 +24,14 @@ import java.lang.annotation.Target;
 /**
  * The annotation that specify an SQL for updating record(s).
  *
+ * <p><br>
+ * <b>How to use:</b>
+ * <pre>
+ * public interface UserMapper {
+ *   &#064;Update("UPDATE users SET name = #{name} WHERE id = #{id}")
+ *   boolean update(User user);
+ * }
+ * </pre>
  * @author Clinton Begin
  */
 @Documented
