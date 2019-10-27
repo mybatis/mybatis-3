@@ -18,7 +18,6 @@ package org.apache.ibatis.submitted.mapper_extend;
 import java.io.Reader;
 
 import org.apache.ibatis.BaseDataTest;
-import org.apache.ibatis.binding.BindingException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -26,9 +25,6 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
-import static com.googlecode.catchexception.apis.BDDCatchException.*;
-import static org.assertj.core.api.BDDAssertions.then;
 
 class MapperExtendTest {
 
@@ -88,17 +84,6 @@ class MapperExtendTest {
       ChildMapper mapper = sqlSession.getMapper(ChildMapper.class);
       User user = mapper.getUserByName("User1");
       Assertions.assertNotNull(user);
-    }
-  }
-
-  @Test
-  void shouldThrowExceptionIfNoMatchingStatementFound() {
-    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      Mapper mapper = sqlSession.getMapper(Mapper.class);
-      when(mapper).noMappedStatement();
-      then(caughtException()).isInstanceOf(BindingException.class)
-        .hasMessage("Invalid bound statement (not found): "
-          + Mapper.class.getName() + ".noMappedStatement");
     }
   }
 }
