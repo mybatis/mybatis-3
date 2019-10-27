@@ -229,10 +229,12 @@ public class MapperAnnotationBuilder {
   private String parseResultMap(Method method) {
     Class<?> returnType = getReturnType(method);
     ConstructorArgs args = method.getAnnotation(ConstructorArgs.class);
+    Arg arg = method.getAnnotation(Arg.class);
     Results results = method.getAnnotation(Results.class);
+    Result result = method.getAnnotation(Result.class);
     TypeDiscriminator typeDiscriminator = method.getAnnotation(TypeDiscriminator.class);
     String resultMapId = generateResultMapName(method);
-    applyResultMap(resultMapId, returnType, argsIf(args), resultsIf(results), typeDiscriminator);
+    applyResultMap(resultMapId, returnType, argsIf(args, arg, method), resultsIf(results, result, method), typeDiscriminator);
     return resultMapId;
   }
 
@@ -626,11 +628,23 @@ public class MapperAnnotationBuilder {
     return value == null || value.trim().length() == 0 ? null : value;
   }
 
-  private Result[] resultsIf(Results results) {
+  private Result[] resultsIf(Results results, Result result, Method method) {
+    if (results != null && result != null) {
+      throw new BuilderException("Cannot use both @Results and @Result annotations with together at '" + method + "'.");
+    }
+    if (result != null) {
+      return new Result[]{result};
+    }
     return results == null ? new Result[0] : results.value();
   }
 
-  private Arg[] argsIf(ConstructorArgs args) {
+  private Arg[] argsIf(ConstructorArgs args, Arg arg, Method method) {
+    if (args != null && arg != null) {
+      throw new BuilderException("Cannot use both @ConstructorArgs and @Arg annotations with together at '" + method + "'.");
+    }
+    if (arg != null) {
+      return new Arg[]{arg};
+    }
     return args == null ? new Arg[0] : args.value();
   }
 
