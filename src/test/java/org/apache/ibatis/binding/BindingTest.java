@@ -743,20 +743,38 @@ class BindingTest {
   }
 
   @Test
-  void shouldErrorWhenSpecifyBothArgAndConstructorArgs() {
+  void shouldMapWhenSpecifyBothArgAndConstructorArgs() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
-      BuilderException exception = Assertions.assertThrows(BuilderException.class,()
-        -> session.getConfiguration().addMapper(WrongArgAndConstructorArgsMapper.class));
-      Assertions.assertEquals("Cannot use both @ConstructorArgs and @Arg annotations with together at 'public abstract org.apache.ibatis.domain.blog.Author org.apache.ibatis.binding.WrongArgAndConstructorArgsMapper.selectAuthor(int)'.", exception.getMessage());
+      BoundAuthorMapper mapper = session.getMapper(BoundAuthorMapper.class);
+      Author author = new Author(-1, "cbegin", "******", "cbegin@nowhere.com", "N/A", Section.NEWS);
+      mapper.insertAuthor(author);
+      Author author2 = mapper.selectAuthorUsingBothArgAndConstructorArgs(author.getId());
+      assertNotNull(author2);
+      assertEquals(author.getId(), author2.getId());
+      assertEquals(author.getUsername(), author2.getUsername());
+      assertEquals(author.getPassword(), author2.getPassword());
+      assertEquals(author.getBio(), author2.getBio());
+      assertEquals(author.getEmail(), author2.getEmail());
+      assertEquals(author.getFavouriteSection(), author2.getFavouriteSection());
+      session.rollback();
     }
   }
 
   @Test
-  void shouldErrorWhenSpecifyBothResultAndResults() {
+  void shouldMapWhenSpecifyBothResultAndResults() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
-      BuilderException exception = Assertions.assertThrows(BuilderException.class,()
-        -> session.getConfiguration().addMapper(WrongResultAndResultsMapper.class));
-      Assertions.assertEquals("Cannot use both @Results and @Result annotations with together at 'public abstract org.apache.ibatis.domain.blog.Author org.apache.ibatis.binding.WrongResultAndResultsMapper.selectAuthor(int)'.", exception.getMessage());
+      BoundAuthorMapper mapper = session.getMapper(BoundAuthorMapper.class);
+      Author author = new Author(-1, "cbegin", "******", "cbegin@nowhere.com", "N/A", Section.NEWS);
+      mapper.insertAuthor(author);
+      Author author2 = mapper.selectAuthorUsingBothResultAndResults(author.getId());
+      assertNotNull(author2);
+      assertEquals(author.getId(), author2.getId());
+      assertEquals(author.getUsername(), author2.getUsername());
+      assertNull(author2.getPassword());
+      assertNull(author2.getBio());
+      assertNull(author2.getEmail());
+      assertNull(author2.getFavouriteSection());
+      session.rollback();
     }
   }
 
