@@ -36,6 +36,7 @@ import javax.sql.DataSource;
 import net.sf.cglib.proxy.Factory;
 
 import org.apache.ibatis.BaseDataTest;
+import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.domain.blog.Author;
 import org.apache.ibatis.domain.blog.Blog;
@@ -688,4 +689,94 @@ class BindingTest {
     assertTrue(mapperClasses.contains(BoundAuthorMapper.class));
   }
 
+  @Test
+  void shouldMapPropertiesUsingRepeatableAnnotation() {
+    try (SqlSession session = sqlSessionFactory.openSession()) {
+      BoundAuthorMapper mapper = session.getMapper(BoundAuthorMapper.class);
+      Author author = new Author(-1, "cbegin", "******", "cbegin@nowhere.com", "N/A", Section.NEWS);
+      mapper.insertAuthor(author);
+      Author author2 = mapper.selectAuthorMapToPropertiesUsingRepeatable(author.getId());
+      assertNotNull(author2);
+      assertEquals(author.getId(), author2.getId());
+      assertEquals(author.getUsername(), author2.getUsername());
+      assertEquals(author.getPassword(), author2.getPassword());
+      assertEquals(author.getBio(), author2.getBio());
+      assertEquals(author.getEmail(), author2.getEmail());
+      session.rollback();
+    }
+  }
+
+  @Test
+  void shouldMapConstructorUsingRepeatableAnnotation() {
+    try (SqlSession session = sqlSessionFactory.openSession()) {
+      BoundAuthorMapper mapper = session.getMapper(BoundAuthorMapper.class);
+      Author author = new Author(-1, "cbegin", "******", "cbegin@nowhere.com", "N/A", Section.NEWS);
+      mapper.insertAuthor(author);
+      Author author2 = mapper.selectAuthorMapToConstructorUsingRepeatable(author.getId());
+      assertNotNull(author2);
+      assertEquals(author.getId(), author2.getId());
+      assertEquals(author.getUsername(), author2.getUsername());
+      assertEquals(author.getPassword(), author2.getPassword());
+      assertEquals(author.getBio(), author2.getBio());
+      assertEquals(author.getEmail(), author2.getEmail());
+      assertEquals(author.getFavouriteSection(), author2.getFavouriteSection());
+      session.rollback();
+    }
+  }
+
+  @Test
+  void shouldMapUsingSingleRepeatableAnnotation() {
+    try (SqlSession session = sqlSessionFactory.openSession()) {
+      BoundAuthorMapper mapper = session.getMapper(BoundAuthorMapper.class);
+      Author author = new Author(-1, "cbegin", "******", "cbegin@nowhere.com", "N/A", Section.NEWS);
+      mapper.insertAuthor(author);
+      Author author2 = mapper.selectAuthorUsingSingleRepeatable(author.getId());
+      assertNotNull(author2);
+      assertEquals(author.getId(), author2.getId());
+      assertEquals(author.getUsername(), author2.getUsername());
+      assertNull(author2.getPassword());
+      assertNull(author2.getBio());
+      assertNull(author2.getEmail());
+      assertNull(author2.getFavouriteSection());
+      session.rollback();
+    }
+  }
+
+  @Test
+  void shouldMapWhenSpecifyBothArgAndConstructorArgs() {
+    try (SqlSession session = sqlSessionFactory.openSession()) {
+      BoundAuthorMapper mapper = session.getMapper(BoundAuthorMapper.class);
+      Author author = new Author(-1, "cbegin", "******", "cbegin@nowhere.com", "N/A", Section.NEWS);
+      mapper.insertAuthor(author);
+      Author author2 = mapper.selectAuthorUsingBothArgAndConstructorArgs(author.getId());
+      assertNotNull(author2);
+      assertEquals(author.getId(), author2.getId());
+      assertEquals(author.getUsername(), author2.getUsername());
+      assertEquals(author.getPassword(), author2.getPassword());
+      assertEquals(author.getBio(), author2.getBio());
+      assertEquals(author.getEmail(), author2.getEmail());
+      assertEquals(author.getFavouriteSection(), author2.getFavouriteSection());
+      session.rollback();
+    }
+  }
+
+  @Test
+  void shouldMapWhenSpecifyBothResultAndResults() {
+    try (SqlSession session = sqlSessionFactory.openSession()) {
+      BoundAuthorMapper mapper = session.getMapper(BoundAuthorMapper.class);
+      Author author = new Author(-1, "cbegin", "******", "cbegin@nowhere.com", "N/A", Section.NEWS);
+      mapper.insertAuthor(author);
+      Author author2 = mapper.selectAuthorUsingBothResultAndResults(author.getId());
+      assertNotNull(author2);
+      assertEquals(author.getId(), author2.getId());
+      assertEquals(author.getUsername(), author2.getUsername());
+      assertNull(author2.getPassword());
+      assertNull(author2.getBio());
+      assertNull(author2.getEmail());
+      assertNull(author2.getFavouriteSection());
+      session.rollback();
+    }
+  }
+
 }
+
