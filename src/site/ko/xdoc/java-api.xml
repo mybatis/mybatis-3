@@ -454,7 +454,8 @@ void rollback(boolean force)</source>
         <td>ConstructorArgs 의 일부로 한개의 생성자 인자
 		사용가능한 속성들 : id, column, javaType, jdbcType, typeHandler, select 그리고 resultMap.
 		id 속성은 비교하기 위해 사용되는 값이다.
-		XML에서는 <code>&lt;idArg&gt;</code> 엘리먼트와 유사하다.</td>
+		XML에서는 <code>&lt;idArg&gt;</code> 엘리먼트와 유사하다.
+    Since 3.5.4, it can be used as repeatable annotation.</td>
       </tr>
       <tr>
         <td><code>@TypeDiscriminator</code></td>
@@ -494,7 +495,8 @@ void rollback(boolean force)</source>
 		id 속성은 프로퍼티를 비교할 때 사용할지를 표시하는 boolean 값이다. (XML 에서 &lt;id&gt; 와 유사하다.)
 		one 속성은 한개의 관계(associations)이고 &lt;association&gt; 과 유사하다.
 		many 속성은 collection이고  &lt;collection&gt; 과 유사하다.
-		클래스의 명명규칙 충돌을 피하기 위해 명명되었다.</td>
+		클래스의 명명규칙 충돌을 피하기 위해 명명되었다.
+    Since 3.5.4, it can be used as repeatable annotation.</td>
       </tr>
       <tr>
         <td><code>@One</code></td>
