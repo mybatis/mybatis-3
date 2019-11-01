@@ -24,11 +24,27 @@ import java.lang.annotation.Target;
 import org.apache.ibatis.scripting.LanguageDriver;
 
 /**
+ * The annotation that specify a {@link LanguageDriver} to use.
+ *
+ * <p><br>
+ * <b>How to use:</b>
+ * <pre>
+ * public interface UserMapper {
+ *   &#064;Lang(MyXMLLanguageDriver.class)
+ *   &#064;Select("SELECT id, name FROM users WHERE id = #{id}")
+ *   User selectById(int id);
+ * }
+ * </pre>
  * @author Clinton Begin
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Lang {
+  /**
+   * Returns the {@link LanguageDriver} implementation type to use.
+   *
+   * @return the {@link LanguageDriver} implementation type
+   */
   Class<? extends LanguageDriver> value();
 }

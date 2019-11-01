@@ -13,11 +13,12 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.mapping;
+package org.apache.ibatis.submitted.nestedresulthandler_gh1551;
 
-/**
- * @author Clinton Begin
- */
-public enum SqlCommandType {
-  UNKNOWN, INSERT, UPDATE, DELETE, SELECT, FLUSH
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+public interface ProductMapper {
+  List<ProductResp> selectAllInfo(@Param("code") String code);
 }

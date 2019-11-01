@@ -23,8 +23,16 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Marker interface for MyBatis mappers
+ * Marker interface for MyBatis mappers.
  *
+ * <p><br>
+ * <b>How to use:</b>
+ * <pre>
+ * &#064;Mapper
+ * public interface UserMapper {
+ *   // ...
+ * }
+ * </pre>
  * @author Frank David Martínez
  */
 @Documented

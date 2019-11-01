@@ -22,6 +22,24 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * The annotation that specify a method that provide an SQL for inserting record(s).
+ *
+ * <p><br>
+ * <b>How to use:</b>
+ * <pre>
+ * public interface UserMapper {
+ *
+ *   &#064;InsertProvider(type = SqlProvider.class, method = "insert")
+ *   void insert(User user);
+ *
+ *   public static class SqlProvider {
+ *     public static String insert() {
+ *       return "INSERT INTO users (id, name) VALUES(#{id}, #{name})";
+ *     }
+ *   }
+ *
+ * }
+ * </pre>
  * @author Clinton Begin
  */
 @Documented
