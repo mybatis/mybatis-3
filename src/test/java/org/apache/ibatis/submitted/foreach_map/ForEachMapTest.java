@@ -35,7 +35,7 @@ class ForEachMapTest {
 
   @BeforeAll
   static void setUpClass() throws Exception {
-    // create a SqlSessionFactory
+    // create an SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/foreach_map/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
