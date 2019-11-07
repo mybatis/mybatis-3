@@ -34,7 +34,7 @@
 	<sql id="personColumnList">
 		person_id, person_name
 	</sql>
-	<!-- Referencing a sql fragment in another file -->
+	<!-- Referencing an sql fragment in another file -->
 	<select id="select" parameterType="java.lang.Integer" resultMap="resultWithPets">
 		SELECT
 		<include refid="personColumnList" />
@@ -46,7 +46,7 @@
 		AND person_id = owner_id
 		ORDER BY pet_id
 	</select>
-	<!-- Referencing a sql fragment and a result map in another file -->
+	<!-- Referencing an sql fragment and a result map in another file -->
 	<select id="selectPet" parameterType="java.lang.Integer"
 		resultMap="org.apache.ibatis.submitted.xml_external_ref.PetMapper.petResult">
 		SELECT

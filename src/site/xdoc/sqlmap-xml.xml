@@ -2137,7 +2137,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
 
         <p>
           <span class="label important">NOTE</span> Second level cache is transactional. That means that it is updated
-          when a SqlSession finishes with commit or when it finishes with rollback but no inserts/deletes/updates
+          when an SqlSession finishes with commit or when it finishes with rollback but no inserts/deletes/updates
           with flushCache=true where executed.
         </p>
 

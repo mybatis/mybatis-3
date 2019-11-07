@@ -35,7 +35,7 @@ class DuplicateStatementsTest {
 
   @BeforeEach
   void setupDb() throws Exception {
-      // create a SqlSessionFactory
+      // create an SqlSessionFactory
       try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/duplicate_statements/mybatis-config.xml")) {
         sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
       }

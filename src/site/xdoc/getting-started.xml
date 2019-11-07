@@ -47,13 +47,13 @@
     <subsection name="Building SqlSessionFactory from XML">
       <p>
         Every MyBatis application centers around an instance of
-        SqlSessionFactory. A SqlSessionFactory instance can be acquired by
+        SqlSessionFactory. An SqlSessionFactory instance can be acquired by
         using the SqlSessionFactoryBuilder. SqlSessionFactoryBuilder can
-        build a SqlSessionFactory instance from an XML configuration file,
+        build an SqlSessionFactory instance from an XML configuration file,
         or from a custom prepared instance of the Configuration class.
       </p>
       <p>
-        Building a SqlSessionFactory instance from an XML file is very
+        Building an SqlSessionFactory instance from an XML file is very
         simple. It is recommended that you use a classpath resource for
         this configuration, but you could use any InputStream instance,
         including one created from a literal file path or a file:// URL.
@@ -139,9 +139,9 @@ SqlSessionFactory sqlSessionFactory =
         BlogMapper.class). More on this later.
       </p>
     </subsection>
-    <subsection name="Acquiring a SqlSession from SqlSessionFactory">
+    <subsection name="Acquiring an SqlSession from SqlSessionFactory">
       <p>
-        Now that you have a SqlSessionFactory, as the name suggests, you
+        Now that you have an SqlSessionFactory, as the name suggests, you
         can acquire an instance of
         SqlSession. The SqlSession contains absolutely every method needed to execute
         SQL commands against
@@ -338,12 +338,12 @@ public interface BlogMapper {
           Each thread should have its own instance of SqlSession. Instances of
           SqlSession are not to be shared and are not thread safe. Therefore
           the best scope is request or method scope. Never keep references to
-          a SqlSession instance in a static field or even an instance field
-          of a class. Never keep references to a SqlSession in any sort of
+          an SqlSession instance in a static field or even an instance field
+          of a class. Never keep references to an SqlSession in any sort of
           managed scope, such as HttpSession of the Servlet framework. If
           you're using a web framework of any sort, consider the SqlSession
           to follow a similar scope to that of an HTTP request. In other
-          words, upon receiving an HTTP request, you can open a SqlSession,
+          words, upon receiving an HTTP request, you can open an SqlSession,
           then upon returning the response, you can close it. Closing the
           session is very important. You should always ensure that it's
           closed within a finally block. The following is the standard

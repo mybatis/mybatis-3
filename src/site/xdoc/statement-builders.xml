@@ -30,7 +30,7 @@
         <p>One of the nastiest things a Java developer will ever have to do is embed SQL in Java code. Usually this is
           done because the SQL has to be dynamically generated - otherwise you could externalize it in a file or a
           stored proc. As you've already seen, MyBatis has a powerful answer for dynamic SQL generation in its
-          XML mapping features. However, sometimes it becomes necessary to build a SQL statement string inside of Java
+          XML mapping features. However, sometimes it becomes necessary to build an SQL statement string inside of Java
           code. In that case, MyBatis has one more feature to help you out, before reducing yourself to the typical mess
           of plus signs, quotes, newlines, formatting problems and nested conditionals to deal with extra commas or
           AND conjunctions. Indeed, dynamically generating SQL code in Java can be a real nightmare.  For example:
@@ -52,7 +52,7 @@ String sql = "SELECT P.ID, P.USERNAME, P.PASSWORD, P.FULL_NAME, "
       </subsection>
       <subsection name="The Solution">
       <p>MyBatis 3 offers a convenient utility class to help with the problem.
-        With the SQL class, you simply create an instance that lets you call methods against it to build a SQL statement
+        With the SQL class, you simply create an instance that lets you call methods against it to build an SQL statement
         one step at a time.  The example problem above would look like this when rewritten with the SQL class:
       </p>
 

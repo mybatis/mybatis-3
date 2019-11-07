@@ -32,7 +32,7 @@
 		<include refid="personIdColumnList"/>,
 		person_name
 	</sql>
-	<!-- Referencing a sql fragment in same file -->
+	<!-- Referencing an sql fragment in same file -->
 	<select id="select" parameterType="java.lang.Integer" resultMap="personResult">
 		SELECT
 		<include refid="personColumnList" />

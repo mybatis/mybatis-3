@@ -52,7 +52,7 @@ class SqlProviderTest {
 
   @BeforeAll
   static void setUp() throws Exception {
-    // create a SqlSessionFactory
+    // create an SqlSessionFactory
     try (Reader reader = Resources
         .getResourceAsReader("org/apache/ibatis/submitted/sqlprovider/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -63,7 +63,7 @@ class SqlProviderTest {
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
             "org/apache/ibatis/submitted/sqlprovider/CreateDB.sql");
 
-    // create a SqlSessionFactory
+    // create an SqlSessionFactory
     try (Reader reader = Resources
         .getResourceAsReader("org/apache/ibatis/submitted/sqlprovider/mybatis-config.xml")) {
       sqlSessionFactoryForDerby = new SqlSessionFactoryBuilder().build(reader, "development-derby");

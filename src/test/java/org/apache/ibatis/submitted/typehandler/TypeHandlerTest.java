@@ -39,7 +39,7 @@ class TypeHandlerTest {
 
   @BeforeEach
   void setUp() throws Exception {
-    // create a SqlSessionFactory
+    // create an SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/typehandler/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
       sqlSessionFactory.getConfiguration().getTypeHandlerRegistry().register(StringTrimmingTypeHandler.class);

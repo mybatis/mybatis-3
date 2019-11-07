@@ -212,7 +212,7 @@ class SPTest {
   }
 
   /*
-   * This test shows how to use a input and output parameters and return a
+   * This test shows how to use an input and output parameters and return a
    * result set from a stored procedure.
    *
    * This test shows using a single value parameter.
@@ -231,7 +231,7 @@ class SPTest {
   }
 
   /*
-   * This test shows how to use a input and output parameters and return a
+   * This test shows how to use an input and output parameters and return a
    * result set from a stored procedure.
    *
    * This test shows using a Map parameter.
@@ -256,7 +256,7 @@ class SPTest {
   }
 
   /*
-   * This test shows how to use a input and output parameters and return a
+   * This test shows how to use an input and output parameters and return a
    * result set from a stored procedure.
    *
    * This test shows using a Map parameter.
@@ -468,7 +468,7 @@ class SPTest {
   }
 
   /*
-   * This test shows how to use a input and output parameters and return a
+   * This test shows how to use an input and output parameters and return a
    * result set from a stored procedure.
    *
    * This test shows using a single value parameter.
@@ -489,7 +489,7 @@ class SPTest {
   }
 
   /*
-   * This test shows how to use a input and output parameters and return a
+   * This test shows how to use an input and output parameters and return a
    * result set from a stored procedure.
    *
    * This test shows using a single value parameter.
@@ -511,7 +511,7 @@ class SPTest {
   }
 
   /*
-   * This test shows how to use a input and output parameters and return a
+   * This test shows how to use an input and output parameters and return a
    * result set from a stored procedure.
    *
    * This test shows using a Map parameter.
@@ -538,7 +538,7 @@ class SPTest {
   }
 
   /*
-   * This test shows how to use a input and output parameters and return a
+   * This test shows how to use an input and output parameters and return a
    * result set from a stored procedure.
    *
    * This test shows using a Map parameter.
@@ -566,7 +566,7 @@ class SPTest {
   }
 
   /*
-   * This test shows how to use a input and output parameters and return a
+   * This test shows how to use an input and output parameters and return a
    * result set from a stored procedure.
    *
    * This test shows using a Map parameter.
@@ -593,7 +593,7 @@ class SPTest {
   }
 
   /*
-   * This test shows how to use a input and output parameters and return a
+   * This test shows how to use an input and output parameters and return a
    * result set from a stored procedure.
    *
    * This test shows using a Map parameter.

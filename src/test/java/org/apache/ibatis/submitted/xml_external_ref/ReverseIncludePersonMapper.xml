@@ -24,7 +24,7 @@
 		<id property="id" column="person_id" />
 		<result property="name" column="person_name" />
 	</resultMap>
-	<!-- Referencing a sql fragment farther in same file -->
+	<!-- Referencing an sql fragment farther in same file -->
 	<select id="select" parameterType="java.lang.Integer" resultMap="personResult">
 		SELECT
 		<include refid="personColumnList" />

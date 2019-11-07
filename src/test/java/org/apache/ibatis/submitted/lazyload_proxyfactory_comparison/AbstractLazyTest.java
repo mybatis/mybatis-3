@@ -36,7 +36,7 @@ abstract class AbstractLazyTest {
 
   @BeforeEach
   void before() throws Exception {
-    // create a SqlSessionFactory
+    // create an SqlSessionFactory
    SqlSessionFactory sqlSessionFactory;
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/lazyload_proxyfactory_comparison/mybatis-config-" + getConfiguration() + ".xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);

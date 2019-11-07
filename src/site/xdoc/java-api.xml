@@ -62,10 +62,10 @@
   </subsection>
 
   <subsection name="SqlSessions" id="sqlSessions">
-  <p>The primary Java interface for working with MyBatis is the SqlSession. Through this interface you can execute commands, get mappers and manage transactions. We'll talk more about SqlSession itself shortly, but first we have to learn how to acquire an instance of SqlSession. SqlSessions are created by a SqlSessionFactory instance. The SqlSessionFactory contains methods for creating instances of SqlSessions all different ways. The SqlSessionFactory itself is created by the SqlSessionFactoryBuilder that can create the SqlSessonFactory from XML, annotations or hand coded Java configuration.</p>
+  <p>The primary Java interface for working with MyBatis is the SqlSession. Through this interface you can execute commands, get mappers and manage transactions. We'll talk more about SqlSession itself shortly, but first we have to learn how to acquire an instance of SqlSession. SqlSessions are created by an SqlSessionFactory instance. The SqlSessionFactory contains methods for creating instances of SqlSessions all different ways. The SqlSessionFactory itself is created by the SqlSessionFactoryBuilder that can create the SqlSessonFactory from XML, annotations or hand coded Java configuration.</p>
   <p><span class="label important">NOTE</span> When using MyBatis with a dependency injection framework like Spring or Guice, SqlSessions are created and injected by the DI framework so you don't need to use the SqlSessionFactoryBuilder or SqlSessionFactory and can go directly to the SqlSession section. Please refer to the MyBatis-Spring or MyBatis-Guice manuals for further info.</p>
   <h4>SqlSessionFactoryBuilder</h4>
-  <p>The SqlSessionFactoryBuilder has five build() methods, each which allows you to build a SqlSessionFactory from a different source.</p>
+  <p>The SqlSessionFactoryBuilder has five build() methods, each which allows you to build an SqlSessionFactory from a different source.</p>
   <source>SqlSessionFactory build(InputStream inputStream)
 SqlSessionFactory build(InputStream inputStream, String environment)
 SqlSessionFactory build(InputStream inputStream, Properties properties)
@@ -102,7 +102,7 @@ SqlSessionFactory build(Configuration config)</source>
   <p>Thus, the highest priority properties are those passed in as a method parameter, followed by resource/url attributes and finally the properties specified in the body of the properties element.</p>
   <hr/>
 
-  <p>So to summarize, the first four methods are largely the same, but with overrides to allow you to optionally specify the environment and/or properties. Here is an example of building a SqlSessionFactory from an mybatis-config.xml file. </p>
+  <p>So to summarize, the first four methods are largely the same, but with overrides to allow you to optionally specify the environment and/or properties. Here is an example of building an SqlSessionFactory from an mybatis-config.xml file. </p>
 
   <source>String <strong>resource</strong> = "org/mybatis/builder/mybatis-config.xml";
 InputStream <strong>inputStream</strong> = Resources.getResourceAsStream(resource);
@@ -125,7 +125,7 @@ Reader getUrlAsReader(String urlString)
 Properties getUrlAsProperties(String urlString)
 Class classForName(String className)</source>
 
-  <p>The final build method takes an instance of Configuration. The Configuration class contains everything you could possibly need to know about a SqlSessionFactory instance. The Configuration class is useful for introspecting on the configuration, including finding and manipulating SQL maps (not recommended once the application is accepting requests). The configuration class has every configuration switch that you've learned about already, only exposed as a Java API. Here's a simple example of how to manually a Configuration instance and pass it to the build() method to create a SqlSessionFactory.</p>
+  <p>The final build method takes an instance of Configuration. The Configuration class contains everything you could possibly need to know about an SqlSessionFactory instance. The Configuration class is useful for introspecting on the configuration, including finding and manipulating SQL maps (not recommended once the application is accepting requests). The configuration class has every configuration switch that you've learned about already, only exposed as a Java API. Here's a simple example of how to manually a Configuration instance and pass it to the build() method to create an SqlSessionFactory.</p>
   <source>DataSource dataSource = BaseDataTest.createBlogDataSource();
 TransactionFactory transactionFactory = new JdbcTransactionFactory();
 
@@ -143,7 +143,7 @@ configuration.addMapper(BoundAuthorMapper.class);
 SqlSessionFactoryBuilder builder = new SqlSessionFactoryBuilder();
 SqlSessionFactory factory = builder.build(configuration);</source>
 
-  <p>Now you have a SqlSessionFactory that can be used to create SqlSession instances.</p>
+  <p>Now you have an SqlSessionFactory that can be used to create SqlSession instances.</p>
 
   <h4>SqlSessionFactory</h4>
   <p>SqlSessionFactory has six methods that are used to create SqlSession instances. In general, the decisions you'll be making when selecting one of these methods are:</p>
@@ -163,7 +163,7 @@ SqlSession openSession(ExecutorType execType, boolean autoCommit)
 SqlSession openSession(ExecutorType execType, Connection connection)
 Configuration getConfiguration();</source>
 
-  <p>The default openSession() method that takes no parameters will create a SqlSession with the following characteristics:</p>
+  <p>The default openSession() method that takes no parameters will create an SqlSession with the following characteristics:</p>
   <ul>
     <li>A transaction scope <u>will</u> be started (i.e. NOT auto-commit).</li>
     <li>A <code>Connection</code> object will be acquired from the DataSource instance configured by the active environment.</li>
