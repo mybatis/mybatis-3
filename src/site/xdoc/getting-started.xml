@@ -139,7 +139,7 @@ SqlSessionFactory sqlSessionFactory =
         BlogMapper.class). More on this later.
       </p>
     </subsection>
-    <subsection name="Acquiring a SqlSession from SqlSessionFactory">
+    <subsection name="Acquiring an SqlSession from SqlSessionFactory">
       <p>
         Now that you have an SqlSessionFactory, as the name suggests, you
         can acquire an instance of
