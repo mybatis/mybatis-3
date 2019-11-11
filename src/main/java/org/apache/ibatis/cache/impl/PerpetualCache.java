@@ -28,7 +28,7 @@ public class PerpetualCache implements Cache {
 
   private final String id;
 
-  private Map<Object, Object> cache = new HashMap<>();
+  private final Map<Object, Object> cache = new HashMap<>(8);
 
   public PerpetualCache(String id) {
     this.id = id;
