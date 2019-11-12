@@ -95,7 +95,7 @@ class MapperExtendTest {
   void shouldThrowExceptionIfNoMatchingStatementFound() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
-      when(mapper).noMappedStatement();
+      when(mapper::noMappedStatement);
       then(caughtException()).isInstanceOf(BindingException.class)
         .hasMessage("Invalid bound statement (not found): "
           + Mapper.class.getName() + ".noMappedStatement");

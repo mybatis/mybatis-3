@@ -115,7 +115,7 @@ class ForEachTest {
   void shouldReportMissingPropertyName() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
-      when(mapper).typoInItemProperty(Collections.singletonList(new User()));
+      when(() -> mapper.typoInItemProperty(Collections.singletonList(new User())));
       then(caughtException()).isInstanceOf(PersistenceException.class)
         .hasMessageContaining("There is no getter for property named 'idd' in 'class org.apache.ibatis.submitted.foreach.User'");
     }

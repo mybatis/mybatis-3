@@ -272,23 +272,23 @@ class CacheTest {
 
   @Test
   void shouldErrorUnsupportedProperties() {
-    when(sqlSessionFactory.getConfiguration()).addMapper(CustomCacheUnsupportedPropertyMapper.class);
+    when(() -> sqlSessionFactory.getConfiguration().addMapper(CustomCacheUnsupportedPropertyMapper.class));
     then(caughtException()).isInstanceOf(CacheException.class)
       .hasMessage("Unsupported property type for cache: 'date' of type class java.util.Date");
   }
 
   @Test
   void shouldErrorInvalidCacheNamespaceRefAttributesSpecifyBoth() {
-    when(sqlSessionFactory.getConfiguration().getMapperRegistry())
-      .addMapper(InvalidCacheNamespaceRefBothMapper.class);
+    when(() -> sqlSessionFactory.getConfiguration().getMapperRegistry()
+      .addMapper(InvalidCacheNamespaceRefBothMapper.class));
     then(caughtException()).isInstanceOf(BuilderException.class)
       .hasMessage("Cannot use both value() and name() attribute in the @CacheNamespaceRef");
   }
 
   @Test
   void shouldErrorInvalidCacheNamespaceRefAttributesIsEmpty() {
-    when(sqlSessionFactory.getConfiguration().getMapperRegistry())
-      .addMapper(InvalidCacheNamespaceRefEmptyMapper.class);
+    when(() -> sqlSessionFactory.getConfiguration().getMapperRegistry()
+      .addMapper(InvalidCacheNamespaceRefEmptyMapper.class));
     then(caughtException()).isInstanceOf(BuilderException.class)
       .hasMessage("Should be specified either value() or name() attribute in the @CacheNamespaceRef");
   }
