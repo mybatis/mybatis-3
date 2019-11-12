@@ -108,4 +108,8 @@ public interface CountryMapper {
   @Options(useGeneratedKeys = true, keyProperty = ParamNameResolver.GENERIC_NAME_PREFIX + "2.id")
   @Insert({ "insert into country (countryname,countrycode) values (#{param2.countryname},#{param2.countrycode})" })
   int singleParamWithATrickyName(@Param(ParamNameResolver.GENERIC_NAME_PREFIX + "2") Country country);
+
+  @Options(useGeneratedKeys = true, keyProperty = "id")
+  @Insert({ "insert into country (countryname,countrycode) values (#{countryname},#{countrycode})" })
+  int insertMap(Map<String, Object> map);
 }

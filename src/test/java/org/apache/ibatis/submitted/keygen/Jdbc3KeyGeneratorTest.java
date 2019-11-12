@@ -590,4 +590,20 @@ class Jdbc3KeyGeneratorTest {
       }
     }
   }
+
+  @Test
+  void shouldAssingKeysToAMap() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      try {
+        CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
+        Map<String, Object> map = new HashMap<>();
+        map.put("countrycode", "CN");
+        map.put("countryname", "China");
+        mapper.insertMap(map);
+        assertNotNull(map.get("id"));
+      } finally {
+        sqlSession.rollback();
+      }
+    }
+  }
 }
