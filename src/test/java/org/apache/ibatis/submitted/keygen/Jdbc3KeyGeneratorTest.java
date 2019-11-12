@@ -556,4 +556,38 @@ class Jdbc3KeyGeneratorTest {
       }
     }
   }
+
+  @Test
+  void shouldAssignKeysToListWithoutInvokingEqualsNorHashCode() {
+    // gh-1719
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      try {
+        CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
+        List<NpeCountry> countries = new ArrayList<>();
+        countries.add(new NpeCountry("China", "CN"));
+        countries.add(new NpeCountry("United Kiongdom", "GB"));
+        countries.add(new NpeCountry("United States of America", "US"));
+        mapper.insertWeirdCountries(countries);
+        for (NpeCountry country : countries) {
+          assertNotNull(country.getId());
+        }
+      } finally {
+        sqlSession.rollback();
+      }
+    }
+  }
+
+  @Test
+  void shouldAssignKeyToAParamWithTrickyName() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      try {
+        CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
+        Country country = new Country("China", "CN");
+        mapper.singleParamWithATrickyName(country);
+        assertNotNull(country.getId());
+      } finally {
+        sqlSession.rollback();
+      }
+    }
+  }
 }
