@@ -40,6 +40,8 @@
           Java POJOs
           (Plain Old Java Objects) to database records.
         </p>
+        <p>If you are completely new to database access in Java,<a href="https://www.marcobehler.com/guides/a-guide-to-accessing-databases-in-java">https://www.marcobehler.com/guides/a-guide-to-accessing-databases-in-java</a> contains a good overview of the various parts, pieces and options and shows you where exactly MyBatis fits in.
+        </p>
       </subsection>
 
       <subsection name="Help make this documentation better…">
