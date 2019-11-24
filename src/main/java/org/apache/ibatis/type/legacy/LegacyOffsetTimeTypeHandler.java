@@ -13,42 +13,53 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.type;
+package org.apache.ibatis.type.legacy;
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.time.OffsetTime;
 
-/**
- * Since version 3.5.0, this type handler requires a driver that supports JDBC 4.2 API.<br>
- * For other drivers, there is {@link org.apache.ibatis.type.legacy.LegacyOffsetTimeTypeHandler}.
- * 
- * @since 3.4.5
- * @author Tomas Rohovsky
- */
-public class OffsetTimeTypeHandler extends BaseTypeHandler<OffsetTime> {
+import org.apache.ibatis.type.BaseTypeHandler;
+import org.apache.ibatis.type.JdbcType;
 
+/**
+ * This type handler converts {@link java.time.OffsetTime} to/from {@link java.sql.Time}.<br>
+ * It may work with most drivers, but the offset may be lost.
+ * 
+ * @since 3.5.4
+ */
+public class LegacyOffsetTimeTypeHandler extends BaseTypeHandler<OffsetTime> {
   @Override
   public void setNonNullParameter(PreparedStatement ps, int i, OffsetTime parameter, JdbcType jdbcType)
-          throws SQLException {
-    ps.setObject(i, parameter);
+      throws SQLException {
+    ps.setTime(i, Time.valueOf(parameter.toLocalTime()));
   }
 
   @Override
   public OffsetTime getNullableResult(ResultSet rs, String columnName) throws SQLException {
-    return rs.getObject(columnName, OffsetTime.class);
+    Time time = rs.getTime(columnName);
+    return getOffsetTime(time);
   }
 
   @Override
   public OffsetTime getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
-    return rs.getObject(columnIndex, OffsetTime.class);
+    Time time = rs.getTime(columnIndex);
+    return getOffsetTime(time);
   }
 
   @Override
   public OffsetTime getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
-    return cs.getObject(columnIndex, OffsetTime.class);
+    Time time = cs.getTime(columnIndex);
+    return getOffsetTime(time);
   }
 
+  private static OffsetTime getOffsetTime(Time time) {
+    if (time != null) {
+      return time.toLocalTime().atOffset(OffsetTime.now().getOffset());
+    }
+    return null;
+  }
 }

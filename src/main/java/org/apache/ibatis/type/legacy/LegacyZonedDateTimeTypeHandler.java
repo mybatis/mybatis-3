@@ -13,41 +13,51 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.type;
+package org.apache.ibatis.type.legacy;
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
-/**
- * Since version 3.5.0, this type handler requires a driver that supports JDBC 4.2 API.<br>
- * For other drivers, there is {@link org.apache.ibatis.type.legacy.LegacyZonedDateTimeTypeHandler}.
- * 
- * @since 3.4.5
- * @author Tomas Rohovsky
- */
-public class ZonedDateTimeTypeHandler extends BaseTypeHandler<ZonedDateTime> {
+import org.apache.ibatis.type.BaseTypeHandler;
+import org.apache.ibatis.type.JdbcType;
 
+/**
+ * This type handler converts {@link java.time.ZonedDateTime} to/from {@link java.sql.Timestamp}.<br>
+ * It may work with most drivers, but the zone may be lost.
+ * 
+ * @since 3.5.4
+ */
+public class LegacyZonedDateTimeTypeHandler extends BaseTypeHandler<ZonedDateTime> {
   @Override
   public void setNonNullParameter(PreparedStatement ps, int i, ZonedDateTime parameter, JdbcType jdbcType)
-          throws SQLException {
-    ps.setObject(i, parameter);
+      throws SQLException {
+    ps.setTimestamp(i, Timestamp.from(parameter.toInstant()));
   }
 
   @Override
   public ZonedDateTime getNullableResult(ResultSet rs, String columnName) throws SQLException {
-    return rs.getObject(columnName, ZonedDateTime.class);
+    Timestamp timestamp = rs.getTimestamp(columnName);
+    return getZonedDateTime(timestamp);
   }
 
   @Override
   public ZonedDateTime getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
-    return rs.getObject(columnIndex, ZonedDateTime.class);
+    Timestamp timestamp = rs.getTimestamp(columnIndex);
+    return getZonedDateTime(timestamp);
   }
 
   @Override
   public ZonedDateTime getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
-    return cs.getObject(columnIndex, ZonedDateTime.class);
+    Timestamp timestamp = cs.getTimestamp(columnIndex);
+    return getZonedDateTime(timestamp);
+  }
+
+  private static ZonedDateTime getZonedDateTime(Timestamp timestamp) {
+    return timestamp == null ? null : ZonedDateTime.ofInstant(timestamp.toInstant(), ZoneId.systemDefault());
   }
 }
