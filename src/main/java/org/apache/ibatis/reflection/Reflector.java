@@ -56,7 +56,7 @@ public class Reflector {
   private final Map<String, Invoker> getMethods = new HashMap<>();
   private final Map<String, Class<?>> setTypes = new HashMap<>();
   private final Map<String, Class<?>> getTypes = new HashMap<>();
-  private final Map<String, Class<?>> FirstParameterizedSetType = new HashMap<>();
+  private final Map<String, Class<?>> firstParameterizedSetType = new HashMap<>();
   private Constructor<?> defaultConstructor;
 
   private Map<String, String> caseInsensitivePropertyMap = new HashMap<>();
@@ -449,7 +449,7 @@ public class Reflector {
   }
 
   public Class<?> getFirstParameterizedSetType(String name) {
-    Class<?> clazz = FirstParameterizedSetType.get(name);
+    Class<?> clazz = firstParameterizedSetType.get(name);
     if (clazz == null) {
       throw new ReflectionException("not ParameterizedType for property named '" + name + "' in '" + type + "'");
     }
@@ -459,7 +459,7 @@ public class Reflector {
   private void addIfExistsParamterized(String property,Type paramType) {
     if(paramType instanceof ParameterizedType){
       ParameterizedType p = (ParameterizedType)paramType;
-      FirstParameterizedSetType.put(property,typeToClass(p.getActualTypeArguments()[0]));
+      firstParameterizedSetType.put(property,typeToClass(p.getActualTypeArguments()[0]));
     }
   }
 }
