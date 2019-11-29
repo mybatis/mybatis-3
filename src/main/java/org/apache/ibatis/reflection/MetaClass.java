@@ -78,6 +78,16 @@ public class MetaClass {
     }
   }
 
+  public Class<?> getFirstParameterizedSetType(String name) {
+    PropertyTokenizer prop = new PropertyTokenizer(name);
+    if (prop.hasNext()) {
+      MetaClass metaProp = metaClassForProperty(prop.getName());
+      return metaProp.getFirstParameterizedSetType(prop.getChildren());
+    } else {
+      return reflector.getFirstParameterizedSetType(prop.getName());
+    }
+  }
+
   public Class<?> getGetterType(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {

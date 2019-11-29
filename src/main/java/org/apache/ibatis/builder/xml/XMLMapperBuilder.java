@@ -294,11 +294,13 @@ public class XMLMapperBuilder extends BaseBuilder {
   }
 
   protected Class<?> inheritEnclosingType(XNode resultMapNode, Class<?> enclosingType) {
-    if ("association".equals(resultMapNode.getName()) && resultMapNode.getStringAttribute("resultMap") == null) {
+    if (("association".equals(resultMapNode.getName()) || "collection".equals(resultMapNode.getName()))
+      && resultMapNode.getStringAttribute("resultMap") == null) {
       String property = resultMapNode.getStringAttribute("property");
       if (property != null && enclosingType != null) {
         MetaClass metaResultType = MetaClass.forClass(enclosingType, configuration.getReflectorFactory());
-        return metaResultType.getSetterType(property);
+        return "association".equals(resultMapNode.getName())?
+          metaResultType.getSetterType(property):metaResultType.getFirstParameterizedSetType(property);
       }
     } else if ("case".equals(resultMapNode.getName()) && resultMapNode.getStringAttribute("resultMap") == null) {
       return enclosingType;
