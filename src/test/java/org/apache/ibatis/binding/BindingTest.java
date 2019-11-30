@@ -37,6 +37,7 @@ import net.sf.cglib.proxy.Factory;
 
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.builder.BuilderException;
+import org.apache.ibatis.binding.MapperProxy.MapperMethodInvoker;
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.domain.blog.Author;
 import org.apache.ibatis.domain.blog.Blog;
@@ -590,7 +591,7 @@ class BindingTest {
       mapper.selectBlog(1);
       assertEquals(1, mapperProxyFactory.getMethodCache().size());
       assertTrue(mapperProxyFactory.getMethodCache().containsKey(selectBlog));
-      final MapperMethod cachedSelectBlog = mapperProxyFactory.getMethodCache().get(selectBlog);
+      final MapperMethodInvoker cachedSelectBlog = mapperProxyFactory.getMethodCache().get(selectBlog);
 
       // Call mapper method again and verify the cache is unchanged:
       session.clearCache();
