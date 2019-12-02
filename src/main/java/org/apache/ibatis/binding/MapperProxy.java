@@ -131,8 +131,8 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
     Object invoke(Object proxy, Method method, Object[] args, SqlSession sqlSession) throws Throwable;
   }
 
-  private class PlainMethodInvoker implements MapperMethodInvoker {
-    private MapperMethod mapperMethod;
+  private static class PlainMethodInvoker implements MapperMethodInvoker {
+    private final MapperMethod mapperMethod;
 
     public PlainMethodInvoker(MapperMethod mapperMethod) {
       super();
@@ -145,8 +145,8 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
     }
   }
 
-  private class DefaultMethodInvoker implements MapperMethodInvoker {
-    private MethodHandle methodHandle;
+  private static class DefaultMethodInvoker implements MapperMethodInvoker {
+    private final MethodHandle methodHandle;
 
     public DefaultMethodInvoker(MethodHandle methodHandle) {
       super();
