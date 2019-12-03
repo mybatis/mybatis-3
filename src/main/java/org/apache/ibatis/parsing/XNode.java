@@ -333,9 +333,9 @@ public class XNode {
     List<XNode> children = getChildren();
     if (!children.isEmpty()) {
       builder.append(">\n");
-      for (int k = 0; k < children.size(); k++) {
+      for (XNode child : children) {
         indent(builder, level + 1);
-        children.get(k).toString(builder, level + 1);
+        child.toString(builder, level + 1);
       }
       indent(builder, level);
       builder.append("</");

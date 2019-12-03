@@ -252,7 +252,7 @@ public class ScriptRunner {
     } finally {
       try {
         statement.close();
-      } catch (Exception e) {
+      } catch (Exception ignored) {
         // Ignore to workaround a bug in some connection pools
         // (Does anyone know the details of the bug?)
       }

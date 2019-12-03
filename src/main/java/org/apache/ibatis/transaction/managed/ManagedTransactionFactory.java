@@ -40,7 +40,7 @@ public class ManagedTransactionFactory implements TransactionFactory {
     if (props != null) {
       String closeConnectionProperty = props.getProperty("closeConnection");
       if (closeConnectionProperty != null) {
-        closeConnection = Boolean.valueOf(closeConnectionProperty);
+        closeConnection = Boolean.parseBoolean(closeConnectionProperty);
       }
     }
   }
