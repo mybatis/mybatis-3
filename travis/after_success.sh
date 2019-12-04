@@ -42,6 +42,8 @@ if [ $TRAVIS_REPO_SLUG == "mybatis/mybatis-3" ] && [ "$TRAVIS_PULL_REQUEST" == "
     ./mvnw clean test jacoco:report coveralls:report -q --settings ./travis/settings.xml
     echo -e "Successfully ran coveralls under Travis job ${TRAVIS_JOB_NUMBER}"
 
+    ./mvnw sonar:sonar
+
     # Deploy to site
     # Cannot currently run site this way
     # ./mvnw site site:deploy -q --settings ./travis/settings.xml
