@@ -8,7 +8,7 @@
       <transactionManager type="JDBC"/>
       <dataSource type="UNPOOLED">
         <property name="driver" value="org.hsqldb.jdbcDriver" />
-        <property name="url" value="jdbc:hsqldb:mem:collectionparameters" />
+        <property name="url" value="jdbc:hsqldb:mem:collection_donot_need_oftype" />
         <property name="username" value="sa" />
       </dataSource>
     </environment>
