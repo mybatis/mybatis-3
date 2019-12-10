@@ -34,6 +34,12 @@ import org.apache.ibatis.mapping.FetchType;
 @Target({})
 public @interface One {
   /**
+   * Returns the id that retrieves result map.
+   *
+   * @return the id that retrieves result map.
+   */
+  String resultMapId() default "";
+  /**
    * Returns the statement id that retrieves single object.
    *
    * @return the statement id

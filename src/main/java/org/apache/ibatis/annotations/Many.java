@@ -34,6 +34,12 @@ import org.apache.ibatis.mapping.FetchType;
 @Target({})
 public @interface Many {
   /**
+   * Returns the id that retrieves result map.
+   *
+   * @return the id that retrieves result map.
+   */
+  String resultMapId() default "";
+  /**
    * Returns the statement id that retrieves collection.
    *
    * @return the statement id

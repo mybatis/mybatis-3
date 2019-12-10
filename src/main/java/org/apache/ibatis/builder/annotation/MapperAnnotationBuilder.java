@@ -552,7 +552,7 @@ public class MapperAnnotationBuilder {
           result.javaType() == void.class ? null : result.javaType(),
           result.jdbcType() == JdbcType.UNDEFINED ? null : result.jdbcType(),
           hasNestedSelect(result) ? nestedSelectId(result) : null,
-          null,
+          hasNestedResultMap(result) ? nestedResultMapId(result) : null,
           null,
           null,
           typeHandler,
@@ -562,6 +562,24 @@ public class MapperAnnotationBuilder {
           isLazy(result));
       resultMappings.add(resultMapping);
     }
+  }
+
+  private String nestedResultMapId(Result result) {
+    String resultMapId = result.one().resultMapId();
+    if (resultMapId.length() < 1) {
+      resultMapId = result.many().resultMapId();
+    }
+    if (!resultMapId.contains(".")) {
+      resultMapId = type.getName() + "." + resultMapId;
+    }
+    return resultMapId;
+  }
+
+  private boolean hasNestedResultMap(Result result) {
+    if (result.one().resultMapId().length() > 0 && result.many().resultMapId().length() > 0) {
+      throw new BuilderException("Cannot use both @One and @Many annotations in the same @Result");
+    }
+    return result.one().resultMapId().length() > 0 || result.many().resultMapId().length() > 0;
   }
 
   private String nestedSelectId(Result result) {
