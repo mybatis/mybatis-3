@@ -307,12 +307,12 @@ public class XMLMapperBuilder extends BaseBuilder {
   public Class<?> getCollectionType(Class<?> srcType, String propName) {
     String setMethodName = "set"+propName.substring(0, 1).toUpperCase(Locale.ENGLISH) + propName.substring(1);
     List<Method> propSetMethods = Arrays.stream(srcType.getDeclaredMethods())
-      .filter(m -> setMethodName.equals(m.getName()) && m.getParameterTypes().length == 1 && Collection.class.isAssignableFrom(m.getParameterTypes()[0]) )
+      .filter(m -> setMethodName.equals(m.getName()) && m.getParameterTypes().length == 1 && Collection.class.isAssignableFrom(m.getParameterTypes()[0]))
       .collect(Collectors.toList());
     if(propSetMethods == null || propSetMethods.size() == 0){
       return null;
     }
-    //pick anyone to use
+    //anyone dosen't matter
     Type[] types = TypeParameterResolver.resolveParamTypes(propSetMethods.get(0), srcType);
     if(types.length>0){
       if(types[0] instanceof ParameterizedType){
