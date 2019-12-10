@@ -33,7 +33,6 @@ class MyBatisTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()){
       UserDao mapper = sqlSession.getMapper(UserDao.class);
       List<User> users = mapper.flindAll();
-      System.out.println(users);
       Assertions.assertNotNull(users, "users must not be null");
       Assertions.assertEquals(4, users.size(), "should return 4 results");
       Assertions.assertEquals(2, users.get(0).getRoles().size(), "should have 2 roles");
@@ -45,10 +44,21 @@ class MyBatisTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()){
       UserDao mapper = sqlSession.getMapper(UserDao.class);
       List<User> users = mapper.flindAll2();
-      System.out.println(users);
       Assertions.assertNotNull(users, "users must not be null");
       Assertions.assertEquals(4, users.size(), "should return 4 results");
       Assertions.assertEquals(2, users.get(0).getRoles().size(), "should have 2 roles");
+    }
+  }
+
+  @Test
+  void test3() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()){
+      UserDao mapper = sqlSession.getMapper(UserDao.class);
+      List<User> users = mapper.flindAll3();
+      Assertions.assertNotNull(users, "users must not be null");
+      Assertions.assertEquals(2, users.size(), "should return 2 results");
+      Assertions.assertEquals(1, users.get(0).getRoles().size(), "should have 1 roles");
+      Assertions.assertEquals("老师", users.get(0).getRoles().get(0).getRoleName(), "should have 1 roles");
     }
   }
 
