@@ -250,7 +250,7 @@ class XmlConfigBuilderTest {
       XMLConfigBuilder builder = new XMLConfigBuilder(inputStream);
       builder.parse();
 
-      when(builder).parse();
+      when(builder::parse);
       then(caughtException()).isInstanceOf(BuilderException.class)
               .hasMessage("Each XMLConfigBuilder can only be used once.");
     }
@@ -267,7 +267,7 @@ class XmlConfigBuilderTest {
             + "</configuration>\n";
 
     XMLConfigBuilder builder = new XMLConfigBuilder(new StringReader(MAPPER_CONFIG));
-    when(builder).parse();
+    when(builder::parse);
     then(caughtException()).isInstanceOf(BuilderException.class)
       .hasMessageContaining("The setting foo is not known.  Make sure you spelled it correctly (case sensitive).");
   }
@@ -283,7 +283,7 @@ class XmlConfigBuilderTest {
             + "</configuration>\n";
 
     XMLConfigBuilder builder = new XMLConfigBuilder(new StringReader(MAPPER_CONFIG));
-    when(builder).parse();
+    when(builder::parse);
     then(caughtException()).isInstanceOf(BuilderException.class)
       .hasMessageContaining("Error registering typeAlias for 'null'. Cause: ");
   }
@@ -297,7 +297,7 @@ class XmlConfigBuilderTest {
             + "</configuration>\n";
 
     XMLConfigBuilder builder = new XMLConfigBuilder(new StringReader(MAPPER_CONFIG));
-    when(builder).parse();
+    when(builder::parse);
     then(caughtException()).isInstanceOf(BuilderException.class)
       .hasMessageContaining("The properties element cannot specify both a URL and a resource based property file reference.  Please specify one or the other.");
   }

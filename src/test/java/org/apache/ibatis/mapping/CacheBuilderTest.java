@@ -38,7 +38,7 @@ class CacheBuilderTest {
 
   @Test
   void testInitializingFailure() {
-    when(new CacheBuilder("test").implementation(InitializingFailureCache.class)).build();
+    when(() -> new CacheBuilder("test").implementation(InitializingFailureCache.class).build());
     then(caughtException()).isInstanceOf(CacheException.class)
       .hasMessage("Failed cache initialization for 'test' on 'org.apache.ibatis.mapping.CacheBuilderTest$InitializingFailureCache'");
   }

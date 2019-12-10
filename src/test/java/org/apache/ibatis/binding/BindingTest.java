@@ -37,6 +37,7 @@ import net.sf.cglib.proxy.Factory;
 
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.builder.BuilderException;
+import org.apache.ibatis.binding.MapperProxy.MapperMethodInvoker;
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.domain.blog.Author;
 import org.apache.ibatis.domain.blog.Blog;
@@ -146,7 +147,7 @@ class BindingTest {
       try {
         BoundAuthorMapper mapper = session.getMapper(BoundAuthorMapper.class);
         Author author = new Author(-1, "cbegin", "******", "cbegin@nowhere.com", "N/A", Section.NEWS);
-        when(mapper).insertAuthorInvalidSelectKey(author);
+        when(() -> mapper.insertAuthorInvalidSelectKey(author));
         then(caughtException()).isInstanceOf(PersistenceException.class).hasMessageContaining(
             "### The error may exist in org/apache/ibatis/binding/BoundAuthorMapper.xml" + System.lineSeparator() +
                 "### The error may involve org.apache.ibatis.binding.BoundAuthorMapper.insertAuthorInvalidSelectKey!selectKey" + System.lineSeparator() +
@@ -163,7 +164,7 @@ class BindingTest {
       try {
         BoundAuthorMapper mapper = session.getMapper(BoundAuthorMapper.class);
         Author author = new Author(-1, "cbegin", "******", "cbegin@nowhere.com", "N/A", Section.NEWS);
-        when(mapper).insertAuthorInvalidInsert(author);
+        when(() -> mapper.insertAuthorInvalidInsert(author));
         then(caughtException()).isInstanceOf(PersistenceException.class).hasMessageContaining(
             "### The error may exist in org/apache/ibatis/binding/BoundAuthorMapper.xml" + System.lineSeparator() +
                 "### The error may involve org.apache.ibatis.binding.BoundAuthorMapper.insertAuthorInvalidInsert" + System.lineSeparator() +
@@ -590,7 +591,7 @@ class BindingTest {
       mapper.selectBlog(1);
       assertEquals(1, mapperProxyFactory.getMethodCache().size());
       assertTrue(mapperProxyFactory.getMethodCache().containsKey(selectBlog));
-      final MapperMethod cachedSelectBlog = mapperProxyFactory.getMethodCache().get(selectBlog);
+      final MapperMethodInvoker cachedSelectBlog = mapperProxyFactory.getMethodCache().get(selectBlog);
 
       // Call mapper method again and verify the cache is unchanged:
       session.clearCache();

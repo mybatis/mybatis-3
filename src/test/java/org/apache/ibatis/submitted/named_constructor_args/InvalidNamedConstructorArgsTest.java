@@ -60,7 +60,7 @@ class InvalidNamedConstructorArgsTest {
   @Test
   void noMatchingConstructorArgName() {
     Configuration configuration = sqlSessionFactory.getConfiguration();
-    when(configuration).addMapper(NoMatchingConstructorMapper.class);
+    when(() -> configuration.addMapper(NoMatchingConstructorMapper.class));
 
     then(caughtException()).isInstanceOf(BuilderException.class)
       .hasMessageContaining(
@@ -82,7 +82,7 @@ class InvalidNamedConstructorArgsTest {
   @Test
   void wrongJavaType() {
     Configuration configuration = sqlSessionFactory.getConfiguration();
-    when(configuration).addMapper(ConstructorWithWrongJavaType.class);
+    when(() -> configuration.addMapper(ConstructorWithWrongJavaType.class));
     then(caughtException()).isInstanceOf(BuilderException.class)
       .hasMessageContaining(
           "'org.apache.ibatis.submitted.named_constructor_args.InvalidNamedConstructorArgsTest$ConstructorWithWrongJavaType.select-void'")
@@ -105,7 +105,7 @@ class InvalidNamedConstructorArgsTest {
   @Test
   void missingRequiredJavaType() {
     Configuration configuration = sqlSessionFactory.getConfiguration();
-    when(configuration).addMapper(ConstructorMissingRequiresJavaType.class);
+    when(() -> configuration.addMapper(ConstructorMissingRequiresJavaType.class));
     then(caughtException()).isInstanceOf(BuilderException.class)
       .hasMessageContaining(
             "'org.apache.ibatis.submitted.named_constructor_args.InvalidNamedConstructorArgsTest$ConstructorMissingRequiresJavaType.select-void'")

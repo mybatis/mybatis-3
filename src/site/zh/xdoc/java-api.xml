@@ -360,7 +360,7 @@ void rollback(boolean force)</source>
             <li><code>&lt;idArg&gt;</code></li>
           </ul>
         </td>
-        <td>单参数构造方法，是 ConstructorArgs 集合的一部分。属性有：<code>id</code>, <code>column</code>, <code>javaType</code>, <code>jdbcType</code>, <code>typeHandler</code>, <code>select</code> 和 <code>resultMap</code>。id 属性是布尔值，来标识用于比较的属性，和<code>&lt;idArg&gt;</code> XML 元素相似。</td>
+        <td>单参数构造方法，是 ConstructorArgs 集合的一部分。属性有：<code>id</code>, <code>column</code>, <code>javaType</code>, <code>jdbcType</code>, <code>typeHandler</code>, <code>select</code> 和 <code>resultMap</code>。id 属性是布尔值，来标识用于比较的属性，和<code>&lt;idArg&gt;</code> XML 元素相似。Since 3.5.4, it can be used as repeatable annotation.</td>
       </tr>
       <tr>
         <td><code>@TypeDiscriminator</code></td>
@@ -389,7 +389,7 @@ void rollback(boolean force)</source>
             <li><code>&lt;id&gt;</code></li>
           </ul>
         </td>
-        <td>在列和属性或字段之间的单独结果映射。属性有：<code>id</code>, <code>column</code>, <code>javaType</code>, <code>jdbcType</code>, <code>typeHandler</code>, <code>one</code>, <code>many</code>。id 属性是一个布尔值，来标识应该被用于比较（和在 XML 映射中的<code>&lt;id&gt;</code>相似）的属性。one 属性是单独的联系，和 <code>&lt;association&gt;</code> 相似，而 many 属性是对集合而言的，和<code>&lt;collection&gt;</code>相似。它们这样命名是为了避免名称冲突。</td>
+        <td>在列和属性或字段之间的单独结果映射。属性有：<code>id</code>, <code>column</code>, <code>javaType</code>, <code>jdbcType</code>, <code>typeHandler</code>, <code>one</code>, <code>many</code>。id 属性是一个布尔值，来标识应该被用于比较（和在 XML 映射中的<code>&lt;id&gt;</code>相似）的属性。one 属性是单独的联系，和 <code>&lt;association&gt;</code> 相似，而 many 属性是对集合而言的，和<code>&lt;collection&gt;</code>相似。它们这样命名是为了避免名称冲突。Since 3.5.4, it can be used as repeatable annotation.</td>
       </tr>
       <tr>
         <td><code>@One</code></td>
