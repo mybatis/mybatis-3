@@ -17,14 +17,9 @@ package org.apache.ibatis.builder.xml;
 
 import java.io.InputStream;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.lang.reflect.*;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import org.apache.ibatis.builder.BaseBuilder;
 import org.apache.ibatis.builder.BuilderException;
@@ -301,12 +296,52 @@ public class XMLMapperBuilder extends BaseBuilder {
       if (property != null && enclosingType != null) {
         MetaClass metaResultType = MetaClass.forClass(enclosingType, configuration.getReflectorFactory());
         return "association".equals(resultMapNode.getName())?
-          metaResultType.getSetterType(property):TypeParameterResolver.getFirstParameterizedSetType(enclosingType,property);
+          metaResultType.getSetterType(property):getCollectionType(enclosingType,property);
       }
     } else if ("case".equals(resultMapNode.getName()) && resultMapNode.getStringAttribute("resultMap") == null) {
       return enclosingType;
     }
     return null;
+  }
+
+  public Class<?> getCollectionType(Class<?> srcType, String propName) {
+    String setMethodName = "set"+propName.substring(0, 1).toUpperCase(Locale.ENGLISH) + propName.substring(1);
+    List<Method> propSetMethods = Arrays.stream(srcType.getDeclaredMethods())
+      .filter(m -> setMethodName.equals(m.getName()) && m.getParameterTypes().length == 1 && Collection.class.isAssignableFrom(m.getParameterTypes()[0]))
+      .collect(Collectors.toList());
+    if(propSetMethods == null || propSetMethods.size() == 0){
+      return null;
+    }
+    //anyone dosen't matter
+    Type[] types = TypeParameterResolver.resolveParamTypes(propSetMethods.get(0), srcType);
+    if(types.length>0){
+      if(types[0] instanceof ParameterizedType){
+        ParameterizedType p = (ParameterizedType)types[0];
+        return typeToClass(p.getActualTypeArguments()[0]);
+      }
+    }
+    return null;
+  }
+
+  private Class<?> typeToClass(Type src) {
+    Class<?> result = null;
+    if (src instanceof Class) {
+      result = (Class<?>) src;
+    } else if (src instanceof ParameterizedType) {
+      result = (Class<?>) ((ParameterizedType) src).getRawType();
+    } else if (src instanceof GenericArrayType) {
+      Type componentType = ((GenericArrayType) src).getGenericComponentType();
+      if (componentType instanceof Class) {
+        result = Array.newInstance((Class<?>) componentType, 0).getClass();
+      } else {
+        Class<?> componentClass = typeToClass(componentType);
+        result = Array.newInstance(componentClass, 0).getClass();
+      }
+    }
+    if (result == null) {
+      result = Object.class;
+    }
+    return result;
   }
 
   private void processConstructorElement(XNode resultChild, Class<?> resultType, List<ResultMapping> resultMappings) throws Exception {
