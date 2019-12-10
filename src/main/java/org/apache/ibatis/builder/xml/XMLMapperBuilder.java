@@ -44,6 +44,7 @@ import org.apache.ibatis.mapping.ResultMapping;
 import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.parsing.XPathParser;
 import org.apache.ibatis.reflection.MetaClass;
+import org.apache.ibatis.reflection.TypeParameterResolver;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
@@ -294,11 +295,13 @@ public class XMLMapperBuilder extends BaseBuilder {
   }
 
   protected Class<?> inheritEnclosingType(XNode resultMapNode, Class<?> enclosingType) {
-    if ("association".equals(resultMapNode.getName()) && resultMapNode.getStringAttribute("resultMap") == null) {
+    if (("association".equals(resultMapNode.getName()) || "collection".equals(resultMapNode.getName()))
+      && resultMapNode.getStringAttribute("resultMap") == null) {
       String property = resultMapNode.getStringAttribute("property");
       if (property != null && enclosingType != null) {
         MetaClass metaResultType = MetaClass.forClass(enclosingType, configuration.getReflectorFactory());
-        return metaResultType.getSetterType(property);
+        return "association".equals(resultMapNode.getName())?
+          metaResultType.getSetterType(property):TypeParameterResolver.getFirstParameterizedSetType(enclosingType,property);
       }
     } else if ("case".equals(resultMapNode.getName()) && resultMapNode.getStringAttribute("resultMap") == null) {
       return enclosingType;

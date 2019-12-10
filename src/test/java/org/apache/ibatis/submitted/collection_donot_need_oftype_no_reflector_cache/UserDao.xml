@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UserDao">
+  <cache readOnly="true"/>
+  <resultMap id="BaseUserMap" type="org.apache.ibatis.submitted.collection_donot_need_oftype_no_reflector_cache.User">
+    <id column="id" property="id"/>
+    <result column="username" property="username"/>
+  </resultMap>
+
+  <resultMap id="UserRoleMap" type="org.apache.ibatis.submitted.collection_donot_need_oftype_no_reflector_cache.User" extends="BaseUserMap">
+    <!--don't need ofType-->
+    <collection property="roles">
+      <id column="role_id" property="id"/>
+      <result column="role_name" property="roleName"/>
+    </collection>
+  </resultMap>
+
+  <select id="findAll" resultMap="UserRoleMap">
+    select
+     u.id,u.username,r.id role_id,r.role_name
+    from user u
+    left join user_role ur on u.id =ur.user_id
+    left join role r on ur.role_id = r.id
+  </select>
+</mapper>

@@ -15,6 +15,10 @@
  */
 package org.apache.ibatis.reflection;
 
+import sun.reflect.generics.reflectiveObjects.GenericArrayTypeImpl;
+import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
+import sun.reflect.generics.reflectiveObjects.WildcardTypeImpl;
+
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
@@ -24,6 +28,7 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
 import java.util.Arrays;
+import java.util.Locale;
 
 /**
  * @author Iwao AVE!
@@ -216,6 +221,45 @@ public class TypeParameterResolver {
 
   private TypeParameterResolver() {
     super();
+  }
+
+  public static Class<?> getFirstParameterizedSetType(Class<?> enclosingType, String property) {
+    String setMethodName = "set"+property.substring(0, 1).toLowerCase(Locale.ENGLISH) + property.substring(1);
+    Method declaredMethod;
+    try {
+      Class<?> setParamTypes = enclosingType.getDeclaredField(property).getType();
+      declaredMethod = enclosingType.getDeclaredMethod(setMethodName, setParamTypes);
+    } catch (NoSuchFieldException e) {
+      return null;
+    } catch (NoSuchMethodException e) {
+      return null;
+    }
+    Type[] types = resolveParamTypes(declaredMethod, enclosingType);
+    if(types.length>0){
+
+    }
+    return null;
+  }
+
+  private Class<?> typeToClass(Type src) {
+    Class<?> result = null;
+    if (src instanceof Class) {
+      result = (Class<?>) src;
+    } else if (src instanceof ParameterizedType) {
+      result = (Class<?>) ((ParameterizedType) src).getRawType();
+    } else if (src instanceof GenericArrayType) {
+      Type componentType = ((GenericArrayType) src).getGenericComponentType();
+      if (componentType instanceof Class) {
+        result = Array.newInstance((Class<?>) componentType, 0).getClass();
+      } else {
+        Class<?> componentClass = typeToClass(componentType);
+        result = Array.newInstance(componentClass, 0).getClass();
+      }
+    }
+    if (result == null) {
+      result = Object.class;
+    }
+    return result;
   }
 
   static class ParameterizedTypeImpl implements ParameterizedType {
