@@ -10,7 +10,7 @@
   </resultMap>
 
   <resultMap id="UserRoleMap" type="org.apache.ibatis.submitted.collection_donot_need_oftype_no_reflector_cache.User" extends="BaseUserMap">
-    <!--don't need ofType-->
+    <!--don't need ofType but if have different paramter setType,You'd better use 'ofType' to specify a type -->
     <collection property="roles">
       <id column="role_id" property="id"/>
       <result column="role_name" property="roleName"/>

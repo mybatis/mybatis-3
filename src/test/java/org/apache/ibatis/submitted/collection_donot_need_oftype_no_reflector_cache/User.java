@@ -1,9 +1,10 @@
 package org.apache.ibatis.submitted.collection_donot_need_oftype_no_reflector_cache;
 
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import org.testcontainers.shaded.com.fasterxml.jackson.databind.util.BeanUtil;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class User {
   private Integer id;	//int
@@ -30,19 +31,16 @@ public class User {
     return roles;
   }
 
-  public void setRoles(List<Role> roles) {
-    this.roles = roles;
+  public void setRoles(List<Map<String,Object>> roles) {
+    List<Role> roles2 = roles.stream().map(map -> {
+      return BeanUtils.mapToBean(map, Role.class);
+    }).collect(Collectors.toList());
+    this.roles=roles2;
   }
 
   public void setRoles(Set<Role> roles) {
     this.roles = new ArrayList<>(roles);
   }
 
-  public void setRoles(String roles) {
-    this.roles = new ArrayList<>();
-    Role role = new Role();
-    role.setId(1);
-    role.setRoleName("asd");
-    this.roles.add(role);
-  }
+
 }
