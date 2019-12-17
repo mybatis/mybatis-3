@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
 /**
  * @author Clinton Begin
  */
-public class ScriptRunner {
+public class ScriptRunner implements AutoCloseable {
 
   private static final String LINE_SEPARATOR = System.getProperty("line.separator", "\n");
 
@@ -316,4 +316,8 @@ public class ScriptRunner {
     }
   }
 
+    @Override
+    public void close() {
+        closeConnection();
+    }
 }

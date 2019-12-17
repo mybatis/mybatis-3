@@ -35,7 +35,7 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
 /**
  * @author Clinton Begin
  */
-public class SqlRunner {
+public class SqlRunner implements AutoCloseable {
 
   public static final int NO_GENERATED_KEY = Integer.MIN_VALUE + 1001;
 
@@ -256,4 +256,8 @@ public class SqlRunner {
     }
   }
 
+    @Override
+    public void close() {
+        closeConnection();
+    }
 }
