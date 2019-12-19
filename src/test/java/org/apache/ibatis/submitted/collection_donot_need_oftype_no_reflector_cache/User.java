@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 public class User {
   private Integer id;	//int
   private String username;	//varchar
-  private List<Role> roles;
+  private List<Map<String,Object>> roles = new ArrayList<>();
 
   public Integer getId() {
     return id;
@@ -27,20 +27,7 @@ public class User {
     this.username = username;
   }
 
-  public List<Role> getRoles() {
+  public List<Map<String,Object>> getRoles() {
     return roles;
   }
-
-  public void setRoles(List<Map<String,Object>> roles) {
-    List<Role> roles2 = roles.stream().map(map -> {
-      return BeanUtils.mapToBean(map, Role.class);
-    }).collect(Collectors.toList());
-    this.roles=roles2;
-  }
-
-  public void setRoles(Set<Role> roles) {
-    this.roles = new ArrayList<>(roles);
-  }
-
-
 }

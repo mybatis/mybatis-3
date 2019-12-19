@@ -35,6 +35,7 @@ class MyBatisTest {
       Assertions.assertNotNull(users, "users must not be null");
       Assertions.assertEquals(4, users.size(), "should return 4 results");
       Assertions.assertEquals(2, users.get(0).getRoles().size(), "should have 2 roles");
+      Assertions.assertEquals("班主任", users.get(0).getRoles().get(0).get("roleName"), "should have 2 roles");
     }
   }
 
