@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -252,7 +252,7 @@ public class ScriptRunner {
     } finally {
       try {
         statement.close();
-      } catch (Exception e) {
+      } catch (Exception ignored) {
         // Ignore to workaround a bug in some connection pools
         // (Does anyone know the details of the bug?)
       }
