@@ -38,7 +38,7 @@ public @interface Many {
    *
    * @return the id that retrieves result map.
    */
-  String resultMapId() default "";
+  String resultMap() default "";
   /**
    * Returns the statement id that retrieves collection.
    *

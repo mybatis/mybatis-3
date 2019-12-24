@@ -10,13 +10,13 @@ role_name varchar(10)
 -- Records of role
 -- ----------------------------
 INSERT INTO role (id,role_name)
-VALUES ('1', '老师');
+VALUES ('1', 'teacher');
 INSERT INTO role (id,role_name)
-VALUES ('2', '学生');
+VALUES ('2', 'student');
 INSERT INTO role (id,role_name)
-VALUES ('3', '班主任');
+VALUES ('3', 'Headmaster');
 INSERT INTO role (id,role_name)
-VALUES ('4', '学习委员');
+VALUES ('4', 'Learning-commissary');
 
 CREATE TABLE user (
 id int,
@@ -27,13 +27,13 @@ username varchar(32),
 -- Records of user
 -- ----------------------------
 INSERT INTO user (id,username)
-VALUES ('1', '赵六');
+VALUES ('1', 'James Gosling');
 INSERT INTO user (id,username)
-VALUES ('2', '李四');
+VALUES ('2', 'Doug Lea');
 INSERT INTO user (id,username)
-VALUES ('3', '毛六');
+VALUES ('3', 'Rod johnson');
 INSERT INTO user (id,username)
-VALUES ('4', '王五');
+VALUES ('4', 'Juergen Hoeller');
 
 -- ----------------------------
 -- Table structure for `user_role`

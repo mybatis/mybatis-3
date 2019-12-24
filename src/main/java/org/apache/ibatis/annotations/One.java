@@ -38,7 +38,7 @@ public @interface One {
    *
    * @return the id that retrieves result map.
    */
-  String resultMapId() default "";
+  String resultMap() default "";
   /**
    * Returns the statement id that retrieves single object.
    *
