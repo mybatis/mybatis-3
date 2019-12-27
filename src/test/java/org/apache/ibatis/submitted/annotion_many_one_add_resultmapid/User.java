@@ -1,11 +1,25 @@
+/**
+ *    Copyright 2009-2019 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 package org.apache.ibatis.submitted.annotion_many_one_add_resultmapid;
-
 
 import java.util.List;
 
 public class User {
-  private Integer id;	//int
-  private String username;	//varchar
+  private Integer id;
+  private String username;
   private List<User> teachers;
   private Role role;
   private List<Role> roles;
@@ -18,14 +32,13 @@ public class User {
     this.role = role;
   }
 
-
   @Override
   public String toString() {
     return "User{" +
-      "id=" + id +
-      ", username='" + username + '\'' +
-      ", roles=" + roles +
-      '}';
+        "id=" + id +
+        ", username='" + username + '\'' +
+        ", roles=" + roles +
+        '}';
   }
 
   public Integer getId() {
@@ -51,6 +64,7 @@ public class User {
   public void setRoles(List<Role> roles) {
     this.roles = roles;
   }
+
   public List<User> getTeachers() {
     return teachers;
   }
