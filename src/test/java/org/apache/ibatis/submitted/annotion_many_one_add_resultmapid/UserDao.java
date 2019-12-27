@@ -1,6 +1,3 @@
-/**
- * Copyright (c) 2019 ucsmy.com, All rights reserved.
- */
 package org.apache.ibatis.submitted.annotion_many_one_add_resultmapid;
 
 import org.apache.ibatis.annotations.*;
