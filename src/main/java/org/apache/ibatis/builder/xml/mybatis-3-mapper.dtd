@@ -183,7 +183,8 @@ useCache (true|false) #IMPLIED
 databaseId CDATA #IMPLIED
 lang CDATA #IMPLIED
 resultOrdered (true|false) #IMPLIED
-resultSets CDATA #IMPLIED 
+resultSets CDATA #IMPLIED
+localCacheScope (SESSION|STATEMENT|NOUSE) #IMPLIED
 >
 
 <!ELEMENT insert (#PCDATA | selectKey | include | trim | where | set | foreach | choose | if | bind)*>
