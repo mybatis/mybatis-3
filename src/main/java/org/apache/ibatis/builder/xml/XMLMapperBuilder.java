@@ -17,14 +17,9 @@ package org.apache.ibatis.builder.xml;
 
 import java.io.InputStream;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.lang.reflect.*;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import org.apache.ibatis.builder.BaseBuilder;
 import org.apache.ibatis.builder.BuilderException;
@@ -44,6 +39,7 @@ import org.apache.ibatis.mapping.ResultMapping;
 import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.parsing.XPathParser;
 import org.apache.ibatis.reflection.MetaClass;
+import org.apache.ibatis.reflection.TypeParameterResolver;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
@@ -294,16 +290,44 @@ public class XMLMapperBuilder extends BaseBuilder {
   }
 
   protected Class<?> inheritEnclosingType(XNode resultMapNode, Class<?> enclosingType) {
-    if ("association".equals(resultMapNode.getName()) && resultMapNode.getStringAttribute("resultMap") == null) {
+    if (("association".equals(resultMapNode.getName()) || "collection".equals(resultMapNode.getName()))
+      && resultMapNode.getStringAttribute("resultMap") == null) {
       String property = resultMapNode.getStringAttribute("property");
       if (property != null && enclosingType != null) {
         MetaClass metaResultType = MetaClass.forClass(enclosingType, configuration.getReflectorFactory());
-        return metaResultType.getSetterType(property);
+        return "association".equals(resultMapNode.getName())?
+          metaResultType.getSetterType(property):getCollectionType(enclosingType,property);
       }
     } else if ("case".equals(resultMapNode.getName()) && resultMapNode.getStringAttribute("resultMap") == null) {
       return enclosingType;
     }
     return null;
+  }
+
+  public Class<?> getCollectionType(Class<?> srcType, String propName) {
+    try {
+      Field declaredField = srcType.getDeclaredField(propName);
+      Type genericType = declaredField.getGenericType();
+      if(genericType instanceof ParameterizedType){
+        ParameterizedType p = (ParameterizedType)genericType;
+        return typeToClass(p.getActualTypeArguments()[0]);
+      }
+    } catch (NoSuchFieldException e) {
+    }
+    return null;
+  }
+
+  private Class<?> typeToClass(Type src) {
+    Class<?> result = null;
+    if (src instanceof Class) {
+      result = (Class<?>) src;
+    } else if (src instanceof ParameterizedType) {
+      result = (Class<?>) ((ParameterizedType) src).getRawType();
+    }
+    if (result == null) {
+      result = Object.class;
+    }
+    return result;
   }
 
   private void processConstructorElement(XNode resultChild, Class<?> resultType, List<ResultMapping> resultMappings) throws Exception {
