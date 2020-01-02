@@ -462,6 +462,24 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
             </tr>
             <tr>
               <td>
+                userShortKey
+              </td>
+              <td>
+                When we generate mapping relationships such as <code>mappedStatements</code>, <code>resultMaps</code>,
+                <code>sqlFragments</code> for each mapping file, a short key is generated synchronously for convenience of operation
+                (in this case, there will be two keys in the collection pointing to the same object at the same time).
+                But if we do multiple mapping file parsing, then the objects corresponding to these short keys may exist in the form of Ambiguity.
+                So we can disable this feature to generate a collection of unique mappings.
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                true
+              </td>
+            </tr>
+            <tr>
+              <td>
                 logPrefix
               </td>
               <td>
