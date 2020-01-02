@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.Arrays;
 
 import org.apache.ibatis.annotations.AutomapConstructor;
 import org.apache.ibatis.binding.MapperMethod.ParamMap;
@@ -681,12 +682,9 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       return constructors[0];
     }
 
-    for (final Constructor<?> constructor : constructors) {
-      if (constructor.isAnnotationPresent(AutomapConstructor.class)) {
-        return constructor;
-      }
-    }
-    return null;
+    return Arrays.stream(constructors)
+                  .filter(constructor -> constructor.isAnnotationPresent(AutomapConstructor.class))
+                  .findFirst().orElse(null);
   }
 
   private boolean allowedConstructorUsingTypeHandlers(final Constructor<?> constructor, final List<JdbcType> jdbcTypes) {
