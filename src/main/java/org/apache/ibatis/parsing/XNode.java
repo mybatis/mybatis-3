@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.function.Supplier;
 
 import org.w3c.dom.CharacterData;
 import org.w3c.dom.Element;
@@ -82,7 +83,7 @@ public class XNode {
       }
       String value = current.getStringAttribute("id",
           current.getStringAttribute("value",
-              current.getStringAttribute("property", null)));
+              current.getStringAttribute("property", (String) null)));
       if (value != null) {
         value = value.replace('.', '_');
         builder.insert(0, "]");
@@ -209,8 +210,13 @@ public class XNode {
     }
   }
 
+  public String getStringAttribute(String name, Supplier<String> defSupplier) {
+    String value = attributes.getProperty(name);
+    return value == null ? defSupplier.get() : value;
+  }
+
   public String getStringAttribute(String name) {
-    return getStringAttribute(name, null);
+    return getStringAttribute(name, (String) null);
   }
 
   public String getStringAttribute(String name, String def) {
