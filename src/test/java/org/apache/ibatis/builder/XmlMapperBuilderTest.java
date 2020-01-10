@@ -64,6 +64,20 @@ class XmlMapperBuilderTest {
   }
 
   @Test
+  void mappedStatementWithoutOptionsWhenSpecifyDefaultValue() throws Exception {
+    Configuration configuration = new Configuration();
+    configuration.setDefaultResultSetType(ResultSetType.SCROLL_INSENSITIVE);
+    String resource = "org/apache/ibatis/builder/AuthorMapper.xml";
+    InputStream inputStream = Resources.getResourceAsStream(resource);
+    XMLMapperBuilder builder = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
+    builder.parse();
+    inputStream.close();
+
+    MappedStatement mappedStatement = configuration.getMappedStatement("selectAuthor");
+    assertThat(mappedStatement.getResultSetType()).isEqualTo(ResultSetType.SCROLL_INSENSITIVE);
+  }
+
+  @Test
   void parseExpression() {
     BaseBuilder builder = new BaseBuilder(new Configuration()){{}};
     {
@@ -81,7 +95,7 @@ class XmlMapperBuilderTest {
   @Test
   void resolveJdbcTypeWithUndefinedValue() {
     BaseBuilder builder = new BaseBuilder(new Configuration()){{}};
-    when(builder).resolveJdbcType("aaa");
+    when(() -> builder.resolveJdbcType("aaa"));
     then(caughtException())
       .isInstanceOf(BuilderException.class)
       .hasMessageStartingWith("Error resolving JdbcType. Cause: java.lang.IllegalArgumentException: No enum")
@@ -91,7 +105,7 @@ class XmlMapperBuilderTest {
   @Test
   void resolveResultSetTypeWithUndefinedValue() {
     BaseBuilder builder = new BaseBuilder(new Configuration()){{}};
-    when(builder).resolveResultSetType("bbb");
+    when(() -> builder.resolveResultSetType("bbb"));
     then(caughtException())
       .isInstanceOf(BuilderException.class)
       .hasMessageStartingWith("Error resolving ResultSetType. Cause: java.lang.IllegalArgumentException: No enum")
@@ -101,7 +115,7 @@ class XmlMapperBuilderTest {
   @Test
   void resolveParameterModeWithUndefinedValue() {
     BaseBuilder builder = new BaseBuilder(new Configuration()){{}};
-    when(builder).resolveParameterMode("ccc");
+    when(() -> builder.resolveParameterMode("ccc"));
     then(caughtException())
       .isInstanceOf(BuilderException.class)
       .hasMessageStartingWith("Error resolving ParameterMode. Cause: java.lang.IllegalArgumentException: No enum")
@@ -111,16 +125,16 @@ class XmlMapperBuilderTest {
   @Test
   void createInstanceWithAbstractClass() {
     BaseBuilder builder = new BaseBuilder(new Configuration()){{}};
-    when(builder).createInstance("org.apache.ibatis.builder.BaseBuilder");
+    when(() -> builder.createInstance("org.apache.ibatis.builder.BaseBuilder"));
     then(caughtException())
       .isInstanceOf(BuilderException.class)
-      .hasMessage("Error creating instance. Cause: java.lang.InstantiationException: org.apache.ibatis.builder.BaseBuilder");
+      .hasMessage("Error creating instance. Cause: java.lang.NoSuchMethodException: org.apache.ibatis.builder.BaseBuilder.<init>()");
   }
 
   @Test
   void resolveClassWithNotFound() {
     BaseBuilder builder = new BaseBuilder(new Configuration()){{}};
-    when(builder).resolveClass("ddd");
+    when(() -> builder.resolveClass("ddd"));
     then(caughtException())
       .isInstanceOf(BuilderException.class)
       .hasMessage("Error resolving class. Cause: org.apache.ibatis.type.TypeException: Could not resolve type alias 'ddd'.  Cause: java.lang.ClassNotFoundException: Cannot find class: ddd");
@@ -136,7 +150,7 @@ class XmlMapperBuilderTest {
   @Test
   void resolveTypeHandlerNoAssignable() {
     BaseBuilder builder = new BaseBuilder(new Configuration()){{}};
-    when(builder).resolveTypeHandler(String.class, "integer");
+    when(() -> builder.resolveTypeHandler(String.class, "integer"));
     then(caughtException())
       .isInstanceOf(BuilderException.class)
       .hasMessage("Type java.lang.Integer is not a valid TypeHandler because it does not implement TypeHandler interface");
@@ -145,7 +159,7 @@ class XmlMapperBuilderTest {
   @Test
   void setCurrentNamespaceValueIsNull() {
     MapperBuilderAssistant builder = new MapperBuilderAssistant(new Configuration(), "resource");
-    when(builder).setCurrentNamespace(null);
+    when(() -> builder.setCurrentNamespace(null));
     then(caughtException())
       .isInstanceOf(BuilderException.class)
       .hasMessage("The mapper element requires a namespace attribute to be specified.");
@@ -154,7 +168,7 @@ class XmlMapperBuilderTest {
   @Test
   void useCacheRefNamespaceIsNull() {
     MapperBuilderAssistant builder = new MapperBuilderAssistant(new Configuration(), "resource");
-    when(builder).useCacheRef(null);
+    when(() -> builder.useCacheRef(null));
     then(caughtException())
       .isInstanceOf(BuilderException.class)
       .hasMessage("cache-ref element requires a namespace attribute.");
@@ -163,7 +177,7 @@ class XmlMapperBuilderTest {
   @Test
   void useCacheRefNamespaceIsUndefined() {
     MapperBuilderAssistant builder = new MapperBuilderAssistant(new Configuration(), "resource");
-    when(builder).useCacheRef("eee");
+    when(() -> builder.useCacheRef("eee"));
     then(caughtException())
       .hasMessage("No cache for namespace 'eee' could be found.");
   }
@@ -191,4 +205,21 @@ class XmlMapperBuilderTest {
 //    builder2.parse();
 //  }
 
+   @Test
+   public void erorrResultMapLocation() throws Exception {
+     Configuration configuration = new Configuration();
+     String resource = "org/apache/ibatis/builder/ProblemResultMapper.xml";
+     try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
+       XMLMapperBuilder builder = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
+       builder.parse();
+       String resultMapName = "java.lang.String";
+       // namespace + "." + id
+       String statementId = "org.mybatis.spring.ErrorProblemMapper" + "." + "findProblemResultMapTest";
+       // same as MapperBuilderAssistant.getStatementResultMaps Exception message
+       String message = "Could not find result map '" + resultMapName + "' referenced from '" + statementId + "'";
+       IncompleteElementException exception = Assertions.assertThrows(IncompleteElementException.class,
+         ()-> configuration.getMappedStatement("findProblemTypeTest"));
+       assertThat(exception.getMessage()).isEqualTo(message);
+     }
+   }
 }

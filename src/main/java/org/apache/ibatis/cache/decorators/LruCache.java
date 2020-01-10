@@ -17,7 +17,6 @@ package org.apache.ibatis.cache.decorators;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.concurrent.locks.ReadWriteLock;
 
 import org.apache.ibatis.cache.Cache;
 
@@ -83,11 +82,6 @@ public class LruCache implements Cache {
   public void clear() {
     delegate.clear();
     keyMap.clear();
-  }
-
-  @Override
-  public ReadWriteLock getReadWriteLock() {
-    return null;
   }
 
   private void cycleKeyList(Object key) {

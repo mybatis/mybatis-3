@@ -89,7 +89,7 @@ class GenericTokenParserTest {
   @Disabled("Because it randomly fails on Travis CI. It could be useful during development.")
   @Test
   void shouldParseFastOnJdk7u6() {
-    Assertions.assertTimeout(Duration.ofMillis(1), () -> {
+    Assertions.assertTimeout(Duration.ofMillis(1000), () -> {
       // issue #760
       GenericTokenParser parser = new GenericTokenParser("${", "}", new VariableTokenHandler(new HashMap<String, String>() {
         {

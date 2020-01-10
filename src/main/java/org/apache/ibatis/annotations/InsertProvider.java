@@ -22,6 +22,24 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * The annotation that specify a method that provide an SQL for inserting record(s).
+ *
+ * <p><br>
+ * <b>How to use:</b>
+ * <pre>
+ * public interface UserMapper {
+ *
+ *   &#064;InsertProvider(type = SqlProvider.class, method = "insert")
+ *   void insert(User user);
+ *
+ *   public static class SqlProvider {
+ *     public static String insert() {
+ *       return "INSERT INTO users (id, name) VALUES(#{id}, #{name})";
+ *     }
+ *   }
+ *
+ * }
+ * </pre>
  * @author Clinton Begin
  */
 @Documented
@@ -33,8 +51,21 @@ public @interface InsertProvider {
    * Specify a type that implements an SQL provider method.
    *
    * @return a type that implements an SQL provider method
+   * @since 3.5.2
+   * @see #type()
    */
-  Class<?> type();
+  Class<?> value() default void.class;
+
+  /**
+   * Specify a type that implements an SQL provider method.
+   * <p>
+   * This attribute is alias of {@link #value()}.
+   * </p>
+   *
+   * @return a type that implements an SQL provider method
+   * @see #value()
+   */
+  Class<?> type() default void.class;
 
   /**
    * Specify a method for providing an SQL.

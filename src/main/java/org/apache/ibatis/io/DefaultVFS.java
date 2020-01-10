@@ -95,19 +95,19 @@ public class DefaultVFS extends VFS {
              * then we assume the current resource is not a directory.
              */
             is = url.openStream();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
             List<String> lines = new ArrayList<>();
-            for (String line; (line = reader.readLine()) != null;) {
-              if (log.isDebugEnabled()) {
-                log.debug("Reader entry: " + line);
-              }
-              lines.add(line);
-              if (getResources(path + "/" + line).isEmpty()) {
-                lines.clear();
-                break;
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
+              for (String line; (line = reader.readLine()) != null;) {
+                if (log.isDebugEnabled()) {
+                  log.debug("Reader entry: " + line);
+                }
+                lines.add(line);
+                if (getResources(path + "/" + line).isEmpty()) {
+                  lines.clear();
+                  break;
+                }
               }
             }
-
             if (!lines.isEmpty()) {
               if (log.isDebugEnabled()) {
                 log.debug("Listing " + url);
@@ -223,15 +223,17 @@ public class DefaultVFS extends VFS {
     }
 
     // If the file part of the URL is itself a URL, then that URL probably points to the JAR
-    try {
-      for (;;) {
+    boolean continueLoop = true;
+    while (continueLoop) {
+      try {
         url = new URL(url.getFile());
         if (log.isDebugEnabled()) {
           log.debug("Inner URL: " + url);
         }
+      } catch (MalformedURLException e) {
+        // This will happen at some point and serves as a break in the loop
+        continueLoop = false;
       }
-    } catch (MalformedURLException e) {
-      // This will happen at some point and serves as a break in the loop
     }
 
     // Look for the .jar extension and chop off everything after that

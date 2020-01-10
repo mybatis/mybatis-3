@@ -56,14 +56,14 @@ class LanguageDriverRegistryTest {
 
   @Test
   void registerByTypeNull() {
-    when(registry).register((Class<? extends LanguageDriver>) null);
+    when(() -> registry.register((Class<? extends LanguageDriver>) null));
     then(caughtException()).isInstanceOf(IllegalArgumentException.class)
       .hasMessage("null is not a valid Language Driver");
   }
 
   @Test
   void registerByTypeDoesNotCreateNewInstance() {
-    when(registry).register(PrivateLanguageDriver.class);
+    when(() -> registry.register(PrivateLanguageDriver.class));
     then(caughtException()).isInstanceOf(ScriptingException.class)
       .hasMessage("Failed to load language driver for org.apache.ibatis.scripting.LanguageDriverRegistryTest$PrivateLanguageDriver");
   }
@@ -88,7 +88,7 @@ class LanguageDriverRegistryTest {
 
   @Test
   void registerByInstanceNull() {
-    when(registry).register((LanguageDriver) null);
+    when(() -> registry.register((LanguageDriver) null));
     then(caughtException()).isInstanceOf(IllegalArgumentException.class)
       .hasMessage("null is not a valid Language Driver");
   }

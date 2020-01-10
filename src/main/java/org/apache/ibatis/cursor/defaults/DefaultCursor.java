@@ -41,7 +41,7 @@ public class DefaultCursor<T> implements Cursor<T> {
   private final ResultMap resultMap;
   private final ResultSetWrapper rsw;
   private final RowBounds rowBounds;
-  private final ObjectWrapperResultHandler<T> objectWrapperResultHandler = new ObjectWrapperResultHandler<>();
+  protected final ObjectWrapperResultHandler<T> objectWrapperResultHandler = new ObjectWrapperResultHandler<>();
 
   private final CursorIterator cursorIterator = new CursorIterator();
   private boolean iteratorRetrieved;
@@ -123,7 +123,7 @@ public class DefaultCursor<T> implements Cursor<T> {
 
   protected T fetchNextUsingRowBound() {
     T result = fetchNextObjectFromDatabase();
-    while (result != null && indexWithRowBound < rowBounds.getOffset()) {
+    while (objectWrapperResultHandler.fetched && indexWithRowBound < rowBounds.getOffset()) {
       result = fetchNextObjectFromDatabase();
     }
     return result;
@@ -135,6 +135,7 @@ public class DefaultCursor<T> implements Cursor<T> {
     }
 
     try {
+      objectWrapperResultHandler.fetched = false;
       status = CursorStatus.OPEN;
       if (!rsw.getResultSet().isClosed()) {
         resultSetHandler.handleRowValues(rsw, resultMap, objectWrapperResultHandler, RowBounds.DEFAULT, null);
@@ -144,11 +145,11 @@ public class DefaultCursor<T> implements Cursor<T> {
     }
 
     T next = objectWrapperResultHandler.result;
-    if (next != null) {
+    if (objectWrapperResultHandler.fetched) {
       indexWithRowBound++;
     }
     // No more object or limit reached
-    if (next == null || getReadItemsCount() == rowBounds.getOffset() + rowBounds.getLimit()) {
+    if (!objectWrapperResultHandler.fetched || getReadItemsCount() == rowBounds.getOffset() + rowBounds.getLimit()) {
       close();
       status = CursorStatus.CONSUMED;
     }
@@ -165,18 +166,20 @@ public class DefaultCursor<T> implements Cursor<T> {
     return indexWithRowBound + 1;
   }
 
-  private static class ObjectWrapperResultHandler<T> implements ResultHandler<T> {
+  protected static class ObjectWrapperResultHandler<T> implements ResultHandler<T> {
 
-    private T result;
+    protected T result;
+    protected boolean fetched;
 
     @Override
     public void handleResult(ResultContext<? extends T> context) {
       this.result = context.getResultObject();
       context.stop();
+      fetched = true;
     }
   }
 
-  private class CursorIterator implements Iterator<T> {
+  protected class CursorIterator implements Iterator<T> {
 
     /**
      * Holder for the next object to be returned.
@@ -190,10 +193,10 @@ public class DefaultCursor<T> implements Cursor<T> {
 
     @Override
     public boolean hasNext() {
-      if (object == null) {
+      if (!objectWrapperResultHandler.fetched) {
         object = fetchNextUsingRowBound();
       }
-      return object != null;
+      return objectWrapperResultHandler.fetched;
     }
 
     @Override
@@ -201,11 +204,12 @@ public class DefaultCursor<T> implements Cursor<T> {
       // Fill next with object fetched from hasNext()
       T next = object;
 
-      if (next == null) {
+      if (!objectWrapperResultHandler.fetched) {
         next = fetchNextUsingRowBound();
       }
 
-      if (next != null) {
+      if (objectWrapperResultHandler.fetched) {
+        objectWrapperResultHandler.fetched = false;
         object = null;
         iteratorIndex++;
         return next;

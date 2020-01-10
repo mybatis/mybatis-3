@@ -33,7 +33,9 @@ public interface TransactionFactory {
    * Sets transaction factory custom properties.
    * @param props
    */
-  void setProperties(Properties props);
+  default void setProperties(Properties props) {
+    // NOP
+  }
 
   /**
    * Creates a {@link Transaction} out of an existing connection.

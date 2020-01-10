@@ -24,6 +24,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.ReflectPermission;
 import java.lang.reflect.Type;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -33,6 +34,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.ibatis.reflection.invoker.AmbiguousMethodInvoker;
 import org.apache.ibatis.reflection.invoker.GetFieldInvoker;
 import org.apache.ibatis.reflection.invoker.Invoker;
 import org.apache.ibatis.reflection.invoker.MethodInvoker;
@@ -92,6 +94,7 @@ public class Reflector {
     for (Entry<String, List<Method>> entry : conflictingGetters.entrySet()) {
       Method winner = null;
       String propName = entry.getKey();
+      boolean isAmbiguous = false;
       for (Method candidate : entry.getValue()) {
         if (winner == null) {
           winner = candidate;
@@ -101,10 +104,8 @@ public class Reflector {
         Class<?> candidateType = candidate.getReturnType();
         if (candidateType.equals(winnerType)) {
           if (!boolean.class.equals(candidateType)) {
-            throw new ReflectionException(
-                "Illegal overloaded getter method with ambiguous type for property "
-                    + propName + " in class " + winner.getDeclaringClass()
-                    + ". This breaks the JavaBeans specification and can cause unpredictable results.");
+            isAmbiguous = true;
+            break;
           } else if (candidate.getName().startsWith("is")) {
             winner = candidate;
           }
@@ -113,22 +114,23 @@ public class Reflector {
         } else if (winnerType.isAssignableFrom(candidateType)) {
           winner = candidate;
         } else {
-          throw new ReflectionException(
-              "Illegal overloaded getter method with ambiguous type for property "
-                  + propName + " in class " + winner.getDeclaringClass()
-                  + ". This breaks the JavaBeans specification and can cause unpredictable results.");
+          isAmbiguous = true;
+          break;
         }
       }
-      addGetMethod(propName, winner);
+      addGetMethod(propName, winner, isAmbiguous);
     }
   }
 
-  private void addGetMethod(String name, Method method) {
-    if (isValidPropertyName(name)) {
-      getMethods.put(name, new MethodInvoker(method));
-      Type returnType = TypeParameterResolver.resolveReturnType(method, type);
-      getTypes.put(name, typeToClass(returnType));
-    }
+  private void addGetMethod(String name, Method method, boolean isAmbiguous) {
+    MethodInvoker invoker = isAmbiguous
+        ? new AmbiguousMethodInvoker(method, MessageFormat.format(
+            "Illegal overloaded getter method with ambiguous type for property ''{0}'' in class ''{1}''. This breaks the JavaBeans specification and can cause unpredictable results.",
+            name, method.getDeclaringClass().getName()))
+        : new MethodInvoker(method);
+    getMethods.put(name, invoker);
+    Type returnType = TypeParameterResolver.resolveReturnType(method, type);
+    getTypes.put(name, typeToClass(returnType));
   }
 
   private void addSetMethods(Class<?> clazz) {
@@ -140,35 +142,31 @@ public class Reflector {
   }
 
   private void addMethodConflict(Map<String, List<Method>> conflictingMethods, String name, Method method) {
-    List<Method> list = conflictingMethods.computeIfAbsent(name, k -> new ArrayList<>());
-    list.add(method);
+    if (isValidPropertyName(name)) {
+      List<Method> list = conflictingMethods.computeIfAbsent(name, k -> new ArrayList<>());
+      list.add(method);
+    }
   }
 
   private void resolveSetterConflicts(Map<String, List<Method>> conflictingSetters) {
     for (String propName : conflictingSetters.keySet()) {
       List<Method> setters = conflictingSetters.get(propName);
       Class<?> getterType = getTypes.get(propName);
+      boolean isGetterAmbiguous = getMethods.get(propName) instanceof AmbiguousMethodInvoker;
+      boolean isSetterAmbiguous = false;
       Method match = null;
-      ReflectionException exception = null;
       for (Method setter : setters) {
-        if (setter.getParameterTypes()[0].equals(getterType)) {
+        if (!isGetterAmbiguous && setter.getParameterTypes()[0].equals(getterType)) {
           // should be the best match
           match = setter;
           break;
         }
-        if (exception == null) {
-          try {
-            match = pickBetterSetter(match, setter, propName);
-          } catch (ReflectionException e) {
-            // there could still be the 'best match'
-            match = null;
-            exception = e;
-          }
+        if (!isSetterAmbiguous) {
+          match = pickBetterSetter(match, setter, propName);
+          isSetterAmbiguous = match == null;
         }
       }
-      if (match == null) {
-        throw exception;
-      } else {
+      if (match != null) {
         addSetMethod(propName, match);
       }
     }
@@ -185,17 +183,21 @@ public class Reflector {
     } else if (paramType2.isAssignableFrom(paramType1)) {
       return setter1;
     }
-    throw new ReflectionException("Ambiguous setters defined for property '" + property + "' in class '"
-        + setter2.getDeclaringClass() + "' with types '" + paramType1.getName() + "' and '"
-        + paramType2.getName() + "'.");
+    MethodInvoker invoker = new AmbiguousMethodInvoker(setter1,
+        MessageFormat.format(
+            "Ambiguous setters defined for property ''{0}'' in class ''{1}'' with types ''{2}'' and ''{3}''.",
+            property, setter2.getDeclaringClass().getName(), paramType1.getName(), paramType2.getName()));
+    setMethods.put(property, invoker);
+    Type[] paramTypes = TypeParameterResolver.resolveParamTypes(setter1, type);
+    setTypes.put(property, typeToClass(paramTypes[0]));
+    return null;
   }
 
   private void addSetMethod(String name, Method method) {
-    if (isValidPropertyName(name)) {
-      setMethods.put(name, new MethodInvoker(method));
-      Type[] paramTypes = TypeParameterResolver.resolveParamTypes(method, type);
-      setTypes.put(name, typeToClass(paramTypes[0]));
-    }
+    MethodInvoker invoker = new MethodInvoker(method);
+    setMethods.put(name, invoker);
+    Type[] paramTypes = TypeParameterResolver.resolveParamTypes(method, type);
+    setTypes.put(name, typeToClass(paramTypes[0]));
   }
 
   private Class<?> typeToClass(Type src) {

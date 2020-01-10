@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2018 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -1685,7 +1685,7 @@ public class User {
         <source><![CDATA[<cache type="com.domain.something.MyCustomCache"/>]]></source>
 
         <p>이 예제는 사용자 지정 캐시 구현체를 사용하는 방법을 보여준다.
-		type속성에 명시된 클래스는 org.mybatis.cache.Cache인터페이스를 반드시 구현해야 한다.
+		type속성에 명시된 클래스는 org.apache.ibatis.cache.Cache인터페이스를 반드시 구현해야 한다.
 		이 인터페이스는 마이바티스 프레임워크의 가장 복잡한 구성엘리먼트 중 하나이다.
 		하지만 하는 일은 간단하다.</p>
 

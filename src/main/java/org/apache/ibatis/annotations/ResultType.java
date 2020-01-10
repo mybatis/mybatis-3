@@ -27,6 +27,15 @@ import java.lang.annotation.Target;
  * this annotation can be used to tell MyBatis what kind of object
  * it should build for each row.
  *
+ * <p><br>
+ * <b>How to use:</b>
+ * <pre>
+ * public interface UserMapper {
+ *   &#064;ResultType(User.class)
+ *   &#064;Select("SELECT id, name FROM users WHERE name LIKE #{name} || '%' ORDER BY id")
+ *   void collectByStartingWithName(String name, ResultHandler&lt;User&gt; handler);
+ * }
+ * </pre>
  * @since 3.2.0
  * @author Jeff Butler
  */
@@ -34,5 +43,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface ResultType {
+  /**
+   * Returns the return type.
+   *
+   * @return the return type
+   */
   Class<?> value();
 }

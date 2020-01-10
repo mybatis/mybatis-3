@@ -157,6 +157,21 @@ AND title like ‘someTitle’]]></source>
   <p><span class="label important">NOTA</span> You can pass any Iterable object (for example List, Set, etc.), as well as any Map or Array object to foreach as collection parameter. When using an Iterable or Array, index will be the number of current iteration and value item will be the element retrieved in this iteration. When using a Map (or Collection of Map.Entry objects), index will be the key object and item will be the value object.</p>
   <p>Esto finaliza la discusión sobre la configuración XML y los ficheros de mapeo XML. En la sección siguiente hablaremos del API Java en detalle, de forma que puedas obtener el máximo rendimiento de los mapeos que has creado.</p>
   </subsection>
+  <subsection name="script">
+  <p>For using dynamic SQL in annotated mapper class, <em>script</em> element can be used. For example:</p>
+  <source><![CDATA[
+    @Update({"<script>",
+      "update Author",
+      "  <set>",
+      "    <if test='username != null'>username=#{username},</if>",
+      "    <if test='password != null'>password=#{password},</if>",
+      "    <if test='email != null'>email=#{email},</if>",
+      "    <if test='bio != null'>bio=#{bio}</if>",
+      "  </set>",
+      "where id=#{id}",
+      "</script>"})
+    void updateAuthorValues(Author author);]]></source>
+  </subsection>
   <subsection name="bind">
   <p>El elemento <code>bind</code> te permite crear una variable a partir de una expresion OGNL y asociarla al contexto. Por ejemplo:</p>
   <source><![CDATA[

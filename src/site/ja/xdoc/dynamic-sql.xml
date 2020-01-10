@@ -163,6 +163,21 @@ AND title like ‘someTitle’]]></source>
   <p><span class="label important">NOTE</span> collection には Iterable を実装したオブジェクト（List や Set など）の他に Map や Array を指定することもできます。collection に Iterable または Array を指定した場合、 index で指定した変数にはインデックスの数値、 item で指定した変数にはコレクション、配列の要素が格納されます。Map あるいは Map.Entry のコレクションを指定した場合は index にマップのキー、item にマップの値が格納されます。</p>
   <p>XML 設定ファイルと XML Mapper ファイルについての説明はここまでになります。次の章では、Java API について詳しく見ていきます。</p>
   </subsection>
+  <subsection name="script">
+  <p>For using dynamic SQL in annotated mapper class, <em>script</em> element can be used. For example:</p>
+  <source><![CDATA[
+    @Update({"<script>",
+      "update Author",
+      "  <set>",
+      "    <if test='username != null'>username=#{username},</if>",
+      "    <if test='password != null'>password=#{password},</if>",
+      "    <if test='email != null'>email=#{email},</if>",
+      "    <if test='bio != null'>bio=#{bio}</if>",
+      "  </set>",
+      "where id=#{id}",
+      "</script>"})
+    void updateAuthorValues(Author author);]]></source>
+  </subsection>
   <subsection name="bind">
   <p><code>bind</code> 要素を使うと、OGNL 式の結果を変数に格納し、その変数を SQL 文中で使用することができます。</p>
   <source><![CDATA[

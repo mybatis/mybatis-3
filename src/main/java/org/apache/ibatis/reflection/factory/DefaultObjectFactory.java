@@ -25,7 +25,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Properties;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -54,11 +53,6 @@ public class DefaultObjectFactory implements ObjectFactory, Serializable {
     return (T) instantiateClass(classToCreate, constructorArgTypes, constructorArgs);
   }
 
-  @Override
-  public void setProperties(Properties properties) {
-    // no props for default
-  }
-
   private  <T> T instantiateClass(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
     try {
       Constructor<T> constructor;
@@ -75,13 +69,13 @@ public class DefaultObjectFactory implements ObjectFactory, Serializable {
           }
         }
       }
-      constructor = type.getDeclaredConstructor(constructorArgTypes.toArray(new Class[constructorArgTypes.size()]));
+      constructor = type.getDeclaredConstructor(constructorArgTypes.toArray(new Class[0]));
       try {
-        return constructor.newInstance(constructorArgs.toArray(new Object[constructorArgs.size()]));
+        return constructor.newInstance(constructorArgs.toArray(new Object[0]));
       } catch (IllegalAccessException e) {
         if (Reflector.canControlMemberAccessible()) {
           constructor.setAccessible(true);
-          return constructor.newInstance(constructorArgs.toArray(new Object[constructorArgs.size()]));
+          return constructor.newInstance(constructorArgs.toArray(new Object[0]));
         } else {
           throw e;
         }

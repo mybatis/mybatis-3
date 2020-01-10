@@ -29,9 +29,18 @@ public class CacheKey implements Cloneable, Serializable {
 
   private static final long serialVersionUID = 1146682552656046210L;
 
-  public static final CacheKey NULL_CACHE_KEY = new NullCacheKey();
+  public static final CacheKey NULL_CACHE_KEY = new CacheKey(){
+    @Override
+    public void update(Object object) {
+      throw new CacheException("Not allowed to update a null cache key instance.");
+    }
+    @Override
+    public void updateAll(Object[] objects) {
+      throw new CacheException("Not allowed to update a null cache key instance.");
+    }
+  };
 
-  private static final int DEFAULT_MULTIPLYER = 37;
+  private static final int DEFAULT_MULTIPLIER = 37;
   private static final int DEFAULT_HASHCODE = 17;
 
   private final int multiplier;
@@ -43,7 +52,7 @@ public class CacheKey implements Cloneable, Serializable {
 
   public CacheKey() {
     this.hashcode = DEFAULT_HASHCODE;
-    this.multiplier = DEFAULT_MULTIPLYER;
+    this.multiplier = DEFAULT_MULTIPLIER;
     this.count = 0;
     this.updateList = new ArrayList<>();
   }

@@ -103,6 +103,9 @@ public class XMLStatementBuilder extends BaseBuilder {
     String resultMap = context.getStringAttribute("resultMap");
     String resultSetType = context.getStringAttribute("resultSetType");
     ResultSetType resultSetTypeEnum = resolveResultSetType(resultSetType);
+    if (resultSetTypeEnum == null) {
+      resultSetTypeEnum = configuration.getDefaultResultSetType();
+    }
     String keyProperty = context.getStringAttribute("keyProperty");
     String keyColumn = context.getStringAttribute("keyColumn");
     String resultSets = context.getStringAttribute("resultSets");
@@ -173,23 +176,18 @@ public class XMLStatementBuilder extends BaseBuilder {
 
   private boolean databaseIdMatchesCurrent(String id, String databaseId, String requiredDatabaseId) {
     if (requiredDatabaseId != null) {
-      if (!requiredDatabaseId.equals(databaseId)) {
-        return false;
-      }
-    } else {
-      if (databaseId != null) {
-        return false;
-      }
-      // skip this statement if there is a previous one with a not null databaseId
-      id = builderAssistant.applyCurrentNamespace(id, false);
-      if (this.configuration.hasStatement(id, false)) {
-        MappedStatement previous = this.configuration.getMappedStatement(id, false); // issue #2
-        if (previous.getDatabaseId() != null) {
-          return false;
-        }
-      }
+      return requiredDatabaseId.equals(databaseId);
     }
-    return true;
+    if (databaseId != null) {
+      return false;
+    }
+    id = builderAssistant.applyCurrentNamespace(id, false);
+    if (!this.configuration.hasStatement(id, false)) {
+      return true;
+    }
+    // skip this statement if there is a previous one with a not null databaseId
+    MappedStatement previous = this.configuration.getMappedStatement(id, false); // issue #2
+    return previous.getDatabaseId() == null;
   }
 
   private LanguageDriver getLanguageDriver(String lang) {

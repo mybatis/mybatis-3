@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -23,14 +23,28 @@ import java.lang.annotation.Target;
 import org.apache.ibatis.mapping.FetchType;
 
 /**
+ * The annotation that specify the nested statement for retrieving collections.
+ *
+ * @see Result
+ * @see Results
  * @author Clinton Begin
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({})
 public @interface Many {
+  /**
+   * Returns the statement id that retrieves collection.
+   *
+   * @return the statement id
+   */
   String select() default "";
 
+  /**
+   * Returns the fetch strategy for nested statement.
+   *
+   * @return the fetch strategy
+   */
   FetchType fetchType() default FetchType.DEFAULT;
 
 }
