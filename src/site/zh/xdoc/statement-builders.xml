@@ -28,7 +28,7 @@
   <body>
     <section name="SQL 语句构建器">
       <subsection name="问题">
-        <p>Java 程序员面对的最痛苦的事情之一就是在 Java 代码中嵌入 SQL 语句。这通常是因为需要动态生成 SQL 语句，不然我们可以将它们放到外部文件或者存储过程中。正如你已经看到的，MyBatis 在 XML 映射功能中有一个强大的 SQL 动态生成解决方案。但有时，我们还是需要在 Java 代码里构建 SQL 语句。此时，MyBatis 有另外一个特性可以帮到你，从而让你从处理典型问题中解放出来，比如加号、引号、换行、格式化问题、嵌入条件的逗号管理及 AND 连接。确实，在 Java 代码中动态生成 SQL 代码真的就是一场噩梦。例如：
+        <p>Java 程序员面对的最痛苦的事情之一就是在 Java 代码中嵌入 SQL 语句。这通常是因为需要动态生成 SQL 语句，不然我们可以将它们放到外部文件或者存储过程中。如你所见，MyBatis 在 XML 映射中具备强大的 SQL 动态生成能力。但有时，我们还是需要在 Java 代码里构建 SQL 语句。此时，MyBatis 有另外一个特性可以帮到你，让你从处理典型问题中解放出来，比如加号、引号、换行、格式化问题、嵌入条件的逗号管理及 AND 连接。确实，在 Java 代码中动态生成 SQL 代码真的就是一场噩梦。例如：
         </p>
 
         <source><![CDATA[
@@ -72,7 +72,7 @@ private String selectPersonSql() {
 }
 ]]></source>
 
-      <p>这个例子有什么特别的地方吗？仔细看一下你会发现，你不用担心可能会重复出现的 "AND" 关键字，或者要做出用 "WHERE" 还是 "AND" 还是不用拼接的选择。SQL 类已经为你处理了哪里应该插入 "WHERE"、哪里应该使用 "AND" 的问题，并帮你完成所有的字符串拼接工作。
+      <p>这个例子有什么特别之处吗？仔细看一下你会发现，你不用担心可能会重复出现的 "AND" 关键字，或者要做出用 "WHERE" 拼接还是 "AND" 拼接还是不用拼接的选择。SQL 类已经为你处理了哪里应该插入 "WHERE"、哪里应该使用 "AND" 的问题，并帮你完成所有的字符串拼接工作。
         </p>
 
       </subsection>
@@ -520,7 +520,7 @@ public String selectPersonsWithFetchFirstSql() {
 
       <subsection name="SqlBuilder 和 SelectBuilder (已经废弃)">
         <p>
-          在版本 3.2 之前，我们采取了不太一样的措施，通过使用 ThreadLocal 变量来掩盖一些对 Java DSL 不太友好的语言限制。这种方式已被废弃，在这个领域，人们已经对现代框架使用的构建器模式和匿名内部类模式习以为常了。因此，SelectBuilder 和 SqlBuilder 类都被废弃了。
+          在版本 3.2 之前，我们的实现方式不太一样，我们利用 ThreadLocal 变量来掩盖一些对 Java DSL 不太友好的语言限制。现在，现代 SQL 构建框架使用的构建器和匿名内部类思想已被人们所熟知。因此，我们废弃了基于这种实现方式的 SelectBuilder 和 SqlBuilder 类。
         </p>
         <p>
           下面的方法仅仅适用于废弃的 SqlBuilder 和 SelectBuilder 类。
@@ -553,7 +553,7 @@ public String selectPersonsWithFetchFirstSql() {
         </table>
 
         <p>
-          虽然 SelectBuilder 和 SqlBuilder 类并不神奇，但是知道它们的工作原理也是很重要的。
+          SelectBuilder 和 SqlBuilder 类并不神奇，但最好还是知道它们的工作原理。
           SelectBuilder 以及 SqlBuilder 借助静态导入和 ThreadLocal 变量实现了对插入条件友好的简洁语法。要使用它们，只需要静态导入这个类的方法即可，就像这样（只能使用其中的一条，不能同时使用）:
         </p>
 

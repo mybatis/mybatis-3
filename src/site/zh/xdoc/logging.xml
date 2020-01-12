@@ -83,7 +83,7 @@ org.apache.ibatis.logging.LogFactory.useStdOutLogging();]]></source>
       </ul>
       <subsection name="日志配置">
       <p>你可以通过在包、映射类的全限定名、命名空间或全限定语句名上开启日志功能，来查看 MyBatis 的日志语句。
-      <p>再提醒一次，具体的步骤根据日志实现的不同而不同。我们接下来会以 Log4J 作为示范。配置日志功能非常简单：添加一个或多个配置文件（如 log4j.properties），有时还需要添加 jar 包（如 log4j.jar）。下面的例子将使用 Log4J 来配置完整的日志服务。一共两个步骤：
+      <p>再次提醒，具体配置步骤取决于日志实现。接下来我们会以 Log4J 作为示范。配置日志功能非常简单：添加一个或多个配置文件（如 log4j.properties），有时还需要添加 jar 包（如 log4j.jar）。下面的例子将使用 Log4J 来配置完整的日志服务。一共两个步骤：
 <p></p>
         <h4>
           步骤 1：添加 Log4J 的 jar 包
@@ -137,7 +137,7 @@ log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n]]></source>
 
         <source>log4j.logger.org.mybatis.example.BlogMapper.selectBlog=TRACE</source>
         <p>你应该会发现，为映射器和 XML 文件打开日志功能的语句毫无差别。
-        <p><span class="label important">提示</span> 如果你使用的是 SLF4J 或 Log4j 2，MyBatis 将以 MYBATIS 这个标记值进行调用。</p>
+        <p><span class="label important">提示</span> 如果你使用的是 SLF4J 或 Log4j 2，MyBatis 会设置 tag 为 MYBATIS。</p>
         <p>配置文件 <code>log4j.properties</code> 的余下内容用来配置输出器（appender），这一内容已经超出本文档的范围。关于 Log4J 的更多内容，可以参考上面的 Log4J 网站。或者，你也可以简单地做个实验，看看不同的配置会产生怎样的效果。
 
       </subsection>

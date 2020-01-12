@@ -30,8 +30,8 @@
   <body>
     <section name="动态 SQL">
       <p>动态 SQL 是 MyBatis 的强大特性之一。如果你使用过 JDBC 或其它类似的框架，你应该能理解根据不同条件拼接 SQL 语句有多痛苦，例如拼接时要确保不能忘记添加必要的空格，还要注意去掉列表最后一个列名的逗号。利用动态 SQL，可以彻底摆脱这种痛苦。</p>
-      <p>使用动态 SQL 并非一件易事，但通过提供能够被用于任何 SQL 映射语句中的强大的动态 SQL 语言，MyBatis 显著地提升了这一特性的易用性。</p>
-      <p>如果你之前用过 JSTL 或任何基于类 XML 语言的文本处理器，那你对动态 SQL 元素会感觉似曾相识。在 MyBatis 之前的版本中，需要花时间了解大量的元素。MyBatis 3 大大精简了元素种类，现在要学习的元素种类比原来的一半还要少。MyBatis 采用功能强大的基于 OGNL 的表达式来替换其它大部分元素。</p>
+      <p>使用动态 SQL 并非一件易事，但借助可用于任何 SQL 映射语句中的强大的动态 SQL 语言，MyBatis 显著地提升了这一特性的易用性。</p>
+      <p>如果你之前用过 JSTL 或任何基于类 XML 语言的文本处理器，你对动态 SQL 元素可能会感觉似曾相识。在 MyBatis 之前的版本中，需要花时间了解大量的元素。借助功能强大的基于 OGNL 的表达式，MyBatis 3 替换了之前的大部分元素，大大精简了元素种类，现在要学习的元素种类比原来的一半还要少。</p>
       <ul>
         <li>if</li>
         <li>choose (when, otherwise)</li>
@@ -105,7 +105,7 @@ WHERE]]></source>
 WHERE
 AND title like ‘someTitle’]]></source>
         <p>这个查询也会失败。这个问题不能简单地用条件元素来解决。这个问题是如此的难以解决，以至于解决过的人不会再想碰到这种问题。</p>
-        <p>MyBatis 有一个简单的、在 90% 的情景下有用的解决办法。而对于无法使用这个办法的情景，你也可以对其进行自定义来解决你的问题。而这，只需要一处简单的改动：</p>
+        <p>MyBatis 有一个简单且适合大多数场景的解决办法。而在其他场景中，可以对其进行自定义以符合需求。而这，只需要一处简单的改动：</p>
         <source><![CDATA[<select id="findActiveBlogLike"
      resultType="Blog">
   SELECT * FROM BLOG
@@ -121,12 +121,12 @@ AND title like ‘someTitle’]]></source>
     </if>
   </where>
 </select>]]></source>
-        <p><em>where</em> 元素只会在子元素返回任何内容的情况下才去插入 “WHERE” 子句。而且，若子句的开头为 “AND” 或 “OR”，<em>where</em> 元素也会将它们去除。</p>
+        <p><em>where</em> 元素只会在子元素返回任何内容的情况下才插入 “WHERE” 子句。而且，若子句的开头为 “AND” 或 “OR”，<em>where</em> 元素也会将它们去除。</p>
         <p>如果 <em>where</em> 元素与你期望的不太一样，你也可以通过自定义 trim 元素来定制 <em>where</em> 元素的功能。比如，和 <em>where</em> 元素等价的自定义 trim 元素为：</p>
         <source><![CDATA[<trim prefix="WHERE" prefixOverrides="AND |OR ">
   ...
 </trim>]]></source>
-        <p><em>prefixOverrides</em> 属性会忽略通过管道符分隔的文本序列（注意此例中的空格也是必要的）。上述例子会移除所有 <em>prefixOverrides</em> 属性中指定的内容，并且插入 <em>prefix</em> 属性中指定的内容。</p>
+        <p><em>prefixOverrides</em> 属性会忽略通过管道符分隔的文本序列（注意此例中的空格是必要的）。上述例子会移除所有 <em>prefixOverrides</em> 属性中指定的内容，并且插入 <em>prefix</em> 属性中指定的内容。</p>
         <p>用于动态更新语句的类似解决方案叫做 <em>set</em>。<em>set</em> 元素可以用于动态包含需要更新的列，忽略其它不更新的列。比如：</p>
         <source><![CDATA[<update id="updateAuthorIfNecessary">
   update Author
@@ -158,7 +158,7 @@ AND title like ‘someTitle’]]></source>
 </select>]]></source>
         <p><em>foreach</em> 元素的功能非常强大，它允许你指定一个集合，声明可以在元素体内使用的集合项（item）和索引（index）变量。它也允许你指定开头与结尾的字符串以及集合项迭代之间的分隔符。这个元素也不会错误地添加多余的分隔符，看它多智能！</p>
         <p><span class="label important">提示</span> 你可以将任何可迭代对象（如 List、Set 等）、Map 对象或者数组对象作为集合参数传递给 <em>foreach</em>。当使用可迭代对象或者数组时，index 是当前迭代的序号，item 的值是本次迭代获取到的元素。当使用 Map 对象（或者 Map.Entry 对象的集合）时，index 是键，item 是值。</p>
-        <p>至此，我们已经完成了涉及 XML 配置文件和 XML 映射文件的讨论。下一章将详细探讨 Java API，以便你能从你创建的映射配置中受益良多。</p>
+        <p>至此，我们已经完成了与 XML 配置及映射文件相关的讨论。下一章将详细探讨 Java API，以便你能充分利用已经创建的映射配置。</p>
       </subsection>
   <subsection name="script">
   <p>要在带注解的映射器接口类中使用动态 SQL，可以使用 <em>script</em> 元素。比如:</p>
@@ -199,8 +199,8 @@ AND title like ‘someTitle’]]></source>
 </insert>
 ]]></source>
       </subsection>
-      <subsection name="动态 SQL 中的可插入脚本语言">
-        <p>MyBatis 从 3.2 版本开始支持可插入脚本语言，这允许你插入一种语言驱动，并基于这种语言来编写动态 SQL 查询语句。</p>
+      <subsection name="动态 SQL 中的插入脚本语言">
+        <p>MyBatis 从 3.2 版本开始支持插入脚本语言，这允许你插入一种语言驱动，并基于这种语言来编写动态 SQL 查询语句。</p>
         <p>可以通过实现以下接口来插入一种语言：</p>
         <source><![CDATA[public interface LanguageDriver {
   ParameterHandler createParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql);
