@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2019 the original author or authors.
+       Copyright 2009-2020 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -27,8 +27,7 @@
 
   <body>
     <section name="日志">
-      <p></p>
-      <p>Mybatis 通过使用内置的日志工厂提供日志功能。内置日志工厂将会把日志工作委托给下面的实现之一：
+      <p>Mybatis 通过使用内置的日志工厂提供日志功能。内置日志工厂将会把日志工作委托给下面的实现之一：</p>
       <ul>
         <li>
           SLF4J
@@ -56,16 +55,14 @@
   </settings>
 </configuration>]]>
       </source>
-      <p>可选的值有：SLF4J、LOG4J、LOG4J2、JDK_LOGGING、COMMONS_LOGGING、STDOUT_LOGGING、NO_LOGGING，或者是实现了 <code>org.apache.ibatis.logging.Log</code> 接口，且构造方法以字符串为参数的类完全限定名。
-      <p>你也可以调用如下任一方法来使用日志工具：</p>
-      <p>你也可以调用以下任一方法来选择日志实现：
+      <p>可选的值有：SLF4J、LOG4J、LOG4J2、JDK_LOGGING、COMMONS_LOGGING、STDOUT_LOGGING、NO_LOGGING，或者是实现了 <code>org.apache.ibatis.logging.Log</code> 接口，且构造方法以字符串为参数的类完全限定名。</p>
+      <p>你也可以调用以下任一方法来选择日志实现：</p>
       <source><![CDATA[org.apache.ibatis.logging.LogFactory.useSlf4jLogging();
 org.apache.ibatis.logging.LogFactory.useLog4JLogging();
 org.apache.ibatis.logging.LogFactory.useJdkLogging();
 org.apache.ibatis.logging.LogFactory.useCommonsLogging();
 org.apache.ibatis.logging.LogFactory.useStdOutLogging();]]></source>
-      <p>你应该在调用其它 MyBatis 方法之前调用以上的某个方法。另外，仅当运行时类路径中存在该日志实现时，日志实现的切换才会生效。如果你的环境中并不存在 Log4J，你却试图调用了相应的方法，MyBatis 就会忽略这一切换请求，并将以默认的查找顺序决定使用的日志实现。
-      <p>关于 SLF4J、Apache Commons Logging、Apache Log4J 和 JDK Logging 的 API 介绍不在本文档介绍范围内。不过，下面的例子可以作为一个快速入门。关于这些日志框架的更多信息，可以参考以下链接：</p>
+      <p>你应该在调用其它 MyBatis 方法之前调用以上的某个方法。另外，仅当运行时类路径中存在该日志实现时，日志实现的切换才会生效。如果你的环境中并不存在 Log4J，你却试图调用了相应的方法，MyBatis 就会忽略这一切换请求，并将以默认的查找顺序决定使用的日志实现。</p>
       <p>关于 SLF4J、Apache Commons Logging、Apache Log4J 和 JDK Logging 的 API 介绍不在本文档介绍范围内。不过，下面的例子可以作为一个快速入门。有关这些日志框架的更多信息，可以参考以下链接：</p>
       <ul>
         <li>
@@ -82,25 +79,25 @@ org.apache.ibatis.logging.LogFactory.useStdOutLogging();]]></source>
         </li>
       </ul>
       <subsection name="日志配置">
-      <p>你可以通过在包、映射类的全限定名、命名空间或全限定语句名上开启日志功能，来查看 MyBatis 的日志语句。
-      <p>再次提醒，具体配置步骤取决于日志实现。接下来我们会以 Log4J 作为示范。配置日志功能非常简单：添加一个或多个配置文件（如 log4j.properties），有时还需要添加 jar 包（如 log4j.jar）。下面的例子将使用 Log4J 来配置完整的日志服务。一共两个步骤：
-<p></p>
+      <p>你可以通过在包、映射类的全限定名、命名空间或全限定语句名上开启日志功能，来查看 MyBatis 的日志语句。</p>
+      <p>再次提醒，具体配置步骤取决于日志实现。接下来我们会以 Log4J 作为示范。配置日志功能非常简单：添加一个或多个配置文件（如 log4j.properties），有时还需要添加 jar 包（如 log4j.jar）。下面的例子将使用 Log4J 来配置完整的日志服务。一共两个步骤：</p>
+
         <h4>
           步骤 1：添加 Log4J 的 jar 包
         </h4>
-        <p>由于我们使用的是 Log4J，我们要确保它的 jar 包可以被应用使用。为此，需要将 jar 包添加到应用的类路径中。Log4J 的 jar 包可以在上面的链接中下载。
-        <p>对于 web 应用或企业级应用，你可以将 <code>log4j.jar</code> 添加到 <code>WEB-INF/lib</code> 目录下；对于独立应用，可以将它添加到 JVM 的 <code>-classpath</code> 启动参数中。
-<p></p>
+        <p>由于我们使用的是 Log4J，我们要确保它的 jar 包可以被应用使用。为此，需要将 jar 包添加到应用的类路径中。Log4J 的 jar 包可以在上面的链接中下载。</p>
+        <p>对于 web 应用或企业级应用，你可以将 <code>log4j.jar</code> 添加到 <code>WEB-INF/lib</code> 目录下；对于独立应用，可以将它添加到 JVM 的 <code>-classpath</code> 启动参数中。</p>
+
         <h4>
           步骤 2：配置 Log4J
         </h4>
-        <p>配置 Log4J 比较简单。假设你需要记录这个映射器的日志：
+        <p>配置 Log4J 比较简单。假设你需要记录这个映射器的日志：</p>
         <source><![CDATA[package org.mybatis.example;
 public interface BlogMapper {
   @Select("SELECT * FROM blog WHERE id = #{id}")
   Blog selectBlog(int id);
 }]]></source>
-        <p>在应用的类路径中创建一个名为 <code>log4j.properties</code> 的文件，文件的具体内容如下：
+        <p>在应用的类路径中创建一个名为 <code>log4j.properties</code> 的文件，文件的具体内容如下：</p>
         <source><![CDATA[# 全局日志配置
 log4j.rootLogger=ERROR, stdout
 # MyBatis 日志配置
@@ -110,16 +107,16 @@ log4j.appender.stdout=org.apache.log4j.ConsoleAppender
 log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
 log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n]]></source>
         <p>上述配置将使 Log4J 详细打印 <code>org.mybatis.example.BlogMapper</code> 的日志，对于应用的其它部分，只打印错误信息。</p>
-        <p>为了实现更细粒度的日志输出，你也可以只打印特定语句的日志。以下配置将只打印语句 <code>selectBlog</code> 的日志：
+        <p>为了实现更细粒度的日志输出，你也可以只打印特定语句的日志。以下配置将只打印语句 <code>selectBlog</code> 的日志：</p>
 
         <source>log4j.logger.org.mybatis.example.BlogMapper.selectBlog=TRACE</source>
         <p>或者，你也可以打印一组映射器的日志，只需要打开映射器所在的包的日志功能即可：</p>
 
         <source>log4j.logger.org.mybatis.example=TRACE</source>
-        <p>某些查询可能会返回庞大的结果集。这时，你可能只想查看 SQL 语句，而忽略返回的结果集。为此，SQL 语句将会在 DEBUG 日志级别下记录（JDK 日志则为 FINE）。返回的结果集则会在 TRACE 日志级别下记录（JDK 日志则为 FINER)。因此，只要将日志级别调整为 DEBUG 即可：
+        <p>某些查询可能会返回庞大的结果集。这时，你可能只想查看 SQL 语句，而忽略返回的结果集。为此，SQL 语句将会在 DEBUG 日志级别下记录（JDK 日志则为 FINE）。返回的结果集则会在 TRACE 日志级别下记录（JDK 日志则为 FINER)。因此，只要将日志级别调整为 DEBUG 即可：</p>
 
         <source>log4j.logger.org.mybatis.example=DEBUG</source>
-        <p>但如果你要为下面的映射器 XML 文件打印日志，又该怎么办呢？
+        <p>但如果你要为下面的映射器 XML 文件打印日志，又该怎么办呢？</p>
 
       <source><![CDATA[<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
@@ -130,16 +127,15 @@ log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n]]></source>
     select * from Blog where id = #{id}
   </select>
 </mapper>]]></source>
-        <p>这时，你可以通过打开命名空间的日志功能来对整个 XML 记录日志：
+        <p>这时，你可以通过打开命名空间的日志功能来对整个 XML 记录日志：</p>
 
         <source>log4j.logger.org.mybatis.example.BlogMapper=TRACE</source>
-<p>而要记录具体语句的日志，可以这样做：</p>
+        <p>而要记录具体语句的日志，可以这样做：</p>
 
         <source>log4j.logger.org.mybatis.example.BlogMapper.selectBlog=TRACE</source>
-        <p>你应该会发现，为映射器和 XML 文件打开日志功能的语句毫无差别。
+        <p>你应该会发现，为映射器和 XML 文件打开日志功能的语句毫无差别。</p>
         <p><span class="label important">提示</span> 如果你使用的是 SLF4J 或 Log4j 2，MyBatis 会设置 tag 为 MYBATIS。</p>
-        <p>配置文件 <code>log4j.properties</code> 的余下内容用来配置输出器（appender），这一内容已经超出本文档的范围。关于 Log4J 的更多内容，可以参考上面的 Log4J 网站。或者，你也可以简单地做个实验，看看不同的配置会产生怎样的效果。
-
+        <p>配置文件 <code>log4j.properties</code> 的余下内容用来配置输出器（appender），这一内容已经超出本文档的范围。关于 Log4J 的更多内容，可以参考上面的 Log4J 网站。或者，你也可以简单地做个实验，看看不同的配置会产生怎样的效果。</p>
       </subsection>
     </section>
   </body>

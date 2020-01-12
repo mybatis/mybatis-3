@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2019 the original author or authors.
+       Copyright 2009-2020 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -444,7 +444,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
 <li><code>&lt;select&gt;</code></li>
 </ul>
         </td>
-        <td>允许构建动态 SQL。这些备选的 SQL 注解允许你指定返回 SQL 语句的类和方法，以供运行时执行。（从 MyBatis 3.4.6 开始，可以使用 <code>CharSequence</code> 代替 <code>String</code> 来作为返回类型）。当执行映射语句时，MyBatis 会实例化注解指定的类，并调用注解指定的方法。你可以通过 <code>ProviderContext</code> 传递映射方法接收到的参数、"Mapper interface type" 和 "Mapper method"（仅在 MyBatis 3.4.5 以上支持）作为参数。（MyBatis 3.4 以上支持传入多个参数）属性：<code>type</code>、<code>method</code>。<code>type</code> 属性用于指定类名。<code>method</code> 用于指定该类的方法名（从版本 3.5.1 开始，可以忽略 <code>method</code> 属性，MyBatis 将会使用 <code>ProviderMethodResolver</code> 接口解析方法的具体实现。如果解析失败，MyBatis 将会使用名为 <code>provideSql</code> 的降级实现）。<span class="label important">提示</span> 接下来的“SQL 语句构建器”一章将会讨论该话题，以帮助你以更清晰、更便于阅读的方式构建动态 SQL。</td>
+        <td>允许构建动态 SQL。这些备选的 SQL 注解允许你指定返回 SQL 语句的类和方法，以供运行时执行。（从 MyBatis 3.4.6 开始，可以使用 <code>CharSequence</code> 代替 <code>String</code> 来作为返回类型）。当执行映射语句时，MyBatis 会实例化注解指定的类，并调用注解指定的方法。你可以通过 <code>ProviderContext</code> 传递映射方法接收到的参数、"Mapper interface type" 和 "Mapper method"（仅在 MyBatis 3.4.5 以上支持）作为参数。（MyBatis 3.4 以上支持传入多个参数）属性：<code>type</code>、<code>method</code>。<code>type</code> 属性用于指定类名。<code>method</code> 用于指定该类的方法名（从版本 3.5.1 开始，可以省略 <code>method</code> 属性，MyBatis 将会使用 <code>ProviderMethodResolver</code> 接口解析方法的具体实现。如果解析失败，MyBatis 将会使用名为 <code>provideSql</code> 的降级实现）。<span class="label important">提示</span> 接下来的“SQL 语句构建器”一章将会讨论该话题，以帮助你以更清晰、更便于阅读的方式构建动态 SQL。</td>
       </tr>
       <tr>
         <td><code>@Param</code></td>
