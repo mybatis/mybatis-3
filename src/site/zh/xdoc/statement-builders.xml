@@ -313,9 +313,9 @@ public String updatePersonSql() {
                 </ul>
               </td>
               <td>
-                Appends a <code>LIMIT</code> clause.
-                This method valid when use together with SELECT(), UPDATE() and DELETE().
-                And this method is designed to use together with OFFSET() when use SELECT(). (Available since 3.5.2)
+                追加新的 <code>LIMIT</code> 子句。
+				仅在 SELECT()、UPDATE()、DELETE() 时有效。
+				当在 SELECT() 中使用时，应该配合 OFFSET() 使用。（于 3.5.2 引入）
               </td>
             </tr>
             <tr>
@@ -330,9 +330,9 @@ public String updatePersonSql() {
                 </ul>
               </td>
               <td>
-                Appends a <code>OFFSET</code> clause.
-                This method valid when use together with SELECT().
-                And this method is designed to use together with LIMIT(). (Available since 3.5.2)
+                追加新的 <code>OFFSET</code> 子句。
+                仅在 SELECT() 时有效。
+                当在 SELECT() 时使用时，应该配合 LIMIT() 使用。（于 3.5.2 引入）
               </td>
             </tr>
             <tr>
@@ -347,9 +347,9 @@ public String updatePersonSql() {
                 </ul>
               </td>
               <td>
-                Appends a <code>OFFSET n ROWS</code> clause.
-                This method valid when use together with SELECT().
-                And this method is designed to use together with FETCH_FIRST_ROWS_ONLY(). (Available since 3.5.2)
+			    追加新的 <code>OFFSET n ROWS</code> 子句。
+				仅在 SELECT() 时有效。
+				该方法应该配合 FETCH_FIRST_ROWS_ONLY() 使用。（于 3.5.2 加入）
               </td>
             </tr>
             <tr>
@@ -364,9 +364,9 @@ public String updatePersonSql() {
                 </ul>
               </td>
               <td>
-                Appends a <code>FETCH FIRST n ROWS ONLY</code> clause.
-                This method valid when use together with SELECT().
-                And this method is designed to use together with OFFSET_ROWS(). (Available since 3.5.2)
+			  	追加新的 <code>FETCH FIRST n ROWS ONLY</code> 子句。
+				仅在 SELECT() 时有效。
+				该方法应该配合 OFFSET_ROWS() 使用。（于 3.5.2 加入）
               </td>
             </tr>
             <tr>
@@ -431,18 +431,16 @@ public String updatePersonSql() {
                 <code>ADD_ROW()</code>
               </td>
               <td>
-                Add new row for bulk insert. (Available since 3.5.2)
+                添加新的一行数据，以便执行批量插入。（于 3.5.2 引入）
               </td>
             </tr>
           </tbody>
         </table>
 
         <p>
-          <span class="label important">NOTE</span>
-          It is important to note that SQL class writes <code>LIMIT</code>, <code>OFFSET</code>, <code>OFFSET n ROWS</code> and <code>FETCH FIRST n ROWS ONLY</code> clauses into the generated statement as is.
-          In other words, the library does not attempt to normalize those values for databases that don’t support these clauses directly.
-          Therefore, it is very important for users to understand whether or not the target database supports these clauses.
-          If the target database does not support these clauses, then it is likely that using this support will create SQL that has runtime errors.
+          <span class="label important">提示</span>
+          注意，SQL 类将原样插入 <code>LIMIT</code>、<code>OFFSET</code>、<code>OFFSET n ROWS</code> 以及 <code>FETCH FIRST n ROWS ONLY</code> 子句。换句话说，类库不会为不支持这些子句的数据库执行任何转换。
+		  因此，用户应该要了解目标数据库是否支持这些子句。如果目标数据库不支持这些子句，产生的 SQL 可能会引起运行错误。
         </p>
 
         <p>从版本 3.4.2 开始，你可以像下面这样使用可变长度参数：</p>
@@ -474,7 +472,7 @@ public String updatePersonSql() {
 }
 ]]></source>
 
-        <p>Since version 3.5.2, you can create insert statement for bulk insert as follow:</p>
+        <p>从版本 3.5.2 开始，你可以像下面这样构建批量插入语句：</p>
 
         <source><![CDATA[
 public String insertPersonsSql() {
