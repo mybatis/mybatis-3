@@ -20,6 +20,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 import org.apache.ibatis.logging.Log;
@@ -53,8 +54,8 @@ public class ExternalResources {
     String templateName = "";
     Properties migrationProperties = new Properties();
 
-    try {
-      migrationProperties.load(new FileInputStream(templatePath));
+    try (InputStream is = new FileInputStream(templatePath)) {
+      migrationProperties.load(is);
       templateName = migrationProperties.getProperty(templateProperty);
     } catch (FileNotFoundException e) {
       throw e;
