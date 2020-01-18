@@ -41,7 +41,7 @@ import java.util.Properties;
 
 class ScriptRunnerTest extends BaseDataTest {
 
-  private static final String LINE_SEPARATOR = System.getProperty("line.separator", "\n");
+  private static final String LINE_SEPARATOR = System.lineSeparator();
 
   @Test
   @Disabled("This fails with HSQLDB 2.0 due to the create index statements in the schema script")
