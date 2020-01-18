@@ -234,7 +234,7 @@ public class ScriptRunner {
       statement.setEscapeProcessing(escapeProcessing);
       String sql = command;
       if (removeCRs) {
-        sql = sql.replaceAll("\r\n", "\n");
+        sql = sql.replace("\r\n", "\n");
       }
       try {
         boolean hasResults = statement.execute(sql);
