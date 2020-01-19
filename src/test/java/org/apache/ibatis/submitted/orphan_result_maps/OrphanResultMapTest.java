@@ -15,10 +15,10 @@
  */
 package org.apache.ibatis.submitted.orphan_result_maps;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import org.apache.ibatis.session.Configuration;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class OrphanResultMapTest {
 

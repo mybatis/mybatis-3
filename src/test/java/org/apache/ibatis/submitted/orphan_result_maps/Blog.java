@@ -15,11 +15,11 @@
  */
 package org.apache.ibatis.submitted.orphan_result_maps;
 
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.submitted.parent_reference_3level.Post;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.submitted.parent_reference_3level.Post;
 
 public class Blog {
 

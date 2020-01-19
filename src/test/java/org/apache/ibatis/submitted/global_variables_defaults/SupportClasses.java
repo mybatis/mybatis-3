@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,12 +15,12 @@
  */
 package org.apache.ibatis.submitted.global_variables_defaults;
 
+import java.lang.reflect.Field;
+import java.util.Properties;
+
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
-
-import java.lang.reflect.Field;
-import java.util.Properties;
 
 public class SupportClasses {
 

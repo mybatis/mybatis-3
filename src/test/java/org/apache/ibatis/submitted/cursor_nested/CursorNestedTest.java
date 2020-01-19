@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,6 +15,9 @@
  */
 package org.apache.ibatis.submitted.cursor_nested;
 
+import java.io.Reader;
+import java.util.Iterator;
+
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.io.Resources;
@@ -25,9 +28,6 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
-import java.io.Reader;
-import java.util.Iterator;
 
 class CursorNestedTest {
 
