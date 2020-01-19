@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -40,13 +40,30 @@ public final class OgnlCache {
     // Prevent Instantiation of Static Class
   }
 
-  public static Object getValue(String expression, Object root) {
+  /**
+   * Get a value that evaluate specified expression.
+   *
+   * @param expression an expression for getting value
+   * @param root a target object
+   * @param classResolver a class resolver for OGNL
+   * @return an evaluation value
+   * @since 3.5.2
+   */
+  public static Object getValue(String expression, Object root, OgnlClassResolver classResolver) {
     try {
-      Map context = Ognl.createDefaultContext(root, MEMBER_ACCESS, CLASS_RESOLVER, null);
+      Map context = Ognl.createDefaultContext(root, MEMBER_ACCESS, classResolver == null ? CLASS_RESOLVER : classResolver, null);
       return Ognl.getValue(parseExpression(expression), context, root);
     } catch (OgnlException e) {
       throw new BuilderException("Error evaluating expression '" + expression + "'. Cause: " + e, e);
     }
+  }
+
+  /**
+   * @deprecated Since 3.5.2, please use the {@link #getValue(String, Object, OgnlClassResolver)}
+   */
+  @Deprecated
+  public static Object getValue(String expression, Object root) {
+    return getValue(expression, root, null);
   }
 
   private static Object parseExpression(String expression) throws OgnlException {

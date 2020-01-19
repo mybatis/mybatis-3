@@ -28,8 +28,25 @@ import org.apache.ibatis.builder.BuilderException;
  */
 public class ExpressionEvaluator {
 
+  private final OgnlClassResolver classResolver;
+
+  /**
+   * @deprecated Since 3.5.2, please use the {@link #ExpressionEvaluator(OgnlClassResolver)}
+   */
+  @Deprecated
+  public ExpressionEvaluator() {
+    this(null);
+  }
+
+  /**
+   * @since 3.5.2
+   */
+  public ExpressionEvaluator(OgnlClassResolver classResolver) {
+    this.classResolver = classResolver;
+  }
+
   public boolean evaluateBoolean(String expression, Object parameterObject) {
-    Object value = OgnlCache.getValue(expression, parameterObject);
+    Object value = OgnlCache.getValue(expression, parameterObject, classResolver);
     if (value instanceof Boolean) {
       return (Boolean) value;
     }
@@ -40,7 +57,7 @@ public class ExpressionEvaluator {
   }
 
   public Iterable<?> evaluateIterable(String expression, Object parameterObject) {
-    Object value = OgnlCache.getValue(expression, parameterObject);
+    Object value = OgnlCache.getValue(expression, parameterObject, classResolver);
     if (value == null) {
       throw new BuilderException("The expression '" + expression + "' evaluated to a null value.");
     }

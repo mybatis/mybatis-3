@@ -15,23 +15,54 @@
  */
 package org.apache.ibatis.scripting.xmltags;
 
-import ognl.DefaultClassResolver;
-import org.apache.ibatis.io.Resources;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import ognl.ClassResolver;
+import org.apache.ibatis.type.TypeAliasRegistry;
+import org.apache.ibatis.type.TypeException;
 
 /**
  * Custom ognl {@code ClassResolver} which behaves same like ognl's
- * {@code DefaultClassResolver}. But uses the {@code Resources}
+ * {@code DefaultClassResolver}. But uses the {@link TypeAliasRegistry#resolveAlias(String)}
  * utility class to find the target class instead of {@code Class#forName(String)}.
  *
  * @author Daniel Guggi
  *
  * @see <a href='https://github.com/mybatis/mybatis-3/issues/161'>Issue 161</a>
  */
-public class OgnlClassResolver extends DefaultClassResolver {
+public class OgnlClassResolver implements ClassResolver {
 
+  private final Map<String, Class> classCache = new ConcurrentHashMap<>(101);
+  private final TypeAliasRegistry registry;
+
+  public OgnlClassResolver() {
+    this(new TypeAliasRegistry());
+  }
+
+  /**
+   * @since 3.5.2
+   */
+  public OgnlClassResolver(TypeAliasRegistry registry) {
+    this.registry = registry;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
   @Override
-  protected Class toClassForName(String className) throws ClassNotFoundException {
-    return Resources.classForName(className);
+  public Class classForName(String className, Map context) {
+    return classCache.computeIfAbsent(className, k -> {
+      try {
+        return registry.resolveAlias(k);
+      } catch (TypeException e) {
+        if (k.indexOf('.') == -1) {
+          // fallback to resolve class from 'java.lang' package (support same behavior with DefaultClassResolver)
+          return registry.resolveAlias("java.lang." + className);
+        }
+        throw e;
+      }
+    });
   }
 
 }

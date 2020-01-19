@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -23,10 +23,21 @@ public class IfSqlNode implements SqlNode {
   private final String test;
   private final SqlNode contents;
 
+  /**
+   * @deprecated Since 3.5.2, please use the {@link #IfSqlNode(SqlNode, String, OgnlClassResolver)}
+   */
+  @Deprecated
   public IfSqlNode(SqlNode contents, String test) {
+    this(contents, test, null);
+  }
+
+  /**
+   * @since 3.5.2
+   */
+  public IfSqlNode(SqlNode contents, String test, OgnlClassResolver classResolver) {
     this.test = test;
     this.contents = contents;
-    this.evaluator = new ExpressionEvaluator();
+    this.evaluator = new ExpressionEvaluator(classResolver);
   }
 
   @Override

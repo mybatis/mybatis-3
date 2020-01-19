@@ -28,14 +28,38 @@ import org.apache.ibatis.type.SimpleTypeRegistry;
 public class TextSqlNode implements SqlNode {
   private final String text;
   private final Pattern injectionFilter;
+  private final OgnlClassResolver classResolver;
 
+  /**
+   * @deprecated Since 3.5.2, please use the {@link #TextSqlNode(String, OgnlClassResolver)}
+   */
+  @Deprecated
   public TextSqlNode(String text) {
-    this(text, null);
+    this(text, null, null);
   }
 
+  /**
+   * @deprecated Since 3.5.2, please use the {@link #TextSqlNode(String, Pattern, OgnlClassResolver)}
+   */
+  @Deprecated
   public TextSqlNode(String text, Pattern injectionFilter) {
+    this(text, injectionFilter, null);
+  }
+
+  /**
+   * @since 3.5.2
+   */
+  public TextSqlNode(String text, OgnlClassResolver classResolver) {
+    this(text, null, classResolver);
+  }
+
+  /**
+   * @since 3.5.2
+   */
+  public TextSqlNode(String text, Pattern injectionFilter, OgnlClassResolver classResolver) {
     this.text = text;
     this.injectionFilter = injectionFilter;
+    this.classResolver = classResolver;
   }
 
   public boolean isDynamic() {
@@ -47,7 +71,7 @@ public class TextSqlNode implements SqlNode {
 
   @Override
   public boolean apply(DynamicContext context) {
-    GenericTokenParser parser = createParser(new BindingTokenParser(context, injectionFilter));
+    GenericTokenParser parser = createParser(new BindingTokenParser(context, injectionFilter, classResolver));
     context.appendSql(parser.parse(text));
     return true;
   }
@@ -60,10 +84,12 @@ public class TextSqlNode implements SqlNode {
 
     private DynamicContext context;
     private Pattern injectionFilter;
+    private final OgnlClassResolver classResolver;
 
-    public BindingTokenParser(DynamicContext context, Pattern injectionFilter) {
+    private BindingTokenParser(DynamicContext context, Pattern injectionFilter, OgnlClassResolver classResolver) {
       this.context = context;
       this.injectionFilter = injectionFilter;
+      this.classResolver = classResolver;
     }
 
     @Override
@@ -74,7 +100,7 @@ public class TextSqlNode implements SqlNode {
       } else if (SimpleTypeRegistry.isSimpleType(parameter.getClass())) {
         context.getBindings().put("value", parameter);
       }
-      Object value = OgnlCache.getValue(content, context.getBindings());
+      Object value = OgnlCache.getValue(content, context.getBindings(), classResolver);
       String srtValue = value == null ? "" : String.valueOf(value); // issue #274 return "" instead of "null"
       checkInjection(srtValue);
       return srtValue;

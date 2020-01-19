@@ -37,7 +37,7 @@ public class ForEachSqlNode implements SqlNode {
   private final Configuration configuration;
 
   public ForEachSqlNode(Configuration configuration, SqlNode contents, String collectionExpression, String index, String item, String open, String close, String separator) {
-    this.evaluator = new ExpressionEvaluator();
+    this.evaluator = new ExpressionEvaluator(configuration.getOgnlClassResolver());
     this.collectionExpression = collectionExpression;
     this.contents = contents;
     this.open = open;
