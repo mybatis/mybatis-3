@@ -60,23 +60,23 @@
   </select>
 
   <sql id="include">
-  	FROM names
+      FROM names
   </sql>
 
   <select id="selectRawWithIncludeAndCData" resultType="Name" lang="raw">
-  	<![CDATA[
+      <![CDATA[
     SELECT firstName, lastName
-  	]]>
+      ]]>
     <include refid="includeWithCData"/>
-  	<![CDATA[
+      <![CDATA[
     WHERE lastName LIKE #{name}
-  	]]>
+      ]]>
   </select>
 
   <sql id="includeWithCData">
-  	<![CDATA[
-  	FROM names
-  	]]>
+      <![CDATA[
+      FROM names
+      ]]>
   </sql>
 
   <select id="selectXml" resultType="Name" lang="xml">

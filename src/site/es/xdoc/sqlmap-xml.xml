@@ -672,7 +672,7 @@ public class User {
           Ojalá todo fuera tan sencillo.
         </p>
 
-	      <h4>Mapeo de resultados avanzado</h4>
+        <h4>Mapeo de resultados avanzado</h4>
 
         <p>
           MyBatis fue creado con una idea en mente: las bases de datos no siempre son como a ti te gustaría que fueran. Nos encantaría que todas las bases de datos estuvieran en 3ª forma normal o BCNF, pero no lo están. Sería genial que una base de datos encajara perfectamente con todas las aplicaciones que la usan pero no es así. Los ResultMaps son la respuesta de MyBatis a este problema.

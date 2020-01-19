@@ -22,29 +22,29 @@
 
 <configuration>
 
-	<settings>
-		<setting name="mapUnderscoreToCamelCase" value="true" />
-	</settings>
+    <settings>
+        <setting name="mapUnderscoreToCamelCase" value="true" />
+    </settings>
 
-	<typeAliases>
-		<package name="org/apache/ibatis/submitted/missing_id_property" />
-	</typeAliases>
+    <typeAliases>
+        <package name="org/apache/ibatis/submitted/missing_id_property" />
+    </typeAliases>
 
-	<environments default="development">
-		<environment id="development">
-			<transactionManager type="JDBC">
-				<property name="" value="" />
-			</transactionManager>
-			<dataSource type="UNPOOLED">
-				<property name="driver" value="org.hsqldb.jdbcDriver" />
-				<property name="url" value="jdbc:hsqldb:mem:missing_id_property" />
-				<property name="username" value="sa" />
-			</dataSource>
-		</environment>
-	</environments>
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC">
+                <property name="" value="" />
+            </transactionManager>
+            <dataSource type="UNPOOLED">
+                <property name="driver" value="org.hsqldb.jdbcDriver" />
+                <property name="url" value="jdbc:hsqldb:mem:missing_id_property" />
+                <property name="username" value="sa" />
+            </dataSource>
+        </environment>
+    </environments>
 
-	<mappers>
-		<mapper resource="org/apache/ibatis/submitted/missing_id_property/Map.xml" />
-	</mappers>
+    <mappers>
+        <mapper resource="org/apache/ibatis/submitted/missing_id_property/Map.xml" />
+    </mappers>
 
 </configuration>

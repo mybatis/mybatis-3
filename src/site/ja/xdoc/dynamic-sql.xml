@@ -233,7 +233,7 @@ AND title like ‘someTitle’]]></source>
 
     <p>これまでのセクションで出てきた XML タグは、全てデフォルトの言語ドライバー <code>org.apache.ibatis.scripting.xmltags.XmlLanguageDriver</code> （エイリアスは <code>xml</code> ）によって提供されているものです。</p>
 
-	</subsection>
-	</section>
+    </subsection>
+    </section>
   </body>
 </document>
