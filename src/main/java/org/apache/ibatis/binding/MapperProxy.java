@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -82,14 +82,14 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
       if (Object.class.equals(method.getDeclaringClass())) {
         return method.invoke(this, args);
       } else {
-        return cachedInvoker(proxy, method, args).invoke(proxy, method, args, sqlSession);
+        return cachedInvoker(method).invoke(proxy, method, args, sqlSession);
       }
     } catch (Throwable t) {
       throw ExceptionUtil.unwrapThrowable(t);
     }
   }
 
-  private MapperMethodInvoker cachedInvoker(Object proxy, Method method, Object[] args) throws Throwable {
+  private MapperMethodInvoker cachedInvoker(Method method) throws Throwable {
     try {
       return methodCache.computeIfAbsent(method, m -> {
         if (m.isDefault()) {
