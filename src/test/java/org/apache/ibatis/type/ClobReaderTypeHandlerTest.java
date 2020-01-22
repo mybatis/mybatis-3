@@ -23,6 +23,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.*;
 import java.sql.Clob;
+
 import javax.sql.DataSource;
 
 import org.apache.ibatis.BaseDataTest;

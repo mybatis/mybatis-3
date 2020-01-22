@@ -17,6 +17,7 @@ package org.apache.ibatis.submitted.sqlprovider;
 
 import java.util.List;
 import java.util.Map;
+
 import org.apache.ibatis.annotations.DeleteProvider;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Param;

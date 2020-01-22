@@ -18,6 +18,7 @@ package org.apache.ibatis.session;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.concurrent.atomic.AtomicInteger;
+
 import javax.sql.DataSource;
 
 import org.apache.ibatis.BaseDataTest;

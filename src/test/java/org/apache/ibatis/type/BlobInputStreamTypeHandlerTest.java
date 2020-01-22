@@ -21,6 +21,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.*;
 import java.sql.Blob;
+
 import javax.sql.DataSource;
 
 import org.apache.ibatis.BaseDataTest;

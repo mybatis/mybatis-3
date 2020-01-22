@@ -16,6 +16,7 @@
 package org.apache.ibatis.scripting.xmltags;
 
 import ognl.DefaultClassResolver;
+
 import org.apache.ibatis.io.Resources;
 
 /**
