@@ -393,11 +393,9 @@ public final class TypeHandlerRegistry {
       Map<JdbcType, TypeHandler<?>> map = typeHandlerMap.get(javaType);
       if (map == null || map == NULL_TYPE_HANDLER_MAP) {
         map = new HashMap<>();
-        map.put(jdbcType, handler);
-        typeHandlerMap.put(javaType, map);
-      } else {
-        map.put(jdbcType, handler);
       }
+      map.put(jdbcType, handler);
+      typeHandlerMap.put(javaType, map);
     }
     allTypeHandlersMap.put(handler.getClass(), handler);
   }
