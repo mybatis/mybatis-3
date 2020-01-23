@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,6 +24,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.apache.ibatis.domain.misc.RichType;
 import org.junit.jupiter.api.BeforeEach;
@@ -214,5 +219,31 @@ class TypeHandlerRegistryTest {
     assertFalse(typeHandlerRegistry.hasTypeHandler(Address.class));
     typeHandlerRegistry.register(Address.class, StringTypeHandler.class);
     assertTrue(typeHandlerRegistry.hasTypeHandler(Address.class));
+  }
+
+  enum TestEnum {
+    ONE,
+    TWO
+  }
+
+  @Test
+  void shouldAutoRegisterEnutmTypeInMultiThreadEnvironment() throws Exception {
+    // gh-1820
+    ExecutorService executorService = Executors.newCachedThreadPool();
+    try {
+      for (int iteration = 0; iteration < 2000; iteration++) {
+        TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry();
+        List<Future<Boolean>> taskResults = IntStream.range(0, 2)
+            .mapToObj(taskIndex -> executorService.submit(() -> {
+              return typeHandlerRegistry.hasTypeHandler(TestEnum.class, JdbcType.VARCHAR);
+            })).collect(Collectors.toList());
+        for (int i = 0; i < taskResults.size(); i++) {
+          Future<Boolean> future = taskResults.get(i);
+          assertTrue(future.get(), "false is returned at round " + iteration);
+        }
+      }
+    } finally {
+      executorService.shutdownNow();
+    }
   }
 }
