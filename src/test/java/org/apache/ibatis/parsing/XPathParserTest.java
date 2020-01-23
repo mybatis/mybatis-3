@@ -251,7 +251,7 @@ class XPathParserTest {
       fail("bug");
     } catch (IOException e){
     } catch (BuilderException e){
-      Assert.assertEquals("Error creating document instance.  Cause: java.lang.IllegalArgumentException: Xml contain illegal char, please check it in ansi encoding",
+      Assert.assertEquals("Error creating document instance.  Cause: org.apache.ibatis.exceptions.IllegalCharException: Xml contain illegal char, please check it in ansi encoding",
         e.getMessage());
     }
   }

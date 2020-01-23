@@ -28,6 +28,7 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -37,6 +38,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.ibatis.builder.BuilderException;
+import org.apache.ibatis.exceptions.IllegalCharException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -76,6 +78,7 @@ public class XPathParser {
   }
 
   public XPathParser(Document document) {
+    checkDocument(document);
     commonConstructor(false, null, null);
     this.document = document;
   }
@@ -96,6 +99,7 @@ public class XPathParser {
   }
 
   public XPathParser(Document document, boolean validation) {
+    checkDocument(document);
     commonConstructor(validation, null, null);
     this.document = document;
   }
@@ -116,6 +120,7 @@ public class XPathParser {
   }
 
   public XPathParser(Document document, boolean validation, Properties variables) {
+    checkDocument(document);
     commonConstructor(validation, variables, null);
     this.document = document;
   }
@@ -136,6 +141,7 @@ public class XPathParser {
   }
 
   public XPathParser(Document document, boolean validation, Properties variables, EntityResolver entityResolver) {
+    checkDocument(document);
     commonConstructor(validation, variables, entityResolver);
     this.document = document;
   }
@@ -278,18 +284,22 @@ public class XPathParser {
     static final TransformerFactory tf = TransformerFactory.newInstance();
   }
 
-  private void checkDocument(Document document) throws TransformerException {
-    Transformer transformer = TransformerFactoryHolder.tf.newTransformer();
+  private void checkDocument(Document document) {
     ByteArrayOutputStream bos = new ByteArrayOutputStream();
-    transformer.transform(new DOMSource(document), new StreamResult(bos));
+    try {
+      Transformer transformer = TransformerFactoryHolder.tf.newTransformer();
+      transformer.transform(new DOMSource(document), new StreamResult(bos));
+    } catch (TransformerException e) {
+      throw new BuilderException("transformer document to byte array error");
+    }
     String xmlStr = bos.toString();
     if (xmlStr == null || xmlStr.length() == 0) {
-      throw new IllegalArgumentException("config xml is empty");
+      throw new BuilderException("config xml is empty");
     }
     char[] chars = xmlStr.toCharArray();
     for (char xmlChar : chars) {
       if(XML_ILLEGAL_CHAR == xmlChar) {
-        throw new IllegalArgumentException("Xml contain illegal char, please check it in ansi encoding");
+        throw new IllegalCharException("Xml contain illegal char, please check it in ansi encoding");
       }
     }
   }
