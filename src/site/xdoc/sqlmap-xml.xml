@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2018 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -823,7 +823,7 @@ public class User {
           Now if only the world was always that simple.
         </p>
 
-	    <h4>Advanced Result Maps</h4>
+        <h4>Advanced Result Maps</h4>
 
         <p>
           MyBatis was created with one idea in mind: Databases aren't always what you want or need them to be.

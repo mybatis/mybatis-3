@@ -22,26 +22,26 @@
 
 <mapper namespace="org.apache.ibatis.submitted.serializecircular.PersonMapper">
 
-	<resultMap id="map" type="org.apache.ibatis.submitted.serializecircular.Person">
-		<id column="id" property="id" />
-		<association column="nr_department" property="department" javaType="org.apache.ibatis.submitted.serializecircular.Department" select="org.apache.ibatis.submitted.serializecircular.DepartmentMapper.getById"/>
-	</resultMap>
+    <resultMap id="map" type="org.apache.ibatis.submitted.serializecircular.Person">
+        <id column="id" property="id" />
+        <association column="nr_department" property="department" javaType="org.apache.ibatis.submitted.serializecircular.Department" select="org.apache.ibatis.submitted.serializecircular.DepartmentMapper.getById"/>
+    </resultMap>
 
-	<sql id="columns">
-		person.id,
-		person.nr_department
-	</sql>
+    <sql id="columns">
+        person.id,
+        person.nr_department
+    </sql>
 
-	<sql id="table">person</sql>
+    <sql id="table">person</sql>
 
-	<select id="getById" parameterType="Integer" resultMap="map">
+    <select id="getById" parameterType="Integer" resultMap="map">
         SELECT
-        	person.id,
-			person.nr_department
+            person.id,
+            person.nr_department
         FROM
-        	person
+            person
         WHERE
-        	id = #{id}
+            id = #{id}
     </select>
 
 </mapper>

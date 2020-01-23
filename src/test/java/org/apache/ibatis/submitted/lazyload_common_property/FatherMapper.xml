@@ -30,8 +30,8 @@
 
 
     <select id="selectById" resultMap="FatherMap" parameterType="int">
-    	SELECT id, name, grand_father_id
-    	FROM Father
-    	WHERE id = #{id}
+        SELECT id, name, grand_father_id
+        FROM Father
+        WHERE id = #{id}
     </select>
 </mapper>

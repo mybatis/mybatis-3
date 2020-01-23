@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -127,8 +127,8 @@ public class TransactionalCache implements Cache {
       try {
         delegate.removeObject(entry);
       } catch (Exception e) {
-        log.warn("Unexpected exception while notifiying a rollback to the cache adapter."
-            + "Consider upgrading your cache adapter to the latest version.  Cause: " + e);
+        log.warn("Unexpected exception while notifiying a rollback to the cache adapter. "
+            + "Consider upgrading your cache adapter to the latest version. Cause: " + e);
       }
     }
   }

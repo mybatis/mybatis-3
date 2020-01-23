@@ -27,23 +27,23 @@
         <setting name="aggressiveLazyLoading" value="true"/>
     </settings>
 
-	<environments default="development">
-		<environment id="development">
-			<transactionManager type="JDBC">
-				<property name="" value="" />
-			</transactionManager>
-			<dataSource type="UNPOOLED">
-				<property name="driver" value="org.hsqldb.jdbcDriver" />
-				<property name="url" value="jdbc:hsqldb:mem:serializecircularwith" />
-				<property name="username" value="sa" />
-			</dataSource>
-		</environment>
-	</environments>
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC">
+                <property name="" value="" />
+            </transactionManager>
+            <dataSource type="UNPOOLED">
+                <property name="driver" value="org.hsqldb.jdbcDriver" />
+                <property name="url" value="jdbc:hsqldb:mem:serializecircularwith" />
+                <property name="username" value="sa" />
+            </dataSource>
+        </environment>
+    </environments>
 
-	<mappers>
-		<mapper class="org.apache.ibatis.submitted.serializecircular.PersonMapper" />
-		<mapper class="org.apache.ibatis.submitted.serializecircular.AttributeMapper" />
-		<mapper class="org.apache.ibatis.submitted.serializecircular.DepartmentMapper" />
-	</mappers>
+    <mappers>
+        <mapper class="org.apache.ibatis.submitted.serializecircular.PersonMapper" />
+        <mapper class="org.apache.ibatis.submitted.serializecircular.AttributeMapper" />
+        <mapper class="org.apache.ibatis.submitted.serializecircular.DepartmentMapper" />
+    </mappers>
 
 </configuration>
