@@ -55,10 +55,10 @@ class CacheTest {
 
   /*
    * Test Plan:
-   *  1) SqlSession 1 executes "select * from A".
-   *  2) SqlSession 1 closes.
-   *  3) SqlSession 2 executes "delete from A where id = 1"
-   *  4) SqlSession 2 executes "select * from A"
+   *  1) XmlSqlTest 1 executes "select * from A".
+   *  2) XmlSqlTest 1 closes.
+   *  3) XmlSqlTest 2 executes "delete from A where id = 1"
+   *  4) XmlSqlTest 2 executes "select * from A"
    *
    * Assert:
    *   Step 4 returns 1 row. (This case fails when caching is enabled.)
@@ -83,12 +83,12 @@ class CacheTest {
 
   /*
    * Test Plan:
-   *  1) SqlSession 1 executes "select * from A".
-   *  2) SqlSession 1 closes.
-   *  3) SqlSession 2 executes "delete from A where id = 1"
-   *  4) SqlSession 2 executes "select * from A"
-   *  5) SqlSession 2 rollback
-   *  6) SqlSession 3 executes "select * from A"
+   *  1) XmlSqlTest 1 executes "select * from A".
+   *  2) XmlSqlTest 1 closes.
+   *  3) XmlSqlTest 2 executes "delete from A where id = 1"
+   *  4) XmlSqlTest 2 executes "select * from A"
+   *  5) XmlSqlTest 2 rollback
+   *  6) XmlSqlTest 3 executes "select * from A"
    *
    * Assert:
    *   Step 6 returns 2 rows.
@@ -117,12 +117,12 @@ class CacheTest {
 
   /*
    * Test Plan with Autocommit on:
-   *  1) SqlSession 1 executes "select * from A".
-   *  2) SqlSession 1 closes.
-   *  3) SqlSession 2 executes "delete from A where id = 1"
-   *  4) SqlSession 2 closes.
-   *  5) SqlSession 2 executes "select * from A".
-   *  6) SqlSession 3 closes.
+   *  1) XmlSqlTest 1 executes "select * from A".
+   *  2) XmlSqlTest 1 closes.
+   *  3) XmlSqlTest 2 executes "delete from A where id = 1"
+   *  4) XmlSqlTest 2 closes.
+   *  5) XmlSqlTest 2 executes "select * from A".
+   *  6) XmlSqlTest 3 closes.
    *
    * Assert:
    *   Step 6 returns 1 row.
@@ -150,12 +150,12 @@ class CacheTest {
    * Test case for #405
    *
    * Test Plan with Autocommit on:
-   *  1) SqlSession 1 executes "select * from A".
-   *  2) SqlSession 1 closes.
-   *  3) SqlSession 2 executes "insert into person (id, firstname, lastname) values (3, hello, world)"
-   *  4) SqlSession 2 closes.
-   *  5) SqlSession 3 executes "select * from A".
-   *  6) SqlSession 3 closes.
+   *  1) XmlSqlTest 1 executes "select * from A".
+   *  2) XmlSqlTest 1 closes.
+   *  3) XmlSqlTest 2 executes "insert into person (id, firstname, lastname) values (3, hello, world)"
+   *  4) XmlSqlTest 2 closes.
+   *  5) XmlSqlTest 3 executes "select * from A".
+   *  6) XmlSqlTest 3 closes.
    *
    * Assert:
    *   Step 5 returns 3 row.
@@ -181,14 +181,14 @@ class CacheTest {
 
   /*-
    * Test Plan with Autocommit on:
-   *  1) SqlSession 1 executes select to cache result
-   *  2) SqlSession 1 closes.
-   *  3) SqlSession 2 executes insert without flushing cache
-   *  4) SqlSession 2 closes.
-   *  5) SqlSession 3 executes select (flushCache = false)
-   *  6) SqlSession 3 closes.
-   *  7) SqlSession 4 executes select (flushCache = true)
-   *  8) SqlSession 4 closes.
+   *  1) XmlSqlTest 1 executes select to cache result
+   *  2) XmlSqlTest 1 closes.
+   *  3) XmlSqlTest 2 executes insert without flushing cache
+   *  4) XmlSqlTest 2 closes.
+   *  5) XmlSqlTest 3 executes select (flushCache = false)
+   *  6) XmlSqlTest 3 closes.
+   *  7) XmlSqlTest 4 executes select (flushCache = true)
+   *  8) XmlSqlTest 4 closes.
    *
    * Assert:
    *   Step 5 returns 2 row.

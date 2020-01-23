@@ -16,6 +16,7 @@
 package org.apache.ibatis.parsing;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,7 +28,10 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.io.Resources;
+import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.jupiter.api.Test;
+import org.junit.rules.ExpectedException;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
@@ -239,4 +243,16 @@ class XPathParserTest {
     assertEquals(carsNodeToStringExpect, carsNodeToString);
   }
 
+  @Test
+  public void testXmlIllegalChar() {
+    String resource = "resources/illegal_char.xml";
+    try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
+      XPathParser parser = new XPathParser(inputStream, false, null, null);
+      fail("bug");
+    } catch (IOException e){
+    } catch (BuilderException e){
+      Assert.assertEquals("Error creating document instance.  Cause: java.lang.IllegalArgumentException: Xml contain illegal char, please check it in ansi encoding",
+        e.getMessage());
+    }
+  }
 }

@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.parsing;
 
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
@@ -26,6 +27,11 @@ import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
@@ -51,6 +57,8 @@ public class XPathParser {
   private EntityResolver entityResolver;
   private Properties variables;
   private XPath xpath;
+
+  private static final char XML_ILLEGAL_CHAR = '\uFEFF';
 
   public XPathParser(String xml) {
     commonConstructor(false, null, null);
@@ -258,9 +266,31 @@ public class XPathParser {
           // NOP
         }
       });
-      return builder.parse(inputSource);
+      Document document = builder.parse(inputSource);
+      checkDocument(document);
+      return document;
     } catch (Exception e) {
       throw new BuilderException("Error creating document instance.  Cause: " + e, e);
+    }
+  }
+
+  private static class TransformerFactoryHolder {
+    static final TransformerFactory tf = TransformerFactory.newInstance();
+  }
+
+  private void checkDocument(Document document) throws TransformerException {
+    Transformer transformer = TransformerFactoryHolder.tf.newTransformer();
+    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    transformer.transform(new DOMSource(document), new StreamResult(bos));
+    String xmlStr = bos.toString();
+    if (xmlStr == null || xmlStr.length() == 0) {
+      throw new IllegalArgumentException("config xml is empty");
+    }
+    char[] chars = xmlStr.toCharArray();
+    for (char xmlChar : chars) {
+      if(XML_ILLEGAL_CHAR == xmlChar) {
+        throw new IllegalArgumentException("Xml contain illegal char, please check it in ansi encoding");
+      }
     }
   }
 

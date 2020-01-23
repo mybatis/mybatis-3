@@ -1,0 +1,14 @@
+<insert id="insertAuthorList" parameterType="org.apache.ibatis.domain.blog.Author">
+  insert into Author (id,username,password,email,bio)
+  values
+  <foreach item="item" index="index" collection="list"
+           open="" separator="," close="">
+    (
+    #{item.﻿id},
+    #{item.username},
+    #{item.password},
+    #{item.email},
+    #{item.bio}
+    )
+  </foreach>
+</insert>
