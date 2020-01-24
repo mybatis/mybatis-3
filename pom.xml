@@ -267,7 +267,7 @@
     <dependency>
       <groupId>org.testcontainers</groupId>
       <artifactId>postgresql</artifactId>
-      <version>1.12.4</version>
+      <version>1.12.5</version>
       <scope>test</scope>
     </dependency>
     <dependency>
