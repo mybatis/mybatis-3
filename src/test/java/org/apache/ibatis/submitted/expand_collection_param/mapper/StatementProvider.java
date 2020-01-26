@@ -21,7 +21,7 @@ import org.apache.ibatis.submitted.expand_collection_param.model.UserRole;
 
 import java.util.List;
 
-class StatementProvider {
+public class StatementProvider {
   public String getUsers(@Param("id") Integer id, @Param("roles") List<UserRole> roles) {
     SQL sql = new SQL();
     sql.SELECT("*");
