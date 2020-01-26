@@ -81,13 +81,9 @@ public class XMLScriptBuilder extends BaseBuilder {
       XNode child = node.newXNode(children.item(i));
       if (child.getNode().getNodeType() == Node.CDATA_SECTION_NODE || child.getNode().getNodeType() == Node.TEXT_NODE) {
         String data = child.getStringBody("");
-        TextSqlNode textSqlNode = new TextSqlNode(data);
-        if (textSqlNode.isDynamic()) {
-          contents.add(textSqlNode);
-          isDynamic = true;
-        } else {
-          contents.add(new StaticTextSqlNode(data));
-        }
+        TextNodeParserResult parserResult = TextNodeParser.parse(configuration, data);
+        contents.addAll(parserResult.nodes);
+        isDynamic = isDynamic || parserResult.isDynamic;
       } else if (child.getNode().getNodeType() == Node.ELEMENT_NODE) { // issue #628
         String nodeName = child.getNode().getNodeName();
         NodeHandler handler = nodeHandlerMap.get(nodeName);

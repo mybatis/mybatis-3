@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.apache.ibatis.submitted.expand_collection_param.mapper.XmlMapper">
+
+  <select id="getUsers" resultType="org.apache.ibatis.submitted.expand_collection_param.model.User">
+      select * from users
+      where id != #{id}
+      and role in (#{roles...})
+      order by id
+  </select>
+
+
+</mapper>
