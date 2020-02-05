@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -22,11 +22,11 @@
 
 <mapper namespace="org.apache.ibatis.submitted.complex_type">
 
-	<update id="updateProps" parameterType="org.apache.ibatis.submitted.complex_type.Item">
-		insert into properties (item_id, property_id, value) values
-		<foreach collection="properties" item="prop" close=";" separator=",">
-			(#{id}, #{prop.id}, #{prop.value})
-		</foreach>
-	</update>
+    <update id="updateProps" parameterType="org.apache.ibatis.submitted.complex_type.Item">
+        insert into properties (item_id, property_id, value) values
+        <foreach collection="properties" item="prop" close=";" separator=",">
+            (#{id}, #{prop.id}, #{prop.value})
+        </foreach>
+    </update>
 
 </mapper>

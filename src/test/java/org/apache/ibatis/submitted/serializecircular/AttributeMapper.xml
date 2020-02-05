@@ -21,17 +21,17 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.apache.ibatis.submitted.serializecircular.AttributeMapper">
-	<resultMap id="map" type="org.apache.ibatis.submitted.serializecircular.Attribute">
-		<id column="nr_id" property="id" />
-	</resultMap>
+    <resultMap id="map" type="org.apache.ibatis.submitted.serializecircular.Attribute">
+        <id column="nr_id" property="id" />
+    </resultMap>
 
-	<select id="getById" parameterType="Integer" resultMap="map">
+    <select id="getById" parameterType="Integer" resultMap="map">
         SELECT
-        	productattribute.nr_id
+            productattribute.nr_id
         FROM
-        	productattribute
+            productattribute
         WHERE
-        	nr_id = #{id}
+            nr_id = #{id}
     </select>
 
 </mapper>

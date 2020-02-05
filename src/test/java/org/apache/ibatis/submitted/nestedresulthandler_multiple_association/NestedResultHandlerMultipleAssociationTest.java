@@ -16,7 +16,6 @@
 package org.apache.ibatis.submitted.nestedresulthandler_multiple_association;
 
 import java.io.Reader;
-
 import java.util.List;
 
 import org.apache.ibatis.BaseDataTest;

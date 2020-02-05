@@ -35,6 +35,6 @@
         WHERE id = #{id}
     </sql>
     <select id="selectById" resultMap="personMap" parameterType="int">
-    	<include refid="selectByIdScript"/>
+        <include refid="selectByIdScript"/>
     </select>
 </mapper>

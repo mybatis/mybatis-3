@@ -231,7 +231,7 @@ AND title like ‘someTitle’]]></source>
 
     <p>Todos los tags que has visto en las secciones previas se proporcionan por el lenguaje por defecto de MyBatis cuyo driver es
     <code>org.apache.ibatis.scripting.xmltags.XmlLanguageDriver</code> que tiene un alias llamado <code>xml</code>.</p>
-	</subsection>
+  </subsection>
   </section>
   </body>
 </document>

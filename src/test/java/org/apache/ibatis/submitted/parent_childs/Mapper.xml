@@ -22,30 +22,30 @@
 
 <mapper namespace="org.apache.ibatis.submitted.parent_childs.Mapper">
 
-	<resultMap id="ParentMap" type="org.apache.ibatis.submitted.parent_childs.Parent">
-		<id column="p_Id" property="id" />
-		<id column="p_Name" property="name" />
-		<id column="p_SurName" property="surName" />
-		<collection property="childs" resultMap="ChildMap" />
-	</resultMap>
+    <resultMap id="ParentMap" type="org.apache.ibatis.submitted.parent_childs.Parent">
+        <id column="p_Id" property="id" />
+        <id column="p_Name" property="name" />
+        <id column="p_SurName" property="surName" />
+        <collection property="childs" resultMap="ChildMap" />
+    </resultMap>
 
-	<resultMap id="ChildMap" type="org.apache.ibatis.submitted.parent_childs.Child">
-		<id column="c_id" property="id" />
-		<id column="c_Name" property="name" />
-		<id column="c_SurName" property="surName" />
-		<id column="c_Age" property="age" />
-	</resultMap>
+    <resultMap id="ChildMap" type="org.apache.ibatis.submitted.parent_childs.Child">
+        <id column="c_id" property="id" />
+        <id column="c_Name" property="name" />
+        <id column="c_SurName" property="surName" />
+        <id column="c_Age" property="age" />
+    </resultMap>
 
-	<select id="getParents" resultMap="ParentMap">
-		select
-		p.Id as p_Id,
-		p.Name as p_Name,
-		p.SurName as p_SurName,
-		c.Id as c_Id,
-		c.Name as c_Name,
-		c.SurName as c_SurName,
-		c.Age as c_Age
-		from Parent p
-		left outer join Child c on p.Id = c.ParentId
-	</select>
+    <select id="getParents" resultMap="ParentMap">
+        select
+        p.Id as p_Id,
+        p.Name as p_Name,
+        p.SurName as p_SurName,
+        c.Id as c_Id,
+        c.Name as c_Name,
+        c.SurName as c_SurName,
+        c.Age as c_Age
+        from Parent p
+        left outer join Child c on p.Id = c.ParentId
+    </select>
 </mapper>

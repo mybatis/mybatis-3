@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.function.Supplier;
 
 import org.w3c.dom.CharacterData;
 import org.w3c.dom.Element;
@@ -82,7 +83,7 @@ public class XNode {
       }
       String value = current.getStringAttribute("id",
           current.getStringAttribute("value",
-              current.getStringAttribute("property", null)));
+              current.getStringAttribute("property", (String) null)));
       if (value != null) {
         value = value.replace('.', '_');
         builder.insert(0, "]");
@@ -209,8 +210,25 @@ public class XNode {
     }
   }
 
+  /**
+   * Return a attribute value as String.
+   *
+   * <p>
+   * If attribute value is absent, return value that provided from supplier of default value.
+   * </p>
+   *
+   * @param name attribute name
+   * @param defSupplier a supplier of default value
+   *
+   * @since 3.5.4
+   */
+  public String getStringAttribute(String name, Supplier<String> defSupplier) {
+    String value = attributes.getProperty(name);
+    return value == null ? defSupplier.get() : value;
+  }
+
   public String getStringAttribute(String name) {
-    return getStringAttribute(name, null);
+    return getStringAttribute(name, (String) null);
   }
 
   public String getStringAttribute(String name, String def) {
@@ -333,9 +351,9 @@ public class XNode {
     List<XNode> children = getChildren();
     if (!children.isEmpty()) {
       builder.append(">\n");
-      for (int k = 0; k < children.size(); k++) {
+      for (XNode child : children) {
         indent(builder, level + 1);
-        children.get(k).toString(builder, level + 1);
+        child.toString(builder, level + 1);
       }
       indent(builder, level);
       builder.append("</");

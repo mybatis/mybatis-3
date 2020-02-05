@@ -229,7 +229,7 @@ AND title like ‘someTitle’]]></source>
 
     <p>All the xml tags you have seen in the previous sections are provided by the default MyBatis language that is provided by the driver
     <code>org.apache.ibatis.scripting.xmltags.XmlLanguageDriver</code> which is aliased as <code>xml</code>.</p>
-	</subsection>
+  </subsection>
   </section>
   </body>
 </document>
