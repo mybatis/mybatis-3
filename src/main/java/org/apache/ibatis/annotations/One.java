@@ -34,6 +34,12 @@ import org.apache.ibatis.mapping.FetchType;
 @Target({})
 public @interface One {
   /**
+   * Returns the columnPrefix.
+   *
+   * @return the columnPrefix.
+   */
+  String columnPrefix() default "";
+  /**
    * Returns the result map id used to map single object.
    *
    * @return the result map id
