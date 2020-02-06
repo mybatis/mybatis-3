@@ -34,6 +34,13 @@ import org.apache.ibatis.mapping.FetchType;
 @Target({})
 public @interface Many {
   /**
+   * Returns the columnPrefix.
+   *
+   * @return the columnPrefix.
+   */
+  String columnPrefix() default "";
+
+  /**
    * Returns the result map id used to map collection.
    *
    * @return the result map id
