@@ -23,9 +23,17 @@ import java.lang.annotation.Target;
 
 /**
  * The annotation that reference a cache.
- * <p>
- * If you use this annotation, should be specified either {@link #value()} or {@link #name()} attribute.
- * </p>
+ *
+ * <p>If you use this annotation, should be specified either {@link #value()} or {@link #name()} attribute.
+ *
+ * <p><br>
+ * <b>How to use:</b>
+ * <pre>
+ * &#064;CacheNamespaceRef(UserMapper.class)
+ * public interface AdminUserMapper {
+ *   // ...
+ * }
+ * </pre>
  * @author Clinton Begin
  * @author Kazuki Shimizu
  */
@@ -35,12 +43,16 @@ import java.lang.annotation.Target;
 public @interface CacheNamespaceRef {
 
   /**
-   * A namespace type to reference a cache (the namespace name become a FQCN of specified type).
+   * Returns the namespace type to reference a cache (the namespace name become a FQCN of specified type).
+   *
+   * @return the namespace type to reference a cache
    */
   Class<?> value() default void.class;
 
   /**
-   * A namespace name to reference a cache.
+   * Returns the namespace name to reference a cache.
+   *
+   * @return the namespace name
    * @since 3.4.2
    */
   String name() default "";

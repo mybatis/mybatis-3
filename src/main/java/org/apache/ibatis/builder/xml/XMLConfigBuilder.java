@@ -18,6 +18,7 @@ package org.apache.ibatis.builder.xml;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.Properties;
+
 import javax.sql.DataSource;
 
 import org.apache.ibatis.builder.BaseBuilder;

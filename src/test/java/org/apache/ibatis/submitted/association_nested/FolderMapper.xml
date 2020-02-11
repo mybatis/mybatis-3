@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -22,9 +22,9 @@
 <mapper namespace="org.apache.ibatis.submitted.association_nested.FolderMapper">
 
   <resultMap id="folderResultMap" type="org.apache.ibatis.submitted.association_nested.FolderFlatTree">
-  	<id column="id"/>
-  	<id column="lvl1_id"/>
-  	<id column="lvl2_id"/>
+    <id column="id"/>
+    <id column="lvl1_id"/>
+    <id column="lvl2_id"/>
     <association property="root" javaType="org.apache.ibatis.submitted.association_nested.Folder">
       <result property="id" column="id"/>
       <result property="name" column="name"/>
@@ -40,11 +40,11 @@
   </resultMap>
 
   <select id="findWithSubFolders" resultMap="folderResultMap">
-		select f.id, f.name, f1.id as lvl1_id, f1.name as lvl1_name, f2.id as lvl2_id, f2.name as lvl2_name from folder f
-		left join folder f1 on f1.parent_id = f.id
-		left join folder f2 on f2.parent_id = f1.id
-		where name = #{name}
-		order by f.id, f1.id, f2.id
-	</select>
+        select f.id, f.name, f1.id as lvl1_id, f1.name as lvl1_name, f2.id as lvl2_id, f2.name as lvl2_name from folder f
+        left join folder f1 on f1.parent_id = f.id
+        left join folder f2 on f2.parent_id = f1.id
+        where name = #{name}
+        order by f.id, f1.id, f2.id
+    </select>
 
 </mapper>

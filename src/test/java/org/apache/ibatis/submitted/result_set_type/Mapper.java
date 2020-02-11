@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,9 +15,9 @@
  */
 package org.apache.ibatis.submitted.result_set_type;
 
-import org.apache.ibatis.session.RowBounds;
-
 import java.util.List;
+
+import org.apache.ibatis.session.RowBounds;
 
 public interface Mapper {
 

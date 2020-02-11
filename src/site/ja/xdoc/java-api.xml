@@ -356,7 +356,8 @@ void rollback(boolean force)</source>
         </td>
         <td>ConstructorArgs に含まれる個々のコンストラクター引数です。属性: <code>id</code>,
         <code>column</code>, <code>javaType</code>, <code>jdbcType</code>, <code>typeHandler</code>, <code>select</code>,
-        <code>resultMap</code>. id は真偽値で、指定したプロパティがオブジェクトをユニークに識別できる値であることを表します。この働きは XML 要素の <code>&lt;idArg&gt;</code> に相当します。</td>
+        <code>resultMap</code>. id は真偽値で、指定したプロパティがオブジェクトをユニークに識別できる値であることを表します。この働きは XML 要素の <code>&lt;idArg&gt;</code> に相当します。
+        3.5.4以降では、繰り返し可能な注釈として使用することができます。</td>
       </tr>
       <tr>
         <td><code>@TypeDiscriminator</code></td>
@@ -389,7 +390,8 @@ void rollback(boolean force)</source>
         </td>
         <td>ある結果列とプロパティまたはフィールドのマッピング情報を定義します。属性: <code>id</code>, <code>column</code>,
         <code>property</code>, <code>javaType</code>, <code>jdbcType</code>, <code>typeHandler</code>, <code>one</code>,
-        <code>many</code>. id は真偽値で、そのプロパティがオブジェクトの比較に使うよう指示します（XML マッピングにおける id 要素とほぼ同じです）。one は XML における association 要素に、many は collection 要素に相当します（クラス名のコンフリクトを避けるため異なる名称が使われています）。</td>
+        <code>many</code>. id は真偽値で、そのプロパティがオブジェクトの比較に使うよう指示します（XML マッピングにおける id 要素とほぼ同じです）。one は XML における association 要素に、many は collection 要素に相当します（クラス名のコンフリクトを避けるため異なる名称が使われています）。
+        3.5.4以降では、繰り返し可能な注釈として使用することができます。</td>
       </tr>
       <tr>
         <td><code>@One</code></td>

@@ -22,6 +22,24 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * The annotation that specify a method that provide an SQL for updating record(s).
+ *
+ * <p><br>
+ * <b>How to use:</b>
+ * <pre>
+ * public interface UserMapper {
+ *
+ *   &#064;UpdateProvider(type = SqlProvider.class, method = "update")
+ *   boolean update(User user);
+ *
+ *   public static class SqlProvider {
+ *     public static String update() {
+ *       return "UPDATE users SET name = #{name} WHERE id = #{id}";
+ *     }
+ *   }
+ *
+ * }
+ * </pre>
  * @author Clinton Begin
  */
 @Documented

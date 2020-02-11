@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.ibatis.binding.MapperMethod.ParamMap;
 import org.apache.ibatis.executor.Executor;
@@ -35,6 +36,7 @@ import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.reflection.ArrayUtil;
 import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.reflection.ParamNameResolver;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.defaults.DefaultSqlSession.StrictMap;
 import org.apache.ibatis.type.JdbcType;
@@ -46,6 +48,8 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
  * @author Kazuki Shimizu
  */
 public class Jdbc3KeyGenerator implements KeyGenerator {
+
+  private static final String SECOND_GENERIC_PARAM_NAME = ParamNameResolver.GENERIC_NAME_PREFIX + "2";
 
   /**
    * A shared instance.
@@ -94,7 +98,7 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
     } else if (parameter instanceof ArrayList && !((ArrayList<?>) parameter).isEmpty()
         && ((ArrayList<?>) parameter).get(0) instanceof ParamMap) {
       // Multi-param or single param with @Param in batch operation
-      assignKeysToParamMapList(configuration, rs, rsmd, keyProperties, ((ArrayList<ParamMap<?>>) parameter));
+      assignKeysToParamMapList(configuration, rs, rsmd, keyProperties, (ArrayList<ParamMap<?>>) parameter);
     } else {
       // Single param without @Param
       assignKeysToParam(configuration, rs, rsmd, keyProperties, parameter);
@@ -171,7 +175,10 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
 
   private Entry<String, KeyAssigner> getAssignerForParamMap(Configuration config, ResultSetMetaData rsmd,
       int columnPosition, Map<String, ?> paramMap, String keyProperty, String[] keyProperties, boolean omitParamName) {
-    boolean singleParam = paramMap.values().stream().distinct().count() == 1;
+    Set<String> keySet = paramMap.keySet();
+    // A caveat : if the only parameter has {@code @Param("param2")} on it,
+    // it must be referenced with param name e.g. 'param2.x'.
+    boolean singleParam = !keySet.contains(SECOND_GENERIC_PARAM_NAME);
     int firstDot = keyProperty.indexOf('.');
     if (firstDot == -1) {
       if (singleParam) {
@@ -180,10 +187,10 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
       throw new ExecutorException("Could not determine which parameter to assign generated keys to. "
           + "Note that when there are multiple parameters, 'keyProperty' must include the parameter name (e.g. 'param.id'). "
           + "Specified key properties are " + ArrayUtil.toString(keyProperties) + " and available parameters are "
-          + paramMap.keySet());
+          + keySet);
     }
     String paramName = keyProperty.substring(0, firstDot);
-    if (paramMap.containsKey(paramName)) {
+    if (keySet.contains(paramName)) {
       String argParamName = omitParamName ? null : paramName;
       String argKeyProperty = keyProperty.substring(firstDot + 1);
       return entry(paramName, new KeyAssigner(config, rsmd, columnPosition, argParamName, argKeyProperty));
@@ -193,7 +200,7 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
       throw new ExecutorException("Could not find parameter '" + paramName + "'. "
           + "Note that when there are multiple parameters, 'keyProperty' must include the parameter name (e.g. 'param.id'). "
           + "Specified key properties are " + ArrayUtil.toString(keyProperties) + " and available parameters are "
-          + paramMap.keySet());
+          + keySet);
     }
   }
 

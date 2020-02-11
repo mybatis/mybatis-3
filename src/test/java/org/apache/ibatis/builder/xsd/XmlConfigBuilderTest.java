@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,6 +14,12 @@
  *    limitations under the License.
  */
 package org.apache.ibatis.builder.xsd;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.HashSet;
 
 import org.apache.ibatis.builder.CustomLongTypeHandler;
 import org.apache.ibatis.builder.CustomObjectWrapperFactory;
@@ -43,12 +49,6 @@ import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.apache.ibatis.type.JdbcType;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-
-import java.io.InputStream;
-import java.util.Arrays;
-import java.util.HashSet;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @Disabled("We'll try a different approach. See #1393")
 class XmlConfigBuilderTest {

@@ -16,6 +16,7 @@
 package org.apache.ibatis.submitted.cglib_lazy_error;
 
 import java.io.Reader;
+
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;

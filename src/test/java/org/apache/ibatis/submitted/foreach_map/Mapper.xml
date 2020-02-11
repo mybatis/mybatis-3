@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -28,9 +28,9 @@
             open="" separator="," close="">(#{key}, #{item})</foreach>
     </insert>
 
-	<select id="sel_string_string" resultType="org.apache.ibatis.submitted.foreach_map.StringStringMapEntry">
-		select * from string_string order by id
-	</select>
+    <select id="sel_string_string" resultType="org.apache.ibatis.submitted.foreach_map.StringStringMapEntry">
+        select * from string_string order by id
+    </select>
 
     <insert id="ins_int_bool">
         insert into int_bool (key, value) values
@@ -39,8 +39,8 @@
     </insert>
 
     <select id="sel_int_bool" resultType="org.apache.ibatis.submitted.foreach_map.IntBoolMapEntry">
-		select * from int_bool order by id
-	</select>
+        select * from int_bool order by id
+    </select>
 
     <insert id="ins_nested_bean">
         insert into nested_bean (keya, keyb, valuea, valueb) values
@@ -49,8 +49,8 @@
     </insert>
 
     <select id="sel_nested_bean" resultType="org.apache.ibatis.submitted.foreach_map.NestedBeanMapEntry">
-		select * from nested_bean order by id
-	</select>
+        select * from nested_bean order by id
+    </select>
 
     <select id="sel_key_cols" resultType="int">
         select count(*) from key_cols where

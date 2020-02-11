@@ -22,6 +22,24 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * The annotation that specify a method that provide an SQL for deleting record(s).
+ *
+ * <p><br>
+ * <b>How to use:</b>
+ * <pre>
+ * public interface UserMapper {
+ *
+ *   &#064;DeleteProvider(type = SqlProvider.class, method = "deleteById")
+ *   boolean deleteById(int id);
+ *
+ *   public static class SqlProvider {
+ *     public static String deleteById() {
+ *       return "DELETE FROM users WHERE id = #{id}";
+ *     }
+ *   }
+ *
+ * }
+ * </pre>
  * @author Clinton Begin
  */
 @Documented

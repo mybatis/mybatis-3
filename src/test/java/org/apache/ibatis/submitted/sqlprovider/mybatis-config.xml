@@ -22,39 +22,39 @@
 
 <configuration>
 
-	<properties>
-		<property name="Constants.LOGICAL_DELETE_OFF" value="false"/>
-		<property name="org.apache.ibatis.parsing.PropertyParser.enable-default-value" value="true"/>
-	</properties>
+    <properties>
+        <property name="Constants.LOGICAL_DELETE_OFF" value="false"/>
+        <property name="org.apache.ibatis.parsing.PropertyParser.enable-default-value" value="true"/>
+    </properties>
 
-	<environments default="development">
-		<environment id="development">
-			<transactionManager type="JDBC">
-				<property name="" value="" />
-			</transactionManager>
-			<dataSource type="UNPOOLED">
-				<property name="driver" value="org.hsqldb.jdbcDriver" />
-				<property name="url" value="jdbc:hsqldb:mem:sqlprovider" />
-				<property name="username" value="sa" />
-			</dataSource>
-		</environment>
-		<environment id="development-derby">
-			<transactionManager type="JDBC" />
-			<dataSource type="UNPOOLED">
-				<property name="driver" value="org.apache.derby.jdbc.EmbeddedDriver" />
-				<property name="url" value="jdbc:derby:target/derby/sqlprovider;create=true" />
-				<property name="username" value="" />
-			</dataSource>
-		</environment>
-	</environments>
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC">
+                <property name="" value="" />
+            </transactionManager>
+            <dataSource type="UNPOOLED">
+                <property name="driver" value="org.hsqldb.jdbcDriver" />
+                <property name="url" value="jdbc:hsqldb:mem:sqlprovider" />
+                <property name="username" value="sa" />
+            </dataSource>
+        </environment>
+        <environment id="development-derby">
+            <transactionManager type="JDBC" />
+            <dataSource type="UNPOOLED">
+                <property name="driver" value="org.apache.derby.jdbc.EmbeddedDriver" />
+                <property name="url" value="jdbc:derby:target/derby/sqlprovider;create=true" />
+                <property name="username" value="" />
+            </dataSource>
+        </environment>
+    </environments>
 
-	<databaseIdProvider type="DB_VENDOR">
-		<property name="HSQL Database Engine" value="hsql"/>
-		<property name="Apache Derby" value="derby"/>
-	</databaseIdProvider>
+    <databaseIdProvider type="DB_VENDOR">
+        <property name="HSQL Database Engine" value="hsql"/>
+        <property name="Apache Derby" value="derby"/>
+    </databaseIdProvider>
 
-	<mappers>
-		<mapper class="org.apache.ibatis.submitted.sqlprovider.Mapper" />
-	</mappers>
+    <mappers>
+        <mapper class="org.apache.ibatis.submitted.sqlprovider.Mapper" />
+    </mappers>
 
 </configuration>

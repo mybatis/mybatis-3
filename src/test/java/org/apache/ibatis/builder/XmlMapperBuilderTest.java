@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,6 +15,10 @@
  */
 package org.apache.ibatis.builder;
 
+import static com.googlecode.catchexception.apis.BDDCatchException.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.BDDAssertions.then;
+
 import java.io.InputStream;
 import java.util.regex.Pattern;
 
@@ -27,11 +31,6 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.TypeHandler;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import static com.googlecode.catchexception.apis.BDDCatchException.*;
-import static org.assertj.core.api.BDDAssertions.then;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 class XmlMapperBuilderTest {
 
@@ -95,7 +94,7 @@ class XmlMapperBuilderTest {
   @Test
   void resolveJdbcTypeWithUndefinedValue() {
     BaseBuilder builder = new BaseBuilder(new Configuration()){{}};
-    when(builder).resolveJdbcType("aaa");
+    when(() -> builder.resolveJdbcType("aaa"));
     then(caughtException())
       .isInstanceOf(BuilderException.class)
       .hasMessageStartingWith("Error resolving JdbcType. Cause: java.lang.IllegalArgumentException: No enum")
@@ -105,7 +104,7 @@ class XmlMapperBuilderTest {
   @Test
   void resolveResultSetTypeWithUndefinedValue() {
     BaseBuilder builder = new BaseBuilder(new Configuration()){{}};
-    when(builder).resolveResultSetType("bbb");
+    when(() -> builder.resolveResultSetType("bbb"));
     then(caughtException())
       .isInstanceOf(BuilderException.class)
       .hasMessageStartingWith("Error resolving ResultSetType. Cause: java.lang.IllegalArgumentException: No enum")
@@ -115,7 +114,7 @@ class XmlMapperBuilderTest {
   @Test
   void resolveParameterModeWithUndefinedValue() {
     BaseBuilder builder = new BaseBuilder(new Configuration()){{}};
-    when(builder).resolveParameterMode("ccc");
+    when(() -> builder.resolveParameterMode("ccc"));
     then(caughtException())
       .isInstanceOf(BuilderException.class)
       .hasMessageStartingWith("Error resolving ParameterMode. Cause: java.lang.IllegalArgumentException: No enum")
@@ -125,7 +124,7 @@ class XmlMapperBuilderTest {
   @Test
   void createInstanceWithAbstractClass() {
     BaseBuilder builder = new BaseBuilder(new Configuration()){{}};
-    when(builder).createInstance("org.apache.ibatis.builder.BaseBuilder");
+    when(() -> builder.createInstance("org.apache.ibatis.builder.BaseBuilder"));
     then(caughtException())
       .isInstanceOf(BuilderException.class)
       .hasMessage("Error creating instance. Cause: java.lang.NoSuchMethodException: org.apache.ibatis.builder.BaseBuilder.<init>()");
@@ -134,7 +133,7 @@ class XmlMapperBuilderTest {
   @Test
   void resolveClassWithNotFound() {
     BaseBuilder builder = new BaseBuilder(new Configuration()){{}};
-    when(builder).resolveClass("ddd");
+    when(() -> builder.resolveClass("ddd"));
     then(caughtException())
       .isInstanceOf(BuilderException.class)
       .hasMessage("Error resolving class. Cause: org.apache.ibatis.type.TypeException: Could not resolve type alias 'ddd'.  Cause: java.lang.ClassNotFoundException: Cannot find class: ddd");
@@ -150,7 +149,7 @@ class XmlMapperBuilderTest {
   @Test
   void resolveTypeHandlerNoAssignable() {
     BaseBuilder builder = new BaseBuilder(new Configuration()){{}};
-    when(builder).resolveTypeHandler(String.class, "integer");
+    when(() -> builder.resolveTypeHandler(String.class, "integer"));
     then(caughtException())
       .isInstanceOf(BuilderException.class)
       .hasMessage("Type java.lang.Integer is not a valid TypeHandler because it does not implement TypeHandler interface");
@@ -159,7 +158,7 @@ class XmlMapperBuilderTest {
   @Test
   void setCurrentNamespaceValueIsNull() {
     MapperBuilderAssistant builder = new MapperBuilderAssistant(new Configuration(), "resource");
-    when(builder).setCurrentNamespace(null);
+    when(() -> builder.setCurrentNamespace(null));
     then(caughtException())
       .isInstanceOf(BuilderException.class)
       .hasMessage("The mapper element requires a namespace attribute to be specified.");
@@ -168,7 +167,7 @@ class XmlMapperBuilderTest {
   @Test
   void useCacheRefNamespaceIsNull() {
     MapperBuilderAssistant builder = new MapperBuilderAssistant(new Configuration(), "resource");
-    when(builder).useCacheRef(null);
+    when(() -> builder.useCacheRef(null));
     then(caughtException())
       .isInstanceOf(BuilderException.class)
       .hasMessage("cache-ref element requires a namespace attribute.");
@@ -177,7 +176,7 @@ class XmlMapperBuilderTest {
   @Test
   void useCacheRefNamespaceIsUndefined() {
     MapperBuilderAssistant builder = new MapperBuilderAssistant(new Configuration(), "resource");
-    when(builder).useCacheRef("eee");
+    when(() -> builder.useCacheRef("eee"));
     then(caughtException())
       .hasMessage("No cache for namespace 'eee' could be found.");
   }

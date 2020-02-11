@@ -203,7 +203,7 @@ int delete(String statement, Object parameter)]]></source>
 int insert(String statement)
 int update(String statement)
 int delete(String statement)]]></source>
-  
+
   <p>A Cursor offers the same results as a List, except it fetches data lazily using an Iterator.</p>
   <source><![CDATA[try (Cursor<MyEntity> entities = session.selectCursor(statement, param)) {
    for (MyEntity entity:entities) {
@@ -353,7 +353,7 @@ void rollback(boolean force)</source>
             <li><code>&lt;idArg&gt;</code></li>
           </ul>
         </td>
-        <td>Un argumento que es parte de un  ConstructorArgs.  Atributos:  id, column, javaType, jdbcType, typeHandler, select and resultMap.  El atributo id es un valor booleano que identifica la propiedad que será usada en las comparaciones, parecido al elemento XML &lt;idArg&gt;.</td>
+        <td>Un argumento que es parte de un  ConstructorArgs.  Atributos:  id, column, javaType, jdbcType, typeHandler, select and resultMap.  El atributo id es un valor booleano que identifica la propiedad que será usada en las comparaciones, parecido al elemento XML &lt;idArg&gt;. Since 3.5.4, it can be used as repeatable annotation.</td>
       </tr>
       <tr>
         <td><code>@TypeDiscriminator</code></td>
@@ -382,7 +382,7 @@ void rollback(boolean force)</source>
             <li><code>&lt;id&gt;</code></li>
           </ul>
         </td>
-        <td>Un result mapping entre una columna y una propiedad o campo. Atributos: :  id, column, property, javaType, jdbcType, typeHandler, one, many.  El atributo id es un valor booleano que indica que la propiedad debe usarse en comparaciones (similar al &lt;id&gt; de los mapeos XML). El atributo one sirve para asociaciones de simples, similar al &lt;association&gt;, y el atributo many es para colecciones, similar al &lt;collection&gt;. Sus denominaciones son tales para evitar conflictos con nombres de clases.</td>
+        <td>Un result mapping entre una columna y una propiedad o campo. Atributos: :  id, column, property, javaType, jdbcType, typeHandler, one, many.  El atributo id es un valor booleano que indica que la propiedad debe usarse en comparaciones (similar al &lt;id&gt; de los mapeos XML). El atributo one sirve para asociaciones de simples, similar al &lt;association&gt;, y el atributo many es para colecciones, similar al &lt;collection&gt;. Sus denominaciones son tales para evitar conflictos con nombres de clases. Since 3.5.4, it can be used as repeatable annotation.</td>
       </tr>
       <tr>
         <td><code>@One</code></td>

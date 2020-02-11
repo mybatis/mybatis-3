@@ -209,14 +209,14 @@ int delete(String statement, Object parameter)]]></source>
 int insert(String statement)
 int update(String statement)
 int delete(String statement)]]></source>
-  
+
   <p>A <code>Cursor</code> offers the same results as a List, except it fetches data lazily using an <code>Iterator</code>.</p>
   <source><![CDATA[try (Cursor<MyEntity> entities = session.selectCursor(statement, param)) {
    for (MyEntity entity : entities) {
       // process one entity
    }
 }]]></source>
-  
+
   <p>Finally, there are three advanced versions of the <code>select</code> methods that allow you to restrict the range of rows to return, or provide custom result handling logic, usually for very large data sets.</p>
   <source><![CDATA[<E> List<E> selectList (String statement, Object parameter, RowBounds rowBounds)
 <T> Cursor<T> selectCursor(String statement, Object parameter, RowBounds rowBounds)
@@ -372,7 +372,7 @@ void rollback(boolean force)</source>
         <td>A single constructor argument that is part of a ConstructorArgs collection. Attributes: <code>id</code>,
         <code>column</code>, <code>javaType</code>, <code>jdbcType</code>, <code>typeHandler</code>, <code>select</code>,
         <code>resultMap</code>. The id attribute is a boolean value that identifies the property to be used for comparisons,
-        similar to the <code>&lt;idArg&gt;</code> XML element.</td>
+        similar to the <code>&lt;idArg&gt;</code> XML element. Since 3.5.4, it can be used as repeatable annotation.</td>
       </tr>
       <tr>
         <td><code>@TypeDiscriminator</code></td>
@@ -410,7 +410,8 @@ void rollback(boolean force)</source>
         <code>many</code>. The id attribute is a boolean value that indicates that the property should be used for comparisons
         (similar to <code>&lt;id&gt;</code> in the XML mappings).
         The one attribute is for single associations, similar to <code>&lt;association&gt;</code>, and the many attribute
-        is for collections, similar to <code>&lt;collection&gt;</code>. They are named as they are to avoid class naming conflicts.</td>
+        is for collections, similar to <code>&lt;collection&gt;</code>. They are named as they are to avoid class naming conflicts.
+        Since 3.5.4, it can be used as repeatable annotation.</td>
       </tr>
       <tr>
         <td><code>@One</code></td>

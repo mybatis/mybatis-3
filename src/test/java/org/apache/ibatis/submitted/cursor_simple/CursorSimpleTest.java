@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,10 +15,12 @@
  */
 package org.apache.ibatis.submitted.cursor_simple;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.cursor.Cursor;
@@ -30,13 +32,6 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
-import java.io.Reader;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
 
 class CursorSimpleTest {
 
@@ -399,45 +394,45 @@ class CursorSimpleTest {
       Cursor<User> cursor = mapper.getNullUsers(new RowBounds());
       Iterator<User> iterator = cursor.iterator();
 
-      assertFalse(cursor.isOpen());
+      Assertions.assertFalse(cursor.isOpen());
 
       // Cursor is just created, current index is -1
-      assertEquals(-1, cursor.getCurrentIndex());
+      Assertions.assertEquals(-1, cursor.getCurrentIndex());
 
       // Check if hasNext, fetching is started
-      assertTrue(iterator.hasNext());
+      Assertions.assertTrue(iterator.hasNext());
       // Re-invoking hasNext() should not fetch the next row
-      assertTrue(iterator.hasNext());
-      assertTrue(cursor.isOpen());
-      assertFalse(cursor.isConsumed());
+      Assertions.assertTrue(iterator.hasNext());
+      Assertions.assertTrue(cursor.isOpen());
+      Assertions.assertFalse(cursor.isConsumed());
 
       // next() has not been called, index is still -1
-      assertEquals(-1, cursor.getCurrentIndex());
+      Assertions.assertEquals(-1, cursor.getCurrentIndex());
 
       User user;
       user = iterator.next();
-      assertNull(user);
-      assertEquals(0, cursor.getCurrentIndex());
+      Assertions.assertNull(user);
+      Assertions.assertEquals(0, cursor.getCurrentIndex());
 
-      assertTrue(iterator.hasNext());
+      Assertions.assertTrue(iterator.hasNext());
       user = iterator.next();
-      assertEquals("Kate", user.getName());
-      assertEquals(1, cursor.getCurrentIndex());
+      Assertions.assertEquals("Kate", user.getName());
+      Assertions.assertEquals(1, cursor.getCurrentIndex());
 
-      assertTrue(iterator.hasNext());
+      Assertions.assertTrue(iterator.hasNext());
       user = iterator.next();
-      assertNull(user);
-      assertEquals(2, cursor.getCurrentIndex());
+      Assertions.assertNull(user);
+      Assertions.assertEquals(2, cursor.getCurrentIndex());
 
-      assertTrue(iterator.hasNext());
+      Assertions.assertTrue(iterator.hasNext());
       user = iterator.next();
-      assertNull(user);
-      assertEquals(3, cursor.getCurrentIndex());
+      Assertions.assertNull(user);
+      Assertions.assertEquals(3, cursor.getCurrentIndex());
 
       // Check no more elements
-      assertFalse(iterator.hasNext());
-      assertFalse(cursor.isOpen());
-      assertTrue(cursor.isConsumed());
+      Assertions.assertFalse(iterator.hasNext());
+      Assertions.assertFalse(cursor.isOpen());
+      Assertions.assertTrue(cursor.isConsumed());
     }
   }
 
@@ -448,29 +443,29 @@ class CursorSimpleTest {
       Cursor<User> cursor = mapper.getNullUsers(new RowBounds(1, 2));
       Iterator<User> iterator = cursor.iterator();
 
-      assertFalse(cursor.isOpen());
+      Assertions.assertFalse(cursor.isOpen());
 
       // Check if hasNext, fetching is started
-      assertTrue(iterator.hasNext());
+      Assertions.assertTrue(iterator.hasNext());
       // Re-invoking hasNext() should not fetch the next row
-      assertTrue(iterator.hasNext());
-      assertTrue(cursor.isOpen());
-      assertFalse(cursor.isConsumed());
+      Assertions.assertTrue(iterator.hasNext());
+      Assertions.assertTrue(cursor.isOpen());
+      Assertions.assertFalse(cursor.isConsumed());
 
       User user;
       user = iterator.next();
-      assertEquals("Kate", user.getName());
-      assertEquals(1, cursor.getCurrentIndex());
+      Assertions.assertEquals("Kate", user.getName());
+      Assertions.assertEquals(1, cursor.getCurrentIndex());
 
-      assertTrue(iterator.hasNext());
+      Assertions.assertTrue(iterator.hasNext());
       user = iterator.next();
-      assertNull(user);
-      assertEquals(2, cursor.getCurrentIndex());
+      Assertions.assertNull(user);
+      Assertions.assertEquals(2, cursor.getCurrentIndex());
 
       // Check no more elements
-      assertFalse(iterator.hasNext());
-      assertFalse(cursor.isOpen());
-      assertTrue(cursor.isConsumed());
+      Assertions.assertFalse(iterator.hasNext());
+      Assertions.assertFalse(cursor.isOpen());
+      Assertions.assertTrue(cursor.isConsumed());
     }
   }
 }

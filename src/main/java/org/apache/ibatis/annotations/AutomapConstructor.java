@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,6 +24,26 @@ import java.lang.annotation.Target;
 /**
  * The marker annotation that indicate a constructor for automatic mapping.
  *
+ * <p><br>
+ * <b>How to use:</b>
+ * <pre>
+ * public class User {
+ *
+ *   private int id;
+ *   private String name;
+ *
+ *   public User(int id) {
+ *     this.id = id;
+ *   }
+ *
+ *   &#064;AutomapConstructor
+ *   public User(int id, String name) {
+ *     this.id = id;
+ *     this.name = name;
+ *   }
+ *   // ...
+ * }
+ * </pre>
  * @author Tim Chen
  * @since 3.4.3
  */

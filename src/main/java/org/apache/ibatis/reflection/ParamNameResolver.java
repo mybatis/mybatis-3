@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ import org.apache.ibatis.session.RowBounds;
 
 public class ParamNameResolver {
 
-  private static final String GENERIC_NAME_PREFIX = "param";
+  public static final String GENERIC_NAME_PREFIX = "param";
 
   /**
    * <p>
@@ -119,7 +119,7 @@ public class ParamNameResolver {
       for (Map.Entry<Integer, String> entry : names.entrySet()) {
         param.put(entry.getValue(), args[entry.getKey()]);
         // add generic param names (param1, param2, ...)
-        final String genericParamName = GENERIC_NAME_PREFIX + String.valueOf(i + 1);
+        final String genericParamName = GENERIC_NAME_PREFIX + (i + 1);
         // ensure not to overwrite parameter named with @Param
         if (!names.containsValue(genericParamName)) {
           param.put(genericParamName, args[entry.getKey()]);

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -46,6 +46,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.ibatis.binding.MapperMethod.ParamMap;
 import org.apache.ibatis.io.ResolverUtil;
 import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.Configuration;
 
 /**
  * @author Clinton Begin
@@ -55,14 +56,29 @@ public final class TypeHandlerRegistry {
 
   private final Map<JdbcType, TypeHandler<?>>  jdbcTypeHandlerMap = new EnumMap<>(JdbcType.class);
   private final Map<Type, Map<JdbcType, TypeHandler<?>>> typeHandlerMap = new ConcurrentHashMap<>();
-  private final TypeHandler<Object> unknownTypeHandler = new UnknownTypeHandler(this);
+  private final TypeHandler<Object> unknownTypeHandler;
   private final Map<Class<?>, TypeHandler<?>> allTypeHandlersMap = new HashMap<>();
 
   private static final Map<JdbcType, TypeHandler<?>> NULL_TYPE_HANDLER_MAP = Collections.emptyMap();
 
   private Class<? extends TypeHandler> defaultEnumTypeHandler = EnumTypeHandler.class;
 
+  /**
+   * The default constructor.
+   */
   public TypeHandlerRegistry() {
+    this(new Configuration());
+  }
+
+  /**
+   * The constructor that pass the MyBatis configuration.
+   *
+   * @param configuration a MyBatis configuration
+   * @since 3.5.4
+   */
+  public TypeHandlerRegistry(Configuration configuration) {
+    this.unknownTypeHandler = new UnknownTypeHandler(configuration);
+
     register(Boolean.class, new BooleanTypeHandler());
     register(boolean.class, new BooleanTypeHandler());
     register(JdbcType.BOOLEAN, new BooleanTypeHandler());
@@ -366,6 +382,8 @@ public final class TypeHandlerRegistry {
 
   // java type + jdbc type + handler
 
+  // Cast is required here
+  @SuppressWarnings("cast")
   public <T> void register(Class<T> type, JdbcType jdbcType, TypeHandler<? extends T> handler) {
     register((Type) type, jdbcType, handler);
   }
@@ -375,9 +393,9 @@ public final class TypeHandlerRegistry {
       Map<JdbcType, TypeHandler<?>> map = typeHandlerMap.get(javaType);
       if (map == null || map == NULL_TYPE_HANDLER_MAP) {
         map = new HashMap<>();
-        typeHandlerMap.put(javaType, map);
       }
       map.put(jdbcType, handler);
+      typeHandlerMap.put(javaType, map);
     }
     allTypeHandlersMap.put(handler.getClass(), handler);
   }

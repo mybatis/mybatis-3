@@ -69,13 +69,13 @@ public class DefaultObjectFactory implements ObjectFactory, Serializable {
           }
         }
       }
-      constructor = type.getDeclaredConstructor(constructorArgTypes.toArray(new Class[constructorArgTypes.size()]));
+      constructor = type.getDeclaredConstructor(constructorArgTypes.toArray(new Class[0]));
       try {
-        return constructor.newInstance(constructorArgs.toArray(new Object[constructorArgs.size()]));
+        return constructor.newInstance(constructorArgs.toArray(new Object[0]));
       } catch (IllegalAccessException e) {
         if (Reflector.canControlMemberAccessible()) {
           constructor.setAccessible(true);
-          return constructor.newInstance(constructorArgs.toArray(new Object[constructorArgs.size()]));
+          return constructor.newInstance(constructorArgs.toArray(new Object[0]));
         } else {
           throw e;
         }

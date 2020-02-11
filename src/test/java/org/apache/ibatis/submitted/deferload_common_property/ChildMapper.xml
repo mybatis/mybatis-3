@@ -30,7 +30,7 @@
 
 
     <select id="selectAll" resultMap="ChildMap">
-    	SELECT id, name, father_id
-    	FROM Child
+        SELECT id, name, father_id
+        FROM Child
     </select>
 </mapper>
