@@ -22,11 +22,11 @@ public class Role {
   public String toString() {
     return "Role{" +
         "id=" + id +
-        ", roleName='" + roleName + '\'' +
+        ", roleName='" + name + '\'' +
         '}';
   }
 
-  private String roleName;
+  private String name;
 
   public Integer getId() {
     return id;
@@ -36,11 +36,11 @@ public class Role {
     this.id = id;
   }
 
-  public String getRoleName() {
-    return roleName;
+  public String getName() {
+    return name;
   }
 
-  public void setRoleName(String roleName) {
-    this.roleName = roleName;
+  public void setName(String name) {
+    this.name = name;
   }
 }

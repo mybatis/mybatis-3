@@ -15,16 +15,20 @@
  */
 package org.apache.ibatis.submitted.annotion_many_one_add_columnprefix;
 
-import org.apache.ibatis.annotations.*;
-
 import java.util.List;
+
+import org.apache.ibatis.annotations.Many;
+import org.apache.ibatis.annotations.One;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.Results;
+import org.apache.ibatis.annotations.Select;
 
 /**
  * @author lvyang
  */
 public interface UserDao {
   @Select({ "select",
-    "     u.id, u.username, r.id role_id, r.role_name",
+    "     u.id, u.username, r.id role_id, r.name role_name",
     "    from user u",
     "    left join user_role ur on u.id = ur.user_id",
     "    left join role r on ur.role_id = r.id" })
@@ -36,7 +40,7 @@ public interface UserDao {
   List<User> findAll();
 
   @Select({ "select",
-    "     u.id, u.username, r.id role_id, r.role_name",
+    "     u.id, u.username, r.id role_id, r.name role_name",
     "    from user u",
     "    left join user_role ur on u.id = ur.user_id",
     "    left join role r on ur.role_id = r.id" })
@@ -48,7 +52,7 @@ public interface UserDao {
   List<User> findAll2();
 
   @Select({ "select",
-    "     u.id, u.username, r.id role_id, r.role_name",
+    "     u.id, u.username, r.id role_id, r.name role_name",
     "    from user u",
     "    left join user_role ur on u.id = ur.user_id",
     "    left join role r on ur.role_id = r.id where u.id in (2, 3)" })

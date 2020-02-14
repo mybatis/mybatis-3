@@ -24,6 +24,6 @@
   <resultMap id="roleMap2"
     type="org.apache.ibatis.submitted.annotion_many_one_add_columnprefix.Role">
     <id column="id" property="id" />
-    <result column="name" property="roleName" />
+    <result column="name" property="name" />
   </resultMap>
 </mapper>

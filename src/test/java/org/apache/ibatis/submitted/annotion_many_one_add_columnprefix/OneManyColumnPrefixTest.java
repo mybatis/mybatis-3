@@ -75,7 +75,7 @@ class OneManyColumnPrefixTest {
       assertNotNull(users);
       assertEquals(2, users.size());
       assertNotNull(users.get(0).getRole());
-      assertEquals("teacher", users.get(0).getRole().getRoleName());
+      assertEquals("teacher", users.get(0).getRole().getName());
     }
   }
 }

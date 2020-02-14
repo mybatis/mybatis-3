@@ -19,19 +19,19 @@
 -- ----------------------------
 CREATE TABLE role (
 id int,
-role_name varchar(10)
+name varchar(30)
 );
 
 -- ----------------------------
 -- Records of role
 -- ----------------------------
-INSERT INTO role (id,role_name)
+INSERT INTO role (id,name)
 VALUES ('1', 'teacher');
-INSERT INTO role (id,role_name)
+INSERT INTO role (id,name)
 VALUES ('2', 'student');
-INSERT INTO role (id,role_name)
+INSERT INTO role (id,name)
 VALUES ('3', 'Headmaster');
-INSERT INTO role (id,role_name)
+INSERT INTO role (id,name)
 VALUES ('4', 'Learning-commissary');
 
 CREATE TABLE user (
