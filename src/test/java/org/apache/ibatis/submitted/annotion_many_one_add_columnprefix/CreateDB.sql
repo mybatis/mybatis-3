@@ -37,6 +37,7 @@ VALUES ('4', 'Learning-commissary');
 CREATE TABLE user (
 id int,
 username varchar(32),
+friend_id int
 );
 
 -- ----------------------------
@@ -48,8 +49,8 @@ INSERT INTO user (id,username)
 VALUES ('2', 'Doug Lea');
 INSERT INTO user (id,username)
 VALUES ('3', 'Rod johnson');
-INSERT INTO user (id,username)
-VALUES ('4', 'Juergen Hoeller');
+INSERT INTO user (id,username, friend_id)
+VALUES ('4', 'Juergen Hoeller', 1);
 
 -- ----------------------------
 -- Table structure for `user_role`

@@ -23,6 +23,7 @@ public class User {
   private List<User> teachers;
   private Role role;
   private List<Role> roles;
+  private User friend;
 
   public Role getRole() {
     return role;
@@ -71,5 +72,13 @@ public class User {
 
   public void setTeachers(List<User> teachers) {
     this.teachers = teachers;
+  }
+
+  public User getFriend() {
+    return friend;
+  }
+
+  public void setFriend(User friend) {
+    this.friend = friend;
   }
 }

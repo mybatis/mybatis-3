@@ -78,4 +78,20 @@ class OneManyColumnPrefixTest {
       assertEquals("teacher", users.get(0).getRole().getName());
     }
   }
+
+  @Test
+  void shouldResolveNestedColumnPrefix() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      UserDao mapper = sqlSession.getMapper(UserDao.class);
+      User  user = mapper.findUserWithFriend(4);
+      assertEquals(4, user.getId());
+      assertEquals(2, user.getRoles().size());
+      assertEquals("student", user.getRoles().get(0).getName());
+      assertEquals("Learning-commissary", user.getRoles().get(1).getName());
+      assertEquals(1, user.getFriend().getId());
+      assertEquals(2, user.getFriend().getRoles().size());
+      assertEquals("teacher", user.getFriend().getRoles().get(0).getName());
+      assertEquals("Headmaster", user.getFriend().getRoles().get(1).getName());
+    }
+  }
 }
