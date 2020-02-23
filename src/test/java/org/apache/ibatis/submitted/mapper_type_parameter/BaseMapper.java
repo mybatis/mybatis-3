@@ -73,7 +73,7 @@ public interface BaseMapper<S, T> {
         } else {
           sql.append(",");
         }
-        sql.append(" (#{list[" + i + "].id}, #{list[" + i + "].name})");
+        sql.append(" (#{list[").append(i).append("].id}, #{list[").append(i).append("].name})");
       }
       return sql == null ? "" : sql.toString();
     }

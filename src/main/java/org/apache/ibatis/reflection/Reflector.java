@@ -149,8 +149,9 @@ public class Reflector {
   }
 
   private void resolveSetterConflicts(Map<String, List<Method>> conflictingSetters) {
-    for (String propName : conflictingSetters.keySet()) {
-      List<Method> setters = conflictingSetters.get(propName);
+    for (Entry<String, List<Method>> entry : conflictingSetters.entrySet()) {
+      String propName = entry.getKey();
+      List<Method> setters = entry.getValue();
       Class<?> getterType = getTypes.get(propName);
       boolean isGetterAmbiguous = getMethods.get(propName) instanceof AmbiguousMethodInvoker;
       boolean isSetterAmbiguous = false;
@@ -428,7 +429,7 @@ public class Reflector {
    * @return True if the object has a writable property by the name
    */
   public boolean hasSetter(String propertyName) {
-    return setMethods.keySet().contains(propertyName);
+    return setMethods.containsKey(propertyName);
   }
 
   /**
@@ -438,7 +439,7 @@ public class Reflector {
    * @return True if the object has a readable property by the name
    */
   public boolean hasGetter(String propertyName) {
-    return getMethods.keySet().contains(propertyName);
+    return getMethods.containsKey(propertyName);
   }
 
   public String findPropertyName(String name) {
