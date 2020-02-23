@@ -13,26 +13,34 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.scripting.xmltags;
+package org.apache.ibatis.submitted.annotion_many_one_add_columnprefix;
 
-import ognl.DefaultClassResolver;
-
-import org.apache.ibatis.io.Resources;
-
-/**
- * Custom ognl {@code ClassResolver} which behaves same like ognl's
- * {@code DefaultClassResolver}. But uses the {@code Resources}
- * utility class to find the target class instead of {@code Class#forName(String)}.
- *
- * @author Daniel Guggi
- *
- * @see <a href='https://github.com/mybatis/mybatis-3/issues/161'>Issue 161</a>
- */
-public class OgnlClassResolver extends DefaultClassResolver {
+public class Role {
+  private Integer id;
 
   @Override
-  protected Class toClassForName(String className) throws ClassNotFoundException {
-    return Resources.classForName(className);
+  public String toString() {
+    return "Role{" +
+        "id=" + id +
+        ", roleName='" + name + '\'' +
+        '}';
   }
 
+  private String name;
+
+  public Integer getId() {
+    return id;
+  }
+
+  public void setId(Integer id) {
+    this.id = id;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
 }

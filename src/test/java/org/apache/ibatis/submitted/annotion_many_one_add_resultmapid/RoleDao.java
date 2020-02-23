@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2020 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -13,19 +13,22 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.datasource;
+package org.apache.ibatis.submitted.annotion_many_one_add_resultmapid;
 
-import java.util.Properties;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.Results;
+import org.apache.ibatis.annotations.Select;
 
-import javax.sql.DataSource;
+import java.util.List;
 
 /**
- * @author Clinton Begin
+ * @author lvyang
  */
-public interface DataSourceFactory {
-
-  void setProperties(Properties props);
-
-  DataSource getDataSource();
-
+public interface RoleDao {
+  @Select("select * from role")
+  @Results(id = "roleMap1", value = {
+    @Result(id = true, column = "role_id", property = "id"),
+    @Result(column = "role_name", property = "roleName")
+  })
+  public List<Role> findAll();
 }

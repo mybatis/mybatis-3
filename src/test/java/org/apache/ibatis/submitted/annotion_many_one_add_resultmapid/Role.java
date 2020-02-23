@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2020 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -13,19 +13,34 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.datasource;
+package org.apache.ibatis.submitted.annotion_many_one_add_resultmapid;
 
-import java.util.Properties;
+public class Role {
+  private Integer id;
 
-import javax.sql.DataSource;
+  @Override
+  public String toString() {
+    return "Role{" +
+        "id=" + id +
+        ", roleName='" + roleName + '\'' +
+        '}';
+  }
 
-/**
- * @author Clinton Begin
- */
-public interface DataSourceFactory {
+  private String roleName;
 
-  void setProperties(Properties props);
+  public Integer getId() {
+    return id;
+  }
 
-  DataSource getDataSource();
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
+  public String getRoleName() {
+    return roleName;
+  }
+
+  public void setRoleName(String roleName) {
+    this.roleName = roleName;
+  }
 }
