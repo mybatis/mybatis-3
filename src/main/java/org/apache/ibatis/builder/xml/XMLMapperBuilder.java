@@ -108,7 +108,7 @@ public class XMLMapperBuilder extends BaseBuilder {
   private void configurationElement(XNode context) {
     try {
       String namespace = context.getStringAttribute("namespace");
-      if (namespace == null || namespace.equals("")) {
+      if (namespace == null || namespace.isEmpty()) {
         throw new BuilderException("Mapper's namespace cannot be empty");
       }
       builderAssistant.setCurrentNamespace(namespace);
