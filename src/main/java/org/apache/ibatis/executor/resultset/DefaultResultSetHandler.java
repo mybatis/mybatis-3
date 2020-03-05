@@ -1051,7 +1051,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       if (resultMapping.getNestedResultMapId() != null && resultMapping.getResultSet() == null) {
         // Issue #392
         final ResultMap nestedResultMap = configuration.getResultMap(resultMapping.getNestedResultMapId());
-        createRowKeyForMappedProperties(nestedResultMap, rsw, cacheKey, nestedResultMap.getConstructorResultMappings(),
+        createRowKeyForMappedProperties(nestedResultMap, rsw, cacheKey, nestedResultMap.getResultMappings(),
             prependPrefix(resultMapping.getColumnPrefix(), columnPrefix));
       } else if (resultMapping.getNestedQueryId() == null) {
         final String column = prependPrefix(resultMapping.getColumn(), columnPrefix);

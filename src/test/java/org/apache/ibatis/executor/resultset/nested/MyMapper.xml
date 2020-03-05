@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.apache.ibatis.executor.resultset.nested.MyMapper">
+    <select id="selectRank" resultMap="rankItem">
+        select subject.id, subject.name, t.score_num
+        from (select user_id, sum(score) as score_num from match1 group by user_id) t
+        inner join subject
+        on t.user_id = subject.id
+    </select>
+    <resultMap id="rankItem" type="org.apache.ibatis.executor.resultset.nested.RankItem">
+        <result property="score" column="score_num"/>
+        <association property="subject" javaType="org.apache.ibatis.executor.resultset.nested.Subject">
+            <result property="id" column="id"/>
+            <result property="name" column="name"/>
+        </association>
+    </resultMap>
+</mapper>
