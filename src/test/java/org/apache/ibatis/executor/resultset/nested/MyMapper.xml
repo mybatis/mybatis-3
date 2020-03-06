@@ -27,10 +27,41 @@
         on t.user_id = subject.id
     </select>
     <resultMap id="rankItem" type="org.apache.ibatis.executor.resultset.nested.RankItem">
-        <result property="score" column="score_num"/>
+        <result column="score_num" property="score"/>
         <association property="subject" javaType="org.apache.ibatis.executor.resultset.nested.Subject">
-            <result property="id" column="id"/>
-            <result property="name" column="name"/>
+            <result column="id" property="id"/>
+            <result column="name" property="name"/>
         </association>
     </resultMap>
+
+    <select id="selectRank1" resultMap="rankItem1">
+        select subject.id, subject.name, t.score_num
+        from (select user_id, sum(score) as score_num from match1 group by user_id) t
+        inner join subject
+        on t.user_id = subject.id
+    </select>
+
+    <resultMap id="rankItem1" type="org.apache.ibatis.executor.resultset.nested.RankItem">
+        <result column="score_num" property="score"/>
+        <collection property="children" ofType="org.apache.ibatis.executor.resultset.nested.Subject">
+           <result column="id" property="id"/>
+           <result column="name" property="name"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectSubject" resultMap="subjectNested">
+        select s1.id, s1.name, s2.id as cid,s2.name as cname from subject s1
+        left join subject s2
+        on s1.id = s2.pid
+    </select>
+
+    <resultMap id="subjectNested" type="org.apache.ibatis.executor.resultset.nested.Subject">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <collection property="children" ofType="org.apache.ibatis.executor.resultset.nested.Subject">
+            <id column="cid" property="id"/>
+            <result column="cname" property="name"/>
+        </collection>
+    </resultMap>
+
 </mapper>

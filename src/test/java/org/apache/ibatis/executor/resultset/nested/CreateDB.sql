@@ -22,12 +22,13 @@ IF EXISTS;
 
 CREATE TABLE subject (
   id     INT NOT NULL,
-  name   VARCHAR(20)
+  name   VARCHAR(20),
+  pid     INT NOT NULL,
 );
 
-insert into subject (id, name) values (1, 'zhangsan');
-insert into subject (id, name) values (2, 'lisi');
-insert into subject (id, name) values (3, 'wangwu');
+insert into subject (id, name, pid) values (1, 'zhangsan', 0);
+insert into subject (id, name, pid) values (2, 'lisi', 1);
+insert into subject (id, name, pid) values (3, 'wangwu', 1);
 
 CREATE TABLE match1 (
   id        INT NOT NULL,

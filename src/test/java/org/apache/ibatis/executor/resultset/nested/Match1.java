@@ -43,4 +43,13 @@ public class Match1 {
   public void setScore(Integer score) {
     this.score = score;
   }
+
+  @Override
+  public String toString() {
+    return "Match1{" +
+      "id=" + id +
+      ", userId=" + userId +
+      ", score=" + score +
+      '}';
+  }
 }
