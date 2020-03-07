@@ -17,16 +17,27 @@ package org.apache.ibatis.submitted.parent_childs;
 
 public class Child {
 
-  private int id;
+  private Integer id;
   private String name;
   private String surName;
-  private int age;
+  private Integer age;
 
-  public int getId() {
+  public Child() {
+	  
+  }
+  
+  public Child(Integer id, String name, String surName, Integer age) {
+    this.id = id;
+    this.name = name;
+    this.surName = surName;
+    this.age = age;
+  }
+  
+  public Integer getId() {
     return id;
   }
 
-  public void setId(int id) {
+  public void setId(Integer id) {
     this.id = id;
   }
 
