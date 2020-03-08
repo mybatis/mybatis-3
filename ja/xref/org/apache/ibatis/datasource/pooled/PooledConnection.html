@@ -240,7 +240,7 @@
 <a class="jxr_linenumber" name="L232" href="#L232">232</a>   @Override
 <a class="jxr_linenumber" name="L233" href="#L233">233</a>   <strong class="jxr_keyword">public</strong> Object invoke(Object proxy, Method method, Object[] args) <strong class="jxr_keyword">throws</strong> Throwable {
 <a class="jxr_linenumber" name="L234" href="#L234">234</a>     String methodName = method.getName();
-<a class="jxr_linenumber" name="L235" href="#L235">235</a>     <strong class="jxr_keyword">if</strong> (CLOSE.hashCode() == methodName.hashCode() &amp;&amp; CLOSE.equals(methodName)) {
+<a class="jxr_linenumber" name="L235" href="#L235">235</a>     <strong class="jxr_keyword">if</strong> (CLOSE.equals(methodName)) {
 <a class="jxr_linenumber" name="L236" href="#L236">236</a>       dataSource.pushConnection(<strong class="jxr_keyword">this</strong>);
 <a class="jxr_linenumber" name="L237" href="#L237">237</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L238" href="#L238">238</a>     }
@@ -266,6 +266,6 @@
 <a class="jxr_linenumber" name="L258" href="#L258">258</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2019 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2020 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

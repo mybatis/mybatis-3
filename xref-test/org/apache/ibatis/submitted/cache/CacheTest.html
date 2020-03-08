@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/submitted/cache/CacheTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2019 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2020 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
@@ -23,26 +23,26 @@
 <a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">package</strong> org.apache.ibatis.submitted.cache;
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  
-<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> java.io.Reader;
-<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> java.lang.reflect.Field;
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> com.googlecode.catchexception.apis.BDDCatchException.*;
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.assertj.core.api.BDDAssertions.then;
 <a class="jxr_linenumber" name="L20" href="#L20">20</a>  
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.BaseDataTest;
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.annotations.CacheNamespace;
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.annotations.Property;
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.cache.Cache;
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.cache.CacheException;
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> java.io.Reader;
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> java.lang.reflect.Field;
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.BaseDataTest;
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.annotations.CacheNamespace;
 <a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.annotations.CacheNamespaceRef;
-<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.builder.BuilderException;
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.io.Resources;
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.session.SqlSession;
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.session.SqlSessionFactory;
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.session.SqlSessionFactoryBuilder;
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.api.Assertions;
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.api.BeforeEach;
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.api.Test;
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>  
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> com.googlecode.catchexception.apis.BDDCatchException.*;
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.assertj.core.api.BDDAssertions.then;
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.annotations.Property;
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.builder.BuilderException;
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.cache.Cache;
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.cache.CacheException;
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.io.Resources;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.session.SqlSession;
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.session.SqlSessionFactory;
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.session.SqlSessionFactoryBuilder;
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.api.Assertions;
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.api.BeforeEach;
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.api.Test;
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>  
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>  <em class="jxr_comment">// issue #524</em>
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>  <strong class="jxr_keyword">class</strong> <a name="CacheTest" href="../../../../../org/apache/ibatis/submitted/cache/CacheTest.html#CacheTest">CacheTest</a> {
@@ -280,23 +280,23 @@
 <a class="jxr_linenumber" name="L272" href="#L272">272</a> 
 <a class="jxr_linenumber" name="L273" href="#L273">273</a>   @Test
 <a class="jxr_linenumber" name="L274" href="#L274">274</a>   <strong class="jxr_keyword">void</strong> shouldErrorUnsupportedProperties() {
-<a class="jxr_linenumber" name="L275" href="#L275">275</a>     when(sqlSessionFactory.getConfiguration()).addMapper(CustomCacheUnsupportedPropertyMapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L275" href="#L275">275</a>     when(() -&gt; sqlSessionFactory.getConfiguration().addMapper(CustomCacheUnsupportedPropertyMapper.<strong class="jxr_keyword">class</strong>));
 <a class="jxr_linenumber" name="L276" href="#L276">276</a>     then(caughtException()).isInstanceOf(CacheException.<strong class="jxr_keyword">class</strong>)
 <a class="jxr_linenumber" name="L277" href="#L277">277</a>       .hasMessage(<span class="jxr_string">"Unsupported property type for cache: 'date' of type class java.util.Date"</span>);
 <a class="jxr_linenumber" name="L278" href="#L278">278</a>   }
 <a class="jxr_linenumber" name="L279" href="#L279">279</a> 
 <a class="jxr_linenumber" name="L280" href="#L280">280</a>   @Test
 <a class="jxr_linenumber" name="L281" href="#L281">281</a>   <strong class="jxr_keyword">void</strong> shouldErrorInvalidCacheNamespaceRefAttributesSpecifyBoth() {
-<a class="jxr_linenumber" name="L282" href="#L282">282</a>     when(sqlSessionFactory.getConfiguration().getMapperRegistry())
-<a class="jxr_linenumber" name="L283" href="#L283">283</a>       .addMapper(InvalidCacheNamespaceRefBothMapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L282" href="#L282">282</a>     when(() -&gt; sqlSessionFactory.getConfiguration().getMapperRegistry()
+<a class="jxr_linenumber" name="L283" href="#L283">283</a>       .addMapper(InvalidCacheNamespaceRefBothMapper.<strong class="jxr_keyword">class</strong>));
 <a class="jxr_linenumber" name="L284" href="#L284">284</a>     then(caughtException()).isInstanceOf(BuilderException.<strong class="jxr_keyword">class</strong>)
 <a class="jxr_linenumber" name="L285" href="#L285">285</a>       .hasMessage(<span class="jxr_string">"Cannot use both value() and name() attribute in the @CacheNamespaceRef"</span>);
 <a class="jxr_linenumber" name="L286" href="#L286">286</a>   }
 <a class="jxr_linenumber" name="L287" href="#L287">287</a> 
 <a class="jxr_linenumber" name="L288" href="#L288">288</a>   @Test
 <a class="jxr_linenumber" name="L289" href="#L289">289</a>   <strong class="jxr_keyword">void</strong> shouldErrorInvalidCacheNamespaceRefAttributesIsEmpty() {
-<a class="jxr_linenumber" name="L290" href="#L290">290</a>     when(sqlSessionFactory.getConfiguration().getMapperRegistry())
-<a class="jxr_linenumber" name="L291" href="#L291">291</a>       .addMapper(InvalidCacheNamespaceRefEmptyMapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L290" href="#L290">290</a>     when(() -&gt; sqlSessionFactory.getConfiguration().getMapperRegistry()
+<a class="jxr_linenumber" name="L291" href="#L291">291</a>       .addMapper(InvalidCacheNamespaceRefEmptyMapper.<strong class="jxr_keyword">class</strong>));
 <a class="jxr_linenumber" name="L292" href="#L292">292</a>     then(caughtException()).isInstanceOf(BuilderException.<strong class="jxr_keyword">class</strong>)
 <a class="jxr_linenumber" name="L293" href="#L293">293</a>       .hasMessage(<span class="jxr_string">"Should be specified either value() or name() attribute in the @CacheNamespaceRef"</span>);
 <a class="jxr_linenumber" name="L294" href="#L294">294</a>   }
@@ -335,6 +335,6 @@
 <a class="jxr_linenumber" name="L327" href="#L327">327</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2019 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2020 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

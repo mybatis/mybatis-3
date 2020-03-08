@@ -110,7 +110,7 @@
 <a class="jxr_linenumber" name="L102" href="#L102">102</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L103" href="#L103">103</a>     }
 <a class="jxr_linenumber" name="L104" href="#L104">104</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L105" href="#L105">105</a>       <strong class="jxr_keyword">return</strong> resolveClass(alias).getDeclaredConstructor().newInstance();
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>       <strong class="jxr_keyword">return</strong> clazz.getDeclaredConstructor().newInstance();
 <a class="jxr_linenumber" name="L106" href="#L106">106</a>     } <strong class="jxr_keyword">catch</strong> (Exception e) {
 <a class="jxr_linenumber" name="L107" href="#L107">107</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="BuilderException" href="../../../../org/apache/ibatis/builder/BuilderException.html#BuilderException">BuilderException</a>(<span class="jxr_string">"Error creating instance. Cause: "</span> + e, e);
 <a class="jxr_linenumber" name="L108" href="#L108">108</a>     }
@@ -159,6 +159,6 @@
 <a class="jxr_linenumber" name="L151" href="#L151">151</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2019 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2020 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

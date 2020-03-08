@@ -312,7 +312,7 @@
 <a class="jxr_linenumber" name="L304" href="#L304">304</a> 
 <a class="jxr_linenumber" name="L305" href="#L305">305</a>     Iterator&lt;CartItem&gt; i = cart.getCartItems();
 <a class="jxr_linenumber" name="L306" href="#L306">306</a>     <strong class="jxr_keyword">while</strong> (i.hasNext()) {
-<a class="jxr_linenumber" name="L307" href="#L307">307</a>       <a name="CartItem" hr<a name="CartItem" href="../../../../../org/apache/ibatis/domain/jpetstore/CartItem.html#CartItem">CartItem</a>./../../../org/apache/ibatis/domain/jpetstore/CartItem.html#CartItem">CartItem</a> cartItem = (<a name="CartItem" href="../../../../../org/apache/ibatis/domain/jpetstore/CartItem.html#CartItem">CartItem</a>) i.next();
+<a class="jxr_linenumber" name="L307" href="#L307">307</a>       <a name="CartItem" href="../../../../../org/apache/ibatis/domain/jpetstore/CartItem.html#CartItem">CartItem</a> cartItem = i.next();
 <a class="jxr_linenumber" name="L308" href="#L308">308</a>       addLineItem(cartItem);
 <a class="jxr_linenumber" name="L309" href="#L309">309</a>     }
 <a class="jxr_linenumber" name="L310" href="#L310">310</a> 
@@ -330,6 +330,6 @@
 <a class="jxr_linenumber" name="L322" href="#L322">322</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2019 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2020 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

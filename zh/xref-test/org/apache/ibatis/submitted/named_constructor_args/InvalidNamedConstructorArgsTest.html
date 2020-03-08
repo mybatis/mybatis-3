@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../../testapidocs/org/apache/ibatis/submitted/named_constructor_args/InvalidNamedConstructorArgsTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2019 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2020 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
@@ -23,22 +23,22 @@
 <a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">package</strong> org.apache.ibatis.submitted.named_constructor_args;
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  
-<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> java.io.Reader;
-<a class="jxr_linenumber" name="L19" href="#L19">19</a>  
-<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.BaseDataTest;
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.annotations.Arg;
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.annotations.ConstructorArgs;
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.annotations.Select;
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.builder.BuilderException;
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.io.Resources;
-<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.session.Configuration;
-<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.session.SqlSessionFactory;
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.session.SqlSessionFactoryBuilder;
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.api.BeforeAll;
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.api.Test;
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>  
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> com.googlecode.catchexception.apis.BDDCatchException.*;
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.assertj.core.api.BDDAssertions.then;
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> com.googlecode.catchexception.apis.BDDCatchException.*;
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.assertj.core.api.BDDAssertions.then;
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> java.io.Reader;
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.BaseDataTest;
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.annotations.Arg;
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.annotations.ConstructorArgs;
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.annotations.Select;
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.builder.BuilderException;
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.io.Resources;
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.session.Configuration;
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.session.SqlSessionFactory;
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.session.SqlSessionFactoryBuilder;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.api.BeforeAll;
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.api.Test;
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>  
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">class</strong> <a name="InvalidNamedConstructorArgsTest" href="../../../../../org/apache/ibatis/submitted/named_constructor_args/InvalidNamedConstructorArgsTest.html#InvalidNamedConstructorArgsTest">InvalidNamedConstructorArgsTest</a> {
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>  
@@ -68,7 +68,7 @@
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>    @Test
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>    <strong class="jxr_keyword">void</strong> noMatchingConstructorArgName() {
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>      Configuration configuration = sqlSessionFactory.getConfiguration();
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>      when(configuration).addMapper(NoMatchingConstructorMapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>      when(() -&gt; configuration.addMapper(NoMatchingConstructorMapper.<strong class="jxr_keyword">class</strong>));
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>  
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>      then(caughtException()).isInstanceOf(BuilderException.<strong class="jxr_keyword">class</strong>)
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>        .hasMessageContaining(
@@ -90,7 +90,7 @@
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>    @Test
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>    <strong class="jxr_keyword">void</strong> wrongJavaType() {
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>      Configuration configuration = sqlSessionFactory.getConfiguration();
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>      when(configuration).addMapper(ConstructorWithWrongJavaType.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>      when(() -&gt; configuration.addMapper(ConstructorWithWrongJavaType.<strong class="jxr_keyword">class</strong>));
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>      then(caughtException()).isInstanceOf(BuilderException.<strong class="jxr_keyword">class</strong>)
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>        .hasMessageContaining(
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>            <span class="jxr_string">"'org.apache.ibatis.submitted.named_constructor_args.InvalidNamedConstructorArgsTest$ConstructorWithWrongJavaType.select-void'"</span>)
@@ -113,7 +113,7 @@
 <a class="jxr_linenumber" name="L105" href="#L105">105</a>   @Test
 <a class="jxr_linenumber" name="L106" href="#L106">106</a>   <strong class="jxr_keyword">void</strong> missingRequiredJavaType() {
 <a class="jxr_linenumber" name="L107" href="#L107">107</a>     Configuration configuration = sqlSessionFactory.getConfiguration();
-<a class="jxr_linenumber" name="L108" href="#L108">108</a>     when(configuration).addMapper(ConstructorMissingRequiresJavaType.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>     when(() -&gt; configuration.addMapper(ConstructorMissingRequiresJavaType.<strong class="jxr_keyword">class</strong>));
 <a class="jxr_linenumber" name="L109" href="#L109">109</a>     then(caughtException()).isInstanceOf(BuilderException.<strong class="jxr_keyword">class</strong>)
 <a class="jxr_linenumber" name="L110" href="#L110">110</a>       .hasMessageContaining(
 <a class="jxr_linenumber" name="L111" href="#L111">111</a>             <span class="jxr_string">"'org.apache.ibatis.submitted.named_constructor_args.InvalidNamedConstructorArgsTest$ConstructorMissingRequiresJavaType.select-void'"</span>)
@@ -123,6 +123,6 @@
 <a class="jxr_linenumber" name="L115" href="#L115">115</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2019 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2020 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

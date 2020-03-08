@@ -187,7 +187,7 @@
 <a class="jxr_linenumber" name="L179" href="#L179">179</a>       }
 <a class="jxr_linenumber" name="L180" href="#L180">180</a>       <strong class="jxr_keyword">if</strong> (declaringClass == parentAsClass) {
 <a class="jxr_linenumber" name="L181" href="#L181">181</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; parentTypeVars.length; i++) {
-<a class="jxr_linenumber" name="L182" href="#L182">182</a>           <strong class="jxr_keyword">if</strong> (typeVar == parentTypeVars[i]) {
+<a class="jxr_linenumber" name="L182" href="#L182">182</a>           <strong class="jxr_keyword">if</strong> (typeVar.equals(parentTypeVars[i])) {
 <a class="jxr_linenumber" name="L183" href="#L183">183</a>             <strong class="jxr_keyword">return</strong> parentAsType.getActualTypeArguments()[i];
 <a class="jxr_linenumber" name="L184" href="#L184">184</a>           }
 <a class="jxr_linenumber" name="L185" href="#L185">185</a>         }
@@ -210,7 +210,7 @@
 <a class="jxr_linenumber" name="L202" href="#L202">202</a>     <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; parentTypeArgs.length; i++) {
 <a class="jxr_linenumber" name="L203" href="#L203">203</a>       <strong class="jxr_keyword">if</strong> (parentTypeArgs[i] instanceof TypeVariable) {
 <a class="jxr_linenumber" name="L204" href="#L204">204</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> j = 0; j &lt; srcTypeVars.length; j++) {
-<a class="jxr_linenumber" name="L205" href="#L205">205</a>           <strong class="jxr_keyword">if</strong> (srcTypeVars[j] == parentTypeArgs[i]) {
+<a class="jxr_linenumber" name="L205" href="#L205">205</a>           <strong class="jxr_keyword">if</strong> (srcTypeVars[j].equals(parentTypeArgs[i])) {
 <a class="jxr_linenumber" name="L206" href="#L206">206</a>             noChange = false;
 <a class="jxr_linenumber" name="L207" href="#L207">207</a>             newParentArgs[i] = srcTypeArgs[j];
 <a class="jxr_linenumber" name="L208" href="#L208">208</a>           }
@@ -299,6 +299,6 @@
 <a class="jxr_linenumber" name="L291" href="#L291">291</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2019 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2020 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

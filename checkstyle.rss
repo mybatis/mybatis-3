@@ -23,11 +23,11 @@ under the License.
     <link>http://www.mybatis.org/mybatis-3</link>
     <description>mybatis - Checkstyle report</description>
     <language>en-us</language>
-    <copyright>&#169;2009 - 2019 MyBatis.org</copyright>
+    <copyright>&#169;2009 - 2020 MyBatis.org</copyright>
     <item>
       <title>File: 392,
              Errors: 0,
-             Warnings: 1205,
+             Warnings: 1105,
              Infos: 0
       </title>
             <link>http://www.mybatis.org/mybatis-3/checkstyle.html</link>
@@ -262,7 +262,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  2
+                  0
                 </td>
                 <td>
                   0
@@ -388,7 +388,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  4
+                  3
                 </td>
                 <td>
                   0
@@ -402,7 +402,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  11
+                  0
                 </td>
                 <td>
                   0
@@ -668,7 +668,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  5
+                  0
                 </td>
                 <td>
                   0
@@ -920,7 +920,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  2
+                  0
                 </td>
                 <td>
                   0
@@ -990,7 +990,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  2
+                  0
                 </td>
                 <td>
                   0
@@ -1032,7 +1032,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  2
+                  0
                 </td>
                 <td>
                   0
@@ -1144,7 +1144,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  4
+                  0
                 </td>
                 <td>
                   0
@@ -2040,7 +2040,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  2
+                  1
                 </td>
                 <td>
                   0
@@ -2264,7 +2264,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  10
+                  0
                 </td>
                 <td>
                   0
@@ -2460,7 +2460,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  3
+                  2
                 </td>
                 <td>
                   0
@@ -2474,7 +2474,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  2
+                  0
                 </td>
                 <td>
                   0
@@ -2712,7 +2712,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  1
+                  0
                 </td>
                 <td>
                   0
@@ -2852,7 +2852,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  9
+                  0
                 </td>
                 <td>
                   0
@@ -2922,7 +2922,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  7
+                  0
                 </td>
                 <td>
                   0
@@ -3020,7 +3020,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  1
+                  0
                 </td>
                 <td>
                   0
@@ -3034,7 +3034,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  2
+                  0
                 </td>
                 <td>
                   0
@@ -3286,7 +3286,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  3
+                  0
                 </td>
                 <td>
                   0
@@ -3426,7 +3426,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  2
+                  0
                 </td>
                 <td>
                   0
@@ -3510,7 +3510,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  2
+                  0
                 </td>
                 <td>
                   0
@@ -3566,7 +3566,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  4
+                  3
                 </td>
                 <td>
                   0
@@ -3608,7 +3608,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  8
+                  7
                 </td>
                 <td>
                   0
@@ -4098,7 +4098,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  3
+                  0
                 </td>
                 <td>
                   0
@@ -4154,7 +4154,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  2
+                  0
                 </td>
                 <td>
                   0
@@ -4224,7 +4224,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  2
+                  0
                 </td>
                 <td>
                   0
@@ -4308,7 +4308,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  4
+                  3
                 </td>
                 <td>
                   0
@@ -4630,7 +4630,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  3
+                  0
                 </td>
                 <td>
                   0
@@ -4728,7 +4728,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  6
+                  0
                 </td>
                 <td>
                   0
@@ -4938,7 +4938,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  7
+                  0
                 </td>
                 <td>
                   0
@@ -5008,7 +5008,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  4
+                  3
                 </td>
                 <td>
                   0
@@ -5218,7 +5218,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  21
+                  20
                 </td>
                 <td>
                   0
@@ -5456,7 +5456,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  2
+                  0
                 </td>
                 <td>
                   0
