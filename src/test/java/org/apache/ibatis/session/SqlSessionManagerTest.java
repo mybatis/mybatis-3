@@ -15,15 +15,18 @@
  */
 package org.apache.ibatis.session;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.Reader;
+import java.util.List;
 
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.domain.blog.Author;
+import org.apache.ibatis.domain.blog.PostLite;
 import org.apache.ibatis.domain.blog.mappers.AuthorMapper;
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.io.Resources;
@@ -94,6 +97,18 @@ class SqlSessionManagerTest extends BaseDataTest {
     manager.close();
     Author actual = mapper.selectAuthor(502);
     assertNull(actual);
+  }
+
+  @Test
+  public void shouldFindAllPostLites() throws Exception {
+    List<PostLite> posts = manager.selectList("org.apache.ibatis.domain.blog.mappers.PostMapper.selectPostLite");
+    assertEquals(2, posts.size()); // old gcode issue #392, new #1848
+  }
+
+  @Test
+  public void shouldFindAllMutablePostLites() throws Exception {
+    List<PostLite> posts = manager.selectList("org.apache.ibatis.domain.blog.mappers.PostMapper.selectMutablePostLite");
+    assertEquals(2, posts.size()); // old gcode issue #392, new #1848
   }
 
 }
