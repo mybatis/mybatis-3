@@ -250,7 +250,7 @@ public class ResultMapping {
   public void setLazy(boolean lazy) {
     this.lazy = lazy;
   }
-  
+
   public boolean isSimple() {
     return this.nestedResultMapId == null && this.nestedQueryId == null && this.resultSet == null;
   }

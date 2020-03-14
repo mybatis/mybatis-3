@@ -48,7 +48,7 @@
         from Parent p
         left outer join Child c on p.Id = c.ParentId
     </select>
-        
+
     <resultMap id="ParentMapConstructor" type="org.apache.ibatis.submitted.parent_childs.Parent">
         <result column="p_Id" property="id" />
         <result column="p_Name" property="name" />
@@ -64,7 +64,7 @@
 	        <arg column="c_Age" javaType="int"/>
         </constructor>
     </resultMap>
-    
+
     <select id="getParentsWithConstructor" resultMap="ParentMapConstructor">
         select
         p.Id as p_Id,
@@ -77,5 +77,5 @@
         from Parent p
         left outer join Child c on p.Id = c.ParentId
     </select>
-    
+
 </mapper>

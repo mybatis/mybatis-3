@@ -14,6 +14,6 @@
  *    limitations under the License.
  */
 /**
- * Base package for caching stuff.
+ * Java Language Package.
  */
-package org.apache.ibatis.cache;
+package org.apache.ibatis.lang;
