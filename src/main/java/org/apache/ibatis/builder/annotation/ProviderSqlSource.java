@@ -172,7 +172,7 @@ public class ProviderSqlSource implements SqlSource {
 
   private Throwable extractRootCause(Exception e) {
     Throwable cause = e;
-    while(cause.getCause() != null) {
+    while (cause.getCause() != null) {
       cause = cause.getCause();
     }
     return cause;

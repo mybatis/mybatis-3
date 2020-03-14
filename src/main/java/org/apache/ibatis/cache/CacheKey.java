@@ -29,7 +29,7 @@ public class CacheKey implements Cloneable, Serializable {
 
   private static final long serialVersionUID = 1146682552656046210L;
 
-  public static final CacheKey NULL_CACHE_KEY = new CacheKey(){
+  public static final CacheKey NULL_CACHE_KEY = new CacheKey() {
     @Override
     public void update(Object object) {
       throw new CacheException("Not allowed to update a null cache key instance.");
