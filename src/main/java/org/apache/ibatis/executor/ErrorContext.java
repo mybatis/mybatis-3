@@ -35,7 +35,7 @@ public class ErrorContext {
   }
 
   public static ErrorContext instance() {
-   return LOCAL.get();
+    return LOCAL.get();
   }
 
   public ErrorContext store() {

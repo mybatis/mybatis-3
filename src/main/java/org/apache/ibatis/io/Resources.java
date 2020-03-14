@@ -69,8 +69,8 @@ public class Resources {
    * @throws java.io.IOException If the resource cannot be found or read
    */
   public static URL getResourceURL(String resource) throws IOException {
-      // issue #625
-      return getResourceURL(null, resource);
+    // issue #625
+    return getResourceURL(null, resource);
   }
 
   /**

@@ -46,8 +46,9 @@ public class ProviderSqlSource implements SqlSource {
   private final Integer providerContextIndex;
 
   /**
-   * @deprecated Since 3.5.3, Please use the {@link #ProviderSqlSource(Configuration, Annotation, Class, Method)} instead of this.
    * This constructor will remove at a future version.
+   *
+   * @deprecated Since 3.5.3, Please use the {@link #ProviderSqlSource(Configuration, Annotation, Class, Method)} instead of this.
    */
   @Deprecated
   public ProviderSqlSource(Configuration configuration, Object provider) {
@@ -55,9 +56,10 @@ public class ProviderSqlSource implements SqlSource {
   }
 
   /**
+   * This constructor will remove at a future version.
+   *
    * @since 3.4.5
    * @deprecated Since 3.5.3, Please use the {@link #ProviderSqlSource(Configuration, Annotation, Class, Method)} instead of this.
-   * This constructor will remove at a future version.
    */
   @Deprecated
   public ProviderSqlSource(Configuration configuration, Object provider, Class<?> mapperType, Method mapperMethod) {
@@ -138,7 +140,7 @@ public class ProviderSqlSource implements SqlSource {
       if (parameterObject instanceof Map) {
         int bindParameterCount = providerMethodParameterTypes.length - (providerContext == null ? 0 : 1);
         if (bindParameterCount == 1 &&
-          (providerMethodParameterTypes[Integer.valueOf(0).equals(providerContextIndex) ? 1 : 0].isAssignableFrom(parameterObject.getClass()))) {
+            (providerMethodParameterTypes[Integer.valueOf(0).equals(providerContextIndex) ? 1 : 0].isAssignableFrom(parameterObject.getClass()))) {
           sql = invokeProviderMethod(extractProviderMethodArguments(parameterObject));
         } else {
           @SuppressWarnings("unchecked")
