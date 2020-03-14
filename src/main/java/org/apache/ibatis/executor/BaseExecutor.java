@@ -146,14 +146,17 @@ public abstract class BaseExecutor implements Executor {
     if (queryStack == 0 && ms.isFlushCacheRequired()) {
       clearLocalCache();
     }
-    List<E> list;
+    List<E> list = null;
     try {
       queryStack++;
-      list = resultHandler == null ? (List<E>) localCache.getObject(key) : null;
+      boolean needCache = ms.getLocalCacheScope()!=LocalCacheScope.NOUSE;
+      if(needCache){
+          list = resultHandler == null ? (List<E>) localCache.getObject(key) : null;
+      }
       if (list != null) {
         handleLocallyCachedOutputParameters(ms, key, parameter, boundSql);
       } else {
-        list = queryFromDatabase(ms, parameter, rowBounds, resultHandler, key, boundSql);
+        list = queryFromDatabase(ms, parameter, rowBounds, resultHandler, key, boundSql,needCache);
       }
     } finally {
       queryStack--;
@@ -164,7 +167,7 @@ public abstract class BaseExecutor implements Executor {
       }
       // issue #601
       deferredLoads.clear();
-      if (configuration.getLocalCacheScope() == LocalCacheScope.STATEMENT) {
+      if (ms.getLocalCacheScope() == LocalCacheScope.STATEMENT) {
         // issue #482
         clearLocalCache();
       }
@@ -317,15 +320,20 @@ public abstract class BaseExecutor implements Executor {
     }
   }
 
-  private <E> List<E> queryFromDatabase(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql) throws SQLException {
+  private <E> List<E> queryFromDatabase(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql,boolean needCache) throws SQLException {
     List<E> list;
-    localCache.putObject(key, EXECUTION_PLACEHOLDER);
-    try {
+    if(needCache){
+      localCache.putObject(key, EXECUTION_PLACEHOLDER);
+      try {
+        list = doQuery(ms, parameter, rowBounds, resultHandler, boundSql);
+      } finally {
+        localCache.removeObject(key);
+      }
+      localCache.putObject(key, list);
+    }else{
       list = doQuery(ms, parameter, rowBounds, resultHandler, boundSql);
-    } finally {
-      localCache.removeObject(key);
     }
-    localCache.putObject(key, list);
+
     if (ms.getStatementType() == StatementType.CALLABLE) {
       localOutputParameterCache.putObject(key, parameter);
     }

@@ -27,6 +27,7 @@ import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.LocalCacheScope;
 
 /**
  * @author Clinton Begin
@@ -56,6 +57,7 @@ public final class MappedStatement {
   private Log statementLog;
   private LanguageDriver lang;
   private String[] resultSets;
+  private LocalCacheScope localCacheScope;
 
   MappedStatement() {
     // constructor disabled
@@ -80,6 +82,7 @@ public final class MappedStatement {
       }
       mappedStatement.statementLog = LogFactory.getLog(logId);
       mappedStatement.lang = configuration.getDefaultScriptingLanguageInstance();
+      mappedStatement.localCacheScope = configuration.getLocalCacheScope();
     }
 
     public Builder resource(String resource) {
@@ -183,6 +186,11 @@ public final class MappedStatement {
       return this;
     }
 
+    public Builder localCacheScope(LocalCacheScope localCacheScope) {
+      mappedStatement.localCacheScope = localCacheScope;
+      return this;
+    }
+
     public MappedStatement build() {
       assert mappedStatement.configuration != null;
       assert mappedStatement.id != null;
@@ -191,6 +199,8 @@ public final class MappedStatement {
       mappedStatement.resultMaps = Collections.unmodifiableList(mappedStatement.resultMaps);
       return mappedStatement;
     }
+
+
   }
 
   public KeyGenerator getKeyGenerator() {
@@ -283,6 +293,10 @@ public final class MappedStatement {
 
   public String[] getResultSets() {
     return resultSets;
+  }
+
+  public LocalCacheScope getLocalCacheScope() {
+    return localCacheScope;
   }
 
   /**

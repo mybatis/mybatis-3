@@ -23,6 +23,7 @@ import java.lang.annotation.Target;
 
 import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.mapping.StatementType;
+import org.apache.ibatis.session.LocalCacheScope;
 
 /**
  * The annotation that specify options for customizing default behaviors.
@@ -132,4 +133,11 @@ public @interface Options {
    * @return result set names that separate with comma(',')
    */
   String resultSets() default "";
+
+  /**
+   * Return the LocalCacheScope value.
+   *
+   * @return the LocalCacheScope value
+   */
+  LocalCacheScope localCacheScope() default LocalCacheScope.NULL;
 }

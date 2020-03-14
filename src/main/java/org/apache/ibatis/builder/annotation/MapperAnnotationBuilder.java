@@ -84,6 +84,7 @@ import org.apache.ibatis.parsing.PropertyParser;
 import org.apache.ibatis.reflection.TypeParameterResolver;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.LocalCacheScope;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.type.JdbcType;
@@ -310,6 +311,7 @@ public class MapperAnnotationBuilder {
       boolean isSelect = sqlCommandType == SqlCommandType.SELECT;
       boolean flushCache = !isSelect;
       boolean useCache = isSelect;
+      LocalCacheScope localCacheScope = configuration.getLocalCacheScope();
 
       KeyGenerator keyGenerator;
       String keyProperty = null;
@@ -343,6 +345,9 @@ public class MapperAnnotationBuilder {
         statementType = options.statementType();
         if (options.resultSetType() != ResultSetType.DEFAULT) {
           resultSetType = options.resultSetType();
+        }
+        if(options.localCacheScope()!=LocalCacheScope.NULL){
+          localCacheScope = options.localCacheScope();
         }
       }
 
@@ -378,7 +383,7 @@ public class MapperAnnotationBuilder {
           null,
           languageDriver,
           // ResultSets
-          options != null ? nullOrEmpty(options.resultSets()) : null);
+          options != null ? nullOrEmpty(options.resultSets()) : null,localCacheScope);
     }
   }
 
@@ -675,7 +680,7 @@ public class MapperAnnotationBuilder {
 
     assistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType, fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass, resultSetTypeEnum,
         flushCache, useCache, false,
-        keyGenerator, keyProperty, keyColumn, null, languageDriver, null);
+        keyGenerator, keyProperty, keyColumn, null, languageDriver, null,LocalCacheScope.NOUSE);
 
     id = assistant.applyCurrentNamespace(id, false);
 
