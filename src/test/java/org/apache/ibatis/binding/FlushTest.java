@@ -35,11 +35,11 @@ import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class FlushTest {
+class FlushTest {
     private static SqlSessionFactory sqlSessionFactory;
 
     @BeforeAll
-    public static void setup() throws Exception {
+    static void setup() throws Exception {
         DataSource dataSource = BaseDataTest.createBlogDataSource();
         TransactionFactory transactionFactory = new JdbcTransactionFactory();
         Environment environment = new Environment("Production", transactionFactory, dataSource);
@@ -52,7 +52,7 @@ public class FlushTest {
     }
 
     @Test
-    public void invokeFlushStatementsViaMapper() {
+    void invokeFlushStatementsViaMapper() {
         try (SqlSession session = sqlSessionFactory.openSession()) {
 
             BoundAuthorMapper mapper = session.getMapper(BoundAuthorMapper.class);

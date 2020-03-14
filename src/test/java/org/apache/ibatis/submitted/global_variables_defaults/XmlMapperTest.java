@@ -28,7 +28,7 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class XmlMapperTest {
+class XmlMapperTest {
 
   @Test
   void applyDefaultValueOnXmlMapper() throws IOException {

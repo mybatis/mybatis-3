@@ -100,13 +100,13 @@ class SqlSessionManagerTest extends BaseDataTest {
   }
 
   @Test
-  public void shouldFindAllPostLites() throws Exception {
+  void shouldFindAllPostLites() throws Exception {
     List<PostLite> posts = manager.selectList("org.apache.ibatis.domain.blog.mappers.PostMapper.selectPostLite");
     assertEquals(2, posts.size()); // old gcode issue #392, new #1848
   }
 
   @Test
-  public void shouldFindAllMutablePostLites() throws Exception {
+  void shouldFindAllMutablePostLites() throws Exception {
     List<PostLite> posts = manager.selectList("org.apache.ibatis.domain.blog.mappers.PostMapper.selectMutablePostLite");
     assertEquals(2, posts.size()); // old gcode issue #392, new #1848
   }
