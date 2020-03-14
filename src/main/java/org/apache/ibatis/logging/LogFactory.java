@@ -43,8 +43,8 @@ public final class LogFactory {
     // disable construction
   }
 
-  public static Log getLog(Class<?> aClass) {
-    return getLog(aClass.getName());
+  public static Log getLog(Class<?> clazz) {
+    return getLog(clazz.getName());
   }
 
   public static Log getLog(String logger) {
