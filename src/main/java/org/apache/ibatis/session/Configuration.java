@@ -971,7 +971,7 @@ public class Configuration {
     }
 
     protected static class Ambiguity {
-      final private String subject;
+      private final String subject;
 
       public Ambiguity(String subject) {
         this.subject = subject;
