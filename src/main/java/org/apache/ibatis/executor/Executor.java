@@ -23,6 +23,8 @@ import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.session.PageBounds;
+import org.apache.ibatis.session.PageResult;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.transaction.Transaction;
@@ -40,6 +42,8 @@ public interface Executor {
 
   <E> List<E> query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler) throws SQLException;
 
+  <E> PageResult<E> query(MappedStatement ms, Object parameter, PageBounds pageBounds, ResultHandler resultHandler) throws SQLException;
+  
   <E> Cursor<E> queryCursor(MappedStatement ms, Object parameter, RowBounds rowBounds) throws SQLException;
 
   List<BatchResult> flushStatements() throws SQLException;

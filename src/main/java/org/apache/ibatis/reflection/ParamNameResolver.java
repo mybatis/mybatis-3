@@ -25,6 +25,7 @@ import java.util.TreeMap;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.binding.MapperMethod.ParamMap;
 import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.PageBounds;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 
@@ -89,7 +90,7 @@ public class ParamNameResolver {
   }
 
   private static boolean isSpecialParameter(Class<?> clazz) {
-    return RowBounds.class.isAssignableFrom(clazz) || ResultHandler.class.isAssignableFrom(clazz);
+    return RowBounds.class.isAssignableFrom(clazz) || ResultHandler.class.isAssignableFrom(clazz) || PageBounds.class.isAssignableFrom(clazz);
   }
 
   /**
