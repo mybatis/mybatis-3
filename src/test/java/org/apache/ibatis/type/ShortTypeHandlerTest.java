@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -36,10 +36,8 @@ class ShortTypeHandlerTest extends BaseTypeHandlerTest {
   @Override
   @Test
   public void shouldGetResultFromResultSetByName() throws Exception {
-    when(rs.getShort("column")).thenReturn((short) 100);
+    when(rs.getShort("column")).thenReturn((short) 100, (short) 0);
     assertEquals(Short.valueOf((short) 100), TYPE_HANDLER.getResult(rs, "column"));
-
-    when(rs.getShort("column")).thenReturn((short) 0);
     assertEquals(Short.valueOf((short) 0), TYPE_HANDLER.getResult(rs, "column"));
   }
 
@@ -54,10 +52,8 @@ class ShortTypeHandlerTest extends BaseTypeHandlerTest {
   @Override
   @Test
   public void shouldGetResultFromResultSetByPosition() throws Exception {
-    when(rs.getShort(1)).thenReturn((short) 100);
+    when(rs.getShort(1)).thenReturn((short) 100, (short) 0);
     assertEquals(Short.valueOf((short) 100), TYPE_HANDLER.getResult(rs, 1));
-
-    when(rs.getShort(1)).thenReturn((short) 0);
     assertEquals(Short.valueOf((short) 0), TYPE_HANDLER.getResult(rs, 1));
   }
 
@@ -72,10 +68,8 @@ class ShortTypeHandlerTest extends BaseTypeHandlerTest {
   @Override
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
-    when(cs.getShort(1)).thenReturn((short) 100);
+    when(cs.getShort(1)).thenReturn((short) 100, (short) 0);
     assertEquals(Short.valueOf((short) 100), TYPE_HANDLER.getResult(cs, 1));
-
-    when(cs.getShort(1)).thenReturn((short) 0);
     assertEquals(Short.valueOf((short) 0), TYPE_HANDLER.getResult(cs, 1));
   }
 

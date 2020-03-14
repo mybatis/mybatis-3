@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -41,10 +41,8 @@ class YearTypeHandlerTest extends BaseTypeHandlerTest {
   @Override
   @Test
   public void shouldGetResultFromResultSetByName() throws Exception {
-    when(rs.getInt("column")).thenReturn(INSTANT.getValue());
+    when(rs.getInt("column")).thenReturn(INSTANT.getValue(), 0);
     assertEquals(INSTANT, TYPE_HANDLER.getResult(rs, "column"));
-
-    when(rs.getInt("column")).thenReturn(0);
     assertEquals(Year.of(0), TYPE_HANDLER.getResult(rs, "column"));
   }
 
@@ -59,10 +57,8 @@ class YearTypeHandlerTest extends BaseTypeHandlerTest {
   @Override
   @Test
   public void shouldGetResultFromResultSetByPosition() throws Exception {
-    when(rs.getInt(1)).thenReturn(INSTANT.getValue());
+    when(rs.getInt(1)).thenReturn(INSTANT.getValue(), 0);
     assertEquals(INSTANT, TYPE_HANDLER.getResult(rs, 1));
-
-    when(rs.getInt(1)).thenReturn(0);
     assertEquals(Year.of(0), TYPE_HANDLER.getResult(rs, 1));
   }
 
@@ -77,10 +73,8 @@ class YearTypeHandlerTest extends BaseTypeHandlerTest {
   @Override
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
-    when(cs.getInt(1)).thenReturn(INSTANT.getValue());
+    when(cs.getInt(1)).thenReturn(INSTANT.getValue(), 0);
     assertEquals(INSTANT, TYPE_HANDLER.getResult(cs, 1));
-
-    when(cs.getInt(1)).thenReturn(0);
     assertEquals(Year.of(0), TYPE_HANDLER.getResult(cs, 1));
   }
 
