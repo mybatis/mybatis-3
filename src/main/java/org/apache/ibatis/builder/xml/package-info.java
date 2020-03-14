@@ -14,6 +14,6 @@
  *    limitations under the License.
  */
 /**
- * Parses XML files to create a Configuration
+ * Parses XML files to create a Configuration.
  */
 package org.apache.ibatis.builder.xml;

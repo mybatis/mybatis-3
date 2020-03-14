@@ -14,6 +14,6 @@
  *    limitations under the License.
  */
 /**
- * JNDI Datasource factory
+ * JNDI Datasource factory.
  */
 package org.apache.ibatis.datasource.jndi;

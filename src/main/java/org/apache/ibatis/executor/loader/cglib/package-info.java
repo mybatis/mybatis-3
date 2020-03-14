@@ -14,6 +14,6 @@
  *    limitations under the License.
  */
 /**
- * CGLIB proxy factory
+ * CGLIB proxy factory.
  */
 package org.apache.ibatis.executor.loader.cglib;

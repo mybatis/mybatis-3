@@ -14,6 +14,6 @@
  *    limitations under the License.
  */
 /**
- * Parses annotions to create a Configuration
+ * Parses annotions to create a Configuration.
  */
 package org.apache.ibatis.builder.annotation;

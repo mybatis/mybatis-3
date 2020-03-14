@@ -14,6 +14,6 @@
  *    limitations under the License.
  */
 /**
- * Base package for loading results into beans
+ * Base package for loading results into beans.
  */
 package org.apache.ibatis.executor.loader;

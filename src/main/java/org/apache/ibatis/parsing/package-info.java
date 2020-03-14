@@ -14,6 +14,6 @@
  *    limitations under the License.
  */
 /**
- * Parsing utils
+ * Parsing utils.
  */
 package org.apache.ibatis.parsing;

@@ -14,6 +14,6 @@
  *    limitations under the License.
  */
 /**
- * Simple single-thread pooled datasource
+ * Simple single-thread pooled datasource.
  */
 package org.apache.ibatis.datasource.pooled;
