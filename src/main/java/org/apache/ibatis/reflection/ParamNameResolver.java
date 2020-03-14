@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,8 +17,11 @@ package org.apache.ibatis.reflection;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -48,6 +51,7 @@ public class ParamNameResolver {
   private final SortedMap<Integer, String> names;
 
   private boolean hasParamAnnotation;
+  private boolean useActualParamName;
 
   public ParamNameResolver(Configuration config, Method method) {
     final Class<?>[] paramTypes = method.getParameterTypes();
@@ -77,6 +81,8 @@ public class ParamNameResolver {
           // use the parameter index as the name ("0", "1", ...)
           // gcode issue #71
           name = String.valueOf(map.size());
+        } else {
+          useActualParamName = true;
         }
       }
       map.put(paramIndex, name);
@@ -112,7 +118,8 @@ public class ParamNameResolver {
     if (args == null || paramCount == 0) {
       return null;
     } else if (!hasParamAnnotation && paramCount == 1) {
-      return args[names.firstKey()];
+      Object value = args[names.firstKey()];
+      return wrapToMapIfCollection(value, useActualParamName ? names.get(0) : null);
     } else {
       final Map<String, Object> param = new ParamMap<>();
       int i = 0;
@@ -129,4 +136,32 @@ public class ParamNameResolver {
       return param;
     }
   }
+
+  /**
+   * Wrap to a {@link ParamMap} if object is {@link Collection} or array.
+   *
+   * @param object a parameter object
+   * @param actualParamName an actual parameter name
+   *                        (If specify a name, set an object to {@link ParamMap} with specified name)
+   * @return a {@link ParamMap}
+   * @since 3.5.5
+   */
+  public static Object wrapToMapIfCollection(Object object, String actualParamName) {
+    if (object instanceof Collection) {
+      ParamMap<Object> map = new ParamMap<>();
+      map.put("collection", object);
+      if (object instanceof List) {
+        map.put("list", object);
+      }
+      Optional.ofNullable(actualParamName).ifPresent(name -> map.put(name, object));
+      return map;
+    } else if (object != null && object.getClass().isArray()) {
+      ParamMap<Object> map = new ParamMap<>();
+      map.put("array", object);
+      Optional.ofNullable(actualParamName).ifPresent(name -> map.put(name, object));
+      return map;
+    }
+    return object;
+  }
+
 }
