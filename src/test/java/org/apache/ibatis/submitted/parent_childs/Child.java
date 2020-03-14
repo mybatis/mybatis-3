@@ -23,16 +23,16 @@ public class Child {
   private Integer age;
 
   public Child() {
-	  
+
   }
-  
+
   public Child(Integer id, String name, String surName, Integer age) {
     this.id = id;
     this.name = name;
     this.surName = surName;
     this.age = age;
   }
-  
+
   public Integer getId() {
     return id;
   }

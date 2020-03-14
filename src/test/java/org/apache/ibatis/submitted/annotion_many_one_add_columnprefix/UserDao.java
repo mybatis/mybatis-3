@@ -76,10 +76,10 @@ public interface UserDao {
     "    from user u",
     "    left join user_role ur on u.id = ur.user_id",
     "    left join role r on ur.role_id = r.id" ,
-    "    left join user f on u.friend_id = f.id", 
+    "    left join user f on u.friend_id = f.id",
     "    left join user_role fur on f.id = fur.user_id",
     "    left join role fr on fur.role_id = fr.id" ,
-    "    where u.id = #{userId} order by r.id, fr.id" 
+    "    where u.id = #{userId} order by r.id, fr.id"
     })
   @Results(id = "userWithFriendMap", value = {
     @Result(id = true, column = "id", property = "id"),

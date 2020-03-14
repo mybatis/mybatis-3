@@ -400,7 +400,7 @@ public String updatePersonSql() {
               <td>
                 <code>UPDATE(String)</code>
               </td>
-              <td>开始新的 update 语句，并指定更新表的表名。后面都会跟着一个或多个 SET() 调用，通常也会有一个 WHERE() 调用。 
+              <td>开始新的 update 语句，并指定更新表的表名。后面都会跟着一个或多个 SET() 调用，通常也会有一个 WHERE() 调用。
               </td>
             </tr>
             <tr>
