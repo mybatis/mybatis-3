@@ -140,7 +140,9 @@ public class JBoss6VFS extends VFS {
     }
   }
 
-  /** Mark this {@link VFS} as invalid for the current environment. */
+  /**
+   * Mark this {@link VFS} as invalid for the current environment.
+   */
   protected static void setInvalid() {
     if (JBoss6VFS.valid.booleanValue()) {
       log.debug("JBoss 6 VFS API is not available in this environment.");
