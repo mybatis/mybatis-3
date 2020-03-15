@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -69,8 +69,8 @@ public class Resources {
    * @throws java.io.IOException If the resource cannot be found or read
    */
   public static URL getResourceURL(String resource) throws IOException {
-      // issue #625
-      return getResourceURL(null, resource);
+    // issue #625
+    return getResourceURL(null, resource);
   }
 
   /**

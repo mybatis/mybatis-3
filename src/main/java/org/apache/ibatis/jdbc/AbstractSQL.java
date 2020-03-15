@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -395,12 +395,12 @@ public abstract class AbstractSQL<T> {
   }
 
   private static class SafeAppendable {
-    private final Appendable a;
+    private final Appendable appendable;
     private boolean empty = true;
 
     public SafeAppendable(Appendable a) {
       super();
-      this.a = a;
+      this.appendable = a;
     }
 
     public SafeAppendable append(CharSequence s) {
@@ -408,7 +408,7 @@ public abstract class AbstractSQL<T> {
         if (empty && s.length() > 0) {
           empty = false;
         }
-        a.append(s);
+        appendable.append(s);
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
