@@ -215,11 +215,12 @@ public class XNode {
    *
    * <p>
    * If attribute value is absent, return value that provided from supplier of default value.
-   * </p>
    *
-   * @param name attribute name
-   * @param defSupplier a supplier of default value
-   *
+   * @param name
+   *          attribute name
+   * @param defSupplier
+   *          a supplier of default value
+   * @return the string attribute
    * @since 3.5.4
    */
   public String getStringAttribute(String name, Supplier<String> defSupplier) {

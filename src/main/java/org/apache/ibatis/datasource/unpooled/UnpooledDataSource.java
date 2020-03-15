@@ -185,6 +185,9 @@ public class UnpooledDataSource implements DataSource {
   }
 
   /**
+   * Gets the default network timeout.
+   *
+   * @return the default network timeout
    * @since 3.5.2
    */
   public Integer getDefaultNetworkTimeout() {
