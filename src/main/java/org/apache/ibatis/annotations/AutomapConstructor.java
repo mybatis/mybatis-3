@@ -26,6 +26,7 @@ import java.lang.annotation.Target;
  *
  * <p><br>
  * <b>How to use:</b>
+ *
  * <pre>
  * public class User {
  *
@@ -44,6 +45,7 @@ import java.lang.annotation.Target;
  *   // ...
  * }
  * </pre>
+ *
  * @author Tim Chen
  * @since 3.4.3
  */

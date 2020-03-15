@@ -26,6 +26,7 @@ import java.lang.annotation.Target;
  *
  * <p><br>
  * <b>How to use:</b>
+ *
  * <pre>
  * public interface UserMapper {
  *
@@ -40,6 +41,7 @@ import java.lang.annotation.Target;
  *
  * }
  * </pre>
+ *
  * @author Clinton Begin
  */
 @Documented

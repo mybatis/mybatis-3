@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -75,7 +75,7 @@ public class CglibProxyFactory implements ProxyFactory {
         LogHolder.log.debug(WRITE_REPLACE_METHOD + " method was found on bean " + type + ", make sure it returns this");
       }
     } catch (NoSuchMethodException e) {
-      enhancer.setInterfaces(new Class[]{WriteReplaceInterface.class});
+      enhancer.setInterfaces(new Class[] { WriteReplaceInterface.class });
     } catch (SecurityException e) {
       // nothing to do here
     }
