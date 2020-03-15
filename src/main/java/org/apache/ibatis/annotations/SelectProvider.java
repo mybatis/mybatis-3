@@ -75,7 +75,8 @@ public @interface SelectProvider {
    * If this attribute omit, the MyBatis will call a method that decide by following rules.
    * <ul>
    *   <li>
-   *     If class that specified the {@link #type()} attribute implements the {@link org.apache.ibatis.builder.annotation.ProviderMethodResolver},
+   *     If class that specified the {@link #type()} attribute implements the
+   *     {@link org.apache.ibatis.builder.annotation.ProviderMethodResolver},
    *     the MyBatis use a method that returned by it
    *   </li>
    *   <li>

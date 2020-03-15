@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ class ValueInMapTest {
 
     // populate in-memory database
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/valueinmap/CreateDB.sql");
+        "org/apache/ibatis/submitted/valueinmap/CreateDB.sql");
   }
 
   @Test // issue #165
@@ -64,7 +64,7 @@ class ValueInMapTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       List<String> list = new ArrayList<>();
       list.add("users");
-      Assertions.assertThrows(PersistenceException.class, () -> sqlSession.selectOne("count2",list));
+      Assertions.assertThrows(PersistenceException.class, () -> sqlSession.selectOne("count2", list));
     }
   }
 

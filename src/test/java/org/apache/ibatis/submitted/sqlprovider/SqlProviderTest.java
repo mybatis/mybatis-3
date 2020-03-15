@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -61,7 +61,7 @@ class SqlProviderTest {
     }
     // populate in-memory database
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/sqlprovider/CreateDB.sql");
+        "org/apache/ibatis/submitted/sqlprovider/CreateDB.sql");
 
     // create a SqlSessionFactory
     try (Reader reader = Resources
@@ -488,8 +488,8 @@ class SqlProviderTest {
   void mapperMultipleParamAndProviderContextWithAtParam() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
-      assertEquals(1, mapper.selectByIdAndNameWithAtParam(4,"User4").size());
-      assertEquals(0, mapper.selectActiveByIdAndNameWithAtParam(4,"User4").size());
+      assertEquals(1, mapper.selectByIdAndNameWithAtParam(4, "User4").size());
+      assertEquals(0, mapper.selectActiveByIdAndNameWithAtParam(4, "User4").size());
     }
   }
 
@@ -497,8 +497,8 @@ class SqlProviderTest {
   void mapperMultipleParamAndProviderContext() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
-      assertEquals(1, mapper.selectByIdAndName(4,"User4").size());
-      assertEquals(0, mapper.selectActiveByIdAndName(4,"User4").size());
+      assertEquals(1, mapper.selectByIdAndName(4, "User4").size());
+      assertEquals(0, mapper.selectActiveByIdAndName(4, "User4").size());
     }
   }
 
@@ -892,7 +892,6 @@ class SqlProviderTest {
     }
   }
 
-
   @Test
   void shouldUpdateUserSelective() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
@@ -929,11 +928,11 @@ class SqlProviderTest {
 
   @Test
   void shouldPassedDatabaseIdToProviderMethod() {
-    try (SqlSession sqlSession = sqlSessionFactory.openSession()){
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       DatabaseIdMapper mapper = sqlSession.getMapper(DatabaseIdMapper.class);
       assertEquals("hsql", mapper.selectDatabaseId());
     }
-    try (SqlSession sqlSession = sqlSessionFactoryForDerby.openSession()){
+    try (SqlSession sqlSession = sqlSessionFactoryForDerby.openSession()) {
       DatabaseIdMapper mapper = sqlSession.getMapper(DatabaseIdMapper.class);
       assertEquals("derby", mapper.selectDatabaseId());
     }

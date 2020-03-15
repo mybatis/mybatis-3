@@ -20,6 +20,7 @@ import java.util.List;
 public interface Mapper {
 
   List<Parent> getParents();
+
   List<Parent> getParentsWithConstructor();
 
 }

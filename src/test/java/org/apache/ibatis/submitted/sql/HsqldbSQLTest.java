@@ -39,7 +39,7 @@ class HsqldbSQLTest {
   static void setUp() throws Exception {
     Configuration configuration = new Configuration();
     Environment environment = new Environment("development", new JdbcTransactionFactory(),
-      new UnpooledDataSource("org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:HsqldbSQLTest", "sa", ""));
+        new UnpooledDataSource("org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:HsqldbSQLTest", "sa", ""));
     configuration.setEnvironment(environment);
     configuration.setUseGeneratedKeys(true);
     configuration.addMapper(Mapper.class);
@@ -49,7 +49,7 @@ class HsqldbSQLTest {
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
 
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-      "org/apache/ibatis/submitted/sql/CreateDB-hsqldb.sql");
+        "org/apache/ibatis/submitted/sql/CreateDB-hsqldb.sql");
   }
 
   @Test

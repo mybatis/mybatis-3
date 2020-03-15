@@ -28,21 +28,21 @@ class OrphanResultMapTest {
 
   @Test
   void testSeparateResultMaps() {
-    //given
+    // given
     Configuration configuration = new Configuration();
     configuration.getTypeAliasRegistry().registerAlias(Blog.class);
     configuration.getTypeAliasRegistry().registerAlias(Post.class);
     configuration.addMapper(SeparateCollectionMapper.class);
 
-    //there should be two result maps declared, with two name variants each
+    // there should be two result maps declared, with two name variants each
     assertEquals(4, configuration.getResultMaps().size());
 
-    //test short names
+    // test short names
     assertNotNull(configuration.getResultMap(RESULT_MAP_BLOG));
     assertNotNull(configuration.getResultMap(RESULT_MAP_POST));
     assertThrows(IllegalArgumentException.class, () -> configuration.getResultMap(RESULT_MAP_INNER));
 
-    //test long names
+    // test long names
     String prefix = SeparateCollectionMapper.class.getName() + ".";
     assertNotNull(configuration.getResultMap(prefix + RESULT_MAP_BLOG));
     assertNotNull(configuration.getResultMap(prefix + RESULT_MAP_POST));
@@ -51,20 +51,20 @@ class OrphanResultMapTest {
 
   @Test
   void testNestedResultMap() {
-    //given
+    // given
     Configuration configuration = new Configuration();
     configuration.getTypeAliasRegistry().registerAlias(Blog.class);
     configuration.getTypeAliasRegistry().registerAlias(Post.class);
     configuration.addMapper(NestedCollectionMapper.class);
 
-    //there should be two result maps declared, with two name variants each
+    // there should be two result maps declared, with two name variants each
     assertEquals(4, configuration.getResultMaps().size());
 
-    //test short names
+    // test short names
     assertNotNull(configuration.getResultMap(RESULT_MAP_BLOG));
     assertNotNull(configuration.getResultMap(RESULT_MAP_INNER));
 
-    //test long names
+    // test long names
     String prefix = NestedCollectionMapper.class.getName() + ".";
     assertNotNull(configuration.getResultMap(prefix + RESULT_MAP_BLOG));
     assertNotNull(configuration.getResultMap(prefix + RESULT_MAP_INNER));

@@ -38,7 +38,7 @@ class ByteObjectArrayTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldGetResultFromResultSetByName() throws Exception {
     byte[] byteArray = new byte[] { 1, 2 };
     when(rs.getBytes("column")).thenReturn(byteArray);
-    assertThat(TYPE_HANDLER.getResult(rs, "column")).isEqualTo(new Byte[]{1, 2});
+    assertThat(TYPE_HANDLER.getResult(rs, "column")).isEqualTo(new Byte[] { 1, 2 });
     verify(rs, never()).wasNull();
   }
 
@@ -55,7 +55,7 @@ class ByteObjectArrayTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldGetResultFromResultSetByPosition() throws Exception {
     byte[] byteArray = new byte[] { 1, 2 };
     when(rs.getBytes(1)).thenReturn(byteArray);
-    assertThat(TYPE_HANDLER.getResult(rs, 1)).isEqualTo(new Byte[]{1, 2});
+    assertThat(TYPE_HANDLER.getResult(rs, 1)).isEqualTo(new Byte[] { 1, 2 });
     verify(rs, never()).wasNull();
   }
 
@@ -72,7 +72,7 @@ class ByteObjectArrayTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldGetResultFromCallableStatement() throws Exception {
     byte[] byteArray = new byte[] { 1, 2 };
     when(cs.getBytes(1)).thenReturn(byteArray);
-    assertThat(TYPE_HANDLER.getResult(cs, 1)).isEqualTo(new Byte[]{1, 2});
+    assertThat(TYPE_HANDLER.getResult(cs, 1)).isEqualTo(new Byte[] { 1, 2 });
     verify(cs, never()).wasNull();
   }
 

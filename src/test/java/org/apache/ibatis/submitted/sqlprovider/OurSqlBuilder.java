@@ -59,101 +59,118 @@ public class OurSqlBuilder {
   }
 
   public String buildGetUsersByCriteriaQuery(final User criteria) {
-    return new SQL(){{
-      SELECT("*");
-      FROM("users");
-      if (criteria.getId() != null) {
-        WHERE("id = #{id}");
+    return new SQL() {
+      {
+        SELECT("*");
+        FROM("users");
+        if (criteria.getId() != null) {
+          WHERE("id = #{id}");
+        }
+        if (criteria.getName() != null) {
+          WHERE("name like #{name} || '%'");
+        }
       }
-      if (criteria.getName() != null) {
-        WHERE("name like #{name} || '%'");
-      }
-    }}.toString();
+    }.toString();
   }
 
   public String buildGetUsersByCriteriaMapQuery(final Map<String, Object> criteria) {
-    return new SQL(){{
-      SELECT("*");
-      FROM("users");
-      if (criteria.get("id") != null) {
-        WHERE("id = #{id}");
+    return new SQL() {
+      {
+        SELECT("*");
+        FROM("users");
+        if (criteria.get("id") != null) {
+          WHERE("id = #{id}");
+        }
+        if (criteria.get("name") != null) {
+          WHERE("name like #{name} || '%'");
+        }
       }
-      if (criteria.get("name") != null) {
-        WHERE("name like #{name} || '%'");
-      }
-    }}.toString();
+    }.toString();
   }
 
   public String buildGetUsersByCriteriaMapWithParamQuery(@Param("id") Integer id, @Param("name") String name) {
-    return new SQL() {{
-      SELECT("*");
-      FROM("users");
-      if (id != null) {
-        WHERE("id = #{id}");
+    return new SQL() {
+      {
+        SELECT("*");
+        FROM("users");
+        if (id != null) {
+          WHERE("id = #{id}");
+        }
+        if (name != null) {
+          WHERE("name like #{name} || '%'");
+        }
       }
-      if (name != null) {
-        WHERE("name like #{name} || '%'");
-      }
-    }}.toString();
+    }.toString();
   }
 
   public String buildGetUsersByNameQuery(final String name, final String orderByColumn) {
-    return new SQL(){{
-      SELECT("*");
-      FROM("users");
-      if (name != null) {
-        WHERE("name like #{param1} || '%'");
+    return new SQL() {
+      {
+        SELECT("*");
+        FROM("users");
+        if (name != null) {
+          WHERE("name like #{param1} || '%'");
+        }
+        ORDER_BY(orderByColumn);
       }
-      ORDER_BY(orderByColumn);
-    }}.toString();
+    }.toString();
   }
 
   public String buildGetUsersByNameUsingMap(Map<String, Object> params) {
     final String name = String.class.cast(params.get("param1"));
     final String orderByColumn = String.class.cast(params.get("param2"));
-    return new SQL(){{
-      SELECT("*");
-      FROM("users");
-      if (name != null) {
-        WHERE("name like #{param1} || '%'");
+    return new SQL() {
+      {
+        SELECT("*");
+        FROM("users");
+        if (name != null) {
+          WHERE("name like #{param1} || '%'");
+        }
+        ORDER_BY(orderByColumn);
       }
-      ORDER_BY(orderByColumn);
-    }}.toString();
+    }.toString();
   }
 
-  public String buildGetUsersByNameWithParamNameAndOrderByQuery(@Param("orderByColumn") final String orderByColumn, @Param("name") final String name) {
-    return new SQL(){{
-      SELECT("*");
-      FROM("users");
-      if (name != null) {
-        WHERE("name like #{name} || '%'");
+  public String buildGetUsersByNameWithParamNameAndOrderByQuery(@Param("orderByColumn") final String orderByColumn,
+      @Param("name") final String name) {
+    return new SQL() {
+      {
+        SELECT("*");
+        FROM("users");
+        if (name != null) {
+          WHERE("name like #{name} || '%'");
+        }
+        ORDER_BY(orderByColumn);
       }
-      ORDER_BY(orderByColumn);
-    }}.toString();
+    }.toString();
   }
 
   public String buildGetUsersByNameWithParamNameQuery(@Param("name") final String name) {
-    return new SQL(){{
-      SELECT("*");
-      FROM("users");
-      if (name != null) {
-        WHERE("name like #{name} || '%'");
+    return new SQL() {
+      {
+        SELECT("*");
+        FROM("users");
+        if (name != null) {
+          WHERE("name like #{name} || '%'");
+        }
+        ORDER_BY("id DESC");
       }
-      ORDER_BY("id DESC");
-    }}.toString();
+    }.toString();
   }
 
   public String buildGetUsersByNameWithParamNameQueryUsingMap(Map<String, Object> params) {
     final String name = String.class.cast(params.get("name"));
     final String orderByColumn = String.class.cast(params.get("orderByColumn"));
-    return new SQL(){{
-      SELECT("*");
-      FROM("users");
-      if (name != null) {
-        WHERE("name like #{param1} || '%'");
+    return new SQL() {
+      {
+        SELECT("*");
+        FROM("users");
+        if (name != null) {
+          WHERE("name like #{param1} || '%'");
+        }
+        ORDER_BY(orderByColumn);
       }
-      ORDER_BY(orderByColumn);
-    }}.toString();
+    }.toString();
   }
 
   public String buildInsert() {
@@ -169,67 +186,81 @@ public class OurSqlBuilder {
   }
 
   public String buildSelectByIdProviderContextOnly(ProviderContext context) {
-    final boolean containsLogicalDelete = context.getMapperMethod().getAnnotation(BaseMapper.ContainsLogicalDelete.class) != null;
+    final boolean containsLogicalDelete = context.getMapperMethod()
+        .getAnnotation(BaseMapper.ContainsLogicalDelete.class) != null;
     final String tableName = context.getMapperType().getAnnotation(BaseMapper.Meta.class).tableName();
-    return new SQL(){{
-      SELECT("*");
-      FROM(tableName);
-      WHERE("id = #{id}");
-      if (!containsLogicalDelete){
-        WHERE("logical_delete = ${Constants.LOGICAL_DELETE_OFF}");
+    return new SQL() {
+      {
+        SELECT("*");
+        FROM(tableName);
+        WHERE("id = #{id}");
+        if (!containsLogicalDelete) {
+          WHERE("logical_delete = ${Constants.LOGICAL_DELETE_OFF}");
+        }
       }
-    }}.toString();
+    }.toString();
   }
 
   public String buildSelectByNameOneParamAndProviderContext(ProviderContext context, final String name) {
-    final boolean containsLogicalDelete = context.getMapperMethod().getAnnotation(BaseMapper.ContainsLogicalDelete.class) != null;
+    final boolean containsLogicalDelete = context.getMapperMethod()
+        .getAnnotation(BaseMapper.ContainsLogicalDelete.class) != null;
     final String tableName = context.getMapperType().getAnnotation(BaseMapper.Meta.class).tableName();
-    return new SQL(){{
-      SELECT("*");
-      FROM(tableName);
-      if (name != null) {
-        WHERE("name like #{name} || '%'");
+    return new SQL() {
+      {
+        SELECT("*");
+        FROM(tableName);
+        if (name != null) {
+          WHERE("name like #{name} || '%'");
+        }
+        if (!containsLogicalDelete) {
+          WHERE("logical_delete = ${LOGICAL_DELETE_OFF:0}");
+        }
       }
-      if (!containsLogicalDelete){
-        WHERE("logical_delete = ${LOGICAL_DELETE_OFF:0}");
-      }
-    }}.toString();
+    }.toString();
   }
 
-  public String buildSelectByIdAndNameMultipleParamAndProviderContextWithAtParam(@Param("id") final Integer id, ProviderContext context, @Param("name") final String name) {
-    final boolean containsLogicalDelete = context.getMapperMethod().getAnnotation(BaseMapper.ContainsLogicalDelete.class) != null;
+  public String buildSelectByIdAndNameMultipleParamAndProviderContextWithAtParam(@Param("id") final Integer id,
+      ProviderContext context, @Param("name") final String name) {
+    final boolean containsLogicalDelete = context.getMapperMethod()
+        .getAnnotation(BaseMapper.ContainsLogicalDelete.class) != null;
     final String tableName = context.getMapperType().getAnnotation(BaseMapper.Meta.class).tableName();
-    return new SQL(){{
-      SELECT("*");
-      FROM(tableName);
-      if (id != null) {
-        WHERE("id = #{id}");
+    return new SQL() {
+      {
+        SELECT("*");
+        FROM(tableName);
+        if (id != null) {
+          WHERE("id = #{id}");
+        }
+        if (name != null) {
+          WHERE("name like #{name} || '%'");
+        }
+        if (!containsLogicalDelete) {
+          WHERE("logical_delete = false");
+        }
       }
-      if (name != null) {
-        WHERE("name like #{name} || '%'");
-      }
-      if (!containsLogicalDelete){
-        WHERE("logical_delete = false");
-      }
-    }}.toString();
+    }.toString();
   }
 
-  public String buildSelectByIdAndNameMultipleParamAndProviderContext(final Integer id, final String name, ProviderContext context) {
-    final boolean containsLogicalDelete = context.getMapperMethod().getAnnotation(BaseMapper.ContainsLogicalDelete.class) != null;
+  public String buildSelectByIdAndNameMultipleParamAndProviderContext(final Integer id, final String name,
+      ProviderContext context) {
+    final boolean containsLogicalDelete = context.getMapperMethod()
+        .getAnnotation(BaseMapper.ContainsLogicalDelete.class) != null;
     final String tableName = context.getMapperType().getAnnotation(BaseMapper.Meta.class).tableName();
-    return new SQL(){{
-      SELECT("*");
-      FROM(tableName);
-      if (id != null) {
-        WHERE("id = #{param1}");
+    return new SQL() {
+      {
+        SELECT("*");
+        FROM(tableName);
+        if (id != null) {
+          WHERE("id = #{param1}");
+        }
+        if (name != null) {
+          WHERE("name like #{param2} || '%'");
+        }
+        if (!containsLogicalDelete) {
+          WHERE("logical_delete = false");
+        }
       }
-      if (name != null) {
-        WHERE("name like #{param2} || '%'");
-      }
-      if (!containsLogicalDelete){
-        WHERE("logical_delete = false");
-      }
-    }}.toString();
+    }.toString();
   }
 
   private Class<?> getEntityClass(ProviderContext providerContext) {

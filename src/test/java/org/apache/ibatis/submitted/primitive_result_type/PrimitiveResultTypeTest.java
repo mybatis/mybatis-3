@@ -30,7 +30,7 @@ class PrimitiveResultTypeTest {
   @BeforeAll
   static void setup() throws Exception {
     BaseDataTest.runScript(IbatisConfig.getSqlSessionFactory().getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/primitive_result_type/create.sql");
+        "org/apache/ibatis/submitted/primitive_result_type/create.sql");
   }
 
   @Test
@@ -48,9 +48,10 @@ class PrimitiveResultTypeTest {
       assertTrue(bcode instanceof BigDecimal);
     }
   }
+
   @Test
-  void noErrorThrowOut(){
-      List<Product> products=ProductDAO.selectAllProducts();
+  void noErrorThrowOut() {
+    List<Product> products = ProductDAO.selectAllProducts();
     assertEquals(4, products.size(), "should return 4 results");
   }
 }
