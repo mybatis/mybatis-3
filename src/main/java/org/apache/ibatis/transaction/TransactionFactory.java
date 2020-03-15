@@ -32,6 +32,7 @@ public interface TransactionFactory {
   /**
    * Sets transaction factory custom properties.
    * @param props
+   *         the new properties
    */
   default void setProperties(Properties props) {
     // NOP

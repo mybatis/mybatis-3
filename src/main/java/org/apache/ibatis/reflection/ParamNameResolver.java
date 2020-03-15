@@ -94,6 +94,8 @@ public class ParamNameResolver {
 
   /**
    * Returns parameter names referenced by SQL providers.
+   *
+   * @return the names
    */
   public String[] getNames() {
     return names.values().toArray(new String[0]);
@@ -106,6 +108,10 @@ public class ParamNameResolver {
    * In addition to the default names, this method also adds the generic names (param1, param2,
    * ...).
    * </p>
+   *
+   * @param args
+   *            the args
+   * @return the named params
    */
   public Object getNamedParams(Object[] args) {
     final int paramCount = names.size();

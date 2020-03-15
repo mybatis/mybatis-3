@@ -168,6 +168,9 @@ public class TypeAliasRegistry {
   }
 
   /**
+   * Gets the type aliases.
+   *
+   * @return the type aliases
    * @since 3.2.2
    */
   public Map<String, Class<?>> getTypeAliases() {

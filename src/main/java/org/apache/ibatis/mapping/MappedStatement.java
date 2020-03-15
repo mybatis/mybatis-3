@@ -175,6 +175,11 @@ public final class MappedStatement {
     }
 
     /**
+     * Resul sets.
+     *
+     * @param resultSet
+     *          the result set
+     * @return the builder
      * @deprecated Use {@link #resultSets}
      */
     @Deprecated
@@ -286,6 +291,9 @@ public final class MappedStatement {
   }
 
   /**
+   * Gets the resul sets.
+   *
+   * @return the resul sets
    * @deprecated Use {@link #getResultSets()}
    */
   @Deprecated

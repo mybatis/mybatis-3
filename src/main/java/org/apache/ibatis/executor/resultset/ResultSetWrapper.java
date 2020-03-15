@@ -94,8 +94,10 @@ public class ResultSetWrapper {
    * If not found it gets the column JDBC type and tries to get a handler for it.
    *
    * @param propertyType
+   *            the property type
    * @param columnName
-   * @return
+   *            the column name
+   * @return the type handler
    */
   public TypeHandler<?> getTypeHandler(Class<?> propertyType, String columnName) {
     TypeHandler<?> handler = null;

@@ -79,8 +79,10 @@ public abstract class VFS {
   }
 
   /**
-   * Get the singleton {@link VFS} instance. If no {@link VFS} implementation can be found for the
-   * current environment, then this method returns null.
+   * Get the singleton {@link VFS} instance. If no {@link VFS} implementation can be found for the current environment,
+   * then this method returns null.
+   *
+   * @return single instance of VFS
    */
   public static VFS getInstance() {
     return VFSHolder.INSTANCE;
@@ -98,7 +100,13 @@ public abstract class VFS {
     }
   }
 
-  /** Get a class by name. If the class is not found then return null. */
+  /**
+   *  Get a class by name. If the class is not found then return null.
+   *
+   * @param className
+   *         the class name
+   * @return the class
+   */
   protected static Class<?> getClass(String className) {
     try {
       return Thread.currentThread().getContextClassLoader().loadClass(className);
@@ -114,9 +122,13 @@ public abstract class VFS {
   /**
    * Get a method by name and parameter types. If the method is not found then return null.
    *
-   * @param clazz The class to which the method belongs.
-   * @param methodName The name of the method.
-   * @param parameterTypes The types of the parameters accepted by the method.
+   * @param clazz
+   *          The class to which the method belongs.
+   * @param methodName
+   *          The name of the method.
+   * @param parameterTypes
+   *          The types of the parameters accepted by the method.
+   * @return the method
    */
   protected static Method getMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
     if (clazz == null) {
@@ -136,12 +148,19 @@ public abstract class VFS {
   /**
    * Invoke a method on an object and return whatever it returns.
    *
-   * @param method The method to invoke.
-   * @param object The instance or class (for static methods) on which to invoke the method.
-   * @param parameters The parameters to pass to the method.
+   * @param <T>
+   *          the generic type
+   * @param method
+   *          The method to invoke.
+   * @param object
+   *          The instance or class (for static methods) on which to invoke the method.
+   * @param parameters
+   *          The parameters to pass to the method.
    * @return Whatever the method returns.
-   * @throws IOException If I/O errors occur
-   * @throws RuntimeException If anything else goes wrong
+   * @throws IOException
+   *          If I/O errors occur
+   * @throws RuntimeException
+   *          If anything else goes wrong
    */
   @SuppressWarnings("unchecked")
   protected static <T> T invoke(Method method, Object object, Object... parameters)
@@ -171,7 +190,11 @@ public abstract class VFS {
     return Collections.list(Thread.currentThread().getContextClassLoader().getResources(path));
   }
 
-  /** Return true if the {@link VFS} implementation is valid for the current environment. */
+  /**
+   *  Return true if the {@link VFS} implementation is valid for the current environment.
+   *
+   * @return true, if is valid
+   */
   public abstract boolean isValid();
 
   /**

@@ -77,8 +77,13 @@ public final class ConnectionLogger extends BaseJdbcLogger implements Invocation
   /**
    * Creates a logging version of a connection.
    *
-   * @param conn - the original connection
-   * @return - the connection with logging
+   * @param conn
+   *           the original connection
+   * @param statementLog
+   *           the statement log
+   * @param queryStack
+   *           the query stack
+   * @return the connection with logging
    */
   public static Connection newInstance(Connection conn, Log statementLog, int queryStack) {
     InvocationHandler handler = new ConnectionLogger(conn, statementLog, queryStack);
