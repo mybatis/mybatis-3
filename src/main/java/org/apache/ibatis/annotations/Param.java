@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
 /**
  * The annotation that specify the parameter name.
  *
- * <p><br>
+ * <p>
  * <b>How to use:</b>
  *
  * <pre>

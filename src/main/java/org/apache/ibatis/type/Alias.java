@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
 /**
  * The annotation that specify alias name.
  *
- * <p><br>
+ * <p>
  * <b>How to use:</b>
  * <pre>
  * &#064;Alias("Email")

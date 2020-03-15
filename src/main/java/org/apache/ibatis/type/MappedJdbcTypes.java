@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
 /**
  * The annotation that specify jdbc types to map {@link TypeHandler}.
  *
- * <p><br>
+ * <p>
  * <b>How to use:</b>
  * <pre>
  * &#064;MappedJdbcTypes({JdbcType.CHAR, JdbcType.VARCHAR})

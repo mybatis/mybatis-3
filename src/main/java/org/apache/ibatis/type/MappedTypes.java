@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
 /**
  * The annotation that specify java types to map {@link TypeHandler}.
  *
- * <p><br>
+ * <p>
  * <b>How to use:</b>
  * <pre>
  * &#064;MappedTypes(String.class)

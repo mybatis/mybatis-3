@@ -28,7 +28,7 @@ import org.apache.ibatis.type.UnknownTypeHandler;
 /**
  * The annotation that be grouping conditional mapping definitions.
  *
- * <p><br>
+ * <p>
  * <b>How to use:</b>
  *
  * <pre>

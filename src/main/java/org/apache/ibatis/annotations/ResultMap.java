@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
 /**
  * The annotation that specify result map names to use.
  *
- * <p><br>
+ * <p>
  * <b>How to use:</b><br>
  * Mapper interface:
  *

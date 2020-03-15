@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
  * this annotation can be used to tell MyBatis what kind of object
  * it should build for each row.
  *
- * <p><br>
+ * <p>
  * <b>How to use:</b>
  *
  * <pre>

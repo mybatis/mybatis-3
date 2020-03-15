@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
 /**
  * The annotation that specify the property name(or column name) for a key value of {@link java.util.Map}.
  *
- * <p><br>
+ * <p>
  * <b>How to use:</b>
  *
  * <pre>

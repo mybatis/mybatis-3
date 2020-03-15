@@ -27,7 +27,7 @@ import org.apache.ibatis.mapping.StatementType;
 /**
  * The annotation that specify options for customizing default behaviors.
  *
- * <p><br>
+ * <p>
  * <b>How to use:</b>
  *
  * <pre>
