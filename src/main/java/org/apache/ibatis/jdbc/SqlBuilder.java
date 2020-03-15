@@ -52,7 +52,7 @@ public class SqlBuilder {
     try {
       return sql().toString();
     } finally {
-        RESET();
+      RESET();
     }
   }
 
