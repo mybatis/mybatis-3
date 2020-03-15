@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -325,10 +325,6 @@ public class MapperMethod {
       return hasResultHandler() ? (ResultHandler) args[resultHandlerIndex] : null;
     }
 
-    public String getMapKey() {
-      return mapKey;
-    }
-
     public Class<?> getReturnType() {
       return returnType;
     }
@@ -371,6 +367,10 @@ public class MapperMethod {
         }
       }
       return index;
+    }
+
+    public String getMapKey() {
+      return mapKey;
     }
 
     private String getMapKey(Method method) {
