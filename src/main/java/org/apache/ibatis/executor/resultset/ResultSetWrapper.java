@@ -80,7 +80,7 @@ public class ResultSetWrapper {
   }
 
   public JdbcType getJdbcType(String columnName) {
-    for (int i = 0 ; i < columnNames.size(); i++) {
+    for (int i = 0; i < columnNames.size(); i++) {
       if (columnNames.get(i).equalsIgnoreCase(columnName)) {
         return jdbcTypes.get(i);
       }

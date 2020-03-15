@@ -76,7 +76,7 @@ public class ProviderSqlSource implements SqlSource {
    */
   @Deprecated
   public ProviderSqlSource(Configuration configuration, Object provider, Class<?> mapperType, Method mapperMethod) {
-    this(configuration, (Annotation) provider , mapperType, mapperMethod);
+    this(configuration, (Annotation) provider, mapperType, mapperMethod);
   }
 
   /**
@@ -162,8 +162,8 @@ public class ProviderSqlSource implements SqlSource {
       String sql;
       if (parameterObject instanceof Map) {
         int bindParameterCount = providerMethodParameterTypes.length - (providerContext == null ? 0 : 1);
-        if (bindParameterCount == 1 &&
-            (providerMethodParameterTypes[Integer.valueOf(0).equals(providerContextIndex) ? 1 : 0].isAssignableFrom(parameterObject.getClass()))) {
+        if (bindParameterCount == 1
+            && providerMethodParameterTypes[Integer.valueOf(0).equals(providerContextIndex) ? 1 : 0].isAssignableFrom(parameterObject.getClass())) {
           sql = invokeProviderMethod(extractProviderMethodArguments(parameterObject));
         } else {
           @SuppressWarnings("unchecked")
