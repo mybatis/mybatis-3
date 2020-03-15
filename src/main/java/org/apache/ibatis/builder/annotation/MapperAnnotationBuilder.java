@@ -486,12 +486,7 @@ public class MapperAnnotationBuilder {
   }
 
   private SqlSource buildSqlSourceFromStrings(String[] strings, Class<?> parameterTypeClass, LanguageDriver languageDriver) {
-    final StringBuilder sql = new StringBuilder();
-    for (String fragment : strings) {
-      sql.append(fragment);
-      sql.append(" ");
-    }
-    return languageDriver.createSqlSource(configuration, sql.toString().trim(), parameterTypeClass);
+    return languageDriver.createSqlSource(configuration, String.join(" ", strings).trim(), parameterTypeClass);
   }
 
   private SqlCommandType getSqlCommandType(Method method) {
