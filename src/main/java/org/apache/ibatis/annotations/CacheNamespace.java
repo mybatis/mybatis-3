@@ -28,7 +28,7 @@ import org.apache.ibatis.cache.impl.PerpetualCache;
 /**
  * The annotation that specify to use cache on namespace(e.g. mapper interface).
  *
- * <p><br>
+ * <p>
  * <b>How to use:</b>
  *
  * <pre>

@@ -34,9 +34,9 @@ public class TypeParameterResolver {
    * Resolve field type.
    *
    * @param field
-   *            the field
+   *          the field
    * @param srcType
-   *            the src type
+   *          the src type
    * @return The field type as {@link Type}. If it has type parameters in the declaration,<br>
    *         they will be resolved to the actual runtime {@link Type}s.
    */
@@ -50,9 +50,9 @@ public class TypeParameterResolver {
    * Resolve return type.
    *
    * @param method
-   *            the method
+   *          the method
    * @param srcType
-   *            the src type
+   *          the src type
    * @return The return type of the method as {@link Type}. If it has type parameters in the declaration,<br>
    *         they will be resolved to the actual runtime {@link Type}s.
    */
@@ -66,9 +66,9 @@ public class TypeParameterResolver {
    * Resolve param types.
    *
    * @param method
-   *            the method
+   *          the method
    * @param srcType
-   *            the src type
+   *          the src type
    * @return The parameter types of the method as an array of {@link Type}s. If they have type parameters in the
    *         declaration,<br>
    *         they will be resolved to the actual runtime {@link Type}s.

@@ -343,7 +343,8 @@ public class Configuration {
   /**
    * Sets the auto mapping unknown column behavior.
    *
-   * @param autoMappingUnknownColumnBehavior the new auto mapping unknown column behavior
+   * @param autoMappingUnknownColumnBehavior
+   *          the new auto mapping unknown column behavior
    * @since 3.4.0
    */
   public void setAutoMappingUnknownColumnBehavior(AutoMappingUnknownColumnBehavior autoMappingUnknownColumnBehavior) {
@@ -438,7 +439,8 @@ public class Configuration {
   /**
    * Sets the default fetch size.
    *
-   * @param defaultFetchSize the new default fetch size
+   * @param defaultFetchSize
+   *          the new default fetch size
    * @since 3.3.0
    */
   public void setDefaultFetchSize(Integer defaultFetchSize) {
@@ -458,7 +460,8 @@ public class Configuration {
   /**
    * Sets the default result set type.
    *
-   * @param defaultResultSetType the new default result set type
+   * @param defaultResultSetType
+   *          the new default result set type
    * @since 3.5.2
    */
   public void setDefaultResultSetType(ResultSetType defaultResultSetType) {
@@ -579,7 +582,8 @@ public class Configuration {
   /**
    * Gets the language driver.
    *
-   * @param langClass the lang class
+   * @param langClass
+   *          the lang class
    * @return the language driver
    * @since 3.5.1
    */
@@ -890,7 +894,7 @@ public class Configuration {
    * Extracts namespace from fully qualified statement id.
    *
    * @param statementId
-   *            the statement id
+   *          the statement id
    * @return namespace or null when id does not contain period.
    */
   protected String extractNamespace(String statementId) {

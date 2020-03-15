@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
  *
  * <p>If you use this annotation, should be specified either {@link #value()} or {@link #name()} attribute.
  *
- * <p><br>
+ * <p>
  * <b>How to use:</b>
  *
  * <pre>

@@ -101,10 +101,10 @@ public abstract class VFS {
   }
 
   /**
-   *  Get a class by name. If the class is not found then return null.
+   * Get a class by name. If the class is not found then return null.
    *
    * @param className
-   *         the class name
+   *          the class name
    * @return the class
    */
   protected static Class<?> getClass(String className) {
@@ -158,9 +158,9 @@ public abstract class VFS {
    *          The parameters to pass to the method.
    * @return Whatever the method returns.
    * @throws IOException
-   *          If I/O errors occur
+   *           If I/O errors occur
    * @throws RuntimeException
-   *          If anything else goes wrong
+   *           If anything else goes wrong
    */
   @SuppressWarnings("unchecked")
   protected static <T> T invoke(Method method, Object object, Object... parameters)
@@ -191,7 +191,7 @@ public abstract class VFS {
   }
 
   /**
-   *  Return true if the {@link VFS} implementation is valid for the current environment.
+   * Return true if the {@link VFS} implementation is valid for the current environment.
    *
    * @return true, if is valid
    */

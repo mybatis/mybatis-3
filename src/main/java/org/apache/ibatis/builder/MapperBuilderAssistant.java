@@ -299,46 +299,46 @@ public class MapperBuilderAssistant extends BaseBuilder {
   }
 
   /**
-   *  Backward compatibility signature 'addMappedStatement'.
+   * Backward compatibility signature 'addMappedStatement'.
    *
    * @param id
-   *            the id
+   *          the id
    * @param sqlSource
-   *            the sql source
+   *          the sql source
    * @param statementType
-   *            the statement type
+   *          the statement type
    * @param sqlCommandType
-   *            the sql command type
+   *          the sql command type
    * @param fetchSize
-   *            the fetch size
+   *          the fetch size
    * @param timeout
-   *            the timeout
+   *          the timeout
    * @param parameterMap
-   *            the parameter map
+   *          the parameter map
    * @param parameterType
-   *            the parameter type
+   *          the parameter type
    * @param resultMap
-   *            the result map
+   *          the result map
    * @param resultType
-   *            the result type
+   *          the result type
    * @param resultSetType
-   *            the result set type
+   *          the result set type
    * @param flushCache
-   *            the flush cache
+   *          the flush cache
    * @param useCache
-   *            the use cache
+   *          the use cache
    * @param resultOrdered
-   *            the result ordered
+   *          the result ordered
    * @param keyGenerator
-   *            the key generator
+   *          the key generator
    * @param keyProperty
-   *            the key property
+   *          the key property
    * @param keyColumn
-   *            the key column
+   *          the key column
    * @param databaseId
-   *            the database id
+   *          the database id
    * @param lang
-   *            the lang
+   *          the lang
    * @return the mapped statement
    */
   public MappedStatement addMappedStatement(String id, SqlSource sqlSource, StatementType statementType,
@@ -446,32 +446,31 @@ public class MapperBuilderAssistant extends BaseBuilder {
         .build();
   }
 
-
   /**
-   *  Backward compatibility signature 'buildResultMapping'.
+   * Backward compatibility signature 'buildResultMapping'.
    *
    * @param resultType
-   *            the result type
+   *          the result type
    * @param property
-   *            the property
+   *          the property
    * @param column
-   *            the column
+   *          the column
    * @param javaType
-   *            the java type
+   *          the java type
    * @param jdbcType
-   *            the jdbc type
+   *          the jdbc type
    * @param nestedSelect
-   *            the nested select
+   *          the nested select
    * @param nestedResultMap
-   *            the nested result map
+   *          the nested result map
    * @param notNullColumn
-   *            the not null column
+   *          the not null column
    * @param columnPrefix
-   *            the column prefix
+   *          the column prefix
    * @param typeHandler
-   *            the type handler
+   *          the type handler
    * @param flags
-   *            the flags
+   *          the flags
    * @return the result mapping
    */
   public ResultMapping buildResultMapping(Class<?> resultType, String property, String column, Class<?> javaType,
@@ -486,7 +485,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
    * Gets the language driver.
    *
    * @param langClass
-   *            the lang class
+   *          the lang class
    * @return the language driver
    * @deprecated Use {@link Configuration#getLanguageDriver(Class)}
    */

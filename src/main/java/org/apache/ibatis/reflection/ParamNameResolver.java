@@ -110,7 +110,7 @@ public class ParamNameResolver {
    * </p>
    *
    * @param args
-   *            the args
+   *          the args
    * @return the named params
    */
   public Object getNamedParams(Object[] args) {
