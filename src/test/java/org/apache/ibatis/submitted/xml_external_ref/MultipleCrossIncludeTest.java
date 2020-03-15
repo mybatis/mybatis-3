@@ -48,14 +48,17 @@ class MultipleCrossIncludeTest {
 
   @Test
   void testMappedStatementCache() throws Exception {
-    try (Reader configReader = Resources.getResourceAsReader("org/apache/ibatis/submitted/xml_external_ref/MultipleCrossIncludeMapperConfig.xml")) {
+    try (Reader configReader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/xml_external_ref/MultipleCrossIncludeMapperConfig.xml")) {
       SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configReader);
 
       Configuration configuration = sqlSessionFactory.getConfiguration();
       configuration.getMappedStatementNames();
 
-      MappedStatement selectPetStatement = configuration.getMappedStatement("org.apache.ibatis.submitted.xml_external_ref.MultipleCrossIncludePetMapper.select");
-      MappedStatement selectPersonStatement = configuration.getMappedStatement("org.apache.ibatis.submitted.xml_external_ref.MultipleCrossIncludePersonMapper.select");
+      MappedStatement selectPetStatement = configuration
+          .getMappedStatement("org.apache.ibatis.submitted.xml_external_ref.MultipleCrossIncludePetMapper.select");
+      MappedStatement selectPersonStatement = configuration
+          .getMappedStatement("org.apache.ibatis.submitted.xml_external_ref.MultipleCrossIncludePersonMapper.select");
       Cache cache = selectPetStatement.getCache();
       assertEquals("org.apache.ibatis.submitted.xml_external_ref.MultipleCrossIncludePetMapper", cache.getId());
       assertSame(cache, selectPersonStatement.getCache());
@@ -93,8 +96,8 @@ class MultipleCrossIncludeTest {
 
   private SqlSessionFactory getSqlSessionFactoryJavaConfig() throws Exception {
     Configuration configuration = new Configuration();
-    Environment environment = new Environment("development", new JdbcTransactionFactory(), new UnpooledDataSource(
-        "org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:xmlextref", null));
+    Environment environment = new Environment("development", new JdbcTransactionFactory(),
+        new UnpooledDataSource("org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:xmlextref", null));
     configuration.setEnvironment(environment);
     configuration.addMapper(MultipleCrossIncludePersonMapper.class);
     configuration.addMapper(MultipleCrossIncludePetMapper.class);

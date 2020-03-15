@@ -40,7 +40,8 @@ class FooMapperTest {
 
   @BeforeAll
   static void setUpBeforeClass() throws Exception {
-    final SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(Resources.getResourceAsReader(SQL_MAP_CONFIG));
+    final SqlSessionFactory factory = new SqlSessionFactoryBuilder()
+        .build(Resources.getResourceAsReader(SQL_MAP_CONFIG));
     session = factory.openSession();
     conn = session.getConnection();
 

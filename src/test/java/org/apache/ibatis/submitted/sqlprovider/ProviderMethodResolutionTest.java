@@ -48,8 +48,7 @@ class ProviderMethodResolutionTest {
 
   @BeforeAll
   static void setUp() throws Exception {
-    try (Reader reader = Resources
-        .getResourceAsReader("org/apache/ibatis/submitted/sqlprovider/mybatis-config.xml")) {
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/sqlprovider/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
       sqlSessionFactory.getConfiguration().addMapper(ProvideMethodResolverMapper.class);
     }
@@ -156,7 +155,8 @@ class ProviderMethodResolutionTest {
       }
 
       public static String select2() {
-        throw new IllegalStateException("This method should not called when specify `method` attribute on @SelectProvider.");
+        throw new IllegalStateException(
+            "This method should not called when specify `method` attribute on @SelectProvider.");
       }
 
       public static String provideSelect2Sql() {
@@ -187,8 +187,7 @@ class ProviderMethodResolutionTest {
     default Method resolveMethod(ProviderContext context) {
       List<Method> targetMethods = Arrays.stream(getClass().getMethods())
           .filter(m -> m.getName().equals(context.getMapperMethod().getName() + "Sql"))
-          .filter(m -> CharSequence.class.isAssignableFrom(m.getReturnType()))
-          .collect(Collectors.toList());
+          .filter(m -> CharSequence.class.isAssignableFrom(m.getReturnType())).collect(Collectors.toList());
       if (targetMethods.size() == 1) {
         return targetMethods.get(0);
       }

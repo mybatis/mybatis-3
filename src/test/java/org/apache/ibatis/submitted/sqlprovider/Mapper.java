@@ -51,7 +51,8 @@ public interface Mapper extends BaseMapper<User> {
   List<User> getUsersByNameUsingMap(String name, String orderByColumn);
 
   @SelectProvider(type = OurSqlBuilder.class, method = "buildGetUsersByNameWithParamNameAndOrderByQuery")
-  List<User> getUsersByNameWithParamNameAndOrderBy(@Param("name") String name, @Param("orderByColumn") String orderByColumn);
+  List<User> getUsersByNameWithParamNameAndOrderBy(@Param("name") String name,
+      @Param("orderByColumn") String orderByColumn);
 
   @SelectProvider(type = OurSqlBuilder.class, method = "buildGetUsersByNameWithParamNameQuery")
   List<User> getUsersByNameWithParamName(@Param("name") String name);
