@@ -30,8 +30,7 @@ import org.apache.ibatis.type.TypeHandler;
 public class StringTrimmingTypeHandler implements TypeHandler<String> {
 
   @Override
-  public void setParameter(PreparedStatement ps, int i, String parameter,
-      JdbcType jdbcType) throws SQLException {
+  public void setParameter(PreparedStatement ps, int i, String parameter, JdbcType jdbcType) throws SQLException {
     ps.setString(i, trim(parameter));
   }
 
@@ -46,8 +45,7 @@ public class StringTrimmingTypeHandler implements TypeHandler<String> {
   }
 
   @Override
-  public String getResult(CallableStatement cs, int columnIndex)
-      throws SQLException {
+  public String getResult(CallableStatement cs, int columnIndex) throws SQLException {
     return trim(cs.getString(columnIndex));
   }
 

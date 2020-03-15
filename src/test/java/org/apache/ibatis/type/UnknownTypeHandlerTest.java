@@ -103,7 +103,8 @@ class UnknownTypeHandlerTest extends BaseTypeHandlerTest {
 
   @Test
   void setParameterWithNonNullParameterThrowsException() throws SQLException {
-    doThrow(new SQLException("invalid column")).when((UnknownTypeHandler) TYPE_HANDLER).setNonNullParameter(ps, 1, 99, JdbcType.INTEGER);
+    doThrow(new SQLException("invalid column")).when((UnknownTypeHandler) TYPE_HANDLER).setNonNullParameter(ps, 1, 99,
+        JdbcType.INTEGER);
     try {
       TYPE_HANDLER.setParameter(ps, 1, 99, JdbcType.INTEGER);
       Assertions.fail("Should have thrown a TypeException");
