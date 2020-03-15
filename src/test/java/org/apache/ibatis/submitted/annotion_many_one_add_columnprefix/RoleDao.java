@@ -15,11 +15,11 @@
  */
 package org.apache.ibatis.submitted.annotion_many_one_add_columnprefix;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
-
-import java.util.List;
 
 /**
  * @author lvyang
