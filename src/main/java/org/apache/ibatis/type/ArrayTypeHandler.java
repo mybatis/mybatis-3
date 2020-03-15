@@ -39,6 +39,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ArrayTypeHandler extends BaseTypeHandler<Object> {
 
   private static final ConcurrentHashMap<Class<?>, String> STANDARD_MAPPING;
+
   static {
     STANDARD_MAPPING = new ConcurrentHashMap<>();
     STANDARD_MAPPING.put(BigDecimal.class, JdbcType.NUMERIC.name());
