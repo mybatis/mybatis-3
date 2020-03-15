@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -40,6 +40,7 @@ public interface Cursor<T> extends Closeable, Iterable<T> {
 
   /**
    * Get the current item index. The first item has the index 0.
+   *
    * @return -1 if the first cursor item has not been retrieved. The index of the current item retrieved.
    */
   int getCurrentIndex();

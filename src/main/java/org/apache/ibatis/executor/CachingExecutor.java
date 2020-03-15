@@ -54,7 +54,7 @@ public class CachingExecutor implements Executor {
   @Override
   public void close(boolean forceRollback) {
     try {
-      //issues #499, #524 and #573
+      // issues #499, #524 and #573
       if (forceRollback) {
         tcm.rollback();
       } else {

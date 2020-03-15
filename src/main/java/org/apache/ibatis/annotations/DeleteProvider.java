@@ -26,6 +26,7 @@ import java.lang.annotation.Target;
  *
  * <p><br>
  * <b>How to use:</b>
+ *
  * <pre>
  * public interface UserMapper {
  *
@@ -40,6 +41,7 @@ import java.lang.annotation.Target;
  *
  * }
  * </pre>
+ *
  * @author Clinton Begin
  */
 @Documented
@@ -61,6 +63,7 @@ public @interface DeleteProvider {
    * <p>
    * This attribute is alias of {@link #value()}.
    * </p>
+   *
    * @return a type that implements an SQL provider method
    * @see #value()
    */
