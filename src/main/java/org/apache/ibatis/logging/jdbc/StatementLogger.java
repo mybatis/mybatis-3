@@ -71,11 +71,11 @@ public final class StatementLogger extends BaseJdbcLogger implements InvocationH
    * Creates a logging version of a Statement.
    *
    * @param stmt
-   *           the statement
+   *          the statement
    * @param statementLog
-   *           the statement log
+   *          the statement log
    * @param queryStack
-   *           the query stack
+   *          the query stack
    * @return the proxy
    */
   public static Statement newInstance(Statement stmt, Log statementLog, int queryStack) {

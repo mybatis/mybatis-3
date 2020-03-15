@@ -213,7 +213,7 @@ public class DefaultVFS extends VFS {
    * @param url The URL of the JAR entry.
    * @return The URL of the JAR file, if one is found. Null if not.
    * @throws MalformedURLException
-   *          the malformed URL exception
+   *           the malformed URL exception
    */
   protected URL findJarForResource(URL url) throws MalformedURLException {
     if (log.isDebugEnabled()) {

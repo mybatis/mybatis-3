@@ -122,11 +122,11 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
    * Creates a logging version of a ResultSet.
    *
    * @param rs
-   *           the ResultSet to proxy
+   *          the ResultSet to proxy
    * @param statementLog
-   *           the statement log
+   *          the statement log
    * @param queryStack
-   *           the query stack
+   *          the query stack
    * @return the ResultSet with logging
    */
   public static ResultSet newInstance(ResultSet rs, Log statementLog, int queryStack) {

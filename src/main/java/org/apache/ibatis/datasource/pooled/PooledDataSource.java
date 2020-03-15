@@ -566,7 +566,7 @@ public class PooledDataSource implements DataSource {
         try {
           conn.getRealConnection().close();
         } catch (Exception e2) {
-          //ignore
+          // ignore
         }
         result = false;
         if (log.isDebugEnabled()) {

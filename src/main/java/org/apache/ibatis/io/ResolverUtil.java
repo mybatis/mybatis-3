@@ -55,7 +55,8 @@ import org.apache.ibatis.logging.LogFactory;
  * </pre>
  *
  * @author Tim Fennell
- * @param <T> the generic type
+ * @param <T>
+ *          the generic type
  */
 public class ResolverUtil<T> {
 
@@ -74,7 +75,8 @@ public class ResolverUtil<T> {
      * Will be called repeatedly with candidate classes. Must return True if a class
      * is to be included in the results, false otherwise.
      *
-     * @param type the type
+     * @param type
+     *          the type
      * @return true, if successful
      */
     boolean matches(Class<?> type);
@@ -90,9 +92,10 @@ public class ResolverUtil<T> {
     private Class<?> parent;
 
     /**
-     *  Constructs an IsA test using the supplied Class as the parent class/interface.
+     * Constructs an IsA test using the supplied Class as the parent class/interface.
      *
-     * @param parentType the parent type
+     * @param parentType
+     *          the parent type
      */
     public IsA(Class<?> parentType) {
       this.parent = parentType;
@@ -120,9 +123,10 @@ public class ResolverUtil<T> {
     private Class<? extends Annotation> annotation;
 
     /**
-     *  Constructs an AnnotatedWith test for the specified annotation type.
+     * Constructs an AnnotatedWith test for the specified annotation type.
      *
-     * @param annotation the annotation
+     * @param annotation
+     *          the annotation
      */
     public AnnotatedWith(Class<? extends Annotation> annotation) {
       this.annotation = annotation;
