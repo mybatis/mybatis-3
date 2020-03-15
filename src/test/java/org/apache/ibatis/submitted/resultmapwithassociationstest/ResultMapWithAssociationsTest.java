@@ -40,7 +40,7 @@ class ResultMapWithAssociationsTest {
 
     // populate in-memory database
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/resultmapwithassociationstest/CreateDB.sql");
+        "org/apache/ibatis/submitted/resultmapwithassociationstest/CreateDB.sql");
   }
 
   @Test

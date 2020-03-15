@@ -59,10 +59,10 @@ public interface Mapper extends BaseMapper<User> {
   @InsertProvider(type = OurSqlBuilder.class, method = "buildInsert")
   void insert(User user);
 
-  @UpdateProvider(type= OurSqlBuilder.class, method= "buildUpdate")
+  @UpdateProvider(type = OurSqlBuilder.class, method = "buildUpdate")
   void update(User user);
 
-  @DeleteProvider(type= OurSqlBuilder.class, method= "buildDelete")
+  @DeleteProvider(type = OurSqlBuilder.class, method = "buildDelete")
   void delete(Integer id);
 
 }
