@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.ibatis.cursor.Cursor;
+import org.apache.ibatis.exceptions.ExceptionFactory;
 import org.apache.ibatis.executor.BatchResult;
 import org.apache.ibatis.reflection.ExceptionUtil;
 
@@ -48,27 +49,51 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
   }
 
   public static SqlSessionManager newInstance(Reader reader) {
-    return new SqlSessionManager(new SqlSessionFactoryBuilder().build(reader, null, null));
+    return new SqlSessionManager(new SqlSessionFactoryBuilder().build(reader));
+  }
+
+  public static SqlSessionManager newInstance(Reader reader, ExceptionFactory exceptionFactory) {
+    return new SqlSessionManager(new SqlSessionFactoryBuilder().build(reader, exceptionFactory));
   }
 
   public static SqlSessionManager newInstance(Reader reader, String environment) {
-    return new SqlSessionManager(new SqlSessionFactoryBuilder().build(reader, environment, null));
+    return new SqlSessionManager(new SqlSessionFactoryBuilder().build(reader, environment));
+  }
+
+  public static SqlSessionManager newInstance(Reader reader, String environment, ExceptionFactory exceptionFactory) {
+    return new SqlSessionManager(new SqlSessionFactoryBuilder().build(reader, environment, exceptionFactory));
   }
 
   public static SqlSessionManager newInstance(Reader reader, Properties properties) {
-    return new SqlSessionManager(new SqlSessionFactoryBuilder().build(reader, null, properties));
+    return new SqlSessionManager(new SqlSessionFactoryBuilder().build(reader, properties));
+  }
+
+  public static SqlSessionManager newInstance(Reader reader, Properties properties, ExceptionFactory exceptionFactory) {
+    return new SqlSessionManager(new SqlSessionFactoryBuilder().build(reader, properties, exceptionFactory));
   }
 
   public static SqlSessionManager newInstance(InputStream inputStream) {
-    return new SqlSessionManager(new SqlSessionFactoryBuilder().build(inputStream, null, null));
+    return new SqlSessionManager(new SqlSessionFactoryBuilder().build(inputStream));
+  }
+
+  public static SqlSessionManager newInstance(InputStream inputStream, ExceptionFactory exceptionFactory) {
+    return new SqlSessionManager(new SqlSessionFactoryBuilder().build(inputStream, exceptionFactory));
   }
 
   public static SqlSessionManager newInstance(InputStream inputStream, String environment) {
-    return new SqlSessionManager(new SqlSessionFactoryBuilder().build(inputStream, environment, null));
+    return new SqlSessionManager(new SqlSessionFactoryBuilder().build(inputStream, environment));
+  }
+
+  public static SqlSessionManager newInstance(InputStream inputStream, String environment, ExceptionFactory exceptionFactory) {
+    return new SqlSessionManager(new SqlSessionFactoryBuilder().build(inputStream, environment, exceptionFactory));
   }
 
   public static SqlSessionManager newInstance(InputStream inputStream, Properties properties) {
-    return new SqlSessionManager(new SqlSessionFactoryBuilder().build(inputStream, null, properties));
+    return new SqlSessionManager(new SqlSessionFactoryBuilder().build(inputStream, properties));
+  }
+
+  public static SqlSessionManager newInstance(InputStream inputStream, Properties properties, ExceptionFactory exceptionFactory) {
+    return new SqlSessionManager(new SqlSessionFactoryBuilder().build(inputStream, properties, exceptionFactory));
   }
 
   public static SqlSessionManager newInstance(SqlSessionFactory sqlSessionFactory) {
@@ -154,6 +179,11 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
   @Override
   public Configuration getConfiguration() {
     return sqlSessionFactory.getConfiguration();
+  }
+
+  @Override
+  public ExceptionFactory getExceptionFactory() {
+    return sqlSessionFactory.getExceptionFactory();
   }
 
   @Override
