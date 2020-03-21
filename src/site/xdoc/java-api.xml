@@ -423,6 +423,7 @@ void rollback(boolean force)</source>
         mapping.
         <code>resultMap</code>(available since 3.5.5), which is the fully qualified name of a result map that map to
         a single container object from select result.
+        <code>columnPrefix</code>(available since 3.5.5), which is column prefix for grouping select columns at nested result map.
         <span class="label important">NOTE</span> You will notice that join mapping is not supported via the Annotations API.
         This is due to the limitation in Java Annotations that does not allow for circular references.</td>
       </tr>
@@ -436,6 +437,7 @@ void rollback(boolean force)</source>
         mapping.
         <code>resultMap</code>(available since 3.5.5), which is the fully qualified name of a result map that map to
         collection object from select result.
+        <code>columnPrefix</code>(available since 3.5.5), which is column prefix for grouping select columns at nested result map.
         <span class="label important">NOTE</span> You will notice that join mapping is not supported via the
         Annotations API. This is due to the limitation in Java Annotations that does not allow for circular references.</td>
       </tr>

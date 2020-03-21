@@ -37,6 +37,7 @@ public @interface Many {
    * Returns the columnPrefix.
    *
    * @return the columnPrefix.
+   * @since 3.5.5
    */
   String columnPrefix() default "";
 
