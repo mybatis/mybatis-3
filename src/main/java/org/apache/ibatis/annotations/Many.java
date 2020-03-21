@@ -44,6 +44,7 @@ public @interface Many {
    * Returns the result map id used to map collection.
    *
    * @return the result map id
+   * @since 3.5.5
    */
   String resultMap() default "";
 
