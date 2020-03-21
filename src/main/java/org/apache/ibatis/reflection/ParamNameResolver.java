@@ -35,6 +35,8 @@ public class ParamNameResolver {
 
   public static final String GENERIC_NAME_PREFIX = "param";
 
+  private final boolean useActualParamName;
+
   /**
    * <p>
    * The key is the index and the value is the name of the parameter.<br />
@@ -51,9 +53,9 @@ public class ParamNameResolver {
   private final SortedMap<Integer, String> names;
 
   private boolean hasParamAnnotation;
-  private boolean useActualParamName;
 
   public ParamNameResolver(Configuration config, Method method) {
+    this.useActualParamName = config.isUseActualParamName();
     final Class<?>[] paramTypes = method.getParameterTypes();
     final Annotation[][] paramAnnotations = method.getParameterAnnotations();
     final SortedMap<Integer, String> map = new TreeMap<>();
@@ -74,15 +76,13 @@ public class ParamNameResolver {
       }
       if (name == null) {
         // @Param was not specified.
-        if (config.isUseActualParamName()) {
+        if (useActualParamName) {
           name = getActualParamName(method, paramIndex);
         }
         if (name == null) {
           // use the parameter index as the name ("0", "1", ...)
           // gcode issue #71
           name = String.valueOf(map.size());
-        } else {
-          useActualParamName = true;
         }
       }
       map.put(paramIndex, name);
