@@ -20,9 +20,11 @@
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="org.apache.ibatis.submitted.cachenamespaceref_exception.Mapper">
-	<cache/>
-	<select id="getUserById" resultType="org.apache.ibatis.submitted.cachenamespaceref_exception.User">
-		select * from users where id = #{id};
-	</select>
+<mapper
+  namespace="org.apache.ibatis.submitted.cachenamespaceref_exception.Mapper">
+  <cache />
+  <select id="getUserById"
+    resultType="org.apache.ibatis.submitted.cachenamespaceref_exception.User">
+    select * from users where id = #{id};
+  </select>
 </mapper>

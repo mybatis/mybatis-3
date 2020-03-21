@@ -33,23 +33,23 @@ class CacheNamespaceRefTest {
   @BeforeAll
   static void setUp() throws Exception {
     // create an SqlSessionFactory
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/cachenamespaceref_exception/mybatis-config.xml")) {
+    try (Reader reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/cachenamespaceref_exception/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
     // populate in-memory database
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/cachenamespaceref_exception/CreateDB.sql");
+        "org/apache/ibatis/submitted/cachenamespaceref_exception/CreateDB.sql");
   }
-  
+
   @Test
-  public void getUserByIdTest()
-  {
-	  try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-	      Mapper mapper = sqlSession.getMapper(Mapper.class);
-	      User user = mapper.getUserById(1);
-	      assertNotNull(user);
-	    }
+  public void getUserByIdTest() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      User user = mapper.getUserById(1);
+      assertNotNull(user);
+    }
   }
 
 }

@@ -22,6 +22,6 @@ import org.apache.ibatis.annotations.Select;
 
 @CacheNamespaceRef(name = "org.apache.ibatis.submitted.cachenamespaceref_exception.Mapper")
 public interface BusinessDao {
-	@Select("select name from users;")
-	public List<String> selectUserNames();
+  @Select("select name from users;")
+  public List<String> selectUserNames();
 }

@@ -18,6 +18,5 @@ package org.apache.ibatis.submitted.cachenamespaceref_exception;
 import org.apache.ibatis.annotations.Param;
 
 public interface Mapper {
-  
   User getUserById(@Param("id") Integer id);
 }
