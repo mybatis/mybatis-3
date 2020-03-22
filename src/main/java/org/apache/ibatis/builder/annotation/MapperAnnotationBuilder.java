@@ -354,11 +354,13 @@ public class MapperAnnotationBuilder {
       }
 
       String resultMapId = null;
-      ResultMap resultMapAnnotation = method.getAnnotation(ResultMap.class);
-      if (resultMapAnnotation != null) {
-        resultMapId = String.join(",", resultMapAnnotation.value());
-      } else if (isSelect) {
-        resultMapId = generateResultMapName(method);
+      if (isSelect) {
+        ResultMap resultMapAnnotation = method.getAnnotation(ResultMap.class);
+        if (resultMapAnnotation != null) {
+          resultMapId = String.join(",", resultMapAnnotation.value());
+        } else {
+          resultMapId = generateResultMapName(method);
+        }
       }
 
       assistant.addMappedStatement(
