@@ -130,19 +130,26 @@ public class MapperAnnotationBuilder {
       assistant.setCurrentNamespace(type.getName());
       parseCache();
       parseCacheRef();
-      Method[] methods = type.getMethods();
-      for (Method method : methods) {
+      for (Method method : type.getMethods()) {
+        if (!canHaveStatement(method)) {
+          continue;
+        }
+        if (getSqlCommandType(method) == SqlCommandType.SELECT && method.getAnnotation(ResultMap.class) == null) {
+          parseResultMap(method);
+        }
         try {
-          // issue #237
-          if (!method.isBridge()) {
-            parseStatement(method);
-          }
+          parseStatement(method);
         } catch (IncompleteElementException e) {
           configuration.addIncompleteMethod(new MethodResolver(this, method));
         }
       }
     }
     parsePendingMethods();
+  }
+
+  private boolean canHaveStatement(Method method) {
+    // issue #237
+    return !method.isBridge() && !method.isDefault();
   }
 
   private void parsePendingMethods() {
@@ -347,11 +354,13 @@ public class MapperAnnotationBuilder {
       }
 
       String resultMapId = null;
-      ResultMap resultMapAnnotation = method.getAnnotation(ResultMap.class);
-      if (resultMapAnnotation != null) {
-        resultMapId = String.join(",", resultMapAnnotation.value());
-      } else if (isSelect) {
-        resultMapId = parseResultMap(method);
+      if (isSelect) {
+        ResultMap resultMapAnnotation = method.getAnnotation(ResultMap.class);
+        if (resultMapAnnotation != null) {
+          resultMapId = String.join(",", resultMapAnnotation.value());
+        } else {
+          resultMapId = generateResultMapName(method);
+        }
       }
 
       assistant.addMappedStatement(
