@@ -37,7 +37,7 @@ import org.apache.ibatis.io.Resources;
  */
 public class TypeAliasRegistry {
 
-  private final Map<String, Class<?>> typeAliases = new HashMap<>();
+  private final Map<String, Class<?>> typeAliases = new HashMap<>(128);
 
   public TypeAliasRegistry() {
     registerAlias("string", String.class);
