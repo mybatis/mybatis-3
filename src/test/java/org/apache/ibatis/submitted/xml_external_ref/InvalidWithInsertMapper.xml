@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -17,22 +17,22 @@
 
 -->
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.apache.ibatis.submitted.xml_external_ref.InvalidWithInsertMapper">
-	<sql id="personColumnList">
-		person_id, person_name
-	</sql>
-	<select id="selectAll" resultType="java.util.Map">
-		SELECT
-		<include refid="wrongId" />
-		FROM person
-	</select>
-	
-	<insert id="insert" parameterType="java.util.Map">
-		INSERT INTO Person (person_name)
-		VALUES (#{name})
-		<selectKey>
-			SELECT IDENTITY()
-		</selectKey>
-	</insert>
+    <sql id="personColumnList">
+        person_id, person_name
+    </sql>
+    <select id="selectAll" resultType="java.util.Map">
+        SELECT
+        <include refid="wrongId" />
+        FROM person
+    </select>
+
+    <insert id="insert" parameterType="java.util.Map">
+        INSERT INTO Person (person_name)
+        VALUES (#{name})
+        <selectKey>
+            SELECT IDENTITY()
+        </selectKey>
+    </insert>
 </mapper>

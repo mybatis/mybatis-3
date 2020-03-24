@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -32,11 +32,11 @@ import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
  */
 public class MetaObject {
 
-  private Object originalObject;
-  private ObjectWrapper objectWrapper;
-  private ObjectFactory objectFactory;
-  private ObjectWrapperFactory objectWrapperFactory;
-  private ReflectorFactory reflectorFactory;
+  private final Object originalObject;
+  private final ObjectWrapper objectWrapper;
+  private final ObjectFactory objectFactory;
+  private final ObjectWrapperFactory objectWrapperFactory;
+  private final ReflectorFactory reflectorFactory;
 
   private MetaObject(Object object, ObjectFactory objectFactory, ObjectWrapperFactory objectWrapperFactory, ReflectorFactory reflectorFactory) {
     this.originalObject = object;
@@ -74,7 +74,7 @@ public class MetaObject {
   }
 
   public ReflectorFactory getReflectorFactory() {
-	return reflectorFactory;
+    return reflectorFactory;
   }
 
   public Object getOriginalObject() {
@@ -128,7 +128,7 @@ public class MetaObject {
     if (prop.hasNext()) {
       MetaObject metaValue = metaObjectForProperty(prop.getIndexedName());
       if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
-        if (value == null && prop.getChildren() != null) {
+        if (value == null) {
           // don't instantiate child path if value is null
           return;
         } else {

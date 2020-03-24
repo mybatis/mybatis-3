@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+       Copyright 2009-2019 the original author or authors.
+
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
+-->
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.apache.ibatis.submitted.nestedresulthandler_gh1551.ProductMapper">
+  <resultMap id="AllInfoResultMap" type="ProductResp">
+    <id column="ID" property="id"/>
+    <result column="NAME" property="name"/>
+    <result column="CODE" property="code"/>
+    <result column="INFO_ID" property="productInfo.id"/>
+    <result column="ID" property="productInfo.productId"/>
+    <result column="INFO_OTHER_INFO" property="productInfo.otherInfo"/>
+    <collection property="skus" select="selectSkuByPk1" column="ID"/>
+  </resultMap>
+  <select id="selectAllInfo" resultMap="AllInfoResultMap">
+     select
+        p.id,
+        p.code,
+        p.name,
+        i.id as INFO_ID,
+        i.other_info as INFO_OTHER_INFO
+      from
+        product p
+      left join product_info i on p.id = i.product_id
+      where p.code = #{code}
+  </select>
+  <resultMap id="SkuResultMap" type="ProductSku">
+    <id column="ID" property="id"/>
+    <result column="PRODUCT_ID" property="productId"/>
+    <result column="COLOR" property="color"/>
+    <result column="SIZE" property="size"/>
+  </resultMap>
+  <select id="selectSkuByPk1" resultMap="SkuResultMap">
+    select * from product_sku where product_id = #{id} ORDER BY id
+  </select>
+</mapper>

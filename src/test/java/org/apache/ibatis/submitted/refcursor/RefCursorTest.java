@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,77 +15,122 @@
  */
 package org.apache.ibatis.submitted.refcursor;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.IOException;
-import java.io.Reader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.BaseDataTest;
+import org.apache.ibatis.mapping.Environment;
+import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.ResultContext;
+import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.apache.ibatis.testcontainers.PgContainer;
+import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
-/*
- * This class contains tests for refcursors.  The tests require a
- * local install of PostgreSQL and cannot be run as a part of the normal
- * MyBatis build unless PostreSQL is setup on the build machine as 
- * described in setupdb.txt
- * 
- * If PostgreSQL is setup as described in setupdb.txt, then remove
- * the @Ignore annotation to enable the tests.
- * 
+/**
  * @author Jeff Butler
- *
  */
-@Ignore("See setupdb.txt for instructions on how to run the tests in this class")
-public class RefCursorTest {
-    @SuppressWarnings("unchecked")
-    @Test
-    public void testRefCursor1() throws IOException {
-        Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/refcursor/MapperConfig.xml");
-        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        try {
-            OrdersMapper mapper = sqlSession.getMapper(OrdersMapper.class);
-            Map<String, Object> parameter = new HashMap<String, Object>();
-            parameter.put("orderId", 1);
-            mapper.getOrder1(parameter);
-            
-            assertNotNull(parameter.get("order"));
-            List<Order> orders = (List<Order>) parameter.get("order");
-            assertEquals(1, orders.size());
-            Order order = orders.get(0);
-            assertEquals(3, order.getDetailLines().size());
-        } finally {
-            sqlSession.close();
-        }
+@Tag("TestcontainersTests")
+class RefCursorTest {
+
+  private static SqlSessionFactory sqlSessionFactory;
+
+  @BeforeAll
+  static void setUp() throws Exception {
+    Configuration configuration = new Configuration();
+    Environment environment = new Environment("development", new JdbcTransactionFactory(),
+        PgContainer.getUnpooledDataSource());
+    configuration.setEnvironment(environment);
+    configuration.addMapper(OrdersMapper.class);
+    sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
+
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/refcursor/CreateDB.sql");
+  }
+
+  @Test
+  void testRefCursor1() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      OrdersMapper mapper = sqlSession.getMapper(OrdersMapper.class);
+      Map<String, Object> parameter = new HashMap<>();
+      parameter.put("orderId", 1);
+      mapper.getOrder1(parameter);
+
+      assertNotNull(parameter.get("order"));
+      @SuppressWarnings("unchecked")
+      List<Order> orders = (List<Order>) parameter.get("order");
+      assertEquals(1, orders.size());
+      Order order = orders.get(0);
+      assertEquals(3, order.getDetailLines().size());
+    }
+  }
+
+  @Test
+  void testRefCursor2() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      OrdersMapper mapper = sqlSession.getMapper(OrdersMapper.class);
+      Map<String, Object> parameter = new HashMap<>();
+      parameter.put("orderId", 1);
+      mapper.getOrder2(parameter);
+
+      assertNotNull(parameter.get("order"));
+      @SuppressWarnings("unchecked")
+      List<Order> orders = (List<Order>) parameter.get("order");
+      assertEquals(1, orders.size());
+      Order order = orders.get(0);
+      assertEquals(3, order.getDetailLines().size());
+    }
+  }
+
+  @Test
+  void shouldUseResultHandlerOnOutputParam() {
+    class OrderResultHandler implements ResultHandler<Order> {
+      private List<Order> orders = new ArrayList<>();
+
+      @Override
+      public void handleResult(ResultContext<? extends Order> resultContext) {
+        Order order = resultContext.getResultObject();
+        order.setCustomerName("Anonymous");
+        orders.add(order);
+      }
+
+      List<Order> getResult() {
+        return orders;
+      }
     }
 
-    @SuppressWarnings("unchecked")
-    @Test
-    public void testRefCursor2() throws IOException {
-        Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/refcursor/MapperConfig.xml");
-        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        try {
-            OrdersMapper mapper = sqlSession.getMapper(OrdersMapper.class);
-            Map<String, Object> parameter = new HashMap<String, Object>();
-            parameter.put("orderId", 1);
-            mapper.getOrder2(parameter);
-            
-            assertNotNull(parameter.get("order"));
-            List<Order> orders = (List<Order>) parameter.get("order");
-            assertEquals(1, orders.size());
-            Order order = orders.get(0);
-            assertEquals(3, order.getDetailLines().size());
-        } finally {
-            sqlSession.close();
-        }
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      OrdersMapper mapper = sqlSession.getMapper(OrdersMapper.class);
+      OrderResultHandler handler = new OrderResultHandler();
+      Map<String, Object> parameter = new HashMap<>();
+      parameter.put("orderId", 1);
+      mapper.getOrder3(parameter, handler);
+
+      assertNull(parameter.get("order"));
+      assertEquals(3, parameter.get("detailCount"));
+      assertEquals("Anonymous", handler.getResult().get(0).getCustomerName());
     }
+  }
+
+  @Test
+  void shouldNullResultSetNotCauseNpe() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      OrdersMapper mapper = sqlSession.getMapper(OrdersMapper.class);
+      Map<String, Object> parameter = new HashMap<>();
+      parameter.put("orderId", 99);
+      mapper.getOrder3(parameter, resultContext -> {
+        // won't be used
+      });
+      assertEquals(0, parameter.get("detailCount"));
+    }
+  }
 }

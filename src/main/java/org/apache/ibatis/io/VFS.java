@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import org.apache.ibatis.logging.LogFactory;
 
 /**
  * Provides a very simple API for accessing resources within an application server.
- * 
+ *
  * @author Ben Gunter
  */
 public abstract class VFS {
@@ -38,59 +38,60 @@ public abstract class VFS {
   /** The built-in implementations. */
   public static final Class<?>[] IMPLEMENTATIONS = { JBoss6VFS.class, DefaultVFS.class };
 
-  /** The list to which implementations are added by {@link #addImplClass(Class)}. */
-  public static final List<Class<? extends VFS>> USER_IMPLEMENTATIONS = new ArrayList<Class<? extends VFS>>();
+  /**
+   * The list to which implementations are added by {@link #addImplClass(Class)}.
+   */
+  public static final List<Class<? extends VFS>> USER_IMPLEMENTATIONS = new ArrayList<>();
 
-  /** Singleton instance. */
-  private static VFS instance;
+  /** Singleton instance holder. */
+  private static class VFSHolder {
+    static final VFS INSTANCE = createVFS();
+
+    @SuppressWarnings("unchecked")
+    static VFS createVFS() {
+      // Try the user implementations first, then the built-ins
+      List<Class<? extends VFS>> impls = new ArrayList<>();
+      impls.addAll(USER_IMPLEMENTATIONS);
+      impls.addAll(Arrays.asList((Class<? extends VFS>[]) IMPLEMENTATIONS));
+
+      // Try each implementation class until a valid one is found
+      VFS vfs = null;
+      for (int i = 0; vfs == null || !vfs.isValid(); i++) {
+        Class<? extends VFS> impl = impls.get(i);
+        try {
+          vfs = impl.getDeclaredConstructor().newInstance();
+          if (!vfs.isValid() && log.isDebugEnabled()) {
+            log.debug("VFS implementation " + impl.getName()
+                + " is not valid in this environment.");
+          }
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+          log.error("Failed to instantiate " + impl, e);
+          return null;
+        }
+      }
+
+      if (log.isDebugEnabled()) {
+        log.debug("Using VFS adapter " + vfs.getClass().getName());
+      }
+
+      return vfs;
+    }
+  }
 
   /**
-   * Get the singleton {@link VFS} instance. If no {@link VFS} implementation can be found for the
-   * current environment, then this method returns null.
+   * Get the singleton {@link VFS} instance. If no {@link VFS} implementation can be found for the current environment,
+   * then this method returns null.
+   *
+   * @return single instance of VFS
    */
-  @SuppressWarnings("unchecked")
   public static VFS getInstance() {
-    if (instance != null) {
-      return instance;
-    }
-
-    // Try the user implementations first, then the built-ins
-    List<Class<? extends VFS>> impls = new ArrayList<Class<? extends VFS>>();
-    impls.addAll(USER_IMPLEMENTATIONS);
-    impls.addAll(Arrays.asList((Class<? extends VFS>[]) IMPLEMENTATIONS));
-
-    // Try each implementation class until a valid one is found
-    VFS vfs = null;
-    for (int i = 0; vfs == null || !vfs.isValid(); i++) {
-      Class<? extends VFS> impl = impls.get(i);
-      try {
-        vfs = impl.newInstance();
-        if (vfs == null || !vfs.isValid()) {
-          if (log.isDebugEnabled()) {
-            log.debug("VFS implementation " + impl.getName() +
-              " is not valid in this environment.");
-          }
-        }
-      } catch (InstantiationException e) {
-        log.error("Failed to instantiate " + impl, e);
-        return null;
-      } catch (IllegalAccessException e) {
-        log.error("Failed to instantiate " + impl, e);
-        return null;
-      }
-    }
-
-    if (log.isDebugEnabled()) {
-      log.debug("Using VFS adapter " + vfs.getClass().getName());
-    }
-    VFS.instance = vfs;
-    return VFS.instance;
+    return VFSHolder.INSTANCE;
   }
 
   /**
    * Adds the specified class to the list of {@link VFS} implementations. Classes added in this
    * manner are tried in the order they are added and before any of the built-in implementations.
-   * 
+   *
    * @param clazz The {@link VFS} implementation class to add.
    */
   public static void addImplClass(Class<? extends VFS> clazz) {
@@ -99,11 +100,17 @@ public abstract class VFS {
     }
   }
 
-  /** Get a class by name. If the class is not found then return null. */
+  /**
+   * Get a class by name. If the class is not found then return null.
+   *
+   * @param className
+   *          the class name
+   * @return the class
+   */
   protected static Class<?> getClass(String className) {
     try {
       return Thread.currentThread().getContextClassLoader().loadClass(className);
-//      return ReflectUtil.findClass(className);
+      // return ReflectUtil.findClass(className);
     } catch (ClassNotFoundException e) {
       if (log.isDebugEnabled()) {
         log.debug("Class not found: " + className);
@@ -114,10 +121,14 @@ public abstract class VFS {
 
   /**
    * Get a method by name and parameter types. If the method is not found then return null.
-   * 
-   * @param clazz The class to which the method belongs.
-   * @param methodName The name of the method.
-   * @param parameterTypes The types of the parameters accepted by the method.
+   *
+   * @param clazz
+   *          The class to which the method belongs.
+   * @param methodName
+   *          The name of the method.
+   * @param parameterTypes
+   *          The types of the parameters accepted by the method.
+   * @return the method
    */
   protected static Method getMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
     if (clazz == null) {
@@ -136,22 +147,27 @@ public abstract class VFS {
 
   /**
    * Invoke a method on an object and return whatever it returns.
-   * 
-   * @param method The method to invoke.
-   * @param object The instance or class (for static methods) on which to invoke the method.
-   * @param parameters The parameters to pass to the method.
+   *
+   * @param <T>
+   *          the generic type
+   * @param method
+   *          The method to invoke.
+   * @param object
+   *          The instance or class (for static methods) on which to invoke the method.
+   * @param parameters
+   *          The parameters to pass to the method.
    * @return Whatever the method returns.
-   * @throws IOException If I/O errors occur
-   * @throws RuntimeException If anything else goes wrong
+   * @throws IOException
+   *           If I/O errors occur
+   * @throws RuntimeException
+   *           If anything else goes wrong
    */
   @SuppressWarnings("unchecked")
   protected static <T> T invoke(Method method, Object object, Object... parameters)
       throws IOException, RuntimeException {
     try {
       return (T) method.invoke(object, parameters);
-    } catch (IllegalArgumentException e) {
-      throw new RuntimeException(e);
-    } catch (IllegalAccessException e) {
+    } catch (IllegalArgumentException | IllegalAccessException e) {
       throw new RuntimeException(e);
     } catch (InvocationTargetException e) {
       if (e.getTargetException() instanceof IOException) {
@@ -165,7 +181,7 @@ public abstract class VFS {
   /**
    * Get a list of {@link URL}s from the context classloader for all the resources found at the
    * specified path.
-   * 
+   *
    * @param path The resource path.
    * @return A list of {@link URL}s, as returned by {@link ClassLoader#getResources(String)}.
    * @throws IOException If I/O errors occur
@@ -174,13 +190,17 @@ public abstract class VFS {
     return Collections.list(Thread.currentThread().getContextClassLoader().getResources(path));
   }
 
-  /** Return true if the {@link VFS} implementation is valid for the current environment. */
+  /**
+   * Return true if the {@link VFS} implementation is valid for the current environment.
+   *
+   * @return true, if is valid
+   */
   public abstract boolean isValid();
 
   /**
    * Recursively list the full resource path of all the resources that are children of the
    * resource identified by a URL.
-   * 
+   *
    * @param url The URL that identifies the resource to list.
    * @param forPath The path to the resource that is identified by the URL. Generally, this is the
    *            value passed to {@link #getResources(String)} to get the resource URL.
@@ -192,13 +212,13 @@ public abstract class VFS {
   /**
    * Recursively list the full resource path of all the resources that are children of all the
    * resources found at the specified path.
-   * 
+   *
    * @param path The path of the resource(s) to list.
    * @return A list containing the names of the child resources.
    * @throws IOException If I/O errors occur
    */
   public List<String> list(String path) throws IOException {
-    List<String> names = new ArrayList<String>();
+    List<String> names = new ArrayList<>();
     for (URL url : getResources(path)) {
       names.addAll(list(url, path));
     }

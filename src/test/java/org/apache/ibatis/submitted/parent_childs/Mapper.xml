@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2020 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -22,30 +22,60 @@
 
 <mapper namespace="org.apache.ibatis.submitted.parent_childs.Mapper">
 
-	<resultMap id="ParentMap" type="org.apache.ibatis.submitted.parent_childs.Parent">
-		<id column="p_Id" property="id" />
-		<id column="p_Name" property="name" />
-		<id column="p_SurName" property="surName" />
-		<collection property="childs" resultMap="ChildMap" />
-	</resultMap>
+    <resultMap id="ParentMap" type="org.apache.ibatis.submitted.parent_childs.Parent">
+        <result column="p_Id" property="id" />
+        <result column="p_Name" property="name" />
+        <result column="p_SurName" property="surName" />
+        <collection property="childs" resultMap="ChildMap" />
+    </resultMap>
 
-	<resultMap id="ChildMap" type="org.apache.ibatis.submitted.parent_childs.Child">
-		<id column="c_id" property="id" />
-		<id column="c_Name" property="name" />
-		<id column="c_SurName" property="surName" />
-		<id column="c_Age" property="age" />
-	</resultMap>
+    <resultMap id="ChildMap" type="org.apache.ibatis.submitted.parent_childs.Child">
+        <result column="c_id" property="id" />
+        <result column="c_Name" property="name" />
+        <result column="c_SurName" property="surName" />
+        <result column="c_Age" property="age" />
+    </resultMap>
 
-	<select id="getParents" resultMap="ParentMap">
-		select
-		p.Id as p_Id, 
-		p.Name as p_Name, 
-		p.SurName as p_SurName,
-		c.Id as c_Id, 
-		c.Name as c_Name, 
-		c.SurName as c_SurName, 
-		c.Age as c_Age
-		from Parent p
-		left outer join Child c on p.Id = c.ParentId
-	</select>
+    <select id="getParents" resultMap="ParentMap">
+        select
+        p.Id as p_Id,
+        p.Name as p_Name,
+        p.SurName as p_SurName,
+        c.Id as c_Id,
+        c.Name as c_Name,
+        c.SurName as c_SurName,
+        c.Age as c_Age
+        from Parent p
+        left outer join Child c on p.Id = c.ParentId
+    </select>
+
+    <resultMap id="ParentMapConstructor" type="org.apache.ibatis.submitted.parent_childs.Parent">
+        <result column="p_Id" property="id" />
+        <result column="p_Name" property="name" />
+        <result column="p_SurName" property="surName" />
+        <collection property="childs" resultMap="ChildMapConstructor" />
+    </resultMap>
+
+    <resultMap id="ChildMapConstructor" type="org.apache.ibatis.submitted.parent_childs.Child">
+        <constructor>
+	        <arg column="c_id" javaType="int"/>
+	        <arg column="c_Name" javaType="String"/>
+	        <arg column="c_SurName" javaType="String"/>
+	        <arg column="c_Age" javaType="int"/>
+        </constructor>
+    </resultMap>
+
+    <select id="getParentsWithConstructor" resultMap="ParentMapConstructor">
+        select
+        p.Id as p_Id,
+        p.Name as p_Name,
+        p.SurName as p_SurName,
+        c.Id as c_Id,
+        c.Name as c_Name,
+        c.SurName as c_SurName,
+        c.Age as c_Age
+        from Parent p
+        left outer join Child c on p.Id = c.ParentId
+    </select>
+
 </mapper>

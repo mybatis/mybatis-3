@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -41,22 +41,22 @@
   </ul>
   <subsection name="if" id="if">
   <p>動的 SQL で最も良く行うのが、次のように条件に応じて where 句に検索条件を追加する処理でしょう。</p>
-  <source><![CDATA[<select id="findActiveBlogWithTitleLike" 
+  <source><![CDATA[<select id="findActiveBlogWithTitleLike"
      resultType="Blog">
-  SELECT * FROM BLOG 
-  WHERE state = ‘ACTIVE’ 
+  SELECT * FROM BLOG
+  WHERE state = ‘ACTIVE’
   <if test="title != null">
     AND title like #{title}
   </if>
-</select>]]></source>  
+</select>]]></source>
   <p>このステートメントによって「任意の検索項目」を実現することができます。title を指定しなければ全ての ACTIVE な Blog が返されますが、title を指定した場合は指定したタイトルを持った Blog が返されます（このステートメントでは like 演算子を使っているので、渡された title にワイルドカードを使うこともできます）。</p>
   <p>
     タイトルと著者の両方を任意の条件としたい場合はどうすれば良いのでしょうか。<br />
     ステートメント名を分かりやすいものに変更したら、あとは条件をもう一つ追加するだけです。
   </p>
-  <source><![CDATA[<select id="findActiveBlogLike" 
+  <source><![CDATA[<select id="findActiveBlogLike"
      resultType="Blog">
-  SELECT * FROM BLOG WHERE state = ‘ACTIVE’ 
+  SELECT * FROM BLOG WHERE state = ‘ACTIVE’
   <if test="title != null">
     AND title like #{title}
   </if>
@@ -68,7 +68,7 @@
   <subsection name="choose, when, otherwise" id="chooseWhenOtherwise">
   <p>全ての条件を適用する代わりに、多くの選択肢の中から一つを選んで適用したいという場合があります。</p>
   <p>引き続き上の例を使って、タイトルが指定されたらタイトルのみを条件として検索し、著者が指定されたら著者のみを条件として検索するようにしてみましょう。どちらも指定されなかった場合は注目のブログのみを返すようにしてみましょう（ランダムに選ばれた無意味なリストではなく、管理者が戦略的に選んだリストを返したいという要件があるのでしょう）。</p>
-  <source><![CDATA[<select id="findActiveBlogLike" 
+  <source><![CDATA[<select id="findActiveBlogLike"
      resultType="Blog">
   SELECT * FROM BLOG WHERE state = ‘ACTIVE’
   <choose>
@@ -86,13 +86,13 @@
   </subsection>
   <subsection name="trim, where, set" id="trimWhereSet">
   <p>ここまでの例題は動的 SQL の厄介な問題点を都合よく避けていました。もう一度 if の例に戻って、今度は "ACTIVE = 1" も動的な条件に変更してみましょう。</p>
-  <source><![CDATA[<select id="findActiveBlogLike" 
+  <source><![CDATA[<select id="findActiveBlogLike"
      resultType="Blog">
-  SELECT * FROM BLOG 
-  WHERE 
+  SELECT * FROM BLOG
+  WHERE
   <if test="state != null">
     state = #{state}
-  </if> 
+  </if>
   <if test="title != null">
     AND title like #{title}
   </if>
@@ -101,21 +101,21 @@
   </if>
 </select>]]></source>
   <p>どの条件にも一致しない場合はどうなるのでしょうか？その場合は次のような SQL が実行されることになります。</p>
-  <source><![CDATA[SELECT * FROM BLOG 
+  <source><![CDATA[SELECT * FROM BLOG
 WHERE]]></source>
   <p>この SQL は構文エラーで失敗するでしょう。もし２番目の条件だけが一致したらどうなるのでしょうか？今度は次の SQL になります。</p>
-  <source><![CDATA[SELECT * FROM BLOG 
-WHERE 
+  <source><![CDATA[SELECT * FROM BLOG
+WHERE
 AND title like ‘someTitle’]]></source>
   <p>これまた構文エラーで失敗するでしょう。動的 SQL の問題は単なる条件分岐だけで解決できるものではありません。自分で書いたことがある方なら、もう二度と書きたくないと思うはずです。</p>
   <p>MyBatis は約 90% のケースをうまく処理できる簡単な解決策を提供します。残りの 10% についても、カスタマイズすることで処理できるようになります。上記の例は、一箇所修正するだけで期待通りに動作するようになります。</p>
-  <source><![CDATA[<select id="findActiveBlogLike" 
+  <source><![CDATA[<select id="findActiveBlogLike"
      resultType="Blog">
-  SELECT * FROM BLOG 
-  <where> 
+  SELECT * FROM BLOG
+  <where>
     <if test="state != null">
          state = #{state}
-    </if> 
+    </if>
     <if test="title != null">
         AND title like #{title}
     </if>
@@ -123,12 +123,12 @@ AND title like ‘someTitle’]]></source>
         AND author_name like #{author.name}
     </if>
   </where>
-</select>]]></source> 
+</select>]]></source>
   <p><em>where</em> 要素は、内包するタグのどれかが結果を返すときだけ "WHERE" を挿入します。更に、内包するタグから返された結果が "AND" または "OR" で始まっていた場合はこれを削除します。</p>
   <p><em>where</em> 要素の動作が期待と異なる場合は、trim 要素を定義することで処理内容をカスタマイズすることができます。</p>
   <source><![CDATA[<trim prefix="WHERE" prefixOverrides="AND |OR ">
-  ... 
-</trim>]]></source>  
+  ...
+</trim>]]></source>
   <p><em>prefixOverrides</em> 属性にはパイプで区切られたオーバーライド対象の文字列を指定します。ここではスペースにも意味があります。trim 要素の <em>prefixOverrides</em> 属性のリストに含まれる文字列が先頭にあった場合は削除され、<em>prefix</em> 属性で指定された文字列は結果が空でない場合先頭に挿入されます。</p>
   <p>動的な update ステートメントのために同じような要素 <em>set</em> が用意されています。<em>set</em> 要素を使うと、アップデート対象の列を動的に追加することができます。例：</p>
   <source><![CDATA[<update id="updateAuthorIfNecessary">
@@ -141,7 +141,7 @@ AND title like ‘someTitle’]]></source>
     </set>
   where id=#{id}
 </update>]]></source>
-  <p><em>set</em> 要素は、動的に SET キーワードを付加し、余分な末尾のカンマを削除します。</p>  
+  <p><em>set</em> 要素は、動的に SET キーワードを付加し、余分な末尾のカンマを削除します。</p>
   <p>疑問に思った方のために、これと同じ処理を行う trim 要素は次のようになります。</p>
   <source><![CDATA[<trim prefix="SET" suffixOverrides=",">
   ...
@@ -162,14 +162,29 @@ AND title like ‘someTitle’]]></source>
   <p><em>foreach</em> 要素は非常に強力で、イテレーション処理の対象となるコレクションを指定する collection と、ループ内で要素を格納する変数 item、ループ回数を格納する index 変数を宣言することができます。また、開始・終了の文字列とイテレーションの合間に出力する区切り文字を指定することもできます。foreach タグは賢いので、余分な区切り文字を出力することはありません。</p>
   <p><span class="label important">NOTE</span> collection には Iterable を実装したオブジェクト（List や Set など）の他に Map や Array を指定することもできます。collection に Iterable または Array を指定した場合、 index で指定した変数にはインデックスの数値、 item で指定した変数にはコレクション、配列の要素が格納されます。Map あるいは Map.Entry のコレクションを指定した場合は index にマップのキー、item にマップの値が格納されます。</p>
   <p>XML 設定ファイルと XML Mapper ファイルについての説明はここまでになります。次の章では、Java API について詳しく見ていきます。</p>
-  </subsection>  
+  </subsection>
+  <subsection name="script">
+  <p>For using dynamic SQL in annotated mapper class, <em>script</em> element can be used. For example:</p>
+  <source><![CDATA[
+    @Update({"<script>",
+      "update Author",
+      "  <set>",
+      "    <if test='username != null'>username=#{username},</if>",
+      "    <if test='password != null'>password=#{password},</if>",
+      "    <if test='email != null'>email=#{email},</if>",
+      "    <if test='bio != null'>bio=#{bio}</if>",
+      "  </set>",
+      "where id=#{id}",
+      "</script>"})
+    void updateAuthorValues(Author author);]]></source>
+  </subsection>
   <subsection name="bind">
   <p><code>bind</code> 要素を使うと、OGNL 式の結果を変数に格納し、その変数を SQL 文中で使用することができます。</p>
   <source><![CDATA[
 <select id="selectBlogsLike" resultType="Blog">
   <bind name="pattern" value="'%' + _parameter.getTitle() + '%'" />
   SELECT * FROM BLOG
-  WHERE title LIKE #{pattern} 
+  WHERE title LIKE #{pattern}
 </select>]]></source>
   </subsection>
   <subsection name="複数データベースのサポート">
@@ -194,7 +209,7 @@ AND title like ‘someTitle’]]></source>
   ParameterHandler createParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql);
   SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType);
   SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType);
-}]]></source>    
+}]]></source>
     <p>作成した言語ドライバーをデフォルトとして使用する場合は、mybatis-config.xml に次のような設定を追加します（typeAlias の使用は必須ではありません）。</p>
     <source><![CDATA[<typeAliases>
   <typeAlias type="org.sample.MyLanguageDriver" alias="myLanguage"/>
@@ -218,7 +233,7 @@ AND title like ‘someTitle’]]></source>
 
     <p>これまでのセクションで出てきた XML タグは、全てデフォルトの言語ドライバー <code>org.apache.ibatis.scripting.xmltags.XmlLanguageDriver</code> （エイリアスは <code>xml</code> ）によって提供されているものです。</p>
 
-	</subsection>
-	</section>
+    </subsection>
+    </section>
   </body>
 </document>

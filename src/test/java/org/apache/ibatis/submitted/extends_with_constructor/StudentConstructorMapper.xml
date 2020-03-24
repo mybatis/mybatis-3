@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -23,28 +23,28 @@
 <mapper namespace="org.apache.ibatis.submitted.extends_with_constructor.StudentConstructorMapper">
     <resultMap id="StudentConstructorMap" type="org.apache.ibatis.submitted.extends_with_constructor.StudentConstructor">
         <constructor>
-        	<idArg column="id" javaType="int"/>
-        	<arg column="name" javaType="string"/>
+            <idArg column="id" javaType="int"/>
+            <arg column="name" javaType="string"/>
         </constructor>
         <association property="teacher" column="teacher_id" select="org.apache.ibatis.submitted.extends_with_constructor.TeacherMapper.selectById"/>
     </resultMap>
     <resultMap id="StudentConstructorWithTeacherMap" type="org.apache.ibatis.submitted.extends_with_constructor.StudentConstructor" extends="StudentConstructorMap">
-    	<association property="teacher" resultMap="org.apache.ibatis.submitted.extends_with_constructor.TeacherMapper.TeacherMap"/>
+        <association property="teacher" resultMap="org.apache.ibatis.submitted.extends_with_constructor.TeacherMapper.TeacherMap"/>
     </resultMap>
     <resultMap id="StudentNoNameMap" type="org.apache.ibatis.submitted.extends_with_constructor.StudentConstructor" extends="StudentConstructorMap">
         <constructor>
-        	<idArg column="id" javaType="int"/>
+            <idArg column="id" javaType="int"/>
         </constructor>
     </resultMap>
-    
+
     <select id="selectWithTeacherById" resultMap="StudentConstructorWithTeacherMap" parameterType="int">
-    	SELECT id, name, teacher_id
-    	FROM student
-    	WHERE id = #{id}
+        SELECT id, name, teacher_id
+        FROM student
+        WHERE id = #{id}
     </select>
     <select id="selectNoNameById" resultMap="StudentNoNameMap" parameterType="int">
-    	SELECT id, name, teacher_id
-    	FROM student
-    	WHERE id = #{id}
+        SELECT id, name, teacher_id
+        FROM student
+        WHERE id = #{id}
     </select>
 </mapper>

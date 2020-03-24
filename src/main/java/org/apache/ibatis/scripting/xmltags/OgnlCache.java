@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -32,7 +32,9 @@ import org.apache.ibatis.builder.BuilderException;
  */
 public final class OgnlCache {
 
-  private static final Map<String, Object> expressionCache = new ConcurrentHashMap<String, Object>();
+  private static final OgnlMemberAccess MEMBER_ACCESS = new OgnlMemberAccess();
+  private static final OgnlClassResolver CLASS_RESOLVER = new OgnlClassResolver();
+  private static final Map<String, Object> expressionCache = new ConcurrentHashMap<>();
 
   private OgnlCache() {
     // Prevent Instantiation of Static Class
@@ -40,7 +42,7 @@ public final class OgnlCache {
 
   public static Object getValue(String expression, Object root) {
     try {
-      Map<Object, OgnlClassResolver> context = Ognl.createDefaultContext(root, new OgnlClassResolver());
+      Map context = Ognl.createDefaultContext(root, MEMBER_ACCESS, CLASS_RESOLVER, null);
       return Ognl.getValue(parseExpression(expression), context, root);
     } catch (OgnlException e) {
       throw new BuilderException("Error evaluating expression '" + expression + "'. Cause: " + e, e);

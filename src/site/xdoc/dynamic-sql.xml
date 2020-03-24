@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -156,6 +156,21 @@ AND title like ‘someTitle’]]></source>
   <p><span class="label important">NOTE</span> You can pass any Iterable object (for example List, Set, etc.), as well as any Map or Array object to foreach as collection parameter. When using an Iterable or Array, index will be the number of current iteration and value item will be the element retrieved in this iteration. When using a Map (or Collection of Map.Entry objects), index will be the key object and item will be the value object.</p>
   <p>This wraps up the discussion regarding the XML configuration file and XML mapping files. The next section will discuss the Java API in detail, so that you can get the most out of the mappings that you’ve created.</p>
   </subsection>
+  <subsection name="script">
+  <p>For using dynamic SQL in annotated mapper class, <em>script</em> element can be used. For example:</p>
+  <source><![CDATA[
+    @Update({"<script>",
+      "update Author",
+      "  <set>",
+      "    <if test='username != null'>username=#{username},</if>",
+      "    <if test='password != null'>password=#{password},</if>",
+      "    <if test='email != null'>email=#{email},</if>",
+      "    <if test='bio != null'>bio=#{bio}</if>",
+      "  </set>",
+      "where id=#{id}",
+      "</script>"})
+    void updateAuthorValues(Author author);]]></source>
+  </subsection>
   <subsection name="bind">
   <p>The <code>bind</code> element lets you create a variable out of an OGNL expression and bind it to the context. For example:</p>
   <source><![CDATA[
@@ -189,7 +204,7 @@ AND title like ‘someTitle’]]></source>
   ParameterHandler createParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql);
   SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType);
   SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType);
-}]]></source>    
+}]]></source>
     <p>Once you have your custom language driver you can set it to be the default by configuring it in the mybatis-config.xml file:</p>
   <source><![CDATA[<typeAliases>
   <typeAlias type="org.sample.MyLanguageDriver" alias="myLanguage"/>
@@ -197,7 +212,7 @@ AND title like ‘someTitle’]]></source>
 <settings>
   <setting name="defaultScriptingLanguage" value="myLanguage"/>
 </settings>
-]]></source>    
+]]></source>
     <p>Instead of changing the default, you can specify the language for an specific statement by adding the <code>lang</code> attribute as follows:
     </p>
   <source><![CDATA[<select id="selectBlog" lang="myLanguage">
@@ -212,9 +227,9 @@ AND title like ‘someTitle’]]></source>
 
     <p><span class="label important">NOTE</span> You can use Apache Velocity as your dynamic language. Have a look at the MyBatis-Velocity project for the details.</p>
 
-    <p>All the xml tags you have seen in the previous sections are provided by the default MyBatis language that is provided by the driver  
+    <p>All the xml tags you have seen in the previous sections are provided by the default MyBatis language that is provided by the driver
     <code>org.apache.ibatis.scripting.xmltags.XmlLanguageDriver</code> which is aliased as <code>xml</code>.</p>
-	</subsection>
+  </subsection>
   </section>
   </body>
 </document>

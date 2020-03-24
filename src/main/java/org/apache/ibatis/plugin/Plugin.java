@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -30,9 +30,9 @@ import org.apache.ibatis.reflection.ExceptionUtil;
  */
 public class Plugin implements InvocationHandler {
 
-  private Object target;
-  private Interceptor interceptor;
-  private Map<Class<?>, Set<Method>> signatureMap;
+  private final Object target;
+  private final Interceptor interceptor;
+  private final Map<Class<?>, Set<Method>> signatureMap;
 
   private Plugin(Object target, Interceptor interceptor, Map<Class<?>, Set<Method>> signatureMap) {
     this.target = target;
@@ -70,16 +70,12 @@ public class Plugin implements InvocationHandler {
     Intercepts interceptsAnnotation = interceptor.getClass().getAnnotation(Intercepts.class);
     // issue #251
     if (interceptsAnnotation == null) {
-      throw new PluginException("No @Intercepts annotation was found in interceptor " + interceptor.getClass().getName());      
+      throw new PluginException("No @Intercepts annotation was found in interceptor " + interceptor.getClass().getName());
     }
     Signature[] sigs = interceptsAnnotation.value();
-    Map<Class<?>, Set<Method>> signatureMap = new HashMap<Class<?>, Set<Method>>();
+    Map<Class<?>, Set<Method>> signatureMap = new HashMap<>();
     for (Signature sig : sigs) {
-      Set<Method> methods = signatureMap.get(sig.type());
-      if (methods == null) {
-        methods = new HashSet<Method>();
-        signatureMap.put(sig.type(), methods);
-      }
+      Set<Method> methods = signatureMap.computeIfAbsent(sig.type(), k -> new HashSet<>());
       try {
         Method method = sig.type().getMethod(sig.method(), sig.args());
         methods.add(method);
@@ -91,7 +87,7 @@ public class Plugin implements InvocationHandler {
   }
 
   private static Class<?>[] getAllInterfaces(Class<?> type, Map<Class<?>, Set<Method>> signatureMap) {
-    Set<Class<?>> interfaces = new HashSet<Class<?>>();
+    Set<Class<?>> interfaces = new HashSet<>();
     while (type != null) {
       for (Class<?> c : type.getInterfaces()) {
         if (signatureMap.containsKey(c)) {

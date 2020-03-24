@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+
+       Copyright 2009-2019 the original author or authors.
+
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
+-->
+<mapper namespace="org.apache.ibatis.builder.xsd.AuthorMapper"
+                xmlns="http://mybatis.org/schema/mybatis-mapper"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="http://mybatis.org/schema/mybatis-mapper http://mybatis.org/schema/mybatis-mapper.xsd">
+
+    <parameterMap id="selectAuthor" type="org.apache.ibatis.domain.blog.Author">
+        <parameter property="id" />
+    </parameterMap>
+
+    <resultMap id="selectAuthor" type="org.apache.ibatis.domain.blog.Author">
+        <id column="id" property="id" />
+        <result property="username" column="username" />
+        <result property="password" column="password" />
+        <result property="email" column="email" />
+        <result property="bio" column="bio" />
+        <result property="favouriteSection" column="favourite_section" />
+    </resultMap>
+
+    <resultMap id="selectImmutableAuthor" type="org.apache.ibatis.domain.blog.ImmutableAuthor">
+        <constructor>
+            <idArg column="id" javaType="_int" />
+            <arg column="username" javaType="string" />
+            <arg column="password" javaType="string" />
+            <arg column="email" javaType="string" />
+            <arg column="bio" javaType="string" />
+            <arg column="favourite_section" javaType="org.apache.ibatis.domain.blog.Section" />
+        </constructor>
+    </resultMap>
+
+    <resultMap id="complexAuthorId" type="org.apache.ibatis.domain.blog.ComplexImmutableAuthorId">
+        <constructor>
+            <idArg column="id" javaType="_int" />
+            <idArg column="username" javaType="string" />
+            <idArg column="password" javaType="string" />
+            <idArg column="email" javaType="string" />
+        </constructor>
+    </resultMap>
+
+    <resultMap id="selectComplexImmutableAuthor" type="org.apache.ibatis.domain.blog.ComplexImmutableAuthor">
+        <constructor>
+            <idArg javaType="org.apache.ibatis.domain.blog.ComplexImmutableAuthorId"
+                resultMap="complexAuthorId" />
+            <arg column="bio" javaType="string" />
+            <arg column="favourite_section" javaType="org.apache.ibatis.domain.blog.Section" />
+        </constructor>
+    </resultMap>
+
+    <select id="selectAllAuthors" resultType="org.apache.ibatis.domain.blog.Author">
+        select * from author
+    </select>
+
+    <select id="selectAllAuthorsSet" resultType="org.apache.ibatis.domain.blog.Author">
+        select * from author
+    </select>
+
+    <select id="selectAllAuthorsVector" resultType="org.apache.ibatis.domain.blog.Author">
+        select * from author
+    </select>
+
+    <select id="selectAllAuthorsLinkedList" resultType="org.apache.ibatis.domain.blog.Author">
+        select * from author
+    </select>
+
+    <select id="selectAllAuthorsArray" resultType="org.apache.ibatis.domain.blog.Author">
+        select * from author
+    </select>
+
+    <select id="selectComplexAuthors" resultMap="selectComplexImmutableAuthor">
+        select * from author
+    </select>
+
+    <select id="selectAuthorLinkedHashMap" resultType="java.util.LinkedHashMap">
+        select id, username from author where id = #{value}
+    </select>
+
+    <select id="selectAuthor" parameterMap="selectAuthor" resultMap="selectAuthor">
+        select id, username, password, email, bio, favourite_section
+        from author where id = ?
+    </select>
+
+    <select id="selectImmutableAuthor" parameterMap="selectAuthor"
+        resultMap="selectImmutableAuthor">
+        select id, username, password, email, bio, favourite_section
+        from author where id = ?
+    </select>
+
+    <select id="selectAuthorWithInlineParams" parameterType="int"
+        resultType="org.apache.ibatis.domain.blog.Author">
+        select * from author where id = #{id}
+    </select>
+
+    <insert id="insertAuthor" parameterType="org.apache.ibatis.domain.blog.Author">
+        <selectKey keyProperty="id" resultType="_int" order="BEFORE">
+            <include refid="selectNum">
+                <property name="num" value="1"/>
+            </include>
+        </selectKey>
+        insert into Author (username,password,email,bio)
+        values (#{username},#{password},#{email},#{bio})
+    </insert>
+
+    <update id="updateAuthor" parameterType="org.apache.ibatis.domain.blog.Author">
+        update Author
+        set username=#{username,
+        javaType=String},
+        password=#{password},
+        email=#{email},
+        bio=#{bio}
+        where id=#{id}
+    </update>
+
+    <delete id="deleteAuthor" parameterType="int">
+        delete from Author where id = #{id}
+    </delete>
+
+
+    <update id="updateAuthorIfNecessary" parameterType="org.apache.ibatis.domain.blog.Author">
+        update Author
+        <set>
+            <if test="username != null">username=#{username},</if>
+            <if test="password != null">password=#{password},</if>
+            <if test="email != null">email=#{email},</if>
+            <if test="bio != null">bio=#{bio}</if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <select id="selectWithOptions" resultType="org.apache.ibatis.domain.blog.Author"
+        fetchSize="200" timeout="10" statementType="PREPARED" resultSetType="SCROLL_SENSITIVE" flushCache="false" useCache="false">
+        select * from author
+    </select>
+
+    <sql id="selectNum">
+        SELECT #{num}
+    </sql>
+
+</mapper>

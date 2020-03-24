@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.transaction.managed;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
@@ -25,19 +25,19 @@ import java.util.Properties;
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.TransactionFactory;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ManagedTransactionFactoryTest extends BaseDataTest {
+@ExtendWith(MockitoExtension.class)
+class ManagedTransactionFactoryTest extends BaseDataTest {
 
   @Mock
   private Connection conn;
 
   @Test
-  public void shouldEnsureThatCallsToManagedTransactionAPIDoNotForwardToManagedConnections() throws Exception {
+  void shouldEnsureThatCallsToManagedTransactionAPIDoNotForwardToManagedConnections() throws Exception {
     TransactionFactory tf = new ManagedTransactionFactory();
     tf.setProperties(new Properties());
     Transaction tx = tf.newTransaction(conn);
@@ -49,7 +49,8 @@ public class ManagedTransactionFactoryTest extends BaseDataTest {
   }
 
   @Test
-  public void shouldEnsureThatCallsToManagedTransactionAPIDoNotForwardToManagedConnectionsAndDoesNotCloseConnection() throws Exception {
+  void shouldEnsureThatCallsToManagedTransactionAPIDoNotForwardToManagedConnectionsAndDoesNotCloseConnection()
+      throws Exception {
     TransactionFactory tf = new ManagedTransactionFactory();
     Properties props = new Properties();
     props.setProperty("closeConnection", "false");

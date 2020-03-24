@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -22,82 +22,82 @@
 
 <mapper namespace="org.apache.ibatis.submitted.multidb.MultiDbMapper">
 
-	<select id="select1" resultType="string" parameterType="int">
-		select
-		name from common where id=#{value}
-	</select>
+    <select id="select1" resultType="string" parameterType="int">
+        select
+        name from common where id=#{value}
+    </select>
 
-	<select id="select1" databaseId="hsql"
-		resultType="string" parameterType="int">
-		select name from hsql where
-		id=#{value}
-	</select>
+    <select id="select1" databaseId="hsql"
+        resultType="string" parameterType="int">
+        select name from hsql where
+        id=#{value}
+    </select>
 
-	<select id="select2" resultType="string" parameterType="int">
-		select
-		name from common where id=#{value}
-	</select>
+    <select id="select2" resultType="string" parameterType="int">
+        select
+        name from common where id=#{value}
+    </select>
 
-	<select id="select2" databaseId="OTHER" resultType="string"
-		parameterType="int">
-		select name from oracle where id=#{value}
-	</select>
+    <select id="select2" databaseId="OTHER" resultType="string"
+        parameterType="int">
+        select name from oracle where id=#{value}
+    </select>
 
-	<select id="select3" resultType="string" parameterType="int">
-		select name from
-		<if test="_databaseId == 'hsql'">
-			hsql
-		</if>
-		<if test="_databaseId != 'hsql'">
-			common
-		</if>
-		where id=#{value}
-	</select>
-	
-	<sql id="sql1" databaseId="hsql">
-		hsql
-	</sql>
+    <select id="select3" resultType="string" parameterType="int">
+        select name from
+        <if test="_databaseId == 'hsql'">
+            hsql
+        </if>
+        <if test="_databaseId != 'hsql'">
+            common
+        </if>
+        where id=#{value}
+    </select>
 
-	<sql id="sql1">
-		common
-	</sql>
-	
-	<select id="select4" resultType="string" parameterType="int">
-		select name from
-		<include refid="sql1"/>
-		where id=#{value}
-	</select>
+    <sql id="sql1" databaseId="hsql">
+        hsql
+    </sql>
 
-	<insert id="insert" parameterType="org.apache.ibatis.submitted.multidb.User">
-		<selectKey keyProperty="id" resultType="int" order="BEFORE">
-			<if test="_databaseId == 'hsql'">
-				select max(id) + 1 from hsql
-			</if>
-			<if test="_databaseId != 'hsql'">
-				select max(id) + 1 from common
-			</if>
-		</selectKey>
-		<if test="_databaseId == 'hsql'">
-			insert into hsql values (#{id}, #{name})
-		</if>
-		<if test="_databaseId != 'hsql'">
-			insert into common values (#{id}, #{name})
-		</if>
-	</insert>
+    <sql id="sql1">
+        common
+    </sql>
 
-	<insert id="insert2" parameterType="org.apache.ibatis.submitted.multidb.User">
-		<selectKey keyProperty="id" resultType="int" order="BEFORE">
-				select max(id) + 1 from common
-		</selectKey>
-		<selectKey keyProperty="id" resultType="int" order="BEFORE" databaseId="hsql">
-				select max(id) + 1 from hsql
-		</selectKey>
-		<if test="_databaseId == 'hsql'">
-			insert into hsql values (#{id}, #{name})
-		</if>
-		<if test="_databaseId != 'hsql'">
-			insert into common values (#{id}, #{name})
-		</if>
-	</insert>
+    <select id="select4" resultType="string" parameterType="int">
+        select name from
+        <include refid="sql1"/>
+        where id=#{value}
+    </select>
+
+    <insert id="insert" parameterType="org.apache.ibatis.submitted.multidb.User">
+        <selectKey keyProperty="id" resultType="int" order="BEFORE">
+            <if test="_databaseId == 'hsql'">
+                select max(id) + 1 from hsql
+            </if>
+            <if test="_databaseId != 'hsql'">
+                select max(id) + 1 from common
+            </if>
+        </selectKey>
+        <if test="_databaseId == 'hsql'">
+            insert into hsql values (#{id}, #{name})
+        </if>
+        <if test="_databaseId != 'hsql'">
+            insert into common values (#{id}, #{name})
+        </if>
+    </insert>
+
+    <insert id="insert2" parameterType="org.apache.ibatis.submitted.multidb.User">
+        <selectKey keyProperty="id" resultType="int" order="BEFORE">
+                select max(id) + 1 from common
+        </selectKey>
+        <selectKey keyProperty="id" resultType="int" order="BEFORE" databaseId="hsql">
+                select max(id) + 1 from hsql
+        </selectKey>
+        <if test="_databaseId == 'hsql'">
+            insert into hsql values (#{id}, #{name})
+        </if>
+        <if test="_databaseId != 'hsql'">
+            insert into common values (#{id}, #{name})
+        </if>
+    </insert>
 
 </mapper>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+
+       Copyright 2009-2019 the original author or authors.
+
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
+-->
+<mapper namespace="org.apache.ibatis.domain.blog.mappers.BlogMapper"
+        xmlns="http://mybatis.org/schema/mybatis-mapper"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://mybatis.org/schema/mybatis-mapper http://mybatis.org/schema/mybatis-mapper.xsd">
+
+  <resultMap id="earlyNestedDiscriminatorPost" type="org.apache.ibatis.domain.blog.Post">
+    <id property="id" column="post_id"/>
+    <result property="subject" column="post_subject"/>
+    <discriminator javaType="int" column="draft">
+      <case value="1">
+        <association property="author" resultMap="joinedAuthor"/>
+        <collection property="comments" resultMap="joinedComment"/>
+        <collection property="tags" resultMap="joinedTag"/>
+      </case>
+    </discriminator>
+  </resultMap>
+
+  <resultMap id="blogWithPosts" type="Blog">
+    <id property="id" column="id"/>
+    <result property="title" column="title"/>
+    <association property="author" column="author_id"
+                 select="org.apache.ibatis.domain.blog.mappers.AuthorMapper.selectAuthorWithInlineParams"/>
+    <collection property="posts" column="id" select="selectPostsForBlog"/>
+  </resultMap>
+
+  <select id="selectBlogWithPostsUsingSubSelect" parameterType="int" resultMap="blogWithPosts">
+    select * from Blog where id = #{id}
+  </select>
+
+  <select id="selectPostsForBlog" parameterType="int" resultType="Post">
+    select * from Post where blog_id = #{blog_id}
+  </select>
+
+  <select id="selectCountOfPosts" resultType="int">
+    select count(1) from post
+  </select>
+
+  <resultMap id="blogWithPostsLazy" type="Blog">
+    <id property="id" column="id"/>
+    <result property="title" column="title"/>
+    <association property="author" column="author_id" select="org.apache.ibatis.domain.blog.mappers.AuthorMapper.selectAuthorWithInlineParams" fetchType="lazy"/>
+    <collection property="posts" column="id" select="selectPostsForBlog" fetchType="lazy"/>
+  </resultMap>
+
+  <select id="selectBlogWithPostsUsingSubSelectLazily" parameterType="int" resultMap="blogWithPostsLazy">
+    select * from Blog where id = #{id}
+  </select>
+
+  <resultMap id="joinedAuthor" type="org.apache.ibatis.domain.blog.Author">
+    <id property="id" column="author_id"/>
+    <result property="username" column="author_username"/>
+    <result property="password" column="author_password"/>
+    <result property="email" column="author_email"/>
+    <result property="bio" column="author_bio"/>
+    <result property="favouriteSection" column="author_favourite_section"/>
+  </resultMap>
+
+  <resultMap id="joinedComment" type="org.apache.ibatis.domain.blog.Comment">
+    <id property="id" column="comment_id"/>
+    <!--<association property="post" column="post_id" resultMap="joinedPost"/>-->
+  </resultMap>
+
+  <resultMap id="joinedTag" type="org.apache.ibatis.domain.blog.Tag">
+    <id property="id" column="tag_id"/>
+  </resultMap>
+
+  <resultMap id="joinedPost" type="org.apache.ibatis.domain.blog.Post">
+    <id property="id" column="post_id"/>
+    <result property="subject" column="post_subject"/>
+    <association property="author" resultMap="joinedAuthor"/>
+    <collection property="comments" resultMap="joinedComment"/>
+    <collection property="tags" resultMap="joinedTag"/>
+    <discriminator javaType="int" column="draft">
+      <case value="1" resultMap="draftPost"/>
+    </discriminator>
+  </resultMap>
+
+  <resultMap id="draftPost" type="org.apache.ibatis.domain.blog.DraftPost" extends="joinedPost"/>
+
+  <resultMap id="blogJoinedWithPostsAndAuthor" type="Blog">
+    <id property="id" column="blog_id"/>
+    <result property="title" column="blog_title"/>
+    <association property="author" resultMap="joinedAuthor"/>
+    <collection property="posts" resultMap="joinedPost"/>
+  </resultMap>
+
+  <resultMap id="lateNestedDiscriminatorPost" type="org.apache.ibatis.domain.blog.Post">
+    <id property="id" column="post_id"/>
+    <result property="subject" column="post_subject"/>
+    <discriminator javaType="int" column="draft">
+      <case value="1">
+        <association property="author" resultMap="joinedAuthor"/>
+        <collection property="comments" resultMap="joinedComment"/>
+        <collection property="tags" resultMap="joinedTag"/>
+      </case>
+    </discriminator>
+  </resultMap>
+
+  <select id="selectBlogJoinedWithPostsAndAuthor" parameterType="int" resultMap="blogJoinedWithPostsAndAuthor">
+    select
+    B.id as blog_id,
+    B.title as blog_title,
+    B.author_id as blog_author_id,
+    A.id as author_id,
+    A.username as author_username,
+    A.password as author_password,
+    A.email as author_email,
+    A.bio as author_bio,
+    A.favourite_section as author_favourite_section,
+    P.id as post_id,
+    P.blog_id as post_blog_id,
+    P.author_id as post_author_id,
+    P.created_on as post_created_on,
+    P.section as post_section,
+    P.subject as post_subject,
+    P.draft as draft,
+    P.body as post_body,
+    C.id as comment_id,
+    C.post_id as comment_post_id,
+    C.name as comment_name,
+    C.comment as comment_text,
+    T.id as tag_id,
+    T.name as tag_name
+    from Blog B
+    left outer join Author A on B.author_id = A.id
+    left outer join Post P on B.id = P.blog_id
+    left outer join Comment C on P.id = C.post_id
+    left outer join Post_Tag PT on PT.post_id = P.id
+    left outer join Tag T on PT.tag_id = T.id
+    where B.id = #{id}
+  </select>
+
+  <select id="selectAllPosts" resultType="hashmap">
+    select * from post order by id
+  </select>
+
+</mapper>

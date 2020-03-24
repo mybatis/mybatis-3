@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -35,13 +35,13 @@
     <result column="A_ACTIVE" property="active" jdbcType="BIT" />
   </resultMap>
   <sql id="Base_Column_List" >
-    A."CuStOmEr iD" as "A_CuStOmEr iD", A."first name" as "A_first name", A.FIRST_NAME as A_FIRST_NAME, 
-    A.FIRSTNAME as A_FIRSTNAME, A."last name" as "A_last name", A.E_MAIL as A_E_MAIL, 
-    A."_id1" as "A__id1", A."$id2" as "A_$id2", A."id5_" as "A_id5_", A."id6$" as "A_id6$", 
+    A."CuStOmEr iD" as "A_CuStOmEr iD", A."first name" as "A_first name", A.FIRST_NAME as A_FIRST_NAME,
+    A.FIRSTNAME as A_FIRSTNAME, A."last name" as "A_last name", A.E_MAIL as A_E_MAIL,
+    A."_id1" as "A__id1", A."$id2" as "A_$id2", A."id5_" as "A_id5_", A."id6$" as "A_id6$",
     A."id7$$" as "A_id7$$", A.EMAILADDRESS as A_EMAILADDRESS, A."from" as "A_from", A.ACTIVE as A_ACTIVE
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from "awful table" A
     where A."CuStOmEr iD" = #{customerId,jdbcType=INTEGER}
@@ -51,15 +51,15 @@
     where "CuStOmEr iD" = #{customerId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" useGeneratedKeys="true" keyProperty="customerId" >
-    insert into "awful table" ("first name", FIRST_NAME, 
-      FIRSTNAME, "last name", E_MAIL, 
-      "_id1", "$id2", "id5_", "id6$", 
-      "id7$$", EMAILADDRESS, "from", 
+    insert into "awful table" ("first name", FIRST_NAME,
+      FIRSTNAME, "last name", E_MAIL,
+      "_id1", "$id2", "id5_", "id6$",
+      "id7$$", EMAILADDRESS, "from",
       ACTIVE)
-    values (#{firstFirstName,jdbcType=VARCHAR}, #{secondFirstName,jdbcType=VARCHAR}, 
-      #{thirdFirstName,jdbcType=VARCHAR}, #{lastName,jdbcType=VARCHAR}, #{eMail,jdbcType=VARCHAR}, 
-      #{id1,jdbcType=INTEGER}, #{id2,jdbcType=INTEGER}, #{id5,jdbcType=INTEGER}, #{id6,jdbcType=INTEGER}, 
-      #{id7,jdbcType=INTEGER}, #{emailaddress,jdbcType=VARCHAR}, #{from,jdbcType=VARCHAR}, 
+    values (#{firstFirstName,jdbcType=VARCHAR}, #{secondFirstName,jdbcType=VARCHAR},
+      #{thirdFirstName,jdbcType=VARCHAR}, #{lastName,jdbcType=VARCHAR}, #{eMail,jdbcType=VARCHAR},
+      #{id1,jdbcType=INTEGER}, #{id2,jdbcType=INTEGER}, #{id5,jdbcType=INTEGER}, #{id6,jdbcType=INTEGER},
+      #{id7,jdbcType=INTEGER}, #{emailaddress,jdbcType=VARCHAR}, #{from,jdbcType=VARCHAR},
       #{active,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" useGeneratedKeys="true" keyProperty="customerId" >

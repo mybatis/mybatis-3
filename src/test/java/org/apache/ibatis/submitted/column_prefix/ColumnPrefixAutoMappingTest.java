@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,14 +15,14 @@
  */
 package org.apache.ibatis.submitted.column_prefix;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ColumnPrefixAutoMappingTest extends ColumnPrefixTest {
+class ColumnPrefixAutoMappingTest extends ColumnPrefixTest {
   @Override
   protected List<Pet> getPetAndRoom(SqlSession sqlSession) {
     List<Pet> pets = sqlSession.selectList("org.apache.ibatis.submitted.column_prefix.MapperAutoMapping.selectPets");
@@ -42,16 +42,13 @@ public class ColumnPrefixAutoMappingTest extends ColumnPrefixTest {
   }
 
   @Test
-  public void testCaseInsensitivity() throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  void testCaseInsensitivity() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Brand brand = sqlSession.selectOne("org.apache.ibatis.submitted.column_prefix.MapperAutoMapping.selectBrandWithProducts", 1);
       assertEquals(Integer.valueOf(1), brand.getId());
       assertEquals(2, brand.getProducts().size());
       assertEquals(Integer.valueOf(10), brand.getProducts().get(0).getId());
       assertEquals("alpha", brand.getProducts().get(0).getName());
-    } finally {
-      sqlSession.close();
     }
   }
 }

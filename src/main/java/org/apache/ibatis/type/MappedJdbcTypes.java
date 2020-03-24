@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -22,12 +22,33 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * The annotation that specify jdbc types to map {@link TypeHandler}.
+ *
+ * <p>
+ * <b>How to use:</b>
+ * <pre>
+ * &#064;MappedJdbcTypes({JdbcType.CHAR, JdbcType.VARCHAR})
+ * public class StringTrimmingTypeHandler implements TypeHandler&lt;String&gt; {
+ *   // ...
+ * }
+ * </pre>
  * @author Eduardo Macarron
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface MappedJdbcTypes {
+  /**
+   * Returns jdbc types to map {@link TypeHandler}.
+   *
+   * @return jdbc types
+   */
   JdbcType[] value();
+
+  /**
+   * Returns whether map to jdbc null type.
+   *
+   * @return {@code true} if map, {@code false} if otherwise
+   */
   boolean includeNullJdbcType() default false;
 }

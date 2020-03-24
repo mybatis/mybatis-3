@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -95,45 +95,45 @@
 
     <select id="selectBlogUsingConstructorWithResultMap" parameterType="int"
             resultMap="blogUsingConstructorWithResultMap">
-      select b.*, 
-      	a.id as author_id, 
-      	a.username as author_username, 
-      	a.password as author_password, 
-      	a.email as author_email, 
-      	a.bio as author_bio, 
-      	a.favourite_section 
-      from Blog b join Author a 
-      on b.author_id = a.id 
+      select b.*,
+        a.id as author_id,
+        a.username as author_username,
+        a.password as author_password,
+        a.email as author_email,
+        a.bio as author_bio,
+        a.favourite_section
+      from Blog b join Author a
+      on b.author_id = a.id
       where b.id = #{id}
     </select>
 
     <select id="selectBlogUsingConstructorWithResultMapAndProperties" parameterType="int"
             resultMap="blogUsingConstructorWithResultMapAndProperties">
-      select b.*, 
-      	a.id as author_id, 
-      	a.username as author_username, 
-      	a.password as author_password, 
-      	a.email as author_email, 
-      	a.bio as author_bio, 
-      	a.favourite_section 
-      from Blog b join Author a 
-      on b.author_id = a.id 
+      select b.*,
+        a.id as author_id,
+        a.username as author_username,
+        a.password as author_password,
+        a.email as author_email,
+        a.bio as author_bio,
+        a.favourite_section
+      from Blog b join Author a
+      on b.author_id = a.id
       where b.id = #{id}
     </select>
-    
+
     <select id="selectBlogUsingConstructorWithResultMapCollection" parameterType="int"
             resultMap="blogUsingConstructorWithResultMapCollection">
       select b.*, p.*,
-      	a.id as author_id, 
-      	a.username as author_username, 
-      	a.password as author_password, 
-      	a.email as author_email, 
-      	a.bio as author_bio, 
-      	a.favourite_section 
-      from Blog b 
+        a.id as author_id,
+        a.username as author_username,
+        a.password as author_password,
+        a.email as author_email,
+        a.bio as author_bio,
+        a.favourite_section
+      from Blog b
           join Author a on b.author_id = a.id
-          join Post p on b.id = p.blog_id 
+          join Post p on b.id = p.blog_id
       where b.id = #{id}
     </select>
-    
+
 </mapper>

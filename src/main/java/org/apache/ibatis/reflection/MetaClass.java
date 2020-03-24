@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -31,11 +31,11 @@ import org.apache.ibatis.reflection.property.PropertyTokenizer;
  */
 public class MetaClass {
 
-  private ReflectorFactory reflectorFactory;
-  private Reflector reflector;
+  private final ReflectorFactory reflectorFactory;
+  private final Reflector reflector;
 
   private MetaClass(Class<?> type, ReflectorFactory reflectorFactory) {
-	this.reflectorFactory = reflectorFactory;
+    this.reflectorFactory = reflectorFactory;
     this.reflector = reflectorFactory.findForClass(type);
   }
 
@@ -116,18 +116,18 @@ public class MetaClass {
     try {
       Invoker invoker = reflector.getGetInvoker(propertyName);
       if (invoker instanceof MethodInvoker) {
-        Field _method = MethodInvoker.class.getDeclaredField("method");
-        _method.setAccessible(true);
-        Method method = (Method) _method.get(invoker);
+        Field declaredMethod = MethodInvoker.class.getDeclaredField("method");
+        declaredMethod.setAccessible(true);
+        Method method = (Method) declaredMethod.get(invoker);
         return TypeParameterResolver.resolveReturnType(method, reflector.getType());
       } else if (invoker instanceof GetFieldInvoker) {
-        Field _field = GetFieldInvoker.class.getDeclaredField("field");
-        _field.setAccessible(true);
-        Field field = (Field) _field.get(invoker);
+        Field declaredField = GetFieldInvoker.class.getDeclaredField("field");
+        declaredField.setAccessible(true);
+        Field field = (Field) declaredField.get(invoker);
         return TypeParameterResolver.resolveFieldType(field, reflector.getType());
       }
-    } catch (NoSuchFieldException e) {
-    } catch (IllegalAccessException e) {
+    } catch (NoSuchFieldException | IllegalAccessException e) {
+      // Ignored
     }
     return null;
   }

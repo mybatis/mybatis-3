@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2020 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -60,18 +60,18 @@
       /web.xml</pre>
   <p>これは推奨されるディレクトリ構造であって必須ではありませんが、一般的なディレクトリ構造を使っておけば他の開発者からは感謝されるはずです。</p>
   <p>尚、この章のサンプルでは、上記のディレクトリ構造を前提にしています。</p>
-  </subsection>  
+  </subsection>
 
   <subsection name="SqlSessions" id="sqlSessions">
   <p>MyBatis の最も良く使う Java インターフェイスは SqlSession です。コマンドの実行、Mapper の取得、トランザクション管理はこのインターフェイスを通して行うことができます。SqlSession については、後で詳しく説明しますが、その前に SqlSession のインスタンスを取得する方法について学ばなくてはなりません。SqlSession は SqlSessionFactory のインスタンスによって作成されます。SqlSessionFactory には、様々な方法で SqlSession を作成するメソッドが含まれています。SqlSessionFactory 自身は SqlSessionFactoryBuilder によって作られますが、作成される SqlSessionFactory は XML、アノテーション、ハードコードされた Java コンフィグレーションのいずれかの方法で設定することができます。</p>
   <p><span class="label important">NOTE</span> MyBatis を Spring や Guice といった依存性注入（DI = Dependency Injection）フレームワークと組み合わせて使う場合、SqlSession は DI フレームワークによって作成・注入されます。SqlSessionFactoryBuilder や SqlSessionFactory を使う必要はありませんので、SqlSession の章まで飛ばして構いません。DIフレームワークとの組み合わせについては MyBatis-Spring および MyBatis-Guice のマニュアルを参照してください。</p>
   <h4>SqlSessionFactoryBuilder</h4>
-  <p>SqlSessionFactoryBuilder には５つの build() メソッドがあり、それぞれ異なるソースから SqlSession をビルドすることができるようになっています。</p>
+  <p>SqlSessionFactoryBuilder には５つの build() メソッドがあり、それぞれ異なるソースから SqlSessionFactory をビルドすることができるようになっています。</p>
   <source>SqlSessionFactory build(InputStream inputStream)
 SqlSessionFactory build(InputStream inputStream, String environment)
 SqlSessionFactory build(InputStream inputStream, Properties properties)
 SqlSessionFactory build(InputStream inputStream, String env, Properties props)
-SqlSessionFactory build(Configuration config)</source>  
+SqlSessionFactory build(Configuration config)</source>
 
   <p>
 良く使うのは、InputStream のインスタンスを引数に取って XML ファイル（具体的には mybatis-config.xml ファイル）を読み込む最初の４つのメソッドです。オプションの引数は environment と properties です。environment は、データソースやトランザクションマネージャーも含めて、どの environment を読み込むかを決定します。例：</p>
@@ -89,7 +89,7 @@ SqlSessionFactory build(Configuration config)</source>
     <dataSource type="JNDI">
         ...
   </environment>
-</environments>]]></source>  
+</environments>]]></source>
   <p>引数として environment を取る build メソッドを呼び出した場合、MyBatis はその environment の設定を使ってビルドを実行します。未定義の environment を指定した場合はエラーが発生します。引数に environment を取らない build メソッドを呼び出した場合はデフォルトの environment が使用されます（上記の例では default="development" と指定されています）。</p>
   <p>引数に properties のインスタンスを取る build メソッドを実行した場合、これらのプロパティは設定内でアクセスできるように読み込まれます。設定内では ${propName} のように記述することでプロパティを参照することができます。</p>
   <p>このドキュメントの前の方で説明しましたが、プロパティは mybatis-config.xml ファイルからも参照される可能性があるので、優先順位について理解しておくことが重要です。再掲しておきます。</p>
@@ -104,13 +104,13 @@ SqlSessionFactory build(Configuration config)</source>
   <p>従って、メソッド引数として渡されたプロパティが最も優先度が高く、次に resource/url 属性、最も優先度が低いのは properties 要素のボディで指定された値ということになります。</p>
   <hr/>
 
-  <p>まとめると、最初の４つの build メソッドはだいたい同じで、必要に応じて environment と properties をオーバーライドできるメソッドを選択することができます。mybatis-config.xml ファイルから SqlSessionFactory をビルドする例を挙げておきます。</p>  
+  <p>まとめると、最初の４つの build メソッドはだいたい同じで、必要に応じて environment と properties をオーバーライドできるメソッドを選択することができます。mybatis-config.xml ファイルから SqlSessionFactory をビルドする例を挙げておきます。</p>
 
   <source>String <strong>resource</strong> = "org/mybatis/builder/mybatis-config.xml";
 InputStream <strong>inputStream</strong> = Resources.getResourceAsStream(resource);
 SqlSessionFactoryBuilder <strong>builder</strong> = new SqlSessionFactoryBuilder();
-SqlSessionFactory <strong>factory</strong> = builder.build(inputStream);</source>  
-  
+SqlSessionFactory <strong>factory</strong> = builder.build(inputStream);</source>
+
   <p>ここでは org.apache.ibatis.io パッケージに含まれている Resources ユーティリティクラスを利用しています。このクラスは名前からも分かるように、クラスパスやファイルシステムあるいはウェブ上の URL からリソースを読み込むためのメソッドを提供します。分かりやすい実装なので、ソースを読めばどのようなメソッドが用意されているか分かると思いますが、シグネチャだけリストアップしておきます。</p>
   <source>URL getResourceURL(String resource)
 URL getResourceURL(ClassLoader loader, String resource)
@@ -159,7 +159,7 @@ SqlSessionFactory factory = builder.build(configuration);</source>
 SqlSession openSession(boolean autoCommit)
 SqlSession openSession(Connection connection)
 SqlSession openSession(TransactionIsolationLevel level)
-SqlSession openSession(ExecutorType execType,TransactionIsolationLevel level)
+SqlSession openSession(ExecutorType execType, TransactionIsolationLevel level)
 SqlSession openSession(ExecutorType execType)
 SqlSession openSession(ExecutorType execType, boolean autoCommit)
 SqlSession openSession(ExecutorType execType, Connection connection)
@@ -190,6 +190,7 @@ Configuration getConfiguration();</source>
   <p>これらは、SQL Mapper で定義されている SELECT, INSERT, UPDATE, DELETE の各メソッドを実行するためのメソッドです。ほとんど自明ですが、それぞれ引数としてステートメントの ID とステートメントの引数オブジェクト（プリミティブ、JavaBean、POJO、Map のいずれか）を取ります。</p>
   <source><![CDATA[<T> T selectOne(String statement, Object parameter)
 <E> List<E> selectList(String statement, Object parameter)
+<T> Cursor<T> selectCursor(String statement, Object parameter)
 <K,V> Map<K,V> selectMap(String statement, Object parameter, String mapKey)
 int insert(String statement, Object parameter)
 int update(String statement, Object parameter)
@@ -198,13 +199,22 @@ int delete(String statement, Object parameter)]]></source>
   <p>insert, update, delete の各メソッドは、ステートメントの実行によって影響を受けた行数を返します。</p>
   <source><![CDATA[<T> T selectOne(String statement)
 <E> List<E> selectList(String statement)
+<T> Cursor<T> selectCursor(String statement)
 <K,V> Map<K,V> selectMap(String statement, String mapKey)
 int insert(String statement)
 int update(String statement)
 int delete(String statement)]]></source>
 
+  <p>A Cursor offers the same results as a List, except it fetches data lazily using an Iterator.</p>
+  <source><![CDATA[try (Cursor<MyEntity> entities = session.selectCursor(statement, param)) {
+   for (MyEntity entity:entities) {
+      // process one entity
+   }
+}]]></source>
+
   <p>最後に、高度な処理を行うための select メソッドがあります。これらは主に非常に大きなデータセットを扱う場合に、返される行の範囲を限定したり、カスタムの ResultHandler を使って独自に結果処理を行うことができるようになっています。</p>
   <source><![CDATA[<E> List<E> selectList (String statement, Object parameter, RowBounds rowBounds)
+<T> Cursor<T> selectCursor(String statement, Object parameter, RowBounds rowBounds)
 <K,V> Map<K,V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowbounds)
 void select (String statement, Object parameter, ResultHandler<T> handler)
 void select (String statement, Object parameter, RowBounds rowBounds, ResultHandler<T> handler)]]></source>
@@ -216,16 +226,17 @@ RowBounds rowBounds = new RowBounds(offset, limit);</source>
 
   <p>ドライバーによって得られる効果は異なります。SCROLL_SENSITIVE または SCROLL_INSENSITIVE （つまり FORWARD_ONLY 以外）の結果セットタイプを使った時、最も良いパフォーマンスが得られます。</p>
   <p>ResultHandler を渡すと、各行を自由に処理することができます。List に追加したり、Map や Set を作成することもできますし、結果を捨てて合計値のみを返すこともできます。ResultHandler を使えば好きな処理を行うことも可能で、MyBatis 自身も内部的に結果リストを構築するために ResultHandler を利用しています。</p>
-  <p>ResultHandler インターフェイスは非常にシンプルです。</p>  
+  <p>3.4.6 以降では、CALLABLE ステートメントに渡された ResultHandler は、指定されたストアド・プロシージャで宣言されている REFCURSOR 型の OUT 引数全てに対して適用されます。</p>
+  <p>ResultHandler インターフェイスは非常にシンプルです。</p>
   <source><![CDATA[package org.mybatis.executor.result;
 public interface ResultHandler<T> {
   void handleResult(ResultContext<? extends T> context);
 }]]></source>
 
   <p>引数 ResultContext を介して結果オブジェクトにアクセスすることができます。ResultContext#getResultCount() メソッドは作成された結果オブジェクトの数を返します。ResultContext#stop() メソッドを呼び出すと、それ以上結果を読み込まないよう MyBatis に指示します。</p>
-  
+
   <p>ResultHandler を使用する場合に注意すべき点が２つあります。</p>
-  
+
   <ul>
   <li>ResultHandler を引数に取るメソッドから返されるデータはキャッシュされません。</li>
   <li>複雑な ResultMap では複数行のデータがひとつのオブジェクトにマッピングされることもあります。こうした ResultMap を ResultHandler と併用する際、association や collection のデータがマッピングされる前の状態のオブジェクトが渡される場合があります。</li>
@@ -255,19 +266,7 @@ void rollback(boolean force)</source>
   <h5>確実に SqlSession をクローズする</h5>
   <source>void close()</source>
   <p>最も重要なのは、オープンした session は必ずクローズする必要があるということです。そのためには次のようなパターンでコードを書くのが最も確実です。</p>
-  <source>SqlSession session = sqlSessionFactory.openSession();
-try {
-    // following 3 lines pseudocode for "doing some work"
-    session.insert(...);
-    session.update(...);
-    session.delete(...);
-    session.commit();
-} finally {
-    session.close();
-}</source>
-  <p>MyBatis 3.2 からは Java 1.7 で導入された try-with-resources 構文を使ってクローズ処理を省略することもできます。</p>
-  <source>
-try (SqlSession session = sqlSessionFactory.openSession()) {
+  <source>try (SqlSession session = sqlSessionFactory.openSession()) {
     // following 3 lines pseudocode for "doing some work"
     session.insert(...);
     session.update(...);
@@ -278,12 +277,12 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
   <source>Configuration getConfiguration()</source>
 
   <h5>Mapper を使う</h5>
-  <source><![CDATA[<T> T getMapper(Class<T> type)]]></source>  
+  <source><![CDATA[<T> T getMapper(Class<T> type)]]></source>
   <p>SqlSession に用意されている insert, update, delete, select などのメソッドは確かに強力ですが、かなり冗長で、型に安全でないため IDE やユニットテストの機能をフルに活用することができません。既にスタートガイドの章で Mapper を使う例が出てきました。</p>
   <p>マップドステートメントを実行する際は Mapper クラスを使った方法がより一般的です。Mapper クラスは SqlSession のメソッドに対応したメソッド定義を持つインターフェイスです。次の例は、Mapper クラスで定義されているメソッドが SqlSession のメソッドとどのように対応しているかを表しています。</p>
   <source><![CDATA[public interface AuthorMapper {
   // (Author) selectOne("selectAuthor",5);
-  Author selectAuthor(int id); 
+  Author selectAuthor(int id);
   // (List<Author>) selectList(“selectAuthors”)
   List<Author> selectAuthors();
   // (Map<Integer,Author>) selectMap("selectAuthors", "id")
@@ -296,7 +295,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
   // delete("deleteAuthor",5)
   int deleteAuthor(int id);
 }]]></source>
-  <p>基本的に、それぞれの Mapper メソッドのシグネチャは、対応する SqlSession のメソッドのシグネチャからステートメントの ID を指定する String 型の引数を除いたものになっています。ステートメントの ID は引数で指定するのではなくメソッド名から取得されます。</p> 
+  <p>基本的に、それぞれの Mapper メソッドのシグネチャは、対応する SqlSession のメソッドのシグネチャからステートメントの ID を指定する String 型の引数を除いたものになっています。ステートメントの ID は引数で指定するのではなくメソッド名から取得されます。</p>
   <p>戻り値の型について補足しておくと、クエリの結果が単一オブジェクトの場合はその型と一致している必要があり、複数の場合は配列またはコレクションになります。プリミティブ、Map, POJO, JavaBean など通常の型は一通り指定可能です。</p>
   <p><span class="label important">NOTE</span> Mapper インターフェイスは、他のインターフェイスを実装したり、他のクラスを継承する必要はありません。定義されているメソッドのシグネチャから対応するステートメントを識別できるようになっていれば OK です。</p>
   <p><span class="label important">NOTE</span> Mapper インターフェイスは他のインターフェイスを継承することができます。Mapper インターフェイスを XML と組み合わせて使う場合は、ステートメントが正しいネームスペースに含まれるように注意してください。また唯一の制限として、継承関係にある複数のインターフェイスに同じシグネチャを持つメソッドを定義することはできません（そもそも良い考えではありません）。</p>
@@ -334,7 +333,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>Class</code></td>
         <td><code>&lt;cacheRef&gt;</code></td>
         <td>
-          別のネームスペースに対して定義されているキャッシュの設定を参照します。 属性: <code>value</code>, <code>name</code>
+          別のネームスペースに対して定義されているキャッシュの設定を参照します。XML マッパーで宣言されているキャッシュは、namespace に同一 FQCN が指定されていても独立したキャッシュとして扱われます。属性: <code>value</code>, <code>name</code>
           このアノテーションを使用する場合は、<code>value</code>または<code>name</code>属性のどちらかを指定する必要があります。
           <code>value</code>属性にはネームスペースを示すJava型(ネームスペース名は指定したJava型のFQCNになる)を、
           <code>name</code>属性(この属性は3.4.2以降で利用可能)にはネームスペースを示す名前を指定します。
@@ -357,7 +356,8 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         </td>
         <td>ConstructorArgs に含まれる個々のコンストラクター引数です。属性: <code>id</code>,
         <code>column</code>, <code>javaType</code>, <code>jdbcType</code>, <code>typeHandler</code>, <code>select</code>,
-        <code>resultMap</code>. id は真偽値で、指定したプロパティがオブジェクトをユニークに識別できる値であることを表します。この働きは XML 要素の <code>&lt;idArg&gt;</code> に相当します。</td>
+        <code>resultMap</code>. id は真偽値で、指定したプロパティがオブジェクトをユニークに識別できる値であることを表します。この働きは XML 要素の <code>&lt;idArg&gt;</code> に相当します。
+        3.5.4以降では、繰り返し可能な注釈として使用することができます。</td>
       </tr>
       <tr>
         <td><code>@TypeDiscriminator</code></td>
@@ -390,22 +390,29 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         </td>
         <td>ある結果列とプロパティまたはフィールドのマッピング情報を定義します。属性: <code>id</code>, <code>column</code>,
         <code>property</code>, <code>javaType</code>, <code>jdbcType</code>, <code>typeHandler</code>, <code>one</code>,
-        <code>many</code>. id は真偽値で、そのプロパティがオブジェクトの比較に使うよう指示します（XML マッピングにおける id 要素とほぼ同じです）。one は XML における association 要素に、many は collection 要素に相当します（クラス名のコンフリクトを避けるため異なる名称が使われています）。</td>
+        <code>many</code>. id は真偽値で、そのプロパティがオブジェクトの比較に使うよう指示します（XML マッピングにおける id 要素とほぼ同じです）。one は XML における association 要素に、many は collection 要素に相当します（クラス名のコンフリクトを避けるため異なる名称が使われています）。
+        3.5.4以降では、繰り返し可能な注釈として使用することができます。</td>
       </tr>
       <tr>
         <td><code>@One</code></td>
         <td>N/A</td>
         <td><code>&lt;association&gt;</code></td>
-        <td>複雑型のプロパティのマッピング情報を定義します。属性: <code>select</code>, <code>fetchType</code>. select は適切な型を読み込むことができるマップドステートメント（Mapper メソッド）の完全修飾名です。
+        <td>複雑型のプロパティのマッピング情報を定義します。属性: <code>select</code>, <code>fetchType</code>, <code>resultMap</code>(3.5.5以降で利用可能), <code>columnPrefix</code>(3.5.5以降で利用可能).
+        select は適切な型を読み込むことができるマップドステートメント（Mapper メソッド）の完全修飾名です。
         fetchType はグローバルな設定 <code>lazyLoadingEnabled</code> をオーバーライドする場合に指定します。
+        resultMap は結果列を単一のコンテナオブジェクト(JavaBeanなど)へマッピングするための結果マップの完全修飾名を指定します。
+        columnPrefix はネストした結果マップで結果列をグループ化するためのカラム名のプレフィックスを指定します。
         <span class="label important">NOTE</span> アノテーション API では結合マッピングがサポートされていません。これは Java アノテーションでは循環参照が許可されないためです。</td>
       </tr>
       <tr>
         <td><code>@Many</code></td>
         <td>N/A</td>
         <td><code>&lt;collection&gt;</code></td>
-        <td>複雑型のプロパティのマッピング情報を定義します。属性: <code>select</code>, <code>fetchType</code>. select は適切な型のコレクションを読み込むことができるマップドステートメント（Mapper メソッド）の完全修飾名です。
+        <td>複雑型のプロパティのマッピング情報を定義します。属性: <code>select</code>, <code>fetchType</code>, <code>resultMap</code>(3.5.5以降で利用可能), <code>columnPrefix</code>(3.5.5以降で利用可能).
+        select は適切な型のコレクションを読み込むことができるマップドステートメント（Mapper メソッド）の完全修飾名です。
         fetchType はグローバルな設定 <code>lazyLoadingEnabled</code> をオーバーライドする場合に指定します。
+        resultMap は結果列をコレクションオブジェクト(JavaBeanのリストなど)へマッピングするための結果マップの完全修飾名を指定します。
+        columnPrefix はネストした結果マップで結果列をグループ化するためのカラム名のプレフィックスを指定します。
         <span class="label important">NOTE</span> アノテーション API では結合マッピングがサポートされていません。これは Java アノテーションでは循環参照が許可されないためです。</td>
       </tr>
       <tr>
@@ -419,9 +426,9 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>Method</code></td>
         <td>マップドステートメントの属性</td>
         <td>このアノテーションを使うと、通常マップドステートメントの属性として指定される多様なスイッチや設定オプションにアクセスすることができます。<code>Options</code> アノテーションによって、各ステートメントのアノテーションを複雑化することなく、一貫したクリーンな方法で設定にアクセスできるよう工夫されています。キー: Attributes:
-        <code>useCache=true</code>, <code>flushCache=FlushCachePolicy.DEFAULT</code>, <code>resultSetType=FORWARD_ONLY</code>,
+        <code>useCache=true</code>, <code>flushCache=FlushCachePolicy.DEFAULT</code>, <code>resultSetType=DEFAULT</code>,
         <code>statementType=PREPARED</code>, <code>fetchSize=-1</code>, <code>timeout=-1</code>,
-        <code>useGeneratedKeys=false</code>, <code>keyProperty="id"</code>, <code>keyColumn=""</code>, <code>resultSets=""</code>.
+        <code>useGeneratedKeys=false</code>, <code>keyProperty=""</code>, <code>keyColumn=""</code>, <code>resultSets=""</code>.
         Java アノテーションを使う場合、値として <code>null</code> を指定することはできないという制限があります。これはどういうことかというと、<code>Options</code> アノテーションを付加したステートメントにはデフォルトのオプションが適用されるということです。予期しない動作を防ぐため、各オプションのデフォルト値を把握しておくようにしてください。<br/><br/>
         <code>keyColumn</code> は特定のデータベース（Oracle や PostgreSQL など）でのみ必須となります。
         <code>keyColumn</code> と <code>keyProperty</code> に対して指定可能な値については、上で出てきた insert ステートメントについての説明を参照してください。</td>
@@ -464,9 +471,16 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
             <li><code>&lt;select&gt;</code></li>
           </ul>
         </td>
-        <td>これらのアノテーションは動的 SQL を生成するためのものです。実行時に指定されたメソッドが呼び出され、メソッドから返された SQL ステートメントが実行されます。マップドステートメントを実行する際、プロバイダーによって指定したクラスのインスタンスが作成され、指定されたメソッドが実行されます。
-        メソッドに引数を渡すことができます。(MyBatis 3.4以降では、複数の引数を渡すことができます)
-        キー: <code>type</code>, <code>method</code>. <code>type</code> にはクラスオブジェクト、<code>method</code> にはメソッド名を指定します。 <span class="label important">NOTE</span> 次の章で、クリーンで可読性の高いコードで動的 SQL を構築するためのクラスについて説明します。
+        <td>これらのアノテーションは動的 SQL を生成するためのものです。実行時に指定されたメソッドが呼び出され、メソッドから返された SQL ステートメントが実行されます (MyBatis 3.4.6以降では、メソッドの返り値として <code>String</code> ではなく <code>CharSequence</code> を指定することができます)。
+        マップドステートメントを実行する際、プロバイダーによって指定したクラスのインスタンスが作成され、指定されたメソッドが実行されます。
+        なお、メソッド引数にはMapperメソッドの引数に渡したオブジェクトに加え、<code>ProviderContext</code>(MyBatis 3.4.5以降で利用可能)を介して「Mapperインタフェースの型」「Mapperメソッド」「データベースID」を渡すことができます。(MyBatis 3.4以降では、複数の引数を渡すことができます)
+        キー: <code>value</code>, <code>type</code>, <code>method</code>.
+        <code>value</code> と <code>type</code> にはクラスオブジェクトを指定します
+        (<code>type</code> は <code>value</code> の別名で、どちらか一方を指定する必要があります)。
+        <code>method</code> にはメソッド名を指定します
+        (MyBatis 3.5.1以降では、<code>method</code> 属性を省略することができます。その際MyBatisは、<code>ProviderMethodResolver</code> インタフェースを介して対象メソッドの解決を試み、
+        対象メソッドが解決できない場合は、<code>provideSql</code>という名前のメソッドを代替メソッドとして利用します)。
+        <span class="label important">NOTE</span> 次の章で、クリーンで可読性の高いコードで動的 SQL を構築するためのクラスについて説明します。
 </td>
       </tr>
       <tr>
@@ -530,8 +544,8 @@ User getUserById(Integer id);
 
 @Results(id = "companyResults")
 @ConstructorArgs({
-  @Arg(property = "id", column = "cid", id = <strong>true</strong>),
-  @Arg(property = "name", column = "name")
+  @Arg(column = "cid", javaType = Integer.class, id = <strong>true</strong>),
+  @Arg(column = "name", javaType = String.class)
 })
 @Select("select * from company where id = #{id}")
 Company getCompanyById(Integer id);</source>
@@ -541,7 +555,7 @@ Company getCompanyById(Integer id);</source>
 List<User> getUsersByName(String name);
 
 class UserSqlBuilder {
-  public String buildGetUsersByName(final String name) {
+  public static String buildGetUsersByName(final String name) {
     return new SQL(){{
       SELECT("*");
       FROM("users");
@@ -561,7 +575,7 @@ List<User> getUsersByName(
 class UserSqlBuilder {
 
   // @Paramを使わない場合は, Mapperメソッドと同じ引数で定義する必要があります。
-  public String buildGetUsersByName(
+  public static String buildGetUsersByName(
       final String name, final String orderByColumn) {
     return new SQL(){{
       SELECT("*");
@@ -572,7 +586,7 @@ class UserSqlBuilder {
   }
 
   // @Paramを使う場合は, 必要な引数のみ定義することができます。
-  public String buildGetUsersByName(@Param("orderByColumn") final String orderByColumn) {
+  public static String buildGetUsersByName(@Param("orderByColumn") final String orderByColumn) {
     return new SQL(){{
       SELECT("*");
       FROM("users");
@@ -580,6 +594,27 @@ class UserSqlBuilder {
       ORDER_BY(orderByColumn);
     }}.toString();
   }
+}]]></source>
+
+    <p>次のコードは、<code>ProviderMethodResolver</code>(MyBatis 3.5.1以降で利用可能)のデフォルト実装の利用例です。</p>
+    <source><![CDATA[@SelectProvider(UserSqlProvider.class)
+List<User> getUsersByName(String name);
+
+// SQLプロバイダクラスにProviderMethodResolverを実装する
+class UserSqlProvider implements ProviderMethodResolver {
+
+  // デフォルト実装では、マッパーメソッドと同名のメソッドが対象メソッドとして扱われます。
+  public static String getUsersByName(final String name) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      if (name != null) {
+        WHERE("name like #{value} || '%'");
+      }
+      ORDER_BY("id");
+    }}.toString();
+  }
+
 }]]></source>
 
   </subsection>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@
   <section name="SQL dinámico">
   <p>Una de las características más potentes de MyBatis ha sido siempre sus capacidades de SQL dinámico. Si tienes experiencia con JDBC o algún framework similar, entenderás que doloroso es concatenar strings de SQL, asegurándose de que no olvidas espacios u omitir una coma al final de la lista de columnas. El SQL dinámico puede ser realmente doloroso de usar.</p>
   <p>Aunque trabajar con SQL dinámico no va a ser nunca una fiesta, MyBatis ciertamente mejora la situación con un lenguaje de SQL dinámico potente que puede usarse en cualquier mapped statement.</p>
-  <p>Los elementos de SQL dinámico deberían ser familiares a aquel que haya usado JSTL o algún procesador de texto basado en XML. En versiones anteriores de MyBatis había un montón de elementos que conocer y comprender. MyBatis 3 mejora esto y ahora hay algo menos de la mitad de esos elementos con los que trabajar. MyBatis emplea potentes expresiones OGNL para eliminar la necesidad del resto de los elementos:</p>  
+  <p>Los elementos de SQL dinámico deberían ser familiares a aquel que haya usado JSTL o algún procesador de texto basado en XML. En versiones anteriores de MyBatis había un montón de elementos que conocer y comprender. MyBatis 3 mejora esto y ahora hay algo menos de la mitad de esos elementos con los que trabajar. MyBatis emplea potentes expresiones OGNL para eliminar la necesidad del resto de los elementos:</p>
   <ul>
     <li>if</li>
     <li>choose (when, otherwise)</li>
@@ -38,19 +38,19 @@
   </ul>
   <subsection name="if" id="if">
   <p>La tarea más frecuente en SQL dinámico es incluir un trozo de la clausula where condicionalmente. Por ejemplo:</p>
-  <source><![CDATA[<select id="findActiveBlogWithTitleLike" 
+  <source><![CDATA[<select id="findActiveBlogWithTitleLike"
      resultType="Blog">
-  SELECT * FROM BLOG 
-  WHERE state = ‘ACTIVE’ 
+  SELECT * FROM BLOG
+  WHERE state = ‘ACTIVE’
   <if test="title != null">
     AND title like #{title}
   </if>
-</select>]]></source>  
+</select>]]></source>
   <p>Este statement proporciona una funcionalidad de búsqueda de texto. Si no se pasa ningún título, entonces se retornan todos los Blogs activos. Pero si se pasa un título se buscará un título como el pasado (para los perspicaces, sí, en este caso tu parámetro debe incluir el carácter de comodín).</p>
   <p>¿Y cómo hacemos si debemos buscar opcionalmente por título o autor? Primeramente, yo cambiaría el nombre del statement para que tenga algo más de sentido. Y luego añadir otra condición.</p>
-  <source><![CDATA[<select id="findActiveBlogLike" 
+  <source><![CDATA[<select id="findActiveBlogLike"
      resultType="Blog">
-  SELECT * FROM BLOG WHERE state = ‘ACTIVE’ 
+  SELECT * FROM BLOG WHERE state = ‘ACTIVE’
   <if test="title != null">
     AND title like #{title}
   </if>
@@ -62,7 +62,7 @@
   <subsection name="choose, when, otherwise" id="chooseWhenOtherwise">
   <p>En ocasiones no queremos usar una condición sino elegir una de entre varias opciones. De forma similar al switch  de Java, MyBatis ofrece el elemento choose.</p>
   <p>Usemos el ejemplo anterior, pero ahora vamos a buscar solamente por título si se ha proporcionado un título y por autor si se ha proporcionado un autor. Si  no se proporciona ninguno devolvemos una lista de Blogs destacados (quizá una lista seleccionada por los administradores en lugar de una gran lista de blogs sin sentido).</p>
-  <source><![CDATA[<select id="findActiveBlogLike" 
+  <source><![CDATA[<select id="findActiveBlogLike"
      resultType="Blog">
   SELECT * FROM BLOG WHERE state = ‘ACTIVE’
   <choose>
@@ -80,13 +80,13 @@
   </subsection>
   <subsection name="trim, where, set" id="trimWhereSet">
   <p>En los ejemplos anteriores se ha sorteado intencionadamente un notorio problema del SQL dinámico. Imagina lo que sucedería si volvemos a nuestro ejemplo del “if”, pero esta vez, hacemos que “ACTIVE = 1” sea también una condición dinámica.</p>
-  <source><![CDATA[<select id="findActiveBlogLike" 
+  <source><![CDATA[<select id="findActiveBlogLike"
      resultType="Blog">
-  SELECT * FROM BLOG 
-  WHERE 
+  SELECT * FROM BLOG
+  WHERE
   <if test="state != null">
     state = #{state}
-  </if> 
+  </if>
   <if test="title != null">
     AND title like #{title}
   </if>
@@ -95,21 +95,21 @@
   </if>
 </select>]]></source>
   <p>¿Qué sucede si no se cumple ninguna condición? Acabarías con una sentencia SQL con este aspecto:</p>
-  <source><![CDATA[SELECT * FROM BLOG 
+  <source><![CDATA[SELECT * FROM BLOG
 WHERE]]></source>
   <p>Y eso fallará. ¿Y qué sucede si se cumple la segunda condición? Acabarías con una sentencia SQL con este aspecto:</p>
-  <source><![CDATA[SELECT * FROM BLOG 
-WHERE 
+  <source><![CDATA[SELECT * FROM BLOG
+WHERE
 AND title like ‘someTitle’]]></source>
   <p>Y eso también fallará. Este problema no se resuelve fácil con condicionales, y si alguna vez tienes que hacerlo, posiblemente no quieras repetirlo nunca más.</p>
   <p>MyBatis tiene una respuesta sencilla que funcionará en el 90% de los casos. Y en los casos en los que no funciona puedes personalizarlo para hacerlo funcionar. Con un cambio simple, todo funciona correctamente:</p>
-  <source><![CDATA[<select id="findActiveBlogLike" 
+  <source><![CDATA[<select id="findActiveBlogLike"
      resultType="Blog">
-  SELECT * FROM BLOG 
-  <where> 
+  SELECT * FROM BLOG
+  <where>
     <if test="state != null">
          state = #{state}
-    </if> 
+    </if>
     <if test="title != null">
         AND title like #{title}
     </if>
@@ -117,12 +117,12 @@ AND title like ‘someTitle’]]></source>
         AND author_name like #{author.name}
     </if>
   </where>
-</select>]]></source> 
+</select>]]></source>
   <p>El elemento where sabe que debe insertar la “WHERE” solo si los tags internos devuelven algún contenido. Más aun, si el contenido comienza con “AND” o “OR”, sabe cómo eliminarlo.</p>
   <p>Si el elemento where no se comporta exactamente como te gustaría, lo puedes personalizar definiendo tu propio elemento trim. Por ejemplo, el trim equivalente al elemento where es:</p>
   <source><![CDATA[<trim prefix="WHERE" prefixOverrides="AND |OR ">
-  ... 
-</trim>]]></source>  
+  ...
+</trim>]]></source>
   <p>El atributo prefixOverrides acepta una lista de textos delimitados pro el carácter “| “ donde el espacio en blanco es relevante. El resultado es que se elimina cualquier cosa que se haya especificado en el atributo prefixOverrides, y que se inserta todo lo incluido en el atributo with.</p>
   <p>Hay una solución similar para updates dinámicos llamada set. El elemento set se pude usar para incluir dinámicamente columnas para modificar y dejar fuera las demás. Por ejemplo:</p>
   <source><![CDATA[<update id="updateAuthorIfNecessary">
@@ -135,7 +135,7 @@ AND title like ‘someTitle’]]></source>
     </set>
   where id=#{id}
 </update>]]></source>
-  <p>En este caso, el elemento set  prefijará dinámicamente el valor SET y además eliminará todas las comas sobrantes que pudieran quedar tras las asignaciones de valor después de que se hayan aplicado las condiciones.</p>  
+  <p>En este caso, el elemento set  prefijará dinámicamente el valor SET y además eliminará todas las comas sobrantes que pudieran quedar tras las asignaciones de valor después de que se hayan aplicado las condiciones.</p>
   <p>Si tienes curiosidad de qué aspecto tendría el elemento trim equivalente, aquí lo tienes:</p>
   <source><![CDATA[<trim prefix="SET" suffixOverrides=",">
   ...
@@ -156,7 +156,22 @@ AND title like ‘someTitle’]]></source>
   <p>El elemento foreach es muy potente, permite especificar una colección y declarar variables elemento e índice que pueden usarse dentro del cuerpo del elemento. Permite también abrir y cerrar strings y añadir un separador entre las iteraciones. Este elemento es inteligente en tanto en cuanto no añade separadores extra accidentalmente.</p>
   <p><span class="label important">NOTA</span> You can pass any Iterable object (for example List, Set, etc.), as well as any Map or Array object to foreach as collection parameter. When using an Iterable or Array, index will be the number of current iteration and value item will be the element retrieved in this iteration. When using a Map (or Collection of Map.Entry objects), index will be the key object and item will be the value object.</p>
   <p>Esto finaliza la discusión sobre la configuración XML y los ficheros de mapeo XML. En la sección siguiente hablaremos del API Java en detalle, de forma que puedas obtener el máximo rendimiento de los mapeos que has creado.</p>
-  </subsection>  
+  </subsection>
+  <subsection name="script">
+  <p>For using dynamic SQL in annotated mapper class, <em>script</em> element can be used. For example:</p>
+  <source><![CDATA[
+    @Update({"<script>",
+      "update Author",
+      "  <set>",
+      "    <if test='username != null'>username=#{username},</if>",
+      "    <if test='password != null'>password=#{password},</if>",
+      "    <if test='email != null'>email=#{email},</if>",
+      "    <if test='bio != null'>bio=#{bio}</if>",
+      "  </set>",
+      "where id=#{id}",
+      "</script>"})
+    void updateAuthorValues(Author author);]]></source>
+  </subsection>
   <subsection name="bind">
   <p>El elemento <code>bind</code> te permite crear una variable a partir de una expresion OGNL y asociarla al contexto. Por ejemplo:</p>
   <source><![CDATA[
@@ -190,7 +205,7 @@ AND title like ‘someTitle’]]></source>
   ParameterHandler createParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql);
   SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType);
   SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType);
-}]]></source>    
+}]]></source>
     <p>Una vez tienes tu driver de lenguaje puedes puede hacer que sea el de uso por defecto estableciéndolo en el fichero mybatis-config.xml:</p>
   <source><![CDATA[<typeAliases>
   <typeAlias type="org.sample.MyLanguageDriver" alias="myLanguage"/>
@@ -198,8 +213,8 @@ AND title like ‘someTitle’]]></source>
 <settings>
   <setting name="defaultScriptingLanguage" value="myLanguage"/>
 </settings>
-]]></source>    
-    <p>En lugar de cambiar el valor por defecto, puedes indicar el lenguaje para un statement específico 
+]]></source>
+    <p>En lugar de cambiar el valor por defecto, puedes indicar el lenguaje para un statement específico
     añadiendo el atributo <code>lang</code> de la siguiente forma:
     </p>
   <source><![CDATA[<select id="selectBlog" lang="myLanguage">
@@ -214,9 +229,9 @@ AND title like ‘someTitle’]]></source>
 
     <p><span class="label important">NOTA</span> Puedes utilizar Apache Velocity como lenguaje dinámico. Echa un vistazo al proyecto MyBatis-Velocity para conocer los detalles.</p>
 
-    <p>Todos los tags que has visto en las secciones previas se proporcionan por el lenguaje por defecto de MyBatis cuyo driver es 
+    <p>Todos los tags que has visto en las secciones previas se proporcionan por el lenguaje por defecto de MyBatis cuyo driver es
     <code>org.apache.ibatis.scripting.xmltags.XmlLanguageDriver</code> que tiene un alias llamado <code>xml</code>.</p>
-	</subsection>
+  </subsection>
   </section>
   </body>
 </document>

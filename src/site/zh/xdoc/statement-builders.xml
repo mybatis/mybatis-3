@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2020 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -20,15 +20,15 @@
   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
 
   <properties>
-    <title>MyBatis 3 | SQL语句构建器</title>
+    <title>MyBatis 3 | SQL 语句构建器</title>
     <author email="clinton.begin@gmail.com">Clinton Begin</author>
     <author email="nanlei1987@gmail.com">Nan Lei</author>
   </properties>
 
   <body>
-    <section name="SQL语句构建器类">
+    <section name="SQL 语句构建器">
       <subsection name="问题">
-        <p>Java程序员面对的最痛苦的事情之一就是在Java代码中嵌入SQL语句。这么来做通常是由于SQL语句需要动态来生成-否则可以将它们放到外部文件或者存储过程中。正如你已经看到的那样，MyBatis在它的XML映射特性中有一个强大的动态SQL生成方案。但有时在Java代码内部创建SQL语句也是必要的。此时，MyBatis有另外一个特性可以帮到你，在减少典型的加号,引号,新行,格式化问题和嵌入条件来处理多余的逗号或 AND 连接词之前。事实上，在Java代码中来动态生成SQL代码就是一场噩梦。例如：
+        <p>Java 程序员面对的最痛苦的事情之一就是在 Java 代码中嵌入 SQL 语句。这通常是因为需要动态生成 SQL 语句，不然我们可以将它们放到外部文件或者存储过程中。如你所见，MyBatis 在 XML 映射中具备强大的 SQL 动态生成能力。但有时，我们还是需要在 Java 代码里构建 SQL 语句。此时，MyBatis 有另外一个特性可以帮到你，让你从处理典型问题中解放出来，比如加号、引号、换行、格式化问题、嵌入条件的逗号管理及 AND 连接。确实，在 Java 代码中动态生成 SQL 代码真的就是一场噩梦。例如：
         </p>
 
         <source><![CDATA[
@@ -45,8 +45,8 @@ String sql = "SELECT P.ID, P.USERNAME, P.PASSWORD, P.FULL_NAME, "
 "ORDER BY P.ID, P.FULL_NAME";
 ]]></source>
       </subsection>
-      <subsection name="The Solution">
-      <p>MyBatis 3提供了方便的工具类来帮助解决该问题。使用SQL类，简单地创建一个实例来调用方法生成SQL语句。上面示例中的问题就像重写SQL类那样：
+      <subsection name="解决方案">
+      <p>MyBatis 3 提供了方便的工具类来帮助解决此问题。借助 SQL 类，我们只需要简单地创建一个实例，并调用它的方法即可生成 SQL 语句。让我们来用 SQL 类重写上面的例子：
       </p>
 
       <source><![CDATA[
@@ -72,17 +72,17 @@ private String selectPersonSql() {
 }
 ]]></source>
 
-      <p>该例中有什么特殊之处？当你仔细看时，那不用担心偶然间重复出现的"AND"关键字，或者在"WHERE"和"AND"之间的选择，抑或什么都不选。该SQL类非常注意"WHERE"应该出现在何处，哪里又应该使用"AND"，还有所有的字符串链接。
+      <p>这个例子有什么特别之处吗？仔细看一下你会发现，你不用担心可能会重复出现的 "AND" 关键字，或者要做出用 "WHERE" 拼接还是 "AND" 拼接还是不用拼接的选择。SQL 类已经为你处理了哪里应该插入 "WHERE"、哪里应该使用 "AND" 的问题，并帮你完成所有的字符串拼接工作。
         </p>
 
       </subsection>
 
-      <subsection name="SQL类">
+      <subsection name="SQL 类">
 
-        <p>这里给出一些示例：</p>
+        <p>这里有一些示例：</p>
 
         <source><![CDATA[
-// Anonymous inner class
+// 匿名内部类风格
 public String deletePersonSql() {
   return new SQL() {{
     DELETE_FROM("PERSON");
@@ -90,7 +90,7 @@ public String deletePersonSql() {
   }}.toString();
 }
 
-// Builder / Fluent style
+// Builder / Fluent 风格
 public String insertPersonSql() {
   String sql = new SQL()
     .INSERT_INTO("PERSON")
@@ -100,7 +100,7 @@ public String insertPersonSql() {
   return sql;
 }
 
-// With conditionals (note the final parameters, required for the anonymous inner class to access them)
+// 动态条件（注意参数需要使用 final 修饰，以便匿名内部类对它们进行访问）
 public String selectPersonLike(final String id, final String firstName, final String lastName) {
   return new SQL() {{
     SELECT("P.ID, P.USERNAME, P.PASSWORD, P.FIRST_NAME, P.LAST_NAME");
@@ -161,11 +161,8 @@ public String updatePersonSql() {
                   </li>
                 </ul>
               </td>
-              <td>开始或插入到
-                <code>SELECT</code>子句。
-                可以被多次调用，参数也会添加到
-                <code>SELECT</code>子句。
-                参数通常使用逗号分隔的列名和别名列表，但也可以是数据库驱动程序接受的任意类型。
+              <td>开始新的或追加到已有的 <code>SELECT</code>子句。可以被多次调用，参数会被追加到 <code>SELECT</code> 子句。
+                 参数通常使用逗号分隔的列名和别名列表，但也可以是数据库驱动程序接受的任意参数。
               </td>
             </tr>
             <tr>
@@ -179,13 +176,8 @@ public String updatePersonSql() {
                   </li>
                 </ul>
               </td>
-              <td>开始或插入到
-                <code>SELECT</code>子句，
-                也可以插入
-                <code>DISTINCT</code>关键字到生成的查询语句中。
-                可以被多次调用，参数也会添加到
-                <code>SELECT</code>子句。
-                 参数通常使用逗号分隔的列名和别名列表，但也可以是数据库驱动程序接受的任意类型。
+              <td>开始新的或追加到已有的 <code>SELECT</code>子句，并添加 <code>DISTINCT</code> 关键字到生成的查询中。可以被多次调用，参数会被追加到 <code>SELECT</code> 子句。
+                 参数通常使用逗号分隔的列名和别名列表，但也可以是数据库驱动程序接受的任意参数。
               </td>
             </tr>
             <tr>
@@ -199,11 +191,9 @@ public String updatePersonSql() {
                   </li>
                 </ul>
               </td>
-              <td>开始或插入到
+              <td>开始新的或追加到已有的 <code>FROM</code>子句。可以被多次调用，参数会被追加到
                 <code>FROM</code>子句。
-                可以被多次调用，参数也会添加到
-                <code>FROM</code>子句。
-                参数通常是表名或别名，也可以是数据库驱动程序接受的任意类型。
+                参数通常是一个表名或别名，也可以是数据库驱动程序接受的任意参数。
               </td>
             </tr>
             <tr>
@@ -235,9 +225,8 @@ public String updatePersonSql() {
                   </li>
                 </ul>
               </td>
-              <td>基于调用的方法，添加新的合适类型的
-                <code>JOIN</code>子句。
-				参数可以包含由列命和join on条件组合成标准的join。
+              <td>基于调用的方法，添加新的合适类型的 <code>JOIN</code> 子句。
+				参数可以包含一个由列和连接条件构成的标准连接。
               </td>
             </tr>
             <tr>
@@ -251,34 +240,23 @@ public String updatePersonSql() {
                   </li>
                 </ul>
               </td>
-              <td>插入新的
-                <code>WHERE</code>子句条件，
-                由<code>AND</code>链接。可以多次被调用，每次都由<code>AND</code>来链接新条件。使用
-                <code>OR()</code>
-                来分隔<code>OR</code>。
+              <td>插入新的 <code>WHERE</code> 子句条件，并使用 <code>AND</code> 拼接。可以被多次调用，对于每一次调用产生的新条件，会使用 <code>AND</code> 拼接起来。要使用 <code>OR</code> 分隔，请使用 <code>OR()</code>。
               </td>
             </tr>
             <tr>
               <td>
                 <code>OR()</code>
               </td>
-              <td>使用<code>OR</code>来分隔当前的
-                <code>WHERE</code>子句条件。
-				可以被多次调用，但在一行中多次调用或生成不稳定的<code>SQL</code>。
+              <td>使用 <code>OR</code> 来分隔当前的 <code>WHERE</code> 子句条件。
+				可以被多次调用，但在一行中多次调用会生成错误的 <code>SQL</code>。
               </td>
             </tr>
             <tr>
               <td>
                 <code>AND()</code>
               </td>
-              <td>使用<code>AND</code>来分隔当前的
-                <code>WHERE</code>子句条件。
-				可以被多次调用，但在一行中多次调用或生成不稳定的<code>SQL</code>。因为
-                <code>WHERE</code>
-                和
-                <code>HAVING</code>
-                二者都会自动链接
-                <code>AND</code>, 这是非常罕见的方法，只是为了完整性才被使用。
+              <td>使用 <code>AND</code> 来分隔当前的 <code>WHERE</code>子句条件。
+				可以被多次调用，但在一行中多次调用会生成错误的 <code>SQL</code>。由于 <code>WHERE</code> 和 <code>HAVING</code>都会自动使用 <code>AND</code> 拼接, 因此这个方法并不常用，只是为了完整性才被定义出来。
               </td>
             </tr>
             <tr>
@@ -292,9 +270,7 @@ public String updatePersonSql() {
                   </li>
                 </ul>
               </td>
-              <td>插入新的
-                <code>GROUP BY</code>子句元素，由逗号连接。
-				可以被多次调用，每次都由逗号连接新的条件。
+              <td>追加新的 <code>GROUP BY</code> 子句，使用逗号拼接。可以被多次调用，每次调用都会使用逗号将新的条件拼接起来。
               </td>
             </tr>
             <tr>
@@ -308,11 +284,7 @@ public String updatePersonSql() {
                   </li>
                 </ul>
               </td>
-              <td>插入新的
-                <code>HAVING</code>子句条件。
-                由AND连接。可以被多次调用，每次都由<code>AND</code>来连接新的条件。使用
-                <code>OR()</code>
-                来分隔<code>OR</code>.
+              <td>追加新的 <code>HAVING</code> 子句。使用 AND 拼接。可以被多次调用，每次调用都使用<code>AND</code>来拼接新的条件。要使用 <code>OR</code> 分隔，请使用 <code>OR()</code>。
               </td>
             </tr>
             <tr>
@@ -326,23 +298,89 @@ public String updatePersonSql() {
                   </li>
                 </ul>
               </td>
-              <td>插入新的
-                <code>ORDER BY</code>子句元素，
-                由逗号连接。可以多次被调用，每次由逗号连接新的条件。
+              <td>追加新的 <code>ORDER BY</code> 子句，使用逗号拼接。可以多次被调用，每次调用会使用逗号拼接新的条件。
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <ul>
+                  <li>
+                    <code>LIMIT(String)</code>
+                  </li>
+                  <li>
+                    <code>LIMIT(int)</code>
+                  </li>
+                </ul>
+              </td>
+              <td>
+                追加新的 <code>LIMIT</code> 子句。
+				仅在 SELECT()、UPDATE()、DELETE() 时有效。
+				当在 SELECT() 中使用时，应该配合 OFFSET() 使用。（于 3.5.2 引入）
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <ul>
+                  <li>
+                    <code>OFFSET(String)</code>
+                  </li>
+                  <li>
+                    <code>OFFSET(long)</code>
+                  </li>
+                </ul>
+              </td>
+              <td>
+                追加新的 <code>OFFSET</code> 子句。
+                仅在 SELECT() 时有效。
+                当在 SELECT() 时使用时，应该配合 LIMIT() 使用。（于 3.5.2 引入）
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <ul>
+                  <li>
+                    <code>OFFSET_ROWS(String)</code>
+                  </li>
+                  <li>
+                    <code>OFFSET_ROWS(long)</code>
+                  </li>
+                </ul>
+              </td>
+              <td>
+			    追加新的 <code>OFFSET n ROWS</code> 子句。
+				仅在 SELECT() 时有效。
+				该方法应该配合 FETCH_FIRST_ROWS_ONLY() 使用。（于 3.5.2 加入）
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <ul>
+                  <li>
+                    <code>FETCH_FIRST_ROWS_ONLY(String)</code>
+                  </li>
+                  <li>
+                    <code>FETCH_FIRST_ROWS_ONLY(int)</code>
+                  </li>
+                </ul>
+              </td>
+              <td>
+			  	追加新的 <code>FETCH FIRST n ROWS ONLY</code> 子句。
+				仅在 SELECT() 时有效。
+				该方法应该配合 OFFSET_ROWS() 使用。（于 3.5.2 加入）
               </td>
             </tr>
             <tr>
               <td>
                 <code>DELETE_FROM(String)</code>
               </td>
-              <td>开始一个delete语句并指定需要从哪个表删除的表名。通常它后面都会跟着WHERE语句！
+              <td>开始新的 delete 语句，并指定删除表的表名。通常它后面都会跟着一个 WHERE 子句！
               </td>
             </tr>
             <tr>
               <td>
                 <code>INSERT_INTO(String)</code>
               </td>
-              <td>开始一个insert语句并指定需要插入数据的表名。后面都会跟着一个或者多个VALUES() or INTO_COLUMNS() and INTO_VALUES()。
+              <td>开始新的 insert 语句，并指定插入数据表的表名。后面应该会跟着一个或多个 VALUES() 调用，或 INTO_COLUMNS() 和 INTO_VALUES() 调用。
               </td>
             </tr>
             <tr>
@@ -356,20 +394,20 @@ public String updatePersonSql() {
                   </li>
                 </ul>
               </td>
-              <td>针对update语句，插入到"set"列表中</td>
+              <td>对 update 语句追加 "set" 属性的列表</td>
             </tr>
             <tr>
               <td>
                 <code>UPDATE(String)</code>
               </td>
-              <td>开始一个update语句并指定需要更新的表明。后面都会跟着一个或者多个SET()，通常也会有一个WHERE()。 
+              <td>开始新的 update 语句，并指定更新表的表名。后面都会跟着一个或多个 SET() 调用，通常也会有一个 WHERE() 调用。
               </td>
             </tr>
             <tr>
               <td>
                 <code>VALUES(String, String)</code>
               </td>
-              <td>插入到insert语句中。第一个参数是要插入的列名，第二个参数则是该列的值。
+              <td>追加数据值到 insert 语句中。第一个参数是数据插入的列名，第二个参数则是数据值。
               </td>
             </tr>
             <tr>
@@ -377,8 +415,7 @@ public String updatePersonSql() {
                 <code>INTO_COLUMNS(String...)</code>
               </td>
               <td>
-                Appends columns phrase to an insert statement.
-                This should be call INTO_VALUES() with together.
+                追加插入列子句到 insert 语句中。应与 INTO_VALUES() 一同使用。
               </td>
             </tr>
             <tr>
@@ -386,15 +423,27 @@ public String updatePersonSql() {
                 <code>INTO_VALUES(String...)</code>
               </td>
               <td>
-                Appends values phrase to an insert statement.
-                This should be call INTO_COLUMNS() with together.
+                追加插入值子句到 insert 语句中。应与 INTO_COLUMNS() 一同使用。
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>ADD_ROW()</code>
+              </td>
+              <td>
+                添加新的一行数据，以便执行批量插入。（于 3.5.2 引入）
               </td>
             </tr>
           </tbody>
         </table>
 
-        <p>Since version 3.4.2, you can use variable-length arguments as follows:</p>
+        <p>
+          <span class="label important">提示</span>
+          注意，SQL 类将原样插入 <code>LIMIT</code>、<code>OFFSET</code>、<code>OFFSET n ROWS</code> 以及 <code>FETCH FIRST n ROWS ONLY</code> 子句。换句话说，类库不会为不支持这些子句的数据库执行任何转换。
+		  因此，用户应该要了解目标数据库是否支持这些子句。如果目标数据库不支持这些子句，产生的 SQL 可能会引起运行错误。
+        </p>
 
+        <p>从版本 3.4.2 开始，你可以像下面这样使用可变长度参数：</p>
 <source><![CDATA[
 public String selectPersonSql() {
   return new SQL()
@@ -423,14 +472,56 @@ public String updatePersonSql() {
 }
 ]]></source>
 
+        <p>从版本 3.5.2 开始，你可以像下面这样构建批量插入语句：</p>
+
+        <source><![CDATA[
+public String insertPersonsSql() {
+  // INSERT INTO PERSON (ID, FULL_NAME)
+  //     VALUES (#{mainPerson.id}, #{mainPerson.fullName}) , (#{subPerson.id}, #{subPerson.fullName})
+  return new SQL()
+    .INSERT_INTO("PERSON")
+    .INTO_COLUMNS("ID", "FULL_NAME")
+    .INTO_VALUES("#{mainPerson.id}", "#{mainPerson.fullName}")
+    .ADD_ROW()
+    .INTO_VALUES("#{subPerson.id}", "#{subPerson.fullName}")
+    .toString();
+}
+]]></source>
+
+        <p>从版本 3.5.2 开始，你可以像下面这样构建限制返回结果数的 SELECT 语句,：</p>
+
+        <source><![CDATA[
+public String selectPersonsWithOffsetLimitSql() {
+  // SELECT id, name FROM PERSON
+  //     LIMIT #{limit} OFFSET #{offset}
+  return new SQL()
+    .SELECT("id", "name")
+    .FROM("PERSON")
+    .LIMIT("#{limit}")
+    .OFFSET("#{offset}")
+    .toString();
+}
+
+public String selectPersonsWithFetchFirstSql() {
+  // SELECT id, name FROM PERSON
+  //     OFFSET #{offset} ROWS FETCH FIRST #{limit} ROWS ONLY
+  return new SQL()
+    .SELECT("id", "name")
+    .FROM("PERSON")
+    .OFFSET_ROWS("#{offset}")
+    .FETCH_FIRST_ROWS_ONLY("#{limit}")
+    .toString();
+}
+]]></source>
+
       </subsection>
 
       <subsection name="SqlBuilder 和 SelectBuilder (已经废弃)">
         <p>
-          在3.2版本之前，我们使用了一点不同的做法，通过实现ThreadLocal变量来掩盖一些导致Java DSL麻烦的语言限制。但这种方式已经废弃了，现代的框架都欢迎人们使用构建器类型和匿名内部类的想法。因此，SelectBuilder 和 SqlBuilder 类都被废弃了。
+          在版本 3.2 之前，我们的实现方式不太一样，我们利用 ThreadLocal 变量来掩盖一些对 Java DSL 不太友好的语言限制。现在，现代 SQL 构建框架使用的构建器和匿名内部类思想已被人们所熟知。因此，我们废弃了基于这种实现方式的 SelectBuilder 和 SqlBuilder 类。
         </p>
         <p>
-          下面的方法仅仅适用于废弃的SqlBuilder 和 SelectBuilder 类。
+          下面的方法仅仅适用于废弃的 SqlBuilder 和 SelectBuilder 类。
         </p>
         <table>
         <thead>
@@ -446,45 +537,33 @@ public String updatePersonSql() {
             /
             <code>RESET()</code>
           </td>
-          <td>这些方法清空SelectBuilder类的ThreadLocal状态，并且准备一个新的构建语句。开始新的语句时，
-            <code>BEGIN()</code>读取得最好。
-			由于一些原因（在某些条件下，也许是逻辑需要一个完全不同的语句），在执行中清理语句
-            <code>RESET()</code>读取得最好。
+          <td>这些方法清空 SelectBuilder 类的 ThreadLocal 状态，并准备好构建一个新的语句。开始新的语句时，<code>BEGIN()</code> 是最名副其实的（可读性最好的）。但如果由于一些原因（比如程序逻辑在某些条件下需要一个完全不同的语句），在执行过程中要重置语句构建状态，就很适合使用 <code>RESET()</code>。
           </td>
         </tr>
         <tr>
           <td>
             <code>SQL()</code>
           </td>
-          <td>返回生成的
-            <code>SQL()</code>
-            并重置
-            <code>SelectBuilder</code>
-            状态 (好像
-            <code>BEGIN()</code>
-            或
-            <code>RESET()</code>
-            被调用了).
-            因此，该方法只能被调用一次！
+          <td>该方法返回生成的 <code>SQL()</code> 并重置 <code>SelectBuilder</code> 状态（等价于调用了 <code>BEGIN()</code> 或 <code>RESET()</code>）。因此，该方法只能被调用一次！
           </td>
         </tr>
         </tbody>
         </table>
 
         <p>
-          SelectBuilder 和 SqlBuilder 类并不神奇，但是知道它们如何工作也是很重要的。
-          SelectBuilder 使用 SqlBuilder 使用了静态导入和ThreadLocal变量的组合来开启整洁语法，可以很容易地和条件交错。使用它们，静态导入类的方法即可，就像这样(一个或其它，并非两者):
+          SelectBuilder 和 SqlBuilder 类并不神奇，但最好还是知道它们的工作原理。
+          SelectBuilder 以及 SqlBuilder 借助静态导入和 ThreadLocal 变量实现了对插入条件友好的简洁语法。要使用它们，只需要静态导入这个类的方法即可，就像这样（只能使用其中的一条，不能同时使用）:
         </p>
 
         <source>import static org.apache.ibatis.jdbc.SelectBuilder.*;</source>
         <source>import static org.apache.ibatis.jdbc.SqlBuilder.*;</source>
 
-        <p>这就允许像下面这样来创建方法：</p>
+        <p>然后就可以像下面这样创建一些方法：</p>
 
         <source><![CDATA[
-/* DEPRECATED */
+/* 已被废弃 */
 public String selectBlogsSql() {
-  BEGIN(); // Clears ThreadLocal variable
+  BEGIN(); // 重置 ThreadLocal 状态变量
   SELECT("*");
   FROM("BLOG");
   return SQL();
@@ -492,9 +571,9 @@ public String selectBlogsSql() {
         ]]></source>
 
         <source><![CDATA[
-/* DEPRECATED */
+/* 已被废弃 */
 private String selectPersonSql() {
-  BEGIN(); // Clears ThreadLocal variable
+  BEGIN(); // 重置 ThreadLocal 状态变量
   SELECT("P.ID, P.USERNAME, P.PASSWORD, P.FULL_NAME");
   SELECT("P.LAST_NAME, P.CREATED_ON, P.UPDATED_ON");
   FROM("PERSON P");

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.session.Configuration;
@@ -42,12 +43,12 @@ public class ResultSetWrapper {
 
   private final ResultSet resultSet;
   private final TypeHandlerRegistry typeHandlerRegistry;
-  private final List<String> columnNames = new ArrayList<String>();
-  private final List<String> classNames = new ArrayList<String>();
-  private final List<JdbcType> jdbcTypes = new ArrayList<JdbcType>();
-  private final Map<String, Map<Class<?>, TypeHandler<?>>> typeHandlerMap = new HashMap<String, Map<Class<?>, TypeHandler<?>>>();
-  private Map<String, List<String>> mappedColumnNamesMap = new HashMap<String, List<String>>();
-  private Map<String, List<String>> unMappedColumnNamesMap = new HashMap<String, List<String>>();
+  private final List<String> columnNames = new ArrayList<>();
+  private final List<String> classNames = new ArrayList<>();
+  private final List<JdbcType> jdbcTypes = new ArrayList<>();
+  private final Map<String, Map<Class<?>, TypeHandler<?>>> typeHandlerMap = new HashMap<>();
+  private final Map<String, List<String>> mappedColumnNamesMap = new HashMap<>();
+  private final Map<String, List<String>> unMappedColumnNamesMap = new HashMap<>();
 
   public ResultSetWrapper(ResultSet rs, Configuration configuration) throws SQLException {
     super();
@@ -74,8 +75,12 @@ public class ResultSetWrapper {
     return Collections.unmodifiableList(classNames);
   }
 
+  public List<JdbcType> getJdbcTypes() {
+    return jdbcTypes;
+  }
+
   public JdbcType getJdbcType(String columnName) {
-    for (int i = 0 ; i < columnNames.size(); i++) {
+    for (int i = 0; i < columnNames.size(); i++) {
       if (columnNames.get(i).equalsIgnoreCase(columnName)) {
         return jdbcTypes.get(i);
       }
@@ -87,16 +92,18 @@ public class ResultSetWrapper {
    * Gets the type handler to use when reading the result set.
    * Tries to get from the TypeHandlerRegistry by searching for the property type.
    * If not found it gets the column JDBC type and tries to get a handler for it.
-   * 
+   *
    * @param propertyType
+   *          the property type
    * @param columnName
-   * @return
+   *          the column name
+   * @return the type handler
    */
   public TypeHandler<?> getTypeHandler(Class<?> propertyType, String columnName) {
     TypeHandler<?> handler = null;
     Map<Class<?>, TypeHandler<?>> columnHandlers = typeHandlerMap.get(columnName);
     if (columnHandlers == null) {
-      columnHandlers = new HashMap<Class<?>, TypeHandler<?>>();
+      columnHandlers = new HashMap<>();
       typeHandlerMap.put(columnName, columnHandlers);
     } else {
       handler = columnHandlers.get(propertyType);
@@ -138,8 +145,8 @@ public class ResultSetWrapper {
   }
 
   private void loadMappedAndUnmappedColumnNames(ResultMap resultMap, String columnPrefix) throws SQLException {
-    List<String> mappedColumnNames = new ArrayList<String>();
-    List<String> unmappedColumnNames = new ArrayList<String>();
+    List<String> mappedColumnNames = new ArrayList<>();
+    List<String> unmappedColumnNames = new ArrayList<>();
     final String upperColumnPrefix = columnPrefix == null ? null : columnPrefix.toUpperCase(Locale.ENGLISH);
     final Set<String> mappedColumns = prependPrefixes(resultMap.getMappedColumns(), upperColumnPrefix);
     for (String columnName : columnNames) {
@@ -180,11 +187,11 @@ public class ResultSetWrapper {
     if (columnNames == null || columnNames.isEmpty() || prefix == null || prefix.length() == 0) {
       return columnNames;
     }
-    final Set<String> prefixed = new HashSet<String>();
+    final Set<String> prefixed = new HashSet<>();
     for (String columnName : columnNames) {
       prefixed.add(prefix + columnName);
     }
     return prefixed;
   }
-  
+
 }

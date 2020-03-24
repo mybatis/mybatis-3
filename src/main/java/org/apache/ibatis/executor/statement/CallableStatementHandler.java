@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.mapping.ParameterMode;
+import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.type.JdbcType;
@@ -65,7 +66,7 @@ public class CallableStatementHandler extends BaseStatementHandler {
   public <E> List<E> query(Statement statement, ResultHandler resultHandler) throws SQLException {
     CallableStatement cs = (CallableStatement) statement;
     cs.execute();
-    List<E> resultList = resultSetHandler.<E>handleResultSets(cs);
+    List<E> resultList = resultSetHandler.handleResultSets(cs);
     resultSetHandler.handleOutputParameters(cs);
     return resultList;
   }
@@ -74,7 +75,7 @@ public class CallableStatementHandler extends BaseStatementHandler {
   public <E> Cursor<E> queryCursor(Statement statement) throws SQLException {
     CallableStatement cs = (CallableStatement) statement;
     cs.execute();
-    Cursor<E> resultList = resultSetHandler.<E>handleCursorResultSets(cs);
+    Cursor<E> resultList = resultSetHandler.handleCursorResultSets(cs);
     resultSetHandler.handleOutputParameters(cs);
     return resultList;
   }
@@ -82,10 +83,10 @@ public class CallableStatementHandler extends BaseStatementHandler {
   @Override
   protected Statement instantiateStatement(Connection connection) throws SQLException {
     String sql = boundSql.getSql();
-    if (mappedStatement.getResultSetType() != null) {
-      return connection.prepareCall(sql, mappedStatement.getResultSetType().getValue(), ResultSet.CONCUR_READ_ONLY);
-    } else {
+    if (mappedStatement.getResultSetType() == ResultSetType.DEFAULT) {
       return connection.prepareCall(sql);
+    } else {
+      return connection.prepareCall(sql, mappedStatement.getResultSetType().getValue(), ResultSet.CONCUR_READ_ONLY);
     }
   }
 

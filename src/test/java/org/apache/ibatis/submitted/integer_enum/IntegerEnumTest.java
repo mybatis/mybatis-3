@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,12 +20,12 @@ import java.io.Reader;
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class IntegerEnumTest extends BaseDataTest {
+class IntegerEnumTest extends BaseDataTest {
 
   @Test
-  public void shouldParseMapWithIntegerJdbcType() throws Exception {
+  void shouldParseMapWithIntegerJdbcType() throws Exception {
     String resource = "org/apache/ibatis/submitted/integer_enum/MapperConfig.xml";
     Reader reader = Resources.getResourceAsReader(resource);
     SqlSessionFactoryBuilder builder = new SqlSessionFactoryBuilder();

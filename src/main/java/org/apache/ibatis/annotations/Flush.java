@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -23,6 +23,16 @@ import java.lang.annotation.Target;
 
 /**
  * The maker annotation that invoke a flush statements via Mapper interface.
+ *
+ * <p>
+ * <b>How to use:</b>
+ *
+ * <pre>
+ * public interface UserMapper {
+ *   &#064;Flush
+ *   List&lt;BatchResult&gt; flush();
+ * }
+ * </pre>
  *
  * @since 3.3.0
  * @author Kazuki Shimizu

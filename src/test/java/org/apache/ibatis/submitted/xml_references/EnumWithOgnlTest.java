@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -26,30 +26,32 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class EnumWithOgnlTest {
-    
-    @Test
-    public void testConfiguration() {
-        UnpooledDataSourceFactory dataSourceFactory = new UnpooledDataSourceFactory();
-        Properties dataSourceProperties = new Properties();
-        dataSourceProperties.put("driver", "org.hsqldb.jdbcDriver");
-        dataSourceProperties.put("url", "jdbc:hsqldb:mem:xml_references");
-        dataSourceProperties.put("username", "sa");
-        dataSourceFactory.setProperties(dataSourceProperties);
-        Environment environment = new Environment("test", new JdbcTransactionFactory(), dataSourceFactory.getDataSource());
-        Configuration configuration = new Configuration();
-        configuration.setEnvironment(environment);
-        configuration.getTypeAliasRegistry().registerAlias(Person.class);
-        configuration.addMapper(PersonMapper.class);
-        configuration.addMapper(PersonMapper2.class);
-        new DefaultSqlSessionFactory(configuration);
-    }
-    @Test
-    public void testMixedConfiguration() throws Exception {
-      Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/xml_references/ibatisConfig.xml");
+class EnumWithOgnlTest {
+
+  @Test
+  void testConfiguration() {
+    UnpooledDataSourceFactory dataSourceFactory = new UnpooledDataSourceFactory();
+    Properties dataSourceProperties = new Properties();
+    dataSourceProperties.put("driver", "org.hsqldb.jdbcDriver");
+    dataSourceProperties.put("url", "jdbc:hsqldb:mem:xml_references");
+    dataSourceProperties.put("username", "sa");
+    dataSourceFactory.setProperties(dataSourceProperties);
+    Environment environment = new Environment("test", new JdbcTransactionFactory(), dataSourceFactory.getDataSource());
+    Configuration configuration = new Configuration();
+    configuration.setEnvironment(environment);
+    configuration.getTypeAliasRegistry().registerAlias(Person.class);
+    configuration.addMapper(PersonMapper.class);
+    configuration.addMapper(PersonMapper2.class);
+    new DefaultSqlSessionFactory(configuration);
+  }
+
+  @Test
+  void testMixedConfiguration() throws Exception {
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/xml_references/ibatisConfig.xml")) {
       SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
       sqlSessionFactory.getConfiguration().addMapper(PersonMapper2.class);
     }
+  }
 }

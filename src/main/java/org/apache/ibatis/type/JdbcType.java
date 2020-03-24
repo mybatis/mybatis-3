@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -65,10 +65,12 @@ public enum JdbcType {
   ROWID(Types.ROWID), // JDK6
   LONGNVARCHAR(Types.LONGNVARCHAR), // JDK6
   SQLXML(Types.SQLXML), // JDK6
-  DATETIMEOFFSET(-155); // SQL Server 2008
+  DATETIMEOFFSET(-155), // SQL Server 2008
+  TIME_WITH_TIMEZONE(Types.TIME_WITH_TIMEZONE), // JDBC 4.2 JDK8
+  TIMESTAMP_WITH_TIMEZONE(Types.TIMESTAMP_WITH_TIMEZONE); // JDBC 4.2 JDK8
 
   public final int TYPE_CODE;
-  private static Map<Integer,JdbcType> codeLookup = new HashMap<Integer,JdbcType>();
+  private static Map<Integer,JdbcType> codeLookup = new HashMap<>();
 
   static {
     for (JdbcType type : JdbcType.values()) {

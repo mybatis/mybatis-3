@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,17 +15,18 @@
  */
 package org.apache.ibatis;
 
-import org.apache.ibatis.datasource.pooled.PooledDataSource;
-import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
-
-import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.Reader;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
+
+import javax.sql.DataSource;
+
+import org.apache.ibatis.datasource.pooled.PooledDataSource;
+import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.jdbc.ScriptRunner;
 
 public abstract class BaseDataTest {
 
@@ -58,25 +59,19 @@ public abstract class BaseDataTest {
   }
 
   public static void runScript(DataSource ds, String resource) throws IOException, SQLException {
-    Connection connection = ds.getConnection();
-    try {
+    try (Connection connection = ds.getConnection()) {
       ScriptRunner runner = new ScriptRunner(connection);
       runner.setAutoCommit(true);
       runner.setStopOnError(false);
       runner.setLogWriter(null);
       runner.setErrorLogWriter(null);
       runScript(runner, resource);
-    } finally {
-      connection.close();
     }
   }
 
   public static void runScript(ScriptRunner runner, String resource) throws IOException, SQLException {
-    Reader reader = Resources.getResourceAsReader(resource);
-    try {
+    try (Reader reader = Resources.getResourceAsReader(resource)) {
       runner.runScript(reader);
-    } finally {
-      reader.close();
     }
   }
 

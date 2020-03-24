@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@
     a.name as author_name
     FROM author a
   </select>
-  
+
   <select id="getPostsFromAuthor" resultType="Post">
     SELECT
     p.post_id as post_id,
@@ -62,5 +62,5 @@
     FROM post p
     WHERE author_id = #{id}
   </select>
-  
+
 </mapper>

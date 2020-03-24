@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -42,8 +42,8 @@ public class DefaultParameterHandler implements ParameterHandler {
 
   private final MappedStatement mappedStatement;
   private final Object parameterObject;
-  private BoundSql boundSql;
-  private Configuration configuration;
+  private final BoundSql boundSql;
+  private final Configuration configuration;
 
   public DefaultParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql) {
     this.mappedStatement = mappedStatement;
@@ -85,9 +85,7 @@ public class DefaultParameterHandler implements ParameterHandler {
           }
           try {
             typeHandler.setParameter(ps, i + 1, value, jdbcType);
-          } catch (TypeException e) {
-            throw new TypeException("Could not set parameters for mapping: " + parameterMapping + ". Cause: " + e, e);
-          } catch (SQLException e) {
+          } catch (TypeException | SQLException e) {
             throw new TypeException("Could not set parameters for mapping: " + parameterMapping + ". Cause: " + e, e);
           }
         }

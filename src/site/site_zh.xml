@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2018 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -23,31 +23,31 @@
     <menu name="参考文档">
       <item name="简介" href="index.html"/>
       <item name="入门" href="getting-started.html"/>
-      <item name="XML配置" href="configuration.html" collapse="true">
-        <item href="configuration.html#properties" name="属性(properties)" />
-        <item href="configuration.html#settings" name="设置(settings)" />
-        <item href="configuration.html#typeAliases" name="类型别名(typeAliases)" />
-        <item href="configuration.html#typeHandlers" name="类型处理(typeHandlers)" />
-        <item href="configuration.html#objectFactory" name="对象工厂(objectFactory)" />
-        <item href="configuration.html#plugins" name="插件(plugins)" />
-        <item href="configuration.html#environments" name="环境配置(environments)" />
-        <item href="configuration.html#databaseIdProvider" name="数据库厂商标识(databaseIdProvider)" />
-        <item href="configuration.html#mappers" name="映射器(mappers)" />
+      <item name="XML 配置" href="configuration.html" collapse="true">
+        <item href="configuration.html#properties" name="属性" />
+        <item href="configuration.html#settings" name="设置" />
+        <item href="configuration.html#typeAliases" name="类型别名" />
+        <item href="configuration.html#typeHandlers" name="类型处理器" />
+        <item href="configuration.html#objectFactory" name="对象工厂" />
+        <item href="configuration.html#plugins" name="插件" />
+        <item href="configuration.html#environments" name="环境配置" />
+        <item href="configuration.html#databaseIdProvider" name="数据库厂商标识" />
+        <item href="configuration.html#mappers" name="映射器" />
       </item>
-      <item name="XML映射文件" href="sqlmap-xml.html" collapse="true">
-        <item href="sqlmap-xml.html#select" name="查询(select)" />
-        <item href="sqlmap-xml.html#insert_update_and_delete" name="更新(insert, update and delete)" />
-        <item href="sqlmap-xml.html#Parameters" name="参数(Parameters)" />
-        <item href="sqlmap-xml.html#Result_Maps" name="结果集(Result Maps)" />
-        <item href="sqlmap-xml.html#Auto-mapping" name="自动映射(Auto-mapping)" />
-        <item href="sqlmap-xml.html#cache" name="cache" />
+      <item name="XML 映射文件" href="sqlmap-xml.html" collapse="true">
+        <item href="sqlmap-xml.html#select" name="select" />
+        <item href="sqlmap-xml.html#insert_update_and_delete" name="insert, update 和 delete" />
+        <item href="sqlmap-xml.html#Parameters" name="参数" />
+        <item href="sqlmap-xml.html#Result_Maps" name="结果映射" />
+        <item href="sqlmap-xml.html#Auto-mapping" name="自动映射" />
+        <item href="sqlmap-xml.html#cache" name="缓存" />
       </item>
-      <item name="动态SQL" href="dynamic-sql.html"/>
+      <item name="动态 SQL" href="dynamic-sql.html"/>
       <item name="Java API" href="java-api.html" collapse="true">
         <item name="目录结构" href="java-api.html#directoryStructure" />
-        <item name="SqlSessions" href="java-api.html#sqlSessions" />
+        <item name="SqlSession" href="java-api.html#sqlSessions" />
       </item>
-      <item name="SQL语句构建器" href="statement-builders.html" collapse="true" />
+      <item name="SQL 语句构建器" href="statement-builders.html" collapse="true" />
       <item name="日志" href="logging.html"/>
     </menu>
 

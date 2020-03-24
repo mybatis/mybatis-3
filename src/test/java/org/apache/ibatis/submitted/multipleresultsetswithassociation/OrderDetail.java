@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ public class OrderDetail {
   private int lineNumber;
   private int quantity;
   private String itemDescription;
-  
+
   private OrderHeader orderHeader;
 
   public int getOrderId() {
@@ -57,10 +57,10 @@ public class OrderDetail {
   }
 
   public OrderHeader getOrderHeader() {
-      return orderHeader;
+    return orderHeader;
   }
 
   public void setOrderHeader(OrderHeader orderHeader) {
-      this.orderHeader = orderHeader;
+    this.orderHeader = orderHeader;
   }
 }

@@ -1,10 +1,15 @@
 <!--
-Thank you for your contribution!
-请将您的问题发送到邮件列表 https://groups.google.com/group/mybatis-user
+❌ 不要在这里问问题❗️
+⭕️ 请将您的问题发送到邮件列表
+請用英文寫
+https://groups.google.com/group/mybatis-user
+或
+https://stackoverflow.com/questions/ask?tags=mybatis
 
 Question?
 ======================
 Please use the mailing list. http://groups.google.com/group/mybatis-user
+Or Stack Overflow with 'mybatis' tag. https://stackoverflow.com/questions/ask?tags=mybatis
 Questions on this tracker will be closed without comment.
 
 Bug report?
@@ -28,7 +33,7 @@ Feature request?
 <!-- BUG REPORT FORM -->
 
 ## MyBatis version
-3.3.1
+3.x.x
 
 ## Database vendor and version
 
