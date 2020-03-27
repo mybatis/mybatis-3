@@ -128,7 +128,15 @@ public class MapperBuilderAssistant extends BaseBuilder {
       boolean readWrite,
       boolean blocking,
       Properties props) {
-    Cache cache = new CacheBuilder(currentNamespace)
+
+    Cache cache = null;
+    try {
+      cache = configuration.getCache(currentNamespace);
+    } catch (Exception e){
+      // do nothing
+    }
+    if(cache == null) {
+      cache = new CacheBuilder(currentNamespace)
         .implementation(valueOrDefault(typeClass, PerpetualCache.class))
         .addDecorator(valueOrDefault(evictionClass, LruCache.class))
         .clearInterval(flushInterval)
@@ -137,7 +145,8 @@ public class MapperBuilderAssistant extends BaseBuilder {
         .blocking(blocking)
         .properties(props)
         .build();
-    configuration.addCache(cache);
+      configuration.addCache(cache);
+    }
     currentCache = cache;
     return cache;
   }
