@@ -75,6 +75,9 @@ public class DefaultSqlSession implements SqlSession {
   public <T> T selectOne(String statement, Object parameter) {
     // Popular vote was to return null on 0 results and throw exception on too many.
     List<T> list = this.selectList(statement, parameter);
+    if(list==null){
+      return null;
+    }
     if (list.size() == 1) {
       return list.get(0);
     } else if (list.size() > 1) {
