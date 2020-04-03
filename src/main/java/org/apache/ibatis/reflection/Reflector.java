@@ -283,6 +283,8 @@ public class Reflector {
       getMethods.put(field.getName(), new GetFieldInvoker(field));
       Type fieldType = TypeParameterResolver.resolveFieldType(field, type);
       getTypes.put(field.getName(), typeToClass(fieldType));
+      getGenericTypeRawClasses
+        .put(field.getName(), GenericTypeRawClassPair.newGenericTypeRawClassPair(fieldType, typeToClass(fieldType)));
     }
   }
 
