@@ -440,6 +440,21 @@ public final class TypeHandlerRegistry {
     }
   }
 
+  public <T> TypeHandler<T> getInstance(Type genericType, Class<?> rawClass, Class<?> typeHandlerClass) {
+    // Try instance TypeHandler with Type first
+    if(genericType != null){
+      try {
+        Constructor<?> c = typeHandlerClass.getConstructor(Type.class);
+        return (TypeHandler<T>) c.newInstance(genericType);
+      } catch (NoSuchMethodException ignored) {
+        // ignored
+      } catch (Exception e) {
+        throw new TypeException("Failed invoking constructor for handler " + typeHandlerClass, e);
+      }
+    }
+    return getInstance(rawClass, typeHandlerClass);
+  }
+
   // scan
 
   public void register(String packageName) {

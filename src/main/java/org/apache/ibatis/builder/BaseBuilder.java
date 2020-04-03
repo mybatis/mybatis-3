@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.builder;
 
+import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -132,6 +133,19 @@ public abstract class BaseBuilder {
     return resolveTypeHandler(javaType, typeHandlerType);
   }
 
+  protected TypeHandler<?> resolveTypeHandler(Type genericType, Class<?> rawClass, String typeHandlerAlias) {
+    if (typeHandlerAlias == null) {
+      return null;
+    }
+    Class<?> type = resolveClass(typeHandlerAlias);
+    if (type != null && !TypeHandler.class.isAssignableFrom(type)) {
+      throw new BuilderException("Type " + type.getName() + " is not a valid TypeHandler because it does not implement TypeHandler interface");
+    }
+    @SuppressWarnings("unchecked") // already verified it is a TypeHandler
+      Class<? extends TypeHandler<?>> typeHandlerType = (Class<? extends TypeHandler<?>>) type;
+    return resolveTypeHandler(genericType, rawClass, typeHandlerType);
+  }
+
   protected TypeHandler<?> resolveTypeHandler(Class<?> javaType, Class<? extends TypeHandler<?>> typeHandlerType) {
     if (typeHandlerType == null) {
       return null;
@@ -141,6 +155,19 @@ public abstract class BaseBuilder {
     if (handler == null) {
       // not in registry, create a new one
       handler = typeHandlerRegistry.getInstance(javaType, typeHandlerType);
+    }
+    return handler;
+  }
+
+  protected TypeHandler<?> resolveTypeHandler(Type genericType , Class<?> rawClass, Class<? extends TypeHandler<?>> typeHandlerType) {
+    if (typeHandlerType == null) {
+      return null;
+    }
+    // javaType ignored for injected handlers see issue #746 for full detail
+    TypeHandler<?> handler = typeHandlerRegistry.getMappingTypeHandler(typeHandlerType);
+    if (handler == null) {
+      // not in registry, create a new one
+      handler = typeHandlerRegistry.getInstance(genericType, rawClass, typeHandlerType);
     }
     return handler;
   }

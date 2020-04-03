@@ -29,7 +29,7 @@ import org.apache.ibatis.reflection.property.PropertyTokenizer;
 /**
  * @author Clinton Begin
  */
-public class MetaClass {
+public class  MetaClass {
 
   private final ReflectorFactory reflectorFactory;
   private final Reflector reflector;
@@ -75,6 +75,26 @@ public class MetaClass {
       return metaProp.getSetterType(prop.getChildren());
     } else {
       return reflector.getSetterType(prop.getName());
+    }
+  }
+
+  public GenericTypeRawClassPair getSetterTypeRawClassPair(String name) {
+    PropertyTokenizer prop = new PropertyTokenizer(name);
+    if (prop.hasNext()) {
+      MetaClass metaProp = metaClassForProperty(prop.getName());
+      return metaProp.getSetterTypeRawClassPair(prop.getChildren());
+    } else {
+      return reflector.getSetterTypeRawClassPair(prop.getName());
+    }
+  }
+
+  public GenericTypeRawClassPair getGetterTypeRawClassPair(String name) {
+    PropertyTokenizer prop = new PropertyTokenizer(name);
+    if (prop.hasNext()) {
+      MetaClass metaProp = metaClassForProperty(prop.getName());
+      return metaProp.getGetterTypeRawClassPair(prop.getChildren());
+    } else {
+      return reflector.getGetterTypeRawClassPair(prop.getName());
     }
   }
 
