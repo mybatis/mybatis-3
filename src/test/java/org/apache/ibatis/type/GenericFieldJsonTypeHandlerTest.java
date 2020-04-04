@@ -39,16 +39,16 @@ public class GenericFieldJsonTypeHandlerTest{
   interface GenericFieldJsonTestMapper {
     @Results({
       @Result(property = "id", column = "id"),
-      @Result(property = "genericObj", column = "json", typeHandler = org.apache.ibatis.type.GenericTypeJsonTypeHandler.class),
+      @Result(property = "genericFieldObj", column = "json", typeHandler = org.apache.ibatis.type.GenericTypeJsonTypeHandler.class),
     })
     @Select("SELECT ID, JSON FROM test_generic WHERE ID = #{id}")
-    GenericFieldType findOne(int id);
+    HadGenericFieldType findOne(int id);
 
-    @Insert("INSERT INTO test_generic (ID, JSON) VALUES(#{id}, #{genericObj, typeHandler=org.apache.ibatis.type.GenericTypeJsonTypeHandler})")
-    void insert(GenericFieldType blobContent);
+    @Insert("INSERT INTO test_generic (ID, JSON) VALUES(#{id}, #{genericFieldObj, typeHandler=org.apache.ibatis.type.GenericTypeJsonTypeHandler})")
+    void insert(HadGenericFieldType blobContent);
   }
 
-  static class RawType{
+  static class GenerciArgumentType{
     private String name;
 
     public String getName() {
@@ -61,34 +61,34 @@ public class GenericFieldJsonTypeHandlerTest{
 
     @Override
     public String toString() {
-      return "RawType{" +
+      return "GenerciArgumentType{" +
         "name='" + name + '\'' +
         '}';
     }
   }
 
-  static class GenericType<T>{
-    private T genericObj;
+  static class GenericFieldType<T>{
+    private T genericArgumentTypeObj;
 
-    public T getGenericObj() {
-      return genericObj;
-    }
+    public T getGenericArgumentTypeObj() {
+		return genericArgumentTypeObj;
+	}
 
-    public void setGenericObj(T genericObj) {
-      this.genericObj = genericObj;
-    }
+	public void setGenericArgumentTypeObj(T genericArgumentTypeObj) {
+		this.genericArgumentTypeObj = genericArgumentTypeObj;
+	}
 
-    @Override
+	@Override
     public String toString() {
-      return "GenericType{" +
-        "genericObj=" + genericObj +
+      return "GenericFieldType{" +
+        "genericArgumentTypeObj=" + genericArgumentTypeObj +
         '}';
     }
   }
 
-  static class GenericFieldType{
+  static class HadGenericFieldType{
     private int id;
-    private GenericType<RawType> genericObj;
+    private GenericFieldType<GenerciArgumentType> genericFieldObj;
 
     public int getId() {
       return id;
@@ -98,20 +98,19 @@ public class GenericFieldJsonTypeHandlerTest{
       this.id = id;
     }
 
-    public GenericType<RawType> getGenericObj() {
-      return genericObj;
-    }
+    public GenericFieldType<GenerciArgumentType> getGenericFieldObj() {
+		return genericFieldObj;
+	}
 
-    public void setGenericObj(
-      GenericType<RawType> genericObj) {
-      this.genericObj = genericObj;
-    }
+	public void setGenericFieldObj(GenericFieldType<GenerciArgumentType> genericFieldObj) {
+		this.genericFieldObj = genericFieldObj;
+	}
 
-    @Override
+	@Override
     public String toString() {
-      return "GenericFieldType{" +
+      return "HadGenericFieldType{" +
         "id=" + id +
-        ", genericObj=" + genericObj +
+        ", genericFieldObj=" + genericFieldObj +
         '}';
     }
   }
@@ -135,18 +134,17 @@ public class GenericFieldJsonTypeHandlerTest{
     SqlSession sqlSession = sqlSessionFactory.openSession();
     GenericFieldJsonTestMapper mapper = sqlSession.getMapper(GenericFieldJsonTestMapper.class);
     int id = 1;
-    GenericType<RawType> genericObj = new GenericType<>();
-    RawType rawObj = new RawType();
-    rawObj.setName("Test");
-    genericObj.setGenericObj(rawObj);
-    GenericFieldType genericFieldObj = new GenericFieldType();
-    genericFieldObj.setId(id);
-    genericFieldObj.setGenericObj(genericObj);
-    mapper.insert(genericFieldObj);
+    GenericFieldType<GenerciArgumentType> genericFieldObj = new GenericFieldType<>();
+    GenerciArgumentType argumentTypeObj = new GenerciArgumentType();
+    argumentTypeObj.setName("Test");
+    genericFieldObj.setGenericArgumentTypeObj(argumentTypeObj);
+    HadGenericFieldType hadGenericFieldObj = new HadGenericFieldType();
+    hadGenericFieldObj.setId(id);
+    hadGenericFieldObj.setGenericFieldObj(genericFieldObj);
+    mapper.insert(hadGenericFieldObj);
 
-    genericFieldObj = mapper.findOne(id);
-    rawObj = genericFieldObj.getGenericObj().getGenericObj();
-    System.out.println(rawObj);
+    hadGenericFieldObj = mapper.findOne(id);
+    argumentTypeObj = hadGenericFieldObj.getGenericFieldObj().getGenericArgumentTypeObj();
+    System.out.println(hadGenericFieldObj);
   }
-
 }
