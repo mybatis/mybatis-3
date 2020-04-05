@@ -78,23 +78,23 @@ public class  MetaClass {
     }
   }
 
-  public GenericTypeRawClassPair getSetterTypeRawClassPair(String name) {
+  public GenericTypeRawClassPair getSetterGenericTypeRawClassPair(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
       MetaClass metaProp = metaClassForProperty(prop.getName());
-      return metaProp.getSetterTypeRawClassPair(prop.getChildren());
+      return metaProp.getSetterGenericTypeRawClassPair(prop.getChildren());
     } else {
-      return reflector.getSetterTypeRawClassPair(prop.getName());
+      return reflector.getSetterGenericTypeRawClassPair(prop.getName());
     }
   }
 
-  public GenericTypeRawClassPair getGetterTypeRawClassPair(String name) {
+  public GenericTypeRawClassPair getGetterGenericTypeRawClassPair(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
       MetaClass metaProp = metaClassForProperty(prop.getName());
-      return metaProp.getGetterTypeRawClassPair(prop.getChildren());
+      return metaProp.getGetterGenericTypeRawClassPair(prop.getChildren());
     } else {
-      return reflector.getGetterTypeRawClassPair(prop.getName());
+      return reflector.getGetterGenericTypeRawClassPair(prop.getName());
     }
   }
 

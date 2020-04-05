@@ -430,7 +430,7 @@ public class Reflector {
    * @param propertyName - the name of the property
    * @return The Class of the property setter
    */
-  public GenericTypeRawClassPair getSetterTypeRawClassPair(String propertyName) {
+  public GenericTypeRawClassPair getSetterGenericTypeRawClassPair(String propertyName) {
     GenericTypeRawClassPair genericTypeRawClassPair = setGenericTypeRawClasses.get(propertyName);
     if (genericTypeRawClassPair == null) {
       throw new ReflectionException("There is no setter for property named '" + propertyName + "' in '" + type + "'");
@@ -444,7 +444,7 @@ public class Reflector {
    * @param propertyName - the name of the property
    * @return The Class of the property getter
    */
-  public GenericTypeRawClassPair getGetterTypeRawClassPair(String propertyName) {
+  public GenericTypeRawClassPair getGetterGenericTypeRawClassPair(String propertyName) {
     GenericTypeRawClassPair genericTypeRawClassPair = getGenericTypeRawClasses.get(propertyName);
     if (genericTypeRawClassPair == null) {
       throw new ReflectionException("There is no getter for property named '" + propertyName + "' in '" + type + "'");

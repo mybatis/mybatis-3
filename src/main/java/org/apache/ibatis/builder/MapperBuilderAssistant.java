@@ -425,7 +425,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
     if (javaType == null && property != null) {
       try {
         MetaClass metaResultType = MetaClass.forClass(resultType, configuration.getReflectorFactory());
-        genericTypeRawClassPair = metaResultType.getSetterTypeRawClassPair(property);
+        genericTypeRawClassPair = metaResultType.getSetterGenericTypeRawClassPair(property);
       } catch (Exception e) {
         //ignore, following null check statement will deal with the situation
       }
@@ -444,7 +444,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
         return GenericTypeRawClassPair.newOnlyRawClassPair(Object.class);
       } else {
         MetaClass metaResultType = MetaClass.forClass(resultType, configuration.getReflectorFactory());
-        return metaResultType.getGetterTypeRawClassPair(property);
+        return metaResultType.getGetterGenericTypeRawClassPair(property);
       }
     }
     if (javaType == null) {

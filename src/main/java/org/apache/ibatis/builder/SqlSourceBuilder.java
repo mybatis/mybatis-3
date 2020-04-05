@@ -86,7 +86,7 @@ public class SqlSourceBuilder extends BaseBuilder {
       } else {
         MetaClass metaClass = MetaClass.forClass(parameterType, configuration.getReflectorFactory());
         if (metaClass.hasGetter(property)) {
-          GenericTypeRawClassPair rawClassPair = metaClass.getGetterTypeRawClassPair(property);
+          GenericTypeRawClassPair rawClassPair = metaClass.getGetterGenericTypeRawClassPair(property);
           propertyType = rawClassPair.getRawClass();
           genericType = rawClassPair.getType();
         } else {
