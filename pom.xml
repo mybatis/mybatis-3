@@ -27,7 +27,7 @@
   </parent>
 
   <artifactId>mybatis</artifactId>
-  <version>3.4.0</version>
+  <version>3.4.0.100</version>
   <packaging>jar</packaging>
 
   <name>mybatis</name>
