@@ -36,7 +36,7 @@ public class ScriptRunner {
 
   private static final String DEFAULT_DELIMITER = ";";
 
-  private static final Pattern DELIMITER_PATTERN = Pattern.compile("^\\s*((--)|(//))?\\s*(//)?\\s*@DELIMITER\\s+([^\\s]+)", Pattern.CASE_INSENSITIVE);
+  private static final Pattern DELIMITER_PATTERN = Pattern.compile("^\\s*((--)|(//))?\\s*(//)?\\s*@?DELIMITER\\s+([^\\s]+)", Pattern.CASE_INSENSITIVE);
 
   private final Connection connection;
 
@@ -205,11 +205,9 @@ public class ScriptRunner {
 
   private void handleLine(StringBuilder command, String line) throws SQLException {
     String trimmedLine = line.trim();
-    if (lineIsComment(trimmedLine)) {
-      Matcher matcher = DELIMITER_PATTERN.matcher(trimmedLine);
-      if (matcher.find()) {
-        delimiter = matcher.group(5);
-      }
+    if(lineIsDelimiter(trimmedLine)) {
+      println(trimmedLine);
+    } else if (lineIsComment(trimmedLine)) {
       println(trimmedLine);
     } else if (commandReadyToExecute(trimmedLine)) {
       command.append(line, 0, line.lastIndexOf(delimiter));
@@ -223,8 +221,17 @@ public class ScriptRunner {
     }
   }
 
+  private boolean lineIsDelimiter(String trimmedLine) {
+    Matcher matcher = DELIMITER_PATTERN.matcher(trimmedLine);
+    if (matcher.find()) {
+      delimiter = matcher.group(5);
+      return true;
+    }
+    return false;
+  }
+
   private boolean lineIsComment(String trimmedLine) {
-    return trimmedLine.startsWith("//") || trimmedLine.startsWith("--");
+    return trimmedLine.startsWith("//") || trimmedLine.startsWith("--") || trimmedLine.startsWith("/*");
   }
 
   private boolean commandReadyToExecute(String trimmedLine) {
