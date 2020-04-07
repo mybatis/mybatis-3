@@ -224,7 +224,7 @@ class ReflectorTest {
   }
 
   @Test
-  public void shouldTwoGettersForNonBooleanPropertyThrowException() throws Exception {
+  void shouldTwoGettersForNonBooleanPropertyThrowException() throws Exception {
     @SuppressWarnings("unused")
     class BeanClass {
       public Integer getProp1() {return 1;}
@@ -256,7 +256,7 @@ class ReflectorTest {
   }
 
   @Test
-  public void shouldTwoGettersWithDifferentTypesThrowException() throws Exception {
+  void shouldTwoGettersWithDifferentTypesThrowException() throws Exception {
     @SuppressWarnings("unused")
     class BeanClass {
       public Integer getProp1() {return 1;}

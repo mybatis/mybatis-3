@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2019 the original author or authors.
+       Copyright 2009-2020 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -389,16 +389,20 @@ void rollback(boolean force)</source>
         <td>N/A</td>
         <td><code>&lt;association&gt;</code></td>
         <td>
-        Un mapeo a una propiedad que contiene un tipo complejo. Atributos: select, que contiene el nombre completamente cualificado de un mapped statement (o un método de mapper) que puede cargar la instancia del tipo indicado,
+        Un mapeo a una propiedad que contiene un tipo complejo. Atributos: select, que contiene el nombre completamente cualificado de un mapped statement (o un método de mapper) que puede cargar la instancia del tipo indicado.
         <code>fetchType</code>, que sobrescribe el parámetro global de configuración <code>lazyLoadingEnabled</code> para este mapeo.
+        <code>resultMap</code>(available since 3.5.5), which is the fully qualified name of a result map that map to a single container object from select result.
+        <code>columnPrefix</code>(available since 3.5.5), which is column prefix for grouping select columns at nested result map.
         Nota: Habrás visto que el mapeo de tipo join no se soporta mediante el API de anotaciones. Esto es debido a las limitaciones de las anotaciones en Java que no permiten referencias circulares.</td>
       </tr>
       <tr>
         <td><code>@Many</code></td>
         <td>N/A</td>
         <td><code>&lt;collection&gt;</code></td>
-        <td>Un mapeo a una propiedad que contiene una colección de tipos complejos. Atributos: select, que contiene el nombre completamente cualificado de un mapped statement (o un método de mapper) que puede cargar la instancia del tipo indicado,
+        <td>Un mapeo a una propiedad que contiene una colección de tipos complejos. Atributos: select, que contiene el nombre completamente cualificado de un mapped statement (o un método de mapper) que puede cargar la instancia del tipo indicado.
         <code>fetchType</code>, que sobrescribe el parámetro global de configuración <code>lazyLoadingEnabled</code> para este mapeo.
+        <code>resultMap</code>(available since 3.5.5), which is the fully qualified name of a result map that map to collection object from select result.
+        <code>columnPrefix</code>(available since 3.5.5), which is column prefix for grouping select columns at nested result map.
         Nota: Habrás visto que el mapeo de tipo join no se soporta mediante el API de anotaciones. Esto es debido a las limitaciones de las anotaciones en Java que no permiten referencias circulares.</td>
       </tr>
       <tr>

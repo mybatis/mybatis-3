@@ -16,3 +16,4 @@ derby.log
 /bin/
 .mvn/wrapper/maven-wrapper.jar
 ibderby/
+.sts4-cache/

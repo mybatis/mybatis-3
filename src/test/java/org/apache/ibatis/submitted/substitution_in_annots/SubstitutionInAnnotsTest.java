@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -35,13 +35,14 @@ class SubstitutionInAnnotsTest {
   @BeforeAll
   static void setUp() throws Exception {
     Configuration configuration = new Configuration();
-    Environment environment = new Environment("test", new JdbcTransactionFactory(), new UnpooledDataSource("org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:annots", null));
+    Environment environment = new Environment("test", new JdbcTransactionFactory(),
+        new UnpooledDataSource("org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:annots", null));
     configuration.setEnvironment(environment);
     configuration.addMapper(SubstitutionInAnnotsMapper.class);
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
 
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/substitution_in_annots/CreateDB.sql");
+        "org/apache/ibatis/submitted/substitution_in_annots/CreateDB.sql");
   }
 
   @Test

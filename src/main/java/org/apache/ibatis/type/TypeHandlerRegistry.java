@@ -475,6 +475,9 @@ public final class TypeHandlerRegistry {
   // get information
 
   /**
+   * Gets the type handlers.
+   *
+   * @return the type handlers
    * @since 3.2.2
    */
   public Collection<TypeHandler<?>> getTypeHandlers() {

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -27,8 +27,9 @@ import org.apache.ibatis.mapping.StatementType;
 /**
  * The annotation that specify options for customizing default behaviors.
  *
- * <p><br>
+ * <p>
  * <b>How to use:</b>
+ *
  * <pre>
  * public interface UserMapper {
  *   &#064;Option(useGeneratedKeys = true, keyProperty = "id")
@@ -36,6 +37,7 @@ import org.apache.ibatis.mapping.StatementType;
  *   boolean insert(User user);
  * }
  * </pre>
+ *
  * @author Clinton Begin
  */
 @Documented
@@ -92,6 +94,7 @@ public @interface Options {
 
   /**
    * Returns the statement timeout.
+   *
    * @return the statement timeout
    */
   int timeout() default -1;

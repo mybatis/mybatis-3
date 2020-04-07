@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ class SqlxmlTypeHandlerTest extends BaseTypeHandlerTest {
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
 
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/type/SqlxmlTypeHandlerTest.sql");
+        "org/apache/ibatis/type/SqlxmlTypeHandlerTest.sql");
   }
 
   @Override
@@ -129,8 +129,7 @@ class SqlxmlTypeHandlerTest extends BaseTypeHandlerTest {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       Mapper mapper = session.getMapper(Mapper.class);
       XmlBean bean = mapper.select(1);
-      assertEquals("<title>XML data</title>",
-          bean.getContent());
+      assertEquals("<title>XML data</title>", bean.getContent());
     }
   }
 

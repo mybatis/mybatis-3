@@ -41,7 +41,7 @@ class RoundingHandlersTest {
 
     // populate in-memory database
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/rounding/CreateDB.sql");
+        "org/apache/ibatis/submitted/rounding/CreateDB.sql");
   }
 
   @Test

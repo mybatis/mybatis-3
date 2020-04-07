@@ -195,7 +195,7 @@ class XPathParserTest {
   }
 
   @Test
-  public void formatXNodeToString() {
+  void formatXNodeToString() {
     XPathParser parser = new XPathParser("<users><user><id>100</id><name>Tom</name><age>30</age><cars><car>BMW</car><car>Audi</car><car>Benz</car></cars></user></users>");
     String usersNodeToString = parser.evalNode("/users").toString();
     String userNodeToString = parser.evalNode("/users/user").toString();

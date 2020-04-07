@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2019 the original author or authors.
+       Copyright 2009-2020 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -503,7 +503,10 @@ void rollback(boolean force)</source>
         <td>N/A</td>
         <td><code>&lt;association&gt;</code></td>
         <td>복잡한 타입의 한개의 프로퍼티를 위한 매핑이다.
-		사용가능한 속성들 : select(매핑 구문의 이름, 예를들어 매퍼 메소드)
+		사용가능한 속성들 : select(매핑 구문의 이름, 예를들어 매퍼 메소드).
+		<code>fetchType</code>, which supersedes the global configuration parameter <code>lazyLoadingEnabled</code> for this mapping.
+		<code>resultMap</code>(available since 3.5.5), which is the fully qualified name of a result map that map to a single container object from select result.
+    <code>columnPrefix</code>(available since 3.5.5), which is column prefix for grouping select columns at nested result map.
 		Note: 조인 매핑은 애노테이션 API 를 통해서는 지원되지 않는다는 것을 알아야 한다.
 		순환(circular) 참조를 허용하지 않는 자바 애노테이션의 제약사항때문이다.</td>
       </tr>
@@ -513,6 +516,9 @@ void rollback(boolean force)</source>
         <td><code>&lt;collection&gt;</code></td>
         <td>복잡한 타입의 collection 프로퍼티를 위한 매핑이다.
 		사용가능한 속성들 : select(매핑 구문의 이름, 예를들어 매퍼 메소드)
+		<code>fetchType</code>, which supersedes the global configuration parameter <code>lazyLoadingEnabled</code> for this mapping.
+		<code>resultMap</code>(available since 3.5.5), which is the fully qualified name of a result map that map to collection object from select result.
+    <code>columnPrefix</code>(available since 3.5.5), which is column prefix for grouping select columns at nested result map.
 		Note: 조인 매핑은 애노테이션 API 를 통해서는 지원되지 않는다는 것을 알아야 한다.
 		순환(circular) 참조를 허용하지 않는 자바 애노테이션의 제약사항때문이다.</td>
       </tr>

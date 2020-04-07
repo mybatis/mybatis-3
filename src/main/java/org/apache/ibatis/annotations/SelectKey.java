@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -26,8 +26,9 @@ import org.apache.ibatis.mapping.StatementType;
 /**
  * The annotation that specify an SQL for retrieving a key value.
  *
- * <p><br>
+ * <p>
  * <b>How to use:</b>
+ *
  * <pre>
  * public interface UserMapper {
  *   &#064;SelectKey(statement = "SELECT identity('users')", keyProperty = "id", before = true, resultType = int.class)
@@ -35,6 +36,7 @@ import org.apache.ibatis.mapping.StatementType;
  *   boolean insert(User user);
  * }
  * </pre>
+ *
  * @author Clinton Begin
  */
 @Documented

@@ -54,7 +54,7 @@ class BlobByteObjectArrayTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldGetResultFromResultSetByName() throws Exception {
     byte[] byteArray = new byte[] { 1, 2 };
     when(rs.getBlob("column")).thenReturn(blob);
-    when(blob.length()).thenReturn((long)byteArray.length);
+    when(blob.length()).thenReturn((long) byteArray.length);
     when(blob.getBytes(1, 2)).thenReturn(byteArray);
     assertThat(TYPE_HANDLER.getResult(rs, "column")).isEqualTo(new Byte[] { 1, 2 });
 
@@ -72,7 +72,7 @@ class BlobByteObjectArrayTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldGetResultFromResultSetByPosition() throws Exception {
     byte[] byteArray = new byte[] { 1, 2 };
     when(rs.getBlob(1)).thenReturn(blob);
-    when(blob.length()).thenReturn((long)byteArray.length);
+    when(blob.length()).thenReturn((long) byteArray.length);
     when(blob.getBytes(1, 2)).thenReturn(byteArray);
     assertThat(TYPE_HANDLER.getResult(rs, 1)).isEqualTo(new Byte[] { 1, 2 });
   }
@@ -89,7 +89,7 @@ class BlobByteObjectArrayTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldGetResultFromCallableStatement() throws Exception {
     byte[] byteArray = new byte[] { 1, 2 };
     when(cs.getBlob(1)).thenReturn(blob);
-    when(blob.length()).thenReturn((long)byteArray.length);
+    when(blob.length()).thenReturn((long) byteArray.length);
     when(blob.getBytes(1, 2)).thenReturn(byteArray);
     assertThat(TYPE_HANDLER.getResult(cs, 1)).isEqualTo(new Byte[] { 1, 2 });
   }

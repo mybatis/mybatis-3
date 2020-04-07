@@ -29,7 +29,7 @@ import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Test;
 
-public class OgnlCacheTest {
+class OgnlCacheTest {
   @Test
   void concurrentAccess() throws Exception {
     class DataClass {

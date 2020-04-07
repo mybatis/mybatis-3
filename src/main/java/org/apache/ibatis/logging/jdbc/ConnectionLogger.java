@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -48,14 +48,7 @@ public final class ConnectionLogger extends BaseJdbcLogger implements Invocation
       if (Object.class.equals(method.getDeclaringClass())) {
         return method.invoke(this, params);
       }
-      if ("prepareStatement".equals(method.getName())) {
-        if (isDebugEnabled()) {
-          debug(" Preparing: " + removeBreakingWhitespace((String) params[0]), true);
-        }
-        PreparedStatement stmt = (PreparedStatement) method.invoke(connection, params);
-        stmt = PreparedStatementLogger.newInstance(stmt, statementLog, queryStack);
-        return stmt;
-      } else if ("prepareCall".equals(method.getName())) {
+      if ("prepareStatement".equals(method.getName()) || "prepareCall".equals(method.getName())) {
         if (isDebugEnabled()) {
           debug(" Preparing: " + removeBreakingWhitespace((String) params[0]), true);
         }
@@ -77,8 +70,13 @@ public final class ConnectionLogger extends BaseJdbcLogger implements Invocation
   /**
    * Creates a logging version of a connection.
    *
-   * @param conn - the original connection
-   * @return - the connection with logging
+   * @param conn
+   *          the original connection
+   * @param statementLog
+   *          the statement log
+   * @param queryStack
+   *          the query stack
+   * @return the connection with logging
    */
   public static Connection newInstance(Connection conn, Log statementLog, int queryStack) {
     InvocationHandler handler = new ConnectionLogger(conn, statementLog, queryStack);

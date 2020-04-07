@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2019 the original author or authors.
+       Copyright 2009-2020 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -418,9 +418,12 @@ void rollback(boolean force)</source>
         <td>N/A</td>
         <td><code>&lt;association&gt;</code></td>
         <td>A mapping to a single property value of a complex type. Attributes: <code>select</code>, which is the fully
-        qualified name of a mapped statement (i.e. mapper method) that can load an instance of the appropriate type,
+        qualified name of a mapped statement (i.e. mapper method) that can load an instance of the appropriate type.
         <code>fetchType</code>, which supersedes the global configuration parameter <code>lazyLoadingEnabled</code> for this
         mapping.
+        <code>resultMap</code>(available since 3.5.5), which is the fully qualified name of a result map that map to
+        a single container object from select result.
+        <code>columnPrefix</code>(available since 3.5.5), which is column prefix for grouping select columns at nested result map.
         <span class="label important">NOTE</span> You will notice that join mapping is not supported via the Annotations API.
         This is due to the limitation in Java Annotations that does not allow for circular references.</td>
       </tr>
@@ -430,8 +433,11 @@ void rollback(boolean force)</source>
         <td><code>&lt;collection&gt;</code></td>
         <td>A mapping to a collection property of a complex type. Attributes: <code>select</code>, which is the fully
         qualified name of a mapped statement (i.e. mapper method) that can load a collection of instances of the appropriate
-        types, <code>fetchType</code>, which supersedes the global configuration parameter <code>lazyLoadingEnabled</code> for this
+        types. <code>fetchType</code>, which supersedes the global configuration parameter <code>lazyLoadingEnabled</code> for this
         mapping.
+        <code>resultMap</code>(available since 3.5.5), which is the fully qualified name of a result map that map to
+        collection object from select result.
+        <code>columnPrefix</code>(available since 3.5.5), which is column prefix for grouping select columns at nested result map.
         <span class="label important">NOTE</span> You will notice that join mapping is not supported via the
         Annotations API. This is due to the limitation in Java Annotations that does not allow for circular references.</td>
       </tr>

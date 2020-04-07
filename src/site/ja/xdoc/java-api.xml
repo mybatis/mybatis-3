@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2019 the original author or authors.
+       Copyright 2009-2020 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -397,16 +397,22 @@ void rollback(boolean force)</source>
         <td><code>@One</code></td>
         <td>N/A</td>
         <td><code>&lt;association&gt;</code></td>
-        <td>複雑型のプロパティのマッピング情報を定義します。属性: <code>select</code>, <code>fetchType</code>. select は適切な型を読み込むことができるマップドステートメント（Mapper メソッド）の完全修飾名です。
+        <td>複雑型のプロパティのマッピング情報を定義します。属性: <code>select</code>, <code>fetchType</code>, <code>resultMap</code>(3.5.5以降で利用可能), <code>columnPrefix</code>(3.5.5以降で利用可能).
+        select は適切な型を読み込むことができるマップドステートメント（Mapper メソッド）の完全修飾名です。
         fetchType はグローバルな設定 <code>lazyLoadingEnabled</code> をオーバーライドする場合に指定します。
+        resultMap は結果列を単一のコンテナオブジェクト(JavaBeanなど)へマッピングするための結果マップの完全修飾名を指定します。
+        columnPrefix はネストした結果マップで結果列をグループ化するためのカラム名のプレフィックスを指定します。
         <span class="label important">NOTE</span> アノテーション API では結合マッピングがサポートされていません。これは Java アノテーションでは循環参照が許可されないためです。</td>
       </tr>
       <tr>
         <td><code>@Many</code></td>
         <td>N/A</td>
         <td><code>&lt;collection&gt;</code></td>
-        <td>複雑型のプロパティのマッピング情報を定義します。属性: <code>select</code>, <code>fetchType</code>. select は適切な型のコレクションを読み込むことができるマップドステートメント（Mapper メソッド）の完全修飾名です。
+        <td>複雑型のプロパティのマッピング情報を定義します。属性: <code>select</code>, <code>fetchType</code>, <code>resultMap</code>(3.5.5以降で利用可能), <code>columnPrefix</code>(3.5.5以降で利用可能).
+        select は適切な型のコレクションを読み込むことができるマップドステートメント（Mapper メソッド）の完全修飾名です。
         fetchType はグローバルな設定 <code>lazyLoadingEnabled</code> をオーバーライドする場合に指定します。
+        resultMap は結果列をコレクションオブジェクト(JavaBeanのリストなど)へマッピングするための結果マップの完全修飾名を指定します。
+        columnPrefix はネストした結果マップで結果列をグループ化するためのカラム名のプレフィックスを指定します。
         <span class="label important">NOTE</span> アノテーション API では結合マッピングがサポートされていません。これは Java アノテーションでは循環参照が許可されないためです。</td>
       </tr>
       <tr>

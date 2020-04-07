@@ -39,7 +39,7 @@ class ParametrizedListTest {
     }
 
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/parametrizedlist/CreateDB.sql");
+        "org/apache/ibatis/submitted/parametrizedlist/CreateDB.sql");
   }
 
   @Test

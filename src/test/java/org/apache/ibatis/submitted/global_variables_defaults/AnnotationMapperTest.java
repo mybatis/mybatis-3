@@ -31,10 +31,10 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class AnnotationMapperTest {
+class AnnotationMapperTest {
 
   @Test
-  public void applyDefaultValueOnAnnotationMapper() throws IOException {
+  void applyDefaultValueOnAnnotationMapper() throws IOException {
 
     Properties props = new Properties();
     props.setProperty(PropertyParser.KEY_ENABLE_DEFAULT_VALUE, "true");
@@ -56,7 +56,7 @@ public class AnnotationMapperTest {
   }
 
   @Test
-  public void applyPropertyValueOnAnnotationMapper() throws IOException {
+  void applyPropertyValueOnAnnotationMapper() throws IOException {
 
     Properties props = new Properties();
     props.setProperty(PropertyParser.KEY_ENABLE_DEFAULT_VALUE, "true");
