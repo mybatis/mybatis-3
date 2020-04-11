@@ -308,6 +308,16 @@ class ScriptRunnerTest extends BaseDataTest {
     Assert.assertEquals(";", findDelimiter(DELIMITER_PATTERN, testStr2));
   }
 
+  @Test
+  public void testSubDelimiter() {
+    String testStr1 = "delimiter   ;;";
+    String testStr2 = "delimiter  ;";
+    String testStr3 = "sdelimiter  ;";
+    Assert.assertTrue("DELIMITER".equalsIgnoreCase(testStr1.substring(0, "DELIMITER".length())));
+    Assert.assertTrue("DELIMITER".equalsIgnoreCase(testStr2.substring(0, "DELIMITER".length())));
+    Assert.assertFalse("DELIMITER".equalsIgnoreCase(testStr3.substring(0, "DELIMITER".length())));
+  }
+
   /**
    * eg: dbeaver export
    * DELIMITER ;;
