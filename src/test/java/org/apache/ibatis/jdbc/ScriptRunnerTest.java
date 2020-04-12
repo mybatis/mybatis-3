@@ -318,6 +318,24 @@ class ScriptRunnerTest extends BaseDataTest {
     Assert.assertFalse("DELIMITER".equalsIgnoreCase(testStr3.substring(0, "DELIMITER".length())));
   }
 
+  private String regionMatchDelimiter(String inputLine) {
+    String trimLine = inputLine.trim();
+    if (trimLine.regionMatches(true, 0,
+      "Delimiter", 0, "Delimiter".length())) {
+      return inputLine.substring("Delimiter".length()).trim();
+    }
+    return "";
+  }
+
+  @Test
+  public void testRegionMatch() {
+    String testStr1 = "Delimiter ;;";
+    Assert.assertTrue(regionMatchDelimiter(testStr1).length() > 0);
+    Assert.assertEquals(";;", regionMatchDelimiter(testStr1));
+    String testStr2 = "Delimiter ";
+    Assert.assertFalse(regionMatchDelimiter(testStr2).length() > 0);
+  }
+
   /**
    * eg: dbeaver export
    * DELIMITER ;;

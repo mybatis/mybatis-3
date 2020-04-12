@@ -9,7 +9,6 @@ import java.util.regex.Pattern;
  * @author James
  */
 public class NoCommentDelimiterHandler implements DelimiterHandler {
-  private static final Pattern NOCOMMENT_DELIMITER = Pattern.compile("^DELIMITER\\s*(\\S+)", Pattern.CASE_INSENSITIVE);
 
   private static final String DELIMITER_NAME = "DELIMITER";
 
@@ -23,11 +22,11 @@ public class NoCommentDelimiterHandler implements DelimiterHandler {
   @Override
   public boolean resetDelimiter(ScriptRunner scriptRunner, String trimmedLine) {
     if (lineStartWithDelimiter(trimmedLine)) {
-      Matcher matcher = NOCOMMENT_DELIMITER.matcher(trimmedLine);
-      if (matcher.find()) {
-        scriptRunner.setDelimiter(matcher.group(1));
-        return true;
-      }
+        String delimiter = trimmedLine.substring(DELIMITER_NAME.length()).trim();
+        if (delimiter.length() > 0) {
+          scriptRunner.setDelimiter(delimiter);
+          return true;
+        }
     }
     return false;
   }
