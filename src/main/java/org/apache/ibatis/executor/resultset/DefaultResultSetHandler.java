@@ -477,7 +477,12 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       if (propertyMapping.isCompositeResult()
           || (column != null && mappedColumnNames.contains(column.toUpperCase(Locale.ENGLISH)))
           || propertyMapping.getResultSet() != null) {
-        Object value = getPropertyMappingValue(rsw.getResultSet(), metaObject, propertyMapping, lazyLoader, columnPrefix);
+
+        // mapping composite property or simple property
+        Object value = propertyMapping.isCompositeResult()
+          ? getCompositePropertyMappingValue(rsw, propertyMapping, lazyLoader, columnPrefix)
+          : getPropertyMappingValue(rsw.getResultSet(), metaObject, propertyMapping, lazyLoader, columnPrefix);
+
         // issue #541 make property optional
         final String property = propertyMapping.getProperty();
         if (property == null) {
@@ -496,6 +501,18 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       }
     }
     return foundValues;
+  }
+
+  //
+  // COMPOSITE PROPERTY MAPPING
+  //
+  private Object getCompositePropertyMappingValue(ResultSetWrapper rsw, ResultMapping propertyMapping, ResultLoaderMap lazyLoader, String columnPrefix) throws SQLException {
+    final List<ResultMapping> resultMappings = propertyMapping.getComposites();
+    final ResultMap resultMap = new ResultMap.Builder(configuration, propertyMapping.getJavaType().getSimpleName(),
+      propertyMapping.getJavaType(), resultMappings)
+      .build();
+
+    return getRowValue(rsw, resultMap, columnPrefix);
   }
 
   private Object getPropertyMappingValue(ResultSet rs, MetaObject metaResultObject, ResultMapping propertyMapping, ResultLoaderMap lazyLoader, String columnPrefix)
