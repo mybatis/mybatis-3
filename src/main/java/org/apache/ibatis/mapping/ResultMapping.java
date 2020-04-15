@@ -146,8 +146,10 @@ public class ResultMapping {
       if (resultMapping.nestedQueryId != null && resultMapping.nestedResultMapId != null) {
         throw new IllegalStateException("Cannot define both nestedQueryId and nestedResultMapId in property " + resultMapping.property);
       }
+
       // Issue #5: there should be no mappings without typehandler
-      if (resultMapping.nestedQueryId == null && resultMapping.nestedResultMapId == null && resultMapping.typeHandler == null) {
+      // when mapping is composites result is not need a typehandler
+      if (resultMapping.nestedQueryId == null && resultMapping.nestedResultMapId == null && resultMapping.typeHandler == null && resultMapping.composites.isEmpty()) {
         throw new IllegalStateException("No typehandler found for property " + resultMapping.property);
       }
       // Issue #4 and GH #39: column is optional only in nested resultmaps but not in the rest
