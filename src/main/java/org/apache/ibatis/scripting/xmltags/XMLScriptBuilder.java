@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -116,6 +116,17 @@ public class XMLScriptBuilder extends BaseBuilder {
       final String expression = nodeToHandle.getStringAttribute("value");
       final VarDeclSqlNode node = new VarDeclSqlNode(name, expression);
       targetContents.add(node);
+
+      String data = nodeToHandle.getStringBody("");
+      TextSqlNode textSqlNode = new TextSqlNode(data);
+      if (textSqlNode.isDynamic()) {
+        targetContents.add(textSqlNode);
+        isDynamic = true;
+      } else {
+        targetContents.add(new StaticTextSqlNode(data));
+      }
+
+
     }
   }
 
