@@ -22,6 +22,7 @@ import java.util.Map;
 import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.parsing.GenericTokenParser;
+import org.apache.ibatis.parsing.StringParser;
 import org.apache.ibatis.parsing.TokenHandler;
 import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.reflection.MetaObject;
@@ -42,7 +43,12 @@ public class SqlSourceBuilder extends BaseBuilder {
   public SqlSource parse(String originalSql, Class<?> parameterType, Map<String, Object> additionalParameters) {
     ParameterMappingTokenHandler handler = new ParameterMappingTokenHandler(configuration, parameterType, additionalParameters);
     GenericTokenParser parser = new GenericTokenParser("#{", "}", handler);
-    String sql = parser.parse(originalSql);
+    String sql;
+    if (configuration.isMinifySqlEnabled()) {
+      sql = parser.parse(StringParser.removeBreakingWhitespace(originalSql));
+    } else {
+      sql = parser.parse(originalSql);
+    }
     return new StaticSqlSource(configuration, sql, handler.getParameterMappings());
   }
 

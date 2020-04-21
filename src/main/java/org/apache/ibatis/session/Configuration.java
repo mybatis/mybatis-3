@@ -113,6 +113,7 @@ public class Configuration {
   protected boolean callSettersOnNulls;
   protected boolean useActualParamName = true;
   protected boolean returnInstanceForEmptyRow;
+  protected boolean minifySqlEnabled;
 
   protected String logPrefix;
   protected Class<? extends Log> logImpl;
@@ -264,6 +265,14 @@ public class Configuration {
 
   public void setReturnInstanceForEmptyRow(boolean returnEmptyInstance) {
     this.returnInstanceForEmptyRow = returnEmptyInstance;
+  }
+
+  public boolean isMinifySqlEnabled() {
+    return minifySqlEnabled;
+  }
+
+  public void setMinifySqlEnabled(boolean minifySqlEnabled) {
+    this.minifySqlEnabled = minifySqlEnabled;
   }
 
   public String getDatabaseId() {

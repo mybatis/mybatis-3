@@ -26,10 +26,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 
 import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.parsing.StringParser;
 import org.apache.ibatis.reflection.ArrayUtil;
 
 /**
@@ -121,13 +121,7 @@ public abstract class BaseJdbcLogger {
   }
 
   protected String removeBreakingWhitespace(String original) {
-    StringTokenizer whitespaceStripper = new StringTokenizer(original);
-    StringBuilder builder = new StringBuilder();
-    while (whitespaceStripper.hasMoreTokens()) {
-      builder.append(whitespaceStripper.nextToken());
-      builder.append(" ");
-    }
-    return builder.toString();
+    return StringParser.removeBreakingWhitespace(original);
   }
 
   protected boolean isDebugEnabled() {
