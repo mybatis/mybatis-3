@@ -462,8 +462,8 @@ public final class TypeHandlerRegistry {
     // Try instance TypeHandler with Type first
     try {
       Constructor<?> c = typeHandlerClass.getConstructor(Type.class);
-      Type actualParam = genericType != null ? genericType : rawClass;
-      return (TypeHandler<T>) c.newInstance(actualParam);
+      Type actualArg = genericType != null ? genericType : rawClass;
+      return (TypeHandler<T>) c.newInstance(actualArg);
     } catch (NoSuchMethodException ignored) {
       // ignored
     } catch (Exception e) {
