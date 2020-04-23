@@ -15,6 +15,9 @@
  */
 package org.apache.ibatis.type;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import javax.sql.DataSource;
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.annotations.Insert;
@@ -22,12 +25,14 @@ import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.mapping.Environment;
+import org.apache.ibatis.reflection.Reflector;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
+import org.junit.Assert;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -39,12 +44,13 @@ public class GenericFieldJsonTypeHandlerTest{
   interface GenericFieldJsonTestMapper {
     @Results({
       @Result(property = "id", column = "id"),
-      @Result(property = "genericFieldObj", column = "json", typeHandler = org.apache.ibatis.type.GenericTypeJsonTypeHandler.class),
+      @Result(property = "simpleFieldObj", column = "simple", typeHandler = org.apache.ibatis.type.GenericTypeJsonTypeHandler.class),
+      @Result(property = "genericFieldObj", column = "json", typeHandler = org.apache.ibatis.type.GenericTypeJsonTypeHandler.class)
     })
-    @Select("SELECT ID, JSON FROM test_generic WHERE ID = #{id}")
+    @Select("SELECT ID, SIMPLE, JSON FROM test_generic WHERE ID = #{id}")
     HadGenericFieldType findOne(int id);
 
-    @Insert("INSERT INTO test_generic (ID, JSON) VALUES(#{id}, #{genericFieldObj, typeHandler=org.apache.ibatis.type.GenericTypeJsonTypeHandler})")
+    @Insert("INSERT INTO test_generic (ID, SIMPLE, JSON) VALUES(#{id}, #{simpleFieldObj, typeHandler=org.apache.ibatis.type.GenericTypeJsonTypeHandler}, #{genericFieldObj, typeHandler=org.apache.ibatis.type.GenericTypeJsonTypeHandler})")
     void insert(HadGenericFieldType blobContent);
   }
 
@@ -71,14 +77,14 @@ public class GenericFieldJsonTypeHandlerTest{
     private T genericArgumentTypeObj;
 
     public T getGenericArgumentTypeObj() {
-		return genericArgumentTypeObj;
-	}
+      return genericArgumentTypeObj;
+    }
 
-	public void setGenericArgumentTypeObj(T genericArgumentTypeObj) {
-		this.genericArgumentTypeObj = genericArgumentTypeObj;
-	}
+    public void setGenericArgumentTypeObj(T genericArgumentTypeObj) {
+      this.genericArgumentTypeObj = genericArgumentTypeObj;
+    }
 
-	@Override
+    @Override
     public String toString() {
       return "GenericFieldType{" +
         "genericArgumentTypeObj=" + genericArgumentTypeObj +
@@ -88,6 +94,7 @@ public class GenericFieldJsonTypeHandlerTest{
 
   static class HadGenericFieldType{
     private int id;
+    private LocalDateTime simpleFieldObj;
     private GenericFieldType<GenerciArgumentType> genericFieldObj;
 
     public int getId() {
@@ -99,17 +106,26 @@ public class GenericFieldJsonTypeHandlerTest{
     }
 
     public GenericFieldType<GenerciArgumentType> getGenericFieldObj() {
-		return genericFieldObj;
-	}
+      return genericFieldObj;
+    }
 
-	public void setGenericFieldObj(GenericFieldType<GenerciArgumentType> genericFieldObj) {
-		this.genericFieldObj = genericFieldObj;
-	}
+    public void setGenericFieldObj(GenericFieldType<GenerciArgumentType> genericFieldObj) {
+      this.genericFieldObj = genericFieldObj;
+    }
 
-	@Override
+    public LocalDateTime getSimpleFieldObj() {
+      return simpleFieldObj;
+    }
+
+    public void setSimpleFieldObj(LocalDateTime simpleFieldObj) {
+      this.simpleFieldObj = simpleFieldObj;
+    }
+
+    @Override
     public String toString() {
       return "HadGenericFieldType{" +
         "id=" + id +
+        ", simpleFieldObj=" + simpleFieldObj +
         ", genericFieldObj=" + genericFieldObj +
         '}';
     }
@@ -140,11 +156,14 @@ public class GenericFieldJsonTypeHandlerTest{
     genericFieldObj.setGenericArgumentTypeObj(argumentTypeObj);
     HadGenericFieldType hadGenericFieldObj = new HadGenericFieldType();
     hadGenericFieldObj.setId(id);
+    hadGenericFieldObj.setSimpleFieldObj(LocalDateTime.now());
     hadGenericFieldObj.setGenericFieldObj(genericFieldObj);
     mapper.insert(hadGenericFieldObj);
 
     hadGenericFieldObj = mapper.findOne(id);
-    argumentTypeObj = hadGenericFieldObj.getGenericFieldObj().getGenericArgumentTypeObj();
-    System.out.println(hadGenericFieldObj);
+    Class<?> argumentTypeClazz = hadGenericFieldObj.getGenericFieldObj().getGenericArgumentTypeObj().getClass();
+    Assert.assertEquals(GenerciArgumentType.class, argumentTypeClazz);
+    Class<?> simpleFieldClazz = hadGenericFieldObj.getSimpleFieldObj().getClass();
+    Assert.assertEquals(LocalDateTime.class, simpleFieldClazz);
   }
 }

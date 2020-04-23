@@ -41,14 +41,13 @@ public final class GenericTypeRawClassPair {
   public static GenericTypeRawClassPair newGenericTypeRawClassPair(Type type, Class<?> rawClass){
     Objects.requireNonNull(rawClass, "rawClass must be present");
     if(type instanceof Class){
-      return newOnlyRawClassPair(rawClass);
+      type = null;
     }
     return new GenericTypeRawClassPair(type, rawClass);
   }
 
   public static GenericTypeRawClassPair newOnlyRawClassPair(Class<?> rawClass){
-    Objects.requireNonNull(rawClass, "rawClass must be present");
-    return new GenericTypeRawClassPair(null, rawClass);
+    return newGenericTypeRawClassPair(null, rawClass);
   }
 
 }

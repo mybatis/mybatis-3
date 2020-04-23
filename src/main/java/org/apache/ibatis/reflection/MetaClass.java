@@ -87,15 +87,36 @@ public class  MetaClass {
       return reflector.getSetterGenericTypeRawClassPair(prop.getName());
     }
   }
-
   public GenericTypeRawClassPair getGetterGenericTypeRawClassPair(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
       MetaClass metaProp = metaClassForProperty(prop.getName());
       return metaProp.getGetterGenericTypeRawClassPair(prop.getChildren());
     } else {
-      return reflector.getGetterGenericTypeRawClassPair(prop.getName());
+      return getGetterGenericTypeRawClassPair(prop);
     }
+  }
+
+  private GenericTypeRawClassPair getGetterGenericTypeRawClassPair(PropertyTokenizer prop) {
+    GenericTypeRawClassPair typeRawClassPair = reflector.getGetterGenericTypeRawClassPair(prop.getName());
+    Class<?> rawType = typeRawClassPair.getRawClass();
+    Type returnType = typeRawClassPair.getType();
+    if (prop.getIndex() != null && Collection.class.isAssignableFrom(rawType)) {
+      if (returnType instanceof ParameterizedType) {
+        Type[] actualTypeArguments = ((ParameterizedType) returnType).getActualTypeArguments();
+        if (actualTypeArguments != null && actualTypeArguments.length == 1) {
+          returnType = actualTypeArguments[0];
+          if (returnType instanceof Class) {
+            return GenericTypeRawClassPair.newOnlyRawClassPair((Class<?>) returnType);
+          } else if (returnType instanceof ParameterizedType) {
+            ParameterizedType castedReturnType = (ParameterizedType)returnType;
+            return GenericTypeRawClassPair.newGenericTypeRawClassPair(castedReturnType,
+              (Class<?>) castedReturnType.getRawType());
+          }
+        }
+      }
+    }
+    return typeRawClassPair;
   }
 
   public Class<?> getGetterType(String name) {

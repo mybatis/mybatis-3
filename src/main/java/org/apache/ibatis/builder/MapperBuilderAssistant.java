@@ -163,10 +163,9 @@ public class MapperBuilderAssistant extends BaseBuilder {
     resultMap = applyCurrentNamespace(resultMap, true);
 
     // Class parameterType = parameterMapBuilder.type();
-    GenericTypeRawClassPair genericTypeRawClassPair = resolveParameterJavaType(parameterType, property, javaType, jdbcType);
-    Type fieldType = genericTypeRawClassPair.getType();
-    Class<?> javaTypeClass = genericTypeRawClassPair.getRawClass();
-    TypeHandler<?> typeHandlerInstance = resolveTypeHandler(fieldType, javaTypeClass, typeHandler);
+    Class<?> javaTypeClass = resolveParameterJavaType(parameterType, property, javaType, jdbcType);
+    TypeHandler<?> typeHandlerInstance = resolveTypeHandler(javaTypeClass, typeHandler);
+
     return new ParameterMapping.Builder(configuration, property, javaTypeClass)
         .jdbcType(jdbcType)
         .resultMapId(resultMap)
@@ -540,26 +539,27 @@ public class MapperBuilderAssistant extends BaseBuilder {
       }
     }
     if (genericTypeRawClassPair == null) {
-      genericTypeRawClassPair = GenericTypeRawClassPair.newOnlyRawClassPair(Object.class);
+      Class deduceJavaType = javaType != null ? javaType : Object.class;
+      genericTypeRawClassPair = GenericTypeRawClassPair.newOnlyRawClassPair(deduceJavaType);
     }
     return genericTypeRawClassPair;
   }
 
-  private GenericTypeRawClassPair resolveParameterJavaType(Class<?> resultType, String property, Class<?> javaType, JdbcType jdbcType) {
+  private Class<?> resolveParameterJavaType(Class<?> resultType, String property, Class<?> javaType, JdbcType jdbcType) {
     if (javaType == null) {
       if (JdbcType.CURSOR.equals(jdbcType)) {
-        return GenericTypeRawClassPair.newOnlyRawClassPair(java.sql.ResultSet.class);
+        javaType = java.sql.ResultSet.class;
       } else if (Map.class.isAssignableFrom(resultType)) {
-        return GenericTypeRawClassPair.newOnlyRawClassPair(Object.class);
+        javaType = Object.class;
       } else {
         MetaClass metaResultType = MetaClass.forClass(resultType, configuration.getReflectorFactory());
-        return metaResultType.getGetterGenericTypeRawClassPair(property);
+        javaType = metaResultType.getGetterType(property);
       }
     }
     if (javaType == null) {
-      return GenericTypeRawClassPair.newOnlyRawClassPair(Object.class);
+      javaType = Object.class;
     }
-    return GenericTypeRawClassPair.newOnlyRawClassPair(javaType);
+    return javaType;
   }
 
 }

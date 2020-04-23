@@ -196,6 +196,7 @@ public class Reflector {
     setMethods.put(property, invoker);
     Type[] paramTypes = TypeParameterResolver.resolveParamTypes(setter1, type);
     setTypes.put(property, typeToClass(paramTypes[0]));
+    setGenericTypeRawClasses.put(property, typeToTypeClassPair(paramTypes[0]));
     return null;
   }
 

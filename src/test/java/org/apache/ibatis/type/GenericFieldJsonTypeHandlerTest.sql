@@ -18,5 +18,6 @@ DROP TABLE test_generic;
 
 CREATE TABLE test_generic (
   id INT PRIMARY KEY,
+  simple VARCHAR(200),
   json VARCHAR(200)
 );

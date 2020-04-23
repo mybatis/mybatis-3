@@ -25,7 +25,7 @@ import java.sql.SQLException;
 public class GenericTypeJsonTypeHandler implements TypeHandler{
 	private Type type;
 	private static final Gson gson = new Gson();
-	
+
 	public GenericTypeJsonTypeHandler(Type type){
 		this.type = type;
 	}
