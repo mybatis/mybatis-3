@@ -273,7 +273,7 @@
     <dependency>
       <groupId>org.testcontainers</groupId>
       <artifactId>mysql</artifactId>
-      <version>1.13.0</version>
+      <version>1.14.1</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
