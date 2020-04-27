@@ -309,6 +309,20 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
             </tr>
             <tr>
               <td>
+                defaultResultSetType
+              </td>
+              <td>
+                Specifies a scroll strategy when omit it per statement settings. (Since: 3.5.2)
+              </td>
+              <td>
+                FORWARD_ONLY | SCROLL_SENSITIVE | SCROLL_INSENSITIVE | DEFAULT(same behavior with 'Not Set')
+              </td>
+              <td>
+                Not Set (null)
+              </td>
+            </tr>
+            <tr>
+              <td>
                 safeRowBoundsEnabled
               </td>
               <td>
@@ -1474,13 +1488,15 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
   method = "update",
   args = {MappedStatement.class,Object.class})})
 public class ExamplePlugin implements Interceptor {
+  private Properties properties = new Properties();
   public Object intercept(Invocation invocation) throws Throwable {
-    return invocation.proceed();
-  }
-  public Object plugin(Object target) {
-    return Plugin.wrap(target, this);
+    // implement pre processing if need
+    Object returnObject = invocation.proceed();
+    // implement post processing if need
+    return returnObject;
   }
   public void setProperties(Properties properties) {
+    this.properties = properties;
   }
 }]]></source>
 
@@ -1573,7 +1589,9 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
 		어쨌든 둘다 타입 별칭이 있다.
 		즉 TransactionFactory를 위한 클래스 명이나 타입 별칭 중 하나를 사용할 수 있다.</p>
         <source><![CDATA[public interface TransactionFactory {
-  void setProperties(Properties props);
+  default void setProperties(Properties props) { // Since 3.5.2, change to default method
+    // NOP
+  }
   Transaction newTransaction(Connection conn);
   Transaction newTransaction(DataSource dataSource, TransactionIsolationLevel level, boolean autoCommit);
 }]]></source>
@@ -1598,13 +1616,15 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
         <p>
           <strong>UNPOOLED</strong> - 이 구현체는 매번 요청에 대해 커넥션을 열고 닫는 간단한 DataSource이다.
 		  조금 늦긴 하지만 성능을 크게 필요로 하지 않는 간단한 애플리케이션을 위해서는 괜찮은 선택이다.
-		  UNPOOLED DataSource는 5 개의 프로퍼티만으로 설정한다.</p>
+		  UNPOOLED DataSource에는 다음과 같은 속성이 있습니다.</p>
         <ul>
           <li><code>driver</code> - JDBC드라이버의 패키지 경로를 포함한 결제 자바 클래스명</li>
           <li><code>url</code> - 데이터베이스 인스턴스에 대한 JDBC URL</li>
           <li><code>username</code> - 데이터베이스에 로그인 할 때 사용할 사용자명</li>
           <li><code>password</code> - 데이터베이스에 로그인 할 때 사용할 패스워드</li>
           <li><code>defaultTransactionIsolationLevel</code> - 커넥션에 대한 디폴트 트랜잭션 격리 레벨</li>
+          <li><code>defaultNetworkTimeout</code> – The default network timeout value in milliseconds to wait for the database operation to complete. See the API documentation of <code>java.sql.Connection#setNetworkTimeout()</code> for details.</li>
+
         </ul>
         <p>필수는 아니지만 선택적으로 데이터베이스 드라이버에 프로퍼티를 전달할 수도 있다.
 		그러기 위해서는 다음 예제처럼 “driver.” 로 시작하는 접두어로 프로퍼티를 명시하면 된다.</p>
@@ -1724,7 +1744,9 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
     </p>
 
         <source><![CDATA[public interface DatabaseIdProvider {
-  void setProperties(Properties p);
+  default void setProperties(Properties p) { // Since 3.5.2, change to default method
+    // NOP
+  }
   String getDatabaseId(DataSource dataSource) throws SQLException;
 }]]></source>
 

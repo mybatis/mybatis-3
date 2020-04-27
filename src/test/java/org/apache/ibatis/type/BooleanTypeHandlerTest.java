@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -36,10 +36,8 @@ class BooleanTypeHandlerTest extends BaseTypeHandlerTest {
   @Override
   @Test
   public void shouldGetResultFromResultSetByName() throws Exception {
-    when(rs.getBoolean("column")).thenReturn(true);
+    when(rs.getBoolean("column")).thenReturn(true, false);
     assertEquals(true, TYPE_HANDLER.getResult(rs, "column"));
-
-    when(rs.getBoolean("column")).thenReturn(false);
     assertEquals(false, TYPE_HANDLER.getResult(rs, "column"));
   }
 
@@ -54,10 +52,8 @@ class BooleanTypeHandlerTest extends BaseTypeHandlerTest {
   @Override
   @Test
   public void shouldGetResultFromResultSetByPosition() throws Exception {
-    when(rs.getBoolean(1)).thenReturn(true);
+    when(rs.getBoolean(1)).thenReturn(true, false);
     assertEquals(true, TYPE_HANDLER.getResult(rs, 1));
-
-    when(rs.getBoolean(1)).thenReturn(false);
     assertEquals(false, TYPE_HANDLER.getResult(rs, 1));
   }
 
@@ -72,10 +68,8 @@ class BooleanTypeHandlerTest extends BaseTypeHandlerTest {
   @Override
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
-    when(cs.getBoolean(1)).thenReturn(true);
+    when(cs.getBoolean(1)).thenReturn(true, false);
     assertEquals(true, TYPE_HANDLER.getResult(cs, 1));
-
-    when(cs.getBoolean(1)).thenReturn(false);
     assertEquals(false, TYPE_HANDLER.getResult(cs, 1));
   }
 

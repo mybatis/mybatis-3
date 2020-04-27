@@ -66,7 +66,6 @@ public class GenericTokenParser {
             end = text.indexOf(closeToken, offset);
           } else {
             expression.append(src, offset, end - offset);
-            offset = end + closeToken.length();
             break;
           }
         }

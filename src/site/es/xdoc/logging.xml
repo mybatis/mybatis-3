@@ -144,15 +144,15 @@ log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n]]></source>
   </select>
 </mapper>]]></source>
 
-		<p>En tal caso puedes activar el logging de todo el fichero añadiendo un logger para el namespace como se muestra a continuación:</p>
+        <p>En tal caso puedes activar el logging de todo el fichero añadiendo un logger para el namespace como se muestra a continuación:</p>
 
         <source>log4j.logger.org.mybatis.example.BlogMapper=TRACE</source>
 
-		<p>O para un statement específico:</p>
+        <p>O para un statement específico:</p>
 
         <source>log4j.logger.org.mybatis.example.BlogMapper.selectBlog=TRACE</source>
 
-		<p>Sí, como ya te habrás dado cuenta, no hay ninguna diferencia entre configurar el logging para un mapper o para un fichero XML.</p>
+        <p>Sí, como ya te habrás dado cuenta, no hay ninguna diferencia entre configurar el logging para un mapper o para un fichero XML.</p>
 
         <p><span class="label important">NOTA</span> Si usas SLF4J o Log4j 2 MyBatis le llamará usando MYBATIS como marker.</p>
 

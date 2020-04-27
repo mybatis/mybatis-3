@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -71,6 +71,7 @@ import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ParameterMap;
 import org.apache.ibatis.mapping.ResultMap;
+import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.mapping.VendorDatabaseIdProvider;
 import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.plugin.Interceptor;
@@ -121,6 +122,7 @@ public class Configuration {
   protected Set<String> lazyLoadTriggerMethods = new HashSet<>(Arrays.asList("equals", "clone", "hashCode", "toString"));
   protected Integer defaultStatementTimeout;
   protected Integer defaultFetchSize;
+  protected ResultSetType defaultResultSetType;
   protected ExecutorType defaultExecutorType = ExecutorType.SIMPLE;
   protected AutoMappingBehavior autoMappingBehavior = AutoMappingBehavior.PARTIAL;
   protected AutoMappingUnknownColumnBehavior autoMappingUnknownColumnBehavior = AutoMappingUnknownColumnBehavior.NONE;
@@ -144,7 +146,7 @@ public class Configuration {
 
   protected final MapperRegistry mapperRegistry = new MapperRegistry(this);
   protected final InterceptorChain interceptorChain = new InterceptorChain();
-  protected final TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry();
+  protected final TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry(this);
   protected final TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
   protected final LanguageDriverRegistry languageRegistry = new LanguageDriverRegistry();
 
@@ -329,6 +331,9 @@ public class Configuration {
   }
 
   /**
+   * Gets the auto mapping unknown column behavior.
+   *
+   * @return the auto mapping unknown column behavior
    * @since 3.4.0
    */
   public AutoMappingUnknownColumnBehavior getAutoMappingUnknownColumnBehavior() {
@@ -336,6 +341,10 @@ public class Configuration {
   }
 
   /**
+   * Sets the auto mapping unknown column behavior.
+   *
+   * @param autoMappingUnknownColumnBehavior
+   *          the new auto mapping unknown column behavior
    * @since 3.4.0
    */
   public void setAutoMappingUnknownColumnBehavior(AutoMappingUnknownColumnBehavior autoMappingUnknownColumnBehavior) {
@@ -418,6 +427,9 @@ public class Configuration {
   }
 
   /**
+   * Gets the default fetch size.
+   *
+   * @return the default fetch size
    * @since 3.3.0
    */
   public Integer getDefaultFetchSize() {
@@ -425,10 +437,35 @@ public class Configuration {
   }
 
   /**
+   * Sets the default fetch size.
+   *
+   * @param defaultFetchSize
+   *          the new default fetch size
    * @since 3.3.0
    */
   public void setDefaultFetchSize(Integer defaultFetchSize) {
     this.defaultFetchSize = defaultFetchSize;
+  }
+
+  /**
+   * Gets the default result set type.
+   *
+   * @return the default result set type
+   * @since 3.5.2
+   */
+  public ResultSetType getDefaultResultSetType() {
+    return defaultResultSetType;
+  }
+
+  /**
+   * Sets the default result set type.
+   *
+   * @param defaultResultSetType
+   *          the new default result set type
+   * @since 3.5.2
+   */
+  public void setDefaultResultSetType(ResultSetType defaultResultSetType) {
+    this.defaultResultSetType = defaultResultSetType;
   }
 
   public boolean isUseColumnLabel() {
@@ -484,6 +521,9 @@ public class Configuration {
   }
 
   /**
+   * Gets the mapper registry.
+   *
+   * @return the mapper registry
    * @since 3.2.2
    */
   public MapperRegistry getMapperRegistry() {
@@ -515,6 +555,9 @@ public class Configuration {
   }
 
   /**
+   * Gets the interceptors.
+   *
+   * @return the interceptors
    * @since 3.2.2
    */
   public List<Interceptor> getInterceptors() {
@@ -537,6 +580,11 @@ public class Configuration {
   }
 
   /**
+   * Gets the language driver.
+   *
+   * @param langClass
+   *          the lang class
+   * @return the language driver
    * @since 3.5.1
    */
   public LanguageDriver getLanguageDriver(Class<? extends LanguageDriver> langClass) {
@@ -548,6 +596,9 @@ public class Configuration {
   }
 
   /**
+   * Gets the default scripting lanuage instance.
+   *
+   * @return the default scripting lanuage instance
    * @deprecated Use {@link #getDefaultScriptingLanguageInstance()}
    */
   @Deprecated
@@ -843,6 +894,7 @@ public class Configuration {
    * Extracts namespace from fully qualified statement id.
    *
    * @param statementId
+   *          the statement id
    * @return namespace or null when id does not contain period.
    */
   protected String extractNamespace(String statementId) {
@@ -923,6 +975,7 @@ public class Configuration {
       return this;
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public V put(String key, V value) {
       if (containsKey(key)) {
@@ -940,6 +993,7 @@ public class Configuration {
       return super.put(key, value);
     }
 
+    @Override
     public V get(Object key) {
       V value = super.get(key);
       if (value == null) {
@@ -953,7 +1007,7 @@ public class Configuration {
     }
 
     protected static class Ambiguity {
-      final private String subject;
+      private final String subject;
 
       public Ambiguity(String subject) {
         this.subject = subject;

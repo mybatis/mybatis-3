@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -27,6 +27,17 @@ import java.lang.annotation.Target;
  * this annotation can be used to tell MyBatis what kind of object
  * it should build for each row.
  *
+ * <p>
+ * <b>How to use:</b>
+ *
+ * <pre>
+ * public interface UserMapper {
+ *   &#064;ResultType(User.class)
+ *   &#064;Select("SELECT id, name FROM users WHERE name LIKE #{name} || '%' ORDER BY id")
+ *   void collectByStartingWithName(String name, ResultHandler&lt;User&gt; handler);
+ * }
+ * </pre>
+ *
  * @since 3.2.0
  * @author Jeff Butler
  */
@@ -34,5 +45,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface ResultType {
+  /**
+   * Returns the return type.
+   *
+   * @return the return type
+   */
   Class<?> value();
 }

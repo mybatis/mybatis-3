@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 package org.apache.ibatis.builder;
 
 /**
- * Interface that indicate to provide a initialization method.
+ * Interface that indicate to provide an initialization method.
  *
  * @since 3.4.2
  * @author Kazuki Shimizu
@@ -24,11 +24,14 @@ package org.apache.ibatis.builder;
 public interface InitializingObject {
 
   /**
-   * Initialize a instance.
+   * Initialize an instance.
    * <p>
    * This method will be invoked after it has set all properties.
    * </p>
-   * @throws Exception in the event of misconfiguration (such as failure to set an essential property) or if initialization fails
+   *
+   * @throws Exception
+   *           in the event of misconfiguration (such as failure to set an essential property) or if initialization
+   *           fails
    */
   void initialize() throws Exception;
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -22,23 +22,23 @@
 
 <mapper namespace="org.apache.ibatis.submitted.quotedcolumnnames.Map">
 
-	<select id="doSelect" resultType="java.util.HashMap">
-		select
-			ID as "id",
-			FIRST_NAME as "firstName",
-			LAST_NAME as "lastName"
-		from names
-	</select>
+    <select id="doSelect" resultType="java.util.HashMap">
+        select
+            ID as "id",
+            FIRST_NAME as "firstName",
+            LAST_NAME as "lastName"
+        from names
+    </select>
 
 
-	<resultMap id="myResultMap" type="java.util.HashMap">
-		<result column="id" property="ID" javaType="java.lang.String"/>
-		<result column="FIRST_NAME" property="firstName" javaType="java.lang.String" />
-		<result column="LAST_NAME" property="lastName" javaType="java.lang.String"/>
-	</resultMap>
+    <resultMap id="myResultMap" type="java.util.HashMap">
+        <result column="id" property="ID" javaType="java.lang.String"/>
+        <result column="FIRST_NAME" property="firstName" javaType="java.lang.String" />
+        <result column="LAST_NAME" property="lastName" javaType="java.lang.String"/>
+    </resultMap>
 
-	<select id="doSelectWithResultMap" resultMap="myResultMap">
-		select *
-		from names
-	</select>
+    <select id="doSelectWithResultMap" resultMap="myResultMap">
+        select *
+        from names
+    </select>
 </mapper>

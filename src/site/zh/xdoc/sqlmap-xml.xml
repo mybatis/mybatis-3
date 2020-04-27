@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2018 the original author or authors.
+       Copyright 2009-2020 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -20,62 +20,64 @@
       xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
 
   <properties>
-    <title>MyBatis 3 | XML 映射文件</title>
+    <title>MyBatis 3 | XML 映射器</title>
     <author email="clinton.begin@gmail.com">Clinton Begin</author>
     <author email="nanlei1987@gmail.com">Nan Lei</author>
     <author email="echowdx@gmail.com">Dongxu Wang</author>
   </properties>
 
   <body>
-    <section name="XML 映射文件">
-      <p>MyBatis 的真正强大在于它的映射语句，这是它的魔力所在。由于它的异常强大，映射器的
+    <section name="XML 映射器">
+      <p>MyBatis 的真正强大在于它的语句映射，这是它的魔力所在。由于它的异常强大，映射器的
       XML 文件就显得相对简单。如果拿它跟具有相同功能的 JDBC 代码进行对比，你会立即发现省掉了将近
-      95% 的代码。MyBatis 为聚焦于 SQL 而构建，以尽可能地为你减少麻烦。</p>
+      95% 的代码。MyBatis 致力于减少使用成本，让用户能更专注于 SQL 代码。</p>
       <p>SQL 映射文件只有很少的几个顶级元素（按照应被定义的顺序列出）：</p>
       <ul>
         <li>
           <code>cache</code>
-          – 对给定命名空间的缓存配置。
+          – 该命名空间的缓存配置。
         </li>
         <li>
           <code>cache-ref</code>
-          – 对其他命名空间缓存配置的引用。
+          – 引用其它命名空间的缓存配置。
         </li>
         <li>
           <code>resultMap</code>
-          – 是最复杂也是最强大的元素，用来描述如何从数据库结果集中来加载对象。
+          – 描述如何从数据库结果集中加载对象，是最复杂也是最强大的元素。
         </li>
         <li>
           <strike>
             <code>parameterMap</code>
-            – 已被废弃！老式风格的参数映射。更好的办法是使用内联参数，此元素可能在将来被移除。文档中不会介绍此元素。
+            – 老式风格的参数映射。此元素已被废弃，并可能在将来被移除！请使用行内参数映射。文档中不会介绍此元素。
           </strike>
         </li>
         <li>
           <code>sql</code>
-          – 可被其他语句引用的可重用语句块。
+          – 可被其它语句引用的可重用语句块。
         </li>
         <li>
           <code>insert</code>
-          – 映射插入语句
+          – 映射插入语句。
         </li>
         <li>
           <code>update</code>
-          – 映射更新语句
+          – 映射更新语句。
         </li>
         <li>
           <code>delete</code>
-          – 映射删除语句
+          – 映射删除语句。
         </li>
         <li>
           <code>select</code>
-          – 映射查询语句
+          – 映射查询语句。
         </li>
       </ul>
       <p>下一部分将从语句本身开始来描述每个元素的细节。</p>
 
       <subsection name="select" id="select">
-        <p>查询语句是 MyBatis 中最常用的元素之一，光能把数据存到数据库中价值并不大，只有还能重新取出来才有用，多数应用也都是查询比修改要频繁。对每个插入、更新或删除操作，通常间隔多个查询操作。这是 MyBatis 的基本原则之一，也是将焦点和努力放在查询和结果映射的原因。简单查询的 select 元素是非常简单的。比如：
+        <p>查询语句是 MyBatis 中最常用的元素之一——光能把数据存到数据库中价值并不大，还要能重新取出来才有用，多数应用也都是查询比修改要频繁。
+        MyBatis 的基本原则之一是：在每个插入、更新或删除操作之间，通常会执行多个查询操作。因此，MyBatis
+        在查询和结果映射做了相当多的改进。一个简单查询的 select 元素是非常简单的。比如：
         </p>
 
         <source><![CDATA[<select id="selectPerson" parameterType="int" resultType="hashmap">
@@ -83,7 +85,7 @@
 </select>]]></source>
 
         <p>
-          这个语句被称作 selectPerson，接受一个 int（或 Integer）类型的参数，并返回一个
+          这个语句名为 selectPerson，接受一个 int（或 Integer）类型的参数，并返回一个
           HashMap 类型的对象，其中的键是列名，值便是结果行中的对应值。
         </p>
 
@@ -102,12 +104,12 @@ PreparedStatement ps = conn.prepareStatement(selectPerson);
 ps.setInt(1,id);]]></source>
 
         <p>
-          当然，使用 JDBC 意味着需要更多的代码来提取结果并将它们映射到对象实例中，而这就是
-          MyBatis 节省你时间的地方。参数和结果映射还有更深入的细节。这些细节会分别在后面单独的小节中呈现。
+          当然，使用 JDBC 就意味着使用更多的代码，以便提取结果并将它们映射到对象实例中，而这就是 MyBatis
+          的拿手好戏。参数和结果映射的详细细节会分别在后面单独的小节中说明。
         </p>
 
         <p>
-          select 元素允许你配置很多属性来配置每条语句的作用细节。
+          select 元素允许你配置很多属性来配置每条语句的行为细节。
         </p>
 
         <source><![CDATA[<select
@@ -141,8 +143,8 @@ ps.setInt(1,id);]]></source>
             <tr>
               <td><code>parameterType</code></td>
               <td>
-                将会传入这条语句的参数类的完全限定名或别名。这个属性是可选的，因为
-                MyBatis 可以通过类型处理器（TypeHandler） 推断出具体传入语句的参数，默认值为未设置（unset）。
+                将会传入这条语句的参数的类全限定名或别名。这个属性是可选的，因为
+                MyBatis 可以通过类型处理器（TypeHandler）推断出具体传入语句的参数，默认值为未设置（unset）。
               </td>
             </tr>
             <tr>
@@ -151,24 +153,24 @@ ps.setInt(1,id);]]></source>
               </td>
               <td>
                 <strike>
-                  这是引用外部 parameterMap 的已经被废弃的方法。请使用内联参数映射和 parameterType 属性。
+                  用于引用外部 parameterMap 的属性，目前已被废弃。请使用行内参数映射和 parameterType 属性。
                 </strike>
               </td>
             </tr>
             <tr>
               <td><code>resultType</code></td>
               <td>
-                从这条语句中返回的期望类型的类的完全限定名或别名。
-                注意如果返回的是集合，那应该设置为集合包含的类型，而不是集合本身。可以使用
-                resultType 或 resultMap，但不能同时使用。
+                期望从这条语句中返回结果的类全限定名或别名。
+                注意，如果返回的是集合，那应该设置为集合包含的类型，而不是集合本身的类型。
+                resultType 和 resultMap 之间只能同时使用一个。
               </td>
             </tr>
             <tr>
               <td><code>resultMap</code></td>
               <td>
-                外部 resultMap 的命名引用。结果集的映射是 MyBatis
-                最强大的特性，如果你对其理解透彻，许多复杂映射的情形都能迎刃而解。可以使用
-                resultMap 或 resultType，但不能同时使用。
+                对外部 resultMap 的命名引用。结果映射是 MyBatis
+                最强大的特性，如果你对其理解透彻，许多复杂的映射问题都能迎刃而解。
+                resultType 和 resultMap 之间只能同时使用一个。
               </td>
             </tr>
             <tr>
@@ -186,20 +188,20 @@ ps.setInt(1,id);]]></source>
             <tr>
               <td><code>timeout</code></td>
               <td>
-                这个设置是在抛出异常之前，驱动程序等待数据库返回请求结果的秒数。默认值为未设置（unset）（依赖驱动）。
+                这个设置是在抛出异常之前，驱动程序等待数据库返回请求结果的秒数。默认值为未设置（unset）（依赖数据库驱动）。
               </td>
             </tr>
             <tr>
               <td><code>fetchSize</code></td>
               <td>
-                这是一个给驱动的提示，尝试让驱动程序每次批量返回的结果行数和这个设置值相等。
+                这是一个给驱动的建议值，尝试让驱动程序每次批量返回的结果行数等于这个设置值。
                 默认值为未设置（unset）（依赖驱动）。
               </td>
             </tr>
             <tr>
               <td><code>statementType</code></td>
               <td>
-                STATEMENT，PREPARED 或 CALLABLE 中的一个。这会让 MyBatis 分别使用
+                可选 STATEMENT，PREPARED 或 CALLABLE。这会让 MyBatis 分别使用
                 Statement，PreparedStatement 或 CallableStatement，默认值：PREPARED。
               </td>
             </tr>
@@ -207,28 +209,28 @@ ps.setInt(1,id);]]></source>
               <td><code>resultSetType</code></td>
               <td>
                 FORWARD_ONLY，SCROLL_SENSITIVE, SCROLL_INSENSITIVE 或
-                DEFAULT（等价于 unset） 中的一个，默认值为 unset （依赖驱动）。
+                DEFAULT（等价于 unset） 中的一个，默认值为 unset （依赖数据库驱动）。
               </td>
             </tr>
             <tr>
               <td><code>databaseId</code></td>
               <td>
                 如果配置了数据库厂商标识（databaseIdProvider），MyBatis
-                会加载所有的不带 databaseId 或匹配当前 databaseId 的语句；如果带或者不带的语句都有，则不带的会被忽略。
+                会加载所有不带 databaseId 或匹配当前 databaseId 的语句；如果带和不带的语句都有，则不带的会被忽略。
               </td>
             </tr>
             <tr>
               <td><code>resultOrdered</code></td>
               <td>
-                这个设置仅针对嵌套结果 select 语句适用：如果为
-                true，就是假设包含了嵌套结果集或是分组，这样的话当返回一个主结果行的时候，就不会发生有对前面结果集的引用的情况。
-                这就使得在获取嵌套的结果集的时候不至于导致内存不够用。默认值：<code>false</code>。
+                这个设置仅针对嵌套结果 select 语句：如果为
+                true，将会假设包含了嵌套结果集或是分组，当返回一个主结果行时，就不会产生对前面结果集的引用。
+                这就使得在获取嵌套结果集的时候不至于内存不够用。默认值：<code>false</code>。
               </td>
             </tr>
             <tr>
               <td><code>resultSets</code></td>
               <td>
-                这个设置仅对多结果集的情况适用。它将列出语句执行后返回的结果集并给每个结果集一个名称，名称是逗号分隔的。
+                这个设置仅适用于多结果集的情况。它将列出语句执行后返回的结果集并赋予每个结果集一个名称，多个名称之间以逗号分隔。
               </td>
             </tr>
           </tbody>
@@ -275,13 +277,13 @@ ps.setInt(1,id);]]></source>
           <tbody>
             <tr>
               <td><code>id</code></td>
-              <td>命名空间中的唯一标识符，可被用来代表这条语句。</td>
+              <td>在命名空间中唯一的标识符，可以被用来引用这条语句。</td>
             </tr>
             <tr>
               <td><code>parameterType</code></td>
               <td>
-                将要传入语句的参数的完全限定类名或别名。这个属性是可选的，因为 MyBatis
-                可以通过类型处理器推断出具体传入语句的参数，默认值为未设置（unset）。
+                将会传入这条语句的参数的类全限定名或别名。这个属性是可选的，因为
+                MyBatis 可以通过类型处理器（TypeHandler）推断出具体传入语句的参数，默认值为未设置（unset）。
               </td>
             </tr>
             <tr>
@@ -289,58 +291,58 @@ ps.setInt(1,id);]]></source>
                 <strike><code>parameterMap</code></strike>
               </td>
               <td>
-                <strike>这是引用外部 parameterMap 的已经被废弃的方法。请使用内联参数映射和 parameterType 属性。
+                <strike>用于引用外部 parameterMap 的属性，目前已被废弃。请使用行内参数映射和 parameterType 属性。
                 </strike>
               </td>
             </tr>
             <tr>
               <td><code>flushCache</code></td>
-              <td>将其设置为 true 后，只要语句被调用，都会导致本地缓存和二级缓存被清空，默认值：true（对于 insert、update 和 delete 语句）。
+              <td>将其设置为 true 后，只要语句被调用，都会导致本地缓存和二级缓存被清空，默认值：（对 insert、update 和 delete 语句）true。
               </td>
             </tr>
             <tr>
               <td><code>timeout</code></td>
-              <td>这个设置是在抛出异常之前，驱动程序等待数据库返回请求结果的秒数。默认值为未设置（unset）（依赖驱动）。
+              <td>这个设置是在抛出异常之前，驱动程序等待数据库返回请求结果的秒数。默认值为未设置（unset）（依赖数据库驱动）。
               </td>
             </tr>
             <tr>
               <td><code>statementType</code></td>
               <td>
-                STATEMENT，PREPARED 或 CALLABLE 的一个。这会让 MyBatis 分别使用
+                可选 STATEMENT，PREPARED 或 CALLABLE。这会让 MyBatis 分别使用
                 Statement，PreparedStatement 或 CallableStatement，默认值：PREPARED。
               </td>
             </tr>
             <tr>
               <td><code>useGeneratedKeys</code></td>
               <td>
-                （仅对 insert 和 update 有用）这会令 MyBatis 使用 JDBC 的
-                getGeneratedKeys 方法来取出由数据库内部生成的主键（比如：像 MySQL 和 SQL Server 这样的关系数据库管理系统的自动递增字段），默认值：false。
+                （仅适用于 insert 和 update）这会令 MyBatis 使用 JDBC 的
+                getGeneratedKeys 方法来取出由数据库内部生成的主键（比如：像 MySQL 和 SQL Server 这样的关系型数据库管理系统的自动递增字段），默认值：false。
               </td>
             </tr>
             <tr>
               <td><code>keyProperty</code></td>
               <td>
-               （仅对 insert 和 update 有用）唯一标记一个属性，MyBatis 会通过
-                getGeneratedKeys 的返回值或者通过 insert 语句的 selectKey 子元素设置它的键值，默认值：未设置（<code>unset</code>）。如果希望得到多个生成的列，也可以是逗号分隔的属性名称列表。
+               （仅适用于 insert 和 update）指定能够唯一识别对象的属性，MyBatis 会使用
+                getGeneratedKeys 的返回值或 insert 语句的 selectKey 子元素设置它的值，默认值：未设置（<code>unset</code>）。如果生成列不止一个，可以用逗号分隔多个属性名称。
               </td>
             </tr>
             <tr>
               <td><code>keyColumn</code></td>
               <td>
-                （仅对 insert 和 update 有用）通过生成的键值设置表中的列名，这个设置仅在某些数据库（像 PostgreSQL）是必须的，当主键列不是表中的第一列的时候需要设置。如果希望使用多个生成的列，也可以设置为逗号分隔的属性名称列表。
+                （仅适用于 insert 和 update）设置生成键值在表中的列名，在某些数据库（像 PostgreSQL）中，当主键列不是表中的第一列的时候，是必须设置的。如果生成列不止一个，可以用逗号分隔多个属性名称。
               </td>
             </tr>
             <tr>
               <td><code>databaseId</code></td>
               <td>
-                如果配置了数据库厂商标识（databaseIdProvider），MyBatis 会加载所有的不带
-                databaseId 或匹配当前 databaseId 的语句；如果带或者不带的语句都有，则不带的会被忽略。
+                如果配置了数据库厂商标识（databaseIdProvider），MyBatis 会加载所有不带
+                databaseId 或匹配当前 databaseId 的语句；如果带和不带的语句都有，则不带的会被忽略。
               </td>
             </tr>
           </tbody>
         </table>
 
-        <p>下面就是 insert，update 和 delete 语句的示例：</p>
+        <p>下面是 insert，update 和 delete 语句的示例：</p>
 
         <source><![CDATA[<insert id="insertAuthor">
   insert into Author (id,username,password,email,bio)
@@ -360,9 +362,9 @@ ps.setInt(1,id);]]></source>
   delete from Author where id = #{id}
 </delete>]]></source>
 
-        <p>如前所述，插入语句的配置规则更加丰富，在插入语句里面有一些额外的属性和子元素用来处理主键的生成，而且有多种生成方式。</p>
+        <p>如前所述，插入语句的配置规则更加丰富，在插入语句里面有一些额外的属性和子元素用来处理主键的生成，并且提供了多种生成方式。</p>
 
-        <p>首先，如果你的数据库支持自动生成主键的字段（比如 MySQL 和 SQL Server），那么你可以设置 useGeneratedKeys=”true”，然后再把 keyProperty 设置到目标属性上就 OK 了。例如，如果上面的 Author 表已经对 id 使用了自动生成的列类型，那么语句可以修改为：</p>
+        <p>首先，如果你的数据库支持自动生成主键的字段（比如 MySQL 和 SQL Server），那么你可以设置 useGeneratedKeys=”true”，然后再把 keyProperty 设置为目标属性就 OK 了。例如，如果上面的 Author 表已经在 id 列上使用了自动生成，那么语句可以修改为：</p>
 
         <source><![CDATA[<insert id="insertAuthor" useGeneratedKeys="true"
     keyProperty="id">
@@ -383,12 +385,12 @@ ps.setInt(1,id);]]></source>
 </insert>]]></source>
 
         <p>
-          对于不支持自动生成类型的数据库或可能不支持自动生成主键的 JDBC 驱动，MyBatis 有另外一种方法来生成主键。
+          对于不支持自动生成主键列的数据库和可能不支持自动生成主键的 JDBC 驱动，MyBatis 有另外一种方法来生成主键。
         </p>
 
         <p>
-          这里有一个简单（甚至很傻）的示例，它可以生成一个随机 ID（你最好不要这么做，但这里展示了
-          MyBatis 处理问题的灵活性及其所关心的广度）：
+          这里有一个简单（也很傻）的示例，它可以生成一个随机 ID（不建议实际使用，这里只是为了展示
+          MyBatis 处理问题的灵活性和宽容度）：
         </p>
 
         <source><![CDATA[<insert id="insertAuthor">
@@ -400,8 +402,8 @@ ps.setInt(1,id);]]></source>
   values
     (#{id}, #{username}, #{password}, #{email}, #{bio}, #{favouriteSection,jdbcType=VARCHAR})
 </insert>]]></source>
-        <p>在上面的示例中，selectKey 元素中的语句将会首先运行，Author 的 id
-        会被设置，然后插入语句会被调用。这可以提供给你一个与数据库中自动生成主键类似的行为，同时保持了 Java 代码的简洁。
+        <p>在上面的示例中，首先会运行 selectKey 元素中的语句，并设置 Author 的
+        id，然后才会调用插入语句。这样就实现了数据库自动生成主键类似的行为，同时保持了 Java 代码的简洁。
         </p>
         <p>selectKey 元素描述如下：
         </p>
@@ -423,35 +425,38 @@ ps.setInt(1,id);]]></source>
             <tr>
               <td><code>keyProperty</code></td>
               <td>
-                selectKey 语句结果应该被设置的目标属性。如果希望得到多个生成的列，也可以是逗号分隔的属性名称列表。
+                <code>selectKey</code> 语句结果应该被设置到的目标属性。如果生成列不止一个，可以用逗号分隔多个属性名称。
               </td>
             </tr>
             <tr>
               <td><code>keyColumn</code></td>
               <td>
-                匹配属性的返回结果集中的列名称。如果希望得到多个生成的列，也可以是逗号分隔的属性名称列表。
+                返回结果集中生成列属性的列名。如果生成列不止一个，可以用逗号分隔多个属性名称。
               </td>
             </tr>
             <tr>
               <td><code>resultType</code></td>
               <td>
-                结果的类型。MyBatis 通常可以推断出来，但是为了更加精确，写上也不会有什么问题。MyBatis 允许将任何简单类型用作主键的类型，包括字符串。如果希望作用于多个生成的列，则可以使用一个包含期望属性的 Object 或一个 Map。
+                结果的类型。通常 MyBatis 可以推断出来，但是为了更加准确，写上也不会有什么问题。MyBatis
+                允许将任何简单类型用作主键的类型，包括字符串。如果生成列不止一个，则可以使用包含期望属性的
+                Object 或 Map。
               </td>
             </tr>
             <tr>
               <td><code>order</code></td>
               <td>
-                这可以被设置为 BEFORE 或 AFTER。如果设置为
-                BEFORE，那么它会首先生成主键，设置 keyProperty 然后执行插入语句。如果设置为
-                AFTER，那么先执行插入语句，然后是 selectKey 中的语句 - 这和 Oracle
+                可以设置为 <code>BEFORE</code> 或 <code>AFTER</code>。如果设置为
+                <code>BEFORE</code>，那么它首先会生成主键，设置 <code>keyProperty</code> 再执行插入语句。如果设置为
+                <code>AFTER</code>，那么先执行插入语句，然后是 <code>selectKey</code> 中的语句 - 这和 Oracle
                 数据库的行为相似，在插入语句内部可能有嵌入索引调用。
               </td>
             </tr>
             <tr>
               <td><code>statementType</code></td>
               <td>
-                与前面相同，MyBatis 支持 STATEMENT，PREPARED 和 CALLABLE
-                语句的映射类型，分别代表 PreparedStatement 和 CallableStatement 类型。
+                和前面一样，MyBatis 支持 <code>STATEMENT</code>，<code>PREPARED</code> 和 <code>CALLABLE</code>
+                类型的映射语句，分别代表 <code>Statement</code>, <code>PreparedStatement</code> 和
+                <code>CallableStatement</code> 类型。
               </td>
             </tr>
           </tbody>
@@ -460,15 +465,14 @@ ps.setInt(1,id);]]></source>
 
       <subsection name="sql">
         <p>
-          这个元素可以被用来定义可重用的 SQL 代码段，这些 SQL
-          代码可以被包含在其他语句中。它可以（在加载的时候）被静态地设置参数。
-          在不同的包含语句中可以设置不同的值到参数占位符上。比如：
+          这个元素可以用来定义可重用的 SQL 代码片段，以便在其它语句中使用。
+          参数可以静态地（在加载的时候）确定下来，并且可以在不同的 include 元素中定义不同的参数值。比如：
         </p>
 
         <source><![CDATA[<sql id="userColumns"> ${alias}.id,${alias}.username,${alias}.password </sql>]]></source>
 
         <p>
-          这个 SQL 片段可以被包含在其他语句中，例如：
+          这个 SQL 片段可以在其它语句中使用，例如：
         </p>
 
         <source><![CDATA[<select id="selectUsers" resultType="map">
@@ -480,7 +484,7 @@ ps.setInt(1,id);]]></source>
 </select>]]></source>
 
         <p>
-          属性值也可以被用在 include 元素的 refid 属性里或 include 元素的内部语句中，例如：
+          也可以在 include 元素的 refid 属性或内部语句中使用属性值，例如：
         </p>
 
         <source><![CDATA[<sql id="sometable">
@@ -504,8 +508,8 @@ ps.setInt(1,id);]]></source>
 
       <subsection name="参数" id="Parameters">
         <p>
-          你之前见到的所有语句中，使用的都是简单参数。实际上参数是 MyBatis
-          非常强大的元素。对于简单的使用场景，大约 90% 的情况下你都不需要使用复杂的参数，比如：
+          之前见到的所有语句都使用了简单的参数形式。但实际上，参数是 MyBatis
+          非常强大的元素。对于大多数简单的使用场景，你都不需要使用复杂的参数，比如：
         </p>
 
         <source><![CDATA[<select id="selectUsers" resultType="User">
@@ -515,10 +519,10 @@ ps.setInt(1,id);]]></source>
 </select>]]></source>
 
         <p>
-          上面的这个示例说明了一个非常简单的命名参数映射。参数类型被设置为
-          <code>int</code>，这样这个参数就可以被设置成任何内容。原始类型或简单数据类型（比如
-          <code>Integer</code> 和 <code>String</code>）因为没有相关属性，它会完全用参数值来替代。
-          然而，如果传入一个复杂的对象，行为就会有一点不同了。比如：
+          上面的这个示例说明了一个非常简单的命名参数映射。鉴于参数类型（parameterType）会被自动设置为
+          <code>int</code>，这个参数可以随意命名。原始类型或简单数据类型（比如
+          <code>Integer</code> 和 <code>String</code>）因为没有其它属性，会用它们的值来作为参数。
+          然而，如果传入一个复杂的对象，行为就会有点不一样了。比如：
         </p>
 
         <source><![CDATA[<insert id="insertUser" parameterType="User">
@@ -527,47 +531,47 @@ ps.setInt(1,id);]]></source>
 </insert>]]></source>
 
         <p>
-          如果 User 类型的参数对象传递到了语句中，id、username 和 password
-          属性将会被查找，然后将它们的值传入预处理语句的参数中。
+          如果 User 类型的参数对象传递到了语句中，会查找 id、username 和 password
+          属性，然后将它们的值传入预处理语句的参数中。
         </p>
 
         <p>
-          对向语句中传递参数来说，这真是既简单又有效。不过参数映射的功能远不止于此。
+          对传递语句参数来说，这种方式真是干脆利落。不过参数映射的功能远不止于此。
         </p>
 
         <p>
-          首先，像 MyBatis 的其他部分一样，参数也可以指定一个特殊的数据类型。
+          首先，和 MyBatis 的其它部分一样，参数也可以指定一个特殊的数据类型。
         </p>
 
         <source><![CDATA[#{property,javaType=int,jdbcType=NUMERIC}]]></source>
 
         <p>
-          像 MyBatis 的其它部分一样，javaType 几乎总是可以根据参数对象的类型确定下来，除非该对象是一个
+          和 MyBatis 的其它部分一样，几乎总是可以根据参数对象的类型确定 javaType，除非该对象是一个
           <code>HashMap</code>。这个时候，你需要显式指定 <code>javaType</code>
           来确保正确的类型处理器（<code>TypeHandler</code>）被使用。
         </p>
 
-        <p><span class="label important">提示</span> JDBC 要求，如果一个列允许 null
-        值，并且会传递值 null 的参数，就必须要指定 JDBC Type。阅读
-        <code>PreparedStatement.setNull()</code>的 JavaDoc 文档来获取更多信息。
+        <p><span class="label important">提示</span> JDBC 要求，如果一个列允许使用 null
+        值，并且会使用值为 null 的参数，就必须要指定 JDBC 类型（jdbcType）。阅读
+        <code>PreparedStatement.setNull()</code>的 JavaDoc 来获取更多信息。
         </p>
 
         <p>
-          要更进一步地自定义类型处理方式，你也可以指定一个特殊的类型处理器类（或别名），比如：
+          要更进一步地自定义类型处理方式，可以指定一个特殊的类型处理器类（或别名），比如：
         </p>
 
         <source><![CDATA[#{age,javaType=int,jdbcType=NUMERIC,typeHandler=MyTypeHandler}]]></source>
 
-        <p>尽管看起来配置变得越来越繁琐，但实际上，很少需要如此繁琐的配置。</p>
+        <p>参数的配置好像越来越繁琐了，但实际上，很少需要如此繁琐的配置。</p>
 
-        <p>对于数值类型，还有一个小数保留位数的设置，来指定小数点后保留的位数。</p>
+        <p>对于数值类型，还可以设置 <code>numericScale</code> 指定小数点后保留的位数。</p>
 
         <source><![CDATA[#{height,javaType=double,jdbcType=NUMERIC,numericScale=2}]]></source>
 
         <p>
           最后，mode 属性允许你指定 <code>IN</code>，<code>OUT</code> 或
           <code>INOUT</code> 参数。如果参数的 <code>mode</code> 为 <code>OUT</code>
-          或 <code>INOUT</code>，就像你在指定输出参数时所期望的行为那样，参数对象的属性实际值将会被改变。
+          或 <code>INOUT</code>，将会修改参数对象的属性值，以便作为输出参数返回。
           如果 <code>mode</code> 为 <code>OUT</code>（或 <code>INOUT</code>），而且
           <code>jdbcType</code> 为 <code>CURSOR</code>（也就是 Oracle 的
           REFCURSOR），你必须指定一个 <code>resultMap</code> 引用来将结果集
@@ -586,8 +590,8 @@ ps.setInt(1,id);]]></source>
         <source><![CDATA[#{middleInitial, mode=OUT, jdbcType=STRUCT, jdbcTypeName=MY_TYPE, resultMap=departmentResultMap}]]></source>
 
         <p>
-          尽管所有这些选项很强大，但大多时候你只须简单地指定属性名，其他的事情
-          MyBatis 会自己去推断，顶多要为可能为空的列指定 <code>jdbcType</code>。
+          尽管上面这些选项很强大，但大多时候，你只须简单指定属性名，顶多要为可能为空的列指定
+          <code>jdbcType</code>，其他的事情交给 MyBatis 自己去推断就行了。
         </p>
 
         <source><![CDATA[#{firstName}
@@ -599,20 +603,20 @@ ps.setInt(1,id);]]></source>
         </h4>
 
 	      <p>
-          默认情况下,使用 <code>#{}</code>
-          格式的语法会导致 MyBatis 创建 <code>PreparedStatement</code>
-          参数占位符并安全地设置参数（就像使用 ? 一样）。
-          这样做更安全，更迅速，通常也是首选做法，不过有时你就是想直接在 SQL 语句中插入一个不转义的字符串。
-          比如，像 ORDER BY，你可以这样来使用：
+          默认情况下，使用 <code>#{}</code>
+          参数语法时，MyBatis 会创建 <code>PreparedStatement</code>
+          参数占位符，并通过占位符安全地设置参数（就像使用 ? 一样）。
+          这样做更安全，更迅速，通常也是首选做法，不过有时你就是想直接在 SQL 语句中直接插入一个不转义的字符串。
+          比如 ORDER BY 子句，这时候你可以：
         </p>
 
         <source><![CDATA[ORDER BY ${columnName}]]></source>
 
-        <p>这里 MyBatis 不会修改或转义字符串。</p>
+        <p>这样，MyBatis 就不会修改或转义该字符串了。</p>
 
         <p>
           当 SQL 语句中的元数据（如表名或列名）是动态生成的时候，字符串替换将会非常有用。
-          举个例子，如果你想通过任何一列从表中 <code>select</code> 数据时，不需要像下面这样写：
+          举个例子，如果你想 <code>select</code> 一个表任意一列的数据时，不需要这样写：
           <source><![CDATA[
 @Select("select * from user where id = #{id}")
 User findById(@Param("id") long id);
@@ -623,15 +627,15 @@ User findByName(@Param("name") String name);
 @Select("select * from user where email = #{email}")
 User findByEmail(@Param("email") String email);
 
-// and more "findByXxx" method
+// 其它的 "findByXxx" 方法
 ]]></source>
-          可以只写这样一个方法：
+          而是可以只写这样一个方法：
           <source><![CDATA[
 @Select("select * from user where ${column} = #{value}")
 User findByColumn(@Param("column") String column, @Param("value") String value);
 ]]></source>
-          其中 <code>${column}</code> 会被直接替换，而 <code>#{value}</code> 会被使用 <code>?</code> 预处理。
-          因此你就可以像下面这样来达到上述功能：
+          其中 <code>${column}</code> 会被直接替换，而 <code>#{value}</code> 会使用 <code>?</code> 预处理。
+          这样，就能完成同样的任务：
           <source><![CDATA[
 User userOfId1 = userMapper.findByColumn("id", 1L);
 User userOfNameKid = userMapper.findByColumn("name", "kid");
@@ -640,27 +644,27 @@ User userOfEmail = userMapper.findByColumn("email", "noone@nowhere.com");
         </p>
 
         <p>
-          这个想法也同样适用于用来替换表名的情况。
+          这种方式也同样适用于替换表名的情况。
         </p>
 
         <p>
           <span class="label important">提示</span>
-          用这种方式接受用户的输入，并将其用于语句中的参数是不安全的，会导致潜在的 SQL
-          注入攻击，因此要么不允许用户输入这些字段，要么自行转义并检验。
+          用这种方式接受用户的输入，并用作语句参数是不安全的，会导致潜在的 SQL
+          注入攻击。因此，要么不允许用户输入这些字段，要么自行转义并检验这些参数。
         </p>
       </subsection>
 
       <subsection name="结果映射" id="Result_Maps">
         <p>
-		      <code>resultMap</code> 元素是 MyBatis 中最重要最强大的元素。它可以让你从 90%
+		  <code>resultMap</code> 元素是 MyBatis 中最重要最强大的元素。它可以让你从 90%
           的 JDBC <code>ResultSets</code> 数据提取代码中解放出来，并在一些情形下允许你进行一些
           JDBC 不支持的操作。实际上，在为一些比如连接的复杂语句编写映射代码的时候，一份
-          <code>resultMap</code> 能够代替实现同等功能的长达数千行的代码。ResultMap
-          的设计思想是，对于简单的语句根本不需要配置显式的结果映射，而对于复杂一点的语句只需要描述它们的关系就行了。
+          <code>resultMap</code> 能够代替实现同等功能的数千行代码。ResultMap
+          的设计思想是，对简单的语句做到零配置，对于复杂一点的语句，只需要描述语句之间的关系就行了。
         </p>
 
         <p>
-          你已经见过简单映射语句的示例了，但并没有显式指定 <code>resultMap</code>。比如：
+          之前你已经见过简单映射语句的示例，它们没有显式指定 <code>resultMap</code>。比如：
         </p>
 
         <source><![CDATA[<select id="selectUsers" resultType="map">
@@ -670,7 +674,7 @@ User userOfEmail = userMapper.findByColumn("email", "noone@nowhere.com");
 </select>]]></source>
 
         <p>
-		      上述语句只是简单地将所有的列映射到 <code>HashMap</code> 的键上，这由 <code>resultType</code> 属性指定。虽然在大部分情况下都够用，但是 HashMap 不是一个很好的领域模型。你的程序更可能会使用 JavaBean 或 POJO（Plain Old Java Objects，普通老式 Java 对象）作为领域模型。MyBatis 对两者都提供了支持。看看下面这个 JavaBean：
+		  上述语句只是简单地将所有的列映射到 <code>HashMap</code> 的键上，这由 <code>resultType</code> 属性指定。虽然在大部分情况下都够用，但是 HashMap 并不是一个很好的领域模型。你的程序更可能会使用 JavaBean 或 POJO（Plain Old Java Objects，普通老式 Java 对象）作为领域模型。MyBatis 对两者都提供了支持。看看下面这个 JavaBean：
         </p>
         <source><![CDATA[package com.someapp.model;
 public class User {
@@ -715,7 +719,7 @@ public class User {
 </select>]]></source>
 
         <p>
-          类型别名是你的好帮手。使用它们，你就可以不用输入类的完全限定名称了。比如：
+          类型别名是你的好帮手。使用它们，你就可以不用输入类的全限定名了。比如：
         </p>
 
         <source><![CDATA[<!-- mybatis-config.xml 中 -->
@@ -729,9 +733,9 @@ public class User {
 </select>]]></source>
 
         <p>
-          这些情况下，MyBatis 会在幕后自动创建一个 <code>ResultMap</code>，再基于属性名来映射列到
-          JavaBean 的属性上。如果列名和属性名没有精确匹配，可以在 SELECT
-          语句中对列使用别名（这是一个基本的 SQL 特性）来匹配标签。比如：
+          在这些情况下，MyBatis 会在幕后自动创建一个 <code>ResultMap</code>，再根据属性名来映射列到
+          JavaBean 的属性上。如果列名和属性名不能匹配上，可以在 SELECT
+          语句中设置列别名（这是一个基本的 SQL 特性）来完成匹配。比如：
         </p>
 
         <source><![CDATA[<select id="selectUsers" resultType="User">
@@ -744,9 +748,11 @@ public class User {
 </select>]]></source>
 
         <p>
-          <code>ResultMap</code> 最优秀的地方在于，虽然你已经对它相当了解了，但是根本就不需要显式地用到他们。
-          上面这些简单的示例根本不需要下面这些繁琐的配置。
-          但出于示范的原因，让我们来看看最后一个示例中，如果使用外部的
+          在学习了上面的知识后，你会发现上面的例子没有一个需要显式配置
+          <code>ResultMap</code>，这就是 <code>ResultMap</code>
+          的优秀之处——你完全可以不用显式地配置它们。
+          虽然上面的例子不用显式配置 <code>ResultMap</code>。
+          但为了讲解，我们来看看如果在刚刚的示例中，显式使用外部的
           <code>resultMap</code> 会怎样，这也是解决列名不匹配的另外一种方式。
         </p>
 
@@ -757,7 +763,7 @@ public class User {
 </resultMap>]]></source>
 
         <p>
-          而在引用它的语句中使用 <code>resultMap</code> 属性就行了（注意我们去掉了
+          然后在引用它的语句中设置 <code>resultMap</code> 属性就行了（注意我们去掉了
           <code>resultType</code> 属性）。比如:
         </p>
 
@@ -768,15 +774,15 @@ public class User {
 </select>]]></source>
 
         <p>
-          如果世界总是这么简单就好了。
+          如果这个世界总是这么简单就好了。
         </p>
 
 	      <h4>高级结果映射</h4>
 
         <p>
           MyBatis 创建时的一个思想是：数据库不可能永远是你所想或所需的那个样子。
-          我们希望每个数据库都具备良好的第三范式或 BCNF 范式，可惜它们不总都是这样。
-          如果能有一种完美的数据库映射模式，所有应用程序都可以使用它，那就太好了，但可惜也没有。
+          我们希望每个数据库都具备良好的第三范式或 BCNF 范式，可惜它们并不都是那样。
+          如果能有一种数据库映射模式，完美适配所有的应用程序，那就太好了，但可惜也没有。
           而 ResultMap 就是 MyBatis 对这个问题的答案。
         </p>
 
@@ -821,8 +827,8 @@ public class User {
 
         <p>
           你可能想把它映射到一个智能的对象模型，这个对象表示了一篇博客，它由某位作者所写，有很多的博文，每篇博文有零或多条的评论和标签。
-          我们来看看下面这个完整的例子，它是一个非常复杂的结果映射（假设作者，博客，博文，评论和标签都是类型别名）。
-          不用紧张，我们会一步一步来说明。虽然它看起来令人望而生畏，但其实非常简单。
+          我们先来看看下面这个完整的例子，它是一个非常复杂的结果映射（假设作者，博客，博文，评论和标签都是类型别名）。
+          不用紧张，我们会一步一步地来说明。虽然它看起来令人望而生畏，但其实非常简单。
         </p>
 
         <source><![CDATA[<!-- 非常复杂的结果映射 -->
@@ -874,13 +880,13 @@ public class User {
           <li>
             <code>association</code> – 一个复杂类型的关联；许多结果将包装成这种类型
             <ul>
-              <li>嵌套结果映射 – 关联本身可以是一个 <code>resultMap</code> 元素，或者从别处引用一个</li>
+              <li>嵌套结果映射 – 关联可以是 <code>resultMap</code> 元素，或是对其它结果映射的引用</li>
             </ul>
           </li>
           <li>
             <code>collection</code> – 一个复杂类型的集合
             <ul>
-              <li>嵌套结果映射 – 集合本身可以是一个 <code>resultMap</code> 元素，或者从别处引用一个</li>
+              <li>嵌套结果映射 – 集合可以是 <code>resultMap</code> 元素，或是对其它结果映射的引用</li>
             </ul>
           </li>
           <li>
@@ -889,7 +895,7 @@ public class User {
               <li>
                 <code>case</code> – 基于某些值的结果映射
                 <ul>
-		              <li>嵌套结果映射 – <code>case</code> 本身可以是一个 <code>resultMap</code> 元素，因此可以具有相同的结构和元素，或者从别处引用一个</li>
+		          <li>嵌套结果映射 – <code>case</code> 也是一个结果映射，因此具有相同的结构和元素；或者引用其它的结果映射</li>
                 </ul>
               </li>
             </ul>
@@ -918,7 +924,7 @@ public class User {
             <tr>
               <td><code>autoMapping</code></td>
               <td>
-                如果设置这个属性，MyBatis将会为本结果映射开启或者关闭自动映射。
+                如果设置这个属性，MyBatis 将会为本结果映射开启或者关闭自动映射。
                 这个属性会覆盖全局的属性 autoMappingBehavior。默认值：未设置（unset）。
               </td>
             </tr>
@@ -927,12 +933,11 @@ public class User {
 
         <p>
           <span class="label important">最佳实践</span>
-          最好一步步地建立结果映射。单元测试可以在这个过程中起到很大帮助。
-          如果你尝试一次创建一个像上面示例那样的巨大的结果映射，那么很可能会出现错误而且很难去使用它来完成工作。
-          从最简单的形态开始，逐步迭代。而且别忘了单元测试！
-          使用框架的缺点是有时候它们看上去像黑盒子（无论源代码是否可见）。
-          为了确保你实现的行为和想要的一致，最好的选择是编写单元测试。提交 bug
-          的时候它也能起到很大的作用。
+          最好逐步建立结果映射。单元测试可以在这个过程中起到很大帮助。
+          如果你尝试一次性创建像上面示例那么巨大的结果映射，不仅容易出错，难度也会直线上升。
+          所以，从最简单的形态开始，逐步迭代。而且别忘了单元测试！
+          有时候，框架的行为像是一个黑盒子（无论是否开源）。因此，为了确保实现的行为与你的期望相一致，最好编写单元测试。
+          并且单元测试在提交 bug 时也能起到很大的作用。
         </p>
 
         <p>
@@ -945,14 +950,14 @@ public class User {
 <result property="subject" column="post_subject"/>]]></source>
 
         <p>
-          这些是结果映射最基本的内容。<i>id</i> 和 <i>result</i>
+          这些元素是结果映射的基础。<i>id</i> 和 <i>result</i>
           元素都将一个列的值映射到一个简单数据类型（String, int, double, Date
           等）的属性或字段。
         </p>
 
         <p>
           这两者之间的唯一不同是，<i>id</i>
-          元素表示的结果将是对象的标识属性，这会在比较对象实例时用到。
+          元素对应的属性会被标记为对象的标识符，在比较对象实例时使用。
           这样可以提高整体的性能，尤其是进行缓存和嵌套结果映射（也就是连接映射）的时候。
         </p>
 
@@ -972,9 +977,9 @@ public class User {
             <tr>
               <td><code>property</code></td>
               <td>
-                映射到列结果的字段或属性。如果用来匹配的 JavaBean
-                存在给定名字的属性，那么它将会被使用。否则 MyBatis 将会寻找给定名称的字段。
-                无论是哪一种情形，你都可以使用通常的点式分隔形式进行复杂属性导航。
+                映射到列结果的字段或属性。如果 JavaBean
+                有这个名字的属性（property），会先使用该属性。否则 MyBatis 将会寻找给定名称的字段（field）。
+                无论是哪一种情形，你都可以使用常见的点式分隔形式进行复杂属性导航。
                 比如，你可以这样映射一些简单的东西：“username”，或者映射到一些复杂的东西上：“address.street.number”。
               </td>
             </tr>
@@ -988,7 +993,7 @@ public class User {
             <tr>
               <td><code>javaType</code></td>
               <td>
-                一个 Java 类的完全限定名，或一个类型别名（关于内置的类型别名，可以参考上面的表格）。
+                一个 Java 类的全限定名，或一个类型别名（关于内置的类型别名，可以参考上面的表格）。
                 如果你映射到一个 JavaBean，MyBatis 通常可以推断类型。然而，如果你映射到的是
                 HashMap，那么你应该明确地指定 javaType 来保证行为与期望的相一致。
               </td>
@@ -999,14 +1004,14 @@ public class User {
                 JDBC 类型，所支持的 JDBC 类型参见这个表格之后的“支持的 JDBC 类型”。
                 只需要在可能执行插入、更新和删除的且允许空值的列上指定 JDBC 类型。这是
                 JDBC 的要求而非 MyBatis 的要求。如果你直接面向 JDBC
-                编程，你需要对可能存在空值的列指定这个类型。
+                编程，你需要对可以为空值的列指定这个类型。
               </td>
             </tr>
             <tr>
               <td><code>typeHandler</code></td>
               <td>
                 我们在前面讨论过默认的类型处理器。使用这个属性，你可以覆盖默认的类型处理器。
-                这个属性值是一个类型处理器实现类的完全限定名，或者是类型别名。
+                这个属性值是一个类型处理器实现类的全限定名，或者是类型别名。
               </td>
             </tr>
           </tbody>
@@ -2040,7 +2045,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
 
         <p>
           这个示例展示了如何使用一个自定义的缓存实现。type 属性指定的类必须实现
-          org.mybatis.cache.Cache 接口，且提供一个接受 String 参数作为 id 的构造器。
+          org.apache.ibatis.cache.Cache 接口，且提供一个接受 String 参数作为 id 的构造器。
           这个接口是 MyBatis 框架中许多复杂的接口之一，但是行为却非常简单。
         </p>
 

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,6 +14,8 @@
  *    limitations under the License.
  */
 package org.apache.ibatis.submitted.sqlprovider;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.Reader;
 import java.lang.reflect.Method;
@@ -37,8 +39,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 /**
  * Test for https://github.com/mybatis/mybatis-3/issues/1279
  */
@@ -48,8 +48,7 @@ class ProviderMethodResolutionTest {
 
   @BeforeAll
   static void setUp() throws Exception {
-    try (Reader reader = Resources
-        .getResourceAsReader("org/apache/ibatis/submitted/sqlprovider/mybatis-config.xml")) {
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/sqlprovider/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
       sqlSessionFactory.getConfiguration().addMapper(ProvideMethodResolverMapper.class);
     }
@@ -135,7 +134,7 @@ class ProviderMethodResolutionTest {
 
   interface ProvideMethodResolverMapper {
 
-    @SelectProvider(type = MethodResolverBasedSqlProvider.class)
+    @SelectProvider(MethodResolverBasedSqlProvider.class)
     int select();
 
     @SelectProvider(type = MethodResolverBasedSqlProvider.class, method = "provideSelect2Sql")
@@ -147,7 +146,7 @@ class ProviderMethodResolutionTest {
     @SelectProvider(type = CustomMethodResolverBasedSqlProvider.class)
     int select4();
 
-    @DeleteProvider(type = ReservedMethodNameBasedSqlProvider.class)
+    @DeleteProvider(ReservedMethodNameBasedSqlProvider.class)
     int delete();
 
     class MethodResolverBasedSqlProvider implements ProviderMethodResolver {
@@ -156,7 +155,8 @@ class ProviderMethodResolutionTest {
       }
 
       public static String select2() {
-        throw new IllegalStateException("This method should not called when specify `method` attribute on @SelectProvider.");
+        throw new IllegalStateException(
+            "This method should not called when specify `method` attribute on @SelectProvider.");
       }
 
       public static String provideSelect2Sql() {
@@ -187,8 +187,7 @@ class ProviderMethodResolutionTest {
     default Method resolveMethod(ProviderContext context) {
       List<Method> targetMethods = Arrays.stream(getClass().getMethods())
           .filter(m -> m.getName().equals(context.getMapperMethod().getName() + "Sql"))
-          .filter(m -> CharSequence.class.isAssignableFrom(m.getReturnType()))
-          .collect(Collectors.toList());
+          .filter(m -> CharSequence.class.isAssignableFrom(m.getReturnType())).collect(Collectors.toList());
       if (targetMethods.size() == 1) {
         return targetMethods.get(0);
       }
@@ -211,7 +210,7 @@ class ProviderMethodResolutionTest {
 
   interface DefaultProvideMethodResolverReturnTypeMatchedMethodIsNoneMapper {
 
-    @InsertProvider(type = MethodResolverBasedSqlProvider.class)
+    @InsertProvider(MethodResolverBasedSqlProvider.class)
     int insert();
 
     class MethodResolverBasedSqlProvider implements ProviderMethodResolver {
@@ -224,7 +223,7 @@ class ProviderMethodResolutionTest {
 
   interface DefaultProvideMethodResolverMatchedMethodIsMultipleMapper {
 
-    @UpdateProvider(type = MethodResolverBasedSqlProvider.class)
+    @UpdateProvider(MethodResolverBasedSqlProvider.class)
     int update();
 
     class MethodResolverBasedSqlProvider implements ProviderMethodResolver {

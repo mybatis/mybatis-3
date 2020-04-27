@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package org.apache.ibatis.builder;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -297,6 +298,61 @@ public class MapperBuilderAssistant extends BaseBuilder {
     return statement;
   }
 
+  /**
+   * Backward compatibility signature 'addMappedStatement'.
+   *
+   * @param id
+   *          the id
+   * @param sqlSource
+   *          the sql source
+   * @param statementType
+   *          the statement type
+   * @param sqlCommandType
+   *          the sql command type
+   * @param fetchSize
+   *          the fetch size
+   * @param timeout
+   *          the timeout
+   * @param parameterMap
+   *          the parameter map
+   * @param parameterType
+   *          the parameter type
+   * @param resultMap
+   *          the result map
+   * @param resultType
+   *          the result type
+   * @param resultSetType
+   *          the result set type
+   * @param flushCache
+   *          the flush cache
+   * @param useCache
+   *          the use cache
+   * @param resultOrdered
+   *          the result ordered
+   * @param keyGenerator
+   *          the key generator
+   * @param keyProperty
+   *          the key property
+   * @param keyColumn
+   *          the key column
+   * @param databaseId
+   *          the database id
+   * @param lang
+   *          the lang
+   * @return the mapped statement
+   */
+  public MappedStatement addMappedStatement(String id, SqlSource sqlSource, StatementType statementType,
+      SqlCommandType sqlCommandType, Integer fetchSize, Integer timeout, String parameterMap, Class<?> parameterType,
+      String resultMap, Class<?> resultType, ResultSetType resultSetType, boolean flushCache, boolean useCache,
+      boolean resultOrdered, KeyGenerator keyGenerator, String keyProperty, String keyColumn, String databaseId,
+      LanguageDriver lang) {
+    return addMappedStatement(
+      id, sqlSource, statementType, sqlCommandType, fetchSize, timeout,
+      parameterMap, parameterType, resultMap, resultType, resultSetType,
+      flushCache, useCache, resultOrdered, keyGenerator, keyProperty,
+      keyColumn, databaseId, lang, null);
+  }
+
   private <T> T valueOrDefault(T value, T defaultValue) {
     return value == null ? defaultValue : value;
   }
@@ -337,7 +393,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
         try {
           resultMaps.add(configuration.getResultMap(resultMapName.trim()));
         } catch (IllegalArgumentException e) {
-          throw new IncompleteElementException("Could not find result map " + resultMapName, e);
+          throw new IncompleteElementException("Could not find result map '" + resultMapName + "' referenced from '" + statementId + "'", e);
         }
       }
     } else if (resultType != null) {
@@ -369,7 +425,12 @@ public class MapperBuilderAssistant extends BaseBuilder {
       boolean lazy) {
     Class<?> javaTypeClass = resolveResultJavaType(resultType, property, javaType);
     TypeHandler<?> typeHandlerInstance = resolveTypeHandler(javaTypeClass, typeHandler);
-    List<ResultMapping> composites = parseCompositeColumnName(column);
+    List<ResultMapping> composites;
+    if ((nestedSelect == null || nestedSelect.isEmpty()) && (foreignColumn == null || foreignColumn.isEmpty())) {
+      composites = Collections.emptyList();
+    } else {
+      composites = parseCompositeColumnName(column);
+    }
     return new ResultMapping.Builder(configuration, property, column, javaTypeClass)
         .jdbcType(jdbcType)
         .nestedQueryId(applyCurrentNamespace(nestedSelect, true))
@@ -383,6 +444,54 @@ public class MapperBuilderAssistant extends BaseBuilder {
         .foreignColumn(foreignColumn)
         .lazy(lazy)
         .build();
+  }
+
+  /**
+   * Backward compatibility signature 'buildResultMapping'.
+   *
+   * @param resultType
+   *          the result type
+   * @param property
+   *          the property
+   * @param column
+   *          the column
+   * @param javaType
+   *          the java type
+   * @param jdbcType
+   *          the jdbc type
+   * @param nestedSelect
+   *          the nested select
+   * @param nestedResultMap
+   *          the nested result map
+   * @param notNullColumn
+   *          the not null column
+   * @param columnPrefix
+   *          the column prefix
+   * @param typeHandler
+   *          the type handler
+   * @param flags
+   *          the flags
+   * @return the result mapping
+   */
+  public ResultMapping buildResultMapping(Class<?> resultType, String property, String column, Class<?> javaType,
+      JdbcType jdbcType, String nestedSelect, String nestedResultMap, String notNullColumn, String columnPrefix,
+      Class<? extends TypeHandler<?>> typeHandler, List<ResultFlag> flags) {
+    return buildResultMapping(
+      resultType, property, column, javaType, jdbcType, nestedSelect,
+      nestedResultMap, notNullColumn, columnPrefix, typeHandler, flags, null, null, configuration.isLazyLoadingEnabled());
+  }
+
+  /**
+   * Gets the language driver.
+   *
+   * @param langClass
+   *          the lang class
+   * @return the language driver
+   * @deprecated Use {@link Configuration#getLanguageDriver(Class)}
+   */
+  @Deprecated
+  public LanguageDriver getLanguageDriver(Class<? extends LanguageDriver> langClass) {
+    return configuration.getLanguageDriver(langClass);
   }
 
   private Set<String> parseMultipleColumnNames(String columnName) {
@@ -422,7 +531,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
         MetaClass metaResultType = MetaClass.forClass(resultType, configuration.getReflectorFactory());
         javaType = metaResultType.getSetterType(property);
       } catch (Exception e) {
-        //ignore, following null check statement will deal with the situation
+        // ignore, following null check statement will deal with the situation
       }
     }
     if (javaType == null) {
@@ -446,36 +555,6 @@ public class MapperBuilderAssistant extends BaseBuilder {
       javaType = Object.class;
     }
     return javaType;
-  }
-
-  /** Backward compatibility signature. */
-  public ResultMapping buildResultMapping(Class<?> resultType, String property, String column, Class<?> javaType,
-      JdbcType jdbcType, String nestedSelect, String nestedResultMap, String notNullColumn, String columnPrefix,
-      Class<? extends TypeHandler<?>> typeHandler, List<ResultFlag> flags) {
-    return buildResultMapping(
-      resultType, property, column, javaType, jdbcType, nestedSelect,
-      nestedResultMap, notNullColumn, columnPrefix, typeHandler, flags, null, null, configuration.isLazyLoadingEnabled());
-  }
-
-  /**
-   * @deprecated Use {@link Configuration#getLanguageDriver(Class)}
-   */
-  @Deprecated
-  public LanguageDriver getLanguageDriver(Class<? extends LanguageDriver> langClass) {
-    return configuration.getLanguageDriver(langClass);
-  }
-
-  /** Backward compatibility signature. */
-  public MappedStatement addMappedStatement(String id, SqlSource sqlSource, StatementType statementType,
-      SqlCommandType sqlCommandType, Integer fetchSize, Integer timeout, String parameterMap, Class<?> parameterType,
-      String resultMap, Class<?> resultType, ResultSetType resultSetType, boolean flushCache, boolean useCache,
-      boolean resultOrdered, KeyGenerator keyGenerator, String keyProperty, String keyColumn, String databaseId,
-      LanguageDriver lang) {
-    return addMappedStatement(
-      id, sqlSource, statementType, sqlCommandType, fetchSize, timeout,
-      parameterMap, parameterType, resultMap, resultType, resultSetType,
-      flushCache, useCache, resultOrdered, keyGenerator, keyProperty,
-      keyColumn, databaseId, lang, null);
   }
 
 }
