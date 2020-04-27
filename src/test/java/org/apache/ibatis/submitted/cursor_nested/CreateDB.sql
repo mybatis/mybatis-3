@@ -1,5 +1,5 @@
 --
---    Copyright 2009-2016 the original author or authors.
+--    Copyright 2009-2020 the original author or authors.
 --
 --    Licensed under the Apache License, Version 2.0 (the "License");
 --    you may not use this file except in compliance with the License.
@@ -38,3 +38,5 @@ insert into users values(4, 'User4', 1, 1);
 insert into users values(4, 'User4', 1, 2);
 insert into users values(4, 'User4', 2, 1);
 insert into users values(4, 'User4', 2, 2);
+insert into users values(1, 'User1', 3, 1);
+insert into users values(1, 'User1', 2, 4);

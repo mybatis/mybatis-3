@@ -62,8 +62,8 @@ class CursorNestedTest {
       Assertions.assertFalse(usersCursor.isConsumed());
 
       User user = iterator.next();
-      Assertions.assertEquals(2, user.getGroups().size());
-      Assertions.assertEquals(3, user.getRoles().size());
+      Assertions.assertEquals(3, user.getGroups().size());
+      Assertions.assertEquals(4, user.getRoles().size());
 
       user = iterator.next();
       Assertions.assertEquals(1, user.getGroups().size());
