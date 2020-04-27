@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2019 the original author or authors.
+       Copyright 2009-2020 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -225,6 +225,7 @@ ps.setInt(1,id);]]></source>
             <tr>
               <td><code>resultOrdered</code></td>
               <td>この属性は結果がネストされた select ステートメントでのみ有効です。true が設定された場合、MyBatis はクエリの結果が正しい順番にソートされているという前提でマッピングを実行します。これによりメモリ消費を抑えることができます。
+                Collection付きのResultMapを使うCursorの場合にはtrueが必須となります。
                 デフォルトは <code>false</code> です。
               </td>
             </tr>
