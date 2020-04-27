@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2019 the original author or authors.
+       Copyright 2009-2020 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -235,7 +235,9 @@ ps.setInt(1,id);]]></source>
               <td>This is only applicable for nested result select statements: If this is true, it
                 is assumed that nested results are contained or grouped together such that when a
                 new main result row is returned, no references to a previous result row will occur
-                anymore. This allows nested results to be filled much more memory friendly. Default:
+                anymore. This allows nested results to be filled much more memory friendly.
+                If collections exist in result map of a cursor SQL query, then this must be true and the query
+                must be ordered using the id columns of the resultMap. Default:
                 <code>false</code>.
               </td>
             </tr>
