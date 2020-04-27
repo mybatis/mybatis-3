@@ -16,6 +16,8 @@
 package org.apache.ibatis.submitted.cursor_nested;
 
 import java.io.Reader;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 
 import org.apache.ibatis.BaseDataTest;
@@ -62,20 +64,28 @@ class CursorNestedTest {
       Assertions.assertFalse(usersCursor.isConsumed());
 
       User user = iterator.next();
-      Assertions.assertEquals(3, user.getGroups().size());
-      Assertions.assertEquals(4, user.getRoles().size());
+      Assertions.assertEquals(1, user.getId());
+      Assertions.assertEquals("User1", user.getName());
+      Assertions.assertEquals(Arrays.asList("1", "2", "3"), user.getGroups());
+      Assertions.assertEquals(Arrays.asList("1", "2", "3", "4"), user.getRoles());
 
       user = iterator.next();
-      Assertions.assertEquals(1, user.getGroups().size());
-      Assertions.assertEquals(3, user.getRoles().size());
+      Assertions.assertEquals(2, user.getId());
+      Assertions.assertEquals("User2", user.getName());
+      Assertions.assertEquals(Collections.singletonList("1"), user.getGroups());
+      Assertions.assertEquals(Arrays.asList("1", "2", "3"), user.getRoles());
 
       user = iterator.next();
-      Assertions.assertEquals(3, user.getGroups().size());
-      Assertions.assertEquals(1, user.getRoles().size());
+      Assertions.assertEquals(3, user.getId());
+      Assertions.assertEquals("User3", user.getName());
+      Assertions.assertEquals(Arrays.asList("1", "2", "3"), user.getGroups());
+      Assertions.assertEquals(Collections.singletonList("1"), user.getRoles());
 
       user = iterator.next();
-      Assertions.assertEquals(2, user.getGroups().size());
-      Assertions.assertEquals(2, user.getRoles().size());
+      Assertions.assertEquals(4, user.getId());
+      Assertions.assertEquals("User4", user.getName());
+      Assertions.assertEquals(Arrays.asList("1", "2"), user.getGroups());
+      Assertions.assertEquals(Arrays.asList("1", "2"), user.getRoles());
 
       Assertions.assertTrue(usersCursor.isOpen());
       Assertions.assertFalse(usersCursor.isConsumed());
