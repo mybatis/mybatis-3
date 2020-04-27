@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,6 +19,11 @@ import org.apache.ibatis.cursor.Cursor;
 
 public interface Mapper {
 
-  Cursor<User> getAllUsers();
+  Cursor<User> getAllUsersSqlOrderedResultOrdered();
 
+  Cursor<User> getAllUsersSqlOrderedResultUnordered();
+
+  Cursor<User> getAllUsersSqlUnorderedResultOrdered();
+
+  Cursor<User> getAllUsersSqlUnorderedResultUnordered();
 }

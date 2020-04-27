@@ -29,6 +29,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 class CursorNestedTest {
@@ -48,11 +49,171 @@ class CursorNestedTest {
   }
 
   @Test
-  void shouldGetAllUser() {
+  void getAllUsersSqlOrderedResultOrdered() {
     Cursor<User> usersCursor;
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
-      usersCursor = mapper.getAllUsers();
+      usersCursor = mapper.getAllUsersSqlOrderedResultOrdered();
+
+      Assertions.assertFalse(usersCursor.isOpen());
+      // Retrieving iterator, fetching is not started
+      Iterator<User> iterator = usersCursor.iterator();
+
+      // Check if hasNext, fetching is started
+      Assertions.assertTrue(iterator.hasNext());
+      Assertions.assertTrue(usersCursor.isOpen());
+      Assertions.assertFalse(usersCursor.isConsumed());
+
+      User user = iterator.next();
+      Assertions.assertEquals(1, user.getId());
+      Assertions.assertEquals("User1", user.getName());
+      Assertions.assertEquals(Arrays.asList("1", "2", "3"), user.getGroups());
+      Assertions.assertEquals(Arrays.asList("1", "2", "3", "4"), user.getRoles());
+
+      user = iterator.next();
+      Assertions.assertEquals(2, user.getId());
+      Assertions.assertEquals("User2", user.getName());
+      Assertions.assertEquals(Collections.singletonList("1"), user.getGroups());
+      Assertions.assertEquals(Arrays.asList("1", "2", "3"), user.getRoles());
+
+      user = iterator.next();
+      Assertions.assertEquals(3, user.getId());
+      Assertions.assertEquals("User3", user.getName());
+      Assertions.assertEquals(Arrays.asList("1", "2", "3"), user.getGroups());
+      Assertions.assertEquals(Collections.singletonList("1"), user.getRoles());
+
+      user = iterator.next();
+      Assertions.assertEquals(4, user.getId());
+      Assertions.assertEquals("User4", user.getName());
+      Assertions.assertEquals(Arrays.asList("1", "2"), user.getGroups());
+      Assertions.assertEquals(Arrays.asList("1", "2"), user.getRoles());
+
+      Assertions.assertTrue(usersCursor.isOpen());
+      Assertions.assertFalse(usersCursor.isConsumed());
+
+      // Check no more elements
+      Assertions.assertFalse(iterator.hasNext());
+      Assertions.assertFalse(usersCursor.isOpen());
+      Assertions.assertTrue(usersCursor.isConsumed());
+    }
+    Assertions.assertFalse(usersCursor.isOpen());
+  }
+
+  @Test
+  void getAllUsersSqlOrderedResultUnordered() {
+    Cursor<User> usersCursor;
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      usersCursor = mapper.getAllUsersSqlOrderedResultUnordered();
+
+      Assertions.assertFalse(usersCursor.isOpen());
+      // Retrieving iterator, fetching is not started
+      Iterator<User> iterator = usersCursor.iterator();
+
+      // Check if hasNext, fetching is started
+      Assertions.assertTrue(iterator.hasNext());
+      Assertions.assertTrue(usersCursor.isOpen());
+      Assertions.assertFalse(usersCursor.isConsumed());
+
+      User user = iterator.next();
+      Assertions.assertEquals(1, user.getId());
+      Assertions.assertEquals("User1", user.getName());
+      Assertions.assertEquals(Arrays.asList("1", "2", "3"), user.getGroups());
+      Assertions.assertEquals(Arrays.asList("1", "2", "3", "4"), user.getRoles());
+
+      user = iterator.next();
+      Assertions.assertEquals(2, user.getId());
+      Assertions.assertEquals("User2", user.getName());
+      Assertions.assertEquals(Collections.singletonList("1"), user.getGroups());
+      Assertions.assertEquals(Arrays.asList("1", "2", "3"), user.getRoles());
+
+      user = iterator.next();
+      Assertions.assertEquals(3, user.getId());
+      Assertions.assertEquals("User3", user.getName());
+      Assertions.assertEquals(Arrays.asList("1", "2", "3"), user.getGroups());
+      Assertions.assertEquals(Collections.singletonList("1"), user.getRoles());
+
+      user = iterator.next();
+      Assertions.assertEquals(4, user.getId());
+      Assertions.assertEquals("User4", user.getName());
+      Assertions.assertEquals(Arrays.asList("1", "2"), user.getGroups());
+      Assertions.assertEquals(Arrays.asList("1", "2"), user.getRoles());
+
+      Assertions.assertTrue(usersCursor.isOpen());
+      Assertions.assertFalse(usersCursor.isConsumed());
+
+      // Check no more elements
+      Assertions.assertFalse(iterator.hasNext());
+      Assertions.assertFalse(usersCursor.isOpen());
+      Assertions.assertTrue(usersCursor.isConsumed());
+    }
+    Assertions.assertFalse(usersCursor.isOpen());
+  }
+
+  @Test
+  @Disabled("Demonstration for unordered SQL misuse")
+  void getAllUsersSqlUnorderedResultOrdered() {
+    Cursor<User> usersCursor;
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      usersCursor = mapper.getAllUsersSqlUnorderedResultOrdered();
+
+      Assertions.assertFalse(usersCursor.isOpen());
+      // Retrieving iterator, fetching is not started
+      Iterator<User> iterator = usersCursor.iterator();
+
+      // Check if hasNext, fetching is started
+      Assertions.assertTrue(iterator.hasNext());
+      Assertions.assertTrue(usersCursor.isOpen());
+      Assertions.assertFalse(usersCursor.isConsumed());
+
+      User user = iterator.next();
+      Assertions.assertEquals(1, user.getId());
+      Assertions.assertEquals("User1", user.getName());
+      Assertions.assertEquals(Arrays.asList("1", "2"), user.getGroups());
+      Assertions.assertEquals(Arrays.asList("1", "2", "3"), user.getRoles());
+
+      user = iterator.next();
+      Assertions.assertEquals(2, user.getId());
+      Assertions.assertEquals("User2", user.getName());
+      Assertions.assertEquals(Collections.singletonList("1"), user.getGroups());
+      Assertions.assertEquals(Arrays.asList("1", "2", "3"), user.getRoles());
+
+      user = iterator.next();
+      Assertions.assertEquals(3, user.getId());
+      Assertions.assertEquals("User3", user.getName());
+      Assertions.assertEquals(Arrays.asList("1", "2", "3"), user.getGroups());
+      Assertions.assertEquals(Collections.singletonList("1"), user.getRoles());
+
+      user = iterator.next();
+      Assertions.assertEquals(4, user.getId());
+      Assertions.assertEquals("User4", user.getName());
+      Assertions.assertEquals(Arrays.asList("1", "2"), user.getGroups());
+      Assertions.assertEquals(Arrays.asList("1", "2"), user.getRoles());
+
+      user = iterator.next();
+      Assertions.assertEquals(1, user.getId());
+      Assertions.assertEquals("User1", user.getName());
+      Assertions.assertEquals(Arrays.asList("3", "2"), user.getGroups());
+      Assertions.assertEquals(Arrays.asList("1", "4"), user.getRoles());
+
+      Assertions.assertTrue(usersCursor.isOpen());
+      Assertions.assertFalse(usersCursor.isConsumed());
+
+      // Check no more elements
+      Assertions.assertFalse(iterator.hasNext());
+      Assertions.assertFalse(usersCursor.isOpen());
+      Assertions.assertTrue(usersCursor.isConsumed());
+    }
+    Assertions.assertFalse(usersCursor.isOpen());
+  }
+
+  @Test
+  void getAllUsersSqlUnorderedResultUnordered() {
+    Cursor<User> usersCursor;
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      usersCursor = mapper.getAllUsersSqlOrderedResultOrdered();
 
       Assertions.assertFalse(usersCursor.isOpen());
       // Retrieving iterator, fetching is not started
@@ -101,7 +262,8 @@ class CursorNestedTest {
   @Test
   void testCursorWithRowBound() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      Cursor<User> usersCursor = sqlSession.selectCursor("getAllUsers", null, new RowBounds(2, 1));
+      Cursor<User> usersCursor = sqlSession.selectCursor(
+        "getAllUsersSqlOrderedResultOrdered", null, new RowBounds(2, 1));
 
       Iterator<User> iterator = usersCursor.iterator();
 
