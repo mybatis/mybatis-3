@@ -22,6 +22,7 @@ import java.util.Iterator;
 
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.cursor.Cursor;
+import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
@@ -100,54 +101,11 @@ class CursorNestedTest {
   }
 
   @Test
-  void getAllUsersSqlOrderedResultUnordered() {
-    Cursor<User> usersCursor;
+  void getAllUsersSqlOrderedResultUnorderedThrowsException() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
-      usersCursor = mapper.getAllUsersSqlOrderedResultUnordered();
-
-      Assertions.assertFalse(usersCursor.isOpen());
-      // Retrieving iterator, fetching is not started
-      Iterator<User> iterator = usersCursor.iterator();
-
-      // Check if hasNext, fetching is started
-      Assertions.assertTrue(iterator.hasNext());
-      Assertions.assertTrue(usersCursor.isOpen());
-      Assertions.assertFalse(usersCursor.isConsumed());
-
-      User user = iterator.next();
-      Assertions.assertEquals(1, user.getId());
-      Assertions.assertEquals("User1", user.getName());
-      Assertions.assertEquals(Arrays.asList("1", "2", "3"), user.getGroups());
-      Assertions.assertEquals(Arrays.asList("1", "2", "3", "4"), user.getRoles());
-
-      user = iterator.next();
-      Assertions.assertEquals(2, user.getId());
-      Assertions.assertEquals("User2", user.getName());
-      Assertions.assertEquals(Collections.singletonList("1"), user.getGroups());
-      Assertions.assertEquals(Arrays.asList("1", "2", "3"), user.getRoles());
-
-      user = iterator.next();
-      Assertions.assertEquals(3, user.getId());
-      Assertions.assertEquals("User3", user.getName());
-      Assertions.assertEquals(Arrays.asList("1", "2", "3"), user.getGroups());
-      Assertions.assertEquals(Collections.singletonList("1"), user.getRoles());
-
-      user = iterator.next();
-      Assertions.assertEquals(4, user.getId());
-      Assertions.assertEquals("User4", user.getName());
-      Assertions.assertEquals(Arrays.asList("1", "2"), user.getGroups());
-      Assertions.assertEquals(Arrays.asList("1", "2"), user.getRoles());
-
-      Assertions.assertTrue(usersCursor.isOpen());
-      Assertions.assertFalse(usersCursor.isConsumed());
-
-      // Check no more elements
-      Assertions.assertFalse(iterator.hasNext());
-      Assertions.assertFalse(usersCursor.isOpen());
-      Assertions.assertTrue(usersCursor.isConsumed());
+      Assertions.assertThrows(PersistenceException.class, mapper::getAllUsersSqlOrderedResultUnordered);
     }
-    Assertions.assertFalse(usersCursor.isOpen());
   }
 
   @Test
@@ -209,54 +167,11 @@ class CursorNestedTest {
   }
 
   @Test
-  void getAllUsersSqlUnorderedResultUnordered() {
-    Cursor<User> usersCursor;
+  void getAllUsersSqlUnorderedResultUnorderedThrowsException() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
-      usersCursor = mapper.getAllUsersSqlOrderedResultOrdered();
-
-      Assertions.assertFalse(usersCursor.isOpen());
-      // Retrieving iterator, fetching is not started
-      Iterator<User> iterator = usersCursor.iterator();
-
-      // Check if hasNext, fetching is started
-      Assertions.assertTrue(iterator.hasNext());
-      Assertions.assertTrue(usersCursor.isOpen());
-      Assertions.assertFalse(usersCursor.isConsumed());
-
-      User user = iterator.next();
-      Assertions.assertEquals(1, user.getId());
-      Assertions.assertEquals("User1", user.getName());
-      Assertions.assertEquals(Arrays.asList("1", "2", "3"), user.getGroups());
-      Assertions.assertEquals(Arrays.asList("1", "2", "3", "4"), user.getRoles());
-
-      user = iterator.next();
-      Assertions.assertEquals(2, user.getId());
-      Assertions.assertEquals("User2", user.getName());
-      Assertions.assertEquals(Collections.singletonList("1"), user.getGroups());
-      Assertions.assertEquals(Arrays.asList("1", "2", "3"), user.getRoles());
-
-      user = iterator.next();
-      Assertions.assertEquals(3, user.getId());
-      Assertions.assertEquals("User3", user.getName());
-      Assertions.assertEquals(Arrays.asList("1", "2", "3"), user.getGroups());
-      Assertions.assertEquals(Collections.singletonList("1"), user.getRoles());
-
-      user = iterator.next();
-      Assertions.assertEquals(4, user.getId());
-      Assertions.assertEquals("User4", user.getName());
-      Assertions.assertEquals(Arrays.asList("1", "2"), user.getGroups());
-      Assertions.assertEquals(Arrays.asList("1", "2"), user.getRoles());
-
-      Assertions.assertTrue(usersCursor.isOpen());
-      Assertions.assertFalse(usersCursor.isConsumed());
-
-      // Check no more elements
-      Assertions.assertFalse(iterator.hasNext());
-      Assertions.assertFalse(usersCursor.isOpen());
-      Assertions.assertTrue(usersCursor.isConsumed());
+      Assertions.assertThrows(PersistenceException.class, mapper::getAllUsersSqlUnorderedResultUnordered);
     }
-    Assertions.assertFalse(usersCursor.isOpen());
   }
 
   @Test

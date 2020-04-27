@@ -174,6 +174,9 @@ public abstract class BaseExecutor implements Executor {
 
   @Override
   public <E> Cursor<E> queryCursor(MappedStatement ms, Object parameter, RowBounds rowBounds) throws SQLException {
+    if (ms.hasNestedResultMaps() && !ms.isResultOrdered()) {
+      throw new ExecutorException("Querying cursor having nested result maps with resultOrdered=false");
+    }
     BoundSql boundSql = ms.getBoundSql(parameter);
     return doQueryCursor(ms, parameter, rowBounds, boundSql);
   }
