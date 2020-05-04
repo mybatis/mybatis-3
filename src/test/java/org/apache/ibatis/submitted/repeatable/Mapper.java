@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -44,6 +44,13 @@ public interface Mapper {
   @Options(databaseId = "derby")
   @Options(flushCache = Options.FlushCachePolicy.TRUE)
   User getUserUsingProvider(Integer id);
+
+  @SelectProvider(type = HsqlSqlProvider.class, method = "getUserUsingProvider", databaseId = "hsql")
+  @Select(value = "SELECT id, name, 'DERBY' as databaseName FROM users WHERE id = #{id}", databaseId = "derby")
+  @Select("SELECT id, name, 'DEFAULT' as databaseName FROM users WHERE id = #{id}")
+  @Options(useCache = false, databaseId = "hsql")
+  @Options(useCache = false, databaseId = "derby")
+  User getUserUsingBoth(Integer id);
 
   @Insert(value = "INSERT INTO users (id, name) VALUES(#{id}, #{name} || ' HSQL')", databaseId = "hsql")
   @Insert(value = "INSERT INTO users (id, name) VALUES(#{id}, #{name} || ' DERBY')", databaseId = "derby")

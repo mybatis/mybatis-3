@@ -15,9 +15,6 @@
  */
 package org.apache.ibatis.annotations;
 
-import org.apache.ibatis.builder.annotation.StatementAnnotationMetadata;
-import org.apache.ibatis.mapping.SqlCommandType;
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Repeatable;
@@ -44,7 +41,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 @Repeatable(Update.List.class)
-@StatementAnnotationMetadata(commandType = SqlCommandType.UPDATE)
 public @interface Update {
   /**
    * Returns an SQL for updating record(s).
@@ -67,7 +63,6 @@ public @interface Update {
   @Documented
   @Retention(RetentionPolicy.RUNTIME)
   @Target(ElementType.METHOD)
-  @StatementAnnotationMetadata(commandType = SqlCommandType.UPDATE)
   @interface List {
     Update[] value();
   }

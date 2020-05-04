@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -43,7 +43,13 @@ class RepeatableErrorTest {
       SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader, "development-derby");
       BuilderException exception = Assertions.assertThrows(BuilderException.class, () ->
           sqlSessionFactory.getConfiguration().addMapper(BothSelectAndSelectProviderMapper.class));
-      Assertions.assertEquals("You cannot supply both a static SQL and SqlProvider on method 'org.apache.ibatis.submitted.repeatable.BothSelectAndSelectProviderMapper.getUser'.", exception.getMessage());
+      String message = exception.getMessage();
+      Assertions.assertTrue(message.startsWith("Detected conflicting annotations "));
+      Assertions.assertTrue(message.contains("'@org.apache.ibatis.annotations.Select("));
+      Assertions.assertTrue(message.contains("'@org.apache.ibatis.annotations.SelectProvider("));
+      Assertions.assertTrue(message.matches(".*databaseId=[\"]*,.*"));
+      Assertions.assertTrue(message.endsWith(
+          "'org.apache.ibatis.submitted.repeatable.BothSelectAndSelectProviderMapper.getUser'."));
     }
   }
 
@@ -53,7 +59,13 @@ class RepeatableErrorTest {
       SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader, "development-derby");
       BuilderException exception = Assertions.assertThrows(BuilderException.class, () ->
           sqlSessionFactory.getConfiguration().addMapper(BothSelectContainerAndSelectProviderContainerMapper.class));
-      Assertions.assertEquals("You cannot supply both a static SQL and SqlProvider on method 'org.apache.ibatis.submitted.repeatable.BothSelectContainerAndSelectProviderContainerMapper.getUser'.", exception.getMessage());
+      String message = exception.getMessage();
+      Assertions.assertTrue(message.startsWith("Detected conflicting annotations "));
+      Assertions.assertTrue(message.contains("'@org.apache.ibatis.annotations.Select("));
+      Assertions.assertTrue(message.contains("'@org.apache.ibatis.annotations.SelectProvider("));
+      Assertions.assertTrue(message.matches(".*databaseId=\"?hsql\"?,.*"));
+      Assertions.assertTrue(message.endsWith(
+          " on 'org.apache.ibatis.submitted.repeatable.BothSelectContainerAndSelectProviderContainerMapper.getUser'."));
     }
   }
 

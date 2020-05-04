@@ -15,9 +15,6 @@
  */
 package org.apache.ibatis.annotations;
 
-import org.apache.ibatis.builder.annotation.StatementAnnotationMetadata;
-import org.apache.ibatis.mapping.SqlCommandType;
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Repeatable;
@@ -44,7 +41,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 @Repeatable(Select.List.class)
-@StatementAnnotationMetadata(commandType = SqlCommandType.SELECT)
 public @interface Select {
   /**
    * Returns an SQL for retrieving record(s).
@@ -67,7 +63,6 @@ public @interface Select {
   @Documented
   @Retention(RetentionPolicy.RUNTIME)
   @Target(ElementType.METHOD)
-  @StatementAnnotationMetadata(commandType = SqlCommandType.SELECT)
   @interface List {
     Select[] value();
   }

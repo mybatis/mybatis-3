@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -170,4 +170,51 @@ class RepeatableSelectTest {
     }
   }
 
+  @Test
+  void usingBoth() throws IOException, SQLException {
+    SqlSessionFactory sqlSessionFactory;
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/repeatable/mybatis-config.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader, "development-derby");
+    }
+
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/repeatable/CreateDB.sql");
+
+    User user;
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      user = mapper.getUserUsingBoth(1);
+      sqlSession.commit();
+      Assertions.assertEquals("User1", user.getName());
+      Assertions.assertEquals("DERBY", user.getDatabaseName());
+    }
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      Assertions.assertNotSame(user, mapper.getUser(1));
+    }
+  }
+
+  @Test
+  void usingBothProvider() throws IOException, SQLException {
+    SqlSessionFactory sqlSessionFactory;
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/repeatable/mybatis-config.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader, "development-hsql");
+    }
+
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/repeatable/CreateDB.sql");
+
+    User user;
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      user = mapper.getUserUsingBoth(1);
+      sqlSession.commit();
+      Assertions.assertEquals("User1", user.getName());
+      Assertions.assertEquals("HSQL", user.getDatabaseName());
+    }
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      Assertions.assertNotSame(user, mapper.getUser(1));
+    }
+  }
 }
