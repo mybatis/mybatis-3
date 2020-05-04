@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -70,8 +70,13 @@ public final class StatementLogger extends BaseJdbcLogger implements InvocationH
   /**
    * Creates a logging version of a Statement.
    *
-   * @param stmt - the statement
-   * @return - the proxy
+   * @param stmt
+   *          the statement
+   * @param statementLog
+   *          the statement log
+   * @param queryStack
+   *          the query stack
+   * @return the proxy
    */
   public static Statement newInstance(Statement stmt, Log statementLog, int queryStack) {
     InvocationHandler handler = new StatementLogger(stmt, statementLog, queryStack);

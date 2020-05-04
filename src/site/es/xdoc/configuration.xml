@@ -300,6 +300,20 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
             </tr>
             <tr>
               <td>
+                defaultResultSetType
+              </td>
+              <td>
+                Specifies a scroll strategy when omit it per statement settings. (Since: 3.5.2)
+              </td>
+              <td>
+                FORWARD_ONLY | SCROLL_SENSITIVE | SCROLL_INSENSITIVE | DEFAULT(same behavior with 'Not Set')
+              </td>
+              <td>
+                Not Set (null)
+              </td>
+            </tr>
+            <tr>
+              <td>
                 safeRowBoundsEnabled
               </td>
               <td>Habilita el uso de RowBounds en statements anidados.
@@ -1507,13 +1521,15 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
   method = "update",
   args = {MappedStatement.class,Object.class})})
 public class ExamplePlugin implements Interceptor {
+  private Properties properties = new Properties();
   public Object intercept(Invocation invocation) throws Throwable {
-    return invocation.proceed();
-  }
-  public Object plugin(Object target) {
-    return Plugin.wrap(target, this);
+    // implement pre processing if need
+    Object returnObject = invocation.proceed();
+    // implement post processing if need
+    return returnObject;
   }
   public void setProperties(Properties properties) {
+    this.properties = properties;
   }
 }]]></source>
 
@@ -1603,7 +1619,9 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
         <p>Ninguno de estos TransactionManagers necesita ninguna propiedad. Sin embargo ambos son Type Aliases, es decir, en lugar de usarlos puedes informar el nombre totalmente cualificado o el Type Alias de tu propia implementación del interfaz TransactionFactory:
         </p>
         <source><![CDATA[public interface TransactionFactory {
-  void setProperties(Properties props);
+  default void setProperties(Properties props) { // Since 3.5.2, change to default method
+    // NOP
+  }
   Transaction newTransaction(Connection conn);
   Transaction newTransaction(DataSource dataSource, TransactionIsolationLevel level, boolean autoCommit);
 }]]></source>
@@ -1773,7 +1791,9 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
 		</p>
 
         <source><![CDATA[public interface DatabaseIdProvider {
-  void setProperties(Properties p);
+  default void setProperties(Properties p) { // Since 3.5.2, change to default method
+    // NOP
+  }
   String getDatabaseId(DataSource dataSource) throws SQLException;
 }]]></source>
 

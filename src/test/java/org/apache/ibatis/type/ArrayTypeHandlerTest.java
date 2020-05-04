@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,15 +15,21 @@
  */
 package org.apache.ibatis.type;
 
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-
-import java.sql.Array;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import java.sql.Array;
+import java.sql.Connection;
+import java.sql.Types;
+
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 
 class ArrayTypeHandlerTest extends BaseTypeHandlerTest {
 
@@ -39,11 +45,37 @@ class ArrayTypeHandlerTest extends BaseTypeHandlerTest {
     verify(ps).setArray(1, mockArray);
   }
 
+  @Test
+  public void shouldSetStringArrayParameter() throws Exception {
+    Connection connection = mock(Connection.class);
+    when(ps.getConnection()).thenReturn(connection);
+
+    Array array = mock(Array.class);
+    when(connection.createArrayOf(anyString(), any(String[].class))).thenReturn(array);
+
+    TYPE_HANDLER.setParameter(ps, 1, new String[] { "Hello World" }, JdbcType.ARRAY);
+    verify(ps).setArray(1, array);
+    verify(array).free();
+  }
+
+  @Test
+  public void shouldSetNullParameter() throws Exception {
+    TYPE_HANDLER.setParameter(ps, 1, null, JdbcType.ARRAY);
+    verify(ps).setNull(1, Types.ARRAY);
+  }
+
+  @Test
+  public void shouldFailForNonArrayParameter() {
+    assertThrows(TypeException.class, () -> {
+      TYPE_HANDLER.setParameter(ps, 1, "unsupported parameter type", null);
+    });
+  }
+
   @Override
   @Test
   public void shouldGetResultFromResultSetByName() throws Exception {
     when(rs.getArray("column")).thenReturn(mockArray);
-    String[] stringArray = new String[]{"a", "b"};
+    String[] stringArray = new String[] { "a", "b" };
     when(mockArray.getArray()).thenReturn(stringArray);
     assertEquals(stringArray, TYPE_HANDLER.getResult(rs, "column"));
     verify(mockArray).free();
@@ -60,7 +92,7 @@ class ArrayTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldGetResultFromResultSetByPosition() throws Exception {
     when(rs.getArray(1)).thenReturn(mockArray);
-    String[] stringArray = new String[]{"a", "b"};
+    String[] stringArray = new String[] { "a", "b" };
     when(mockArray.getArray()).thenReturn(stringArray);
     assertEquals(stringArray, TYPE_HANDLER.getResult(rs, 1));
     verify(mockArray).free();
@@ -77,7 +109,7 @@ class ArrayTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
     when(cs.getArray(1)).thenReturn(mockArray);
-    String[] stringArray = new String[]{"a", "b"};
+    String[] stringArray = new String[] { "a", "b" };
     when(mockArray.getArray()).thenReturn(stringArray);
     assertEquals(stringArray, TYPE_HANDLER.getResult(cs, 1));
     verify(mockArray).free();

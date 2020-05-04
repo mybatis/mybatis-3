@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2019 the original author or authors.
+       Copyright 2009-2020 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -62,10 +62,10 @@
   </subsection>
 
   <subsection name="SqlSessions" id="sqlSessions">
-  <p>The primary Java interface for working with MyBatis is the SqlSession. Through this interface you can execute commands, get mappers and manage transactions. We'll talk more about SqlSession itself shortly, but first we have to learn how to acquire an instance of SqlSession. SqlSessions are created by a SqlSessionFactory instance. The SqlSessionFactory contains methods for creating instances of SqlSessions all different ways. The SqlSessionFactory itself is created by the SqlSessionFactoryBuilder that can create the SqlSessonFactory from XML, Annotations or hand coded Java configuration.</p>
+  <p>The primary Java interface for working with MyBatis is the SqlSession. Through this interface you can execute commands, get mappers and manage transactions. We'll talk more about SqlSession itself shortly, but first we have to learn how to acquire an instance of SqlSession. SqlSessions are created by a SqlSessionFactory instance. The SqlSessionFactory contains methods for creating instances of SqlSessions all different ways. The SqlSessionFactory itself is created by the SqlSessionFactoryBuilder that can create the SqlSessonFactory from XML, annotations or hand coded Java configuration.</p>
   <p><span class="label important">NOTE</span> When using MyBatis with a dependency injection framework like Spring or Guice, SqlSessions are created and injected by the DI framework so you don't need to use the SqlSessionFactoryBuilder or SqlSessionFactory and can go directly to the SqlSession section. Please refer to the MyBatis-Spring or MyBatis-Guice manuals for further info.</p>
   <h4>SqlSessionFactoryBuilder</h4>
-  <p>The SqlSessionFactoryBuilder has five build() methods, each which allows you to build a SqlSession from a different source.</p>
+  <p>The SqlSessionFactoryBuilder has five build() methods, each which allows you to build a SqlSessionFactory from a different source.</p>
   <source>SqlSessionFactory build(InputStream inputStream)
 SqlSessionFactory build(InputStream inputStream, String environment)
 SqlSessionFactory build(InputStream inputStream, Properties properties)
@@ -200,8 +200,8 @@ Configuration getConfiguration();</source>
 int insert(String statement, Object parameter)
 int update(String statement, Object parameter)
 int delete(String statement, Object parameter)]]></source>
-  <p>The difference between selectOne and selectList is only in that selectOne must return exactly one object or null (none). If any more than one, an exception will be thrown. If you don't' know how many objects are expected, use selectList. If you want to check for the existence of an object, you're better off returning a count (0 or 1). The selectMap is a special case in that it is designed to convert a list of results into a Map based on one of the properties in the resulting objects. Because not all statements require a parameter, these methods are overloaded with versions that do not require the parameter object.</p>
-  <p>The value returned by the insert, update and delete methods indicate the number of rows affected by the statement.</p>
+  <p>The difference between <code>selectOne</code> and <code>selectList</code> is only in that <code>selectOne</code> must return exactly one object or <code>null</code> (none). If any more than one, an exception will be thrown. If you don't know how many objects are expected, use <code>selectList</code>. If you want to check for the existence of an object, you're better off returning a count (0 or 1). The <code>selectMap</code> is a special case in that it is designed to convert a list of results into a <code>Map</code> based on one of the properties in the resulting objects. Because not all statements require a parameter, these methods are overloaded with versions that do not require the parameter object.</p>
+  <p>The value returned by the <code>insert</code>, <code>update</code> and <code>delete</code> methods indicate the number of rows affected by the statement.</p>
   <source><![CDATA[<T> T selectOne(String statement)
 <E> List<E> selectList(String statement)
 <T> Cursor<T> selectCursor(String statement)
@@ -209,108 +209,113 @@ int delete(String statement, Object parameter)]]></source>
 int insert(String statement)
 int update(String statement)
 int delete(String statement)]]></source>
-  
-  <p>A Cursor offers the same results as a List, except it fetches data lazily using an Iterator.</p>
+
+  <p>A <code>Cursor</code> offers the same results as a List, except it fetches data lazily using an <code>Iterator</code>.</p>
   <source><![CDATA[try (Cursor<MyEntity> entities = session.selectCursor(statement, param)) {
-   for (MyEntity entity:entities) {
+   for (MyEntity entity : entities) {
       // process one entity
    }
 }]]></source>
-  
-  <p>Finally, there are three advanced versions of the select methods that allow you to restrict the range of rows to return, or provide custom result handling logic, usually for very large data sets.</p>
+
+  <p>Finally, there are three advanced versions of the <code>select</code> methods that allow you to restrict the range of rows to return, or provide custom result handling logic, usually for very large data sets.</p>
   <source><![CDATA[<E> List<E> selectList (String statement, Object parameter, RowBounds rowBounds)
 <T> Cursor<T> selectCursor(String statement, Object parameter, RowBounds rowBounds)
 <K,V> Map<K,V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowbounds)
 void select (String statement, Object parameter, ResultHandler<T> handler)
 void select (String statement, Object parameter, RowBounds rowBounds, ResultHandler<T> handler)]]></source>
 
-  <p>The RowBounds parameter causes MyBatis to skip the number of records specified, as well as limit the number of results returned to some number. The RowBounds class has a constructor to take both the offset and limit, and is otherwise immutable.</p>
+  <p>The <code>RowBounds</code> parameter causes MyBatis to skip the number of records specified, as well as limit the number of results returned to some number. The <code>RowBounds</code> class has a constructor to take both the <code>offset</code> and <code>limit</code>, and is otherwise immutable.</p>
   <source>int offset = 100;
 int limit = 25;
 RowBounds rowBounds = new RowBounds(offset, limit);</source>
 
-  <p>Different drivers are able to achieve different levels of efficiency in this regard. For the best performance, use result set types of SCROLL_SENSITIVE or SCROLL_INSENSITIVE (in other words: not FORWARD_ONLY).</p>
-  <p>The ResultHandler parameter allows you to handle each row however you like. You can add it to a List, create a Map, Set, or throw each result away and instead keep only rolled up totals of calculations. You can do pretty much anything with the ResultHandler, and it's what MyBatis uses internally itself to build result set lists.</p>
-  <p>Since 3.4.6, ResultHandler passed to a CALLABLE statement is used on every REFCURSOR output parameter of the stored procedure if there is any.</p>
+  <p>Different drivers are able to achieve different levels of efficiency in this regard. For the best performance, use result set types of <code>SCROLL_SENSITIVE</code> or <code>SCROLL_INSENSITIVE</code> (in other words: not <code>FORWARD_ONLY</code>).</p>
+  <p>The <code>ResultHandler</code> parameter allows you to handle each row however you like. You can add it to a <code>List</code>, create a <code>Map</code>, <code>Set</code>, or throw each result away and instead keep only rolled up totals of calculations. You can do pretty much anything with the <code>ResultHandler</code>, and it's what MyBatis uses internally itself to build result set lists.</p>
+  <p>Since 3.4.6, <code>ResultHandler</code> passed to a <code>CALLABLE</code> statement is used on every <code>REFCURSOR</code> output parameter of the stored procedure if there is any.</p>
   <p>The interface is very simple.</p>
   <source><![CDATA[package org.apache.ibatis.session;
 public interface ResultHandler<T> {
   void handleResult(ResultContext<? extends T> context);
 }]]></source>
 
-  <p>The ResultContext parameter gives you access to the result object itself, a count of the number of result objects created, and a Boolean stop() method that you can use to stop MyBatis from loading any more results.</p>
+  <p>The <code>ResultContext</code> parameter gives you access to the result object itself, a count of the number of result objects created, and a <code>Boolean stop()</code> method that you can use to stop MyBatis from loading any more results.</p>
 
-  <p>Using a ResultHandler has two limitations that you should be aware of:</p>
+  <p>Using a <code>ResultHandler</code> has two limitations that you should be aware of:</p>
 
   <ul>
-  <li>Data got from a method called with a ResultHandler will not be cached.</li>
-  <li>When using advanced resultmaps MyBatis will probably require several rows to build an object. If a ResultHandler is used you may be given an object whose associations or collections are not yet filled.</li>
+  <li>Data gotten from a method called with a <code>ResultHandler</code> will not be cached.</li>
+  <li>When using advanced <code>resultMap</code>s MyBatis will probably require several rows to build an object. If a <code>ResultHandler</code> is used you may be given an object whose associations or collections are not yet filled.</li>
   </ul>
 
   <h5>Batch update statement Flush Method</h5>
-  <p>There is method for flushing(executing) batch update statements that stored in a JDBC driver class at any timing. This method can be used when you use the <code>ExecutorType.BATCH</code> as <code>ExecutorType</code>.</p>
+  <p>There is method for flushing (executing) batch update statements that are stored in a JDBC driver class at any time. This method can be used when the <code>ExecutorType</code> is <code>ExecutorType.BATCH</code>.</p>
   <source><![CDATA[List<BatchResult> flushStatements()]]></source>
 
   <h5>Transaction Control Methods</h5>
-  <p>There are four methods for controlling the scope of a transaction. Of course, these have no effect if you've chosen to use auto-commit or if you're using an external transaction manager. However, if you're using the JDBC transaction manager, managed by the Connection instance, then the four methods that will come in handy are:</p>
+  <p>There are four methods for controlling the scope of a transaction. Of course, these have no effect if you've chosen to use auto-commit or if you're using an external transaction manager. However, if you're using the JDBC transaction manager, managed by the <code>Connection</code> instance, then the four methods that will come in handy are:</p>
   <source>void commit()
 void commit(boolean force)
 void rollback()
 void rollback(boolean force)</source>
-  <p>By default MyBatis does not actually commit unless it detects that the database has been changed by a call to insert, update or delete. If you've somehow made changes without calling these methods, then you can pass true into the commit and rollback methods to guarantee that it will be committed (note, you still can't force a session in auto-commit mode, or one that is using an external transaction manager). Most of the time you won't have to call rollback(), as MyBatis will do that for you if you don't call commit. However, if you need more fine grained control over a session where multiple commits and rollbacks are possible, you have the rollback option there to make that possible.</p>
+  <p>By default MyBatis does not actually commit unless it detects that the database has been changed by a call to <code>insert</code>, <code>update</code> or <code>delete</code>. If you've somehow made changes without calling these methods, then you can pass <code>true</code> into the <code>commit</code> and <code>rollback</code> methods to guarantee that they will be committed (note, you still can't force a session in auto-commit mode, or one that is using an external transaction manager). Most of the time you won't have to call <code>rollback()</code>, as MyBatis will do that for you if you don't call commit. However, if you need more fine-grained control over a session where multiple commits and rollbacks are possible, you have the rollback option there to make that possible.</p>
   <p><span class="label important">NOTE</span> MyBatis-Spring and MyBatis-Guice provide declarative transaction handling. So if you are using MyBatis with Spring or Guice please refer to their specific manuals.</p>
 
   <h5>Local Cache</h5>
   <p>MyBatis uses two caches: a local cache and a second level cache.</p>
-  <p>Each time a new session is created MyBatis creates a local cache and attaches it to the session. Any query executed within the session will be stored in the local cache so further executions of the same query with the same input parameters will not hit the database. The local cache is cleared upon update, commit, rollback and close.</p>
-  <p>By default local cache data is used for the whole session duration. This cache is needed to resolve circular references and to speed up repeated nested queries, so it can never be completely disabled but you can configure the local cache to be used just for the duration of an statement execution by setting localCacheScope=STATEMENT.</p>
-  <p>Note that when the localCacheScope is set to SESSION, MyBatis returns references to the same objects which are stored in the local cache. Any modification of returned object (lists etc.) influences the local cache contents and subsequently the values which are returned from the cache in the lifetime of the session. Therefore, as best practice, do not to modify the objects returned by MyBatis.</p>
-  <p>You can clear the local cache at any time calling:</p>
+  <p>Each time a new session is created MyBatis creates a local cache and attaches it to the session. Any query executed within the session will be stored in the local cache so further executions of the same query with the same input parameters will not hit the database. The local cache is cleared upon <code>update</code>, <code>commit</code>, <code>rollback</code> and <code>close</code>.</p>
+  <p>By default local cache data is used for the whole session duration. This cache is needed to resolve circular references and to speed up repeated nested queries, so it can never be completely disabled but you can configure the local cache to be used just for the duration of a statement execution by setting <code>localCacheScope=STATEMENT</code>.</p>
+  <p>Note that when the <code>localCacheScope</code> is set to <code>SESSION</code>, MyBatis returns references to the same objects which are stored in the local cache. Any modification of the returned objects (lists etc.) influences the local cache contents and subsequently the values which are returned from the cache in the lifetime of the session. Therefore, as best practice, do not to modify the objects returned by MyBatis.</p>
+  <p>You can clear the local cache at any time by calling:</p>
   <source>void clearCache()</source>
 
   <h5>Ensuring that SqlSession is Closed</h5>
   <source>void close()</source>
-  <p>The most important thing you must ensure is that you close any sessions that you open. The best way to ensure this is to use the following unit of work pattern:</p>
+  <p>The most important thing you must ensure is to close any session that you open. The best way to ensure this is to use the following unit of work pattern:</p>
   <source>try (SqlSession session = sqlSessionFactory.openSession()) {
-    // following 3 lines pseudocode for "doing some work"
+    // following 3 lines are pseudocode for "doing some work"
     session.insert(...);
     session.update(...);
     session.delete(...);
     session.commit();
 }</source>
-  <p><span class="label important">NOTE</span> Just like SqlSessionFactory, you can get the instance of Configuration that the SqlSession is using by calling the getConfiguration() method.</p>
+  <p><span class="label important">NOTE</span> Just like <code>SqlSessionFactory</code>, you can get the instance of <code>Configuration</code> that the <code>SqlSession</code> is using by calling the <code>getConfiguration()</code> method.</p>
   <source>Configuration getConfiguration()</source>
 
   <h5>Using Mappers</h5>
   <source><![CDATA[<T> T getMapper(Class<T> type)]]></source>
-  <p>While the various insert, update, delete and select methods above are powerful, they are also very verbose, not type safe and not as helpful to your IDE or unit tests as they could be. We've already seen an example of using Mappers in the Getting Started section above.</p>
-  <p>Therefore, a more common way to execute mapped statements is to use Mapper classes. A mapper class is simply an interface with method definitions that match up against the SqlSession methods. The following example class demonstrates some method signatures and how they map to the SqlSession.</p>
+  <p>While the various <code>insert</code>, <code>update</code>, <code>delete</code> and <code>select</code> methods above are powerful, they are also very verbose, not type safe and not as helpful to your IDE or unit tests as they could be. We've already seen an example of using <code>Mapper</code>s in the Getting Started section above.</p>
+  <p>Therefore, a more common way to execute mapped statements is to use <code>Mapper</code> classes. A <code>Mapper</code> class is simply an interface with method definitions that match up against the <code>SqlSession</code> methods. The following example class demonstrates some method signatures and how they map to the <code>SqlSession</code>.</p>
   <source><![CDATA[public interface AuthorMapper {
   // (Author) selectOne("selectAuthor", 5);
   Author selectAuthor(int id);
+
   // (List<Author>) selectList("selectAuthors")
   List<Author> selectAuthors();
+
   // (Map<Integer,Author>) selectMap("selectAuthors", "id")
   @MapKey("id")
   Map<Integer, Author> selectAuthors();
+
   // insert("insertAuthor", author)
   int insertAuthor(Author author);
+
   // updateAuthor("updateAuthor", author)
   int updateAuthor(Author author);
+
   // delete("deleteAuthor", 5)
   int deleteAuthor(int id);
 }]]></source>
-  <p>In a nutshell, each Mapper method signature should match that of the SqlSession method that it's associated to, but without the String parameter ID. Instead, the method name must match the mapped statement ID.</p>
-  <p>In addition, the return type must match that of the expected result type for single results or an array or collection for multiple results or Cursor. All of the usual types are supported, including: Primitives, Maps, POJOs and JavaBeans.</p>
+  <p>In a nutshell, each <code>Mapper</code> method signature should match that of the <code>SqlSession</code> method that it's associated to, but without the <code>String</code> parameter ID. Instead, the method name must match the mapped statement ID.</p>
+  <p>In addition, the return type must match that of the expected result type for single results or an array or collection for multiple results or <code>Cursor</code>. All of the usual types are supported, including: Primitives, <code>Maps</code>, POJOs and <code>JavaBeans</code>.</p>
   <p><span class="label important">NOTE</span> Mapper interfaces do not need to implement any interface or extend any class. As long as the method signature can be used to uniquely identify a corresponding mapped statement.</p>
-  <p><span class="label important">NOTE</span> Mapper interfaces can extend other interfaces. Be sure that you have the statements in the appropriate namespace when using XML binding to Mapper interfaces. Also, the only limitation is that you cannot have the same method signature in two interfaces in a hierarchy (a bad idea anyway).</p>
-  <p>You can pass multiple parameters to a mapper method. If you do, they will be named by the literal "param" followed by their position in the parameter list by default, for example: #{param1}, #{param2} etc. If you wish to change the name of the parameters (multiple only), then you can use the @Param("paramName") annotation on the parameter.</p>
-  <p>You can also pass a RowBounds instance to the method to limit query results.</p>
+  <p><span class="label important">NOTE</span> Mapper interfaces can extend other interfaces. Be sure that you have the statements in the appropriate namespace when using XML binding to <code>Mapper</code> interfaces. Also, the only limitation is that you cannot have the same method signature in two interfaces in a hierarchy (a bad idea anyway).</p>
+  <p>You can pass multiple parameters to a mapper method. If you do, they will be named by the literal "param" followed by their position in the parameter list by default, for example: <code>#{param1}</code>, <code>#{param2}</code> etc. If you wish to change the name of the parameters (multiple only), then you can use the <code>@Param("paramName")</code> annotation on the parameter.</p>
+  <p>You can also pass a <code>RowBounds</code> instance to the method to limit query results.</p>
 
   <h5>Mapper Annotations</h5>
-  <p>Since the very beginning, MyBatis has been an XML driven framework. The configuration is XML based, and the Mapped Statements are defined in XML. With MyBatis 3, there are new options available. MyBatis 3 builds on top of a comprehensive and powerful Java based Configuration API. This Configuration API is the foundation for the XML based MyBatis configuration, as well as the new Annotation based configuration. Annotations offer a simple way to implement simple mapped statements without introducing a lot of overhead.</p>
-  <p><span class="label important">NOTE</span> Java Annotations are unfortunately limited in their expressiveness and flexibility. Despite a lot of time spent in investigation, design and trials, the most powerful MyBatis mappings simply cannot be built with Annotations – without getting ridiculous that is. C# Attributes (for example) do not suffer from these limitations, and thus MyBatis.NET will enjoy a much richer alternative to XML. That said, the Java Annotation based configuration is not without its benefits.</p>
-  <p><strong>The Annotations are as follows:</strong></p>
+  <p>Since the very beginning, MyBatis has been an XML driven framework. The configuration is XML based, and the Mapped Statements are defined in XML. With MyBatis 3, there are new options available. MyBatis 3 builds on top of a comprehensive and powerful Java based Configuration API. This Configuration API is the foundation for the XML based MyBatis configuration, as well as the new annotation-based configuration. Annotations offer a simple way to implement simple mapped statements without introducing a lot of overhead.</p>
+  <p><span class="label important">NOTE</span> Java annotations are unfortunately limited in their expressiveness and flexibility. Despite a lot of time spent in investigation, design and trials, the most powerful MyBatis mappings simply cannot be built with annotations – without getting ridiculous that is. C# Attributes (for example) do not suffer from these limitations, and thus MyBatis.NET will enjoy a much richer alternative to XML. That said, the Java annotation-based configuration is not without its benefits.</p>
+  <p><strong>The annotations are as follows:</strong></p>
   <table>
     <thead>
       <tr>
@@ -367,7 +372,7 @@ void rollback(boolean force)</source>
         <td>A single constructor argument that is part of a ConstructorArgs collection. Attributes: <code>id</code>,
         <code>column</code>, <code>javaType</code>, <code>jdbcType</code>, <code>typeHandler</code>, <code>select</code>,
         <code>resultMap</code>. The id attribute is a boolean value that identifies the property to be used for comparisons,
-        similar to the <code>&lt;idArg&gt;</code> XML element.</td>
+        similar to the <code>&lt;idArg&gt;</code> XML element. Since 3.5.4, it can be used as repeatable annotation.</td>
       </tr>
       <tr>
         <td><code>@TypeDiscriminator</code></td>
@@ -405,16 +410,20 @@ void rollback(boolean force)</source>
         <code>many</code>. The id attribute is a boolean value that indicates that the property should be used for comparisons
         (similar to <code>&lt;id&gt;</code> in the XML mappings).
         The one attribute is for single associations, similar to <code>&lt;association&gt;</code>, and the many attribute
-        is for collections, similar to <code>&lt;collection&gt;</code>. They are named as they are to avoid class naming conflicts.</td>
+        is for collections, similar to <code>&lt;collection&gt;</code>. They are named as they are to avoid class naming conflicts.
+        Since 3.5.4, it can be used as repeatable annotation.</td>
       </tr>
       <tr>
         <td><code>@One</code></td>
         <td>N/A</td>
         <td><code>&lt;association&gt;</code></td>
         <td>A mapping to a single property value of a complex type. Attributes: <code>select</code>, which is the fully
-        qualified name of a mapped statement (i.e. mapper method) that can load an instance of the appropriate type,
+        qualified name of a mapped statement (i.e. mapper method) that can load an instance of the appropriate type.
         <code>fetchType</code>, which supersedes the global configuration parameter <code>lazyLoadingEnabled</code> for this
         mapping.
+        <code>resultMap</code>(available since 3.5.5), which is the fully qualified name of a result map that map to
+        a single container object from select result.
+        <code>columnPrefix</code>(available since 3.5.5), which is column prefix for grouping select columns at nested result map.
         <span class="label important">NOTE</span> You will notice that join mapping is not supported via the Annotations API.
         This is due to the limitation in Java Annotations that does not allow for circular references.</td>
       </tr>
@@ -424,8 +433,11 @@ void rollback(boolean force)</source>
         <td><code>&lt;collection&gt;</code></td>
         <td>A mapping to a collection property of a complex type. Attributes: <code>select</code>, which is the fully
         qualified name of a mapped statement (i.e. mapper method) that can load a collection of instances of the appropriate
-        types, <code>fetchType</code>, which supersedes the global configuration parameter <code>lazyLoadingEnabled</code> for this
+        types. <code>fetchType</code>, which supersedes the global configuration parameter <code>lazyLoadingEnabled</code> for this
         mapping.
+        <code>resultMap</code>(available since 3.5.5), which is the fully qualified name of a result map that map to
+        collection object from select result.
+        <code>columnPrefix</code>(available since 3.5.5), which is column prefix for grouping select columns at nested result map.
         <span class="label important">NOTE</span> You will notice that join mapping is not supported via the
         Annotations API. This is due to the limitation in Java Annotations that does not allow for circular references.</td>
       </tr>
@@ -502,7 +514,9 @@ void rollback(boolean force)</source>
         You can pass objects that passed to arguments of a mapper method, "Mapper interface type", "Mapper method" and "Database ID"
         via the <code>ProviderContext</code>(available since MyBatis 3.4.5 or later) as method argument.
         (In MyBatis 3.4 or later, it's allow multiple parameters)
-        Attributes: <code>type</code>, <code>method</code>. The <code>type</code> attribute is a class.
+        Attributes: <code>value</code>, <code>type</code> and <code>method</code>.
+        The <code>value</code> and <code>type</code> attribute is a class
+        (The <code>type</code> attribute is alias for <code>value</code>, you must be specify either one).
         The <code>method</code> is the name of the method on that class
         (Since 3.5.1, you can omit <code>method</code> attribute, the MyBatis will resolve a target method via the
         <code>ProviderMethodResolver</code> interface.
@@ -589,8 +603,8 @@ User getUserById(Integer id);
 
 @Results(id = "companyResults")
 @ConstructorArgs({
-  @Arg(property = "id", column = "cid", id = <strong>true</strong>),
-  @Arg(property = "name", column = "name")
+  @Arg(column = "cid", javaType = Integer.class, id = <strong>true</strong>),
+  @Arg(column = "name", javaType = String.class)
 })
 @Select("select * from company where id = #{id}")
 Company getCompanyById(Integer id);</source>
@@ -642,7 +656,7 @@ class UserSqlBuilder {
 }]]></source>
 
     <p>This example shows usage the default implementation of <code>ProviderMethodResolver</code>(available since MyBatis 3.5.1 or later):</p>
-    <source><![CDATA[@SelectProvider(type = UserSqlProvider.class)
+    <source><![CDATA[@SelectProvider(UserSqlProvider.class)
 List<User> getUsersByName(String name);
 
 // Implements the ProviderMethodResolver on your provider class

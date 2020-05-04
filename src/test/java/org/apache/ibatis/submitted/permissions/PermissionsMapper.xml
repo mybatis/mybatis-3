@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -22,60 +22,60 @@
 
 <mapper namespace="org.apache.ibatis.submitted.permissions.PermissionsMapper">
 
-	<!-- testing nested result map loop -->
+    <!-- testing nested result map loop -->
 
-	<resultMap id="resourceResults" type="Resource">
-		<id property="name" column="resourceName" />
-		<collection property="principals" resultMap="principalResults" />
-	</resultMap>
+    <resultMap id="resourceResults" type="Resource">
+        <id property="name" column="resourceName" />
+        <collection property="principals" resultMap="principalResults" />
+    </resultMap>
 
-	<resultMap id="principalResults" type="Principal">
-		<id property="principalName" column="principalName" />
-		<collection property="permissions" resultMap="permisionResults" />
-	</resultMap>
+    <resultMap id="principalResults" type="Principal">
+        <id property="principalName" column="principalName" />
+        <collection property="permissions" resultMap="permisionResults" />
+    </resultMap>
 
-	<resultMap id="permisionResults" type="Permission">
-		<result property="permission" column="permission" />
-		<association property="resource" resultMap="resourceResults" />
-	</resultMap>
+    <resultMap id="permisionResults" type="Permission">
+        <result property="permission" column="permission" />
+        <association property="resource" resultMap="resourceResults" />
+    </resultMap>
 
-	<select id="getResources" resultMap="resourceResults">
-		select * from permissions
-	</select>
+    <select id="getResources" resultMap="resourceResults">
+        select * from permissions
+    </select>
 
-	<!-- testing nested select loop -->
+    <!-- testing nested select loop -->
 
-	<resultMap id="resourceResultsSelect" type="Resource">
-		<id property="name" column="resourceName" />
-		<collection property="principals" select="getPrincipal"
-			column="resourceName" />
-	</resultMap>
+    <resultMap id="resourceResultsSelect" type="Resource">
+        <id property="name" column="resourceName" />
+        <collection property="principals" select="getPrincipal"
+            column="resourceName" />
+    </resultMap>
 
-	<resultMap id="principalResultsSelect" type="Principal">
-		<id property="principalName" column="principalName" />
-		<collection property="permissions" select="getPermission"
-			column="principalName" />
-	</resultMap>
+    <resultMap id="principalResultsSelect" type="Principal">
+        <id property="principalName" column="principalName" />
+        <collection property="permissions" select="getPermission"
+            column="principalName" />
+    </resultMap>
 
-	<resultMap id="permisionResultsSelect" type="Permission">
-		<result property="permission" column="permission" />
-		<association property="resource" select="getResource"
-			column="permission" />
-	</resultMap>
+    <resultMap id="permisionResultsSelect" type="Permission">
+        <result property="permission" column="permission" />
+        <association property="resource" select="getResource"
+            column="permission" />
+    </resultMap>
 
-	<select id="getResource" resultMap="resourceResultsSelect">
-		select distinct(resourceName)
-		from permissions where permission = #{permission}
-	</select>
+    <select id="getResource" resultMap="resourceResultsSelect">
+        select distinct(resourceName)
+        from permissions where permission = #{permission}
+    </select>
 
-	<select id="getPrincipal" resultMap="principalResultsSelect">
-		select
-		distinct(principalName) from permissions where resourceName = #{name}
-	</select>
+    <select id="getPrincipal" resultMap="principalResultsSelect">
+        select
+        distinct(principalName) from permissions where resourceName = #{name}
+    </select>
 
-	<select id="getPermission" resultMap="permisionResultsSelect">
-		select distinct(permission)
-		from permissions where principalName = #{principalName}
-	</select>
+    <select id="getPermission" resultMap="permisionResultsSelect">
+        select distinct(permission)
+        from permissions where principalName = #{principalName}
+    </select>
 
 </mapper>

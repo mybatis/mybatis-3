@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -137,7 +137,8 @@ public class ParameterMapping {
 
   /**
    * Used for handling output of callable statements.
-   * @return
+   *
+   * @return the mode
    */
   public ParameterMode getMode() {
     return mode;
@@ -145,7 +146,8 @@ public class ParameterMapping {
 
   /**
    * Used for handling output of callable statements.
-   * @return
+   *
+   * @return the java type
    */
   public Class<?> getJavaType() {
     return javaType;
@@ -153,7 +155,8 @@ public class ParameterMapping {
 
   /**
    * Used in the UnknownTypeHandler in case there is no handler for the property type.
-   * @return
+   *
+   * @return the jdbc type
    */
   public JdbcType getJdbcType() {
     return jdbcType;
@@ -161,7 +164,8 @@ public class ParameterMapping {
 
   /**
    * Used for handling output of callable statements.
-   * @return
+   *
+   * @return the numeric scale
    */
   public Integer getNumericScale() {
     return numericScale;
@@ -169,7 +173,8 @@ public class ParameterMapping {
 
   /**
    * Used when setting parameters to the PreparedStatement.
-   * @return
+   *
+   * @return the type handler
    */
   public TypeHandler<?> getTypeHandler() {
     return typeHandler;
@@ -177,7 +182,8 @@ public class ParameterMapping {
 
   /**
    * Used for handling output of callable statements.
-   * @return
+   *
+   * @return the result map id
    */
   public String getResultMapId() {
     return resultMapId;
@@ -185,15 +191,17 @@ public class ParameterMapping {
 
   /**
    * Used for handling output of callable statements.
-   * @return
+   *
+   * @return the jdbc type name
    */
   public String getJdbcTypeName() {
     return jdbcTypeName;
   }
 
   /**
-   * Not used
-   * @return
+   * Expression 'Not used'.
+   *
+   * @return the expression
    */
   public String getExpression() {
     return expression;

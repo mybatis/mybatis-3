@@ -26,6 +26,9 @@ import java.lang.reflect.WildcardType;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import org.apache.ibatis.reflection.typeparam.Calculator;
 import org.apache.ibatis.reflection.typeparam.Calculator.SubCalculator;
@@ -429,4 +432,29 @@ class TypeParameterResolverTest {
     Field field = A.class.getDeclaredField("id");
     assertEquals(Integer.class, TypeParameterResolver.resolveFieldType(field, clazz));
   }
+
+  @Test
+  void shouldTypeVariablesBeComparedWithEquals() throws Exception {
+    // #1794
+    ExecutorService executor = Executors.newFixedThreadPool(2);
+    Future<Type> futureA = executor.submit(() -> {
+      Type retType = TypeParameterResolver.resolveReturnType(IfaceA.class.getMethods()[0], IfaceA.class);
+      return ((ParameterizedType) retType).getActualTypeArguments()[0];
+    });
+    Future<Type> futureB = executor.submit(() -> {
+      Type retType = TypeParameterResolver.resolveReturnType(IfaceB.class.getMethods()[0], IfaceB.class);
+      return ((ParameterizedType) retType).getActualTypeArguments()[0];
+    });
+    assertEquals(AA.class, futureA.get());
+    assertEquals(BB.class, futureB.get());
+    executor.shutdown();
+  }
+
+  // @formatter:off
+  class AA {}
+  class BB {}
+  interface IfaceA extends ParentIface<AA> {}
+  interface IfaceB extends ParentIface<BB> {}
+  interface ParentIface<T> {List<T> m();}
+  // @formatter:on
 }

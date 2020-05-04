@@ -17,22 +17,22 @@
 
 -->
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.apache.ibatis.submitted.xml_external_ref.InvalidWithInsertMapper">
-	<sql id="personColumnList">
-		person_id, person_name
-	</sql>
-	<select id="selectAll" resultType="java.util.Map">
-		SELECT
-		<include refid="wrongId" />
-		FROM person
-	</select>
+    <sql id="personColumnList">
+        person_id, person_name
+    </sql>
+    <select id="selectAll" resultType="java.util.Map">
+        SELECT
+        <include refid="wrongId" />
+        FROM person
+    </select>
 
-	<insert id="insert" parameterType="java.util.Map">
-		INSERT INTO Person (person_name)
-		VALUES (#{name})
-		<selectKey>
-			SELECT IDENTITY()
-		</selectKey>
-	</insert>
+    <insert id="insert" parameterType="java.util.Map">
+        INSERT INTO Person (person_name)
+        VALUES (#{name})
+        <selectKey>
+            SELECT IDENTITY()
+        </selectKey>
+    </insert>
 </mapper>

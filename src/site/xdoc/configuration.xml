@@ -151,9 +151,9 @@ SqlSessionFactory factory =
 </properties>]]></source>
 
         <p>
-          <span class="label important">NOTE</span> Also If you are used already the <code>":"</code> as property key(e.g. <code>db:username</code>)
-          or you are used already the ternary operator of OGNL expression(e.g. <code>${tableName != null ? tableName : 'global_constants'}</code>) on your sql definition,
-          you should be change the character that separate key and default value by adding a special property as follow:
+          <span class="label important">NOTE</span> This will conflict with the <code>":"</code> character in property keys (e.g. <code>db:username</code>)
+          or the ternary operator of OGNL expressions (e.g. <code>${tableName != null ? tableName : 'global_constants'}</code>) on a SQL definition.
+          If you use either and want default property values, you must change the default value separator by adding this special property:
         </p>
 
         <source><![CDATA[
@@ -209,7 +209,7 @@ SqlSessionFactory factory =
               </td>
               <td>
                 Globally enables or disables lazy loading. When enabled, all relations will be lazily loaded.
-                This value can be superseded for an specific relation by using the <code>fetchType</code> attribute on it.
+                This value can be superseded for a specific relation by using the <code>fetchType</code> attribute on it.
               </td>
               <td>
                 true | false
@@ -378,6 +378,20 @@ SqlSessionFactory factory =
               </td>
               <td>
                 Any positive integer
+              </td>
+              <td>
+                Not Set (null)
+              </td>
+            </tr>
+            <tr>
+              <td>
+                defaultResultSetType
+              </td>
+              <td>
+                Specifies a scroll strategy when omit it per statement settings. (Since: 3.5.2)
+              </td>
+              <td>
+                FORWARD_ONLY | SCROLL_SENSITIVE | SCROLL_INSENSITIVE | DEFAULT(same behavior with 'Not Set')
               </td>
               <td>
                 Not Set (null)
@@ -943,7 +957,7 @@ public class Author {
         </p>
         <p>
           <span class="label important">NOTE</span>
-          Since version 3.4.5, The MyBatis has been supported JSR-310(Date and Time API) by default.
+          Since version 3.4.5, MyBatis supports JSR-310 (Date and Time API) by default.
         </p>
         <table>
           <thead>
@@ -1423,7 +1437,7 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
           data type until the statement is executed.
         </p>
         <p>
-          MyBatis will know the the Java type that you want to handle with
+          MyBatis will know the Java type that you want to handle with
           this TypeHandler by introspecting its generic type, but
           you can override this behavior by two means:
         </p>
@@ -1436,7 +1450,7 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
           </li>
         </ul>
 
-        <p>Associated JDBC type can be specified by two means:</p>
+        <p>The associated JDBC type can be specified by two means:</p>
         <ul>
           <li>
            Adding a <code>jdbcType</code> attribute to the typeHandler element (for example: <code>jdbcType="VARCHAR"</code>).
@@ -1594,15 +1608,22 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
         </p>
         <source><![CDATA[// ExampleObjectFactory.java
 public class ExampleObjectFactory extends DefaultObjectFactory {
-  public Object create(Class type) {
+  @Override
+  public <T> T create(Class<T> type) {
     return super.create(type);
   }
-  public Object create(Class type, List<Class> constructorArgTypes, List<Object> constructorArgs) {
+
+  @Override
+  public <T> T create(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
     return super.create(type, constructorArgTypes, constructorArgs);
   }
+
+  @Override
   public void setProperties(Properties properties) {
     super.setProperties(properties);
   }
+
+  @Override
   public <T> boolean isCollection(Class<T> type) {
     return Collection.class.isAssignableFrom(type);
   }}
@@ -1675,13 +1696,19 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
   method = "update",
   args = {MappedStatement.class,Object.class})})
 public class ExamplePlugin implements Interceptor {
+  private Properties properties = new Properties();
+
+  @Override
   public Object intercept(Invocation invocation) throws Throwable {
-    return invocation.proceed();
+    // implement pre-processing if needed
+    Object returnObject = invocation.proceed();
+    // implement post-processing if needed
+    return returnObject;
   }
-  public Object plugin(Object target) {
-    return Plugin.wrap(target, this);
-  }
+
+  @Override
   public void setProperties(Properties properties) {
+    this.properties = properties;
   }
 }]]></source>
 
@@ -1695,7 +1722,7 @@ public class ExamplePlugin implements Interceptor {
           The plug-in above will intercept all calls to the "update" method
           on
           the Executor instance, which is an internal object responsible for
-          the low level execution of mapped statements.
+          the low-level execution of mapped statements.
         </p>
         <p><span class="label important">NOTE</span>
           <strong>Overriding the Configuration Class
@@ -1704,9 +1731,9 @@ public class ExamplePlugin implements Interceptor {
         <p>
           In addition to modifying core MyBatis behaviour with plugins, you
           can
-          also override the Configuration class entirely. Simply extend it
+          also override the <code>Configuration</code> class entirely. Simply extend it
           and override any methods inside, and pass it into the call to the
-          SqlSessionFactoryBuilder.build(myConfig) method. Again though, this
+          <code>SqlSessionFactoryBuilder.build(myConfig)</code> method. Again though, this
           could have a severe impact on the behaviour of MyBatis, so use
           caution.
         </p>
@@ -1846,7 +1873,9 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, propert
           TransactionFactory interface.
         </p>
         <source><![CDATA[public interface TransactionFactory {
-  void setProperties(Properties props);
+  default void setProperties(Properties props) { // Since 3.5.2, change to default method
+    // NOP
+  }
   Transaction newTransaction(Connection conn);
   Transaction newTransaction(DataSource dataSource, TransactionIsolationLevel level, boolean autoCommit);
 }]]></source>
@@ -1875,13 +1904,12 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, propert
           The dataSource element configures the source of JDBC Connection
           objects using the standard JDBC DataSource interface.
         </p>
-        <ul>
-          <li>Most MyBatis applications will configure a dataSource as in the
-            example. However, it’s not required. Realize though, that to
-            facilitate Lazy Loading, this dataSource is required.
-          </li>
-        </ul>
-        <p>There are three build-in dataSource types (i.e. type="[UNPOOLED|POOLED|JNDI]"):
+        <p>
+          Most MyBatis applications will configure a dataSource as in the
+          example. However, it’s not required. Realize though, that to
+          facilitate Lazy Loading, this dataSource is required.
+        </p>
+        <p>There are three built-in dataSource types (i.e. type="[UNPOOLED|POOLED|JNDI]"):
         </p>
         <p>
           <strong>UNPOOLED</strong>
@@ -2099,7 +2127,9 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
         </p>
 
         <source><![CDATA[public interface DatabaseIdProvider {
-  void setProperties(Properties p);
+  default void setProperties(Properties p) { // Since 3.5.2, changed to default method
+    // NOP
+  }
   String getDatabaseId(DataSource dataSource) throws SQLException;
 }]]></source>
 

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -22,6 +22,26 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * The annotation that specify a method that provide an SQL for deleting record(s).
+ *
+ * <p>
+ * <b>How to use:</b>
+ *
+ * <pre>
+ * public interface UserMapper {
+ *
+ *   &#064;DeleteProvider(type = SqlProvider.class, method = "deleteById")
+ *   boolean deleteById(int id);
+ *
+ *   public static class SqlProvider {
+ *     public static String deleteById() {
+ *       return "DELETE FROM users WHERE id = #{id}";
+ *     }
+ *   }
+ *
+ * }
+ * </pre>
+ *
  * @author Clinton Begin
  */
 @Documented
@@ -33,8 +53,21 @@ public @interface DeleteProvider {
    * Specify a type that implements an SQL provider method.
    *
    * @return a type that implements an SQL provider method
+   * @since 3.5.2
+   * @see #type()
    */
-  Class<?> type();
+  Class<?> value() default void.class;
+
+  /**
+   * Specify a type that implements an SQL provider method.
+   * <p>
+   * This attribute is alias of {@link #value()}.
+   * </p>
+   *
+   * @return a type that implements an SQL provider method
+   * @see #value()
+   */
+  Class<?> type() default void.class;
 
   /**
    * Specify a method for providing an SQL.
@@ -44,7 +77,8 @@ public @interface DeleteProvider {
    * If this attribute omit, the MyBatis will call a method that decide by following rules.
    * <ul>
    *   <li>
-   *     If class that specified the {@link #type()} attribute implements the {@link org.apache.ibatis.builder.annotation.ProviderMethodResolver},
+   *     If class that specified the {@link #type()} attribute implements the
+   *     {@link org.apache.ibatis.builder.annotation.ProviderMethodResolver},
    *     the MyBatis use a method that returned by it
    *   </li>
    *   <li>

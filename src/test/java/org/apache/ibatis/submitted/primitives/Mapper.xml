@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -22,16 +22,16 @@
 
 <mapper namespace="org.apache.ibatis.submitted.primitives.Mapper">
 
-	<select id="select" resultMap="assetrightMap">
-		Select * from A left join B on B.REF = A.ID
-	</select>
+    <select id="select" resultMap="assetrightMap">
+        Select * from A left join B on B.REF = A.ID
+    </select>
 
-	<resultMap id="assetrightMap" type="org.apache.ibatis.submitted.primitives.Assetright">
-		<id property="id" column="ID" jdbcType="NUMERIC" />
-		<result property="name" column="NAME" jdbcType="VARCHAR" />
-		<collection property="values" ofType="java.lang.Long">
-			<result column="ENTRY" jdbcType="NUMERIC" />
-		</collection>
-	</resultMap>
+    <resultMap id="assetrightMap" type="org.apache.ibatis.submitted.primitives.Assetright">
+        <id property="id" column="ID" jdbcType="NUMERIC" />
+        <result property="name" column="NAME" jdbcType="VARCHAR" />
+        <collection property="values" ofType="java.lang.Long">
+            <result column="ENTRY" jdbcType="NUMERIC" />
+        </collection>
+    </resultMap>
 
 </mapper>

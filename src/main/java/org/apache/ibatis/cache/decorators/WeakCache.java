@@ -19,7 +19,6 @@ import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.concurrent.locks.ReadWriteLock;
 
 import org.apache.ibatis.cache.Cache;
 
@@ -93,11 +92,6 @@ public class WeakCache implements Cache {
     hardLinksToAvoidGarbageCollection.clear();
     removeGarbageCollectedItems();
     delegate.clear();
-  }
-
-  @Override
-  public ReadWriteLock getReadWriteLock() {
-    return null;
   }
 
   private void removeGarbageCollectedItems() {

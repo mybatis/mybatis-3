@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -21,18 +21,18 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.apache.ibatis.submitted.refid_resolution.Mapper">
-	<sql id="columnList">
-		field1, field2
-	</sql>
-	<select id="selectValid" resultType="map">
-		select
-		<include refid="columnList" />
-		from table1
-	</select>
-	<select id="selectInvalid" resultType="map">
-		select
-		<!-- Non-existent refid with the same short name -->
-		<include refid="noSuchMapper.columnList" />
-		from table1
-	</select>
+    <sql id="columnList">
+        field1, field2
+    </sql>
+    <select id="selectValid" resultType="map">
+        select
+        <include refid="columnList" />
+        from table1
+    </select>
+    <select id="selectInvalid" resultType="map">
+        select
+        <!-- Non-existent refid with the same short name -->
+        <include refid="noSuchMapper.columnList" />
+        from table1
+    </select>
 </mapper>

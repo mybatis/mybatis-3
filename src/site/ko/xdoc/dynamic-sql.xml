@@ -188,6 +188,21 @@ AND title like ‘someTitle’]]></source>
         <p><span class="label important">참고</span> 컬렉션 파라미터로 Map이나 배열객체와 더불어 List, Set등과 같은 반복가능한 객체를 전달할 수 있다. 반복가능하거나 배열을 사용할때 index값은 현재 몇번째 반복인지를 나타내고 value항목은 반복과정에서 가져오는 요소를 나타낸다. Map을 사용할때 index는 key객체가 되고 항목은 value객체가 된다. </p>
         <p>XML설정 파일과 XML 매핑 파일에 대해서는 이 정도에서 정리하고 다음 섹션에서는 Java API 에 대해 좀더 상세하게 살펴볼 것이다.</p>
       </subsection>
+  <subsection name="script">
+  <p>For using dynamic SQL in annotated mapper class, <em>script</em> element can be used. For example:</p>
+  <source><![CDATA[
+    @Update({"<script>",
+      "update Author",
+      "  <set>",
+      "    <if test='username != null'>username=#{username},</if>",
+      "    <if test='password != null'>password=#{password},</if>",
+      "    <if test='email != null'>email=#{email},</if>",
+      "    <if test='bio != null'>bio=#{bio}</if>",
+      "  </set>",
+      "where id=#{id}",
+      "</script>"})
+    void updateAuthorValues(Author author);]]></source>
+  </subsection>
   <subsection name="bind">
   <p><code>bind</code> 엘리먼트는 OGNL표현을 사용해서 변수를 만든 뒤 컨텍스트에 바인딩한다.
   예를들면 </p>

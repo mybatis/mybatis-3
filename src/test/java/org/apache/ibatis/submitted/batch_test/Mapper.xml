@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -26,9 +26,9 @@
         <result property="name" column="name" />
         <association property="dept" column="dept_id"  select="getDept"/>
     </resultMap>
-	<select id="getUser" resultMap="userResultMap">
-		select * from users where id = #{id}
-	</select>
+    <select id="getUser" resultMap="userResultMap">
+        select * from users where id = #{id}
+    </select>
 
     <select id="getDept" resultType="org.apache.ibatis.submitted.batch_test.Dept" >
         select * from depts where id = #{id}

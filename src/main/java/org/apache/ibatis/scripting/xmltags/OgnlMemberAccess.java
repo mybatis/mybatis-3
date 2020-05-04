@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -58,9 +58,7 @@ class OgnlMemberAccess implements MemberAccess {
   @Override
   public void restore(Map context, Object target, Member member, String propertyName,
       Object state) {
-    if (state != null) {
-      ((AccessibleObject) member).setAccessible((Boolean) state);
-    }
+    // Flipping accessible flag is not thread safe. See #1648
   }
 
   @Override

@@ -61,7 +61,7 @@ class MultipleDiscriminatorTest {
     }
     @Test
     void testMultipleDiscriminatorLoop() {
-        Assertions.assertTimeout(Duration.ofMillis(20), () -> {
+        Assertions.assertTimeout(Duration.ofMillis(20000), () -> {
           try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
             personMapper.getLoop();

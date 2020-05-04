@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2019 the original author or authors.
+       Copyright 2009-2020 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -83,7 +83,7 @@
   추가적인 정보는 MyBatis-Spring이나 MyBatis-Guice를 참고하길 바란다. </p>
   <h4>SqlSessionFactoryBuilder</h4>
   <p>SqlSessionFactoryBuilder는 5개의 build() 메소드를 가진다.
-  각각은 서로 다른 소스에서 SqlSession을 빌드한다.</p>
+  각각은 서로 다른 소스에서 SqlSessionFactory을 빌드한다.</p>
   <source>SqlSessionFactory build(InputStream inputStream)
 SqlSessionFactory build(InputStream inputStream, String environment)
 SqlSessionFactory build(InputStream inputStream, Properties properties)
@@ -454,7 +454,8 @@ void rollback(boolean force)</source>
         <td>ConstructorArgs 의 일부로 한개의 생성자 인자
 		사용가능한 속성들 : id, column, javaType, jdbcType, typeHandler, select 그리고 resultMap.
 		id 속성은 비교하기 위해 사용되는 값이다.
-		XML에서는 <code>&lt;idArg&gt;</code> 엘리먼트와 유사하다.</td>
+		XML에서는 <code>&lt;idArg&gt;</code> 엘리먼트와 유사하다.
+    Since 3.5.4, it can be used as repeatable annotation.</td>
       </tr>
       <tr>
         <td><code>@TypeDiscriminator</code></td>
@@ -494,14 +495,18 @@ void rollback(boolean force)</source>
 		id 속성은 프로퍼티를 비교할 때 사용할지를 표시하는 boolean 값이다. (XML 에서 &lt;id&gt; 와 유사하다.)
 		one 속성은 한개의 관계(associations)이고 &lt;association&gt; 과 유사하다.
 		many 속성은 collection이고  &lt;collection&gt; 과 유사하다.
-		클래스의 명명규칙 충돌을 피하기 위해 명명되었다.</td>
+		클래스의 명명규칙 충돌을 피하기 위해 명명되었다.
+    Since 3.5.4, it can be used as repeatable annotation.</td>
       </tr>
       <tr>
         <td><code>@One</code></td>
         <td>N/A</td>
         <td><code>&lt;association&gt;</code></td>
         <td>복잡한 타입의 한개의 프로퍼티를 위한 매핑이다.
-		사용가능한 속성들 : select(매핑 구문의 이름, 예를들어 매퍼 메소드)
+		사용가능한 속성들 : select(매핑 구문의 이름, 예를들어 매퍼 메소드).
+		<code>fetchType</code>, which supersedes the global configuration parameter <code>lazyLoadingEnabled</code> for this mapping.
+		<code>resultMap</code>(available since 3.5.5), which is the fully qualified name of a result map that map to a single container object from select result.
+    <code>columnPrefix</code>(available since 3.5.5), which is column prefix for grouping select columns at nested result map.
 		Note: 조인 매핑은 애노테이션 API 를 통해서는 지원되지 않는다는 것을 알아야 한다.
 		순환(circular) 참조를 허용하지 않는 자바 애노테이션의 제약사항때문이다.</td>
       </tr>
@@ -511,6 +516,9 @@ void rollback(boolean force)</source>
         <td><code>&lt;collection&gt;</code></td>
         <td>복잡한 타입의 collection 프로퍼티를 위한 매핑이다.
 		사용가능한 속성들 : select(매핑 구문의 이름, 예를들어 매퍼 메소드)
+		<code>fetchType</code>, which supersedes the global configuration parameter <code>lazyLoadingEnabled</code> for this mapping.
+		<code>resultMap</code>(available since 3.5.5), which is the fully qualified name of a result map that map to collection object from select result.
+    <code>columnPrefix</code>(available since 3.5.5), which is column prefix for grouping select columns at nested result map.
 		Note: 조인 매핑은 애노테이션 API 를 통해서는 지원되지 않는다는 것을 알아야 한다.
 		순환(circular) 참조를 허용하지 않는 자바 애노테이션의 제약사항때문이다.</td>
       </tr>
@@ -588,8 +596,8 @@ void rollback(boolean force)</source>
         <td>실행시 SQL 을 리턴할 클래스 과 메소드명을 명시하도록 해주는 대체수단의 애노테이션이다 (Since 3.4.6, you can specify the <code>CharSequence</code> instead of <code>String</code> as a method return type).
 		매핑된 구문을 실행할 때 마이바티스는 클래스의 인스턴스를 만들고 메소드를 실행한다.
     Mapper 메서드의 인수인 "Mapper interface type" and "Database ID" 과 <code>ProviderContext</code>(Mybatis 3.4.5 부터) 를 이용한 "Mapper method" 로 전달 된 객체를 메서드 매개변수로 전달할 수 있다.(마이바티스 3.4이상에서는 복수 파라미터를 허용한다.)
-		사용가능한 속성들 : type, method.
-		type 속성은 클래스.
+		사용가능한 속성들 : value, type, method.
+		value and type 속성은 클래스 (The <code>type</code> attribute is alias for <code>value</code>, you must be specify either one).
 		method 속성은 메소드명이다
     (Since 3.5.1, you can omit <code>method</code> attribute, the MyBatis will resolve a target method via the
     <code>ProviderMethodResolver</code> interface.
@@ -674,8 +682,8 @@ User getUserById(Integer id);
 
 @Results(id = "companyResults")
 @ConstructorArgs({
-  @Arg(property = "id", column = "cid", id = <strong>true</strong>),
-  @Arg(property = "name", column = "name")
+  @Arg(column = "cid", javaType = Integer.class, id = <strong>true</strong>),
+  @Arg(column = "name", javaType = String.class)
 })
 @Select("select * from company where id = #{id}")
 Company getCompanyById(Integer id);</source>
@@ -727,7 +735,7 @@ class UserSqlBuilder {
 }]]></source>
 
     <p>This example shows usage the default implementation of <code>ProviderMethodResolver</code>(available since MyBatis 3.5.1 or later):</p>
-    <source><![CDATA[@SelectProvider(type = UserSqlProvider.class)
+    <source><![CDATA[@SelectProvider(UserSqlProvider.class)
 List<User> getUsersByName(String name);
 
 // Implements the ProviderMethodResolver on your provider class

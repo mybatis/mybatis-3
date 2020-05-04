@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -22,13 +22,13 @@
 
 <mapper namespace="org.apache.ibatis.submitted.inline_association_with_dot.ElementMapperUsingSubMap">
 
- 	<resultMap id="selectElementValueInContainerUsingSubMap" type="org.apache.ibatis.submitted.inline_association_with_dot.Element">
- 	    <association property="element" resultMap="selectElementValueInContainerUsingSubMap_submap"/>
- 	</resultMap>
+     <resultMap id="selectElementValueInContainerUsingSubMap" type="org.apache.ibatis.submitted.inline_association_with_dot.Element">
+         <association property="element" resultMap="selectElementValueInContainerUsingSubMap_submap"/>
+     </resultMap>
 
- 	<resultMap id="selectElementValueInContainerUsingSubMap_submap" type="org.apache.ibatis.submitted.inline_association_with_dot.Element">
- 	    <result property="element.value" column="VALUECOLUMN"/>
- 	</resultMap>
+     <resultMap id="selectElementValueInContainerUsingSubMap_submap" type="org.apache.ibatis.submitted.inline_association_with_dot.Element">
+         <result property="element.value" column="VALUECOLUMN"/>
+     </resultMap>
 
     <select id="selectElement" resultMap="selectElementValueInContainerUsingSubMap">
         select VALUECOLUMN from VALUETABLE

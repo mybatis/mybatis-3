@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package org.apache.ibatis.submitted.lazyload_proxyfactory_comparison;
 import org.junit.jupiter.api.Disabled;
 
 @Disabled("See Issue 664: Javassist ProxyFactory does not handle interfaces with generics correctly.")
-public class JavassistLazyTest
+class JavassistLazyTest
 extends AbstractLazyTest {
   @Override
   protected String getConfiguration() {

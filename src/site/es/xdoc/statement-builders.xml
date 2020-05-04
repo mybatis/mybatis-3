@@ -286,6 +286,74 @@ public String updatePersonSql() {
   </tr>
   <tr>
     <td>
+      <ul>
+        <li>
+          <code>LIMIT(String)</code>
+        </li>
+        <li>
+          <code>LIMIT(int)</code>
+        </li>
+      </ul>
+    </td>
+    <td>
+      Appends a <code>LIMIT</code> clause.
+      This method valid when use together with SELECT(), UPDATE() and DELETE().
+      And this method is designed to use together with OFFSET() when use SELECT(). (Available since 3.5.2)
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <ul>
+        <li>
+          <code>OFFSET(String)</code>
+        </li>
+        <li>
+          <code>OFFSET(long)</code>
+        </li>
+      </ul>
+    </td>
+    <td>
+      Appends a <code>OFFSET</code> clause.
+      This method valid when use together with SELECT().
+      And this method is designed to use together with LIMIT(). (Available since 3.5.2)
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <ul>
+        <li>
+          <code>OFFSET_ROWS(String)</code>
+        </li>
+        <li>
+          <code>OFFSET_ROWS(long)</code>
+        </li>
+      </ul>
+    </td>
+    <td>
+      Appends a <code>OFFSET n ROWS</code> clause.
+      This method valid when use together with SELECT().
+      And this method is designed to use together with FETCH_FIRST_ROWS_ONLY(). (Available since 3.5.2)
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <ul>
+        <li>
+          <code>FETCH_FIRST_ROWS_ONLY(String)</code>
+        </li>
+        <li>
+          <code>FETCH_FIRST_ROWS_ONLY(int)</code>
+        </li>
+      </ul>
+    </td>
+    <td>
+      Appends a <code>FETCH FIRST n ROWS ONLY</code> clause.
+      This method valid when use together with SELECT().
+      And this method is designed to use together with OFFSET_ROWS(). (Available since 3.5.2)
+    </td>
+  </tr>
+  <tr>
+    <td>
       <code>DELETE_FROM(String)</code>
     </td>
     <td>Comienza una sentencia delete y especifica la tabla donde borrar. Generalmente suele ir seguida de una clausula WHERE!
@@ -341,8 +409,24 @@ public String updatePersonSql() {
       This should be call INTO_COLUMNS() with together.
     </td>
   </tr>
+  <tr>
+    <td>
+      <code>ADD_ROW()</code>
+    </td>
+    <td>
+      Add new row for bulk insert. (Available since 3.5.2)
+    </td>
+  </tr>
           </tbody>
         </table>
+
+        <p>
+          <span class="label important">NOTE</span>
+          It is important to note that SQL class writes <code>LIMIT</code>, <code>OFFSET</code>, <code>OFFSET n ROWS</code> and <code>FETCH FIRST n ROWS ONLY</code> clauses into the generated statement as is.
+          In other words, the library does not attempt to normalize those values for databases that don’t support these clauses directly.
+          Therefore, it is very important for users to understand whether or not the target database supports these clauses.
+          If the target database does not support these clauses, then it is likely that using this support will create SQL that has runtime errors.
+        </p>
 
         <p>Since version 3.4.2, you can use variable-length arguments as follows:</p>
 
@@ -370,6 +454,48 @@ public String updatePersonSql() {
     .UPDATE("PERSON")
     .SET("FULL_NAME = #{fullName}", "DATE_OF_BIRTH = #{dateOfBirth}")
     .WHERE("ID = #{id}")
+    .toString();
+}
+]]></source>
+
+        <p>Since version 3.5.2, you can create insert statement for bulk insert as follow:</p>
+
+        <source><![CDATA[
+public String insertPersonsSql() {
+  // INSERT INTO PERSON (ID, FULL_NAME)
+  //     VALUES (#{mainPerson.id}, #{mainPerson.fullName}) , (#{subPerson.id}, #{subPerson.fullName})
+  return new SQL()
+    .INSERT_INTO("PERSON")
+    .INTO_COLUMNS("ID", "FULL_NAME")
+    .INTO_VALUES("#{mainPerson.id}", "#{mainPerson.fullName}")
+    .ADD_ROW()
+    .INTO_VALUES("#{subPerson.id}", "#{subPerson.fullName}")
+    .toString();
+}
+]]></source>
+
+        <p>Since version 3.5.2, you can create select statement for limiting search result rows clause as follow:</p>
+
+        <source><![CDATA[
+public String selectPersonsWithOffsetLimitSql() {
+  // SELECT id, name FROM PERSON
+  //     LIMIT #{limit} OFFSET #{offset}
+  return new SQL()
+    .SELECT("id", "name")
+    .FROM("PERSON")
+    .LIMIT("#{limit}")
+    .OFFSET("#{offset}")
+    .toString();
+}
+
+public String selectPersonsWithFetchFirstSql() {
+  // SELECT id, name FROM PERSON
+  //     OFFSET #{offset} ROWS FETCH FIRST #{limit} ROWS ONLY
+  return new SQL()
+    .SELECT("id", "name")
+    .FROM("PERSON")
+    .OFFSET_ROWS("#{offset}")
+    .FETCH_FIRST_ROWS_ONLY("#{limit}")
     .toString();
 }
 ]]></source>

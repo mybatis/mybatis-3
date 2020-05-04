@@ -1,5 +1,5 @@
 --
---    Copyright 2009-2018 the original author or authors.
+--    Copyright 2009-2019 the original author or authors.
 --
 --    Licensed under the Apache License, Version 2.0 (the "License");
 --    you may not use this file except in compliance with the License.
@@ -30,10 +30,10 @@ insert into vehicle (id, maker, vehicle_type, door_count, carrying_capacity) val
 (2, 'Maker2', 2, null, 1.5);
 
 create table owner (
-	id int,
-	name varchar(20),
-	vehicle_type varchar(20),
-	vehicle_id int
+    id int,
+    name varchar(20),
+    vehicle_type varchar(20),
+    vehicle_id int
 );
 
 insert into owner (id, name, vehicle_type, vehicle_id) values

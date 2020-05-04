@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -22,14 +22,14 @@
 
 <mapper namespace="org.apache.ibatis.submitted.global_variables.Mapper">
 
-	<cache type="org.apache.ibatis.submitted.global_variables.CustomCache">
-		<property name="stringValue" value="${stringProperty}"/>
-		<property name="integerValue" value="${integerProperty}"/>
-		<property name="longValue" value="${longProperty}"/>
-	</cache>
+    <cache type="org.apache.ibatis.submitted.global_variables.CustomCache">
+        <property name="stringValue" value="${stringProperty}"/>
+        <property name="integerValue" value="${integerProperty}"/>
+        <property name="longValue" value="${longProperty}"/>
+    </cache>
 
-	<select id="getUser" resultType="org.apache.ibatis.submitted.global_variables.User">
-		select * from ${table} where id = #{id}
-	</select>
+    <select id="getUser" resultType="org.apache.ibatis.submitted.global_variables.User">
+        select * from ${table} where id = #{id}
+    </select>
 
 </mapper>

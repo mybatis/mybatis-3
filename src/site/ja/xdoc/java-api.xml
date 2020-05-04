@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2019 the original author or authors.
+       Copyright 2009-2020 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -66,7 +66,7 @@
   <p>MyBatis の最も良く使う Java インターフェイスは SqlSession です。コマンドの実行、Mapper の取得、トランザクション管理はこのインターフェイスを通して行うことができます。SqlSession については、後で詳しく説明しますが、その前に SqlSession のインスタンスを取得する方法について学ばなくてはなりません。SqlSession は SqlSessionFactory のインスタンスによって作成されます。SqlSessionFactory には、様々な方法で SqlSession を作成するメソッドが含まれています。SqlSessionFactory 自身は SqlSessionFactoryBuilder によって作られますが、作成される SqlSessionFactory は XML、アノテーション、ハードコードされた Java コンフィグレーションのいずれかの方法で設定することができます。</p>
   <p><span class="label important">NOTE</span> MyBatis を Spring や Guice といった依存性注入（DI = Dependency Injection）フレームワークと組み合わせて使う場合、SqlSession は DI フレームワークによって作成・注入されます。SqlSessionFactoryBuilder や SqlSessionFactory を使う必要はありませんので、SqlSession の章まで飛ばして構いません。DIフレームワークとの組み合わせについては MyBatis-Spring および MyBatis-Guice のマニュアルを参照してください。</p>
   <h4>SqlSessionFactoryBuilder</h4>
-  <p>SqlSessionFactoryBuilder には５つの build() メソッドがあり、それぞれ異なるソースから SqlSession をビルドすることができるようになっています。</p>
+  <p>SqlSessionFactoryBuilder には５つの build() メソッドがあり、それぞれ異なるソースから SqlSessionFactory をビルドすることができるようになっています。</p>
   <source>SqlSessionFactory build(InputStream inputStream)
 SqlSessionFactory build(InputStream inputStream, String environment)
 SqlSessionFactory build(InputStream inputStream, Properties properties)
@@ -356,7 +356,8 @@ void rollback(boolean force)</source>
         </td>
         <td>ConstructorArgs に含まれる個々のコンストラクター引数です。属性: <code>id</code>,
         <code>column</code>, <code>javaType</code>, <code>jdbcType</code>, <code>typeHandler</code>, <code>select</code>,
-        <code>resultMap</code>. id は真偽値で、指定したプロパティがオブジェクトをユニークに識別できる値であることを表します。この働きは XML 要素の <code>&lt;idArg&gt;</code> に相当します。</td>
+        <code>resultMap</code>. id は真偽値で、指定したプロパティがオブジェクトをユニークに識別できる値であることを表します。この働きは XML 要素の <code>&lt;idArg&gt;</code> に相当します。
+        3.5.4以降では、繰り返し可能な注釈として使用することができます。</td>
       </tr>
       <tr>
         <td><code>@TypeDiscriminator</code></td>
@@ -389,22 +390,29 @@ void rollback(boolean force)</source>
         </td>
         <td>ある結果列とプロパティまたはフィールドのマッピング情報を定義します。属性: <code>id</code>, <code>column</code>,
         <code>property</code>, <code>javaType</code>, <code>jdbcType</code>, <code>typeHandler</code>, <code>one</code>,
-        <code>many</code>. id は真偽値で、そのプロパティがオブジェクトの比較に使うよう指示します（XML マッピングにおける id 要素とほぼ同じです）。one は XML における association 要素に、many は collection 要素に相当します（クラス名のコンフリクトを避けるため異なる名称が使われています）。</td>
+        <code>many</code>. id は真偽値で、そのプロパティがオブジェクトの比較に使うよう指示します（XML マッピングにおける id 要素とほぼ同じです）。one は XML における association 要素に、many は collection 要素に相当します（クラス名のコンフリクトを避けるため異なる名称が使われています）。
+        3.5.4以降では、繰り返し可能な注釈として使用することができます。</td>
       </tr>
       <tr>
         <td><code>@One</code></td>
         <td>N/A</td>
         <td><code>&lt;association&gt;</code></td>
-        <td>複雑型のプロパティのマッピング情報を定義します。属性: <code>select</code>, <code>fetchType</code>. select は適切な型を読み込むことができるマップドステートメント（Mapper メソッド）の完全修飾名です。
+        <td>複雑型のプロパティのマッピング情報を定義します。属性: <code>select</code>, <code>fetchType</code>, <code>resultMap</code>(3.5.5以降で利用可能), <code>columnPrefix</code>(3.5.5以降で利用可能).
+        select は適切な型を読み込むことができるマップドステートメント（Mapper メソッド）の完全修飾名です。
         fetchType はグローバルな設定 <code>lazyLoadingEnabled</code> をオーバーライドする場合に指定します。
+        resultMap は結果列を単一のコンテナオブジェクト(JavaBeanなど)へマッピングするための結果マップの完全修飾名を指定します。
+        columnPrefix はネストした結果マップで結果列をグループ化するためのカラム名のプレフィックスを指定します。
         <span class="label important">NOTE</span> アノテーション API では結合マッピングがサポートされていません。これは Java アノテーションでは循環参照が許可されないためです。</td>
       </tr>
       <tr>
         <td><code>@Many</code></td>
         <td>N/A</td>
         <td><code>&lt;collection&gt;</code></td>
-        <td>複雑型のプロパティのマッピング情報を定義します。属性: <code>select</code>, <code>fetchType</code>. select は適切な型のコレクションを読み込むことができるマップドステートメント（Mapper メソッド）の完全修飾名です。
+        <td>複雑型のプロパティのマッピング情報を定義します。属性: <code>select</code>, <code>fetchType</code>, <code>resultMap</code>(3.5.5以降で利用可能), <code>columnPrefix</code>(3.5.5以降で利用可能).
+        select は適切な型のコレクションを読み込むことができるマップドステートメント（Mapper メソッド）の完全修飾名です。
         fetchType はグローバルな設定 <code>lazyLoadingEnabled</code> をオーバーライドする場合に指定します。
+        resultMap は結果列をコレクションオブジェクト(JavaBeanのリストなど)へマッピングするための結果マップの完全修飾名を指定します。
+        columnPrefix はネストした結果マップで結果列をグループ化するためのカラム名のプレフィックスを指定します。
         <span class="label important">NOTE</span> アノテーション API では結合マッピングがサポートされていません。これは Java アノテーションでは循環参照が許可されないためです。</td>
       </tr>
       <tr>
@@ -466,7 +474,10 @@ void rollback(boolean force)</source>
         <td>これらのアノテーションは動的 SQL を生成するためのものです。実行時に指定されたメソッドが呼び出され、メソッドから返された SQL ステートメントが実行されます (MyBatis 3.4.6以降では、メソッドの返り値として <code>String</code> ではなく <code>CharSequence</code> を指定することができます)。
         マップドステートメントを実行する際、プロバイダーによって指定したクラスのインスタンスが作成され、指定されたメソッドが実行されます。
         なお、メソッド引数にはMapperメソッドの引数に渡したオブジェクトに加え、<code>ProviderContext</code>(MyBatis 3.4.5以降で利用可能)を介して「Mapperインタフェースの型」「Mapperメソッド」「データベースID」を渡すことができます。(MyBatis 3.4以降では、複数の引数を渡すことができます)
-        キー: <code>type</code>, <code>method</code>. <code>type</code> にはクラスオブジェクト、<code>method</code> にはメソッド名を指定します
+        キー: <code>value</code>, <code>type</code>, <code>method</code>.
+        <code>value</code> と <code>type</code> にはクラスオブジェクトを指定します
+        (<code>type</code> は <code>value</code> の別名で、どちらか一方を指定する必要があります)。
+        <code>method</code> にはメソッド名を指定します
         (MyBatis 3.5.1以降では、<code>method</code> 属性を省略することができます。その際MyBatisは、<code>ProviderMethodResolver</code> インタフェースを介して対象メソッドの解決を試み、
         対象メソッドが解決できない場合は、<code>provideSql</code>という名前のメソッドを代替メソッドとして利用します)。
         <span class="label important">NOTE</span> 次の章で、クリーンで可読性の高いコードで動的 SQL を構築するためのクラスについて説明します。
@@ -533,8 +544,8 @@ User getUserById(Integer id);
 
 @Results(id = "companyResults")
 @ConstructorArgs({
-  @Arg(property = "id", column = "cid", id = <strong>true</strong>),
-  @Arg(property = "name", column = "name")
+  @Arg(column = "cid", javaType = Integer.class, id = <strong>true</strong>),
+  @Arg(column = "name", javaType = String.class)
 })
 @Select("select * from company where id = #{id}")
 Company getCompanyById(Integer id);</source>
@@ -586,7 +597,7 @@ class UserSqlBuilder {
 }]]></source>
 
     <p>次のコードは、<code>ProviderMethodResolver</code>(MyBatis 3.5.1以降で利用可能)のデフォルト実装の利用例です。</p>
-    <source><![CDATA[@SelectProvider(type = UserSqlProvider.class)
+    <source><![CDATA[@SelectProvider(UserSqlProvider.class)
 List<User> getUsersByName(String name);
 
 // SQLプロバイダクラスにProviderMethodResolverを実装する

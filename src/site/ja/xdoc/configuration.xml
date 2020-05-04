@@ -329,6 +329,20 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
             </tr>
             <tr>
               <td>
+                defaultResultSetType
+              </td>
+              <td>
+                ステートメント毎の設定を省略した場合のスクロール方法を指定します。 (導入されたバージョン: 3.5.2)
+              </td>
+              <td>
+                FORWARD_ONLY | SCROLL_SENSITIVE | SCROLL_INSENSITIVE | DEFAULT(指定しない時と同じ動作)
+              </td>
+              <td>
+                なし (null)
+              </td>
+            </tr>
+            <tr>
+              <td>
                 safeRowBoundsEnabled
               </td>
               <td>
@@ -1551,13 +1565,15 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
   method = "update",
   args = {MappedStatement.class,Object.class})})
 public class ExamplePlugin implements Interceptor {
+  private Properties properties = new Properties();
   public Object intercept(Invocation invocation) throws Throwable {
-    return invocation.proceed();
-  }
-  public Object plugin(Object target) {
-    return Plugin.wrap(target, this);
+    // implement pre processing if need
+    Object returnObject = invocation.proceed();
+    // implement post processing if need
+    return returnObject;
   }
   public void setProperties(Properties properties) {
+    this.properties = properties;
   }
 }]]></source>
 
@@ -1679,7 +1695,9 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
           トランザクションマネージャーに必須のプロパティはありませんが、これらはともにタイプエイリアスです。つまり、TransactionFactory インターフェイスの実装クラスの完全修飾クラス名を指定すれば、MyBatis が用意した二種類のトランザクションマネージャーの代わりに独自に実装したトランザクションマネージャーを利用することが可能です。
         </p>
         <source><![CDATA[public interface TransactionFactory {
-  void setProperties(Properties props);
+  default void setProperties(Properties props) { // Since 3.5.2, change to default method
+    // NOP
+  }
   Transaction newTransaction(Connection conn);
   Transaction newTransaction(DataSource dataSource, TransactionIsolationLevel level, boolean autoCommit);
 }]]></source>
@@ -1880,7 +1898,9 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
     </p>
 
         <source><![CDATA[public interface DatabaseIdProvider {
-  void setProperties(Properties p);
+  default void setProperties(Properties p) { // Since 3.5.2, change to default method
+    // NOP
+  }
   String getDatabaseId(DataSource dataSource) throws SQLException;
 }]]></source>
 
