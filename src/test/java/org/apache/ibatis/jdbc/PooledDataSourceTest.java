@@ -121,7 +121,7 @@ class PooledDataSourceTest extends BaseDataTest {
     ds.setPoolPingConnectionsNotUsedFor(1000);
 
     Connection con = ds.getConnection();
-    exexuteQuery(con);
+    executeQuery(con);
     // Simulate connection leak by not closing.
     // con.close();
 
@@ -132,11 +132,11 @@ class PooledDataSourceTest extends BaseDataTest {
 
     // Should return usable connection.
     con = ds.getConnection();
-    exexuteQuery(con);
+    executeQuery(con);
     con.close();
   }
 
-  private void exexuteQuery(Connection con) throws SQLException {
+  private void executeQuery(Connection con) throws SQLException {
     try (PreparedStatement st = con.prepareStatement("select 1");
          ResultSet rs = st.executeQuery()) {
       while (rs.next()) {
