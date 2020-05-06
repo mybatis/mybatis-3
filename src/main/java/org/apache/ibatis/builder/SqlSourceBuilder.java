@@ -25,7 +25,7 @@ import org.apache.ibatis.parsing.GenericTokenParser;
 import org.apache.ibatis.parsing.TokenHandler;
 import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.reflection.MetaObject;
-import org.apache.ibatis.reflection.GenericTypeRawClassPair;
+import org.apache.ibatis.reflection.DeclaringType;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import java.lang.reflect.Type;
@@ -86,9 +86,9 @@ public class SqlSourceBuilder extends BaseBuilder {
       } else {
         MetaClass metaClass = MetaClass.forClass(parameterType, configuration.getReflectorFactory());
         if (metaClass.hasGetter(property)) {
-          GenericTypeRawClassPair rawClassPair = metaClass.getGetterGenericTypeRawClassPair(property);
-          propertyType = rawClassPair.getRawClass();
-          genericType = rawClassPair.getType();
+          DeclaringType declaringType = metaClass.getGetterDeclaringType(property);
+          propertyType = declaringType.getRawClass();
+          genericType = declaringType.getGenericType();
         } else {
           propertyType = Object.class;
         }

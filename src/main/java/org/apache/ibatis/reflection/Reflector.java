@@ -55,9 +55,9 @@ public class Reflector {
   private final Map<String, Invoker> setMethods = new HashMap<>();
   private final Map<String, Invoker> getMethods = new HashMap<>();
   private final Map<String, Class<?>> setTypes = new HashMap<>();
-  private final Map<String, GenericTypeRawClassPair> setGenericTypeRawClasses = new HashMap<>();
+  private final Map<String, DeclaringType> setDeclaringTypes = new HashMap<>();
   private final Map<String, Class<?>> getTypes = new HashMap<>();
-  private final Map<String, GenericTypeRawClassPair> getGenericTypeRawClasses = new HashMap<>();
+  private final Map<String, DeclaringType> getDeclaringTypes = new HashMap<>();
   private Constructor<?> defaultConstructor;
 
   private Map<String, String> caseInsensitivePropertyMap = new HashMap<>();
@@ -134,8 +134,8 @@ public class Reflector {
     Type returnType = TypeParameterResolver.resolveReturnType(method, type);
     Class<?> rawClass = typeToClass(returnType);
     getTypes.put(name, rawClass);
-    getGenericTypeRawClasses
-      .put(name, GenericTypeRawClassPair.newGenericTypeRawClassPair(returnType, rawClass));
+    getDeclaringTypes
+      .put(name, newDeclaringType(returnType, rawClass));
   }
 
   private void addSetMethods(Class<?> clazz) {
@@ -196,7 +196,7 @@ public class Reflector {
     setMethods.put(property, invoker);
     Type[] paramTypes = TypeParameterResolver.resolveParamTypes(setter1, type);
     setTypes.put(property, typeToClass(paramTypes[0]));
-    setGenericTypeRawClasses.put(property, typeToTypeClassPair(paramTypes[0]));
+    setDeclaringTypes.put(property, typeToTypeClassPair(paramTypes[0]));
     return null;
   }
 
@@ -205,11 +205,25 @@ public class Reflector {
     setMethods.put(name, invoker);
     Type[] paramTypes = TypeParameterResolver.resolveParamTypes(method, type);
     setTypes.put(name, typeToClass(paramTypes[0]));
-    setGenericTypeRawClasses.put(name, typeToTypeClassPair(paramTypes[0]));
+    setDeclaringTypes.put(name, typeToTypeClassPair(paramTypes[0]));
   }
 
-  private GenericTypeRawClassPair typeToTypeClassPair(Type src) {
-    return GenericTypeRawClassPair.newGenericTypeRawClassPair(src, typeToClass(src));
+  private DeclaringType typeToTypeClassPair(Type src) {
+    return newDeclaringType(src, typeToClass(src));
+  }
+  
+  private DeclaringType newDeclaringType(Type type, Class<?> clazz) {
+	  return new DeclaringType() {
+			@Override
+			public Type getGenericType() {
+				return type;
+			}
+
+			@Override
+			public Class<?> getRawClass() {
+				return clazz;
+			}
+      };
   }
 
   private Class<?> typeToClass(Type src) {
@@ -259,7 +273,7 @@ public class Reflector {
       setMethods.put(field.getName(), new SetFieldInvoker(field));
       Type fieldType = TypeParameterResolver.resolveFieldType(field, type);
       setTypes.put(field.getName(), typeToClass(fieldType));
-      setGenericTypeRawClasses.put(field.getName(), typeToTypeClassPair(fieldType));
+      setDeclaringTypes.put(field.getName(), typeToTypeClassPair(fieldType));
     }
   }
 
@@ -268,8 +282,8 @@ public class Reflector {
       getMethods.put(field.getName(), new GetFieldInvoker(field));
       Type fieldType = TypeParameterResolver.resolveFieldType(field, type);
       getTypes.put(field.getName(), typeToClass(fieldType));
-      getGenericTypeRawClasses
-        .put(field.getName(), GenericTypeRawClassPair.newGenericTypeRawClassPair(fieldType, typeToClass(fieldType)));
+      getDeclaringTypes
+        .put(field.getName(), newDeclaringType(fieldType, typeToClass(fieldType)));
     }
   }
 
@@ -410,12 +424,12 @@ public class Reflector {
    * @param propertyName - the name of the property
    * @return The Class of the property setter
    */
-  public GenericTypeRawClassPair getSetterGenericTypeRawClassPair(String propertyName) {
-    GenericTypeRawClassPair genericTypeRawClassPair = setGenericTypeRawClasses.get(propertyName);
-    if (genericTypeRawClassPair == null) {
+  public DeclaringType getSetterDeclaringType(String propertyName) {
+    DeclaringType declaringType = setDeclaringTypes.get(propertyName);
+    if (declaringType == null) {
       throw new ReflectionException("There is no setter for property named '" + propertyName + "' in '" + type + "'");
     }
-    return genericTypeRawClassPair;
+    return declaringType;
   }
 
   /**
@@ -424,12 +438,12 @@ public class Reflector {
    * @param propertyName - the name of the property
    * @return The Class of the property getter
    */
-  public GenericTypeRawClassPair getGetterGenericTypeRawClassPair(String propertyName) {
-    GenericTypeRawClassPair genericTypeRawClassPair = getGenericTypeRawClasses.get(propertyName);
-    if (genericTypeRawClassPair == null) {
+  public DeclaringType getGetterDeclaringType(String propertyName) {
+    DeclaringType declaringType = getDeclaringTypes.get(propertyName);
+    if (declaringType == null) {
       throw new ReflectionException("There is no getter for property named '" + propertyName + "' in '" + type + "'");
     }
-    return genericTypeRawClassPair;
+    return declaringType;
   }
 
   /**

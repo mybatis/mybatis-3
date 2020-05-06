@@ -45,7 +45,7 @@ import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.reflection.MetaClass;
-import org.apache.ibatis.reflection.GenericTypeRawClassPair;
+import org.apache.ibatis.reflection.DeclaringType;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
@@ -425,9 +425,9 @@ public class MapperBuilderAssistant extends BaseBuilder {
       String resultSet,
       String foreignColumn,
       boolean lazy) {
-    GenericTypeRawClassPair genericTypeRawClassPair = resolveResultJavaType(resultType, property, javaType);
-    Class<?> javaTypeClass = genericTypeRawClassPair.getRawClass();
-    TypeHandler<?> typeHandlerInstance = resolveTypeHandler(genericTypeRawClassPair.getType(), javaTypeClass, typeHandler);
+    DeclaringType declaringType = resolveResultJavaType(resultType, property, javaType);
+    Class<?> javaTypeClass = declaringType.getRawClass();
+    TypeHandler<?> typeHandlerInstance = resolveTypeHandler(declaringType.getGenericType(), javaTypeClass, typeHandler);
     List<ResultMapping> composites;
     if ((nestedSelect == null || nestedSelect.isEmpty()) && (foreignColumn == null || foreignColumn.isEmpty())) {
       composites = Collections.emptyList();
@@ -528,21 +528,33 @@ public class MapperBuilderAssistant extends BaseBuilder {
     return composites;
   }
 
-  private GenericTypeRawClassPair resolveResultJavaType(Class<?> resultType, String property, Class<?> javaType) {
-    GenericTypeRawClassPair genericTypeRawClassPair = null;
+  private DeclaringType resolveResultJavaType(Class<?> resultType, String property, Class<?> javaType) {
+    DeclaringType declaringType = null;
     if (javaType == null && property != null) {
       try {
         MetaClass metaResultType = MetaClass.forClass(resultType, configuration.getReflectorFactory());
-        genericTypeRawClassPair = metaResultType.getSetterGenericTypeRawClassPair(property);
+        declaringType = metaResultType.getSetterDeclaringType(property);
       } catch (Exception e) {
         // ignore, following null check statement will deal with the situation
       }
     }
-    if (genericTypeRawClassPair == null) {
-      Class deduceJavaType = javaType != null ? javaType : Object.class;
-      genericTypeRawClassPair = GenericTypeRawClassPair.newOnlyRawClassPair(deduceJavaType);
+    if (declaringType == null) {
+      Class<?> deduceJavaType = javaType != null ? javaType : Object.class;
+      declaringType = new DeclaringType() {
+
+		@Override
+		public Type getGenericType() {
+			return null;
+		}
+
+		@Override
+		public Class<?> getRawClass() {
+			return deduceJavaType;
+		}
+    	  
+      };
     }
-    return genericTypeRawClassPair;
+    return declaringType;
   }
 
   private Class<?> resolveParameterJavaType(Class<?> resultType, String property, Class<?> javaType, JdbcType jdbcType) {

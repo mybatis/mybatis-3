@@ -78,47 +78,60 @@ public class  MetaClass {
     }
   }
 
-  public GenericTypeRawClassPair getSetterGenericTypeRawClassPair(String name) {
+  public DeclaringType getSetterDeclaringType(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
       MetaClass metaProp = metaClassForProperty(prop.getName());
-      return metaProp.getSetterGenericTypeRawClassPair(prop.getChildren());
+      return metaProp.getSetterDeclaringType(prop.getChildren());
     } else {
-      return reflector.getSetterGenericTypeRawClassPair(prop.getName());
+      return reflector.getSetterDeclaringType(prop.getName());
     }
   }
-  public GenericTypeRawClassPair getGetterGenericTypeRawClassPair(String name) {
+  public DeclaringType getGetterDeclaringType(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
       MetaClass metaProp = metaClassForProperty(prop.getName());
-      return metaProp.getGetterGenericTypeRawClassPair(prop.getChildren());
+      return metaProp.getGetterDeclaringType(prop.getChildren());
     } else {
-      return getGetterGenericTypeRawClassPair(prop);
+      return getGetterDeclaringType(prop);
     }
   }
 
-  private GenericTypeRawClassPair getGetterGenericTypeRawClassPair(PropertyTokenizer prop) {
-    GenericTypeRawClassPair typeRawClassPair = reflector.getGetterGenericTypeRawClassPair(prop.getName());
-    Class<?> rawType = typeRawClassPair.getRawClass();
-    Type returnType = typeRawClassPair.getType();
+  private DeclaringType getGetterDeclaringType(PropertyTokenizer prop) {
+    DeclaringType declaringType = reflector.getGetterDeclaringType(prop.getName());
+    Class<?> rawType = declaringType.getRawClass();
+    Type returnType = declaringType.getGenericType();
     if (prop.getIndex() != null && Collection.class.isAssignableFrom(rawType)) {
       if (returnType instanceof ParameterizedType) {
         Type[] actualTypeArguments = ((ParameterizedType) returnType).getActualTypeArguments();
         if (actualTypeArguments != null && actualTypeArguments.length == 1) {
           returnType = actualTypeArguments[0];
           if (returnType instanceof Class) {
-            return GenericTypeRawClassPair.newOnlyRawClassPair((Class<?>) returnType);
+            return newDeclaringType(null, (Class<?>) returnType);
           } else if (returnType instanceof ParameterizedType) {
             ParameterizedType castedReturnType = (ParameterizedType)returnType;
-            return GenericTypeRawClassPair.newGenericTypeRawClassPair(castedReturnType,
-              (Class<?>) castedReturnType.getRawType());
+            return newDeclaringType(castedReturnType, (Class<?>) castedReturnType.getRawType());
           }
         }
       }
     }
-    return typeRawClassPair;
+    return declaringType;
   }
 
+  private DeclaringType newDeclaringType(Type type, Class<?> clazz) {
+	  return new DeclaringType() {
+			@Override
+			public Type getGenericType() {
+				return type;
+			}
+
+			@Override
+			public Class<?> getRawClass() {
+				return clazz;
+			}
+      };
+  }
+  
   public Class<?> getGetterType(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
