@@ -1091,7 +1091,7 @@ public class User {
 
         <p>
           为了将结果注入构造方法，MyBatis 需要通过某种方式定位相应的构造方法。
-          在下面的例子中，MyBatis 搜索一个声明了三个形参的的构造方法，参数类型以
+          在下面的例子中，MyBatis 搜索一个声明了三个形参的构造方法，参数类型以
           <code>java.lang.Integer</code>, <code>java.lang.String</code> 和
           <code>int</code> 的顺序给出。
         </p>
