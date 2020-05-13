@@ -18,7 +18,7 @@ package org.apache.ibatis.cache.decorators;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheException;
@@ -37,7 +37,7 @@ public class BlockingCache implements Cache {
 
   private long timeout;
   private final Cache delegate;
-  private final ConcurrentHashMap<Object, ReentrantLock> locks;
+  private final ConcurrentHashMap<Object, ReentrantReadWriteLock> locks;
 
   public BlockingCache(Cache delegate) {
     this.delegate = delegate;
@@ -59,24 +59,29 @@ public class BlockingCache implements Cache {
     try {
       delegate.putObject(key, value);
     } finally {
-      releaseLock(key);
+      releaseLock(key,false);
     }
   }
 
   @Override
   public Object getObject(Object key) {
-    acquireLock(key);
-    Object value = delegate.getObject(key);
-    if (value != null) {
-      releaseLock(key);
+    acquireLock(key,true);
+    try {
+      Object value = delegate.getObject(key);
+      if (value != null) {
+        releaseLock(key,false);
+      }
+      return value;
+
+    }finally {
+      releaseLock(key,true);
     }
-    return value;
   }
 
   @Override
   public Object removeObject(Object key) {
     // despite of its name, this method is called only to release locks
-    releaseLock(key);
+    releaseLock(key,false);
     return null;
   }
 
@@ -85,12 +90,13 @@ public class BlockingCache implements Cache {
     delegate.clear();
   }
 
-  private ReentrantLock getLockForKey(Object key) {
-    return locks.computeIfAbsent(key, k -> new ReentrantLock());
+  private ReentrantReadWriteLock getLockForKey(Object key) {
+    return locks.computeIfAbsent(key, k -> new ReentrantReadWriteLock());
   }
 
-  private void acquireLock(Object key) {
-    Lock lock = getLockForKey(key);
+  private void acquireLock(Object key, boolean read) {
+    ReentrantReadWriteLock rw = getLockForKey(key);
+    Lock lock = read ? rw.readLock() : rw.writeLock();
     if (timeout > 0) {
       try {
         boolean acquired = lock.tryLock(timeout, TimeUnit.MILLISECONDS);
@@ -105,12 +111,12 @@ public class BlockingCache implements Cache {
     }
   }
 
-  private void releaseLock(Object key) {
-    ReentrantLock lock = locks.get(key);
-    if (lock.isHeldByCurrentThread()) {
-      lock.unlock();
-    }
+  private void releaseLock(Object key, boolean read) {
+    ReentrantReadWriteLock rw = getLockForKey(key);
+    Lock lock = read ? rw.readLock() : rw.writeLock();
+    lock.unlock();
   }
+
 
   public long getTimeout() {
     return timeout;
