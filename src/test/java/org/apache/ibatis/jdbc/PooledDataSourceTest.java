@@ -15,8 +15,7 @@
  */
 package org.apache.ibatis.jdbc;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -139,7 +138,7 @@ class PooledDataSourceTest extends BaseDataTest {
 
   private void executeQuery(Connection con) throws SQLException {
     try (PreparedStatement st = con.prepareStatement("select 1");
-      ResultSet rs = st.executeQuery()) {
+         ResultSet rs = st.executeQuery()) {
       while (rs.next()) {
         assertEquals(1, rs.getInt(1));
       }
