@@ -206,18 +206,8 @@ public abstract class BaseExecutor implements Executor {
     // mimic DefaultParameterHandler logic
     for (ParameterMapping parameterMapping : parameterMappings) {
       if (parameterMapping.getMode() != ParameterMode.OUT) {
-        Object value;
         String propertyName = parameterMapping.getProperty();
-        if (boundSql.hasAdditionalParameter(propertyName)) {
-          value = boundSql.getAdditionalParameter(propertyName);
-        } else if (parameterObject == null) {
-          value = null;
-        } else if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {
-          value = parameterObject;
-        } else {
-          MetaObject metaObject = configuration.newMetaObject(parameterObject);
-          value = metaObject.getValue(propertyName);
-        }
+        Object value = parseCacheValue(parameterObject, boundSql, typeHandlerRegistry, propertyName, configuration);
         cacheKey.update(value);
       }
     }
@@ -226,6 +216,23 @@ public abstract class BaseExecutor implements Executor {
       cacheKey.update(configuration.getEnvironment().getId());
     }
     return cacheKey;
+  }
+
+  public static Object parseCacheValue(Object parameterObject, BoundSql boundSql,
+    TypeHandlerRegistry typeHandlerRegistry,
+    String propertyName, Configuration configuration) {
+    Object value;
+    if (boundSql.hasAdditionalParameter(propertyName)) {
+      value = boundSql.getAdditionalParameter(propertyName);
+    } else if (parameterObject == null) {
+      value = null;
+    } else if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {
+      value = parameterObject;
+    } else {
+      MetaObject metaObject = configuration.newMetaObject(parameterObject);
+      value = metaObject.getValue(propertyName);
+    }
+    return value;
   }
 
   @Override
