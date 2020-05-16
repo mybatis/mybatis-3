@@ -563,7 +563,15 @@ public abstract class AbstractSQL<T> {
   private static class SQLStatement {
 
     public enum StatementType {
-      DELETE, INSERT, SELECT, UPDATE
+
+      DELETE,
+
+      INSERT,
+
+      SELECT,
+
+      UPDATE
+
     }
 
     private enum LimitingRowsStrategy {

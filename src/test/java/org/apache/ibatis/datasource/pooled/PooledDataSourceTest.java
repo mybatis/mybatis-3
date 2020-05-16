@@ -144,9 +144,8 @@ class PooledDataSourceTest {
     }
 
     assertEquals(dataSource.getPoolMaximumActiveConnections() - poolState.getIdleConnectionCount(),
-      poolState.getActiveConnectionCount());
-    assertEquals(dataSource.getPoolMaximumIdleConnections(),
-      poolState.getIdleConnectionCount());
+        poolState.getActiveConnectionCount());
+    assertEquals(dataSource.getPoolMaximumIdleConnections(), poolState.getIdleConnectionCount());
 
     dataSource.forceCloseAll();
 
