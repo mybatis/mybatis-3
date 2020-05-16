@@ -96,8 +96,8 @@ class SelectKeyTest {
       Map<String, String> parms = new HashMap<>();
       parms.put("name", "Fred");
       sqlSession.insert("org.apache.ibatis.submitted.selectkey.Table2.insertTooManyValuesInSelectKey", parms);
-      Assertions.assertThrows(PersistenceException.class,
-          () -> sqlSession.insert("org.apache.ibatis.submitted.selectkey.Table2.insertTooManyValuesInSelectKey", parms));
+      Assertions.assertThrows(PersistenceException.class, () -> sqlSession
+          .insert("org.apache.ibatis.submitted.selectkey.Table2.insertTooManyValuesInSelectKey", parms));
     }
   }
 

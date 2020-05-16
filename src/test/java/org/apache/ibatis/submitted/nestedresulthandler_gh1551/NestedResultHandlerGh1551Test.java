@@ -39,7 +39,7 @@ class NestedResultHandlerGh1551Test {
 
     // populate in-memory database
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-      "org/apache/ibatis/submitted/nestedresulthandler_gh1551/CreateDB.sql");
+        "org/apache/ibatis/submitted/nestedresulthandler_gh1551/CreateDB.sql");
   }
 
   @Test

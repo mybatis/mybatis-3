@@ -29,29 +29,29 @@ import org.junit.jupiter.api.Test;
 
 final class ImmutablePOJOTest {
 
-    private static final Integer POJO_ID = 1;
-    private static SqlSessionFactory factory;
+  private static final Integer POJO_ID = 1;
+  private static SqlSessionFactory factory;
 
-    @BeforeAll
-    static void setupClass() throws Exception {
-        try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/lazy_immutable/ibatisConfig.xml")) {
-            factory = new SqlSessionFactoryBuilder().build(reader);
-        }
-
-        BaseDataTest.runScript(factory.getConfiguration().getEnvironment().getDataSource(),
-                "org/apache/ibatis/submitted/lazy_immutable/CreateDB.sql");
+  @BeforeAll
+  static void setupClass() throws Exception {
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/lazy_immutable/ibatisConfig.xml")) {
+      factory = new SqlSessionFactoryBuilder().build(reader);
     }
 
-    @Test
-    void testLoadLazyImmutablePOJO() {
-        try (SqlSession session = factory.openSession()) {
-            final ImmutablePOJOMapper mapper = session.getMapper(ImmutablePOJOMapper.class);
-            final ImmutablePOJO pojo = mapper.getImmutablePOJO(POJO_ID);
+    BaseDataTest.runScript(factory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/lazy_immutable/CreateDB.sql");
+  }
 
-            assertEquals(POJO_ID, pojo.getId());
-            assertNotNull(pojo.getDescription(), "Description should not be null.");
-          assertNotEquals(0, pojo.getDescription().length(), "Description should not be empty.");
-        }
+  @Test
+  void testLoadLazyImmutablePOJO() {
+    try (SqlSession session = factory.openSession()) {
+      final ImmutablePOJOMapper mapper = session.getMapper(ImmutablePOJOMapper.class);
+      final ImmutablePOJO pojo = mapper.getImmutablePOJO(POJO_ID);
+
+      assertEquals(POJO_ID, pojo.getId());
+      assertNotNull(pojo.getDescription(), "Description should not be null.");
+      assertNotEquals(0, pojo.getDescription().length(), "Description should not be empty.");
     }
+  }
 
 }

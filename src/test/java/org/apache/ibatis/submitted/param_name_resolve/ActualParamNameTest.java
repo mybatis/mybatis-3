@@ -39,15 +39,14 @@ class ActualParamNameTest {
   static void setUp() throws Exception {
     // create an SqlSessionFactory
     try (Reader reader = Resources
-      .getResourceAsReader("org/apache/ibatis/submitted/param_name_resolve/mybatis-config.xml")) {
+        .getResourceAsReader("org/apache/ibatis/submitted/param_name_resolve/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
       sqlSessionFactory.getConfiguration().addMapper(Mapper.class);
     }
 
     // populate in-memory database
     try (Connection conn = sqlSessionFactory.getConfiguration().getEnvironment().getDataSource().getConnection();
-         Reader reader = Resources
-           .getResourceAsReader("org/apache/ibatis/submitted/param_name_resolve/CreateDB.sql")) {
+        Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/param_name_resolve/CreateDB.sql")) {
       ScriptRunner runner = new ScriptRunner(conn);
       runner.setLogWriter(null);
       runner.runScript(reader);

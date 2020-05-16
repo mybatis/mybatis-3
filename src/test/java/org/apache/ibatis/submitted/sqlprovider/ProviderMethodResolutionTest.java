@@ -66,8 +66,8 @@ class ProviderMethodResolutionTest {
 
   @Test
   void shouldErrorWhenDefaultResolverMethodNameMatchedMethodIsNone() {
-    BuilderException e = Assertions.assertThrows(BuilderException.class,
-        () -> sqlSessionFactory.getConfiguration().addMapper(DefaultProvideMethodResolverMethodNameMatchedMethodIsNoneMapper.class));
+    BuilderException e = Assertions.assertThrows(BuilderException.class, () -> sqlSessionFactory.getConfiguration()
+        .addMapper(DefaultProvideMethodResolverMethodNameMatchedMethodIsNoneMapper.class));
     assertEquals(
         "Cannot resolve the provider method because 'insert' not found in SqlProvider 'org.apache.ibatis.submitted.sqlprovider.ProviderMethodResolutionTest$DefaultProvideMethodResolverMethodNameMatchedMethodIsNoneMapper$MethodResolverBasedSqlProvider'.",
         e.getCause().getMessage());
@@ -75,8 +75,8 @@ class ProviderMethodResolutionTest {
 
   @Test
   void shouldErrorWhenDefaultResolverReturnTypeMatchedMethodIsNone() {
-    BuilderException e = Assertions.assertThrows(BuilderException.class,
-        () -> sqlSessionFactory.getConfiguration().addMapper(DefaultProvideMethodResolverReturnTypeMatchedMethodIsNoneMapper.class));
+    BuilderException e = Assertions.assertThrows(BuilderException.class, () -> sqlSessionFactory.getConfiguration()
+        .addMapper(DefaultProvideMethodResolverReturnTypeMatchedMethodIsNoneMapper.class));
     assertEquals(
         "Cannot resolve the provider method because 'insert' does not return the CharSequence or its subclass in SqlProvider 'org.apache.ibatis.submitted.sqlprovider.ProviderMethodResolutionTest$DefaultProvideMethodResolverReturnTypeMatchedMethodIsNoneMapper$MethodResolverBasedSqlProvider'.",
         e.getCause().getMessage());
@@ -84,8 +84,8 @@ class ProviderMethodResolutionTest {
 
   @Test
   void shouldErrorWhenDefaultResolverMatchedMethodIsMultiple() {
-    BuilderException e = Assertions.assertThrows(BuilderException.class,
-        () -> sqlSessionFactory.getConfiguration().addMapper(DefaultProvideMethodResolverMatchedMethodIsMultipleMapper.class));
+    BuilderException e = Assertions.assertThrows(BuilderException.class, () -> sqlSessionFactory.getConfiguration()
+        .addMapper(DefaultProvideMethodResolverMatchedMethodIsMultipleMapper.class));
     assertEquals(
         "Cannot resolve the provider method because 'update' is found multiple in SqlProvider 'org.apache.ibatis.submitted.sqlprovider.ProviderMethodResolutionTest$DefaultProvideMethodResolverMatchedMethodIsMultipleMapper$MethodResolverBasedSqlProvider'.",
         e.getCause().getMessage());

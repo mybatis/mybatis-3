@@ -41,7 +41,7 @@ class NoActualParamNameTest {
   static void setUp() throws Exception {
     // create an SqlSessionFactory
     try (Reader reader = Resources
-      .getResourceAsReader("org/apache/ibatis/submitted/param_name_resolve/mybatis-config.xml")) {
+        .getResourceAsReader("org/apache/ibatis/submitted/param_name_resolve/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
       sqlSessionFactory.getConfiguration().addMapper(Mapper.class);
       sqlSessionFactory.getConfiguration().setUseActualParamName(false);
@@ -49,8 +49,7 @@ class NoActualParamNameTest {
 
     // populate in-memory database
     try (Connection conn = sqlSessionFactory.getConfiguration().getEnvironment().getDataSource().getConnection();
-         Reader reader = Resources
-           .getResourceAsReader("org/apache/ibatis/submitted/param_name_resolve/CreateDB.sql")) {
+        Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/param_name_resolve/CreateDB.sql")) {
       ScriptRunner runner = new ScriptRunner(conn);
       runner.setLogWriter(null);
       runner.runScript(reader);
@@ -64,10 +63,11 @@ class NoActualParamNameTest {
       // use actual name -> no available and index parameter("0") is not available too
       {
         try {
-           mapper.getUserCountUsingList(Arrays.asList(1, 2));
-           fail();
+          mapper.getUserCountUsingList(Arrays.asList(1, 2));
+          fail();
         } catch (PersistenceException e) {
-          assertEquals("Parameter 'ids' not found. Available parameters are [collection, list]", e.getCause().getMessage());
+          assertEquals("Parameter 'ids' not found. Available parameters are [collection, list]",
+              e.getCause().getMessage());
         }
       }
       // use 'collection' as alias
