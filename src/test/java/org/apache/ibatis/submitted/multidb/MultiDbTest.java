@@ -39,7 +39,7 @@ class MultiDbTest {
     }
 
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/multidb/CreateDB.sql");
+        "org/apache/ibatis/submitted/multidb/CreateDB.sql");
   }
 
   @Test

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,12 +18,15 @@ package org.apache.ibatis.submitted.lazyload_proxyfactory_comparison;
 import org.apache.ibatis.annotations.Param;
 
 public interface Mapper {
-    UserWithGetObjectWithInterface getUserWithGetObjectWithInterface(@Param("id") Integer id);
-    UserWithGetObjectWithoutInterface getUserWithGetObjectWithoutInterface(@Param("id") Integer id);
+  UserWithGetObjectWithInterface getUserWithGetObjectWithInterface(@Param("id") Integer id);
 
-    UserWithGetXxxWithInterface getUserWithGetXxxWithInterface(@Param("id") Integer id);
-    UserWithGetXxxWithoutInterface getUserWithGetXxxWithoutInterface(@Param("id") Integer id);
+  UserWithGetObjectWithoutInterface getUserWithGetObjectWithoutInterface(@Param("id") Integer id);
 
-    UserWithNothingWithInterface getUserWithNothingWithInterface(@Param("id") Integer id);
-    UserWithNothingWithoutInterface getUserWithNothingWithoutInterface(@Param("id") Integer id);
+  UserWithGetXxxWithInterface getUserWithGetXxxWithInterface(@Param("id") Integer id);
+
+  UserWithGetXxxWithoutInterface getUserWithGetXxxWithoutInterface(@Param("id") Integer id);
+
+  UserWithNothingWithInterface getUserWithNothingWithInterface(@Param("id") Integer id);
+
+  UserWithNothingWithoutInterface getUserWithNothingWithoutInterface(@Param("id") Integer id);
 }

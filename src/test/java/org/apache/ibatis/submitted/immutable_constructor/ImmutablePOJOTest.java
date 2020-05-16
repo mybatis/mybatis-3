@@ -38,12 +38,13 @@ final class ImmutablePOJOTest {
 
   @BeforeAll
   static void setupClass() throws Exception {
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/immutable_constructor/ibatisConfig.xml")) {
+    try (Reader reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/immutable_constructor/ibatisConfig.xml")) {
       factory = new SqlSessionFactoryBuilder().build(reader);
     }
 
     BaseDataTest.runScript(factory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/immutable_constructor/CreateDB.sql");
+        "org/apache/ibatis/submitted/immutable_constructor/CreateDB.sql");
   }
 
   @Test
