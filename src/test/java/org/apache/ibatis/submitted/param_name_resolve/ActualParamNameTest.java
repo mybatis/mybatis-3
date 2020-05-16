@@ -15,6 +15,13 @@
  */
 package org.apache.ibatis.submitted.param_name_resolve;
 
+import static org.junit.Assert.assertEquals;
+
+import java.io.Reader;
+import java.sql.Connection;
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
@@ -23,13 +30,6 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
-import java.io.Reader;
-import java.sql.Connection;
-import java.util.Arrays;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
 
 class ActualParamNameTest {
 
