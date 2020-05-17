@@ -26,7 +26,7 @@ public class SqlSourceBuilderTest {
 
   private static Configuration configuration;
   private static SqlSourceBuilder sqlSourceBuilder;
-  String sqlFromXml = "\\t\\n\\n  SELECT * \\n        FROM user\\n \\t        WHERE user_id = 1\\n\\t  ";
+  private final String sqlFromXml = "\t\n\n  SELECT * \n        FROM user\n \t        WHERE user_id = 1\n\t  ";
 
   @BeforeEach
   void setUp() {
@@ -36,7 +36,7 @@ public class SqlSourceBuilderTest {
   }
 
   @Test
-  void testMinifySqlEnabledIsFalse() {
+  void testShrinkWhitespacesInSqlIsFalse() {
     SqlSource sqlSource = sqlSourceBuilder.parse(sqlFromXml, null, null);
     BoundSql boundSql = sqlSource.getBoundSql(null);
     String actual = boundSql.getSql();
@@ -44,14 +44,13 @@ public class SqlSourceBuilderTest {
   }
 
   @Test
-  void testMinifySqlEnabledIsTrue() {
-    String expected = "\\t\\n\\n SELECT * \\n FROM user\\n \\t WHERE user_id = 1\\n\\t";
-
+  void testShrinkWhitespacesInSqlIsTrue() {
     configuration.setShrinkWhitespacesInSql(true);
     SqlSource sqlSource = sqlSourceBuilder.parse(sqlFromXml, null, null);
     BoundSql boundSql = sqlSource.getBoundSql(null);
     String actual = boundSql.getSql();
 
-    Assertions.assertEquals(expected, actual);
+    String shrankWhitespacesInSql = "SELECT * FROM user WHERE user_id = 1";
+    Assertions.assertEquals(shrankWhitespacesInSql, actual);
   }
 }
