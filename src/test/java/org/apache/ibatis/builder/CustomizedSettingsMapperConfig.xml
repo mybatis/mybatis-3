@@ -54,6 +54,7 @@
     <setting name="vfsImpl" value="org.apache.ibatis.io.JBoss6VFS"/>
     <setting name="configurationFactory" value="java.lang.String"/>
     <setting name="defaultEnumTypeHandler" value="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
+    <setting name="shrinkWhitespacesInSql" value="true"/>
   </settings>
 
   <typeAliases>
