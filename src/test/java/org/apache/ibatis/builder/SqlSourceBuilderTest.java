@@ -53,7 +53,7 @@ public class SqlSourceBuilderTest {
 
   @Test
   void testMinifySqlEnabledIsTrue() {
-    configuration.setMinifySqlEnabled(true);
+    configuration.setShrinkWhitespacesInSql(true);
     SqlSource sqlSource = sqlSourceBuilder.parse(sqlFromXml, null, null);
     BoundSql boundSql = sqlSource.getBoundSql(null);
     String actual = boundSql.getSql();

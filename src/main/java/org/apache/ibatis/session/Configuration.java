@@ -113,7 +113,7 @@ public class Configuration {
   protected boolean callSettersOnNulls;
   protected boolean useActualParamName = true;
   protected boolean returnInstanceForEmptyRow;
-  protected boolean minifySqlEnabled;
+  protected boolean shrinkWhitespacesInSql;
 
   protected String logPrefix;
   protected Class<? extends Log> logImpl;
@@ -267,12 +267,12 @@ public class Configuration {
     this.returnInstanceForEmptyRow = returnEmptyInstance;
   }
 
-  public boolean isMinifySqlEnabled() {
-    return minifySqlEnabled;
+  public boolean isShrinkWhitespacesInSql() {
+    return shrinkWhitespacesInSql;
   }
 
-  public void setMinifySqlEnabled(boolean minifySqlEnabled) {
-    this.minifySqlEnabled = minifySqlEnabled;
+  public void setShrinkWhitespacesInSql(boolean shrinkWhitespacesInSql) {
+    this.shrinkWhitespacesInSql = shrinkWhitespacesInSql;
   }
 
   public String getDatabaseId() {
