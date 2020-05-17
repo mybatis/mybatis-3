@@ -555,6 +555,20 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 설정하지 않음
               </td>
             </tr>
+            <tr>
+              <td>
+                shrinkWhitespacesInSql
+              </td>
+              <td>
+                mapper xml 파일에서 쿼리를 읽을때 whitespace 문자를 최대한 줄여 네트워크로 전송하는 패킷을 줄여준다.
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
+              </td>
+            </tr>
           </tbody>
         </table>
         <p>위 설정을 모두 사용한 setting 엘리먼트의 예제이다:</p>

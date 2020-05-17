@@ -572,6 +572,20 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 未指定
               </td>
             </tr>
+            <tr>
+              <td>
+                shrinkWhitespacesInSql
+              </td>
+              <td>
+                When reading a query from the mapper xml file, the whitespace characters are reduced as much as possible to reduce the packets transmitted over the network.
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
+              </td>
+            </tr>
           </tbody>
         </table>
         <p>
