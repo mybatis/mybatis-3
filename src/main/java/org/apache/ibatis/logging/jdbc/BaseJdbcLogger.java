@@ -28,8 +28,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.ibatis.builder.SqlSourceBuilder;
 import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.parsing.StringParser;
 import org.apache.ibatis.reflection.ArrayUtil;
 
 /**
@@ -120,8 +120,8 @@ public abstract class BaseJdbcLogger {
     columnValues.clear();
   }
 
-  protected String removeBreakingWhitespace(String original) {
-    return StringParser.removeBreakingWhitespace(original);
+  protected String removeExtraWhitespace(String original) {
+    return SqlSourceBuilder.removeExtraWhitespaces(original);
   }
 
   protected boolean isDebugEnabled() {

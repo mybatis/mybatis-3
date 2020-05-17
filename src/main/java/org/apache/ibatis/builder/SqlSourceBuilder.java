@@ -18,11 +18,11 @@ package org.apache.ibatis.builder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.parsing.GenericTokenParser;
-import org.apache.ibatis.parsing.StringParser;
 import org.apache.ibatis.parsing.TokenHandler;
 import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.reflection.MetaObject;
@@ -45,11 +45,25 @@ public class SqlSourceBuilder extends BaseBuilder {
     GenericTokenParser parser = new GenericTokenParser("#{", "}", handler);
     String sql;
     if (configuration.isShrinkWhitespacesInSql()) {
-      sql = parser.parse(StringParser.removeBreakingWhitespace(originalSql));
+      sql = parser.parse(removeExtraWhitespaces(originalSql));
     } else {
       sql = parser.parse(originalSql);
     }
     return new StaticSqlSource(configuration, sql, handler.getParameterMappings());
+  }
+
+  public static String removeExtraWhitespaces(String original) {
+    StringTokenizer tokenizer = new StringTokenizer(original);
+    StringBuilder builder = new StringBuilder();
+    boolean hasMoreTokens = tokenizer.hasMoreTokens();
+    while (hasMoreTokens) {
+      builder.append(tokenizer.nextToken());
+      hasMoreTokens = tokenizer.hasMoreTokens();
+      if (hasMoreTokens) {
+        builder.append(' ');
+      }
+    }
+    return builder.toString();
   }
 
   private static class ParameterMappingTokenHandler extends BaseBuilder implements TokenHandler {
