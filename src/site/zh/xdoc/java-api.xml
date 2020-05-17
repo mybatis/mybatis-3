@@ -413,7 +413,11 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>@Options</code></td>
         <td><code>方法</code></td>
         <td>映射语句的属性</td>
-        <td>该注解允许你指定大部分开关和配置选项，它们通常在映射语句上作为属性出现。与在注解上提供大量的属性相比，<code>Options</code> 注解提供了一致、清晰的方式来指定选项。属性：<code>useCache=true</code>、<code>flushCache=FlushCachePolicy.DEFAULT</code>、<code>resultSetType=DEFAULT</code>、<code>statementType=PREPARED</code>、<code>fetchSize=-1</code>、<code>timeout=-1</code>、<code>useGeneratedKeys=false</code>、<code>keyProperty=""</code>、<code>keyColumn=""</code>、<code>resultSets=""</code>。注意，Java 注解无法指定 <code>null</code> 值。因此，一旦你使用了 <code>Options</code> 注解，你的语句就会被上述属性的默认值所影响。要注意避免默认值带来的非预期行为。<br/><br/>
+        <td>该注解允许你指定大部分开关和配置选项，它们通常在映射语句上作为属性出现。与在注解上提供大量的属性相比，<code>Options</code> 注解提供了一致、清晰的方式来指定选项。属性：<code>useCache=true</code>、<code>flushCache=FlushCachePolicy.DEFAULT</code>、<code>resultSetType=DEFAULT</code>、<code>statementType=PREPARED</code>、<code>fetchSize=-1</code>、<code>timeout=-1</code>、<code>useGeneratedKeys=false</code>、<code>keyProperty=""</code>、<code>keyColumn=""</code>、<code>resultSets=""</code>, <code>databaseId=""</code>。注意，Java 注解无法指定 <code>null</code> 值。因此，一旦你使用了 <code>Options</code> 注解，你的语句就会被上述属性的默认值所影响。要注意避免默认值带来的非预期行为。
+        The <code>databaseId</code>(Available since 3.5.5), in case there is a configured <code>DatabaseIdProvider</code>,
+        the MyBatis use the <code>Options</code> with no <code>databaseId</code> attribute or with a <code>databaseId</code>
+        that matches the current one. If found with and without the <code>databaseId</code> the latter will be discarded.<br/><br/>
+
         注意：<code>keyColumn</code> 属性只在某些数据库中有效（如 Oracle、PostgreSQL 等）。要了解更多关于 <code>keyColumn</code> 和 <code>keyProperty</code> 可选值信息，请查看“insert, update 和 delete”一节。</td>
       </tr>
       <tr>
@@ -434,7 +438,12 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
 <li><code>&lt;select&gt;</code></li>
 </ul>
         </td>
-        <td>每个注解分别代表将会被执行的 SQL 语句。它们用字符串数组（或单个字符串）作为参数。如果传递的是字符串数组，字符串数组会被连接成单个完整的字符串，每个字符串之间加入一个空格。这有效地避免了用 Java 代码构建 SQL 语句时产生的“丢失空格”问题。当然，你也可以提前手动连接好字符串。属性：<code>value</code>，指定用来组成单个 SQL 语句的字符串数组。</td>
+        <td>
+        每个注解分别代表将会被执行的 SQL 语句。它们用字符串数组（或单个字符串）作为参数。如果传递的是字符串数组，字符串数组会被连接成单个完整的字符串，每个字符串之间加入一个空格。这有效地避免了用 Java 代码构建 SQL 语句时产生的“丢失空格”问题。当然，你也可以提前手动连接好字符串。属性：<code>value</code>，指定用来组成单个 SQL 语句的字符串数组。
+        The <code>databaseId</code>(Available since 3.5.5), in case there is a configured <code>DatabaseIdProvider</code>,
+        the MyBatis use a statement with no <code>databaseId</code> attribute or with a <code>databaseId</code>
+        that matches the current one. If found with and without the <code>databaseId</code> the latter will be discarded.
+        </td>
       </tr>
       <tr>
         <td>
@@ -454,7 +463,12 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
 <li><code>&lt;select&gt;</code></li>
 </ul>
         </td>
-        <td>允许构建动态 SQL。这些备选的 SQL 注解允许你指定返回 SQL 语句的类和方法，以供运行时执行。（从 MyBatis 3.4.6 开始，可以使用 <code>CharSequence</code> 代替 <code>String</code> 来作为返回类型）。当执行映射语句时，MyBatis 会实例化注解指定的类，并调用注解指定的方法。你可以通过 <code>ProviderContext</code> 传递映射方法接收到的参数、"Mapper interface type" 和 "Mapper method"（仅在 MyBatis 3.4.5 以上支持）作为参数。（MyBatis 3.4 以上支持传入多个参数）属性：<code>type</code>、<code>method</code>。<code>type</code> 属性用于指定类名。<code>method</code> 用于指定该类的方法名（从版本 3.5.1 开始，可以省略 <code>method</code> 属性，MyBatis 将会使用 <code>ProviderMethodResolver</code> 接口解析方法的具体实现。如果解析失败，MyBatis 将会使用名为 <code>provideSql</code> 的降级实现）。<span class="label important">提示</span> 接下来的“SQL 语句构建器”一章将会讨论该话题，以帮助你以更清晰、更便于阅读的方式构建动态 SQL。</td>
+        <td>
+        允许构建动态 SQL。这些备选的 SQL 注解允许你指定返回 SQL 语句的类和方法，以供运行时执行。（从 MyBatis 3.4.6 开始，可以使用 <code>CharSequence</code> 代替 <code>String</code> 来作为返回类型）。当执行映射语句时，MyBatis 会实例化注解指定的类，并调用注解指定的方法。你可以通过 <code>ProviderContext</code> 传递映射方法接收到的参数、"Mapper interface type" 和 "Mapper method"（仅在 MyBatis 3.4.5 以上支持）作为参数。（MyBatis 3.4 以上支持传入多个参数）属性：<code>type</code>、<code>method</code>。<code>type</code> 属性用于指定类名。<code>method</code> 用于指定该类的方法名（从版本 3.5.1 开始，可以省略 <code>method</code> 属性，MyBatis 将会使用 <code>ProviderMethodResolver</code> 接口解析方法的具体实现。如果解析失败，MyBatis 将会使用名为 <code>provideSql</code> 的降级实现）。<span class="label important">提示</span> 接下来的“SQL 语句构建器”一章将会讨论该话题，以帮助你以更清晰、更便于阅读的方式构建动态 SQL。
+        The <code>databaseId</code>(Available since 3.5.5), in case there is a configured <code>DatabaseIdProvider</code>,
+        the MyBatis will use a provider method with no <code>databaseId</code> attribute or with a <code>databaseId</code>
+        that matches the current one. If found with and without the <code>databaseId</code> the latter will be discarded.
+        </td>
       </tr>
       <tr>
         <td><code>@Param</code></td>
@@ -466,7 +480,12 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>@SelectKey</code></td>
         <td><code>方法</code></td>
         <td><code>&lt;selectKey&gt;</code></td>
-        <td>这个注解的功能与 <code>&lt;selectKey&gt;</code> 标签完全一致。该注解只能在 <code>@Insert</code> 或 <code>@InsertProvider</code> 或 <code>@Update</code> 或 <code>@UpdateProvider</code> 标注的方法上使用，否则将会被忽略。如果标注了 <code>@SelectKey</code> 注解，MyBatis 将会忽略掉由 <code>@Options</code> 注解所设置的生成主键或设置（configuration）属性。属性：<code>statement</code> 以字符串数组形式指定将会被执行的 SQL 语句，<code>keyProperty</code> 指定作为参数传入的对象对应属性的名称，该属性将会更新成新的值，<code>before</code> 可以指定为 <code>true</code> 或 <code>false</code> 以指明 SQL 语句应被在插入语句的之前还是之后执行。<code>resultType</code> 则指定 <code>keyProperty</code> 的 Java 类型。<code>statementType</code> 则用于选择语句类型，可以选择 <code>STATEMENT</code>、<code>PREPARED</code> 或 <code>CALLABLE</code> 之一，它们分别对应于 <code>Statement</code>、<code>PreparedStatement</code> 和 <code>CallableStatement</code>。默认值是 <code>PREPARED</code>。</td>
+        <td>
+        这个注解的功能与 <code>&lt;selectKey&gt;</code> 标签完全一致。该注解只能在 <code>@Insert</code> 或 <code>@InsertProvider</code> 或 <code>@Update</code> 或 <code>@UpdateProvider</code> 标注的方法上使用，否则将会被忽略。如果标注了 <code>@SelectKey</code> 注解，MyBatis 将会忽略掉由 <code>@Options</code> 注解所设置的生成主键或设置（configuration）属性。属性：<code>statement</code> 以字符串数组形式指定将会被执行的 SQL 语句，<code>keyProperty</code> 指定作为参数传入的对象对应属性的名称，该属性将会更新成新的值，<code>before</code> 可以指定为 <code>true</code> 或 <code>false</code> 以指明 SQL 语句应被在插入语句的之前还是之后执行。<code>resultType</code> 则指定 <code>keyProperty</code> 的 Java 类型。<code>statementType</code> 则用于选择语句类型，可以选择 <code>STATEMENT</code>、<code>PREPARED</code> 或 <code>CALLABLE</code> 之一，它们分别对应于 <code>Statement</code>、<code>PreparedStatement</code> 和 <code>CallableStatement</code>。默认值是 <code>PREPARED</code>。
+        The <code>databaseId</code>(Available since 3.5.5), in case there is a configured <code>DatabaseIdProvider</code>,
+        the MyBatis will use a statement with no <code>databaseId</code> attribute or with a <code>databaseId</code>
+        that matches the current one. If found with and without the <code>databaseId</code> the latter will be discarded.
+        </td>
       </tr>
       <tr>
         <td><code>@ResultMap</code></td>
@@ -581,6 +600,15 @@ class UserSqlProvider implements ProviderMethodResolver {
     }}.toString();
   }
 }]]></source>
+
+    <p>This example shows usage the <code>databaseId</code> attribute on the statement annotation(Available since 3.5.5):</p>
+    <source><![CDATA[
+@Select(value = "SELECT SYS_GUID() FROM dual", databaseId = "oracle") // Use this statement if DatabaseIdProvider provide "oracle"
+@Select(value = "SELECT uuid_generate_v4()", databaseId = "postgres") // Use this statement if DatabaseIdProvider provide "postgres"
+@Select("SELECT RANDOM_UUID()") // Use this statement if the DatabaseIdProvider not configured or not matches databaseId
+String generateId();
+]]></source>
+
   </subsection>
 
   </section>

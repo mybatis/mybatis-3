@@ -544,11 +544,15 @@ void rollback(boolean force)</source>
 		useGeneratedKeys=false,
 		keyProperty=“”,
 		keyColumn=“”,
-		resultSets=“”.
+		resultSets=“”,
+    databaseId="".
 		자바 애노테이션을 이해하는 것이 중요하다.
 		자바 애노테이션은 “null”을 설정 할 수 없다.
 		그래서 일단 Options 애노테이션을 사용하면 각각의 속성은 디폴트 값을 사용하게 된다.
 		디폴트 값이 기대하지 않은 결과를 만들지 않도록 주의해야 한다.
+    The <code>databaseId</code>(Available since 3.5.5), in case there is a configured <code>DatabaseIdProvider</code>,
+    the MyBatis use the <code>Options</code> with no <code>databaseId</code> attribute or with a <code>databaseId</code>
+    that matches the current one. If found with and without the <code>databaseId</code> the latter will be discarded.<br/><br/>
 		keyColumn은 키 칼럼이 테이블의 첫번째 칼럼이 아닌 특정 데이터베이스에서만(PostgreSQL 같은) 필요하다.</td>
       </tr>
       <tr>
@@ -573,7 +577,11 @@ void rollback(boolean force)</source>
 		각각 문자열의 배열(또는 한개의 문자열)을 가진다.
 		문자열의 배열이 전달되면, 각각 공백을 두고 하나로 합친다.
 		자바 코드에서 SQL 을 만들때 발행할 수 있는 “공백 누락” 문제를 해결하도록 도와준다.
-		사용가능한 속성들 : value(한개의 SQL 구문을 만들기 위한 문자열의 배열)</td>
+		사용가능한 속성들 : value(한개의 SQL 구문을 만들기 위한 문자열의 배열).
+    The <code>databaseId</code>(Available since 3.5.5), in case there is a configured <code>DatabaseIdProvider</code>,
+    the MyBatis use a statement with no <code>databaseId</code> attribute or with a <code>databaseId</code>
+    that matches the current one. If found with and without the <code>databaseId</code> the latter will be discarded.
+        </td>
       </tr>
       <tr>
         <td>
@@ -602,6 +610,9 @@ void rollback(boolean force)</source>
     (Since 3.5.1, you can omit <code>method</code> attribute, the MyBatis will resolve a target method via the
     <code>ProviderMethodResolver</code> interface.
     If not resolve by it, the MyBatis use the reserved fallback method that named <code>provideSql</code>).
+    The <code>databaseId</code>(Available since 3.5.5), in case there is a configured <code>DatabaseIdProvider</code>,
+    the MyBatis will use a provider method with no <code>databaseId</code> attribute or with a <code>databaseId</code>
+    that matches the current one. If found with and without the <code>databaseId</code> the latter will be discarded.
 		Note: 이 섹션은 클래스에 대한 설명으로 동적 SQL 을 좀더 깔끔하고 읽기 쉽게 만드는데 도움이 될 수 있다.</td>
       </tr>
       <tr>
@@ -624,7 +635,11 @@ void rollback(boolean force)</source>
 		keyProperty는 새로운 값으로 수정될 파라미터 객체의 프로퍼티이다.
 		SQL이 insert 전후에 실행되는 것을 나타내기 위해 true나 false가 되어야 한다.
 		resultType은 keyProperty의 자바 타입이다.
-		statementType=PREPARED.</td>
+		statementType=PREPARED.
+    The <code>databaseId</code>(Available since 3.5.5), in case there is a configured <code>DatabaseIdProvider</code>,
+    the MyBatis will use a statement with no <code>databaseId</code> attribute or with a <code>databaseId</code>
+    that matches the current one. If found with and without the <code>databaseId</code> the latter will be discarded.
+        </td>
       </tr>
       <tr>
         <td><code>@ResultMap</code></td>
@@ -752,6 +767,14 @@ class UserSqlProvider implements ProviderMethodResolver {
     }}.toString();
   }
 }]]></source>
+
+    <p>This example shows usage the <code>databaseId</code> attribute on the statement annotation(Available since 3.5.5):</p>
+    <source><![CDATA[
+@Select(value = "SELECT SYS_GUID() FROM dual", databaseId = "oracle") // Use this statement if DatabaseIdProvider provide "oracle"
+@Select(value = "SELECT uuid_generate_v4()", databaseId = "postgres") // Use this statement if DatabaseIdProvider provide "postgres"
+@Select("SELECT RANDOM_UUID()") // Use this statement if the DatabaseIdProvider not configured or not matches databaseId
+String generateId();
+]]></source>
 
   </subsection>
 
