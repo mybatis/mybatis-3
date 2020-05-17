@@ -70,7 +70,7 @@ class ProviderMethodResolutionTest {
         .addMapper(DefaultProvideMethodResolverMethodNameMatchedMethodIsNoneMapper.class));
     assertEquals(
         "Cannot resolve the provider method because 'insert' not found in SqlProvider 'org.apache.ibatis.submitted.sqlprovider.ProviderMethodResolutionTest$DefaultProvideMethodResolverMethodNameMatchedMethodIsNoneMapper$MethodResolverBasedSqlProvider'.",
-        e.getCause().getMessage());
+        e.getMessage());
   }
 
   @Test
@@ -79,7 +79,7 @@ class ProviderMethodResolutionTest {
         .addMapper(DefaultProvideMethodResolverReturnTypeMatchedMethodIsNoneMapper.class));
     assertEquals(
         "Cannot resolve the provider method because 'insert' does not return the CharSequence or its subclass in SqlProvider 'org.apache.ibatis.submitted.sqlprovider.ProviderMethodResolutionTest$DefaultProvideMethodResolverReturnTypeMatchedMethodIsNoneMapper$MethodResolverBasedSqlProvider'.",
-        e.getCause().getMessage());
+        e.getMessage());
   }
 
   @Test
@@ -88,7 +88,7 @@ class ProviderMethodResolutionTest {
         .addMapper(DefaultProvideMethodResolverMatchedMethodIsMultipleMapper.class));
     assertEquals(
         "Cannot resolve the provider method because 'update' is found multiple in SqlProvider 'org.apache.ibatis.submitted.sqlprovider.ProviderMethodResolutionTest$DefaultProvideMethodResolverMatchedMethodIsMultipleMapper$MethodResolverBasedSqlProvider'.",
-        e.getCause().getMessage());
+        e.getMessage());
   }
 
   @Test
@@ -129,7 +129,7 @@ class ProviderMethodResolutionTest {
         () -> sqlSessionFactory.getConfiguration().addMapper(ReservedNameMethodIsNoneMapper.class));
     assertEquals(
         "Error creating SqlSource for SqlProvider. Method 'provideSql' not found in SqlProvider 'org.apache.ibatis.submitted.sqlprovider.ProviderMethodResolutionTest$ReservedNameMethodIsNoneMapper$SqlProvider'.",
-        e.getCause().getMessage());
+        e.getMessage());
   }
 
   interface ProvideMethodResolverMapper {
