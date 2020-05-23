@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -39,7 +39,8 @@ class MultipleResultSetTest {
 
   @BeforeAll
   static void setUp() throws Exception {
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multipleresultsetswithassociation/mybatis-config.xml")) {
+    try (Reader reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/multipleresultsetswithassociation/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
@@ -51,10 +52,12 @@ class MultipleResultSetTest {
       try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multipleresultsetswithassociation/CreateDB1.sql")) {
         runReaderScript(conn, reader);
       }
-      try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multipleresultsetswithassociation/CreateDB2.sql")) {
+      try (Reader reader = Resources
+          .getResourceAsReader("org/apache/ibatis/submitted/multipleresultsetswithassociation/CreateDB2.sql")) {
         runReaderScript(conn, reader);
       }
-      try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multipleresultsetswithassociation/CreateDB3.sql")) {
+      try (Reader reader = Resources
+          .getResourceAsReader("org/apache/ibatis/submitted/multipleresultsetswithassociation/CreateDB3.sql")) {
         runReaderScript(conn, reader);
       }
     }
@@ -81,8 +84,8 @@ class MultipleResultSetTest {
 
       // Each order detail should have a corresponding OrderHeader
       // Only 2 of 6 orderDetails have orderHeaders
-      for(OrderDetail orderDetail : orderDetails){
-          Assertions.assertNotNull(orderDetail.getOrderHeader());
+      for (OrderDetail orderDetail : orderDetails) {
+        Assertions.assertNotNull(orderDetail.getOrderHeader());
       }
     }
   }
@@ -99,8 +102,8 @@ class MultipleResultSetTest {
 
       // Each order detail should have a corresponding OrderHeader
       // Only 2 of 6 orderDetails have orderHeaders
-      for(OrderDetail orderDetail : orderDetails){
-          Assertions.assertNotNull(orderDetail.getOrderHeader());
+      for (OrderDetail orderDetail : orderDetails) {
+        Assertions.assertNotNull(orderDetail.getOrderHeader());
       }
     }
   }

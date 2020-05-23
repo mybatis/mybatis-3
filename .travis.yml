@@ -1,7 +1,8 @@
 language: java
 
 jdk:
-  - openjdk15
+  # JDK15 is blocked due to maven-bundle-plugin and underlying bnd (see https://issues.apache.org/jira/browse/FELIX-6259)
+  #- openjdk15
   - openjdk14
   - openjdk13
   - openjdk11

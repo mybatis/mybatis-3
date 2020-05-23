@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -29,111 +29,112 @@ import org.junit.jupiter.api.Test;
 
 class NotNullColumnTest {
 
-    private static SqlSessionFactory sqlSessionFactory;
+  private static SqlSessionFactory sqlSessionFactory;
 
-    @BeforeAll
-    static void initDatabase() throws Exception {
-        try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/not_null_column/ibatisConfig.xml")) {
-            sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-        }
-
-        BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-                "org/apache/ibatis/submitted/not_null_column/CreateDB.sql");
+  @BeforeAll
+  static void initDatabase() throws Exception {
+    try (
+        Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/not_null_column/ibatisConfig.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
-    @Test
-    void testNotNullColumnWithChildrenNoFid() {
-      try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-          FatherMapper fatherMapper = sqlSession.getMapper(FatherMapper.class);
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/not_null_column/CreateDB.sql");
+  }
 
-          Father test = fatherMapper.selectByIdNoFid(1);
-          assertNotNull(test);
-          assertNotNull(test.getChildren());
-          assertEquals(2, test.getChildren().size());
-      }
+  @Test
+  void testNotNullColumnWithChildrenNoFid() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      FatherMapper fatherMapper = sqlSession.getMapper(FatherMapper.class);
+
+      Father test = fatherMapper.selectByIdNoFid(1);
+      assertNotNull(test);
+      assertNotNull(test.getChildren());
+      assertEquals(2, test.getChildren().size());
     }
+  }
 
-    @Test
-    void testNotNullColumnWithoutChildrenNoFid() {
-      try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-          FatherMapper fatherMapper = sqlSession.getMapper(FatherMapper.class);
+  @Test
+  void testNotNullColumnWithoutChildrenNoFid() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      FatherMapper fatherMapper = sqlSession.getMapper(FatherMapper.class);
 
-          Father test = fatherMapper.selectByIdNoFid(2);
-          assertNotNull(test);
-          assertNotNull(test.getChildren());
-          assertTrue(test.getChildren().isEmpty());
-      }
+      Father test = fatherMapper.selectByIdNoFid(2);
+      assertNotNull(test);
+      assertNotNull(test.getChildren());
+      assertTrue(test.getChildren().isEmpty());
     }
+  }
 
-    @Test
-    void testNotNullColumnWithoutChildrenFid() {
-      try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-          FatherMapper fatherMapper = sqlSession.getMapper(FatherMapper.class);
+  @Test
+  void testNotNullColumnWithoutChildrenFid() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      FatherMapper fatherMapper = sqlSession.getMapper(FatherMapper.class);
 
-          Father test = fatherMapper.selectByIdFid(2);
-          assertNotNull(test);
-          assertNotNull(test.getChildren());
-          assertTrue(test.getChildren().isEmpty());
-      }
+      Father test = fatherMapper.selectByIdFid(2);
+      assertNotNull(test);
+      assertNotNull(test.getChildren());
+      assertTrue(test.getChildren().isEmpty());
     }
+  }
 
-    @Test
-    void testNotNullColumnWithoutChildrenWithInternalResultMap() {
-      try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-          FatherMapper fatherMapper = sqlSession.getMapper(FatherMapper.class);
+  @Test
+  void testNotNullColumnWithoutChildrenWithInternalResultMap() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      FatherMapper fatherMapper = sqlSession.getMapper(FatherMapper.class);
 
-          Father test = fatherMapper.selectByIdWithInternalResultMap(2);
-          assertNotNull(test);
-          assertNotNull(test.getChildren());
-          assertTrue(test.getChildren().isEmpty());
-      }
+      Father test = fatherMapper.selectByIdWithInternalResultMap(2);
+      assertNotNull(test);
+      assertNotNull(test.getChildren());
+      assertTrue(test.getChildren().isEmpty());
     }
+  }
 
-    @Test
-    void testNotNullColumnWithoutChildrenWithRefResultMap() {
-      try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-          FatherMapper fatherMapper = sqlSession.getMapper(FatherMapper.class);
+  @Test
+  void testNotNullColumnWithoutChildrenWithRefResultMap() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      FatherMapper fatherMapper = sqlSession.getMapper(FatherMapper.class);
 
-          Father test = fatherMapper.selectByIdWithRefResultMap(2);
-          assertNotNull(test);
-          assertNotNull(test.getChildren());
-          assertTrue(test.getChildren().isEmpty());
-      }
+      Father test = fatherMapper.selectByIdWithRefResultMap(2);
+      assertNotNull(test);
+      assertNotNull(test.getChildren());
+      assertTrue(test.getChildren().isEmpty());
     }
+  }
 
-    @Test
-    void testNotNullColumnWithoutChildrenFidMultipleNullColumns() {
-      try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-          FatherMapper fatherMapper = sqlSession.getMapper(FatherMapper.class);
+  @Test
+  void testNotNullColumnWithoutChildrenFidMultipleNullColumns() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      FatherMapper fatherMapper = sqlSession.getMapper(FatherMapper.class);
 
-          Father test = fatherMapper.selectByIdFidMultipleNullColumns(2);
-          assertNotNull(test);
-          assertNotNull(test.getChildren());
-          assertTrue(test.getChildren().isEmpty());
-      }
+      Father test = fatherMapper.selectByIdFidMultipleNullColumns(2);
+      assertNotNull(test);
+      assertNotNull(test.getChildren());
+      assertTrue(test.getChildren().isEmpty());
     }
+  }
 
-    @Test
-    void testNotNullColumnWithoutChildrenFidMultipleNullColumnsAndBrackets() {
-      try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-          FatherMapper fatherMapper = sqlSession.getMapper(FatherMapper.class);
+  @Test
+  void testNotNullColumnWithoutChildrenFidMultipleNullColumnsAndBrackets() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      FatherMapper fatherMapper = sqlSession.getMapper(FatherMapper.class);
 
-          Father test = fatherMapper.selectByIdFidMultipleNullColumnsAndBrackets(2);
-          assertNotNull(test);
-          assertNotNull(test.getChildren());
-          assertTrue(test.getChildren().isEmpty());
-      }
+      Father test = fatherMapper.selectByIdFidMultipleNullColumnsAndBrackets(2);
+      assertNotNull(test);
+      assertNotNull(test.getChildren());
+      assertTrue(test.getChildren().isEmpty());
     }
+  }
 
-    @Test
-    void testNotNullColumnWithoutChildrenFidWorkaround() {
-      try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-          FatherMapper fatherMapper = sqlSession.getMapper(FatherMapper.class);
+  @Test
+  void testNotNullColumnWithoutChildrenFidWorkaround() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      FatherMapper fatherMapper = sqlSession.getMapper(FatherMapper.class);
 
-          Father test = fatherMapper.selectByIdFidWorkaround(2);
-          assertNotNull(test);
-          assertNotNull(test.getChildren());
-          assertTrue(test.getChildren().isEmpty());
-      }
+      Father test = fatherMapper.selectByIdFidWorkaround(2);
+      assertNotNull(test);
+      assertNotNull(test.getChildren());
+      assertTrue(test.getChildren().isEmpty());
     }
+  }
 }

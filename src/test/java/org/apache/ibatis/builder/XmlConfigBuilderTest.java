@@ -100,6 +100,7 @@ class XmlConfigBuilderTest {
       assertNull(config.getLogImpl());
       assertNull(config.getConfigurationFactory());
       assertThat(config.getTypeHandlerRegistry().getTypeHandler(RoundingMode.class)).isInstanceOf(EnumTypeHandler.class);
+      assertThat(config.isShrinkWhitespacesInSql()).isFalse();
     }
   }
 
@@ -194,6 +195,7 @@ class XmlConfigBuilderTest {
       assertThat(config.getLogImpl().getName()).isEqualTo(Slf4jImpl.class.getName());
       assertThat(config.getVfsImpl().getName()).isEqualTo(JBoss6VFS.class.getName());
       assertThat(config.getConfigurationFactory().getName()).isEqualTo(String.class.getName());
+      assertThat(config.isShrinkWhitespacesInSql()).isTrue();
 
       assertThat(config.getTypeAliasRegistry().getTypeAliases().get("blogauthor")).isEqualTo(Author.class);
       assertThat(config.getTypeAliasRegistry().getTypeAliases().get("blog")).isEqualTo(Blog.class);

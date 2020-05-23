@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -37,12 +37,13 @@ class FooMapperTest {
 
   @BeforeAll
   static void setUpBeforeClass() throws Exception {
-    final SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(Resources.getResourceAsReader(SQL_MAP_CONFIG));
+    final SqlSessionFactory factory = new SqlSessionFactoryBuilder()
+        .build(Resources.getResourceAsReader(SQL_MAP_CONFIG));
     session = factory.openSession();
     conn = session.getConnection();
 
     BaseDataTest.runScript(factory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/null_associations/create-schema-mysql.sql");
+        "org/apache/ibatis/submitted/null_associations/create-schema-mysql.sql");
   }
 
   @BeforeEach

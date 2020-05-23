@@ -39,7 +39,7 @@ class InlineCollectionWithDotTest {
       SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(batisConfigReader);
 
       BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-              "org/apache/ibatis/submitted/inline_association_with_dot/create.sql");
+          "org/apache/ibatis/submitted/inline_association_with_dot/create.sql");
 
       sqlSession = sqlSessionFactory.openSession();
     }
@@ -57,8 +57,7 @@ class InlineCollectionWithDotTest {
    * possible bij using an inline 'association' map.
    */
   @Test
-  void selectElementValueInContainerUsingInline()
-  throws Exception {
+  void selectElementValueInContainerUsingInline() throws Exception {
     openSession("inline");
 
     Element myElement = sqlSession.getMapper(ElementMapperUsingInline.class).selectElement();
@@ -72,10 +71,10 @@ class InlineCollectionWithDotTest {
    */
   @Test
   void selectElementValueInContainerUsingSubMap() throws Exception {
-   openSession("submap");
+    openSession("submap");
 
-   Element myElement = sqlSession.getMapper(ElementMapperUsingSubMap.class).selectElement();
+    Element myElement = sqlSession.getMapper(ElementMapperUsingSubMap.class).selectElement();
 
-   assertEquals("value", myElement.getElement().getElement().getValue());
+    assertEquals("value", myElement.getElement().getElement().getValue());
   }
 }

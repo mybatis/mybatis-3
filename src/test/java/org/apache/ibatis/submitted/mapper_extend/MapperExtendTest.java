@@ -43,7 +43,7 @@ class MapperExtendTest {
 
     // populate in-memory database
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/mapper_extend/CreateDB.sql");
+        "org/apache/ibatis/submitted/mapper_extend/CreateDB.sql");
   }
 
   @Test

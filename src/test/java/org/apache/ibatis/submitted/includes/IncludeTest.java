@@ -40,11 +40,11 @@ class IncludeTest {
 
     // populate in-memory database
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/includes/CreateDB.sql");
+        "org/apache/ibatis/submitted/includes/CreateDB.sql");
   }
 
   @Test
-  void testIncludes()  {
+  void testIncludes() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       final Integer result = sqlSession.selectOne("org.apache.ibatis.submitted.includes.mapper.selectWithProperty");
       Assertions.assertEquals(Integer.valueOf(1), result);
