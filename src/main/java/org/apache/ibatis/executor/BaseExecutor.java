@@ -206,8 +206,18 @@ public abstract class BaseExecutor implements Executor {
     // mimic DefaultParameterHandler logic
     for (ParameterMapping parameterMapping : parameterMappings) {
       if (parameterMapping.getMode() != ParameterMode.OUT) {
+        Object value;
         String propertyName = parameterMapping.getProperty();
-        Object value = parseCacheValue(parameterObject, boundSql, typeHandlerRegistry, propertyName, configuration);
+        if (boundSql.hasAdditionalParameter(propertyName)) {
+          value = boundSql.getAdditionalParameter(propertyName);
+        } else if (parameterObject == null) {
+          value = null;
+        } else if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {
+          value = parameterObject;
+        } else {
+          MetaObject metaObject = configuration.newMetaObject(parameterObject);
+          value = metaObject.getValue(propertyName);
+        }
         cacheKey.update(value);
       }
     }
@@ -216,23 +226,6 @@ public abstract class BaseExecutor implements Executor {
       cacheKey.update(configuration.getEnvironment().getId());
     }
     return cacheKey;
-  }
-
-  public static Object parseCacheValue(Object parameterObject, BoundSql boundSql,
-    TypeHandlerRegistry typeHandlerRegistry,
-    String propertyName, Configuration configuration) {
-    Object value;
-    if (boundSql.hasAdditionalParameter(propertyName)) {
-      value = boundSql.getAdditionalParameter(propertyName);
-    } else if (parameterObject == null) {
-      value = null;
-    } else if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {
-      value = parameterObject;
-    } else {
-      MetaObject metaObject = configuration.newMetaObject(parameterObject);
-      value = metaObject.getValue(propertyName);
-    }
-    return value;
   }
 
   @Override
@@ -279,10 +272,10 @@ public abstract class BaseExecutor implements Executor {
   protected abstract List<BatchResult> doFlushStatements(boolean isRollback) throws SQLException;
 
   protected abstract <E> List<E> doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql)
-      throws SQLException;
+    throws SQLException;
 
   protected abstract <E> Cursor<E> doQueryCursor(MappedStatement ms, Object parameter, RowBounds rowBounds, BoundSql boundSql)
-      throws SQLException;
+    throws SQLException;
 
   protected void closeStatement(Statement statement) {
     if (statement != null) {
@@ -366,11 +359,11 @@ public abstract class BaseExecutor implements Executor {
 
     // issue #781
     public DeferredLoad(MetaObject resultObject,
-                        String property,
-                        CacheKey key,
-                        PerpetualCache localCache,
-                        Configuration configuration,
-                        Class<?> targetType) {
+      String property,
+      CacheKey key,
+      PerpetualCache localCache,
+      Configuration configuration,
+      Class<?> targetType) {
       this.resultObject = resultObject;
       this.property = property;
       this.key = key;
@@ -387,7 +380,7 @@ public abstract class BaseExecutor implements Executor {
     public void load() {
       @SuppressWarnings("unchecked")
       // we suppose we get back a List
-      List<Object> list = (List<Object>) localCache.getObject(key);
+        List<Object> list = (List<Object>) localCache.getObject(key);
       Object value = resultExtractor.extractObjectFromList(list, targetType);
       resultObject.setValue(property, value);
     }
