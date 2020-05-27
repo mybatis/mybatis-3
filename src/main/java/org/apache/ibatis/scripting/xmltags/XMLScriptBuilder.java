@@ -37,7 +37,6 @@ public class XMLScriptBuilder extends BaseBuilder {
   private final XNode context;
   private boolean isDynamic;
   private final Class<?> parameterType;
-  private final Map<String, NodeHandler> nodeHandlerMap = new HashMap<>();
 
   public XMLScriptBuilder(Configuration configuration, XNode context) {
     this(configuration, context, null);
@@ -47,20 +46,26 @@ public class XMLScriptBuilder extends BaseBuilder {
     super(configuration);
     this.context = context;
     this.parameterType = parameterType;
-    initNodeHandlerMap();
+    if (NodeHandlerMapHolder.nodeHandlerMap.size() == 0) {
+      initNodeHandlerMap();
+    }
+  }
+
+  private static final class NodeHandlerMapHolder {
+    public static final Map<String, NodeHandler> nodeHandlerMap = new HashMap<>();
   }
 
 
   private void initNodeHandlerMap() {
-    nodeHandlerMap.put("trim", new TrimHandler());
-    nodeHandlerMap.put("where", new WhereHandler());
-    nodeHandlerMap.put("set", new SetHandler());
-    nodeHandlerMap.put("foreach", new ForEachHandler());
-    nodeHandlerMap.put("if", new IfHandler());
-    nodeHandlerMap.put("choose", new ChooseHandler());
-    nodeHandlerMap.put("when", new IfHandler());
-    nodeHandlerMap.put("otherwise", new OtherwiseHandler());
-    nodeHandlerMap.put("bind", new BindHandler());
+    NodeHandlerMapHolder.nodeHandlerMap.put("trim", new TrimHandler());
+    NodeHandlerMapHolder.nodeHandlerMap.put("where", new WhereHandler());
+    NodeHandlerMapHolder.nodeHandlerMap.put("set", new SetHandler());
+    NodeHandlerMapHolder.nodeHandlerMap.put("foreach", new ForEachHandler());
+    NodeHandlerMapHolder.nodeHandlerMap.put("if", new IfHandler());
+    NodeHandlerMapHolder.nodeHandlerMap.put("choose", new ChooseHandler());
+    NodeHandlerMapHolder.nodeHandlerMap.put("when", new IfHandler());
+    NodeHandlerMapHolder.nodeHandlerMap.put("otherwise", new OtherwiseHandler());
+    NodeHandlerMapHolder.nodeHandlerMap.put("bind", new BindHandler());
   }
 
   public SqlSource parseScriptNode() {
@@ -90,7 +95,7 @@ public class XMLScriptBuilder extends BaseBuilder {
         }
       } else if (child.getNode().getNodeType() == Node.ELEMENT_NODE) { // issue #628
         String nodeName = child.getNode().getNodeName();
-        NodeHandler handler = nodeHandlerMap.get(nodeName);
+        NodeHandler handler = NodeHandlerMapHolder.nodeHandlerMap.get(nodeName);
         if (handler == null) {
           throw new BuilderException("Unknown element <" + nodeName + "> in SQL statement.");
         }
@@ -226,7 +231,7 @@ public class XMLScriptBuilder extends BaseBuilder {
       List<XNode> children = chooseSqlNode.getChildren();
       for (XNode child : children) {
         String nodeName = child.getNode().getNodeName();
-        NodeHandler handler = nodeHandlerMap.get(nodeName);
+        NodeHandler handler = NodeHandlerMapHolder.nodeHandlerMap.get(nodeName);
         if (handler instanceof IfHandler) {
           handler.handleNode(child, ifSqlNodes);
         } else if (handler instanceof OtherwiseHandler) {
