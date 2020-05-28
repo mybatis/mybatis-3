@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,74 +16,59 @@
 package org.apache.ibatis.submitted.multiple_discriminator;
 
 import java.io.Reader;
-import java.sql.Connection;
-import java.sql.DriverManager;
+import java.time.Duration;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-public class MultipleDiscriminatorTest {
-    
-    private static SqlSessionFactory sqlSessionFactory;
-    
-    @BeforeClass
-    public static void initDatabase() throws Exception {
-        Connection conn = null;
+class MultipleDiscriminatorTest {
 
-        try {
-            Class.forName("org.hsqldb.jdbcDriver");
-            conn = DriverManager.getConnection("jdbc:hsqldb:mem:multiple_discriminator", "sa",
-                    "");
+  private static SqlSessionFactory sqlSessionFactory;
 
-            Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multiple_discriminator/CreateDB.sql");
-
-            ScriptRunner runner = new ScriptRunner(conn);
-            runner.setLogWriter(null);
-            runner.setErrorLogWriter(null);
-            runner.runScript(reader);
-            conn.commit();
-            reader.close();
-
-            reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multiple_discriminator/ibatisConfig.xml");
-            sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-            reader.close();
-        } finally {
-            if (conn != null) {
-                conn.close();
-            }
-        }
+  @BeforeAll
+  static void initDatabase() throws Exception {
+    try (Reader reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/multiple_discriminator/ibatisConfig.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
-    
-    @Test
-    public void testMultipleDiscriminator() {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
-        Person person = personMapper.get(1L);
-        Assert.assertNotNull("Person must not be null", person);
-        Assert.assertEquals("Person must be a director", Director.class, person.getClass());
-      sqlSession.close();
+
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/multiple_discriminator/CreateDB.sql");
+  }
+
+  @Test
+  void testMultipleDiscriminator() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
+      Person person = personMapper.get(1L);
+      Assertions.assertNotNull(person, "Person must not be null");
+      Assertions.assertEquals(Director.class, person.getClass(), "Person must be a director");
     }
-    @Test
-    public void testMultipleDiscriminator2() {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
-        Person person = personMapper.get2(1L);
-        Assert.assertNotNull("Person must not be null", person);
-        Assert.assertEquals("Person must be a director", Director.class, person.getClass());
-      sqlSession.close();
+  }
+
+  @Test
+  void testMultipleDiscriminator2() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
+      Person person = personMapper.get2(1L);
+      Assertions.assertNotNull(person, "Person must not be null");
+      Assertions.assertEquals(Director.class, person.getClass(), "Person must be a director");
     }
-    @Test(timeout=20000)
-    public void testMultipleDiscriminatorLoop() {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
+  }
+
+  @Test
+  void testMultipleDiscriminatorLoop() {
+    Assertions.assertTimeout(Duration.ofMillis(20000), () -> {
+      try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
         PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
         personMapper.getLoop();
-      sqlSession.close();
-      
-    }
+      }
+    });
+  }
 }

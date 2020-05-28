@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,13 +18,16 @@ package org.apache.ibatis.submitted.xml_references;
 import java.util.List;
 
 public interface PersonMapper {
-    
-    public interface PersonType {
-        public Person.Type getType();
-    }
-    
-    public List<Person> selectAllByType(Person.Type type);
-    public List<Person> selectAllByTypeNameAttribute(Person.Type type);
-    public List<Person> selectAllByTypeWithInterface(PersonType personType);
-    public List<Person> selectAllByTypeNameAttributeWithInterface(PersonType personType);
+
+  interface PersonType {
+    Person.Type getType();
+  }
+
+  List<Person> selectAllByType(Person.Type type);
+
+  List<Person> selectAllByTypeNameAttribute(Person.Type type);
+
+  List<Person> selectAllByTypeWithInterface(PersonType personType);
+
+  List<Person> selectAllByTypeNameAttributeWithInterface(PersonType personType);
 }

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -21,10 +21,27 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.decorators.LruCache;
 import org.apache.ibatis.cache.impl.PerpetualCache;
 
 /**
+ * The annotation that specify to use cache on namespace(e.g. mapper interface).
+ *
+ * <p>
+ * <b>How to use:</b>
+ *
+ * <pre>
+ * &#064;acheNamespace(implementation = CustomCache.class, properties = {
+ *   &#064;Property(name = "host", value = "${mybatis.cache.host}"),
+ *   &#064;Property(name = "port", value = "${mybatis.cache.port}"),
+ *   &#064;Property(name = "name", value = "usersCache")
+ * })
+ * public interface UserMapper {
+ *   // ...
+ * }
+ * </pre>
+ *
  * @author Clinton Begin
  * @author Kazuki Shimizu
  */
@@ -32,22 +49,55 @@ import org.apache.ibatis.cache.impl.PerpetualCache;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface CacheNamespace {
-  Class<? extends org.apache.ibatis.cache.Cache> implementation() default PerpetualCache.class;
 
-  Class<? extends org.apache.ibatis.cache.Cache> eviction() default LruCache.class;
+  /**
+   * Returns the cache implementation type to use.
+   *
+   * @return the cache implementation type
+   */
+  Class<? extends Cache> implementation() default PerpetualCache.class;
 
+  /**
+   * Returns the cache evicting implementation type to use.
+   *
+   * @return the cache evicting implementation type
+   */
+  Class<? extends Cache> eviction() default LruCache.class;
+
+  /**
+   * Returns the flush interval.
+   *
+   * @return the flush interval
+   */
   long flushInterval() default 0;
 
+  /**
+   * Return the cache size.
+   *
+   * @return the cache size
+   */
   int size() default 1024;
 
+  /**
+   * Returns whether use read/write cache.
+   *
+   * @return {@code true} if use read/write cache; {@code false} if otherwise
+   */
   boolean readWrite() default true;
-  
+
+  /**
+   * Returns whether block the cache at request time or not.
+   *
+   * @return {@code true} if block the cache; {@code false} if otherwise
+   */
   boolean blocking() default false;
 
   /**
-   * Property values for a implementation object.
+   * Returns property values for a implementation object.
+   *
+   * @return property values
    * @since 3.4.2
    */
   Property[] properties() default {};
-  
+
 }

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -107,13 +107,13 @@ public class ParameterMapping {
 
     private void validate() {
       if (ResultSet.class.equals(parameterMapping.javaType)) {
-        if (parameterMapping.resultMapId == null) { 
-          throw new IllegalStateException("Missing resultmap in property '"  
-              + parameterMapping.property + "'.  " 
+        if (parameterMapping.resultMapId == null) {
+          throw new IllegalStateException("Missing resultmap in property '"
+              + parameterMapping.property + "'.  "
               + "Parameters of type java.sql.ResultSet require a resultmap.");
-        }            
+        }
       } else {
-        if (parameterMapping.typeHandler == null) { 
+        if (parameterMapping.typeHandler == null) {
           throw new IllegalStateException("Type handler was null on parameter mapping for property '"
             + parameterMapping.property + "'. It was either not specified and/or could not be found for the javaType ("
             + parameterMapping.javaType.getName() + ") : jdbcType (" + parameterMapping.jdbcType + ") combination.");
@@ -136,64 +136,72 @@ public class ParameterMapping {
   }
 
   /**
-   * Used for handling output of callable statements
-   * @return
+   * Used for handling output of callable statements.
+   *
+   * @return the mode
    */
   public ParameterMode getMode() {
     return mode;
   }
 
   /**
-   * Used for handling output of callable statements
-   * @return
+   * Used for handling output of callable statements.
+   *
+   * @return the java type
    */
   public Class<?> getJavaType() {
     return javaType;
   }
 
   /**
-   * Used in the UnknownTypeHandler in case there is no handler for the property type
-   * @return
+   * Used in the UnknownTypeHandler in case there is no handler for the property type.
+   *
+   * @return the jdbc type
    */
   public JdbcType getJdbcType() {
     return jdbcType;
   }
 
   /**
-   * Used for handling output of callable statements
-   * @return
+   * Used for handling output of callable statements.
+   *
+   * @return the numeric scale
    */
   public Integer getNumericScale() {
     return numericScale;
   }
 
   /**
-   * Used when setting parameters to the PreparedStatement
-   * @return
+   * Used when setting parameters to the PreparedStatement.
+   *
+   * @return the type handler
    */
   public TypeHandler<?> getTypeHandler() {
     return typeHandler;
   }
 
   /**
-   * Used for handling output of callable statements
-   * @return
+   * Used for handling output of callable statements.
+   *
+   * @return the result map id
    */
   public String getResultMapId() {
     return resultMapId;
   }
 
   /**
-   * Used for handling output of callable statements
-   * @return
+   * Used for handling output of callable statements.
+   *
+   * @return the jdbc type name
    */
   public String getJdbcTypeName() {
     return jdbcTypeName;
   }
 
   /**
-   * Not used
-   * @return
+   * Expression 'Not used'.
+   *
+   * @return the expression
    */
   public String getExpression() {
     return expression;

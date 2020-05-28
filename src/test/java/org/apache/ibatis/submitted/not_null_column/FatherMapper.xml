@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -26,38 +26,38 @@
         <result property="id" column="child_id"/>
         <result property="name" column="child_name"/>
     </resultMap>
-    
+
     <resultMap id="FatherMapNoFid" type="Father">
         <id property="id" column="id"/>
         <result property="name" column="name"/>
         <collection property="children" ofType="Child" notNullColumn="child_id">
-	        <result property="id" column="child_id"/>
-	        <result property="name" column="child_name"/>
+            <result property="id" column="child_id"/>
+            <result property="name" column="child_name"/>
         </collection>
     </resultMap>
 
     <select id="selectByIdNoFid" resultMap="FatherMapNoFid" parameterType="int">
-    	SELECT id, name, Child.id AS child_id, Child.name AS child_name
-    	FROM Father
-    	LEFT JOIN Child ON Father.id = Child.father_id
-    	WHERE id = #{id}
+        SELECT id, name, Child.id AS child_id, Child.name AS child_name
+        FROM Father
+        LEFT JOIN Child ON Father.id = Child.father_id
+        WHERE id = #{id}
     </select>
 
     <resultMap id="FatherMapFid" type="Father">
         <id property="id" column="id"/>
         <result property="name" column="name"/>
         <collection property="children" ofType="Child" notNullColumn="child_id">
-	        <id property="id" column="child_id"/>
+            <id property="id" column="child_id"/>
             <result property="fatherId" column="id"/>
-	        <result property="name" column="child_name"/>
+            <result property="name" column="child_name"/>
         </collection>
     </resultMap>
 
     <select id="selectByIdFid" resultMap="FatherMapFid" parameterType="int">
-    	SELECT id, name, Child.id AS child_id, Child.name AS child_name
-    	FROM Father
-    	LEFT JOIN Child ON Father.id = Child.father_id
-    	WHERE id = #{id}
+        SELECT id, name, Child.id AS child_id, Child.name AS child_name
+        FROM Father
+        LEFT JOIN Child ON Father.id = Child.father_id
+        WHERE id = #{id}
     </select>
 
     <resultMap id="FatherMapWithInternalResultMap" type="Father">
@@ -65,19 +65,19 @@
         <result property="name" column="name"/>
         <result property="tempDateField" column="current"/>
         <collection property="children" ofType="Child" notNullColumn="child_id">
-	        <result property="id" column="child_id"/>
-	        <result property="name" column="child_name"/>
-	        <result property="tempDateField" column="current"/>
+            <result property="id" column="child_id"/>
+            <result property="name" column="child_name"/>
+            <result property="tempDateField" column="current"/>
         </collection>
     </resultMap>
 
     <select id="selectByIdWithInternalResultMap" resultMap="FatherMapWithInternalResultMap" parameterType="int">
-    	SELECT id, name, sysdate as current, Child.id AS child_id, Child.name AS child_name
-    	FROM Father
-    	LEFT JOIN Child ON Father.id = Child.father_id
-    	WHERE id = #{id}
+        SELECT id, name, sysdate as current, Child.id AS child_id, Child.name AS child_name
+        FROM Father
+        LEFT JOIN Child ON Father.id = Child.father_id
+        WHERE id = #{id}
     </select>
-    
+
     <resultMap id="ChildMapWithRefResultMap" type="Child">
         <result property="id" column="child_id"/>
         <result property="name" column="child_name"/>
@@ -91,61 +91,61 @@
     </resultMap>
 
     <select id="selectByIdWithRefResultMap" resultMap="FatherMapWithRefResultMap" parameterType="int">
-    	SELECT id, name, sysdate as current, Child.id AS child_id, Child.name AS child_name
-    	FROM Father
-    	LEFT JOIN Child ON Father.id = Child.father_id
-    	WHERE id = #{id}
+        SELECT id, name, sysdate as current, Child.id AS child_id, Child.name AS child_name
+        FROM Father
+        LEFT JOIN Child ON Father.id = Child.father_id
+        WHERE id = #{id}
     </select>
 
     <resultMap id="FatherMapFidMultipleNullColumns" type="Father">
         <id property="id" column="id"/>
         <result property="name" column="name"/>
         <collection property="children" ofType="Child" notNullColumn="child_id, child_name">
-	        <id property="id" column="child_id"/>
+            <id property="id" column="child_id"/>
             <result property="fatherId" column="id"/>
-	        <result property="name" column="child_name"/>
+            <result property="name" column="child_name"/>
         </collection>
     </resultMap>
 
     <select id="selectByIdFidMultipleNullColumns" resultMap="FatherMapFidMultipleNullColumns" parameterType="int">
-    	SELECT id, name, Child.id AS child_id, Child.name AS child_name
-    	FROM Father
-    	LEFT JOIN Child ON Father.id = Child.father_id
-    	WHERE id = #{id}
+        SELECT id, name, Child.id AS child_id, Child.name AS child_name
+        FROM Father
+        LEFT JOIN Child ON Father.id = Child.father_id
+        WHERE id = #{id}
     </select>
-    
+
     <resultMap id="FatherMapFidMultipleNullColumnsAndBrackets" type="Father">
         <id property="id" column="id"/>
         <result property="name" column="name"/>
         <collection property="children" ofType="Child" notNullColumn="{child_id, child_name}">
-	        <id property="id" column="child_id"/>
+            <id property="id" column="child_id"/>
             <result property="fatherId" column="id"/>
-	        <result property="name" column="child_name"/>
+            <result property="name" column="child_name"/>
         </collection>
     </resultMap>
 
     <select id="selectByIdFidMultipleNullColumnsAndBrackets" resultMap="FatherMapFidMultipleNullColumnsAndBrackets" parameterType="int">
-    	SELECT id, name, Child.id AS child_id, Child.name AS child_name
-    	FROM Father
-    	LEFT JOIN Child ON Father.id = Child.father_id
-    	WHERE id = #{id}
+        SELECT id, name, Child.id AS child_id, Child.name AS child_name
+        FROM Father
+        LEFT JOIN Child ON Father.id = Child.father_id
+        WHERE id = #{id}
     </select>
-    
+
     <resultMap id="FatherMapFidWorkaround" type="Father">
         <id property="id" column="id"/>
         <result property="name" column="name"/>
         <collection property="children" ofType="Child">
-	        <result property="id" column="child_id"/>
+            <result property="id" column="child_id"/>
             <result property="fatherId" column="child_father_id"/>
-	        <result property="name" column="child_name"/>
+            <result property="name" column="child_name"/>
         </collection>
     </resultMap>
 
     <select id="selectByIdFidWorkaround" resultMap="FatherMapFidWorkaround" parameterType="int">
-    	SELECT id, name, Child.id AS child_id, Child.name AS child_name, Child.father_id AS child_father_id
-    	FROM Father
-    	LEFT JOIN Child ON Father.id = Child.father_id
-    	WHERE id = #{id}
+        SELECT id, name, Child.id AS child_id, Child.name AS child_name, Child.father_id AS child_father_id
+        FROM Father
+        LEFT JOIN Child ON Father.id = Child.father_id
+        WHERE id = #{id}
     </select>
 
 </mapper>

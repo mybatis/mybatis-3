@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
        limitations under the License.
 
 -->
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper">
     <resultMap id="ParentBeanResultMap" type="org.apache.ibatis.submitted.nestedresulthandler_multiple_association.ParentBean">
@@ -24,31 +24,31 @@
         <result property="value" column="value"/>
         <collection property="childs" select="selectChildsBinomes" column="id" />
     </resultMap>
-    
+
     <resultMap id="ChildsBinomesResultMap" type="org.apache.ibatis.submitted.nestedresulthandler_multiple_association.Binome">
         <association property="one" select="selectChildBeanById" column="idchild_from" javaType="org.apache.ibatis.submitted.nestedresulthandler_multiple_association.ChildBean" />
         <association property="two" select="selectChildBeanById" column="idchild_to"  javaType="org.apache.ibatis.submitted.nestedresulthandler_multiple_association.ChildBean" />
     </resultMap>
-    
+
     <resultMap id="ChildBeanResultMap" type="org.apache.ibatis.submitted.nestedresulthandler_multiple_association.ChildBean">
         <id property="id" column="id"/>
         <result property="value" column="value"/>
     </resultMap>
-    
+
     <select id="selectParentBeans" resultMap="ParentBeanResultMap" useCache="false">
-    	select * from parent
+        select * from parent
     </select>
-    
+
     <select id="selectParentBeanById" resultMap="ParentBeanResultMap" useCache="false">
-    	select * from parent where id = #{value}
+        select * from parent where id = #{value}
     </select>
-    
+
     <select id="selectChildBeanById" parameterType="java.lang.Integer" resultMap="ChildBeanResultMap" useCache="false">
-    	select * from child where id = #{value}
+        select * from child where id = #{value}
     </select>
-    
+
     <select id="selectChildsBinomes" parameterType="java.lang.Integer" resultMap="ChildsBinomesResultMap" useCache="false">
-    	select * from parent_child where idparent = #{value}
+        select * from parent_child where idparent = #{value}
     </select>
-    
+
 </mapper>

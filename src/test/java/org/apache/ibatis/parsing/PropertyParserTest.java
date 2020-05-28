@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,15 +15,15 @@
  */
 package org.apache.ibatis.parsing;
 
-import org.assertj.core.api.Assertions;
-import org.junit.Test;
-
 import java.util.Properties;
 
-public class PropertyParserTest {
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+class PropertyParserTest {
 
   @Test
-  public void replaceToVariableValue() {
+  void replaceToVariableValue() {
     Properties props = new Properties();
     props.setProperty(PropertyParser.KEY_ENABLE_DEFAULT_VALUE, "true");
     props.setProperty("key", "value");
@@ -43,7 +43,7 @@ public class PropertyParserTest {
   }
 
   @Test
-  public void notReplace() {
+  void notReplace() {
     Properties props = new Properties();
     props.setProperty(PropertyParser.KEY_ENABLE_DEFAULT_VALUE, "true");
     Assertions.assertThat(PropertyParser.parse("${key}", props)).isEqualTo("${key}");
@@ -58,7 +58,7 @@ public class PropertyParserTest {
   }
 
   @Test
-  public void applyDefaultValue() {
+  void applyDefaultValue() {
     Properties props = new Properties();
     props.setProperty(PropertyParser.KEY_ENABLE_DEFAULT_VALUE, "true");
     Assertions.assertThat(PropertyParser.parse("${key:default}", props)).isEqualTo("default");
@@ -69,7 +69,7 @@ public class PropertyParserTest {
   }
 
   @Test
-  public void applyCustomSeparator() {
+  void applyCustomSeparator() {
     Properties props = new Properties();
     props.setProperty(PropertyParser.KEY_ENABLE_DEFAULT_VALUE, "true");
     props.setProperty(PropertyParser.KEY_DEFAULT_VALUE_SEPARATOR, "?:");

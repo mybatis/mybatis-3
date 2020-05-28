@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2018 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@
       <result column="author_password" property="password"/>
       <result column="author_email" property="email"/>
       <result column="author_bio" property="bio"/>
-      <result column="favourite_section" javaType="org.apache.ibatis.domain.blog.Section"/>
+      <result column="favourite_section" property="favouriteSection" javaType="org.apache.ibatis.domain.blog.Section"/>
   </resultMap>
 
   <insert id="insertAuthor" parameterType="org.apache.ibatis.domain.blog.Author">
@@ -47,6 +47,26 @@
       select CAST(RANDOM()*1000000 as INTEGER) a from SYSIBM.SYSDUMMY1
     </selectKey>
     insert into Author (id,username,password,email,bio,favourite_section)
+    values(
+    #{id}, #{username}, #{password}, #{email}, #{bio}, #{favouriteSection:VARCHAR}
+    )
+  </insert>
+
+  <insert id="insertAuthorInvalidSelectKey">
+    <selectKey keyProperty="id" resultType="int" order="BEFORE">
+      select CCAST(RANDOM()*1000000 as INTEGER) a from SYSIBM.SYSDUMMY1
+    </selectKey>
+    insert into Author (id,username,password,email,bio,favourite_section)
+    values(
+    #{id}, #{username}, #{password}, #{email}, #{bio}, #{favouriteSection:VARCHAR}
+    )
+  </insert>
+
+  <insert id="insertAuthorInvalidInsert">
+    <selectKey keyProperty="id" resultType="int" order="BEFORE">
+      select CAST(RANDOM()*1000000 as INTEGER) a from SYSIBM.SYSDUMMY1
+    </selectKey>
+    insert into Author (id,username,password,email,bio,favourite_section_xyz)
     values(
     #{id}, #{username}, #{password}, #{email}, #{bio}, #{favouriteSection:VARCHAR}
     )

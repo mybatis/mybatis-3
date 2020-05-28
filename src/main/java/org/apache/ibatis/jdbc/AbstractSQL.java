@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package org.apache.ibatis.jdbc;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -47,6 +48,11 @@ public abstract class AbstractSQL<T> {
   }
 
   /**
+   * Sets the.
+   *
+   * @param sets
+   *          the sets
+   * @return the t
    * @since 3.4.2
    */
   public T SET(String... sets) {
@@ -61,12 +67,17 @@ public abstract class AbstractSQL<T> {
   }
 
   public T VALUES(String columns, String values) {
-    sql().columns.add(columns);
-    sql().values.add(values);
+    INTO_COLUMNS(columns);
+    INTO_VALUES(values);
     return getSelf();
   }
 
   /**
+   * Into columns.
+   *
+   * @param columns
+   *          the columns
+   * @return the t
    * @since 3.4.2
    */
   public T INTO_COLUMNS(String... columns) {
@@ -75,10 +86,16 @@ public abstract class AbstractSQL<T> {
   }
 
   /**
+   * Into values.
+   *
+   * @param values
+   *          the values
+   * @return the t
    * @since 3.4.2
    */
   public T INTO_VALUES(String... values) {
-    sql().values.addAll(Arrays.asList(values));
+    List<String> list = sql().valuesList.get(sql().valuesList.size() - 1);
+    Collections.addAll(list, values);
     return getSelf();
   }
 
@@ -89,6 +106,11 @@ public abstract class AbstractSQL<T> {
   }
 
   /**
+   * Select.
+   *
+   * @param columns
+   *          the columns
+   * @return the t
    * @since 3.4.2
    */
   public T SELECT(String... columns) {
@@ -104,6 +126,11 @@ public abstract class AbstractSQL<T> {
   }
 
   /**
+   * Select distinct.
+   *
+   * @param columns
+   *          the columns
+   * @return the t
    * @since 3.4.2
    */
   public T SELECT_DISTINCT(String... columns) {
@@ -124,6 +151,11 @@ public abstract class AbstractSQL<T> {
   }
 
   /**
+   * From.
+   *
+   * @param tables
+   *          the tables
+   * @return the t
    * @since 3.4.2
    */
   public T FROM(String... tables) {
@@ -137,6 +169,11 @@ public abstract class AbstractSQL<T> {
   }
 
   /**
+   * Join.
+   *
+   * @param joins
+   *          the joins
+   * @return the t
    * @since 3.4.2
    */
   public T JOIN(String... joins) {
@@ -150,6 +187,11 @@ public abstract class AbstractSQL<T> {
   }
 
   /**
+   * Inner join.
+   *
+   * @param joins
+   *          the joins
+   * @return the t
    * @since 3.4.2
    */
   public T INNER_JOIN(String... joins) {
@@ -163,6 +205,11 @@ public abstract class AbstractSQL<T> {
   }
 
   /**
+   * Left outer join.
+   *
+   * @param joins
+   *          the joins
+   * @return the t
    * @since 3.4.2
    */
   public T LEFT_OUTER_JOIN(String... joins) {
@@ -176,6 +223,11 @@ public abstract class AbstractSQL<T> {
   }
 
   /**
+   * Right outer join.
+   *
+   * @param joins
+   *          the joins
+   * @return the t
    * @since 3.4.2
    */
   public T RIGHT_OUTER_JOIN(String... joins) {
@@ -189,6 +241,11 @@ public abstract class AbstractSQL<T> {
   }
 
   /**
+   * Outer join.
+   *
+   * @param joins
+   *          the joins
+   * @return the t
    * @since 3.4.2
    */
   public T OUTER_JOIN(String... joins) {
@@ -203,6 +260,11 @@ public abstract class AbstractSQL<T> {
   }
 
   /**
+   * Where.
+   *
+   * @param conditions
+   *          the conditions
+   * @return the t
    * @since 3.4.2
    */
   public T WHERE(String... conditions) {
@@ -227,6 +289,11 @@ public abstract class AbstractSQL<T> {
   }
 
   /**
+   * Group by.
+   *
+   * @param columns
+   *          the columns
+   * @return the t
    * @since 3.4.2
    */
   public T GROUP_BY(String... columns) {
@@ -241,6 +308,11 @@ public abstract class AbstractSQL<T> {
   }
 
   /**
+   * Having.
+   *
+   * @param conditions
+   *          the conditions
+   * @return the t
    * @since 3.4.2
    */
   public T HAVING(String... conditions) {
@@ -255,10 +327,130 @@ public abstract class AbstractSQL<T> {
   }
 
   /**
+   * Order by.
+   *
+   * @param columns
+   *          the columns
+   * @return the t
    * @since 3.4.2
    */
   public T ORDER_BY(String... columns) {
     sql().orderBy.addAll(Arrays.asList(columns));
+    return getSelf();
+  }
+
+  /**
+   * Set the limit variable string(e.g. {@code "#{limit}"}).
+   *
+   * @param variable a limit variable string
+   * @return a self instance
+   * @see #OFFSET(String)
+   * @since 3.5.2
+   */
+  public T LIMIT(String variable) {
+    sql().limit = variable;
+    sql().limitingRowsStrategy = SQLStatement.LimitingRowsStrategy.OFFSET_LIMIT;
+    return getSelf();
+  }
+
+  /**
+   * Set the limit value.
+   *
+   * @param value an offset value
+   * @return a self instance
+   * @see #OFFSET(long)
+   * @since 3.5.2
+   */
+  public T LIMIT(int value) {
+    return LIMIT(String.valueOf(value));
+  }
+
+  /**
+   * Set the offset variable string(e.g. {@code "#{offset}"}).
+   *
+   * @param variable a offset variable string
+   * @return a self instance
+   * @see #LIMIT(String)
+   * @since 3.5.2
+   */
+  public T OFFSET(String variable) {
+    sql().offset = variable;
+    sql().limitingRowsStrategy = SQLStatement.LimitingRowsStrategy.OFFSET_LIMIT;
+    return getSelf();
+  }
+
+  /**
+   * Set the offset value.
+   *
+   * @param value an offset value
+   * @return a self instance
+   * @see #LIMIT(int)
+   * @since 3.5.2
+   */
+  public T OFFSET(long value) {
+    return OFFSET(String.valueOf(value));
+  }
+
+  /**
+   * Set the fetch first rows variable string(e.g. {@code "#{fetchFirstRows}"}).
+   *
+   * @param variable a fetch first rows variable string
+   * @return a self instance
+   * @see #OFFSET_ROWS(String)
+   * @since 3.5.2
+   */
+  public T FETCH_FIRST_ROWS_ONLY(String variable) {
+    sql().limit = variable;
+    sql().limitingRowsStrategy = SQLStatement.LimitingRowsStrategy.ISO;
+    return getSelf();
+  }
+
+  /**
+   * Set the fetch first rows value.
+   *
+   * @param value a fetch first rows value
+   * @return a self instance
+   * @see #OFFSET_ROWS(long)
+   * @since 3.5.2
+   */
+  public T FETCH_FIRST_ROWS_ONLY(int value) {
+    return FETCH_FIRST_ROWS_ONLY(String.valueOf(value));
+  }
+
+  /**
+   * Set the offset rows variable string(e.g. {@code "#{offset}"}).
+   *
+   * @param variable a offset rows variable string
+   * @return a self instance
+   * @see #FETCH_FIRST_ROWS_ONLY(String)
+   * @since 3.5.2
+   */
+  public T OFFSET_ROWS(String variable) {
+    sql().offset = variable;
+    sql().limitingRowsStrategy = SQLStatement.LimitingRowsStrategy.ISO;
+    return getSelf();
+  }
+
+  /**
+   * Set the offset rows value.
+   *
+   * @param value an offset rows value
+   * @return a self instance
+   * @see #FETCH_FIRST_ROWS_ONLY(int)
+   * @since 3.5.2
+   */
+  public T OFFSET_ROWS(long value) {
+    return OFFSET_ROWS(String.valueOf(value));
+  }
+
+  /**
+   * used to add a new inserted row while do multi-row insert.
+   *
+   * @return the t
+   * @since 3.5.2
+   */
+  public T ADD_ROW() {
+    sql().valuesList.add(new ArrayList<>());
     return getSelf();
   }
 
@@ -279,12 +471,12 @@ public abstract class AbstractSQL<T> {
   }
 
   private static class SafeAppendable {
-    private final Appendable a;
+    private final Appendable appendable;
     private boolean empty = true;
 
     public SafeAppendable(Appendable a) {
       super();
-      this.a = a;
+      this.appendable = a;
     }
 
     public SafeAppendable append(CharSequence s) {
@@ -292,7 +484,7 @@ public abstract class AbstractSQL<T> {
         if (empty && s.length() > 0) {
           empty = false;
         }
-        a.append(s);
+        appendable.append(s);
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
@@ -311,26 +503,64 @@ public abstract class AbstractSQL<T> {
       DELETE, INSERT, SELECT, UPDATE
     }
 
+    private enum LimitingRowsStrategy {
+      NOP {
+        @Override
+        protected void appendClause(SafeAppendable builder, String offset, String limit) {
+          // NOP
+        }
+      },
+      ISO {
+        @Override
+        protected void appendClause(SafeAppendable builder, String offset, String limit) {
+          if (offset != null) {
+            builder.append(" OFFSET ").append(offset).append(" ROWS");
+          }
+          if (limit != null) {
+            builder.append(" FETCH FIRST ").append(limit).append(" ROWS ONLY");
+          }
+        }
+      },
+      OFFSET_LIMIT {
+        @Override
+        protected void appendClause(SafeAppendable builder, String offset, String limit) {
+          if (limit != null) {
+            builder.append(" LIMIT ").append(limit);
+          }
+          if (offset != null) {
+            builder.append(" OFFSET ").append(offset);
+          }
+        }
+      };
+
+      protected abstract void appendClause(SafeAppendable builder, String offset, String limit);
+
+    }
+
     StatementType statementType;
-    List<String> sets = new ArrayList<String>();
-    List<String> select = new ArrayList<String>();
-    List<String> tables = new ArrayList<String>();
-    List<String> join = new ArrayList<String>();
-    List<String> innerJoin = new ArrayList<String>();
-    List<String> outerJoin = new ArrayList<String>();
-    List<String> leftOuterJoin = new ArrayList<String>();
-    List<String> rightOuterJoin = new ArrayList<String>();
-    List<String> where = new ArrayList<String>();
-    List<String> having = new ArrayList<String>();
-    List<String> groupBy = new ArrayList<String>();
-    List<String> orderBy = new ArrayList<String>();
-    List<String> lastList = new ArrayList<String>();
-    List<String> columns = new ArrayList<String>();
-    List<String> values = new ArrayList<String>();
+    List<String> sets = new ArrayList<>();
+    List<String> select = new ArrayList<>();
+    List<String> tables = new ArrayList<>();
+    List<String> join = new ArrayList<>();
+    List<String> innerJoin = new ArrayList<>();
+    List<String> outerJoin = new ArrayList<>();
+    List<String> leftOuterJoin = new ArrayList<>();
+    List<String> rightOuterJoin = new ArrayList<>();
+    List<String> where = new ArrayList<>();
+    List<String> having = new ArrayList<>();
+    List<String> groupBy = new ArrayList<>();
+    List<String> orderBy = new ArrayList<>();
+    List<String> lastList = new ArrayList<>();
+    List<String> columns = new ArrayList<>();
+    List<List<String>> valuesList = new ArrayList<>();
     boolean distinct;
+    String offset;
+    String limit;
+    LimitingRowsStrategy limitingRowsStrategy = LimitingRowsStrategy.NOP;
 
     public SQLStatement() {
-        // Prevent Synthetic Access
+      // Prevent Synthetic Access
+      valuesList.add(new ArrayList<>());
     }
 
     private void sqlClause(SafeAppendable builder, String keyword, List<String> parts, String open, String close,
@@ -368,6 +598,7 @@ public abstract class AbstractSQL<T> {
       sqlClause(builder, "GROUP BY", groupBy, "", "", ", ");
       sqlClause(builder, "HAVING", having, "(", ")", " AND ");
       sqlClause(builder, "ORDER BY", orderBy, "", "", ", ");
+      limitingRowsStrategy.appendClause(builder, offset, limit);
       return builder.toString();
     }
 
@@ -382,13 +613,16 @@ public abstract class AbstractSQL<T> {
     private String insertSQL(SafeAppendable builder) {
       sqlClause(builder, "INSERT INTO", tables, "", "", "");
       sqlClause(builder, "", columns, "(", ")", ", ");
-      sqlClause(builder, "VALUES", values, "(", ")", ", ");
+      for (int i = 0; i < valuesList.size(); i++) {
+        sqlClause(builder, i > 0 ? "," : "VALUES", valuesList.get(i), "(", ")", ", ");
+      }
       return builder.toString();
     }
 
     private String deleteSQL(SafeAppendable builder) {
       sqlClause(builder, "DELETE FROM", tables, "", "", "");
       sqlClause(builder, "WHERE", where, "(", ")", " AND ");
+      limitingRowsStrategy.appendClause(builder, null, limit);
       return builder.toString();
     }
 
@@ -397,6 +631,7 @@ public abstract class AbstractSQL<T> {
       joins(builder);
       sqlClause(builder, "SET", sets, "", "", ", ");
       sqlClause(builder, "WHERE", where, "(", ")", " AND ");
+      limitingRowsStrategy.appendClause(builder, null, limit);
       return builder.toString();
     }
 

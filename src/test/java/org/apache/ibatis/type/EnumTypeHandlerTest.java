@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,17 +15,19 @@
  */
 package org.apache.ibatis.type;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class EnumTypeHandlerTest extends BaseTypeHandlerTest {
+class EnumTypeHandlerTest extends BaseTypeHandlerTest {
 
   enum MyEnum {
-    ONE, TWO
+    ONE,
+    TWO
   }
 
   private static final TypeHandler<MyEnum> TYPE_HANDLER = new EnumTypeHandler<MyEnum>(MyEnum.class);
@@ -47,48 +49,48 @@ public class EnumTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldGetResultFromResultSetByName() throws Exception {
     when(rs.getString("column")).thenReturn("ONE");
-    when(rs.wasNull()).thenReturn(false);
     assertEquals(MyEnum.ONE, TYPE_HANDLER.getResult(rs, "column"));
+    verify(rs, never()).wasNull();
   }
 
   @Override
   @Test
   public void shouldGetResultNullFromResultSetByName() throws Exception {
     when(rs.getString("column")).thenReturn(null);
-    when(rs.wasNull()).thenReturn(true);
     assertNull(TYPE_HANDLER.getResult(rs, "column"));
+    verify(rs, never()).wasNull();
   }
 
   @Override
   @Test
   public void shouldGetResultFromResultSetByPosition() throws Exception {
     when(rs.getString(1)).thenReturn("ONE");
-    when(rs.wasNull()).thenReturn(false);
     assertEquals(MyEnum.ONE, TYPE_HANDLER.getResult(rs, 1));
+    verify(rs, never()).wasNull();
   }
 
   @Override
   @Test
   public void shouldGetResultNullFromResultSetByPosition() throws Exception {
     when(rs.getString(1)).thenReturn(null);
-    when(rs.wasNull()).thenReturn(true);
     assertNull(TYPE_HANDLER.getResult(rs, 1));
+    verify(rs, never()).wasNull();
   }
 
   @Override
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
     when(cs.getString(1)).thenReturn("ONE");
-    when(cs.wasNull()).thenReturn(false);
     assertEquals(MyEnum.ONE, TYPE_HANDLER.getResult(cs, 1));
+    verify(cs, never()).wasNull();
   }
 
   @Override
   @Test
   public void shouldGetResultNullFromCallableStatement() throws Exception {
     when(cs.getString(1)).thenReturn(null);
-    when(cs.wasNull()).thenReturn(true);
     assertNull(TYPE_HANDLER.getResult(cs, 1));
+    verify(cs, never()).wasNull();
   }
 
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2017 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -28,19 +28,24 @@
 
   <body>
     <section name="简介">
-      <subsection name="什么是 MyBatis ？">
-        <p>MyBatis 是一款优秀的持久层框架，它支持定制化 SQL、存储过程以及高级映射。MyBatis 避免了几乎所有的 JDBC 代码和手动设置参数以及获取结果集。MyBatis 可以使用简单的 XML 或注解来配置和映射原生信息，将接口和 Java 的 POJOs(Plain Old Java Objects,普通的 Java对象)映射成数据库中的记录。</p>
+      <subsection name="什么是 MyBatis？">
+        <p>MyBatis 是一款优秀的持久层框架，它支持自定义 SQL、存储过程以及高级映射。MyBatis
+        免除了几乎所有的 JDBC 代码以及设置参数和获取结果集的工作。MyBatis
+        可以通过简单的 XML 或注解来配置和映射原始类型、接口和 Java POJO（Plain Old
+        Java Objects，普通老式 Java 对象）为数据库中的记录。</p>
       </subsection>
 
       <subsection name="帮助改进文档...">
-        <p>不管你以何种方式发现了文档的不足，或是丢失对某一特性的描述，那么你能做的最好的事情莫过于去研究它并把文档写出来。</p>
-        <p>该文档 xdoc 格式的源码文件可通过<a href="https://github.com/mybatis/mybatis-3/tree/master/src/site">项目的 Git 代码库</a>来获取。Fork 该源码库，做出更新，然后提交一个 pull request 吧。</p>
-        <p>你将成为本文档的最佳作者，MyBatis 的用户定会过来查阅的。
+        <p>如果你发现文档有任何的遗漏，或缺少某一个功能点的说明，最好的解决办法是先自己学习，然后为遗漏的部份补上相应的文档。</p>
+        <p>该文档 xdoc 格式的源码文件可通过<a
+        href="https://github.com/mybatis/mybatis-3/tree/master/src/site">项目的
+        Git 代码库</a>来获取。复刻该源码库，作出更新，并提交 Pull Request 吧。</p>
+        <p>还有其他像你一样的人都需要阅读这份文档，而你，就是这份文档最好的作者。
         </p>
       </subsection>
 
-      <subsection name="当前的国际化版本">
-        <p>MyBatis 的其他语言版本：</p>
+      <subsection name="文档的翻译版本">
+        <p>您可以阅读 MyBatis 文档的其他语言版本：</p>
         <ul class="i18n">
           <li class="en"><a href="../index.html">English</a></li>
           <li class="es"><a href="../es/index.html">Español</a></li>
@@ -49,7 +54,7 @@
           <li class="ko"><a href="../ko/index.html">한국어</a></li>
           <li class="zh"><a href="./getting-started.html">简体中文</a></li>
         </ul>
-        <p>你想使用本地语言来了解MyBatis吗？那就将它翻译成你的母语并提供给我们吧！</p>
+        <p>想用你的母语来了解 MyBatis 吗？那就将文档翻译成你的母语并提供给我们吧！</p>
       </subsection>
     </section>
   </body>

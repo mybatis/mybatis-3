@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
     <resultMap id="personRM" type="org.apache.ibatis.submitted.custom_collection_handling.Person">
         <id property="id" column="id" />
         <result property="name" column="name" />
-        <collection 
+        <collection
             property="contacts"
             ofType="org.apache.ibatis.submitted.custom_collection_handling.Contact"
             javaType="org.apache.ibatis.submitted.custom_collection_handling.CustomCollection">
@@ -38,11 +38,11 @@
     <resultMap id="personRM2" type="org.apache.ibatis.submitted.custom_collection_handling.Person">
         <id property="id" column="id" />
         <result property="name" column="name" />
-        <collection 
+        <collection
             property="contacts"
             ofType="org.apache.ibatis.submitted.custom_collection_handling.Contact"
             javaType="org.apache.ibatis.submitted.custom_collection_handling.CustomCollection"
-            column="id" 
+            column="id"
             select="findContacts" />
     </resultMap>
 

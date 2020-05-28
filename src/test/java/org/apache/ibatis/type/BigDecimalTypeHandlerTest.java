@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,15 +15,16 @@
  */
 package org.apache.ibatis.type;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class BigDecimalTypeHandlerTest extends BaseTypeHandlerTest {
+class BigDecimalTypeHandlerTest extends BaseTypeHandlerTest {
 
   private static final TypeHandler<BigDecimal> TYPE_HANDLER = new BigDecimalTypeHandler();
 
@@ -38,8 +39,8 @@ public class BigDecimalTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldGetResultFromResultSetByName() throws Exception {
     when(rs.getBigDecimal("column")).thenReturn(new BigDecimal(1));
-    when(rs.wasNull()).thenReturn(false);
     assertEquals(new BigDecimal(1), TYPE_HANDLER.getResult(rs, "column"));
+    verify(rs, never()).wasNull();
   }
 
   @Override
@@ -51,8 +52,8 @@ public class BigDecimalTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldGetResultFromResultSetByPosition() throws Exception {
     when(rs.getBigDecimal(1)).thenReturn(new BigDecimal(1));
-    when(rs.wasNull()).thenReturn(false);
     assertEquals(new BigDecimal(1), TYPE_HANDLER.getResult(rs, 1));
+    verify(rs, never()).wasNull();
   }
 
   @Override
@@ -64,8 +65,8 @@ public class BigDecimalTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
     when(cs.getBigDecimal(1)).thenReturn(new BigDecimal(1));
-    when(cs.wasNull()).thenReturn(false);
     assertEquals(new BigDecimal(1), TYPE_HANDLER.getResult(cs, 1));
+    verify(cs, never()).wasNull();
   }
 
   @Override

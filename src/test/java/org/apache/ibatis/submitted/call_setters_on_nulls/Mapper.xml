@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -22,22 +22,22 @@
 
 <mapper namespace="org.apache.ibatis.submitted.call_setters_on_nulls.Mapper">
 
-	<select id="getUserUnmapped" resultType="org.apache.ibatis.submitted.call_setters_on_nulls.User">
-		select * from users
-	</select>
+    <select id="getUserUnmapped" resultType="org.apache.ibatis.submitted.call_setters_on_nulls.User">
+        select * from users
+    </select>
 
-	<select id="getUserInMap" resultType="map">
-		select * from users
-	</select>
+    <select id="getUserInMap" resultType="map">
+        select * from users
+    </select>
 
-	<select id="getUserMapped" resultMap="userMap">
-		select * from users
-	</select>
-	
-	<resultMap type="org.apache.ibatis.submitted.call_setters_on_nulls.User" id="userMap">
-		<id property="id" column="id" />
-		<result property="name" column="name" />
-	</resultMap>
+    <select id="getUserMapped" resultMap="userMap">
+        select * from users
+    </select>
+
+    <resultMap type="org.apache.ibatis.submitted.call_setters_on_nulls.User" id="userMap">
+        <id property="id" column="id" />
+        <result property="name" column="name" />
+    </resultMap>
 
     <select id="getNameOnly" resultType="map">
         select name from users2
@@ -46,9 +46,9 @@
     <select id="getNameOnlyMapped" resultMap="mapResult">
         select name from users2
     </select>
-    
+
     <resultMap type="map" id="mapResult">
-    	<result column="name" property="name" />
+        <result column="name" property="name" />
     </resultMap>
 
 </mapper>

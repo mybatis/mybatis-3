@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -21,17 +21,17 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.apache.ibatis.submitted.serializecircular.AttributeMapper">
-	<resultMap id="map" type="org.apache.ibatis.submitted.serializecircular.Attribute">
-		<id column="nr_id" property="id" />
-	</resultMap>
-	
-	<select id="getById" parameterType="Integer" resultMap="map">
+    <resultMap id="map" type="org.apache.ibatis.submitted.serializecircular.Attribute">
+        <id column="nr_id" property="id" />
+    </resultMap>
+
+    <select id="getById" parameterType="Integer" resultMap="map">
         SELECT
-        	productattribute.nr_id
+            productattribute.nr_id
         FROM
-        	productattribute
+            productattribute
         WHERE
-        	nr_id = #{id}
+            nr_id = #{id}
     </select>
 
 </mapper>

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -21,17 +21,46 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * The annotation that conditional mapping definition for {@link TypeDiscriminator}.
+ *
+ * @see TypeDiscriminator
+ * @see Result
+ * @see Arg
+ * @see Results
+ * @see ConstructorArgs
  * @author Clinton Begin
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({})
 public @interface Case {
+
+  /**
+   * Return the condition value to apply this mapping.
+   *
+   * @return the condition value
+   */
   String value();
 
+  /**
+   * Return the object type that create a object using this mapping.
+   *
+   * @return the object type
+   */
   Class<?> type();
 
+  /**
+   * Return mapping definitions for property.
+   *
+   * @return mapping definitions for property
+   */
   Result[] results() default {};
 
+  /**
+   * Return mapping definitions for constructor.
+   *
+   * @return mapping definitions for constructor
+   */
   Arg[] constructArgs() default {};
+
 }

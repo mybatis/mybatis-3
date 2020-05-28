@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.submitted.multidb;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.Reader;
 
@@ -23,22 +23,24 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ProviderTest {
+class ProviderTest {
 
   @Test
-  public void shouldUseDefaultId() throws Exception {
+  void shouldUseDefaultId() throws Exception {
     Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multidb/MultiDbConfig.xml");
-    DefaultSqlSessionFactory sqlSessionFactory = (DefaultSqlSessionFactory) new SqlSessionFactoryBuilder().build(reader);
+    DefaultSqlSessionFactory sqlSessionFactory = (DefaultSqlSessionFactory) new SqlSessionFactoryBuilder()
+        .build(reader);
     Configuration c = sqlSessionFactory.getConfiguration();
     assertEquals("hsql", c.getDatabaseId());
   }
 
   @Test
-  public void shouldUseProvider() throws Exception {
+  void shouldUseProvider() throws Exception {
     Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multidb/ProviderConfig.xml");
-    DefaultSqlSessionFactory sqlSessionFactory = (DefaultSqlSessionFactory) new SqlSessionFactoryBuilder().build(reader);
+    DefaultSqlSessionFactory sqlSessionFactory = (DefaultSqlSessionFactory) new SqlSessionFactoryBuilder()
+        .build(reader);
     Configuration c = sqlSessionFactory.getConfiguration();
     assertEquals("translated", c.getDatabaseId());
   }

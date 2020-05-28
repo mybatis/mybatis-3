@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -21,11 +21,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.YearMonth;
 
-import org.apache.ibatis.lang.UsesJava8;
-
 /**
- * Type Handler for {@link java.time.YearMonth}
- *
+ * Type Handler for {@link java.time.YearMonth}.
+ * <p>
  * YearMonthTypeHandler relies upon
  * {@link java.time.YearMonth#parse YearMonth.parse}. Therefore column values
  * are expected as strings. The format must be uuuu-MM. Example: "2016-08"
@@ -33,7 +31,6 @@ import org.apache.ibatis.lang.UsesJava8;
  * @since 3.4.5
  * @author Björn Raupach
  */
-@UsesJava8
 public class YearMonthTypeHandler extends BaseTypeHandler<YearMonth> {
 
   @Override

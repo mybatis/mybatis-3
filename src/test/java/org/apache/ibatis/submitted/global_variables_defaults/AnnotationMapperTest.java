@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,6 +15,10 @@
  */
 package org.apache.ibatis.submitted.global_variables_defaults;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.util.Properties;
+
 import org.apache.ibatis.annotations.CacheNamespace;
 import org.apache.ibatis.annotations.Property;
 import org.apache.ibatis.annotations.Select;
@@ -25,16 +29,12 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.util.Properties;
-
-public class AnnotationMapperTest {
+class AnnotationMapperTest {
 
   @Test
-  public void applyDefaultValueOnAnnotationMapper() throws IOException {
+  void applyDefaultValueOnAnnotationMapper() throws IOException {
 
     Properties props = new Properties();
     props.setProperty(PropertyParser.KEY_ENABLE_DEFAULT_VALUE, "true");
@@ -47,20 +47,16 @@ public class AnnotationMapperTest {
 
     Assertions.assertThat(cache.getName()).isEqualTo("default");
 
-    SqlSession sqlSession = factory.openSession();
-    try {
+    try (SqlSession sqlSession = factory.openSession()) {
       AnnotationMapper mapper = sqlSession.getMapper(AnnotationMapper.class);
 
       Assertions.assertThat(mapper.ping()).isEqualTo("Hello");
-
-    } finally {
-      sqlSession.close();
     }
 
   }
 
   @Test
-  public void applyPropertyValueOnAnnotationMapper() throws IOException {
+  void applyPropertyValueOnAnnotationMapper() throws IOException {
 
     Properties props = new Properties();
     props.setProperty(PropertyParser.KEY_ENABLE_DEFAULT_VALUE, "true");
@@ -75,14 +71,10 @@ public class AnnotationMapperTest {
 
     Assertions.assertThat(cache.getName()).isEqualTo("custom");
 
-    SqlSession sqlSession = factory.openSession();
-    try {
+    try (SqlSession sqlSession = factory.openSession()) {
       AnnotationMapper mapper = sqlSession.getMapper(AnnotationMapper.class);
 
       Assertions.assertThat(mapper.ping()).isEqualTo("Hi");
-
-    } finally {
-      sqlSession.close();
     }
 
   }

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,131 +16,133 @@
 package org.apache.ibatis.builder;
 
 import java.util.Map;
-import org.junit.Assert;
-import org.junit.Test;
 
-public class ParameterExpressionTest {
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+class ParameterExpressionTest {
 
   @Test
-  public void simpleProperty() {
+  void simpleProperty() {
     Map<String, String> result = new ParameterExpression("id");
-    Assert.assertEquals(1, result.size());
-    Assert.assertEquals("id", result.get("property"));
+    Assertions.assertEquals(1, result.size());
+    Assertions.assertEquals("id", result.get("property"));
   }
 
-  public void propertyWithSpacesInside() {
+  @Test
+  void propertyWithSpacesInside() {
     Map<String, String> result = new ParameterExpression(" with spaces ");
-    Assert.assertEquals(1, result.size());
-    Assert.assertEquals("with spaces", result.get("property"));
+    Assertions.assertEquals(1, result.size());
+    Assertions.assertEquals("with spaces", result.get("property"));
   }
 
   @Test
-  public void simplePropertyWithOldStyleJdbcType() {
+  void simplePropertyWithOldStyleJdbcType() {
     Map<String, String> result = new ParameterExpression("id:VARCHAR");
-    Assert.assertEquals(2, result.size());
-    Assert.assertEquals("id", result.get("property"));
-    Assert.assertEquals("VARCHAR", result.get("jdbcType"));
+    Assertions.assertEquals(2, result.size());
+    Assertions.assertEquals("id", result.get("property"));
+    Assertions.assertEquals("VARCHAR", result.get("jdbcType"));
   }
 
   @Test
-  public void oldStyleJdbcTypeWithExtraWhitespaces() {
+  void oldStyleJdbcTypeWithExtraWhitespaces() {
     Map<String, String> result = new ParameterExpression(" id :  VARCHAR ");
-    Assert.assertEquals(2, result.size());
-    Assert.assertEquals("id", result.get("property"));
-    Assert.assertEquals("VARCHAR", result.get("jdbcType"));
+    Assertions.assertEquals(2, result.size());
+    Assertions.assertEquals("id", result.get("property"));
+    Assertions.assertEquals("VARCHAR", result.get("jdbcType"));
   }
 
   @Test
-  public void expressionWithOldStyleJdbcType() {
+  void expressionWithOldStyleJdbcType() {
     Map<String, String> result = new ParameterExpression("(id.toString()):VARCHAR");
-    Assert.assertEquals(2, result.size());
-    Assert.assertEquals("id.toString()", result.get("expression"));
-    Assert.assertEquals("VARCHAR", result.get("jdbcType"));
+    Assertions.assertEquals(2, result.size());
+    Assertions.assertEquals("id.toString()", result.get("expression"));
+    Assertions.assertEquals("VARCHAR", result.get("jdbcType"));
   }
 
   @Test
-  public void simplePropertyWithOneAttribute() {
+  void simplePropertyWithOneAttribute() {
     Map<String, String> result = new ParameterExpression("id,name=value");
-    Assert.assertEquals(2, result.size());
-    Assert.assertEquals("id", result.get("property"));
-    Assert.assertEquals("value", result.get("name"));
+    Assertions.assertEquals(2, result.size());
+    Assertions.assertEquals("id", result.get("property"));
+    Assertions.assertEquals("value", result.get("name"));
   }
 
   @Test
-  public void expressionWithOneAttribute() {
+  void expressionWithOneAttribute() {
     Map<String, String> result = new ParameterExpression("(id.toString()),name=value");
-    Assert.assertEquals(2, result.size());
-    Assert.assertEquals("id.toString()", result.get("expression"));
-    Assert.assertEquals("value", result.get("name"));
+    Assertions.assertEquals(2, result.size());
+    Assertions.assertEquals("id.toString()", result.get("expression"));
+    Assertions.assertEquals("value", result.get("name"));
   }
 
   @Test
-  public void simplePropertyWithManyAttributes() {
+  void simplePropertyWithManyAttributes() {
     Map<String, String> result = new ParameterExpression("id, attr1=val1, attr2=val2, attr3=val3");
-    Assert.assertEquals(4, result.size());
-    Assert.assertEquals("id", result.get("property"));
-    Assert.assertEquals("val1", result.get("attr1"));
-    Assert.assertEquals("val2", result.get("attr2"));
-    Assert.assertEquals("val3", result.get("attr3"));
+    Assertions.assertEquals(4, result.size());
+    Assertions.assertEquals("id", result.get("property"));
+    Assertions.assertEquals("val1", result.get("attr1"));
+    Assertions.assertEquals("val2", result.get("attr2"));
+    Assertions.assertEquals("val3", result.get("attr3"));
   }
 
   @Test
-  public void expressionWithManyAttributes() {
+  void expressionWithManyAttributes() {
     Map<String, String> result = new ParameterExpression("(id.toString()), attr1=val1, attr2=val2, attr3=val3");
-    Assert.assertEquals(4, result.size());
-    Assert.assertEquals("id.toString()", result.get("expression"));
-    Assert.assertEquals("val1", result.get("attr1"));
-    Assert.assertEquals("val2", result.get("attr2"));
-    Assert.assertEquals("val3", result.get("attr3"));
+    Assertions.assertEquals(4, result.size());
+    Assertions.assertEquals("id.toString()", result.get("expression"));
+    Assertions.assertEquals("val1", result.get("attr1"));
+    Assertions.assertEquals("val2", result.get("attr2"));
+    Assertions.assertEquals("val3", result.get("attr3"));
   }
 
   @Test
-  public void simplePropertyWithOldStyleJdbcTypeAndAttributes() {
+  void simplePropertyWithOldStyleJdbcTypeAndAttributes() {
     Map<String, String> result = new ParameterExpression("id:VARCHAR, attr1=val1, attr2=val2");
-    Assert.assertEquals(4, result.size());
-    Assert.assertEquals("id", result.get("property"));
-    Assert.assertEquals("VARCHAR", result.get("jdbcType"));
-    Assert.assertEquals("val1", result.get("attr1"));
-    Assert.assertEquals("val2", result.get("attr2"));
+    Assertions.assertEquals(4, result.size());
+    Assertions.assertEquals("id", result.get("property"));
+    Assertions.assertEquals("VARCHAR", result.get("jdbcType"));
+    Assertions.assertEquals("val1", result.get("attr1"));
+    Assertions.assertEquals("val2", result.get("attr2"));
   }
 
   @Test
-  public void simplePropertyWithSpaceAndManyAttributes() {
+  void simplePropertyWithSpaceAndManyAttributes() {
     Map<String, String> result = new ParameterExpression("user name, attr1=val1, attr2=val2, attr3=val3");
-    Assert.assertEquals(4, result.size());
-    Assert.assertEquals("user name", result.get("property"));
-    Assert.assertEquals("val1", result.get("attr1"));
-    Assert.assertEquals("val2", result.get("attr2"));
-    Assert.assertEquals("val3", result.get("attr3"));
+    Assertions.assertEquals(4, result.size());
+    Assertions.assertEquals("user name", result.get("property"));
+    Assertions.assertEquals("val1", result.get("attr1"));
+    Assertions.assertEquals("val2", result.get("attr2"));
+    Assertions.assertEquals("val3", result.get("attr3"));
   }
 
   @Test
-  public void shouldIgnoreLeadingAndTrailingSpaces() {
+  void shouldIgnoreLeadingAndTrailingSpaces() {
     Map<String, String> result = new ParameterExpression(" id , jdbcType =  VARCHAR,  attr1 = val1 ,  attr2 = val2 ");
-    Assert.assertEquals(4, result.size());
-    Assert.assertEquals("id", result.get("property"));
-    Assert.assertEquals("VARCHAR", result.get("jdbcType"));
-    Assert.assertEquals("val1", result.get("attr1"));
-    Assert.assertEquals("val2", result.get("attr2"));
+    Assertions.assertEquals(4, result.size());
+    Assertions.assertEquals("id", result.get("property"));
+    Assertions.assertEquals("VARCHAR", result.get("jdbcType"));
+    Assertions.assertEquals("val1", result.get("attr1"));
+    Assertions.assertEquals("val2", result.get("attr2"));
   }
 
   @Test
-  public void invalidOldJdbcTypeFormat() {
+  void invalidOldJdbcTypeFormat() {
     try {
       new ParameterExpression("id:");
-      Assert.fail();
+      Assertions.fail();
     } catch (BuilderException e) {
-      Assert.assertTrue(e.getMessage().contains("Parsing error in {id:} in position 3"));
+      Assertions.assertTrue(e.getMessage().contains("Parsing error in {id:} in position 3"));
     }
   }
 
   @Test
-  public void invalidJdbcTypeOptUsingExpression() {
+  void invalidJdbcTypeOptUsingExpression() {
     try {
       new ParameterExpression("(expression)+");
-      Assert.fail();
+      Assertions.fail();
     } catch (BuilderException e) {
-      Assert.assertTrue(e.getMessage().contains("Parsing error in {(expression)+} in position 12"));
+      Assertions.assertTrue(e.getMessage().contains("Parsing error in {(expression)+} in position 12"));
     }
   }
 

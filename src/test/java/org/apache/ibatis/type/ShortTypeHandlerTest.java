@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,13 +15,14 @@
  */
 package org.apache.ibatis.type;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ShortTypeHandlerTest extends BaseTypeHandlerTest {
+class ShortTypeHandlerTest extends BaseTypeHandlerTest {
 
   private static final TypeHandler<Short> TYPE_HANDLER = new ShortTypeHandler();
 
@@ -35,40 +36,49 @@ public class ShortTypeHandlerTest extends BaseTypeHandlerTest {
   @Override
   @Test
   public void shouldGetResultFromResultSetByName() throws Exception {
-    when(rs.getShort("column")).thenReturn((short) 100);
-    when(rs.wasNull()).thenReturn(false);
-    assertEquals(new Short((short) 100), TYPE_HANDLER.getResult(rs, "column"));
+    when(rs.getShort("column")).thenReturn((short) 100, (short) 0);
+    assertEquals(Short.valueOf((short) 100), TYPE_HANDLER.getResult(rs, "column"));
+    assertEquals(Short.valueOf((short) 0), TYPE_HANDLER.getResult(rs, "column"));
   }
 
   @Override
+  @Test
   public void shouldGetResultNullFromResultSetByName() throws Exception {
-    // Unnecessary
+    when(rs.getShort("column")).thenReturn((short) 0);
+    when(rs.wasNull()).thenReturn(true);
+    assertNull(TYPE_HANDLER.getResult(rs, "column"));
   }
 
   @Override
   @Test
   public void shouldGetResultFromResultSetByPosition() throws Exception {
-    when(rs.getShort(1)).thenReturn((short) 100);
-    when(rs.wasNull()).thenReturn(false);
-    assertEquals(new Short((short) 100), TYPE_HANDLER.getResult(rs, 1));
+    when(rs.getShort(1)).thenReturn((short) 100, (short) 0);
+    assertEquals(Short.valueOf((short) 100), TYPE_HANDLER.getResult(rs, 1));
+    assertEquals(Short.valueOf((short) 0), TYPE_HANDLER.getResult(rs, 1));
   }
 
   @Override
+  @Test
   public void shouldGetResultNullFromResultSetByPosition() throws Exception {
-    // Unnecessary
+    when(rs.getShort(1)).thenReturn((short) 0);
+    when(rs.wasNull()).thenReturn(true);
+    assertNull(TYPE_HANDLER.getResult(rs, 1));
   }
 
   @Override
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
-    when(cs.getShort(1)).thenReturn((short) 100);
-    when(cs.wasNull()).thenReturn(false);
-    assertEquals(new Short((short) 100), TYPE_HANDLER.getResult(cs, 1));
+    when(cs.getShort(1)).thenReturn((short) 100, (short) 0);
+    assertEquals(Short.valueOf((short) 100), TYPE_HANDLER.getResult(cs, 1));
+    assertEquals(Short.valueOf((short) 0), TYPE_HANDLER.getResult(cs, 1));
   }
 
   @Override
+  @Test
   public void shouldGetResultNullFromCallableStatement() throws Exception {
-    // Unnecessary
+    when(cs.getShort(1)).thenReturn((short) 0);
+    when(cs.wasNull()).thenReturn(true);
+    assertNull(TYPE_HANDLER.getResult(cs, 1));
   }
 
 }

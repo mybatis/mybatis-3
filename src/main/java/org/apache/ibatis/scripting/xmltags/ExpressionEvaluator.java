@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -48,16 +48,16 @@ public class ExpressionEvaluator {
       return (Iterable<?>) value;
     }
     if (value.getClass().isArray()) {
-        // the array may be primitive, so Arrays.asList() may throw
-        // a ClassCastException (issue 209).  Do the work manually
-        // Curse primitives! :) (JGB)
-        int size = Array.getLength(value);
-        List<Object> answer = new ArrayList<Object>();
-        for (int i = 0; i < size; i++) {
-            Object o = Array.get(value, i);
-            answer.add(o);
-        }
-        return answer;
+      // the array may be primitive, so Arrays.asList() may throw
+      // a ClassCastException (issue 209).  Do the work manually
+      // Curse primitives! :) (JGB)
+      int size = Array.getLength(value);
+      List<Object> answer = new ArrayList<>();
+      for (int i = 0; i < size; i++) {
+        Object o = Array.get(value, i);
+        answer.add(o);
+      }
+      return answer;
     }
     if (value instanceof Map) {
       return ((Map) value).entrySet();

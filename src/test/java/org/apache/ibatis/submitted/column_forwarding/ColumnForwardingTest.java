@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,69 +16,55 @@
 package org.apache.ibatis.submitted.column_forwarding;
 
 import java.io.Reader;
-import java.sql.Connection;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-public class ColumnForwardingTest {
+class ColumnForwardingTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
-  public static void setUp() throws Exception {
+  @BeforeAll
+  static void setUp() throws Exception {
     // create a SqlSessionFactory
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/column_forwarding/mybatis-config.xml");
-    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    reader.close();
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/column_forwarding/mybatis-config.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    }
 
     // populate in-memory database
-    SqlSession session = sqlSessionFactory.openSession();
-    Connection conn = session.getConnection();
-    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/column_forwarding/CreateDB.sql");
-    ScriptRunner runner = new ScriptRunner(conn);
-    runner.setLogWriter(null);
-    runner.runScript(reader);
-    conn.close();
-    reader.close();
-    session.close();
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+            "org/apache/ibatis/submitted/column_forwarding/CreateDB.sql");
   }
 
   @Test
-  public void shouldGetUserWithGroup() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  void shouldGetUserWithGroup() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUser(1);
-      Assert.assertNotNull(user);
-      Assert.assertNotNull(user.getId());
-      Assert.assertEquals("active", user.getState());
-      Assert.assertNotNull(user.getGroup());
-      Assert.assertNotNull(user.getGroup().getId());
-      Assert.assertEquals("active", user.getGroup().getState());
-    } finally {
-      sqlSession.close();
+      Assertions.assertNotNull(user);
+      Assertions.assertNotNull(user.getId());
+      Assertions.assertEquals("active", user.getState());
+      Assertions.assertNotNull(user.getGroup());
+      Assertions.assertNotNull(user.getGroup().getId());
+      Assertions.assertEquals("active", user.getGroup().getState());
     }
   }
 
   @Test
-  public void shouldGetUserWithoutGroup() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+  void shouldGetUserWithoutGroup() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUser(2);
-      Assert.assertNotNull(user);
-      Assert.assertNotNull(user.getId());
-      Assert.assertNull(user.getState());
-      Assert.assertNull(user.getGroup());
-    } finally {
-      sqlSession.close();
+      Assertions.assertNotNull(user);
+      Assertions.assertNotNull(user.getId());
+      Assertions.assertNull(user.getState());
+      Assertions.assertNull(user.getGroup());
     }
   }
 }

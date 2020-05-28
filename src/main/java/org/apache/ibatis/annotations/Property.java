@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -31,12 +31,18 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({})
 public @interface Property {
+
   /**
-   * A target property name
+   * Returns the property name.
+   *
+   * @return the property name
    */
   String name();
+
   /**
-   * A property value or placeholder
+   * Returns the property value or placeholder.
+   *
+   * @return the property value or placeholder
    */
   String value();
 }

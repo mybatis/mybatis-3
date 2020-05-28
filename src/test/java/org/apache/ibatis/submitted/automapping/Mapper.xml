@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2017 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -22,70 +22,70 @@
 
 <mapper namespace="org.apache.ibatis.submitted.automapping.Mapper">
 
-	<select id="getUser" resultMap="result">
-		select id, name from users where id = #{id}
-	</select>
+    <select id="getUser" resultMap="result">
+        select id, name from users where id = #{id}
+    </select>
 
-	<resultMap type="org.apache.ibatis.submitted.automapping.User" id="result" autoMapping="true">
-	</resultMap>
+    <resultMap type="org.apache.ibatis.submitted.automapping.User" id="result" autoMapping="true">
+    </resultMap>
 
-	<select id="getUserWithPhoneNumber" resultMap="resultWithPhoneNumber">
-		select * from users where id = #{id}
-	</select>
+    <select id="getUserWithPhoneNumber" resultMap="resultWithPhoneNumber">
+        select * from users where id = #{id}
+    </select>
 
-	<resultMap type="org.apache.ibatis.submitted.automapping.User" id="resultWithPhoneNumber" autoMapping="true">
-		<result property="phone" column="phone_number"/>
-	</resultMap>
+    <resultMap type="org.apache.ibatis.submitted.automapping.User" id="resultWithPhoneNumber" autoMapping="true">
+        <result property="phone" column="phone_number"/>
+    </resultMap>
 
-	<sql id="selectUserPetBreeder">
-		select users.id, users.name,
-			pets.id as petId, pets.name as petName,
-			breeder.id as breederId, breeder.name as breederName
-		from users
-		left join pets on pets.owner = users.id
-		left join breeder on breeder.id = pets.breeder
-		where users.id = #{id}
-	</sql>
+    <sql id="selectUserPetBreeder">
+        select users.id, users.name,
+            pets.id as petId, pets.name as petName,
+            breeder.id as breederId, breeder.name as breederName
+        from users
+        left join pets on pets.owner = users.id
+        left join breeder on breeder.id = pets.breeder
+        where users.id = #{id}
+    </sql>
 
-	<select id="getUserWithPets_Inline" resultMap="resultWithPets_Inline">
-		<include refid="selectUserPetBreeder" />
-	</select>
+    <select id="getUserWithPets_Inline" resultMap="resultWithPets_Inline">
+        <include refid="selectUserPetBreeder" />
+    </select>
 
-	<resultMap type="org.apache.ibatis.submitted.automapping.User" id="resultWithPets_Inline" autoMapping="true">
-		<id column="id" property="id"/>
-		<collection property="pets" ofType="org.apache.ibatis.submitted.automapping.Pet">
-			<id column="petId" property="petId"/>
-			<association property="breeder" javaType="org.apache.ibatis.submitted.automapping.Breeder" autoMapping="true"/>
-		</collection>
-	</resultMap>
+    <resultMap type="org.apache.ibatis.submitted.automapping.User" id="resultWithPets_Inline" autoMapping="true">
+        <id column="id" property="id"/>
+        <collection property="pets" ofType="org.apache.ibatis.submitted.automapping.Pet">
+            <id column="petId" property="petId"/>
+            <association property="breeder" javaType="org.apache.ibatis.submitted.automapping.Breeder" autoMapping="true"/>
+        </collection>
+    </resultMap>
 
-	<select id="getUserWithPets_External" resultMap="resultWithPets_External">
-		<include refid="selectUserPetBreeder" />
-	</select>
+    <select id="getUserWithPets_External" resultMap="resultWithPets_External">
+        <include refid="selectUserPetBreeder" />
+    </select>
 
-	<resultMap type="org.apache.ibatis.submitted.automapping.User" id="resultWithPets_External" autoMapping="true">
-		<id column="id" property="id"/>
-		<collection property="pets" resultMap="petResult" />
-	</resultMap>
+    <resultMap type="org.apache.ibatis.submitted.automapping.User" id="resultWithPets_External" autoMapping="true">
+        <id column="id" property="id"/>
+        <collection property="pets" resultMap="petResult" />
+    </resultMap>
 
-	<resultMap type="org.apache.ibatis.submitted.automapping.Pet" id="petResult">
-		<id property="petId" column="petId" />
-		<association property="breeder" resultMap="breederResult" />
-	</resultMap>
+    <resultMap type="org.apache.ibatis.submitted.automapping.Pet" id="petResult">
+        <id property="petId" column="petId" />
+        <association property="breeder" resultMap="breederResult" />
+    </resultMap>
 
-	<resultMap type="org.apache.ibatis.submitted.automapping.Breeder" id="breederResult" autoMapping="true">
-		<id property="breederId" column="breederId" />
-	</resultMap>
+    <resultMap type="org.apache.ibatis.submitted.automapping.Breeder" id="breederResult" autoMapping="true">
+        <id property="breederId" column="breederId" />
+    </resultMap>
 
-	<resultMap type="org.apache.ibatis.submitted.automapping.Book" id="bookResult">
-		<result property="name" column="name"/>
-	</resultMap>
-	
-	<select id="getBooks" resultMap="bookResult">
-		select version, name from books
-	</select>
-	
-	<select id="getArticle" resultType="org.apache.ibatis.submitted.automapping.Article">
-		select 9 as version from INFORMATION_SCHEMA.SYSTEM_USERS
-	</select>	
+    <resultMap type="org.apache.ibatis.submitted.automapping.Book" id="bookResult">
+        <result property="name" column="name"/>
+    </resultMap>
+
+    <select id="getBooks" resultMap="bookResult">
+        select version, name from books
+    </select>
+
+    <select id="getArticle" resultType="org.apache.ibatis.submitted.automapping.Article">
+        select 9 as version from INFORMATION_SCHEMA.SYSTEM_USERS
+    </select>
 </mapper>

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -25,11 +25,11 @@ import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.reflection.ExceptionUtil;
 
 /**
- * Statement proxy to add logging
- * 
+ * Statement proxy to add logging.
+ *
  * @author Clinton Begin
  * @author Eduardo Macarron
- * 
+ *
  */
 public final class StatementLogger extends BaseJdbcLogger implements InvocationHandler {
 
@@ -45,10 +45,10 @@ public final class StatementLogger extends BaseJdbcLogger implements InvocationH
     try {
       if (Object.class.equals(method.getDeclaringClass())) {
         return method.invoke(this, params);
-      }    
+      }
       if (EXECUTE_METHODS.contains(method.getName())) {
         if (isDebugEnabled()) {
-          debug(" Executing: " + removeBreakingWhitespace((String) params[0]), true);
+          debug(" Executing: " + removeExtraWhitespace((String) params[0]), true);
         }
         if ("executeQuery".equals(method.getName())) {
           ResultSet rs = (ResultSet) method.invoke(statement, params);
@@ -67,11 +67,16 @@ public final class StatementLogger extends BaseJdbcLogger implements InvocationH
     }
   }
 
-  /*
-   * Creates a logging version of a Statement
+  /**
+   * Creates a logging version of a Statement.
    *
-   * @param stmt - the statement
-   * @return - the proxy
+   * @param stmt
+   *          the statement
+   * @param statementLog
+   *          the statement log
+   * @param queryStack
+   *          the query stack
+   * @return the proxy
    */
   public static Statement newInstance(Statement stmt, Log statementLog, int queryStack) {
     InvocationHandler handler = new StatementLogger(stmt, statementLog, queryStack);
@@ -79,8 +84,8 @@ public final class StatementLogger extends BaseJdbcLogger implements InvocationH
     return (Statement) Proxy.newProxyInstance(cl, new Class[]{Statement.class}, handler);
   }
 
-  /*
-   * return the wrapped statement
+  /**
+   * return the wrapped statement.
    *
    * @return the statement
    */

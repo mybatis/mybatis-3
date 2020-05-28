@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -29,7 +28,6 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
-import org.apache.ibatis.reflection.Jdk;
 import org.apache.ibatis.reflection.ParamNameUtil;
 import org.apache.ibatis.session.Configuration;
 
@@ -85,12 +83,12 @@ public class ResultMap {
       if (resultMap.id == null) {
         throw new IllegalArgumentException("ResultMaps must have an id");
       }
-      resultMap.mappedColumns = new HashSet<String>();
-      resultMap.mappedProperties = new HashSet<String>();
-      resultMap.idResultMappings = new ArrayList<ResultMapping>();
-      resultMap.constructorResultMappings = new ArrayList<ResultMapping>();
-      resultMap.propertyResultMappings = new ArrayList<ResultMapping>();
-      final List<String> constructorArgNames = new ArrayList<String>();
+      resultMap.mappedColumns = new HashSet<>();
+      resultMap.mappedProperties = new HashSet<>();
+      resultMap.idResultMappings = new ArrayList<>();
+      resultMap.constructorResultMappings = new ArrayList<>();
+      resultMap.propertyResultMappings = new ArrayList<>();
+      final List<String> constructorArgNames = new ArrayList<>();
       for (ResultMapping resultMapping : resultMap.resultMappings) {
         resultMap.hasNestedQueries = resultMap.hasNestedQueries || resultMapping.getNestedQueryId() != null;
         resultMap.hasNestedResultMaps = resultMap.hasNestedResultMaps || (resultMapping.getNestedResultMapId() != null && resultMapping.getResultSet() == null);
@@ -106,7 +104,7 @@ public class ResultMap {
           }
         }
         final String property = resultMapping.getProperty();
-        if(property != null) {
+        if (property != null) {
           resultMap.mappedProperties.add(property);
         }
         if (resultMapping.getFlags().contains(ResultFlag.CONSTRUCTOR)) {
@@ -132,13 +130,10 @@ public class ResultMap {
               + resultMap.getType().getName() + "' by arg names " + constructorArgNames
               + ". There might be more info in debug log.");
         }
-        Collections.sort(resultMap.constructorResultMappings, new Comparator<ResultMapping>() {
-          @Override
-          public int compare(ResultMapping o1, ResultMapping o2) {
-            int paramIdx1 = actualArgNames.indexOf(o1.getProperty());
-            int paramIdx2 = actualArgNames.indexOf(o2.getProperty());
-            return paramIdx1 - paramIdx2;
-          }
+        resultMap.constructorResultMappings.sort((o1, o2) -> {
+          int paramIdx1 = actualArgNames.indexOf(o1.getProperty());
+          int paramIdx2 = actualArgNames.indexOf(o2.getProperty());
+          return paramIdx1 - paramIdx2;
         });
       }
       // lock down collections
@@ -185,7 +180,7 @@ public class ResultMap {
     }
 
     private List<String> getArgNames(Constructor<?> constructor) {
-      List<String> paramNames = new ArrayList<String>();
+      List<String> paramNames = new ArrayList<>();
       List<String> actualParamNames = null;
       final Annotation[][] paramAnnotations = constructor.getParameterAnnotations();
       int paramCount = paramAnnotations.length;
@@ -197,7 +192,7 @@ public class ResultMap {
             break;
           }
         }
-        if (name == null && resultMap.configuration.isUseActualParamName() && Jdk.parameterExists) {
+        if (name == null && resultMap.configuration.isUseActualParamName()) {
           if (actualParamNames == null) {
             actualParamNames = ParamNameUtil.getParamNames(constructor);
           }
@@ -258,7 +253,7 @@ public class ResultMap {
   public void forceNestedResultMaps() {
     hasNestedResultMaps = true;
   }
-  
+
   public Boolean getAutoMapping() {
     return autoMapping;
   }
