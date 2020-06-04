@@ -30,6 +30,6 @@
 
 
     <select id="selectById" resultMap="personMap" parameterType="int">
-    	<include refid="org.apache.ibatis.submitted.xml_references.PersonMapper.selectByIdScript"/>
+        <include refid="org.apache.ibatis.submitted.xml_references.PersonMapper.selectByIdScript"/>
     </select>
 </mapper>

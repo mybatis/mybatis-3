@@ -27,8 +27,8 @@
     </resultMap>
 
     <select id="selectById" resultMap="TeacherMap" parameterType="int">
-    	SELECT id, name
-    	FROM teacher
-    	WHERE id = #{id};
+        SELECT id, name
+        FROM teacher
+        WHERE id = #{id};
     </select>
 </mapper>

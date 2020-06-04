@@ -45,7 +45,7 @@
       <item name="动态 SQL" href="dynamic-sql.html"/>
       <item name="Java API" href="java-api.html" collapse="true">
         <item name="目录结构" href="java-api.html#directoryStructure" />
-        <item name="SqlSessions" href="java-api.html#sqlSessions" />
+        <item name="SqlSession" href="java-api.html#sqlSessions" />
       </item>
       <item name="SQL 语句构建器" href="statement-builders.html" collapse="true" />
       <item name="日志" href="logging.html"/>

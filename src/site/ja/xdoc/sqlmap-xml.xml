@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2018 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -1984,7 +1984,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
 
         <p>
           上記は、カスタムキャッシュの実装を使用するための設定例です。
-          type 属性で指定されているクラスは org.mybatis.cache.Cache インターフェイスを実装している必要があります。
+          type 属性で指定されているクラスは org.apache.ibatis.cache.Cache インターフェイスを実装している必要があります。
           このインターフェイスは MyBatis の中では複雑な方ですが、その役割を考えればシンプルです。
         </p>
 

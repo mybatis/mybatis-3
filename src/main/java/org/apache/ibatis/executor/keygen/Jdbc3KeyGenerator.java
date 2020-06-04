@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.ibatis.binding.MapperMethod.ParamMap;
 import org.apache.ibatis.executor.Executor;
@@ -35,6 +36,7 @@ import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.reflection.ArrayUtil;
 import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.reflection.ParamNameResolver;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.defaults.DefaultSqlSession.StrictMap;
 import org.apache.ibatis.type.JdbcType;
@@ -47,12 +49,17 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
  */
 public class Jdbc3KeyGenerator implements KeyGenerator {
 
+  private static final String SECOND_GENERIC_PARAM_NAME = ParamNameResolver.GENERIC_NAME_PREFIX + "2";
+
   /**
    * A shared instance.
    *
    * @since 3.4.3
    */
   public static final Jdbc3KeyGenerator INSTANCE = new Jdbc3KeyGenerator();
+
+  private static final String MSG_TOO_MANY_KEYS = "Too many keys are generated. There are only %d target objects. "
+      + "You either specified a wrong 'keyProperty' or encountered a driver bug like #1523.";
 
   @Override
   public void processBefore(Executor executor, MappedStatement ms, Statement stmt, Object parameter) {
@@ -91,7 +98,7 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
     } else if (parameter instanceof ArrayList && !((ArrayList<?>) parameter).isEmpty()
         && ((ArrayList<?>) parameter).get(0) instanceof ParamMap) {
       // Multi-param or single param with @Param in batch operation
-      assignKeysToParamMapList(configuration, rs, rsmd, keyProperties, ((ArrayList<ParamMap<?>>) parameter));
+      assignKeysToParamMapList(configuration, rs, rsmd, keyProperties, (ArrayList<ParamMap<?>>) parameter);
     } else {
       // Single param without @Param
       assignKeysToParam(configuration, rs, rsmd, keyProperties, parameter);
@@ -110,6 +117,9 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
     }
     Iterator<?> iterator = params.iterator();
     while (rs.next()) {
+      if (!iterator.hasNext()) {
+        throw new ExecutorException(String.format(MSG_TOO_MANY_KEYS, params.size()));
+      }
       Object param = iterator.next();
       assignerList.forEach(x -> x.assign(rs, param));
     }
@@ -119,7 +129,11 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
       String[] keyProperties, ArrayList<ParamMap<?>> paramMapList) throws SQLException {
     Iterator<ParamMap<?>> iterator = paramMapList.iterator();
     List<KeyAssigner> assignerList = new ArrayList<>();
+    long counter = 0;
     while (rs.next()) {
+      if (!iterator.hasNext()) {
+        throw new ExecutorException(String.format(MSG_TOO_MANY_KEYS, counter));
+      }
       ParamMap<?> paramMap = iterator.next();
       if (assignerList.isEmpty()) {
         for (int i = 0; i < keyProperties.length; i++) {
@@ -129,6 +143,7 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
         }
       }
       assignerList.forEach(x -> x.assign(rs, paramMap));
+      counter++;
     }
   }
 
@@ -145,17 +160,25 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
           k -> entry(collectionize(paramMap.get(k)).iterator(), new ArrayList<>()));
       iteratorPair.getValue().add(entry.getValue());
     }
+    long counter = 0;
     while (rs.next()) {
       for (Entry<Iterator<?>, List<KeyAssigner>> pair : assignerMap.values()) {
+        if (!pair.getKey().hasNext()) {
+          throw new ExecutorException(String.format(MSG_TOO_MANY_KEYS, counter));
+        }
         Object param = pair.getKey().next();
         pair.getValue().forEach(x -> x.assign(rs, param));
       }
+      counter++;
     }
   }
 
   private Entry<String, KeyAssigner> getAssignerForParamMap(Configuration config, ResultSetMetaData rsmd,
       int columnPosition, Map<String, ?> paramMap, String keyProperty, String[] keyProperties, boolean omitParamName) {
-    boolean singleParam = paramMap.values().stream().distinct().count() == 1;
+    Set<String> keySet = paramMap.keySet();
+    // A caveat : if the only parameter has {@code @Param("param2")} on it,
+    // it must be referenced with param name e.g. 'param2.x'.
+    boolean singleParam = !keySet.contains(SECOND_GENERIC_PARAM_NAME);
     int firstDot = keyProperty.indexOf('.');
     if (firstDot == -1) {
       if (singleParam) {
@@ -164,10 +187,10 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
       throw new ExecutorException("Could not determine which parameter to assign generated keys to. "
           + "Note that when there are multiple parameters, 'keyProperty' must include the parameter name (e.g. 'param.id'). "
           + "Specified key properties are " + ArrayUtil.toString(keyProperties) + " and available parameters are "
-          + paramMap.keySet());
+          + keySet);
     }
     String paramName = keyProperty.substring(0, firstDot);
-    if (paramMap.containsKey(paramName)) {
+    if (keySet.contains(paramName)) {
       String argParamName = omitParamName ? null : paramName;
       String argKeyProperty = keyProperty.substring(firstDot + 1);
       return entry(paramName, new KeyAssigner(config, rsmd, columnPosition, argParamName, argKeyProperty));
@@ -177,7 +200,7 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
       throw new ExecutorException("Could not find parameter '" + paramName + "'. "
           + "Note that when there are multiple parameters, 'keyProperty' must include the parameter name (e.g. 'param.id'). "
           + "Specified key properties are " + ArrayUtil.toString(keyProperties) + " and available parameters are "
-          + paramMap.keySet());
+          + keySet);
     }
   }
 

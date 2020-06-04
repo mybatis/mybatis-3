@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -30,7 +30,8 @@ class ProviderTest {
   @Test
   void shouldUseDefaultId() throws Exception {
     Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multidb/MultiDbConfig.xml");
-    DefaultSqlSessionFactory sqlSessionFactory = (DefaultSqlSessionFactory) new SqlSessionFactoryBuilder().build(reader);
+    DefaultSqlSessionFactory sqlSessionFactory = (DefaultSqlSessionFactory) new SqlSessionFactoryBuilder()
+        .build(reader);
     Configuration c = sqlSessionFactory.getConfiguration();
     assertEquals("hsql", c.getDatabaseId());
   }
@@ -38,7 +39,8 @@ class ProviderTest {
   @Test
   void shouldUseProvider() throws Exception {
     Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multidb/ProviderConfig.xml");
-    DefaultSqlSessionFactory sqlSessionFactory = (DefaultSqlSessionFactory) new SqlSessionFactoryBuilder().build(reader);
+    DefaultSqlSessionFactory sqlSessionFactory = (DefaultSqlSessionFactory) new SqlSessionFactoryBuilder()
+        .build(reader);
     Configuration c = sqlSessionFactory.getConfiguration();
     assertEquals("translated", c.getDatabaseId());
   }

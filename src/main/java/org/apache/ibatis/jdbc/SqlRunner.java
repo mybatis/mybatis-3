@@ -191,6 +191,10 @@ public class SqlRunner {
     }
   }
 
+  /**
+   * @deprecated Since 3.5.4, this method is deprecated. Please close the {@link Connection} outside of this class.
+   */
+  @Deprecated
   public void closeConnection() {
     try {
       connection.close();

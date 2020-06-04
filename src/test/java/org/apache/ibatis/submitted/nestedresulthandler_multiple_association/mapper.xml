@@ -36,19 +36,19 @@
     </resultMap>
 
     <select id="selectParentBeans" resultMap="ParentBeanResultMap" useCache="false">
-    	select * from parent
+        select * from parent
     </select>
 
     <select id="selectParentBeanById" resultMap="ParentBeanResultMap" useCache="false">
-    	select * from parent where id = #{value}
+        select * from parent where id = #{value}
     </select>
 
     <select id="selectChildBeanById" parameterType="java.lang.Integer" resultMap="ChildBeanResultMap" useCache="false">
-    	select * from child where id = #{value}
+        select * from child where id = #{value}
     </select>
 
     <select id="selectChildsBinomes" parameterType="java.lang.Integer" resultMap="ChildsBinomesResultMap" useCache="false">
-    	select * from parent_child where idparent = #{value}
+        select * from parent_child where idparent = #{value}
     </select>
 
 </mapper>

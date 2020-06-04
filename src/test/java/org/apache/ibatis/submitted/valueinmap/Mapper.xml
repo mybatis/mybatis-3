@@ -22,12 +22,12 @@
 
 <mapper namespace="org.apache.ibatis.submitted.valueinmap.Mapper">
 
-	<select id="count" resultType="int" parameterType="map">
-		select count(*) from ${table} where ${column}=#{value}
-	</select>
+    <select id="count" resultType="int" parameterType="map">
+        select count(*) from ${table} where ${column}=#{value}
+    </select>
 
-	<select id="count2" resultType="int">
-		select count(*) from ${listx}
-	</select>
+    <select id="count2" resultType="int">
+        select count(*) from ${listx}
+    </select>
 
 </mapper>

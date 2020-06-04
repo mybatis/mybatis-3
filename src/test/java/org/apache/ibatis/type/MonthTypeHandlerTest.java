@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -42,15 +42,15 @@ class MonthTypeHandlerTest extends BaseTypeHandlerTest {
   @Override
   @Test
   public void shouldGetResultFromResultSetByName() throws Exception {
-    when(rs.getInt("column")).thenReturn(INSTANT.getValue());
+    when(rs.getInt("column")).thenReturn(INSTANT.getValue(), 0);
     assertEquals(INSTANT, TYPE_HANDLER.getResult(rs, "column"));
-
-    when(rs.getInt("column")).thenReturn(0);
     try {
       TYPE_HANDLER.getResult(rs, "column");
       fail();
     } catch (ResultMapException e) {
-      assertEquals("Error attempting to get column 'column' from result set.  Cause: java.time.DateTimeException: Invalid value for MonthOfYear: 0", e.getMessage());
+      assertEquals(
+          "Error attempting to get column 'column' from result set.  Cause: java.time.DateTimeException: Invalid value for MonthOfYear: 0",
+          e.getMessage());
     }
   }
 
@@ -65,15 +65,15 @@ class MonthTypeHandlerTest extends BaseTypeHandlerTest {
   @Override
   @Test
   public void shouldGetResultFromResultSetByPosition() throws Exception {
-    when(rs.getInt(1)).thenReturn(INSTANT.getValue());
+    when(rs.getInt(1)).thenReturn(INSTANT.getValue(), 0);
     assertEquals(INSTANT, TYPE_HANDLER.getResult(rs, 1));
-
-    when(rs.getInt(1)).thenReturn(0);
     try {
       TYPE_HANDLER.getResult(rs, 1);
       fail();
     } catch (ResultMapException e) {
-      assertEquals("Error attempting to get column #1 from result set.  Cause: java.time.DateTimeException: Invalid value for MonthOfYear: 0", e.getMessage());
+      assertEquals(
+          "Error attempting to get column #1 from result set.  Cause: java.time.DateTimeException: Invalid value for MonthOfYear: 0",
+          e.getMessage());
     }
   }
 
@@ -88,15 +88,15 @@ class MonthTypeHandlerTest extends BaseTypeHandlerTest {
   @Override
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
-    when(cs.getInt(1)).thenReturn(INSTANT.getValue());
+    when(cs.getInt(1)).thenReturn(INSTANT.getValue(), 0);
     assertEquals(INSTANT, TYPE_HANDLER.getResult(cs, 1));
-
-    when(cs.getInt(1)).thenReturn(0);
     try {
       TYPE_HANDLER.getResult(cs, 1);
       fail();
     } catch (ResultMapException e) {
-      assertEquals("Error attempting to get column #1 from callable statement.  Cause: java.time.DateTimeException: Invalid value for MonthOfYear: 0", e.getMessage());
+      assertEquals(
+          "Error attempting to get column #1 from callable statement.  Cause: java.time.DateTimeException: Invalid value for MonthOfYear: 0",
+          e.getMessage());
     }
   }
 

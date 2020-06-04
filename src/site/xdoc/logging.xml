@@ -204,17 +204,15 @@ log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n]]></source>
   </select>
 </mapper>]]></source>
 
-		<p>In that case you can enable logging for the whole XML file by adding
-		a logger for the namespace as shown below:</p>
+        <p>In that case you can enable logging for the whole XML file by adding a logger for the namespace as shown below:</p>
 
         <source>log4j.logger.org.mybatis.example.BlogMapper=TRACE</source>
 
-		<p>Or for an specific statement:</p>
+        <p>Or for an specific statement:</p>
 
         <source>log4j.logger.org.mybatis.example.BlogMapper.selectBlog=TRACE</source>
 
-		<p>Yes, as you may have noticed, there is no difference in configuring
-		logging for mapper interfaces or for XML mapper files.</p>
+        <p>Yes, as you may have noticed, there is no difference in configuring logging for mapper interfaces or for XML mapper files.</p>
 
         <p><span class="label important">NOTE</span> If you are using SLF4J or Log4j 2 MyBatis will call it using the marker MYBATIS.</p>
 
