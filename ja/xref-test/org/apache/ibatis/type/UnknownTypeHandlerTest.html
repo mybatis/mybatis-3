@@ -111,53 +111,54 @@
 <a class="jxr_linenumber" name="L103" href="#L103">103</a> 
 <a class="jxr_linenumber" name="L104" href="#L104">104</a>   @Test
 <a class="jxr_linenumber" name="L105" href="#L105">105</a>   <strong class="jxr_keyword">void</strong> setParameterWithNonNullParameterThrowsException() <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L106" href="#L106">106</a>     doThrow(<strong class="jxr_keyword">new</strong> SQLException(<span class="jxr_string">"invalid column"</span>)).when((UnknownTypeHandler) TYPE_HANDLER).setNonNullParameter(ps, 1, 99, JdbcType.INTEGER);
-<a class="jxr_linenumber" name="L107" href="#L107">107</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L108" href="#L108">108</a>       TYPE_HANDLER.setParameter(ps, 1, 99, JdbcType.INTEGER);
-<a class="jxr_linenumber" name="L109" href="#L109">109</a>       Assertions.fail(<span class="jxr_string">"Should have thrown a TypeException"</span>);
-<a class="jxr_linenumber" name="L110" href="#L110">110</a>     } <strong class="jxr_keyword">catch</strong> (Exception e) {
-<a class="jxr_linenumber" name="L111" href="#L111">111</a>       Assertions.assertTrue(e instanceof TypeException, <span class="jxr_string">"Expected TypedException"</span>);
-<a class="jxr_linenumber" name="L112" href="#L112">112</a>       Assertions.assertTrue(e.getMessage().contains(<span class="jxr_string">"parameter #1"</span>), <span class="jxr_string">"Parameter index is in exception"</span>);
-<a class="jxr_linenumber" name="L113" href="#L113">113</a>     }
-<a class="jxr_linenumber" name="L114" href="#L114">114</a>   }
-<a class="jxr_linenumber" name="L115" href="#L115">115</a> 
-<a class="jxr_linenumber" name="L116" href="#L116">116</a>   @Test
-<a class="jxr_linenumber" name="L117" href="#L117">117</a>   <strong class="jxr_keyword">void</strong> getResultWithResultSetAndColumnNameThrowsException() <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L118" href="#L118">118</a>     doThrow(<strong class="jxr_keyword">new</strong> SQLException(<span class="jxr_string">"invalid column"</span>)).when((UnknownTypeHandler) TYPE_HANDLER).getNullableResult(rs, <span class="jxr_string">"foo"</span>);
-<a class="jxr_linenumber" name="L119" href="#L119">119</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L120" href="#L120">120</a>       TYPE_HANDLER.getResult(rs, <span class="jxr_string">"foo"</span>);
-<a class="jxr_linenumber" name="L121" href="#L121">121</a>       Assertions.fail(<span class="jxr_string">"Should have thrown a ResultMapException"</span>);
-<a class="jxr_linenumber" name="L122" href="#L122">122</a>     } <strong class="jxr_keyword">catch</strong> (Exception e) {
-<a class="jxr_linenumber" name="L123" href="#L123">123</a>       Assertions.assertTrue(e instanceof ResultMapException, <span class="jxr_string">"Expected ResultMapException"</span>);
-<a class="jxr_linenumber" name="L124" href="#L124">124</a>       Assertions.assertTrue(e.getMessage().contains(<span class="jxr_string">"column 'foo'"</span>), <span class="jxr_string">"column name is not in exception"</span>);
-<a class="jxr_linenumber" name="L125" href="#L125">125</a>     }
-<a class="jxr_linenumber" name="L126" href="#L126">126</a>   }
-<a class="jxr_linenumber" name="L127" href="#L127">127</a> 
-<a class="jxr_linenumber" name="L128" href="#L128">128</a>   @Test
-<a class="jxr_linenumber" name="L129" href="#L129">129</a>   <strong class="jxr_keyword">void</strong> getResultWithResultSetAndColumnIndexThrowsException() <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L130" href="#L130">130</a>     doThrow(<strong class="jxr_keyword">new</strong> SQLException(<span class="jxr_string">"invalid column"</span>)).when((UnknownTypeHandler) TYPE_HANDLER).getNullableResult(rs, 1);
-<a class="jxr_linenumber" name="L131" href="#L131">131</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L132" href="#L132">132</a>       TYPE_HANDLER.getResult(rs, 1);
-<a class="jxr_linenumber" name="L133" href="#L133">133</a>       Assertions.fail(<span class="jxr_string">"Should have thrown a ResultMapException"</span>);
-<a class="jxr_linenumber" name="L134" href="#L134">134</a>     } <strong class="jxr_keyword">catch</strong> (Exception e) {
-<a class="jxr_linenumber" name="L135" href="#L135">135</a>       Assertions.assertTrue(e instanceof ResultMapException, <span class="jxr_string">"Expected ResultMapException"</span>);
-<a class="jxr_linenumber" name="L136" href="#L136">136</a>       Assertions.assertTrue(e.getMessage().contains(<span class="jxr_string">"column #1"</span>), <span class="jxr_string">"column index is not in exception"</span>);
-<a class="jxr_linenumber" name="L137" href="#L137">137</a>     }
-<a class="jxr_linenumber" name="L138" href="#L138">138</a>   }
-<a class="jxr_linenumber" name="L139" href="#L139">139</a> 
-<a class="jxr_linenumber" name="L140" href="#L140">140</a>   @Test
-<a class="jxr_linenumber" name="L141" href="#L141">141</a>   <strong class="jxr_keyword">void</strong> getResultWithCallableStatementAndColumnIndexThrowsException() <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L142" href="#L142">142</a>     doThrow(<strong class="jxr_keyword">new</strong> SQLException(<span class="jxr_string">"invalid column"</span>)).when((UnknownTypeHandler) TYPE_HANDLER).getNullableResult(cs, 1);
-<a class="jxr_linenumber" name="L143" href="#L143">143</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L144" href="#L144">144</a>       TYPE_HANDLER.getResult(cs, 1);
-<a class="jxr_linenumber" name="L145" href="#L145">145</a>       Assertions.fail(<span class="jxr_string">"Should have thrown a ResultMapException"</span>);
-<a class="jxr_linenumber" name="L146" href="#L146">146</a>     } <strong class="jxr_keyword">catch</strong> (Exception e) {
-<a class="jxr_linenumber" name="L147" href="#L147">147</a>       Assertions.assertTrue(e instanceof ResultMapException, <span class="jxr_string">"Expected ResultMapException"</span>);
-<a class="jxr_linenumber" name="L148" href="#L148">148</a>       Assertions.assertTrue(e.getMessage().contains(<span class="jxr_string">"column #1"</span>), <span class="jxr_string">"column index is not in exception"</span>);
-<a class="jxr_linenumber" name="L149" href="#L149">149</a>     }
-<a class="jxr_linenumber" name="L150" href="#L150">150</a>   }
-<a class="jxr_linenumber" name="L151" href="#L151">151</a> 
-<a class="jxr_linenumber" name="L152" href="#L152">152</a> }
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>     doThrow(<strong class="jxr_keyword">new</strong> SQLException(<span class="jxr_string">"invalid column"</span>)).when((UnknownTypeHandler) TYPE_HANDLER).setNonNullParameter(ps, 1, 99,
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>         JdbcType.INTEGER);
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>       TYPE_HANDLER.setParameter(ps, 1, 99, JdbcType.INTEGER);
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>       Assertions.fail(<span class="jxr_string">"Should have thrown a TypeException"</span>);
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>     } <strong class="jxr_keyword">catch</strong> (Exception e) {
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>       Assertions.assertTrue(e instanceof TypeException, <span class="jxr_string">"Expected TypedException"</span>);
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>       Assertions.assertTrue(e.getMessage().contains(<span class="jxr_string">"parameter #1"</span>), <span class="jxr_string">"Parameter index is in exception"</span>);
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>     }
+<a class="jxr_linenumber" name="L115" href="#L115">115</a>   }
+<a class="jxr_linenumber" name="L116" href="#L116">116</a> 
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>   @Test
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>   <strong class="jxr_keyword">void</strong> getResultWithResultSetAndColumnNameThrowsException() <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L119" href="#L119">119</a>     doThrow(<strong class="jxr_keyword">new</strong> SQLException(<span class="jxr_string">"invalid column"</span>)).when((UnknownTypeHandler) TYPE_HANDLER).getNullableResult(rs, <span class="jxr_string">"foo"</span>);
+<a class="jxr_linenumber" name="L120" href="#L120">120</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L121" href="#L121">121</a>       TYPE_HANDLER.getResult(rs, <span class="jxr_string">"foo"</span>);
+<a class="jxr_linenumber" name="L122" href="#L122">122</a>       Assertions.fail(<span class="jxr_string">"Should have thrown a ResultMapException"</span>);
+<a class="jxr_linenumber" name="L123" href="#L123">123</a>     } <strong class="jxr_keyword">catch</strong> (Exception e) {
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>       Assertions.assertTrue(e instanceof ResultMapException, <span class="jxr_string">"Expected ResultMapException"</span>);
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>       Assertions.assertTrue(e.getMessage().contains(<span class="jxr_string">"column 'foo'"</span>), <span class="jxr_string">"column name is not in exception"</span>);
+<a class="jxr_linenumber" name="L126" href="#L126">126</a>     }
+<a class="jxr_linenumber" name="L127" href="#L127">127</a>   }
+<a class="jxr_linenumber" name="L128" href="#L128">128</a> 
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>   @Test
+<a class="jxr_linenumber" name="L130" href="#L130">130</a>   <strong class="jxr_keyword">void</strong> getResultWithResultSetAndColumnIndexThrowsException() <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L131" href="#L131">131</a>     doThrow(<strong class="jxr_keyword">new</strong> SQLException(<span class="jxr_string">"invalid column"</span>)).when((UnknownTypeHandler) TYPE_HANDLER).getNullableResult(rs, 1);
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>       TYPE_HANDLER.getResult(rs, 1);
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>       Assertions.fail(<span class="jxr_string">"Should have thrown a ResultMapException"</span>);
+<a class="jxr_linenumber" name="L135" href="#L135">135</a>     } <strong class="jxr_keyword">catch</strong> (Exception e) {
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>       Assertions.assertTrue(e instanceof ResultMapException, <span class="jxr_string">"Expected ResultMapException"</span>);
+<a class="jxr_linenumber" name="L137" href="#L137">137</a>       Assertions.assertTrue(e.getMessage().contains(<span class="jxr_string">"column #1"</span>), <span class="jxr_string">"column index is not in exception"</span>);
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>     }
+<a class="jxr_linenumber" name="L139" href="#L139">139</a>   }
+<a class="jxr_linenumber" name="L140" href="#L140">140</a> 
+<a class="jxr_linenumber" name="L141" href="#L141">141</a>   @Test
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>   <strong class="jxr_keyword">void</strong> getResultWithCallableStatementAndColumnIndexThrowsException() <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>     doThrow(<strong class="jxr_keyword">new</strong> SQLException(<span class="jxr_string">"invalid column"</span>)).when((UnknownTypeHandler) TYPE_HANDLER).getNullableResult(cs, 1);
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L145" href="#L145">145</a>       TYPE_HANDLER.getResult(cs, 1);
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>       Assertions.fail(<span class="jxr_string">"Should have thrown a ResultMapException"</span>);
+<a class="jxr_linenumber" name="L147" href="#L147">147</a>     } <strong class="jxr_keyword">catch</strong> (Exception e) {
+<a class="jxr_linenumber" name="L148" href="#L148">148</a>       Assertions.assertTrue(e instanceof ResultMapException, <span class="jxr_string">"Expected ResultMapException"</span>);
+<a class="jxr_linenumber" name="L149" href="#L149">149</a>       Assertions.assertTrue(e.getMessage().contains(<span class="jxr_string">"column #1"</span>), <span class="jxr_string">"column index is not in exception"</span>);
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>     }
+<a class="jxr_linenumber" name="L151" href="#L151">151</a>   }
+<a class="jxr_linenumber" name="L152" href="#L152">152</a> 
+<a class="jxr_linenumber" name="L153" href="#L153">153</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2020 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>

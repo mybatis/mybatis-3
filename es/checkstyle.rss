@@ -25,9 +25,9 @@ under the License.
     <language>en-us</language>
     <copyright>&#169;2009 - 2020 MyBatis.org</copyright>
     <item>
-      <title>File: 274,
+      <title>File: 290,
              Errors: 0,
-             Warnings: 1105,
+             Warnings: 1039,
              Infos: 0
       </title>
             <link>http://www.mybatis.org/mybatis-3/checkstyle.html</link>
@@ -192,7 +192,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  5
+                  2
                 </td>
                 <td>
                   0
@@ -206,7 +206,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  9
+                  8
                 </td>
                 <td>
                   0
@@ -243,6 +243,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.transaction.TransactionException.java">org/apache/ibatis/transaction/TransactionException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.annotations.CacheNamespace.java">org/apache/ibatis/annotations/CacheNamespace.java</a>
                 </td>
                 <td>
                   0
@@ -312,6 +326,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.annotations.Delete.java">org/apache/ibatis/annotations/Delete.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.builder.xml.XMLConfigBuilder.java">org/apache/ibatis/builder/xml/XMLConfigBuilder.java</a>
                 </td>
                 <td>
@@ -332,7 +360,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  18
+                  17
                 </td>
                 <td>
                   0
@@ -346,7 +374,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  3
+                  2
                 </td>
                 <td>
                   0
@@ -369,6 +397,34 @@ under the License.
                           <tr>
                 <td>
                   <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.datasource.pooled.PooledConnection.java">org/apache/ibatis/datasource/pooled/PooledConnection.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.annotations.Mapper.java">org/apache/ibatis/annotations/Mapper.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.annotations.Param.java">org/apache/ibatis/annotations/Param.java</a>
                 </td>
                 <td>
                   0
@@ -452,6 +508,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.annotations.CacheNamespaceRef.java">org/apache/ibatis/annotations/CacheNamespaceRef.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.logging.slf4j.Slf4jLocationAwareLoggerImpl.java">org/apache/ibatis/logging/slf4j/Slf4jLocationAwareLoggerImpl.java</a>
                 </td>
                 <td>
@@ -486,7 +556,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  14
+                  13
                 </td>
                 <td>
                   0
@@ -528,7 +598,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  46
+                  45
                 </td>
                 <td>
                   0
@@ -570,7 +640,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  3
+                  4
                 </td>
                 <td>
                   0
@@ -599,6 +669,20 @@ under the License.
                 </td>
                 <td>
                   1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.annotations.Options.java">org/apache/ibatis/annotations/Options.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
                 </td>
                 <td>
                   0
@@ -774,6 +858,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.type.MappedJdbcTypes.java">org/apache/ibatis/type/MappedJdbcTypes.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator.java">org/apache/ibatis/executor/keygen/Jdbc3KeyGenerator.java</a>
                 </td>
                 <td>
@@ -858,13 +956,27 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.annotations.Flush.java">org/apache/ibatis/annotations/Flush.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.cache.CacheKey.java">org/apache/ibatis/cache/CacheKey.java</a>
                 </td>
                 <td>
                   0
                 </td>
                 <td>
-                  7
+                  4
                 </td>
                 <td>
                   0
@@ -998,6 +1110,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.type.MappedTypes.java">org/apache/ibatis/type/MappedTypes.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.mapping.DefaultDatabaseIdProvider.java">org/apache/ibatis/mapping/DefaultDatabaseIdProvider.java</a>
                 </td>
                 <td>
@@ -1082,6 +1208,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.annotations.MapKey.java">org/apache/ibatis/annotations/MapKey.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.mapping.CacheBuilder.java">org/apache/ibatis/mapping/CacheBuilder.java</a>
                 </td>
                 <td>
@@ -1097,20 +1237,6 @@ under the License.
                           <tr>
                 <td>
                   <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.executor.statement.StatementUtil.java">org/apache/ibatis/executor/statement/StatementUtil.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  1
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.builder.InitializingObject.java">org/apache/ibatis/builder/InitializingObject.java</a>
                 </td>
                 <td>
                   0
@@ -1172,7 +1298,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  3
+                  4
                 </td>
                 <td>
                   0
@@ -1194,13 +1320,27 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.annotations.Select.java">org/apache/ibatis/annotations/Select.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.io.DefaultVFS.java">org/apache/ibatis/io/DefaultVFS.java</a>
                 </td>
                 <td>
                   0
                 </td>
                 <td>
-                  9
+                  1
                 </td>
                 <td>
                   0
@@ -1214,7 +1354,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  7
+                  6
                 </td>
                 <td>
                   0
@@ -1228,7 +1368,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  2
+                  1
                 </td>
                 <td>
                   0
@@ -1306,6 +1446,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.annotations.ConstructorArgs.java">org/apache/ibatis/annotations/ConstructorArgs.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.logging.log4j2.Log4j2LoggerImpl.java">org/apache/ibatis/logging/log4j2/Log4j2LoggerImpl.java</a>
                 </td>
                 <td>
@@ -1340,7 +1494,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  8
+                  6
                 </td>
                 <td>
                   0
@@ -1354,7 +1508,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  8
+                  5
                 </td>
                 <td>
                   0
@@ -1368,7 +1522,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  6
+                  3
                 </td>
                 <td>
                   0
@@ -1522,7 +1676,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  11
+                  7
                 </td>
                 <td>
                   0
@@ -1698,6 +1852,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.annotations.AutomapConstructor.java">org/apache/ibatis/annotations/AutomapConstructor.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.datasource.jndi.JndiDataSourceFactory.java">org/apache/ibatis/datasource/jndi/JndiDataSourceFactory.java</a>
                 </td>
                 <td>
@@ -1727,20 +1895,6 @@ under the License.
                           <tr>
                 <td>
                   <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.type.SqlDateTypeHandler.java">org/apache/ibatis/type/SqlDateTypeHandler.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  1
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.io.ResolverUtil.java">org/apache/ibatis/io/ResolverUtil.java</a>
                 </td>
                 <td>
                   0
@@ -1802,7 +1956,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  11
+                  8
                 </td>
                 <td>
                   0
@@ -1844,7 +1998,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  6
+                  5
                 </td>
                 <td>
                   0
@@ -1872,7 +2026,21 @@ under the License.
                   0
                 </td>
                 <td>
-                  6
+                  5
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.annotations.Update.java">org/apache/ibatis/annotations/Update.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
                 </td>
                 <td>
                   0
@@ -1950,6 +2118,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.annotations.Insert.java">org/apache/ibatis/annotations/Insert.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.type.LocalDateTimeTypeHandler.java">org/apache/ibatis/type/LocalDateTimeTypeHandler.java</a>
                 </td>
                 <td>
@@ -1970,21 +2152,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  3
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.transaction.Transaction.java">org/apache/ibatis/transaction/Transaction.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  5
+                  2
                 </td>
                 <td>
                   0
@@ -2068,21 +2236,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  3
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.transaction.TransactionFactory.java">org/apache/ibatis/transaction/TransactionFactory.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  1
+                  4
                 </td>
                 <td>
                   0
@@ -2124,7 +2278,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  3
+                  4
                 </td>
                 <td>
                   0
@@ -2572,7 +2726,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  18
+                  8
                 </td>
                 <td>
                   0
@@ -2614,7 +2768,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  5
+                  4
                 </td>
                 <td>
                   0
@@ -2656,7 +2810,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  6
+                  4
                 </td>
                 <td>
                   0
@@ -2684,7 +2838,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  7
+                  6
                 </td>
                 <td>
                   0
@@ -2726,7 +2880,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  36
+                  24
                 </td>
                 <td>
                   0
@@ -2754,7 +2908,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  1
+                  2
                 </td>
                 <td>
                   0
@@ -2852,7 +3006,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  18
+                  15
                 </td>
                 <td>
                   0
@@ -2973,6 +3127,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.session.SqlSessionFactory.java">org/apache/ibatis/session/SqlSessionFactory.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.annotations.TypeDiscriminator.java">org/apache/ibatis/annotations/TypeDiscriminator.java</a>
                 </td>
                 <td>
                   0
@@ -3146,7 +3314,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  2
+                  3
                 </td>
                 <td>
                   0
@@ -3189,6 +3357,20 @@ under the License.
                 </td>
                 <td>
                   1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.annotations.SelectKey.java">org/apache/ibatis/annotations/SelectKey.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
                 </td>
                 <td>
                   0
@@ -3258,7 +3440,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  3
+                  4
                 </td>
                 <td>
                   0
@@ -3322,6 +3504,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.annotations.Lang.java">org/apache/ibatis/annotations/Lang.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.scripting.xmltags.WhereSqlNode.java">org/apache/ibatis/scripting/xmltags/WhereSqlNode.java</a>
                 </td>
                 <td>
@@ -3342,7 +3538,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  9
+                  7
                 </td>
                 <td>
                   0
@@ -3384,7 +3580,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  14
+                  15
                 </td>
                 <td>
                   0
@@ -3468,7 +3664,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  60
+                  59
                 </td>
                 <td>
                   0
@@ -3524,7 +3720,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  8
+                  7
                 </td>
                 <td>
                   0
@@ -3538,7 +3734,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  2
+                  1
                 </td>
                 <td>
                   0
@@ -3552,7 +3748,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  20
+                  19
                 </td>
                 <td>
                   0
@@ -3608,7 +3804,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  8
+                  4
                 </td>
                 <td>
                   0
@@ -3622,7 +3818,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  20
+                  21
                 </td>
                 <td>
                   0
@@ -3672,6 +3868,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.annotations.ResultType.java">org/apache/ibatis/annotations/ResultType.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.jdbc.Null.java">org/apache/ibatis/jdbc/Null.java</a>
                 </td>
                 <td>
@@ -3692,7 +3902,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  116
+                  100
                 </td>
                 <td>
                   0
@@ -3734,7 +3944,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  7
+                  8
                 </td>
                 <td>
                   0
@@ -3799,6 +4009,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.session.ExecutorType.java">org/apache/ibatis/session/ExecutorType.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.type.Alias.java">org/apache/ibatis/type/Alias.java</a>
                 </td>
                 <td>
                   0

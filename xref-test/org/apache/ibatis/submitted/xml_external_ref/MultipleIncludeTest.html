@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/submitted/xml_external_ref/MultipleIncludeTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2019 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2020 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
@@ -75,8 +75,8 @@
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>    <strong class="jxr_keyword">private</strong> SqlSessionFactory getSqlSessionFactoryJavaConfig() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>  
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>      Configuration configuration = <strong class="jxr_keyword">new</strong> Configuration();
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>      Environment environment = <strong class="jxr_keyword">new</strong> Environment(<span class="jxr_string">"development"</span>, <strong class="jxr_keyword">new</strong> JdbcTransactionFactory(), <strong class="jxr_keyword">new</strong> UnpooledDataSource(
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>          <span class="jxr_string">"org.hsqldb.jdbcDriver"</span>, <span class="jxr_string">"jdbc:hsqldb:mem:xmlextref"</span>, <strong class="jxr_keyword">null</strong>));
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>      Environment environment = <strong class="jxr_keyword">new</strong> Environment(<span class="jxr_string">"development"</span>, <strong class="jxr_keyword">new</strong> JdbcTransactionFactory(),
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>          <strong class="jxr_keyword">new</strong> UnpooledDataSource(<span class="jxr_string">"org.hsqldb.jdbcDriver"</span>, <span class="jxr_string">"jdbc:hsqldb:mem:xmlextref"</span>, <strong class="jxr_keyword">null</strong>));
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>      configuration.setEnvironment(environment);
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>      configuration.addMapper(MultipleIncludePersonMapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>      SqlSessionFactory sqlSessionFactory = <strong class="jxr_keyword">new</strong> SqlSessionFactoryBuilder().build(configuration);
@@ -88,7 +88,7 @@
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>  
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> initDb(SqlSessionFactory sqlSessionFactory) <strong class="jxr_keyword">throws</strong> IOException, SQLException {
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>      BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>              <span class="jxr_string">"org/apache/ibatis/submitted/xml_external_ref/CreateDB.sql"</span>);
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>          <span class="jxr_string">"org/apache/ibatis/submitted/xml_external_ref/CreateDB.sql"</span>);
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>    }
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>  
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>  }

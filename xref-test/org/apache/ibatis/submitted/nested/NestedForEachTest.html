@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/submitted/nested/NestedForEachTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2019 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2020 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
@@ -49,7 +49,7 @@
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>      }
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>  
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>      BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>              <span class="jxr_string">"org/apache/ibatis/submitted/nested/CreateDB.sql"</span>);
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>          <span class="jxr_string">"org/apache/ibatis/submitted/nested/CreateDB.sql"</span>);
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>    }
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>  
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>    @Test
@@ -60,8 +60,8 @@
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>        <a name="Parameter" href="../../../../../org/apache/ibatis/subm<a name="Parameter" href="../../../../../org/apache/ibatis/submitted/nested/Parameter.html#Parameter">Parameter</a>ted/Parameter.html#Parameter">Parameter</a> parameter = <strong class="jxr_keyword">new</strong> <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/nested/Parameter.html#Parameter">Parameter</a>();
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>        parameter.addName(name);
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>  
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>        List&lt;Map&lt;String, Object&gt;&gt; answer =
-<a class="jxr_linenumber" name="L56" href="#L56">56</a>            sqlSession.selectList(<span class="jxr_string">"org.apache.ibatis.submitted.nested.Mapper.simpleSelect"</span>, parameter);
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>        List&lt;Map&lt;String, Object&gt;&gt; answer = sqlSession.selectList(<span class="jxr_string">"org.apache.ibatis.submitted.nested.Mapper.simpleSelect"</span>,
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>            parameter);
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>  
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>        assertEquals(3, answer.size());
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>      }
@@ -71,11 +71,11 @@
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>    <strong class="jxr_keyword">void</strong> testSimpleSelectWithPrimitives() {
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>        Map&lt;String, Object&gt; parameter = <strong class="jxr_keyword">new</strong> HashMap&lt;&gt;();
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>        <strong class="jxr_keyword">int</strong>[] array = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">int</strong>[] {1, 3, 5};
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>        <strong class="jxr_keyword">int</strong>[] array = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">int</strong>[] { 1, 3, 5 };
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>        parameter.put(<span class="jxr_string">"ids"</span>, array);
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>  
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>        List&lt;Map&lt;String, Object&gt;&gt; answer =
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>            sqlSession.selectList(<span class="jxr_string">"org.apache.ibatis.submitted.nested.Mapper.simpleSelectWithPrimitives"</span>, parameter);
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>        List&lt;Map&lt;String, Object&gt;&gt; answer = sqlSession
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>            .selectList(<span class="jxr_string">"org.apache.ibatis.submitted.nested.Mapper.simpleSelectWithPrimitives"</span>, parameter);
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>  
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>        assertEquals(3, answer.size());
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>      }
@@ -101,8 +101,8 @@
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>        <a name="Parameter" href="../../../../../org/apache/ibatis/subm<a name="Parameter" href="../../../../../org/apache/ibatis/submitted/nested/Parameter.html#Parameter">Parameter</a>ted/Parameter.html#Parameter">Parameter</a> parameter = <strong class="jxr_keyword">new</strong> <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/nested/Parameter.html#Parameter">Parameter</a>();
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>        parameter.addName(name);
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>  
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>        List&lt;Map&lt;String, Object&gt;&gt; answer =
-<a class="jxr_linenumber" name="L97" href="#L97">97</a>            sqlSession.selectList(<span class="jxr_string">"org.apache.ibatis.submitted.nested.Mapper.nestedSelect"</span>, parameter);
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>        List&lt;Map&lt;String, Object&gt;&gt; answer = sqlSession.selectList(<span class="jxr_string">"org.apache.ibatis.submitted.nested.Mapper.nestedSelect"</span>,
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>            parameter);
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>  
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>        assertEquals(2, answer.size());
 <a class="jxr_linenumber" name="L100" href="#L100">100</a>     }
@@ -124,8 +124,8 @@
 <a class="jxr_linenumber" name="L116" href="#L116">116</a>       name.addFirstName(<span class="jxr_string">"Betty"</span>);
 <a class="jxr_linenumber" name="L117" href="#L117">117</a>       parameter.addName(name);
 <a class="jxr_linenumber" name="L118" href="#L118">118</a> 
-<a class="jxr_linenumber" name="L119" href="#L119">119</a>       List&lt;Map&lt;String, Object&gt;&gt; answer =
-<a class="jxr_linenumber" name="L120" href="#L120">120</a>           sqlSession.selectList(<span class="jxr_string">"org.apache.ibatis.submitted.nested.Mapper.nestedSelect"</span>, parameter);
+<a class="jxr_linenumber" name="L119" href="#L119">119</a>       List&lt;Map&lt;String, Object&gt;&gt; answer = sqlSession.selectList(<span class="jxr_string">"org.apache.ibatis.submitted.nested.Mapper.nestedSelect"</span>,
+<a class="jxr_linenumber" name="L120" href="#L120">120</a>           parameter);
 <a class="jxr_linenumber" name="L121" href="#L121">121</a> 
 <a class="jxr_linenumber" name="L122" href="#L122">122</a>       assertEquals(3, answer.size());
 <a class="jxr_linenumber" name="L123" href="#L123">123</a>     }

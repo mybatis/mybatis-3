@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../../apidocs/org/apache/ibatis/session/defaults/DefaultSqlSession.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2019 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2020 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
@@ -27,21 +27,21 @@
 <a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> java.sql.Connection;
 <a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> java.sql.SQLException;
 <a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> java.util.ArrayList;
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> java.util.Collection;
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> java.util.HashMap;
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> java.util.List;
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> java.util.Map;
-<a class="jxr_linenumber" name="L26" href="#L26">26</a>  
-<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.binding.BindingException;
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.cursor.Cursor;
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.exceptions.ExceptionFactory;
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.exceptions.TooManyResultsException;
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.executor.BatchResult;
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.executor.ErrorContext;
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.executor.Executor;
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.executor.result.DefaultMapResultHandler;
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.executor.result.DefaultResultContext;
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.mapping.MappedStatement;
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> java.util.HashMap;
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> java.util.List;
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> java.util.Map;
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.binding.BindingException;
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.cursor.Cursor;
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.exceptions.ExceptionFactory;
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.exceptions.TooManyResultsException;
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.executor.BatchResult;
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.executor.ErrorContext;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.executor.Executor;
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.executor.result.DefaultMapResultHandler;
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.executor.result.DefaultResultContext;
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.mapping.MappedStatement;
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.reflection.ParamNameResolver;
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.session.Configuration;
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.session.ResultHandler;
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.session.RowBounds;
@@ -325,36 +325,28 @@
 <a class="jxr_linenumber" name="L317" href="#L317">317</a>   }
 <a class="jxr_linenumber" name="L318" href="#L318">318</a> 
 <a class="jxr_linenumber" name="L319" href="#L319">319</a>   <strong class="jxr_keyword">private</strong> Object wrapCollection(<strong class="jxr_keyword">final</strong> Object object) {
-<a class="jxr_linenumber" name="L320" href="#L320">320</a>     <strong class="jxr_keyword">if</strong> (object instanceof Collection) {
-<a class="jxr_linenumber" name="L321" href="#L321">321</a>       StrictMap&lt;Object&gt; map = <strong class="jxr_keyword">new</strong> StrictMap&lt;&gt;();
-<a class="jxr_linenumber" name="L322" href="#L322">322</a>       map.put(<span class="jxr_string">"collection"</span>, object);
-<a class="jxr_linenumber" name="L323" href="#L323">323</a>       <strong class="jxr_keyword">if</strong> (object instanceof List) {
-<a class="jxr_linenumber" name="L324" href="#L324">324</a>         map.put(<span class="jxr_string">"list"</span>, object);
-<a class="jxr_linenumber" name="L325" href="#L325">325</a>       }
-<a class="jxr_linenumber" name="L326" href="#L326">326</a>       <strong class="jxr_keyword">return</strong> map;
-<a class="jxr_linenumber" name="L327" href="#L327">327</a>     } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (object != <strong class="jxr_keyword">null</strong> &amp;&amp; object.getClass().isArray()) {
-<a class="jxr_linenumber" name="L328" href="#L328">328</a>       StrictMap&lt;Object&gt; map = <strong class="jxr_keyword">new</strong> StrictMap&lt;&gt;();
-<a class="jxr_linenumber" name="L329" href="#L329">329</a>       map.put(<span class="jxr_string">"array"</span>, object);
-<a class="jxr_linenumber" name="L330" href="#L330">330</a>       <strong class="jxr_keyword">return</strong> map;
-<a class="jxr_linenumber" name="L331" href="#L331">331</a>     }
-<a class="jxr_linenumber" name="L332" href="#L332">332</a>     <strong class="jxr_keyword">return</strong> object;
-<a class="jxr_linenumber" name="L333" href="#L333">333</a>   }
-<a class="jxr_linenumber" name="L334" href="#L334">334</a> 
-<a class="jxr_linenumber" name="L335" href="#L335">335</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> StrictMap&lt;V&gt; <strong class="jxr_keyword">extends</strong> HashMap&lt;String, V&gt; {
-<a class="jxr_linenumber" name="L336" href="#L336">336</a> 
-<a class="jxr_linenumber" name="L337" href="#L337">337</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = -5741767162221585340L;
+<a class="jxr_linenumber" name="L320" href="#L320">320</a>     <strong class="jxr_keyword">return</strong> ParamNameResolver.wrapToMapIfCollection(object, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L321" href="#L321">321</a>   }
+<a class="jxr_linenumber" name="L322" href="#L322">322</a> 
+<a class="jxr_linenumber" name="L323" href="#L323">323</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L324" href="#L324">324</a> <em class="jxr_javadoccomment">   * @deprecated Since 3.5.5</em>
+<a class="jxr_linenumber" name="L325" href="#L325">325</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L326" href="#L326">326</a>   @Deprecated
+<a class="jxr_linenumber" name="L327" href="#L327">327</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> StrictMap&lt;V&gt; <strong class="jxr_keyword">extends</strong> HashMap&lt;String, V&gt; {
+<a class="jxr_linenumber" name="L328" href="#L328">328</a> 
+<a class="jxr_linenumber" name="L329" href="#L329">329</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = -5741767162221585340L;
+<a class="jxr_linenumber" name="L330" href="#L330">330</a> 
+<a class="jxr_linenumber" name="L331" href="#L331">331</a>     @Override
+<a class="jxr_linenumber" name="L332" href="#L332">332</a>     <strong class="jxr_keyword">public</strong> V get(Object key) {
+<a class="jxr_linenumber" name="L333" href="#L333">333</a>       <strong class="jxr_keyword">if</strong> (!<strong class="jxr_keyword">super</strong>.containsKey(key)) {
+<a class="jxr_linenumber" name="L334" href="#L334">334</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="BindingException" href="../../../../../org/apache/ibatis/binding/BindingException.html#BindingException">BindingException</a>(<span class="jxr_string">"Parameter '"</span> + key + <span class="jxr_string">"' not found. Available parameters are "</span> + <strong class="jxr_keyword">this</strong>.keySet());
+<a class="jxr_linenumber" name="L335" href="#L335">335</a>       }
+<a class="jxr_linenumber" name="L336" href="#L336">336</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">super</strong>.get(key);
+<a class="jxr_linenumber" name="L337" href="#L337">337</a>     }
 <a class="jxr_linenumber" name="L338" href="#L338">338</a> 
-<a class="jxr_linenumber" name="L339" href="#L339">339</a>     @Override
-<a class="jxr_linenumber" name="L340" href="#L340">340</a>     <strong class="jxr_keyword">public</strong> V get(Object key) {
-<a class="jxr_linenumber" name="L341" href="#L341">341</a>       <strong class="jxr_keyword">if</strong> (!<strong class="jxr_keyword">super</strong>.containsKey(key)) {
-<a class="jxr_linenumber" name="L342" href="#L342">342</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="BindingException" href="../../../../../org/apache/ibatis/binding/BindingException.html#BindingException">BindingException</a>(<span class="jxr_string">"Parameter '"</span> + key + <span class="jxr_string">"' not found. Available parameters are "</span> + <strong class="jxr_keyword">this</strong>.keySet());
-<a class="jxr_linenumber" name="L343" href="#L343">343</a>       }
-<a class="jxr_linenumber" name="L344" href="#L344">344</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">super</strong>.get(key);
-<a class="jxr_linenumber" name="L345" href="#L345">345</a>     }
-<a class="jxr_linenumber" name="L346" href="#L346">346</a> 
-<a class="jxr_linenumber" name="L347" href="#L347">347</a>   }
-<a class="jxr_linenumber" name="L348" href="#L348">348</a> 
-<a class="jxr_linenumber" name="L349" href="#L349">349</a> }
+<a class="jxr_linenumber" name="L339" href="#L339">339</a>   }
+<a class="jxr_linenumber" name="L340" href="#L340">340</a> 
+<a class="jxr_linenumber" name="L341" href="#L341">341</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2020 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>

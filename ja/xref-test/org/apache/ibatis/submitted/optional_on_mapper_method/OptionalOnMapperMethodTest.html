@@ -51,8 +51,8 @@
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>    @BeforeAll
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>    <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> setUp() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>      <em class="jxr_comment">// create an SqlSessionFactory</em>
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>      <strong class="jxr_keyword">try</strong> (Reader reader = Resources.getResourceAsReader(
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>          <span class="jxr_string">"org/apache/ibatis/submitted/optional_on_mapper_method/mybatis-config.xml"</span>)) {
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>      <strong class="jxr_keyword">try</strong> (Reader reader = Resources
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>          .getResourceAsReader(<span class="jxr_string">"org/apache/ibatis/submitted/optional_on_mapper_method/mybatis-config.xml"</span>)) {
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>        sqlSessionFactory = <strong class="jxr_keyword">new</strong> SqlSessionFactoryBuilder().build(reader);
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>      }
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>  

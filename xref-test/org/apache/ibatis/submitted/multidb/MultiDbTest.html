@@ -35,23 +35,23 @@
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.api.BeforeAll;
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.api.Test;
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>  
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="MultiDbTest" href="../../../../../org/apache/ibatis/submitted/multidb/MultiDbTest.html#MultiDbTest">MultiDbTest</a> {
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">class</strong> <a name="MultiDbTest" href="../../../../../org/apache/ibatis/submitted/multidb/MultiDbTest.html#MultiDbTest">MultiDbTest</a> {
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>  
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>    <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">static</strong> SqlSessionFactory sqlSessionFactory;
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>    <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">static</strong> SqlSessionFactory sqlSessionFactory2;
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>  
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>    @BeforeAll
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> setUp() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>    <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> setUp() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>      <strong class="jxr_keyword">try</strong> (Reader reader = Resources.getResourceAsReader(<span class="jxr_string">"org/apache/ibatis/submitted/multidb/MultiDbConfig.xml"</span>)) {
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>        sqlSessionFactory = <strong class="jxr_keyword">new</strong> SqlSessionFactoryBuilder().build(reader);
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>      }
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>  
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>      BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>              <span class="jxr_string">"org/apache/ibatis/submitted/multidb/CreateDB.sql"</span>);
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>          <span class="jxr_string">"org/apache/ibatis/submitted/multidb/CreateDB.sql"</span>);
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>    }
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>  
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>    @Test
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldExecuteHsqlQuery() {
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>    <strong class="jxr_keyword">void</strong> shouldExecuteHsqlQuery() {
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>        <a name="MultiDbMapper" href="../../../../../org/apache/ibatis/submitted/multidb/MultiDbMapper.html#MultiDbMapper">MultiDbMapper</a> mapper = sqlSession.getMapper(MultiDbMapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>        String answer = mapper.select1(1);
@@ -60,7 +60,7 @@
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>    }
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>  
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>    @Test
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldExecuteCommonQuery() {
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>    <strong class="jxr_keyword">void</strong> shouldExecuteCommonQuery() {
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>        <a name="MultiDbMapper" href="../../../../../org/apache/ibatis/submitted/multidb/MultiDbMapper.html#MultiDbMapper">MultiDbMapper</a> mapper = sqlSession.getMapper(MultiDbMapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>        String answer = mapper.select2(1);
@@ -69,7 +69,7 @@
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>    }
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>  
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>    @Test
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldExecuteHsqlQueryWithDynamicIf() {
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>    <strong class="jxr_keyword">void</strong> shouldExecuteHsqlQueryWithDynamicIf() {
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>        <a name="MultiDbMapper" href="../../../../../org/apache/ibatis/submitted/multidb/MultiDbMapper.html#MultiDbMapper">MultiDbMapper</a> mapper = sqlSession.getMapper(MultiDbMapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>        String answer = mapper.select3(1);
@@ -78,7 +78,7 @@
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>    }
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>  
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>    @Test
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldExecuteHsqlQueryWithInclude() {
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>    <strong class="jxr_keyword">void</strong> shouldExecuteHsqlQueryWithInclude() {
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>        <a name="MultiDbMapper" href="../../../../../org/apache/ibatis/submitted/multidb/MultiDbMapper.html#MultiDbMapper">MultiDbMapper</a> mapper = sqlSession.getMapper(MultiDbMapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>        String answer = mapper.select4(1);
@@ -87,7 +87,7 @@
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>    }
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>  
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>    @Test
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldInsertInCommonWithSelectKey() {
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>    <strong class="jxr_keyword">void</strong> shouldInsertInCommonWithSelectKey() {
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>        <a name="MultiDbMapper" href="../../../../../org/apache/ibatis/submitted/multidb/MultiDbMapper.html#MultiDbMapper">MultiDbMapper</a> mapper = sqlSession.getMapper(MultiDbMapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>        mapper.insert(<strong class="jxr_keyword">new</strong> <a name="User" href="../../../../../org/apache/ibatis/submitted/multidb/User.html#User">User</a>(2, <span class="jxr_string">"test"</span>));
@@ -97,7 +97,7 @@
 <a class="jxr_linenumber" name="L89" href="#L89">89</a>    }
 <a class="jxr_linenumber" name="L90" href="#L90">90</a>  
 <a class="jxr_linenumber" name="L91" href="#L91">91</a>    @Test
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldInsertInCommonWithSelectKey2() {
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>    <strong class="jxr_keyword">void</strong> shouldInsertInCommonWithSelectKey2() {
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>        <a name="MultiDbMapper" href="../../../../../org/apache/ibatis/submitted/multidb/MultiDbMapper.html#MultiDbMapper">MultiDbMapper</a> mapper = sqlSession.getMapper(MultiDbMapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>        mapper.insert2(<strong class="jxr_keyword">new</strong> <a name="User" href="../../../../../org/apache/ibatis/submitted/multidb/User.html#User">User</a>(2, <span class="jxr_string">"test"</span>));

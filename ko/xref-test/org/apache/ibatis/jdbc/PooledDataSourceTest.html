@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/jdbc/PooledDataSourceTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2019 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2020 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
@@ -129,7 +129,7 @@
 <a class="jxr_linenumber" name="L121" href="#L121">121</a>     ds.setPoolPingConnectionsNotUsedFor(1000);
 <a class="jxr_linenumber" name="L122" href="#L122">122</a> 
 <a class="jxr_linenumber" name="L123" href="#L123">123</a>     Connection con = ds.getConnection();
-<a class="jxr_linenumber" name="L124" href="#L124">124</a>     exexuteQuery(con);
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>     executeQuery(con);
 <a class="jxr_linenumber" name="L125" href="#L125">125</a>     <em class="jxr_comment">// Simulate connection leak by not closing.</em>
 <a class="jxr_linenumber" name="L126" href="#L126">126</a>     <em class="jxr_comment">// con.close();</em>
 <a class="jxr_linenumber" name="L127" href="#L127">127</a> 
@@ -140,11 +140,11 @@
 <a class="jxr_linenumber" name="L132" href="#L132">132</a> 
 <a class="jxr_linenumber" name="L133" href="#L133">133</a>     <em class="jxr_comment">// Should return usable connection.</em>
 <a class="jxr_linenumber" name="L134" href="#L134">134</a>     con = ds.getConnection();
-<a class="jxr_linenumber" name="L135" href="#L135">135</a>     exexuteQuery(con);
+<a class="jxr_linenumber" name="L135" href="#L135">135</a>     executeQuery(con);
 <a class="jxr_linenumber" name="L136" href="#L136">136</a>     con.close();
 <a class="jxr_linenumber" name="L137" href="#L137">137</a>   }
 <a class="jxr_linenumber" name="L138" href="#L138">138</a> 
-<a class="jxr_linenumber" name="L139" href="#L139">139</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> exexuteQuery(Connection con) <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L139" href="#L139">139</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> executeQuery(Connection con) <strong class="jxr_keyword">throws</strong> SQLException {
 <a class="jxr_linenumber" name="L140" href="#L140">140</a>     <strong class="jxr_keyword">try</strong> (PreparedStatement st = con.prepareStatement(<span class="jxr_string">"select 1"</span>);
 <a class="jxr_linenumber" name="L141" href="#L141">141</a>          ResultSet rs = st.executeQuery()) {
 <a class="jxr_linenumber" name="L142" href="#L142">142</a>       <strong class="jxr_keyword">while</strong> (rs.next()) {

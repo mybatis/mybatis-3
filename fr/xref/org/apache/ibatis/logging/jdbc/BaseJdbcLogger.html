@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../../apidocs/org/apache/ibatis/logging/jdbc/BaseJdbcLogger.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2019 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2020 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
@@ -34,9 +34,9 @@
 <a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> java.util.List;
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> java.util.Map;
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> java.util.Set;
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> java.util.StringTokenizer;
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> java.util.stream.Collectors;
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>  
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> java.util.stream.Collectors;
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.builder.SqlSourceBuilder;
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.logging.Log;
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.reflection.ArrayUtil;
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>  
@@ -128,49 +128,43 @@
 <a class="jxr_linenumber" name="L120" href="#L120">120</a>     columnValues.clear();
 <a class="jxr_linenumber" name="L121" href="#L121">121</a>   }
 <a class="jxr_linenumber" name="L122" href="#L122">122</a> 
-<a class="jxr_linenumber" name="L123" href="#L123">123</a>   <strong class="jxr_keyword">protected</strong> String removeBreakingWhitespace(String original) {
-<a class="jxr_linenumber" name="L124" href="#L124">124</a>     StringTokenizer whitespaceStripper = <strong class="jxr_keyword">new</strong> StringTokenizer(original);
-<a class="jxr_linenumber" name="L125" href="#L125">125</a>     StringBuilder builder = <strong class="jxr_keyword">new</strong> StringBuilder();
-<a class="jxr_linenumber" name="L126" href="#L126">126</a>     <strong class="jxr_keyword">while</strong> (whitespaceStripper.hasMoreTokens()) {
-<a class="jxr_linenumber" name="L127" href="#L127">127</a>       builder.append(whitespaceStripper.nextToken());
-<a class="jxr_linenumber" name="L128" href="#L128">128</a>       builder.append(<span class="jxr_string">" "</span>);
-<a class="jxr_linenumber" name="L129" href="#L129">129</a>     }
-<a class="jxr_linenumber" name="L130" href="#L130">130</a>     <strong class="jxr_keyword">return</strong> builder.toString();
-<a class="jxr_linenumber" name="L131" href="#L131">131</a>   }
-<a class="jxr_linenumber" name="L132" href="#L132">132</a> 
-<a class="jxr_linenumber" name="L133" href="#L133">133</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">boolean</strong> isDebugEnabled() {
-<a class="jxr_linenumber" name="L134" href="#L134">134</a>     <strong class="jxr_keyword">return</strong> statementLog.isDebugEnabled();
-<a class="jxr_linenumber" name="L135" href="#L135">135</a>   }
-<a class="jxr_linenumber" name="L136" href="#L136">136</a> 
-<a class="jxr_linenumber" name="L137" href="#L137">137</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">boolean</strong> isTraceEnabled() {
-<a class="jxr_linenumber" name="L138" href="#L138">138</a>     <strong class="jxr_keyword">return</strong> statementLog.isTraceEnabled();
+<a class="jxr_linenumber" name="L123" href="#L123">123</a>   <strong class="jxr_keyword">protected</strong> String removeExtraWhitespace(String original) {
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>     <strong class="jxr_keyword">return</strong> SqlSourceBuilder.removeExtraWhitespaces(original);
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>   }
+<a class="jxr_linenumber" name="L126" href="#L126">126</a> 
+<a class="jxr_linenumber" name="L127" href="#L127">127</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">boolean</strong> isDebugEnabled() {
+<a class="jxr_linenumber" name="L128" href="#L128">128</a>     <strong class="jxr_keyword">return</strong> statementLog.isDebugEnabled();
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>   }
+<a class="jxr_linenumber" name="L130" href="#L130">130</a> 
+<a class="jxr_linenumber" name="L131" href="#L131">131</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">boolean</strong> isTraceEnabled() {
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>     <strong class="jxr_keyword">return</strong> statementLog.isTraceEnabled();
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>   }
+<a class="jxr_linenumber" name="L134" href="#L134">134</a> 
+<a class="jxr_linenumber" name="L135" href="#L135">135</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> debug(String text, <strong class="jxr_keyword">boolean</strong> input) {
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>     <strong class="jxr_keyword">if</strong> (statementLog.isDebugEnabled()) {
+<a class="jxr_linenumber" name="L137" href="#L137">137</a>       statementLog.debug(prefix(input) + text);
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>     }
 <a class="jxr_linenumber" name="L139" href="#L139">139</a>   }
 <a class="jxr_linenumber" name="L140" href="#L140">140</a> 
-<a class="jxr_linenumber" name="L141" href="#L141">141</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> debug(String text, <strong class="jxr_keyword">boolean</strong> input) {
-<a class="jxr_linenumber" name="L142" href="#L142">142</a>     <strong class="jxr_keyword">if</strong> (statementLog.isDebugEnabled()) {
-<a class="jxr_linenumber" name="L143" href="#L143">143</a>       statementLog.debug(prefix(input) + text);
+<a class="jxr_linenumber" name="L141" href="#L141">141</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> trace(String text, <strong class="jxr_keyword">boolean</strong> input) {
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>     <strong class="jxr_keyword">if</strong> (statementLog.isTraceEnabled()) {
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>       statementLog.trace(prefix(input) + text);
 <a class="jxr_linenumber" name="L144" href="#L144">144</a>     }
 <a class="jxr_linenumber" name="L145" href="#L145">145</a>   }
 <a class="jxr_linenumber" name="L146" href="#L146">146</a> 
-<a class="jxr_linenumber" name="L147" href="#L147">147</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> trace(String text, <strong class="jxr_keyword">boolean</strong> input) {
-<a class="jxr_linenumber" name="L148" href="#L148">148</a>     <strong class="jxr_keyword">if</strong> (statementLog.isTraceEnabled()) {
-<a class="jxr_linenumber" name="L149" href="#L149">149</a>       statementLog.trace(prefix(input) + text);
-<a class="jxr_linenumber" name="L150" href="#L150">150</a>     }
-<a class="jxr_linenumber" name="L151" href="#L151">151</a>   }
-<a class="jxr_linenumber" name="L152" href="#L152">152</a> 
-<a class="jxr_linenumber" name="L153" href="#L153">153</a>   <strong class="jxr_keyword">private</strong> String prefix(<strong class="jxr_keyword">boolean</strong> isInput) {
-<a class="jxr_linenumber" name="L154" href="#L154">154</a>     <strong class="jxr_keyword">char</strong>[] buffer = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">char</strong>[queryStack * 2 + 2];
-<a class="jxr_linenumber" name="L155" href="#L155">155</a>     Arrays.fill(buffer, '=');
-<a class="jxr_linenumber" name="L156" href="#L156">156</a>     buffer[queryStack * 2 + 1] = ' ';
-<a class="jxr_linenumber" name="L157" href="#L157">157</a>     <strong class="jxr_keyword">if</strong> (isInput) {
-<a class="jxr_linenumber" name="L158" href="#L158">158</a>       buffer[queryStack * 2] = '&gt;';
-<a class="jxr_linenumber" name="L159" href="#L159">159</a>     } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L160" href="#L160">160</a>       buffer[0] = '&lt;';
-<a class="jxr_linenumber" name="L161" href="#L161">161</a>     }
-<a class="jxr_linenumber" name="L162" href="#L162">162</a>     <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> String(buffer);
-<a class="jxr_linenumber" name="L163" href="#L163">163</a>   }
-<a class="jxr_linenumber" name="L164" href="#L164">164</a> 
-<a class="jxr_linenumber" name="L165" href="#L165">165</a> }
+<a class="jxr_linenumber" name="L147" href="#L147">147</a>   <strong class="jxr_keyword">private</strong> String prefix(<strong class="jxr_keyword">boolean</strong> isInput) {
+<a class="jxr_linenumber" name="L148" href="#L148">148</a>     <strong class="jxr_keyword">char</strong>[] buffer = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">char</strong>[queryStack * 2 + 2];
+<a class="jxr_linenumber" name="L149" href="#L149">149</a>     Arrays.fill(buffer, '=');
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>     buffer[queryStack * 2 + 1] = ' ';
+<a class="jxr_linenumber" name="L151" href="#L151">151</a>     <strong class="jxr_keyword">if</strong> (isInput) {
+<a class="jxr_linenumber" name="L152" href="#L152">152</a>       buffer[queryStack * 2] = '&gt;';
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>     } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L154" href="#L154">154</a>       buffer[0] = '&lt;';
+<a class="jxr_linenumber" name="L155" href="#L155">155</a>     }
+<a class="jxr_linenumber" name="L156" href="#L156">156</a>     <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> String(buffer);
+<a class="jxr_linenumber" name="L157" href="#L157">157</a>   }
+<a class="jxr_linenumber" name="L158" href="#L158">158</a> 
+<a class="jxr_linenumber" name="L159" href="#L159">159</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2020 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>

@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../../testapidocs/org/apache/ibatis/submitted/stringlist/StringListTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2019 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2020 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
@@ -52,7 +52,7 @@
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>  
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>      <em class="jxr_comment">// populate in-memory database</em>
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>      BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>        <span class="jxr_string">"org/apache/ibatis/submitted/stringlist/CreateDB.sql"</span>);
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>          <span class="jxr_string">"org/apache/ibatis/submitted/stringlist/CreateDB.sql"</span>);
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>    }
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>  
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>    @Test
@@ -72,20 +72,20 @@
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>        <a name="Mapper" href="../../../../../org/apache/ibatis/submitted/stringlist/Mapper.html#Mapper">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>        List&lt;Map&lt;String, Object&gt;&gt; results = mapper.getUsersAndGroupsMap(1);
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>        Assertions.assertEquals(1, results.size());
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>        Assertions.assertEquals(2, ((List&lt;?&gt;)results.get(0).get(<span class="jxr_string">"groups"</span>)).size());
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>        Assertions.assertEquals(2, ((List&lt;?&gt;)results.get(0).get(<span class="jxr_string">"roles"</span>)).size());
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>        Assertions.assertEquals(2, ((List&lt;?&gt;) results.get(0).get(<span class="jxr_string">"groups"</span>)).size());
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>        Assertions.assertEquals(2, ((List&lt;?&gt;) results.get(0).get(<span class="jxr_string">"roles"</span>)).size());
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>      }
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>    }
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>  
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>    @Test
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>    <strong class="jxr_keyword">void</strong> shouldFailFastIfCollectionTypeIsAmbiguous() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>      <strong class="jxr_keyword">try</strong> (Reader reader = Resources
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>        .getResourceAsReader(<span class="jxr_string">"org/apache/ibatis/submitted/stringlist/mybatis-config-invalid.xml"</span>)) {
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>          .getResourceAsReader(<span class="jxr_string">"org/apache/ibatis/submitted/stringlist/mybatis-config-invalid.xml"</span>)) {
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>        <strong class="jxr_keyword">new</strong> SqlSessionFactoryBuilder().build(reader);
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>        fail(<span class="jxr_string">"Should throw exception when collection type is unresolvable."</span>);
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>      } <strong class="jxr_keyword">catch</strong> (PersistenceException e) {
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>        assertTrue(e.getMessage()
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>          .contains(<span class="jxr_string">"Ambiguous collection type for property 'groups'. You must specify 'javaType' or 'resultMap'."</span>));
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>            .contains(<span class="jxr_string">"Ambiguous collection type for property 'groups'. You must specify 'javaType' or 'resultMap'."</span>));
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>      }
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>    }
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>  }

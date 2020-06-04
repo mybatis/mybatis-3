@@ -203,7 +203,7 @@
 <a class="jxr_linenumber" name="L195" href="#L195">195</a>   }
 <a class="jxr_linenumber" name="L196" href="#L196">196</a> 
 <a class="jxr_linenumber" name="L197" href="#L197">197</a>   @Test
-<a class="jxr_linenumber" name="L198" href="#L198">198</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> formatXNodeToString() {
+<a class="jxr_linenumber" name="L198" href="#L198">198</a>   <strong class="jxr_keyword">void</strong> formatXNodeToString() {
 <a class="jxr_linenumber" name="L199" href="#L199">199</a>     XPathParser parser = <strong class="jxr_keyword">new</strong> XPathParser(<span class="jxr_string">"&lt;users&gt;&lt;user&gt;&lt;id&gt;100&lt;/id&gt;&lt;name&gt;Tom&lt;/name&gt;&lt;age&gt;30&lt;/age&gt;&lt;cars&gt;&lt;car&gt;BMW&lt;/car&gt;&lt;car&gt;Audi&lt;/car&gt;&lt;car&gt;Benz&lt;/car&gt;&lt;/cars&gt;&lt;/user&gt;&lt;/users&gt;"</span>);
 <a class="jxr_linenumber" name="L200" href="#L200">200</a>     String usersNodeToString = parser.evalNode(<span class="jxr_string">"/users"</span>).toString();
 <a class="jxr_linenumber" name="L201" href="#L201">201</a>     String userNodeToString = parser.evalNode(<span class="jxr_string">"/users/user"</span>).toString();

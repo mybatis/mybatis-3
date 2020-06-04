@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../../apidocs/org/apache/ibatis/logging/jdbc/ResultSetLogger.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2019 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2020 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
@@ -129,25 +129,30 @@
 <a class="jxr_linenumber" name="L121" href="#L121">121</a>   <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L122" href="#L122">122</a> <em class="jxr_javadoccomment">   * Creates a logging version of a ResultSet.</em>
 <a class="jxr_linenumber" name="L123" href="#L123">123</a> <em class="jxr_javadoccomment">   *</em>
-<a class="jxr_linenumber" name="L124" href="#L124">124</a> <em class="jxr_javadoccomment">   * @param rs - the ResultSet to proxy</em>
-<a class="jxr_linenumber" name="L125" href="#L125">125</a> <em class="jxr_javadoccomment">   * @return - the ResultSet with logging</em>
-<a class="jxr_linenumber" name="L126" href="#L126">126</a> <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L127" href="#L127">127</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> ResultSet newInstance(ResultSet rs, <a name="Log" href="../../../../../org/apache/ibatis/logging/Log.html#Log">Log</a> statementLog, <strong class="jxr_keyword">int</strong> queryStack) {
-<a class="jxr_linenumber" name="L128" href="#L128">128</a>     InvocationHandler handler = <strong class="jxr_keyword">new</strong> <a name="ResultSetLogger" href="../../../../../org/apache/ibatis/logging/jdbc/ResultSetLogger.html#ResultSetLogger">ResultSetLogger</a>(rs, statementLog, queryStack);
-<a class="jxr_linenumber" name="L129" href="#L129">129</a>     ClassLoader cl = ResultSet.<strong class="jxr_keyword">class</strong>.getClassLoader();
-<a class="jxr_linenumber" name="L130" href="#L130">130</a>     <strong class="jxr_keyword">return</strong> (ResultSet) Proxy.newProxyInstance(cl, <strong class="jxr_keyword">new</strong> Class[]{ResultSet.<strong class="jxr_keyword">class</strong>}, handler);
-<a class="jxr_linenumber" name="L131" href="#L131">131</a>   }
-<a class="jxr_linenumber" name="L132" href="#L132">132</a> 
-<a class="jxr_linenumber" name="L133" href="#L133">133</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L134" href="#L134">134</a> <em class="jxr_javadoccomment">   * Get the wrapped result set.</em>
-<a class="jxr_linenumber" name="L135" href="#L135">135</a> <em class="jxr_javadoccomment">   *</em>
-<a class="jxr_linenumber" name="L136" href="#L136">136</a> <em class="jxr_javadoccomment">   * @return the resultSet</em>
-<a class="jxr_linenumber" name="L137" href="#L137">137</a> <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L138" href="#L138">138</a>   <strong class="jxr_keyword">public</strong> ResultSet getRs() {
-<a class="jxr_linenumber" name="L139" href="#L139">139</a>     <strong class="jxr_keyword">return</strong> rs;
-<a class="jxr_linenumber" name="L140" href="#L140">140</a>   }
-<a class="jxr_linenumber" name="L141" href="#L141">141</a> 
-<a class="jxr_linenumber" name="L142" href="#L142">142</a> }
+<a class="jxr_linenumber" name="L124" href="#L124">124</a> <em class="jxr_javadoccomment">   * @param rs</em>
+<a class="jxr_linenumber" name="L125" href="#L125">125</a> <em class="jxr_javadoccomment">   *          the ResultSet to proxy</em>
+<a class="jxr_linenumber" name="L126" href="#L126">126</a> <em class="jxr_javadoccomment">   * @param statementLog</em>
+<a class="jxr_linenumber" name="L127" href="#L127">127</a> <em class="jxr_javadoccomment">   *          the statement log</em>
+<a class="jxr_linenumber" name="L128" href="#L128">128</a> <em class="jxr_javadoccomment">   * @param queryStack</em>
+<a class="jxr_linenumber" name="L129" href="#L129">129</a> <em class="jxr_javadoccomment">   *          the query stack</em>
+<a class="jxr_linenumber" name="L130" href="#L130">130</a> <em class="jxr_javadoccomment">   * @return the ResultSet with logging</em>
+<a class="jxr_linenumber" name="L131" href="#L131">131</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> ResultSet newInstance(ResultSet rs, <a name="Log" href="../../../../../org/apache/ibatis/logging/Log.html#Log">Log</a> statementLog, <strong class="jxr_keyword">int</strong> queryStack) {
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>     InvocationHandler handler = <strong class="jxr_keyword">new</strong> <a name="ResultSetLogger" href="../../../../../org/apache/ibatis/logging/jdbc/ResultSetLogger.html#ResultSetLogger">ResultSetLogger</a>(rs, statementLog, queryStack);
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>     ClassLoader cl = ResultSet.<strong class="jxr_keyword">class</strong>.getClassLoader();
+<a class="jxr_linenumber" name="L135" href="#L135">135</a>     <strong class="jxr_keyword">return</strong> (ResultSet) Proxy.newProxyInstance(cl, <strong class="jxr_keyword">new</strong> Class[]{ResultSet.<strong class="jxr_keyword">class</strong>}, handler);
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>   }
+<a class="jxr_linenumber" name="L137" href="#L137">137</a> 
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L139" href="#L139">139</a> <em class="jxr_javadoccomment">   * Get the wrapped result set.</em>
+<a class="jxr_linenumber" name="L140" href="#L140">140</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L141" href="#L141">141</a> <em class="jxr_javadoccomment">   * @return the resultSet</em>
+<a class="jxr_linenumber" name="L142" href="#L142">142</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>   <strong class="jxr_keyword">public</strong> ResultSet getRs() {
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>     <strong class="jxr_keyword">return</strong> rs;
+<a class="jxr_linenumber" name="L145" href="#L145">145</a>   }
+<a class="jxr_linenumber" name="L146" href="#L146">146</a> 
+<a class="jxr_linenumber" name="L147" href="#L147">147</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2020 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>

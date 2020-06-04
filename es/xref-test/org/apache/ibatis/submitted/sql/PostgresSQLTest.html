@@ -49,7 +49,7 @@
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>    <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> setUp() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>      Configuration configuration = <strong class="jxr_keyword">new</strong> Configuration();
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>      Environment environment = <strong class="jxr_keyword">new</strong> Environment(<span class="jxr_string">"development"</span>, <strong class="jxr_keyword">new</strong> JdbcTransactionFactory(),
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>        PgContainer.getUnpooledDataSource());
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>          PgContainer.getUnpooledDataSource());
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>      configuration.setEnvironment(environment);
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>      configuration.setUseGeneratedKeys(<strong class="jxr_keyword">true</strong>);
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>      configuration.addMapper(Mapper.<strong class="jxr_keyword">class</strong>);
@@ -59,7 +59,7 @@
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>      sqlSessionFactory = <strong class="jxr_keyword">new</strong> SqlSessionFactoryBuilder().build(configuration);
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>  
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>      BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>        <span class="jxr_string">"org/apache/ibatis/submitted/sql/CreateDB.sql"</span>);
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>          <span class="jxr_string">"org/apache/ibatis/submitted/sql/CreateDB.sql"</span>);
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>    }
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>  
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>    @Test

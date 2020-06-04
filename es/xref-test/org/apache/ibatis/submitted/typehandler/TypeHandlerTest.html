@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../../testapidocs/org/apache/ibatis/submitted/typehandler/TypeHandlerTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2019 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2020 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
@@ -55,7 +55,7 @@
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>  
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>      <em class="jxr_comment">// populate in-memory database</em>
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>      BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>              <span class="jxr_string">"org/apache/ibatis/submitted/typehandler/CreateDB.sql"</span>);
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>          <span class="jxr_string">"org/apache/ibatis/submitted/typehandler/CreateDB.sql"</span>);
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>    }
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>  
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>    <em class="jxr_comment">// Some tests need to register additional type handler</em>
@@ -131,36 +131,39 @@
 <a class="jxr_linenumber" name="L123" href="#L123">123</a> 
 <a class="jxr_linenumber" name="L124" href="#L124">124</a>   @Test
 <a class="jxr_linenumber" name="L125" href="#L125">125</a>   <strong class="jxr_keyword">void</strong> shouldPickSameTypeHandlerMappedToDifferentJdbcTypes() {
-<a class="jxr_linenumber" name="L126" href="#L126">126</a>     sqlSessionFactory.getConfiguration().getTypeHandlerRegistry().register(ProductId.<strong class="jxr_keyword">class</strong>, JdbcType.BIGINT, ProductIdTypeHandler.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L127" href="#L127">127</a>     addMapper();
-<a class="jxr_linenumber" name="L128" href="#L128">128</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-<a class="jxr_linenumber" name="L129" href="#L129">129</a>       <a name="Mapper" href="../../../../../org/apache/ibatis/submitted/typehandler/Mapper.html#Mapper">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L130" href="#L130">130</a>       <a name="Product" href="../../../../../org/apache/ibatis/submitted/typehandler/Product.html#Product">Product</a> product = mapper.getProductByNameXml(<span class="jxr_string">"iPad"</span>);
-<a class="jxr_linenumber" name="L131" href="#L131">131</a>       assertEquals(Integer.valueOf(2), product.getId().getValue());
-<a class="jxr_linenumber" name="L132" href="#L132">132</a>     }
-<a class="jxr_linenumber" name="L133" href="#L133">133</a>   }
-<a class="jxr_linenumber" name="L134" href="#L134">134</a> 
-<a class="jxr_linenumber" name="L135" href="#L135">135</a>   @Test
-<a class="jxr_linenumber" name="L136" href="#L136">136</a>   <strong class="jxr_keyword">void</strong> shouldFailIfMultipleHandlerMappedToAType() {
-<a class="jxr_linenumber" name="L137" href="#L137">137</a>     sqlSessionFactory.getConfiguration().getTypeHandlerRegistry().register(ProductId.<strong class="jxr_keyword">class</strong>, JdbcType.BIGINT, ConstantProductIdTypeHandler.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L138" href="#L138">138</a>     <em class="jxr_comment">// multiple type handlers are mapped to ProductId and</em>
-<a class="jxr_linenumber" name="L139" href="#L139">139</a>     <em class="jxr_comment">// none of them are mapped to null jdbcType.</em>
-<a class="jxr_linenumber" name="L140" href="#L140">140</a>     Assertions.assertThrows(BuilderException.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">this</strong>::addMapper);
-<a class="jxr_linenumber" name="L141" href="#L141">141</a>   }
-<a class="jxr_linenumber" name="L142" href="#L142">142</a> 
-<a class="jxr_linenumber" name="L143" href="#L143">143</a>   @Test
-<a class="jxr_linenumber" name="L144" href="#L144">144</a>   <strong class="jxr_keyword">void</strong> shouldPickHandlerForNull() {
-<a class="jxr_linenumber" name="L145" href="#L145">145</a>     sqlSessionFactory.getConfiguration().getTypeHandlerRegistry().register(ProductId.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">null</strong>, ConstantProductIdTypeHandler.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L146" href="#L146">146</a>     <em class="jxr_comment">// multiple type handlers are mapped to ProductId and</em>
-<a class="jxr_linenumber" name="L147" href="#L147">147</a>     <em class="jxr_comment">// one of them are mapped to null jdbcType.</em>
-<a class="jxr_linenumber" name="L148" href="#L148">148</a>     addMapper();
-<a class="jxr_linenumber" name="L149" href="#L149">149</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-<a class="jxr_linenumber" name="L150" href="#L150">150</a>       <a name="Mapper" href="../../../../../org/apache/ibatis/submitted/typehandler/Mapper.html#Mapper">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L151" href="#L151">151</a>       <a name="Product" href="../../../../../org/apache/ibatis/submitted/typehandler/Product.html#Product">Product</a> product = mapper.getProductByNameXml(<span class="jxr_string">"iPad"</span>);
-<a class="jxr_linenumber" name="L152" href="#L152">152</a>       assertEquals(Integer.valueOf(999), product.getId().getValue());
-<a class="jxr_linenumber" name="L153" href="#L153">153</a>     }
-<a class="jxr_linenumber" name="L154" href="#L154">154</a>   }
-<a class="jxr_linenumber" name="L155" href="#L155">155</a> }
+<a class="jxr_linenumber" name="L126" href="#L126">126</a>     sqlSessionFactory.getConfiguration().getTypeHandlerRegistry().register(ProductId.<strong class="jxr_keyword">class</strong>, JdbcType.BIGINT,
+<a class="jxr_linenumber" name="L127" href="#L127">127</a>         ProductIdTypeHandler.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L128" href="#L128">128</a>     addMapper();
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+<a class="jxr_linenumber" name="L130" href="#L130">130</a>       <a name="Mapper" href="../../../../../org/apache/ibatis/submitted/typehandler/Mapper.html#Mapper">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L131" href="#L131">131</a>       <a name="Product" href="../../../../../org/apache/ibatis/submitted/typehandler/Product.html#Product">Product</a> product = mapper.getProductByNameXml(<span class="jxr_string">"iPad"</span>);
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>       assertEquals(Integer.valueOf(2), product.getId().getValue());
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>     }
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>   }
+<a class="jxr_linenumber" name="L135" href="#L135">135</a> 
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>   @Test
+<a class="jxr_linenumber" name="L137" href="#L137">137</a>   <strong class="jxr_keyword">void</strong> shouldFailIfMultipleHandlerMappedToAType() {
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>     sqlSessionFactory.getConfiguration().getTypeHandlerRegistry().register(ProductId.<strong class="jxr_keyword">class</strong>, JdbcType.BIGINT,
+<a class="jxr_linenumber" name="L139" href="#L139">139</a>         ConstantProductIdTypeHandler.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L140" href="#L140">140</a>     <em class="jxr_comment">// multiple type handlers are mapped to ProductId and</em>
+<a class="jxr_linenumber" name="L141" href="#L141">141</a>     <em class="jxr_comment">// none of them are mapped to null jdbcType.</em>
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>     Assertions.assertThrows(BuilderException.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">this</strong>::addMapper);
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>   }
+<a class="jxr_linenumber" name="L144" href="#L144">144</a> 
+<a class="jxr_linenumber" name="L145" href="#L145">145</a>   @Test
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>   <strong class="jxr_keyword">void</strong> shouldPickHandlerForNull() {
+<a class="jxr_linenumber" name="L147" href="#L147">147</a>     sqlSessionFactory.getConfiguration().getTypeHandlerRegistry().register(ProductId.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">null</strong>,
+<a class="jxr_linenumber" name="L148" href="#L148">148</a>         ConstantProductIdTypeHandler.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L149" href="#L149">149</a>     <em class="jxr_comment">// multiple type handlers are mapped to ProductId and</em>
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>     <em class="jxr_comment">// one of them are mapped to null jdbcType.</em>
+<a class="jxr_linenumber" name="L151" href="#L151">151</a>     addMapper();
+<a class="jxr_linenumber" name="L152" href="#L152">152</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>       <a name="Mapper" href="../../../../../org/apache/ibatis/submitted/typehandler/Mapper.html#Mapper">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L154" href="#L154">154</a>       <a name="Product" href="../../../../../org/apache/ibatis/submitted/typehandler/Product.html#Product">Product</a> product = mapper.getProductByNameXml(<span class="jxr_string">"iPad"</span>);
+<a class="jxr_linenumber" name="L155" href="#L155">155</a>       assertEquals(Integer.valueOf(999), product.getId().getValue());
+<a class="jxr_linenumber" name="L156" href="#L156">156</a>     }
+<a class="jxr_linenumber" name="L157" href="#L157">157</a>   }
+<a class="jxr_linenumber" name="L158" href="#L158">158</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2020 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
