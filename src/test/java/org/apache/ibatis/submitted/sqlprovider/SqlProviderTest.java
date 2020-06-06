@@ -30,9 +30,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.BaseDataTest;
+import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.DeleteProvider;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.SelectProvider;
+import org.apache.ibatis.annotations.UpdateProvider;
 import org.apache.ibatis.binding.MapperMethod;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.builder.annotation.ProviderContext;
@@ -659,6 +661,70 @@ class SqlProviderTest {
     ProviderSqlSource sqlSource = new ProviderSqlSource(new Configuration(),
         (Object) mapperMethod.getAnnotation(SelectProvider.class), mapperType, mapperMethod);
     assertEquals("SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_USERS", sqlSource.getBoundSql(null).getSql());
+  }
+
+  @Test
+  void omitTypeWhenSpecifyDefaultType() throws NoSuchMethodException {
+    Class<?> mapperType = DefaultSqlProviderMapper.class;
+    Configuration configuration = new Configuration();
+    configuration.setDefaultSqlProviderType(DefaultSqlProviderMapper.SqlProvider.class);
+    {
+      Method mapperMethod = mapperType.getMethod("select", int.class);
+      String sql = new ProviderSqlSource(configuration, mapperMethod.getAnnotation(SelectProvider.class), mapperType,
+        mapperMethod).getBoundSql(1).getSql();
+      assertEquals("select name from foo where id = ?", sql);
+    }
+    {
+      Method mapperMethod = mapperType.getMethod("insert", String.class);
+      String sql = new ProviderSqlSource(configuration, mapperMethod.getAnnotation(InsertProvider.class), mapperType,
+        mapperMethod).getBoundSql("Taro").getSql();
+      assertEquals("insert into foo (name) values(?)", sql);
+    }
+    {
+      Method mapperMethod = mapperType.getMethod("update", int.class, String.class);
+      String sql = new ProviderSqlSource(configuration, mapperMethod.getAnnotation(UpdateProvider.class), mapperType,
+        mapperMethod).getBoundSql(Collections.emptyMap() ).getSql();
+      assertEquals("update foo set name = ? where id = ?", sql);
+    }
+    {
+      Method mapperMethod = mapperType.getMethod("delete", int.class);
+      String sql = new ProviderSqlSource(configuration, mapperMethod.getAnnotation(DeleteProvider.class), mapperType,
+        mapperMethod).getBoundSql(Collections.emptyMap() ).getSql();
+      assertEquals("delete from foo where id = ?", sql);
+    }
+  }
+
+  public interface DefaultSqlProviderMapper {
+
+    @SelectProvider
+    String select(int id);
+
+    @InsertProvider
+    void insert(String name);
+
+    @UpdateProvider
+    void update(int id, String name);
+
+    @DeleteProvider
+    void delete(int id);
+
+    class SqlProvider {
+
+      public static String provideSql(ProviderContext c) {
+        switch (c.getMapperMethod().getName()) {
+          case "select" :
+            return "select name from foo where id = #{id}";
+          case "insert" :
+            return "insert into foo (name) values(#{name})";
+          case "update" :
+            return "update foo set name = #{name} where id = #{id}";
+          default:
+            return "delete from foo where id = #{id}";
+        }
+      }
+
+    }
+
   }
 
   public interface ErrorMapper {
