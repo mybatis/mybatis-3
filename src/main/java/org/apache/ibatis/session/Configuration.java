@@ -245,7 +245,7 @@ public class Configuration {
   }
 
   /**
-   * GEt an applying type when omit a type on sql provider annotation(e.g. {@link org.apache.ibatis.annotations.SelectProvider}).
+   * Gets an applying type when omit a type on sql provider annotation(e.g. {@link org.apache.ibatis.annotations.SelectProvider}).
    *
    * @return the default type for sql provider annotation
    * @since 3.5.6
