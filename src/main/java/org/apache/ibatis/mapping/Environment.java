@@ -33,11 +33,11 @@ public final class Environment {
     }
     if (transactionFactory == null) {
       throw new IllegalArgumentException("Parameter 'transactionFactory' must not be null");
-    }
-    this.id = id;
+    } 
     if (dataSource == null) {
       throw new IllegalArgumentException("Parameter 'dataSource' must not be null");
     }
+    this.id = id;
     this.transactionFactory = transactionFactory;
     this.dataSource = dataSource;
   }
