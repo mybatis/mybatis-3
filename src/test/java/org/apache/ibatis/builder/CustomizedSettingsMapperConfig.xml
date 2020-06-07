@@ -56,7 +56,7 @@
     <setting name="defaultEnumTypeHandler" value="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
     <setting name="shrinkWhitespacesInSql" value="true"/>
     <setting name="defaultSqlProviderType" value="org.apache.ibatis.builder.XmlConfigBuilderTest$MySqlProvider"/>
-    <setting name="sqlInjectionAllowPattern" value="^[a-zA-Z_]$"/>
+    <setting name="stringSubstitutionFilterPattern" value="^[a-zA-Z_]$"/>
     <setting name="dynamicSqlBehavior" value="DENY"/>
   </settings>
 

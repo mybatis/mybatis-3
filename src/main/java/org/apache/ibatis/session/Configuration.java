@@ -131,7 +131,7 @@ public class Configuration {
   protected AutoMappingBehavior autoMappingBehavior = AutoMappingBehavior.PARTIAL;
   protected AutoMappingUnknownColumnBehavior autoMappingUnknownColumnBehavior = AutoMappingUnknownColumnBehavior.NONE;
   protected DynamicSqlBehavior dynamicSqlBehavior = DynamicSqlBehavior.ALLOW;
-  protected Pattern sqlInjectionAllowPattern;
+  protected Pattern stringSubstitutionFilterPattern;
 
   protected Properties variables = new Properties();
   protected ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
@@ -407,25 +407,25 @@ public class Configuration {
   }
 
   /**
-   * Gets a regex pattern that allow sql injection using substitution variable(${...}).
+   * Gets a regex pattern that allow substitution to an sql text using substitution variable({@code ${...}}).
    * <p>
    * The default value is none (this mean is allowing all value).
    * </p>
-   * @return a regex pattern that allow sql injection
+   * @return a regex pattern that allow substitution
    * @since 3.5.6
    */
-  public Pattern getSqlInjectionAllowPattern() {
-    return sqlInjectionAllowPattern;
+  public Pattern getStringSubstitutionFilterPattern() {
+    return stringSubstitutionFilterPattern;
   }
 
   /**
-   * Sets a regex pattern that allow sql injection using substitution variable(${...}).
+   * Sets a regex pattern that allow substitution to an sql text using substitution variable({@code ${...}}).
    *
-   * @param sqlInjectionAllowPattern a regex pattern that allow sql injection
+   * @param stringSubstitutionFilterPattern a regex pattern that allow substitution
    * @since 3.5.6
    */
-  public void setSqlInjectionAllowPattern(Pattern sqlInjectionAllowPattern) {
-    this.sqlInjectionAllowPattern = sqlInjectionAllowPattern;
+  public void setStringSubstitutionFilterPattern(Pattern stringSubstitutionFilterPattern) {
+    this.stringSubstitutionFilterPattern = stringSubstitutionFilterPattern;
   }
 
   public boolean isLazyLoadingEnabled() {

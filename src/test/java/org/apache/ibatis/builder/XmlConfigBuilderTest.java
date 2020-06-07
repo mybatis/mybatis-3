@@ -103,7 +103,7 @@ class XmlConfigBuilderTest {
       assertThat(config.getTypeHandlerRegistry().getTypeHandler(RoundingMode.class)).isInstanceOf(EnumTypeHandler.class);
       assertThat(config.isShrinkWhitespacesInSql()).isFalse();
       assertThat(config.getDefaultSqlProviderType()).isNull();
-      assertThat(config.getSqlInjectionAllowPattern()).isNull();
+      assertThat(config.getStringSubstitutionFilterPattern()).isNull();
       assertThat(config.getDynamicSqlBehavior()).isEqualTo(DynamicSqlBehavior.ALLOW);
     }
   }
@@ -201,7 +201,7 @@ class XmlConfigBuilderTest {
       assertThat(config.getConfigurationFactory().getName()).isEqualTo(String.class.getName());
       assertThat(config.isShrinkWhitespacesInSql()).isTrue();
       assertThat(config.getDefaultSqlProviderType().getName()).isEqualTo(MySqlProvider.class.getName());
-      assertThat(config.getSqlInjectionAllowPattern().pattern()).isEqualTo("^[a-zA-Z_]$");
+      assertThat(config.getStringSubstitutionFilterPattern().pattern()).isEqualTo("^[a-zA-Z_]$");
       assertThat(config.getDynamicSqlBehavior()).isEqualTo(DynamicSqlBehavior.DENY);
 
       assertThat(config.getTypeAliasRegistry().getTypeAliases().get("blogauthor")).isEqualTo(Author.class);

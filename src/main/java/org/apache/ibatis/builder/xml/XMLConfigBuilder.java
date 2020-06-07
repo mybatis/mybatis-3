@@ -272,7 +272,7 @@ public class XMLConfigBuilder extends BaseBuilder {
     configuration.setShrinkWhitespacesInSql(booleanValueOf(props.getProperty("shrinkWhitespacesInSql"), false));
     configuration.setDefaultSqlProviderType(resolveClass(props.getProperty("defaultSqlProviderType")));
     configuration.setDynamicSqlBehavior(DynamicSqlBehavior.valueOf(props.getProperty("dynamicSqlBehavior", "ALLOW")));
-    configuration.setSqlInjectionAllowPattern(parseExpression(props.getProperty("sqlInjectionAllowPattern"), null));
+    configuration.setStringSubstitutionFilterPattern(parseExpression(props.getProperty("stringSubstitutionFilterPattern"), null));
   }
 
   private void environmentsElement(XNode context) throws Exception {

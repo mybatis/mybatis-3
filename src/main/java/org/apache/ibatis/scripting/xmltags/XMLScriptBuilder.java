@@ -81,7 +81,7 @@ public class XMLScriptBuilder extends BaseBuilder {
       XNode child = node.newXNode(children.item(i));
       if (child.getNode().getNodeType() == Node.CDATA_SECTION_NODE || child.getNode().getNodeType() == Node.TEXT_NODE) {
         String data = child.getStringBody("");
-        TextSqlNode textSqlNode = new TextSqlNode(data, configuration.getSqlInjectionAllowPattern());
+        TextSqlNode textSqlNode = new TextSqlNode(data, configuration.getStringSubstitutionFilterPattern());
         if (textSqlNode.isDynamic()) {
           configuration.getDynamicSqlBehavior().doAction(data);
           contents.add(textSqlNode);
