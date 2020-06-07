@@ -648,6 +648,22 @@ SqlSessionFactory factory =
                 false
               </td>
             </tr>
+            <tr>
+              <td>
+                defaultSqlProviderType
+              </td>
+              <td>
+                Specifies an sql provider class that holds provider method (Since 3.5.6).
+                This class apply to the <code>type</code>(or <code>value</code>) attribute on sql provider annotation(e.g. <code>@SelectProvider</code>),
+                when these attribute was omitted.
+              </td>
+              <td>
+                A type alias or fully qualified class name
+              </td>
+              <td>
+                Not set
+              </td>
+            </tr>
           </tbody>
         </table>
         <p>
