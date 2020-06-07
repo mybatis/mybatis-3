@@ -39,6 +39,7 @@ import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.reflection.ReflectorFactory;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
+import org.apache.ibatis.scripting.xmltags.DynamicSqlBehavior;
 import org.apache.ibatis.session.AutoMappingBehavior;
 import org.apache.ibatis.session.AutoMappingUnknownColumnBehavior;
 import org.apache.ibatis.session.Configuration;
@@ -270,6 +271,8 @@ public class XMLConfigBuilder extends BaseBuilder {
     configuration.setConfigurationFactory(resolveClass(props.getProperty("configurationFactory")));
     configuration.setShrinkWhitespacesInSql(booleanValueOf(props.getProperty("shrinkWhitespacesInSql"), false));
     configuration.setDefaultSqlProviderType(resolveClass(props.getProperty("defaultSqlProviderType")));
+    configuration.setDynamicSqlBehavior(DynamicSqlBehavior.valueOf(props.getProperty("dynamicSqlBehavior", "ALLOW")));
+    configuration.setSqlInjectionAllowPattern(parseExpression(props.getProperty("sqlInjectionAllowPattern"), null));
   }
 
   private void environmentsElement(XNode context) throws Exception {

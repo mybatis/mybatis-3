@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package org.apache.ibatis.builder.xml.dynamic;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -25,10 +26,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.BoundSql;
+import org.apache.ibatis.scripting.ScriptingException;
 import org.apache.ibatis.scripting.xmltags.ChooseSqlNode;
 import org.apache.ibatis.scripting.xmltags.DynamicSqlSource;
 import org.apache.ibatis.scripting.xmltags.ForEachSqlNode;
@@ -397,6 +400,31 @@ class DynamicSqlSourceTest extends BaseDataTest {
     final DynamicSqlSource source = new DynamicSqlSource(new Configuration(), sqlNode);
     String sql = source.getBoundSql(new Bean(null)).getSql();
     Assertions.assertEquals("id=", sql);
+  }
+
+  @Test
+  void shouldThrownExceptionWhenDetectInvalidSqlInjection() {
+    final String sql = "SELECT * FROM user WHERE date=#{date} ORDER BY ${orderBy}";
+    final TextSqlNode sqlNode = new TextSqlNode(sql, Pattern.compile("^[a-zA-Z_]*$"));
+    final DynamicSqlSource source = new DynamicSqlSource(new Configuration(), sqlNode);
+    Map<String, Object> parameters = new HashMap<>();
+    parameters.put("orderBy", "id; SELECT * FROM user;");
+    try {
+      source.getBoundSql(parameters);
+      fail();
+    } catch (ScriptingException e) {
+      Assertions.assertEquals("Detect an invalid injection value[id; SELECT * FROM user;] at expression[orderBy]. The valid injection pattern is '^[a-zA-Z_]*$'.", e.getMessage());
+    }
+  }
+
+  @Test
+  void shouldNoThrownExceptionWhenDetectValidSqlInjection() {
+    final String sql = "SELECT * FROM user WHERE date=#{date} ORDER BY ${orderBy}";
+    final TextSqlNode sqlNode = new TextSqlNode(sql, Pattern.compile("^[a-zA-Z_]*$"));
+    final DynamicSqlSource source = new DynamicSqlSource(new Configuration(), sqlNode);
+    Map<String, Object> parameters = new HashMap<>();
+    parameters.put("orderBy", "user_id");
+    Assertions.assertEquals("SELECT * FROM user WHERE date=? ORDER BY user_id", source.getBoundSql(parameters).getSql());
   }
 
   public static class Bean {

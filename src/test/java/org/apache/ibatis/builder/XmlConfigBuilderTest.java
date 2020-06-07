@@ -51,6 +51,7 @@ import org.apache.ibatis.logging.slf4j.Slf4jImpl;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.scripting.defaults.RawLanguageDriver;
+import org.apache.ibatis.scripting.xmltags.DynamicSqlBehavior;
 import org.apache.ibatis.scripting.xmltags.XMLLanguageDriver;
 import org.apache.ibatis.session.AutoMappingBehavior;
 import org.apache.ibatis.session.AutoMappingUnknownColumnBehavior;
@@ -102,6 +103,8 @@ class XmlConfigBuilderTest {
       assertThat(config.getTypeHandlerRegistry().getTypeHandler(RoundingMode.class)).isInstanceOf(EnumTypeHandler.class);
       assertThat(config.isShrinkWhitespacesInSql()).isFalse();
       assertThat(config.getDefaultSqlProviderType()).isNull();
+      assertThat(config.getSqlInjectionAllowPattern()).isNull();
+      assertThat(config.getDynamicSqlBehavior()).isEqualTo(DynamicSqlBehavior.ALLOW);
     }
   }
 
@@ -198,6 +201,8 @@ class XmlConfigBuilderTest {
       assertThat(config.getConfigurationFactory().getName()).isEqualTo(String.class.getName());
       assertThat(config.isShrinkWhitespacesInSql()).isTrue();
       assertThat(config.getDefaultSqlProviderType().getName()).isEqualTo(MySqlProvider.class.getName());
+      assertThat(config.getSqlInjectionAllowPattern().pattern()).isEqualTo("^[a-zA-Z_]$");
+      assertThat(config.getDynamicSqlBehavior()).isEqualTo(DynamicSqlBehavior.DENY);
 
       assertThat(config.getTypeAliasRegistry().getTypeAliases().get("blogauthor")).isEqualTo(Author.class);
       assertThat(config.getTypeAliasRegistry().getTypeAliases().get("blog")).isEqualTo(Blog.class);

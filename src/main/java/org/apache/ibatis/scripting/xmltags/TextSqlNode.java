@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -76,13 +76,14 @@ public class TextSqlNode implements SqlNode {
       }
       Object value = OgnlCache.getValue(content, context.getBindings());
       String srtValue = value == null ? "" : String.valueOf(value); // issue #274 return "" instead of "null"
-      checkInjection(srtValue);
+      checkInjection(srtValue, content);
       return srtValue;
     }
 
-    private void checkInjection(String value) {
+    private void checkInjection(String value, String expression) {
       if (injectionFilter != null && !injectionFilter.matcher(value).matches()) {
-        throw new ScriptingException("Invalid input. Please conform to regex" + injectionFilter.pattern());
+        throw new ScriptingException("Detect an invalid injection value[" + value + "] at expression[" + expression + "]." +
+          " The valid injection pattern is '" + injectionFilter.pattern() + "'.");
       }
     }
   }

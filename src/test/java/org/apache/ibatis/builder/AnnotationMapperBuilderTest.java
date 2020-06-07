@@ -16,17 +16,27 @@
 package org.apache.ibatis.builder;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.builder.annotation.MapperAnnotationBuilder;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.mapping.StatementType;
+import org.apache.ibatis.scripting.ScriptingException;
+import org.apache.ibatis.scripting.xmltags.DynamicSqlBehavior;
 import org.apache.ibatis.session.Configuration;
+import org.apache.log4j.spi.LoggingEvent;
+import org.apache.log4j.varia.NullAppender;
 import org.junit.jupiter.api.Test;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 class AnnotationMapperBuilderTest {
 
@@ -94,6 +104,82 @@ class AnnotationMapperBuilderTest {
     assertThat(mappedStatement.getResultSetType()).isEqualTo(ResultSetType.DEFAULT);
   }
 
+  @Test
+  void shouldAllowDynamicSqlWhenDefaultSettings() {
+    {
+      Configuration configuration = new Configuration();
+      MapperAnnotationBuilder builder = new MapperAnnotationBuilder(configuration, DynamicSqlMapper1.class);
+      builder.parse();
+      MappedStatement mappedStatement = configuration.getMappedStatement("select");
+      Map<String, Object> parameters = new HashMap<>();
+      parameters.put("table", "users");
+      assertThat(mappedStatement.getBoundSql(parameters).getSql()).isEqualTo("SELECT name FROM users WHERE date = ?");
+    }
+    {
+      Configuration configuration = new Configuration();
+      MapperAnnotationBuilder builder = new MapperAnnotationBuilder(configuration, DynamicSqlMapper2.class);
+      builder.parse();
+      MappedStatement mappedStatement = configuration.getMappedStatement("select");
+      Map<String, Object> parameters = new HashMap<>();
+      parameters.put("table", "users");
+      assertThat(mappedStatement.getBoundSql(parameters).getSql()).isEqualTo("SELECT name FROM users WHERE date = ?");
+    }
+  }
+
+  @Test
+  void shouldAllowDynamicSqlWhenWarningSettings() {
+    {
+      Configuration configuration = new Configuration();
+      configuration.setDynamicSqlBehavior(DynamicSqlBehavior.WARNING);
+      MapperAnnotationBuilder builder = new MapperAnnotationBuilder(configuration, DynamicSqlMapper1.class);
+      builder.parse();
+      MappedStatement mappedStatement = configuration.getMappedStatement("select");
+      Map<String, Object> parameters = new HashMap<>();
+      parameters.put("table", "users");
+      assertThat(mappedStatement.getBoundSql(parameters).getSql()).isEqualTo("SELECT name FROM users WHERE date = ?");
+      assertThat(AnnotationMapperBuilderTest.LastEventSavedAppender.event.getMessage().toString())
+        .isEqualTo("Dynamic sql is detected. dynamic content : SELECT name FROM ${table} WHERE date = #{date}");
+    }
+    {
+      Configuration configuration = new Configuration();
+      configuration.setDynamicSqlBehavior(DynamicSqlBehavior.WARNING);
+      MapperAnnotationBuilder builder = new MapperAnnotationBuilder(configuration, DynamicSqlMapper2.class);
+      builder.parse();
+      MappedStatement mappedStatement = configuration.getMappedStatement("select");
+      Map<String, Object> parameters = new HashMap<>();
+      parameters.put("table", "users");
+      assertThat(mappedStatement.getBoundSql(parameters).getSql()).isEqualTo("SELECT name FROM users WHERE date = ?");
+      assertThat(AnnotationMapperBuilderTest.LastEventSavedAppender.event.getMessage().toString())
+        .isEqualTo("Dynamic sql is detected. dynamic content : SELECT name FROM ${table} WHERE date = #{date}");
+    }
+  }
+
+  @Test
+  void shouldThrownExceptionWhenDynamicSqlIsDenySettings() {
+    {
+      Configuration configuration = new Configuration();
+      configuration.setDynamicSqlBehavior(DynamicSqlBehavior.DENY);
+      MapperAnnotationBuilder builder = new MapperAnnotationBuilder(configuration, DynamicSqlMapper1.class);
+      try {
+        builder.parse();
+        fail("should be failed to parse.");
+      } catch (ScriptingException e) {
+        assertThat(e.getMessage()).isEqualTo("Dynamic sql is detected. dynamic content : SELECT name FROM ${table} WHERE date = #{date}");
+      }
+    }
+    {
+      Configuration configuration = new Configuration();
+      configuration.setDynamicSqlBehavior(DynamicSqlBehavior.DENY);
+      MapperAnnotationBuilder builder = new MapperAnnotationBuilder(configuration, DynamicSqlMapper2.class);
+      try {
+        builder.parse();
+        fail("should be failed to parse.");
+      } catch (ScriptingException e) {
+        assertThat(e.getMessage()).isEqualTo("Dynamic sql is detected. dynamic content : SELECT name FROM ${table} WHERE date = #{date}");
+      }
+    }
+  }
+
   interface Mapper {
 
     @Insert("insert into test (name) values(#{name})")
@@ -111,6 +197,24 @@ class AnnotationMapperBuilderTest {
     @Select("select * from test")
     String selectWithoutOptions(Integer id);
 
+  }
+
+  interface DynamicSqlMapper1 {
+    @Select("SELECT name FROM ${table} WHERE date = #{date}")
+    String select(@Param("table") String table, @Param("date") Date date);
+  }
+
+  interface DynamicSqlMapper2 {
+    @Select("<script>SELECT name FROM ${table} WHERE date = #{date}</script>")
+    String select(@Param("table") String table, @Param("date") Date date);
+  }
+
+  public static class LastEventSavedAppender extends NullAppender {
+    private static LoggingEvent event;
+
+    public void doAppend(LoggingEvent event) {
+      AnnotationMapperBuilderTest.LastEventSavedAppender.event = event;
+    }
   }
 
 }

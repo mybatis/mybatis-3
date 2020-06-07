@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.function.BiFunction;
+import java.util.regex.Pattern;
 
 import org.apache.ibatis.binding.MapperRegistry;
 import org.apache.ibatis.builder.CacheRefResolver;
@@ -86,6 +87,7 @@ import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.scripting.LanguageDriverRegistry;
 import org.apache.ibatis.scripting.defaults.RawLanguageDriver;
+import org.apache.ibatis.scripting.xmltags.DynamicSqlBehavior;
 import org.apache.ibatis.scripting.xmltags.XMLLanguageDriver;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
@@ -128,6 +130,8 @@ public class Configuration {
   protected ExecutorType defaultExecutorType = ExecutorType.SIMPLE;
   protected AutoMappingBehavior autoMappingBehavior = AutoMappingBehavior.PARTIAL;
   protected AutoMappingUnknownColumnBehavior autoMappingUnknownColumnBehavior = AutoMappingUnknownColumnBehavior.NONE;
+  protected DynamicSqlBehavior dynamicSqlBehavior = DynamicSqlBehavior.ALLOW;
+  protected Pattern sqlInjectionAllowPattern;
 
   protected Properties variables = new Properties();
   protected ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
@@ -380,6 +384,48 @@ public class Configuration {
    */
   public void setAutoMappingUnknownColumnBehavior(AutoMappingUnknownColumnBehavior autoMappingUnknownColumnBehavior) {
     this.autoMappingUnknownColumnBehavior = autoMappingUnknownColumnBehavior;
+  }
+
+  /**
+   * Gets the dynamic sql behavior(allow or deny).
+   *
+   * @return the dynamic sql behavior
+   * @since 3.5.6
+   */
+  public DynamicSqlBehavior getDynamicSqlBehavior() {
+    return dynamicSqlBehavior;
+  }
+
+  /**
+   * Sets the dynamic sql detecting behavior(allow or deny).
+   *
+   * @param dynamicSqlBehavior the dynamic sql behavior
+   * @since 3.5.6
+   */
+  public void setDynamicSqlBehavior(DynamicSqlBehavior dynamicSqlBehavior) {
+    this.dynamicSqlBehavior = dynamicSqlBehavior;
+  }
+
+  /**
+   * Gets a regex pattern that allow sql injection using substitution variable(${...}).
+   * <p>
+   * The default value is none (this mean is allowing all value).
+   * </p>
+   * @return a regex pattern that allow sql injection
+   * @since 3.5.6
+   */
+  public Pattern getSqlInjectionAllowPattern() {
+    return sqlInjectionAllowPattern;
+  }
+
+  /**
+   * Sets a regex pattern that allow sql injection using substitution variable(${...}).
+   *
+   * @param sqlInjectionAllowPattern a regex pattern that allow sql injection
+   * @since 3.5.6
+   */
+  public void setSqlInjectionAllowPattern(Pattern sqlInjectionAllowPattern) {
+    this.sqlInjectionAllowPattern = sqlInjectionAllowPattern;
   }
 
   public boolean isLazyLoadingEnabled() {
