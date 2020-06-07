@@ -480,7 +480,8 @@ void rollback(boolean force)</source>
           via the <code>ProviderContext</code>(available since MyBatis 3.4.5 or later) as method argument.(In MyBatis 3.4 or later, it's allow multiple parameters)
           Atributos: value, type y method.
           El atributo value y type es el nombre completamente cualificado de una clase
-          (The <code>type</code> attribute is alias for <code>value</code>, you must be specify either one).
+          (The <code>type</code> attribute is alias for <code>value</code>, you must be specify either one.
+          But both attributes can be omit when specify the <code>defaultSqlProviderType</code> as global configuration).
           El method es el nombre un método de dicha clase
           (Since 3.5.1, you can omit <code>method</code> attribute, the MyBatis will resolve a target method via the
           <code>ProviderMethodResolver</code> interface.
@@ -633,6 +634,29 @@ class UserSqlProvider implements ProviderMethodResolver {
       ORDER_BY("id");
     }}.toString();
   }
+}]]></source>
+
+    <p>This example shows usage that share an sql provider class to all mapper methods using global configuration(Available since 3.5.6):</p>
+    <source><![CDATA[
+Configuration configuration = new Configuration();
+configuration.setDefaultSqlProviderType(TemplateFilePathProvider.class); // Specify an sql provider class for sharing on all mapper methods
+// ...]]></source>
+    <source><![CDATA[
+// Can omit the type/value attribute on sql provider annotation
+// If omit it, the MyBatis apply the class that specified on defaultSqlProviderType.
+public interface UserMapper {
+
+  @SelectProvider // Same with @SelectProvider(TemplateFilePathProvider.class)
+  User findUser(int id);
+
+  @InsertProvider // Same with @InsertProvider(TemplateFilePathProvider.class)
+  void createUser(User user);
+
+  @UpdateProvider // Same with @UpdateProvider(TemplateFilePathProvider.class)
+  void updateUser(User user);
+
+  @DeleteProvider // Same with @DeleteProvider(TemplateFilePathProvider.class)
+  void deleteUser(int id);
 }]]></source>
 
     <p>This example shows usage the default implementation of <code>ProviderMethodResolver</code>(available since MyBatis 3.5.1 or later):</p>
