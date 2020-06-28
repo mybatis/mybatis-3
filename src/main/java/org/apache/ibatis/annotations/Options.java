@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package org.apache.ibatis.annotations;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -27,8 +28,9 @@ import org.apache.ibatis.mapping.StatementType;
 /**
  * The annotation that specify options for customizing default behaviors.
  *
- * <p><br>
+ * <p>
  * <b>How to use:</b>
+ *
  * <pre>
  * public interface UserMapper {
  *   &#064;Option(useGeneratedKeys = true, keyProperty = "id")
@@ -36,11 +38,13 @@ import org.apache.ibatis.mapping.StatementType;
  *   boolean insert(User user);
  * }
  * </pre>
+ *
  * @author Clinton Begin
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
+@Repeatable(Options.List.class)
 public @interface Options {
   /**
    * The options for the {@link Options#flushCache()}.
@@ -92,6 +96,7 @@ public @interface Options {
 
   /**
    * Returns the statement timeout.
+   *
    * @return the statement timeout
    */
   int timeout() default -1;
@@ -132,4 +137,23 @@ public @interface Options {
    * @return result set names that separate with comma(',')
    */
   String resultSets() default "";
+
+  /**
+   * @return A database id that correspond this options
+   * @since 3.5.5
+   */
+  String databaseId() default "";
+
+  /**
+   * The container annotation for {@link Options}.
+   * @author Kazuki Shimizu
+   * @since 3.5.5
+   */
+  @Documented
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target(ElementType.METHOD)
+  @interface List {
+    Options[] value();
+  }
+
 }

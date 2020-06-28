@@ -212,7 +212,7 @@ class ReflectorTest {
     assertNotNull(reflector.getSetInvoker("prop1"));
 
     Class<?> paramType = reflector.getSetterType("prop2");
-    assertTrue(String.class.equals(paramType) || Integer.class.equals(paramType));
+    assertTrue(String.class.equals(paramType) || Integer.class.equals(paramType) || boolean.class.equals(paramType));
 
     Invoker ambiguousInvoker = reflector.getSetInvoker("prop2");
     Object[] param = String.class.equals(paramType)? new String[]{"x"} : new Integer[]{1};
@@ -224,7 +224,7 @@ class ReflectorTest {
   }
 
   @Test
-  public void shouldTwoGettersForNonBooleanPropertyThrowException() throws Exception {
+  void shouldTwoGettersForNonBooleanPropertyThrowException() throws Exception {
     @SuppressWarnings("unused")
     class BeanClass {
       public Integer getProp1() {return 1;}
@@ -256,7 +256,7 @@ class ReflectorTest {
   }
 
   @Test
-  public void shouldTwoGettersWithDifferentTypesThrowException() throws Exception {
+  void shouldTwoGettersWithDifferentTypesThrowException() throws Exception {
     @SuppressWarnings("unused")
     class BeanClass {
       public Integer getProp1() {return 1;}

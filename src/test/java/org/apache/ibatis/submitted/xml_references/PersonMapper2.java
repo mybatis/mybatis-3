@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,12 +19,15 @@ import java.util.List;
 
 public interface PersonMapper2 {
 
-    interface PersonType {
-        Person.Type getType();
-    }
+  interface PersonType {
+    Person.Type getType();
+  }
 
-    List<Person> selectAllByType(Person.Type type);
-    List<Person> selectAllByTypeNameAttribute(Person.Type type);
-    List<Person> selectAllByTypeWithInterface(PersonType personType);
-    List<Person> selectAllByTypeNameAttributeWithInterface(PersonType personType);
+  List<Person> selectAllByType(Person.Type type);
+
+  List<Person> selectAllByTypeNameAttribute(Person.Type type);
+
+  List<Person> selectAllByTypeWithInterface(PersonType personType);
+
+  List<Person> selectAllByTypeNameAttributeWithInterface(PersonType personType);
 }

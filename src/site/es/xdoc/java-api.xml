@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2019 the original author or authors.
+       Copyright 2009-2020 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -389,16 +389,20 @@ void rollback(boolean force)</source>
         <td>N/A</td>
         <td><code>&lt;association&gt;</code></td>
         <td>
-        Un mapeo a una propiedad que contiene un tipo complejo. Atributos: select, que contiene el nombre completamente cualificado de un mapped statement (o un método de mapper) que puede cargar la instancia del tipo indicado,
+        Un mapeo a una propiedad que contiene un tipo complejo. Atributos: select, que contiene el nombre completamente cualificado de un mapped statement (o un método de mapper) que puede cargar la instancia del tipo indicado.
         <code>fetchType</code>, que sobrescribe el parámetro global de configuración <code>lazyLoadingEnabled</code> para este mapeo.
+        <code>resultMap</code>(available since 3.5.5), which is the fully qualified name of a result map that map to a single container object from select result.
+        <code>columnPrefix</code>(available since 3.5.5), which is column prefix for grouping select columns at nested result map.
         Nota: Habrás visto que el mapeo de tipo join no se soporta mediante el API de anotaciones. Esto es debido a las limitaciones de las anotaciones en Java que no permiten referencias circulares.</td>
       </tr>
       <tr>
         <td><code>@Many</code></td>
         <td>N/A</td>
         <td><code>&lt;collection&gt;</code></td>
-        <td>Un mapeo a una propiedad que contiene una colección de tipos complejos. Atributos: select, que contiene el nombre completamente cualificado de un mapped statement (o un método de mapper) que puede cargar la instancia del tipo indicado,
+        <td>Un mapeo a una propiedad que contiene una colección de tipos complejos. Atributos: select, que contiene el nombre completamente cualificado de un mapped statement (o un método de mapper) que puede cargar la instancia del tipo indicado.
         <code>fetchType</code>, que sobrescribe el parámetro global de configuración <code>lazyLoadingEnabled</code> para este mapeo.
+        <code>resultMap</code>(available since 3.5.5), which is the fully qualified name of a result map that map to collection object from select result.
+        <code>columnPrefix</code>(available since 3.5.5), which is column prefix for grouping select columns at nested result map.
         Nota: Habrás visto que el mapeo de tipo join no se soporta mediante el API de anotaciones. Esto es debido a las limitaciones de las anotaciones en Java que no permiten referencias circulares.</td>
       </tr>
       <tr>
@@ -411,7 +415,19 @@ void rollback(boolean force)</source>
         <td><code>@Options</code></td>
         <td><code>Method</code></td>
         <td>Attributes of mapped statements.</td>
-        <td>Esta anotación proporciona acceso a un gran conjunto de opciones de configuración que normalmente aparecen como atributos en los mapped statements. En lugar de complicar cada anotación existente la anotación Options proporciona una forma sencilla y concisa de acceder a estas opciones. Atributos: useCache=true, flushCache=FlushCachePolicy.DEFAULT, resultSetType=DEFAULT, statementType=PREPARED, fetchSize=-1, timeout=-1, useGeneratedKeys=false, keyProperty=“”, keyColumn=“”, resultSets=“”.  Es importante comprender que las anotaciones en Java no permiten indicar un valor nulo. Por lo tanto, cuando usas la anotación Options el statement usará todos los valores por defecto. Presta atención a estos valores pro defecto para evitar comportamientos inesperados. La keyColumn solo se requiere para algunas bases de datos (como PostgreSQL) cuando la columna no es la primera columna de la tabla.</td>
+        <td>
+          Esta anotación proporciona acceso a un gran conjunto de opciones de configuración que normalmente aparecen como atributos en los mapped statements.
+          En lugar de complicar cada anotación existente la anotación Options proporciona una forma sencilla y concisa de acceder a estas opciones.
+          Atributos: useCache=true, flushCache=FlushCachePolicy.DEFAULT, resultSetType=DEFAULT, statementType=PREPARED, fetchSize=-1, timeout=-1, useGeneratedKeys=false, keyProperty=“”, keyColumn=“”, resultSets=“”, databaseId="".
+          Es importante comprender que las anotaciones en Java no permiten indicar un valor nulo.
+          Por lo tanto, cuando usas la anotación Options el statement usará todos los valores por defecto.
+          Presta atención a estos valores pro defecto para evitar comportamientos inesperados.
+          The <code>databaseId</code>(Available since 3.5.5), in case there is a configured <code>DatabaseIdProvider</code>,
+          the MyBatis use the <code>Options</code> with no <code>databaseId</code> attribute or with a <code>databaseId</code>
+          that matches the current one. If found with and without the <code>databaseId</code> the latter will be discarded.<br/><br/>
+
+          La keyColumn solo se requiere para algunas bases de datos (como PostgreSQL) cuando la columna no es la primera columna de la tabla.
+        </td>
       </tr>
       <tr>
         <td>
@@ -431,7 +447,15 @@ void rollback(boolean force)</source>
             <li><code>&lt;select&gt;</code></li>
           </ul>
         </td>
-        <td>Cada una de estas anotaciones representa el SQL que debe ejecutarse. Cada una de ellas recibe un array de strings (o un solo string). Si se pasa un array de strings, todos ellos se concatenarán introduciendo un espacio en blanco entre ellos. Esto ayuda a evitar el problema “falta un espacio en blanco” al construir SQL en código Java. Sin embargo, también puedes concatenarlos en un solo string si lo prefieres. Atributos: value, que es el array de String para formar una única sentencia SQL.</td>
+        <td>
+          Cada una de estas anotaciones representa el SQL que debe ejecutarse. Cada una de ellas recibe un array de strings (o un solo string).
+          Si se pasa un array de strings, todos ellos se concatenarán introduciendo un espacio en blanco entre ellos.
+          Esto ayuda a evitar el problema “falta un espacio en blanco” al construir SQL en código Java. Sin embargo, también puedes concatenarlos en un solo string si lo prefieres.
+          Atributos: value, que es el array de String para formar una única sentencia SQL.
+          The <code>databaseId</code>(Available since 3.5.5), in case there is a configured <code>DatabaseIdProvider</code>,
+          the MyBatis use a statement with no <code>databaseId</code> attribute or with a <code>databaseId</code>
+          that matches the current one. If found with and without the <code>databaseId</code> the latter will be discarded.
+        </td>
       </tr>
       <tr>
         <td>
@@ -456,11 +480,16 @@ void rollback(boolean force)</source>
           via the <code>ProviderContext</code>(available since MyBatis 3.4.5 or later) as method argument.(In MyBatis 3.4 or later, it's allow multiple parameters)
           Atributos: value, type y method.
           El atributo value y type es el nombre completamente cualificado de una clase
-          (The <code>type</code> attribute is alias for <code>value</code>, you must be specify either one).
+          (The <code>type</code> attribute is alias for <code>value</code>, you must be specify either one.
+          But both attributes can be omit when specify the <code>defaultSqlProviderType</code> as global configuration).
           El method es el nombre un método de dicha clase
           (Since 3.5.1, you can omit <code>method</code> attribute, the MyBatis will resolve a target method via the
           <code>ProviderMethodResolver</code> interface.
           If not resolve by it, the MyBatis use the reserved fallback method that named <code>provideSql</code>).
+          The <code>databaseId</code>(Available since 3.5.5), in case there is a configured <code>DatabaseIdProvider</code>,
+          the MyBatis will use a provider method with no <code>databaseId</code> attribute or with a <code>databaseId</code>
+          that matches the current one. If found with and without the <code>databaseId</code> the latter will be discarded.
+
           Nota: A continuación hay una sección sobre la clase, que puede ayudar a construir SQL dinámico de una forma más clara y sencilla de leer.</td>
       </tr>
       <tr>
@@ -473,7 +502,15 @@ void rollback(boolean force)</source>
         <td><code>@SelectKey</code></td>
         <td><code>Method</code></td>
         <td><code>&lt;selectKey&gt;</code></td>
-        <td>Esta anotación es igual que la &lt;selectKey&gt; para métodos anotados con @Insert, @InsertProvider, @Update o @UpdateProvider. Se ignora en otros métodos. Si especificas la anotación @SelectKey, entonces MyBatis ignorará todas las propiedades de generación de claves proporcionadas por la anotación @Options, o mediante propiedades de configuración. Atributos: statement un array de strings que contienen la SQL a ejecutar, keyProperty que es la propiedad del objeto parámetro que se actualizará con el Nuevo valor, before que debe valer true o false para indicar si la sentencia SQL debe ejecutarse antes o después de la insert, resultType que es el tipo de la propiedad keyProperty, y statementType=PREPARED.</td>
+        <td>
+          Esta anotación es igual que la &lt;selectKey&gt; para métodos anotados con @Insert, @InsertProvider, @Update o @UpdateProvider.
+          Se ignora en otros métodos. Si especificas la anotación @SelectKey, entonces MyBatis ignorará todas las propiedades de generación de claves proporcionadas por la anotación @Options, o mediante propiedades de configuración.
+          Atributos: statement un array de strings que contienen la SQL a ejecutar, keyProperty que es la propiedad del objeto parámetro que se actualizará con el Nuevo valor,
+          before que debe valer true o false para indicar si la sentencia SQL debe ejecutarse antes o después de la insert, resultType que es el tipo de la propiedad keyProperty, y statementType=PREPARED.
+          The <code>databaseId</code>(Available since 3.5.5), in case there is a configured <code>DatabaseIdProvider</code>,
+          the MyBatis will use a statement with no <code>databaseId</code> attribute or with a <code>databaseId</code>
+          that matches the current one. If found with and without the <code>databaseId</code> the latter will be discarded.
+        </td>
       </tr>
       <tr>
         <td><code>@ResultMap</code></td>
@@ -599,6 +636,29 @@ class UserSqlProvider implements ProviderMethodResolver {
   }
 }]]></source>
 
+    <p>This example shows usage that share an sql provider class to all mapper methods using global configuration(Available since 3.5.6):</p>
+    <source><![CDATA[
+Configuration configuration = new Configuration();
+configuration.setDefaultSqlProviderType(TemplateFilePathProvider.class); // Specify an sql provider class for sharing on all mapper methods
+// ...]]></source>
+    <source><![CDATA[
+// Can omit the type/value attribute on sql provider annotation
+// If omit it, the MyBatis apply the class that specified on defaultSqlProviderType.
+public interface UserMapper {
+
+  @SelectProvider // Same with @SelectProvider(TemplateFilePathProvider.class)
+  User findUser(int id);
+
+  @InsertProvider // Same with @InsertProvider(TemplateFilePathProvider.class)
+  void createUser(User user);
+
+  @UpdateProvider // Same with @UpdateProvider(TemplateFilePathProvider.class)
+  void updateUser(User user);
+
+  @DeleteProvider // Same with @DeleteProvider(TemplateFilePathProvider.class)
+  void deleteUser(int id);
+}]]></source>
+
     <p>This example shows usage the default implementation of <code>ProviderMethodResolver</code>(available since MyBatis 3.5.1 or later):</p>
     <source><![CDATA[@SelectProvider(UserSqlProvider.class)
 List<User> getUsersByName(String name);
@@ -617,6 +677,14 @@ class UserSqlProvider implements ProviderMethodResolver {
     }}.toString();
   }
 }]]></source>
+
+    <p>This example shows usage the <code>databaseId</code> attribute on the statement annotation(Available since 3.5.5):</p>
+    <source><![CDATA[
+@Select(value = "SELECT SYS_GUID() FROM dual", databaseId = "oracle") // Use this statement if DatabaseIdProvider provide "oracle"
+@Select(value = "SELECT uuid_generate_v4()", databaseId = "postgres") // Use this statement if DatabaseIdProvider provide "postgres"
+@Select("SELECT RANDOM_UUID()") // Use this statement if the DatabaseIdProvider not configured or not matches databaseId
+String generateId();
+]]></source>
 
   </subsection>
 

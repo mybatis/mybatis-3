@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -113,10 +113,12 @@ public class Configuration {
   protected boolean callSettersOnNulls;
   protected boolean useActualParamName = true;
   protected boolean returnInstanceForEmptyRow;
+  protected boolean shrinkWhitespacesInSql;
 
   protected String logPrefix;
   protected Class<? extends Log> logImpl;
   protected Class<? extends VFS> vfsImpl;
+  protected Class<?> defaultSqlProviderType;
   protected LocalCacheScope localCacheScope = LocalCacheScope.SESSION;
   protected JdbcType jdbcTypeForNull = JdbcType.OTHER;
   protected Set<String> lazyLoadTriggerMethods = new HashSet<>(Arrays.asList("equals", "clone", "hashCode", "toString"));
@@ -242,6 +244,27 @@ public class Configuration {
     }
   }
 
+  /**
+   * Gets an applying type when omit a type on sql provider annotation(e.g. {@link org.apache.ibatis.annotations.SelectProvider}).
+   *
+   * @return the default type for sql provider annotation
+   * @since 3.5.6
+   */
+  public Class<?> getDefaultSqlProviderType() {
+    return defaultSqlProviderType;
+  }
+
+  /**
+   * Sets an applying type when omit a type on sql provider annotation(e.g. {@link org.apache.ibatis.annotations.SelectProvider}).
+   *
+   * @param defaultSqlProviderType
+   *          the default type for sql provider annotation
+   * @since 3.5.6
+   */
+  public void setDefaultSqlProviderType(Class<?> defaultSqlProviderType) {
+    this.defaultSqlProviderType = defaultSqlProviderType;
+  }
+
   public boolean isCallSettersOnNulls() {
     return callSettersOnNulls;
   }
@@ -264,6 +287,14 @@ public class Configuration {
 
   public void setReturnInstanceForEmptyRow(boolean returnEmptyInstance) {
     this.returnInstanceForEmptyRow = returnEmptyInstance;
+  }
+
+  public boolean isShrinkWhitespacesInSql() {
+    return shrinkWhitespacesInSql;
+  }
+
+  public void setShrinkWhitespacesInSql(boolean shrinkWhitespacesInSql) {
+    this.shrinkWhitespacesInSql = shrinkWhitespacesInSql;
   }
 
   public String getDatabaseId() {
@@ -331,6 +362,9 @@ public class Configuration {
   }
 
   /**
+   * Gets the auto mapping unknown column behavior.
+   *
+   * @return the auto mapping unknown column behavior
    * @since 3.4.0
    */
   public AutoMappingUnknownColumnBehavior getAutoMappingUnknownColumnBehavior() {
@@ -338,6 +372,10 @@ public class Configuration {
   }
 
   /**
+   * Sets the auto mapping unknown column behavior.
+   *
+   * @param autoMappingUnknownColumnBehavior
+   *          the new auto mapping unknown column behavior
    * @since 3.4.0
    */
   public void setAutoMappingUnknownColumnBehavior(AutoMappingUnknownColumnBehavior autoMappingUnknownColumnBehavior) {
@@ -420,6 +458,9 @@ public class Configuration {
   }
 
   /**
+   * Gets the default fetch size.
+   *
+   * @return the default fetch size
    * @since 3.3.0
    */
   public Integer getDefaultFetchSize() {
@@ -427,6 +468,10 @@ public class Configuration {
   }
 
   /**
+   * Sets the default fetch size.
+   *
+   * @param defaultFetchSize
+   *          the new default fetch size
    * @since 3.3.0
    */
   public void setDefaultFetchSize(Integer defaultFetchSize) {
@@ -434,6 +479,9 @@ public class Configuration {
   }
 
   /**
+   * Gets the default result set type.
+   *
+   * @return the default result set type
    * @since 3.5.2
    */
   public ResultSetType getDefaultResultSetType() {
@@ -441,6 +489,10 @@ public class Configuration {
   }
 
   /**
+   * Sets the default result set type.
+   *
+   * @param defaultResultSetType
+   *          the new default result set type
    * @since 3.5.2
    */
   public void setDefaultResultSetType(ResultSetType defaultResultSetType) {
@@ -500,6 +552,9 @@ public class Configuration {
   }
 
   /**
+   * Gets the mapper registry.
+   *
+   * @return the mapper registry
    * @since 3.2.2
    */
   public MapperRegistry getMapperRegistry() {
@@ -531,6 +586,9 @@ public class Configuration {
   }
 
   /**
+   * Gets the interceptors.
+   *
+   * @return the interceptors
    * @since 3.2.2
    */
   public List<Interceptor> getInterceptors() {
@@ -553,6 +611,11 @@ public class Configuration {
   }
 
   /**
+   * Gets the language driver.
+   *
+   * @param langClass
+   *          the lang class
+   * @return the language driver
    * @since 3.5.1
    */
   public LanguageDriver getLanguageDriver(Class<? extends LanguageDriver> langClass) {
@@ -564,6 +627,9 @@ public class Configuration {
   }
 
   /**
+   * Gets the default scripting lanuage instance.
+   *
+   * @return the default scripting lanuage instance
    * @deprecated Use {@link #getDefaultScriptingLanguageInstance()}
    */
   @Deprecated
@@ -859,6 +925,7 @@ public class Configuration {
    * Extracts namespace from fully qualified statement id.
    *
    * @param statementId
+   *          the statement id
    * @return namespace or null when id does not contain period.
    */
   protected String extractNamespace(String statementId) {
@@ -971,7 +1038,7 @@ public class Configuration {
     }
 
     protected static class Ambiguity {
-      final private String subject;
+      private final String subject;
 
       public Ambiguity(String subject) {
         this.subject = subject;

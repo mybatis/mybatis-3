@@ -1,7 +1,7 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2019 the original author or authors.
+       Copyright 2009-2020 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -629,6 +629,36 @@ SqlSessionFactory factory =
               </td>
               <td>
                 A type alias or fully qualified class name.
+              </td>
+              <td>
+                Not set
+              </td>
+            </tr>
+            <tr>
+              <td>
+                shrinkWhitespacesInSql
+              </td>
+              <td>
+                Removes extra whitespace characters from the SQL. Note that this also affects literal strings in SQL. (Since 3.5.5)
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
+              </td>
+            </tr>
+            <tr>
+              <td>
+                defaultSqlProviderType
+              </td>
+              <td>
+                Specifies an sql provider class that holds provider method (Since 3.5.6).
+                This class apply to the <code>type</code>(or <code>value</code>) attribute on sql provider annotation(e.g. <code>@SelectProvider</code>),
+                when these attribute was omitted.
+              </td>
+              <td>
+                A type alias or fully qualified class name
               </td>
               <td>
                 Not set

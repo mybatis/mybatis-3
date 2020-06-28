@@ -62,7 +62,7 @@ public interface BaseMapper<T> {
   @InsertProvider(type = OurSqlBuilder.class, method = "buildInsertSelective")
   void insertSelective(T entity);
 
-  @UpdateProvider(type= OurSqlBuilder.class, method= "buildUpdateSelective")
+  @UpdateProvider(type = OurSqlBuilder.class, method = "buildUpdateSelective")
   void updateSelective(T entity);
 
   @SelectProvider(type = OurSqlBuilder.class, method = "buildGetByEntityQuery")

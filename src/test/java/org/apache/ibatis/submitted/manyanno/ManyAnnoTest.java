@@ -32,7 +32,8 @@ class ManyAnnoTest extends BaseDataTest {
 
   @Test
   void testGetMessageForEmptyDatabase() throws Exception {
-    final Environment environment = new Environment("test", new JdbcTransactionFactory(), BaseDataTest.createBlogDataSource());
+    final Environment environment = new Environment("test", new JdbcTransactionFactory(),
+        BaseDataTest.createBlogDataSource());
     final Configuration config = new Configuration(environment);
     config.addMapper(PostMapper.class);
     final SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(config);
@@ -40,7 +41,6 @@ class ManyAnnoTest extends BaseDataTest {
 
       PostMapper mapper = session.getMapper(PostMapper.class);
       List<AnnoPost> posts = mapper.getPosts(101);
-
 
       assertEquals(3, posts.size());
       assertEquals(3, posts.get(0).getTags().size());

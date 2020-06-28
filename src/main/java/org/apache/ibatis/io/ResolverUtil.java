@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -55,9 +55,12 @@ import org.apache.ibatis.logging.LogFactory;
  * </pre>
  *
  * @author Tim Fennell
+ * @param <T>
+ *          the generic type
  */
 public class ResolverUtil<T> {
-  /*
+
+  /**
    * An instance of Log to use for logging in this class.
    */
   private static final Log log = LogFactory.getLog(ResolverUtil.class);
@@ -67,9 +70,14 @@ public class ResolverUtil<T> {
    * are to be included in the results produced by the ResolverUtil.
    */
   public interface Test {
+
     /**
      * Will be called repeatedly with candidate classes. Must return True if a class
      * is to be included in the results, false otherwise.
+     *
+     * @param type
+     *          the type
+     * @return true, if successful
      */
     boolean matches(Class<?> type);
   }
@@ -79,9 +87,16 @@ public class ResolverUtil<T> {
    * that this test will match the parent type itself if it is presented for matching.
    */
   public static class IsA implements Test {
+
+    /** The parent. */
     private Class<?> parent;
 
-    /** Constructs an IsA test using the supplied Class as the parent class/interface. */
+    /**
+     * Constructs an IsA test using the supplied Class as the parent class/interface.
+     *
+     * @param parentType
+     *          the parent type
+     */
     public IsA(Class<?> parentType) {
       this.parent = parentType;
     }
@@ -103,9 +118,16 @@ public class ResolverUtil<T> {
    * is, then the test returns true, otherwise false.
    */
   public static class AnnotatedWith implements Test {
+
+    /** The annotation. */
     private Class<? extends Annotation> annotation;
 
-    /** Constructs an AnnotatedWith test for the specified annotation type. */
+    /**
+     * Constructs an AnnotatedWith test for the specified annotation type.
+     *
+     * @param annotation
+     *          the annotation
+     */
     public AnnotatedWith(Class<? extends Annotation> annotation) {
       this.annotation = annotation;
     }
@@ -167,8 +189,11 @@ public class ResolverUtil<T> {
    * of a non-interface class, subclasses will be collected.  Accumulated classes can be
    * accessed by calling {@link #getClasses()}.
    *
-   * @param parent the class of interface to find subclasses or implementations of
-   * @param packageNames one or more package names to scan (including subpackages) for classes
+   * @param parent
+   *          the class of interface to find subclasses or implementations of
+   * @param packageNames
+   *          one or more package names to scan (including subpackages) for classes
+   * @return the resolver util
    */
   public ResolverUtil<T> findImplementations(Class<?> parent, String... packageNames) {
     if (packageNames == null) {
@@ -187,8 +212,11 @@ public class ResolverUtil<T> {
    * Attempts to discover classes that are annotated with the annotation. Accumulated
    * classes can be accessed by calling {@link #getClasses()}.
    *
-   * @param annotation the annotation that should be present on matching classes
-   * @param packageNames one or more package names to scan (including subpackages) for classes
+   * @param annotation
+   *          the annotation that should be present on matching classes
+   * @param packageNames
+   *          one or more package names to scan (including subpackages) for classes
+   * @return the resolver util
    */
   public ResolverUtil<T> findAnnotated(Class<? extends Annotation> annotation, String... packageNames) {
     if (packageNames == null) {
@@ -209,9 +237,11 @@ public class ResolverUtil<T> {
    * true the class is retained.  Accumulated classes can be fetched by calling
    * {@link #getClasses()}.
    *
-   * @param test an instance of {@link Test} that will be used to filter classes
-   * @param packageName the name of the package from which to start scanning for
-   *        classes, e.g. {@code net.sourceforge.stripes}
+   * @param test
+   *          an instance of {@link Test} that will be used to filter classes
+   * @param packageName
+   *          the name of the package from which to start scanning for classes, e.g. {@code net.sourceforge.stripes}
+   * @return the resolver util
    */
   public ResolverUtil<T> find(Test test, String packageName) {
     String path = getPackagePath(packageName);
@@ -234,7 +264,9 @@ public class ResolverUtil<T> {
    * Converts a Java package name to a path that can be looked up with a call to
    * {@link ClassLoader#getResources(String)}.
    *
-   * @param packageName The Java package name to convert to a path
+   * @param packageName
+   *          The Java package name to convert to a path
+   * @return the package path
    */
   protected String getPackagePath(String packageName) {
     return packageName == null ? null : packageName.replace('.', '/');
@@ -261,8 +293,8 @@ public class ResolverUtil<T> {
         matches.add((Class<T>) type);
       }
     } catch (Throwable t) {
-      log.warn("Could not examine class '" + fqn + "'" + " due to a " +
-          t.getClass().getName() + " with message: " + t.getMessage());
+      log.warn("Could not examine class '" + fqn + "'" + " due to a "
+          + t.getClass().getName() + " with message: " + t.getMessage());
     }
   }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2019 the original author or authors.
+       Copyright 2009-2020 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -24,6 +24,9 @@
     <author email="clinton.begin@gmail.com">Clinton Begin</author>
     <author email="harawata@gmail.com">Iwao AVE!</author>
   </properties>
+  The <code>databaseId</code>(Available since 3.5.5), in case there is a configured <code>DatabaseIdProvider</code>,
+  the MyBatis use the <code>Options</code> with no <code>databaseId</code> attribute or with a <code>databaseId</code>
+  that matches the current one. If found with and without the <code>databaseId</code> the latter will be discarded.<br/><br/>
 
   <body>
   <section name="Java API" id="javaApi">
@@ -397,16 +400,22 @@ void rollback(boolean force)</source>
         <td><code>@One</code></td>
         <td>N/A</td>
         <td><code>&lt;association&gt;</code></td>
-        <td>複雑型のプロパティのマッピング情報を定義します。属性: <code>select</code>, <code>fetchType</code>. select は適切な型を読み込むことができるマップドステートメント（Mapper メソッド）の完全修飾名です。
+        <td>複雑型のプロパティのマッピング情報を定義します。属性: <code>select</code>, <code>fetchType</code>, <code>resultMap</code>(3.5.5以降で利用可能), <code>columnPrefix</code>(3.5.5以降で利用可能).
+        select は適切な型を読み込むことができるマップドステートメント（Mapper メソッド）の完全修飾名です。
         fetchType はグローバルな設定 <code>lazyLoadingEnabled</code> をオーバーライドする場合に指定します。
+        resultMap は結果列を単一のコンテナオブジェクト(JavaBeanなど)へマッピングするための結果マップの完全修飾名を指定します。
+        columnPrefix はネストした結果マップで結果列をグループ化するためのカラム名のプレフィックスを指定します。
         <span class="label important">NOTE</span> アノテーション API では結合マッピングがサポートされていません。これは Java アノテーションでは循環参照が許可されないためです。</td>
       </tr>
       <tr>
         <td><code>@Many</code></td>
         <td>N/A</td>
         <td><code>&lt;collection&gt;</code></td>
-        <td>複雑型のプロパティのマッピング情報を定義します。属性: <code>select</code>, <code>fetchType</code>. select は適切な型のコレクションを読み込むことができるマップドステートメント（Mapper メソッド）の完全修飾名です。
+        <td>複雑型のプロパティのマッピング情報を定義します。属性: <code>select</code>, <code>fetchType</code>, <code>resultMap</code>(3.5.5以降で利用可能), <code>columnPrefix</code>(3.5.5以降で利用可能).
+        select は適切な型のコレクションを読み込むことができるマップドステートメント（Mapper メソッド）の完全修飾名です。
         fetchType はグローバルな設定 <code>lazyLoadingEnabled</code> をオーバーライドする場合に指定します。
+        resultMap は結果列をコレクションオブジェクト(JavaBeanのリストなど)へマッピングするための結果マップの完全修飾名を指定します。
+        columnPrefix はネストした結果マップで結果列をグループ化するためのカラム名のプレフィックスを指定します。
         <span class="label important">NOTE</span> アノテーション API では結合マッピングがサポートされていません。これは Java アノテーションでは循環参照が許可されないためです。</td>
       </tr>
       <tr>
@@ -422,8 +431,13 @@ void rollback(boolean force)</source>
         <td>このアノテーションを使うと、通常マップドステートメントの属性として指定される多様なスイッチや設定オプションにアクセスすることができます。<code>Options</code> アノテーションによって、各ステートメントのアノテーションを複雑化することなく、一貫したクリーンな方法で設定にアクセスできるよう工夫されています。キー: Attributes:
         <code>useCache=true</code>, <code>flushCache=FlushCachePolicy.DEFAULT</code>, <code>resultSetType=DEFAULT</code>,
         <code>statementType=PREPARED</code>, <code>fetchSize=-1</code>, <code>timeout=-1</code>,
-        <code>useGeneratedKeys=false</code>, <code>keyProperty=""</code>, <code>keyColumn=""</code>, <code>resultSets=""</code>.
-        Java アノテーションを使う場合、値として <code>null</code> を指定することはできないという制限があります。これはどういうことかというと、<code>Options</code> アノテーションを付加したステートメントにはデフォルトのオプションが適用されるということです。予期しない動作を防ぐため、各オプションのデフォルト値を把握しておくようにしてください。<br/><br/>
+        <code>useGeneratedKeys=false</code>, <code>keyProperty=""</code>, <code>keyColumn=""</code>, <code>resultSets=""</code>,
+        <code>databaseId=""</code>.
+        Java アノテーションを使う場合、値として <code>null</code> を指定することはできないという制限があります。これはどういうことかというと、<code>Options</code> アノテーションを付加したステートメントにはデフォルトのオプションが適用されるということです。予期しない動作を防ぐため、各オプションのデフォルト値を把握しておくようにしてください。
+        <code>databaseId</code>(3.5.5以降で利用可能)：<code>DatabaseIdProvider</code>の設定がある場合は、
+        MyBatisは<code>databaseId</code>の指定がないものまたは<code>DatabaseIdProvider</code>が提供する値と一致するものを利用します。
+        もし<code>databaseId</code>の指定があるものとないものを両方見つけた場合は、後者は破棄されます。<br/><br/>
+
         <code>keyColumn</code> は特定のデータベース（Oracle や PostgreSQL など）でのみ必須となります。
         <code>keyColumn</code> と <code>keyProperty</code> に対して指定可能な値については、上で出てきた insert ステートメントについての説明を参照してください。</td>
       </tr>
@@ -445,7 +459,14 @@ void rollback(boolean force)</source>
             <li><code>&lt;select&gt;</code></li>
           </ul>
         </td>
-        <td>これらのアノテーションは、それぞれ実行対象の SQL に対応しています。各アノテーションは String の配列（単一の String でも OK）を引数に取ります。渡された String の配列は、スペース区切りで連結されます。これによって、Java のコード内で SQL を構築するときに良くある 'スペースの付け忘れ' によるバグを防ぐことができます。一応、'+' 記号で連結した文字列を引数とすることも可能です。単一値 <code>value</code> は SQL ステートメントを構成する String の配列です。</td>
+        <td>
+          これらのアノテーションは、それぞれ実行対象の SQL に対応しています。各アノテーションは String の配列（単一の String でも OK）を引数に取ります。
+          渡された String の配列は、スペース区切りで連結されます。これによって、Java のコード内で SQL を構築するときに良くある 'スペースの付け忘れ' によるバグを防ぐことができます。一応、'+' 記号で連結した文字列を引数とすることも可能です。
+          <code>value</code>：SQL ステートメントを構成する String の配列です。
+          <code>databaseId</code>(3.5.5以降で利用可能)：<code>DatabaseIdProvider</code>の設定がある場合は、
+          MyBatisは<code>databaseId</code>の指定がないものまたは<code>DatabaseIdProvider</code>が提供する値と一致するアノテーションに指定されているステートメントを利用します。
+          もし<code>databaseId</code>の指定があるものとないものを両方見つけた場合は、後者は破棄されます。
+        </td>
       </tr>
       <tr>
         <td>
@@ -470,10 +491,15 @@ void rollback(boolean force)</source>
         なお、メソッド引数にはMapperメソッドの引数に渡したオブジェクトに加え、<code>ProviderContext</code>(MyBatis 3.4.5以降で利用可能)を介して「Mapperインタフェースの型」「Mapperメソッド」「データベースID」を渡すことができます。(MyBatis 3.4以降では、複数の引数を渡すことができます)
         キー: <code>value</code>, <code>type</code>, <code>method</code>.
         <code>value</code> と <code>type</code> にはクラスオブジェクトを指定します
-        (<code>type</code> は <code>value</code> の別名で、どちらか一方を指定する必要があります)。
+        (<code>type</code> は <code>value</code> の別名で、どちらか一方を指定する必要があります。
+        ただし、グローバル設定として<code>defaultSqlProviderType</code>を指定している場合は両方とも省略することができます)。
         <code>method</code> にはメソッド名を指定します
         (MyBatis 3.5.1以降では、<code>method</code> 属性を省略することができます。その際MyBatisは、<code>ProviderMethodResolver</code> インタフェースを介して対象メソッドの解決を試み、
         対象メソッドが解決できない場合は、<code>provideSql</code>という名前のメソッドを代替メソッドとして利用します)。
+        <code>databaseId</code>(3.5.5以降で利用可能)：<code>DatabaseIdProvider</code>の設定がある場合は、
+        MyBatisは<code>databaseId</code>の指定がないものまたは<code>DatabaseIdProvider</code>が提供する値と一致するアノテーションに指定されているメソッドを利用します。
+        もし<code>databaseId</code>の指定があるものとないものを両方見つけた場合は、後者は破棄されます。
+
         <span class="label important">NOTE</span> 次の章で、クリーンで可読性の高いコードで動的 SQL を構築するためのクラスについて説明します。
 </td>
       </tr>
@@ -489,7 +515,11 @@ void rollback(boolean force)</source>
         <td><code>Method</code></td>
         <td><code>&lt;selectKey&gt;</code></td>
         <td>このアノテーションを <code>@Insert</code>, <code>@InsertProvider</code>, <code>@Update</code>, <code>@UpdateProvider</code> が付加されたメソッドに追加することで、XML の <code>&lt;selectKey&gt;</code> に相当する機能を実現することができます（他のメソッドに追加しても無視されます）。<code>@SelectKey</code> アノテーションが指定されている場合、<code>@Options</code> アノテーションや設定プロパティによるキーの自動生成に関する設定は無視されます。
-        属性: <code>statement</code> SQL ステートメントを構成する String の配列です。 <code>keyProperty</code> は自動生成されたキーの値が設定される引数オブジェクトのプロパティを指定します。<code>before</code> insert の前にステートメントを実行する場合は true、後に実行する場合は false を指定します。<code>resultType</code> は keyProperty で指定したプロパティの Java タイプです。<code>statementType</code> はステートメントの種類で STATEMENT, PREPARED, CALLABLE のいずれかを指定します（デフォルトは PREPARED）。</td>
+        属性: <code>statement</code> SQL ステートメントを構成する String の配列です。 <code>keyProperty</code> は自動生成されたキーの値が設定される引数オブジェクトのプロパティを指定します。<code>before</code> insert の前にステートメントを実行する場合は true、後に実行する場合は false を指定します。<code>resultType</code> は keyProperty で指定したプロパティの Java タイプです。<code>statementType</code> はステートメントの種類で STATEMENT, PREPARED, CALLABLE のいずれかを指定します（デフォルトは PREPARED）。
+        <code>databaseId</code>(3.5.5以降で利用可能)：<code>DatabaseIdProvider</code>の設定がある場合は、
+        MyBatisは<code>databaseId</code>の指定がないものまたは<code>DatabaseIdProvider</code>が提供する値と一致するアノテーションに指定されているステートメントを利用します。
+        もし<code>databaseId</code>の指定があるものとないものを両方見つけた場合は、後者は破棄されます。
+        </td>
       </tr>
       <tr>
         <td><code>@ResultMap</code></td>
@@ -590,6 +620,29 @@ class UserSqlBuilder {
   }
 }]]></source>
 
+    <p>次のコードは、グローバル設定を利用して全てのマッパーメソッドで同じSQLプロバイダクラスを利用する例です。(3.5.6以降で利用可能)</p>
+    <source><![CDATA[
+Configuration configuration = new Configuration();
+configuration.setDefaultSqlProviderType(TemplateFilePathProvider.class); // 全てのマッパーメソッドで利用するSQLプロバイダクラスを指定する
+// ...]]></source>
+    <source><![CDATA[
+// 各メソッドのSQLプロバイダアノテーションの type または value 属性は省略することができ、
+// 省略した場合はMyBaitsはグローバル設定の defaultSqlProviderType に指定されているクラスを適用する
+public interface UserMapper {
+
+  @SelectProvider // @SelectProvider(TemplateFilePathProvider.class) と同義
+  User findUser(int id);
+
+  @InsertProvider // @InsertProvider(TemplateFilePathProvider.class) と同義
+  void createUser(User user);
+
+  @UpdateProvider // @UpdateProvider(TemplateFilePathProvider.class) と同義
+  void updateUser(User user);
+
+  @DeleteProvider // @DeleteProvider(TemplateFilePathProvider.class) と同義
+  void deleteUser(int id);
+}]]></source>
+
     <p>次のコードは、<code>ProviderMethodResolver</code>(MyBatis 3.5.1以降で利用可能)のデフォルト実装の利用例です。</p>
     <source><![CDATA[@SelectProvider(UserSqlProvider.class)
 List<User> getUsersByName(String name);
@@ -610,6 +663,14 @@ class UserSqlProvider implements ProviderMethodResolver {
   }
 
 }]]></source>
+
+    <p>次のコードは、<code>databaseId</code>属性(3.5.5以降で利用可能)の利用例です。</p>
+    <source><![CDATA[
+@Select(value = "SELECT SYS_GUID() FROM dual", databaseId = "oracle") // DatabaseIdProviderが提供する値が "oracle" の時にこのステートメントを利用する
+@Select(value = "SELECT uuid_generate_v4()", databaseId = "postgres") // DatabaseIdProviderが提供する値が "postgres" の時にこのステートメントを利用する
+@Select("SELECT RANDOM_UUID()") // DatabaseIdProviderの設定がないまたはDatabaseIdProviderが提供する値に一致しない時にこのステートメントを利用する
+String generateId();
+]]></source>
 
   </subsection>
 

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -62,14 +62,14 @@ class MultipleResultTest {
       Assertions.assertEquals(2, results.size());
 
       Assertions.assertEquals(6, results.get(0).size());
-      OrderDetail detail = (OrderDetail)results.get(0).get(0);
+      OrderDetail detail = (OrderDetail) results.get(0).get(0);
       Assertions.assertEquals(1, detail.getOrderId());
       Assertions.assertEquals(1, detail.getLineNumber());
       Assertions.assertEquals(1, detail.getQuantity());
       Assertions.assertEquals("Pen", detail.getItemDescription());
 
       Assertions.assertEquals(2, results.get(1).size());
-      OrderHeader header = (OrderHeader)results.get(1).get(0);
+      OrderHeader header = (OrderHeader) results.get(1).get(0);
       Assertions.assertEquals(1, header.getOrderId());
       Assertions.assertEquals("Fred", header.getCustName());
     }

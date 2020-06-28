@@ -48,8 +48,7 @@ class ProviderMethodResolutionTest {
 
   @BeforeAll
   static void setUp() throws Exception {
-    try (Reader reader = Resources
-        .getResourceAsReader("org/apache/ibatis/submitted/sqlprovider/mybatis-config.xml")) {
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/sqlprovider/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
       sqlSessionFactory.getConfiguration().addMapper(ProvideMethodResolverMapper.class);
     }
@@ -67,29 +66,29 @@ class ProviderMethodResolutionTest {
 
   @Test
   void shouldErrorWhenDefaultResolverMethodNameMatchedMethodIsNone() {
-    BuilderException e = Assertions.assertThrows(BuilderException.class,
-        () -> sqlSessionFactory.getConfiguration().addMapper(DefaultProvideMethodResolverMethodNameMatchedMethodIsNoneMapper.class));
+    BuilderException e = Assertions.assertThrows(BuilderException.class, () -> sqlSessionFactory.getConfiguration()
+        .addMapper(DefaultProvideMethodResolverMethodNameMatchedMethodIsNoneMapper.class));
     assertEquals(
         "Cannot resolve the provider method because 'insert' not found in SqlProvider 'org.apache.ibatis.submitted.sqlprovider.ProviderMethodResolutionTest$DefaultProvideMethodResolverMethodNameMatchedMethodIsNoneMapper$MethodResolverBasedSqlProvider'.",
-        e.getCause().getMessage());
+        e.getMessage());
   }
 
   @Test
   void shouldErrorWhenDefaultResolverReturnTypeMatchedMethodIsNone() {
-    BuilderException e = Assertions.assertThrows(BuilderException.class,
-        () -> sqlSessionFactory.getConfiguration().addMapper(DefaultProvideMethodResolverReturnTypeMatchedMethodIsNoneMapper.class));
+    BuilderException e = Assertions.assertThrows(BuilderException.class, () -> sqlSessionFactory.getConfiguration()
+        .addMapper(DefaultProvideMethodResolverReturnTypeMatchedMethodIsNoneMapper.class));
     assertEquals(
         "Cannot resolve the provider method because 'insert' does not return the CharSequence or its subclass in SqlProvider 'org.apache.ibatis.submitted.sqlprovider.ProviderMethodResolutionTest$DefaultProvideMethodResolverReturnTypeMatchedMethodIsNoneMapper$MethodResolverBasedSqlProvider'.",
-        e.getCause().getMessage());
+        e.getMessage());
   }
 
   @Test
   void shouldErrorWhenDefaultResolverMatchedMethodIsMultiple() {
-    BuilderException e = Assertions.assertThrows(BuilderException.class,
-        () -> sqlSessionFactory.getConfiguration().addMapper(DefaultProvideMethodResolverMatchedMethodIsMultipleMapper.class));
+    BuilderException e = Assertions.assertThrows(BuilderException.class, () -> sqlSessionFactory.getConfiguration()
+        .addMapper(DefaultProvideMethodResolverMatchedMethodIsMultipleMapper.class));
     assertEquals(
         "Cannot resolve the provider method because 'update' is found multiple in SqlProvider 'org.apache.ibatis.submitted.sqlprovider.ProviderMethodResolutionTest$DefaultProvideMethodResolverMatchedMethodIsMultipleMapper$MethodResolverBasedSqlProvider'.",
-        e.getCause().getMessage());
+        e.getMessage());
   }
 
   @Test
@@ -130,7 +129,7 @@ class ProviderMethodResolutionTest {
         () -> sqlSessionFactory.getConfiguration().addMapper(ReservedNameMethodIsNoneMapper.class));
     assertEquals(
         "Error creating SqlSource for SqlProvider. Method 'provideSql' not found in SqlProvider 'org.apache.ibatis.submitted.sqlprovider.ProviderMethodResolutionTest$ReservedNameMethodIsNoneMapper$SqlProvider'.",
-        e.getCause().getMessage());
+        e.getMessage());
   }
 
   interface ProvideMethodResolverMapper {
@@ -156,7 +155,8 @@ class ProviderMethodResolutionTest {
       }
 
       public static String select2() {
-        throw new IllegalStateException("This method should not called when specify `method` attribute on @SelectProvider.");
+        throw new IllegalStateException(
+            "This method should not called when specify `method` attribute on @SelectProvider.");
       }
 
       public static String provideSelect2Sql() {
@@ -187,8 +187,7 @@ class ProviderMethodResolutionTest {
     default Method resolveMethod(ProviderContext context) {
       List<Method> targetMethods = Arrays.stream(getClass().getMethods())
           .filter(m -> m.getName().equals(context.getMapperMethod().getName() + "Sql"))
-          .filter(m -> CharSequence.class.isAssignableFrom(m.getReturnType()))
-          .collect(Collectors.toList());
+          .filter(m -> CharSequence.class.isAssignableFrom(m.getReturnType())).collect(Collectors.toList());
       if (targetMethods.size() == 1) {
         return targetMethods.get(0);
       }

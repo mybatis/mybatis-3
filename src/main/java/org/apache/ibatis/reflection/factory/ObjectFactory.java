@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -35,17 +35,27 @@ public interface ObjectFactory {
 
   /**
    * Creates a new object with default constructor.
-   * @param type Object type
-   * @return
+   *
+   * @param <T>
+   *          the generic type
+   * @param type
+   *          Object type
+   * @return the t
    */
   <T> T create(Class<T> type);
 
   /**
    * Creates a new object with the specified constructor and params.
-   * @param type Object type
-   * @param constructorArgTypes Constructor argument types
-   * @param constructorArgs Constructor argument values
-   * @return
+   *
+   * @param <T>
+   *          the generic type
+   * @param type
+   *          Object type
+   * @param constructorArgTypes
+   *          Constructor argument types
+   * @param constructorArgs
+   *          Constructor argument values
+   * @return the t
    */
   <T> T create(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs);
 
@@ -53,7 +63,10 @@ public interface ObjectFactory {
    * Returns true if this object can have a set of other objects.
    * It's main purpose is to support non-java.util.Collection objects like Scala collections.
    *
-   * @param type Object type
+   * @param <T>
+   *          the generic type
+   * @param type
+   *          Object type
    * @return whether it is a collection or not
    * @since 3.1.0
    */

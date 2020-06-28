@@ -63,7 +63,7 @@ class BlobInputStreamTypeHandlerTest extends BaseTypeHandlerTest {
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
 
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/type/BlobInputStreamTypeHandlerTest.sql");
+        "org/apache/ibatis/type/BlobInputStreamTypeHandlerTest.sql");
   }
 
   @Override

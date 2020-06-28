@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -65,8 +65,7 @@ public class DefaultVFS extends VFS {
           log.debug("Listing " + url);
         }
         resources = listResources(new JarInputStream(is), path);
-      }
-      else {
+      } else {
         List<String> children = new ArrayList<>();
         try {
           if (isJar(url)) {
@@ -84,8 +83,7 @@ public class DefaultVFS extends VFS {
                 children.add(entry.getName());
               }
             }
-          }
-          else {
+          } else {
             /*
              * Some servlet containers allow reading from directory resources like a
              * text file, listing the child resources one per line. However, there is no
@@ -124,16 +122,15 @@ public class DefaultVFS extends VFS {
           if ("file".equals(url.getProtocol())) {
             File file = new File(url.getFile());
             if (log.isDebugEnabled()) {
-                log.debug("Listing directory " + file.getAbsolutePath());
+              log.debug("Listing directory " + file.getAbsolutePath());
             }
             if (file.isDirectory()) {
               if (log.isDebugEnabled()) {
-                  log.debug("Listing " + url);
+                log.debug("Listing " + url);
               }
               children = Arrays.asList(file.list());
             }
-          }
-          else {
+          } else {
             // No idea where the exception came from so rethrow it
             throw e;
           }
@@ -216,6 +213,7 @@ public class DefaultVFS extends VFS {
    * @param url The URL of the JAR entry.
    * @return The URL of the JAR file, if one is found. Null if not.
    * @throws MalformedURLException
+   *           the malformed URL exception
    */
   protected URL findJarForResource(URL url) throws MalformedURLException {
     if (log.isDebugEnabled()) {
@@ -244,8 +242,7 @@ public class DefaultVFS extends VFS {
       if (log.isDebugEnabled()) {
         log.debug("Extracted JAR URL: " + jarUrl);
       }
-    }
-    else {
+    } else {
       if (log.isDebugEnabled()) {
         log.debug("Not a JAR: " + jarUrl);
       }
@@ -257,8 +254,7 @@ public class DefaultVFS extends VFS {
       URL testUrl = new URL(jarUrl.toString());
       if (isJar(testUrl)) {
         return testUrl;
-      }
-      else {
+      } else {
         // WebLogic fix: check if the URL's file exists in the filesystem.
         if (log.isDebugEnabled()) {
           log.debug("Not a JAR: " + jarUrl);
@@ -299,7 +295,9 @@ public class DefaultVFS extends VFS {
    * Converts a Java package name to a path that can be looked up with a call to
    * {@link ClassLoader#getResources(String)}.
    *
-   * @param packageName The Java package name to convert to a path
+   * @param packageName
+   *          The Java package name to convert to a path
+   * @return the package path
    */
   protected String getPackagePath(String packageName) {
     return packageName == null ? null : packageName.replace('.', '/');
@@ -308,7 +306,9 @@ public class DefaultVFS extends VFS {
   /**
    * Returns true if the resource located at the given URL is a JAR file.
    *
-   * @param url The URL of the resource to test.
+   * @param url
+   *          The URL of the resource to test.
+   * @return true, if is jar
    */
   protected boolean isJar(URL url) {
     return isJar(url, new byte[JAR_MAGIC.length]);
@@ -317,10 +317,12 @@ public class DefaultVFS extends VFS {
   /**
    * Returns true if the resource located at the given URL is a JAR file.
    *
-   * @param url The URL of the resource to test.
-   * @param buffer A buffer into which the first few bytes of the resource are read. The buffer
-   *            must be at least the size of {@link #JAR_MAGIC}. (The same buffer may be reused
-   *            for multiple calls as an optimization.)
+   * @param url
+   *          The URL of the resource to test.
+   * @param buffer
+   *          A buffer into which the first few bytes of the resource are read. The buffer must be at least the size of
+   *          {@link #JAR_MAGIC}. (The same buffer may be reused for multiple calls as an optimization.)
+   * @return true, if is jar
    */
   protected boolean isJar(URL url, byte[] buffer) {
     InputStream is = null;

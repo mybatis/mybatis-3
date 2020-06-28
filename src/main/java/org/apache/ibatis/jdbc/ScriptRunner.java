@@ -28,6 +28,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * This is an internal testing utility.<br>
+ * You are welcome to use this class for your own purposes,<br>
+ * but if there is some feature/enhancement you need for your own usage,<br>
+ * please make and modify your own copy instead of sending us an enhancement request.<br>
+ * 
  * @author Clinton Begin
  */
 public class ScriptRunner {
@@ -78,6 +83,10 @@ public class ScriptRunner {
   }
 
   /**
+   * Sets the escape processing.
+   *
+   * @param escapeProcessing
+   *          the new escape processing
    * @since 3.1.1
    */
   public void setEscapeProcessing(boolean escapeProcessing) {
@@ -208,7 +217,7 @@ public class ScriptRunner {
       }
       println(trimmedLine);
     } else if (commandReadyToExecute(trimmedLine)) {
-      command.append(line.substring(0, line.lastIndexOf(delimiter)));
+      command.append(line, 0, line.lastIndexOf(delimiter));
       command.append(LINE_SEPARATOR);
       println(command);
       executeStatement(command.toString());

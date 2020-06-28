@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package org.apache.ibatis.annotations;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -24,8 +25,9 @@ import java.lang.annotation.Target;
 /**
  * The annotation that specify a method that provide an SQL for updating record(s).
  *
- * <p><br>
+ * <p>
  * <b>How to use:</b>
+ *
  * <pre>
  * public interface UserMapper {
  *
@@ -40,11 +42,13 @@ import java.lang.annotation.Target;
  *
  * }
  * </pre>
+ *
  * @author Clinton Begin
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
+@Repeatable(UpdateProvider.List.class)
 public @interface UpdateProvider {
 
   /**
@@ -75,7 +79,8 @@ public @interface UpdateProvider {
    * If this attribute omit, the MyBatis will call a method that decide by following rules.
    * <ul>
    *   <li>
-   *     If class that specified the {@link #type()} attribute implements the {@link org.apache.ibatis.builder.annotation.ProviderMethodResolver},
+   *     If class that specified the {@link #type()} attribute implements the
+   *     {@link org.apache.ibatis.builder.annotation.ProviderMethodResolver},
    *     the MyBatis use a method that returned by it
    *   </li>
    *   <li>
@@ -87,5 +92,23 @@ public @interface UpdateProvider {
    * @return a method name of method for providing an SQL
    */
   String method() default "";
+
+  /**
+   * @return A database id that correspond this provider
+   * @since 3.5.5
+   */
+  String databaseId() default "";
+
+  /**
+   * The container annotation for {@link UpdateProvider}.
+   * @author Kazuki Shimizu
+   * @since 3.5.5
+   */
+  @Documented
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target(ElementType.METHOD)
+  @interface List {
+    UpdateProvider[] value();
+  }
 
 }

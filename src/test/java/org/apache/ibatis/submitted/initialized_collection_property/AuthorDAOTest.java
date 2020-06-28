@@ -41,7 +41,7 @@ class AuthorDAOTest {
     }
 
     BaseDataTest.runScript(factory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/initialized_collection_property/create.sql");
+        "org/apache/ibatis/submitted/initialized_collection_property/create.sql");
   }
 
   @Test

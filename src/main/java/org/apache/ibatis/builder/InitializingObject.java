@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -28,7 +28,10 @@ public interface InitializingObject {
    * <p>
    * This method will be invoked after it has set all properties.
    * </p>
-   * @throws Exception in the event of misconfiguration (such as failure to set an essential property) or if initialization fails
+   *
+   * @throws Exception
+   *           in the event of misconfiguration (such as failure to set an essential property) or if initialization
+   *           fails
    */
   void initialize() throws Exception;
 

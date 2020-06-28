@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2019 the original author or authors.
+       Copyright 2009-2020 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -418,9 +418,12 @@ void rollback(boolean force)</source>
         <td>N/A</td>
         <td><code>&lt;association&gt;</code></td>
         <td>A mapping to a single property value of a complex type. Attributes: <code>select</code>, which is the fully
-        qualified name of a mapped statement (i.e. mapper method) that can load an instance of the appropriate type,
+        qualified name of a mapped statement (i.e. mapper method) that can load an instance of the appropriate type.
         <code>fetchType</code>, which supersedes the global configuration parameter <code>lazyLoadingEnabled</code> for this
         mapping.
+        <code>resultMap</code>(available since 3.5.5), which is the fully qualified name of a result map that map to
+        a single container object from select result.
+        <code>columnPrefix</code>(available since 3.5.5), which is column prefix for grouping select columns at nested result map.
         <span class="label important">NOTE</span> You will notice that join mapping is not supported via the Annotations API.
         This is due to the limitation in Java Annotations that does not allow for circular references.</td>
       </tr>
@@ -430,8 +433,11 @@ void rollback(boolean force)</source>
         <td><code>&lt;collection&gt;</code></td>
         <td>A mapping to a collection property of a complex type. Attributes: <code>select</code>, which is the fully
         qualified name of a mapped statement (i.e. mapper method) that can load a collection of instances of the appropriate
-        types, <code>fetchType</code>, which supersedes the global configuration parameter <code>lazyLoadingEnabled</code> for this
+        types. <code>fetchType</code>, which supersedes the global configuration parameter <code>lazyLoadingEnabled</code> for this
         mapping.
+        <code>resultMap</code>(available since 3.5.5), which is the fully qualified name of a result map that map to
+        collection object from select result.
+        <code>columnPrefix</code>(available since 3.5.5), which is column prefix for grouping select columns at nested result map.
         <span class="label important">NOTE</span> You will notice that join mapping is not supported via the
         Annotations API. This is due to the limitation in Java Annotations that does not allow for circular references.</td>
       </tr>
@@ -451,13 +457,18 @@ void rollback(boolean force)</source>
         <code>Options</code> annotation provides a consistent and clear way to access these. Attributes:
         <code>useCache=true</code>, <code>flushCache=FlushCachePolicy.DEFAULT</code>, <code>resultSetType=DEFAULT</code>,
         <code>statementType=PREPARED</code>, <code>fetchSize=-1</code>, <code>timeout=-1</code>,
-        <code>useGeneratedKeys=false</code>, <code>keyProperty=""</code>, <code>keyColumn=""</code>, <code>resultSets=""</code>.
+        <code>useGeneratedKeys=false</code>, <code>keyProperty=""</code>, <code>keyColumn=""</code>, <code>resultSets=""</code>
+        and <code>databaseId=""</code>.
         It's important to understand that with Java Annotations, there is no way to specify <code>null</code> as a value.
         Therefore, once you engage the <code>Options</code> annotation, your statement is subject to all of the default
-        values. Pay attention to what the default values are to avoid unexpected behavior.<br/><br/>
+        values. Pay attention to what the default values are to avoid unexpected behavior.
+        The <code>databaseId</code>(Available since 3.5.5), in case there is a configured <code>DatabaseIdProvider</code>,
+        the MyBatis use the <code>Options</code> with no <code>databaseId</code> attribute or with a <code>databaseId</code>
+        that matches the current one. If found with and without the <code>databaseId</code> the latter will be discarded.<br/><br/>
         Note that <code>keyColumn</code> is only required in certain databases (like Oracle and PostgreSQL).
         See the discussion about <code>keyColumn</code> and <code>keyProperty</code> above in the discussion of the
-        insert statement for more information about allowable values in these attributes.</td>
+        insert statement for more information about allowable values in these attributes.
+        </td>
       </tr>
       <tr>
         <td>
@@ -481,7 +492,11 @@ void rollback(boolean force)</source>
         (or a single string will do). If an array of strings is passed, they are concatenated with a single space between
         each to separate them. This helps avoid the "missing space" problem when building SQL in Java code. However,
         you're also welcome to concatenate together a single string if you like.
-        Attributes: <code>value</code>, which is the array of Strings to form the single SQL statement.</td>
+        Attributes: <code>value</code>, which is the array of Strings to form the single SQL statement.
+        The <code>databaseId</code>(Available since 3.5.5), in case there is a configured <code>DatabaseIdProvider</code>,
+        the MyBatis use a statement with no <code>databaseId</code> attribute or with a <code>databaseId</code>
+        that matches the current one. If found with and without the <code>databaseId</code> the latter will be discarded.
+        </td>
       </tr>
       <tr>
         <td>
@@ -508,13 +523,18 @@ void rollback(boolean force)</source>
         You can pass objects that passed to arguments of a mapper method, "Mapper interface type", "Mapper method" and "Database ID"
         via the <code>ProviderContext</code>(available since MyBatis 3.4.5 or later) as method argument.
         (In MyBatis 3.4 or later, it's allow multiple parameters)
-        Attributes: <code>value</code>, <code>type</code> and <code>method</code>.
+        Attributes: <code>value</code>, <code>type</code>, <code>method</code> and <code>databaseId</code>.
         The <code>value</code> and <code>type</code> attribute is a class
-        (The <code>type</code> attribute is alias for <code>value</code>, you must be specify either one).
+        (The <code>type</code> attribute is alias for <code>value</code>, you must be specify either one.
+        But both attributes can be omit when specify the <code>defaultSqlProviderType</code> as global configuration).
         The <code>method</code> is the name of the method on that class
         (Since 3.5.1, you can omit <code>method</code> attribute, the MyBatis will resolve a target method via the
         <code>ProviderMethodResolver</code> interface.
         If not resolve by it, the MyBatis use the reserved fallback method that named <code>provideSql</code>).
+        The <code>databaseId</code>(Available since 3.5.5), in case there is a configured <code>DatabaseIdProvider</code>,
+        the MyBatis will use a provider method with no <code>databaseId</code> attribute or with a <code>databaseId</code>
+        that matches the current one. If found with and without the <code>databaseId</code> the latter will be discarded.
+
         <span class="label important">NOTE</span>
         Following this section is a discussion about the class, which can help build dynamic SQL in a cleaner, easier to read way.</td>
       </tr>
@@ -539,7 +559,11 @@ void rollback(boolean force)</source>
         Attributes: <code>statement</code> an array of strings which is the SQL statement to execute, <code>keyProperty</code> which
         is the property of the parameter object that will be updated with the new value, <code>before</code> which must be either
         <code>true</code> or <code>false</code> to denote if the SQL statement should be executed before or after the insert,
-        <code>resultType</code> which is the Java type of the <code>keyProperty</code>, and <code>statementType</code> is a type of the statement that is any one of <code>STATEMENT</code>, <code>PREPARED</code> or <code>CALLABLE</code> that is mapped to <code>Statement</code>, <code>PreparedStatement</code> and <code>CallableStatement</code> respectively. The default is <code>PREPARED</code>.</td>
+        <code>resultType</code> which is the Java type of the <code>keyProperty</code>, and <code>statementType</code> is a type of the statement that is any one of <code>STATEMENT</code>, <code>PREPARED</code> or <code>CALLABLE</code> that is mapped to <code>Statement</code>, <code>PreparedStatement</code> and <code>CallableStatement</code> respectively. The default is <code>PREPARED</code>.
+        The <code>databaseId</code>(Available since 3.5.5), in case there is a configured <code>DatabaseIdProvider</code>,
+        the MyBatis will use a statement with no <code>databaseId</code> attribute or with a <code>databaseId</code>
+        that matches the current one. If found with and without the <code>databaseId</code> the latter will be discarded.
+        </td>
       </tr>
       <tr>
         <td><code>@ResultMap</code></td>
@@ -649,6 +673,29 @@ class UserSqlBuilder {
   }
 }]]></source>
 
+    <p>This example shows usage that share an sql provider class to all mapper methods using global configuration(Available since 3.5.6):</p>
+    <source><![CDATA[
+Configuration configuration = new Configuration();
+configuration.setDefaultSqlProviderType(TemplateFilePathProvider.class); // Specify an sql provider class for sharing on all mapper methods
+// ...]]></source>
+    <source><![CDATA[
+// Can omit the type/value attribute on sql provider annotation
+// If omit it, the MyBatis apply the class that specified on defaultSqlProviderType.
+public interface UserMapper {
+
+  @SelectProvider // Same with @SelectProvider(TemplateFilePathProvider.class)
+  User findUser(int id);
+
+  @InsertProvider // Same with @InsertProvider(TemplateFilePathProvider.class)
+  void createUser(User user);
+
+  @UpdateProvider // Same with @UpdateProvider(TemplateFilePathProvider.class)
+  void updateUser(User user);
+
+  @DeleteProvider // Same with @DeleteProvider(TemplateFilePathProvider.class)
+  void deleteUser(int id);
+}]]></source>
+
     <p>This example shows usage the default implementation of <code>ProviderMethodResolver</code>(available since MyBatis 3.5.1 or later):</p>
     <source><![CDATA[@SelectProvider(UserSqlProvider.class)
 List<User> getUsersByName(String name);
@@ -667,6 +714,15 @@ class UserSqlProvider implements ProviderMethodResolver {
     }}.toString();
   }
 }]]></source>
+
+
+    <p>This example shows usage the <code>databaseId</code> attribute on the statement annotation(Available since 3.5.5):</p>
+    <source><![CDATA[
+@Select(value = "SELECT SYS_GUID() FROM dual", databaseId = "oracle") // Use this statement if DatabaseIdProvider provide "oracle"
+@Select(value = "SELECT uuid_generate_v4()", databaseId = "postgres") // Use this statement if DatabaseIdProvider provide "postgres"
+@Select("SELECT RANDOM_UUID()") // Use this statement if the DatabaseIdProvider not configured or not matches databaseId
+String generateId();
+]]></source>
 
   </subsection>
 

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ class StringListTest {
 
     // populate in-memory database
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-      "org/apache/ibatis/submitted/stringlist/CreateDB.sql");
+        "org/apache/ibatis/submitted/stringlist/CreateDB.sql");
   }
 
   @Test
@@ -64,20 +64,20 @@ class StringListTest {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<Map<String, Object>> results = mapper.getUsersAndGroupsMap(1);
       Assertions.assertEquals(1, results.size());
-      Assertions.assertEquals(2, ((List<?>)results.get(0).get("groups")).size());
-      Assertions.assertEquals(2, ((List<?>)results.get(0).get("roles")).size());
+      Assertions.assertEquals(2, ((List<?>) results.get(0).get("groups")).size());
+      Assertions.assertEquals(2, ((List<?>) results.get(0).get("roles")).size());
     }
   }
 
   @Test
   void shouldFailFastIfCollectionTypeIsAmbiguous() throws Exception {
     try (Reader reader = Resources
-      .getResourceAsReader("org/apache/ibatis/submitted/stringlist/mybatis-config-invalid.xml")) {
+        .getResourceAsReader("org/apache/ibatis/submitted/stringlist/mybatis-config-invalid.xml")) {
       new SqlSessionFactoryBuilder().build(reader);
       fail("Should throw exception when collection type is unresolvable.");
     } catch (PersistenceException e) {
       assertTrue(e.getMessage()
-        .contains("Ambiguous collection type for property 'groups'. You must specify 'javaType' or 'resultMap'."));
+          .contains("Ambiguous collection type for property 'groups'. You must specify 'javaType' or 'resultMap'."));
     }
   }
 }

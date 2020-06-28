@@ -28,7 +28,7 @@
 
   <body>
     <section name="XML 映射器">
-      <p>MyBatis 的真正强大在于它的语句映射，这是它的魔力所在。由于它的异常强大，映射器的 
+      <p>MyBatis 的真正强大在于它的语句映射，这是它的魔力所在。由于它的异常强大，映射器的
       XML 文件就显得相对简单。如果拿它跟具有相同功能的 JDBC 代码进行对比，你会立即发现省掉了将近
       95% 的代码。MyBatis 致力于减少使用成本，让用户能更专注于 SQL 代码。</p>
       <p>SQL 映射文件只有很少的几个顶级元素（按照应被定义的顺序列出）：</p>
@@ -1091,7 +1091,7 @@ public class User {
 
         <p>
           为了将结果注入构造方法，MyBatis 需要通过某种方式定位相应的构造方法。
-          在下面的例子中，MyBatis 搜索一个声明了三个形参的的构造方法，参数类型以
+          在下面的例子中，MyBatis 搜索一个声明了三个形参的构造方法，参数类型以
           <code>java.lang.Integer</code>, <code>java.lang.String</code> 和
           <code>int</code> 的顺序给出。
         </p>
