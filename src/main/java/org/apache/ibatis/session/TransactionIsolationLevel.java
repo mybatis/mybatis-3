@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -27,9 +27,9 @@ public enum TransactionIsolationLevel {
   REPEATABLE_READ(Connection.TRANSACTION_REPEATABLE_READ),
   SERIALIZABLE(Connection.TRANSACTION_SERIALIZABLE),
   /**
-  * A non-standard isolation level for Microsoft SQL Server. Defined in
-  * the SQL Server JDBC driver {@link com.microsoft.sqlserver.jdbc.ISQLServerConnection}
-  */
+   * A non-standard isolation level for Microsoft SQL Server.
+   * Defined in the SQL Server JDBC driver {@link com.microsoft.sqlserver.jdbc.ISQLServerConnection}
+   */
   SQL_SERVER_SNAPSHOT(0x1000);
 
   private final int level;
