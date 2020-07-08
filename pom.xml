@@ -22,12 +22,12 @@
   <parent>
     <groupId>org.mybatis</groupId>
     <artifactId>mybatis-parent</artifactId>
-    <version>31</version>
+    <version>32-SNAPSHOT</version>
     <relativePath />
   </parent>
 
   <artifactId>mybatis</artifactId>
-  <version>3.5.5-SNAPSHOT</version>
+  <version>3.5.6-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>mybatis</name>
@@ -206,7 +206,7 @@
     <dependency>
       <groupId>org.hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
-      <version>2.5.0</version>
+      <version>2.5.1</version>
       <scope>test</scope>
     </dependency>
     <dependency> <!-- 10.15+ need Java 9+ -->
@@ -243,7 +243,7 @@
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
-      <version>42.2.12</version>
+      <version>42.2.14</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -267,19 +267,19 @@
     <dependency>
       <groupId>org.testcontainers</groupId>
       <artifactId>junit-jupiter</artifactId>
-      <version>1.14.2</version>
+      <version>1.14.3</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.testcontainers</groupId>
       <artifactId>postgresql</artifactId>
-      <version>1.14.2</version>
+      <version>1.14.3</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.testcontainers</groupId>
       <artifactId>mysql</artifactId>
-      <version>1.14.2</version>
+      <version>1.14.3</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -405,5 +405,14 @@
       </properties>
     </profile>
   </profiles>
+
+  <!-- Will remove after released mybatis-parent 32+ (See https://github.com/mybatis/mybatis-3/issues/1926) -->
+  <repositories>
+    <repository>
+      <id>sonatype-oss-snapshots</id>
+      <name>Sonatype OSS Snapshots Repository</name>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </repository>
+  </repositories>
 
 </project>

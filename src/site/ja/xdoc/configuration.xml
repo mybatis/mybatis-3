@@ -586,6 +586,21 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 false
               </td>
             </tr>
+            <tr>
+              <td>
+                defaultSqlProviderType
+              </td>
+              <td>
+                SQLを提供するメソッドを保持するSQLプロバイダクラスを指定します(導入されたバージョン: 3.5.6)。
+                ここで指定したクラスは、SQLプロバイダアノテーション(例: <code>@SelectProvider</code>)の<code>type</code>(または <code>value</code>) 属性を省略した際に適用されます。
+              </td>
+              <td>
+                タイプエイリアスまたは完全修飾クラス名
+              </td>
+              <td>
+                未指定
+              </td>
+            </tr>
           </tbody>
         </table>
         <p>
