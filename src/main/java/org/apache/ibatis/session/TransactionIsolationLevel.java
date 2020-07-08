@@ -29,6 +29,8 @@ public enum TransactionIsolationLevel {
   /**
    * A non-standard isolation level for Microsoft SQL Server.
    * Defined in the SQL Server JDBC driver {@link com.microsoft.sqlserver.jdbc.ISQLServerConnection}
+   *
+   * @since 3.5.6
    */
   SQL_SERVER_SNAPSHOT(0x1000);
 
