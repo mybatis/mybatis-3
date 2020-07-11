@@ -296,6 +296,18 @@ public class DefaultVFS extends VFS {
   }
 
   /**
+   * Converts a Java package name to a path that can be looked up with a call to
+   * {@link ClassLoader#getResources(String)}.
+   *
+   * @param packageName
+   *          The Java package name to convert to a path
+   * @return the package path
+   */
+  protected String getPackagePath(String packageName) {
+    return packageName == null ? null : packageName.replace('.', '/');
+  }
+
+  /**
    * Returns true if the resource located at the given URL is a JAR file.
    *
    * @param url
