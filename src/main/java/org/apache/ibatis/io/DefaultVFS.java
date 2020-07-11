@@ -25,6 +25,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.file.InvalidPathException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -105,6 +106,9 @@ public class DefaultVFS extends VFS {
                   break;
                 }
               }
+            } catch (InvalidPathException e) {
+              // #1974
+              lines.clear();
             }
             if (!lines.isEmpty()) {
               if (log.isDebugEnabled()) {
