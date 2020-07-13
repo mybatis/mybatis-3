@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.function.BiFunction;
@@ -937,16 +938,14 @@ public class Configuration {
   protected void checkGloballyForDiscriminatedNestedResultMaps(ResultMap rm) {
     if (rm.hasNestedResultMaps()) {
       for (Map.Entry<String, ResultMap> entry : resultMaps.entrySet()) {
-        Object value = entry.getValue();
-        if (value instanceof ResultMap) {
-          ResultMap entryResultMap = (ResultMap) value;
+        Optional.ofNullable(entry.getValue()).ifPresent(entryResultMap -> {
           if (!entryResultMap.hasNestedResultMaps() && entryResultMap.getDiscriminator() != null) {
             Collection<String> discriminatedResultMapNames = entryResultMap.getDiscriminator().getDiscriminatorMap().values();
             if (discriminatedResultMapNames.contains(rm.getId())) {
               entryResultMap.forceNestedResultMaps();
             }
           }
-        }
+        });
       }
     }
   }
