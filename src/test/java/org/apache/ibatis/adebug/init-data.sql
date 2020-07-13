@@ -1,0 +1,2 @@
+insert into user (create_time, name, password, phone) values ('2020-7-10', '张三', 'zhangsan', '15101130676');
+insert into user (create_time, name, password, phone) values ('2020-7-10', '里斯', 'lisi', '15101130676');

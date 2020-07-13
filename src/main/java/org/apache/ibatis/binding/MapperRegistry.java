@@ -57,6 +57,7 @@ public class MapperRegistry {
     return knownMappers.containsKey(type);
   }
 
+  // 解析方法的返回值，参数，注解，resultMap，最后注册MappedStatement
   public <T> void addMapper(Class<T> type) {
     if (type.isInterface()) {
       if (hasMapper(type)) {

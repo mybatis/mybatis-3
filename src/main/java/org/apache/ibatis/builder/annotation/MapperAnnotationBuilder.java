@@ -293,6 +293,7 @@ public class MapperAnnotationBuilder {
     return null;
   }
 
+  // 解析注解
   void parseStatement(Method method) {
     final Class<?> parameterTypeClass = getParameterType(method);
     final LanguageDriver languageDriver = getLanguageDriver(method);
@@ -404,6 +405,7 @@ public class MapperAnnotationBuilder {
         }
       }
     }
+    
     return parameterType;
   }
 
