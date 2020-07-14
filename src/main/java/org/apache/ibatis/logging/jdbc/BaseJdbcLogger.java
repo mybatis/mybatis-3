@@ -156,7 +156,7 @@ public abstract class BaseJdbcLogger {
     return new String(buffer);
   }
 
-  private static boolean isSetMethod(Method method){
+  private static boolean isSetMethod(Method method) {
     return (method.getName().startsWith(SET_METHOD_PREFIX)) && (method.getParameterCount() > 1);
   }
 
