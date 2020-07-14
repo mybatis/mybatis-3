@@ -39,6 +39,7 @@ import org.apache.ibatis.reflection.ArrayUtil;
  * @author Eduardo Macarron
  */
 public abstract class BaseJdbcLogger {
+  private static final String SET_METHOD_PREFIX = "set";
 
   protected static final Set<String> SET_METHODS;
   protected static final Set<String> EXECUTE_METHODS = new HashSet<>();
@@ -65,8 +66,7 @@ public abstract class BaseJdbcLogger {
 
   static {
     SET_METHODS = Arrays.stream(PreparedStatement.class.getDeclaredMethods())
-            .filter(method -> method.getName().startsWith("set"))
-            .filter(method -> method.getParameterCount() > 1)
+            .filter(BaseJdbcLogger::isSetMethod)
             .map(Method::getName)
             .collect(Collectors.toSet());
 
@@ -154,6 +154,10 @@ public abstract class BaseJdbcLogger {
       buffer[0] = '<';
     }
     return new String(buffer);
+  }
+
+  private static boolean isSetMethod(Method method){
+    return (method.getName().startsWith(SET_METHOD_PREFIX)) && (method.getParameterCount() > 1);
   }
 
 }
