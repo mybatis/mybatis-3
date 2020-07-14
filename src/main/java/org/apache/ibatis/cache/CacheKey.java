@@ -17,6 +17,7 @@ package org.apache.ibatis.cache;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.StringJoiner;
 
@@ -82,9 +83,7 @@ public class CacheKey implements Cloneable, Serializable {
   }
 
   public void updateAll(Object[] objects) {
-    for (Object o : objects) {
-      update(o);
-    }
+    Arrays.stream(objects).forEach(this::update);
   }
 
   @Override
