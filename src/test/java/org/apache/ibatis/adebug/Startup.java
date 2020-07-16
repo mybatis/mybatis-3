@@ -57,12 +57,17 @@ public class Startup {
     Environment environment =
       new Environment("development", transactionFactory, dataSource);
     Configuration configuration = new Configuration(environment);
+    configuration.getTypeAliasRegistry().registerAlias("user", User.class);
+//    configuration.addMappers("org.apache.ibatis.adebug");
     configuration.addMapper(UserMapper.class);
     SqlSessionFactory sqlSessionFactory =
       new SqlSessionFactoryBuilder().build(configuration);
     SqlSession sqlSession = sqlSessionFactory.openSession();
-    List<User> users = sqlSession.getMapper(UserMapper.class).selectAll();
+    UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+    List<User> users = userMapper.selectAll();
     users.forEach(System.out::println);
+    User user = userMapper.selectByName("张三");
+    System.out.println("selectByName: " + user);
   }
   
   // 测试hsqldb
