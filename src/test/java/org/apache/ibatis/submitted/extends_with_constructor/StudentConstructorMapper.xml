@@ -23,28 +23,28 @@
 <mapper namespace="org.apache.ibatis.submitted.extends_with_constructor.StudentConstructorMapper">
     <resultMap id="StudentConstructorMap" type="org.apache.ibatis.submitted.extends_with_constructor.StudentConstructor">
         <constructor>
-        	<idArg column="id" javaType="int"/>
-        	<arg column="name" javaType="string"/>
+            <idArg column="id" javaType="int"/>
+            <arg column="name" javaType="string"/>
         </constructor>
         <association property="teacher" column="teacher_id" select="org.apache.ibatis.submitted.extends_with_constructor.TeacherMapper.selectById"/>
     </resultMap>
     <resultMap id="StudentConstructorWithTeacherMap" type="org.apache.ibatis.submitted.extends_with_constructor.StudentConstructor" extends="StudentConstructorMap">
-    	<association property="teacher" resultMap="org.apache.ibatis.submitted.extends_with_constructor.TeacherMapper.TeacherMap"/>
+        <association property="teacher" resultMap="org.apache.ibatis.submitted.extends_with_constructor.TeacherMapper.TeacherMap"/>
     </resultMap>
     <resultMap id="StudentNoNameMap" type="org.apache.ibatis.submitted.extends_with_constructor.StudentConstructor" extends="StudentConstructorMap">
         <constructor>
-        	<idArg column="id" javaType="int"/>
+            <idArg column="id" javaType="int"/>
         </constructor>
     </resultMap>
 
     <select id="selectWithTeacherById" resultMap="StudentConstructorWithTeacherMap" parameterType="int">
-    	SELECT id, name, teacher_id
-    	FROM student
-    	WHERE id = #{id}
+        SELECT id, name, teacher_id
+        FROM student
+        WHERE id = #{id}
     </select>
     <select id="selectNoNameById" resultMap="StudentNoNameMap" parameterType="int">
-    	SELECT id, name, teacher_id
-    	FROM student
-    	WHERE id = #{id}
+        SELECT id, name, teacher_id
+        FROM student
+        WHERE id = #{id}
     </select>
 </mapper>

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +33,7 @@ import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.result.DefaultMapResultHandler;
 import org.apache.ibatis.executor.result.DefaultResultContext;
 import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.reflection.ParamNameResolver;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
@@ -269,7 +269,7 @@ public class DefaultSqlSession implements SqlSession {
   }
 
   private void closeCursors() {
-    if (cursorList != null && cursorList.size() != 0) {
+    if (cursorList != null && !cursorList.isEmpty()) {
       for (Cursor<?> cursor : cursorList) {
         try {
           cursor.close();
@@ -317,21 +317,13 @@ public class DefaultSqlSession implements SqlSession {
   }
 
   private Object wrapCollection(final Object object) {
-    if (object instanceof Collection) {
-      StrictMap<Object> map = new StrictMap<>();
-      map.put("collection", object);
-      if (object instanceof List) {
-        map.put("list", object);
-      }
-      return map;
-    } else if (object != null && object.getClass().isArray()) {
-      StrictMap<Object> map = new StrictMap<>();
-      map.put("array", object);
-      return map;
-    }
-    return object;
+    return ParamNameResolver.wrapToMapIfCollection(object, null);
   }
 
+  /**
+   * @deprecated Since 3.5.5
+   */
+  @Deprecated
   public static class StrictMap<V> extends HashMap<String, V> {
 
     private static final long serialVersionUID = -5741767162221585340L;

@@ -22,22 +22,22 @@
 
 <mapper namespace="org.apache.ibatis.submitted.call_setters_on_nulls.Mapper">
 
-	<select id="getUserUnmapped" resultType="org.apache.ibatis.submitted.call_setters_on_nulls.User">
-		select * from users
-	</select>
+    <select id="getUserUnmapped" resultType="org.apache.ibatis.submitted.call_setters_on_nulls.User">
+        select * from users
+    </select>
 
-	<select id="getUserInMap" resultType="map">
-		select * from users
-	</select>
+    <select id="getUserInMap" resultType="map">
+        select * from users
+    </select>
 
-	<select id="getUserMapped" resultMap="userMap">
-		select * from users
-	</select>
+    <select id="getUserMapped" resultMap="userMap">
+        select * from users
+    </select>
 
-	<resultMap type="org.apache.ibatis.submitted.call_setters_on_nulls.User" id="userMap">
-		<id property="id" column="id" />
-		<result property="name" column="name" />
-	</resultMap>
+    <resultMap type="org.apache.ibatis.submitted.call_setters_on_nulls.User" id="userMap">
+        <id property="id" column="id" />
+        <result property="name" column="name" />
+    </resultMap>
 
     <select id="getNameOnly" resultType="map">
         select name from users2
@@ -48,7 +48,7 @@
     </select>
 
     <resultMap type="map" id="mapResult">
-    	<result column="name" property="name" />
+        <result column="name" property="name" />
     </resultMap>
 
 </mapper>

@@ -22,13 +22,13 @@
 
 <mapper namespace="org.apache.ibatis.submitted.cursor_simple.Mapper">
 
-	<select id="getAllUsers" resultMap="results">
-		select * from users
-	</select>
+    <select id="getAllUsers" resultMap="results">
+        select * from users
+    </select>
 
-	<resultMap type="org.apache.ibatis.submitted.cursor_simple.User" id="results">
-		<id column="id" property="id"/>
+    <resultMap type="org.apache.ibatis.submitted.cursor_simple.User" id="results">
+        <id column="id" property="id"/>
     <result property="name" column="name"/>
-	</resultMap>
+    </resultMap>
 
 </mapper>

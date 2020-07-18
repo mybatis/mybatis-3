@@ -3,10 +3,13 @@
 ⭕️ 请将您的问题发送到邮件列表
 請用英文寫
 https://groups.google.com/group/mybatis-user
+或
+https://stackoverflow.com/questions/ask?tags=mybatis
 
 Question?
 ======================
 Please use the mailing list. http://groups.google.com/group/mybatis-user
+Or Stack Overflow with 'mybatis' tag. https://stackoverflow.com/questions/ask?tags=mybatis
 Questions on this tracker will be closed without comment.
 
 Bug report?

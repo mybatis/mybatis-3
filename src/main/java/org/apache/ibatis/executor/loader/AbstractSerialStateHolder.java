@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -62,8 +62,8 @@ public abstract class AbstractSerialStateHolder implements Externalizable {
     this.userBean = userBean;
     this.unloadedProperties = new HashMap<>(unloadedProperties);
     this.objectFactory = objectFactory;
-    this.constructorArgTypes = constructorArgTypes.toArray(new Class<?>[constructorArgTypes.size()]);
-    this.constructorArgs = constructorArgs.toArray(new Object[constructorArgs.size()]);
+    this.constructorArgTypes = constructorArgTypes.toArray(new Class<?>[0]);
+    this.constructorArgs = constructorArgs.toArray(new Object[0]);
   }
 
   @Override

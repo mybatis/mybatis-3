@@ -1,5 +1,5 @@
 --
---    Copyright 2009-2016 the original author or authors.
+--    Copyright 2009-2019 the original author or authors.
 --
 --    Licensed under the Apache License, Version 2.0 (the "License");
 --    you may not use this file except in compliance with the License.
@@ -18,13 +18,13 @@ drop table person if exists;
 drop table country if exists;
 
 create table person(
-	id int IDENTITY,
-	name varchar(20)
+    id int IDENTITY,
+    name varchar(20)
 );
 
 create table country(
-	id bigint IDENTITY,
-	name varchar(20)
+    id bigint IDENTITY,
+    name varchar(20)
 );
 
 insert into person (id, name) values (1, 'Jane'), (2, 'John'); 

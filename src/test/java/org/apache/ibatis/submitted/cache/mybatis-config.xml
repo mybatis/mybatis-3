@@ -19,32 +19,32 @@
 <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"   "http://mybatis.org/dtd/mybatis-3-config.dtd">
 
 <configuration>
-	<settings>
-		<setting name="defaultExecutorType" value="SIMPLE"/>
-		<setting name="useGeneratedKeys" value="true"/>
-	</settings>
+    <settings>
+        <setting name="defaultExecutorType" value="SIMPLE"/>
+        <setting name="useGeneratedKeys" value="true"/>
+    </settings>
 
-	<typeAliases>
-		<typeAlias type="org.apache.ibatis.submitted.cache.Person" alias="Person" />
-	</typeAliases>
+    <typeAliases>
+        <typeAlias type="org.apache.ibatis.submitted.cache.Person" alias="Person" />
+    </typeAliases>
 
-	<environments default="development">
-		<environment id="development">
-			<transactionManager type="JDBC">
-				<property name="" value="" />
-			</transactionManager>
-			<dataSource type="UNPOOLED">
-				<property name="driver" value="org.hsqldb.jdbcDriver" />
-				<property name="url" value="jdbc:hsqldb:mem:cache" />
-				<property name="username" value="sa" />
-			</dataSource>
-		</environment>
-	</environments>
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC">
+                <property name="" value="" />
+            </transactionManager>
+            <dataSource type="UNPOOLED">
+                <property name="driver" value="org.hsqldb.jdbcDriver" />
+                <property name="url" value="jdbc:hsqldb:mem:cache" />
+                <property name="username" value="sa" />
+            </dataSource>
+        </environment>
+    </environments>
 
-	<mappers>
-		<mapper class="org.apache.ibatis.submitted.cache.PersonMapper"/>
-		<mapper class="org.apache.ibatis.submitted.cache.ImportantPersonMapper"/>
-		<mapper class="org.apache.ibatis.submitted.cache.CustomCacheMapper"/>
-		<mapper class="org.apache.ibatis.submitted.cache.SpecialPersonMapper"/>
-	</mappers>
+    <mappers>
+        <mapper class="org.apache.ibatis.submitted.cache.PersonMapper"/>
+        <mapper class="org.apache.ibatis.submitted.cache.ImportantPersonMapper"/>
+        <mapper class="org.apache.ibatis.submitted.cache.CustomCacheMapper"/>
+        <mapper class="org.apache.ibatis.submitted.cache.SpecialPersonMapper"/>
+    </mappers>
 </configuration>

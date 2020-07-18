@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2018 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -131,5 +131,12 @@
   <insert id="insertPlanetAndCountry" useGeneratedKeys="true" keyProperty="planet.id,planet.code,country.id">
     insert into planet (name) values (#{planet.name});
     insert into country (countryname,countrycode) values (#{country.countryname},#{country.countrycode});
+  </insert>
+  <insert id="insertWeirdCountries" useGeneratedKeys="true" keyProperty="id">
+    insert into country (countryname,countrycode)
+    values
+    <foreach collection="list" separator="," item="country">
+      (#{country.countryname},#{country.countrycode})
+    </foreach>
   </insert>
 </mapper>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -26,19 +26,19 @@
     <selectKey keyProperty="id" resultType="int" order="AFTER">
     select top 1 50 from INFORMATION_SCHEMA.SYSTEM_TABLES
     </selectKey>
-  	insert into users values(#{id}, #{name})
+    insert into users values(#{id}, #{name})
   </insert>
 
   <select id="select" resultType="org.apache.ibatis.submitted.batch_keys.User" >
-  	select id, name from users
+    select id, name from users
   </select>
 
   <insert id="insertIdentity" keyProperty="id" useGeneratedKeys="true">
-  	insert into users2 (name) values(#{name})
+    insert into users2 (name) values(#{name})
   </insert>
 
   <select id="selectIdentity" resultType="org.apache.ibatis.submitted.batch_keys.User" >
-  	select id, name from users2
+    select id, name from users2
   </select>
 
 </mapper>

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -95,7 +95,8 @@ public class ReuseExecutor extends BaseExecutor {
 
   private boolean hasStatementFor(String sql) {
     try {
-      return statementMap.keySet().contains(sql) && !statementMap.get(sql).getConnection().isClosed();
+      Statement statement = statementMap.get(sql);
+      return statement != null && !statement.getConnection().isClosed();
     } catch (SQLException e) {
       return false;
     }

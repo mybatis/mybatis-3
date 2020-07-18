@@ -23,7 +23,7 @@
 <mapper namespace="org.apache.ibatis.submitted.force_flush_on_select.PersonMapper">
 
     <!-- One hour cache -->
-	<cache flushInterval="3600000"/>
+    <cache flushInterval="3600000"/>
 
     <resultMap id="personMap" type="Person">
         <id property="id" column="id"/>

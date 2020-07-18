@@ -17,15 +17,12 @@ package org.apache.ibatis.submitted.refcursor;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.BaseDataTest;
-import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultContext;
@@ -33,44 +30,31 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.apache.ibatis.testcontainers.PgContainer;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres;
-import ru.yandex.qatools.embed.postgresql.util.SocketUtil;
-
 /**
  * @author Jeff Butler
  */
-@Tag("EmbeddedPostgresqlTests")
+@Tag("TestcontainersTests")
 class RefCursorTest {
-
-  private static final EmbeddedPostgres postgres = new EmbeddedPostgres();
 
   private static SqlSessionFactory sqlSessionFactory;
 
   @BeforeAll
   static void setUp() throws Exception {
-    // Launch PostgreSQL server. Download / unarchive if necessary.
-    String url = postgres.start(EmbeddedPostgres.cachedRuntimeConfig(Paths.get(System.getProperty("java.io.tmpdir"), "pgembed")), "localhost", SocketUtil.findFreePort(), "refcursor", "postgres", "root", Collections.emptyList());
-
     Configuration configuration = new Configuration();
-    Environment environment = new Environment("development", new JdbcTransactionFactory(), new UnpooledDataSource(
-        "org.postgresql.Driver", url, null));
+    Environment environment = new Environment("development", new JdbcTransactionFactory(),
+        PgContainer.getUnpooledDataSource());
     configuration.setEnvironment(environment);
     configuration.addMapper(OrdersMapper.class);
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
 
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
         "org/apache/ibatis/submitted/refcursor/CreateDB.sql");
-  }
-
-  @AfterAll
-  static void tearDown() {
-    postgres.stop();
   }
 
   @Test

@@ -15,8 +15,6 @@
  */
 package org.apache.ibatis.cache.decorators;
 
-import java.util.concurrent.locks.ReadWriteLock;
-
 import org.apache.ibatis.cache.Cache;
 
 /**
@@ -68,11 +66,6 @@ public class SynchronizedCache implements Cache {
   @Override
   public boolean equals(Object obj) {
     return delegate.equals(obj);
-  }
-
-  @Override
-  public ReadWriteLock getReadWriteLock() {
-    return null;
   }
 
 }
