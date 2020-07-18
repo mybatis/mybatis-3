@@ -90,6 +90,8 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.UnknownTypeHandler;
 
+import static org.apache.ibatis.mapping.ResultMap.DEFAULT_USE_AUTO_MAPPING_CACHE;
+
 /**
  * @author Clinton Begin
  * @author Kazuki Shimizu
@@ -255,7 +257,7 @@ public class MapperAnnotationBuilder {
     applyResults(results, returnType, resultMappings);
     Discriminator disc = applyDiscriminator(resultMapId, returnType, discriminator);
     // TODO add AutoMappingBehaviour
-    assistant.addResultMap(resultMapId, returnType, null, disc, resultMappings, null);
+    assistant.addResultMap(resultMapId, returnType, null, disc, resultMappings, null, DEFAULT_USE_AUTO_MAPPING_CACHE);
     createDiscriminatorResultMaps(resultMapId, returnType, discriminator);
   }
 
@@ -268,7 +270,7 @@ public class MapperAnnotationBuilder {
         applyConstructorArgs(c.constructArgs(), resultType, resultMappings);
         applyResults(c.results(), resultType, resultMappings);
         // TODO add AutoMappingBehaviour
-        assistant.addResultMap(caseResultMapId, c.type(), resultMapId, null, resultMappings, null);
+        assistant.addResultMap(caseResultMapId, c.type(), resultMapId, null, resultMappings, null, DEFAULT_USE_AUTO_MAPPING_CACHE);
       }
     }
   }

@@ -32,8 +32,11 @@ public class ResultMapResolver {
   private final Discriminator discriminator;
   private final List<ResultMapping> resultMappings;
   private final Boolean autoMapping;
+  private final boolean useAutoMappingCache;
 
-  public ResultMapResolver(MapperBuilderAssistant assistant, String id, Class<?> type, String extend, Discriminator discriminator, List<ResultMapping> resultMappings, Boolean autoMapping) {
+  public ResultMapResolver(MapperBuilderAssistant assistant, String id, Class<?> type, String extend,
+                           Discriminator discriminator, List<ResultMapping> resultMappings,
+                           Boolean autoMapping, boolean useAutoMappingCache) {
     this.assistant = assistant;
     this.id = id;
     this.type = type;
@@ -41,10 +44,12 @@ public class ResultMapResolver {
     this.discriminator = discriminator;
     this.resultMappings = resultMappings;
     this.autoMapping = autoMapping;
+    this.useAutoMappingCache = useAutoMappingCache;
   }
 
   public ResultMap resolve() {
-    return assistant.addResultMap(this.id, this.type, this.extend, this.discriminator, this.resultMappings, this.autoMapping);
+    return assistant.addResultMap(this.id, this.type, this.extend, this.discriminator, this.resultMappings,
+      this.autoMapping, this.useAutoMappingCache);
   }
 
 }

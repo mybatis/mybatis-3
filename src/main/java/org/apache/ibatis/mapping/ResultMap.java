@@ -35,6 +35,7 @@ import org.apache.ibatis.session.Configuration;
  * @author Clinton Begin
  */
 public class ResultMap {
+  public static final boolean DEFAULT_USE_AUTO_MAPPING_CACHE = true;
   private Configuration configuration;
 
   private String id;
@@ -49,6 +50,7 @@ public class ResultMap {
   private boolean hasNestedResultMaps;
   private boolean hasNestedQueries;
   private Boolean autoMapping;
+  private boolean useAutoMappingCache;
 
   private ResultMap() {
   }
@@ -59,15 +61,17 @@ public class ResultMap {
     private ResultMap resultMap = new ResultMap();
 
     public Builder(Configuration configuration, String id, Class<?> type, List<ResultMapping> resultMappings) {
-      this(configuration, id, type, resultMappings, null);
+      this(configuration, id, type, resultMappings, null, DEFAULT_USE_AUTO_MAPPING_CACHE);
     }
 
-    public Builder(Configuration configuration, String id, Class<?> type, List<ResultMapping> resultMappings, Boolean autoMapping) {
+    public Builder(Configuration configuration, String id, Class<?> type, List<ResultMapping> resultMappings,
+                   Boolean autoMapping, boolean useAutoMappingCache) {
       resultMap.configuration = configuration;
       resultMap.id = id;
       resultMap.type = type;
       resultMap.resultMappings = resultMappings;
       resultMap.autoMapping = autoMapping;
+      resultMap.useAutoMappingCache = useAutoMappingCache;
     }
 
     public Builder discriminator(Discriminator discriminator) {
@@ -258,4 +262,7 @@ public class ResultMap {
     return autoMapping;
   }
 
+  public boolean isUseAutoMappingCache() {
+    return useAutoMappingCache;
+  }
 }

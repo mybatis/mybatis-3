@@ -59,6 +59,7 @@ id CDATA #REQUIRED
 type CDATA #REQUIRED
 extends CDATA #IMPLIED
 autoMapping (true|false) #IMPLIED
+useAutoMappingCache (true|false) #IMPLIED
 >
 
 <!ELEMENT constructor (idArg*,arg*)>

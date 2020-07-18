@@ -284,7 +284,9 @@ public class XMLMapperBuilder extends BaseBuilder {
             resultMapNode.getValueBasedIdentifier());
     String extend = resultMapNode.getStringAttribute("extends");
     Boolean autoMapping = resultMapNode.getBooleanAttribute("autoMapping");
-    ResultMapResolver resultMapResolver = new ResultMapResolver(builderAssistant, id, typeClass, extend, discriminator, resultMappings, autoMapping);
+    Boolean useAutoMappingCache = resultMapNode.getBooleanAttribute("useAutoMappingCache");
+    ResultMapResolver resultMapResolver = new ResultMapResolver(builderAssistant, id, typeClass, extend, discriminator,
+      resultMappings, autoMapping, useAutoMappingCache == null ? ResultMap.DEFAULT_USE_AUTO_MAPPING_CACHE : useAutoMappingCache);
     try {
       return resultMapResolver.resolve();
     } catch (IncompleteElementException e) {

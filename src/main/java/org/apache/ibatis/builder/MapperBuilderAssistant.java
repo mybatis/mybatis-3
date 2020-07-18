@@ -179,7 +179,8 @@ public class MapperBuilderAssistant extends BaseBuilder {
       String extend,
       Discriminator discriminator,
       List<ResultMapping> resultMappings,
-      Boolean autoMapping) {
+      Boolean autoMapping,
+      boolean useAutoMappingCache) {
     id = applyCurrentNamespace(id, false);
     extend = applyCurrentNamespace(extend, true);
 
@@ -203,7 +204,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       }
       resultMappings.addAll(extendedResultMappings);
     }
-    ResultMap resultMap = new ResultMap.Builder(configuration, id, type, resultMappings, autoMapping)
+    ResultMap resultMap = new ResultMap.Builder(configuration, id, type, resultMappings, autoMapping, useAutoMappingCache)
         .discriminator(discriminator)
         .build();
     configuration.addResultMap(resultMap);
@@ -402,7 +403,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
           statementId + "-Inline",
           resultType,
           new ArrayList<>(),
-          null).build();
+          null, ResultMap.DEFAULT_USE_AUTO_MAPPING_CACHE).build();
       resultMaps.add(inlineResultMap);
     }
     return resultMaps;
