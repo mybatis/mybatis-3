@@ -44,6 +44,7 @@ import org.apache.ibatis.session.SqlSession;
  * @author Lasse Voss
  * @author Kazuki Shimizu
  */
+// mapper接口的方法
 public class MapperMethod {
 
   private final SqlCommand command;

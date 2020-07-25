@@ -106,12 +106,14 @@ public class MapperAnnotationBuilder {
   private final Class<?> type;
 
   public MapperAnnotationBuilder(Configuration configuration, Class<?> type) {
+    // 此处设计的不够好，可以考虑直接传type，在MapperBuilderAssistant的构造函数中解析成类文件
     String resource = type.getName().replace('.', '/') + ".java (best guess)";
     this.assistant = new MapperBuilderAssistant(configuration, resource);
     this.configuration = configuration;
     this.type = type;
   }
 
+  // mapper接口的方法上可能有相关的注解，所以addMapper的时候检测注解，然后找其对应的xml配置文件
   public void parse() {
     String resource = type.toString();
     if (!configuration.isResourceLoaded(resource)) {
@@ -158,6 +160,7 @@ public class MapperAnnotationBuilder {
     }
   }
 
+  // 尝试从当前mapperClass所在目录查找对应的xml文件
   private void loadXmlResource() {
     // Spring may not know the real resource name so we check a flag
     // to prevent loading again a resource twice
@@ -175,6 +178,7 @@ public class MapperAnnotationBuilder {
         }
       }
       if (inputStream != null) {
+        // assistant.getConfiguration() 可以替换成 this.configuration?
         XMLMapperBuilder xmlParser = new XMLMapperBuilder(inputStream, assistant.getConfiguration(), xmlResource, configuration.getSqlFragments(), type.getName());
         xmlParser.parse();
       }

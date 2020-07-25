@@ -18,10 +18,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.SQLOutput;
+import java.sql.*;
 import java.util.List;
 import java.util.Map;
 
@@ -49,6 +46,44 @@ public class Startup {
   }
   
   @Test
+  public void testRawJdbcSelect() throws SQLException {
+    DataSource ds = getDataSource();
+    PreparedStatement ps = ds.getConnection().prepareStatement("select * from user");
+    ResultSet resultSet = ps.executeQuery();
+    while (resultSet.next()) {
+      String name = resultSet.getString("name");
+      String password = resultSet.getString("password");
+      System.out.println(name + "===" + password);
+    }
+    resultSet.close();
+    ps.close();
+  }
+  
+  @Test
+  public void testRawJdbcSelectBy() throws SQLException {
+    DataSource ds = getDataSource();
+    PreparedStatement ps = ds.getConnection().prepareStatement("select * from user where name = ?");
+    ps.setString(1, "张三");
+    ResultSet resultSet = ps.executeQuery();
+    while (resultSet.next()) {
+      String name = resultSet.getString("name");
+      String password = resultSet.getString("password");
+      System.out.println(name + "===" + password);
+    }
+    resultSet.close();
+    ps.close();
+  }
+  
+  @Test
+  public void testRawJdbcUpdate() throws SQLException {
+    DataSource ds = getDataSource();
+    PreparedStatement ps = ds.getConnection().prepareStatement("update user set password='xxx'");
+    int count = ps.executeUpdate();
+    System.out.println(count);
+//    testRawJdbcSelect();
+  }
+  
+  @Test
   public void testFromJavaConfig() {
     
     DataSource dataSource = getDataSource();
@@ -64,8 +99,8 @@ public class Startup {
       new SqlSessionFactoryBuilder().build(configuration);
     SqlSession sqlSession = sqlSessionFactory.openSession();
     UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
-    List<User> users = userMapper.selectAll();
-    users.forEach(System.out::println);
+//    List<User> users = userMapper.selectAll();
+//    users.forEach(System.out::println);
     User user = userMapper.selectByName("张三");
     System.out.println("selectByName: " + user);
   }
