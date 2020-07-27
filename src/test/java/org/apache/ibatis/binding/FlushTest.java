@@ -32,6 +32,7 @@ import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.session.*;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
+import org.junit.Assume;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -53,36 +54,35 @@ class FlushTest {
 
     @Test
     void invokeFlushStatementsViaMapper() {
-        try (SqlSession session = sqlSessionFactory.openSession()) {
+        SqlSession session = sqlSessionFactory.openSession();
+        Assume.assumeNotNull(session);
 
-            BoundAuthorMapper mapper = session.getMapper(BoundAuthorMapper.class);
-            Author author = new Author(-1, "cbegin", "******", "cbegin@nowhere.com", "N/A", Section.NEWS);
-            List<Integer> ids = new ArrayList<>();
-            mapper.insertAuthor(author);
-            ids.add(author.getId());
-            mapper.insertAuthor(author);
-            ids.add(author.getId());
-            mapper.insertAuthor(author);
-            ids.add(author.getId());
-            mapper.insertAuthor(author);
-            ids.add(author.getId());
-            mapper.insertAuthor(author);
-            ids.add(author.getId());
+        BoundAuthorMapper mapper = session.getMapper(BoundAuthorMapper.class);
+        Author author = new Author(-1, "cbegin", "******", "cbegin@nowhere.com", "N/A", Section.NEWS);
+        List<Integer> ids = new ArrayList<>();
+        mapper.insertAuthor(author);
+        ids.add(author.getId());
+        mapper.insertAuthor(author);
+        ids.add(author.getId());
+        mapper.insertAuthor(author);
+        ids.add(author.getId());
+        mapper.insertAuthor(author);
+        ids.add(author.getId());
+        mapper.insertAuthor(author);
+        ids.add(author.getId());
 
-            // test
-            List<BatchResult> results = mapper.flush();
+        // test
+        List<BatchResult> results = mapper.flush();
 
-            assertThat(results.size()).isEqualTo(1);
-            assertThat(results.get(0).getUpdateCounts().length).isEqualTo(ids.size());
+        assertThat(results.size()).isEqualTo(1);
+        assertThat(results.get(0).getUpdateCounts().length).isEqualTo(ids.size());
 
-            for (int id : ids) {
-                Author selectedAuthor = mapper.selectAuthor(id);
-                assertNotNull(selectedAuthor, id + " is not found.");
-            }
-
-            session.rollback();
+        for (int id : ids) {
+            Author selectedAuthor = mapper.selectAuthor(id);
+            assertNotNull(selectedAuthor, id + " is not found.");
         }
 
+        session.rollback();
     }
 
 }
