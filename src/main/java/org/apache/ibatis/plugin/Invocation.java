@@ -15,8 +15,8 @@
  */
 package org.apache.ibatis.plugin;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * @author Clinton Begin
@@ -26,11 +26,15 @@ public class Invocation {
   private final Object target;
   private final Method method;
   private final Object[] args;
+  private final List<Interceptor> interceptors;
+  private int index;
 
-  public Invocation(Object target, Method method, Object[] args) {
+  public Invocation(Object target, Method method, Object[] args, List<Interceptor> interceptors) {
     this.target = target;
     this.method = method;
     this.args = args;
+    this.interceptors = interceptors;
+    index = interceptors.size();
   }
 
   public Object getTarget() {
@@ -45,8 +49,15 @@ public class Invocation {
     return args;
   }
 
-  public Object proceed() throws InvocationTargetException, IllegalAccessException {
-    return method.invoke(target, args);
+  public Object proceed() throws Throwable {
+
+    if ((index--) == 0) {
+      return method.invoke(target, args);
+    }
+
+    Interceptor interceptor = interceptors.get(index);
+    return interceptor.intercept(this);
+
   }
 
 }
