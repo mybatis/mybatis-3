@@ -16,6 +16,7 @@
 package org.apache.ibatis.executor.resultset;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -58,6 +59,7 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultContext;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
+import org.apache.ibatis.type.FieldTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
@@ -557,7 +559,17 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     boolean foundValues = false;
     if (!autoMapping.isEmpty()) {
       for (UnMappedColumnAutoMapping mapping : autoMapping) {
-        final Object value = mapping.typeHandler.getResult(rsw.getResultSet(), mapping.column);
+        TypeHandler<?> typeHandler = mapping.typeHandler;
+        if(typeHandler instanceof FieldTypeHandler) {
+          try {
+            Class<?> aClass = metaObject.getOriginalObject().getClass();
+            Field field = aClass.getDeclaredField(mapping.column);
+            ((FieldTypeHandler) typeHandler).setField(field);
+          } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+          }
+        }
+        final Object value = typeHandler.getResult(rsw.getResultSet(), mapping.column);
         if (value != null) {
           foundValues = true;
         }
