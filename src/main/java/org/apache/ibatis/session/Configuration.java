@@ -113,10 +113,12 @@ public class Configuration {
   protected boolean callSettersOnNulls;
   protected boolean useActualParamName = true;
   protected boolean returnInstanceForEmptyRow;
+  protected boolean shrinkWhitespacesInSql;
 
   protected String logPrefix;
   protected Class<? extends Log> logImpl;
   protected Class<? extends VFS> vfsImpl;
+  protected Class<?> defaultSqlProviderType;
   protected LocalCacheScope localCacheScope = LocalCacheScope.SESSION;
   protected JdbcType jdbcTypeForNull = JdbcType.OTHER;
   protected Set<String> lazyLoadTriggerMethods = new HashSet<>(Arrays.asList("equals", "clone", "hashCode", "toString"));
@@ -242,6 +244,27 @@ public class Configuration {
     }
   }
 
+  /**
+   * Gets an applying type when omit a type on sql provider annotation(e.g. {@link org.apache.ibatis.annotations.SelectProvider}).
+   *
+   * @return the default type for sql provider annotation
+   * @since 3.5.6
+   */
+  public Class<?> getDefaultSqlProviderType() {
+    return defaultSqlProviderType;
+  }
+
+  /**
+   * Sets an applying type when omit a type on sql provider annotation(e.g. {@link org.apache.ibatis.annotations.SelectProvider}).
+   *
+   * @param defaultSqlProviderType
+   *          the default type for sql provider annotation
+   * @since 3.5.6
+   */
+  public void setDefaultSqlProviderType(Class<?> defaultSqlProviderType) {
+    this.defaultSqlProviderType = defaultSqlProviderType;
+  }
+
   public boolean isCallSettersOnNulls() {
     return callSettersOnNulls;
   }
@@ -264,6 +287,14 @@ public class Configuration {
 
   public void setReturnInstanceForEmptyRow(boolean returnEmptyInstance) {
     this.returnInstanceForEmptyRow = returnEmptyInstance;
+  }
+
+  public boolean isShrinkWhitespacesInSql() {
+    return shrinkWhitespacesInSql;
+  }
+
+  public void setShrinkWhitespacesInSql(boolean shrinkWhitespacesInSql) {
+    this.shrinkWhitespacesInSql = shrinkWhitespacesInSql;
   }
 
   public String getDatabaseId() {

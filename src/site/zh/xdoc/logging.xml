@@ -75,7 +75,7 @@ org.apache.ibatis.logging.LogFactory.useStdOutLogging();]]></source>
           <a href="http://logging.apache.org/log4j/">Apache Log4j 1.x and 2.x</a>
         </li>
         <li>
-          <a href="http://java.sun.com/j2se/1.4.1/docs/guide/util/logging/">JDK Logging API</a>
+          <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/logging/overview.html">JDK Logging API</a>
         </li>
       </ul>
       <subsection name="日志配置">
