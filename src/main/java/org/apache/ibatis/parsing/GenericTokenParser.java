@@ -79,7 +79,7 @@ public class GenericTokenParser {
         }
       }
       start = text.indexOf(openToken, offset);
-    }while (start > -1);
+    } while (start > -1);
     if (offset < src.length) {
       builder.append(src, offset, src.length - offset);
     }
