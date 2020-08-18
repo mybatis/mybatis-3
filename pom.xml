@@ -148,7 +148,7 @@
     <dependency>
       <groupId>ognl</groupId>
       <artifactId>ognl</artifactId>
-      <version>3.2.14</version>
+      <version>3.2.15</version>
       <scope>compile</scope>
       <optional>true</optional>
     </dependency>
@@ -206,7 +206,7 @@
     <dependency>
       <groupId>org.hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
-      <version>2.5.0</version>
+      <version>2.5.1</version>
       <scope>test</scope>
     </dependency>
     <dependency> <!-- 10.15+ need Java 9+ -->
@@ -224,13 +224,13 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>3.3.3</version>
+      <version>3.5.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-junit-jupiter</artifactId>
-      <version>3.3.3</version>
+      <version>3.5.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -243,13 +243,13 @@
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
-      <version>42.2.14</version>
+      <version>42.2.15</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
-      <version>8.0.20</version>
+      <version>8.0.21</version>
       <scope>test</scope>
     </dependency>
     <dependency>

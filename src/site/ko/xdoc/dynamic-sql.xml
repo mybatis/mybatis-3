@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2019 the original author or authors.
+       Copyright 2009-2020 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@
 	  간혹 공백이나 콤마를 붙이는 것을 잊어본 적도 있을 것이다.
 	  동적 SQL 은 그만큼 어려운 것이다.</p>
       <p>동적 SQL 을 사용하는 것은 결코 파티가 될 수 없을 것이다.
-	  마이바티스는 강력한 동적 SQL 언어로 이 상황은 개선한다.</p>
+	  마이바티스는 강력한 동적 SQL 언어로 이 상황을 개선한다.</p>
       <p>동적 SQL 엘리먼트들은 JSTL이나 XML기반의 텍스트 프로세서를 사용해 본 사람에게는 친숙할 것이다.
 	  마이바티스의 이전 버전에서는 알고 이해해야 할 엘리먼트가 많았다.
 	  마이바티스 3 에서는 이를 크게 개선했고 실제 사용해야 할 엘리먼트가 반 이하로 줄었다.

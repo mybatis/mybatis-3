@@ -33,7 +33,7 @@ import org.apache.ibatis.mapping.StatementType;
  *
  * <pre>
  * public interface UserMapper {
- *   &#064;Option(useGeneratedKeys = true, keyProperty = "id")
+ *   &#064;Options(useGeneratedKeys = true, keyProperty = "id")
  *   &#064;Insert("INSERT INTO users (name) VALUES(#{name})")
  *   boolean insert(User user);
  * }

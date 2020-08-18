@@ -570,7 +570,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 shrinkWhitespacesInSql
               </td>
               <td>
-                Removes extra whitespace characters from the SQL. Note that this also affects literal strings in SQL. (Since 3.5.5)
+                从SQL中删除多余的空格字符。请注意，这也会影响SQL中的文字字符串。 (新增于 3.5.5)
               </td>
               <td>
                 true | false

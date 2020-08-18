@@ -50,7 +50,7 @@ public interface SqlSession extends Closeable {
   <T> T selectOne(String statement, Object parameter);
 
   /**
-   * Retrieve a list of mapped objects from the statement key and parameter.
+   * Retrieve a list of mapped objects from the statement key.
    * @param <E> the returned list element type
    * @param statement Unique identifier matching the statement to use.
    * @return List of mapped object
