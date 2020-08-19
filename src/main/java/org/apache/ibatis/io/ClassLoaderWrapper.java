@@ -185,9 +185,7 @@ public class ClassLoaderWrapper {
 
           Class<?> c = Class.forName(name, true, cl);
 
-          if (null != c) {
-            return c;
-          }
+          return c;
 
         } catch (ClassNotFoundException e) {
           // we'll ignore this until all classloaders fail to locate the class
