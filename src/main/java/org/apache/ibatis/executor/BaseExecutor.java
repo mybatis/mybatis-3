@@ -22,6 +22,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.cache.impl.PerpetualCache;
@@ -59,7 +60,7 @@ public abstract class BaseExecutor implements Executor {
   protected PerpetualCache localOutputParameterCache;
   protected Configuration configuration;
 
-  protected int queryStack;
+  protected AtomicInteger queryStack;
   private boolean closed;
 
   protected BaseExecutor(Configuration configuration, Transaction transaction) {
@@ -70,6 +71,7 @@ public abstract class BaseExecutor implements Executor {
     this.closed = false;
     this.configuration = configuration;
     this.wrapper = this;
+    this.queryStack = new AtomicInteger(0);
   }
 
   @Override
@@ -143,12 +145,12 @@ public abstract class BaseExecutor implements Executor {
     if (closed) {
       throw new ExecutorException("Executor was closed.");
     }
-    if (queryStack == 0 && ms.isFlushCacheRequired()) {
+    if (queryStack.get() == 0 && ms.isFlushCacheRequired()) {
       clearLocalCache();
     }
     List<E> list;
     try {
-      queryStack++;
+      queryStack.incrementAndGet();
       list = resultHandler == null ? (List<E>) localCache.getObject(key) : null;
       if (list != null) {
         handleLocallyCachedOutputParameters(ms, key, parameter, boundSql);
@@ -156,9 +158,9 @@ public abstract class BaseExecutor implements Executor {
         list = queryFromDatabase(ms, parameter, rowBounds, resultHandler, key, boundSql);
       }
     } finally {
-      queryStack--;
+      queryStack.decrementAndGet();
     }
-    if (queryStack == 0) {
+    if (queryStack.get() == 0) {
       for (DeferredLoad deferredLoad : deferredLoads) {
         deferredLoad.load();
       }
@@ -336,7 +338,7 @@ public abstract class BaseExecutor implements Executor {
   protected Connection getConnection(Log statementLog) throws SQLException {
     Connection connection = transaction.getConnection();
     if (statementLog.isDebugEnabled()) {
-      return ConnectionLogger.newInstance(connection, statementLog, queryStack);
+      return ConnectionLogger.newInstance(connection, statementLog, queryStack.get());
     } else {
       return connection;
     }
