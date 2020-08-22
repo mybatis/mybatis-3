@@ -44,7 +44,7 @@ class LanguageTest {
     }
 
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/language/CreateDB.sql");
+        "org/apache/ibatis/submitted/language/CreateDB.sql");
   }
 
   @Test

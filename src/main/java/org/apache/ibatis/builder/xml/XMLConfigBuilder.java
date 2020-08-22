@@ -268,6 +268,8 @@ public class XMLConfigBuilder extends BaseBuilder {
     configuration.setReturnInstanceForEmptyRow(booleanValueOf(props.getProperty("returnInstanceForEmptyRow"), false));
     configuration.setLogPrefix(props.getProperty("logPrefix"));
     configuration.setConfigurationFactory(resolveClass(props.getProperty("configurationFactory")));
+    configuration.setShrinkWhitespacesInSql(booleanValueOf(props.getProperty("shrinkWhitespacesInSql"), false));
+    configuration.setDefaultSqlProviderType(resolveClass(props.getProperty("defaultSqlProviderType")));
   }
 
   private void environmentsElement(XNode context) throws Exception {

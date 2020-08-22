@@ -17,6 +17,7 @@ package org.apache.ibatis.annotations;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -42,6 +43,7 @@ import org.apache.ibatis.mapping.StatementType;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
+@Repeatable(SelectKey.List.class)
 public @interface SelectKey {
   /**
    * Returns an SQL for retrieving a key value.
@@ -90,4 +92,23 @@ public @interface SelectKey {
    * @return the statement type
    */
   StatementType statementType() default StatementType.PREPARED;
+
+  /**
+   * @return A database id that correspond this select key
+   * @since 3.5.5
+   */
+  String databaseId() default "";
+
+  /**
+   * The container annotation for {@link SelectKey}.
+   * @author Kazuki Shimizu
+   * @since 3.5.5
+   */
+  @Documented
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target(ElementType.METHOD)
+  @interface List {
+    SelectKey[] value();
+  }
+
 }

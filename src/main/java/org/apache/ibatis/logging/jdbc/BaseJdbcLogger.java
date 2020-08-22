@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -26,9 +26,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 
+import org.apache.ibatis.builder.SqlSourceBuilder;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.reflection.ArrayUtil;
 
@@ -120,14 +120,8 @@ public abstract class BaseJdbcLogger {
     columnValues.clear();
   }
 
-  protected String removeBreakingWhitespace(String original) {
-    StringTokenizer whitespaceStripper = new StringTokenizer(original);
-    StringBuilder builder = new StringBuilder();
-    while (whitespaceStripper.hasMoreTokens()) {
-      builder.append(whitespaceStripper.nextToken());
-      builder.append(" ");
-    }
-    return builder.toString();
+  protected String removeExtraWhitespace(String original) {
+    return SqlSourceBuilder.removeExtraWhitespaces(original);
   }
 
   protected boolean isDebugEnabled() {

@@ -44,9 +44,13 @@ class OgnlStaticTest {
 
   /**
    * This is the log output.
+   * <p>
    * DEBUG [main] - ooo Using Connection [org.hsqldb.jdbc.JDBCConnection@5ae1a5c7]
-   * DEBUG [main] - ==>  Preparing: SELECT * FROM users WHERE name IN (?) AND id = ?
+   * <p>
+   * DEBUG [main] - ==> Preparing: SELECT * FROM users WHERE name IN (?) AND id = ?
+   * <p>
    * DEBUG [main] - ==> Parameters: 1(Integer), 1(Integer)
+   * <p>
    * There are two parameter mappings but DefaulParameterHandler maps them both to input paremeter (integer)
    */
   @Test // see issue #448
