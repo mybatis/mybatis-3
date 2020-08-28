@@ -62,7 +62,7 @@ class DefaultObjectFactoryTest {
   }
 
   @Test
-  void creatHashMap() {
+  void createHashMap() {
      DefaultObjectFactory defaultObjectFactory=new DefaultObjectFactory();
      Map  map= defaultObjectFactory.create(Map.class,null,null);
      Assertions.assertTrue(map instanceof HashMap, "Should be HashMap");
@@ -93,5 +93,15 @@ class DefaultObjectFactoryTest {
     DefaultObjectFactory defaultObjectFactory = new DefaultObjectFactory();
     Set set = defaultObjectFactory.create(Set.class);
     Assertions.assertTrue(set instanceof HashSet, " set should be HashSet");
+  }
+
+  @Test
+  void testIsCollection() {
+    DefaultObjectFactory defaultObjectFactory = new DefaultObjectFactory();
+    boolean trueTarget = defaultObjectFactory.isCollection(ArrayList.class);
+    Assertions.assertTrue(trueTarget,"ArrayList should be Collection");
+
+    boolean falseTarget = defaultObjectFactory.isCollection(HashMap.class);
+    Assertions.assertFalse(falseTarget,"HashMap should't be Collection");
   }
 }
