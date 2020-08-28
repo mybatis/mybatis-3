@@ -1,10 +1,17 @@
 language: java
 
 jdk:
-  - openjdk15
   - openjdk14
   - openjdk11
   - openjdk8
+
+matrix:
+  include:
+    - jdk: openjdk15
+      env: JACOCO_SKIP="-Djacoco.skip=true"
+
+script:
+  - ./mvnw test -B $JACOCO_SKIP
 
 services:
   - docker
