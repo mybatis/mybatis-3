@@ -344,6 +344,11 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+
+       if (args == null && "toString".equals(method.getName())){
+           return Arrays.toString(proxy.getClass().getInterfaces());
+       }
+
       final SqlSession sqlSession = SqlSessionManager.this.localSqlSession.get();
       if (sqlSession != null) {
         try {
