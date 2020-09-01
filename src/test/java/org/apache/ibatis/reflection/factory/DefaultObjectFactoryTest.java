@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -93,15 +93,5 @@ class DefaultObjectFactoryTest {
     DefaultObjectFactory defaultObjectFactory = new DefaultObjectFactory();
     Set set = defaultObjectFactory.create(Set.class);
     Assertions.assertTrue(set instanceof HashSet, " set should be HashSet");
-  }
-
-  @Test
-  void testIsCollection() {
-    DefaultObjectFactory defaultObjectFactory = new DefaultObjectFactory();
-    boolean trueTarget = defaultObjectFactory.isCollection(ArrayList.class);
-    Assertions.assertTrue(trueTarget,"ArrayList should be Collection");
-
-    boolean falseTarget = defaultObjectFactory.isCollection(HashMap.class);
-    Assertions.assertFalse(falseTarget,"HashMap should't be Collection");
   }
 }
