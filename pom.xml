@@ -230,7 +230,7 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-junit-jupiter</artifactId>
-      <version>3.5.9</version>
+      <version>3.5.10</version>
       <scope>test</scope>
     </dependency>
     <dependency>
