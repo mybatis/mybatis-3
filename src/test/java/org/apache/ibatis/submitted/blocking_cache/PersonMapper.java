@@ -27,9 +27,6 @@ public interface PersonMapper {
   @Select("select id, firstname, lastname from person")
   List<Person> findAll();
 
-  @Select("select id, firstname, lastname from person where id = #{id}")
-  List<Person> findById(int id);
-
   @Delete("delete from person where id = #{id}")
   int delete(int id);
 }

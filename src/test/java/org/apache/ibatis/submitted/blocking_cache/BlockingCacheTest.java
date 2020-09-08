@@ -16,10 +16,8 @@
 package org.apache.ibatis.submitted.blocking_cache;
 
 import java.io.Reader;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
@@ -99,34 +97,6 @@ class BlockingCacheTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       PersonMapper mapper = sqlSession.getMapper(PersonMapper.class);
       mapper.findAll();
-    }
-  }
-
-  @Test
-  void blockCacheDeathLockTest() throws InterruptedException {
-    CountDownLatch count = new CountDownLatch(1);
-    Runnable run = () -> {
-      try (SqlSession session1 = sqlSessionFactory.openSession();
-           SqlSession session2 = sqlSessionFactory.openSession()) {
-
-        PersonMapper mapper1 = session1.getMapper(PersonMapper.class);
-        PersonMapper mapper2 = session2.getMapper(PersonMapper.class);
-
-        mapper1.findById(1);
-        mapper2.findById(2);
-
-        mapper1.findById(2);
-        mapper2.findById(1);
-
-        session1.commit();
-        session2.commit();
-        count.countDown();
-      }
-    };
-    new Thread(run).start();
-    boolean await = count.await(20, TimeUnit.SECONDS);
-    if (!await) {
-      throw new RuntimeException("BlockingCache made death lock");
     }
   }
 }
