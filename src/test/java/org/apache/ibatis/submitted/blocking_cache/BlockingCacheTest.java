@@ -1,17 +1,17 @@
 /**
- *    Copyright 2009-2020 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Copyright 2009-2020 the original author or authors.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.apache.ibatis.submitted.blocking_cache;
 
@@ -104,29 +104,42 @@ class BlockingCacheTest {
 
   @Test
   void blockCacheDeathLockTest() throws InterruptedException {
-    CountDownLatch count = new CountDownLatch(1);
-    Runnable run = () -> {
-      try (SqlSession session1 = sqlSessionFactory.openSession();
-           SqlSession session2 = sqlSessionFactory.openSession()) {
+    CountDownLatch step = new CountDownLatch(2);
+    CountDownLatch waitForExecute = new CountDownLatch(2);
 
-        PersonMapper mapper1 = session1.getMapper(PersonMapper.class);
-        PersonMapper mapper2 = session2.getMapper(PersonMapper.class);
+    new Thread(() -> {
+      try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+        PersonMapper mapper = sqlSession.getMapper(PersonMapper.class);
+        mapper.findById(1);
+        step.countDown();
+        step.await();
 
-        mapper1.findById(1);
-        mapper2.findById(2);
-
-        mapper1.findById(2);
-        mapper2.findById(1);
-
-        session1.commit();
-        session2.commit();
-        count.countDown();
+        mapper.findById(2);
+        sqlSession.commit();
+      } catch (InterruptedException e) {
+        //ignore
       }
-    };
-    new Thread(run).start();
-    boolean await = count.await(20, TimeUnit.SECONDS);
+      waitForExecute.countDown();
+    }).start();
+
+    new Thread(() -> {
+      try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+        PersonMapper mapper = sqlSession.getMapper(PersonMapper.class);
+        mapper.findById(2);
+        step.countDown();
+        step.await();
+        
+        mapper.findById(1);
+        sqlSession.commit();
+      } catch (InterruptedException e) {
+        //ignore
+      }
+      waitForExecute.countDown();
+    }).start();
+
+    boolean await = waitForExecute.await(30, TimeUnit.SECONDS);
     if (!await) {
-      throw new RuntimeException("BlockingCache made death lock");
+      throw new RuntimeException("BlockingCache has a risk of death lock!");
     }
   }
 }
