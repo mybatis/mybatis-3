@@ -16,8 +16,10 @@
 package org.apache.ibatis.submitted.blocking_cache;
 
 import java.io.Reader;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
@@ -99,4 +101,46 @@ class BlockingCacheTest {
       mapper.findAll();
     }
   }
+
+  @Test
+  void blockCacheDeathLockTest() throws InterruptedException {
+    CountDownLatch step = new CountDownLatch(2);
+    CountDownLatch waitForExecute = new CountDownLatch(2);
+
+    new Thread(() -> {
+      try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+        PersonMapper mapper = sqlSession.getMapper(PersonMapper.class);
+        mapper.findById(1);
+        step.countDown();
+        step.await();
+
+        mapper.findById(2);
+        sqlSession.commit();
+      } catch (InterruptedException e) {
+        //ignore
+      }
+      waitForExecute.countDown();
+    }).start();
+
+    new Thread(() -> {
+      try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+        PersonMapper mapper = sqlSession.getMapper(PersonMapper.class);
+        mapper.findById(2);
+        step.countDown();
+        step.await();
+
+        mapper.findById(1);
+        sqlSession.commit();
+      } catch (InterruptedException e) {
+        //ignore
+      }
+      waitForExecute.countDown();
+    }).start();
+
+    boolean await = waitForExecute.await(30, TimeUnit.SECONDS);
+    if (!await) {
+      throw new RuntimeException("BlockingCache has a risk of death lock!");
+    }
+  }
+
 }
