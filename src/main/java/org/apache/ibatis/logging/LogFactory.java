@@ -55,35 +55,35 @@ public final class LogFactory {
     }
   }
 
-  public static synchronized void useCustomLogging(Class<? extends Log> clazz) {
+  public static void useCustomLogging(Class<? extends Log> clazz) {
     setImplementation(clazz);
   }
 
-  public static synchronized void useSlf4jLogging() {
+  public static void useSlf4jLogging() {
     setImplementation(org.apache.ibatis.logging.slf4j.Slf4jImpl.class);
   }
 
-  public static synchronized void useCommonsLogging() {
+  public static void useCommonsLogging() {
     setImplementation(org.apache.ibatis.logging.commons.JakartaCommonsLoggingImpl.class);
   }
 
-  public static synchronized void useLog4JLogging() {
+  public static  void useLog4JLogging() {
     setImplementation(org.apache.ibatis.logging.log4j.Log4jImpl.class);
   }
 
-  public static synchronized void useLog4J2Logging() {
+  public static void useLog4J2Logging() {
     setImplementation(org.apache.ibatis.logging.log4j2.Log4j2Impl.class);
   }
 
-  public static synchronized void useJdkLogging() {
+  public static void useJdkLogging() {
     setImplementation(org.apache.ibatis.logging.jdk14.Jdk14LoggingImpl.class);
   }
 
-  public static synchronized void useStdOutLogging() {
+  public static void useStdOutLogging() {
     setImplementation(org.apache.ibatis.logging.stdout.StdOutImpl.class);
   }
 
-  public static synchronized void useNoLogging() {
+  public static void useNoLogging() {
     setImplementation(org.apache.ibatis.logging.nologging.NoLoggingImpl.class);
   }
 
