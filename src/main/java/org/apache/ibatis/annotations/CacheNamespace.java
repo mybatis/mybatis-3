@@ -50,6 +50,7 @@ public @interface CacheNamespace {
 
   /**
    * Returns the cache implementation type to use.
+   * 返回要使用的缓存实现类型。
    *
    * @return the cache implementation type
    */

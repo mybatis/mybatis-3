@@ -34,6 +34,8 @@ import org.apache.ibatis.scripting.LanguageDriver;
  *   &#064;Select("SELECT id, name FROM users WHERE id = #{id}")
  *   User selectById(int id);
  * }
+ *
+ * 指定动态SQL解析器
  * </pre>
  * @author Clinton Begin
  */

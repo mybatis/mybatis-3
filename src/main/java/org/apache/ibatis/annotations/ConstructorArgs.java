@@ -38,6 +38,9 @@ import java.lang.annotation.Target;
  * }
  * </pre>
  * @author Clinton Begin
+ *
+ * 在Mapper上返回的 DO 构造方法
+ * @see Arg
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

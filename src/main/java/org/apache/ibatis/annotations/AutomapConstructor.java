@@ -41,11 +41,12 @@ import java.lang.annotation.Target;
  *     this.id = id;
  *     this.name = name;
  *   }
- *   // ...
+ *   // 放在构造函数上会自动映射
  * }
  * </pre>
  * @author Tim Chen
  * @since 3.4.3
+ *
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

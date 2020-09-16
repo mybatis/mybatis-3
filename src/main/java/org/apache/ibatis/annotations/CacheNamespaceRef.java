@@ -31,7 +31,7 @@ import java.lang.annotation.Target;
  * <pre>
  * &#064;CacheNamespaceRef(UserMapper.class)
  * public interface AdminUserMapper {
- *   // ...
+ *   // 缓存刷新
  * }
  * </pre>
  * @author Clinton Begin

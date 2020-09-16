@@ -33,6 +33,8 @@ import java.lang.annotation.Target;
  *   Map&lt;Integer, User&gt; selectByStartingWithName(String name);
  * }
  * </pre>
+ *
+ * 将查询的List 根据 key 分组变成 Map
  * @author Clinton Begin
  */
 @Documented
