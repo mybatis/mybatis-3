@@ -34,6 +34,7 @@ public interface ObjectFactory {
   }
 
   /**
+   * 创建的对象是没有属性值的
    * Creates a new object with default constructor.
    * @param type Object type
    * @return

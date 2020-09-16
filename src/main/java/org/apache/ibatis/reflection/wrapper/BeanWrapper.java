@@ -28,6 +28,7 @@ import org.apache.ibatis.reflection.property.PropertyTokenizer;
 
 /**
  * @author Clinton Begin
+ * 对象的包装
  */
 public class BeanWrapper extends BaseWrapper {
 

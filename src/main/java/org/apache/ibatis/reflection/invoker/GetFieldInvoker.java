@@ -32,6 +32,7 @@ public class GetFieldInvoker implements Invoker {
   @Override
   public Object invoke(Object target, Object[] args) throws IllegalAccessException {
     try {
+      // 获取字段的值
       return field.get(target);
     } catch (IllegalAccessException e) {
       if (Reflector.canControlMemberAccessible()) {

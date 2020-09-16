@@ -31,8 +31,9 @@ import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
  * @author Clinton Begin
  */
 public class MetaObject {
-
+  // 原始对象
   private final Object originalObject;
+  // 原始对象的一个包装
   private final ObjectWrapper objectWrapper;
   private final ObjectFactory objectFactory;
   private final ObjectWrapperFactory objectWrapperFactory;
@@ -125,6 +126,7 @@ public class MetaObject {
 
   public void setValue(String name, Object value) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
+    // 如果是子属性,需要递归
     if (prop.hasNext()) {
       MetaObject metaValue = metaObjectForProperty(prop.getIndexedName());
       if (metaValue == SystemMetaObject.NULL_META_OBJECT) {

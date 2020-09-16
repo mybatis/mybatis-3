@@ -24,6 +24,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ParamNameUtil {
+
+  /**
+   * 获得方法的所有参数列表
+   * @param method
+   * @return
+   */
   public static List<String> getParamNames(Method method) {
     return getParameterNames(method);
   }
@@ -32,6 +38,11 @@ public class ParamNameUtil {
     return getParameterNames(constructor);
   }
 
+  /**
+   * @see Parameter
+   * @param executable
+   * @return
+   */
   private static List<String> getParameterNames(Executable executable) {
     return Arrays.stream(executable.getParameters()).map(Parameter::getName).collect(Collectors.toList());
   }
