@@ -1,9 +1,8 @@
 language: java
 
 jdk:
+  - openjdk16
   - openjdk15
-  - openjdk14
-  - openjdk13
   - openjdk11
   - openjdk8
 
