@@ -336,7 +336,7 @@ public class MapperAnnotationBuilder {
         } else if (FlushCachePolicy.FALSE.equals(options.flushCache())) {
           flushCache = false;
         }
-        useCache = options.useCache();
+        useCache = !flushCache && options.useCache();
         fetchSize = options.fetchSize() > -1 || options.fetchSize() == Integer.MIN_VALUE ? options.fetchSize() : null; //issue #348
         timeout = options.timeout() > -1 ? options.timeout() : null;
         statementType = options.statementType();
