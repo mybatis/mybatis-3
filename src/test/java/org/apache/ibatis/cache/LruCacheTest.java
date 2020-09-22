@@ -58,4 +58,16 @@ class LruCacheTest {
     assertNull(cache.getObject(4));
   }
 
+  @Test
+  void shouldDemonstrateWhenQueryAfterKeyWasRemoved() {
+    LruCache lruCache = new LruCache(new PerpetualCache("default"));
+    lruCache.setSize(2);
+    lruCache.putObject(2, 2);
+    lruCache.putObject(1, 1);
+    lruCache.removeObject(2);
+    lruCache.getObject(2);
+    lruCache.putObject(3, 3);
+    assertNull(lruCache.getObject(1));
+  }
+
 }
