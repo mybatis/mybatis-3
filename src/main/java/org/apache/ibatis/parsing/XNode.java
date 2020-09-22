@@ -130,11 +130,7 @@ public class XNode {
   }
 
   public String getStringBody(String def) {
-    if (body == null) {
-      return def;
-    } else {
-      return body;
-    }
+    return body == null ? def : body;
   }
 
   public Boolean getBooleanBody() {
@@ -219,6 +215,8 @@ public class XNode {
 
   public Boolean getBooleanAttribute(String name, Boolean def) {
     String value = attributes.getProperty(name);
+    // Note that ternary operator will throw NPE in some scenarios, just be careful.
+    // see this explanation[https://stackoverflow.com/questions/5246776/java-weird-nullpointerexception-in-ternary-operator/5246820#5246820]
     return value == null ? def : Boolean.valueOf(value);
   }
 
@@ -228,7 +226,7 @@ public class XNode {
 
   public Integer getIntAttribute(String name, Integer def) {
     String value = attributes.getProperty(name);
-    return value == null ? def : Integer.parseInt(value);
+    return value == null ? def : Integer.valueOf(value);
   }
 
   public Long getLongAttribute(String name) {
@@ -237,7 +235,7 @@ public class XNode {
 
   public Long getLongAttribute(String name, Long def) {
     String value = attributes.getProperty(name);
-    return value == null ? def : Long.parseLong(value);
+    return value == null ? def : Long.valueOf(value);
   }
 
   public Double getDoubleAttribute(String name) {
@@ -246,7 +244,7 @@ public class XNode {
 
   public Double getDoubleAttribute(String name, Double def) {
     String value = attributes.getProperty(name);
-    return value == null ? def : Double.parseDouble(value);
+    return value == null ? def : Double.valueOf(value);
   }
 
   public Float getFloatAttribute(String name) {
@@ -255,7 +253,7 @@ public class XNode {
 
   public Float getFloatAttribute(String name, Float def) {
     String value = attributes.getProperty(name);
-    return value == null ? def : Float.parseFloat(value);
+    return value == null ? def : Float.valueOf(value);
   }
 
   public List<XNode> getChildren() {
