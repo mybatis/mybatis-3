@@ -69,7 +69,7 @@ class DefaultResultSetHandlerTest {
   /**
    * Contrary to the spec, some drivers require case-sensitive column names when getting result.
    *
-   * @see <a href="http://code.google.com/p/mybatis/issues/detail?id=557">Issue 557</a>
+   * @see <a href="https://github.com/mybatis/old-google-code-issues/issues/557">Issue 557</a>
    */
   @Test
   void shouldRetainColumnNameCase() throws Exception {

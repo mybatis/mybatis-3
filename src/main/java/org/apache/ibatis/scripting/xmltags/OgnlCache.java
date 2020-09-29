@@ -28,7 +28,7 @@ import org.apache.ibatis.builder.BuilderException;
  *
  * @author Eduardo Macarron
  *
- * @see <a href='http://code.google.com/p/mybatis/issues/detail?id=342'>Issue 342</a>
+ * @see <a href='https://github.com/mybatis/old-google-code-issues/issues/342'>Issue 342</a>
  */
 public final class OgnlCache {
 

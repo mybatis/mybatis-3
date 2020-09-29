@@ -24,7 +24,8 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.Test;
 
-//@Disabled("see issue #614")
+
+
 class SerializeCircularTest {
 
   @Test
@@ -41,7 +42,9 @@ class SerializeCircularTest {
     }
   }
 
-  // @Disabled("See http://code.google.com/p/mybatis/issues/detail?id=614")
+  /**
+   * @see <a href="https://github.com/mybatis/old-google-code-issues/issues/614">Issue 614</a>
+   */
   @Test
   void serializeAndDeserializeObjectsWithoutAggressiveLazyLoadingWithoutPreloadingAttribute() throws Exception {
     try (SqlSession sqlSession = createSessionWithoutAggressiveLazyLoading()) {
