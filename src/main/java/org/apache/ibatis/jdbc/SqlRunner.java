@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -77,17 +77,10 @@ public class SqlRunner {
    * @throws SQLException If statement preparation or execution fails
    */
   public List<Map<String, Object>> selectAll(String sql, Object... args) throws SQLException {
-    PreparedStatement ps = connection.prepareStatement(sql);
-    try {
+    try (PreparedStatement ps = connection.prepareStatement(sql);) {
       setParameters(ps, args);
       ResultSet rs = ps.executeQuery();
       return getResults(rs);
-    } finally {
-      try {
-        ps.close();
-      } catch (SQLException e) {
-        //ignore
-      }
     }
   }
 
@@ -146,16 +139,9 @@ public class SqlRunner {
    * @throws SQLException If statement preparation or execution fails
    */
   public int update(String sql, Object... args) throws SQLException {
-    PreparedStatement ps = connection.prepareStatement(sql);
-    try {
+    try(PreparedStatement ps = connection.prepareStatement(sql);) {
       setParameters(ps, args);
       return ps.executeUpdate();
-    } finally {
-      try {
-        ps.close();
-      } catch (SQLException e) {
-        //ignore
-      }
     }
   }
 
@@ -179,15 +165,8 @@ public class SqlRunner {
    * @throws SQLException If statement preparation or execution fails
    */
   public void run(String sql) throws SQLException {
-    Statement stmt = connection.createStatement();
-    try {
+    try(Statement stmt = connection.createStatement();) {
       stmt.execute(sql);
-    } finally {
-      try {
-        stmt.close();
-      } catch (SQLException e) {
-        //ignore
-      }
     }
   }
 
@@ -220,44 +199,37 @@ public class SqlRunner {
     }
   }
 
+  /**
+   *  ResultSet should't was closed in here,it should be closed in caller
+   */
   private List<Map<String, Object>> getResults(ResultSet rs) throws SQLException {
-    try {
-      List<Map<String, Object>> list = new ArrayList<>();
-      List<String> columns = new ArrayList<>();
-      List<TypeHandler<?>> typeHandlers = new ArrayList<>();
-      ResultSetMetaData rsmd = rs.getMetaData();
-      for (int i = 0, n = rsmd.getColumnCount(); i < n; i++) {
-        columns.add(rsmd.getColumnLabel(i + 1));
-        try {
-          Class<?> type = Resources.classForName(rsmd.getColumnClassName(i + 1));
-          TypeHandler<?> typeHandler = typeHandlerRegistry.getTypeHandler(type);
-          if (typeHandler == null) {
-            typeHandler = typeHandlerRegistry.getTypeHandler(Object.class);
-          }
-          typeHandlers.add(typeHandler);
-        } catch (Exception e) {
-          typeHandlers.add(typeHandlerRegistry.getTypeHandler(Object.class));
+    List<Map<String, Object>> list = new ArrayList<>();
+    List<String> columns = new ArrayList<>();
+    List<TypeHandler<?>> typeHandlers = new ArrayList<>();
+    ResultSetMetaData rsmd = rs.getMetaData();
+    for (int i = 0, n = rsmd.getColumnCount(); i < n; i++) {
+      columns.add(rsmd.getColumnLabel(i + 1));
+      try {
+        Class<?> type = Resources.classForName(rsmd.getColumnClassName(i + 1));
+        TypeHandler<?> typeHandler = typeHandlerRegistry.getTypeHandler(type);
+        if (typeHandler == null) {
+          typeHandler = typeHandlerRegistry.getTypeHandler(Object.class);
         }
-      }
-      while (rs.next()) {
-        Map<String, Object> row = new HashMap<>();
-        for (int i = 0, n = columns.size(); i < n; i++) {
-          String name = columns.get(i);
-          TypeHandler<?> handler = typeHandlers.get(i);
-          row.put(name.toUpperCase(Locale.ENGLISH), handler.getResult(rs, name));
-        }
-        list.add(row);
-      }
-      return list;
-    } finally {
-      if (rs != null) {
-        try {
-          rs.close();
-        } catch (Exception e) {
-          // ignore
-        }
+        typeHandlers.add(typeHandler);
+      } catch (Exception e) {
+        typeHandlers.add(typeHandlerRegistry.getTypeHandler(Object.class));
       }
     }
+    while (rs.next()) {
+      Map<String, Object> row = new HashMap<>();
+      for (int i = 0, n = columns.size(); i < n; i++) {
+        String name = columns.get(i);
+        TypeHandler<?> handler = typeHandlers.get(i);
+        row.put(name.toUpperCase(Locale.ENGLISH), handler.getResult(rs, name));
+      }
+      list.add(row);
+    }
+    return list;
   }
 
 }
