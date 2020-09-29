@@ -23,7 +23,7 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.Test;
 
 /**
- * @see http://code.google.com/p/mybatis/issues/detail?id=291
+ *
  */
 class ExternalRefidResolutionTest {
   @Test
