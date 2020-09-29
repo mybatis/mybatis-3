@@ -19,7 +19,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -61,7 +61,7 @@ class BaseStatementHandlerTest {
         BaseStatementHandler handler = new SimpleStatementHandler(null, mappedStatementBuilder.build(), null, null, null, null);
         handler.setStatementTimeout(statement, null);
 
-        verifyZeroInteractions(statement); // not apply anything
+        verifyNoInteractions(statement); // not apply anything
     }
 
     @Test
