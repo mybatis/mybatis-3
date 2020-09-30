@@ -142,7 +142,7 @@ public class Configuration {
    * Configuration factory class.
    * Used to create Configuration for loading deserialized unread properties.
    *
-   * @see <a href='https://code.google.com/p/mybatis/issues/detail?id=300'>Issue 300 (google code)</a>
+   * @see <a href='https://github.com/mybatis/old-google-code-issues/issues/300'>Issue 300 (google code)</a>
    */
   protected Class<?> configurationFactory;
 
