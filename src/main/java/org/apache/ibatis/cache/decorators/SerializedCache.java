@@ -27,6 +27,7 @@ import java.io.Serializable;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheException;
 import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.io.SerialFilterChecker;
 
 /**
  * @author Clinton Begin
@@ -96,6 +97,7 @@ public class SerializedCache implements Cache {
   }
 
   private Serializable deserialize(byte[] value) {
+    SerialFilterChecker.check();
     Serializable result;
     try (ByteArrayInputStream bis = new ByteArrayInputStream(value);
         ObjectInputStream ois = new CustomObjectInputStream(bis)) {
