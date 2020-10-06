@@ -108,7 +108,7 @@
 <a class="jxr_linenumber" name="L100" href="#L100">100</a>       <strong class="jxr_keyword">this</strong>.mapperMethod = mapperMethod;
 <a class="jxr_linenumber" name="L101" href="#L101">101</a>       <a name="Lang" href="../../../../../org/apache/ibatis/annotations/Lang.html#Lang">Lang</a> lang = mapperMethod == <strong class="jxr_keyword">null</strong> ? <strong class="jxr_keyword">null</strong> : mapperMethod.getAnnotation(Lang.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L102" href="#L102">102</a>       <strong class="jxr_keyword">this</strong>.languageDriver = configuration.getLanguageDriver(lang == <strong class="jxr_keyword">null</strong> ? <strong class="jxr_keyword">null</strong> : lang.value());
-<a class="jxr_linenumber" name="L103" href="#L103">103</a>       <strong class="jxr_keyword">this</strong>.providerType = getProviderType(provider, mapperMethod);
+<a class="jxr_linenumber" name="L103" href="#L103">103</a>       <strong class="jxr_keyword">this</strong>.providerType = getProviderType(configuration, provider, mapperMethod);
 <a class="jxr_linenumber" name="L104" href="#L104">104</a>       candidateProviderMethodName = (String) provider.annotationType().getMethod(<span class="jxr_string">"method"</span>).invoke(provider);
 <a class="jxr_linenumber" name="L105" href="#L105">105</a> 
 <a class="jxr_linenumber" name="L106" href="#L106">106</a>       <strong class="jxr_keyword">if</strong> (candidateProviderMethodName.length() == 0 &amp;&amp; ProviderMethodResolver.<strong class="jxr_keyword">class</strong>.isAssignableFrom(<strong class="jxr_keyword">this</strong>.providerType)) {
@@ -243,26 +243,29 @@
 <a class="jxr_linenumber" name="L235" href="#L235">235</a>     <strong class="jxr_keyword">return</strong> sql != <strong class="jxr_keyword">null</strong> ? sql.toString() : <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L236" href="#L236">236</a>   }
 <a class="jxr_linenumber" name="L237" href="#L237">237</a> 
-<a class="jxr_linenumber" name="L238" href="#L238">238</a>   <strong class="jxr_keyword">private</strong> Class&lt;?&gt; getProviderType(Annotation providerAnnotation, Method mapperMethod)
+<a class="jxr_linenumber" name="L238" href="#L238">238</a>   <strong class="jxr_keyword">private</strong> Class&lt;?&gt; getProviderType(<a name="Configuration" href="../../../../../org/apache/ibatis/session/Configuration.html#Configuration">Configuration</a> configuration, Annotation providerAnnotation, Method mapperMethod)
 <a class="jxr_linenumber" name="L239" href="#L239">239</a>       <strong class="jxr_keyword">throws</strong> NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 <a class="jxr_linenumber" name="L240" href="#L240">240</a>     Class&lt;?&gt; type = (Class&lt;?&gt;) providerAnnotation.annotationType().getMethod(<span class="jxr_string">"type"</span>).invoke(providerAnnotation);
 <a class="jxr_linenumber" name="L241" href="#L241">241</a>     Class&lt;?&gt; value = (Class&lt;?&gt;) providerAnnotation.annotationType().getMethod(<span class="jxr_string">"value"</span>).invoke(providerAnnotation);
 <a class="jxr_linenumber" name="L242" href="#L242">242</a>     <strong class="jxr_keyword">if</strong> (value == <strong class="jxr_keyword">void</strong>.<strong class="jxr_keyword">class</strong> &amp;&amp; type == <strong class="jxr_keyword">void</strong>.<strong class="jxr_keyword">class</strong>) {
-<a class="jxr_linenumber" name="L243" href="#L243">243</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="BuilderException" href="../../../../../org/apache/ibatis/builder/BuilderException.html#BuilderException">BuilderException</a>(<span class="jxr_string">"Please specify either 'value' or 'type' attribute of @"</span>
-<a class="jxr_linenumber" name="L244" href="#L244">244</a>           + providerAnnotation.annotationType().getSimpleName()
-<a class="jxr_linenumber" name="L245" href="#L245">245</a>           + <span class="jxr_string">" at the '"</span> + mapperMethod.toString() + <span class="jxr_string">"'."</span>);
-<a class="jxr_linenumber" name="L246" href="#L246">246</a>     }
-<a class="jxr_linenumber" name="L247" href="#L247">247</a>     <strong class="jxr_keyword">if</strong> (value != <strong class="jxr_keyword">void</strong>.<strong class="jxr_keyword">class</strong> &amp;&amp; type != <strong class="jxr_keyword">void</strong>.<strong class="jxr_keyword">class</strong> &amp;&amp; value != type) {
-<a class="jxr_linenumber" name="L248" href="#L248">248</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="BuilderException" href="../../../../../org/apache/ibatis/builder/BuilderException.html#BuilderException">BuilderException</a>(<span class="jxr_string">"Cannot specify different class on 'value' and 'type' attribute of @"</span>
-<a class="jxr_linenumber" name="L249" href="#L249">249</a>           + providerAnnotation.annotationType().getSimpleName()
-<a class="jxr_linenumber" name="L250" href="#L250">250</a>           + <span class="jxr_string">" at the '"</span> + mapperMethod.toString() + <span class="jxr_string">"'."</span>);
-<a class="jxr_linenumber" name="L251" href="#L251">251</a>     }
-<a class="jxr_linenumber" name="L252" href="#L252">252</a>     <strong class="jxr_keyword">return</strong> value == <strong class="jxr_keyword">void</strong>.<strong class="jxr_keyword">class</strong> ? type : value;
-<a class="jxr_linenumber" name="L253" href="#L253">253</a>   }
-<a class="jxr_linenumber" name="L254" href="#L254">254</a> 
-<a class="jxr_linenumber" name="L255" href="#L255">255</a> }
+<a class="jxr_linenumber" name="L243" href="#L243">243</a>       <strong class="jxr_keyword">if</strong> (configuration.getDefaultSqlProviderType() != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L244" href="#L244">244</a>         <strong class="jxr_keyword">return</strong> configuration.getDefaultSqlProviderType();
+<a class="jxr_linenumber" name="L245" href="#L245">245</a>       }
+<a class="jxr_linenumber" name="L246" href="#L246">246</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="BuilderException" href="../../../../../org/apache/ibatis/builder/BuilderException.html#BuilderException">BuilderException</a>(<span class="jxr_string">"Please specify either 'value' or 'type' attribute of @"</span>
+<a class="jxr_linenumber" name="L247" href="#L247">247</a>           + providerAnnotation.annotationType().getSimpleName()
+<a class="jxr_linenumber" name="L248" href="#L248">248</a>           + <span class="jxr_string">" at the '"</span> + mapperMethod.toString() + <span class="jxr_string">"'."</span>);
+<a class="jxr_linenumber" name="L249" href="#L249">249</a>     }
+<a class="jxr_linenumber" name="L250" href="#L250">250</a>     <strong class="jxr_keyword">if</strong> (value != <strong class="jxr_keyword">void</strong>.<strong class="jxr_keyword">class</strong> &amp;&amp; type != <strong class="jxr_keyword">void</strong>.<strong class="jxr_keyword">class</strong> &amp;&amp; value != type) {
+<a class="jxr_linenumber" name="L251" href="#L251">251</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="BuilderException" href="../../../../../org/apache/ibatis/builder/BuilderException.html#BuilderException">BuilderException</a>(<span class="jxr_string">"Cannot specify different class on 'value' and 'type' attribute of @"</span>
+<a class="jxr_linenumber" name="L252" href="#L252">252</a>           + providerAnnotation.annotationType().getSimpleName()
+<a class="jxr_linenumber" name="L253" href="#L253">253</a>           + <span class="jxr_string">" at the '"</span> + mapperMethod.toString() + <span class="jxr_string">"'."</span>);
+<a class="jxr_linenumber" name="L254" href="#L254">254</a>     }
+<a class="jxr_linenumber" name="L255" href="#L255">255</a>     <strong class="jxr_keyword">return</strong> value == <strong class="jxr_keyword">void</strong>.<strong class="jxr_keyword">class</strong> ? type : value;
+<a class="jxr_linenumber" name="L256" href="#L256">256</a>   }
+<a class="jxr_linenumber" name="L257" href="#L257">257</a> 
+<a class="jxr_linenumber" name="L258" href="#L258">258</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2020 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2020 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

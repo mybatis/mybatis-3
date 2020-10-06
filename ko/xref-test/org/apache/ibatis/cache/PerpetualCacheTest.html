@@ -77,9 +77,15 @@
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>      assertNull(cache.getObject(4));
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>    }
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>  
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>  }
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>    @Test
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>    <strong class="jxr_keyword">void</strong> shouldDemonstrateIdIsNull() {
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>      Cache cache = <strong class="jxr_keyword">new</strong> PerpetualCache(<strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>      assertThrows(CacheException.<strong class="jxr_keyword">class</strong>, () -&gt; cache.hashCode());
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>      assertThrows(CacheException.<strong class="jxr_keyword">class</strong>, () -&gt; cache.equals(<strong class="jxr_keyword">new</strong> Object()));
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>    }
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2020 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2020 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>
