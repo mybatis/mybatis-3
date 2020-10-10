@@ -15,12 +15,6 @@
  */
 package org.apache.ibatis.executor.statement;
 
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
-
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -34,6 +28,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class BaseStatementHandlerTest {
@@ -61,7 +57,7 @@ class BaseStatementHandlerTest {
         BaseStatementHandler handler = new SimpleStatementHandler(null, mappedStatementBuilder.build(), null, null, null, null);
         handler.setStatementTimeout(statement, null);
 
-        verifyZeroInteractions(statement); // not apply anything
+      verifyNoMoreInteractions(statement); // not apply anything
     }
 
     @Test

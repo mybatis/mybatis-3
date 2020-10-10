@@ -111,8 +111,6 @@ class CglibNPETest {
       int rows = personMapper.insertPerson(selected1);
       Assertions.assertEquals(1, rows);
       selected1 = personMapper.selectById(1);
-      selected2 = personMapper.selectById(2);
-      selected3 = personMapper.selectById(3);
       Person selected4 = personMapper.selectById(4);
       Assertions.assertEquals(1, selected1.getId().longValue());
       Assertions.assertEquals(2, selected2.getId().longValue());

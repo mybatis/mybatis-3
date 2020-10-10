@@ -77,7 +77,6 @@ class ForceFlushOnSelectTest {
       PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
       List<Person> people = personMapper.selectAllFlush();
       updateDatabase(sqlSession.getConnection());
-      people = personMapper.selectAllFlush();
       assertEquals("Simone", people.get(0).getFirstName());
       sqlSession.commit();
     }
@@ -89,7 +88,6 @@ class ForceFlushOnSelectTest {
       PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
       List<Person> people = personMapper.selectAllNoFlush();
       updateDatabase(sqlSession.getConnection());
-      people = personMapper.selectAllNoFlush();
       assertEquals("John", people.get(0).getFirstName());
       sqlSession.commit();
     }
@@ -122,7 +120,6 @@ class ForceFlushOnSelectTest {
       PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
       List<Person> people = personMapper.selectAllNoFlush();
       updateDatabase(sqlSession.getConnection());
-      people = personMapper.selectAllFlush();
       assertEquals("Simone", people.get(0).getFirstName());
       sqlSession.commit();
     }
