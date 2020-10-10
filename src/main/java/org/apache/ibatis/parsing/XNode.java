@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import org.w3c.dom.CharacterData;
@@ -306,18 +307,22 @@ public class XNode {
     }
   }
 
-  public List<XNode> getChildren() {
+  public List<XNode> getChildren(Predicate<Node> predicate) {
     List<XNode> children = new ArrayList<>();
     NodeList nodeList = node.getChildNodes();
     if (nodeList != null) {
       for (int i = 0, n = nodeList.getLength(); i < n; i++) {
         Node node = nodeList.item(i);
-        if (node.getNodeType() == Node.ELEMENT_NODE) {
+        if (predicate.test(node)) {
           children.add(new XNode(xpathParser, node, variables));
         }
       }
     }
     return children;
+  }
+
+  public List<XNode> getChildren(){
+    return getChildren(node->node.getNodeType() == Node.ELEMENT_NODE);
   }
 
   public Properties getChildrenAsProperties() {
@@ -352,6 +357,11 @@ public class XNode {
     List<XNode> children = getChildren();
     if (!children.isEmpty()) {
       builder.append(">\n");
+      // issue 2080
+      if (body != null && !body.trim().equals("")) {
+        indent(builder,level+1);
+        builder.append(body.trim()).append("\n");
+      }
       for (XNode child : children) {
         indent(builder, level + 1);
         child.toString(builder, level + 1);
