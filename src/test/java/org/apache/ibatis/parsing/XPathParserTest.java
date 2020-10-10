@@ -262,7 +262,7 @@ class XPathParserTest {
   @Test
   void complexToString() {
     String xmlString = "<mapper>\n"
-      + "  <select id=\"selectFullStudent\" resultMap=\"fullResult\" databaseId=\"mysql\">\n"
+      + "  <select id=\"selectFullStudent\">\n"
       + "    select\n"
       + "      STUDENT.ID ID,\n"
       + "      STUDENT.SNO SNO,\n"
@@ -285,7 +285,7 @@ class XPathParserTest {
       + "  </select>\n"
       + "</mapper>";
 
-    String ex = "<select resultMap=\"fullResult\" databaseId=\"mysql\" id=\"selectFullStudent\">\n"
+    String ex = "<select id=\"selectFullStudent\">\n"
       + "    select\n"
       + "      STUDENT.ID ID,\n"
       + "      STUDENT.SNO SNO,\n"
