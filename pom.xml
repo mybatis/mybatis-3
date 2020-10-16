@@ -243,7 +243,7 @@
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
-      <version>42.2.14</version>
+      <version>42.2.18</version>
       <scope>test</scope>
     </dependency>
     <dependency>
