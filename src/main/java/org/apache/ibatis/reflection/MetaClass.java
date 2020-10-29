@@ -29,7 +29,7 @@ import org.apache.ibatis.reflection.property.PropertyTokenizer;
 /**
  * @author Clinton Begin
  */
-public class MetaClass {
+public class  MetaClass {
 
   private final ReflectorFactory reflectorFactory;
   private final Reflector reflector;
@@ -78,6 +78,60 @@ public class MetaClass {
     }
   }
 
+  public DeclaringType getSetterDeclaringType(String name) {
+    PropertyTokenizer prop = new PropertyTokenizer(name);
+    if (prop.hasNext()) {
+      MetaClass metaProp = metaClassForProperty(prop.getName());
+      return metaProp.getSetterDeclaringType(prop.getChildren());
+    } else {
+      return reflector.getSetterDeclaringType(prop.getName());
+    }
+  }
+  public DeclaringType getGetterDeclaringType(String name) {
+    PropertyTokenizer prop = new PropertyTokenizer(name);
+    if (prop.hasNext()) {
+      MetaClass metaProp = metaClassForProperty(prop.getName());
+      return metaProp.getGetterDeclaringType(prop.getChildren());
+    } else {
+      return getGetterDeclaringType(prop);
+    }
+  }
+
+  private DeclaringType getGetterDeclaringType(PropertyTokenizer prop) {
+    DeclaringType declaringType = reflector.getGetterDeclaringType(prop.getName());
+    Class<?> rawType = declaringType.getRawClass();
+    Type returnType = declaringType.getGenericType();
+    if (prop.getIndex() != null && Collection.class.isAssignableFrom(rawType)) {
+      if (returnType instanceof ParameterizedType) {
+        Type[] actualTypeArguments = ((ParameterizedType) returnType).getActualTypeArguments();
+        if (actualTypeArguments != null && actualTypeArguments.length == 1) {
+          returnType = actualTypeArguments[0];
+          if (returnType instanceof Class) {
+            return newDeclaringType(null, (Class<?>) returnType);
+          } else if (returnType instanceof ParameterizedType) {
+            ParameterizedType castedReturnType = (ParameterizedType)returnType;
+            return newDeclaringType(castedReturnType, (Class<?>) castedReturnType.getRawType());
+          }
+        }
+      }
+    }
+    return declaringType;
+  }
+
+  private DeclaringType newDeclaringType(Type type, Class<?> clazz) {
+	  return new DeclaringType() {
+			@Override
+			public Type getGenericType() {
+				return type;
+			}
+
+			@Override
+			public Class<?> getRawClass() {
+				return clazz;
+			}
+      };
+  }
+  
   public Class<?> getGetterType(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {

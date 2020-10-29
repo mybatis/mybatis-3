@@ -26,8 +26,10 @@ import org.apache.ibatis.parsing.GenericTokenParser;
 import org.apache.ibatis.parsing.TokenHandler;
 import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.reflection.DeclaringType;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
+import java.lang.reflect.Type;
 
 /**
  * @author Clinton Begin
@@ -92,6 +94,7 @@ public class SqlSourceBuilder extends BaseBuilder {
       Map<String, String> propertiesMap = parseParameterMapping(content);
       String property = propertiesMap.get("property");
       Class<?> propertyType;
+      Type genericType = null;
       if (metaParameters.hasGetter(property)) { // issue #448 get type from additional params
         propertyType = metaParameters.getGetterType(property);
       } else if (typeHandlerRegistry.hasTypeHandler(parameterType)) {
@@ -103,7 +106,9 @@ public class SqlSourceBuilder extends BaseBuilder {
       } else {
         MetaClass metaClass = MetaClass.forClass(parameterType, configuration.getReflectorFactory());
         if (metaClass.hasGetter(property)) {
-          propertyType = metaClass.getGetterType(property);
+          DeclaringType declaringType = metaClass.getGetterDeclaringType(property);
+          propertyType = declaringType.getRawClass();
+          genericType = declaringType.getGenericType();
         } else {
           propertyType = Object.class;
         }
@@ -138,7 +143,7 @@ public class SqlSourceBuilder extends BaseBuilder {
         }
       }
       if (typeHandlerAlias != null) {
-        builder.typeHandler(resolveTypeHandler(javaType, typeHandlerAlias));
+        builder.typeHandler(resolveTypeHandler(genericType, javaType, typeHandlerAlias));
       }
       return builder.build();
     }
