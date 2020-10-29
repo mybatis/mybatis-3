@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2019 the original author or authors.
+       Copyright 2009-2020 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -553,6 +553,36 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               </td>
               <td>
                 설정하지 않음
+              </td>
+            </tr>
+            <tr>
+              <td>
+                shrinkWhitespacesInSql
+              </td>
+              <td>
+                SQL에서 여분의 whitespace 문자들을 삭제한다. 이는 SQL의 리터럴 문자열에도 영향을 미친다. (Since 3.5.5)
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
+              </td>
+            </tr>
+            <tr>
+              <td>
+                defaultSqlProviderType
+              </td>
+              <td>
+                Specifies an sql provider class that holds provider method (Since 3.5.6).
+                This class apply to the <code>type</code>(or <code>value</code>) attribute on sql provider annotation(e.g. <code>@SelectProvider</code>),
+                when these attribute was omitted.
+              </td>
+              <td>
+                A type alias or fully qualified class name
+              </td>
+              <td>
+                Not set
               </td>
             </tr>
           </tbody>

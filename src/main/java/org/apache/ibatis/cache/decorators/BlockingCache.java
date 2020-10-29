@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,20 +15,22 @@
  */
 package org.apache.ibatis.cache.decorators;
 
+import java.text.MessageFormat;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheException;
 
 /**
- * Simple blocking decorator
+ * <p>Simple blocking decorator
  *
- * Simple and inefficient version of EhCache's BlockingCache decorator.
+ * <p>Simple and inefficient version of EhCache's BlockingCache decorator.
  * It sets a lock over a cache key when the element is not found in cache.
  * This way, other threads will wait until this element is filled instead of hitting the database.
+ *
+ * <p>By its nature, this implementation can cause deadlock when used incorrecly.
  *
  * @author Eduardo Macarron
  *
@@ -37,7 +39,7 @@ public class BlockingCache implements Cache {
 
   private long timeout;
   private final Cache delegate;
-  private final ConcurrentHashMap<Object, ReentrantLock> locks;
+  private final ConcurrentHashMap<Object, CountDownLatch> locks;
 
   public BlockingCache(Cache delegate) {
     this.delegate = delegate;
@@ -85,31 +87,35 @@ public class BlockingCache implements Cache {
     delegate.clear();
   }
 
-  private ReentrantLock getLockForKey(Object key) {
-    return locks.computeIfAbsent(key, k -> new ReentrantLock());
-  }
-
   private void acquireLock(Object key) {
-    Lock lock = getLockForKey(key);
-    if (timeout > 0) {
+    CountDownLatch newLatch = new CountDownLatch(1);
+    while (true) {
+      CountDownLatch latch = locks.putIfAbsent(key, newLatch);
+      if (latch == null) {
+        break;
+      }
       try {
-        boolean acquired = lock.tryLock(timeout, TimeUnit.MILLISECONDS);
-        if (!acquired) {
-          throw new CacheException("Couldn't get a lock in " + timeout + " for the key " +  key + " at the cache " + delegate.getId());
+        if (timeout > 0) {
+          boolean acquired = latch.await(timeout, TimeUnit.MILLISECONDS);
+          if (!acquired) {
+            throw new CacheException(
+                "Couldn't get a lock in " + timeout + " for the key " + key + " at the cache " + delegate.getId());
+          }
+        } else {
+          latch.await();
         }
       } catch (InterruptedException e) {
         throw new CacheException("Got interrupted while trying to acquire lock for key " + key, e);
       }
-    } else {
-      lock.lock();
     }
   }
 
   private void releaseLock(Object key) {
-    ReentrantLock lock = locks.get(key);
-    if (lock.isHeldByCurrentThread()) {
-      lock.unlock();
+    CountDownLatch latch = locks.remove(key);
+    if (latch == null) {
+      throw new IllegalStateException("Detected an attempt at releasing unacquired lock. This should never happen.");
     }
+    latch.countDown();
   }
 
   public long getTimeout() {

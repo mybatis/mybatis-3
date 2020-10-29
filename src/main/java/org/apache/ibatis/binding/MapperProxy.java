@@ -91,6 +91,14 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
 
   private MapperMethodInvoker cachedInvoker(Method method) throws Throwable {
     try {
+      // A workaround for https://bugs.openjdk.java.net/browse/JDK-8161372
+      // It should be removed once the fix is backported to Java 8 or
+      // MyBatis drops Java 8 support. See gh-1929
+      MapperMethodInvoker invoker = methodCache.get(method);
+      if (invoker != null) {
+        return invoker;
+      }
+
       return methodCache.computeIfAbsent(method, m -> {
         if (m.isDefault()) {
           try {

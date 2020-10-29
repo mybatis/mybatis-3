@@ -32,7 +32,7 @@ import org.apache.ibatis.cache.impl.PerpetualCache;
  * <b>How to use:</b>
  *
  * <pre>
- * &#064;acheNamespace(implementation = CustomCache.class, properties = {
+ * &#064;CacheNamespace(implementation = CustomCache.class, properties = {
  *   &#064;Property(name = "host", value = "${mybatis.cache.host}"),
  *   &#064;Property(name = "port", value = "${mybatis.cache.port}"),
  *   &#064;Property(name = "name", value = "usersCache")

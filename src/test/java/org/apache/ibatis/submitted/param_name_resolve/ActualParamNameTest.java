@@ -15,6 +15,13 @@
  */
 package org.apache.ibatis.submitted.param_name_resolve;
 
+import static org.junit.Assert.assertEquals;
+
+import java.io.Reader;
+import java.sql.Connection;
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
@@ -24,13 +31,6 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.io.Reader;
-import java.sql.Connection;
-import java.util.Arrays;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-
 class ActualParamNameTest {
 
   private static SqlSessionFactory sqlSessionFactory;
@@ -39,15 +39,14 @@ class ActualParamNameTest {
   static void setUp() throws Exception {
     // create an SqlSessionFactory
     try (Reader reader = Resources
-      .getResourceAsReader("org/apache/ibatis/submitted/param_name_resolve/mybatis-config.xml")) {
+        .getResourceAsReader("org/apache/ibatis/submitted/param_name_resolve/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
       sqlSessionFactory.getConfiguration().addMapper(Mapper.class);
     }
 
     // populate in-memory database
     try (Connection conn = sqlSessionFactory.getConfiguration().getEnvironment().getDataSource().getConnection();
-         Reader reader = Resources
-           .getResourceAsReader("org/apache/ibatis/submitted/param_name_resolve/CreateDB.sql")) {
+        Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/param_name_resolve/CreateDB.sql")) {
       ScriptRunner runner = new ScriptRunner(conn);
       runner.setLogWriter(null);
       runner.runScript(reader);
