@@ -23,7 +23,7 @@ import java.util.Map;
  */
 public class LanguageDriverRegistry {
 
-  private final Map<Class<? extends LanguageDriver>, LanguageDriver> LANGUAGE_DRIVER_MAP = new HashMap<>();
+  private static final Map<Class<? extends LanguageDriver>, LanguageDriver> LANGUAGE_DRIVER_MAP = new HashMap<>();
 
   private Class<? extends LanguageDriver> defaultDriverClass;
 

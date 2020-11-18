@@ -37,6 +37,17 @@ import java.util.concurrent.locks.ReadWriteLock;
  * </pre>
  *
  * @author Clinton Begin
+ * @see org.apache.ibatis.cache.decorators.BlockingCache
+ * @see org.apache.ibatis.cache.decorators.FifoCache
+ * @see org.apache.ibatis.cache.decorators.LoggingCache
+ * @see org.apache.ibatis.cache.decorators.LruCache
+ * @see org.apache.ibatis.cache.decorators.ScheduledCache
+ * @see org.apache.ibatis.cache.decorators.SerializedCache
+ * @see org.apache.ibatis.cache.decorators.SoftCache
+ * @see org.apache.ibatis.cache.decorators.SynchronizedCache
+ * @see org.apache.ibatis.cache.decorators.TransactionalCache
+ * @see org.apache.ibatis.cache.decorators.WeakCache
+ * @see org.apache.ibatis.cache.impl.PerpetualCache
  */
 
 public interface Cache {

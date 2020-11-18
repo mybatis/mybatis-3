@@ -22,6 +22,9 @@ import org.apache.ibatis.mapping.MappedStatement;
 
 /**
  * @author Clinton Begin
+ * @see Jdbc3KeyGenerator
+ * @see NoKeyGenerator
+ * @see SelectKeyGenerator
  */
 public interface KeyGenerator {
 

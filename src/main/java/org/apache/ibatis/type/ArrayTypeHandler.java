@@ -115,7 +115,7 @@ public class ArrayTypeHandler extends BaseTypeHandler<Object> {
     return extractArray(cs.getArray(columnIndex));
   }
 
-  protected Object extractArray(Array array) throws SQLException {
+  private Object extractArray(Array array) throws SQLException {
     if (array == null) {
       return null;
     }

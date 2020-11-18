@@ -22,6 +22,10 @@ import java.util.Arrays;
  */
 public class ArrayUtil {
 
+  private ArrayUtil() {
+    // Prevent Instantiation
+  }
+
   /**
    * Returns a hash code for {@code obj}.
    *

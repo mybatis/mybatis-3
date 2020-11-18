@@ -21,6 +21,9 @@ import javax.sql.DataSource;
 
 /**
  * @author Clinton Begin
+ * @see org.apache.ibatis.datasource.jndi.JndiDataSourceFactory
+ * @see org.apache.ibatis.datasource.pooled.PooledDataSourceFactory
+ * @see org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory
  */
 public interface DataSourceFactory {
 
