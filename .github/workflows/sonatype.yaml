@@ -14,26 +14,25 @@
 #    limitations under the License.
 #
 
-name: Java CI
+name: Sonatype
 
-on: [push]
+on:
+  push:
+    branches:
+      - master
 
 jobs:
-  test:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macOS-latest, windows-latest]
-        java: [8, 11, 15, 16-ea]
-      fail-fast: false
-      max-parallel: 4
-    name: Test JDK ${{ matrix.java }}, ${{ matrix.os }}
-
+  build:
+    if: github.repository_owner == 'mybatis'
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK
         uses: actions/setup-java@v1
         with:
-          java-version: ${{ matrix.java }}
-      - name: Test with Maven
-        run: ./mvnw test -B
+          java-version: 11
+      - name: Deploy to Sonatype
+        run: ./mvnw deploy -DskipTests -B --settings ./.mvn/settings.xml
+        env:
+          CI_DEPLOY_USERNAME: ${{ secrets.CI_DEPLOY_USERNAME }}
+          CI_DEPLOY_PASSWORD: ${{ secrets.CI_DEPLOY_PASSWORD }}

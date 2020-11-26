@@ -36,21 +36,21 @@ if [ $TRAVIS_REPO_SLUG == "mybatis/mybatis-3" ] && [ "$TRAVIS_PULL_REQUEST" == "
   if [ $TRAVIS_JDK_VERSION == "openjdk8" ]; then
 
     # Deploy to sonatype
-    ./mvnw clean deploy -Dmaven.test.skip=true -q --settings ./travis/settings.xml
+    ./mvnw clean deploy -Dmaven.test.skip=true -q --settings ./mvn/settings.xml
     echo -e "Successfully deployed SNAPSHOT artifacts to Sonatype under Travis job ${TRAVIS_JOB_NUMBER}"
 
-    ./mvnw clean test jacoco:report coveralls:report -q --settings ./travis/settings.xml
+    ./mvnw clean test jacoco:report coveralls:report -q --settings ./mvn/settings.xml
     echo -e "Successfully ran coveralls under Travis job ${TRAVIS_JOB_NUMBER}"
 
     ./mvnw sonar:sonar -Dsonar.projectKey=mybatis_mybatis-3
 
     # Deploy to site
     # Cannot currently run site this way
-    # ./mvnw site site:deploy -q --settings ./travis/settings.xml
+    # ./mvnw site site:deploy -q --settings ./mvn/settings.xml
     # echo -e "Successfully deploy site under Travis job ${TRAVIS_JOB_NUMBER}"
 
     # Deploy to sonar
-    ./mvnw clean org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=ccf0be39fd0ca5ea5aa712247c79da7233cd3caa -q --settings ./travis/settings.xml
+    ./mvnw clean org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=ccf0be39fd0ca5ea5aa712247c79da7233cd3caa -q --settings ./mvn/settings.xml
     echo -e "Successfully ran Sonar integration under Travis job ${TRAVIS_JOB_NUMBER}"
   else
     echo "Java Version does not support additonal activity for travis CI"
