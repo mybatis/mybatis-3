@@ -279,6 +279,13 @@
       <version>1.14.3</version>
       <scope>test</scope>
     </dependency>
+    <!-- For javadoc link -->
+    <dependency>
+      <groupId>com.microsoft.sqlserver</groupId>
+      <artifactId>mssql-jdbc</artifactId>
+      <version>8.4.1.jre8</version>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 
   <build>
