@@ -36,4 +36,4 @@ jobs:
         with:
           java-version: ${{ matrix.java }}
       - name: Test with Maven
-        run: ./mvnw test -B
+        run: ./mvnw test -B -Dlicense.skip=true

@@ -32,7 +32,7 @@ jobs:
         with:
           java-version: 11
       - name: Deploy to Sonatype
-        run: ./mvnw deploy -DskipTests -B --settings ./.mvn/settings.xml
+        run: ./mvnw deploy -DskipTests -B --settings ./.mvn/settings.xml -Dlicense.skip=true
         env:
           CI_DEPLOY_USERNAME: ${{ secrets.CI_DEPLOY_USERNAME }}
           CI_DEPLOY_PASSWORD: ${{ secrets.CI_DEPLOY_PASSWORD }}
