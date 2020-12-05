@@ -1,5 +1,5 @@
 #
-#    Copyright 2009-2020 the original author or authors.
+#    Copyright 2016-2020 the original author or authors.
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -14,12 +14,9 @@
 #    limitations under the License.
 #
 
-name: SonarCloud
+name: Coveralls
 
-on:
-  push:
-    branches:
-      - master
+on: [push, pull_request]
 
 jobs:
   build:
@@ -27,15 +24,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          # Disabling shallow clone is recommended for improving relevancy of reporting
-          fetch-depth: 0
       - name: Set up JDK
         uses: actions/setup-java@v1
         with:
-          java-version: 11
-      - name: Analyze with SonarCloud
-        run: ./mvnw verify jacoco:report sonar:sonar -B -Dsonar.projectKey=mybatis_mybatis-3 -Dsonar.organization=mybatis -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN -Dlicense.skip=true
+          java-version: 8
+      - name: Report Coverage to Coveralls for Pull Requests
+        if: github.event_name == 'pull_request'
+        run: ./mvnw test jacoco:report coveralls:report -q -Dlicense.skip=true -DrepoToken=$GITHUB_TOKEN -DserviceName=github -DpullRequest=$PR_NUMBER
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          PR_NUMBER: ${{ github.event.number }}
+      - name: Report Coverage to Coveralls for General Push
+        if: github.event_name == 'push'
+        run: ./mvnw test jacoco:report coveralls:report -q -Dlicense.skip=true -DrepoToken=$GITHUB_TOKEN -DserviceName=github
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
