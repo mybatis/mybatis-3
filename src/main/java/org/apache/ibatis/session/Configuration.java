@@ -627,9 +627,9 @@ public class Configuration {
   }
 
   /**
-   * Gets the default scripting lanuage instance.
+   * Gets the default scripting language instance.
    *
-   * @return the default scripting lanuage instance
+   * @return the default scripting language instance
    * @deprecated Use {@link #getDefaultScriptingLanguageInstance()}
    */
   @Deprecated
