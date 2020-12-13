@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import org.apache.ibatis.session.Configuration;
  * @author Clinton Begin
  */
 public class ForEachSqlNode implements SqlNode {
-  private static final String ITEM_PREFIX = "__frch_";
+  public static final String ITEM_PREFIX = "__frch_";
 
   private final ExpressionEvaluator evaluator;
   private final String collectionExpression;
