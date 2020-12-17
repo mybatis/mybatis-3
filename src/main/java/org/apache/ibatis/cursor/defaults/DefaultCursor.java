@@ -36,7 +36,9 @@ import org.apache.ibatis.session.RowBounds;
  */
 public class DefaultCursor<T> implements Cursor<T> {
 
-  // ResultSetHandler stuff
+  /**
+   * ResultSetHandler stuff
+   */
   private final DefaultResultSetHandler resultSetHandler;
   private final ResultMap resultMap;
   private final ResultSetWrapper rsw;
