@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import org.apache.ibatis.binding.BindingException;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.cache.CacheException;
 import org.apache.ibatis.datasource.DataSourceException;
+import org.apache.ibatis.exceptions.ExceptionFactory.DefaultExceptionFactory;
 import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.logging.LogException;
 import org.apache.ibatis.parsing.ParsingException;
@@ -42,7 +43,7 @@ class GeneralExceptionsTest {
 
   @Test
   void should() {
-    RuntimeException thrown = ExceptionFactory.wrapException(EXPECTED_MESSAGE, EXPECTED_CAUSE);
+    RuntimeException thrown = DefaultExceptionFactory.INSTANCE.wrapException(EXPECTED_MESSAGE, EXPECTED_CAUSE);
     assertTrue(thrown instanceof PersistenceException, "Exception should be wrapped in RuntimeSqlException.");
     testThrowException(thrown);
   }

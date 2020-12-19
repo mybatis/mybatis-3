@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,8 +17,10 @@ package org.apache.ibatis.session.defaults;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Optional;
 
 import org.apache.ibatis.exceptions.ExceptionFactory;
+import org.apache.ibatis.exceptions.ExceptionFactory.DefaultExceptionFactory;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.Environment;
@@ -37,9 +39,15 @@ import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
 public class DefaultSqlSessionFactory implements SqlSessionFactory {
 
   private final Configuration configuration;
+  private final ExceptionFactory exceptionFactory;
+
+  public DefaultSqlSessionFactory(Configuration configuration, ExceptionFactory exceptionFactory) {
+    this.configuration = configuration;
+    this.exceptionFactory = Optional.ofNullable(exceptionFactory).orElse(DefaultExceptionFactory.INSTANCE);
+  }
 
   public DefaultSqlSessionFactory(Configuration configuration) {
-    this.configuration = configuration;
+    this(configuration, null);
   }
 
   @Override
@@ -86,6 +94,11 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
   public Configuration getConfiguration() {
     return configuration;
   }
+  
+  @Override
+  public ExceptionFactory getExceptionFactory() {
+    return exceptionFactory;
+  }
 
   private SqlSession openSessionFromDataSource(ExecutorType execType, TransactionIsolationLevel level, boolean autoCommit) {
     Transaction tx = null;
@@ -94,10 +107,10 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
       final TransactionFactory transactionFactory = getTransactionFactoryFromEnvironment(environment);
       tx = transactionFactory.newTransaction(environment.getDataSource(), level, autoCommit);
       final Executor executor = configuration.newExecutor(tx, execType);
-      return new DefaultSqlSession(configuration, executor, autoCommit);
+      return new DefaultSqlSession(configuration, executor, exceptionFactory, autoCommit);
     } catch (Exception e) {
       closeTransaction(tx); // may have fetched a connection so lets call close()
-      throw ExceptionFactory.wrapException("Error opening session.  Cause: " + e, e);
+      throw exceptionFactory.wrapException("Error opening session.  Cause: " + e, e);
     } finally {
       ErrorContext.instance().reset();
     }
@@ -117,14 +130,14 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
       final TransactionFactory transactionFactory = getTransactionFactoryFromEnvironment(environment);
       final Transaction tx = transactionFactory.newTransaction(connection);
       final Executor executor = configuration.newExecutor(tx, execType);
-      return new DefaultSqlSession(configuration, executor, autoCommit);
+      return new DefaultSqlSession(configuration, executor, exceptionFactory, autoCommit);
     } catch (Exception e) {
-      throw ExceptionFactory.wrapException("Error opening session.  Cause: " + e, e);
+      throw exceptionFactory.wrapException("Error opening session.  Cause: " + e, e);
     } finally {
       ErrorContext.instance().reset();
     }
   }
-
+  
   private TransactionFactory getTransactionFactoryFromEnvironment(Environment environment) {
     if (environment == null || environment.getTransactionFactory() == null) {
       return new ManagedTransactionFactory();

@@ -22,10 +22,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.ibatis.binding.BindingException;
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.exceptions.ExceptionFactory;
+import org.apache.ibatis.exceptions.ExceptionFactory.DefaultExceptionFactory;
 import org.apache.ibatis.exceptions.TooManyResultsException;
 import org.apache.ibatis.executor.BatchResult;
 import org.apache.ibatis.executor.ErrorContext;
@@ -49,20 +51,30 @@ public class DefaultSqlSession implements SqlSession {
 
   private final Configuration configuration;
   private final Executor executor;
+  private final ExceptionFactory exceptionFactory;
 
   private final boolean autoCommit;
   private boolean dirty;
   private List<Cursor<?>> cursorList;
 
-  public DefaultSqlSession(Configuration configuration, Executor executor, boolean autoCommit) {
+  public DefaultSqlSession(Configuration configuration, Executor executor, ExceptionFactory exceptionFactory, boolean autoCommit) {
     this.configuration = configuration;
     this.executor = executor;
+    this.exceptionFactory = Optional.ofNullable(exceptionFactory).orElse(DefaultExceptionFactory.INSTANCE);
     this.dirty = false;
     this.autoCommit = autoCommit;
   }
 
+  public DefaultSqlSession(Configuration configuration, Executor executor, boolean autoCommit) {
+    this(configuration, executor, null, autoCommit);
+  }
+
+  public DefaultSqlSession(Configuration configuration, Executor executor, ExceptionFactory exceptionFactory) {
+    this(configuration, executor, exceptionFactory, false);
+  }
+
   public DefaultSqlSession(Configuration configuration, Executor executor) {
-    this(configuration, executor, false);
+    this(configuration, executor, null, false);
   }
 
   @Override
@@ -124,7 +136,7 @@ public class DefaultSqlSession implements SqlSession {
       registerCursor(cursor);
       return cursor;
     } catch (Exception e) {
-      throw ExceptionFactory.wrapException("Error querying database.  Cause: " + e, e);
+      throw exceptionFactory.wrapException("Error querying database.  Cause: " + e, e);
     } finally {
       ErrorContext.instance().reset();
     }
@@ -146,7 +158,7 @@ public class DefaultSqlSession implements SqlSession {
       MappedStatement ms = configuration.getMappedStatement(statement);
       return executor.query(ms, wrapCollection(parameter), rowBounds, Executor.NO_RESULT_HANDLER);
     } catch (Exception e) {
-      throw ExceptionFactory.wrapException("Error querying database.  Cause: " + e, e);
+      throw exceptionFactory.wrapException("Error querying database.  Cause: " + e, e);
     } finally {
       ErrorContext.instance().reset();
     }
@@ -168,7 +180,7 @@ public class DefaultSqlSession implements SqlSession {
       MappedStatement ms = configuration.getMappedStatement(statement);
       executor.query(ms, wrapCollection(parameter), rowBounds, handler);
     } catch (Exception e) {
-      throw ExceptionFactory.wrapException("Error querying database.  Cause: " + e, e);
+      throw exceptionFactory.wrapException("Error querying database.  Cause: " + e, e);
     } finally {
       ErrorContext.instance().reset();
     }
@@ -196,7 +208,7 @@ public class DefaultSqlSession implements SqlSession {
       MappedStatement ms = configuration.getMappedStatement(statement);
       return executor.update(ms, wrapCollection(parameter));
     } catch (Exception e) {
-      throw ExceptionFactory.wrapException("Error updating database.  Cause: " + e, e);
+      throw exceptionFactory.wrapException("Error updating database.  Cause: " + e, e);
     } finally {
       ErrorContext.instance().reset();
     }
@@ -223,7 +235,7 @@ public class DefaultSqlSession implements SqlSession {
       executor.commit(isCommitOrRollbackRequired(force));
       dirty = false;
     } catch (Exception e) {
-      throw ExceptionFactory.wrapException("Error committing transaction.  Cause: " + e, e);
+      throw exceptionFactory.wrapException("Error committing transaction.  Cause: " + e, e);
     } finally {
       ErrorContext.instance().reset();
     }
@@ -240,7 +252,7 @@ public class DefaultSqlSession implements SqlSession {
       executor.rollback(isCommitOrRollbackRequired(force));
       dirty = false;
     } catch (Exception e) {
-      throw ExceptionFactory.wrapException("Error rolling back transaction.  Cause: " + e, e);
+      throw exceptionFactory.wrapException("Error rolling back transaction.  Cause: " + e, e);
     } finally {
       ErrorContext.instance().reset();
     }
@@ -251,7 +263,7 @@ public class DefaultSqlSession implements SqlSession {
     try {
       return executor.flushStatements();
     } catch (Exception e) {
-      throw ExceptionFactory.wrapException("Error flushing statements.  Cause: " + e, e);
+      throw exceptionFactory.wrapException("Error flushing statements.  Cause: " + e, e);
     } finally {
       ErrorContext.instance().reset();
     }
@@ -274,7 +286,7 @@ public class DefaultSqlSession implements SqlSession {
         try {
           cursor.close();
         } catch (IOException e) {
-          throw ExceptionFactory.wrapException("Error closing cursor.  Cause: " + e, e);
+          throw exceptionFactory.wrapException("Error closing cursor.  Cause: " + e, e);
         }
       }
       cursorList.clear();
@@ -296,7 +308,7 @@ public class DefaultSqlSession implements SqlSession {
     try {
       return executor.getTransaction().getConnection();
     } catch (SQLException e) {
-      throw ExceptionFactory.wrapException("Error getting a new connection.  Cause: " + e, e);
+      throw exceptionFactory.wrapException("Error getting a new connection.  Cause: " + e, e);
     }
   }
 
