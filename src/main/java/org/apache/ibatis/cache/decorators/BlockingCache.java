@@ -15,7 +15,6 @@
  */
 package org.apache.ibatis.cache.decorators;
 
-import java.text.MessageFormat;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
