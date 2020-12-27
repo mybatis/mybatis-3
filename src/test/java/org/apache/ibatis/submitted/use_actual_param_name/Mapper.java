@@ -17,6 +17,7 @@ package org.apache.ibatis.submitted.use_actual_param_name;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 public interface Mapper {
@@ -25,7 +26,7 @@ public interface Mapper {
   User getUserById(Integer id);
 
   @Select("select * from users where id = #{id} and name = #{name}")
-  User getUserByIdAndName(Integer id, String name);
+  User getUserByIdAndName(@Param(value = "id") Integer id,@Param(value = "name") String name);
 
   List<User> getUsersByIdList(List<Integer> ids);
 
