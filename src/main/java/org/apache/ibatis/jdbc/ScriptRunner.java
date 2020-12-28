@@ -260,10 +260,6 @@ public class ScriptRunner {
           String message = "Error executing: " + command + ".  Cause: " + e;
           printlnError(message);
         }
-      } catch (Exception e) {
-        // when close method throws some exception , it will catch by here .
-        // keep the original behavior unchanged
-        // see doc  https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html
       }
     }
   }
