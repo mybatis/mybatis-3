@@ -57,6 +57,7 @@ class UseActualParamNameTest {
 
   @Test
   void shouldMultipleParamsBeReferencedByActualNames() {
+    // This test requires -parameters compiler option
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUserByIdAndName(1, "User1");
