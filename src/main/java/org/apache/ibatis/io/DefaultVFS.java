@@ -329,7 +329,7 @@ public class DefaultVFS extends VFS {
    * @return true, if is jar
    */
   protected boolean isJar(URL url, byte[] buffer) {
-    try(InputStream is = url.openStream()) {
+    try (InputStream is = url.openStream()) {
       is.read(buffer, 0, JAR_MAGIC.length);
       if (Arrays.equals(buffer, JAR_MAGIC)) {
         if (log.isDebugEnabled()) {

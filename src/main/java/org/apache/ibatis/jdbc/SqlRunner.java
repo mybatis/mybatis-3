@@ -1,17 +1,17 @@
 /**
- * Copyright 2009-2020 the original author or authors.
- * <p>
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *    Copyright 2009-2020 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
  */
 package org.apache.ibatis.jdbc;
 
@@ -57,9 +57,7 @@ public class SqlRunner {
    *
    * @param sql  The SQL
    * @param args The arguments to be set on the statement.
-   *
    * @return The row expected.
-   *
    * @throws SQLException If less or more than one row is returned
    */
   public Map<String, Object> selectOne(String sql, Object... args) throws SQLException {
@@ -75,15 +73,13 @@ public class SqlRunner {
    *
    * @param sql  The SQL
    * @param args The arguments to be set on the statement.
-   *
    * @return The list of rows expected.
-   *
    * @throws SQLException If statement preparation or execution fails
    */
   public List<Map<String, Object>> selectAll(String sql, Object... args) throws SQLException {
-    try (PreparedStatement ps = connection.prepareStatement(sql);) {
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
       setParameters(ps, args);
-      try (ResultSet rs = ps.executeQuery();) {
+      try (ResultSet rs = ps.executeQuery()) {
         return getResults(rs);
       }
     }
@@ -94,9 +90,7 @@ public class SqlRunner {
    *
    * @param sql  The SQL
    * @param args The arguments to be set on the statement.
-   *
    * @return The number of rows impacted or BATCHED_RESULTS if the statements are being batched.
-   *
    * @throws SQLException If statement preparation or execution fails
    */
   public int insert(String sql, Object... args) throws SQLException {
@@ -111,7 +105,7 @@ public class SqlRunner {
       setParameters(ps, args);
       ps.executeUpdate();
       if (useGeneratedKeySupport) {
-        try (ResultSet generatedKeys = ps.getGeneratedKeys();) {
+        try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
           List<Map<String, Object>> keys = getResults(generatedKeys);
           if (keys.size() == 1) {
             Map<String, Object> key = keys.get(0);
@@ -144,13 +138,11 @@ public class SqlRunner {
    *
    * @param sql  The SQL
    * @param args The arguments to be set on the statement.
-   *
    * @return The number of rows impacted or BATCHED_RESULTS if the statements are being batched.
-   *
    * @throws SQLException If statement preparation or execution fails
    */
   public int update(String sql, Object... args) throws SQLException {
-    try (PreparedStatement ps = connection.prepareStatement(sql);) {
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
       setParameters(ps, args);
       return ps.executeUpdate();
     }
@@ -161,9 +153,7 @@ public class SqlRunner {
    *
    * @param sql  The SQL
    * @param args The arguments to be set on the statement.
-   *
    * @return The number of rows impacted or BATCHED_RESULTS if the statements are being batched.
-   *
    * @throws SQLException If statement preparation or execution fails
    */
   public int delete(String sql, Object... args) throws SQLException {
@@ -175,11 +165,10 @@ public class SqlRunner {
    * Good for DDL
    *
    * @param sql The SQL
-   *
    * @throws SQLException If statement preparation or execution fails
    */
   public void run(String sql) throws SQLException {
-    try (Statement stmt = connection.createStatement();) {
+    try (Statement stmt = connection.createStatement()) {
       stmt.execute(sql);
     }
   }
@@ -199,8 +188,7 @@ public class SqlRunner {
   private void setParameters(PreparedStatement ps, Object... args) throws SQLException {
     for (int i = 0, n = args.length; i < n; i++) {
       if (args[i] == null) {
-        throw new SQLException(
-          "SqlRunner requires an instance of Null to represent typed null values for JDBC compatibility");
+        throw new SQLException("SqlRunner requires an instance of Null to represent typed null values for JDBC compatibility");
       } else if (args[i] instanceof Null) {
         ((Null) args[i]).getTypeHandler().setParameter(ps, i + 1, null, ((Null) args[i]).getJdbcType());
       } else {
@@ -214,9 +202,6 @@ public class SqlRunner {
     }
   }
 
-  /**
-   * ResultSet should't was closed in here,it should be closed in caller
-   */
   private List<Map<String, Object>> getResults(ResultSet rs) throws SQLException {
     List<Map<String, Object>> list = new ArrayList<>();
     List<String> columns = new ArrayList<>();

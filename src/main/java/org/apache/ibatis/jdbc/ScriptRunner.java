@@ -238,7 +238,7 @@ public class ScriptRunner {
   }
 
   private void executeStatement(String command) throws SQLException {
-    try(Statement statement = connection.createStatement()) {
+    try (Statement statement = connection.createStatement()) {
       statement.setEscapeProcessing(escapeProcessing);
       String sql = command;
       if (removeCRs) {
