@@ -154,7 +154,7 @@ public class XNode {
   }
 
   public Long getLongBody(Long def) {
-    return body == null ? def : Long.parseLong(body);
+    return body == null ? def : Long.valueOf(body);
   }
 
   public Double getDoubleBody() {
@@ -162,7 +162,7 @@ public class XNode {
   }
 
   public Double getDoubleBody(Double def) {
-    return body == null ? def : Double.parseDouble(body);
+    return body == null ? def : Double.valueOf(body);
   }
 
   public Float getFloatBody() {
@@ -170,7 +170,7 @@ public class XNode {
   }
 
   public Float getFloatBody(Float def) {
-    return body == null ? def : Float.parseFloat(body);
+    return body == null ? def : Float.valueOf(body);
   }
 
   public <T extends Enum<T>> T getEnumAttribute(Class<T> enumType, String name) {
