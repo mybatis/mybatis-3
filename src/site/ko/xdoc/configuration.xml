@@ -575,7 +575,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               </td>
               <td>
                 Provider method를 가지고 있는 sql provider class를 지정한다. (3.5.6 부터). 
-		이 클래스는 sql provider annotation(예: @SelectProvider)의 type (혹은 value)속성이 누락되었을때 기본으로 적용된다. 
+		이 클래스는 sql provider annotation(예: <code>@SelectProvider</code>)의 <code>type</code> (혹은 <code>value</code>)속성이 누락되었을때 기본으로 적용된다. 
               </td>
               <td>
                 타입별칭이나 패키지 경로를 포함한 클래스명
