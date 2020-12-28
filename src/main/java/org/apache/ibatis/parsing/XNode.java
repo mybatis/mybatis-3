@@ -215,8 +215,6 @@ public class XNode {
 
   public Boolean getBooleanAttribute(String name, Boolean def) {
     String value = attributes.getProperty(name);
-    // Note that ternary operator will throw NPE in some scenarios, just be careful.
-    // see this explanation[https://stackoverflow.com/questions/5246776/java-weird-nullpointerexception-in-ternary-operator/5246820#5246820]
     return value == null ? def : Boolean.valueOf(value);
   }
 
