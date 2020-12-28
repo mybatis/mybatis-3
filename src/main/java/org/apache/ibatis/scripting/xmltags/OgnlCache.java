@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import org.apache.ibatis.builder.BuilderException;
  *
  * @author Eduardo Macarron
  *
- * @see <a href='http://code.google.com/p/mybatis/issues/detail?id=342'>Issue 342</a>
+ * @see <a href='https://github.com/mybatis/old-google-code-issues/issues/342'>Issue 342</a>
  */
 public final class OgnlCache {
 

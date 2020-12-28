@@ -203,7 +203,7 @@ public interface BlogMapper {
       </p>
       <hr/>
       <h4>SqlSessionFactoryBuilder</h4>
-        <p>이 클래스는 인스턴스회되어 사용되고 던져질 수 있다.
+        <p>이 클래스는 인스턴스화되어 사용되고 던져질 수 있다.
 		SqlSessionFactory 를 생성한 후 유지할 필요는 없다.
 		그러므로 SqlSessionFactoryBuilder 인스턴스의 가장 좋은 스코프는 메소드 스코프(예를들면 메소드 지역변수)이다.
 		여러개의 SqlSessionFactory 인스턴스를 빌드하기 위해 SqlSessionFactoryBuilder를 재사용할 수도 있지만 유지하지 않는 것이 가장 좋다.</p>

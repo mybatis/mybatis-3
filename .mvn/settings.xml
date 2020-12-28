@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2020 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -26,8 +26,11 @@
     </server>
     <server>
       <id>gh-pages</id>
-      <username>git</username>
-      <password>${env.CI_SITE_PASSWORD}</password>
+    </server>
+    <server>
+      <id>github</id>
+      <username>${env.CI_DEPLOY_USERNAME}</username>
+      <password>${env.GITHUB_TOKEN}</password>
     </server>
   </servers>
 </settings>
