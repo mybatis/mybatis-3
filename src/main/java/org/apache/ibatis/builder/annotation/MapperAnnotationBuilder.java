@@ -425,8 +425,9 @@ public class MapperAnnotationBuilder {
     } else if (resolvedReturnType instanceof ParameterizedType) {
       ParameterizedType parameterizedType = (ParameterizedType) resolvedReturnType;
       Class<?> rawType = (Class<?>) parameterizedType.getRawType();
+      Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
+
       if (Collection.class.isAssignableFrom(rawType) || Cursor.class.isAssignableFrom(rawType)) {
-        Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
         if (actualTypeArguments != null && actualTypeArguments.length == 1) {
           Type returnTypeParameter = actualTypeArguments[0];
           if (returnTypeParameter instanceof Class<?>) {
@@ -442,7 +443,6 @@ public class MapperAnnotationBuilder {
         }
       } else if (method.isAnnotationPresent(MapKey.class) && Map.class.isAssignableFrom(rawType)) {
         // (gcode issue 504) Do not look into Maps if there is not MapKey annotation
-        Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
         if (actualTypeArguments != null && actualTypeArguments.length == 2) {
           Type returnTypeParameter = actualTypeArguments[1];
           if (returnTypeParameter instanceof Class<?>) {
@@ -453,7 +453,6 @@ public class MapperAnnotationBuilder {
           }
         }
       } else if (Optional.class.equals(rawType)) {
-        Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
         Type returnTypeParameter = actualTypeArguments[0];
         if (returnTypeParameter instanceof Class<?>) {
           returnType = (Class<?>) returnTypeParameter;
