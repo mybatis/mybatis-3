@@ -353,7 +353,11 @@ public class XMLConfigBuilder extends BaseBuilder {
               typeHandlerRegistry.register(javaTypeClass, jdbcType, typeHandlerClass);
             }
           } else {
-            typeHandlerRegistry.register(typeHandlerClass);
+            if (jdbcType == null) {
+              typeHandlerRegistry.register(typeHandlerClass);
+            } else {
+              typeHandlerRegistry.register(jdbcType, typeHandlerRegistry.getInstance(null, typeHandlerClass));
+            }
           }
         }
       }

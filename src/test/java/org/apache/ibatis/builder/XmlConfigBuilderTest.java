@@ -59,6 +59,8 @@ import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.LocalCacheScope;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.apache.ibatis.type.BaseTypeHandler;
+import org.apache.ibatis.type.BlobTypeHandler;
+import org.apache.ibatis.type.ByteArrayTypeHandler;
 import org.apache.ibatis.type.EnumOrdinalTypeHandler;
 import org.apache.ibatis.type.EnumTypeHandler;
 import org.apache.ibatis.type.JdbcType;
@@ -160,6 +162,26 @@ class XmlConfigBuilderTest {
 
     assertTrue(typeHandler instanceof EnumOrderTypeHandler);
     assertArrayEquals(MyEnum.values(), ((EnumOrderTypeHandler<MyEnum>) typeHandler).constants);
+  }
+
+  @Test
+  void registerJdbcOnlyTypeHandler() {
+    final String MAPPER_CONFIG = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
+      + "<!DOCTYPE configuration PUBLIC \"-//mybatis.org//DTD Config 3.0//EN\" \"http://mybatis.org/dtd/mybatis-3-config.dtd\">\n"
+      + "<configuration>\n"
+      + "  <typeHandlers>\n"
+      + "    <typeHandler jdbcType=\"BLOB\" handler=\"org.apache.ibatis.type.ByteArrayTypeHandler\"/>\n"
+      + "  </typeHandlers>\n"
+      + "</configuration>\n";
+
+    XMLConfigBuilder builder = new XMLConfigBuilder(new StringReader(MAPPER_CONFIG));
+    builder.parse();
+
+    TypeHandlerRegistry typeHandlerRegistry = builder.getConfiguration().getTypeHandlerRegistry();
+    // default TypeHandler for JdbcType.BLOB and JdbcType.LONGVARBINARY
+    assertTrue(typeHandlerRegistry.getTypeHandler(JdbcType.LONGVARBINARY) instanceof BlobTypeHandler);
+    // custom TypeHandler for JdbcType.BLOB and JdbcType.LONGVARBINARY
+    assertTrue(typeHandlerRegistry.getTypeHandler(JdbcType.BLOB) instanceof ByteArrayTypeHandler);
   }
 
   @Test
