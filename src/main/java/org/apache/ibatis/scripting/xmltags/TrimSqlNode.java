@@ -84,8 +84,9 @@ public class TrimSqlNode implements SqlNode {
     }
 
     public void applyAll() {
-      sqlBuffer = new StringBuilder(sqlBuffer.toString().trim());
-      String trimmedUppercaseSql = sqlBuffer.toString().toUpperCase(Locale.ENGLISH);
+      String trimmedSql = sqlBuffer.toString().trim();
+      sqlBuffer = new StringBuilder(trimmedSql);
+      String trimmedUppercaseSql = trimmedSql.toUpperCase(Locale.ENGLISH);
       if (trimmedUppercaseSql.length() > 0) {
         applyPrefix(sqlBuffer, trimmedUppercaseSql);
         applySuffix(sqlBuffer, trimmedUppercaseSql);
@@ -136,22 +137,23 @@ public class TrimSqlNode implements SqlNode {
       }
     }
 
-    private void applySuffix(StringBuilder sql, String trimmedUppercaseSql) {
+    private void applySuffix(StringBuilder sqlSB, String trimmedUppercaseSql) {
       if (!suffixApplied) {
         suffixApplied = true;
         if (suffixesToOverride != null) {
           for (String toRemove : suffixesToOverride) {
-            if (trimmedUppercaseSql.endsWith(toRemove) || trimmedUppercaseSql.endsWith(toRemove.trim())) {
-              int start = sql.length() - toRemove.trim().length();
-              int end = sql.length();
-              sql.delete(start, end);
+	    String trimmedToRemove = toRemove.trim();
+            if (sqlSB.length() >= trimedToRemove.length() && trimmedUppercaseSql.endsWith(trimmedToRemove)) {
+              int start = sqlSB.length() - trimmedToRemove.length();
+              int end = sqlSB.length();
+              sqlSB.delete(start, end);
               break;
             }
           }
         }
         if (suffix != null) {
-          sql.append(" ");
-          sql.append(suffix);
+          sqlSB.append(" ");
+          sqlSB.append(suffix);
         }
       }
     }
