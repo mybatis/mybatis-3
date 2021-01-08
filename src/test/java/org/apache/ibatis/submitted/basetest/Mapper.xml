@@ -22,8 +22,28 @@
 
 <mapper namespace="org.apache.ibatis.submitted.basetest.Mapper">
 
+    <baseWhere>
+        <trim suffixOverrides="AND">
+          <if test="id != null">
+	     id = #{id} AND
+          </if>
+          <if test="name != null">
+	     name = #{name} AND
+          </if>
+        </trim>
+    </baseWhere>
     <select id="getUser" resultType="org.apache.ibatis.submitted.basetest.User">
-        select * from users where id = #{id}
+        select * 
+        from users
+        <where>
+          <trim prefixOverrides="AND" suffixOverrides="AND">
+            <include refid="baseWhere" />
+            AND
+            <if test="likeName != null">
+	       name like concat('%',#{likeName},'%') AND
+            </if>
+          </trim>
+        </where>
     </select>
 
     <insert id="insertUser">
