@@ -142,7 +142,7 @@ public class TrimSqlNode implements SqlNode {
         suffixApplied = true;
         if (suffixesToOverride != null) {
           for (String toRemove : suffixesToOverride) {
-	    String trimmedToRemove = toRemove.trim();
+            String trimmedToRemove = toRemove.trim();
             if (sqlSB.length() >= trimedToRemove.length() && trimmedUppercaseSql.endsWith(trimmedToRemove)) {
               int start = sqlSB.length() - trimmedToRemove.length();
               int end = sqlSB.length();
