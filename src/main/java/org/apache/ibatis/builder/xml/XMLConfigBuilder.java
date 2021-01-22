@@ -396,12 +396,11 @@ public class XMLConfigBuilder extends BaseBuilder {
   private boolean isSpecifiedEnvironment(String id) {
     if (environment == null) {
       throw new BuilderException("No environment specified.");
-    } else if (id == null) {
-      throw new BuilderException("Environment requires an id attribute.");
-    } else if (environment.equals(id)) {
-      return true;
     }
-    return false;
+    if (id == null) {
+      throw new BuilderException("Environment requires an id attribute.");
+    }
+    return environment.equals(id);
   }
 
 }
