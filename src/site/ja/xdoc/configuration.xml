@@ -1340,6 +1340,17 @@ public class Author {
                 DATE
               </td>
             </tr>
+            <tr>
+              <td>
+                <code>ZoneIdTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.ZoneId</code>
+              </td>
+              <td>
+                <code>CHAR</code>, <code>VARCHAR</code>
+              </td>
+            </tr>
           </tbody>
         </table>
         <p>

@@ -1274,6 +1274,17 @@ public class Author {
                 <code>DATE</code>
               </td>
             </tr>
+            <tr>
+              <td>
+                <code>ZoneIdTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.ZoneId</code>
+              </td>
+              <td>
+                <code>CHAR</code>, <code>VARCHAR</code>
+              </td>
+            </tr>
           </tbody>
         </table>
         <p>지원하지 않거나 비표준인 타입에 대해서는 당신 스스로 만들어서 타입핸들러를 오버라이드할 수 있다.

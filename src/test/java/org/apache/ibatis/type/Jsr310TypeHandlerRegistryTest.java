@@ -26,6 +26,7 @@ import java.time.OffsetDateTime;
 import java.time.OffsetTime;
 import java.time.Year;
 import java.time.YearMonth;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.chrono.JapaneseDate;
 
@@ -57,5 +58,6 @@ class Jsr310TypeHandlerRegistryTest {
     assertThat(typeHandlerRegistry.getTypeHandler(Year.class)).isInstanceOf(YearTypeHandler.class);
     assertThat(typeHandlerRegistry.getTypeHandler(YearMonth.class)).isInstanceOf(YearMonthTypeHandler.class);
     assertThat(typeHandlerRegistry.getTypeHandler(JapaneseDate.class)).isInstanceOf(JapaneseDateTypeHandler.class);
+    assertThat(typeHandlerRegistry.getTypeHandler(ZoneId.class)).isInstanceOf(ZoneIdTypeHandler.class);
   }
 }

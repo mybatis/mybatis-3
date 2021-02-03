@@ -32,6 +32,7 @@ import java.time.OffsetTime;
 import java.time.Year;
 import java.time.YearMonth;
 import java.time.ZonedDateTime;
+import java.time.ZoneId;
 import java.time.chrono.JapaneseDate;
 import java.util.Collection;
 import java.util.Collections;
@@ -173,6 +174,7 @@ public final class TypeHandlerRegistry {
     register(Year.class, new YearTypeHandler());
     register(YearMonth.class, new YearMonthTypeHandler());
     register(JapaneseDate.class, new JapaneseDateTypeHandler());
+    register(ZoneId.class, new ZoneIdTypeHandler());
 
     // issue #273
     register(Character.class, new CharacterTypeHandler());
