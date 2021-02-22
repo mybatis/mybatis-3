@@ -72,9 +72,11 @@ public class WeakCache implements Cache {
       if (result == null) {
         delegate.removeObject(key);
       } else {
-        hardLinksToAvoidGarbageCollection.addFirst(result);
-        if (hardLinksToAvoidGarbageCollection.size() > numberOfHardLinks) {
-          hardLinksToAvoidGarbageCollection.removeLast();
+        synchronized (hardLinksToAvoidGarbageCollection) {
+          hardLinksToAvoidGarbageCollection.addFirst(result);
+          if (hardLinksToAvoidGarbageCollection.size() > numberOfHardLinks) {
+            hardLinksToAvoidGarbageCollection.removeLast();
+          }
         }
       }
     }
@@ -89,7 +91,9 @@ public class WeakCache implements Cache {
 
   @Override
   public void clear() {
-    hardLinksToAvoidGarbageCollection.clear();
+    synchronized (hardLinksToAvoidGarbageCollection) {
+      hardLinksToAvoidGarbageCollection.clear();
+    }
     removeGarbageCollectedItems();
     delegate.clear();
   }
