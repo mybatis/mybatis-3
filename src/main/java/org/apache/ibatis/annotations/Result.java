@@ -27,7 +27,10 @@ import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.UnknownTypeHandler;
 
 /**
- * The annotation that specify a mapping definition for the property.
+ * The annotation that specify a mapping definition for the property,
+ * or specify a mapping definition for the method returned object,
+ * which means the returned object is only deserialized from the column() by typeHandler()
+ * or default typeHandler from TypeHandlerRegistry.
  *
  * @see Results
  * @author Clinton Begin

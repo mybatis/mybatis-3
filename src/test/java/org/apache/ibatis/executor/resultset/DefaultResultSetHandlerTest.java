@@ -16,6 +16,7 @@
 package org.apache.ibatis.executor.resultset;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -44,12 +45,15 @@ import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
+import org.apache.ibatis.type.BaseTypeHandler;
+import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
@@ -129,7 +133,47 @@ class DefaultResultSetHandlerTest {
     }
   }
 
-  MappedStatement getMappedStatement() {
+  @Test
+  void shouldUseTypeHandlerSpecifiedInResultMap() throws Exception {
+    final Configuration config = new Configuration();
+    final String specString = "specific string type handler";
+    TypeHandler<String> stringTypeHandlerInResultMap = Mockito.mock(BaseTypeHandler.class);
+
+    MappedStatement ms = new MappedStatement
+      .Builder(config, "testSelectAnnotatedByResult", new StaticSqlSource(config, "some select statement"), SqlCommandType.SELECT)
+      .resultMaps(
+        new ArrayList<ResultMap>() {
+          {
+            add(new ResultMap.Builder(config, "testUseTypeHandleInResultMap", String.class, new ArrayList<ResultMapping>() {
+              {
+                add(new ResultMapping.Builder(config, null, "string", stringTypeHandlerInResultMap).build());
+              }
+            }).build());
+          }
+        })
+      .build();
+
+    final DefaultResultSetHandler resultSetHandler = new DefaultResultSetHandler(null, ms, null,
+      null, null, new RowBounds(0, 1));
+
+    when(stringTypeHandlerInResultMap.getResult(rs, "string")).thenReturn(specString);
+    when(stmt.getResultSet()).thenReturn(rs);
+    when(rs.getMetaData()).thenReturn(rsmd);
+    when(rs.getType()).thenReturn(ResultSet.TYPE_FORWARD_ONLY);
+    when(rs.next()).thenReturn(true).thenReturn(false);
+    when(rsmd.getColumnCount()).thenReturn(1);
+    when(rsmd.getColumnLabel(1)).thenReturn("string");
+    when(rsmd.getColumnType(1)).thenReturn(Types.VARCHAR);
+    when(rsmd.getColumnClassName(1)).thenReturn(String.class.getCanonicalName());
+
+    final List<Object> results = resultSetHandler.handleResultSets(stmt);
+    assertTrue(config.getTypeHandlerRegistry().hasTypeHandler(String.class, JdbcType.VARCHAR));
+    assertEquals(1, results.size());
+    assertEquals(specString, results.get(0));
+
+  }
+
+  private MappedStatement getMappedStatement() {
     final Configuration config = new Configuration();
     final TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
     return new MappedStatement.Builder(config, "testSelect", new StaticSqlSource(config, "some select statement"), SqlCommandType.SELECT).resultMaps(

@@ -648,7 +648,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     final MetaClass metaType = MetaClass.forClass(resultType, reflectorFactory);
     final List<ResultMapping> constructorMappings = resultMap.getConstructorResultMappings();
     if (hasTypeHandlerForResultObject(rsw, resultType)) {
-      return createPrimitiveResultObject(rsw, resultMap, columnPrefix);
+      return createResultObjectUseTypeHandler(rsw, resultMap, columnPrefix);
     } else if (!constructorMappings.isEmpty()) {
       return createParameterizedResultObject(rsw, resultType, constructorMappings, constructorArgTypes, constructorArgs, columnPrefix);
     } else if (resultType.isInterface() || metaType.hasDefaultConstructor()) {
@@ -741,17 +741,20 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     return true;
   }
 
-  private Object createPrimitiveResultObject(ResultSetWrapper rsw, ResultMap resultMap, String columnPrefix) throws SQLException {
+  private Object createResultObjectUseTypeHandler(ResultSetWrapper rsw, ResultMap resultMap, String columnPrefix) throws SQLException {
     final Class<?> resultType = resultMap.getType();
     final String columnName;
+    TypeHandler<?> typeHandler = null;
     if (!resultMap.getResultMappings().isEmpty()) {
-      final List<ResultMapping> resultMappingList = resultMap.getResultMappings();
-      final ResultMapping mapping = resultMappingList.get(0);
+      final ResultMapping mapping = resultMap.getResultMappings().get(0);
+      typeHandler = mapping.getTypeHandler();
       columnName = prependPrefix(mapping.getColumn(), columnPrefix);
     } else {
       columnName = rsw.getColumnNames().get(0);
     }
-    final TypeHandler<?> typeHandler = rsw.getTypeHandler(resultType, columnName);
+    if (typeHandler == null) {
+      typeHandler = rsw.getTypeHandler(resultType, columnName);
+    }
     return typeHandler.getResult(rsw.getResultSet(), columnName);
   }
 
