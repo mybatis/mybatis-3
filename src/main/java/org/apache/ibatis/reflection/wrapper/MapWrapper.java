@@ -63,12 +63,12 @@ public class MapWrapper extends BaseWrapper {
 
   @Override
   public String[] getGetterNames() {
-    return map.keySet().toArray(new String[map.keySet().size()]);
+    return map.keySet().toArray(new String[0]);
   }
 
   @Override
   public String[] getSetterNames() {
-    return map.keySet().toArray(new String[map.keySet().size()]);
+    return map.keySet().toArray(new String[0]);
   }
 
   @Override
