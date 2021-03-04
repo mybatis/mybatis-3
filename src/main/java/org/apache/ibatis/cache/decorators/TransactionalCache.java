@@ -127,7 +127,7 @@ public class TransactionalCache implements Cache {
       try {
         delegate.removeObject(entry);
       } catch (Exception e) {
-        log.warn("Unexpected exception while notifiying a rollback to the cache adapter. "
+        log.warn("Unexpected exception while notifying a rollback to the cache adapter. "
             + "Consider upgrading your cache adapter to the latest version. Cause: " + e);
       }
     }

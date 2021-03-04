@@ -14,16 +14,26 @@
 #    limitations under the License.
 #
 
-version: 2
-updates:
-- package-ecosystem: maven
-  directory: "/"
-  schedule:
-    interval: daily
-  open-pull-requests-limit: 10
-  labels:
-  - dependencies
-  ignore:
-  - dependency-name: org.apache.derby:derby
-    versions:
-    - "> 10.14.2.0"
+name: Java CI
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macOS-latest, windows-latest]
+        java: [8, 11, 15, 16-ea]
+      fail-fast: false
+      max-parallel: 4
+    name: Test JDK ${{ matrix.java }}, ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.java }}
+      - name: Test with Maven
+        run: ./mvnw test -B -D"license.skip=true"

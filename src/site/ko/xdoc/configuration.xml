@@ -574,15 +574,14 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 defaultSqlProviderType
               </td>
               <td>
-                Specifies an sql provider class that holds provider method (Since 3.5.6).
-                This class apply to the <code>type</code>(or <code>value</code>) attribute on sql provider annotation(e.g. <code>@SelectProvider</code>),
-                when these attribute was omitted.
+                Provider method를 가지고 있는 sql provider class를 지정한다. (3.5.6 부터).
+                이 클래스는 sql provider annotation(예: <code>@SelectProvider</code>)의 <code>type</code> (혹은 <code>value</code>)속성이 누락되었을때 기본으로 적용된다.
               </td>
               <td>
-                A type alias or fully qualified class name
+                타입별칭이나 패키지 경로를 포함한 클래스명
               </td>
               <td>
-                Not set
+                설정하지 않음
               </td>
             </tr>
           </tbody>

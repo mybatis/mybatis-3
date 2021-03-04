@@ -105,14 +105,6 @@ class MetaObjectTest {
   }
 
   @Test
-  void shouldSetAndGetSelfListItem() {
-    RichType rich = new RichType();
-    MetaObject meta = SystemMetaObject.forObject(rich);
-    meta.setValue("richList[0]", "foo");
-    assertEquals("foo", meta.getValue("richList[0]"));
-  }
-
-  @Test
   void shouldGetAndSetNestedListItem() {
     RichType rich = new RichType();
     MetaObject meta = SystemMetaObject.forObject(rich);

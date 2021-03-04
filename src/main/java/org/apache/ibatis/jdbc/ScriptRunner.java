@@ -238,8 +238,7 @@ public class ScriptRunner {
   }
 
   private void executeStatement(String command) throws SQLException {
-    Statement statement = connection.createStatement();
-    try {
+    try (Statement statement = connection.createStatement()) {
       statement.setEscapeProcessing(escapeProcessing);
       String sql = command;
       if (removeCRs) {
@@ -261,13 +260,6 @@ public class ScriptRunner {
           String message = "Error executing: " + command + ".  Cause: " + e;
           printlnError(message);
         }
-      }
-    } finally {
-      try {
-        statement.close();
-      } catch (Exception ignored) {
-        // Ignore to workaround a bug in some connection pools
-        // (Does anyone know the details of the bug?)
       }
     }
   }

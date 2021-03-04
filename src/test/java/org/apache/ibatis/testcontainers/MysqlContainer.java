@@ -33,7 +33,7 @@ public class MysqlContainer {
   private static MySQLContainer<?> initContainer() {
     @SuppressWarnings("resource")
     MySQLContainer<?> container = new MySQLContainer<>().withDatabaseName(DB_NAME).withUsername(USERNAME)
-        .withPassword(PASSWORD);
+        .withPassword(PASSWORD).withUrlParam("useSSL", "false");
     container.start();
     return container;
   }
