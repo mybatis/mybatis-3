@@ -104,6 +104,7 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
   }
 
   private SqlSession openSessionFromConnection(ExecutorType execType, Connection connection) {
+    Transaction tx = null;
     try {
       boolean autoCommit;
       try {
@@ -115,10 +116,11 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
       }
       final Environment environment = configuration.getEnvironment();
       final TransactionFactory transactionFactory = getTransactionFactoryFromEnvironment(environment);
-      final Transaction tx = transactionFactory.newTransaction(connection);
+      tx = transactionFactory.newTransaction(connection);
       final Executor executor = configuration.newExecutor(tx, execType);
       return new DefaultSqlSession(configuration, executor, autoCommit);
     } catch (Exception e) {
+      closeTransaction(tx);
       throw ExceptionFactory.wrapException("Error opening session.  Cause: " + e, e);
     } finally {
       ErrorContext.instance().reset();
