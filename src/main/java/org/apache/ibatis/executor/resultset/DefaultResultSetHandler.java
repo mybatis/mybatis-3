@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2020 the original author or authors.
+ *    Copyright 2009-2021 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,19 +16,24 @@
 package org.apache.ibatis.executor.resultset;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Parameter;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import org.apache.ibatis.annotations.AutomapConstructor;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.binding.MapperMethod.ParamMap;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.cursor.Cursor;
@@ -686,49 +691,35 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     return foundValues ? objectFactory.create(resultType, constructorArgTypes, constructorArgs) : null;
   }
 
-  private Object createByConstructorSignature(ResultSetWrapper rsw, Class<?> resultType, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) throws SQLException {
-    final Constructor<?>[] constructors = resultType.getDeclaredConstructors();
-    final Constructor<?> defaultConstructor = findDefaultConstructor(constructors);
-    if (defaultConstructor != null) {
-      return createUsingConstructor(rsw, resultType, constructorArgTypes, constructorArgs, defaultConstructor);
-    } else {
-      for (Constructor<?> constructor : constructors) {
-        if (allowedConstructorUsingTypeHandlers(constructor, rsw.getJdbcTypes())) {
-          return createUsingConstructor(rsw, resultType, constructorArgTypes, constructorArgs, constructor);
-        }
-      }
-    }
-    throw new ExecutorException("No constructor found in " + resultType.getName() + " matching " + rsw.getClassNames());
+  private Object createByConstructorSignature(ResultSetWrapper rsw, Class<?> resultType,
+      List<Class<?>> constructorArgTypes, List<Object> constructorArgs) throws SQLException {
+    return applyConstructorAutomapping(rsw, resultType, constructorArgTypes, constructorArgs,
+        findConstructorForAutomapping(resultType, rsw).orElseThrow(() -> new ExecutorException(
+            "No constructor found in " + resultType.getName() + " matching " + rsw.getClassNames())));
   }
 
-  private Object createUsingConstructor(ResultSetWrapper rsw, Class<?> resultType, List<Class<?>> constructorArgTypes, List<Object> constructorArgs, Constructor<?> constructor) throws SQLException {
-    boolean foundValues = false;
-    for (int i = 0; i < constructor.getParameterTypes().length; i++) {
-      Class<?> parameterType = constructor.getParameterTypes()[i];
-      String columnName = rsw.getColumnNames().get(i);
-      TypeHandler<?> typeHandler = rsw.getTypeHandler(parameterType, columnName);
-      Object value = typeHandler.getResult(rsw.getResultSet(), columnName);
-      constructorArgTypes.add(parameterType);
-      constructorArgs.add(value);
-      foundValues = value != null || foundValues;
-    }
-    return foundValues ? objectFactory.create(resultType, constructorArgTypes, constructorArgs) : null;
-  }
-
-  private Constructor<?> findDefaultConstructor(final Constructor<?>[] constructors) {
+  private Optional<Constructor<?>> findConstructorForAutomapping(final Class<?> resultType, ResultSetWrapper rsw) {
+    Constructor<?>[] constructors = resultType.getDeclaredConstructors();
     if (constructors.length == 1) {
-      return constructors[0];
+      return Optional.of(constructors[0]);
     }
-
     for (final Constructor<?> constructor : constructors) {
       if (constructor.isAnnotationPresent(AutomapConstructor.class)) {
-        return constructor;
+        return Optional.of(constructor);
       }
     }
-    return null;
+    if (configuration.isArgNameBasedConstructorAutoMapping()) {
+      // Finding-best-match type implementation is possible,
+      // but using @AutomapConstructor seems sufficient.
+      throw new ExecutorException(MessageFormat.format(
+          "'argNameBasedConstructorAutoMapping' is enabled and the class ''{0}'' has multiple constructors, so @AutomapConstructor must be added to one of the constructors.",
+          resultType.getName()));
+    } else {
+      return Arrays.stream(constructors).filter(x -> findUsableConstructorByArgTypes(x, rsw.getJdbcTypes())).findAny();
+    }
   }
 
-  private boolean allowedConstructorUsingTypeHandlers(final Constructor<?> constructor, final List<JdbcType> jdbcTypes) {
+  private boolean findUsableConstructorByArgTypes(final Constructor<?> constructor, final List<JdbcType> jdbcTypes) {
     final Class<?>[] parameterTypes = constructor.getParameterTypes();
     if (parameterTypes.length != jdbcTypes.size()) {
       return false;
@@ -739,6 +730,69 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       }
     }
     return true;
+  }
+
+  private Object applyConstructorAutomapping(ResultSetWrapper rsw, Class<?> resultType, List<Class<?>> constructorArgTypes, List<Object> constructorArgs, Constructor<?> constructor) throws SQLException {
+    boolean foundValues = false;
+    if (configuration.isArgNameBasedConstructorAutoMapping()) {
+      foundValues = applyArgNameBasedConstructorAutoMapping(rsw, resultType, constructorArgTypes, constructorArgs,
+          constructor, foundValues);
+    } else {
+      foundValues = applyColumnOrderBasedConstructorAutomapping(rsw, constructorArgTypes, constructorArgs, constructor,
+          foundValues);
+    }
+    return foundValues ? objectFactory.create(resultType, constructorArgTypes, constructorArgs) : null;
+  }
+
+  private boolean applyColumnOrderBasedConstructorAutomapping(ResultSetWrapper rsw, List<Class<?>> constructorArgTypes,
+      List<Object> constructorArgs, Constructor<?> constructor, boolean foundValues) throws SQLException {
+    for (int i = 0; i < constructor.getParameterTypes().length; i++) {
+      Class<?> parameterType = constructor.getParameterTypes()[i];
+      String columnName = rsw.getColumnNames().get(i);
+      TypeHandler<?> typeHandler = rsw.getTypeHandler(parameterType, columnName);
+      Object value = typeHandler.getResult(rsw.getResultSet(), columnName);
+      constructorArgTypes.add(parameterType);
+      constructorArgs.add(value);
+      foundValues = value != null || foundValues;
+    }
+    return foundValues;
+  }
+
+  private boolean applyArgNameBasedConstructorAutoMapping(ResultSetWrapper rsw, Class<?> resultType,
+      List<Class<?>> constructorArgTypes, List<Object> constructorArgs, Constructor<?> constructor, boolean foundValues)
+      throws SQLException {
+    List<String> missingArgs = null;
+    Parameter[] params = constructor.getParameters();
+    for (Parameter param : params) {
+      boolean columnNotFound = true;
+      Param paramAnno = param.getAnnotation(Param.class);
+      String paramName = paramAnno == null ? param.getName() : paramAnno.value();
+      for (String columnName : rsw.getColumnNames()) {
+        if (paramName.equalsIgnoreCase(
+            configuration.isMapUnderscoreToCamelCase() ? columnName.replace("_", "") : columnName)) {
+          Class<?> paramType = param.getType();
+          TypeHandler<?> typeHandler = rsw.getTypeHandler(paramType, columnName);
+          Object value = typeHandler.getResult(rsw.getResultSet(), columnName);
+          constructorArgTypes.add(paramType);
+          constructorArgs.add(value);
+          columnNotFound = false;
+          foundValues = value != null || foundValues;
+        }
+      }
+      if (columnNotFound) {
+        if (missingArgs == null) {
+          missingArgs = new ArrayList<>();
+        }
+        missingArgs.add(paramName);
+      }
+    }
+    if (foundValues && constructorArgs.size() < params.length) {
+      throw new ExecutorException(MessageFormat.format("Constructor auto-mapping of ''{1}'' failed "
+          + "because ''{0}'' were not found in the result set; "
+          + "Available columns are ''{2}'' and mapUnderscoreToCamelCase is ''{3}''.",
+          missingArgs, constructor, rsw.getColumnNames(), configuration.isMapUnderscoreToCamelCase()));
+    }
+    return foundValues;
   }
 
   private Object createPrimitiveResultObject(ResultSetWrapper rsw, ResultMap resultMap, String columnPrefix) throws SQLException {

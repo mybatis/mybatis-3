@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2020 the original author or authors.
+ *    Copyright 2009-2021 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -114,6 +114,7 @@ public class Configuration {
   protected boolean useActualParamName = true;
   protected boolean returnInstanceForEmptyRow;
   protected boolean shrinkWhitespacesInSql;
+  protected boolean argNameBasedConstructorAutoMapping;
 
   protected String logPrefix;
   protected Class<? extends Log> logImpl;
@@ -295,6 +296,14 @@ public class Configuration {
 
   public void setShrinkWhitespacesInSql(boolean shrinkWhitespacesInSql) {
     this.shrinkWhitespacesInSql = shrinkWhitespacesInSql;
+  }
+
+  public boolean isArgNameBasedConstructorAutoMapping() {
+    return argNameBasedConstructorAutoMapping;
+  }
+
+  public void setArgNameBasedConstructorAutoMapping(boolean argNameBasedConstructorAutoMapping) {
+    this.argNameBasedConstructorAutoMapping = argNameBasedConstructorAutoMapping;
   }
 
   public String getDatabaseId() {
