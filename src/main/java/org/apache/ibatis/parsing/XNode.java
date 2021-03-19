@@ -318,7 +318,12 @@ public class XNode {
       builder.append(name);
       builder.append(">");
     } else if (body != null) {
-      builder.append(((DeferredTextImpl) node).getData());
+      builder.append(body);
+    } else {
+      builder.append(">");
+      builder.append("</");
+      builder.append(name);
+      builder.append(">");
     }
   }
 
