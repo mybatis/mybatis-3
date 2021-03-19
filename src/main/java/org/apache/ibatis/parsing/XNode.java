@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.function.Supplier;
 
+import com.sun.org.apache.xerces.internal.dom.DeferredTextImpl;
 import org.w3c.dom.CharacterData;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -260,9 +261,7 @@ public class XNode {
     if (nodeList != null) {
       for (int i = 0, n = nodeList.getLength(); i < n; i++) {
         Node node = nodeList.item(i);
-        if (node.getNodeType() == Node.ELEMENT_NODE) {
-          children.add(new XNode(xpathParser, node, variables));
-        }
+        children.add(new XNode(xpathParser, node, variables));
       }
     }
     return children;
@@ -288,18 +287,20 @@ public class XNode {
   }
 
   private void toString(StringBuilder builder, int level) {
-    builder.append("<");
-    builder.append(name);
-    for (Map.Entry<Object, Object> entry : attributes.entrySet()) {
-      builder.append(" ");
-      builder.append(entry.getKey());
-      builder.append("=\"");
-      builder.append(entry.getValue());
-      builder.append("\"");
+    if(node.getNodeType() == Node.ELEMENT_NODE){
+      builder.append("<");
+      builder.append(name);
+      for (Map.Entry<Object, Object> entry : attributes.entrySet()) {
+        builder.append(" ");
+        builder.append(entry.getKey());
+        builder.append("=\"");
+        builder.append(entry.getValue());
+        builder.append("\"");
+      }
     }
     List<XNode> children = getChildren();
     if (!children.isEmpty()) {
-      builder.append(">\n");
+      builder.append(">");
       for (XNode child : children) {
         indent(builder, level + 1);
         child.toString(builder, level + 1);
@@ -309,16 +310,19 @@ public class XNode {
       builder.append(name);
       builder.append(">");
     } else if (body != null) {
-      builder.append(">");
-      builder.append(body);
-      builder.append("</");
-      builder.append(name);
-      builder.append(">");
+      if(node.getNodeType() == Node.TEXT_NODE && node instanceof DeferredTextImpl){
+        builder.append(((DeferredTextImpl) node).getData());
+      }else {
+        builder.append(">");
+        builder.append(body);
+        builder.append("</");
+        builder.append(name);
+        builder.append(">");
+      }
     } else {
       builder.append("/>");
       indent(builder, level);
     }
-    builder.append("\n");
   }
 
   private void indent(StringBuilder builder, int level) {
