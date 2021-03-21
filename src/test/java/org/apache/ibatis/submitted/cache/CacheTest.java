@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2020 the original author or authors.
+ *    Copyright 2009-2021 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ class CacheTest {
 
     // populate in-memory database
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/cache/CreateDB.sql");
+        "org/apache/ibatis/submitted/cache/CreateDB.sql");
   }
 
   /*
@@ -251,6 +251,25 @@ class CacheTest {
   }
 
   @Test
+  void shouldResultBeCachedAfterInsert() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession(true)) {
+      PersonMapper pm = sqlSession.getMapper(PersonMapper.class);
+      // create
+      Person p = new Person(3, "hello", "world");
+      pm.create(p);
+      // select (result should be cached)
+      Assertions.assertEquals(3, pm.findAll().size());
+      // create without flush (cache unchanged)
+      Person p2 = new Person(4, "bonjour", "world");
+      pm.createWithoutFlushCache(p2);
+    }
+    try (SqlSession sqlSession = sqlSessionFactory.openSession(true)) {
+      PersonMapper pm = sqlSession.getMapper(PersonMapper.class);
+      Assertions.assertEquals(3, pm.findAll().size());
+    }
+  }
+
+  @Test
   void shouldApplyCustomCacheProperties() {
     CustomCache customCache = unwrap(sqlSessionFactory.getConfiguration().getCache(CustomCacheMapper.class.getName()));
     Assertions.assertEquals("bar", customCache.getStringValue());
@@ -274,23 +293,23 @@ class CacheTest {
   void shouldErrorUnsupportedProperties() {
     when(() -> sqlSessionFactory.getConfiguration().addMapper(CustomCacheUnsupportedPropertyMapper.class));
     then(caughtException()).isInstanceOf(CacheException.class)
-      .hasMessage("Unsupported property type for cache: 'date' of type class java.util.Date");
+        .hasMessage("Unsupported property type for cache: 'date' of type class java.util.Date");
   }
 
   @Test
   void shouldErrorInvalidCacheNamespaceRefAttributesSpecifyBoth() {
     when(() -> sqlSessionFactory.getConfiguration().getMapperRegistry()
-      .addMapper(InvalidCacheNamespaceRefBothMapper.class));
+        .addMapper(InvalidCacheNamespaceRefBothMapper.class));
     then(caughtException()).isInstanceOf(BuilderException.class)
-      .hasMessage("Cannot use both value() and name() attribute in the @CacheNamespaceRef");
+        .hasMessage("Cannot use both value() and name() attribute in the @CacheNamespaceRef");
   }
 
   @Test
   void shouldErrorInvalidCacheNamespaceRefAttributesIsEmpty() {
     when(() -> sqlSessionFactory.getConfiguration().getMapperRegistry()
-      .addMapper(InvalidCacheNamespaceRefEmptyMapper.class));
+        .addMapper(InvalidCacheNamespaceRefEmptyMapper.class));
     then(caughtException()).isInstanceOf(BuilderException.class)
-      .hasMessage("Should be specified either value() or name() attribute in the @CacheNamespaceRef");
+        .hasMessage("Should be specified either value() or name() attribute in the @CacheNamespaceRef");
   }
 
   private CustomCache unwrap(Cache cache){
@@ -311,7 +330,7 @@ class CacheTest {
   }
 
   @CacheNamespace(implementation = CustomCache.class, properties = {
-      @Property(name = "date", value = "2016/11/21")
+    @Property(name = "date", value = "2016/11/21")
   })
   private interface CustomCacheUnsupportedPropertyMapper {
   }
