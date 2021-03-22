@@ -22,12 +22,7 @@ public class Issue2080Test {
 
   @Test
   void test() {
-    String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" +
-      "<!DOCTYPE mapper\n" +
-      "  PUBLIC \"-//mybatis.org//DTD Mapper 3.0//EN\"\n" +
-      "  \"http://mybatis.org/dtd/mybatis-3-mapper.dtd\">\n" +
-      "\n" +
-      "<mapper namespace=\"demo.StudentMapper\">\n" +
+    String xml = "<mapper namespace=\"demo.StudentMapper\">\n" +
       "  <select id=\"selectFullStudent\" resultMap=\"fullResult\" databaseId=\"mysql\">\n" +
       "    select\n" +
       "    STUDENT.ID ID,\n" +
@@ -53,5 +48,6 @@ public class Issue2080Test {
     XPathParser xPathParser = new XPathParser(xml);
     XNode select = xPathParser.evalNode("mapper/select");
     System.out.println(select.toString());
+    System.out.println(xml);
   }
 }
