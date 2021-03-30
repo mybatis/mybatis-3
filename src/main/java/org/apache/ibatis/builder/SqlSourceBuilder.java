@@ -68,9 +68,9 @@ public class SqlSourceBuilder extends BaseBuilder {
 
   private static class ParameterMappingTokenHandler extends BaseBuilder implements TokenHandler {
 
-    private List<ParameterMapping> parameterMappings = new ArrayList<>();
-    private Class<?> parameterType;
-    private MetaObject metaParameters;
+    private final List<ParameterMapping> parameterMappings = new ArrayList<>();
+    private final Class<?> parameterType;
+    private final MetaObject metaParameters;
 
     public ParameterMappingTokenHandler(Configuration configuration, Class<?> parameterType, Map<String, Object> additionalParameters) {
       super(configuration);
