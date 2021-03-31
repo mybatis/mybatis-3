@@ -22,7 +22,7 @@ import java.util.Iterator;
  */
 public class PropertyTokenizer implements Iterator<PropertyTokenizer> {
   private String name;
-  private final String indexedName;
+  private String indexedName;
   private String index;
   private final String children;
 
@@ -31,15 +31,19 @@ public class PropertyTokenizer implements Iterator<PropertyTokenizer> {
     if (delim > -1) {
       name = fullname.substring(0, delim);
       children = fullname.substring(delim + 1);
+      indexedName = name;
+      return;
     } else {
       name = fullname;
       children = null;
     }
+
     indexedName = name;
-    delim = name.indexOf('[');
+    delim = name.lastIndexOf('[');
     if (delim > -1) {
       index = name.substring(delim + 1, name.length() - 1);
       name = name.substring(0, delim);
+      indexedName = fullname.substring(0, delim);
     }
   }
 
