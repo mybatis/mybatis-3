@@ -41,6 +41,7 @@ import org.apache.ibatis.executor.loader.ResultLoaderMap;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.result.DefaultResultContext;
 import org.apache.ibatis.executor.result.DefaultResultHandler;
+import org.apache.ibatis.executor.result.ResultClassTypeHolder;
 import org.apache.ibatis.executor.result.ResultMapException;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.Discriminator;
@@ -293,6 +294,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private void handleResultSet(ResultSetWrapper rsw, ResultMap resultMap, List<Object> multipleResults, ResultMapping parentMapping) throws SQLException {
     try {
+      ResultClassTypeHolder.setResultType(resultMap.getType());
       if (parentMapping != null) {
         handleRowValues(rsw, resultMap, null, RowBounds.DEFAULT, parentMapping);
       } else {
@@ -307,6 +309,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     } finally {
       // issue #228 (close resultsets)
       closeResultSet(rsw.getResultSet());
+      ResultClassTypeHolder.clean();
     }
   }
 
