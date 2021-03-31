@@ -16,7 +16,6 @@
 package org.apache.ibatis.executor.resultset;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -42,6 +41,7 @@ import org.apache.ibatis.executor.loader.ResultLoaderMap;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.result.DefaultResultContext;
 import org.apache.ibatis.executor.result.DefaultResultHandler;
+import org.apache.ibatis.executor.result.ResultClassTypeHolder;
 import org.apache.ibatis.executor.result.ResultMapException;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.Discriminator;
@@ -59,7 +59,6 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultContext;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
-import org.apache.ibatis.type.FieldTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
@@ -295,6 +294,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private void handleResultSet(ResultSetWrapper rsw, ResultMap resultMap, List<Object> multipleResults, ResultMapping parentMapping) throws SQLException {
     try {
+      ResultClassTypeHolder.setResultType(resultMap.getType());
       if (parentMapping != null) {
         handleRowValues(rsw, resultMap, null, RowBounds.DEFAULT, parentMapping);
       } else {
@@ -309,6 +309,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     } finally {
       // issue #228 (close resultsets)
       closeResultSet(rsw.getResultSet());
+      ResultClassTypeHolder.clean();
     }
   }
 
@@ -559,17 +560,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     boolean foundValues = false;
     if (!autoMapping.isEmpty()) {
       for (UnMappedColumnAutoMapping mapping : autoMapping) {
-        TypeHandler<?> typeHandler = mapping.typeHandler;
-        if(typeHandler instanceof FieldTypeHandler) {
-          try {
-            Class<?> aClass = metaObject.getOriginalObject().getClass();
-            Field field = aClass.getDeclaredField(mapping.column);
-            ((FieldTypeHandler) typeHandler).setField(field);
-          } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-          }
-        }
-        final Object value = typeHandler.getResult(rsw.getResultSet(), mapping.column);
+        final Object value = mapping.typeHandler.getResult(rsw.getResultSet(), mapping.column);
         if (value != null) {
           foundValues = true;
         }
