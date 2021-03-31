@@ -15,18 +15,14 @@
  */
 package org.apache.ibatis.builder;
 
-import java.lang.reflect.Field;
-import java.sql.CallableStatement;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import org.apache.ibatis.executor.result.ResultClassTypeHolder;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.MappedTypes;
 import org.apache.ibatis.type.TypeHandler;
 
-import static org.junit.jupiter.api.Assertions.assertNull;
+import java.sql.CallableStatement;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 @MappedTypes(Long.class)
 public class CustomLongTypeHandler implements TypeHandler<Long> {
@@ -38,7 +34,6 @@ public class CustomLongTypeHandler implements TypeHandler<Long> {
 
   @Override
   public Long getResult(ResultSet rs, String columnName) throws SQLException {
-    assertNull(ResultClassTypeHolder.getResultType());
     return rs.getLong(columnName);
   }
 

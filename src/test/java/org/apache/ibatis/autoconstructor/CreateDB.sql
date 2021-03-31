@@ -26,6 +26,7 @@ CREATE TABLE subject (
   age    INT NOT NULL,
   height INT,
   weight INT,
+  width INT,
   active BIT,
   dt     TIMESTAMP
 );
@@ -47,9 +48,9 @@ CREATE TABLE extensive_subject (
 );
 
 INSERT INTO subject VALUES
-  (1, 'a', 10, 100, 45, 1, CURRENT_TIMESTAMP),
-  (2, 'b', 10, NULL, 45, 1, CURRENT_TIMESTAMP),
-  (2, 'c', 10, NULL, NULL, 0, CURRENT_TIMESTAMP);
+  (1, 'a', 10, 100, 45, 50, 1, CURRENT_TIMESTAMP),
+  (2, 'b', 10, NULL, 45, 50, 1, CURRENT_TIMESTAMP),
+  (2, 'c', 10, NULL, NULL,Null, 0, CURRENT_TIMESTAMP);
 
 INSERT INTO extensive_subject
 VALUES
