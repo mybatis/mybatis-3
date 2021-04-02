@@ -118,6 +118,7 @@ public class Configuration {
   protected String logPrefix;
   protected Class<? extends Log> logImpl;
   protected Class<? extends VFS> vfsImpl;
+  protected Class<?> defaultSqlProviderType;
   protected LocalCacheScope localCacheScope = LocalCacheScope.SESSION;
   protected JdbcType jdbcTypeForNull = JdbcType.OTHER;
   protected Set<String> lazyLoadTriggerMethods = new HashSet<>(Arrays.asList("equals", "clone", "hashCode", "toString"));
@@ -141,7 +142,7 @@ public class Configuration {
    * Configuration factory class.
    * Used to create Configuration for loading deserialized unread properties.
    *
-   * @see <a href='https://code.google.com/p/mybatis/issues/detail?id=300'>Issue 300 (google code)</a>
+   * @see <a href='https://github.com/mybatis/old-google-code-issues/issues/300'>Issue 300 (google code)</a>
    */
   protected Class<?> configurationFactory;
 
@@ -241,6 +242,27 @@ public class Configuration {
       this.vfsImpl = vfsImpl;
       VFS.addImplClass(this.vfsImpl);
     }
+  }
+
+  /**
+   * Gets an applying type when omit a type on sql provider annotation(e.g. {@link org.apache.ibatis.annotations.SelectProvider}).
+   *
+   * @return the default type for sql provider annotation
+   * @since 3.5.6
+   */
+  public Class<?> getDefaultSqlProviderType() {
+    return defaultSqlProviderType;
+  }
+
+  /**
+   * Sets an applying type when omit a type on sql provider annotation(e.g. {@link org.apache.ibatis.annotations.SelectProvider}).
+   *
+   * @param defaultSqlProviderType
+   *          the default type for sql provider annotation
+   * @since 3.5.6
+   */
+  public void setDefaultSqlProviderType(Class<?> defaultSqlProviderType) {
+    this.defaultSqlProviderType = defaultSqlProviderType;
   }
 
   public boolean isCallSettersOnNulls() {
@@ -605,9 +627,9 @@ public class Configuration {
   }
 
   /**
-   * Gets the default scripting lanuage instance.
+   * Gets the default scripting language instance.
    *
-   * @return the default scripting lanuage instance
+   * @return the default scripting language instance
    * @deprecated Use {@link #getDefaultScriptingLanguageInstance()}
    */
   @Deprecated

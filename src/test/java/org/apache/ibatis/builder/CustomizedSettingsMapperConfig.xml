@@ -55,6 +55,7 @@
     <setting name="configurationFactory" value="java.lang.String"/>
     <setting name="defaultEnumTypeHandler" value="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
     <setting name="shrinkWhitespacesInSql" value="true"/>
+    <setting name="defaultSqlProviderType" value="org.apache.ibatis.builder.XmlConfigBuilderTest$MySqlProvider"/>
   </settings>
 
   <typeAliases>

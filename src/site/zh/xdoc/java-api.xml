@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2020 the original author or authors.
+       Copyright 2009-2021 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -67,7 +67,7 @@
   </subsection>
 
   <subsection name="SqlSession" id="sqlSessions">
-  <p>使用 MyBatis 的主要 Java 接口就是 SqlSession。你可以通过这个接口来执行命令，获取映射器示例和管理事务。在介绍 SqlSession 接口之前，我们先来了解如何获取一个 SqlSession 实例。SqlSessions 是由 SqlSessionFactory 实例创建的。SqlSessionFactory 对象包含创建 SqlSession 实例的各种方法。而 SqlSessionFactory 本身是由 SqlSessionFactoryBuilder 创建的，它可以从 XML、注解或 Java 配置代码来创建 SqlSessionFactory。</p>
+  <p>使用 MyBatis 的主要 Java 接口就是 SqlSession。你可以通过这个接口来执行命令，获取映射器实例和管理事务。在介绍 SqlSession 接口之前，我们先来了解如何获取一个 SqlSession 实例。SqlSessions 是由 SqlSessionFactory 实例创建的。SqlSessionFactory 对象包含创建 SqlSession 实例的各种方法。而 SqlSessionFactory 本身是由 SqlSessionFactoryBuilder 创建的，它可以从 XML、注解或 Java 配置代码来创建 SqlSessionFactory。</p>
   <p>
   <span class="label important">提示</span> 当 Mybatis 与一些依赖注入框架（如 Spring 或者 Guice）搭配使用时，SqlSession 将被依赖注入框架创建并注入，所以你不需要使用 SqlSessionFactoryBuilder 或者 SqlSessionFactory，可以直接阅读 SqlSession 这一节。请参考 Mybatis-Spring 或者 Mybatis-Guice 手册以了解更多信息。</p>
   <h4>SqlSessionFactoryBuilder</h4>
@@ -464,7 +464,12 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
 </ul>
         </td>
         <td>
-        允许构建动态 SQL。这些备选的 SQL 注解允许你指定返回 SQL 语句的类和方法，以供运行时执行。（从 MyBatis 3.4.6 开始，可以使用 <code>CharSequence</code> 代替 <code>String</code> 来作为返回类型）。当执行映射语句时，MyBatis 会实例化注解指定的类，并调用注解指定的方法。你可以通过 <code>ProviderContext</code> 传递映射方法接收到的参数、"Mapper interface type" 和 "Mapper method"（仅在 MyBatis 3.4.5 以上支持）作为参数。（MyBatis 3.4 以上支持传入多个参数）属性：<code>type</code>、<code>method</code>。<code>type</code> 属性用于指定类名。<code>method</code> 用于指定该类的方法名（从版本 3.5.1 开始，可以省略 <code>method</code> 属性，MyBatis 将会使用 <code>ProviderMethodResolver</code> 接口解析方法的具体实现。如果解析失败，MyBatis 将会使用名为 <code>provideSql</code> 的降级实现）。<span class="label important">提示</span> 接下来的“SQL 语句构建器”一章将会讨论该话题，以帮助你以更清晰、更便于阅读的方式构建动态 SQL。
+        允许构建动态 SQL。这些备选的 SQL 注解允许你指定返回 SQL 语句的类和方法，以供运行时执行。（从 MyBatis 3.4.6 开始，可以使用 <code>CharSequence</code> 代替 <code>String</code> 来作为返回类型）。当执行映射语句时，MyBatis 会实例化注解指定的类，并调用注解指定的方法。你可以通过 <code>ProviderContext</code> 传递映射方法接收到的参数、"Mapper interface type" 和 "Mapper method"（仅在 MyBatis 3.4.5 以上支持）作为参数。（MyBatis 3.4 以上支持传入多个参数）
+        属性：<code>value</code>、<code>type</code>、<code>method</code>、<code>databaseId</code>。
+        <code>value</code> and <code>type</code> 属性用于指定类名
+        (The <code>type</code> attribute is alias for <code>value</code>, you must be specify either one.
+        But both attributes can be omit when specify the <code>defaultSqlProviderType</code> as global configuration)。
+        <code>method</code> 用于指定该类的方法名（从版本 3.5.1 开始，可以省略 <code>method</code> 属性，MyBatis 将会使用 <code>ProviderMethodResolver</code> 接口解析方法的具体实现。如果解析失败，MyBatis 将会使用名为 <code>provideSql</code> 的降级实现）。<span class="label important">提示</span> 接下来的“SQL 语句构建器”一章将会讨论该话题，以帮助你以更清晰、更便于阅读的方式构建动态 SQL。
         The <code>databaseId</code>(Available since 3.5.5), in case there is a configured <code>DatabaseIdProvider</code>,
         the MyBatis will use a provider method with no <code>databaseId</code> attribute or with a <code>databaseId</code>
         that matches the current one. If found with and without the <code>databaseId</code> the latter will be discarded.
@@ -579,6 +584,29 @@ class UserSqlBuilder {
       ORDER_BY(orderByColumn);
     }}.toString();
   }
+}]]></source>
+
+    <p>This example shows usage that share an sql provider class to all mapper methods using global configuration(Available since 3.5.6):</p>
+    <source><![CDATA[
+Configuration configuration = new Configuration();
+configuration.setDefaultSqlProviderType(TemplateFilePathProvider.class); // Specify an sql provider class for sharing on all mapper methods
+// ...]]></source>
+    <source><![CDATA[
+// Can omit the type/value attribute on sql provider annotation
+// If omit it, the MyBatis apply the class that specified on defaultSqlProviderType.
+public interface UserMapper {
+
+  @SelectProvider // Same with @SelectProvider(TemplateFilePathProvider.class)
+  User findUser(int id);
+
+  @InsertProvider // Same with @InsertProvider(TemplateFilePathProvider.class)
+  void createUser(User user);
+
+  @UpdateProvider // Same with @UpdateProvider(TemplateFilePathProvider.class)
+  void updateUser(User user);
+
+  @DeleteProvider // Same with @DeleteProvider(TemplateFilePathProvider.class)
+  void deleteUser(int id);
 }]]></source>
 
     <p>以下例子展示了 <code>ProviderMethodResolver</code>（3.5.1 后可用）的默认实现使用方法：
