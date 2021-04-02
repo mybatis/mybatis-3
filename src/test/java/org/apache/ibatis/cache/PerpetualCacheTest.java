@@ -69,10 +69,4 @@ class PerpetualCacheTest {
     assertNull(cache.getObject(4));
   }
 
-  @Test
-  void shouldDemonstrateIdIsNull() {
-    Cache cache = new PerpetualCache(null);
-    assertThrows(CacheException.class, () -> cache.hashCode());
-    assertThrows(CacheException.class, () -> cache.equals(new Object()));
-  }
 }

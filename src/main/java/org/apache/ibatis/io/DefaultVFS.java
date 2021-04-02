@@ -25,7 +25,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.nio.file.InvalidPathException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -106,9 +105,6 @@ public class DefaultVFS extends VFS {
                   break;
                 }
               }
-            } catch (InvalidPathException e) {
-              // #1974
-              lines.clear();
             }
             if (!lines.isEmpty()) {
               if (log.isDebugEnabled()) {
@@ -329,7 +325,9 @@ public class DefaultVFS extends VFS {
    * @return true, if is jar
    */
   protected boolean isJar(URL url, byte[] buffer) {
-    try (InputStream is = url.openStream()) {
+    InputStream is = null;
+    try {
+      is = url.openStream();
       is.read(buffer, 0, JAR_MAGIC.length);
       if (Arrays.equals(buffer, JAR_MAGIC)) {
         if (log.isDebugEnabled()) {
@@ -339,6 +337,14 @@ public class DefaultVFS extends VFS {
       }
     } catch (Exception e) {
       // Failure to read the stream means this is not a JAR
+    } finally {
+      if (is != null) {
+        try {
+          is.close();
+        } catch (Exception e) {
+          // Ignore
+        }
+      }
     }
 
     return false;

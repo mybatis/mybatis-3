@@ -101,7 +101,6 @@ class XmlConfigBuilderTest {
       assertNull(config.getConfigurationFactory());
       assertThat(config.getTypeHandlerRegistry().getTypeHandler(RoundingMode.class)).isInstanceOf(EnumTypeHandler.class);
       assertThat(config.isShrinkWhitespacesInSql()).isFalse();
-      assertThat(config.getDefaultSqlProviderType()).isNull();
     }
   }
 
@@ -197,7 +196,6 @@ class XmlConfigBuilderTest {
       assertThat(config.getVfsImpl().getName()).isEqualTo(JBoss6VFS.class.getName());
       assertThat(config.getConfigurationFactory().getName()).isEqualTo(String.class.getName());
       assertThat(config.isShrinkWhitespacesInSql()).isTrue();
-      assertThat(config.getDefaultSqlProviderType().getName()).isEqualTo(MySqlProvider.class.getName());
 
       assertThat(config.getTypeAliasRegistry().getTypeAliases().get("blogauthor")).isEqualTo(Author.class);
       assertThat(config.getTypeAliasRegistry().getTypeAliases().get("blog")).isEqualTo(Blog.class);
@@ -304,13 +302,6 @@ class XmlConfigBuilderTest {
     when(builder::parse);
     then(caughtException()).isInstanceOf(BuilderException.class)
       .hasMessageContaining("The properties element cannot specify both a URL and a resource based property file reference.  Please specify one or the other.");
-  }
-
-  static class MySqlProvider {
-    @SuppressWarnings("unused")
-    public static String provideSql() {
-      return "SELECT 1";
-    }
   }
 
 }

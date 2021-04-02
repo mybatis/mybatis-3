@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
  * You are welcome to use this class for your own purposes,<br>
  * but if there is some feature/enhancement you need for your own usage,<br>
  * please make and modify your own copy instead of sending us an enhancement request.<br>
- *
+ * 
  * @author Clinton Begin
  */
 public class ScriptRunner {
@@ -238,7 +238,8 @@ public class ScriptRunner {
   }
 
   private void executeStatement(String command) throws SQLException {
-    try (Statement statement = connection.createStatement()) {
+    Statement statement = connection.createStatement();
+    try {
       statement.setEscapeProcessing(escapeProcessing);
       String sql = command;
       if (removeCRs) {
@@ -260,6 +261,13 @@ public class ScriptRunner {
           String message = "Error executing: " + command + ".  Cause: " + e;
           printlnError(message);
         }
+      }
+    } finally {
+      try {
+        statement.close();
+      } catch (Exception ignored) {
+        // Ignore to workaround a bug in some connection pools
+        // (Does anyone know the details of the bug?)
       }
     }
   }

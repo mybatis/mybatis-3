@@ -24,6 +24,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Date;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class CacheKeyTest {
@@ -87,30 +88,10 @@ class CacheKeyTest {
   }
 
   @Test
-  void throwExceptionWhenTryingToUpdateNullCacheKey() {
-    CacheKey cacheKey = CacheKey.NULL_CACHE_KEY;
-    assertThrows(CacheException.class, () -> cacheKey.update("null"));
-  }
-
-  @Test
-  void throwExceptionWhenTryingToUpdateAllNullCacheKey() {
-    CacheKey cacheKey = CacheKey.NULL_CACHE_KEY;
-    assertThrows(CacheException.class, () -> cacheKey.updateAll(new Object[]{"null", "null"}));
-  }
-
-  @Test
-  void shouldDemonstrateClonedNullCacheKeysAreEqual() throws Exception {
-    CacheKey cacheKey = CacheKey.NULL_CACHE_KEY;
-    CacheKey clonedCacheKey = cacheKey.clone();
-    assertEquals(cacheKey, clonedCacheKey);
-    assertEquals(cacheKey.hashCode(), clonedCacheKey.hashCode());
-  }
-
-  @Test
   void serializationExceptionTest() {
     CacheKey cacheKey = new CacheKey();
     cacheKey.update(new Object());
-    assertThrows(NotSerializableException.class, () -> {
+    Assertions.assertThrows(NotSerializableException.class, () -> {
       serialize(cacheKey);
     });
   }
@@ -119,7 +100,7 @@ class CacheKeyTest {
   void serializationTest() throws Exception {
     CacheKey cacheKey = new CacheKey();
     cacheKey.update("serializable");
-    assertEquals(cacheKey, serialize(cacheKey));
+    Assertions.assertEquals(cacheKey, serialize(cacheKey));
   }
 
   private static <T> T serialize(T object) throws Exception {
