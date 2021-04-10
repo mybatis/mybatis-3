@@ -45,7 +45,7 @@ jobs:
       - name: Set argLine command line option
         shell: bash
         if: ${{ matrix.java != '8' }}
-        run: echo 'ARG_LINE='"'"'-D"argLine=--illegal-access=permit"'"'" >> $GITHUB_ENV
+        run: echo 'ARG_LINE=-D"argLine=--illegal-access=permit"' >> $GITHUB_ENV
       - name: Set env command line option
         shell: bash
         if: ${{ matrix.os == 'ubuntu-latest' }}
