@@ -42,5 +42,9 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
+      - name: Set argLine command line option
+        shell: bash
+        if: ${{ matrix.java != '8' }}
+        run: echo 'ARG_LINE="-DargLine=--illegal-access=permit"' >> $GITHUB_ENV
       - name: Test with Maven
-        run: ./mvnw test -B -D"env.TRAVIS" -D"license.skip=true" -D"jacoco.skip=true" -DargLine="--illegal-access=permit"
+        run: ./mvnw test -B -D"env.TRAVIS" -D"license.skip=true" -D"jacoco.skip=true" $ARG_LINE
