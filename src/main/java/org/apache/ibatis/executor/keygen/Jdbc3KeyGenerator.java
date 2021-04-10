@@ -19,7 +19,6 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -158,7 +157,7 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
       Entry<String, KeyAssigner> entry = getAssignerForParamMap(configuration, rsmd, i + 1, paramMap, keyProperties[i],
           keyProperties, true);
       Entry<Iterator<?>, List<KeyAssigner>> iteratorPair = MapUtil.computeIfAbsent(assignerMap, entry.getKey(),
-          k -> entry(collectionize(paramMap.get(k)).iterator(), new ArrayList<>()));
+          k -> MapUtil.entry(collectionize(paramMap.get(k)).iterator(), new ArrayList<>()));
       iteratorPair.getValue().add(entry.getValue());
     }
     long counter = 0;
@@ -194,7 +193,7 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
     if (keySet.contains(paramName)) {
       String argParamName = omitParamName ? null : paramName;
       String argKeyProperty = keyProperty.substring(firstDot + 1);
-      return entry(paramName, new KeyAssigner(config, rsmd, columnPosition, argParamName, argKeyProperty));
+      return MapUtil.entry(paramName, new KeyAssigner(config, rsmd, columnPosition, argParamName, argKeyProperty));
     } else if (singleParam) {
       return getAssignerForSingleParam(config, rsmd, columnPosition, paramMap, keyProperty, omitParamName);
     } else {
@@ -210,7 +209,7 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
     // Assume 'keyProperty' to be a property of the single param.
     String singleParamName = nameOfSingleParam(paramMap);
     String argParamName = omitParamName ? null : singleParamName;
-    return entry(singleParamName, new KeyAssigner(config, rsmd, columnPosition, argParamName, keyProperty));
+    return MapUtil.entry(singleParamName, new KeyAssigner(config, rsmd, columnPosition, argParamName, keyProperty));
   }
 
   private static String nameOfSingleParam(Map<String, ?> paramMap) {
@@ -226,11 +225,6 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
     } else {
       return Arrays.asList(param);
     }
-  }
-
-  private static <K, V> Entry<K, V> entry(K key, V value) {
-    // Replace this with Map.entry(key, value) in Java 9.
-    return new AbstractMap.SimpleImmutableEntry<>(key, value);
   }
 
   private class KeyAssigner {

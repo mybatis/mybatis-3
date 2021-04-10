@@ -16,7 +16,9 @@
 
 package org.apache.ibatis.util;
 
+import java.util.AbstractMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.function.Function;
 
 public class MapUtil {
@@ -32,6 +34,13 @@ public class MapUtil {
       return value;
     }
     return map.computeIfAbsent(key, mappingFunction::apply);
+  }
+
+  /**
+   * Map.entry(key, value) alternative for Java 8.
+   */
+  public static <K, V> Entry<K, V> entry(K key, V value) {
+    return new AbstractMap.SimpleImmutableEntry<>(key, value);
   }
 
   private MapUtil() {
