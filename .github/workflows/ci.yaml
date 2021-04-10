@@ -42,8 +42,5 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-      - name: Java early access workaround
-        if: ${{ endsWith(matrix.java, '-ea') }}
-        run: echo 'JACOCO_SKIP="-Djacoco.skip=true"' >> $GITHUB_ENV
       - name: Test with Maven
-        run: ./mvnw test -B -D"license.skip=true" $JACOCO_SKIP
+        run: ./mvnw test -B -D"env.TRAVIS" -D"license.skip=true" -D"jacoco.skip=true" -DargLine="--illegal-access=permit"
