@@ -51,4 +51,5 @@ jobs:
         if: ${{ matrix.os == 'ubuntu-latest' }}
         run: echo 'ENV_TRAVIS="-Denv.TRAVIS"' >> $GITHUB_ENV
       - name: Test with Maven
+        shell: bash
         run: ./mvnw test -B -D"license.skip=true" -D"jacoco.skip=true" $ENV_TRAVIS $ARG_LINE
