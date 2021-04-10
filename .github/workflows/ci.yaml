@@ -46,5 +46,9 @@ jobs:
         shell: bash
         if: ${{ matrix.java != '8' }}
         run: echo 'ARG_LINE="-DargLine=--illegal-access=permit"' >> $GITHUB_ENV
+      - name: Set env command line option
+        shell: bash
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: echo 'ENV_TRAVIS="-Denv.TRAVIS"' >> $GITHUB_ENV
       - name: Test with Maven
-        run: ./mvnw test -B -D"env.TRAVIS" -D"license.skip=true" -D"jacoco.skip=true" $ARG_LINE
+        run: ./mvnw test -B -D"license.skip=true" -D"jacoco.skip=true" $ENV_TRAVIS $ARG_LINE
