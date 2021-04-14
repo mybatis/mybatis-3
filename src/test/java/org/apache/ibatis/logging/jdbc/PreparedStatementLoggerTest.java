@@ -79,6 +79,20 @@ class PreparedStatementLoggerTest {
   }
 
   @Test
+  void shouldPrintPreparedStatement() throws SQLException {
+    when(log.isDebugEnabled()).thenReturn(true);
+    when(preparedStatement.executeQuery(anyString())).thenReturn(resultSet);
+    when(preparedStatement.toString()).thenReturn("DummyStatement: select 1 limit 10");
+
+    ps.setInt(1, 10);
+    ResultSet rs = ps.executeQuery("select 1 limit ?");
+
+    verify(log).debug(contains("PreparedStatement: DummyStatement: select 1 limit 10"));
+    Assertions.assertNotNull(rs);
+    Assertions.assertNotSame(resultSet, rs);
+  }
+
+  @Test
   void shouldNotPrintLog() throws SQLException {
     ps.getResultSet();
     ps.getParameterMetaData();

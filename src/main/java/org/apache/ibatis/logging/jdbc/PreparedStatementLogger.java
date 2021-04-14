@@ -50,6 +50,7 @@ public final class PreparedStatementLogger extends BaseJdbcLogger implements Inv
       if (EXECUTE_METHODS.contains(method.getName())) {
         if (isDebugEnabled()) {
           debug("Parameters: " + getParameterValueString(), true);
+          debug("PreparedStatement: " + statement, true);
         }
         clearColumnInfo();
         if ("executeQuery".equals(method.getName())) {
