@@ -58,4 +58,16 @@ class LruCacheTest {
     assertNull(cache.getObject(4));
   }
 
+  @Test
+  void shouldRemoveUsedLessItem() {
+    Cache cache = new LruCache(new PerpetualCache("default"));
+    for (int i = 0; i < 1024; i++) {
+      cache.putObject(i, i);
+    }
+    assertNotNull(cache.getObject(0));
+    cache.putObject(1025, 1025);
+    assertNotNull(cache.getObject(0));
+    assertNotNull(cache.getObject(1025));
+    assertNull(cache.getObject(1));
+  }
 }
