@@ -23,11 +23,11 @@ under the License.
     <link>http://www.mybatis.org/mybatis-3</link>
     <description>mybatis - Checkstyle report</description>
     <language>en-us</language>
-    <copyright>&#169;2009 - 2020 MyBatis.org</copyright>
+    <copyright>&#169;2009 - 2021 MyBatis.org</copyright>
     <item>
-      <title>File: 385,
+      <title>File: 386,
              Errors: 0,
-             Warnings: 2257,
+             Warnings: 2253,
              Infos: 0
       </title>
             <link>http://www.mybatis.org/mybatis-3/checkstyle.html</link>
@@ -1768,6 +1768,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.util.MapUtil.java">org/apache/ibatis/util/MapUtil.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  3
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.jdbc.SQL.java">org/apache/ibatis/jdbc/SQL.java</a>
                 </td>
                 <td>
@@ -2866,7 +2880,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  17
+                  20
                 </td>
                 <td>
                   0
@@ -3090,7 +3104,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  3
+                  4
                 </td>
                 <td>
                   0
@@ -4854,7 +4868,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  8
+                  9
                 </td>
                 <td>
                   0
@@ -5176,7 +5190,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  25
+                  13
                 </td>
                 <td>
                   0

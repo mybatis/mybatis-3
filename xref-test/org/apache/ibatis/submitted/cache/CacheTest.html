@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/submitted/cache/CacheTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2020 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2021 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
@@ -58,7 +58,7 @@
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>  
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>      <em class="jxr_comment">// populate in-memory database</em>
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>      BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-<a class="jxr_linenumber" name="L53" href="#L53">53</a>              <span class="jxr_string">"org/apache/ibatis/submitted/cache/CreateDB.sql"</span>);
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>          <span class="jxr_string">"org/apache/ibatis/submitted/cache/CreateDB.sql"</span>);
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>    }
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>  
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>    <em class="jxr_comment">/*</em>
@@ -259,82 +259,101 @@
 <a class="jxr_linenumber" name="L251" href="#L251">251</a>   }
 <a class="jxr_linenumber" name="L252" href="#L252">252</a> 
 <a class="jxr_linenumber" name="L253" href="#L253">253</a>   @Test
-<a class="jxr_linenumber" name="L254" href="#L254">254</a>   <strong class="jxr_keyword">void</strong> shouldApplyCustomCacheProperties() {
-<a class="jxr_linenumber" name="L255" href="#L255">255</a>     <a name="CustomCache" href="../../../../../org/apache/ibatis/submitted/cache/CustomCache.html#CustomCache">CustomCache</a> customCache = unwrap(sqlSessionFactory.getConfiguration().getCache(CustomCacheMapper.<strong class="jxr_keyword">class</strong>.getName()));
-<a class="jxr_linenumber" name="L256" href="#L256">256</a>     Assertions.assertEquals(<span class="jxr_string">"bar"</span>, customCache.getStringValue());
-<a class="jxr_linenumber" name="L257" href="#L257">257</a>     Assertions.assertEquals(1, customCache.getIntegerValue().intValue());
-<a class="jxr_linenumber" name="L258" href="#L258">258</a>     Assertions.assertEquals(2, customCache.getIntValue());
-<a class="jxr_linenumber" name="L259" href="#L259">259</a>     Assertions.assertEquals(3, customCache.getLongWrapperValue().longValue());
-<a class="jxr_linenumber" name="L260" href="#L260">260</a>     Assertions.assertEquals(4, customCache.getLongValue());
-<a class="jxr_linenumber" name="L261" href="#L261">261</a>     Assertions.assertEquals(5, customCache.getShortWrapperValue().shortValue());
-<a class="jxr_linenumber" name="L262" href="#L262">262</a>     Assertions.assertEquals(6, customCache.getShortValue());
-<a class="jxr_linenumber" name="L263" href="#L263">263</a>     Assertions.assertEquals((<strong class="jxr_keyword">float</strong>) 7.1, customCache.getFloatWrapperValue(), 1);
-<a class="jxr_linenumber" name="L264" href="#L264">264</a>     Assertions.assertEquals((<strong class="jxr_keyword">float</strong>) 8.1, customCache.getFloatValue(), 1);
-<a class="jxr_linenumber" name="L265" href="#L265">265</a>     Assertions.assertEquals(9.01, customCache.getDoubleWrapperValue(), 1);
-<a class="jxr_linenumber" name="L266" href="#L266">266</a>     Assertions.assertEquals(10.01, customCache.getDoubleValue(), 1);
-<a class="jxr_linenumber" name="L267" href="#L267">267</a>     Assertions.assertEquals((byte) 11, customCache.getByteWrapperValue().byteValue());
-<a class="jxr_linenumber" name="L268" href="#L268">268</a>     Assertions.assertEquals((byte) 12, customCache.getByteValue());
-<a class="jxr_linenumber" name="L269" href="#L269">269</a>     Assertions.assertTrue(customCache.getBooleanWrapperValue());
-<a class="jxr_linenumber" name="L270" href="#L270">270</a>     Assertions.assertTrue(customCache.isBooleanValue());
-<a class="jxr_linenumber" name="L271" href="#L271">271</a>   }
-<a class="jxr_linenumber" name="L272" href="#L272">272</a> 
-<a class="jxr_linenumber" name="L273" href="#L273">273</a>   @Test
-<a class="jxr_linenumber" name="L274" href="#L274">274</a>   <strong class="jxr_keyword">void</strong> shouldErrorUnsupportedProperties() {
-<a class="jxr_linenumber" name="L275" href="#L275">275</a>     when(() -&gt; sqlSessionFactory.getConfiguration().addMapper(CustomCacheUnsupportedPropertyMapper.<strong class="jxr_keyword">class</strong>));
-<a class="jxr_linenumber" name="L276" href="#L276">276</a>     then(caughtException()).isInstanceOf(CacheException.<strong class="jxr_keyword">class</strong>)
-<a class="jxr_linenumber" name="L277" href="#L277">277</a>       .hasMessage(<span class="jxr_string">"Unsupported property type for cache: 'date' of type class java.util.Date"</span>);
-<a class="jxr_linenumber" name="L278" href="#L278">278</a>   }
-<a class="jxr_linenumber" name="L279" href="#L279">279</a> 
-<a class="jxr_linenumber" name="L280" href="#L280">280</a>   @Test
-<a class="jxr_linenumber" name="L281" href="#L281">281</a>   <strong class="jxr_keyword">void</strong> shouldErrorInvalidCacheNamespaceRefAttributesSpecifyBoth() {
-<a class="jxr_linenumber" name="L282" href="#L282">282</a>     when(() -&gt; sqlSessionFactory.getConfiguration().getMapperRegistry()
-<a class="jxr_linenumber" name="L283" href="#L283">283</a>       .addMapper(InvalidCacheNamespaceRefBothMapper.<strong class="jxr_keyword">class</strong>));
-<a class="jxr_linenumber" name="L284" href="#L284">284</a>     then(caughtException()).isInstanceOf(BuilderException.<strong class="jxr_keyword">class</strong>)
-<a class="jxr_linenumber" name="L285" href="#L285">285</a>       .hasMessage(<span class="jxr_string">"Cannot use both value() and name() attribute in the @CacheNamespaceRef"</span>);
-<a class="jxr_linenumber" name="L286" href="#L286">286</a>   }
-<a class="jxr_linenumber" name="L287" href="#L287">287</a> 
-<a class="jxr_linenumber" name="L288" href="#L288">288</a>   @Test
-<a class="jxr_linenumber" name="L289" href="#L289">289</a>   <strong class="jxr_keyword">void</strong> shouldErrorInvalidCacheNamespaceRefAttributesIsEmpty() {
-<a class="jxr_linenumber" name="L290" href="#L290">290</a>     when(() -&gt; sqlSessionFactory.getConfiguration().getMapperRegistry()
-<a class="jxr_linenumber" name="L291" href="#L291">291</a>       .addMapper(InvalidCacheNamespaceRefEmptyMapper.<strong class="jxr_keyword">class</strong>));
-<a class="jxr_linenumber" name="L292" href="#L292">292</a>     then(caughtException()).isInstanceOf(BuilderException.<strong class="jxr_keyword">class</strong>)
-<a class="jxr_linenumber" name="L293" href="#L293">293</a>       .hasMessage(<span class="jxr_string">"Should be specified either value() or name() attribute in the @CacheNamespaceRef"</span>);
-<a class="jxr_linenumber" name="L294" href="#L294">294</a>   }
-<a class="jxr_linenumber" name="L295" href="#L295">295</a> 
-<a class="jxr_linenumber" name="L296" href="#L296">296</a>   <strong class="jxr_keyword">private</strong> <a name="CustomCache" href="../../../../../org/apache/ibatis/submitted/cache/CustomCache.html#CustomCache">CustomCache</a> unwrap(Cache cache){
-<a class="jxr_linenumber" name="L297" href="#L297">297</a>     Field field;
-<a class="jxr_linenumber" name="L298" href="#L298">298</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L299" href="#L299">299</a>       field = cache.getClass().getDeclaredField(<span class="jxr_string">"delegate"</span>);
-<a class="jxr_linenumber" name="L300" href="#L300">300</a>     } <strong class="jxr_keyword">catch</strong> (NoSuchFieldException e) {
-<a class="jxr_linenumber" name="L301" href="#L301">301</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalStateException(e);
-<a class="jxr_linenumber" name="L302" href="#L302">302</a>     }
-<a class="jxr_linenumber" name="L303" href="#L303">303</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L304" href="#L304">304</a>       field.setAccessible(<strong class="jxr_keyword">true</strong>);
-<a class="jxr_linenumber" name="L305" href="#L305">305</a>       <strong class="jxr_keyword">return</strong> (<a name="CustomCache" href="../../../../../org/apache/ibatis/submitted/cache/CustomCache.html#CustomCache">CustomCache</a>)field.get(cache);
-<a class="jxr_linenumber" name="L306" href="#L306">306</a>     } <strong class="jxr_keyword">catch</strong> (IllegalAccessException e) {
-<a class="jxr_linenumber" name="L307" href="#L307">307</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalStateException(e);
-<a class="jxr_linenumber" name="L308" href="#L308">308</a>     } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="L309" href="#L309">309</a>       field.setAccessible(false);
-<a class="jxr_linenumber" name="L310" href="#L310">310</a>     }
-<a class="jxr_linenumber" name="L311" href="#L311">311</a>   }
-<a class="jxr_linenumber" name="L312" href="#L312">312</a> 
-<a class="jxr_linenumber" name="L313" href="#L313">313</a>   @CacheNamespace(implementation = CustomCache.<strong class="jxr_keyword">class</strong>, properties = {
-<a class="jxr_linenumber" name="L314" href="#L314">314</a>       @Property(name = <span class="jxr_string">"date"</span>, value = <span class="jxr_string">"2016/11/21"</span>)
-<a class="jxr_linenumber" name="L315" href="#L315">315</a>   })
-<a class="jxr_linenumber" name="L316" href="#L316">316</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">interface</strong> CustomCacheUnsupportedPropertyMapper {
-<a class="jxr_linenumber" name="L317" href="#L317">317</a>   }
-<a class="jxr_linenumber" name="L318" href="#L318">318</a> 
-<a class="jxr_linenumber" name="L319" href="#L319">319</a>   @CacheNamespaceRef(value = PersonMapper.<strong class="jxr_keyword">class</strong>, name = <span class="jxr_string">"org.apache.ibatis.submitted.cache.PersonMapper"</span>)
-<a class="jxr_linenumber" name="L320" href="#L320">320</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">interface</strong> InvalidCacheNamespaceRefBothMapper {
-<a class="jxr_linenumber" name="L321" href="#L321">321</a>   }
-<a class="jxr_linenumber" name="L322" href="#L322">322</a> 
-<a class="jxr_linenumber" name="L323" href="#L323">323</a>   @CacheNamespaceRef
-<a class="jxr_linenumber" name="L324" href="#L324">324</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">interface</strong> InvalidCacheNamespaceRefEmptyMapper {
-<a class="jxr_linenumber" name="L325" href="#L325">325</a>   }
-<a class="jxr_linenumber" name="L326" href="#L326">326</a> 
-<a class="jxr_linenumber" name="L327" href="#L327">327</a> }
+<a class="jxr_linenumber" name="L254" href="#L254">254</a>   <strong class="jxr_keyword">void</strong> shouldResultBeCachedAfterInsert() {
+<a class="jxr_linenumber" name="L255" href="#L255">255</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession(<strong class="jxr_keyword">true</strong>)) {
+<a class="jxr_linenumber" name="L256" href="#L256">256</a>       <a name="PersonMapper" href="../../../../../org/apache/ibatis/submitted/cache/PersonMapper.html#PersonMapper">PersonMapper</a> pm = sqlSession.getMapper(PersonMapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L257" href="#L257">257</a>       <em class="jxr_comment">// create</em>
+<a class="jxr_linenumber" name="L258" href="#L258">258</a>       <a name="Person" href="../../../../../org/apache/iba<a name="Person" href="../../../../../org/apache/ibatis/submitted/cache/Person.html#Person">Person</a>bmitted/cache/Person.html#Person">Person</a> p = <strong class="jxr_keyword">new</strong> <a name="Person" href="../../../../../org/apache/ibatis/submitted/cache/Person.html#Person">Person</a>(3, <span class="jxr_string">"hello"</span>, <span class="jxr_string">"world"</span>);
+<a class="jxr_linenumber" name="L259" href="#L259">259</a>       pm.create(p);
+<a class="jxr_linenumber" name="L260" href="#L260">260</a>       <em class="jxr_comment">// select (result should be cached)</em>
+<a class="jxr_linenumber" name="L261" href="#L261">261</a>       Assertions.assertEquals(3, pm.findAll().size());
+<a class="jxr_linenumber" name="L262" href="#L262">262</a>       <em class="jxr_comment">// create without flush (cache unchanged)</em>
+<a class="jxr_linenumber" name="L263" href="#L263">263</a>       <a name="Person" href="../../../../../org/apache/ibat<a name="Person" href="../../../../../org/apache/ibatis/submitted/cache/Person.html#Person">Person</a>mitted/cache/Person.html#Person">Person</a> p2 = <strong class="jxr_keyword">new</strong> <a name="Person" href="../../../../../org/apache/ibatis/submitted/cache/Person.html#Person">Person</a>(4, <span class="jxr_string">"bonjour"</span>, <span class="jxr_string">"world"</span>);
+<a class="jxr_linenumber" name="L264" href="#L264">264</a>       pm.createWithoutFlushCache(p2);
+<a class="jxr_linenumber" name="L265" href="#L265">265</a>     }
+<a class="jxr_linenumber" name="L266" href="#L266">266</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession(<strong class="jxr_keyword">true</strong>)) {
+<a class="jxr_linenumber" name="L267" href="#L267">267</a>       <a name="PersonMapper" href="../../../../../org/apache/ibatis/submitted/cache/PersonMapper.html#PersonMapper">PersonMapper</a> pm = sqlSession.getMapper(PersonMapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L268" href="#L268">268</a>       Assertions.assertEquals(3, pm.findAll().size());
+<a class="jxr_linenumber" name="L269" href="#L269">269</a>     }
+<a class="jxr_linenumber" name="L270" href="#L270">270</a>   }
+<a class="jxr_linenumber" name="L271" href="#L271">271</a> 
+<a class="jxr_linenumber" name="L272" href="#L272">272</a>   @Test
+<a class="jxr_linenumber" name="L273" href="#L273">273</a>   <strong class="jxr_keyword">void</strong> shouldApplyCustomCacheProperties() {
+<a class="jxr_linenumber" name="L274" href="#L274">274</a>     <a name="CustomCache" href="../../../../../org/apache/ibatis/submitted/cache/CustomCache.html#CustomCache">CustomCache</a> customCache = unwrap(sqlSessionFactory.getConfiguration().getCache(CustomCacheMapper.<strong class="jxr_keyword">class</strong>.getName()));
+<a class="jxr_linenumber" name="L275" href="#L275">275</a>     Assertions.assertEquals(<span class="jxr_string">"bar"</span>, customCache.getStringValue());
+<a class="jxr_linenumber" name="L276" href="#L276">276</a>     Assertions.assertEquals(1, customCache.getIntegerValue().intValue());
+<a class="jxr_linenumber" name="L277" href="#L277">277</a>     Assertions.assertEquals(2, customCache.getIntValue());
+<a class="jxr_linenumber" name="L278" href="#L278">278</a>     Assertions.assertEquals(3, customCache.getLongWrapperValue().longValue());
+<a class="jxr_linenumber" name="L279" href="#L279">279</a>     Assertions.assertEquals(4, customCache.getLongValue());
+<a class="jxr_linenumber" name="L280" href="#L280">280</a>     Assertions.assertEquals(5, customCache.getShortWrapperValue().shortValue());
+<a class="jxr_linenumber" name="L281" href="#L281">281</a>     Assertions.assertEquals(6, customCache.getShortValue());
+<a class="jxr_linenumber" name="L282" href="#L282">282</a>     Assertions.assertEquals((<strong class="jxr_keyword">float</strong>) 7.1, customCache.getFloatWrapperValue(), 1);
+<a class="jxr_linenumber" name="L283" href="#L283">283</a>     Assertions.assertEquals((<strong class="jxr_keyword">float</strong>) 8.1, customCache.getFloatValue(), 1);
+<a class="jxr_linenumber" name="L284" href="#L284">284</a>     Assertions.assertEquals(9.01, customCache.getDoubleWrapperValue(), 1);
+<a class="jxr_linenumber" name="L285" href="#L285">285</a>     Assertions.assertEquals(10.01, customCache.getDoubleValue(), 1);
+<a class="jxr_linenumber" name="L286" href="#L286">286</a>     Assertions.assertEquals((byte) 11, customCache.getByteWrapperValue().byteValue());
+<a class="jxr_linenumber" name="L287" href="#L287">287</a>     Assertions.assertEquals((byte) 12, customCache.getByteValue());
+<a class="jxr_linenumber" name="L288" href="#L288">288</a>     Assertions.assertTrue(customCache.getBooleanWrapperValue());
+<a class="jxr_linenumber" name="L289" href="#L289">289</a>     Assertions.assertTrue(customCache.isBooleanValue());
+<a class="jxr_linenumber" name="L290" href="#L290">290</a>   }
+<a class="jxr_linenumber" name="L291" href="#L291">291</a> 
+<a class="jxr_linenumber" name="L292" href="#L292">292</a>   @Test
+<a class="jxr_linenumber" name="L293" href="#L293">293</a>   <strong class="jxr_keyword">void</strong> shouldErrorUnsupportedProperties() {
+<a class="jxr_linenumber" name="L294" href="#L294">294</a>     when(() -&gt; sqlSessionFactory.getConfiguration().addMapper(CustomCacheUnsupportedPropertyMapper.<strong class="jxr_keyword">class</strong>));
+<a class="jxr_linenumber" name="L295" href="#L295">295</a>     then(caughtException()).isInstanceOf(CacheException.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="L296" href="#L296">296</a>         .hasMessage(<span class="jxr_string">"Unsupported property type for cache: 'date' of type class java.util.Date"</span>);
+<a class="jxr_linenumber" name="L297" href="#L297">297</a>   }
+<a class="jxr_linenumber" name="L298" href="#L298">298</a> 
+<a class="jxr_linenumber" name="L299" href="#L299">299</a>   @Test
+<a class="jxr_linenumber" name="L300" href="#L300">300</a>   <strong class="jxr_keyword">void</strong> shouldErrorInvalidCacheNamespaceRefAttributesSpecifyBoth() {
+<a class="jxr_linenumber" name="L301" href="#L301">301</a>     when(() -&gt; sqlSessionFactory.getConfiguration().getMapperRegistry()
+<a class="jxr_linenumber" name="L302" href="#L302">302</a>         .addMapper(InvalidCacheNamespaceRefBothMapper.<strong class="jxr_keyword">class</strong>));
+<a class="jxr_linenumber" name="L303" href="#L303">303</a>     then(caughtException()).isInstanceOf(BuilderException.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="L304" href="#L304">304</a>         .hasMessage(<span class="jxr_string">"Cannot use both value() and name() attribute in the @CacheNamespaceRef"</span>);
+<a class="jxr_linenumber" name="L305" href="#L305">305</a>   }
+<a class="jxr_linenumber" name="L306" href="#L306">306</a> 
+<a class="jxr_linenumber" name="L307" href="#L307">307</a>   @Test
+<a class="jxr_linenumber" name="L308" href="#L308">308</a>   <strong class="jxr_keyword">void</strong> shouldErrorInvalidCacheNamespaceRefAttributesIsEmpty() {
+<a class="jxr_linenumber" name="L309" href="#L309">309</a>     when(() -&gt; sqlSessionFactory.getConfiguration().getMapperRegistry()
+<a class="jxr_linenumber" name="L310" href="#L310">310</a>         .addMapper(InvalidCacheNamespaceRefEmptyMapper.<strong class="jxr_keyword">class</strong>));
+<a class="jxr_linenumber" name="L311" href="#L311">311</a>     then(caughtException()).isInstanceOf(BuilderException.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="L312" href="#L312">312</a>         .hasMessage(<span class="jxr_string">"Should be specified either value() or name() attribute in the @CacheNamespaceRef"</span>);
+<a class="jxr_linenumber" name="L313" href="#L313">313</a>   }
+<a class="jxr_linenumber" name="L314" href="#L314">314</a> 
+<a class="jxr_linenumber" name="L315" href="#L315">315</a>   <strong class="jxr_keyword">private</strong> <a name="CustomCache" href="../../../../../org/apache/ibatis/submitted/cache/CustomCache.html#CustomCache">CustomCache</a> unwrap(Cache cache){
+<a class="jxr_linenumber" name="L316" href="#L316">316</a>     Field field;
+<a class="jxr_linenumber" name="L317" href="#L317">317</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L318" href="#L318">318</a>       field = cache.getClass().getDeclaredField(<span class="jxr_string">"delegate"</span>);
+<a class="jxr_linenumber" name="L319" href="#L319">319</a>     } <strong class="jxr_keyword">catch</strong> (NoSuchFieldException e) {
+<a class="jxr_linenumber" name="L320" href="#L320">320</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalStateException(e);
+<a class="jxr_linenumber" name="L321" href="#L321">321</a>     }
+<a class="jxr_linenumber" name="L322" href="#L322">322</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L323" href="#L323">323</a>       field.setAccessible(<strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L324" href="#L324">324</a>       <strong class="jxr_keyword">return</strong> (<a name="CustomCache" href="../../../../../org/apache/ibatis/submitted/cache/CustomCache.html#CustomCache">CustomCache</a>)field.get(cache);
+<a class="jxr_linenumber" name="L325" href="#L325">325</a>     } <strong class="jxr_keyword">catch</strong> (IllegalAccessException e) {
+<a class="jxr_linenumber" name="L326" href="#L326">326</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalStateException(e);
+<a class="jxr_linenumber" name="L327" href="#L327">327</a>     } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="L328" href="#L328">328</a>       field.setAccessible(false);
+<a class="jxr_linenumber" name="L329" href="#L329">329</a>     }
+<a class="jxr_linenumber" name="L330" href="#L330">330</a>   }
+<a class="jxr_linenumber" name="L331" href="#L331">331</a> 
+<a class="jxr_linenumber" name="L332" href="#L332">332</a>   @CacheNamespace(implementation = CustomCache.<strong class="jxr_keyword">class</strong>, properties = {
+<a class="jxr_linenumber" name="L333" href="#L333">333</a>     @Property(name = <span class="jxr_string">"date"</span>, value = <span class="jxr_string">"2016/11/21"</span>)
+<a class="jxr_linenumber" name="L334" href="#L334">334</a>   })
+<a class="jxr_linenumber" name="L335" href="#L335">335</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">interface</strong> CustomCacheUnsupportedPropertyMapper {
+<a class="jxr_linenumber" name="L336" href="#L336">336</a>   }
+<a class="jxr_linenumber" name="L337" href="#L337">337</a> 
+<a class="jxr_linenumber" name="L338" href="#L338">338</a>   @CacheNamespaceRef(value = PersonMapper.<strong class="jxr_keyword">class</strong>, name = <span class="jxr_string">"org.apache.ibatis.submitted.cache.PersonMapper"</span>)
+<a class="jxr_linenumber" name="L339" href="#L339">339</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">interface</strong> InvalidCacheNamespaceRefBothMapper {
+<a class="jxr_linenumber" name="L340" href="#L340">340</a>   }
+<a class="jxr_linenumber" name="L341" href="#L341">341</a> 
+<a class="jxr_linenumber" name="L342" href="#L342">342</a>   @CacheNamespaceRef
+<a class="jxr_linenumber" name="L343" href="#L343">343</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">interface</strong> InvalidCacheNamespaceRefEmptyMapper {
+<a class="jxr_linenumber" name="L344" href="#L344">344</a>   }
+<a class="jxr_linenumber" name="L345" href="#L345">345</a> 
+<a class="jxr_linenumber" name="L346" href="#L346">346</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2020 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2021 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>
