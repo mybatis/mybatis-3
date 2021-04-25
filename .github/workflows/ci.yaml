@@ -24,7 +24,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macOS-latest, windows-latest]
-        java: [8, 11, 15, 16]
+        java: [8, 11, 15, 16, 17-ea]
       fail-fast: false
       max-parallel: 4
     name: Test JDK ${{ matrix.java }}, ${{ matrix.os }}
@@ -42,5 +42,18 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
+      - name: Set argLine command line option
+        if: ${{ matrix.java != '8' }}
+        run: echo 'ARG_LINE=-D"argLine=--illegal-access=permit"' >> $GITHUB_ENV
+      - name: Set env command line option
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: echo 'ENV_TRAVIS="-Denv.TRAVIS"' >> $GITHUB_ENV
       - name: Test with Maven
-        run: ./mvnw test -B -D"license.skip=true"
+        if: ${{ matrix.os != 'windows-latest' }}
+        run: ./mvnw test -B -D"license.skip=true" -D"jacoco.skip=true" $ENV_TRAVIS $ARG_LINE 
+      - name: Test with Maven
+        if: ${{ matrix.os == 'windows-latest' && matrix.java == '8' }}
+        run: ./mvnw test -B -D"license.skip=true" -D"jacoco.skip=true"
+      - name: Test with Maven
+        if: ${{ matrix.os == 'windows-latest' && matrix.java != '8' }}
+        run: ./mvnw test -B -D"license.skip=true" -D"jacoco.skip=true" -D"argLine=--illegal-access=permit"
