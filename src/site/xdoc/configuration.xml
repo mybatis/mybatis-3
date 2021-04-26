@@ -141,7 +141,7 @@ SqlSessionFactory factory =
 
         <p>
           This feature is disabled by default. If you specify a default value into placeholder,
-          you should be enable this feature by adding a special property as follow:
+          you should enable this feature by adding a special property as follow:
         </p>
 
         <source><![CDATA[
