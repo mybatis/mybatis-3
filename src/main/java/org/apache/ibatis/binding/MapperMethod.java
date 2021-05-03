@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -112,7 +112,7 @@ public class MapperMethod {
     } else if (Integer.class.equals(method.getReturnType()) || Integer.TYPE.equals(method.getReturnType())) {
       result = rowCount;
     } else if (Long.class.equals(method.getReturnType()) || Long.TYPE.equals(method.getReturnType())) {
-      result = (long)rowCount;
+      result = (long) rowCount;
     } else if (Boolean.class.equals(method.getReturnType()) || Boolean.TYPE.equals(method.getReturnType())) {
       result = rowCount > 0;
     } else {
@@ -187,7 +187,7 @@ public class MapperMethod {
       }
       return array;
     } else {
-      return list.toArray((E[])array);
+      return list.toArray((E[]) array);
     }
   }
 
@@ -326,10 +326,6 @@ public class MapperMethod {
       return hasResultHandler() ? (ResultHandler) args[resultHandlerIndex] : null;
     }
 
-    public String getMapKey() {
-      return mapKey;
-    }
-
     public Class<?> getReturnType() {
       return returnType;
     }
@@ -352,6 +348,7 @@ public class MapperMethod {
 
     /**
      * return whether return type is {@code java.util.Optional}.
+     *
      * @return return {@code true}, if return type is {@code java.util.Optional}
      * @since 3.5.0
      */
@@ -372,6 +369,10 @@ public class MapperMethod {
         }
       }
       return index;
+    }
+
+    public String getMapKey() {
+      return mapKey;
     }
 
     private String getMapKey(Method method) {

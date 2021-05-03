@@ -1,0 +1,59 @@
+#
+#    Copyright 2009-2021 the original author or authors.
+#
+#    Licensed under the Apache License, Version 2.0 (the "License");
+#    you may not use this file except in compliance with the License.
+#    You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS,
+#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#    See the License for the specific language governing permissions and
+#    limitations under the License.
+#
+
+name: Java CI
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macOS-latest, windows-latest]
+        java: [8, 11, 15, 16, 17-ea]
+      fail-fast: false
+      max-parallel: 4
+    name: Test JDK ${{ matrix.java }}, ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.java }}
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: Set argLine command line option
+        if: ${{ matrix.java != '8' }}
+        run: echo 'ARG_LINE=-D"argLine=--illegal-access=permit"' >> $GITHUB_ENV
+      - name: Set env command line option
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: echo 'ENV_TRAVIS="-Denv.TRAVIS"' >> $GITHUB_ENV
+      - name: Test with Maven
+        if: ${{ matrix.os != 'windows-latest' }}
+        run: ./mvnw test -B -D"license.skip=true" -D"jacoco.skip=true" $ENV_TRAVIS $ARG_LINE 
+      - name: Test with Maven
+        if: ${{ matrix.os == 'windows-latest' && matrix.java == '8' }}
+        run: ./mvnw test -B -D"license.skip=true" -D"jacoco.skip=true"
+      - name: Test with Maven
+        if: ${{ matrix.os == 'windows-latest' && matrix.java != '8' }}
+        run: ./mvnw test -B -D"license.skip=true" -D"jacoco.skip=true" -D"argLine=--illegal-access=permit"

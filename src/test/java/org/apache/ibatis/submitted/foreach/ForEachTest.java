@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,6 +14,9 @@
  *    limitations under the License.
  */
 package org.apache.ibatis.submitted.foreach;
+
+import static com.googlecode.catchexception.apis.BDDCatchException.*;
+import static org.assertj.core.api.BDDAssertions.then;
 
 import java.io.Reader;
 import java.util.ArrayList;
@@ -30,9 +33,6 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
-import static com.googlecode.catchexception.apis.BDDCatchException.*;
-import static org.assertj.core.api.BDDAssertions.then;
 
 class ForEachTest {
 
@@ -115,7 +115,7 @@ class ForEachTest {
   void shouldReportMissingPropertyName() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
-      when(mapper).typoInItemProperty(Collections.singletonList(new User()));
+      when(() -> mapper.typoInItemProperty(Collections.singletonList(new User())));
       then(caughtException()).isInstanceOf(PersistenceException.class)
         .hasMessageContaining("There is no getter for property named 'idd' in 'class org.apache.ibatis.submitted.foreach.User'");
     }

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,6 +14,8 @@
  *    limitations under the License.
  */
 package org.apache.ibatis.submitted.member_access;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.Reader;
 import java.util.HashMap;
@@ -31,8 +33,6 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 /**
  * Tests for member access of Java Object.
  */
@@ -42,8 +42,8 @@ class MemberAccessTest {
 
   @BeforeAll
   static void setUp() throws Exception {
-    try (Reader reader = Resources
-        .getResourceAsReader("org/apache/ibatis/submitted/member_access/mybatis-config.xml")) {
+    try (
+        Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/member_access/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
       sqlSessionFactory.getConfiguration().addMapper(Mapper.class);
     }
@@ -62,8 +62,7 @@ class MemberAccessTest {
       assertEquals(params.protectedField, bean.protectedField);
       assertEquals(params.publicField, bean.publicField);
       assertEquals(params.getPrivateProperty(), bean.properties.get("privateProperty"));
-      assertEquals(params.getPackagePrivateProperty(),
-          bean.properties.get("packagePrivateProperty"));
+      assertEquals(params.getPackagePrivateProperty(), bean.properties.get("packagePrivateProperty"));
       assertEquals(params.getProtectedProperty(), bean.properties.get("protectedProperty"));
       assertEquals(params.getPublicProperty(), bean.properties.get("publicProperty"));
     }
@@ -82,8 +81,7 @@ class MemberAccessTest {
       assertEquals(params.protectedField + "%", bean.protectedField);
       assertEquals(params.publicField + "%", bean.publicField);
       assertEquals(params.getPrivateProperty() + "%", bean.properties.get("privateProperty"));
-      assertEquals(params.getPackagePrivateProperty() + "%",
-          bean.properties.get("packagePrivateProperty"));
+      assertEquals(params.getPackagePrivateProperty() + "%", bean.properties.get("packagePrivateProperty"));
       assertEquals(params.getProtectedProperty() + "%", bean.properties.get("protectedProperty"));
       assertEquals(params.getPublicProperty() + "%", bean.properties.get("publicProperty"));
     }
@@ -102,8 +100,7 @@ class MemberAccessTest {
       assertEquals(params.protectedField, bean.protectedField);
       assertEquals(params.publicField, bean.publicField);
       assertEquals(params.getPrivateProperty(), bean.properties.get("privateProperty"));
-      assertEquals(params.getPackagePrivateProperty(),
-          bean.properties.get("packagePrivateProperty"));
+      assertEquals(params.getPackagePrivateProperty(), bean.properties.get("packagePrivateProperty"));
       assertEquals(params.getProtectedProperty(), bean.properties.get("protectedProperty"));
       assertEquals(params.getPublicProperty(), bean.properties.get("publicProperty"));
     }
@@ -275,7 +272,7 @@ class MemberAccessTest {
     @Select("SELECT '1', '2', '3', '4' FROM INFORMATION_SCHEMA.SYSTEM_USERS")
     Immutable publicConstructorAutoMapping();
 
-    @ConstructorArgs({@Arg(column = "c1", javaType = String.class)})
+    @ConstructorArgs({ @Arg(column = "c1", javaType = String.class) })
     @Select("SELECT '1' as c1 FROM INFORMATION_SCHEMA.SYSTEM_USERS")
     Immutable privateConstructorMapping();
 

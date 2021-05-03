@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2021 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,16 +15,19 @@
  */
 package org.apache.ibatis.submitted.cache;
 
+import static com.googlecode.catchexception.apis.BDDCatchException.*;
+import static org.assertj.core.api.BDDAssertions.then;
+
 import java.io.Reader;
 import java.lang.reflect.Field;
 
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.annotations.CacheNamespace;
+import org.apache.ibatis.annotations.CacheNamespaceRef;
 import org.apache.ibatis.annotations.Property;
+import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheException;
-import org.apache.ibatis.annotations.CacheNamespaceRef;
-import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -32,9 +35,6 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static com.googlecode.catchexception.apis.BDDCatchException.*;
-import static org.assertj.core.api.BDDAssertions.then;
 
 // issue #524
 class CacheTest {
@@ -50,7 +50,7 @@ class CacheTest {
 
     // populate in-memory database
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/cache/CreateDB.sql");
+        "org/apache/ibatis/submitted/cache/CreateDB.sql");
   }
 
   /*
@@ -251,6 +251,25 @@ class CacheTest {
   }
 
   @Test
+  void shouldResultBeCachedAfterInsert() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession(true)) {
+      PersonMapper pm = sqlSession.getMapper(PersonMapper.class);
+      // create
+      Person p = new Person(3, "hello", "world");
+      pm.create(p);
+      // select (result should be cached)
+      Assertions.assertEquals(3, pm.findAll().size());
+      // create without flush (cache unchanged)
+      Person p2 = new Person(4, "bonjour", "world");
+      pm.createWithoutFlushCache(p2);
+    }
+    try (SqlSession sqlSession = sqlSessionFactory.openSession(true)) {
+      PersonMapper pm = sqlSession.getMapper(PersonMapper.class);
+      Assertions.assertEquals(3, pm.findAll().size());
+    }
+  }
+
+  @Test
   void shouldApplyCustomCacheProperties() {
     CustomCache customCache = unwrap(sqlSessionFactory.getConfiguration().getCache(CustomCacheMapper.class.getName()));
     Assertions.assertEquals("bar", customCache.getStringValue());
@@ -272,25 +291,25 @@ class CacheTest {
 
   @Test
   void shouldErrorUnsupportedProperties() {
-    when(sqlSessionFactory.getConfiguration()).addMapper(CustomCacheUnsupportedPropertyMapper.class);
+    when(() -> sqlSessionFactory.getConfiguration().addMapper(CustomCacheUnsupportedPropertyMapper.class));
     then(caughtException()).isInstanceOf(CacheException.class)
-      .hasMessage("Unsupported property type for cache: 'date' of type class java.util.Date");
+        .hasMessage("Unsupported property type for cache: 'date' of type class java.util.Date");
   }
 
   @Test
   void shouldErrorInvalidCacheNamespaceRefAttributesSpecifyBoth() {
-    when(sqlSessionFactory.getConfiguration().getMapperRegistry())
-      .addMapper(InvalidCacheNamespaceRefBothMapper.class);
+    when(() -> sqlSessionFactory.getConfiguration().getMapperRegistry()
+        .addMapper(InvalidCacheNamespaceRefBothMapper.class));
     then(caughtException()).isInstanceOf(BuilderException.class)
-      .hasMessage("Cannot use both value() and name() attribute in the @CacheNamespaceRef");
+        .hasMessage("Cannot use both value() and name() attribute in the @CacheNamespaceRef");
   }
 
   @Test
   void shouldErrorInvalidCacheNamespaceRefAttributesIsEmpty() {
-    when(sqlSessionFactory.getConfiguration().getMapperRegistry())
-      .addMapper(InvalidCacheNamespaceRefEmptyMapper.class);
+    when(() -> sqlSessionFactory.getConfiguration().getMapperRegistry()
+        .addMapper(InvalidCacheNamespaceRefEmptyMapper.class));
     then(caughtException()).isInstanceOf(BuilderException.class)
-      .hasMessage("Should be specified either value() or name() attribute in the @CacheNamespaceRef");
+        .hasMessage("Should be specified either value() or name() attribute in the @CacheNamespaceRef");
   }
 
   private CustomCache unwrap(Cache cache){
@@ -311,7 +330,7 @@ class CacheTest {
   }
 
   @CacheNamespace(implementation = CustomCache.class, properties = {
-      @Property(name = "date", value = "2016/11/21")
+    @Property(name = "date", value = "2016/11/21")
   })
   private interface CustomCacheUnsupportedPropertyMapper {
   }

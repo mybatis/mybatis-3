@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,9 +18,9 @@ package org.apache.ibatis.submitted.force_flush_on_select;
 import java.util.List;
 
 public interface PersonMapper {
-    public Person selectByIdFlush(int id);
-    public Person selectByIdNoFlush(int id);
-    public List<Person> selectAllFlush();
-    public List<Person> selectAllNoFlush();
+    Person selectByIdFlush(int id);
+    Person selectByIdNoFlush(int id);
+    List<Person> selectAllFlush();
+    List<Person> selectAllNoFlush();
     int update(Person p);
 }

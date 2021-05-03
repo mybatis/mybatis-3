@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,38 +24,32 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.Test;
 
-//@Disabled("see issue #614")
 class SerializeCircularTest {
 
   @Test
-  void serializeAndDeserializeObjectsWithAggressiveLazyLoadingWithoutPreloadingAttribute()
-  throws Exception {
+  void serializeAndDeserializeObjectsWithAggressiveLazyLoadingWithoutPreloadingAttribute() throws Exception {
     try (SqlSession sqlSession = createSessionWithAggressiveLazyLoading()) {
       testSerializeWithoutPreloadingAttribute(sqlSession);
     }
   }
 
   @Test
-  void serializeAndDeserializeObjectsWithAggressiveLazyLoadingWithPreloadingAttribute()
-  throws Exception {
+  void serializeAndDeserializeObjectsWithAggressiveLazyLoadingWithPreloadingAttribute() throws Exception {
     try (SqlSession sqlSession = createSessionWithAggressiveLazyLoading()) {
       testSerializeWithPreloadingAttribute(sqlSession);
     }
   }
 
-//  @Disabled("See http://code.google.com/p/mybatis/issues/detail?id=614")
   @Test
-  void serializeAndDeserializeObjectsWithoutAggressiveLazyLoadingWithoutPreloadingAttribute()
-  throws Exception {
+  void serializeAndDeserializeObjectsWithoutAggressiveLazyLoadingWithoutPreloadingAttribute() throws Exception {
     try (SqlSession sqlSession = createSessionWithoutAggressiveLazyLoading()) {
-        //expected problem with deserializing
+      // expected problem with deserializing
       testSerializeWithoutPreloadingAttribute(sqlSession);
     }
   }
 
   @Test
-  void serializeAndDeserializeObjectsWithoutAggressiveLazyLoadingWithPreloadingAttribute()
-  throws Exception {
+  void serializeAndDeserializeObjectsWithoutAggressiveLazyLoadingWithPreloadingAttribute() throws Exception {
     try (SqlSession sqlSession = createSessionWithoutAggressiveLazyLoading()) {
       testSerializeWithPreloadingAttribute(sqlSession);
     }
@@ -70,10 +64,10 @@ class SerializeCircularTest {
   }
 
   private SqlSession createSession(boolean anAggressiveLazyLoading) throws Exception {
-    String xmlConfig = anAggressiveLazyLoading ?
-        "org/apache/ibatis/submitted/serializecircular/MapperConfigWithAggressiveLazyLoading.xml":
-        "org/apache/ibatis/submitted/serializecircular/MapperConfigWithoutAggressiveLazyLoading.xml";
-      SqlSessionFactory sqlSessionFactory = getSqlSessionFactoryXmlConfig(xmlConfig);
+    String xmlConfig = anAggressiveLazyLoading
+        ? "org/apache/ibatis/submitted/serializecircular/MapperConfigWithAggressiveLazyLoading.xml"
+        : "org/apache/ibatis/submitted/serializecircular/MapperConfigWithoutAggressiveLazyLoading.xml";
+    SqlSessionFactory sqlSessionFactory = getSqlSessionFactoryXmlConfig(xmlConfig);
     return sqlSessionFactory.openSession();
   }
 
@@ -108,7 +102,7 @@ class SerializeCircularTest {
       SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configReader);
 
       BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-              "org/apache/ibatis/submitted/serializecircular/CreateDB.sql");
+          "org/apache/ibatis/submitted/serializecircular/CreateDB.sql");
 
       return sqlSessionFactory;
     }

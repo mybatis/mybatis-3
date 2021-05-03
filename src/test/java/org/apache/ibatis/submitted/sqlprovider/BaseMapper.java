@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,18 +15,18 @@
  */
 package org.apache.ibatis.submitted.sqlprovider;
 
-import org.apache.ibatis.annotations.Lang;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.InsertProvider;
-import org.apache.ibatis.annotations.SelectProvider;
-import org.apache.ibatis.annotations.UpdateProvider;
-import org.apache.ibatis.scripting.xmltags.XMLLanguageDriver;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.List;
+
+import org.apache.ibatis.annotations.InsertProvider;
+import org.apache.ibatis.annotations.Lang;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.SelectProvider;
+import org.apache.ibatis.annotations.UpdateProvider;
+import org.apache.ibatis.scripting.xmltags.XMLLanguageDriver;
 
 public interface BaseMapper<T> {
 
@@ -62,7 +62,7 @@ public interface BaseMapper<T> {
   @InsertProvider(type = OurSqlBuilder.class, method = "buildInsertSelective")
   void insertSelective(T entity);
 
-  @UpdateProvider(type= OurSqlBuilder.class, method= "buildUpdateSelective")
+  @UpdateProvider(type = OurSqlBuilder.class, method = "buildUpdateSelective")
   void updateSelective(T entity);
 
   @SelectProvider(type = OurSqlBuilder.class, method = "buildGetByEntityQuery")

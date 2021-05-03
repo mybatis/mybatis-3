@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -303,6 +303,74 @@ public String updatePersonSql() {
             </tr>
             <tr>
               <td>
+                <ul>
+                  <li>
+                    <code>LIMIT(String)</code>
+                  </li>
+                  <li>
+                    <code>LIMIT(int)</code>
+                  </li>
+                </ul>
+              </td>
+              <td>
+                <code>LIMIT</code> 句を追加します。
+                このメソッドは SELECT(), UPDATE(), DELETE() と一緒に使うと有効になり、
+                SELECT()使用時は、OFFSET()と一緒に使うように設計されています。 (3.5.2以降で利用可能)
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <ul>
+                  <li>
+                    <code>OFFSET(String)</code>
+                  </li>
+                  <li>
+                    <code>OFFSET(long)</code>
+                  </li>
+                </ul>
+              </td>
+              <td>
+                <code>OFFSET</code> 句を追加します。
+                このメソッドは SELECT() と一緒に使うと有効になり、
+                LIMIT()と一緒に使うように設計されています。(3.5.2以降で利用可能)
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <ul>
+                  <li>
+                    <code>OFFSET_ROWS(String)</code>
+                  </li>
+                  <li>
+                    <code>OFFSET_ROWS(long)</code>
+                  </li>
+                </ul>
+              </td>
+              <td>
+                <code>OFFSET n ROWS</code> 句を追加します。
+                このメソッドは SELECT() と一緒に使うと有効になり、
+                FETCH_FIRST_ROWS_ONLY()と一緒に使うように設計されています。 (3.5.2以降で利用可能)
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <ul>
+                  <li>
+                    <code>FETCH_FIRST_ROWS_ONLY(String)</code>
+                  </li>
+                  <li>
+                    <code>FETCH_FIRST_ROWS_ONLY(int)</code>
+                  </li>
+                </ul>
+              </td>
+              <td>
+                <code>FETCH FIRST n ROWS ONLY</code> 句を追加します。
+                このメソッドは SELECT() と一緒に使うと有効になり、
+                OFFSET_ROWS()と一緒に使うように設計されています。 (3.5.2以降で利用可能)
+              </td>
+            </tr>
+            <tr>
+              <td>
                 <code>DELETE_FROM(String)</code>
               </td>
               <td>対象となるテーブルを指定して delete ステートメントを開始します。通常、この後に WHERE メソッドの呼び出しが続きます。
@@ -360,9 +428,24 @@ public String updatePersonSql() {
                 このメソッドは、INTO_COLUMNS() メソッドと一緒に呼び出します。
               </td>
             </tr>
+            <tr>
+              <td>
+                <code>ADD_ROW()</code>
+              </td>
+              <td>
+                一括挿入用に新しい行領域を追加します。 (3.5.2以降で利用可能)
+              </td>
+            </tr>
           </tbody>
         </table>
 
+        <p>
+          <span class="label important">NOTE</span>
+          <code>LIMIT</code> 、<code>OFFSET</code> 、<code>OFFSET n ROWS</code> 、<code>FETCH FIRST n ROWS ONLY</code> 句は生成されたステートメントにそのまま書き込むという点に注意することが重要です。
+          言い換えると、これらの句をサポートしていないデータベースに対して、そのデータベースで解釈可能な表現へ変換することはしません。
+          そのため、利用するデータベースがこれらの句をサポートしているか否かを事前に把握しておくことが重要になります。
+          もし、利用するデータベースがこれらの句をサポートしていない場合は、SQL実行時にエラーになります。
+        </p>
 
         <p>バージョン3.4.2以降では、次のように可変長引数を使うことができます。</p>
 
@@ -390,6 +473,48 @@ public String updatePersonSql() {
     .UPDATE("PERSON")
     .SET("FULL_NAME = #{fullName}", "DATE_OF_BIRTH = #{dateOfBirth}")
     .WHERE("ID = #{id}")
+    .toString();
+}
+]]></source>
+
+        <p>バージョン3.5.2以降では、次のように一括挿入用のステートメントを作成することができます。</p>
+
+        <source><![CDATA[
+public String insertPersonsSql() {
+  // INSERT INTO PERSON (ID, FULL_NAME)
+  //     VALUES (#{mainPerson.id}, #{mainPerson.fullName}) , (#{subPerson.id}, #{subPerson.fullName})
+  return new SQL()
+    .INSERT_INTO("PERSON")
+    .INTO_COLUMNS("ID", "FULL_NAME")
+    .INTO_VALUES("#{mainPerson.id}", "#{mainPerson.fullName}")
+    .ADD_ROW()
+    .INTO_VALUES("#{subPerson.id}", "#{subPerson.fullName}")
+    .toString();
+}
+]]></source>
+
+        <p>バージョン3.5.2以降では、次のように検索結果行を制限するための検索ステートメントを作成することができます。</p>
+
+        <source><![CDATA[
+public String selectPersonsWithOffsetLimitSql() {
+  // SELECT id, name FROM PERSON
+  //     LIMIT #{limit} OFFSET #{offset}
+  return new SQL()
+    .SELECT("id", "name")
+    .FROM("PERSON")
+    .LIMIT("#{limit}")
+    .OFFSET("#{offset}")
+    .toString();
+}
+
+public String selectPersonsWithFetchFirstSql() {
+  // SELECT id, name FROM PERSON
+  //     OFFSET #{offset} ROWS FETCH FIRST #{limit} ROWS ONLY
+  return new SQL()
+    .SELECT("id", "name")
+    .FROM("PERSON")
+    .OFFSET_ROWS("#{offset}")
+    .FETCH_FIRST_ROWS_ONLY("#{limit}")
     .toString();
 }
 ]]></source>

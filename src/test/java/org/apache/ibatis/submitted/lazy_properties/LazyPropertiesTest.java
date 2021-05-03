@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ class LazyPropertiesTest {
 
     // populate in-memory database
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/lazy_properties/CreateDB.sql");
+        "org/apache/ibatis/submitted/lazy_properties/CreateDB.sql");
   }
 
   @Test
@@ -137,8 +137,7 @@ class LazyPropertiesTest {
   void verifyCustomLazyLoadTriggerMethods() {
     Configuration configuration = sqlSessionFactory.getConfiguration();
     configuration.setAggressiveLazyLoading(false);
-    configuration
-        .setLazyLoadTriggerMethods(new HashSet<>(Collections.singleton("trigger")));
+    configuration.setLazyLoadTriggerMethods(new HashSet<>(Collections.singleton("trigger")));
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUser(1);

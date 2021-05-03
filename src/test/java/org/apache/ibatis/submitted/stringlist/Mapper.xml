@@ -22,32 +22,32 @@
 
 <mapper namespace="org.apache.ibatis.submitted.stringlist.Mapper">
 
-	<select id="getUsersAndGroups" resultMap="results">
-		select * from users where id = #{id}
-	</select>
+    <select id="getUsersAndGroups" resultMap="results">
+        select * from users where id = #{id}
+    </select>
 
-	<resultMap type="org.apache.ibatis.submitted.stringlist.User" id="results">
-		<id column="id" property="id"/>
-		<collection property="groups" ofType="string">
-			<result column="group_id"/>
-		</collection>
-		<collection property="roles" ofType="string">
-			<result column="rol_id"/>
-		</collection>
-	</resultMap>
+    <resultMap type="org.apache.ibatis.submitted.stringlist.User" id="results">
+        <id column="id" property="id"/>
+        <collection property="groups" ofType="string">
+            <result column="group_id"/>
+        </collection>
+        <collection property="roles" ofType="string">
+            <result column="rol_id"/>
+        </collection>
+    </resultMap>
 
-	<select id="getUsersAndGroupsMap" resultMap="mapResults">
-		select * from users where id = #{id}
-	</select>
+    <select id="getUsersAndGroupsMap" resultMap="mapResults">
+        select * from users where id = #{id}
+    </select>
 
-	<resultMap type="map" id="mapResults">
-		<id column="id" property="id" />
-		<collection property="groups" ofType="string" javaType="list">
-			<result column="group_id" />
-		</collection>
-		<collection property="roles" ofType="string" javaType="list">
-			<result column="rol_id"/>
-		</collection>
+    <resultMap type="map" id="mapResults">
+        <id column="id" property="id" />
+        <collection property="groups" ofType="string" javaType="list">
+            <result column="group_id" />
+        </collection>
+        <collection property="roles" ofType="string" javaType="list">
+            <result column="rol_id"/>
+        </collection>
   </resultMap>
 
 </mapper>

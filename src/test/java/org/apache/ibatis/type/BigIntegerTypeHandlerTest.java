@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -57,7 +57,7 @@ class BigIntegerTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldGetResultFromResultSetByPosition() throws Exception {
     when(rs.getBigDecimal(1)).thenReturn(new BigDecimal("707070656505050302797979792923232303"));
-    assertEquals(new BigInteger("707070656505050302797979792923232303"), TYPE_HANDLER.getResult(rs,1 ));
+    assertEquals(new BigInteger("707070656505050302797979792923232303"), TYPE_HANDLER.getResult(rs, 1));
     verify(rs, never()).wasNull();
   }
 
@@ -65,7 +65,7 @@ class BigIntegerTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldGetResultNullFromResultSetByPosition() throws Exception {
     when(rs.getBigDecimal(1)).thenReturn(null);
-    assertNull(TYPE_HANDLER.getResult(rs,1 ));
+    assertNull(TYPE_HANDLER.getResult(rs, 1));
     verify(rs, never()).wasNull();
   }
 

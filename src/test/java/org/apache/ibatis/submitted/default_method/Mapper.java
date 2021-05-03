@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ public interface Mapper {
     return getUserById((Integer) args[0]);
   }
 
-  static interface SubMapper extends Mapper {
+  interface SubMapper extends Mapper {
     default User defaultGetUser(Object... args) {
       return getUserByIdAndName((String) args[0], (Integer) args[1]);
     }

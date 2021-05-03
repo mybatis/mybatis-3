@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -76,4 +76,27 @@ class BlockingCacheTest {
     }
   }
 
+  @Test
+  void ensureLockIsAcquiredBeforePut() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      PersonMapper mapper = sqlSession.getMapper(PersonMapper.class);
+      mapper.delete(-1);
+      mapper.findAll();
+      sqlSession.commit();
+    }
+  }
+
+  @Test
+  void ensureLockIsReleasedOnRollback() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      PersonMapper mapper = sqlSession.getMapper(PersonMapper.class);
+      mapper.delete(-1);
+      mapper.findAll();
+      sqlSession.rollback();
+    }
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      PersonMapper mapper = sqlSession.getMapper(PersonMapper.class);
+      mapper.findAll();
+    }
+  }
 }

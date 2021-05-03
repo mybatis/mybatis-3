@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2020 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -83,7 +83,7 @@ org.apache.ibatis.logging.LogFactory.useStdOutLogging();]]></source>
           <a href="http://logging.apache.org/log4j/">Apache Log4j</a>
         </li>
         <li>
-          <a href="http://java.sun.com/j2se/1.4.1/docs/guide/util/logging/">JDK Logging API</a>
+          <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/logging/overview.html">JDK Logging API</a>
         </li>
       </ul>
       <subsection name="Logging Configuration">
@@ -97,7 +97,7 @@ org.apache.ibatis.logging.LogFactory.useStdOutLogging();]]></source>
         </h4>
         <p>Log4J を使うので、Log4J の JAR ファイルがアプリケーションから利用できるようにしておく必要があります。Log4J の JAR ファイルをダウンロードしてあなたのアプリケーションのクラスパスに追加してください。JAR ファイルは先ほど挙げた URL からダウンロードできます。
         </p>
-        <p>Web あるいはエンタープライズアプリケーションの場合は、ダウンロードした log4j.jar を WEB-INF/lib ディレクトリに追加します。スタンドアローンアプリケーションの場合は起動時の JVM 引数 -classpath に追加するだけです。
+        <p>Web あるいはエンタープライズアプリケーションの場合は、ダウンロードした <code>log4j.jar</code> を <code>WEB-INF/lib</code> ディレクトリに追加します。スタンドアローンアプリケーションの場合は起動時の JVM の引数に <code>-classpath</code> に追加するだけです。
         </p>
         <p></p>
         <h4>
@@ -110,7 +110,7 @@ public interface BlogMapper {
   @Select("SELECT * FROM blog WHERE id = #{id}")
   Blog selectBlog(int id);
 }]]></source>
-        <p>次のテキストを含む log4j.properties というファイルを作成し、クラスパスに配置します。
+        <p>次のテキストを含む <code>log4j.properties</code> というファイルを作成し、クラスパスに配置します。
         </p>
         <source><![CDATA[# Global logging configuration
 log4j.rootLogger=ERROR, stdout
@@ -121,7 +121,7 @@ log4j.appender.stdout=org.apache.log4j.ConsoleAppender
 log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
 log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n]]></source>
         <p>上記のように設定すると、Log4J は <code>org.mybatis.example.BlogMapper</code> について詳細なログを出力し、それ以外のクラスについてはエラーのみを出力します。</p>
-        <p>ログに出力される情報を細かく調整したいのなら、Mapper ファイル全体ではなく特定のステートメントを指定することもできます。</p>
+        <p>ログに出力される情報を細かく調整したいのなら、Mapper ファイル全体ではなく特定のステートメントを指定することもできます。次の例では <code>selectBlog</code> ステートメントのみログを出力します。</p>
 
         <source>log4j.logger.org.mybatis.example.BlogMapper.selectBlog=TRACE</source>
 
@@ -158,7 +158,7 @@ log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n]]></source>
 
         <p><span class="label important">NOTE</span> SLF4J or Log4j 2 をお使いの場合、MyBatis のログは MYBATIS というマーカーで出力されます。</p>
 
-        <p>上記の log4j.properties の残りの部分はアペンダーの設定になっていますが、このドキュメントでは説明しません。Log4J のサイトを参照してください。あるいは、設定値を変更してみてどのような結果になるか試してみるのも良いでしょう。
+        <p>上記の <code>log4j.properties</code> の残りの部分はアペンダーの設定になっていますが、このドキュメントでは説明しません。Log4J のサイト（上記URL）を参照してください。あるいは、設定値を変更してみてどのような結果になるか試してみるのも良いでしょう。
         </p>
       </subsection>
     </section>

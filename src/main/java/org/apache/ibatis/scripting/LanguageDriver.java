@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -28,11 +28,11 @@ public interface LanguageDriver {
   /**
    * Creates a {@link ParameterHandler} that passes the actual parameters to the the JDBC statement.
    *
+   * @author Frank D. Martinez [mnesarco]
    * @param mappedStatement The mapped statement that is being executed
    * @param parameterObject The input parameter object (can be null)
    * @param boundSql The resulting SQL once the dynamic language has been executed.
-   * @return
-   * @author Frank D. Martinez [mnesarco]
+   * @return the parameter handler
    * @see DefaultParameterHandler
    */
   ParameterHandler createParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql);
@@ -44,7 +44,7 @@ public interface LanguageDriver {
    * @param configuration The MyBatis configuration
    * @param script XNode parsed from a XML file
    * @param parameterType input parameter type got from a mapper method or specified in the parameterType xml attribute. Can be null.
-   * @return
+   * @return the sql source
    */
   SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType);
 
@@ -55,7 +55,7 @@ public interface LanguageDriver {
    * @param configuration The MyBatis configuration
    * @param script The content of the annotation
    * @param parameterType input parameter type got from a mapper method or specified in the parameterType xml attribute. Can be null.
-   * @return
+   * @return the sql source
    */
   SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType);
 

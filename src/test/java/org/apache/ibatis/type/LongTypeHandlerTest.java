@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -36,10 +36,8 @@ class LongTypeHandlerTest extends BaseTypeHandlerTest {
   @Override
   @Test
   public void shouldGetResultFromResultSetByName() throws Exception {
-    when(rs.getLong("column")).thenReturn(100L);
+    when(rs.getLong("column")).thenReturn(100L, 0L);
     assertEquals(Long.valueOf(100L), TYPE_HANDLER.getResult(rs, "column"));
-
-    when(rs.getLong("column")).thenReturn(0L);
     assertEquals(Long.valueOf(0L), TYPE_HANDLER.getResult(rs, "column"));
   }
 
@@ -54,10 +52,8 @@ class LongTypeHandlerTest extends BaseTypeHandlerTest {
   @Override
   @Test
   public void shouldGetResultFromResultSetByPosition() throws Exception {
-    when(rs.getLong(1)).thenReturn(100L);
+    when(rs.getLong(1)).thenReturn(100L, 0L);
     assertEquals(Long.valueOf(100L), TYPE_HANDLER.getResult(rs, 1));
-
-    when(rs.getLong(1)).thenReturn(0L);
     assertEquals(Long.valueOf(0L), TYPE_HANDLER.getResult(rs, 1));
   }
 
@@ -72,10 +68,8 @@ class LongTypeHandlerTest extends BaseTypeHandlerTest {
   @Override
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
-    when(cs.getLong(1)).thenReturn(100L);
+    when(cs.getLong(1)).thenReturn(100L, 0L);
     assertEquals(Long.valueOf(100L), TYPE_HANDLER.getResult(cs, 1));
-
-    when(cs.getLong(1)).thenReturn(0L);
     assertEquals(Long.valueOf(0L), TYPE_HANDLER.getResult(cs, 1));
   }
 

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -30,7 +30,8 @@ import org.apache.ibatis.session.Configuration;
 public class VelocityLanguageDriver implements LanguageDriver {
 
   @Override
-  public ParameterHandler createParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql) {
+  public ParameterHandler createParameterHandler(MappedStatement mappedStatement, Object parameterObject,
+      BoundSql boundSql) {
     return new DefaultParameterHandler(mappedStatement, parameterObject, boundSql);
   }
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -17,42 +17,42 @@
 
 -->
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.apache.ibatis.submitted.xml_external_ref.PersonMapper">
-	<cache-ref namespace="org.apache.ibatis.submitted.xml_external_ref.PetMapper" />
-	<resultMap type="org.apache.ibatis.submitted.xml_external_ref.Person"
-		id="personResult">
-		<id property="id" column="person_id" />
-		<result property="name" column="person_name" />
-	</resultMap>
-	<resultMap type="org.apache.ibatis.submitted.xml_external_ref.Person"
-		id="resultWithPets" extends="personResult">
-		<collection property="pets"
-			ofType="org.apache.ibatis.submitted.xml_external_ref.Pet"
-			resultMap="org.apache.ibatis.submitted.xml_external_ref.PetMapper.petResult" />
-	</resultMap>
-	<sql id="personColumnList">
-		person_id, person_name
-	</sql>
-	<!-- Referencing a sql fragment in another file -->
-	<select id="select" parameterType="java.lang.Integer" resultMap="resultWithPets">
-		SELECT
-		<include refid="personColumnList" />
-		,
-		<include
-			refid="org.apache.ibatis.submitted.xml_external_ref.PetMapper.petColumnList" />
-		FROM person, pet
-		WHERE person_id = #{id}
-		AND person_id = owner_id
-		ORDER BY pet_id
-	</select>
-	<!-- Referencing a sql fragment and a result map in another file -->
-	<select id="selectPet" parameterType="java.lang.Integer"
-		resultMap="org.apache.ibatis.submitted.xml_external_ref.PetMapper.petResult">
-		SELECT
-		<include
-			refid="org.apache.ibatis.submitted.xml_external_ref.PetMapper.petColumnList" />
-		FROM pet
-		WHERE pet_id = #{id}
-	</select>
+    <cache-ref namespace="org.apache.ibatis.submitted.xml_external_ref.PetMapper" />
+    <resultMap type="org.apache.ibatis.submitted.xml_external_ref.Person"
+        id="personResult">
+        <id property="id" column="person_id" />
+        <result property="name" column="person_name" />
+    </resultMap>
+    <resultMap type="org.apache.ibatis.submitted.xml_external_ref.Person"
+        id="resultWithPets" extends="personResult">
+        <collection property="pets"
+            ofType="org.apache.ibatis.submitted.xml_external_ref.Pet"
+            resultMap="org.apache.ibatis.submitted.xml_external_ref.PetMapper.petResult" />
+    </resultMap>
+    <sql id="personColumnList">
+        person_id, person_name
+    </sql>
+    <!-- Referencing a sql fragment in another file -->
+    <select id="select" parameterType="java.lang.Integer" resultMap="resultWithPets">
+        SELECT
+        <include refid="personColumnList" />
+        ,
+        <include
+            refid="org.apache.ibatis.submitted.xml_external_ref.PetMapper.petColumnList" />
+        FROM person, pet
+        WHERE person_id = #{id}
+        AND person_id = owner_id
+        ORDER BY pet_id
+    </select>
+    <!-- Referencing a sql fragment and a result map in another file -->
+    <select id="selectPet" parameterType="java.lang.Integer"
+        resultMap="org.apache.ibatis.submitted.xml_external_ref.PetMapper.petResult">
+        SELECT
+        <include
+            refid="org.apache.ibatis.submitted.xml_external_ref.PetMapper.petColumnList" />
+        FROM pet
+        WHERE pet_id = #{id}
+    </select>
 </mapper>

@@ -96,12 +96,12 @@
     <select id="selectBlogUsingConstructorWithResultMap" parameterType="int"
             resultMap="blogUsingConstructorWithResultMap">
       select b.*,
-      	a.id as author_id,
-      	a.username as author_username,
-      	a.password as author_password,
-      	a.email as author_email,
-      	a.bio as author_bio,
-      	a.favourite_section
+        a.id as author_id,
+        a.username as author_username,
+        a.password as author_password,
+        a.email as author_email,
+        a.bio as author_bio,
+        a.favourite_section
       from Blog b join Author a
       on b.author_id = a.id
       where b.id = #{id}
@@ -110,12 +110,12 @@
     <select id="selectBlogUsingConstructorWithResultMapAndProperties" parameterType="int"
             resultMap="blogUsingConstructorWithResultMapAndProperties">
       select b.*,
-      	a.id as author_id,
-      	a.username as author_username,
-      	a.password as author_password,
-      	a.email as author_email,
-      	a.bio as author_bio,
-      	a.favourite_section
+        a.id as author_id,
+        a.username as author_username,
+        a.password as author_password,
+        a.email as author_email,
+        a.bio as author_bio,
+        a.favourite_section
       from Blog b join Author a
       on b.author_id = a.id
       where b.id = #{id}
@@ -124,12 +124,12 @@
     <select id="selectBlogUsingConstructorWithResultMapCollection" parameterType="int"
             resultMap="blogUsingConstructorWithResultMapCollection">
       select b.*, p.*,
-      	a.id as author_id,
-      	a.username as author_username,
-      	a.password as author_password,
-      	a.email as author_email,
-      	a.bio as author_bio,
-      	a.favourite_section
+        a.id as author_id,
+        a.username as author_username,
+        a.password as author_password,
+        a.email as author_email,
+        a.bio as author_bio,
+        a.favourite_section
       from Blog b
           join Author a on b.author_id = a.id
           join Post p on b.id = p.blog_id

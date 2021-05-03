@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2018 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -672,7 +672,7 @@ public class User {
           Ojalá todo fuera tan sencillo.
         </p>
 
-	      <h4>Mapeo de resultados avanzado</h4>
+        <h4>Mapeo de resultados avanzado</h4>
 
         <p>
           MyBatis fue creado con una idea en mente: las bases de datos no siempre son como a ti te gustaría que fueran. Nos encantaría que todas las bases de datos estuvieran en 3ª forma normal o BCNF, pero no lo están. Sería genial que una base de datos encajara perfectamente con todas las aplicaciones que la usan pero no es así. Los ResultMaps son la respuesta de MyBatis a este problema.
@@ -1751,7 +1751,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
 
         <source><![CDATA[<cache type="com.domain.something.MyCustomCache"/>]]></source>
 
-        <p>Este ejemplo muestra cómo usar una caché personalizada. La clase especificada en el atributo type debe implementar el interfaz org.mybatis.cache.Cache y proporcionar un constructor que recibe como parámetro un String id. Este es uno de los interfaces más complejos de MyBatis pero su funcionalidad es simple.
+        <p>Este ejemplo muestra cómo usar una caché personalizada. La clase especificada en el atributo type debe implementar el interfaz org.apache.ibatis.cache.Cache y proporcionar un constructor que recibe como parámetro un String id. Este es uno de los interfaces más complejos de MyBatis pero su funcionalidad es simple.
         </p>
 
         <source><![CDATA[public interface Cache {

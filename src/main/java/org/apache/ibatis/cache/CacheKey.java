@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -29,21 +29,33 @@ public class CacheKey implements Cloneable, Serializable {
 
   private static final long serialVersionUID = 1146682552656046210L;
 
-  public static final CacheKey NULL_CACHE_KEY = new NullCacheKey();
+  public static final CacheKey NULL_CACHE_KEY = new CacheKey() {
 
-  private static final int DEFAULT_MULTIPLYER = 37;
+    @Override
+    public void update(Object object) {
+      throw new CacheException("Not allowed to update a null cache key instance.");
+    }
+
+    @Override
+    public void updateAll(Object[] objects) {
+      throw new CacheException("Not allowed to update a null cache key instance.");
+    }
+  };
+
+  private static final int DEFAULT_MULTIPLIER = 37;
   private static final int DEFAULT_HASHCODE = 17;
 
   private final int multiplier;
   private int hashcode;
   private long checksum;
   private int count;
-  // 8/21/2017 - Sonarlint flags this as needing to be marked transient.  While true if content is not serializable, this is not always true and thus should not be marked transient.
+  // 8/21/2017 - Sonarlint flags this as needing to be marked transient. While true if content is not serializable, this
+  // is not always true and thus should not be marked transient.
   private List<Object> updateList;
 
   public CacheKey() {
     this.hashcode = DEFAULT_HASHCODE;
-    this.multiplier = DEFAULT_MULTIPLYER;
+    this.multiplier = DEFAULT_MULTIPLIER;
     this.count = 0;
     this.updateList = new ArrayList<>();
   }

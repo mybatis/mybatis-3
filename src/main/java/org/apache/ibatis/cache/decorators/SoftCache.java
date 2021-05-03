@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.concurrent.locks.ReadWriteLock;
 
 import org.apache.ibatis.cache.Cache;
 
@@ -52,7 +51,6 @@ public class SoftCache implements Cache {
     removeGarbageCollectedItems();
     return delegate.getSize();
   }
-
 
   public void setSize(int size) {
     this.numberOfHardLinks = size;
@@ -99,11 +97,6 @@ public class SoftCache implements Cache {
     }
     removeGarbageCollectedItems();
     delegate.clear();
-  }
-
-  @Override
-  public ReadWriteLock getReadWriteLock() {
-    return null;
   }
 
   private void removeGarbageCollectedItems() {
