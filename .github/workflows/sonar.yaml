@@ -31,9 +31,10 @@ jobs:
           # Disabling shallow clone is recommended for improving relevancy of reporting
           fetch-depth: 0
       - name: Set up JDK
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v2
         with:
           java-version: 11
+          distribution: adopt
       - name: Analyze with SonarCloud
         run: ./mvnw verify jacoco:report sonar:sonar -B -Dsonar.projectKey=mybatis_mybatis-3 -Dsonar.organization=mybatis -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN -Dlicense.skip=true
         env:
