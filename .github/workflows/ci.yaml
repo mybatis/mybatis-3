@@ -37,13 +37,13 @@ jobs:
         with:
           java-version: ${{ matrix.java }}
           distribution: ${{ matrix.distribution }}
-      - name: Cache local Maven repository
+      - name: Cache local Maven m2
         uses: actions/cache@v2
         with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
-            ${{ runner.os }}-maven-
+            ${{ runner.os }}-m2
       - name: Set argLine command line option
         if: ${{ matrix.java != '8' }}
         run: echo 'ARG_LINE=-D"argLine=--illegal-access=permit"' >> $GITHUB_ENV
