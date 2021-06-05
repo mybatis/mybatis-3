@@ -33,7 +33,7 @@ public interface TypeHandler<T> {
    * @param rs
    *          the rs
    * @param columnName
-   *          Colunm name, when configuration <code>useColumnLabel</code> is <code>false</code>
+   *          Column name, when configuration <code>useColumnLabel</code> is <code>false</code>
    * @return the result
    * @throws SQLException
    *           the SQL exception
