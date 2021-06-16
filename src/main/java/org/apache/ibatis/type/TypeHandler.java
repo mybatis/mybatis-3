@@ -44,4 +44,32 @@ public interface TypeHandler<T> {
 
   T getResult(CallableStatement cs, int columnIndex) throws SQLException;
 
+  /**
+   * Gets the result.
+   * contain entity field class type
+   *
+   * @param rs           the rs
+   * @param columnName   Column name, when configuration <code>useColumnLabel</code> is <code>false</code>
+   * @param propertyType entity field class type
+   * @return
+   * @throws SQLException
+   */
+  default T getResult(ResultSet rs, String columnName, Class<?> propertyType) throws SQLException {
+    return getResult(rs, columnName);
+  }
+
+  /**
+   * Gets the result.
+   * contain entity field class type
+   *
+   * @param rs
+   * @param columnIndex
+   * @param propertyType entity field class type
+   * @return
+   * @throws SQLException
+   */
+  default T getResult(ResultSet rs, int columnIndex, Class<?> propertyType) throws SQLException {
+    return getResult(rs, columnIndex);
+  }
+
 }

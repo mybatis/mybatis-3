@@ -254,9 +254,9 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
       }
       MetaObject metaParam = configuration.newMetaObject(param);
       try {
+        Class<?> propertyType = metaParam.getSetterType(propertyName);
         if (typeHandler == null) {
           if (metaParam.hasSetter(propertyName)) {
-            Class<?> propertyType = metaParam.getSetterType(propertyName);
             typeHandler = typeHandlerRegistry.getTypeHandler(propertyType,
                 JdbcType.forCode(rsmd.getColumnType(columnPosition)));
           } else {
@@ -267,7 +267,7 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
         if (typeHandler == null) {
           // Error?
         } else {
-          Object value = typeHandler.getResult(rs, columnPosition);
+          Object value = typeHandler.getResult(rs, columnPosition, propertyType);
           metaParam.setValue(propertyName, value);
         }
       } catch (SQLException e) {
