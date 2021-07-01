@@ -15,6 +15,8 @@
  */
 package org.apache.ibatis.scripting.xmltags;
 
+import java.util.Map;
+
 import org.apache.ibatis.builder.xml.XMLMapperEntityResolver;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.mapping.BoundSql;
@@ -40,7 +42,7 @@ public class XMLLanguageDriver implements LanguageDriver {
 
   @Override
   public SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType) {
-    XMLScriptBuilder builder = new XMLScriptBuilder(configuration, script, parameterType);
+    XMLScriptBuilder builder = new XMLScriptBuilder(this, configuration, script, parameterType);
     return builder.parseScriptNode();
   }
 
@@ -53,13 +55,21 @@ public class XMLLanguageDriver implements LanguageDriver {
     } else {
       // issue #127
       script = PropertyParser.parse(script, configuration.getVariables());
-      TextSqlNode textSqlNode = new TextSqlNode(script);
+      TextSqlNode textSqlNode = new TextSqlNode(this, script, null);
       if (textSqlNode.isDynamic()) {
         return new DynamicSqlSource(configuration, textSqlNode);
       } else {
         return new RawSqlSource(configuration, script, parameterType);
       }
     }
+  }
+
+  protected Object getOgnlValue(String expression, Map<String, Object> bindings) {
+    return OgnlCache.getValue(expression, bindings);
+  }
+
+  protected ExpressionEvaluator newExpressionEvaluator() {
+    return new ExpressionEvaluator();
   }
 
 }

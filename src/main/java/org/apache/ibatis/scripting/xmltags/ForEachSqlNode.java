@@ -37,7 +37,11 @@ public class ForEachSqlNode implements SqlNode {
   private final Configuration configuration;
 
   public ForEachSqlNode(Configuration configuration, SqlNode contents, String collectionExpression, String index, String item, String open, String close, String separator) {
-    this.evaluator = new ExpressionEvaluator();
+    this(new XMLLanguageDriver(), configuration, contents, collectionExpression, index, item, open, close, separator);
+  }
+
+  public ForEachSqlNode(XMLLanguageDriver xmlLanguageDriver, Configuration configuration, SqlNode contents, String collectionExpression, String index, String item, String open, String close, String separator) {
+    this.evaluator = xmlLanguageDriver.newExpressionEvaluator();
     this.collectionExpression = collectionExpression;
     this.contents = contents;
     this.open = open;

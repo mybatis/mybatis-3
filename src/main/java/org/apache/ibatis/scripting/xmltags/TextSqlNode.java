@@ -28,12 +28,14 @@ import org.apache.ibatis.type.SimpleTypeRegistry;
 public class TextSqlNode implements SqlNode {
   private final String text;
   private final Pattern injectionFilter;
+  private final XMLLanguageDriver xmlLanguageDriver;
 
   public TextSqlNode(String text) {
-    this(text, null);
+    this(new XMLLanguageDriver(), text, null);
   }
 
-  public TextSqlNode(String text, Pattern injectionFilter) {
+  public TextSqlNode(XMLLanguageDriver xmlLanguageDriver, String text, Pattern injectionFilter) {
+    this.xmlLanguageDriver = xmlLanguageDriver;
     this.text = text;
     this.injectionFilter = injectionFilter;
   }
@@ -47,7 +49,7 @@ public class TextSqlNode implements SqlNode {
 
   @Override
   public boolean apply(DynamicContext context) {
-    GenericTokenParser parser = createParser(new BindingTokenParser(context, injectionFilter));
+    GenericTokenParser parser = createParser(new BindingTokenParser(xmlLanguageDriver, context, injectionFilter));
     context.appendSql(parser.parse(text));
     return true;
   }
@@ -58,10 +60,12 @@ public class TextSqlNode implements SqlNode {
 
   private static class BindingTokenParser implements TokenHandler {
 
+    private final XMLLanguageDriver xmlLanguageDriver;
     private DynamicContext context;
     private Pattern injectionFilter;
 
-    public BindingTokenParser(DynamicContext context, Pattern injectionFilter) {
+    public BindingTokenParser(XMLLanguageDriver xmlLanguageDriver, DynamicContext context, Pattern injectionFilter) {
+      this.xmlLanguageDriver = xmlLanguageDriver;
       this.context = context;
       this.injectionFilter = injectionFilter;
     }
@@ -74,7 +78,7 @@ public class TextSqlNode implements SqlNode {
       } else if (SimpleTypeRegistry.isSimpleType(parameter.getClass())) {
         context.getBindings().put("value", parameter);
       }
-      Object value = OgnlCache.getValue(content, context.getBindings());
+      Object value = xmlLanguageDriver.getOgnlValue(content, context.getBindings());
       String srtValue = value == null ? "" : String.valueOf(value); // issue #274 return "" instead of "null"
       checkInjection(srtValue);
       return srtValue;

@@ -13,28 +13,12 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.scripting.xmltags;
+package org.apache.ibatis.submitted.language;
 
-/**
- * @author Frank D. Martinez [mnesarco]
- */
-public class VarDeclSqlNode implements SqlNode {
+import java.util.List;
 
-  private final XMLLanguageDriver xmlLanguageDriver;
-  private final String name;
-  private final String expression;
+public interface CustomLanguageMapper {
 
-  public VarDeclSqlNode(XMLLanguageDriver xmlLanguageDriver, String var, String exp) {
-    this.xmlLanguageDriver = xmlLanguageDriver;
-    name = var;
-    expression = exp;
-  }
-
-  @Override
-  public boolean apply(DynamicContext context) {
-    final Object value = xmlLanguageDriver.getOgnlValue(expression, context.getBindings());
-    context.bind(name, value);
-    return true;
-  }
+  List<Long> select();
 
 }

@@ -37,14 +37,16 @@ public class XMLScriptBuilder extends BaseBuilder {
   private final XNode context;
   private boolean isDynamic;
   private final Class<?> parameterType;
+  private final XMLLanguageDriver xmlLanguageDriver;
   private final Map<String, NodeHandler> nodeHandlerMap = new HashMap<>();
 
   public XMLScriptBuilder(Configuration configuration, XNode context) {
-    this(configuration, context, null);
+    this(new XMLLanguageDriver(), configuration, context, null);
   }
 
-  public XMLScriptBuilder(Configuration configuration, XNode context, Class<?> parameterType) {
+  public XMLScriptBuilder(XMLLanguageDriver xmlLanguageDriver, Configuration configuration, XNode context, Class<?> parameterType) {
     super(configuration);
+    this.xmlLanguageDriver = xmlLanguageDriver;
     this.context = context;
     this.parameterType = parameterType;
     initNodeHandlerMap();
@@ -81,7 +83,7 @@ public class XMLScriptBuilder extends BaseBuilder {
       XNode child = node.newXNode(children.item(i));
       if (child.getNode().getNodeType() == Node.CDATA_SECTION_NODE || child.getNode().getNodeType() == Node.TEXT_NODE) {
         String data = child.getStringBody("");
-        TextSqlNode textSqlNode = new TextSqlNode(data);
+        TextSqlNode textSqlNode = new TextSqlNode(xmlLanguageDriver, data, null);
         if (textSqlNode.isDynamic()) {
           contents.add(textSqlNode);
           isDynamic = true;
@@ -114,7 +116,7 @@ public class XMLScriptBuilder extends BaseBuilder {
     public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
       final String name = nodeToHandle.getStringAttribute("name");
       final String expression = nodeToHandle.getStringAttribute("value");
-      final VarDeclSqlNode node = new VarDeclSqlNode(name, expression);
+      final VarDeclSqlNode node = new VarDeclSqlNode(xmlLanguageDriver, name, expression);
       targetContents.add(node);
     }
   }
@@ -176,7 +178,7 @@ public class XMLScriptBuilder extends BaseBuilder {
       String open = nodeToHandle.getStringAttribute("open");
       String close = nodeToHandle.getStringAttribute("close");
       String separator = nodeToHandle.getStringAttribute("separator");
-      ForEachSqlNode forEachSqlNode = new ForEachSqlNode(configuration, mixedSqlNode, collection, index, item, open, close, separator);
+      ForEachSqlNode forEachSqlNode = new ForEachSqlNode(xmlLanguageDriver, configuration, mixedSqlNode, collection, index, item, open, close, separator);
       targetContents.add(forEachSqlNode);
     }
   }
@@ -190,7 +192,7 @@ public class XMLScriptBuilder extends BaseBuilder {
     public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
       MixedSqlNode mixedSqlNode = parseDynamicTags(nodeToHandle);
       String test = nodeToHandle.getStringAttribute("test");
-      IfSqlNode ifSqlNode = new IfSqlNode(mixedSqlNode, test);
+      IfSqlNode ifSqlNode = new IfSqlNode(xmlLanguageDriver, mixedSqlNode, test);
       targetContents.add(ifSqlNode);
     }
   }

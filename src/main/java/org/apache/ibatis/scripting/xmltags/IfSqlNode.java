@@ -24,9 +24,13 @@ public class IfSqlNode implements SqlNode {
   private final SqlNode contents;
 
   public IfSqlNode(SqlNode contents, String test) {
+    this(new XMLLanguageDriver(), contents, test);
+  }
+
+  public IfSqlNode(XMLLanguageDriver xmlLanguageDriver, SqlNode contents, String test) {
     this.test = test;
     this.contents = contents;
-    this.evaluator = new ExpressionEvaluator();
+    this.evaluator = xmlLanguageDriver.newExpressionEvaluator();
   }
 
   @Override
