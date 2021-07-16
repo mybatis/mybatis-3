@@ -126,7 +126,7 @@ class TypeHandlerRegistryTest {
   }
 
   @Test
-  void shouldBindHandlersToWrapersAndPrimitivesIndividually() {
+  void shouldBindHandlersToWrappersAndPrimitivesIndividually() {
     typeHandlerRegistry.register(Integer.class, DateTypeHandler.class);
     assertSame(IntegerTypeHandler.class, typeHandlerRegistry.getTypeHandler(int.class).getClass());
     typeHandlerRegistry.register(Integer.class, IntegerTypeHandler.class);
@@ -227,7 +227,7 @@ class TypeHandlerRegistryTest {
   }
 
   @Test
-  void shouldAutoRegisterEnutmTypeInMultiThreadEnvironment() throws Exception {
+  void shouldAutoRegisterEnumTypeInMultiThreadEnvironment() throws Exception {
     // gh-1820
     ExecutorService executorService = Executors.newCachedThreadPool();
     try {
