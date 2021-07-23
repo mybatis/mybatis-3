@@ -146,7 +146,7 @@ public class DefaultVFS extends VFS {
           prefix = prefix + "/";
         }
 
-        // Iterate over immediate children, adding files and recursing into directories
+        // Iterate over immediate children, adding files and recurring into directories
         for (String child : children) {
           String resourcePath = path + "/" + child;
           resources.add(resourcePath);
@@ -271,7 +271,7 @@ public class DefaultVFS extends VFS {
           try {
             file = new File(URLEncoder.encode(jarUrl.toString(), "UTF-8"));
           } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("Unsupported encoding?  UTF-8?  That's unpossible.");
+            throw new RuntimeException("Unsupported encoding?  UTF-8?  That's impossible.");
           }
         }
 
