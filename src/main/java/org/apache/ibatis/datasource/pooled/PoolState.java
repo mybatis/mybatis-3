@@ -84,7 +84,7 @@ public class PoolState {
   @Override
   public synchronized String toString() {
     StringBuilder builder = new StringBuilder();
-    builder.append("\n===CONFINGURATION==============================================");
+    builder.append("\n===CONFIGURATION==============================================");
     builder.append("\n jdbcDriver                     ").append(dataSource.getDriver());
     builder.append("\n jdbcUrl                        ").append(dataSource.getUrl());
     builder.append("\n jdbcUsername                   ").append(dataSource.getUsername());
