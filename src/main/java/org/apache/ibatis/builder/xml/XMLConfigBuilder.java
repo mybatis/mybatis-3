@@ -132,7 +132,7 @@ public class XMLConfigBuilder extends BaseBuilder {
     MetaClass metaConfig = MetaClass.forClass(Configuration.class, localReflectorFactory);
     for (Object key : props.keySet()) {
       if (!metaConfig.hasSetter(String.valueOf(key))) {
-        throw new BuilderException("The setting " + key + " is not known.  Make sure you spelled it correctly (case sensitive).");
+        throw new BuilderException("The setting " + key + " is not known.  Make sure you spelled it correctly (case sensitive). Or the setting has not been added in this version.");
       }
     }
     return props;
