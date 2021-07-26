@@ -391,7 +391,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       String[] resultMapNames = resultMap.split(",");
       for (String resultMapName : resultMapNames) {
         try {
-          resultMaps.add(configuration.getResultMap(resultMapName.trim()));
+          resultMaps.add(configuration.getResultMap(resultMapName));
         } catch (IllegalArgumentException e) {
           throw new IncompleteElementException("Could not find result map '" + resultMapName + "' referenced from '" + statementId + "'", e);
         }
