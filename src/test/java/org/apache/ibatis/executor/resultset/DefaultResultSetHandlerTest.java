@@ -1,5 +1,5 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
+/*
+ *    Copyright 2009-2021 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -69,7 +69,7 @@ class DefaultResultSetHandlerTest {
   /**
    * Contrary to the spec, some drivers require case-sensitive column names when getting result.
    *
-   * @see <a href="http://code.google.com/p/mybatis/issues/detail?id=557">Issue 557</a>
+   * @see <a href="https://github.com/mybatis/old-google-code-issues/issues/557">Issue 557</a>
    */
   @Test
   void shouldRetainColumnNameCase() throws Exception {

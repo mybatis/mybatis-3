@@ -1,5 +1,5 @@
-/**
- *    Copyright 2009-2020 the original author or authors.
+/*
+ *    Copyright 2009-2021 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -57,6 +57,7 @@ class UseActualParamNameTest {
 
   @Test
   void shouldMultipleParamsBeReferencedByActualNames() {
+    // This test requires -parameters compiler option
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUserByIdAndName(1, "User1");

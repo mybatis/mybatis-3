@@ -1,5 +1,5 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
+/*
+ *    Copyright 2009-2021 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,13 +19,11 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.Externalizable;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InvalidClassException;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
-import java.io.ObjectStreamClass;
 import java.io.ObjectStreamException;
 import java.io.StreamCorruptedException;
 import java.util.Arrays;
@@ -33,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.io.SerialFilterChecker;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 
 /**
@@ -108,8 +107,10 @@ public abstract class AbstractSerialStateHolder implements Externalizable {
       return this.userBean;
     }
 
+    SerialFilterChecker.check();
+
     /* First run */
-    try (ObjectInputStream in = new LookAheadObjectInputStream(new ByteArrayInputStream(this.userBeanBytes))) {
+    try (ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(this.userBeanBytes))) {
       this.userBean = in.readObject();
       this.unloadedProperties = (Map<String, ResultLoaderMap.LoadPair>) in.readObject();
       this.objectFactory = (ObjectFactory) in.readObject();
@@ -130,33 +131,4 @@ public abstract class AbstractSerialStateHolder implements Externalizable {
 
   protected abstract Object createDeserializationProxy(Object target, Map<String, ResultLoaderMap.LoadPair> unloadedProperties, ObjectFactory objectFactory,
           List<Class<?>> constructorArgTypes, List<Object> constructorArgs);
-
-  private static class LookAheadObjectInputStream extends ObjectInputStream {
-    private static final List<String> blacklist = Arrays.asList(
-        "org.apache.commons.beanutils.BeanComparator",
-        "org.apache.commons.collections.functors.InvokerTransformer",
-        "org.apache.commons.collections.functors.InstantiateTransformer",
-        "org.apache.commons.collections4.functors.InvokerTransformer",
-        "org.apache.commons.collections4.functors.InstantiateTransformer",
-        "org.codehaus.groovy.runtime.ConvertedClosure",
-        "org.codehaus.groovy.runtime.MethodClosure",
-        "org.springframework.beans.factory.ObjectFactory",
-        "org.springframework.transaction.jta.JtaTransactionManager",
-        "com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl");
-
-    public LookAheadObjectInputStream(InputStream in) throws IOException {
-      super(in);
-    }
-
-    @Override
-    protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException {
-      String className = desc.getName();
-      if (blacklist.contains(className)) {
-        throw new InvalidClassException(className, "Deserialization is not allowed for security reasons. "
-            + "It is strongly recommended to configure the deserialization filter provided by JDK. "
-            + "See http://openjdk.java.net/jeps/290 for the details.");
-      }
-      return super.resolveClass(desc);
-    }
-  }
 }

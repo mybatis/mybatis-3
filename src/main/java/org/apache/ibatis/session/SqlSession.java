@@ -1,5 +1,5 @@
-/**
- *    Copyright 2009-2020 the original author or authors.
+/*
+ *    Copyright 2009-2021 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ public interface SqlSession extends Closeable {
   <T> T selectOne(String statement, Object parameter);
 
   /**
-   * Retrieve a list of mapped objects from the statement key and parameter.
+   * Retrieve a list of mapped objects from the statement key.
    * @param <E> the returned list element type
    * @param statement Unique identifier matching the statement to use.
    * @return List of mapped object

@@ -1,5 +1,5 @@
-/**
- *    Copyright 2009-2020 the original author or authors.
+/*
+ *    Copyright 2009-2021 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -100,7 +100,7 @@ public class ProviderSqlSource implements SqlSource {
       this.mapperMethod = mapperMethod;
       Lang lang = mapperMethod == null ? null : mapperMethod.getAnnotation(Lang.class);
       this.languageDriver = configuration.getLanguageDriver(lang == null ? null : lang.value());
-      this.providerType = getProviderType(provider, mapperMethod);
+      this.providerType = getProviderType(configuration, provider, mapperMethod);
       candidateProviderMethodName = (String) provider.annotationType().getMethod("method").invoke(provider);
 
       if (candidateProviderMethodName.length() == 0 && ProviderMethodResolver.class.isAssignableFrom(this.providerType)) {
@@ -235,11 +235,14 @@ public class ProviderSqlSource implements SqlSource {
     return sql != null ? sql.toString() : null;
   }
 
-  private Class<?> getProviderType(Annotation providerAnnotation, Method mapperMethod)
+  private Class<?> getProviderType(Configuration configuration, Annotation providerAnnotation, Method mapperMethod)
       throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
     Class<?> type = (Class<?>) providerAnnotation.annotationType().getMethod("type").invoke(providerAnnotation);
     Class<?> value = (Class<?>) providerAnnotation.annotationType().getMethod("value").invoke(providerAnnotation);
     if (value == void.class && type == void.class) {
+      if (configuration.getDefaultSqlProviderType() != null) {
+        return configuration.getDefaultSqlProviderType();
+      }
       throw new BuilderException("Please specify either 'value' or 'type' attribute of @"
           + providerAnnotation.annotationType().getSimpleName()
           + " at the '" + mapperMethod.toString() + "'.");

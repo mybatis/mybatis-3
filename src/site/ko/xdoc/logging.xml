@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2019 the original author or authors.
+       Copyright 2009-2020 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -88,7 +88,7 @@ org.apache.ibatis.logging.LogFactory.useStdOutLogging();]]></source>
           <a href="http://logging.apache.org/log4j/">Apache Log4j</a>
         </li>
         <li>
-          <a href="http://java.sun.com/j2se/1.4.1/docs/guide/util/logging/">JDK Logging API</a>
+          <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/logging/overview.html">JDK Logging API</a>
         </li>
       </ul>
       <subsection name="Logging Configuration">

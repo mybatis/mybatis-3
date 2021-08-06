@@ -1,5 +1,5 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
+/*
+ *    Copyright 2009-2021 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ class UnpooledDataSourceTest {
 
   @Test
   void shouldNotRegisterTheSameDriverMultipleTimes() throws Exception {
-    // https://code.google.com/p/mybatis/issues/detail?id=430
+    // https://github.com/mybatis/old-google-code-issues/issues/430
     UnpooledDataSource dataSource = null;
     dataSource = new UnpooledDataSource("org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:multipledrivers", "sa", "");
     dataSource.getConnection().close();

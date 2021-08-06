@@ -1,5 +1,5 @@
-/**
- *    Copyright 2009-2020 the original author or authors.
+/*
+ *    Copyright 2009-2021 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -69,4 +69,10 @@ class PerpetualCacheTest {
     assertNull(cache.getObject(4));
   }
 
+  @Test
+  void shouldDemonstrateIdIsNull() {
+    Cache cache = new PerpetualCache(null);
+    assertThrows(CacheException.class, () -> cache.hashCode());
+    assertThrows(CacheException.class, () -> cache.equals(new Object()));
+  }
 }

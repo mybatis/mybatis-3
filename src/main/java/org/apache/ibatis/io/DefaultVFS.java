@@ -1,5 +1,5 @@
-/**
- *    Copyright 2009-2020 the original author or authors.
+/*
+ *    Copyright 2009-2021 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.file.InvalidPathException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -105,6 +106,9 @@ public class DefaultVFS extends VFS {
                   break;
                 }
               }
+            } catch (InvalidPathException e) {
+              // #1974
+              lines.clear();
             }
             if (!lines.isEmpty()) {
               if (log.isDebugEnabled()) {
@@ -142,7 +146,7 @@ public class DefaultVFS extends VFS {
           prefix = prefix + "/";
         }
 
-        // Iterate over immediate children, adding files and recursing into directories
+        // Iterate over immediate children, adding files and recurring into directories
         for (String child : children) {
           String resourcePath = path + "/" + child;
           resources.add(resourcePath);
@@ -267,7 +271,7 @@ public class DefaultVFS extends VFS {
           try {
             file = new File(URLEncoder.encode(jarUrl.toString(), "UTF-8"));
           } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("Unsupported encoding?  UTF-8?  That's unpossible.");
+            throw new RuntimeException("Unsupported encoding?  UTF-8?  That's impossible.");
           }
         }
 
@@ -325,9 +329,7 @@ public class DefaultVFS extends VFS {
    * @return true, if is jar
    */
   protected boolean isJar(URL url, byte[] buffer) {
-    InputStream is = null;
-    try {
-      is = url.openStream();
+    try (InputStream is = url.openStream()) {
       is.read(buffer, 0, JAR_MAGIC.length);
       if (Arrays.equals(buffer, JAR_MAGIC)) {
         if (log.isDebugEnabled()) {
@@ -337,14 +339,6 @@ public class DefaultVFS extends VFS {
       }
     } catch (Exception e) {
       // Failure to read the stream means this is not a JAR
-    } finally {
-      if (is != null) {
-        try {
-          is.close();
-        } catch (Exception e) {
-          // Ignore
-        }
-      }
     }
 
     return false;

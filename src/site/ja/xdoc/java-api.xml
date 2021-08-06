@@ -491,7 +491,8 @@ void rollback(boolean force)</source>
         なお、メソッド引数にはMapperメソッドの引数に渡したオブジェクトに加え、<code>ProviderContext</code>(MyBatis 3.4.5以降で利用可能)を介して「Mapperインタフェースの型」「Mapperメソッド」「データベースID」を渡すことができます。(MyBatis 3.4以降では、複数の引数を渡すことができます)
         キー: <code>value</code>, <code>type</code>, <code>method</code>.
         <code>value</code> と <code>type</code> にはクラスオブジェクトを指定します
-        (<code>type</code> は <code>value</code> の別名で、どちらか一方を指定する必要があります)。
+        (<code>type</code> は <code>value</code> の別名で、どちらか一方を指定する必要があります。
+        ただし、グローバル設定として<code>defaultSqlProviderType</code>を指定している場合は両方とも省略することができます)。
         <code>method</code> にはメソッド名を指定します
         (MyBatis 3.5.1以降では、<code>method</code> 属性を省略することができます。その際MyBatisは、<code>ProviderMethodResolver</code> インタフェースを介して対象メソッドの解決を試み、
         対象メソッドが解決できない場合は、<code>provideSql</code>という名前のメソッドを代替メソッドとして利用します)。
@@ -617,6 +618,29 @@ class UserSqlBuilder {
       ORDER_BY(orderByColumn);
     }}.toString();
   }
+}]]></source>
+
+    <p>次のコードは、グローバル設定を利用して全てのマッパーメソッドで同じSQLプロバイダクラスを利用する例です。(3.5.6以降で利用可能)</p>
+    <source><![CDATA[
+Configuration configuration = new Configuration();
+configuration.setDefaultSqlProviderType(TemplateFilePathProvider.class); // 全てのマッパーメソッドで利用するSQLプロバイダクラスを指定する
+// ...]]></source>
+    <source><![CDATA[
+// 各メソッドのSQLプロバイダアノテーションの type または value 属性は省略することができ、
+// 省略した場合はMyBaitsはグローバル設定の defaultSqlProviderType に指定されているクラスを適用する
+public interface UserMapper {
+
+  @SelectProvider // @SelectProvider(TemplateFilePathProvider.class) と同義
+  User findUser(int id);
+
+  @InsertProvider // @InsertProvider(TemplateFilePathProvider.class) と同義
+  void createUser(User user);
+
+  @UpdateProvider // @UpdateProvider(TemplateFilePathProvider.class) と同義
+  void updateUser(User user);
+
+  @DeleteProvider // @DeleteProvider(TemplateFilePathProvider.class) と同義
+  void deleteUser(int id);
 }]]></source>
 
     <p>次のコードは、<code>ProviderMethodResolver</code>(MyBatis 3.5.1以降で利用可能)のデフォルト実装の利用例です。</p>

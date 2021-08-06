@@ -525,7 +525,8 @@ void rollback(boolean force)</source>
         (In MyBatis 3.4 or later, it's allow multiple parameters)
         Attributes: <code>value</code>, <code>type</code>, <code>method</code> and <code>databaseId</code>.
         The <code>value</code> and <code>type</code> attribute is a class
-        (The <code>type</code> attribute is alias for <code>value</code>, you must be specify either one).
+        (The <code>type</code> attribute is alias for <code>value</code>, you must be specify either one.
+        But both attributes can be omit when specify the <code>defaultSqlProviderType</code> as global configuration).
         The <code>method</code> is the name of the method on that class
         (Since 3.5.1, you can omit <code>method</code> attribute, the MyBatis will resolve a target method via the
         <code>ProviderMethodResolver</code> interface.
@@ -672,6 +673,29 @@ class UserSqlBuilder {
   }
 }]]></source>
 
+    <p>This example shows usage that share an sql provider class to all mapper methods using global configuration(Available since 3.5.6):</p>
+    <source><![CDATA[
+Configuration configuration = new Configuration();
+configuration.setDefaultSqlProviderType(TemplateFilePathProvider.class); // Specify an sql provider class for sharing on all mapper methods
+// ...]]></source>
+    <source><![CDATA[
+// Can omit the type/value attribute on sql provider annotation
+// If omit it, the MyBatis apply the class that specified on defaultSqlProviderType.
+public interface UserMapper {
+
+  @SelectProvider // Same with @SelectProvider(TemplateFilePathProvider.class)
+  User findUser(int id);
+
+  @InsertProvider // Same with @InsertProvider(TemplateFilePathProvider.class)
+  void createUser(User user);
+
+  @UpdateProvider // Same with @UpdateProvider(TemplateFilePathProvider.class)
+  void updateUser(User user);
+
+  @DeleteProvider // Same with @DeleteProvider(TemplateFilePathProvider.class)
+  void deleteUser(int id);
+}]]></source>
+
     <p>This example shows usage the default implementation of <code>ProviderMethodResolver</code>(available since MyBatis 3.5.1 or later):</p>
     <source><![CDATA[@SelectProvider(UserSqlProvider.class)
 List<User> getUsersByName(String name);
@@ -690,6 +714,7 @@ class UserSqlProvider implements ProviderMethodResolver {
     }}.toString();
   }
 }]]></source>
+
 
     <p>This example shows usage the <code>databaseId</code> attribute on the statement annotation(Available since 3.5.5):</p>
     <source><![CDATA[

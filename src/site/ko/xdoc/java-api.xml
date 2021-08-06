@@ -605,7 +605,8 @@ void rollback(boolean force)</source>
 		매핑된 구문을 실행할 때 마이바티스는 클래스의 인스턴스를 만들고 메소드를 실행한다.
     Mapper 메서드의 인수인 "Mapper interface type" and "Database ID" 과 <code>ProviderContext</code>(Mybatis 3.4.5 부터) 를 이용한 "Mapper method" 로 전달 된 객체를 메서드 매개변수로 전달할 수 있다.(마이바티스 3.4이상에서는 복수 파라미터를 허용한다.)
 		사용가능한 속성들 : value, type, method.
-		value and type 속성은 클래스 (The <code>type</code> attribute is alias for <code>value</code>, you must be specify either one).
+		value and type 속성은 클래스 (The <code>type</code> attribute is alias for <code>value</code>, you must be specify either one.
+    But both attributes can be omit when specify the <code>defaultSqlProviderType</code> as global configuration).
 		method 속성은 메소드명이다
     (Since 3.5.1, you can omit <code>method</code> attribute, the MyBatis will resolve a target method via the
     <code>ProviderMethodResolver</code> interface.
@@ -747,6 +748,29 @@ class UserSqlBuilder {
       ORDER_BY(orderByColumn);
     }}.toString();
   }
+}]]></source>
+
+    <p>This example shows usage that share an sql provider class to all mapper methods using global configuration(Available since 3.5.6):</p>
+    <source><![CDATA[
+Configuration configuration = new Configuration();
+configuration.setDefaultSqlProviderType(TemplateFilePathProvider.class); // Specify an sql provider class for sharing on all mapper methods
+// ...]]></source>
+    <source><![CDATA[
+// Can omit the type/value attribute on sql provider annotation
+// If omit it, the MyBatis apply the class that specified on defaultSqlProviderType.
+public interface UserMapper {
+
+  @SelectProvider // Same with @SelectProvider(TemplateFilePathProvider.class)
+  User findUser(int id);
+
+  @InsertProvider // Same with @InsertProvider(TemplateFilePathProvider.class)
+  void createUser(User user);
+
+  @UpdateProvider // Same with @UpdateProvider(TemplateFilePathProvider.class)
+  void updateUser(User user);
+
+  @DeleteProvider // Same with @DeleteProvider(TemplateFilePathProvider.class)
+  void deleteUser(int id);
 }]]></source>
 
     <p>This example shows usage the default implementation of <code>ProviderMethodResolver</code>(available since MyBatis 3.5.1 or later):</p>
