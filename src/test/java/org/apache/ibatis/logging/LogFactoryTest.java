@@ -15,9 +15,8 @@
  */
 package org.apache.ibatis.logging;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.io.Reader;
+import java.lang.reflect.Constructor;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.logging.commons.JakartaCommonsLoggingImpl;
@@ -29,6 +28,8 @@ import org.apache.ibatis.logging.slf4j.Slf4jImpl;
 import org.apache.ibatis.logging.stdout.StdOutImpl;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class LogFactoryTest {
 
@@ -86,6 +87,25 @@ class LogFactoryTest {
     Log log = LogFactory.getLog(Object.class);
     logSomething(log);
     assertEquals(log.getClass().getName(), NoLoggingImpl.class.getName());
+  }
+
+  @Test
+  void hasImplementation() {
+    LogFactory.useCommonsLogging();
+    assertFalse(LogFactory.hasNoImplementation());
+  }
+
+  @Test
+  void hasNoImplementation() {
+    LogFactory.logConstructor = null;
+    assertTrue(LogFactory.hasNoImplementation());
+  }
+
+  @Test
+  void mustNotOverwriteCustomImplementation() throws NoSuchMethodException {
+    LogFactory.useCustomLogging(JakartaCommonsLoggingImpl.class);
+    LogFactory.tryKnownImplementations();
+    assertEquals(LogFactory.logConstructor, JakartaCommonsLoggingImpl.class.getConstructor(String.class));
   }
 
   @Test

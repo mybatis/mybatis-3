@@ -29,6 +29,7 @@ import org.apache.ibatis.executor.loader.ProxyFactory;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.io.VFS;
 import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.mapping.DatabaseIdProvider;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.parsing.XNode;
@@ -106,7 +107,7 @@ public class XMLConfigBuilder extends BaseBuilder {
       propertiesElement(root.evalNode("properties"));
       Properties settings = settingsAsProperties(root.evalNode("settings"));
       loadCustomVfs(settings);
-      loadCustomLogImpl(settings);
+      loadLogImpl(settings);
       typeAliasesElement(root.evalNode("typeAliases"));
       pluginElement(root.evalNode("plugins"));
       objectFactoryElement(root.evalNode("objectFactory"));
@@ -149,6 +150,14 @@ public class XMLConfigBuilder extends BaseBuilder {
           configuration.setVfsImpl(vfsImpl);
         }
       }
+    }
+  }
+
+  private void loadLogImpl(Properties settings) {
+    loadCustomLogImpl(settings);
+
+    if(LogFactory.hasNoImplementation()) {
+      LogFactory.tryKnownImplementations();
     }
   }
 

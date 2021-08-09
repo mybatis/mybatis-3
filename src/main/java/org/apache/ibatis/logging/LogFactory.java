@@ -28,9 +28,13 @@ public final class LogFactory {
    */
   public static final String MARKER = "MYBATIS";
 
-  private static Constructor<? extends Log> logConstructor;
+  protected static Constructor<? extends Log> logConstructor;
 
-  static {
+  private LogFactory() {
+    // disable construction
+  }
+
+  public static void tryKnownImplementations() {
     tryImplementation(LogFactory::useSlf4jLogging);
     tryImplementation(LogFactory::useCommonsLogging);
     tryImplementation(LogFactory::useLog4J2Logging);
@@ -39,8 +43,8 @@ public final class LogFactory {
     tryImplementation(LogFactory::useNoLogging);
   }
 
-  private LogFactory() {
-    // disable construction
+  public static boolean hasNoImplementation() {
+    return logConstructor == null;
   }
 
   public static Log getLog(Class<?> clazz) {
