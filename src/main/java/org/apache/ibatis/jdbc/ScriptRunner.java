@@ -18,12 +18,7 @@ package org.apache.ibatis.jdbc;
 import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.io.Reader;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.SQLWarning;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -51,11 +46,14 @@ public class ScriptRunner {
   private boolean sendFullScript;
   private boolean removeCRs;
   private boolean escapeProcessing = true;
+  private boolean openDelimiter;
 
   private PrintWriter logWriter = new PrintWriter(System.out);
   private PrintWriter errorLogWriter = new PrintWriter(System.err);
 
   private String delimiter = DEFAULT_DELIMITER;
+  private String extraFirstDelimiter;
+
   private boolean fullLineDelimiter;
 
   public ScriptRunner(Connection connection) {
@@ -85,8 +83,7 @@ public class ScriptRunner {
   /**
    * Sets the escape processing.
    *
-   * @param escapeProcessing
-   *          the new escape processing
+   * @param escapeProcessing the new escape processing
    * @since 3.1.1
    */
   public void setEscapeProcessing(boolean escapeProcessing) {
@@ -107,6 +104,14 @@ public class ScriptRunner {
 
   public void setFullLineDelimiter(boolean fullLineDelimiter) {
     this.fullLineDelimiter = fullLineDelimiter;
+  }
+
+  public String getExtraFirstDelimiter() {
+    return extraFirstDelimiter;
+  }
+
+  public void setExtraFirstDelimiter(String extraFirstDelimiter) {
+    this.extraFirstDelimiter = extraFirstDelimiter;
   }
 
   public void runScript(Reader reader) {
@@ -223,9 +228,16 @@ public class ScriptRunner {
       executeStatement(command.toString());
       command.setLength(0);
     } else if (trimmedLine.length() > 0) {
-      command.append(line);
+      command.append(endContains(line));
       command.append(LINE_SEPARATOR);
     }
+  }
+
+  private String endContains(String line) {
+    if (extraFirstDelimiter != null && extraFirstDelimiter.trim().length() > 0) {
+      return line.endsWith(extraFirstDelimiter) ? "" : line;
+    }
+    return line;
   }
 
   private boolean lineIsComment(String trimmedLine) {
@@ -234,8 +246,17 @@ public class ScriptRunner {
 
   private boolean commandReadyToExecute(String trimmedLine) {
     // issue #561 remove anything after the delimiter
+    if (extraFirstDelimiter != null && extraFirstDelimiter.trim().length() > 0) {
+      if (trimmedLine.endsWith(extraFirstDelimiter)) {
+        openDelimiter = !openDelimiter;
+        return !openDelimiter;
+      } else if (openDelimiter) {
+        return false;
+      }
+    }
     return !fullLineDelimiter && trimmedLine.contains(delimiter) || fullLineDelimiter && trimmedLine.equals(delimiter);
   }
+
 
   private void executeStatement(String command) throws SQLException {
     try (Statement statement = connection.createStatement()) {
