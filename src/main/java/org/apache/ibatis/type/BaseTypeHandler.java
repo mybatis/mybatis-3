@@ -114,7 +114,7 @@ public abstract class BaseTypeHandler<T> extends TypeReference<T> implements Typ
    * @param rs
    *          the rs
    * @param columnName
-   *          Colunm name, when configuration <code>useColumnLabel</code> is <code>false</code>
+   *          Column name, when configuration <code>useColumnLabel</code> is <code>false</code>
    * @return the nullable result
    * @throws SQLException
    *           the SQL exception

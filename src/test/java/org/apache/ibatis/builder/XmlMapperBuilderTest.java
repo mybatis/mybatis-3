@@ -205,7 +205,7 @@ class XmlMapperBuilderTest {
 //  }
 
    @Test
-   void erorrResultMapLocation() throws Exception {
+   void errorResultMapLocation() throws Exception {
      Configuration configuration = new Configuration();
      String resource = "org/apache/ibatis/builder/ProblemResultMapper.xml";
      try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
