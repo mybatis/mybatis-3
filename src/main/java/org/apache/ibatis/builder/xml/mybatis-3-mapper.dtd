@@ -264,9 +264,18 @@ prefix CDATA #IMPLIED
 prefixOverrides CDATA #IMPLIED
 suffix CDATA #IMPLIED
 suffixOverrides CDATA #IMPLIED
+notEmpty CDATA #IMPLIED
 >
+
 <!ELEMENT where (#PCDATA | include | trim | where | set | foreach | choose | if | bind)*>
+<!ATTLIST where
+notEmpty CDATA #IMPLIED
+>
+
 <!ELEMENT set (#PCDATA | include | trim | where | set | foreach | choose | if | bind)*>
+<!ATTLIST set
+notEmpty CDATA #IMPLIED
+>
 
 <!ELEMENT foreach (#PCDATA | include | trim | where | set | foreach | choose | if | bind)*>
 <!ATTLIST foreach

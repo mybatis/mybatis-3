@@ -131,7 +131,8 @@ public class XMLScriptBuilder extends BaseBuilder {
       String prefixOverrides = nodeToHandle.getStringAttribute("prefixOverrides");
       String suffix = nodeToHandle.getStringAttribute("suffix");
       String suffixOverrides = nodeToHandle.getStringAttribute("suffixOverrides");
-      TrimSqlNode trim = new TrimSqlNode(configuration, mixedSqlNode, prefix, prefixOverrides, suffix, suffixOverrides);
+      String notEmpty = nodeToHandle.getStringAttribute("notEmpty");
+      TrimSqlNode trim = new TrimSqlNode(configuration, mixedSqlNode, prefix, prefixOverrides, suffix, suffixOverrides, notEmpty);
       targetContents.add(trim);
     }
   }
@@ -144,7 +145,8 @@ public class XMLScriptBuilder extends BaseBuilder {
     @Override
     public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
       MixedSqlNode mixedSqlNode = parseDynamicTags(nodeToHandle);
-      WhereSqlNode where = new WhereSqlNode(configuration, mixedSqlNode);
+      String notEmpty = nodeToHandle.getStringAttribute("notEmpty");
+      WhereSqlNode where = new WhereSqlNode(configuration, mixedSqlNode, notEmpty);
       targetContents.add(where);
     }
   }
@@ -157,7 +159,8 @@ public class XMLScriptBuilder extends BaseBuilder {
     @Override
     public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
       MixedSqlNode mixedSqlNode = parseDynamicTags(nodeToHandle);
-      SetSqlNode set = new SetSqlNode(configuration, mixedSqlNode);
+      String notEmpty = nodeToHandle.getStringAttribute("notEmpty");
+      SetSqlNode set = new SetSqlNode(configuration, mixedSqlNode, notEmpty);
       targetContents.add(set);
     }
   }
