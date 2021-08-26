@@ -988,7 +988,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       return false;
     } else if (columnPrefix != null) {
       for (String columnName : rsw.getColumnNames()) {
-        if (columnName.toUpperCase().startsWith(columnPrefix.toUpperCase())) {
+        if (columnName.toUpperCase(Locale.ENGLISH).startsWith(columnPrefix.toUpperCase(Locale.ENGLISH))) {
           return true;
         }
       }
