@@ -23,6 +23,7 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.apache.ibatis.cursor.Cursor;
@@ -55,8 +56,8 @@ public abstract class BaseExecutor implements Executor {
   protected Executor wrapper;
 
   protected ConcurrentLinkedQueue<DeferredLoad> deferredLoads;
-  protected PerpetualCache localCache;
-  protected PerpetualCache localOutputParameterCache;
+  protected Cache localCache;
+  protected Cache localOutputParameterCache;
   protected Configuration configuration;
 
   protected int queryStack;
@@ -187,7 +188,7 @@ public abstract class BaseExecutor implements Executor {
     if (deferredLoad.canLoad()) {
       deferredLoad.load();
     } else {
-      deferredLoads.add(new DeferredLoad(resultObject, property, key, localCache, configuration, targetType));
+      deferredLoads.add(deferredLoad);
     }
   }
 
@@ -353,7 +354,7 @@ public abstract class BaseExecutor implements Executor {
     private final String property;
     private final Class<?> targetType;
     private final CacheKey key;
-    private final PerpetualCache localCache;
+    private final Cache localCache;
     private final ObjectFactory objectFactory;
     private final ResultExtractor resultExtractor;
 
@@ -361,7 +362,7 @@ public abstract class BaseExecutor implements Executor {
     public DeferredLoad(MetaObject resultObject,
                         String property,
                         CacheKey key,
-                        PerpetualCache localCache,
+                        Cache localCache,
                         Configuration configuration,
                         Class<?> targetType) {
       this.resultObject = resultObject;
@@ -374,7 +375,8 @@ public abstract class BaseExecutor implements Executor {
     }
 
     public boolean canLoad() {
-      return localCache.getObject(key) != null && localCache.getObject(key) != EXECUTION_PLACEHOLDER;
+      Object value = localCache.getObject(key);
+      return value != null && value != EXECUTION_PLACEHOLDER;
     }
 
     public void load() {
