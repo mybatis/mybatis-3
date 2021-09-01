@@ -1,5 +1,5 @@
-/**
- *    Copyright 2009-2020 the original author or authors.
+/*
+ *    Copyright 2009-2021 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -146,7 +146,7 @@ public class DefaultVFS extends VFS {
           prefix = prefix + "/";
         }
 
-        // Iterate over immediate children, adding files and recursing into directories
+        // Iterate over immediate children, adding files and recurring into directories
         for (String child : children) {
           String resourcePath = path + "/" + child;
           resources.add(resourcePath);
@@ -271,7 +271,7 @@ public class DefaultVFS extends VFS {
           try {
             file = new File(URLEncoder.encode(jarUrl.toString(), "UTF-8"));
           } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("Unsupported encoding?  UTF-8?  That's unpossible.");
+            throw new RuntimeException("Unsupported encoding?  UTF-8?  That's impossible.");
           }
         }
 

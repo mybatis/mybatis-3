@@ -1,4 +1,4 @@
-/**
+/*
  *    Copyright 2009-2021 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,6 +17,7 @@ package org.apache.ibatis.testcontainers;
 
 import javax.sql.DataSource;
 
+import org.apache.ibatis.datasource.pooled.PooledDataSource;
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.testcontainers.containers.MySQLContainer;
 
@@ -39,6 +40,11 @@ public class MysqlContainer {
 
   public static DataSource getUnpooledDataSource() {
     return new UnpooledDataSource(MysqlContainer.DRIVER, INSTANCE.getJdbcUrl(), MysqlContainer.USERNAME,
+        MysqlContainer.PASSWORD);
+  }
+
+  public static PooledDataSource getPooledDataSource() {
+    return new PooledDataSource(MysqlContainer.DRIVER, INSTANCE.getJdbcUrl(), MysqlContainer.USERNAME,
         MysqlContainer.PASSWORD);
   }
 
