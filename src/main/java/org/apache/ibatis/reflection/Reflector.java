@@ -42,6 +42,7 @@ public class Reflector {
   private Constructor<?> defaultConstructor;
 
   private Map<String, String> caseInsensitivePropertyMap = new HashMap<>();
+  private Method[] allMethod;
 
   public Reflector(Class<?> clazz) {
     type = clazz;
@@ -67,7 +68,7 @@ public class Reflector {
 
   private void addGetMethods(Class<?> clazz) {
     Map<String, List<Method>> conflictingGetters = new HashMap<>();
-    Method[] methods = getClassMethods(clazz);
+    Method[] methods = allMethod==null?getClassMethods(clazz):allMethod;
     Arrays.stream(methods).filter(m -> m.getParameterTypes().length == 0 && PropertyNamer.isGetter(m.getName()))
       .forEach(m -> addMethodConflict(conflictingGetters, PropertyNamer.methodToProperty(m.getName()), m));
     resolveGetterConflicts(conflictingGetters);
@@ -118,7 +119,7 @@ public class Reflector {
 
   private void addSetMethods(Class<?> clazz) {
     Map<String, List<Method>> conflictingSetters = new HashMap<>();
-    Method[] methods = getClassMethods(clazz);
+    Method[] methods = allMethod==null?getClassMethods(clazz):allMethod;
     Arrays.stream(methods).filter(m -> m.getParameterTypes().length == 1 && PropertyNamer.isSetter(m.getName()))
       .forEach(m -> addMethodConflict(conflictingSetters, PropertyNamer.methodToProperty(m.getName()), m));
     resolveSetterConflicts(conflictingSetters);
@@ -272,8 +273,8 @@ public class Reflector {
     }
 
     Collection<Method> methods = uniqueMethods.values();
-
-    return methods.toArray(new Method[0]);
+    allMethod = methods.toArray(new Method[0]);
+    return allMethod;
   }
 
   private void addUniqueMethods(Map<String, Method> uniqueMethods, Method[] methods) {
