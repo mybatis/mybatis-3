@@ -15,13 +15,31 @@
  */
 package org.apache.ibatis.reflection;
 
-import org.apache.ibatis.reflection.invoker.*;
+import org.apache.ibatis.reflection.invoker.AmbiguousMethodInvoker;
+import org.apache.ibatis.reflection.invoker.GetFieldInvoker;
+import org.apache.ibatis.reflection.invoker.Invoker;
+import org.apache.ibatis.reflection.invoker.MethodInvoker;
+import org.apache.ibatis.reflection.invoker.SetFieldInvoker;
 import org.apache.ibatis.reflection.property.PropertyNamer;
 import org.apache.ibatis.util.MapUtil;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.GenericArrayType;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.ReflectPermission;
+import java.lang.reflect.Type;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Map.Entry;
 
 /**
@@ -42,13 +60,13 @@ public class Reflector {
   private Constructor<?> defaultConstructor;
 
   private Map<String, String> caseInsensitivePropertyMap = new HashMap<>();
-  private Method[] allMethods;
 
   public Reflector(Class<?> clazz) {
     type = clazz;
     addDefaultConstructor(clazz);
-    addGetMethods(clazz);
-    addSetMethods(clazz);
+    Method [] allMethods = getClassMethods(clazz);
+    addGetMethods(allMethods);
+    addSetMethods(allMethods);
     addFields(clazz);
     readablePropertyNames = getMethods.keySet().toArray(new String[0]);
     writablePropertyNames = setMethods.keySet().toArray(new String[0]);
@@ -66,9 +84,8 @@ public class Reflector {
       .findAny().ifPresent(constructor -> this.defaultConstructor = constructor);
   }
 
-  private void addGetMethods(Class<?> clazz) {
+  private void addGetMethods(Method[] methods) {
     Map<String, List<Method>> conflictingGetters = new HashMap<>();
-    Method[] methods = allMethods==null?getClassMethods(clazz):allMethods;
     Arrays.stream(methods).filter(m -> m.getParameterTypes().length == 0 && PropertyNamer.isGetter(m.getName()))
       .forEach(m -> addMethodConflict(conflictingGetters, PropertyNamer.methodToProperty(m.getName()), m));
     resolveGetterConflicts(conflictingGetters);
@@ -117,9 +134,8 @@ public class Reflector {
     getTypes.put(name, typeToClass(returnType));
   }
 
-  private void addSetMethods(Class<?> clazz) {
+  private void addSetMethods(Method[] methods) {
     Map<String, List<Method>> conflictingSetters = new HashMap<>();
-    Method[] methods = allMethods==null?getClassMethods(clazz):allMethods;
     Arrays.stream(methods).filter(m -> m.getParameterTypes().length == 1 && PropertyNamer.isSetter(m.getName()))
       .forEach(m -> addMethodConflict(conflictingSetters, PropertyNamer.methodToProperty(m.getName()), m));
     resolveSetterConflicts(conflictingSetters);
@@ -273,8 +289,7 @@ public class Reflector {
     }
 
     Collection<Method> methods = uniqueMethods.values();
-    allMethods = methods.toArray(new Method[0]);
-    return allMethods;
+    return methods.toArray(new Method[0]);
   }
 
   private void addUniqueMethods(Map<String, Method> uniqueMethods, Method[] methods) {
