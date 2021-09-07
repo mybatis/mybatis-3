@@ -15,14 +15,6 @@
  */
 package org.apache.ibatis.reflection;
 
-import org.apache.ibatis.reflection.invoker.AmbiguousMethodInvoker;
-import org.apache.ibatis.reflection.invoker.GetFieldInvoker;
-import org.apache.ibatis.reflection.invoker.Invoker;
-import org.apache.ibatis.reflection.invoker.MethodInvoker;
-import org.apache.ibatis.reflection.invoker.SetFieldInvoker;
-import org.apache.ibatis.reflection.property.PropertyNamer;
-import org.apache.ibatis.util.MapUtil;
-
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -41,6 +33,14 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.apache.ibatis.reflection.invoker.AmbiguousMethodInvoker;
+import org.apache.ibatis.reflection.invoker.GetFieldInvoker;
+import org.apache.ibatis.reflection.invoker.Invoker;
+import org.apache.ibatis.reflection.invoker.MethodInvoker;
+import org.apache.ibatis.reflection.invoker.SetFieldInvoker;
+import org.apache.ibatis.reflection.property.PropertyNamer;
+import org.apache.ibatis.util.MapUtil;
 
 /**
  * This class represents a cached set of class definition information that
@@ -64,9 +64,9 @@ public class Reflector {
   public Reflector(Class<?> clazz) {
     type = clazz;
     addDefaultConstructor(clazz);
-    Method [] allMethods = getClassMethods(clazz);
-    addGetMethods(allMethods);
-    addSetMethods(allMethods);
+    Method[] classMethods = getClassMethods(clazz);
+    addGetMethods(classMethods);
+    addSetMethods(classMethods);
     addFields(clazz);
     readablePropertyNames = getMethods.keySet().toArray(new String[0]);
     writablePropertyNames = setMethods.keySet().toArray(new String[0]);
@@ -289,6 +289,7 @@ public class Reflector {
     }
 
     Collection<Method> methods = uniqueMethods.values();
+
     return methods.toArray(new Method[0]);
   }
 
