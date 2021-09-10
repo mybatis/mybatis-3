@@ -113,11 +113,14 @@ public class Configuration {
   protected String logPrefix;
   protected Class <? extends Log> logImpl;
   protected Class <? extends VFS> vfsImpl;
+  //默认本地缓存是 Session 级别
   protected LocalCacheScope localCacheScope = LocalCacheScope.SESSION;
+  //jdbcTypeForNull 空类型是 OTHER
   protected JdbcType jdbcTypeForNull = JdbcType.OTHER;
   protected Set<String> lazyLoadTriggerMethods = new HashSet<String>(Arrays.asList(new String[] { "equals", "clone", "hashCode", "toString" }));
   protected Integer defaultStatementTimeout;
   protected Integer defaultFetchSize;
+  //默认 ExecutorType 是SIMPLE
   protected ExecutorType defaultExecutorType = ExecutorType.SIMPLE;
   protected AutoMappingBehavior autoMappingBehavior = AutoMappingBehavior.PARTIAL;
   protected AutoMappingUnknownColumnBehavior autoMappingUnknownColumnBehavior = AutoMappingUnknownColumnBehavior.NONE;
@@ -128,6 +131,7 @@ public class Configuration {
   protected ObjectWrapperFactory objectWrapperFactory = new DefaultObjectWrapperFactory();
 
   protected boolean lazyLoadingEnabled = false;
+  //默认代理类是 JavassistProxyFactory 而不是 OGNL
   protected ProxyFactory proxyFactory = new JavassistProxyFactory(); // #224 Using internal Javassist instead of OGNL
 
   protected String databaseId;
@@ -140,11 +144,15 @@ public class Configuration {
   protected Class<?> configurationFactory;
 
   protected final MapperRegistry mapperRegistry = new MapperRegistry(this);
+  // 拦截处理链
   protected final InterceptorChain interceptorChain = new InterceptorChain();
+  //类型处理注册
   protected final TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry();
+  //类型别名注册
   protected final TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
   protected final LanguageDriverRegistry languageRegistry = new LanguageDriverRegistry();
 
+  //mappedStatements 集合
   protected final Map<String, MappedStatement> mappedStatements = new StrictMap<MappedStatement>("Mapped Statements collection");
   protected final Map<String, Cache> caches = new StrictMap<Cache>("Caches collection");
   protected final Map<String, ResultMap> resultMaps = new StrictMap<ResultMap>("Result Maps collection");
@@ -349,6 +357,7 @@ public class Configuration {
     return proxyFactory;
   }
 
+  //默认代理是 JavassistProxyFactory
   public void setProxyFactory(ProxyFactory proxyFactory) {
     if (proxyFactory == null) {
       proxyFactory = new JavassistProxyFactory();
@@ -468,6 +477,7 @@ public class Configuration {
    * @param typeHandler a type handler class for {@link Enum}
    * @since 3.4.5
    */
+  //枚举类型处理器
   public void setDefaultEnumTypeHandler(Class<? extends TypeHandler> typeHandler) {
     if (typeHandler != null) {
       getTypeHandlerRegistry().setDefaultEnumTypeHandler(typeHandler);

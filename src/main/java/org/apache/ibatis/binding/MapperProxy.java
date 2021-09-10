@@ -30,6 +30,8 @@ import org.apache.ibatis.session.SqlSession;
 /**
  * @author Clinton Begin
  * @author Eduardo Macarron
+ * 接口Mapper内的方法能重载(overLoad)吗？(重要)？
+ * 原因：在投鞭断流时，Mybatis使用package+Mapper+method全限名作为key，去xml内寻找唯一sql来执行的。类似：key=x.y.UserMapper.getUserById，那么，重载方法时将导致矛盾。对于Mapper接口，Mybatis禁止方法重载(overLoad)。
  */
 public class MapperProxy<T> implements InvocationHandler, Serializable {
 
@@ -47,7 +49,29 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
   @Override
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
     try {
+//      我来说正确答案吧。我们知道这个MapperProxy就是一个InvocationHandler（他的作用是jdk创建动态代理时用的，不清楚动态代理，自己补习一下），
+//      也就是我们会根据当前的接口创建一个这个接口的动态代理对象，使用动态代理对象再利用反射调用实际对象的目标方法。
+//      然而动态代理对象里面的方法都是Interface规定的。但是动态代理对象也能调用比如toString(),hashCode()等这些方法呀，这些方法是所有类从Object继承过来的。
+//
+//      所以这个判断的根本作用就是，如果利用动态代理对象调用的是toString，hashCode,getClass等这些从Object类继承过来的方法，
+//      就直接反射调用。如果调用的是接口规定的方法。我们就用MapperMethod来执行。
+
+//      结论：
+//
+//      1）、method.getDeclaringClass用来判断当前这个方法是哪个类的方法。
+//
+//      2）、接口创建出的代理对象不仅有实现接口的方法，也有从Object继承过来的方法
+//
+//      3）、实现的接口的方法method.getDeclaringClass是接口类型，比如com.atguigu.dao.EmpDao
+//
+//      从Object类继承过来的方法类型是java.lang.Object类型
+//
+//      4）、如果是Object类继承来的方法，直接反射调用
+//
+//      如果是实现的接口规定的方法，利用Mybatis的MapperMethod调用
       if (Object.class.equals(method.getDeclaringClass())) {
+        //// 诸如hashCode()、toString()、equals()等方法，将target指向当前对象thisreturn method.invoke(this, args);
+        //target，在执行Object.java内的方法时，target被指向了this，target已经变成了傀儡、象征、占位符。在投鞭断流式的拦截时，已经没有了target。
         return method.invoke(this, args);
       } else if (isDefaultMethod(method)) {
         return invokeDefaultMethod(proxy, method, args);

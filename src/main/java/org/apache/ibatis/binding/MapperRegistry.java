@@ -65,6 +65,8 @@ public class MapperRegistry {
       boolean loadCompleted = false;
       try {
         knownMappers.put(type, new MapperProxyFactory<T>(type));
+        // 这是重要的类型被添加，在解析器运行前
+        // 否则 mapper解析器可能会自动尝试绑定, 如果类型已经知道的话，就不会尝试做了
         // It's important that the type is added before the parser is run
         // otherwise the binding may automatically be attempted by the
         // mapper parser. If the type is already known, it won't try.

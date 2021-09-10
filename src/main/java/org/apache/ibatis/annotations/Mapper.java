@@ -36,5 +36,6 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target({ TYPE, METHOD, FIELD, PARAMETER })
 public @interface Mapper {
+    //测试一下
   // Interface Mapper
 }
