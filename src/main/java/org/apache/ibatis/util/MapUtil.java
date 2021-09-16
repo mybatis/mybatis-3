@@ -32,7 +32,7 @@ public class MapUtil {
     if (value != null) {
       return value;
     }
-    return map.computeIfAbsent(key, mappingFunction::apply);
+    return map.computeIfAbsent(key, mappingFunction);
   }
 
   /**
