@@ -120,11 +120,14 @@ public class MapperAnnotationBuilder {
 
   public void parse() {
     String resource = type.toString();
+    //加载过的资源
     if (!configuration.isResourceLoaded(resource)) {
       loadXmlResource();
       configuration.addLoadedResource(resource);
       assistant.setCurrentNamespace(type.getName());
+      //解析 cache 注解
       parseCache();
+      //解析 CacheNamespaceRef
       parseCacheRef();
       Method[] methods = type.getMethods();
       for (Method method : methods) {
@@ -286,6 +289,7 @@ public class MapperAnnotationBuilder {
   void parseStatement(Method method) {
     Class<?> parameterTypeClass = getParameterType(method);
     LanguageDriver languageDriver = getLanguageDriver(method);
+    //获取 SqlSource 从注解
     SqlSource sqlSource = getSqlSourceFromAnnotations(method, parameterTypeClass, languageDriver);
     if (sqlSource != null) {
       Options options = method.getAnnotation(Options.class);
@@ -388,8 +392,13 @@ public class MapperAnnotationBuilder {
   private Class<?> getParameterType(Method method) {
     Class<?> parameterType = null;
     Class<?>[] parameterTypes = method.getParameterTypes();
+//    isAssignableFrom()方法是从类继承的角度去判断，instanceof关键字是从实例继承的角度去判断。
+    //isAssignableFrom()方法是判断是否为某个类的父类，instanceof关键字是判断是否某个类的子类
     for (Class<?> currentParameterType : parameterTypes) {
+      //如果是 RowBounds或者是 ResultHandler类型，则直接返回 parameterType参数类型【参数不能是 RowBounds或者 ResultHandler 的子类】
       if (!RowBounds.class.isAssignableFrom(currentParameterType) && !ResultHandler.class.isAssignableFrom(currentParameterType)) {
+        //多个参数的 参数类型为 ParamMap.class;
+        //单个参数，参数类型为 参数的类型
         if (parameterType == null) {
           parameterType = currentParameterType;
         } else {
@@ -454,9 +463,12 @@ public class MapperAnnotationBuilder {
 
   private SqlSource getSqlSourceFromAnnotations(Method method, Class<?> parameterType, LanguageDriver languageDriver) {
     try {
+      // sql注解类型
       Class<? extends Annotation> sqlAnnotationType = getSqlAnnotationType(method);
+      // sqlProvider注解类型
       Class<? extends Annotation> sqlProviderAnnotationType = getSqlProviderAnnotationType(method);
       if (sqlAnnotationType != null) {
+        //不能同时设置 静态sql和 SqlProvider 两个注解
         if (sqlProviderAnnotationType != null) {
           throw new BindingException("You cannot supply both a static SQL and SqlProvider to method named " + method.getName());
         }
@@ -505,11 +517,12 @@ public class MapperAnnotationBuilder {
 
     return SqlCommandType.valueOf(type.getSimpleName().toUpperCase(Locale.ENGLISH));
   }
-
+  //选择注解类型，如果 方法的注解 有 AnnotationType，返回type 【Select.class、Insert.class 增删改查注解等 】
   private Class<? extends Annotation> getSqlAnnotationType(Method method) {
     return chooseAnnotationType(method, sqlAnnotationTypes);
   }
 
+  //选择注解类型，如果 方法的注解 有 SqlProviderAnnotationType，返回type 【SelectProvider 增删改查注解等 】
   private Class<? extends Annotation> getSqlProviderAnnotationType(Method method) {
     return chooseAnnotationType(method, sqlProviderAnnotationTypes);
   }

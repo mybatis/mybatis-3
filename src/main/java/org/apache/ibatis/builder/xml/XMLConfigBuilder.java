@@ -97,6 +97,7 @@ public class XMLConfigBuilder extends BaseBuilder {
     }
     parsed = true;
     parseConfiguration(parser.evalNode("/configuration"));
+    //返回父类创建的 configuration
     return configuration;
   }
 
@@ -361,6 +362,7 @@ public class XMLConfigBuilder extends BaseBuilder {
       for (XNode child : parent.getChildren()) {
         if ("package".equals(child.getName())) {
           String mapperPackage = child.getStringAttribute("name");
+          //查找package报下，符合 Object.class 类型
           configuration.addMappers(mapperPackage);
         } else {
           String resource = child.getStringAttribute("resource");
