@@ -137,7 +137,7 @@ AND title like ‘someTitle’]]></source>
 </update>]]></source>
   <p>En este caso, el elemento set  prefijará dinámicamente el valor SET y además eliminará todas las comas sobrantes que pudieran quedar tras las asignaciones de valor después de que se hayan aplicado las condiciones.</p>
   <p>Si tienes curiosidad de qué aspecto tendría el elemento trim equivalente, aquí lo tienes:</p>
-  <source><![CDATA[<trim prefix="SET" suffixOverrides=",">
+  <source><![CDATA[<trim prefix="SET" prefixOverrides="," suffixOverrides=",">
   ...
 </trim>]]></source>
   <p>Fíjate que en este caso estamos sobrescribiendo un sufijo y añadiendo un prefijo.</p>
