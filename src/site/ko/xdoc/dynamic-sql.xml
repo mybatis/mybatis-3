@@ -164,7 +164,7 @@ AND title like ‘someTitle’]]></source>
 </update>]]></source>
         <p>여기서 set 엘리먼트는 동적으로 SET 키워드를 붙히고 필요없는 콤마를 제거한다.</p>
         <p>아마도 trim 엘리먼트로 처리한다면 아래와 같을 것이다.</p>
-        <source><![CDATA[<trim prefix="SET" suffixOverrides=",">
+        <source><![CDATA[<trim prefix="SET" prefixOverrides="," suffixOverrides=",">
   ...
 </trim>]]></source>
         <p>이 경우 접두사는 추가하고 접미사를 오버라이딩 한다.</p>
