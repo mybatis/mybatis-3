@@ -143,7 +143,7 @@ AND title like ‘someTitle’]]></source>
 </update>]]></source>
   <p><em>set</em> 要素は、動的に SET キーワードを付加し、余分な末尾のカンマを削除します。</p>
   <p>疑問に思った方のために、これと同じ処理を行う trim 要素は次のようになります。</p>
-  <source><![CDATA[<trim prefix="SET" suffixOverrides=",">
+  <source><![CDATA[<trim prefix="SET" prefixOverrides="," suffixOverrides=",">
   ...
 </trim>]]></source>
   <p>prefix を追加している点は前の例と同じですが、今回は suffix をオーバーライドしている点に注意してください。</p>
