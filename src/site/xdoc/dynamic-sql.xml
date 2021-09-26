@@ -136,7 +136,7 @@ AND title like ‘someTitle’]]></source>
 </update>]]></source>
   <p>Here, the <em>set</em> element will dynamically prepend the SET keyword, and also eliminate any extraneous commas that might trail the value assignments after the conditions are applied.</p>
   <p>If you’re curious about what the equivalent <em>trim</em> element would look like, here it is:</p>
-  <source><![CDATA[<trim prefix="SET" suffixOverrides=",">
+  <source><![CDATA[<trim prefix="SET" prefixOverrides="," suffixOverrides=",">
   ...
 </trim>]]></source>
   <p>Notice that in this case we’re overriding a suffix, while we’re still appending a prefix.</p>
