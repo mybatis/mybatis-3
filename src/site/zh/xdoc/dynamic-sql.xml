@@ -140,7 +140,7 @@ AND title like ‘someTitle’]]></source>
 </update>]]></source>
         <p>这个例子中，<em>set</em> 元素会动态地在行首插入 SET 关键字，并会删掉额外的逗号（这些逗号是在使用条件语句给列赋值时引入的）。</p>
         <p>来看看与 <em>set</em> 元素等价的自定义 <em>trim</em> 元素吧：</p>
-        <source><![CDATA[<trim prefix="SET" suffixOverrides=",">
+        <source><![CDATA[<trim prefix="SET" prefixOverrides="," suffixOverrides=",">
   ...
 </trim>]]></source>
         <p>注意，我们覆盖了后缀值设置，并且自定义了前缀值。</p>
