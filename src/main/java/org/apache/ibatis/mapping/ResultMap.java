@@ -122,7 +122,7 @@ public class ResultMap {
       if (resultMap.idResultMappings.isEmpty()) {
         resultMap.idResultMappings.addAll(resultMap.resultMappings);
       }
-      if (!constructorArgNames.isEmpty()) {
+      if (!constructorArgNames.isEmpty() && resultMap.type != null) {
         final List<String> actualArgNames = argNamesOfMatchingConstructor(constructorArgNames);
         if (actualArgNames == null) {
           throw new BuilderException("Error in result map '" + resultMap.id
