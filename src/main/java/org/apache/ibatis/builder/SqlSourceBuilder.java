@@ -1,5 +1,5 @@
-/**
- *    Copyright 2009-2020 the original author or authors.
+/*
+ *    Copyright 2009-2021 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -68,9 +68,9 @@ public class SqlSourceBuilder extends BaseBuilder {
 
   private static class ParameterMappingTokenHandler extends BaseBuilder implements TokenHandler {
 
-    private List<ParameterMapping> parameterMappings = new ArrayList<>();
-    private Class<?> parameterType;
-    private MetaObject metaParameters;
+    private final List<ParameterMapping> parameterMappings = new ArrayList<>();
+    private final Class<?> parameterType;
+    private final MetaObject metaParameters;
 
     public ParameterMappingTokenHandler(Configuration configuration, Class<?> parameterType, Map<String, Object> additionalParameters) {
       super(configuration);

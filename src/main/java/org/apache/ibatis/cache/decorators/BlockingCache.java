@@ -1,5 +1,5 @@
-/**
- *    Copyright 2009-2020 the original author or authors.
+/*
+ *    Copyright 2009-2021 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import org.apache.ibatis.cache.CacheException;
  * It sets a lock over a cache key when the element is not found in cache.
  * This way, other threads will wait until this element is filled instead of hitting the database.
  *
- * <p>By its nature, this implementation can cause deadlock when used incorrecly.
+ * <p>By its nature, this implementation can cause deadlock when used incorrectly.
  *
  * @author Eduardo Macarron
  *

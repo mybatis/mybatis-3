@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2020 the original author or authors.
+       Copyright 2009-2021 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -56,12 +56,12 @@
         </li>
       </ul>
       <subsection name="properties">
-        <p>이 설정은 외부에 옮길 수 있다. 자바 프로퍼티 파일 인스턴스에 설정할 수도 있고 properties 엘리먼트의 하위 엘리먼트에 둘수도 있다. 예를들면:</p>
+        <p>이 설정은 외부에 옮길 수 있다. 자바 프로퍼티 파일 인스턴스에 설정할 수도 있고 properties 엘리먼트의 하위 엘리먼트에 둘 수도 있다. 예를들면:</p>
         <source><![CDATA[<properties resource="org/mybatis/example/config.properties">
   <property name="username" value="dev_user"/>
   <property name="password" value="F2Fa3!33TYyg"/>
 </properties>]]></source>
-        <p>속성들은 파일 도처에 둘수도 있다. 예를들면:</p>
+        <p>속성들은 파일 도처에 둘 수도 있다. 예를들면:</p>
         <source><![CDATA[<dataSource type="POOLED">
   <property name="driver" value="${driver}"/>
   <property name="url" value="${url}"/>
@@ -82,7 +82,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
           <li>properties 엘리먼트의 클래스패스 자원이나 url 속성으로 부터 로드된 속성을 두번째로 읽는다. 그래서 이미 읽은 값이 있다면 덮어쓴다.</li>
           <li>마지막으로 메소드 파라미터로 전달된 속성을 읽는다. 앞서 로드된 값을 덮어쓴다.</li>
         </ul>
-        <p>그래서 가장 우선순위가 높은 속성은 메소드의 파라미터로 전달된 값이고 그 다음은 자원및 url 속성이고 마지막은 properties 엘리먼트에 명시된 값이다.</p>
+        <p>그래서 가장 우선순위가 높은 속성은 메소드의 파라미터로 전달된 값이고 그 다음은 자원 및 url 속성이고 마지막은 properties 엘리먼트에 명시된 값이다.</p>
 
         <p>
           Mybatis 3.4.2 부터, placeholder 에 기본값을 아래처럼 지정할 수 있다.
@@ -124,7 +124,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
 
       </subsection>
       <subsection name="settings">
-        <p>런타임시 마이바티스의 행위를 조정하기 위한 중요한 값들이다. 다음표는 설정과 그 의미 그리고 디폴트 값을 설명한다.</p>
+        <p>런타임시 마이바티스의 행위를 조정하기 위한 중요한 값들이다. 다음 표는 설정과 그 의미 그리고 디폴트 값을 설명한다.</p>
 
         <table>
           <thead>
@@ -181,7 +181,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               <td>
                 multipleResultSetsEnabled
               </td>
-              <td>한개의 구문에서 여러개의 ResultSet을 허용할지의 여부(드라이버가 해당 기능을 지원해야 함) </td>
+              <td>한 개의 구문에서 여러 개의 ResultSet을 허용할지의 여부(드라이버가 해당 기능을 지원해야 함) </td>
               <td>
                 true | false
               </td>
@@ -236,7 +236,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 autoMappingUnknownColumnBehavior
               </td>
               <td>
-                자동매핑 대상중 알수 없는 칼럼(이나 알수없는 프로퍼티 타입)을 발견했을때 행위를 명시
+                자동매핑 대상 중 알 수 없는 칼럼(이나 알 수 없는 프로퍼티 타입)을 발견했을 때 행위를 명시
                 <ul>
                   <li><code>NONE</code>: 아무것도 하지 않음</li>
                   <li><code>WARNING</code>: 경고 로그를 출력(<code>'org.apache.ibatis.session.AutoMappingUnknownColumnBehavior'</code>의 로그레벨은 <code>WARN</code>이어야 한다.) </li>
@@ -372,7 +372,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               <td>
                 마이바티스는 순환참조를 막거나 반복된 쿼리의 속도를 높히기 위해 로컬캐시를 사용한다.
                 디폴트 설정인 SESSION을 사용해서 동일 세션의 모든 쿼리를 캐시한다.
-                localCacheScope=STATEMENT 로 설정하면 로컬 세션은 구문 실행할때만 사용하고 같은 SqlSession에서 두개의 다른 호출사이에는 데이터를 공유하지 않는다.
+                localCacheScope=STATEMENT 로 설정하면 로컬 세션은 구문 실행할때만 사용하고 같은 SqlSession에서 두 개의 다른 호출 사이에는 데이터를 공유하지 않는다.
               </td>
               <td>
                 SESSION | STATEMENT
@@ -404,7 +404,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 지연로딩을 야기하는 객체의 메소드를 명시
               </td>
               <td>
-                메소드 이름을 나열하고 여러개일 경우 콤마(,) 로 구분
+                메소드 이름을 나열하고 여러 개일 경우 콤마(,) 로 구분
               </td>
               <td>
                 equals,clone,hashCode,toString
@@ -443,7 +443,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 callSettersOnNulls
               </td>
               <td>
-                가져온 값이 null일때 setter나 맵의 put 메소드를 호출할지를 명시
+                가져온 값이 null일 때 setter나 맵의 put 메소드를 호출할지를 명시
                 Map.keySet() 이나 null값을 초기화할때 유용하다.
                 int, boolean 등과 같은 원시타입은 null을 설정할 수 없다는 점은 알아두면 좋다.
               </td>
@@ -545,7 +545,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               </td>
               <td>
                 <code>Configuration</code> 인스턴스를 제공하는 클래스를 지정한다.
-                반환된 Configuration 인스턴스는 역직렬화 된 객체의 지연로딩 속성들을 불러오는데 사용된다.
+                반환된 Configuration 인스턴스는 역직렬화 된 객체의 지연로딩 속성들을 불러오는 데 사용된다.
                 이 클래스는 <code>static Configuration getConfiguration()</code> 메서드를 가져야 한다. (3.2.3 부터)
               </td>
               <td>
@@ -619,7 +619,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
   <typeAlias alias="Tag" type="domain.blog.Tag"/>
 </typeAliases>
 ]]></source>
-        <p>이 설정에서 “Blog”는 여러군데에서 “domain.blog.Blog” 대신 사용할 수 있다.</p>
+        <p>이 설정에서 “Blog”는 여러 군데에서 “domain.blog.Blog” 대신 사용할 수 있다.</p>
         <p>마이바티스가 빈을 찾도록 패키지를 명시할 수 있다. 예를들면:
         </p>
         <source><![CDATA[<typeAliases>
@@ -1317,7 +1317,7 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
 		그래서 파라미터와 결과에 정확한 타입 핸들러를 매핑해야 한다.
         마이바티스가 구문이 실행될때까지는 데이터 타입에 대해 모르기 때문이다.</p>
         <p>마이바티스는 제네릭타입을 체크해서 TypeHandler로 다루고자 하는 자바타입을 알것이다.
-		하지만 두가지 방법으로 이 행위를 재정의할 수 있다:
+		하지만 두 가지 방법으로 이 행위를 재정의할 수 있다:
         </p>
         <ul>
           <li>typeHandler 엘리먼트의 <code>javaType</code> 속성 추가(예제: <code>javaType="String"</code>)
@@ -1340,7 +1340,7 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
 		  <code>@MappedJdbcTypes</code> 애노테이션의 사용은 타입핸들러의  범위를 <i>제한</i>하고 명시적으로 설정하지 않는한 <code>결과매핑</code>을 사용하지 못하도록 만든다.
 		  <code>결과매핑</code>에서 타입핸들러를 사용할수 있도록 하려면 <code>@MappedJdbcTypes</code>애노테이션에 <code>includeNullJdbcType=true</code>를 설정하자.
 		  자바타입을 다루기 위해 <b>한개의</b> 타입핸들러만 등록한다면 <code>결과매핑</code>에서 자바타입을 다루기 위해 이 타입핸들러를 기본적으로 사용할 것이다.
-		  한개의 타입핸들러만 등록할 경우 <code>includeNullJdbcType=true</code>를 설정하지 않아도 동일하게 동작한다.
+		  한 개의 타입핸들러만 등록할 경우 <code>includeNullJdbcType=true</code>를 설정하지 않아도 동일하게 동작한다.
         </p>
 
         <p>마지막으로 마이바티스로 하여금 TypeHandler를 찾도록 할수 있다:</p>
@@ -1352,7 +1352,7 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
 
         <p>JDBC타입에 대한 자동검색 기능은 애노테이션을 명시한 경우에만 가능하다는 것을 알아둘 필요가 있다. </p>
         <p>
-          한개 이상의 클래스를 다루는 제네릭 TypeHandler를 만들수 있다.
+          한 개 이상의 클래스를 다루는 제네릭 TypeHandler를 만들수 있다.
           파라미터로 클래스를 가져오는 생성자를 추가하고 마이바티스는 TypeHandler를 만들때 실제 클래스를 전달할 것이다.
         </p>
 
@@ -1376,7 +1376,7 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
 
       <subsection name="Handling Enums">
       	<p>
-      	<code>Enum</code>을 매핑하고자 한다면 <code>EnumTypeHandler</code> 나 <code>EnumOrdinalTypeHandler</code> 를 사용할 필요가 있을것이다.
+      	<code>Enum</code>을 매핑하고자 한다면 <code>EnumTypeHandler</code> 나 <code>EnumOrdinalTypeHandler</code> 를 사용할 필요가 있을 것이다.
       	</p>
 
       	<p>예를들어 순환 방식으로 몇개의 숫자를 사용하는 순환모드를 저장할 필요가 있다고 해보자.
@@ -1387,7 +1387,7 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
       	어떤 하나의 특정 클래스를 다루지 않고 <code>Enum</code> 을 확장하는 모든 클래스를 다룬다. </b>
 
       	<p>아무리 이름을 저장하려해도 DBA는 숫자코드를 고집할수 있다.
-		이름대신 숫자코드를 저장하는 방법은 쉽다.
+		이름 대신 숫자코드를 저장하는 방법은 쉽다.
       	설정파일의 <code>typeHandlers</code>에 <code>EnumOrdinalTypeHandler</code> 를 추가하자.
       	그러면 각각의 <code>RoundingMode</code>는 순서값을 사용해서 숫자를 매핑할 것이다.
       	</p>
@@ -1397,15 +1397,15 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
 </typeHandlers>
 ]]></source>
 		<p>
-		  같은 <code>Enum</code>을 사용해서 어떤곳에는 문자열로 매핑하고 다른곳에는 숫자로 매핑해야 한다면 무엇을 해야 하나?
+		  같은 <code>Enum</code>을 사용해서 어떤 곳에는 문자열로 매핑하고 다른 곳에는 숫자로 매핑해야 한다면 무엇을 해야 하나?
 		</p>
       	<p>
       	  자동매퍼는 <code>EnumOrdinalTypeHandler</code> 를 자동으로 사용할 것이다.
-      	  그래서 평범한 순서를 나타내는 <code>EnumTypeHandler</code> 를 사용하고자 한다면 SQL구문에 사용할 타입핸들러를 몀시적으로 설정한다.
+      	  그래서 평범한 순서를 나타내는 <code>EnumTypeHandler</code> 를 사용하고자 한다면 SQL구문에 사용할 타입핸들러를 명시적으로 설정한다.
       	</p>
       	<p>
-      	  (매퍼 파일은 다음절까지는 다루지 않는다.
-      	  그래서 문서를 보면서 처음 봤다면 일단 이부분은 건너띄고 다음에 다시 볼수도 있다. )
+      	  (매퍼 파일은 다음 절까지는 다루지 않는다.
+      	  그래서 문서를 보면서 처음 봤다면 일단 이 부분은 건너띄고 다음에 다시 볼수도 있다. )
       	</p>
       	<source><![CDATA[<!DOCTYPE mapper
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
@@ -1476,7 +1476,7 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
   <property name="someProperty" value="100"/>
 </objectFactory>]]></source>
         <p>ObjectFactory인터페이스는 매우 간단한다.
-		두개의 create메소드를 가지고 있으며 하나는 디폴트 생성자를 처리하고 다른 하나는 파라미터를 가진 생성자를 처리한다.
+		두 개의 create메소드를 가지고 있으며 하나는 디폴트 생성자를 처리하고 다른 하나는 파라미터를 가진 생성자를 처리한다.
 		마지막으로 setProperties 메소드는 ObjectFactory를 설정하기 위해 사용될 수 있다.
 		objectFactory엘리먼트에 정의된 프로퍼티는 ObjectFactory인스턴스가 초기화된 후 setProperties에 전달될 것이다.</p>
 
@@ -1506,7 +1506,7 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
         </ul>
         <p>이 클래스들의 메소드는 각각 메소드 시그니처를 통해 찾을 수 있고 소스코드는 마이바티스 릴리즈 파일에서 찾을 수 있다.
 		오버라이드할 메소드의 행위를 이해해야만 한다.
-		주어진 메소드의 행위를 변경하거나 오버라이드하고자 한다면 마이바티스의 핵심기능에 악영향을 줄수도 있다.
+		주어진 메소드의 행위를 변경하거나 오버라이드하고자 한다면 마이바티스의 핵심기능에 악영향을 줄 수도 있다.
 		이러한 로우레벨 클래스와 메소드들은 주의를 해서 사용해야 한다.</p>
         <p>플러그인을 사용하도록 처리하는 방법은 간단하다.
 		Interceptor인터페이스를 구현해서 가로채고(intercept) 싶은 시그니처를 명시해야 한다.</p>
@@ -1544,15 +1544,15 @@ public class ExamplePlugin implements Interceptor {
 		다시 얘기하지만 이 작업은 마이바티스에 큰 영향을 줄수 있으니 주의해서 해야 한다.</p>
       </subsection>
       <subsection name="environments">
-        <p>마이바티스는 여러개의 환경으로 설정할 수 있다.
-		여러가지 이유로 여러개의 데이터베이스에 SQL Map을 적용하는데 도움이 된다.
-		예를들어, 개발, 테스트, 리얼 환경을 위해 별도의 설정을 가지거나 같은 스키마를 여러개의 DBMS 제품을 사용할 경우들이다.
-		그외에도 많은 경우가 있을 수 있다.</p>
+        <p>마이바티스는 여러 개의 환경으로 설정할 수 있다.
+		여러가지 이유로 여러 개의 데이터베이스에 SQL Map을 적용하는데 도움이 된다.
+		예를들어, 개발, 테스트, 리얼 환경을 위해 별도의 설정을 가지거나 같은 스키마를 여러 개의 DBMS 제품을 사용할 경우들이다.
+		그 외에도 많은 경우가 있을 수 있다.</p>
         <p>
-          <strong>중요하게 기억해야 할 것은 다중 환경을 설정할 수는 있지만 SqlSessionFactory 인스턴스마다 한개만 사용할 수 있다는 것이다.</strong>
+          <strong>중요하게 기억해야 할 것은 다중 환경을 설정할 수는 있지만 SqlSessionFactory 인스턴스마다 한 개만 사용할 수 있다는 것이다.</strong>
         </p>
-        <p>두개의 데이터베이스에 연결하고 싶다면 SqlSessionFactory 인스턴스를 두개 만들 필요가 있다.
-		세개의 데이터베이스를 사용한다면 역시 세개의 인스턴스를 필요로 한다.
+        <p>두 개의 데이터베이스에 연결하고 싶다면 SqlSessionFactory 인스턴스를 두 개 만들 필요가 있다.
+		세 개의 데이터베이스를 사용한다면 역시 세 개의 인스턴스를 필요로 한다.
 		기억하기 쉽게</p>
         <ul>
           <li>
@@ -1587,16 +1587,16 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
 </environments>]]></source>
         <p>중요한 부분을 살펴보면</p>
         <ul>
-          <li>디폴트 환경(Environment) ID (예를들면. default=”development”).</li>
-          <li>각각의 환경을 정의한 환경(Environment) ID (예를들면. id=”development”).</li>
-          <li>TransactionManager 설정 (예를들면. type=”JDBC”)</li>
-          <li>DataSource 설정 (예를들면. type=”POOLED”)</li>
+          <li>디폴트 환경(Environment) ID (예를 들면. default=”development”).</li>
+          <li>각각의 환경을 정의한 환경(Environment) ID (예를 들면. id=”development”).</li>
+          <li>TransactionManager 설정 (예를 들면. type=”JDBC”)</li>
+          <li>DataSource 설정 (예를 들면. type=”POOLED”)</li>
         </ul>
         <p>디폴트 환경(environment)과 환경(environment) ID 는 용어 자체가 역할을 설명한다.</p>
         <p>
           <strong>transactionManager</strong>
         </p>
-        <p>마이바티스는 두가지 타입의 TransactionManager를 제공한다.</p>
+        <p>마이바티스는 두 가지 타입의 TransactionManager를 제공한다.</p>
         <ul>
           <li>JDBC - 이 설정은 간단하게 JDBC 커밋과 롤백을 처리하기 위해 사용된다.
 		  트랜잭션의 스코프를 관리하기 위해 dataSource 로 부터 커넥션을 가져온다. </li>
@@ -1605,7 +1605,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
 		  대신 컨테이너가 트랜잭션의 모든 생명주기를 관리한다.
 		  디플트로 커넥션을 닫긴 한다.
 		  하지만 몇몇 컨테이너는 커넥션을 닫는 것 또한 기대하지 않기 때문에 커넥션 닫는 것으로 멈추고자 한다면 “closeConnection”프로퍼티를 false로 설정하라.
-		  예를들면:
+		  예를 들면:
             <source><![CDATA[<transactionManager type="MANAGED">
   <property name="closeConnection" value="false"/>
 </transactionManager>]]></source>
@@ -1633,7 +1633,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
   void close() throws SQLException;
   Integer getTimeout() throws SQLException;
 }]]></source>
-        <p>이 두개의 인터페이스를 사용하여 마이바티스가 트랜잭션을 처리하는 방법을 완벽하게 정의할 수 있다.</p>
+        <p>이 두 개의 인터페이스를 사용하여 마이바티스가 트랜잭션을 처리하는 방법을 완벽하게 정의할 수 있다.</p>
         <p>
           <strong>dataSource</strong>
         </p>
@@ -1693,7 +1693,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
         </ul>
         <p>
           <strong>JNDI</strong> - 이 DataSource 구현체는 컨테이너에 따라 설정이 변경되며 JNDI 컨텍스트를 참조한다.
-		  이 DataSource 는 오직 두개의 프로퍼티만을 요구한다.</p>
+		  이 DataSource 는 오직 두 개의 프로퍼티만을 요구한다.</p>
         <ul>
           <li><code>initial_context</code> - 이 프로퍼티는 InitialContext 에서 컨텍스트를 찾기(예를 들어 initialContext.lookup(initial_context))위해 사용된다.
 		  이 프로퍼티는 선택적인 값이다.
@@ -1719,7 +1719,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
 
         <p>
 		  <code>org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory</code>는 새로운 데이터소스를 만들기 위한 상위 클래스처럼 사용할 수 있다.
-		  예를들면 다음의 코드를 사용해서 C3P0를 사용할 수 있다.
+		  예를 들면 다음의 코드를 사용해서 C3P0를 사용할 수 있다.
 		</p>
 
         <source><![CDATA[import org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory;
@@ -1747,7 +1747,7 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
 
       <subsection name="databaseIdProvider">
         <p>마이바티스는 데이터베이스 제품마다 다른 구문을 실행할 수 있다.
-		여러개의 데이터베이스 제품을 가진 업체 제품은 <code>databaseId</code> 속성을 사용한 매핑된 구문을 기반으로 지원한다.
+		여러 개의 데이터베이스 제품을 가진 업체 제품은 <code>databaseId</code> 속성을 사용한 매핑된 구문을 기반으로 지원한다.
         마이바티스는 <code>databaseId</code>속성이 없거나 <code>databaseId</code>속성을 가진 모든 구문을 로드한다.
         같은 구문인데 하나는 <code>databaseId</code>속성이 있고 하나는 <code>databaseId</code>속성이 없을때 뒤에 나온 것이 무시된다.
         다중 지원을 사용하기 위해서는 mybatis-config.xml파일에 다음처럼 <code>databaseIdProvider</code>를 추가하라:
@@ -1757,7 +1757,7 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
 ]]></source>
 
     <p>DB_VENDOR구현체 databaseIdProvider는 <code>DatabaseMetaData#getDatabaseProductName()</code>에 의해 리턴된 문자열로 databaseId를 설정한다.
-    이때 리턴되는 문자열이 너무 길거나 같은 제품의 서로다른 버전으로 다른 값을 리턴하는 경우 다음처럼 프로퍼티를 추가해서 짧게 처리할 수도 있다:
+    이때 리턴되는 문자열이 너무 길거나 같은 제품의 서로 다른 버전으로 다른 값을 리턴하는 경우 다음처럼 프로퍼티를 추가해서 짧게 처리할 수도 있다:
     </p>
 
         <source><![CDATA[<databaseIdProvider type="DB_VENDOR">
@@ -1787,7 +1787,7 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
 		자바는 자동으로 리소스를 찾기 위한 좋은 방법을 제공하지 않는다.
 		그래서 가장 좋은 건 어디서 찾으라고 지정하는 것이다.
 		클래스패스에 상대적으로 리소스를 지정할 수도 있고 url 을 통해서 지정할 수 도 있다.
-		예를들면</p>
+		예를 들면</p>
         <source><![CDATA[<!-- 클래스패스의 상대경로의 리소스 사용 -->
 <mappers>
   <mapper resource="org/mybatis/builder/AuthorMapper.xml"/>

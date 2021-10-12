@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2019 the original author or authors.
+       Copyright 2009-2021 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -237,7 +237,7 @@ ps.setInt(1,id);]]></source>
         </table>
       </subsection>
 
-      <subsection name="insert, update and delete">
+      <subsection name="insert, update and delete" id="insert_update_and_delete">
         <p>
           データを変更するステートメントである insert, update, delete は、非常によく似た実装となっています。
         </p>
