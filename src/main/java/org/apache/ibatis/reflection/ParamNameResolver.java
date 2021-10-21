@@ -53,6 +53,7 @@ public class ParamNameResolver {
   private final SortedMap<Integer, String> names;
 
   private boolean hasParamAnnotation;
+  private boolean mergeParams;
 
   public ParamNameResolver(Configuration config, Method method) {
     this.useActualParamName = config.isUseActualParamName();
@@ -71,6 +72,13 @@ public class ParamNameResolver {
         if (annotation instanceof Param) {
           hasParamAnnotation = true;
           name = ((Param) annotation).value();
+          
+          // find: @Param("") Map param
+          Class<?> type = paramTypes[paramIndex];
+					if ("".equals(name) && Map.class.isAssignableFrom(type)) {
+						mergeParams = true;
+					}
+          
           break;
         }
       }
@@ -120,6 +128,10 @@ public class ParamNameResolver {
    * @return the named params
    */
   public Object getNamedParams(Object[] args) {
+    if (mergeParams) {
+			return mergeParamsToSingleMap(args);
+		}
+    
     final int paramCount = names.size();
     if (args == null || paramCount == 0) {
       return null;
@@ -143,6 +155,22 @@ public class ParamNameResolver {
     }
   }
 
+  private ParamMap<Object> mergeParamsToSingleMap(Object[] args) {
+		ParamMap<Object> param = new ParamMap<>();
+		for (Map.Entry<Integer, String> entry : names.entrySet()) {
+			String name = entry.getValue();
+			Object arg = args[entry.getKey()];
+
+			if ("".equals(name) && arg != null && Map.class.isAssignableFrom(arg.getClass())) {
+				param.putAll((Map) arg);
+			}
+			else {
+				param.put(name, arg);
+			}
+		}
+		return param;
+	}
+  
   /**
    * Wrap to a {@link ParamMap} if object is {@link Collection} or array.
    *
