@@ -26,6 +26,7 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.submitted.ognl_enum.Person.Type;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 class EnumWithOgnlTest {
@@ -60,6 +61,7 @@ class EnumWithOgnlTest {
     }
   }
 
+  @Tag("RequireIllegalAccess")
   @Test
   void testEnumWithOgnlDirectorNameAttribute() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {

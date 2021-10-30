@@ -24,6 +24,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 class OgnlStaticTest {
@@ -63,6 +64,7 @@ class OgnlStaticTest {
     }
   }
 
+  @Tag("RequireIllegalAccess")
   @Test // see issue #61 (gh)
   void shouldGetAUserWithIfNode() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
