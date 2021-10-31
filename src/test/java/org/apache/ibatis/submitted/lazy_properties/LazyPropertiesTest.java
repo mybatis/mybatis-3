@@ -31,6 +31,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 class LazyPropertiesTest {
@@ -156,6 +157,7 @@ class LazyPropertiesTest {
     shoulInvokingSetterInvalidateLazyLoading(new JavassistProxyFactory());
   }
 
+  @Tag("RequireIllegalAccess")
   @Test
   void shouldInvokingSetterInvalidateLazyLoading_Cglib() {
     shoulInvokingSetterInvalidateLazyLoading(new CglibProxyFactory());

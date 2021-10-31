@@ -64,6 +64,7 @@ import org.apache.ibatis.type.EnumTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 class XmlConfigBuilderTest {
@@ -162,6 +163,7 @@ class XmlConfigBuilderTest {
     assertArrayEquals(MyEnum.values(), ((EnumOrderTypeHandler<MyEnum>) typeHandler).constants);
   }
 
+  @Tag("RequireIllegalAccess")
   @Test
   void shouldSuccessfullyLoadXMLConfigFile() throws Exception {
     String resource = "org/apache/ibatis/builder/CustomizedSettingsMapperConfig.xml";
