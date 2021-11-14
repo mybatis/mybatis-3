@@ -317,7 +317,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   }
 
   //
-  // HANDLE ROWS FOR SIMPLE RESULTMAP
+  // HANDLE ROWS FOR SIMPLE RESULT MAP
   //
 
   public void handleRowValues(ResultSetWrapper rsw, ResultMap resultMap, ResultHandler<?> resultHandler, RowBounds rowBounds, ResultMapping parentMapping) throws SQLException {
