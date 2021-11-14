@@ -25,24 +25,19 @@ import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 
-import org.apache.ibatis.executor.loader.AbstractEnhancedDeserializationProxy;
-import org.apache.ibatis.executor.loader.AbstractSerialStateHolder;
-import org.apache.ibatis.executor.loader.ProxyFactory;
-import org.apache.ibatis.executor.loader.ResultLoaderMap;
-import org.apache.ibatis.executor.loader.WriteReplaceInterface;
+import org.apache.ibatis.executor.loader.*;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.reflection.ExceptionUtil;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.property.PropertyCopier;
-import org.apache.ibatis.reflection.property.PropertyNamer;
 import org.apache.ibatis.session.Configuration;
 
 /**
  * @author Clinton Begin
  */
-public class CglibProxyFactory implements ProxyFactory {
+public class CglibProxyFactory extends AbstractProxyFactory implements ProxyFactory {
 
   private static final String FINALIZE_METHOD = "finalize";
   private static final String WRITE_REPLACE_METHOD = "writeReplace";
@@ -137,19 +132,7 @@ public class CglibProxyFactory implements ProxyFactory {
               return original;
             }
           } else {
-            if (lazyLoader.size() > 0 && !FINALIZE_METHOD.equals(methodName)) {
-              if (aggressive || lazyLoadTriggerMethods.contains(methodName)) {
-                lazyLoader.loadAll();
-              } else if (PropertyNamer.isSetter(methodName)) {
-                final String property = PropertyNamer.methodToProperty(methodName);
-                lazyLoader.remove(property);
-              } else if (PropertyNamer.isGetter(methodName)) {
-                final String property = PropertyNamer.methodToProperty(methodName);
-                if (lazyLoader.hasLoader(property)) {
-                  lazyLoader.load(property);
-                }
-              }
-            }
+            lazyLoaderInject(methodName, lazyLoader, FINALIZE_METHOD, aggressive, lazyLoadTriggerMethods);
           }
         }
         return methodProxy.invokeSuper(enhanced, args);
