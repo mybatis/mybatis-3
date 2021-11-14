@@ -84,16 +84,16 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   private final ObjectFactory objectFactory;
   private final ReflectorFactory reflectorFactory;
 
-  // nested resultmaps
+  // nested result maps
   private final Map<CacheKey, Object> nestedResultObjects = new HashMap<>();
   private final Map<String, Object> ancestorObjects = new HashMap<>();
   private Object previousRowValue;
 
-  // multiple resultsets
+  // multiple result sets
   private final Map<String, ResultMapping> nextResultMaps = new HashMap<>();
   private final Map<CacheKey, List<PendingRelation>> pendingRelations = new HashMap<>();
 
-  // Cached Automappings
+  // Cached auto mappings
   private final Map<String, List<UnMappedColumnAutoMapping>> autoMappingsCache = new HashMap<>();
 
   // temporary marking flag that indicate using constructor mapping (use field to reduce memory usage)
