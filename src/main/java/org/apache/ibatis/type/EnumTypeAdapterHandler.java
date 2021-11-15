@@ -27,9 +27,11 @@ public class EnumTypeAdapterHandler<E extends Enum<E>> extends BaseTypeHandler<E
     this.enums = type.getEnumConstants();
   }
 
+  public EnumTypeAdapterHandler() {
+  }
+
   @Override
-  public void setNonNullParameter(PreparedStatement ps, int i, E parameter, JdbcType jdbcType)
-    throws SQLException {
+  public void setNonNullParameter(PreparedStatement ps, int i, E parameter, JdbcType jdbcType) throws SQLException {
     if (jdbcType == null) {
       ps.setString(i, parameter.name());
     } else {
@@ -39,33 +41,25 @@ public class EnumTypeAdapterHandler<E extends Enum<E>> extends BaseTypeHandler<E
 
   @Override
   public E getNullableResult(ResultSet rs, String columnName) throws SQLException {
-    if (enums == null || rs.wasNull()) {
-      return null;
-    }
+    if (enums == null) {return null;}
     String result = rs.getString(columnName);
-    return Arrays.stream(enums).filter(anEnum -> anEnum.name().equals(result)).findFirst()
-      .orElse(null);
+    return Arrays.stream(enums).filter(anEnum -> anEnum.name().equals(result)).findFirst().orElse(null);
   }
 
   @Override
   public E getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
-    if (enums == null || rs.wasNull()) {
-      return null;
-    }
+    if (enums == null) {return null;}
     String result = rs.getString(columnIndex);
-    return Arrays.stream(enums).filter(anEnum -> anEnum.name().equals(result)).findFirst()
-      .orElse(null);
+    return Arrays.stream(enums).filter(anEnum -> anEnum.name().equals(result)).findFirst().orElse(null);
   }
 
   @Override
   public E getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
-    if (enums == null || cs.wasNull()) {
-      return null;
-    }
+    if (enums == null) {return null;}
     String result = cs.getString(columnIndex);
-    return Arrays.stream(enums).filter(anEnum -> anEnum.name().equals(result)).findFirst()
-      .orElse(null);
+    return Arrays.stream(enums).filter(anEnum -> anEnum.name().equals(result)).findFirst().orElse(null);
   }
+
 
 
 }
