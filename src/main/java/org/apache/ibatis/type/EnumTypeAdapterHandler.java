@@ -9,8 +9,8 @@ import java.util.Arrays;
 
 /**
  * @description: Core method --> {@link TypeHandlerRegistry#register(Type, JdbcType, TypeHandler)}
- * When there are multiple enumerations in the mapper.xml {@link TypeHandlerRegistry#allTypeHandlersMap}
- * will be covered
+ * When we have more than one enumeration in the mapper.xml, the {@link TypeHandlerRegistry#allTypeHandlersMap}
+ * will be covered.
  * @author: zhangzhenwei
  * @date: 2021/10/24 21:55
  */
