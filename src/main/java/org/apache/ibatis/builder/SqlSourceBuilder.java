@@ -84,9 +84,53 @@ public class SqlSourceBuilder extends BaseBuilder {
 
     @Override
     public String handleToken(String content) {
+      Object params = metaParameters.getValue("_parameter");
+			if (params != null && params instanceof Map) {
+				String token = handleCollectionParam(content, (Map<String, Object>) params);
+				if (token != null) return token;
+			}
+      
       parameterMappings.add(buildParameterMapping(content));
       return "?";
     }
+
+    // Expand the collection variable into multiple placeholders
+		@SuppressWarnings("rawtypes")
+		private String handleCollectionParam(String content, Map<String, Object> params) {
+			if (!params.containsKey(content)) return null;
+
+			Object data = params.get(content);
+			if (data == null) return null;
+
+			// 数组转成集合, 然后统一处理
+			if (data instanceof Object[]) {
+				data = Arrays.asList((Object[]) data);
+			}
+
+			// 统一处理集合
+			if (data instanceof Collection) {
+				int idx = 0;
+				StringBuilder sb = new StringBuilder();
+
+				Collection vals = (Collection) data;
+				for (Object val : vals) {
+					String bindName = content + "_" + idx;
+					if (params.containsKey(bindName)) {
+						bindName += "_" + params.size();
+					}
+
+					params.put(bindName, val);
+					parameterMappings.add(buildParameterMapping(bindName));
+
+					if (idx > 0) sb.append(",");
+					sb.append("?");
+					idx++;
+				}
+				return sb.toString();
+			}
+
+			return null;
+		}
 
     private ParameterMapping buildParameterMapping(String content) {
       Map<String, String> propertiesMap = parseParameterMapping(content);
