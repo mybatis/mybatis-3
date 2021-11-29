@@ -26,7 +26,7 @@ import org.apache.ibatis.session.Configuration;
 public interface LanguageDriver {
 
   /**
-   * Creates a {@link ParameterHandler} that passes the actual parameters to the the JDBC statement.
+   * Creates a {@link ParameterHandler} that passes the actual parameters to the JDBC statement.
    *
    * @author Frank D. Martinez [mnesarco]
    * @param mappedStatement The mapped statement that is being executed
