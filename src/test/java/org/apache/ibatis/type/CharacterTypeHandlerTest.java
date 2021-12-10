@@ -88,4 +88,24 @@ class CharacterTypeHandlerTest extends BaseTypeHandlerTest {
     verify(cs, never()).wasNull();
   }
 
+  @Test
+  void testEmptyStringGetStringByName() throws Exception {
+    when(rs.getString("column")).thenReturn("");
+    assertNull(TYPE_HANDLER.getResult(rs, "column"));
+    verify(rs, never()).wasNull();
+  }
+
+  @Test
+  void testEmptyStringGetStringByIndex() throws Exception {
+    when(rs.getString(1)).thenReturn("");
+    assertNull(TYPE_HANDLER.getResult(rs, 1));
+    verify(rs, never()).wasNull();
+  }
+
+  @Test
+  void testEmptyStringCallableStatementGetStringByIndex() throws Exception {
+    when(cs.getString(1)).thenReturn("");
+    assertNull(TYPE_HANDLER.getResult(cs, 1));
+    verify(cs, never()).wasNull();
+  }
 }
