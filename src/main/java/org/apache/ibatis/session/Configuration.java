@@ -114,6 +114,7 @@ public class Configuration {
   protected boolean useActualParamName = true;
   protected boolean returnInstanceForEmptyRow;
   protected boolean shrinkWhitespacesInSql;
+  protected boolean forceRollbackOnClose;
 
   protected String logPrefix;
   protected Class<? extends Log> logImpl;
@@ -295,6 +296,26 @@ public class Configuration {
 
   public void setShrinkWhitespacesInSql(boolean shrinkWhitespacesInSql) {
     this.shrinkWhitespacesInSql = shrinkWhitespacesInSql;
+  }
+
+  /**
+   * Whether force rollback on session close.
+   *
+   * @return if return {@code true}, execute force rollback
+   * @since 3.5.8
+   */
+  public boolean isForceRollbackOnClose() {
+    return forceRollbackOnClose;
+  }
+
+  /**
+   * Set whether force rollback on session close.
+   *
+   * @param forceRollbackOnClose if set {@code true}, execute force rollback
+   * @since 3.5.8
+   */
+  public void setForceRollbackOnClose(boolean forceRollbackOnClose) {
+    this.forceRollbackOnClose = forceRollbackOnClose;
   }
 
   public String getDatabaseId() {

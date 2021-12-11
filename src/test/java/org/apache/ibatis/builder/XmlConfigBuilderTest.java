@@ -103,6 +103,7 @@ class XmlConfigBuilderTest {
       assertThat(config.getTypeHandlerRegistry().getTypeHandler(RoundingMode.class)).isInstanceOf(EnumTypeHandler.class);
       assertThat(config.isShrinkWhitespacesInSql()).isFalse();
       assertThat(config.getDefaultSqlProviderType()).isNull();
+      assertThat(config.isForceRollbackOnClose()).isFalse();
     }
   }
 
@@ -200,6 +201,7 @@ class XmlConfigBuilderTest {
       assertThat(config.getConfigurationFactory().getName()).isEqualTo(String.class.getName());
       assertThat(config.isShrinkWhitespacesInSql()).isTrue();
       assertThat(config.getDefaultSqlProviderType().getName()).isEqualTo(MySqlProvider.class.getName());
+      assertThat(config.isForceRollbackOnClose()).isTrue();
 
       assertThat(config.getTypeAliasRegistry().getTypeAliases().get("blogauthor")).isEqualTo(Author.class);
       assertThat(config.getTypeAliasRegistry().getTypeAliases().get("blog")).isEqualTo(Blog.class);
