@@ -6,21 +6,21 @@
 </head>
 <body>
 <div id="overview"><a href="../../../../../../../testapidocs/org/apache/ibatis/submitted/sptests/SPTest.html">View Javadoc</a></div><pre>
-<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2019 the original author or authors.</em>
-<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
-<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
-<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_javadoccomment"> *    You may obtain a copy of the License at</em>
-<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
-<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_javadoccomment"> *    Unless required by applicable law or agreed to in writing, software</em>
-<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_javadoccomment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
-<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_javadoccomment"> *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</em>
-<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_javadoccomment"> *    See the License for the specific language governing permissions and</em>
-<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_javadoccomment"> *    limitations under the License.</em>
-<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2021 the original author or authors.</em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> *    You may obtain a copy of the License at</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_comment"> *    Unless required by applicable law or agreed to in writing, software</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_comment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_comment"> *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_comment"> *    See the License for the specific language governing permissions and</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_comment"> *    limitations under the License.</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> */</em>
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">package</strong> org.apache.ibatis.submitted.sptests;
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.jupiter.api.Assertions.assertEquals;
@@ -69,7 +69,7 @@
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>    @Test
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>    <strong class="jxr_keyword">void</strong> testAdderAsSelect() {
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>        <a name="Parameter" href="../../../../../org/apache/ibatis/subm<a name="Parameter" href="../../../../../org/apache/ibatis/submitted/sptests/Parameter.html#Parameter">Parameter</a>ests/Parameter.html#Parameter">Parameter</a> parameter = <strong class="jxr_keyword">new</strong> <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/sptests/Parameter.html#Parameter">Parameter</a>();
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>        <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/sptests/Parameter.html#Parameter">Parameter</a> parameter = <strong class="jxr_keyword">new</strong> <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/sptests/Parameter.html#Parameter">Parameter</a>();
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>        parameter.setAddend1(2);
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>        parameter.setAddend2(3);
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>  
@@ -89,7 +89,7 @@
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>    @Test
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>    <strong class="jxr_keyword">void</strong> testAdderAsSelectDoubleCall1() {
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>        <a name="Parameter" href="../../../../../org/apache/ibatis/subm<a name="Parameter" href="../../../../../org/apache/ibatis/submitted/sptests/Parameter.html#Parameter">Parameter</a>ests/Parameter.html#Parameter">Parameter</a> parameter = <strong class="jxr_keyword">new</strong> <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/sptests/Parameter.html#Parameter">Parameter</a>();
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>        <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/sptests/Parameter.html#Parameter">Parameter</a> parameter = <strong class="jxr_keyword">new</strong> <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/sptests/Parameter.html#Parameter">Parameter</a>();
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>        parameter.setAddend1(2);
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>        parameter.setAddend2(3);
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>  
@@ -117,7 +117,7 @@
 <a class="jxr_linenumber" name="L109" href="#L109">109</a>   @Test
 <a class="jxr_linenumber" name="L110" href="#L110">110</a>   <strong class="jxr_keyword">void</strong> testAdderAsSelectDoubleCall2() {
 <a class="jxr_linenumber" name="L111" href="#L111">111</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-<a class="jxr_linenumber" name="L112" href="#L112">112</a>       <a name="Parameter" href="../../../../../org/apache/ibatis/subm<a name="Parameter" href="../../../../../org/apache/ibatis/submitted/sptests/Parameter.html#Parameter">Parameter</a>ests/Parameter.html#Parameter">Parameter</a> parameter = <strong class="jxr_keyword">new</strong> <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/sptests/Parameter.html#Parameter">Parameter</a>();
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>       <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/sptests/Parameter.html#Parameter">Parameter</a> parameter = <strong class="jxr_keyword">new</strong> <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/sptests/Parameter.html#Parameter">Parameter</a>();
 <a class="jxr_linenumber" name="L113" href="#L113">113</a>       parameter.setAddend1(2);
 <a class="jxr_linenumber" name="L114" href="#L114">114</a>       parameter.setAddend2(3);
 <a class="jxr_linenumber" name="L115" href="#L115">115</a> 
@@ -144,7 +144,7 @@
 <a class="jxr_linenumber" name="L136" href="#L136">136</a>   @Test
 <a class="jxr_linenumber" name="L137" href="#L137">137</a>   <strong class="jxr_keyword">void</strong> testAdderAsUpdate() {
 <a class="jxr_linenumber" name="L138" href="#L138">138</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-<a class="jxr_linenumber" name="L139" href="#L139">139</a>       <a name="Parameter" href="../../../../../org/apache/ibatis/subm<a name="Parameter" href="../../../../../org/apache/ibatis/submitted/sptests/Parameter.html#Parameter">Parameter</a>ests/Parameter.html#Parameter">Parameter</a> parameter = <strong class="jxr_keyword">new</strong> <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/sptests/Parameter.html#Parameter">Parameter</a>();
+<a class="jxr_linenumber" name="L139" href="#L139">139</a>       <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/sptests/Parameter.html#Parameter">Parameter</a> parameter = <strong class="jxr_keyword">new</strong> <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/sptests/Parameter.html#Parameter">Parameter</a>();
 <a class="jxr_linenumber" name="L140" href="#L140">140</a>       parameter.setAddend1(2);
 <a class="jxr_linenumber" name="L141" href="#L141">141</a>       parameter.setAddend2(3);
 <a class="jxr_linenumber" name="L142" href="#L142">142</a> 
@@ -338,7 +338,7 @@
 <a class="jxr_linenumber" name="L330" href="#L330">330</a>   @Test
 <a class="jxr_linenumber" name="L331" href="#L331">331</a>   <strong class="jxr_keyword">void</strong> testAdderAsSelectAnnotated() {
 <a class="jxr_linenumber" name="L332" href="#L332">332</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-<a class="jxr_linenumber" name="L333" href="#L333">333</a>       <a name="Parameter" href="../../../../../org/apache/ibatis/subm<a name="Parameter" href="../../../../../org/apache/ibatis/submitted/sptests/Parameter.html#Parameter">Parameter</a>ests/Parameter.html#Parameter">Parameter</a> parameter = <strong class="jxr_keyword">new</strong> <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/sptests/Parameter.html#Parameter">Parameter</a>();
+<a class="jxr_linenumber" name="L333" href="#L333">333</a>       <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/sptests/Parameter.html#Parameter">Parameter</a> parameter = <strong class="jxr_keyword">new</strong> <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/sptests/Parameter.html#Parameter">Parameter</a>();
 <a class="jxr_linenumber" name="L334" href="#L334">334</a>       parameter.setAddend1(2);
 <a class="jxr_linenumber" name="L335" href="#L335">335</a>       parameter.setAddend2(3);
 <a class="jxr_linenumber" name="L336" href="#L336">336</a> 
@@ -360,7 +360,7 @@
 <a class="jxr_linenumber" name="L352" href="#L352">352</a>   @Test
 <a class="jxr_linenumber" name="L353" href="#L353">353</a>   <strong class="jxr_keyword">void</strong> testAdderAsSelectDoubleCallAnnotated1() {
 <a class="jxr_linenumber" name="L354" href="#L354">354</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-<a class="jxr_linenumber" name="L355" href="#L355">355</a>       <a name="Parameter" href="../../../../../org/apache/ibatis/subm<a name="Parameter" href="../../../../../org/apache/ibatis/submitted/sptests/Parameter.html#Parameter">Parameter</a>ests/Parameter.html#Parameter">Parameter</a> parameter = <strong class="jxr_keyword">new</strong> <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/sptests/Parameter.html#Parameter">Parameter</a>();
+<a class="jxr_linenumber" name="L355" href="#L355">355</a>       <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/sptests/Parameter.html#Parameter">Parameter</a> parameter = <strong class="jxr_keyword">new</strong> <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/sptests/Parameter.html#Parameter">Parameter</a>();
 <a class="jxr_linenumber" name="L356" href="#L356">356</a>       parameter.setAddend1(2);
 <a class="jxr_linenumber" name="L357" href="#L357">357</a>       parameter.setAddend2(3);
 <a class="jxr_linenumber" name="L358" href="#L358">358</a> 
@@ -390,7 +390,7 @@
 <a class="jxr_linenumber" name="L382" href="#L382">382</a>   @Test
 <a class="jxr_linenumber" name="L383" href="#L383">383</a>   <strong class="jxr_keyword">void</strong> testAdderAsSelectDoubleCallAnnotated2() {
 <a class="jxr_linenumber" name="L384" href="#L384">384</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-<a class="jxr_linenumber" name="L385" href="#L385">385</a>       <a name="Parameter" href="../../../../../org/apache/ibatis/subm<a name="Parameter" href="../../../../../org/apache/ibatis/submitted/sptests/Parameter.html#Parameter">Parameter</a>ests/Parameter.html#Parameter">Parameter</a> parameter = <strong class="jxr_keyword">new</strong> <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/sptests/Parameter.html#Parameter">Parameter</a>();
+<a class="jxr_linenumber" name="L385" href="#L385">385</a>       <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/sptests/Parameter.html#Parameter">Parameter</a> parameter = <strong class="jxr_keyword">new</strong> <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/sptests/Parameter.html#Parameter">Parameter</a>();
 <a class="jxr_linenumber" name="L386" href="#L386">386</a>       parameter.setAddend1(2);
 <a class="jxr_linenumber" name="L387" href="#L387">387</a>       parameter.setAddend2(3);
 <a class="jxr_linenumber" name="L388" href="#L388">388</a> 
@@ -419,7 +419,7 @@
 <a class="jxr_linenumber" name="L411" href="#L411">411</a>   @Test
 <a class="jxr_linenumber" name="L412" href="#L412">412</a>   <strong class="jxr_keyword">void</strong> testAdderAsUpdateAnnotated() {
 <a class="jxr_linenumber" name="L413" href="#L413">413</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-<a class="jxr_linenumber" name="L414" href="#L414">414</a>       <a name="Parameter" href="../../../../../org/apache/ibatis/subm<a name="Parameter" href="../../../../../org/apache/ibatis/submitted/sptests/Parameter.html#Parameter">Parameter</a>ests/Parameter.html#Parameter">Parameter</a> parameter = <strong class="jxr_keyword">new</strong> <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/sptests/Parameter.html#Parameter">Parameter</a>();
+<a class="jxr_linenumber" name="L414" href="#L414">414</a>       <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/sptests/Parameter.html#Parameter">Parameter</a> parameter = <strong class="jxr_keyword">new</strong> <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/sptests/Parameter.html#Parameter">Parameter</a>();
 <a class="jxr_linenumber" name="L415" href="#L415">415</a>       parameter.setAddend1(2);
 <a class="jxr_linenumber" name="L416" href="#L416">416</a>       parameter.setAddend2(3);
 <a class="jxr_linenumber" name="L417" href="#L417">417</a> 

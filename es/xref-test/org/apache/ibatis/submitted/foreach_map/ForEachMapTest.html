@@ -6,21 +6,21 @@
 </head>
 <body>
 <div id="overview"><a href="../../../../../../../testapidocs/org/apache/ibatis/submitted/foreach_map/ForEachMapTest.html">View Javadoc</a></div><pre>
-<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2020 the original author or authors.</em>
-<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
-<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
-<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_javadoccomment"> *    You may obtain a copy of the License at</em>
-<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
-<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_javadoccomment"> *    Unless required by applicable law or agreed to in writing, software</em>
-<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_javadoccomment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
-<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_javadoccomment"> *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</em>
-<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_javadoccomment"> *    See the License for the specific language governing permissions and</em>
-<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_javadoccomment"> *    limitations under the License.</em>
-<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2021 the original author or authors.</em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> *    You may obtain a copy of the License at</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_comment"> *    Unless required by applicable law or agreed to in writing, software</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_comment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_comment"> *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_comment"> *    See the License for the specific language governing permissions and</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_comment"> *    limitations under the License.</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> */</em>
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">package</strong> org.apache.ibatis.submitted.foreach_map;
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> java.io.Reader;
@@ -65,7 +65,7 @@
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>  
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>    @Test
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>    <strong class="jxr_keyword">void</strong> shouldGetStringKeyStringValueEntries() {
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>      <a name="MapParam" href="../../../../../org/apache/ibatis/sub<a name="MapParam" href="../../../../../org/apache/ibatis/submitted/foreach_map/MapParam.html#MapParam">MapParam</a>oreach_map/MapParam.html#MapParam">MapParam</a> mapParam = <strong class="jxr_keyword">new</strong> <a name="MapParam" href="../../../../../org/apache/ibatis/submitted/foreach_map/MapParam.html#MapParam">MapParam</a>();
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>      <a name="MapParam" href="../../../../../org/apache/ibatis/submitted/foreach_map/MapParam.html#MapParam">MapParam</a> mapParam = <strong class="jxr_keyword">new</strong> <a name="MapParam" href="../../../../../org/apache/ibatis/submitted/foreach_map/MapParam.html#MapParam">MapParam</a>();
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>      mapParam.getMap().put(<span class="jxr_string">"key 1"</span>, <span class="jxr_string">"value 1"</span>);
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>      mapParam.getMap().put(<span class="jxr_string">"key 2"</span>, <span class="jxr_string">"value 2"</span>);
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>      sqlSession.insert(<span class="jxr_string">"ins_string_string"</span>, mapParam);
@@ -77,7 +77,7 @@
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>  
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>    @Test
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>    <strong class="jxr_keyword">void</strong> shouldGetIntKeyBoolValueEntries() {
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>      <a name="MapParam" href="../../../../../org/apache/ibatis/sub<a name="MapParam" href="../../../../../org/apache/ibatis/submitted/foreach_map/MapParam.html#MapParam">MapParam</a>oreach_map/MapParam.html#MapParam">MapParam</a> mapParam = <strong class="jxr_keyword">new</strong> <a name="MapParam" href="../../../../../org/apache/ibatis/submitted/foreach_map/MapParam.html#MapParam">MapParam</a>();
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>      <a name="MapParam" href="../../../../../org/apache/ibatis/submitted/foreach_map/MapParam.html#MapParam">MapParam</a> mapParam = <strong class="jxr_keyword">new</strong> <a name="MapParam" href="../../../../../org/apache/ibatis/submitted/foreach_map/MapParam.html#MapParam">MapParam</a>();
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>      mapParam.getMap().put(12345, <strong class="jxr_keyword">true</strong>);
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>      mapParam.getMap().put(54321, false);
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>      sqlSession.insert(<span class="jxr_string">"ins_int_bool"</span>, mapParam);
@@ -89,9 +89,9 @@
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>  
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>    @Test
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>    <strong class="jxr_keyword">void</strong> shouldGetNestedBeanKeyValueEntries() {
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>      <a name="MapParam" href="../../../../../org/apache/ibatis/sub<a name="MapParam" href="../../../../../org/apache/ibatis/submitted/foreach_map/MapParam.html#MapParam">MapParam</a>oreach_map/MapParam.html#MapParam">MapParam</a> mapParam = <strong class="jxr_keyword">new</strong> <a name="MapParam" href="../../../../../org/apache/ibatis/submitted/foreach_map/MapParam.html#MapParam">MapParam</a>();
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>      mapParam.getMap().put(<strong class="jxr_keyword">new</strong> <a name="NestedBean" href="../../../../../org/apache/ibatis/submitted/foreach_map/NestedBean.html#Neste<a name="NestedBean" href="../../../../../org/apache/ibatis/submitted/foreach_map/NestedBean.html#NestedBean">NestedBean</a>tedBean</a>(12345, <strong class="jxr_keyword">true</strong>), <strong class="jxr_keyword">new</strong> <a name="NestedBean" href="../../../../../org/apache/ibatis/submitted/foreach_map/NestedBean.html#NestedBean">NestedBean</a>(54321, false));
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>      mapParam.getMap().put(<strong class="jxr_keyword">new</strong> <a name="NestedBean" href="../../../../../org/apache/ibatis/submitted/foreach_map/NestedBean.html#Neste<a name="NestedBean" href="../../../../../org/apache/ibatis/submitted/foreach_map/NestedBean.html#NestedBean">NestedBean</a>tedBean</a>(67890, <strong class="jxr_keyword">true</strong>), <strong class="jxr_keyword">new</strong> <a name="NestedBean" href="../../../../../org/apache/ibatis/submitted/foreach_map/NestedBean.html#NestedBean">NestedBean</a>(9876, false));
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>      <a name="MapParam" href="../../../../../org/apache/ibatis/submitted/foreach_map/MapParam.html#MapParam">MapParam</a> mapParam = <strong class="jxr_keyword">new</strong> <a name="MapParam" href="../../../../../org/apache/ibatis/submitted/foreach_map/MapParam.html#MapParam">MapParam</a>();
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>      mapParam.getMap().put(<strong class="jxr_keyword">new</strong> <a name="NestedBean" href="../../../../../org/apache/ibatis/submitted/foreach_map/NestedBean.html#NestedBean">NestedBean</a>(12345, <strong class="jxr_keyword">true</strong>), <strong class="jxr_keyword">new</strong> <a name="NestedBean" href="../../../../../org/apache/ibatis/submitted/foreach_map/NestedBean.html#NestedBean">NestedBean</a>(54321, false));
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>      mapParam.getMap().put(<strong class="jxr_keyword">new</strong> <a name="NestedBean" href="../../../../../org/apache/ibatis/submitted/foreach_map/NestedBean.html#NestedBean">NestedBean</a>(67890, <strong class="jxr_keyword">true</strong>), <strong class="jxr_keyword">new</strong> <a name="NestedBean" href="../../../../../org/apache/ibatis/submitted/foreach_map/NestedBean.html#NestedBean">NestedBean</a>(9876, false));
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>      sqlSession.insert(<span class="jxr_string">"ins_nested_bean"</span>, mapParam);
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>  
 <a class="jxr_linenumber" name="L89" href="#L89">89</a>      List&lt;NestedBeanMapEntry&gt; entries = sqlSession.selectList(<span class="jxr_string">"sel_nested_bean"</span>);
@@ -101,7 +101,7 @@
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>  
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>    @Test
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>    <strong class="jxr_keyword">void</strong> shouldSubstituteIndexWithKey() {
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>      <a name="MapParam" href="../../../../../org/apache/ibatis/sub<a name="MapParam" href="../../../../../org/apache/ibatis/submitted/foreach_map/MapParam.html#MapParam">MapParam</a>oreach_map/MapParam.html#MapParam">MapParam</a> mapParam = <strong class="jxr_keyword">new</strong> <a name="MapParam" href="../../../../../org/apache/ibatis/submitted/foreach_map/MapParam.html#MapParam">MapParam</a>();
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>      <a name="MapParam" href="../../../../../org/apache/ibatis/submitted/foreach_map/MapParam.html#MapParam">MapParam</a> mapParam = <strong class="jxr_keyword">new</strong> <a name="MapParam" href="../../../../../org/apache/ibatis/submitted/foreach_map/MapParam.html#MapParam">MapParam</a>();
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>      mapParam.getMap().put(<span class="jxr_string">"col_a"</span>, 22);
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>      mapParam.getMap().put(<span class="jxr_string">"col_b"</span>, 222);
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>      Integer count = sqlSession.selectOne(<span class="jxr_string">"sel_key_cols"</span>, mapParam);

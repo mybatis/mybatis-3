@@ -6,21 +6,21 @@
 </head>
 <body>
 <div id="overview"><a href="../../../../../../apidocs/org/apache/ibatis/reflection/MetaClass.html">View Javadoc</a></div><pre>
-<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2020 the original author or authors.</em>
-<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
-<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
-<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_javadoccomment"> *    You may obtain a copy of the License at</em>
-<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
-<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_javadoccomment"> *    Unless required by applicable law or agreed to in writing, software</em>
-<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_javadoccomment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
-<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_javadoccomment"> *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</em>
-<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_javadoccomment"> *    See the License for the specific language governing permissions and</em>
-<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_javadoccomment"> *    limitations under the License.</em>
-<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2021 the original author or authors.</em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> *    You may obtain a copy of the License at</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_comment"> *    Unless required by applicable law or agreed to in writing, software</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_comment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_comment"> *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_comment"> *    See the License for the specific language governing permissions and</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_comment"> *    limitations under the License.</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> */</em>
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">package</strong> org.apache.ibatis.reflection;
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> java.lang.reflect.Field;
@@ -77,7 +77,7 @@
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>    }
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>  
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>    <strong class="jxr_keyword">public</strong> Class&lt;?&gt; getSetterType(String name) {
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>      <a name="PropertyTokenizer" href="../../../../org/apache/ibatis/re<a name="PropertyTokenizer" href="../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a>/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a> prop = <strong class="jxr_keyword">new</strong> <a name="PropertyTokenizer" href="../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a>(name);
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>      <a name="PropertyTokenizer" href="../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a> prop = <strong class="jxr_keyword">new</strong> <a name="PropertyTokenizer" href="../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a>(name);
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>      <strong class="jxr_keyword">if</strong> (prop.hasNext()) {
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>        <a name="MetaClass" href="../../../../org/apache/ibatis/reflection/MetaClass.html#MetaClass">MetaClass</a> metaProp = metaClassForProperty(prop.getName());
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>        <strong class="jxr_keyword">return</strong> metaProp.getSetterType(prop.getChildren());
@@ -87,7 +87,7 @@
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>    }
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>  
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>    <strong class="jxr_keyword">public</strong> Class&lt;?&gt; getGetterType(String name) {
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>      <a name="PropertyTokenizer" href="../../../../org/apache/ibatis/re<a name="PropertyTokenizer" href="../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a>/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a> prop = <strong class="jxr_keyword">new</strong> <a name="PropertyTokenizer" href="../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a>(name);
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>      <a name="PropertyTokenizer" href="../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a> prop = <strong class="jxr_keyword">new</strong> <a name="PropertyTokenizer" href="../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a>(name);
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>      <strong class="jxr_keyword">if</strong> (prop.hasNext()) {
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>        <a name="MetaClass" href="../../../../org/apache/ibatis/reflection/MetaClass.html#MetaClass">MetaClass</a> metaProp = metaClassForProperty(prop);
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>        <strong class="jxr_keyword">return</strong> metaProp.getGetterType(prop.getChildren());
@@ -141,7 +141,7 @@
 <a class="jxr_linenumber" name="L133" href="#L133">133</a>   }
 <a class="jxr_linenumber" name="L134" href="#L134">134</a> 
 <a class="jxr_linenumber" name="L135" href="#L135">135</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hasSetter(String name) {
-<a class="jxr_linenumber" name="L136" href="#L136">136</a>     <a name="PropertyTokenizer" href="../../../../org/apache/ibatis/re<a name="PropertyTokenizer" href="../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a>/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a> prop = <strong class="jxr_keyword">new</strong> <a name="PropertyTokenizer" href="../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a>(name);
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>     <a name="PropertyTokenizer" href="../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a> prop = <strong class="jxr_keyword">new</strong> <a name="PropertyTokenizer" href="../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a>(name);
 <a class="jxr_linenumber" name="L137" href="#L137">137</a>     <strong class="jxr_keyword">if</strong> (prop.hasNext()) {
 <a class="jxr_linenumber" name="L138" href="#L138">138</a>       <strong class="jxr_keyword">if</strong> (reflector.hasSetter(prop.getName())) {
 <a class="jxr_linenumber" name="L139" href="#L139">139</a>         <a name="MetaClass" href="../../../../org/apache/ibatis/reflection/MetaClass.html#MetaClass">MetaClass</a> metaProp = metaClassForProperty(prop.getName());
@@ -155,7 +155,7 @@
 <a class="jxr_linenumber" name="L147" href="#L147">147</a>   }
 <a class="jxr_linenumber" name="L148" href="#L148">148</a> 
 <a class="jxr_linenumber" name="L149" href="#L149">149</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hasGetter(String name) {
-<a class="jxr_linenumber" name="L150" href="#L150">150</a>     <a name="PropertyTokenizer" href="../../../../org/apache/ibatis/re<a name="PropertyTokenizer" href="../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a>/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a> prop = <strong class="jxr_keyword">new</strong> <a name="PropertyTokenizer" href="../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a>(name);
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>     <a name="PropertyTokenizer" href="../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a> prop = <strong class="jxr_keyword">new</strong> <a name="PropertyTokenizer" href="../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a>(name);
 <a class="jxr_linenumber" name="L151" href="#L151">151</a>     <strong class="jxr_keyword">if</strong> (prop.hasNext()) {
 <a class="jxr_linenumber" name="L152" href="#L152">152</a>       <strong class="jxr_keyword">if</strong> (reflector.hasGetter(prop.getName())) {
 <a class="jxr_linenumber" name="L153" href="#L153">153</a>         <a name="MetaClass" href="../../../../org/apache/ibatis/reflection/MetaClass.html#MetaClass">MetaClass</a> metaProp = metaClassForProperty(prop);
@@ -177,7 +177,7 @@
 <a class="jxr_linenumber" name="L169" href="#L169">169</a>   }
 <a class="jxr_linenumber" name="L170" href="#L170">170</a> 
 <a class="jxr_linenumber" name="L171" href="#L171">171</a>   <strong class="jxr_keyword">private</strong> StringBuilder buildProperty(String name, StringBuilder builder) {
-<a class="jxr_linenumber" name="L172" href="#L172">172</a>     <a name="PropertyTokenizer" href="../../../../org/apache/ibatis/re<a name="PropertyTokenizer" href="../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a>/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a> prop = <strong class="jxr_keyword">new</strong> <a name="PropertyTokenizer" href="../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a>(name);
+<a class="jxr_linenumber" name="L172" href="#L172">172</a>     <a name="PropertyTokenizer" href="../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a> prop = <strong class="jxr_keyword">new</strong> <a name="PropertyTokenizer" href="../../../../org/apache/ibatis/reflection/property/PropertyTokenizer.html#PropertyTokenizer">PropertyTokenizer</a>(name);
 <a class="jxr_linenumber" name="L173" href="#L173">173</a>     <strong class="jxr_keyword">if</strong> (prop.hasNext()) {
 <a class="jxr_linenumber" name="L174" href="#L174">174</a>       String propertyName = reflector.findPropertyName(prop.getName());
 <a class="jxr_linenumber" name="L175" href="#L175">175</a>       <strong class="jxr_keyword">if</strong> (propertyName != <strong class="jxr_keyword">null</strong>) {

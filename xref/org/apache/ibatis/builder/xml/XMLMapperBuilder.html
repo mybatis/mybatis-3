@@ -6,21 +6,21 @@
 </head>
 <body>
 <div id="overview"><a href="../../../../../../apidocs/org/apache/ibatis/builder/xml/XMLMapperBuilder.html">View Javadoc</a></div><pre>
-<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2020 the original author or authors.</em>
-<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
-<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
-<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_javadoccomment"> *    You may obtain a copy of the License at</em>
-<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
-<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_javadoccomment"> *    Unless required by applicable law or agreed to in writing, software</em>
-<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_javadoccomment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
-<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_javadoccomment"> *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</em>
-<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_javadoccomment"> *    See the License for the specific language governing permissions and</em>
-<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_javadoccomment"> *    limitations under the License.</em>
-<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2021 the original author or authors.</em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> *    You may obtain a copy of the License at</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_comment"> *    Unless required by applicable law or agreed to in writing, software</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_comment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_comment"> *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_comment"> *    See the License for the specific language governing permissions and</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_comment"> *    limitations under the License.</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> */</em>
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">package</strong> org.apache.ibatis.builder.xml;
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> java.io.InputStream;
@@ -141,7 +141,7 @@
 <a class="jxr_linenumber" name="L133" href="#L133">133</a> 
 <a class="jxr_linenumber" name="L134" href="#L134">134</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> buildStatementFromContext(List&lt;XNode&gt; list, String requiredDatabaseId) {
 <a class="jxr_linenumber" name="L135" href="#L135">135</a>     <strong class="jxr_keyword">for</strong> (<a name="XNode" href="../../../../../org/apache/ibatis/parsing/XNode.html#XNode">XNode</a> context : list) {
-<a class="jxr_linenumber" name="L136" href="#L136">136</a>       <strong class="jxr_keyword">final</strong> <a name="XMLStatementBuilder" href="../../../../../org/apache/ibatis/builder/xm<a name="XMLStatementBuilder" href="../../../../../org/apache/ibatis/builder/xml/XMLStatementBuilder.html#XMLStatementBuilder">XMLStatementBuilder</a>er.html#XMLStatementBuilder">XMLStatementBuilder</a> statementParser = <strong class="jxr_keyword">new</strong> <a name="XMLStatementBuilder" href="../../../../../org/apache/ibatis/builder/xml/XMLStatementBuilder.html#XMLStatementBuilder">XMLStatementBuilder</a>(configuration, builderAssistant, context, requiredDatabaseId);
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>       <strong class="jxr_keyword">final</strong> <a name="XMLStatementBuilder" href="../../../../../org/apache/ibatis/builder/xml/XMLStatementBuilder.html#XMLStatementBuilder">XMLStatementBuilder</a> statementParser = <strong class="jxr_keyword">new</strong> <a name="XMLStatementBuilder" href="../../../../../org/apache/ibatis/builder/xml/XMLStatementBuilder.html#XMLStatementBuilder">XMLStatementBuilder</a>(configuration, builderAssistant, context, requiredDatabaseId);
 <a class="jxr_linenumber" name="L137" href="#L137">137</a>       <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L138" href="#L138">138</a>         statementParser.parseStatementNode();
 <a class="jxr_linenumber" name="L139" href="#L139">139</a>       } <strong class="jxr_keyword">catch</strong> (<a name="IncompleteElementException" href="../../../../../org/apache/ibatis/builder/IncompleteElementException.html#IncompleteElementException">IncompleteElementException</a> e) {
@@ -198,7 +198,7 @@
 <a class="jxr_linenumber" name="L190" href="#L190">190</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> cacheRefElement(<a name="XNode" href="../../../../../org/apache/ibatis/parsing/XNode.html#XNode">XNode</a> context) {
 <a class="jxr_linenumber" name="L191" href="#L191">191</a>     <strong class="jxr_keyword">if</strong> (context != <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L192" href="#L192">192</a>       configuration.addCacheRef(builderAssistant.getCurrentNamespace(), context.getStringAttribute(<span class="jxr_string">"namespace"</span>));
-<a class="jxr_linenumber" name="L193" href="#L193">193</a>       <a name="CacheRefResolver" href="../../../../../org/apache/ibatis/builder/Cac<a name="CacheRefResolver" href="../../../../../org/apache/ibatis/builder/CacheRefResolver.html#CacheRefResolver">CacheRefResolver</a>ml#CacheRefResolver">CacheRefResolver</a> cacheRefResolver = <strong class="jxr_keyword">new</strong> <a name="CacheRefResolver" href="../../../../../org/apache/ibatis/builder/CacheRefResolver.html#CacheRefResolver">CacheRefResolver</a>(builderAssistant, context.getStringAttribute(<span class="jxr_string">"namespace"</span>));
+<a class="jxr_linenumber" name="L193" href="#L193">193</a>       <a name="CacheRefResolver" href="../../../../../org/apache/ibatis/builder/CacheRefResolver.html#CacheRefResolver">CacheRefResolver</a> cacheRefResolver = <strong class="jxr_keyword">new</strong> <a name="CacheRefResolver" href="../../../../../org/apache/ibatis/builder/CacheRefResolver.html#CacheRefResolver">CacheRefResolver</a>(builderAssistant, context.getStringAttribute(<span class="jxr_string">"namespace"</span>));
 <a class="jxr_linenumber" name="L194" href="#L194">194</a>       <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L195" href="#L195">195</a>         cacheRefResolver.resolveCacheRef();
 <a class="jxr_linenumber" name="L196" href="#L196">196</a>       } <strong class="jxr_keyword">catch</strong> (<a name="IncompleteElementException" href="../../../../../org/apache/ibatis/builder/IncompleteElementException.html#IncompleteElementException">IncompleteElementException</a> e) {
@@ -292,7 +292,7 @@
 <a class="jxr_linenumber" name="L284" href="#L284">284</a>             resultMapNode.getValueBasedIdentifier());
 <a class="jxr_linenumber" name="L285" href="#L285">285</a>     String extend = resultMapNode.getStringAttribute(<span class="jxr_string">"extends"</span>);
 <a class="jxr_linenumber" name="L286" href="#L286">286</a>     Boolean autoMapping = resultMapNode.getBooleanAttribute(<span class="jxr_string">"autoMapping"</span>);
-<a class="jxr_linenumber" name="L287" href="#L287">287</a>     <a name="ResultMapResolver" href="../../../../../org/apache/ibatis/builder/Resu<a name="ResultMapResolver" href="../../../../../org/apache/ibatis/builder/ResultMapResolver.html#ResultMapResolver">ResultMapResolver</a>l#ResultMapResolver">ResultMapResolver</a> resultMapResolver = <strong class="jxr_keyword">new</strong> <a name="ResultMapResolver" href="../../../../../org/apache/ibatis/builder/ResultMapResolver.html#ResultMapResolver">ResultMapResolver</a>(builderAssistant, id, typeClass, extend, discriminator, resultMappings, autoMapping);
+<a class="jxr_linenumber" name="L287" href="#L287">287</a>     <a name="ResultMapResolver" href="../../../../../org/apache/ibatis/builder/ResultMapResolver.html#ResultMapResolver">ResultMapResolver</a> resultMapResolver = <strong class="jxr_keyword">new</strong> <a name="ResultMapResolver" href="../../../../../org/apache/ibatis/builder/ResultMapResolver.html#ResultMapResolver">ResultMapResolver</a>(builderAssistant, id, typeClass, extend, discriminator, resultMappings, autoMapping);
 <a class="jxr_linenumber" name="L288" href="#L288">288</a>     <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L289" href="#L289">289</a>       <strong class="jxr_keyword">return</strong> resultMapResolver.resolve();
 <a class="jxr_linenumber" name="L290" href="#L290">290</a>     } <strong class="jxr_keyword">catch</strong> (<a name="IncompleteElementException" href="../../../../../org/apache/ibatis/builder/IncompleteElementException.html#IncompleteElementException">IncompleteElementException</a> e) {

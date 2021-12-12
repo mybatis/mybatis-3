@@ -6,21 +6,21 @@
 </head>
 <body>
 <div id="overview"><a href="../../../../../../../apidocs/org/apache/ibatis/scripting/xmltags/XMLScriptBuilder.html">View Javadoc</a></div><pre>
-<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2019 the original author or authors.</em>
-<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
-<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
-<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_javadoccomment"> *    You may obtain a copy of the License at</em>
-<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
-<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_javadoccomment"> *    Unless required by applicable law or agreed to in writing, software</em>
-<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_javadoccomment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
-<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_javadoccomment"> *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</em>
-<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_javadoccomment"> *    See the License for the specific language governing permissions and</em>
-<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_javadoccomment"> *    limitations under the License.</em>
-<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2021 the original author or authors.</em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> *    You may obtain a copy of the License at</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_comment"> *    Unless required by applicable law or agreed to in writing, software</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_comment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_comment"> *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_comment"> *    See the License for the specific language governing permissions and</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_comment"> *    limitations under the License.</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> */</em>
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">package</strong> org.apache.ibatis.scripting.xmltags;
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> java.util.ArrayList;
@@ -89,7 +89,7 @@
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>        <a name="XNode" href="../../../../../org/apache/ibatis/parsing/XNode.html#XNode">XNode</a> child = node.newXNode(children.item(i));
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>        <strong class="jxr_keyword">if</strong> (child.getNode().getNodeType() == Node.CDATA_SECTION_NODE || child.getNode().getNodeType() == Node.TEXT_NODE) {
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>          String data = child.getStringBody(<span class="jxr_string">""</span>);
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>          <a name="TextSqlNode" href="../../../../../org/apache/ibatis/script<a name="TextSqlNode" href="../../../../../org/apache/ibatis/scripting/xmltags/TextSqlNode.html#TextSqlNode">TextSqlNode</a>/TextSqlNode.html#TextSqlNode">TextSqlNode</a> textSqlNode = <strong class="jxr_keyword">new</strong> <a name="TextSqlNode" href="../../../../../org/apache/ibatis/scripting/xmltags/TextSqlNode.html#TextSqlNode">TextSqlNode</a>(data);
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>          <a name="TextSqlNode" href="../../../../../org/apache/ibatis/scripting/xmltags/TextSqlNode.html#TextSqlNode">TextSqlNode</a> textSqlNode = <strong class="jxr_keyword">new</strong> <a name="TextSqlNode" href="../../../../../org/apache/ibatis/scripting/xmltags/TextSqlNode.html#TextSqlNode">TextSqlNode</a>(data);
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>          <strong class="jxr_keyword">if</strong> (textSqlNode.isDynamic()) {
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>            contents.add(textSqlNode);
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>            isDynamic = <strong class="jxr_keyword">true</strong>;
@@ -122,7 +122,7 @@
 <a class="jxr_linenumber" name="L114" href="#L114">114</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> handleNode(<a name="XNode" href="../../../../../org/apache/ibatis/parsing/XNode.html#XNode">XNode</a> nodeToHandle, List&lt;SqlNode&gt; targetContents) {
 <a class="jxr_linenumber" name="L115" href="#L115">115</a>       <strong class="jxr_keyword">final</strong> String name = nodeToHandle.getStringAttribute(<span class="jxr_string">"name"</span>);
 <a class="jxr_linenumber" name="L116" href="#L116">116</a>       <strong class="jxr_keyword">final</strong> String expression = nodeToHandle.getStringAttribute(<span class="jxr_string">"value"</span>);
-<a class="jxr_linenumber" name="L117" href="#L117">117</a>       <strong class="jxr_keyword">final</strong> <a name="VarDeclSqlNode" href="../../../../../org/apache/ibatis<a name="VarDeclSqlNode" href="../../../../../org/apache/ibatis/scripting/xmltags/VarDeclSqlNode.html#VarDeclSqlNode">VarDeclSqlNode</a>tags/VarDeclSqlNode.html#VarDeclSqlNode">VarDeclSqlNode</a> node = <strong class="jxr_keyword">new</strong> <a name="VarDeclSqlNode" href="../../../../../org/apache/ibatis/scripting/xmltags/VarDeclSqlNode.html#VarDeclSqlNode">VarDeclSqlNode</a>(name, expression);
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>       <strong class="jxr_keyword">final</strong> <a name="VarDeclSqlNode" href="../../../../../org/apache/ibatis/scripting/xmltags/VarDeclSqlNode.html#VarDeclSqlNode">VarDeclSqlNode</a> node = <strong class="jxr_keyword">new</strong> <a name="VarDeclSqlNode" href="../../../../../org/apache/ibatis/scripting/xmltags/VarDeclSqlNode.html#VarDeclSqlNode">VarDeclSqlNode</a>(name, expression);
 <a class="jxr_linenumber" name="L118" href="#L118">118</a>       targetContents.add(node);
 <a class="jxr_linenumber" name="L119" href="#L119">119</a>     }
 <a class="jxr_linenumber" name="L120" href="#L120">120</a>   }
@@ -139,7 +139,7 @@
 <a class="jxr_linenumber" name="L131" href="#L131">131</a>       String prefixOverrides = nodeToHandle.getStringAttribute(<span class="jxr_string">"prefixOverrides"</span>);
 <a class="jxr_linenumber" name="L132" href="#L132">132</a>       String suffix = nodeToHandle.getStringAttribute(<span class="jxr_string">"suffix"</span>);
 <a class="jxr_linenumber" name="L133" href="#L133">133</a>       String suffixOverrides = nodeToHandle.getStringAttribute(<span class="jxr_string">"suffixOverrides"</span>);
-<a class="jxr_linenumber" name="L134" href="#L134">134</a>       <a name="TrimSqlNode" href="../../../../../org/apache/ibatis<a name="TrimSqlNode" href="../../../../../org/apache/ibatis/scripting/xmltags/TrimSqlNode.html#TrimSqlNode">TrimSqlNode</a>xmltags/TrimSqlNode.html#TrimSqlNode">TrimSqlNode</a> trim = <strong class="jxr_keyword">new</strong> <a name="TrimSqlNode" href="../../../../../org/apache/ibatis/scripting/xmltags/TrimSqlNode.html#TrimSqlNode">TrimSqlNode</a>(configuration, mixedSqlNode, prefix, prefixOverrides, suffix, suffixOverrides);
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>       <a name="TrimSqlNode" href="../../../../../org/apache/ibatis/scripting/xmltags/TrimSqlNode.html#TrimSqlNode">TrimSqlNode</a> trim = <strong class="jxr_keyword">new</strong> <a name="TrimSqlNode" href="../../../../../org/apache/ibatis/scripting/xmltags/TrimSqlNode.html#TrimSqlNode">TrimSqlNode</a>(configuration, mixedSqlNode, prefix, prefixOverrides, suffix, suffixOverrides);
 <a class="jxr_linenumber" name="L135" href="#L135">135</a>       targetContents.add(trim);
 <a class="jxr_linenumber" name="L136" href="#L136">136</a>     }
 <a class="jxr_linenumber" name="L137" href="#L137">137</a>   }
@@ -152,7 +152,7 @@
 <a class="jxr_linenumber" name="L144" href="#L144">144</a>     @Override
 <a class="jxr_linenumber" name="L145" href="#L145">145</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> handleNode(<a name="XNode" href="../../../../../org/apache/ibatis/parsing/XNode.html#XNode">XNode</a> nodeToHandle, List&lt;SqlNode&gt; targetContents) {
 <a class="jxr_linenumber" name="L146" href="#L146">146</a>       <a name="MixedSqlNode" href="../../../../../org/apache/ibatis/scripting/xmltags/MixedSqlNode.html#MixedSqlNode">MixedSqlNode</a> mixedSqlNode = parseDynamicTags(nodeToHandle);
-<a class="jxr_linenumber" name="L147" href="#L147">147</a>       <a name="WhereSqlNode" href="../../../../../org/apache/ibatis/<a name="WhereSqlNode" href="../../../../../org/apache/ibatis/scripting/xmltags/WhereSqlNode.html#WhereSqlNode">WhereSqlNode</a>ltags/WhereSqlNode.html#WhereSqlNode">WhereSqlNode</a> where = <strong class="jxr_keyword">new</strong> <a name="WhereSqlNode" href="../../../../../org/apache/ibatis/scripting/xmltags/WhereSqlNode.html#WhereSqlNode">WhereSqlNode</a>(configuration, mixedSqlNode);
+<a class="jxr_linenumber" name="L147" href="#L147">147</a>       <a name="WhereSqlNode" href="../../../../../org/apache/ibatis/scripting/xmltags/WhereSqlNode.html#WhereSqlNode">WhereSqlNode</a> where = <strong class="jxr_keyword">new</strong> <a name="WhereSqlNode" href="../../../../../org/apache/ibatis/scripting/xmltags/WhereSqlNode.html#WhereSqlNode">WhereSqlNode</a>(configuration, mixedSqlNode);
 <a class="jxr_linenumber" name="L148" href="#L148">148</a>       targetContents.add(where);
 <a class="jxr_linenumber" name="L149" href="#L149">149</a>     }
 <a class="jxr_linenumber" name="L150" href="#L150">150</a>   }
@@ -165,7 +165,7 @@
 <a class="jxr_linenumber" name="L157" href="#L157">157</a>     @Override
 <a class="jxr_linenumber" name="L158" href="#L158">158</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> handleNode(<a name="XNode" href="../../../../../org/apache/ibatis/parsing/XNode.html#XNode">XNode</a> nodeToHandle, List&lt;SqlNode&gt; targetContents) {
 <a class="jxr_linenumber" name="L159" href="#L159">159</a>       <a name="MixedSqlNode" href="../../../../../org/apache/ibatis/scripting/xmltags/MixedSqlNode.html#MixedSqlNode">MixedSqlNode</a> mixedSqlNode = parseDynamicTags(nodeToHandle);
-<a class="jxr_linenumber" name="L160" href="#L160">160</a>       <a name="SetSqlNode" href="../../../../../org/apache/ibati<a name="SetSqlNode" href="../../../../../org/apache/ibatis/scripting/xmltags/SetSqlNode.html#SetSqlNode">SetSqlNode</a>g/xmltags/SetSqlNode.html#SetSqlNode">SetSqlNode</a> set = <strong class="jxr_keyword">new</strong> <a name="SetSqlNode" href="../../../../../org/apache/ibatis/scripting/xmltags/SetSqlNode.html#SetSqlNode">SetSqlNode</a>(configuration, mixedSqlNode);
+<a class="jxr_linenumber" name="L160" href="#L160">160</a>       <a name="SetSqlNode" href="../../../../../org/apache/ibatis/scripting/xmltags/SetSqlNode.html#SetSqlNode">SetSqlNode</a> set = <strong class="jxr_keyword">new</strong> <a name="SetSqlNode" href="../../../../../org/apache/ibatis/scripting/xmltags/SetSqlNode.html#SetSqlNode">SetSqlNode</a>(configuration, mixedSqlNode);
 <a class="jxr_linenumber" name="L161" href="#L161">161</a>       targetContents.add(set);
 <a class="jxr_linenumber" name="L162" href="#L162">162</a>     }
 <a class="jxr_linenumber" name="L163" href="#L163">163</a>   }
@@ -184,7 +184,7 @@
 <a class="jxr_linenumber" name="L176" href="#L176">176</a>       String open = nodeToHandle.getStringAttribute(<span class="jxr_string">"open"</span>);
 <a class="jxr_linenumber" name="L177" href="#L177">177</a>       String close = nodeToHandle.getStringAttribute(<span class="jxr_string">"close"</span>);
 <a class="jxr_linenumber" name="L178" href="#L178">178</a>       String separator = nodeToHandle.getStringAttribute(<span class="jxr_string">"separator"</span>);
-<a class="jxr_linenumber" name="L179" href="#L179">179</a>       <a name="ForEachSqlNode" href="../../../../../org/apache/ibatis/scripting<a name="ForEachSqlNode" href="../../../../../org/apache/ibatis/scripting/xmltags/ForEachSqlNode.html#ForEachSqlNode">ForEachSqlNode</a>chSqlNode.html#ForEachSqlNode">ForEachSqlNode</a> forEachSqlNode = <strong class="jxr_keyword">new</strong> <a name="ForEachSqlNode" href="../../../../../org/apache/ibatis/scripting/xmltags/ForEachSqlNode.html#ForEachSqlNode">ForEachSqlNode</a>(configuration, mixedSqlNode, collection, index, item, open, close, separator);
+<a class="jxr_linenumber" name="L179" href="#L179">179</a>       <a name="ForEachSqlNode" href="../../../../../org/apache/ibatis/scripting/xmltags/ForEachSqlNode.html#ForEachSqlNode">ForEachSqlNode</a> forEachSqlNode = <strong class="jxr_keyword">new</strong> <a name="ForEachSqlNode" href="../../../../../org/apache/ibatis/scripting/xmltags/ForEachSqlNode.html#ForEachSqlNode">ForEachSqlNode</a>(configuration, mixedSqlNode, collection, index, item, open, close, separator);
 <a class="jxr_linenumber" name="L180" href="#L180">180</a>       targetContents.add(forEachSqlNode);
 <a class="jxr_linenumber" name="L181" href="#L181">181</a>     }
 <a class="jxr_linenumber" name="L182" href="#L182">182</a>   }
@@ -198,7 +198,7 @@
 <a class="jxr_linenumber" name="L190" href="#L190">190</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> handleNode(<a name="XNode" href="../../../../../org/apache/ibatis/parsing/XNode.html#XNode">XNode</a> nodeToHandle, List&lt;SqlNode&gt; targetContents) {
 <a class="jxr_linenumber" name="L191" href="#L191">191</a>       <a name="MixedSqlNode" href="../../../../../org/apache/ibatis/scripting/xmltags/MixedSqlNode.html#MixedSqlNode">MixedSqlNode</a> mixedSqlNode = parseDynamicTags(nodeToHandle);
 <a class="jxr_linenumber" name="L192" href="#L192">192</a>       String test = nodeToHandle.getStringAttribute(<span class="jxr_string">"test"</span>);
-<a class="jxr_linenumber" name="L193" href="#L193">193</a>       <a name="IfSqlNode" href="../../../../../org/apache/ibatis/scri<a name="IfSqlNode" href="../../../../../org/apache/ibatis/scripting/xmltags/IfSqlNode.html#IfSqlNode">IfSqlNode</a>tags/IfSqlNode.html#IfSqlNode">IfSqlNode</a> ifSqlNode = <strong class="jxr_keyword">new</strong> <a name="IfSqlNode" href="../../../../../org/apache/ibatis/scripting/xmltags/IfSqlNode.html#IfSqlNode">IfSqlNode</a>(mixedSqlNode, test);
+<a class="jxr_linenumber" name="L193" href="#L193">193</a>       <a name="IfSqlNode" href="../../../../../org/apache/ibatis/scripting/xmltags/IfSqlNode.html#IfSqlNode">IfSqlNode</a> ifSqlNode = <strong class="jxr_keyword">new</strong> <a name="IfSqlNode" href="../../../../../org/apache/ibatis/scripting/xmltags/IfSqlNode.html#IfSqlNode">IfSqlNode</a>(mixedSqlNode, test);
 <a class="jxr_linenumber" name="L194" href="#L194">194</a>       targetContents.add(ifSqlNode);
 <a class="jxr_linenumber" name="L195" href="#L195">195</a>     }
 <a class="jxr_linenumber" name="L196" href="#L196">196</a>   }
@@ -226,7 +226,7 @@
 <a class="jxr_linenumber" name="L218" href="#L218">218</a>       List&lt;SqlNode&gt; otherwiseSqlNodes = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
 <a class="jxr_linenumber" name="L219" href="#L219">219</a>       handleWhenOtherwiseNodes(nodeToHandle, whenSqlNodes, otherwiseSqlNodes);
 <a class="jxr_linenumber" name="L220" href="#L220">220</a>       <a name="SqlNode" href="../../../../../org/apache/ibatis/scripting/xmltags/SqlNode.html#SqlNode">SqlNode</a> defaultSqlNode = getDefaultSqlNode(otherwiseSqlNodes);
-<a class="jxr_linenumber" name="L221" href="#L221">221</a>       <a name="ChooseSqlNode" href="../../../../../org/apache/ibatis/scriptin<a name="ChooseSqlNode" href="../../../../../org/apache/ibatis/scripting/xmltags/ChooseSqlNode.html#ChooseSqlNode">ChooseSqlNode</a>oseSqlNode.html#ChooseSqlNode">ChooseSqlNode</a> chooseSqlNode = <strong class="jxr_keyword">new</strong> <a name="ChooseSqlNode" href="../../../../../org/apache/ibatis/scripting/xmltags/ChooseSqlNode.html#ChooseSqlNode">ChooseSqlNode</a>(whenSqlNodes, defaultSqlNode);
+<a class="jxr_linenumber" name="L221" href="#L221">221</a>       <a name="ChooseSqlNode" href="../../../../../org/apache/ibatis/scripting/xmltags/ChooseSqlNode.html#ChooseSqlNode">ChooseSqlNode</a> chooseSqlNode = <strong class="jxr_keyword">new</strong> <a name="ChooseSqlNode" href="../../../../../org/apache/ibatis/scripting/xmltags/ChooseSqlNode.html#ChooseSqlNode">ChooseSqlNode</a>(whenSqlNodes, defaultSqlNode);
 <a class="jxr_linenumber" name="L222" href="#L222">222</a>       targetContents.add(chooseSqlNode);
 <a class="jxr_linenumber" name="L223" href="#L223">223</a>     }
 <a class="jxr_linenumber" name="L224" href="#L224">224</a> 

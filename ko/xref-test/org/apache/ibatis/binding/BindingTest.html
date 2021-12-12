@@ -6,21 +6,21 @@
 </head>
 <body>
 <div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/binding/BindingTest.html">View Javadoc</a></div><pre>
-<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2020 the original author or authors.</em>
-<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
-<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
-<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_javadoccomment"> *    You may obtain a copy of the License at</em>
-<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
-<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_javadoccomment"> *    Unless required by applicable law or agreed to in writing, software</em>
-<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_javadoccomment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
-<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_javadoccomment"> *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</em>
-<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_javadoccomment"> *    See the License for the specific language governing permissions and</em>
-<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_javadoccomment"> *    limitations under the License.</em>
-<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2021 the original author or authors.</em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> *    You may obtain a copy of the License at</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_comment"> *    Unless required by applicable law or agreed to in writing, software</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_comment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_comment"> *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_comment"> *    See the License for the specific language governing permissions and</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_comment"> *    limitations under the License.</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> */</em>
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">package</strong> org.apache.ibatis.binding;
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> com.googlecode.catchexception.apis.BDDCatchException.*;
@@ -141,7 +141,7 @@
 <a class="jxr_linenumber" name="L133" href="#L133">133</a>   <strong class="jxr_keyword">void</strong> shouldInsertAuthorWithSelectKey() {
 <a class="jxr_linenumber" name="L134" href="#L134">134</a>     <strong class="jxr_keyword">try</strong> (SqlSession session = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L135" href="#L135">135</a>       <a name="BoundAuthorMapper" href="../../../../org/apache/ibatis/binding/BoundAuthorMapper.html#BoundAuthorMapper">BoundAuthorMapper</a> mapper = session.getMapper(BoundAuthorMapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L136" href="#L136">136</a>       <a name="Author" href="../../../../org/apache/ibatis/doma<a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>g/Author.html#Author">Author</a> author = <strong class="jxr_keyword">new</strong> <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>(-1, <span class="jxr_string">"cbegin"</span>, <span class="jxr_string">"******"</span>, <span class="jxr_string">"cbegin@nowhere.com"</span>, <span class="jxr_string">"N/A"</span>, Section.NEWS);
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>       <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a> author = <strong class="jxr_keyword">new</strong> <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>(-1, <span class="jxr_string">"cbegin"</span>, <span class="jxr_string">"******"</span>, <span class="jxr_string">"cbegin@nowhere.com"</span>, <span class="jxr_string">"N/A"</span>, Section.NEWS);
 <a class="jxr_linenumber" name="L137" href="#L137">137</a>       <strong class="jxr_keyword">int</strong> rows = mapper.insertAuthor(author);
 <a class="jxr_linenumber" name="L138" href="#L138">138</a>       assertEquals(1, rows);
 <a class="jxr_linenumber" name="L139" href="#L139">139</a>       session.rollback();
@@ -153,7 +153,7 @@
 <a class="jxr_linenumber" name="L145" href="#L145">145</a>     <strong class="jxr_keyword">try</strong> (SqlSession session = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L146" href="#L146">146</a>       <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L147" href="#L147">147</a>         <a name="BoundAuthorMapper" href="../../../../org/apache/ibatis/binding/BoundAuthorMapper.html#BoundAuthorMapper">BoundAuthorMapper</a> mapper = session.getMapper(BoundAuthorMapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L148" href="#L148">148</a>         <a name="Author" href="../../../../org/apache/ibatis/doma<a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>g/Author.html#Author">Author</a> author = <strong class="jxr_keyword">new</strong> <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>(-1, <span class="jxr_string">"cbegin"</span>, <span class="jxr_string">"******"</span>, <span class="jxr_string">"cbegin@nowhere.com"</span>, <span class="jxr_string">"N/A"</span>, Section.NEWS);
+<a class="jxr_linenumber" name="L148" href="#L148">148</a>         <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a> author = <strong class="jxr_keyword">new</strong> <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>(-1, <span class="jxr_string">"cbegin"</span>, <span class="jxr_string">"******"</span>, <span class="jxr_string">"cbegin@nowhere.com"</span>, <span class="jxr_string">"N/A"</span>, Section.NEWS);
 <a class="jxr_linenumber" name="L149" href="#L149">149</a>         when(() -&gt; mapper.insertAuthorInvalidSelectKey(author));
 <a class="jxr_linenumber" name="L150" href="#L150">150</a>         then(caughtException()).isInstanceOf(PersistenceException.<strong class="jxr_keyword">class</strong>).hasMessageContaining(
 <a class="jxr_linenumber" name="L151" href="#L151">151</a>             <span class="jxr_string">"### The error may exist in org/apache/ibatis/binding/BoundAuthorMapper.xml"</span> + System.lineSeparator() +
@@ -170,7 +170,7 @@
 <a class="jxr_linenumber" name="L162" href="#L162">162</a>     <strong class="jxr_keyword">try</strong> (SqlSession session = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L163" href="#L163">163</a>       <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L164" href="#L164">164</a>         <a name="BoundAuthorMapper" href="../../../../org/apache/ibatis/binding/BoundAuthorMapper.html#BoundAuthorMapper">BoundAuthorMapper</a> mapper = session.getMapper(BoundAuthorMapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L165" href="#L165">165</a>         <a name="Author" href="../../../../org/apache/ibatis/doma<a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>g/Author.html#Author">Author</a> author = <strong class="jxr_keyword">new</strong> <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>(-1, <span class="jxr_string">"cbegin"</span>, <span class="jxr_string">"******"</span>, <span class="jxr_string">"cbegin@nowhere.com"</span>, <span class="jxr_string">"N/A"</span>, Section.NEWS);
+<a class="jxr_linenumber" name="L165" href="#L165">165</a>         <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a> author = <strong class="jxr_keyword">new</strong> <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>(-1, <span class="jxr_string">"cbegin"</span>, <span class="jxr_string">"******"</span>, <span class="jxr_string">"cbegin@nowhere.com"</span>, <span class="jxr_string">"N/A"</span>, Section.NEWS);
 <a class="jxr_linenumber" name="L166" href="#L166">166</a>         when(() -&gt; mapper.insertAuthorInvalidInsert(author));
 <a class="jxr_linenumber" name="L167" href="#L167">167</a>         then(caughtException()).isInstanceOf(PersistenceException.<strong class="jxr_keyword">class</strong>).hasMessageContaining(
 <a class="jxr_linenumber" name="L168" href="#L168">168</a>             <span class="jxr_string">"### The error may exist in org/apache/ibatis/binding/BoundAuthorMapper.xml"</span> + System.lineSeparator() +
@@ -186,7 +186,7 @@
 <a class="jxr_linenumber" name="L178" href="#L178">178</a>   <strong class="jxr_keyword">void</strong> shouldInsertAuthorWithSelectKeyAndDynamicParams() {
 <a class="jxr_linenumber" name="L179" href="#L179">179</a>     <strong class="jxr_keyword">try</strong> (SqlSession session = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L180" href="#L180">180</a>       <a name="BoundAuthorMapper" href="../../../../org/apache/ibatis/binding/BoundAuthorMapper.html#BoundAuthorMapper">BoundAuthorMapper</a> mapper = session.getMapper(BoundAuthorMapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L181" href="#L181">181</a>       <a name="Author" href="../../../../org/apache/ibatis/doma<a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>g/Author.html#Author">Author</a> author = <strong class="jxr_keyword">new</strong> <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>(-1, <span class="jxr_string">"cbegin"</span>, <span class="jxr_string">"******"</span>, <span class="jxr_string">"cbegin@nowhere.com"</span>, <span class="jxr_string">"N/A"</span>, Section.NEWS);
+<a class="jxr_linenumber" name="L181" href="#L181">181</a>       <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a> author = <strong class="jxr_keyword">new</strong> <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>(-1, <span class="jxr_string">"cbegin"</span>, <span class="jxr_string">"******"</span>, <span class="jxr_string">"cbegin@nowhere.com"</span>, <span class="jxr_string">"N/A"</span>, Section.NEWS);
 <a class="jxr_linenumber" name="L182" href="#L182">182</a>       <strong class="jxr_keyword">int</strong> rows = mapper.insertAuthorDynamic(author);
 <a class="jxr_linenumber" name="L183" href="#L183">183</a>       assertEquals(1, rows);
 <a class="jxr_linenumber" name="L184" href="#L184">184</a>       assertNotEquals(-1, author.getId()); <em class="jxr_comment">// id must be autogenerated</em>
@@ -657,7 +657,7 @@
 <a class="jxr_linenumber" name="L649" href="#L649">649</a>       mapper.collectRangeBlogs(handler, <strong class="jxr_keyword">new</strong> RowBounds(1, 1));
 <a class="jxr_linenumber" name="L650" href="#L650">650</a> 
 <a class="jxr_linenumber" name="L651" href="#L651">651</a>       assertEquals(1, handler.getResultList().size());
-<a class="jxr_linenumber" name="L652" href="#L652">652</a>       <a name="Blog<a name="Blog" href="../../../../org/apache/ibatis/domain/blog/Blog.html#Blog">Blog</a>ef="../../../../org/apache/ibatis/domain/blog/Blog.html#Blog">Blog</a> blog = (<a name="Blog" href="../../../../org/apache/ibatis/domain/blog/Blog.html#Blog">Blog</a>) handler.getResultList().get(0);
+<a class="jxr_linenumber" name="L652" href="#L652">652</a>       <a name="Blog" href="../../../../org/apache/ibatis/domain/blog/Blog.html#Blog">Blog</a> blog = (<a name="Blog" href="../../../../org/apache/ibatis/domain/blog/Blog.html#Blog">Blog</a>) handler.getResultList().get(0);
 <a class="jxr_linenumber" name="L653" href="#L653">653</a>       assertEquals(2, blog.getId());
 <a class="jxr_linenumber" name="L654" href="#L654">654</a>     }
 <a class="jxr_linenumber" name="L655" href="#L655">655</a>   }
@@ -701,7 +701,7 @@
 <a class="jxr_linenumber" name="L693" href="#L693">693</a>   <strong class="jxr_keyword">void</strong> shouldMapPropertiesUsingRepeatableAnnotation() {
 <a class="jxr_linenumber" name="L694" href="#L694">694</a>     <strong class="jxr_keyword">try</strong> (SqlSession session = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L695" href="#L695">695</a>       <a name="BoundAuthorMapper" href="../../../../org/apache/ibatis/binding/BoundAuthorMapper.html#BoundAuthorMapper">BoundAuthorMapper</a> mapper = session.getMapper(BoundAuthorMapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L696" href="#L696">696</a>       <a name="Author" href="../../../../org/apache/ibatis/doma<a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>g/Author.html#Author">Author</a> author = <strong class="jxr_keyword">new</strong> <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>(-1, <span class="jxr_string">"cbegin"</span>, <span class="jxr_string">"******"</span>, <span class="jxr_string">"cbegin@nowhere.com"</span>, <span class="jxr_string">"N/A"</span>, Section.NEWS);
+<a class="jxr_linenumber" name="L696" href="#L696">696</a>       <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a> author = <strong class="jxr_keyword">new</strong> <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>(-1, <span class="jxr_string">"cbegin"</span>, <span class="jxr_string">"******"</span>, <span class="jxr_string">"cbegin@nowhere.com"</span>, <span class="jxr_string">"N/A"</span>, Section.NEWS);
 <a class="jxr_linenumber" name="L697" href="#L697">697</a>       mapper.insertAuthor(author);
 <a class="jxr_linenumber" name="L698" href="#L698">698</a>       <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a> author2 = mapper.selectAuthorMapToPropertiesUsingRepeatable(author.getId());
 <a class="jxr_linenumber" name="L699" href="#L699">699</a>       assertNotNull(author2);
@@ -718,7 +718,7 @@
 <a class="jxr_linenumber" name="L710" href="#L710">710</a>   <strong class="jxr_keyword">void</strong> shouldMapConstructorUsingRepeatableAnnotation() {
 <a class="jxr_linenumber" name="L711" href="#L711">711</a>     <strong class="jxr_keyword">try</strong> (SqlSession session = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L712" href="#L712">712</a>       <a name="BoundAuthorMapper" href="../../../../org/apache/ibatis/binding/BoundAuthorMapper.html#BoundAuthorMapper">BoundAuthorMapper</a> mapper = session.getMapper(BoundAuthorMapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L713" href="#L713">713</a>       <a name="Author" href="../../../../org/apache/ibatis/doma<a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>g/Author.html#Author">Author</a> author = <strong class="jxr_keyword">new</strong> <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>(-1, <span class="jxr_string">"cbegin"</span>, <span class="jxr_string">"******"</span>, <span class="jxr_string">"cbegin@nowhere.com"</span>, <span class="jxr_string">"N/A"</span>, Section.NEWS);
+<a class="jxr_linenumber" name="L713" href="#L713">713</a>       <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a> author = <strong class="jxr_keyword">new</strong> <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>(-1, <span class="jxr_string">"cbegin"</span>, <span class="jxr_string">"******"</span>, <span class="jxr_string">"cbegin@nowhere.com"</span>, <span class="jxr_string">"N/A"</span>, Section.NEWS);
 <a class="jxr_linenumber" name="L714" href="#L714">714</a>       mapper.insertAuthor(author);
 <a class="jxr_linenumber" name="L715" href="#L715">715</a>       <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a> author2 = mapper.selectAuthorMapToConstructorUsingRepeatable(author.getId());
 <a class="jxr_linenumber" name="L716" href="#L716">716</a>       assertNotNull(author2);
@@ -736,7 +736,7 @@
 <a class="jxr_linenumber" name="L728" href="#L728">728</a>   <strong class="jxr_keyword">void</strong> shouldMapUsingSingleRepeatableAnnotation() {
 <a class="jxr_linenumber" name="L729" href="#L729">729</a>     <strong class="jxr_keyword">try</strong> (SqlSession session = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L730" href="#L730">730</a>       <a name="BoundAuthorMapper" href="../../../../org/apache/ibatis/binding/BoundAuthorMapper.html#BoundAuthorMapper">BoundAuthorMapper</a> mapper = session.getMapper(BoundAuthorMapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L731" href="#L731">731</a>       <a name="Author" href="../../../../org/apache/ibatis/doma<a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>g/Author.html#Author">Author</a> author = <strong class="jxr_keyword">new</strong> <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>(-1, <span class="jxr_string">"cbegin"</span>, <span class="jxr_string">"******"</span>, <span class="jxr_string">"cbegin@nowhere.com"</span>, <span class="jxr_string">"N/A"</span>, Section.NEWS);
+<a class="jxr_linenumber" name="L731" href="#L731">731</a>       <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a> author = <strong class="jxr_keyword">new</strong> <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>(-1, <span class="jxr_string">"cbegin"</span>, <span class="jxr_string">"******"</span>, <span class="jxr_string">"cbegin@nowhere.com"</span>, <span class="jxr_string">"N/A"</span>, Section.NEWS);
 <a class="jxr_linenumber" name="L732" href="#L732">732</a>       mapper.insertAuthor(author);
 <a class="jxr_linenumber" name="L733" href="#L733">733</a>       <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a> author2 = mapper.selectAuthorUsingSingleRepeatable(author.getId());
 <a class="jxr_linenumber" name="L734" href="#L734">734</a>       assertNotNull(author2);
@@ -754,7 +754,7 @@
 <a class="jxr_linenumber" name="L746" href="#L746">746</a>   <strong class="jxr_keyword">void</strong> shouldMapWhenSpecifyBothArgAndConstructorArgs() {
 <a class="jxr_linenumber" name="L747" href="#L747">747</a>     <strong class="jxr_keyword">try</strong> (SqlSession session = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L748" href="#L748">748</a>       <a name="BoundAuthorMapper" href="../../../../org/apache/ibatis/binding/BoundAuthorMapper.html#BoundAuthorMapper">BoundAuthorMapper</a> mapper = session.getMapper(BoundAuthorMapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L749" href="#L749">749</a>       <a name="Author" href="../../../../org/apache/ibatis/doma<a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>g/Author.html#Author">Author</a> author = <strong class="jxr_keyword">new</strong> <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>(-1, <span class="jxr_string">"cbegin"</span>, <span class="jxr_string">"******"</span>, <span class="jxr_string">"cbegin@nowhere.com"</span>, <span class="jxr_string">"N/A"</span>, Section.NEWS);
+<a class="jxr_linenumber" name="L749" href="#L749">749</a>       <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a> author = <strong class="jxr_keyword">new</strong> <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>(-1, <span class="jxr_string">"cbegin"</span>, <span class="jxr_string">"******"</span>, <span class="jxr_string">"cbegin@nowhere.com"</span>, <span class="jxr_string">"N/A"</span>, Section.NEWS);
 <a class="jxr_linenumber" name="L750" href="#L750">750</a>       mapper.insertAuthor(author);
 <a class="jxr_linenumber" name="L751" href="#L751">751</a>       <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a> author2 = mapper.selectAuthorUsingBothArgAndConstructorArgs(author.getId());
 <a class="jxr_linenumber" name="L752" href="#L752">752</a>       assertNotNull(author2);
@@ -772,7 +772,7 @@
 <a class="jxr_linenumber" name="L764" href="#L764">764</a>   <strong class="jxr_keyword">void</strong> shouldMapWhenSpecifyBothResultAndResults() {
 <a class="jxr_linenumber" name="L765" href="#L765">765</a>     <strong class="jxr_keyword">try</strong> (SqlSession session = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L766" href="#L766">766</a>       <a name="BoundAuthorMapper" href="../../../../org/apache/ibatis/binding/BoundAuthorMapper.html#BoundAuthorMapper">BoundAuthorMapper</a> mapper = session.getMapper(BoundAuthorMapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L767" href="#L767">767</a>       <a name="Author" href="../../../../org/apache/ibatis/doma<a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>g/Author.html#Author">Author</a> author = <strong class="jxr_keyword">new</strong> <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>(-1, <span class="jxr_string">"cbegin"</span>, <span class="jxr_string">"******"</span>, <span class="jxr_string">"cbegin@nowhere.com"</span>, <span class="jxr_string">"N/A"</span>, Section.NEWS);
+<a class="jxr_linenumber" name="L767" href="#L767">767</a>       <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a> author = <strong class="jxr_keyword">new</strong> <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>(-1, <span class="jxr_string">"cbegin"</span>, <span class="jxr_string">"******"</span>, <span class="jxr_string">"cbegin@nowhere.com"</span>, <span class="jxr_string">"N/A"</span>, Section.NEWS);
 <a class="jxr_linenumber" name="L768" href="#L768">768</a>       mapper.insertAuthor(author);
 <a class="jxr_linenumber" name="L769" href="#L769">769</a>       <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a> author2 = mapper.selectAuthorUsingBothResultAndResults(author.getId());
 <a class="jxr_linenumber" name="L770" href="#L770">770</a>       assertNotNull(author2);

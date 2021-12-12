@@ -6,21 +6,21 @@
 </head>
 <body>
 <div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/submitted/language/LanguageTest.html">View Javadoc</a></div><pre>
-<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2020 the original author or authors.</em>
-<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
-<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
-<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_javadoccomment"> *    You may obtain a copy of the License at</em>
-<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
-<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_javadoccomment"> *    Unless required by applicable law or agreed to in writing, software</em>
-<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_javadoccomment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
-<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_javadoccomment"> *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</em>
-<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_javadoccomment"> *    See the License for the specific language governing permissions and</em>
-<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_javadoccomment"> *    limitations under the License.</em>
-<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2021 the original author or authors.</em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> *    You may obtain a copy of the License at</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_comment"> *    Unless required by applicable law or agreed to in writing, software</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_comment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_comment"> *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_comment"> *    See the License for the specific language governing permissions and</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_comment"> *    limitations under the License.</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> */</em>
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">package</strong> org.apache.ibatis.submitted.language;
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.jupiter.api.Assertions.*;
@@ -59,7 +59,7 @@
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>    <strong class="jxr_keyword">void</strong> testDynamicSelectWithPropertyParams() {
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>  
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>        <a name="Parameter" href="../../../../../org/apache/iba<a name="Parameter" href="../../../../../org/apache/ibatis/submitted/language/Parameter.html#Parameter">Parameter</a>tted/language/Parameter.html#Parameter">Parameter</a> p = <strong class="jxr_keyword">new</strong> <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/language/Parameter.html#Parameter">Parameter</a>(<strong class="jxr_keyword">true</strong>, <span class="jxr_string">"Fli%"</span>);
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>        <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/language/Parameter.html#Parameter">Parameter</a> p = <strong class="jxr_keyword">new</strong> <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/language/Parameter.html#Parameter">Parameter</a>(<strong class="jxr_keyword">true</strong>, <span class="jxr_string">"Fli%"</span>);
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>        List&lt;Name&gt; answer = sqlSession.selectList(<span class="jxr_string">"selectNames"</span>, p);
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>        assertEquals(3, answer.size());
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>        <strong class="jxr_keyword">for</strong> (<a name="Name" href="../../../../../org/apache/ibatis/submitted/language/Name.html#Name">Name</a> n : answer) {
@@ -86,7 +86,7 @@
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>    <strong class="jxr_keyword">void</strong> testDynamicSelectWithExpressionParams() {
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>  
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>        <a name="Parameter" href="../../../../../org/apache/iba<a name="Parameter" href="../../../../../org/apache/ibatis/submitted/language/Parameter.html#Parameter">Parameter</a>tted/language/Parameter.html#Parameter">Parameter</a> p = <strong class="jxr_keyword">new</strong> <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/language/Parameter.html#Parameter">Parameter</a>(<strong class="jxr_keyword">true</strong>, <span class="jxr_string">"Fli"</span>);
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>        <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/language/Parameter.html#Parameter">Parameter</a> p = <strong class="jxr_keyword">new</strong> <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/language/Parameter.html#Parameter">Parameter</a>(<strong class="jxr_keyword">true</strong>, <span class="jxr_string">"Fli"</span>);
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>        List&lt;Name&gt; answer = sqlSession.selectList(<span class="jxr_string">"selectNamesWithExpressions"</span>, p);
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>        assertEquals(3, answer.size());
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>        <strong class="jxr_keyword">for</strong> (<a name="Name" href="../../../../../org/apache/ibatis/submitted/language/Name.html#Name">Name</a> n : answer) {
@@ -127,7 +127,7 @@
 <a class="jxr_linenumber" name="L119" href="#L119">119</a>   @Test
 <a class="jxr_linenumber" name="L120" href="#L120">120</a>   <strong class="jxr_keyword">void</strong> testLangRaw() {
 <a class="jxr_linenumber" name="L121" href="#L121">121</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-<a class="jxr_linenumber" name="L122" href="#L122">122</a>       <a name="Parameter" href="../../../../../org/apache/iba<a name="Parameter" href="../../../../../org/apache/ibatis/submitted/language/Parameter.html#Parameter">Parameter</a>tted/language/Parameter.html#Parameter">Parameter</a> p = <strong class="jxr_keyword">new</strong> <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/language/Parameter.html#Parameter">Parameter</a>(<strong class="jxr_keyword">true</strong>, <span class="jxr_string">"Fli%"</span>);
+<a class="jxr_linenumber" name="L122" href="#L122">122</a>       <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/language/Parameter.html#Parameter">Parameter</a> p = <strong class="jxr_keyword">new</strong> <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/language/Parameter.html#Parameter">Parameter</a>(<strong class="jxr_keyword">true</strong>, <span class="jxr_string">"Fli%"</span>);
 <a class="jxr_linenumber" name="L123" href="#L123">123</a>       List&lt;Name&gt; answer = sqlSession.selectList(<span class="jxr_string">"selectRaw"</span>, p);
 <a class="jxr_linenumber" name="L124" href="#L124">124</a>       assertEquals(3, answer.size());
 <a class="jxr_linenumber" name="L125" href="#L125">125</a>       <strong class="jxr_keyword">for</strong> (<a name="Name" href="../../../../../org/apache/ibatis/submitted/language/Name.html#Name">Name</a> n : answer) {
@@ -139,7 +139,7 @@
 <a class="jxr_linenumber" name="L131" href="#L131">131</a>   @Test
 <a class="jxr_linenumber" name="L132" href="#L132">132</a>   <strong class="jxr_keyword">void</strong> testLangRawWithInclude() {
 <a class="jxr_linenumber" name="L133" href="#L133">133</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-<a class="jxr_linenumber" name="L134" href="#L134">134</a>       <a name="Parameter" href="../../../../../org/apache/iba<a name="Parameter" href="../../../../../org/apache/ibatis/submitted/language/Parameter.html#Parameter">Parameter</a>tted/language/Parameter.html#Parameter">Parameter</a> p = <strong class="jxr_keyword">new</strong> <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/language/Parameter.html#Parameter">Parameter</a>(<strong class="jxr_keyword">true</strong>, <span class="jxr_string">"Fli%"</span>);
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>       <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/language/Parameter.html#Parameter">Parameter</a> p = <strong class="jxr_keyword">new</strong> <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/language/Parameter.html#Parameter">Parameter</a>(<strong class="jxr_keyword">true</strong>, <span class="jxr_string">"Fli%"</span>);
 <a class="jxr_linenumber" name="L135" href="#L135">135</a>       List&lt;Name&gt; answer = sqlSession.selectList(<span class="jxr_string">"selectRawWithInclude"</span>, p);
 <a class="jxr_linenumber" name="L136" href="#L136">136</a>       assertEquals(3, answer.size());
 <a class="jxr_linenumber" name="L137" href="#L137">137</a>       <strong class="jxr_keyword">for</strong> (<a name="Name" href="../../../../../org/apache/ibatis/submitted/language/Name.html#Name">Name</a> n : answer) {
@@ -151,7 +151,7 @@
 <a class="jxr_linenumber" name="L143" href="#L143">143</a>   @Test
 <a class="jxr_linenumber" name="L144" href="#L144">144</a>   <strong class="jxr_keyword">void</strong> testLangRawWithIncludeAndCData() {
 <a class="jxr_linenumber" name="L145" href="#L145">145</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-<a class="jxr_linenumber" name="L146" href="#L146">146</a>       <a name="Parameter" href="../../../../../org/apache/iba<a name="Parameter" href="../../../../../org/apache/ibatis/submitted/language/Parameter.html#Parameter">Parameter</a>tted/language/Parameter.html#Parameter">Parameter</a> p = <strong class="jxr_keyword">new</strong> <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/language/Parameter.html#Parameter">Parameter</a>(<strong class="jxr_keyword">true</strong>, <span class="jxr_string">"Fli%"</span>);
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>       <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/language/Parameter.html#Parameter">Parameter</a> p = <strong class="jxr_keyword">new</strong> <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/language/Parameter.html#Parameter">Parameter</a>(<strong class="jxr_keyword">true</strong>, <span class="jxr_string">"Fli%"</span>);
 <a class="jxr_linenumber" name="L147" href="#L147">147</a>       List&lt;Name&gt; answer = sqlSession.selectList(<span class="jxr_string">"selectRawWithIncludeAndCData"</span>, p);
 <a class="jxr_linenumber" name="L148" href="#L148">148</a>       assertEquals(3, answer.size());
 <a class="jxr_linenumber" name="L149" href="#L149">149</a>       <strong class="jxr_keyword">for</strong> (<a name="Name" href="../../../../../org/apache/ibatis/submitted/language/Name.html#Name">Name</a> n : answer) {
@@ -163,7 +163,7 @@
 <a class="jxr_linenumber" name="L155" href="#L155">155</a>   @Test
 <a class="jxr_linenumber" name="L156" href="#L156">156</a>   <strong class="jxr_keyword">void</strong> testLangXmlTags() {
 <a class="jxr_linenumber" name="L157" href="#L157">157</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-<a class="jxr_linenumber" name="L158" href="#L158">158</a>       <a name="Parameter" href="../../../../../org/apache/iba<a name="Parameter" href="../../../../../org/apache/ibatis/submitted/language/Parameter.html#Parameter">Parameter</a>tted/language/Parameter.html#Parameter">Parameter</a> p = <strong class="jxr_keyword">new</strong> <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/language/Parameter.html#Parameter">Parameter</a>(<strong class="jxr_keyword">true</strong>, <span class="jxr_string">"Fli%"</span>);
+<a class="jxr_linenumber" name="L158" href="#L158">158</a>       <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/language/Parameter.html#Parameter">Parameter</a> p = <strong class="jxr_keyword">new</strong> <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/language/Parameter.html#Parameter">Parameter</a>(<strong class="jxr_keyword">true</strong>, <span class="jxr_string">"Fli%"</span>);
 <a class="jxr_linenumber" name="L159" href="#L159">159</a>       List&lt;Name&gt; answer = sqlSession.selectList(<span class="jxr_string">"selectXml"</span>, p);
 <a class="jxr_linenumber" name="L160" href="#L160">160</a>       assertEquals(3, answer.size());
 <a class="jxr_linenumber" name="L161" href="#L161">161</a>       <strong class="jxr_keyword">for</strong> (<a name="Name" href="../../../../../org/apache/ibatis/submitted/language/Name.html#Name">Name</a> n : answer) {
@@ -175,7 +175,7 @@
 <a class="jxr_linenumber" name="L167" href="#L167">167</a>   @Test
 <a class="jxr_linenumber" name="L168" href="#L168">168</a>   <strong class="jxr_keyword">void</strong> testLangRawWithMapper() {
 <a class="jxr_linenumber" name="L169" href="#L169">169</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-<a class="jxr_linenumber" name="L170" href="#L170">170</a>       <a name="Parameter" href="../../../../../org/apache/iba<a name="Parameter" href="../../../../../org/apache/ibatis/submitted/language/Parameter.html#Parameter">Parameter</a>tted/language/Parameter.html#Parameter">Parameter</a> p = <strong class="jxr_keyword">new</strong> <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/language/Parameter.html#Parameter">Parameter</a>(<strong class="jxr_keyword">true</strong>, <span class="jxr_string">"Fli%"</span>);
+<a class="jxr_linenumber" name="L170" href="#L170">170</a>       <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/language/Parameter.html#Parameter">Parameter</a> p = <strong class="jxr_keyword">new</strong> <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/language/Parameter.html#Parameter">Parameter</a>(<strong class="jxr_keyword">true</strong>, <span class="jxr_string">"Fli%"</span>);
 <a class="jxr_linenumber" name="L171" href="#L171">171</a>       <a name="Mapper" href="../../../../../org/apache/ibatis/submitted/language/Mapper.html#Mapper">Mapper</a> m = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L172" href="#L172">172</a>       List&lt;Name&gt; answer = m.selectRawWithMapper(p);
 <a class="jxr_linenumber" name="L173" href="#L173">173</a>       assertEquals(3, answer.size());
@@ -188,7 +188,7 @@
 <a class="jxr_linenumber" name="L180" href="#L180">180</a>   @Test
 <a class="jxr_linenumber" name="L181" href="#L181">181</a>   <strong class="jxr_keyword">void</strong> testLangVelocityWithMapper() {
 <a class="jxr_linenumber" name="L182" href="#L182">182</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-<a class="jxr_linenumber" name="L183" href="#L183">183</a>       <a name="Parameter" href="../../../../../org/apache/iba<a name="Parameter" href="../../../../../org/apache/ibatis/submitted/language/Parameter.html#Parameter">Parameter</a>tted/language/Parameter.html#Parameter">Parameter</a> p = <strong class="jxr_keyword">new</strong> <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/language/Parameter.html#Parameter">Parameter</a>(<strong class="jxr_keyword">true</strong>, <span class="jxr_string">"Fli%"</span>);
+<a class="jxr_linenumber" name="L183" href="#L183">183</a>       <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/language/Parameter.html#Parameter">Parameter</a> p = <strong class="jxr_keyword">new</strong> <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/language/Parameter.html#Parameter">Parameter</a>(<strong class="jxr_keyword">true</strong>, <span class="jxr_string">"Fli%"</span>);
 <a class="jxr_linenumber" name="L184" href="#L184">184</a>       <a name="Mapper" href="../../../../../org/apache/ibatis/submitted/language/Mapper.html#Mapper">Mapper</a> m = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L185" href="#L185">185</a>       List&lt;Name&gt; answer = m.selectVelocityWithMapper(p);
 <a class="jxr_linenumber" name="L186" href="#L186">186</a>       assertEquals(3, answer.size());
@@ -201,7 +201,7 @@
 <a class="jxr_linenumber" name="L193" href="#L193">193</a>   @Test
 <a class="jxr_linenumber" name="L194" href="#L194">194</a>   <strong class="jxr_keyword">void</strong> testLangXmlWithMapper() {
 <a class="jxr_linenumber" name="L195" href="#L195">195</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-<a class="jxr_linenumber" name="L196" href="#L196">196</a>       <a name="Parameter" href="../../../../../org/apache/iba<a name="Parameter" href="../../../../../org/apache/ibatis/submitted/language/Parameter.html#Parameter">Parameter</a>tted/language/Parameter.html#Parameter">Parameter</a> p = <strong class="jxr_keyword">new</strong> <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/language/Parameter.html#Parameter">Parameter</a>(<strong class="jxr_keyword">true</strong>, <span class="jxr_string">"Fli%"</span>);
+<a class="jxr_linenumber" name="L196" href="#L196">196</a>       <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/language/Parameter.html#Parameter">Parameter</a> p = <strong class="jxr_keyword">new</strong> <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/language/Parameter.html#Parameter">Parameter</a>(<strong class="jxr_keyword">true</strong>, <span class="jxr_string">"Fli%"</span>);
 <a class="jxr_linenumber" name="L197" href="#L197">197</a>       <a name="Mapper" href="../../../../../org/apache/ibatis/submitted/language/Mapper.html#Mapper">Mapper</a> m = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L198" href="#L198">198</a>       List&lt;Name&gt; answer = m.selectXmlWithMapper(p);
 <a class="jxr_linenumber" name="L199" href="#L199">199</a>       assertEquals(3, answer.size());
@@ -214,7 +214,7 @@
 <a class="jxr_linenumber" name="L206" href="#L206">206</a>   @Test
 <a class="jxr_linenumber" name="L207" href="#L207">207</a>   <strong class="jxr_keyword">void</strong> testLangXmlWithMapperAndSqlSymbols() {
 <a class="jxr_linenumber" name="L208" href="#L208">208</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-<a class="jxr_linenumber" name="L209" href="#L209">209</a>       <a name="Parameter" href="../../../../../org/apache/iba<a name="Parameter" href="../../../../../org/apache/ibatis/submitted/language/Parameter.html#Parameter">Parameter</a>tted/language/Parameter.html#Parameter">Parameter</a> p = <strong class="jxr_keyword">new</strong> <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/language/Parameter.html#Parameter">Parameter</a>(<strong class="jxr_keyword">true</strong>, <span class="jxr_string">"Fli%"</span>);
+<a class="jxr_linenumber" name="L209" href="#L209">209</a>       <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/language/Parameter.html#Parameter">Parameter</a> p = <strong class="jxr_keyword">new</strong> <a name="Parameter" href="../../../../../org/apache/ibatis/submitted/language/Parameter.html#Parameter">Parameter</a>(<strong class="jxr_keyword">true</strong>, <span class="jxr_string">"Fli%"</span>);
 <a class="jxr_linenumber" name="L210" href="#L210">210</a>       <a name="Mapper" href="../../../../../org/apache/ibatis/submitted/language/Mapper.html#Mapper">Mapper</a> m = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L211" href="#L211">211</a>       List&lt;Name&gt; answer = m.selectXmlWithMapperAndSqlSymbols(p);
 <a class="jxr_linenumber" name="L212" href="#L212">212</a>       assertEquals(3, answer.size());

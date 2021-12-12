@@ -6,21 +6,21 @@
 </head>
 <body>
 <div id="overview"><a href="../../../../../../apidocs/org/apache/ibatis/builder/xml/XMLConfigBuilder.html">View Javadoc</a></div><pre>
-<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2021 the original author or authors.</em>
-<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
-<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
-<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_javadoccomment"> *    You may obtain a copy of the License at</em>
-<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
-<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_javadoccomment"> *    Unless required by applicable law or agreed to in writing, software</em>
-<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_javadoccomment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
-<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_javadoccomment"> *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</em>
-<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_javadoccomment"> *    See the License for the specific language governing permissions and</em>
-<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_javadoccomment"> *    limitations under the License.</em>
-<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2021 the original author or authors.</em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> *    You may obtain a copy of the License at</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_comment"> *    Unless required by applicable law or agreed to in writing, software</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_comment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_comment"> *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_comment"> *    See the License for the specific language governing permissions and</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_comment"> *    limitations under the License.</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> */</em>
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">package</strong> org.apache.ibatis.builder.xml;
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> java.io.InputStream;
@@ -194,7 +194,7 @@
 <a class="jxr_linenumber" name="L186" href="#L186">186</a>       <strong class="jxr_keyword">for</strong> (<a name="XNode" href="../../../../../org/apache/ibatis/parsing/XNode.html#XNode">XNode</a> child : parent.getChildren()) {
 <a class="jxr_linenumber" name="L187" href="#L187">187</a>         String interceptor = child.getStringAttribute(<span class="jxr_string">"interceptor"</span>);
 <a class="jxr_linenumber" name="L188" href="#L188">188</a>         Properties properties = child.getChildrenAsProperties();
-<a class="jxr_linenumber" name="L189" href="#L189">189</a>         <a name="Interceptor" href="../../.<a name="Interceptor" href="../../../../../org/apache/ibatis/plugin/Interceptor.html#Interceptor">Interceptor</a>/apache/ibatis/plugin/Interceptor.html#Interceptor">Interceptor</a> interceptorInstance = (<a name="Interceptor" href="../../../../../org/apache/ibatis/plugin/Interceptor.html#Interceptor">Interceptor</a>) resolveClass(interceptor).getDeclaredConstructor().newInstance();
+<a class="jxr_linenumber" name="L189" href="#L189">189</a>         <a name="Interceptor" href="../../../../../org/apache/ibatis/plugin/Interceptor.html#Interceptor">Interceptor</a> interceptorInstance = (<a name="Interceptor" href="../../../../../org/apache/ibatis/plugin/Interceptor.html#Interceptor">Interceptor</a>) resolveClass(interceptor).getDeclaredConstructor().newInstance();
 <a class="jxr_linenumber" name="L190" href="#L190">190</a>         interceptorInstance.setProperties(properties);
 <a class="jxr_linenumber" name="L191" href="#L191">191</a>         configuration.addInterceptor(interceptorInstance);
 <a class="jxr_linenumber" name="L192" href="#L192">192</a>       }
@@ -205,7 +205,7 @@
 <a class="jxr_linenumber" name="L197" href="#L197">197</a>     <strong class="jxr_keyword">if</strong> (context != <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L198" href="#L198">198</a>       String type = context.getStringAttribute(<span class="jxr_string">"type"</span>);
 <a class="jxr_linenumber" name="L199" href="#L199">199</a>       Properties properties = context.getChildrenAsProperties();
-<a class="jxr_linenumber" name="L200" href="#L200">200</a>       <a name="ObjectFactory" h<a name="ObjectFactory" href="../../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html#ObjectFactory">ObjectFactory</a>/../../org/apache/ibatis/reflection/factory/ObjectFactory.html#ObjectFactory">ObjectFactory</a> factory = (<a name="ObjectFactory" href="../../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html#ObjectFactory">ObjectFactory</a>) resolveClass(type).getDeclaredConstructor().newInstance();
+<a class="jxr_linenumber" name="L200" href="#L200">200</a>       <a name="ObjectFactory" href="../../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html#ObjectFactory">ObjectFactory</a> factory = (<a name="ObjectFactory" href="../../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html#ObjectFactory">ObjectFactory</a>) resolveClass(type).getDeclaredConstructor().newInstance();
 <a class="jxr_linenumber" name="L201" href="#L201">201</a>       factory.setProperties(properties);
 <a class="jxr_linenumber" name="L202" href="#L202">202</a>       configuration.setObjectFactory(factory);
 <a class="jxr_linenumber" name="L203" href="#L203">203</a>     }
@@ -214,7 +214,7 @@
 <a class="jxr_linenumber" name="L206" href="#L206">206</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> objectWrapperFactoryElement(<a name="XNode" href="../../../../../org/apache/ibatis/parsing/XNode.html#XNode">XNode</a> context) <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L207" href="#L207">207</a>     <strong class="jxr_keyword">if</strong> (context != <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L208" href="#L208">208</a>       String type = context.getStringAttribute(<span class="jxr_string">"type"</span>);
-<a class="jxr_linenumber" name="L209" href="#L209">209</a>       <a name="ObjectWrapperFactory" h<a name="ObjectWrapperFactory" href="../../../../../org/apache/ibatis/reflection/wrapper/ObjectWrapperFactory.html#ObjectWrapperFactory">ObjectWrapperFactory</a>org/apache/ibatis/reflection/wrapper/ObjectWrapperFactory.html#ObjectWrapperFactory">ObjectWrapperFactory</a> factory = (<a name="ObjectWrapperFactory" href="../../../../../org/apache/ibatis/reflection/wrapper/ObjectWrapperFactory.html#ObjectWrapperFactory">ObjectWrapperFactory</a>) resolveClass(type).getDeclaredConstructor().newInstance();
+<a class="jxr_linenumber" name="L209" href="#L209">209</a>       <a name="ObjectWrapperFactory" href="../../../../../org/apache/ibatis/reflection/wrapper/ObjectWrapperFactory.html#ObjectWrapperFactory">ObjectWrapperFactory</a> factory = (<a name="ObjectWrapperFactory" href="../../../../../org/apache/ibatis/reflection/wrapper/ObjectWrapperFactory.html#ObjectWrapperFactory">ObjectWrapperFactory</a>) resolveClass(type).getDeclaredConstructor().newInstance();
 <a class="jxr_linenumber" name="L210" href="#L210">210</a>       configuration.setObjectWrapperFactory(factory);
 <a class="jxr_linenumber" name="L211" href="#L211">211</a>     }
 <a class="jxr_linenumber" name="L212" href="#L212">212</a>   }
@@ -222,7 +222,7 @@
 <a class="jxr_linenumber" name="L214" href="#L214">214</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> reflectorFactoryElement(<a name="XNode" href="../../../../../org/apache/ibatis/parsing/XNode.html#XNode">XNode</a> context) <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L215" href="#L215">215</a>     <strong class="jxr_keyword">if</strong> (context != <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L216" href="#L216">216</a>       String type = context.getStringAttribute(<span class="jxr_string">"type"</span>);
-<a class="jxr_linenumber" name="L217" href="#L217">217</a>       <a name="ReflectorFactory" h<a name="ReflectorFactory" href="../../../../../org/apache/ibatis/reflection/ReflectorFactory.html#ReflectorFactory">ReflectorFactory</a>/../org/apache/ibatis/reflection/ReflectorFactory.html#ReflectorFactory">ReflectorFactory</a> factory = (<a name="ReflectorFactory" href="../../../../../org/apache/ibatis/reflection/ReflectorFactory.html#ReflectorFactory">ReflectorFactory</a>) resolveClass(type).getDeclaredConstructor().newInstance();
+<a class="jxr_linenumber" name="L217" href="#L217">217</a>       <a name="ReflectorFactory" href="../../../../../org/apache/ibatis/reflection/ReflectorFactory.html#ReflectorFactory">ReflectorFactory</a> factory = (<a name="ReflectorFactory" href="../../../../../org/apache/ibatis/reflection/ReflectorFactory.html#ReflectorFactory">ReflectorFactory</a>) resolveClass(type).getDeclaredConstructor().newInstance();
 <a class="jxr_linenumber" name="L218" href="#L218">218</a>       configuration.setReflectorFactory(factory);
 <a class="jxr_linenumber" name="L219" href="#L219">219</a>     }
 <a class="jxr_linenumber" name="L220" href="#L220">220</a>   }
@@ -324,7 +324,7 @@
 <a class="jxr_linenumber" name="L316" href="#L316">316</a>     <strong class="jxr_keyword">if</strong> (context != <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L317" href="#L317">317</a>       String type = context.getStringAttribute(<span class="jxr_string">"type"</span>);
 <a class="jxr_linenumber" name="L318" href="#L318">318</a>       Properties props = context.getChildrenAsProperties();
-<a class="jxr_linenumber" name="L319" href="#L319">319</a>       <a name="TransactionFactory" h<a name="TransactionFactory" href="../../../../../org/apache/ibatis/transaction/TransactionFactory.html#TransactionFactory">TransactionFactory</a>./org/apache/ibatis/transaction/TransactionFactory.html#TransactionFactory">TransactionFactory</a> factory = (<a name="TransactionFactory" href="../../../../../org/apache/ibatis/transaction/TransactionFactory.html#TransactionFactory">TransactionFactory</a>) resolveClass(type).getDeclaredConstructor().newInstance();
+<a class="jxr_linenumber" name="L319" href="#L319">319</a>       <a name="TransactionFactory" href="../../../../../org/apache/ibatis/transaction/TransactionFactory.html#TransactionFactory">TransactionFactory</a> factory = (<a name="TransactionFactory" href="../../../../../org/apache/ibatis/transaction/TransactionFactory.html#TransactionFactory">TransactionFactory</a>) resolveClass(type).getDeclaredConstructor().newInstance();
 <a class="jxr_linenumber" name="L320" href="#L320">320</a>       factory.setProperties(props);
 <a class="jxr_linenumber" name="L321" href="#L321">321</a>       <strong class="jxr_keyword">return</strong> factory;
 <a class="jxr_linenumber" name="L322" href="#L322">322</a>     }
@@ -335,7 +335,7 @@
 <a class="jxr_linenumber" name="L327" href="#L327">327</a>     <strong class="jxr_keyword">if</strong> (context != <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L328" href="#L328">328</a>       String type = context.getStringAttribute(<span class="jxr_string">"type"</span>);
 <a class="jxr_linenumber" name="L329" href="#L329">329</a>       Properties props = context.getChildrenAsProperties();
-<a class="jxr_linenumber" name="L330" href="#L330">330</a>       <a name="DataSourceFactory" h<a name="DataSourceFactory" href="../../../../../org/apache/ibatis/datasource/DataSourceFactory.html#DataSourceFactory">DataSourceFactory</a>../org/apache/ibatis/datasource/DataSourceFactory.html#DataSourceFactory">DataSourceFactory</a> factory = (<a name="DataSourceFactory" href="../../../../../org/apache/ibatis/datasource/DataSourceFactory.html#DataSourceFactory">DataSourceFactory</a>) resolveClass(type).getDeclaredConstructor().newInstance();
+<a class="jxr_linenumber" name="L330" href="#L330">330</a>       <a name="DataSourceFactory" href="../../../../../org/apache/ibatis/datasource/DataSourceFactory.html#DataSourceFactory">DataSourceFactory</a> factory = (<a name="DataSourceFactory" href="../../../../../org/apache/ibatis/datasource/DataSourceFactory.html#DataSourceFactory">DataSourceFactory</a>) resolveClass(type).getDeclaredConstructor().newInstance();
 <a class="jxr_linenumber" name="L331" href="#L331">331</a>       factory.setProperties(props);
 <a class="jxr_linenumber" name="L332" href="#L332">332</a>       <strong class="jxr_keyword">return</strong> factory;
 <a class="jxr_linenumber" name="L333" href="#L333">333</a>     }
@@ -382,13 +382,13 @@
 <a class="jxr_linenumber" name="L374" href="#L374">374</a>           <strong class="jxr_keyword">if</strong> (resource != <strong class="jxr_keyword">null</strong> &amp;&amp; url == <strong class="jxr_keyword">null</strong> &amp;&amp; mapperClass == <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L375" href="#L375">375</a>             ErrorContext.instance().resource(resource);
 <a class="jxr_linenumber" name="L376" href="#L376">376</a>             <strong class="jxr_keyword">try</strong>(InputStream inputStream = Resources.getResourceAsStream(resource)) {
-<a class="jxr_linenumber" name="L377" href="#L377">377</a>               <a name="XMLMapperBuilder" href="../../../../../org/apache/ibatis/builder<a name="XMLMapperBuilder" href="../../../../../org/apache/ibatis/builder/xml/XMLMapperBuilder.html#XMLMapperBuilder">XMLMapperBuilder</a>ilder.html#XMLMapperBuilder">XMLMapperBuilder</a> mapperParser = <strong class="jxr_keyword">new</strong> <a name="XMLMapperBuilder" href="../../../../../org/apache/ibatis/builder/xml/XMLMapperBuilder.html#XMLMapperBuilder">XMLMapperBuilder</a>(inputStream, configuration, resource, configuration.getSqlFragments());
+<a class="jxr_linenumber" name="L377" href="#L377">377</a>               <a name="XMLMapperBuilder" href="../../../../../org/apache/ibatis/builder/xml/XMLMapperBuilder.html#XMLMapperBuilder">XMLMapperBuilder</a> mapperParser = <strong class="jxr_keyword">new</strong> <a name="XMLMapperBuilder" href="../../../../../org/apache/ibatis/builder/xml/XMLMapperBuilder.html#XMLMapperBuilder">XMLMapperBuilder</a>(inputStream, configuration, resource, configuration.getSqlFragments());
 <a class="jxr_linenumber" name="L378" href="#L378">378</a>               mapperParser.parse();
 <a class="jxr_linenumber" name="L379" href="#L379">379</a>             }
 <a class="jxr_linenumber" name="L380" href="#L380">380</a>           } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (resource == <strong class="jxr_keyword">null</strong> &amp;&amp; url != <strong class="jxr_keyword">null</strong> &amp;&amp; mapperClass == <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L381" href="#L381">381</a>             ErrorContext.instance().resource(url);
 <a class="jxr_linenumber" name="L382" href="#L382">382</a>             <strong class="jxr_keyword">try</strong>(InputStream inputStream = Resources.getUrlAsStream(url)){
-<a class="jxr_linenumber" name="L383" href="#L383">383</a>               <a name="XMLMapperBuilder" href="../../../../../org/apache/ibatis/builder<a name="XMLMapperBuilder" href="../../../../../org/apache/ibatis/builder/xml/XMLMapperBuilder.html#XMLMapperBuilder">XMLMapperBuilder</a>ilder.html#XMLMapperBuilder">XMLMapperBuilder</a> mapperParser = <strong class="jxr_keyword">new</strong> <a name="XMLMapperBuilder" href="../../../../../org/apache/ibatis/builder/xml/XMLMapperBuilder.html#XMLMapperBuilder">XMLMapperBuilder</a>(inputStream, configuration, url, configuration.getSqlFragments());
+<a class="jxr_linenumber" name="L383" href="#L383">383</a>               <a name="XMLMapperBuilder" href="../../../../../org/apache/ibatis/builder/xml/XMLMapperBuilder.html#XMLMapperBuilder">XMLMapperBuilder</a> mapperParser = <strong class="jxr_keyword">new</strong> <a name="XMLMapperBuilder" href="../../../../../org/apache/ibatis/builder/xml/XMLMapperBuilder.html#XMLMapperBuilder">XMLMapperBuilder</a>(inputStream, configuration, url, configuration.getSqlFragments());
 <a class="jxr_linenumber" name="L384" href="#L384">384</a>               mapperParser.parse();
 <a class="jxr_linenumber" name="L385" href="#L385">385</a>             }
 <a class="jxr_linenumber" name="L386" href="#L386">386</a>           } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (resource == <strong class="jxr_keyword">null</strong> &amp;&amp; url == <strong class="jxr_keyword">null</strong> &amp;&amp; mapperClass != <strong class="jxr_keyword">null</strong>) {

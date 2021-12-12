@@ -6,21 +6,21 @@
 </head>
 <body>
 <div id="overview"><a href="../../../../../../apidocs/org/apache/ibatis/type/TypeHandlerRegistry.html">View Javadoc</a></div><pre>
-<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2020 the original author or authors.</em>
-<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
-<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
-<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_javadoccomment"> *    You may obtain a copy of the License at</em>
-<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
-<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_javadoccomment"> *    Unless required by applicable law or agreed to in writing, software</em>
-<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_javadoccomment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
-<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_javadoccomment"> *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</em>
-<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_javadoccomment"> *    See the License for the specific language governing permissions and</em>
-<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_javadoccomment"> *    limitations under the License.</em>
-<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2021 the original author or authors.</em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> *    You may obtain a copy of the License at</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_comment"> *    Unless required by applicable law or agreed to in writing, software</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_comment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_comment"> *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_comment"> *    See the License for the specific language governing permissions and</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_comment"> *    limitations under the License.</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> */</em>
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">package</strong> org.apache.ibatis.type;
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> java.io.InputStream;
@@ -62,7 +62,7 @@
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a name="TypeHandlerRegistry" href="../../../../org/apache/ibatis/type/TypeHandlerRegistry.html#TypeHandlerRegistry">TypeHandlerRegistry</a> {
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>  
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Map&lt;JdbcType, TypeHandler&lt;?&gt;&gt;  jdbcTypeHandlerMap = <strong class="jxr_keyword">new</strong> EnumMap&lt;&gt;(JdbcType.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Map&lt;JdbcType, TypeHandler&lt;?&gt;&gt; jdbcTypeHandlerMap = <strong class="jxr_keyword">new</strong> EnumMap&lt;&gt;(JdbcType.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Map&lt;Type, Map&lt;JdbcType, TypeHandler&lt;?&gt;&gt;&gt; typeHandlerMap = <strong class="jxr_keyword">new</strong> ConcurrentHashMap&lt;&gt;();
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> TypeHandler&lt;Object&gt; unknownTypeHandler;
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Map&lt;Class&lt;?&gt;, TypeHandler&lt;?&gt;&gt; allTypeHandlersMap = <strong class="jxr_keyword">new</strong> HashMap&lt;&gt;();
@@ -260,10 +260,10 @@
 <a class="jxr_linenumber" name="L252" href="#L252">252</a> 
 <a class="jxr_linenumber" name="L253" href="#L253">253</a>   <strong class="jxr_keyword">private</strong> Map&lt;JdbcType, TypeHandler&lt;?&gt;&gt; getJdbcHandlerMap(Type type) {
 <a class="jxr_linenumber" name="L254" href="#L254">254</a>     Map&lt;JdbcType, TypeHandler&lt;?&gt;&gt; jdbcHandlerMap = typeHandlerMap.get(type);
-<a class="jxr_linenumber" name="L255" href="#L255">255</a>     <strong class="jxr_keyword">if</strong> (NULL_TYPE_HANDLER_MAP.equals(jdbcHandlerMap)) {
-<a class="jxr_linenumber" name="L256" href="#L256">256</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L255" href="#L255">255</a>     <strong class="jxr_keyword">if</strong> (jdbcHandlerMap != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L256" href="#L256">256</a>       <strong class="jxr_keyword">return</strong> NULL_TYPE_HANDLER_MAP.equals(jdbcHandlerMap) ? <strong class="jxr_keyword">null</strong> : jdbcHandlerMap;
 <a class="jxr_linenumber" name="L257" href="#L257">257</a>     }
-<a class="jxr_linenumber" name="L258" href="#L258">258</a>     <strong class="jxr_keyword">if</strong> (jdbcHandlerMap == <strong class="jxr_keyword">null</strong> &amp;&amp; type instanceof Class) {
+<a class="jxr_linenumber" name="L258" href="#L258">258</a>     <strong class="jxr_keyword">if</strong> (type instanceof Class) {
 <a class="jxr_linenumber" name="L259" href="#L259">259</a>       Class&lt;?&gt; clazz = (Class&lt;?&gt;) type;
 <a class="jxr_linenumber" name="L260" href="#L260">260</a>       <strong class="jxr_keyword">if</strong> (Enum.<strong class="jxr_keyword">class</strong>.isAssignableFrom(clazz)) {
 <a class="jxr_linenumber" name="L261" href="#L261">261</a>         Class&lt;?&gt; enumClass = clazz.isAnonymousClass() ? clazz.getSuperclass() : clazz;
@@ -287,7 +287,7 @@
 <a class="jxr_linenumber" name="L279" href="#L279">279</a>         jdbcHandlerMap = getJdbcHandlerMapForEnumInterfaces(iface, enumClazz);
 <a class="jxr_linenumber" name="L280" href="#L280">280</a>       }
 <a class="jxr_linenumber" name="L281" href="#L281">281</a>       <strong class="jxr_keyword">if</strong> (jdbcHandlerMap != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L282" href="#L282">282</a>         <em class="jxr_comment">// Found a type handler regsiterd to a super interface</em>
+<a class="jxr_linenumber" name="L282" href="#L282">282</a>         <em class="jxr_comment">// Found a type handler registered to a super interface</em>
 <a class="jxr_linenumber" name="L283" href="#L283">283</a>         HashMap&lt;JdbcType, TypeHandler&lt;?&gt;&gt; newMap = <strong class="jxr_keyword">new</strong> HashMap&lt;&gt;();
 <a class="jxr_linenumber" name="L284" href="#L284">284</a>         <strong class="jxr_keyword">for</strong> (Entry&lt;JdbcType, TypeHandler&lt;?&gt;&gt; entry : jdbcHandlerMap.entrySet()) {
 <a class="jxr_linenumber" name="L285" href="#L285">285</a>           <em class="jxr_comment">// Create a type handler instance with enum type as a constructor arg</em>
@@ -300,7 +300,7 @@
 <a class="jxr_linenumber" name="L292" href="#L292">292</a>   }
 <a class="jxr_linenumber" name="L293" href="#L293">293</a> 
 <a class="jxr_linenumber" name="L294" href="#L294">294</a>   <strong class="jxr_keyword">private</strong> Map&lt;JdbcType, TypeHandler&lt;?&gt;&gt; getJdbcHandlerMapForSuperclass(Class&lt;?&gt; clazz) {
-<a class="jxr_linenumber" name="L295" href="#L295">295</a>     Class&lt;?&gt; superclass =  clazz.getSuperclass();
+<a class="jxr_linenumber" name="L295" href="#L295">295</a>     Class&lt;?&gt; superclass = clazz.getSuperclass();
 <a class="jxr_linenumber" name="L296" href="#L296">296</a>     <strong class="jxr_keyword">if</strong> (superclass == <strong class="jxr_keyword">null</strong> || Object.<strong class="jxr_keyword">class</strong>.equals(superclass)) {
 <a class="jxr_linenumber" name="L297" href="#L297">297</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L298" href="#L298">298</a>     }

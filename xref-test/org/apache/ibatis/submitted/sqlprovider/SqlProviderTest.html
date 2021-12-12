@@ -6,21 +6,21 @@
 </head>
 <body>
 <div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/submitted/sqlprovider/SqlProviderTest.html">View Javadoc</a></div><pre>
-<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2020 the original author or authors.</em>
-<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
-<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
-<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_javadoccomment"> *    You may obtain a copy of the License at</em>
-<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
-<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_javadoccomment"> *    Unless required by applicable law or agreed to in writing, software</em>
-<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_javadoccomment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
-<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_javadoccomment"> *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</em>
-<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_javadoccomment"> *    See the License for the specific language governing permissions and</em>
-<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_javadoccomment"> *    limitations under the License.</em>
-<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2021 the original author or authors.</em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> *    You may obtain a copy of the License at</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_comment"> *    Unless required by applicable law or agreed to in writing, software</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_comment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_comment"> *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_comment"> *    See the License for the specific language governing permissions and</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_comment"> *    limitations under the License.</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> */</em>
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">package</strong> org.apache.ibatis.submitted.sqlprovider;
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.jupiter.api.Assertions.assertEquals;
@@ -131,14 +131,14 @@
 <a class="jxr_linenumber" name="L123" href="#L123">123</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L124" href="#L124">124</a>       <a name="Mapper" href="../../../../../org/apache/ibatis/submitted/sqlprovider/Mapper.html#Mapper">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L125" href="#L125">125</a>       {
-<a class="jxr_linenumber" name="L126" href="#L126">126</a>         <a name="User" href="../../../../../org/apache/ibatis/sub<a name="User" href="../../../../../org/apache/ibatis/submitted/sqlprovider/User.html#User">User</a>ed/sqlprovider/User.html#User">User</a> criteria = <strong class="jxr_keyword">new</strong> <a name="User" href="../../../../../org/apache/ibatis/submitted/sqlprovider/User.html#User">User</a>();
+<a class="jxr_linenumber" name="L126" href="#L126">126</a>         <a name="User" href="../../../../../org/apache/ibatis/submitted/sqlprovider/User.html#User">User</a> criteria = <strong class="jxr_keyword">new</strong> <a name="User" href="../../../../../org/apache/ibatis/submitted/sqlprovider/User.html#User">User</a>();
 <a class="jxr_linenumber" name="L127" href="#L127">127</a>         criteria.setId(1);
 <a class="jxr_linenumber" name="L128" href="#L128">128</a>         List&lt;User&gt; users = mapper.getUsersByCriteria(criteria);
 <a class="jxr_linenumber" name="L129" href="#L129">129</a>         assertEquals(1, users.size());
 <a class="jxr_linenumber" name="L130" href="#L130">130</a>         assertEquals(<span class="jxr_string">"User1"</span>, users.get(0).getName());
 <a class="jxr_linenumber" name="L131" href="#L131">131</a>       }
 <a class="jxr_linenumber" name="L132" href="#L132">132</a>       {
-<a class="jxr_linenumber" name="L133" href="#L133">133</a>         <a name="User" href="../../../../../org/apache/ibatis/sub<a name="User" href="../../../../../org/apache/ibatis/submitted/sqlprovider/User.html#User">User</a>ed/sqlprovider/User.html#User">User</a> criteria = <strong class="jxr_keyword">new</strong> <a name="User" href="../../../../../org/apache/ibatis/submitted/sqlprovider/User.html#User">User</a>();
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>         <a name="User" href="../../../../../org/apache/ibatis/submitted/sqlprovider/User.html#User">User</a> criteria = <strong class="jxr_keyword">new</strong> <a name="User" href="../../../../../org/apache/ibatis/submitted/sqlprovider/User.html#User">User</a>();
 <a class="jxr_linenumber" name="L134" href="#L134">134</a>         criteria.setName(<span class="jxr_string">"User"</span>);
 <a class="jxr_linenumber" name="L135" href="#L135">135</a>         List&lt;User&gt; users = mapper.getUsersByCriteria(criteria);
 <a class="jxr_linenumber" name="L136" href="#L136">136</a>         assertEquals(4, users.size());
@@ -436,7 +436,7 @@
 <a class="jxr_linenumber" name="L428" href="#L428">428</a>   <strong class="jxr_keyword">void</strong> shouldInsertUser() {
 <a class="jxr_linenumber" name="L429" href="#L429">429</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L430" href="#L430">430</a>       <a name="Mapper" href="../../../../../org/apache/ibatis/submitted/sqlprovider/Mapper.html#Mapper">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L431" href="#L431">431</a>       <a name="User" href="../../../../../org/apache/ibatis<a name="User" href="../../../../../org/apache/ibatis/submitted/sqlprovider/User.html#User">User</a>mitted/sqlprovider/User.html#User">User</a> user = <strong class="jxr_keyword">new</strong> <a name="User" href="../../../../../org/apache/ibatis/submitted/sqlprovider/User.html#User">User</a>();
+<a class="jxr_linenumber" name="L431" href="#L431">431</a>       <a name="User" href="../../../../../org/apache/ibatis/submitted/sqlprovider/User.html#User">User</a> user = <strong class="jxr_keyword">new</strong> <a name="User" href="../../../../../org/apache/ibatis/submitted/sqlprovider/User.html#User">User</a>();
 <a class="jxr_linenumber" name="L432" href="#L432">432</a>       user.setId(999);
 <a class="jxr_linenumber" name="L433" href="#L433">433</a>       user.setName(<span class="jxr_string">"MyBatis"</span>);
 <a class="jxr_linenumber" name="L434" href="#L434">434</a>       mapper.insert(user);
@@ -450,7 +450,7 @@
 <a class="jxr_linenumber" name="L442" href="#L442">442</a>   <strong class="jxr_keyword">void</strong> shouldUpdateUser() {
 <a class="jxr_linenumber" name="L443" href="#L443">443</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L444" href="#L444">444</a>       <a name="Mapper" href="../../../../../org/apache/ibatis/submitted/sqlprovider/Mapper.html#Mapper">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L445" href="#L445">445</a>       <a name="User" href="../../../../../org/apache/ibatis<a name="User" href="../../../../../org/apache/ibatis/submitted/sqlprovider/User.html#User">User</a>mitted/sqlprovider/User.html#User">User</a> user = <strong class="jxr_keyword">new</strong> <a name="User" href="../../../../../org/apache/ibatis/submitted/sqlprovider/User.html#User">User</a>();
+<a class="jxr_linenumber" name="L445" href="#L445">445</a>       <a name="User" href="../../../../../org/apache/ibatis/submitted/sqlprovider/User.html#User">User</a> user = <strong class="jxr_keyword">new</strong> <a name="User" href="../../../../../org/apache/ibatis/submitted/sqlprovider/User.html#User">User</a>();
 <a class="jxr_linenumber" name="L446" href="#L446">446</a>       user.setId(999);
 <a class="jxr_linenumber" name="L447" href="#L447">447</a>       user.setName(<span class="jxr_string">"MyBatis"</span>);
 <a class="jxr_linenumber" name="L448" href="#L448">448</a>       mapper.insert(user);
@@ -467,7 +467,7 @@
 <a class="jxr_linenumber" name="L459" href="#L459">459</a>   <strong class="jxr_keyword">void</strong> shouldDeleteUser() {
 <a class="jxr_linenumber" name="L460" href="#L460">460</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L461" href="#L461">461</a>       <a name="Mapper" href="../../../../../org/apache/ibatis/submitted/sqlprovider/Mapper.html#Mapper">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L462" href="#L462">462</a>       <a name="User" href="../../../../../org/apache/ibatis<a name="User" href="../../../../../org/apache/ibatis/submitted/sqlprovider/User.html#User">User</a>mitted/sqlprovider/User.html#User">User</a> user = <strong class="jxr_keyword">new</strong> <a name="User" href="../../../../../org/apache/ibatis/submitted/sqlprovider/User.html#User">User</a>();
+<a class="jxr_linenumber" name="L462" href="#L462">462</a>       <a name="User" href="../../../../../org/apache/ibatis/submitted/sqlprovider/User.html#User">User</a> user = <strong class="jxr_keyword">new</strong> <a name="User" href="../../../../../org/apache/ibatis/submitted/sqlprovider/User.html#User">User</a>();
 <a class="jxr_linenumber" name="L463" href="#L463">463</a>       user.setId(999);
 <a class="jxr_linenumber" name="L464" href="#L464">464</a>       user.setName(<span class="jxr_string">"MyBatis"</span>);
 <a class="jxr_linenumber" name="L465" href="#L465">465</a>       mapper.insert(user);
@@ -936,7 +936,7 @@
 <a class="jxr_linenumber" name="L928" href="#L928">928</a>   <strong class="jxr_keyword">void</strong> shouldInsertUserSelective() {
 <a class="jxr_linenumber" name="L929" href="#L929">929</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L930" href="#L930">930</a>       <a name="Mapper" href="../../../../../org/apache/ibatis/submitted/sqlprovider/Mapper.html#Mapper">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L931" href="#L931">931</a>       <a name="User" href="../../../../../org/apache/ibatis<a name="User" href="../../../../../org/apache/ibatis/submitted/sqlprovider/User.html#User">User</a>mitted/sqlprovider/User.html#User">User</a> user = <strong class="jxr_keyword">new</strong> <a name="User" href="../../../../../org/apache/ibatis/submitted/sqlprovider/User.html#User">User</a>();
+<a class="jxr_linenumber" name="L931" href="#L931">931</a>       <a name="User" href="../../../../../org/apache/ibatis/submitted/sqlprovider/User.html#User">User</a> user = <strong class="jxr_keyword">new</strong> <a name="User" href="../../../../../org/apache/ibatis/submitted/sqlprovider/User.html#User">User</a>();
 <a class="jxr_linenumber" name="L932" href="#L932">932</a>       user.setId(999);
 <a class="jxr_linenumber" name="L933" href="#L933">933</a>       mapper.insertSelective(user);
 <a class="jxr_linenumber" name="L934" href="#L934">934</a> 
@@ -949,7 +949,7 @@
 <a class="jxr_linenumber" name="L941" href="#L941">941</a>   <strong class="jxr_keyword">void</strong> shouldUpdateUserSelective() {
 <a class="jxr_linenumber" name="L942" href="#L942">942</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L943" href="#L943">943</a>       <a name="Mapper" href="../../../../../org/apache/ibatis/submitted/sqlprovider/Mapper.html#Mapper">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L944" href="#L944">944</a>       <a name="User" href="../../../../../org/apache/ibatis<a name="User" href="../../../../../org/apache/ibatis/submitted/sqlprovider/User.html#User">User</a>mitted/sqlprovider/User.html#User">User</a> user = <strong class="jxr_keyword">new</strong> <a name="User" href="../../../../../org/apache/ibatis/submitted/sqlprovider/User.html#User">User</a>();
+<a class="jxr_linenumber" name="L944" href="#L944">944</a>       <a name="User" href="../../../../../org/apache/ibatis/submitted/sqlprovider/User.html#User">User</a> user = <strong class="jxr_keyword">new</strong> <a name="User" href="../../../../../org/apache/ibatis/submitted/sqlprovider/User.html#User">User</a>();
 <a class="jxr_linenumber" name="L945" href="#L945">945</a>       user.setId(999);
 <a class="jxr_linenumber" name="L946" href="#L946">946</a>       user.setName(<span class="jxr_string">"MyBatis"</span>);
 <a class="jxr_linenumber" name="L947" href="#L947">947</a>       mapper.insert(user);
@@ -966,7 +966,7 @@
 <a class="jxr_linenumber" name="L958" href="#L958">958</a>   <strong class="jxr_keyword">void</strong> mapperGetByEntity() {
 <a class="jxr_linenumber" name="L959" href="#L959">959</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L960" href="#L960">960</a>       <a name="Mapper" href="../../../../../org/apache/ibatis/submitted/sqlprovider/Mapper.html#Mapper">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L961" href="#L961">961</a>       <a name="User" href="../../../../../org/apache/ibatis/<a name="User" href="../../../../../org/apache/ibatis/submitted/sqlprovider/User.html#User">User</a>itted/sqlprovider/User.html#User">User</a> query = <strong class="jxr_keyword">new</strong> <a name="User" href="../../../../../org/apache/ibatis/submitted/sqlprovider/User.html#User">User</a>();
+<a class="jxr_linenumber" name="L961" href="#L961">961</a>       <a name="User" href="../../../../../org/apache/ibatis/submitted/sqlprovider/User.html#User">User</a> query = <strong class="jxr_keyword">new</strong> <a name="User" href="../../../../../org/apache/ibatis/submitted/sqlprovider/User.html#User">User</a>();
 <a class="jxr_linenumber" name="L962" href="#L962">962</a>       query.setName(<span class="jxr_string">"User4"</span>);
 <a class="jxr_linenumber" name="L963" href="#L963">963</a>       assertEquals(1, mapper.getByEntity(query).size());
 <a class="jxr_linenumber" name="L964" href="#L964">964</a>       query = <strong class="jxr_keyword">new</strong> <a name="User" href="../../../../../org/apache/ibatis/submitted/sqlprovider/User.html#User">User</a>();

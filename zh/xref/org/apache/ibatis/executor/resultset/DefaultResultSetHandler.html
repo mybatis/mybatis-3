@@ -6,21 +6,21 @@
 </head>
 <body>
 <div id="overview"><a href="../../../../../../../apidocs/org/apache/ibatis/executor/resultset/DefaultResultSetHandler.html">View Javadoc</a></div><pre>
-<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2021 the original author or authors.</em>
-<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
-<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
-<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_javadoccomment"> *    You may obtain a copy of the License at</em>
-<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
-<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_javadoccomment"> *    Unless required by applicable law or agreed to in writing, software</em>
-<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_javadoccomment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
-<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_javadoccomment"> *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</em>
-<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_javadoccomment"> *    See the License for the specific language governing permissions and</em>
-<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_javadoccomment"> *    limitations under the License.</em>
-<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2021 the original author or authors.</em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> *    You may obtain a copy of the License at</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_comment"> *    Unless required by applicable law or agreed to in writing, software</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_comment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_comment"> *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_comment"> *    See the License for the specific language governing permissions and</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_comment"> *    limitations under the License.</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> */</em>
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">package</strong> org.apache.ibatis.executor.resultset;
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> java.lang.reflect.Constructor;
@@ -169,9 +169,9 @@
 <a class="jxr_linenumber" name="L161" href="#L161">161</a>     <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L162" href="#L162">162</a>       <strong class="jxr_keyword">final</strong> String resultMapId = parameterMapping.getResultMapId();
 <a class="jxr_linenumber" name="L163" href="#L163">163</a>       <strong class="jxr_keyword">final</strong> <a name="ResultMap" href="../../../../../org/apache/ibatis/mapping/ResultMap.html#ResultMap">ResultMap</a> resultMap = configuration.getResultMap(resultMapId);
-<a class="jxr_linenumber" name="L164" href="#L164">164</a>       <strong class="jxr_keyword">final</strong> <a name="ResultSetWrapper" href="../../../../../org/apache/ibati<a name="ResultSetWrapper" href="../../../../../org/apache/ibatis/executor/resultset/ResultSetWrapper.html#ResultSetWrapper">ResultSetWrapper</a>tset/ResultSetWrapper.html#ResultSetWrapper">ResultSetWrapper</a> rsw = <strong class="jxr_keyword">new</strong> <a name="ResultSetWrapper" href="../../../../../org/apache/ibatis/executor/resultset/ResultSetWrapper.html#ResultSetWrapper">ResultSetWrapper</a>(rs, configuration);
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>       <strong class="jxr_keyword">final</strong> <a name="ResultSetWrapper" href="../../../../../org/apache/ibatis/executor/resultset/ResultSetWrapper.html#ResultSetWrapper">ResultSetWrapper</a> rsw = <strong class="jxr_keyword">new</strong> <a name="ResultSetWrapper" href="../../../../../org/apache/ibatis/executor/resultset/ResultSetWrapper.html#ResultSetWrapper">ResultSetWrapper</a>(rs, configuration);
 <a class="jxr_linenumber" name="L165" href="#L165">165</a>       <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">this</strong>.resultHandler == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L166" href="#L166">166</a>         <strong class="jxr_keyword">final</strong> <a name="DefaultResultHandler" href="../../../../../org/apache/ibatis/executor<a name="DefaultResultHandler" href="../../../../../org/apache/ibatis/executor/result/DefaultResultHandler.html#DefaultResultHandler">DefaultResultHandler</a>tHandler.html#DefaultResultHandler">DefaultResultHandler</a> resultHandler = <strong class="jxr_keyword">new</strong> <a name="DefaultResultHandler" href="../../../../../org/apache/ibatis/executor/result/DefaultResultHandler.html#DefaultResultHandler">DefaultResultHandler</a>(objectFactory);
+<a class="jxr_linenumber" name="L166" href="#L166">166</a>         <strong class="jxr_keyword">final</strong> <a name="DefaultResultHandler" href="../../../../../org/apache/ibatis/executor/result/DefaultResultHandler.html#DefaultResultHandler">DefaultResultHandler</a> resultHandler = <strong class="jxr_keyword">new</strong> <a name="DefaultResultHandler" href="../../../../../org/apache/ibatis/executor/result/DefaultResultHandler.html#DefaultResultHandler">DefaultResultHandler</a>(objectFactory);
 <a class="jxr_linenumber" name="L167" href="#L167">167</a>         handleRowValues(rsw, resultMap, resultHandler, <strong class="jxr_keyword">new</strong> <a name="RowBounds" href="../../../../../org/apache/ibatis/session/RowBounds.html#RowBounds">RowBounds</a>(), <strong class="jxr_keyword">null</strong>);
 <a class="jxr_linenumber" name="L168" href="#L168">168</a>         metaParam.setValue(parameterMapping.getProperty(), resultHandler.getResultList());
 <a class="jxr_linenumber" name="L169" href="#L169">169</a>       } <strong class="jxr_keyword">else</strong> {
@@ -306,7 +306,7 @@
 <a class="jxr_linenumber" name="L298" href="#L298">298</a>         handleRowValues(rsw, resultMap, <strong class="jxr_keyword">null</strong>, RowBounds.DEFAULT, parentMapping);
 <a class="jxr_linenumber" name="L299" href="#L299">299</a>       } <strong class="jxr_keyword">else</strong> {
 <a class="jxr_linenumber" name="L300" href="#L300">300</a>         <strong class="jxr_keyword">if</strong> (resultHandler == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L301" href="#L301">301</a>           <a name="DefaultResultHandler" href="../../../../../org/apache/ibatis/executor/result<a name="DefaultResultHandler" href="../../../../../org/apache/ibatis/executor/result/DefaultResultHandler.html#DefaultResultHandler">DefaultResultHandler</a>r.html#DefaultResultHandler">DefaultResultHandler</a> defaultResultHandler = <strong class="jxr_keyword">new</strong> <a name="DefaultResultHandler" href="../../../../../org/apache/ibatis/executor/result/DefaultResultHandler.html#DefaultResultHandler">DefaultResultHandler</a>(objectFactory);
+<a class="jxr_linenumber" name="L301" href="#L301">301</a>           <a name="DefaultResultHandler" href="../../../../../org/apache/ibatis/executor/result/DefaultResultHandler.html#DefaultResultHandler">DefaultResultHandler</a> defaultResultHandler = <strong class="jxr_keyword">new</strong> <a name="DefaultResultHandler" href="../../../../../org/apache/ibatis/executor/result/DefaultResultHandler.html#DefaultResultHandler">DefaultResultHandler</a>(objectFactory);
 <a class="jxr_linenumber" name="L302" href="#L302">302</a>           handleRowValues(rsw, resultMap, defaultResultHandler, rowBounds, <strong class="jxr_keyword">null</strong>);
 <a class="jxr_linenumber" name="L303" href="#L303">303</a>           multipleResults.add(defaultResultHandler.getResultList());
 <a class="jxr_linenumber" name="L304" href="#L304">304</a>         } <strong class="jxr_keyword">else</strong> {
@@ -402,7 +402,7 @@
 <a class="jxr_linenumber" name="L394" href="#L394">394</a>   <em class="jxr_comment">//</em>
 <a class="jxr_linenumber" name="L395" href="#L395">395</a> 
 <a class="jxr_linenumber" name="L396" href="#L396">396</a>   <strong class="jxr_keyword">private</strong> Object getRowValue(<a name="ResultSetWrapper" href="../../../../../org/apache/ibatis/executor/resultset/ResultSetWrapper.html#ResultSetWrapper">ResultSetWrapper</a> rsw, <a name="ResultMap" href="../../../../../org/apache/ibatis/mapping/ResultMap.html#ResultMap">ResultMap</a> resultMap, String columnPrefix) <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L397" href="#L397">397</a>     <strong class="jxr_keyword">final</strong> <a name="ResultLoaderMap" href="../../../../../org/apache/ibatis/execu<a name="ResultLoaderMap" href="../../../../../org/apache/ibatis/executor/loader/ResultLoaderMap.html#ResultLoaderMap">ResultLoaderMap</a>ltLoaderMap.html#ResultLoaderMap">ResultLoaderMap</a> lazyLoader = <strong class="jxr_keyword">new</strong> <a name="ResultLoaderMap" href="../../../../../org/apache/ibatis/executor/loader/ResultLoaderMap.html#ResultLoaderMap">ResultLoaderMap</a>();
+<a class="jxr_linenumber" name="L397" href="#L397">397</a>     <strong class="jxr_keyword">final</strong> <a name="ResultLoaderMap" href="../../../../../org/apache/ibatis/executor/loader/ResultLoaderMap.html#ResultLoaderMap">ResultLoaderMap</a> lazyLoader = <strong class="jxr_keyword">new</strong> <a name="ResultLoaderMap" href="../../../../../org/apache/ibatis/executor/loader/ResultLoaderMap.html#ResultLoaderMap">ResultLoaderMap</a>();
 <a class="jxr_linenumber" name="L398" href="#L398">398</a>     Object rowValue = createResultObject(rsw, resultMap, lazyLoader, columnPrefix);
 <a class="jxr_linenumber" name="L399" href="#L399">399</a>     <strong class="jxr_keyword">if</strong> (rowValue != <strong class="jxr_keyword">null</strong> &amp;&amp; !hasTypeHandlerForResultObject(rsw, resultMap.getType())) {
 <a class="jxr_linenumber" name="L400" href="#L400">400</a>       <strong class="jxr_keyword">final</strong> <a name="MetaObject" href="../../../../../org/apache/ibatis/reflection/MetaObject.html#MetaObject">MetaObject</a> metaObject = configuration.newMetaObject(rowValue);
@@ -430,7 +430,7 @@
 <a class="jxr_linenumber" name="L422" href="#L422">422</a>       applyNestedResultMappings(rsw, resultMap, metaObject, columnPrefix, combinedKey, false);
 <a class="jxr_linenumber" name="L423" href="#L423">423</a>       ancestorObjects.remove(resultMapId);
 <a class="jxr_linenumber" name="L424" href="#L424">424</a>     } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L425" href="#L425">425</a>       <strong class="jxr_keyword">final</strong> <a name="ResultLoaderMap" href="../../../../../org/apache/ibatis/execu<a name="ResultLoaderMap" href="../../../../../org/apache/ibatis/executor/loader/ResultLoaderMap.html#ResultLoaderMap">ResultLoaderMap</a>ltLoaderMap.html#ResultLoaderMap">ResultLoaderMap</a> lazyLoader = <strong class="jxr_keyword">new</strong> <a name="ResultLoaderMap" href="../../../../../org/apache/ibatis/executor/loader/ResultLoaderMap.html#ResultLoaderMap">ResultLoaderMap</a>();
+<a class="jxr_linenumber" name="L425" href="#L425">425</a>       <strong class="jxr_keyword">final</strong> <a name="ResultLoaderMap" href="../../../../../org/apache/ibatis/executor/loader/ResultLoaderMap.html#ResultLoaderMap">ResultLoaderMap</a> lazyLoader = <strong class="jxr_keyword">new</strong> <a name="ResultLoaderMap" href="../../../../../org/apache/ibatis/executor/loader/ResultLoaderMap.html#ResultLoaderMap">ResultLoaderMap</a>();
 <a class="jxr_linenumber" name="L426" href="#L426">426</a>       rowValue = createResultObject(rsw, resultMap, lazyLoader, columnPrefix);
 <a class="jxr_linenumber" name="L427" href="#L427">427</a>       <strong class="jxr_keyword">if</strong> (rowValue != <strong class="jxr_keyword">null</strong> &amp;&amp; !hasTypeHandlerForResultObject(rsw, resultMap.getType())) {
 <a class="jxr_linenumber" name="L428" href="#L428">428</a>         <strong class="jxr_keyword">final</strong> <a name="MetaObject" href="../../../../../org/apache/ibatis/reflection/MetaObject.html#MetaObject">MetaObject</a> metaObject = configuration.newMetaObject(rowValue);
@@ -612,7 +612,7 @@
 <a class="jxr_linenumber" name="L604" href="#L604">604</a>   }
 <a class="jxr_linenumber" name="L605" href="#L605">605</a> 
 <a class="jxr_linenumber" name="L606" href="#L606">606</a>   <strong class="jxr_keyword">private</strong> <a name="CacheKey" href="../../../../../org/apache/ibatis/cache/CacheKey.html#CacheKey">CacheKey</a> createKeyForMultipleResults(ResultSet rs, <a name="ResultMapping" href="../../../../../org/apache/ibatis/mapping/ResultMapping.html#ResultMapping">ResultMapping</a> resultMapping, String names, String columns) <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L607" href="#L607">607</a>     <a name="CacheKey" href="../../../../../org/apache/ibatis/cac<a name="CacheKey" href="../../../../../org/apache/ibatis/cache/CacheKey.html#CacheKey">CacheKey</a>Key.html#CacheKey">CacheKey</a> cacheKey = <strong class="jxr_keyword">new</strong> <a name="CacheKey" href="../../../../../org/apache/ibatis/cache/CacheKey.html#CacheKey">CacheKey</a>();
+<a class="jxr_linenumber" name="L607" href="#L607">607</a>     <a name="CacheKey" href="../../../../../org/apache/ibatis/cache/CacheKey.html#CacheKey">CacheKey</a> cacheKey = <strong class="jxr_keyword">new</strong> <a name="CacheKey" href="../../../../../org/apache/ibatis/cache/CacheKey.html#CacheKey">CacheKey</a>();
 <a class="jxr_linenumber" name="L608" href="#L608">608</a>     cacheKey.update(resultMapping);
 <a class="jxr_linenumber" name="L609" href="#L609">609</a>     <strong class="jxr_keyword">if</strong> (columns != <strong class="jxr_keyword">null</strong> &amp;&amp; names != <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L610" href="#L610">610</a>       String[] columnsArray = columns.split(<span class="jxr_string">","</span>);
@@ -778,7 +778,7 @@
 <a class="jxr_linenumber" name="L770" href="#L770">770</a>       <strong class="jxr_keyword">final</strong> <a name="BoundSql" href="../../../../../org/apache/ibatis/mapping/BoundSql.html#BoundSql">BoundSql</a> nestedBoundSql = nestedQuery.getBoundSql(nestedQueryParameterObject);
 <a class="jxr_linenumber" name="L771" href="#L771">771</a>       <strong class="jxr_keyword">final</strong> <a name="CacheKey" href="../../../../../org/apache/ibatis/cache/CacheKey.html#CacheKey">CacheKey</a> key = executor.createCacheKey(nestedQuery, nestedQueryParameterObject, RowBounds.DEFAULT, nestedBoundSql);
 <a class="jxr_linenumber" name="L772" href="#L772">772</a>       <strong class="jxr_keyword">final</strong> Class&lt;?&gt; targetType = constructorMapping.getJavaType();
-<a class="jxr_linenumber" name="L773" href="#L773">773</a>       <strong class="jxr_keyword">final</strong> <a name="ResultLoader" href="../../../../../org/apache/ibatis/executo<a name="ResultLoader" href="../../../../../org/apache/ibatis/executor/loader/ResultLoader.html#ResultLoader">ResultLoader</a>ultLoader.html#ResultLoader">ResultLoader</a> resultLoader = <strong class="jxr_keyword">new</strong> <a name="ResultLoader" href="../../../../../org/apache/ibatis/executor/loader/ResultLoader.html#ResultLoader">ResultLoader</a>(configuration, executor, nestedQuery, nestedQueryParameterObject, targetType, key, nestedBoundSql);
+<a class="jxr_linenumber" name="L773" href="#L773">773</a>       <strong class="jxr_keyword">final</strong> <a name="ResultLoader" href="../../../../../org/apache/ibatis/executor/loader/ResultLoader.html#ResultLoader">ResultLoader</a> resultLoader = <strong class="jxr_keyword">new</strong> <a name="ResultLoader" href="../../../../../org/apache/ibatis/executor/loader/ResultLoader.html#ResultLoader">ResultLoader</a>(configuration, executor, nestedQuery, nestedQueryParameterObject, targetType, key, nestedBoundSql);
 <a class="jxr_linenumber" name="L774" href="#L774">774</a>       value = resultLoader.loadResult();
 <a class="jxr_linenumber" name="L775" href="#L775">775</a>     }
 <a class="jxr_linenumber" name="L776" href="#L776">776</a>     <strong class="jxr_keyword">return</strong> value;
@@ -800,7 +800,7 @@
 <a class="jxr_linenumber" name="L792" href="#L792">792</a>         executor.deferLoad(nestedQuery, metaResultObject, property, key, targetType);
 <a class="jxr_linenumber" name="L793" href="#L793">793</a>         value = DEFERRED;
 <a class="jxr_linenumber" name="L794" href="#L794">794</a>       } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L795" href="#L795">795</a>         <strong class="jxr_keyword">final</strong> <a name="ResultLoader" href="../../../../../org/apache/ibatis/executo<a name="ResultLoader" href="../../../../../org/apache/ibatis/executor/loader/ResultLoader.html#ResultLoader">ResultLoader</a>ultLoader.html#ResultLoader">ResultLoader</a> resultLoader = <strong class="jxr_keyword">new</strong> <a name="ResultLoader" href="../../../../../org/apache/ibatis/executor/loader/ResultLoader.html#ResultLoader">ResultLoader</a>(configuration, executor, nestedQuery, nestedQueryParameterObject, targetType, key, nestedBoundSql);
+<a class="jxr_linenumber" name="L795" href="#L795">795</a>         <strong class="jxr_keyword">final</strong> <a name="ResultLoader" href="../../../../../org/apache/ibatis/executor/loader/ResultLoader.html#ResultLoader">ResultLoader</a> resultLoader = <strong class="jxr_keyword">new</strong> <a name="ResultLoader" href="../../../../../org/apache/ibatis/executor/loader/ResultLoader.html#ResultLoader">ResultLoader</a>(configuration, executor, nestedQuery, nestedQueryParameterObject, targetType, key, nestedBoundSql);
 <a class="jxr_linenumber" name="L796" href="#L796">796</a>         <strong class="jxr_keyword">if</strong> (propertyMapping.isLazy()) {
 <a class="jxr_linenumber" name="L797" href="#L797">797</a>           lazyLoader.addLoader(property, metaResultObject, resultLoader);
 <a class="jxr_linenumber" name="L798" href="#L798">798</a>           value = DEFERRED;
@@ -861,7 +861,7 @@
 <a class="jxr_linenumber" name="L853" href="#L853">853</a>   <em class="jxr_comment">// DISCRIMINATOR</em>
 <a class="jxr_linenumber" name="L854" href="#L854">854</a>   <em class="jxr_comment">//</em>
 <a class="jxr_linenumber" name="L855" href="#L855">855</a> 
-<a class="jxr_linenumber" name="L856" href="#L856">856</a>   <strong class="jxr_keyword">public</strong> <a name="ResultMap" href="../../../../../org/apache/ib<a name="ResultMap" href="../../../../../org/apache/ibatis/mapping/ResultMap.html#ResultMap">ResultMap</a>ing/ResultMap.html#ResultMap">ResultMap</a> resolveDiscriminatedResultMap(ResultSet rs, <a name="ResultMap" href="../../../../../org/apache/ibatis/annotations/ResultMap.html#ResultMap">ResultMap</a> resultMap, String columnPrefix) <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L856" href="#L856">856</a>   <strong class="jxr_keyword">public</strong> <a name="ResultMap" href="../../../../../org/apache/ibatis/mapping/ResultMap.html#ResultMap">ResultMap</a> resolveDiscriminatedResultMap(ResultSet rs, <a name="ResultMap" href="../../../../../org/apache/ibatis/mapping/ResultMap.html#ResultMap">ResultMap</a> resultMap, String columnPrefix) <strong class="jxr_keyword">throws</strong> SQLException {
 <a class="jxr_linenumber" name="L857" href="#L857">857</a>     Set&lt;String&gt; pastDiscriminators = <strong class="jxr_keyword">new</strong> HashSet&lt;&gt;();
 <a class="jxr_linenumber" name="L858" href="#L858">858</a>     <a name="Discriminator" href="../../../../../org/apache/ibatis/mapping/Discriminator.html#Discriminator">Discriminator</a> discriminator = resultMap.getDiscriminator();
 <a class="jxr_linenumber" name="L859" href="#L859">859</a>     <strong class="jxr_keyword">while</strong> (discriminator != <strong class="jxr_keyword">null</strong>) {
@@ -996,7 +996,7 @@
 <a class="jxr_linenumber" name="L988" href="#L988">988</a>       <strong class="jxr_keyword">return</strong> false;
 <a class="jxr_linenumber" name="L989" href="#L989">989</a>     } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (columnPrefix != <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L990" href="#L990">990</a>       <strong class="jxr_keyword">for</strong> (String columnName : rsw.getColumnNames()) {
-<a class="jxr_linenumber" name="L991" href="#L991">991</a>         <strong class="jxr_keyword">if</strong> (columnName.toUpperCase().startsWith(columnPrefix.toUpperCase())) {
+<a class="jxr_linenumber" name="L991" href="#L991">991</a>         <strong class="jxr_keyword">if</strong> (columnName.toUpperCase(Locale.ENGLISH).startsWith(columnPrefix.toUpperCase(Locale.ENGLISH))) {
 <a class="jxr_linenumber" name="L992" href="#L992">992</a>           <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">true</strong>;
 <a class="jxr_linenumber" name="L993" href="#L993">993</a>         }
 <a class="jxr_linenumber" name="L994" href="#L994">994</a>       }
@@ -1015,7 +1015,7 @@
 <a class="jxr_linenumber" name="L1007" href="#L1007">1007</a>   <em class="jxr_comment">//</em>
 <a class="jxr_linenumber" name="L1008" href="#L1008">1008</a> 
 <a class="jxr_linenumber" name="L1009" href="#L1009">1009</a>   <strong class="jxr_keyword">private</strong> <a name="CacheKey" href="../../../../../org/apache/ibatis/cache/CacheKey.html#CacheKey">CacheKey</a> createRowKey(<a name="ResultMap" href="../../../../../org/apache/ibatis/mapping/ResultMap.html#ResultMap">ResultMap</a> resultMap, <a name="ResultSetWrapper" href="../../../../../org/apache/ibatis/executor/resultset/ResultSetWrapper.html#ResultSetWrapper">ResultSetWrapper</a> rsw, String columnPrefix) <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L1010" href="#L1010">1010</a>     <strong class="jxr_keyword">final</strong> <a name="CacheKey" href="../../../../../org/apache/ibatis/cac<a name="CacheKey" href="../../../../../org/apache/ibatis/cache/CacheKey.html#CacheKey">CacheKey</a>Key.html#CacheKey">CacheKey</a> cacheKey = <strong class="jxr_keyword">new</strong> <a name="CacheKey" href="../../../../../org/apache/ibatis/cache/CacheKey.html#CacheKey">CacheKey</a>();
+<a class="jxr_linenumber" name="L1010" href="#L1010">1010</a>     <strong class="jxr_keyword">final</strong> <a name="CacheKey" href="../../../../../org/apache/ibatis/cache/CacheKey.html#CacheKey">CacheKey</a> cacheKey = <strong class="jxr_keyword">new</strong> <a name="CacheKey" href="../../../../../org/apache/ibatis/cache/CacheKey.html#CacheKey">CacheKey</a>();
 <a class="jxr_linenumber" name="L1011" href="#L1011">1011</a>     cacheKey.update(resultMap.getId());
 <a class="jxr_linenumber" name="L1012" href="#L1012">1012</a>     List&lt;ResultMapping&gt; resultMappings = getResultMappingsForRowKey(resultMap);
 <a class="jxr_linenumber" name="L1013" href="#L1013">1013</a>     <strong class="jxr_keyword">if</strong> (resultMappings.isEmpty()) {
@@ -1033,7 +1033,7 @@
 <a class="jxr_linenumber" name="L1025" href="#L1025">1025</a>     <strong class="jxr_keyword">return</strong> cacheKey;
 <a class="jxr_linenumber" name="L1026" href="#L1026">1026</a>   }
 <a class="jxr_linenumber" name="L1027" href="#L1027">1027</a> 
-<a class="jxr_linenumber" name="L1028" href="#L1028">1028</a>   <strong class="jxr_keyword">private</strong> <a name="CacheKey" hr<a name="CacheKey<a name="CacheKey" href="../../../../../org/apache/ibatis/cache/CacheKey.html#CacheKey">CacheKey</a>../../../../../org/apache/ibatis/cache/CacheKey.html#CacheKey">CacheKey</a>./../../../org/apache/ibatis/cache/CacheKey.html#CacheKey">CacheKey</a> combineKeys(<a name="CacheKey<a name="CacheKey" href="../../../../../org/apache/ibatis/cache/CacheKey.html#CacheKey">CacheKey</a>../../../../../org/apache/ibatis/cache/CacheKey.html#CacheKey">CacheKey</a> rowKey, <a name="CacheKey" href="../../../../../org/apache/ibatis/cache/CacheKey.html#CacheKey">CacheKey</a> parentRowKey) {
+<a class="jxr_linenumber" name="L1028" href="#L1028">1028</a>   <strong class="jxr_keyword">private</strong> <a name="CacheKey" href="../../../../../org/apache/ibatis/cache/CacheKey.html#CacheKey">CacheKey</a> combineKeys(<a name="CacheKey" href="../../../../../org/apache/ibatis/cache/CacheKey.html#CacheKey">CacheKey</a> rowKey, <a name="CacheKey" href="../../../../../org/apache/ibatis/cache/CacheKey.html#CacheKey">CacheKey</a> parentRowKey) {
 <a class="jxr_linenumber" name="L1029" href="#L1029">1029</a>     <strong class="jxr_keyword">if</strong> (rowKey.getUpdateCount() &gt; 1 &amp;&amp; parentRowKey.getUpdateCount() &gt; 1) {
 <a class="jxr_linenumber" name="L1030" href="#L1030">1030</a>       <a name="CacheKey" href="../../../../../org/apache/ibatis/cache/CacheKey.html#CacheKey">CacheKey</a> combinedKey;
 <a class="jxr_linenumber" name="L1031" href="#L1031">1031</a>       <strong class="jxr_keyword">try</strong> {

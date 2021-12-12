@@ -6,21 +6,21 @@
 </head>
 <body>
 <div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/reflection/MetaObjectTest.html">View Javadoc</a></div><pre>
-<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2020 the original author or authors.</em>
-<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
-<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
-<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_javadoccomment"> *    You may obtain a copy of the License at</em>
-<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
-<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_javadoccomment"> *    Unless required by applicable law or agreed to in writing, software</em>
-<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_javadoccomment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
-<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_javadoccomment"> *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</em>
-<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_javadoccomment"> *    See the License for the specific language governing permissions and</em>
-<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_javadoccomment"> *    limitations under the License.</em>
-<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2021 the original author or authors.</em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> *    You may obtain a copy of the License at</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_comment"> *    Unless required by applicable law or agreed to in writing, software</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_comment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_comment"> *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_comment"> *    See the License for the specific language governing permissions and</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_comment"> *    limitations under the License.</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> */</em>
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">package</strong> org.apache.ibatis.reflection;
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.jupiter.api.Assertions.*;
@@ -42,7 +42,7 @@
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>  
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>    @Test
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>    <strong class="jxr_keyword">void</strong> shouldGetAndSetField() {
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>      <a name="RichType" href="../../../../org/apache/ibatis/do<a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a>c/RichType.html#RichType">RichType</a> rich = <strong class="jxr_keyword">new</strong> <a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a>();
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>      <a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a> rich = <strong class="jxr_keyword">new</strong> <a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a>();
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>      MetaObject meta = SystemMetaObject.forObject(rich);
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>      meta.setValue(<span class="jxr_string">"richField"</span>, <span class="jxr_string">"foo"</span>);
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>      assertEquals(<span class="jxr_string">"foo"</span>, meta.getValue(<span class="jxr_string">"richField"</span>));
@@ -50,7 +50,7 @@
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>  
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>    @Test
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>    <strong class="jxr_keyword">void</strong> shouldGetAndSetNestedField() {
-<a class="jxr_linenumber" name="L45" href="#L45">45</a>      <a name="RichType" href="../../../../org/apache/ibatis/do<a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a>c/RichType.html#RichType">RichType</a> rich = <strong class="jxr_keyword">new</strong> <a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a>();
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>      <a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a> rich = <strong class="jxr_keyword">new</strong> <a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a>();
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>      MetaObject meta = SystemMetaObject.forObject(rich);
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>      meta.setValue(<span class="jxr_string">"richType.richField"</span>, <span class="jxr_string">"foo"</span>);
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>      assertEquals(<span class="jxr_string">"foo"</span>, meta.getValue(<span class="jxr_string">"richType.richField"</span>));
@@ -58,7 +58,7 @@
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>  
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>    @Test
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>    <strong class="jxr_keyword">void</strong> shouldGetAndSetProperty() {
-<a class="jxr_linenumber" name="L53" href="#L53">53</a>      <a name="RichType" href="../../../../org/apache/ibatis/do<a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a>c/RichType.html#RichType">RichType</a> rich = <strong class="jxr_keyword">new</strong> <a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a>();
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>      <a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a> rich = <strong class="jxr_keyword">new</strong> <a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a>();
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>      MetaObject meta = SystemMetaObject.forObject(rich);
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>      meta.setValue(<span class="jxr_string">"richProperty"</span>, <span class="jxr_string">"foo"</span>);
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>      assertEquals(<span class="jxr_string">"foo"</span>, meta.getValue(<span class="jxr_string">"richProperty"</span>));
@@ -66,7 +66,7 @@
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>  
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>    @Test
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>    <strong class="jxr_keyword">void</strong> shouldGetAndSetNestedProperty() {
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>      <a name="RichType" href="../../../../org/apache/ibatis/do<a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a>c/RichType.html#RichType">RichType</a> rich = <strong class="jxr_keyword">new</strong> <a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a>();
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>      <a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a> rich = <strong class="jxr_keyword">new</strong> <a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a>();
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>      MetaObject meta = SystemMetaObject.forObject(rich);
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>      meta.setValue(<span class="jxr_string">"richType.richProperty"</span>, <span class="jxr_string">"foo"</span>);
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>      assertEquals(<span class="jxr_string">"foo"</span>, meta.getValue(<span class="jxr_string">"richType.richProperty"</span>));
@@ -74,7 +74,7 @@
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>  
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>    @Test
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>    <strong class="jxr_keyword">void</strong> shouldGetAndSetMapPair() {
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>      <a name="RichType" href="../../../../org/apache/ibatis/do<a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a>c/RichType.html#RichType">RichType</a> rich = <strong class="jxr_keyword">new</strong> <a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a>();
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>      <a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a> rich = <strong class="jxr_keyword">new</strong> <a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a>();
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>      MetaObject meta = SystemMetaObject.forObject(rich);
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>      meta.setValue(<span class="jxr_string">"richMap.key"</span>, <span class="jxr_string">"foo"</span>);
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>      assertEquals(<span class="jxr_string">"foo"</span>, meta.getValue(<span class="jxr_string">"richMap.key"</span>));
@@ -82,7 +82,7 @@
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>  
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>    @Test
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>    <strong class="jxr_keyword">void</strong> shouldGetAndSetMapPairUsingArraySyntax() {
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>      <a name="RichType" href="../../../../org/apache/ibatis/do<a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a>c/RichType.html#RichType">RichType</a> rich = <strong class="jxr_keyword">new</strong> <a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a>();
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>      <a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a> rich = <strong class="jxr_keyword">new</strong> <a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a>();
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>      MetaObject meta = SystemMetaObject.forObject(rich);
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>      meta.setValue(<span class="jxr_string">"richMap[key]"</span>, <span class="jxr_string">"foo"</span>);
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>      assertEquals(<span class="jxr_string">"foo"</span>, meta.getValue(<span class="jxr_string">"richMap[key]"</span>));
@@ -90,7 +90,7 @@
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>  
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>    @Test
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>    <strong class="jxr_keyword">void</strong> shouldGetAndSetNestedMapPair() {
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>      <a name="RichType" href="../../../../org/apache/ibatis/do<a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a>c/RichType.html#RichType">RichType</a> rich = <strong class="jxr_keyword">new</strong> <a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a>();
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>      <a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a> rich = <strong class="jxr_keyword">new</strong> <a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a>();
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>      MetaObject meta = SystemMetaObject.forObject(rich);
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>      meta.setValue(<span class="jxr_string">"richType.richMap.key"</span>, <span class="jxr_string">"foo"</span>);
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>      assertEquals(<span class="jxr_string">"foo"</span>, meta.getValue(<span class="jxr_string">"richType.richMap.key"</span>));
@@ -98,7 +98,7 @@
 <a class="jxr_linenumber" name="L90" href="#L90">90</a>  
 <a class="jxr_linenumber" name="L91" href="#L91">91</a>    @Test
 <a class="jxr_linenumber" name="L92" href="#L92">92</a>    <strong class="jxr_keyword">void</strong> shouldGetAndSetNestedMapPairUsingArraySyntax() {
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>      <a name="RichType" href="../../../../org/apache/ibatis/do<a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a>c/RichType.html#RichType">RichType</a> rich = <strong class="jxr_keyword">new</strong> <a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a>();
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>      <a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a> rich = <strong class="jxr_keyword">new</strong> <a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a>();
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>      MetaObject meta = SystemMetaObject.forObject(rich);
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>      meta.setValue(<span class="jxr_string">"richType.richMap[key]"</span>, <span class="jxr_string">"foo"</span>);
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>      assertEquals(<span class="jxr_string">"foo"</span>, meta.getValue(<span class="jxr_string">"richType.richMap[key]"</span>));
@@ -106,7 +106,7 @@
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>  
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>    @Test
 <a class="jxr_linenumber" name="L100" href="#L100">100</a>   <strong class="jxr_keyword">void</strong> shouldGetAndSetListItem() {
-<a class="jxr_linenumber" name="L101" href="#L101">101</a>     <a name="RichType" href="../../../../org/apache/ibatis/do<a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a>c/RichType.html#RichType">RichType</a> rich = <strong class="jxr_keyword">new</strong> <a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a>();
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>     <a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a> rich = <strong class="jxr_keyword">new</strong> <a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a>();
 <a class="jxr_linenumber" name="L102" href="#L102">102</a>     MetaObject meta = SystemMetaObject.forObject(rich);
 <a class="jxr_linenumber" name="L103" href="#L103">103</a>     meta.setValue(<span class="jxr_string">"richList[0]"</span>, <span class="jxr_string">"foo"</span>);
 <a class="jxr_linenumber" name="L104" href="#L104">104</a>     assertEquals(<span class="jxr_string">"foo"</span>, meta.getValue(<span class="jxr_string">"richList[0]"</span>));
@@ -114,7 +114,7 @@
 <a class="jxr_linenumber" name="L106" href="#L106">106</a> 
 <a class="jxr_linenumber" name="L107" href="#L107">107</a>   @Test
 <a class="jxr_linenumber" name="L108" href="#L108">108</a>   <strong class="jxr_keyword">void</strong> shouldGetAndSetNestedListItem() {
-<a class="jxr_linenumber" name="L109" href="#L109">109</a>     <a name="RichType" href="../../../../org/apache/ibatis/do<a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a>c/RichType.html#RichType">RichType</a> rich = <strong class="jxr_keyword">new</strong> <a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a>();
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>     <a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a> rich = <strong class="jxr_keyword">new</strong> <a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a>();
 <a class="jxr_linenumber" name="L110" href="#L110">110</a>     MetaObject meta = SystemMetaObject.forObject(rich);
 <a class="jxr_linenumber" name="L111" href="#L111">111</a>     meta.setValue(<span class="jxr_string">"richType.richList[0]"</span>, <span class="jxr_string">"foo"</span>);
 <a class="jxr_linenumber" name="L112" href="#L112">112</a>     assertEquals(<span class="jxr_string">"foo"</span>, meta.getValue(<span class="jxr_string">"richType.richList[0]"</span>));
@@ -122,7 +122,7 @@
 <a class="jxr_linenumber" name="L114" href="#L114">114</a> 
 <a class="jxr_linenumber" name="L115" href="#L115">115</a>   @Test
 <a class="jxr_linenumber" name="L116" href="#L116">116</a>   <strong class="jxr_keyword">void</strong> shouldGetReadablePropertyNames() {
-<a class="jxr_linenumber" name="L117" href="#L117">117</a>     <a name="RichType" href="../../../../org/apache/ibatis/do<a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a>c/RichType.html#RichType">RichType</a> rich = <strong class="jxr_keyword">new</strong> <a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a>();
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>     <a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a> rich = <strong class="jxr_keyword">new</strong> <a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a>();
 <a class="jxr_linenumber" name="L118" href="#L118">118</a>     MetaObject meta = SystemMetaObject.forObject(rich);
 <a class="jxr_linenumber" name="L119" href="#L119">119</a>     String[] readables = meta.getGetterNames();
 <a class="jxr_linenumber" name="L120" href="#L120">120</a>     assertEquals(5, readables.length);
@@ -135,7 +135,7 @@
 <a class="jxr_linenumber" name="L127" href="#L127">127</a> 
 <a class="jxr_linenumber" name="L128" href="#L128">128</a>   @Test
 <a class="jxr_linenumber" name="L129" href="#L129">129</a>   <strong class="jxr_keyword">void</strong> shouldGetWriteablePropertyNames() {
-<a class="jxr_linenumber" name="L130" href="#L130">130</a>     <a name="RichType" href="../../../../org/apache/ibatis/do<a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a>c/RichType.html#RichType">RichType</a> rich = <strong class="jxr_keyword">new</strong> <a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a>();
+<a class="jxr_linenumber" name="L130" href="#L130">130</a>     <a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a> rich = <strong class="jxr_keyword">new</strong> <a name="RichType" href="../../../../org/apache/ibatis/domain/misc/RichType.html#RichType">RichType</a>();
 <a class="jxr_linenumber" name="L131" href="#L131">131</a>     MetaObject meta = SystemMetaObject.forObject(rich);
 <a class="jxr_linenumber" name="L132" href="#L132">132</a>     String[] writeables = meta.getSetterNames();
 <a class="jxr_linenumber" name="L133" href="#L133">133</a>     assertEquals(5, writeables.length);
