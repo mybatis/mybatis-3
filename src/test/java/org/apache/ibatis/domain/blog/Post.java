@@ -30,13 +30,6 @@ public class Post {
   private List<Comment> comments;
   private List<Tag> tags;
 
-  public Post() {
-  }
-
-  public Post(int id) {
-    this.id = id;
-  }
-
   public int getId() {
     return id;
   }

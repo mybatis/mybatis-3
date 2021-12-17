@@ -16,10 +16,4 @@
 package org.apache.ibatis.domain.blog;
 
 public class DraftPost extends Post {
-  public DraftPost() {
-  }
-
-  public DraftPost(int id) {
-    super(id);
-  }
 }

@@ -83,9 +83,6 @@
   </resultMap>
 
   <resultMap id="joinedPost" type="org.apache.ibatis.domain.blog.Post">
-    <constructor>
-      <idArg column="post_id" name="id"/>
-    </constructor>
     <id property="id" column="post_id"/>
     <result property="subject" column="post_subject"/>
     <association property="author" resultMap="joinedAuthor"/>
