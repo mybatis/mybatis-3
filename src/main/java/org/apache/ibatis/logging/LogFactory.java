@@ -67,6 +67,10 @@ public final class LogFactory {
     setImplementation(org.apache.ibatis.logging.commons.JakartaCommonsLoggingImpl.class);
   }
 
+  /**
+   * @deprecated Since 3.5.9 - See https://github.com/mybatis/mybatis-3/issues/1223. This method will remove future.
+   */
+  @Deprecated
   public static synchronized void useLog4JLogging() {
     setImplementation(org.apache.ibatis.logging.log4j.Log4jImpl.class);
   }

@@ -21,7 +21,9 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Eduardo Macarron
+ * @deprecated Since 3.5.9 - See https://github.com/mybatis/mybatis-3/issues/1223. This class will remove future.
  */
+@Deprecated
 public class Log4jImpl implements Log {
 
   private static final String FQCN = Log4jImpl.class.getName();

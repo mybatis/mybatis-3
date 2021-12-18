@@ -28,9 +28,15 @@ import org.apache.ibatis.logging.nologging.NoLoggingImpl;
 import org.apache.ibatis.logging.slf4j.Slf4jImpl;
 import org.apache.ibatis.logging.stdout.StdOutImpl;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 
 class LogFactoryTest {
+
+  @AfterAll
+  static void restore() {
+    LogFactory.useSlf4jLogging();
+  }
 
   @Test
   void shouldUseCommonsLogging() {
