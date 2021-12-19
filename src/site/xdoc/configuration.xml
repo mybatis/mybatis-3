@@ -569,7 +569,7 @@ SqlSessionFactory factory =
                 Specifies which logging implementation MyBatis should use. If this setting is not present logging implementation will be autodiscovered.
               </td>
               <td>
-                SLF4J | LOG4J | LOG4J2 | JDK_LOGGING | COMMONS_LOGGING | STDOUT_LOGGING | NO_LOGGING
+                SLF4J | LOG4J(deprecated since 3.5.9) | LOG4J2 | JDK_LOGGING | COMMONS_LOGGING | STDOUT_LOGGING | NO_LOGGING
               </td>
               <td>
                 Not set

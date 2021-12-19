@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2020 the original author or authors.
+       Copyright 2009-2021 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@
           Log4j 2
         </li>
         <li>
-          Log4j
+          Log4j (3.5.9以降非推奨)
         </li>
         <li>
           JDK logging
@@ -51,24 +51,27 @@
       </p>
       <p>アプリケーションサーバーでは、出荷時のクラスパスに Commons Logging が含まれていることがよくあります（Tomcat や WebSphere は良い例でしょう）。重要なのは、このような環境では MyBatis は Commons Logging を使用するということです。これはつまり、独自の Commons Logging 実装を使う WebSphere のような環境では、あなたが追加した Log4J の設定は無視されるということを意味しています。この現象が厄介なのは、MyBatis が Log4J の設定を無視しているように見えるということです（実は、このような環境では MyBatis が Commons Loggin を使用するため、Log4J の設定が無視されているのです）。クラスパスに Commons Logging を含む環境で動作するアプリケーションでも、mybatis-config.xml に設定を追加することで別のロギング実装を使用することができます。
       </p>
-      <source><![CDATA[<configuration>
+<source><![CDATA[
+<configuration>
   <settings>
     ...
     <setting name="logImpl" value="LOG4J"/>
     ...
   </settings>
-</configuration>]]>
-      </source>
+</configuration>
+]]></source>
       <p>指定可能な値は SLF4J, LOG4J, LOG4J2, JDK_LOGGING, COMMONS_LOGGING, STDOUT_LOGGING, NO_LOGGING ですが、<code>org.apache.ibatis.logging.Log</code> インターフェイスを実装し、コンストラクター引数として String を受け取る独自に実装したクラスの完全修飾クラス名を指定することもできます。
       </p>
       <p>下記のメソッドを呼び出すことでロギング実装を指定することも可能です。
       </p>
-      <source><![CDATA[org.apache.ibatis.logging.LogFactory.useSlf4jLogging();
+<source><![CDATA[
+org.apache.ibatis.logging.LogFactory.useSlf4jLogging();
 org.apache.ibatis.logging.LogFactory.useLog4JLogging();
 org.apache.ibatis.logging.LogFactory.useJdkLogging();
 org.apache.ibatis.logging.LogFactory.useCommonsLogging();
-org.apache.ibatis.logging.LogFactory.useStdOutLogging();]]></source>
-      <p>これらのメソッドは、他の MyBatis のメソッドより前に呼び出す必要があります。また、要求された実装が実行時のクラスパスに含まれている場合にのみ切り替えることが可能です。例えば、Log4J に切り替えようとして、実行時に Log4J が見つからない場合、MyBatis は切り替えの要求を無視して通常のアルゴリズムでロギング実装を検索します。
+org.apache.ibatis.logging.LogFactory.useStdOutLogging();
+]]></source>
+      <p>これらのメソッドは、他の MyBatis のメソッドより前に呼び出す必要があります。また、要求された実装が実行時のクラスパスに含まれている場合にのみ切り替えることが可能です。例えば、Log4J2 に切り替えようとして、実行時に Log4J2 が見つからない場合、MyBatis は切り替えの要求を無視して通常のアルゴリズムでロギング実装を検索します。
       </p>
       <p>SLF4J, Apache Commons Logging, Apache Log4J, JDK Logging API についての詳細はこのドキュメントの範囲外となりますが、後述の設定例は参考になると思います。これらのフレームワークについての詳しい情報は、以下の各サイトを参照してください。
       </p>
@@ -89,54 +92,95 @@ org.apache.ibatis.logging.LogFactory.useStdOutLogging();]]></source>
       <subsection name="Logging Configuration">
         <p>実行されるステートメントのログを出力するためには、パッケージ、Mapper の完全修飾名、ネームスペース、あるいはステートメントの完全修飾名に対してログ出力を有効にしてください。
         </p>
-        <p>具体的な設定方法は使用するロギング実装によります。以下は Log4J での設定例です。ロギングサービスの設定は、単純にいくつかの設定ファイル（例えば log4j.properties）と、場合によっては新しい JAR（例えば log4j.jar）を追加するだけのことです。以下は、Log4J をプロバイダーとして完全なロギングサービスを設定する手順です。
+        <p>具体的な設定方法は使用するロギング実装によります。以下は SLF4J(Logback) での設定例です。ロギングサービスの設定は、単純にいくつかの設定ファイル（例えば <code>logback.xml</code>）と、場合によっては新しい JARを追加するだけのことです。以下は、SLF4J(Logback) をプロバイダーとして完全なロギングサービスを設定する手順です。
         </p>
         <p></p>
         <h4>
-          ステップ１: Log4J の JAR ファイルを追加する。
+          ステップ１: SLF4J + Logback の JAR ファイルを追加する。
         </h4>
-        <p>Log4J を使うので、Log4J の JAR ファイルがアプリケーションから利用できるようにしておく必要があります。Log4J の JAR ファイルをダウンロードしてあなたのアプリケーションのクラスパスに追加してください。JAR ファイルは先ほど挙げた URL からダウンロードできます。
+        <p>SLF4J(Logback) を使うので、SLF4J(Logback) の JAR ファイルがアプリケーションから利用できるようにしておく必要があります。SLF4J(Logback) の JAR ファイルをダウンロードしてあなたのアプリケーションのクラスパスに追加してください。
         </p>
-        <p>Web あるいはエンタープライズアプリケーションの場合は、ダウンロードした <code>log4j.jar</code> を <code>WEB-INF/lib</code> ディレクトリに追加します。スタンドアローンアプリケーションの場合は起動時の JVM の引数に <code>-classpath</code> に追加するだけです。
+        <p>Web あるいはエンタープライズアプリケーションの場合は、ダウンロードした <code>logback-classic.jar</code>
+          ,<code>logback-core.jar</code>, <code>slf4j-api.jar</code> を <code>WEB-INF/lib</code> ディレクトリに追加します。スタンドアローンアプリケーションの場合は起動時の JVM 引数 <code>-classpath</code> に追加するだけです。
         </p>
+
+        <p>Mavenを利用している場合は、<code>pom.xml</code>に以下のような設定を追加することでJARファイルをダウンロードすることができます。
+        </p>
+<source><![CDATA[
+<dependency>
+  <groupId>ch.qos.logback</groupId>
+  <artifactId>logback-classic</artifactId>
+  <version>1.x.x</version>
+</dependency>
+]]></source>
+
         <p></p>
         <h4>
-          ステップ２: Log4J を設定する。
+          ステップ２: Logback を設定する。
         </h4>
-        <p>Log4J の設定はシンプルです。例えば次の Mapper のログを出力する場合：
+        <p>Logback の設定はシンプルです。例えば次の Mapper のログを出力する場合：
         </p>
-        <source><![CDATA[package org.mybatis.example;
+        <source><![CDATA[
+package org.mybatis.example;
 public interface BlogMapper {
   @Select("SELECT * FROM blog WHERE id = #{id}")
   Blog selectBlog(int id);
-}]]></source>
-        <p>次のテキストを含む <code>log4j.properties</code> というファイルを作成し、クラスパスに配置します。
+}
+]]></source>
+        <p>次のテキストを含む <code>logback.xml</code> というファイルを作成し、クラスパスに配置します。
         </p>
-        <source><![CDATA[# Global logging configuration
-log4j.rootLogger=ERROR, stdout
-# MyBatis logging configuration...
-log4j.logger.org.mybatis.example.BlogMapper=TRACE
-# Console output...
-log4j.appender.stdout=org.apache.log4j.ConsoleAppender
-log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
-log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n]]></source>
-        <p>上記のように設定すると、Log4J は <code>org.mybatis.example.BlogMapper</code> について詳細なログを出力し、それ以外のクラスについてはエラーのみを出力します。</p>
-        <p>ログに出力される情報を細かく調整したいのなら、Mapper ファイル全体ではなく特定のステートメントを指定することもできます。次の例では <code>selectBlog</code> ステートメントのみログを出力します。</p>
 
-        <source>log4j.logger.org.mybatis.example.BlogMapper.selectBlog=TRACE</source>
+<source><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration>
+<configuration>
+
+  <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%5level [%thread] - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <logger name="org.mybatis.example.BlogMapper">
+    <level value="trace"/>
+  </logger>
+  <root level="error">
+    <appender-ref ref="stdout"/>
+  </root>
+
+</configuration>
+]]></source>
+
+        <p>上記のように設定すると、SLF4J(Logback) は <code>org.mybatis.example.BlogMapper</code> について詳細なログを出力し、それ以外のクラスについてはエラーのみを出力します。</p>
+        <p>ログに出力される情報を細かく調整したいのなら、Mapper ファイル全体ではなく特定のステートメントを指定することもできます。</p>
+
+<source><![CDATA[
+<logger name="org.mybatis.example.BlogMapper.selectBlog">
+  <level value="trace"/>
+</logger>
+]]></source>
 
         <p>逆に、複数の Mapper に対するログを有効化したい場合もあるでしょう。その場合は、対象となる Mapper を含むパッケージを指定することができます。</p>
 
-        <source>log4j.logger.org.mybatis.example=TRACE</source>
+<source><![CDATA[
+<logger name="org.mybatis.example">
+  <level value="trace"/>
+</logger>
+]]></source>
 
         <p>クエリが大量の結果セットを返すようなケースでSQLステートメントのみを出力したい場合に対応できるよう、SQLステートメントは DEBUG（JDK logging では FINE）レベル、結果は TRACE（JDK logging では FINER）レベルで出力されるようになっています。SQLステートメントのみを出力したい場合、ログレベルに DEBUG を設定します。</p>
 
-        <source>log4j.logger.org.mybatis.example=DEBUG</source>
+<source><![CDATA[
+<logger name="org.mybatis.example">
+  <level value="debug"/>
+</logger>
+]]></source>
 
         <p>Mapper インターフェイスを使っていない場合、例えば次のような Mapper XML ファイルを使っていたらどうすれば良いのでしょうか。
         </p>
 
-      <source><![CDATA[<?xml version="1.0" encoding="UTF-8" ?>
+<source><![CDATA[
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
@@ -144,22 +188,114 @@ log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n]]></source>
   <select id="selectBlog" resultType="Blog">
     select * from Blog where id = #{id}
   </select>
-</mapper>]]></source>
+</mapper>
+]]></source>
 
         <p>この場合、次のようにネームスペースを指定することでこの XML ファイル全体のログを有効化することができます。</p>
 
-        <source>log4j.logger.org.mybatis.example.BlogMapper=TRACE</source>
+<source><![CDATA[
+<logger name="org.mybatis.example.BlogMapper">
+  <level value="trace"/>
+</logger>
+]]></source>
 
         <p>特定のステートメントのみを対象とする場合は次のように指定します。</p>
 
-        <source>log4j.logger.org.mybatis.example.BlogMapper.selectBlog=TRACE</source>
+<source><![CDATA[
+<logger name="org.mybatis.example.BlogMapper.selectBlog">
+  <level value="trace"/>
+</logger>
+]]></source>
 
         <p>お気づきのように、Mapper インターフェイスと XML のどちらを使っている場合でも、設定方法に違いはありません。</p>
 
-        <p><span class="label important">NOTE</span> SLF4J or Log4j 2 をお使いの場合、MyBatis のログは MYBATIS というマーカーで出力されます。</p>
+        <p><span class="label important">NOTE</span> SLF4J or Log4j 2 をお使いの場合、MyBatis のログは <code>MYBATIS</code> というマーカーで出力されます。</p>
 
-        <p>上記の <code>log4j.properties</code> の残りの部分はアペンダーの設定になっていますが、このドキュメントでは説明しません。Log4J のサイト（上記URL）を参照してください。あるいは、設定値を変更してみてどのような結果になるか試してみるのも良いでしょう。
+        <p>上記の <code>logback.xml</code> の残りの部分はアペンダーの設定になっていますが、このドキュメントでは説明しません。<a href="https://logback.qos.ch/">Logback</a> のサイトを参照してください。あるいは、設定値を変更してみてどのような結果になるか試してみるのも良いでしょう。
         </p>
+
+        <p></p>
+        <h4>
+          Log4j 2の設定例
+        </h4>
+
+        <p><code>pom.xml</code></p>
+
+<source><![CDATA[
+<dependency>
+  <groupId>org.apache.logging.log4j</groupId>
+  <artifactId>log4j-core</artifactId>
+  <version>2.x.x</version>
+</dependency>
+]]></source>
+
+        <p><code>log4j2.xml</code></p>
+
+<source><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration xmlns="http://logging.apache.org/log4j/2.0/config">
+
+  <Appenders>
+    <Console name="stdout" target="SYSTEM_OUT">
+      <PatternLayout pattern="%5level [%t] - %msg%n"/>
+    </Console>
+  </Appenders>
+
+  <Loggers>
+    <Logger name="org.mybatis.example.BlogMapper" level="trace"/>
+    <Root level="error" >
+      <AppenderRef ref="stdout"/>
+    </Root>
+  </Loggers>
+
+</Configuration>
+]]></source>
+
+        <p></p>
+        <h4>
+          Log4jの設定例
+        </h4>
+
+        <p><code>pom.xml</code></p>
+
+<source><![CDATA[
+<dependency>
+  <groupId>log4j</groupId>
+  <artifactId>log4j</artifactId>
+  <version>1.2.17</version>
+</dependency>
+]]></source>
+
+        <p><code>log4j.properties</code></p>
+
+<source><![CDATA[
+log4j.rootLogger=ERROR, stdout
+
+log4j.logger.org.mybatis.example.BlogMapper=TRACE
+
+log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n
+]]></source>
+
+        <p></p>
+        <h4>
+          JDK Loggingの設定例
+        </h4>
+
+        <p><code>logging.properties</code></p>
+
+        <source><![CDATA[
+handlers=java.util.logging.ConsoleHandler
+.level=SEVERE
+
+org.mybatis.example.BlogMapper=FINER
+
+java.util.logging.ConsoleHandler.level=ALL
+java.util.logging.ConsoleHandler.formatter=java.util.logging.SimpleFormatter
+java.util.logging.SimpleFormatter.format=%1$tT.%1$tL %4$s %3$s - %5$s%6$s%n
+]]></source>
+
       </subsection>
     </section>
   </body>
