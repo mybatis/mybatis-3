@@ -595,6 +595,20 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 Not set
               </td>
             </tr>
+            <tr>
+              <td>
+                nullableOnForEach
+              </td>
+              <td>
+                Specifies the default value of 'nullable' attribute on 'foreach' tag. (Since 3.5.9)
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
+              </td>
+            </tr>
           </tbody>
         </table>
         <p>

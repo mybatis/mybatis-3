@@ -16,6 +16,7 @@
 package org.apache.ibatis.scripting.xmltags;
 
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.ibatis.parsing.GenericTokenParser;
 import org.apache.ibatis.session.Configuration;
@@ -28,6 +29,7 @@ public class ForEachSqlNode implements SqlNode {
 
   private final ExpressionEvaluator evaluator;
   private final String collectionExpression;
+  private final Boolean nullable;
   private final SqlNode contents;
   private final String open;
   private final String close;
@@ -36,9 +38,21 @@ public class ForEachSqlNode implements SqlNode {
   private final String index;
   private final Configuration configuration;
 
+  /**
+   * @deprecated Since 3.5.9, use the {@link #ForEachSqlNode(Configuration, SqlNode, String, Boolean, String, String, String, String, String)}.
+   */
+  @Deprecated
   public ForEachSqlNode(Configuration configuration, SqlNode contents, String collectionExpression, String index, String item, String open, String close, String separator) {
+    this(configuration, contents, collectionExpression, null, index, item, open, close, separator);
+  }
+
+  /**
+   * @since 3.5.9
+   */
+  public ForEachSqlNode(Configuration configuration, SqlNode contents, String collectionExpression, Boolean nullable, String index, String item, String open, String close, String separator) {
     this.evaluator = new ExpressionEvaluator();
     this.collectionExpression = collectionExpression;
+    this.nullable = nullable;
     this.contents = contents;
     this.open = open;
     this.close = close;
@@ -51,8 +65,9 @@ public class ForEachSqlNode implements SqlNode {
   @Override
   public boolean apply(DynamicContext context) {
     Map<String, Object> bindings = context.getBindings();
-    final Iterable<?> iterable = evaluator.evaluateIterable(collectionExpression, bindings);
-    if (!iterable.iterator().hasNext()) {
+    final Iterable<?> iterable = evaluator.evaluateIterable(collectionExpression, bindings,
+      Optional.ofNullable(nullable).orElseGet(configuration::isNullableOnForEach));
+    if (iterable == null || !iterable.iterator().hasNext()) {
       return true;
     }
     boolean first = true;

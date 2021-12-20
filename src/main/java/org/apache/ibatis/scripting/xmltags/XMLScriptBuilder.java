@@ -171,12 +171,13 @@ public class XMLScriptBuilder extends BaseBuilder {
     public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
       MixedSqlNode mixedSqlNode = parseDynamicTags(nodeToHandle);
       String collection = nodeToHandle.getStringAttribute("collection");
+      Boolean nullable = nodeToHandle.getBooleanAttribute("nullable");
       String item = nodeToHandle.getStringAttribute("item");
       String index = nodeToHandle.getStringAttribute("index");
       String open = nodeToHandle.getStringAttribute("open");
       String close = nodeToHandle.getStringAttribute("close");
       String separator = nodeToHandle.getStringAttribute("separator");
-      ForEachSqlNode forEachSqlNode = new ForEachSqlNode(configuration, mixedSqlNode, collection, index, item, open, close, separator);
+      ForEachSqlNode forEachSqlNode = new ForEachSqlNode(configuration, mixedSqlNode, collection, nullable, index, item, open, close, separator);
       targetContents.add(forEachSqlNode);
     }
   }

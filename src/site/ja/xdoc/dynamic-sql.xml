@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2019 the original author or authors.
+       Copyright 2009-2021 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -153,11 +153,12 @@ AND title like ‘someTitle’]]></source>
   <source><![CDATA[<select id="selectPostIn" resultType="domain.blog.Post">
   SELECT *
   FROM POST P
-  WHERE ID in
-  <foreach item="item" index="index" collection="list"
-      open="(" separator="," close=")">
-        #{item}
-  </foreach>
+  <where>
+    <foreach item="item" index="index" collection="list"
+        open="ID in (" separator="," close=")" nullable="true">
+          #{item}
+    </foreach>
+  </where>
 </select>]]></source>
   <p><em>foreach</em> 要素は非常に強力で、イテレーション処理の対象となるコレクションを指定する collection と、ループ内で要素を格納する変数 item、ループ回数を格納する index 変数を宣言することができます。また、開始・終了の文字列とイテレーションの合間に出力する区切り文字を指定することもできます。foreach タグは賢いので、余分な区切り文字を出力することはありません。</p>
   <p><span class="label important">NOTE</span> collection には Iterable を実装したオブジェクト（List や Set など）の他に Map や Array を指定することもできます。collection に Iterable または Array を指定した場合、 index で指定した変数にはインデックスの数値、 item で指定した変数にはコレクション、配列の要素が格納されます。Map あるいは Map.Entry のコレクションを指定した場合は index にマップのキー、item にマップの値が格納されます。</p>
