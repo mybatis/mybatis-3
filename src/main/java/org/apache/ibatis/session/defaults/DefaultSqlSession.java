@@ -257,7 +257,7 @@ public class DefaultSqlSession implements SqlSession {
   @Override
   public void close() {
     try {
-      executor.close(isCommitOrRollbackRequired(false));
+      executor.close(isCommitOrRollbackRequired(configuration.isForceRollbackOnClose()));
       closeCursors();
       dirty = false;
     } finally {
