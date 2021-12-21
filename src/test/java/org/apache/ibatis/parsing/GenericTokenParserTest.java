@@ -86,7 +86,7 @@ class GenericTokenParserTest {
     assertEquals("The null is ${skipped} variable", parser.parse("The ${skipped} is \\${skipped} variable"));
   }
 
-  @Disabled("Because it randomly fails on Travis CI. It could be useful during development.")
+  @Disabled("Because it randomly fails on Github CI. It could be useful during development.")
   @Test
   void shouldParseFastOnJdk7u6() {
     Assertions.assertTimeout(Duration.ofMillis(1000), () -> {

@@ -119,8 +119,8 @@
     <url>https://github.com/mybatis/mybatis-3/issues</url>
   </issueManagement>
   <ciManagement>
-    <system>Travis CI</system>
-    <url>https://travis-ci.org/mybatis/mybatis-3/</url>
+    <system>Github</system>
+    <url>https://github.com/mybatis/mybatis-3/actions</url>
   </ciManagement>
   <distributionManagement>
     <site>
@@ -397,11 +397,11 @@
 
   <profiles>
     <profile>
-      <!-- Run slow tests only on travis ci, to force run otherwise use -D"env.TRAVIS" -->
-      <id>travis-ci</id>
+      <!-- Run slow tests only on github ci, to force run otherwise use -D"env.GITHUB" -->
+      <id>github-ci</id>
       <activation>
         <property>
-          <name>env.TRAVIS</name>
+          <name>env.GITHUB</name>
         </property>
       </activation>
       <properties>
@@ -409,14 +409,5 @@
       </properties>
     </profile>
   </profiles>
-
-  <!-- Will remove after released mybatis-parent 32+ (See https://github.com/mybatis/mybatis-3/issues/1926) -->
-  <repositories>
-    <repository>
-      <id>sonatype-oss-snapshots</id>
-      <name>Sonatype OSS Snapshots Repository</name>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-    </repository>
-  </repositories>
 
 </project>
