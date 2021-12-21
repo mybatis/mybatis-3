@@ -119,8 +119,8 @@
     <url>https://github.com/mybatis/mybatis-3/issues</url>
   </issueManagement>
   <ciManagement>
-    <system>Travis CI</system>
-    <url>https://travis-ci.org/mybatis/mybatis-3/</url>
+    <system>Github</system>
+    <url>https://github.com/mybatis/mybatis-3/actions</url>
   </ciManagement>
   <distributionManagement>
     <site>
