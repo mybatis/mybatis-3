@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2019 the original author or authors.
+       Copyright 2009-2021 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -147,11 +147,12 @@ AND title like ‘someTitle’]]></source>
   <source><![CDATA[<select id="selectPostIn" resultType="domain.blog.Post">
   SELECT *
   FROM POST P
-  WHERE ID in
-  <foreach item="item" index="index" collection="list"
-      open="(" separator="," close=")">
-        #{item}
-  </foreach>
+  <where>
+    <foreach item="item" index="index" collection="list"
+        open="ID in (" separator="," close=")" nullable="true">
+          #{item}
+    </foreach>
+  </where>
 </select>]]></source>
   <p>El elemento foreach es muy potente, permite especificar una colección y declarar variables elemento e índice que pueden usarse dentro del cuerpo del elemento. Permite también abrir y cerrar strings y añadir un separador entre las iteraciones. Este elemento es inteligente en tanto en cuanto no añade separadores extra accidentalmente.</p>
   <p><span class="label important">NOTA</span> You can pass any Iterable object (for example List, Set, etc.), as well as any Map or Array object to foreach as collection parameter. When using an Iterable or Array, index will be the number of current iteration and value item will be the element retrieved in this iteration. When using a Map (or Collection of Map.Entry objects), index will be the key object and item will be the value object.</p>

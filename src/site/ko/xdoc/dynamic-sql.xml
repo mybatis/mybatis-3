@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2020 the original author or authors.
+       Copyright 2009-2021 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -176,11 +176,12 @@ AND title like ‘someTitle’]]></source>
         <source><![CDATA[<select id="selectPostIn" resultType="domain.blog.Post">
   SELECT *
   FROM POST P
-  WHERE ID in
-  <foreach item="item" index="index" collection="list"
-      open="(" separator="," close=")">
-        #{item}
-  </foreach>
+  <where>
+    <foreach item="item" index="index" collection="list"
+        open="ID in (" separator="," close=")" nullable="true">
+          #{item}
+    </foreach>
+  </where>
 </select>]]></source>
         <p>foreach엘리먼트는 매우 강력하고 collection 을 명시하는 것을 허용한다.
 		엘리먼트 내부에서 사용할 수 있는 item, index두가지 변수를 선언한다.

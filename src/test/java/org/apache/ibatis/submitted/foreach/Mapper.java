@@ -34,4 +34,10 @@ public interface Mapper {
   int itemVariableConflict(@Param("id") Integer id, @Param("ids") List<Integer> ids, @Param("ids2") List<Integer> ids2);
 
   int indexVariableConflict(@Param("idx") Integer id, @Param("idxs") List<Integer> ids, @Param("idxs2") List<Integer> ids2);
+
+  int countUserWithNullableIsOmit(User user);
+
+  int countUserWithNullableIsTrue(User user);
+
+  int countUserWithNullableIsFalse(User user);
 }
