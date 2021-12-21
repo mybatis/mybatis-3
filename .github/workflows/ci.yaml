@@ -55,10 +55,10 @@ jobs:
         run: echo 'ARG_LINE=-D"excludedGroups=TestcontainersTests,RequireIllegalAccess"' >> $GITHUB_ENV
       - name: Set env command line option
         if: ${{ matrix.os == 'ubuntu-latest' }}
-        run: echo 'ENV_TRAVIS="-Denv.TRAVIS"' >> $GITHUB_ENV
+        run: echo 'ENV_GITHUB="-Denv.GITHUB"' >> $GITHUB_ENV
       - name: Test with Maven
         if: ${{ matrix.os != 'windows-latest' }}
-        run: ./mvnw test -B -D"license.skip=true" -D"jacoco.skip=true" $ENV_TRAVIS $ARG_LINE 
+        run: ./mvnw test -B -D"license.skip=true" -D"jacoco.skip=true" $ENV_GITHUB $ARG_LINE 
       - name: Test with Maven
         if: ${{ matrix.os == 'windows-latest' && (matrix.java == '8')}}
         run: ./mvnw test -B -D"license.skip=true" -D"jacoco.skip=true"

@@ -397,11 +397,11 @@
 
   <profiles>
     <profile>
-      <!-- Run slow tests only on travis ci, to force run otherwise use -D"env.TRAVIS" -->
-      <id>travis-ci</id>
+      <!-- Run slow tests only on github ci, to force run otherwise use -D"env.GITHUB" -->
+      <id>github-ci</id>
       <activation>
         <property>
-          <name>env.TRAVIS</name>
+          <name>env.GITHUB</name>
         </property>
       </activation>
       <properties>
