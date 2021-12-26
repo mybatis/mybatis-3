@@ -25,9 +25,9 @@ under the License.
     <language>en-us</language>
     <copyright>&#169;2009 - 2021 MyBatis.org</copyright>
     <item>
-      <title>File: 318,
+      <title>File: 319,
              Errors: 0,
-             Warnings: 1305,
+             Warnings: 1314,
              Infos: 0
       </title>
             <link>http://www.mybatis.org/mybatis-3/checkstyle.html</link>
@@ -388,7 +388,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  3
+                  4
                 </td>
                 <td>
                   0
@@ -878,7 +878,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  7
+                  11
                 </td>
                 <td>
                   0
@@ -2062,6 +2062,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.logging.log4j.package-info.java">org/apache/ibatis/logging/log4j/package-info.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="http://www.mybatis.org/mybatis-3/checkstyle.html#org.apache.ibatis.executor.loader.javassist.JavassistProxyFactory.java">org/apache/ibatis/executor/loader/javassist/JavassistProxyFactory.java</a>
                 </td>
                 <td>
@@ -2726,7 +2740,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  5
+                  8
                 </td>
                 <td>
                   0

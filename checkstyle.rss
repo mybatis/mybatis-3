@@ -27,7 +27,7 @@ under the License.
     <item>
       <title>File: 395,
              Errors: 0,
-             Warnings: 1305,
+             Warnings: 1314,
              Infos: 0
       </title>
             <link>http://www.mybatis.org/mybatis-3/checkstyle.html</link>
@@ -290,7 +290,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  3
+                  4
                 </td>
                 <td>
                   0
@@ -570,7 +570,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  7
+                  11
                 </td>
                 <td>
                   0
@@ -4098,7 +4098,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  0
+                  1
                 </td>
                 <td>
                   0
@@ -4406,7 +4406,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  5
+                  8
                 </td>
                 <td>
                   0
