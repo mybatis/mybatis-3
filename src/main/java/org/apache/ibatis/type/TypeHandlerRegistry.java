@@ -296,9 +296,6 @@ public final class TypeHandlerRegistry {
     if (superclass == null || Object.class.equals(superclass)) {
       return null;
     }
-    if (!clazz.isAssignableFrom(clazz.getSuperclass())) {
-      return typeHandlerMap.get(clazz);
-    }
     Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = typeHandlerMap.get(superclass);
     if (jdbcHandlerMap != null) {
       return jdbcHandlerMap;
