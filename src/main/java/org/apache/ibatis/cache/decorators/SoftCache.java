@@ -19,6 +19,8 @@ import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
 import java.util.Deque;
 import java.util.LinkedList;
+import java.util.Objects;
+import java.util.Optional;
 
 import org.apache.ibatis.cache.Cache;
 
@@ -87,7 +89,10 @@ public class SoftCache implements Cache {
   @Override
   public Object removeObject(Object key) {
     removeGarbageCollectedItems();
-    return delegate.removeObject(key);
+    // See #2403 fix return value
+    @SuppressWarnings("unchecked") // assumed delegate cache is totally managed by this cache
+    SoftReference<Object> softReference = (SoftReference<Object>) delegate.removeObject(key);
+    return Optional.ofNullable(softReference).filter(reference -> Objects.nonNull(reference.get())).map(SoftReference::get).orElse(null);
   }
 
   @Override
