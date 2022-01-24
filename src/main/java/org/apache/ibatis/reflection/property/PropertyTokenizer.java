@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2022 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,30 +17,11 @@ package org.apache.ibatis.reflection.property;
 
 import java.util.Iterator;
 
-/**
- * @author Clinton Begin
- */
 public class PropertyTokenizer implements Iterator<PropertyTokenizer> {
-  private String name;
-  private final String indexedName;
-  private String index;
-  private final String children;
+  protected final String name;
 
-  public PropertyTokenizer(String fullname) {
-    int delim = fullname.indexOf('.');
-    if (delim > -1) {
-      name = fullname.substring(0, delim);
-      children = fullname.substring(delim + 1);
-    } else {
-      name = fullname;
-      children = null;
-    }
-    indexedName = name;
-    delim = name.indexOf('[');
-    if (delim > -1) {
-      index = name.substring(delim + 1, name.length() - 1);
-      name = name.substring(0, delim);
-    }
+  protected PropertyTokenizer(String name) {
+    this.name = name;
   }
 
   public String getName() {
@@ -48,29 +29,108 @@ public class PropertyTokenizer implements Iterator<PropertyTokenizer> {
   }
 
   public String getIndex() {
-    return index;
-  }
-
-  public String getIndexedName() {
-    return indexedName;
+    return null;
   }
 
   public String getChildren() {
-    return children;
+    return null;
+  }
+
+  public String getIndexedName() {
+    return name;
   }
 
   @Override
   public boolean hasNext() {
-    return children != null;
+    return false;
   }
 
   @Override
   public PropertyTokenizer next() {
-    return new PropertyTokenizer(children);
+    return null;
   }
 
   @Override
   public void remove() {
     throw new UnsupportedOperationException("Remove is not supported, as it has no meaning in the context of properties.");
   }
+
+  public static PropertyTokenizer valueOf(String fullname) {
+    int delimDot = -1;
+    int delimBracket = -1;
+    int length = fullname.length();
+    for (int i = 0; i < length; i++) {
+      char c = fullname.charAt(i);
+      if (c == '[') {
+        delimBracket = i;
+      } else if (c == '.') {
+        delimDot = i;
+        break;
+      }
+    }
+
+    if (delimDot < 0 && delimBracket < 0) {
+      return new PropertyTokenizer(fullname);
+    }
+
+    String name = fullname, children = null;
+    if (delimDot >= 0) {
+      name = fullname.substring(0, delimDot);
+      children = fullname.substring(delimDot + 1);
+    }
+
+    if (delimBracket <= 0) {
+      return new IterablePropertyTokenizer(name, children);
+    } else {
+      String index, indexedName = name;
+      index = name.substring(delimBracket + 1, name.length() - 1);
+      name = name.substring(0, delimBracket);
+      return new IndexedPropertyTokenizer(name, children, index, indexedName);
+    }
+  }
+
+  private static class IterablePropertyTokenizer extends PropertyTokenizer {
+
+    private final String children;
+
+    IterablePropertyTokenizer(String name, String children) {
+      super(name); this.children = children;
+    }
+
+    @Override
+    public String getChildren() {
+      return this.children;
+    }
+
+    @Override
+    public boolean hasNext() {
+      return this.children != null;
+    }
+
+    @Override
+    public PropertyTokenizer next() {
+      return valueOf(this.children);
+    }
+  }
+
+  private static class IndexedPropertyTokenizer extends IterablePropertyTokenizer {
+
+    private final String index;
+    private final String indexedName;
+
+    IndexedPropertyTokenizer(String name, String children, String index, String indexedName) {
+      super(name, children); this.index = index; this.indexedName = indexedName;
+    }
+
+    @Override
+    public String getIndex() {
+      return index;
+    }
+
+    @Override
+    public String getIndexedName() {
+      return indexedName;
+    }
+  }
 }
+

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2022 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -69,7 +69,7 @@ public class MetaClass {
   }
 
   public Class<?> getSetterType(String name) {
-    PropertyTokenizer prop = new PropertyTokenizer(name);
+    PropertyTokenizer prop = PropertyTokenizer.valueOf(name);
     if (prop.hasNext()) {
       MetaClass metaProp = metaClassForProperty(prop.getName());
       return metaProp.getSetterType(prop.getChildren());
@@ -79,7 +79,7 @@ public class MetaClass {
   }
 
   public Class<?> getGetterType(String name) {
-    PropertyTokenizer prop = new PropertyTokenizer(name);
+    PropertyTokenizer prop = PropertyTokenizer.valueOf(name);
     if (prop.hasNext()) {
       MetaClass metaProp = metaClassForProperty(prop);
       return metaProp.getGetterType(prop.getChildren());
@@ -133,7 +133,7 @@ public class MetaClass {
   }
 
   public boolean hasSetter(String name) {
-    PropertyTokenizer prop = new PropertyTokenizer(name);
+    PropertyTokenizer prop = PropertyTokenizer.valueOf(name);
     if (prop.hasNext()) {
       if (reflector.hasSetter(prop.getName())) {
         MetaClass metaProp = metaClassForProperty(prop.getName());
@@ -147,7 +147,7 @@ public class MetaClass {
   }
 
   public boolean hasGetter(String name) {
-    PropertyTokenizer prop = new PropertyTokenizer(name);
+    PropertyTokenizer prop = PropertyTokenizer.valueOf(name);
     if (prop.hasNext()) {
       if (reflector.hasGetter(prop.getName())) {
         MetaClass metaProp = metaClassForProperty(prop);
@@ -169,7 +169,7 @@ public class MetaClass {
   }
 
   private StringBuilder buildProperty(String name, StringBuilder builder) {
-    PropertyTokenizer prop = new PropertyTokenizer(name);
+    PropertyTokenizer prop = PropertyTokenizer.valueOf(name);
     if (prop.hasNext()) {
       String propertyName = reflector.findPropertyName(prop.getName());
       if (propertyName != null) {

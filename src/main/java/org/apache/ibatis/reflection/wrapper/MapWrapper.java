@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2022 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -73,7 +73,7 @@ public class MapWrapper extends BaseWrapper {
 
   @Override
   public Class<?> getSetterType(String name) {
-    PropertyTokenizer prop = new PropertyTokenizer(name);
+    PropertyTokenizer prop = PropertyTokenizer.valueOf(name);
     if (prop.hasNext()) {
       MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
       if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
@@ -92,7 +92,7 @@ public class MapWrapper extends BaseWrapper {
 
   @Override
   public Class<?> getGetterType(String name) {
-    PropertyTokenizer prop = new PropertyTokenizer(name);
+    PropertyTokenizer prop = PropertyTokenizer.valueOf(name);
     if (prop.hasNext()) {
       MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
       if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
@@ -116,7 +116,7 @@ public class MapWrapper extends BaseWrapper {
 
   @Override
   public boolean hasGetter(String name) {
-    PropertyTokenizer prop = new PropertyTokenizer(name);
+    PropertyTokenizer prop = PropertyTokenizer.valueOf(name);
     if (prop.hasNext()) {
       if (map.containsKey(prop.getIndexedName())) {
         MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());

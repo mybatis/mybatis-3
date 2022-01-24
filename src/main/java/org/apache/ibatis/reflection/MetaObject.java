@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2022 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -110,21 +110,27 @@ public class MetaObject {
   }
 
   public Object getValue(String name) {
-    PropertyTokenizer prop = new PropertyTokenizer(name);
+    return getValue(PropertyTokenizer.valueOf(name));
+  }
+
+  public void setValue(String name, Object value) {
+    setValue(PropertyTokenizer.valueOf(name), value);
+  }
+
+  private Object getValue(PropertyTokenizer prop) {
     if (prop.hasNext()) {
       MetaObject metaValue = metaObjectForProperty(prop.getIndexedName());
       if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
         return null;
       } else {
-        return metaValue.getValue(prop.getChildren());
+        return metaValue.getValue(prop.next());
       }
     } else {
       return objectWrapper.get(prop);
     }
   }
 
-  public void setValue(String name, Object value) {
-    PropertyTokenizer prop = new PropertyTokenizer(name);
+  private void setValue(PropertyTokenizer prop, Object value) {
     if (prop.hasNext()) {
       MetaObject metaValue = metaObjectForProperty(prop.getIndexedName());
       if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
@@ -132,10 +138,10 @@ public class MetaObject {
           // don't instantiate child path if value is null
           return;
         } else {
-          metaValue = objectWrapper.instantiatePropertyValue(name, prop, objectFactory);
+          metaValue = objectWrapper.instantiatePropertyValue(prop.getName(), prop, objectFactory);
         }
       }
-      metaValue.setValue(prop.getChildren(), value);
+      metaValue.setValue(prop.next(), value);
     } else {
       objectWrapper.set(prop, value);
     }
