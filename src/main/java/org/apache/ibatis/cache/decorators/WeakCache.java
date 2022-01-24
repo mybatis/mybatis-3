@@ -19,6 +19,8 @@ import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.util.Deque;
 import java.util.LinkedList;
+import java.util.Objects;
+import java.util.Optional;
 
 import org.apache.ibatis.cache.Cache;
 
@@ -86,7 +88,10 @@ public class WeakCache implements Cache {
   @Override
   public Object removeObject(Object key) {
     removeGarbageCollectedItems();
-    return delegate.removeObject(key);
+    // See #2403 fix return value
+    @SuppressWarnings("unchecked") // assumed delegate cache is totally managed by this cache
+    WeakReference<Object> weakReference = (WeakReference<Object>) delegate.removeObject(key);
+    return Optional.ofNullable(weakReference).filter(reference -> Objects.nonNull(reference.get())).map(WeakReference::get).orElse(null);
   }
 
   @Override
