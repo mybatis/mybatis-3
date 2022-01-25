@@ -87,7 +87,10 @@ public class SoftCache implements Cache {
   @Override
   public Object removeObject(Object key) {
     removeGarbageCollectedItems();
-    return delegate.removeObject(key);
+    // See #2403 fix return value
+    @SuppressWarnings("unchecked") // assumed delegate cache is totally managed by this cache
+    SoftReference<Object> softReference = (SoftReference<Object>) delegate.removeObject(key);
+    return softReference == null ? null : softReference.get();
   }
 
   @Override
