@@ -86,7 +86,10 @@ public class WeakCache implements Cache {
   @Override
   public Object removeObject(Object key) {
     removeGarbageCollectedItems();
-    return delegate.removeObject(key);
+    // See #2403 fix return value
+    @SuppressWarnings("unchecked") // assumed delegate cache is totally managed by this cache
+    WeakReference<Object> weakReference = (WeakReference<Object>) delegate.removeObject(key);
+    return weakReference == null ? null : weakReference.get();
   }
 
   @Override
