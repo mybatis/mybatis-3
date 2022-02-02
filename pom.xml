@@ -234,7 +234,7 @@
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
-      <version>42.3.1</version>
+      <version>42.3.2</version>
       <scope>test</scope>
     </dependency>
     <dependency>
