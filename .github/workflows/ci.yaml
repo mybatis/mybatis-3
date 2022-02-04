@@ -24,7 +24,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macOS-latest, windows-latest]
-        java: [8, 11, 17, 18-ea]
+        java: [8, 11, 17, 18-ea, 19-ea]
         distribution: ['zulu']
       fail-fast: false
       max-parallel: 4
@@ -48,17 +48,17 @@ jobs:
         if: ${{ matrix.java == '11' }}
         run: echo 'ARG_LINE=-D"argLine=--illegal-access=permit"' >> $GITHUB_ENV
       - name: Skip tests that require illegal reflective access
-        if: ${{ matrix.os == 'ubuntu-latest' && (matrix.java == '17' || matrix.java == '18-ea' )}}
+        if: ${{ matrix.os == 'ubuntu-latest' && (matrix.java != '8' && matrix.java != '11' )}}
         run: echo 'ARG_LINE=-D"excludedGroups=RequireIllegalAccess"' >> $GITHUB_ENV
       - name: Skip tests that require illegal reflective access
-        if: ${{ matrix.os != 'ubuntu-latest' && (matrix.java == '17' || matrix.java == '18-ea' )}}
+        if: ${{ matrix.os != 'ubuntu-latest' && (matrix.java != '8' && matrix.java != '11' )}}
         run: echo 'ARG_LINE=-D"excludedGroups=TestcontainersTests,RequireIllegalAccess"' >> $GITHUB_ENV
       - name: Set env command line option
         if: ${{ matrix.os == 'ubuntu-latest' }}
         run: echo 'ENV_GITHUB="-Denv.GITHUB"' >> $GITHUB_ENV
       - name: Test with Maven
         if: ${{ matrix.os != 'windows-latest' }}
-        run: ./mvnw test -B -D"license.skip=true" -D"jacoco.skip=true" $ENV_GITHUB $ARG_LINE 
+        run: ./mvnw test -B -D"license.skip=true" -D"jacoco.skip=true" $ENV_GITHUB $ARG_LINE
       - name: Test with Maven
         if: ${{ matrix.os == 'windows-latest' && (matrix.java == '8')}}
         run: ./mvnw test -B -D"license.skip=true" -D"jacoco.skip=true"
@@ -66,5 +66,5 @@ jobs:
         if: ${{ matrix.os == 'windows-latest' && (matrix.java == '11') }}
         run: ./mvnw test -B -D"license.skip=true" -D"jacoco.skip=true" -D"argLine=--illegal-access=permit"
       - name: Test with Maven
-        if: ${{ matrix.os == 'windows-latest' && (matrix.java == '17' || matrix.java == '18-ea') }}
+        if: ${{ matrix.os == 'windows-latest' && (matrix.java != '8' && matrix.java != '11') }}
         run: ./mvnw test -B -D"license.skip=true" -D"jacoco.skip=true" -D"excludedGroups=TestcontainersTests,RequireIllegalAccess"
