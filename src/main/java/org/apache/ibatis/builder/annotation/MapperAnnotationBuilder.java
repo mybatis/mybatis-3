@@ -83,26 +83,28 @@ public class MapperAnnotationBuilder {
         if (!canHaveStatement(method)) {
           continue;
         }
-        if (getAnnotationWrapper(method, false, Select.class, SelectProvider.class).isPresent()
-            && method.getAnnotation(ResultMap.class) == null) {
-          try {
-            parseResultMap(method);
-          } catch (Exception e) {
-            Class<?> declaringClass = method.getDeclaringClass();
-            String fullyQualifiedClassName = declaringClass.getCanonicalName() != null ? declaringClass.getCanonicalName() : declaringClass.getName();
-            String parameterTypes = Arrays.stream(method.getParameterTypes()).map(Class::getSimpleName).collect(Collectors.joining(","));
-            String canonicalMethodName = fullyQualifiedClassName + "#" + method.getName() + "(" + parameterTypes + ")";
-            throw new BuilderException("Error occurred while parsing mapper method " + canonicalMethodName, e);
-          }
-        }
         try {
+          if (getAnnotationWrapper(method, false, Select.class, SelectProvider.class).isPresent() &&
+            method.getAnnotation(ResultMap.class) == null)
+            parseResultMap(method);
           parseStatement(method);
         } catch (IncompleteElementException e) {
           configuration.addIncompleteMethod(new MethodResolver(this, method));
+          throw wrapParsingException(method, e);
+        } catch (Exception e) {
+          throw wrapParsingException(method, e);
         }
       }
     }
     parsePendingMethods();
+  }
+
+  private BuilderException wrapParsingException(Method method, Exception e) {
+    Class<?> declaringClass = method.getDeclaringClass();
+    String fullyQualifiedClassName = declaringClass.getCanonicalName() != null ? declaringClass.getCanonicalName() : declaringClass.getName();
+    String parameterTypes = Arrays.stream(method.getParameterTypes()).map(Class::getSimpleName).collect(Collectors.joining(","));
+    String canonicalMethodName = fullyQualifiedClassName + "#" + method.getName() + "(" + parameterTypes + ")";
+    return new BuilderException("Error occurred while parsing mapper method " + canonicalMethodName, e);
   }
 
   private boolean canHaveStatement(Method method) {
