@@ -90,21 +90,21 @@ public class MapperAnnotationBuilder {
           parseStatement(method);
         } catch (IncompleteElementException e) {
           configuration.addIncompleteMethod(new MethodResolver(this, method));
-          throw wrapParsingException(method, e);
+          throw new IncompleteElementException(getParsingErrorMessage(method), e);
         } catch (Exception e) {
-          throw wrapParsingException(method, e);
+          throw new BuilderException(getParsingErrorMessage(method), e);
         }
       }
     }
     parsePendingMethods();
   }
 
-  private BuilderException wrapParsingException(Method method, Exception e) {
+  private String getParsingErrorMessage(Method method) {
     Class<?> declaringClass = method.getDeclaringClass();
     String fullyQualifiedClassName = declaringClass.getCanonicalName() != null ? declaringClass.getCanonicalName() : declaringClass.getName();
     String parameterTypes = Arrays.stream(method.getParameterTypes()).map(Class::getSimpleName).collect(Collectors.joining(","));
     String canonicalMethodName = fullyQualifiedClassName + "#" + method.getName() + "(" + parameterTypes + ")";
-    return new BuilderException("Error occurred while parsing mapper method " + canonicalMethodName, e);
+    return "Error occurred while parsing mapper method " + canonicalMethodName;
   }
 
   private boolean canHaveStatement(Method method) {
