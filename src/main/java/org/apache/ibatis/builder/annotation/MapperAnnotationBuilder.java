@@ -90,7 +90,6 @@ public class MapperAnnotationBuilder {
           parseStatement(method);
         } catch (IncompleteElementException e) {
           configuration.addIncompleteMethod(new MethodResolver(this, method));
-          throw new IncompleteElementException(getParsingErrorMessage(method), e);
         } catch (Exception e) {
           throw new BuilderException(getParsingErrorMessage(method), e);
         }
