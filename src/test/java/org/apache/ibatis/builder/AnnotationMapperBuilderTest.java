@@ -97,7 +97,7 @@ class AnnotationMapperBuilderTest {
   void withJavaTypeWhenMissingTypeHandler() {
     Assert.assertThrows(BuilderException.class, () -> {
       Configuration configuration = new Configuration();
-      MapperAnnotationBuilder builder = new MapperAnnotationBuilder(configuration, Mapper.class);
+      MapperAnnotationBuilder builder = new MapperAnnotationBuilder(configuration, BrokenMapper.class);
       builder.parse();
     });
   }
@@ -123,10 +123,13 @@ class AnnotationMapperBuilderTest {
     @Select("select * from test")
     String selectWithoutOptions(Integer id);
 
+
+  }
+
+  interface BrokenMapper extends Mapper {
     @Select("SELECT col FROM test")
     @ConstructorArgs({@Arg(column = "col", javaType = InvalidJavaTestType.class)})
     TestResponseType getTestResponseType(int a, String b);
-
   }
 
 }
