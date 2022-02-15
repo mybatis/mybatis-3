@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2022 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,10 +19,15 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.ToIntBiFunction;
 
 import org.apache.ibatis.annotations.Flush;
 import org.apache.ibatis.annotations.MapKey;
@@ -43,6 +48,7 @@ import org.apache.ibatis.session.SqlSession;
  * @author Eduardo Macarron
  * @author Lasse Voss
  * @author Kazuki Shimizu
+ * @author trytocatch
  */
 public class MapperMethod {
 
@@ -54,22 +60,30 @@ public class MapperMethod {
     this.method = new MethodSignature(config, mapperInterface, method);
   }
 
+  private Object insertUpdateDelete(ToIntBiFunction<String, Object> function, SqlSession sqlSession, Object[] args){
+    int rowCount;
+    if(method.needSkip(sqlSession.getConfiguration(), args)){
+      rowCount = 0;
+    }else {
+      Object param = method.convertArgsToSqlCommandParam(args);
+      rowCount = function.applyAsInt(command.getName(), param);
+    }
+    return rowCountResult(rowCount);
+  }
+
   public Object execute(SqlSession sqlSession, Object[] args) {
     Object result;
     switch (command.getType()) {
       case INSERT: {
-        Object param = method.convertArgsToSqlCommandParam(args);
-        result = rowCountResult(sqlSession.insert(command.getName(), param));
+        result = insertUpdateDelete(sqlSession::insert, sqlSession, args);
         break;
       }
       case UPDATE: {
-        Object param = method.convertArgsToSqlCommandParam(args);
-        result = rowCountResult(sqlSession.update(command.getName(), param));
+        result = insertUpdateDelete(sqlSession::update, sqlSession, args);
         break;
       }
       case DELETE: {
-        Object param = method.convertArgsToSqlCommandParam(args);
-        result = rowCountResult(sqlSession.delete(command.getName(), param));
+        result = insertUpdateDelete(sqlSession::delete, sqlSession, args);
         break;
       }
       case SELECT:
@@ -81,10 +95,15 @@ public class MapperMethod {
         } else if (method.returnsMap()) {
           result = executeForMap(sqlSession, args);
         } else if (method.returnsCursor()) {
+          //SkipOnEmpty doesn't support returnsCursor
           result = executeForCursor(sqlSession, args);
         } else {
           Object param = method.convertArgsToSqlCommandParam(args);
-          result = sqlSession.selectOne(command.getName(), param);
+          if (method.needSkip(sqlSession.getConfiguration(), args)) {
+            result = null;
+          }else {
+            result = sqlSession.selectOne(command.getName(), param);
+          }
           if (method.returnsOptional()
               && (result == null || !method.getReturnType().equals(result.getClass()))) {
             result = Optional.ofNullable(result);
@@ -128,6 +147,9 @@ public class MapperMethod {
           + " needs either a @ResultMap annotation, a @ResultType annotation,"
           + " or a resultType attribute in XML so a ResultHandler can be used as a parameter.");
     }
+    if (method.needSkip(sqlSession.getConfiguration(), args)) {
+      return;
+    }
     Object param = method.convertArgsToSqlCommandParam(args);
     if (method.hasRowBounds()) {
       RowBounds rowBounds = method.extractRowBounds(args);
@@ -139,12 +161,16 @@ public class MapperMethod {
 
   private <E> Object executeForMany(SqlSession sqlSession, Object[] args) {
     List<E> result;
-    Object param = method.convertArgsToSqlCommandParam(args);
-    if (method.hasRowBounds()) {
-      RowBounds rowBounds = method.extractRowBounds(args);
-      result = sqlSession.selectList(command.getName(), param, rowBounds);
+    if (method.needSkip(sqlSession.getConfiguration(), args)) {
+      result = new ArrayList<>();
     } else {
-      result = sqlSession.selectList(command.getName(), param);
+      Object param = method.convertArgsToSqlCommandParam(args);
+      if (method.hasRowBounds()) {
+        RowBounds rowBounds = method.extractRowBounds(args);
+        result = sqlSession.selectList(command.getName(), param, rowBounds);
+      } else {
+        result = sqlSession.selectList(command.getName(), param);
+      }
     }
     // issue #510 Collections & arrays support
     if (!method.getReturnType().isAssignableFrom(result.getClass())) {
@@ -192,12 +218,16 @@ public class MapperMethod {
 
   private <K, V> Map<K, V> executeForMap(SqlSession sqlSession, Object[] args) {
     Map<K, V> result;
-    Object param = method.convertArgsToSqlCommandParam(args);
-    if (method.hasRowBounds()) {
-      RowBounds rowBounds = method.extractRowBounds(args);
-      result = sqlSession.selectMap(command.getName(), param, method.getMapKey(), rowBounds);
+    if (method.needSkip(sqlSession.getConfiguration(), args)) {
+      result = sqlSession.getConfiguration().getObjectFactory().create(Map.class);
     } else {
-      result = sqlSession.selectMap(command.getName(), param, method.getMapKey());
+      Object param = method.convertArgsToSqlCommandParam(args);
+      if (method.hasRowBounds()) {
+        RowBounds rowBounds = method.extractRowBounds(args);
+        result = sqlSession.selectMap(command.getName(), param, method.getMapKey(), rowBounds);
+      } else {
+        result = sqlSession.selectMap(command.getName(), param, method.getMapKey());
+      }
     }
     return result;
   }
@@ -303,6 +333,47 @@ public class MapperMethod {
       this.rowBoundsIndex = getUniqueParamIndex(method, RowBounds.class);
       this.resultHandlerIndex = getUniqueParamIndex(method, ResultHandler.class);
       this.paramNameResolver = new ParamNameResolver(configuration, method);
+    }
+
+    public boolean needSkip(Configuration configuration, Object[] args){
+      for (Map.Entry<Integer, String> entry : paramNameResolver.getSkipParams().entrySet()) {
+        Object toCheck = args[entry.getKey()];
+        if(!entry.getValue().isEmpty()){
+          toCheck = configuration.newMetaObject(toCheck).getValue(entry.getValue());
+        }
+        if(isEmpty(toCheck)){
+          return true;
+        }
+      }
+      return false;
+    }
+
+    /**
+     * determine if it is empty or null, supports {@link Collection}, {@link Map}, {@link Iterator},
+     * {@link Iterable}, {@link Enumeration}, array, not supports {@link String}<br/>
+     * @param object the object to check
+     * @return is empty or null
+     */
+    private static boolean isEmpty(Object object) {
+      if (object == null) {
+        return true;
+      }else if (object instanceof Collection) {
+        return ((Collection<?>) object).isEmpty();
+      } else if (object instanceof Map) {
+        return ((Map<?, ?>) object).isEmpty();
+      } else if (object instanceof Object[]) {
+        return ((Object[]) object).length == 0;
+      } else if (object.getClass().isArray()) {
+        return Array.getLength(object) == 0;
+      } else if (object instanceof Iterator) {
+        return !((Iterator<?>) object).hasNext();
+      } else if (object instanceof Iterable) {
+        return !((Iterable<?>) object).iterator().hasNext();
+      } else if (object instanceof Enumeration) {
+        return !((Enumeration<?>) object).hasMoreElements();
+      }else {
+        return false;
+      }
     }
 
     public Object convertArgsToSqlCommandParam(Object[] args) {

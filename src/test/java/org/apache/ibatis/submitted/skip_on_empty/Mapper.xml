@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+       Copyright 2009-2022 the original author or authors.
+
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
+-->
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.apache.ibatis.submitted.skip_on_empty.Mapper">
+  <select id="getUsersListFromList"
+          resultType="org.apache.ibatis.submitted.skip_on_empty.User">
+    select * from users where id in
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+
+  <select id="getUsersArrayListFromArray"
+          resultType="org.apache.ibatis.submitted.skip_on_empty.User">
+    select * from users where id in
+    <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+
+  <select id="getUsersLinkedListFromRequest"
+          resultType="org.apache.ibatis.submitted.skip_on_empty.User">
+    select * from users where id in
+    <foreach item="item" index="index" collection="idSet" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+
+  <select id="getUsersArrayFromNamedRequest"
+          resultType="org.apache.ibatis.submitted.skip_on_empty.User">
+    select * from users where id in
+    <foreach item="item" index="index" collection="request.idSet" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+
+  <select id="getFirstUserFromList"
+          resultType="org.apache.ibatis.submitted.skip_on_empty.User">
+    select * from users where id in
+    <foreach item="id" collection="ref.idSet" separator="," open="(" close=")">
+      #{id}
+    </foreach>
+    order by code limit 1
+  </select>
+
+  <select id="getCodeMapFromIdsAndCodes"
+          resultType="org.apache.ibatis.submitted.skip_on_empty.User">
+    select * from users where id in
+    <foreach item="id" collection="ids" separator="," open="(" close=")">
+      #{id}
+    </foreach>
+    and code in
+    <foreach item="code" collection="codes" separator="," open="(" close=")">
+      #{code}
+    </foreach>
+  </select>
+
+  <select id="getUserCursorFromList"
+          resultType="org.apache.ibatis.submitted.skip_on_empty.User">
+    select * from users where id in
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+
+  <insert id="batchInsert">
+    insert into users (id,code,name) values
+    <foreach item="user" collection="list" separator=",">
+      (#{user.id}, #{user.code}, #{user.name})
+    </foreach>
+  </insert>
+
+  <update id="batchUpdate">
+    update users set name = #{newName} where id in
+    <foreach item="id" collection="ids" separator="," open="(" close=")">
+      #{id}
+    </foreach>
+  </update>
+
+  <delete id="batchDelete">
+    delete from users where id in
+    <foreach item="id" collection="list" separator="," open="(" close=")">
+      #{id}
+    </foreach>
+  </delete>
+
+  <select id="getUsersListFromListWithHandler"
+          resultType="org.apache.ibatis.submitted.skip_on_empty.User">
+    select * from users where id in
+    <foreach item="id" collection="ids" separator="," open="(" close=")">
+      #{id}
+    </foreach>
+  </select>
+
+</mapper>

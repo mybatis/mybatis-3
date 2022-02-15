@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2022 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -26,7 +26,10 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.SkipOnEmpty;
+import org.apache.ibatis.binding.BindingException;
 import org.apache.ibatis.binding.MapperMethod.ParamMap;
+import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
@@ -52,6 +55,11 @@ public class ParamNameResolver {
    */
   private final SortedMap<Integer, String> names;
 
+  /**
+   * the skip config on params
+   */
+  private final Map<Integer, String> skipParams;
+
   private boolean hasParamAnnotation;
 
   public ParamNameResolver(Configuration config, Method method) {
@@ -61,6 +69,8 @@ public class ParamNameResolver {
     final SortedMap<Integer, String> map = new TreeMap<>();
     int paramCount = paramAnnotations.length;
     // get names from @Param annotations
+    // get skip settings from @SkipOnEmpty annotations
+    Map<Integer, String> skipParams = new TreeMap<>();
     for (int paramIndex = 0; paramIndex < paramCount; paramIndex++) {
       if (isSpecialParameter(paramTypes[paramIndex])) {
         // skip special parameters
@@ -71,7 +81,12 @@ public class ParamNameResolver {
         if (annotation instanceof Param) {
           hasParamAnnotation = true;
           name = ((Param) annotation).value();
-          break;
+        }else if(annotation instanceof SkipOnEmpty) {
+          if (Cursor.class.equals(method.getReturnType())) {
+            throw new BindingException("The mapper method " + method.getName()
+              + " returns Cursor, it doesn't support @" + SkipOnEmpty.class.getSimpleName());
+          }
+          skipParams.put(paramIndex, ((SkipOnEmpty) annotation).value());
         }
       }
       if (name == null) {
@@ -88,6 +103,7 @@ public class ParamNameResolver {
       map.put(paramIndex, name);
     }
     names = Collections.unmodifiableSortedMap(map);
+    this.skipParams = skipParams.isEmpty() ? Collections.emptyMap() : Collections.unmodifiableMap(skipParams);
   }
 
   private String getActualParamName(Method method, int paramIndex) {
@@ -105,6 +121,15 @@ public class ParamNameResolver {
    */
   public String[] getNames() {
     return names.values().toArray(new String[0]);
+  }
+
+  /**
+   * Returns the skip config on params
+   *
+   * @return
+   */
+  public Map<Integer, String> getSkipParams() {
+    return skipParams;
   }
 
   /**
