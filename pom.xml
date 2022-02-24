@@ -139,6 +139,7 @@
     <osgi.import>*;resolution:=optional</osgi.import>
     <osgi.dynamicImport>*</osgi.dynamicImport>
     <spotbugs.onlyAnalyze>org.apache.ibatis.*</spotbugs.onlyAnalyze>
+    <project.build.outputTimestamp>1645112687</project.build.outputTimestamp>
   </properties>
 
   <dependencies>
