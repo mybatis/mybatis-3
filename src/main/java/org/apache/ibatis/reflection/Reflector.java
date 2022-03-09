@@ -65,9 +65,14 @@ public class Reflector {
     type = clazz;
     addDefaultConstructor(clazz);
     Method[] classMethods = getClassMethods(clazz);
-    addGetMethods(classMethods);
-    addSetMethods(classMethods);
-    addFields(clazz);
+    if (this.isRecordType()) {
+       addAccessorMethods(classMethods);
+    }
+    else {
+      addGetMethods(classMethods);
+      addSetMethods(classMethods);
+      addFields(clazz);
+    }
     readablePropertyNames = getMethods.keySet().toArray(new String[0]);
     writablePropertyNames = setMethods.keySet().toArray(new String[0]);
     for (String propName : readablePropertyNames) {
@@ -77,6 +82,20 @@ public class Reflector {
       caseInsensitivePropertyMap.put(propName.toUpperCase(Locale.ENGLISH), propName);
     }
   }
+
+  // java.lang.Record
+
+  private boolean isRecordType() {
+    Class<?> parent = this.type.getSuperclass();
+    return null != parent && "java.lang.Record".equals(parent.getName());
+  }
+
+  private void addAccessorMethods(Method[] methods) {
+    Arrays.stream(methods).filter(m -> m.getParameterTypes().length == 0)
+      .forEach(m -> addGetMethod(m.getName(), m, false));
+  }
+
+  // non-record
 
   private void addDefaultConstructor(Class<?> clazz) {
     Constructor<?>[] constructors = clazz.getDeclaredConstructors();
@@ -132,6 +151,9 @@ public class Reflector {
     getMethods.put(name, invoker);
     Type returnType = TypeParameterResolver.resolveReturnType(method, type);
     getTypes.put(name, typeToClass(returnType));
+//    if (this.isRecordType()) {
+//        System.out.println("record " + this.type.getSimpleName() + " addGetMethod " + name + " returning " + returnType);
+//    }
   }
 
   private void addSetMethods(Method[] methods) {
