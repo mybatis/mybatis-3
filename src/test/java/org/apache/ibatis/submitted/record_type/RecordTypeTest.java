@@ -16,10 +16,17 @@
 package org.apache.ibatis.submitted.record_type;
 
 import java.io.Reader;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import org.apache.ibatis.BaseDataTest;
+import org.apache.ibatis.annotations.Arg;
+import org.apache.ibatis.annotations.ConstructorArgs;
+import org.apache.ibatis.annotations.ResultType;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -27,7 +34,83 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-class RecordTypeTest {
+public class RecordTypeTest {
+
+    static record Property(int id, String value) {
+    }
+
+    static record Item(int id, List<Property> properties) {
+    }
+
+    static record ItemId(Long get) implements Supplier<Long> {
+    }
+    public static class ItemIdTypeHandler extends IdTypeHandler<Long, ItemId> {
+        public ItemIdTypeHandler() {
+            super(Long.class, ItemId::new);
+        }
+    }
+
+    static record PropId(Integer get) implements Supplier<Integer> {
+    }
+    public static class PropIdTypeHandler extends IdTypeHandler<Integer, PropId> {
+        public PropIdTypeHandler() {
+            super(Integer.class, PropId::new);
+        }
+    }
+
+    static record Property2(PropId id, String value) {
+    }
+
+    static record Item2(ItemId id, List<Property2> properties) {
+        public String idStr() {
+            return String.valueOf(id);
+        }
+    }
+
+    static interface Mapper {
+
+        @Update("""
+        <script>
+            insert into properties (item_id, property_id, value) values
+            <foreach collection="properties" item="prop" close=";" separator=",">
+                (#{id},
+                 #{prop.id},
+                 #{prop.value})
+            </foreach>
+        </script>
+        """)
+        void updateProps(Item item);
+
+        @Update("""
+        <script>
+            insert into properties (item_id, property_id, value) values
+            <foreach collection="properties" item="prop" close=";" separator=",">
+                (#{id, jdbcType=NUMERIC, typeHandler=org.apache.ibatis.submitted.record_type.RecordTypeTest$ItemIdTypeHandler},
+                 #{prop.id, jdbcType=NUMERIC, typeHandler=org.apache.ibatis.submitted.record_type.RecordTypeTest$PropIdTypeHandler},
+                 #{prop.value})
+            </foreach>
+        </script>
+        """)
+        void updateProps2(Item2 item);
+
+        @Select("select * from properties")
+        @ResultType(HashMap.class)
+        List<Map<String, Object>> selectAsMap();
+
+        @Select("select property_id, value from properties")
+        @ConstructorArgs(value = {
+            @Arg(column = "property_id",  javaType = int.class),
+            @Arg(column = "value",        javaType = String.class),
+        })
+        List<Property> allProps();
+
+        @Select("select property_id, value from properties")
+        @ConstructorArgs(value = {
+            @Arg(column="property_id",  javaType=PropId.class, typeHandler=PropIdTypeHandler.class),
+            @Arg(column="value",        javaType=String.class),
+        })
+        List<Property2> allProps2();
+    }
 
   private static SqlSessionFactory sqlSessionFactory;
 
@@ -44,18 +127,33 @@ class RecordTypeTest {
   }
 
   @Test
-  void shouldUpdateProps() {
+  void test1() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      Property p1 = new Property(11, "value11");
-      Property p2 = new Property(22, "value22");
-      List<Property> list = List.of(p1, p2);
-      Item item = new Item(10, list);
-      sqlSession.update("updateProps", item);
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
 
-      List<Map<String, Object>> rows = sqlSession.selectList("selectProps");
-      for (var row : rows) {
+      mapper.updateProps(new Item(10, List.of(
+              new Property(11, "value11"),
+              new Property(12, "value12"))));
+
+      mapper.updateProps2(new Item2(new ItemId(20L), List.of(
+              new Property2(new PropId(21), "value21"),
+              new Property2(new PropId(22), "value22"))));
+
+      mapper.selectAsMap().forEach(row -> {
           System.out.println(row);
-      }
+      });
+      System.out.println();
+
+      mapper.allProps().forEach(prop -> {
+          System.out.println(prop);
+      });
+
+      mapper.allProps2().forEach(prop -> {
+          System.out.println(prop);
+      });
+    }
+    catch (Exception e) {
+        e.printStackTrace();
     }
   }
 

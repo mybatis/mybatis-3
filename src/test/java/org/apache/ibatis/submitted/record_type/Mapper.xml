@@ -20,16 +20,5 @@
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="org.apache.ibatis.submitted.record_type">
-
-    <update id="updateProps" parameterType="org.apache.ibatis.submitted.record_type.Item">
-        insert into properties (item_id, property_id, value) values
-        <foreach collection="properties" item="prop" close=";" separator=",">
-            (#{id}, #{prop.id}, #{prop.value})
-        </foreach>
-    </update>
-
-    <select id="selectProps" resultType="map">
-    select * from properties
-    </select>
+<mapper namespace="org.apache.ibatis.submitted.record_type.RecordTypeTest$Mapper">
 </mapper>
