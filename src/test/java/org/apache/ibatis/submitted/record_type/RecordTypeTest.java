@@ -16,21 +16,19 @@
 package org.apache.ibatis.submitted.record_type;
 
 import java.io.Reader;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Supplier;
 
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.annotations.Arg;
 import org.apache.ibatis.annotations.ConstructorArgs;
-import org.apache.ibatis.annotations.ResultType;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -93,18 +91,14 @@ public class RecordTypeTest {
         """)
         void updateProps2(Item2 item);
 
-        @Select("select * from properties")
-        @ResultType(HashMap.class)
-        List<Map<String, Object>> selectAsMap();
-
-        @Select("select property_id, value from properties")
+        @Select("select property_id, value from properties order by property_id")
         @ConstructorArgs(value = {
             @Arg(column = "property_id",  javaType = int.class),
             @Arg(column = "value",        javaType = String.class),
         })
         List<Property> allProps();
 
-        @Select("select property_id, value from properties")
+        @Select("select property_id, value from properties order by property_id")
         @ConstructorArgs(value = {
             @Arg(column="property_id",  javaType=PropId.class, typeHandler=PropIdTypeHandler.class),
             @Arg(column="value",        javaType=String.class),
@@ -139,18 +133,19 @@ public class RecordTypeTest {
               new Property2(new PropId(21), "value21"),
               new Property2(new PropId(22), "value22"))));
 
-      mapper.selectAsMap().forEach(row -> {
-          System.out.println(row);
-      });
-      System.out.println();
+      var l1 = mapper.allProps();
+      Assertions.assertEquals(4, l1.size());
+      Assertions.assertEquals(l1.get(0), new Property(11, "value11"));
+      Assertions.assertEquals(l1.get(1), new Property(12, "value12"));
+      Assertions.assertEquals(l1.get(2), new Property(21, "value21"));
+      Assertions.assertEquals(l1.get(3), new Property(22, "value22"));
 
-      mapper.allProps().forEach(prop -> {
-          System.out.println(prop);
-      });
-
-      mapper.allProps2().forEach(prop -> {
-          System.out.println(prop);
-      });
+      var l2 = mapper.allProps2();
+      Assertions.assertEquals(4, l2.size());
+      Assertions.assertEquals(l2.get(0), new Property2(new PropId(11), "value11"));
+      Assertions.assertEquals(l2.get(1), new Property2(new PropId(12), "value12"));
+      Assertions.assertEquals(l2.get(2), new Property2(new PropId(21), "value21"));
+      Assertions.assertEquals(l2.get(3), new Property2(new PropId(22), "value22"));
     }
     catch (Exception e) {
         e.printStackTrace();
