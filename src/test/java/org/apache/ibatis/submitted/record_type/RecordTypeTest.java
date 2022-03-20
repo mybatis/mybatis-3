@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2022 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,96 +15,19 @@
  */
 package org.apache.ibatis.submitted.record_type;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.io.Reader;
-import java.util.List;
-import java.util.function.Supplier;
 
 import org.apache.ibatis.BaseDataTest;
-import org.apache.ibatis.annotations.Arg;
-import org.apache.ibatis.annotations.ConstructorArgs;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class RecordTypeTest {
-
-    static record Property(int id, String value) {
-    }
-
-    static record Item(int id, List<Property> properties) {
-    }
-
-    static record ItemId(Long get) implements Supplier<Long> {
-    }
-    public static class ItemIdTypeHandler extends IdTypeHandler<Long, ItemId> {
-        public ItemIdTypeHandler() {
-            super(Long.class, ItemId::new);
-        }
-    }
-
-    static record PropId(Integer get) implements Supplier<Integer> {
-    }
-    public static class PropIdTypeHandler extends IdTypeHandler<Integer, PropId> {
-        public PropIdTypeHandler() {
-            super(Integer.class, PropId::new);
-        }
-    }
-
-    static record Property2(PropId id, String value) {
-    }
-
-    static record Item2(ItemId id, List<Property2> properties) {
-        public String idStr() {
-            return String.valueOf(id);
-        }
-    }
-
-    static interface Mapper {
-
-        @Update("""
-        <script>
-            insert into properties (item_id, property_id, value) values
-            <foreach collection="properties" item="prop" close=";" separator=",">
-                (#{id},
-                 #{prop.id},
-                 #{prop.value})
-            </foreach>
-        </script>
-        """)
-        void updateProps(Item item);
-
-        @Update("""
-        <script>
-            insert into properties (item_id, property_id, value) values
-            <foreach collection="properties" item="prop" close=";" separator=",">
-                (#{id, jdbcType=NUMERIC, typeHandler=org.apache.ibatis.submitted.record_type.RecordTypeTest$ItemIdTypeHandler},
-                 #{prop.id, jdbcType=NUMERIC, typeHandler=org.apache.ibatis.submitted.record_type.RecordTypeTest$PropIdTypeHandler},
-                 #{prop.value})
-            </foreach>
-        </script>
-        """)
-        void updateProps2(Item2 item);
-
-        @Select("select property_id, value from properties order by property_id")
-        @ConstructorArgs(value = {
-            @Arg(column = "property_id",  javaType = int.class),
-            @Arg(column = "value",        javaType = String.class),
-        })
-        List<Property> allProps();
-
-        @Select("select property_id, value from properties order by property_id")
-        @ConstructorArgs(value = {
-            @Arg(column="property_id",  javaType=PropId.class, typeHandler=PropIdTypeHandler.class),
-            @Arg(column="value",        javaType=String.class),
-        })
-        List<Property2> allProps2();
-    }
+class RecordTypeTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
@@ -114,41 +37,42 @@ public class RecordTypeTest {
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/record_type/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
-
     // populate in-memory database
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/record_type/CreateDB.sql");
+        "org/apache/ibatis/submitted/record_type/CreateDB.sql");
   }
 
   @Test
-  void test1() {
+  void testSelectRecord() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      Mapper mapper = sqlSession.getMapper(Mapper.class);
-
-      mapper.updateProps(new Item(10, List.of(
-              new Property(11, "value11"),
-              new Property(12, "value12"))));
-
-      mapper.updateProps2(new Item2(new ItemId(20L), List.of(
-              new Property2(new PropId(21), "value21"),
-              new Property2(new PropId(22), "value22"))));
-
-      var l1 = mapper.allProps();
-      Assertions.assertEquals(4, l1.size());
-      Assertions.assertEquals(l1.get(0), new Property(11, "value11"));
-      Assertions.assertEquals(l1.get(1), new Property(12, "value12"));
-      Assertions.assertEquals(l1.get(2), new Property(21, "value21"));
-      Assertions.assertEquals(l1.get(3), new Property(22, "value22"));
-
-      var l2 = mapper.allProps2();
-      Assertions.assertEquals(4, l2.size());
-      Assertions.assertEquals(l2.get(0), new Property2(new PropId(11), "value11"));
-      Assertions.assertEquals(l2.get(1), new Property2(new PropId(12), "value12"));
-      Assertions.assertEquals(l2.get(2), new Property2(new PropId(21), "value21"));
-      Assertions.assertEquals(l2.get(3), new Property2(new PropId(22), "value22"));
+      RecordTypeMapper mapper = sqlSession.getMapper(RecordTypeMapper.class);
+      Property prop = mapper.selectProperty(1);
+      assertEquals("Val1", prop.value());
     }
-    catch (Exception e) {
-        e.printStackTrace();
+  }
+
+  @Test
+  void testSelectRecordAutomapping() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      RecordTypeMapper mapper = sqlSession.getMapper(RecordTypeMapper.class);
+      Property prop = mapper.selectPropertyAutomapping(1);
+      assertEquals("Val1", prop.value());
+      assertEquals("https://www.google.com", prop.URL());
+    }
+  }
+
+  @Test
+  void testInsertRecord() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      RecordTypeMapper mapper = sqlSession.getMapper(RecordTypeMapper.class);
+      assertEquals(1, mapper.insertProperty(new Property(2, "Val2", "https://mybatis.org")));
+      sqlSession.commit();
+    }
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      RecordTypeMapper mapper = sqlSession.getMapper(RecordTypeMapper.class);
+      Property prop  = mapper.selectProperty(2);
+      assertEquals("Val2", prop.value());
+      assertEquals("https://mybatis.org", prop.URL());
     }
   }
 

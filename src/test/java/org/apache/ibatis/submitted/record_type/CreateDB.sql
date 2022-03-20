@@ -1,5 +1,5 @@
 --
---    Copyright 2009-2019 the original author or authors.
+--    Copyright 2009-2022 the original author or authors.
 --
 --    Licensed under the Apache License, Version 2.0 (the "License");
 --    you may not use this file except in compliance with the License.
@@ -14,10 +14,12 @@
 --    limitations under the License.
 --
 
-drop table properties if exists;
+drop table prop if exists;
 
-create table properties (
-    item_id int, 
-    property_id int, 
-    value varchar(20)
+create table prop (
+  id int, 
+  val varchar(20),
+  url varchar(32)
 );
+
+insert into prop (id, val, url) values (1, 'Val1', 'https://www.google.com');
