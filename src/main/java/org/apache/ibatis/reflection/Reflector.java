@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2022 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,6 +15,9 @@
  */
 package org.apache.ibatis.reflection;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -50,6 +53,7 @@ import org.apache.ibatis.util.MapUtil;
  */
 public class Reflector {
 
+  private static final MethodHandle isRecordMethodHandle = getIsRecordMethodHandle();
   private final Class<?> type;
   private final String[] readablePropertyNames;
   private final String[] writablePropertyNames;
@@ -65,10 +69,9 @@ public class Reflector {
     type = clazz;
     addDefaultConstructor(clazz);
     Method[] classMethods = getClassMethods(clazz);
-    if (this.isRecordType()) {
-       addAccessorMethods(classMethods);
-    }
-    else {
+    if (isRecord(type)) {
+      addRecordGetMethods(classMethods);
+    } else {
       addGetMethods(classMethods);
       addSetMethods(classMethods);
       addFields(clazz);
@@ -83,19 +86,10 @@ public class Reflector {
     }
   }
 
-  // java.lang.Record
-
-  private boolean isRecordType() {
-    Class<?> parent = this.type.getSuperclass();
-    return null != parent && "java.lang.Record".equals(parent.getName());
-  }
-
-  private void addAccessorMethods(Method[] methods) {
+  private void addRecordGetMethods(Method[] methods) {
     Arrays.stream(methods).filter(m -> m.getParameterTypes().length == 0)
       .forEach(m -> addGetMethod(m.getName(), m, false));
   }
-
-  // non-record
 
   private void addDefaultConstructor(Class<?> clazz) {
     Constructor<?>[] constructors = clazz.getDeclaredConstructors();
@@ -151,9 +145,6 @@ public class Reflector {
     getMethods.put(name, invoker);
     Type returnType = TypeParameterResolver.resolveReturnType(method, type);
     getTypes.put(name, typeToClass(returnType));
-//    if (this.isRecordType()) {
-//        System.out.println("record " + this.type.getSimpleName() + " addGetMethod " + name + " returning " + returnType);
-//    }
   }
 
   private void addSetMethods(Method[] methods) {
@@ -466,5 +457,26 @@ public class Reflector {
 
   public String findPropertyName(String name) {
     return caseInsensitivePropertyMap.get(name.toUpperCase(Locale.ENGLISH));
+  }
+
+  /**
+   * Class.isRecord() alternative for Java 15 and older.
+   */
+  private static boolean isRecord(Class<?> clazz) {
+    try {
+      return isRecordMethodHandle != null && (boolean)isRecordMethodHandle.invokeExact(clazz);
+    } catch (Throwable e) {
+      throw new ReflectionException("Failed to invoke 'Class.isRecord()'.", e);
+    }
+  }
+
+  private static MethodHandle getIsRecordMethodHandle() {
+    MethodHandles.Lookup lookup = MethodHandles.lookup();
+    MethodType mt = MethodType.methodType(boolean.class);
+    try {
+      return lookup.findVirtual(Class.class, "isRecord", mt);
+    } catch (NoSuchMethodException | IllegalAccessException e) {
+      return null;
+    }
   }
 }
