@@ -374,6 +374,16 @@
           </excludes>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>animal-sniffer-maven-plugin</artifactId>
+        <configuration>
+          <ignores>
+            <!-- https://github.com/mojohaus/animal-sniffer/issues/67 -->
+            <ignore>java.lang.invoke.MethodHandle</ignore>
+          </ignores>
+        </configuration>
+      </plugin>
     </plugins>
 
     <resources>
@@ -413,6 +423,38 @@
       </activation>
       <properties>
         <excludedGroups />
+      </properties>
+    </profile>
+    <profile>
+      <id>pre16</id>
+      <activation>
+        <jdk>(,16)</jdk>
+      </activation>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-compiler-plugin</artifactId>
+              <configuration>
+                <testExcludes>
+                  <testExclude>**/record_type/*.java</testExclude>
+                </testExcludes>
+              </configuration>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
+    </profile>
+    <profile>
+      <id>16</id>
+      <activation>
+        <jdk>[16,)</jdk>
+      </activation>
+      <properties>
+        <maven.compiler.testTarget>16</maven.compiler.testTarget>
+        <maven.compiler.testSource>16</maven.compiler.testSource>
+        <excludedGroups>TestcontainersTests,RequireIllegalAccess</excludedGroups>
       </properties>
     </profile>
   </profiles>
