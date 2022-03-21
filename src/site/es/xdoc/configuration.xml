@@ -482,7 +482,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 Permite especificar qué implementación de logging utilizar. Si no está informado la impelmentación se descubrirá automaticamente.
               </td>
               <td>
-                SLF4J | LOG4J | LOG4J2 | JDK_LOGGING | COMMONS_LOGGING | STDOUT_LOGGING | NO_LOGGING
+                SLF4J | LOG4J(deprecated since 3.5.9) | LOG4J2 | JDK_LOGGING | COMMONS_LOGGING | STDOUT_LOGGING | NO_LOGGING
               </td>
               <td>
                 No informado
@@ -575,6 +575,20 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               </td>
               <td>
                 Not set
+              </td>
+            </tr>
+            <tr>
+              <td>
+                nullableOnForEach
+              </td>
+              <td>
+                Specifies the default value of 'nullable' attribute on 'foreach' tag. (Since 3.5.9)
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
               </td>
             </tr>
             <tr>

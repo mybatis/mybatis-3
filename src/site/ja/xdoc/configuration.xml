@@ -508,7 +508,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 MyBatis のログ出力に使用するロギング実装を指定します。未指定の場合は自動的検出されます。
               </td>
               <td>
-                SLF4J | LOG4J | LOG4J2 | JDK_LOGGING | COMMONS_LOGGING | STDOUT_LOGGING | NO_LOGGING
+                SLF4J | LOG4J(3.5.9以降非推奨) | LOG4J2 | JDK_LOGGING | COMMONS_LOGGING | STDOUT_LOGGING | NO_LOGGING
               </td>
               <td>
                 未指定
@@ -599,6 +599,20 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               </td>
               <td>
                 未指定
+              </td>
+            </tr>
+            <tr>
+              <td>
+                nullableOnForEach
+              </td>
+              <td>
+                'foreach' タグの 'nullable' 属性のデフォルト値. (導入されたバージョン: 3.5.9)
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
               </td>
             </tr>
             <tr>

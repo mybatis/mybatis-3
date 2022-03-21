@@ -57,6 +57,7 @@
     <setting name="shrinkWhitespacesInSql" value="true"/>
     <setting name="argNameBasedConstructorAutoMapping" value="true"/>
     <setting name="defaultSqlProviderType" value="org.apache.ibatis.builder.XmlConfigBuilderTest$MySqlProvider"/>
+    <setting name="nullableOnForEach" value="true"/>
   </settings>
 
   <typeAliases>

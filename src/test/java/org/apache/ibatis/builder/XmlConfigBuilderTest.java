@@ -64,6 +64,7 @@ import org.apache.ibatis.type.EnumTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 class XmlConfigBuilderTest {
@@ -103,6 +104,7 @@ class XmlConfigBuilderTest {
       assertThat(config.isShrinkWhitespacesInSql()).isFalse();
       assertThat(config.isArgNameBasedConstructorAutoMapping()).isFalse();
       assertThat(config.getDefaultSqlProviderType()).isNull();
+      assertThat(config.isNullableOnForEach()).isFalse();
     }
   }
 
@@ -163,6 +165,7 @@ class XmlConfigBuilderTest {
     assertArrayEquals(MyEnum.values(), ((EnumOrderTypeHandler<MyEnum>) typeHandler).constants);
   }
 
+  @Tag("RequireIllegalAccess")
   @Test
   void shouldSuccessfullyLoadXMLConfigFile() throws Exception {
     String resource = "org/apache/ibatis/builder/CustomizedSettingsMapperConfig.xml";
@@ -200,6 +203,7 @@ class XmlConfigBuilderTest {
       assertThat(config.isShrinkWhitespacesInSql()).isTrue();
       assertThat(config.isArgNameBasedConstructorAutoMapping()).isTrue();
       assertThat(config.getDefaultSqlProviderType().getName()).isEqualTo(MySqlProvider.class.getName());
+      assertThat(config.isNullableOnForEach()).isTrue();
 
       assertThat(config.getTypeAliasRegistry().getTypeAliases().get("blogauthor")).isEqualTo(Author.class);
       assertThat(config.getTypeAliasRegistry().getTypeAliases().get("blog")).isEqualTo(Blog.class);
