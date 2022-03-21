@@ -74,6 +74,7 @@ class BooleanTypeHandlerTest extends BaseTypeHandlerTest {
   }
 
   @Override
+  @Test
   public void shouldGetResultNullFromCallableStatement() throws Exception {
     when(cs.getBoolean(1)).thenReturn(false);
     when(cs.wasNull()).thenReturn(true);
