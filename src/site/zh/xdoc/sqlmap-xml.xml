@@ -575,9 +575,9 @@ ps.setInt(1,id);]]></source>
           如果 <code>mode</code> 为 <code>OUT</code>（或 <code>INOUT</code>），而且
           <code>jdbcType</code> 为 <code>CURSOR</code>（也就是 Oracle 的
           REFCURSOR），你必须指定一个 <code>resultMap</code> 引用来将结果集
-          <code>ResultMap</code> 映射到参数的类型上。要注意这里的
+          <code>ResultSet</code> 映射到参数的类型上。要注意这里的
           <code>javaType</code> 属性是可选的，如果留空并且 jdbcType 是
-          <code>CURSOR</code>，它会被自动地被设为 <code>ResultMap</code>。
+          <code>CURSOR</code>，它会被自动地被设为 <code>ResultSet</code>。
         </p>
 
         <source><![CDATA[#{department, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=departmentResultMap}]]></source>
