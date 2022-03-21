@@ -267,8 +267,13 @@ public final class TypeHandlerRegistry {
       } else {
         jdbcHandlerMap = getJdbcHandlerMapForSuperclass(clazz);
       }
+      if (jdbcHandlerMap != null) {
+        typeHandlerMap.put(type, jdbcHandlerMap);
+      }
     }
-    typeHandlerMap.put(type, jdbcHandlerMap == null ? NULL_TYPE_HANDLER_MAP : jdbcHandlerMap);
+    if (jdbcHandlerMap == null) {
+      typeHandlerMap.put(type, NULL_TYPE_HANDLER_MAP);
+    }
     return jdbcHandlerMap;
   }
 
