@@ -620,7 +620,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 argNameBasedConstructorAutoMapping
               </td>
               <td>
-                引数を受け取るコンストラクタに対して自動マッピングを適用する際、引数名に一致する列をマップ対象にします。<code>false</code> の場合は列の順序依存となります。 (導入されたバージョン: 3.5.7）
+                引数を受け取るコンストラクタに対して自動マッピングを適用する際、引数名に一致する列をマップ対象にします。<code>false</code> の場合は列の順序依存となります。 (導入されたバージョン: 3.5.10）
               </td>
               <td>
                 true | false

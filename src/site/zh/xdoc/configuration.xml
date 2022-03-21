@@ -614,7 +614,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 argNameBasedConstructorAutoMapping
               </td>
               <td>
-                When applying constructor auto-mapping, argument name is used to search the column to map instead of relying on the column order. (Since 3.5.7)
+                When applying constructor auto-mapping, argument name is used to search the column to map instead of relying on the column order. (Since 3.5.10)
               </td>
               <td>
                 true | false
