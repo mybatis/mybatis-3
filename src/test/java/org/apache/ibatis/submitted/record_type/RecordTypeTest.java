@@ -77,4 +77,13 @@ class RecordTypeTest {
     }
   }
 
+  @Test
+  void testSelectNestedRecord() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      RecordTypeMapper mapper = sqlSession.getMapper(RecordTypeMapper.class);
+      Item item = mapper.selectItem(100);
+      assertEquals(Integer.valueOf(100), item.id());
+      assertEquals(new Property(1, "Val1", "https://www.google.com"), item.property());
+    }
+  }
 }
