@@ -47,7 +47,8 @@ class RecordTypeTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       RecordTypeMapper mapper = sqlSession.getMapper(RecordTypeMapper.class);
       Property prop = mapper.selectProperty(1);
-      assertEquals("Val1", prop.value());
+      assertEquals("Val1!", prop.value());
+      assertEquals("https://www.google.com", prop.URL());
     }
   }
 
@@ -56,7 +57,7 @@ class RecordTypeTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       RecordTypeMapper mapper = sqlSession.getMapper(RecordTypeMapper.class);
       Property prop = mapper.selectPropertyAutomapping(1);
-      assertEquals("Val1", prop.value());
+      assertEquals("Val1!", prop.value());
       assertEquals("https://www.google.com", prop.URL());
     }
   }
@@ -71,7 +72,7 @@ class RecordTypeTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       RecordTypeMapper mapper = sqlSession.getMapper(RecordTypeMapper.class);
       Property prop  = mapper.selectProperty(2);
-      assertEquals("Val2", prop.value());
+      assertEquals("Val2!!", prop.value());
       assertEquals("https://mybatis.org", prop.URL());
     }
   }
