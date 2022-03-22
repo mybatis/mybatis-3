@@ -99,7 +99,7 @@ SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(input
 
     <subsection name="不使用 XML 构建 SqlSessionFactory">
       <p>
-        如果你更愿意直接从 Java 代码而不是 XML 文件中创建配置，或者想要创建你自己的配置建造器，MyBatis
+        如果你更愿意直接从 Java 代码而不是 XML 文件中创建配置，或者想要创建你自己的配置的构建工具，MyBatis
         也提供了完整的配置类，提供了所有与 XML 文件等价的配置项。
       </p>
 
@@ -148,7 +148,7 @@ SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(confi
       <p>
         现在你可能很想知道 SqlSession 和 Mapper 到底具体执行了些什么操作，但 SQL
         语句映射是个相当广泛的话题，可能会占去文档的大部分篇幅。
-        但为了让你能够了解个大概，这里会给出几个例子。
+        但为了让你能够了解个大概，这里先给出几个例子。
       </p>
       <p>
         在上面提到的例子中，一个语句既可以通过 XML 定义，也可以通过注解定义。我们先看看
@@ -238,7 +238,7 @@ public interface BlogMapper {
         因此，如果你需要做一些很复杂的操作，最好用 XML 来映射语句。
       </p>
       <p>
-        选择何种方式来配置映射，以及认为是否应该要统一映射语句定义的形式，完全取决于你和你的团队。
+        选择何种方式来配置映射，以及是否应该要统一映射语句定义的形式，完全取决于你和你的团队。
         换句话说，永远不要拘泥于一种方式，你可以很轻松的在基于注解和 XML
         的语句映射方式间自由移植和切换。
       </p>
