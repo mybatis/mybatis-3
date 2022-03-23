@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.submitted.autodiscover;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.Reader;
@@ -43,7 +44,7 @@ class AutodiscoverTest {
   @Test
   void testTypeAlias() {
     TypeAliasRegistry typeAliasRegistry = sqlSessionFactory.getConfiguration().getTypeAliasRegistry();
-    typeAliasRegistry.resolveAlias("testAlias");
+    assertNotNull(typeAliasRegistry.resolveAlias("testAlias"));
   }
 
   @Test
