@@ -142,7 +142,7 @@ AND title like ‘someTitle’]]></source>
   where id=#{id}
 </update>]]></source>
   <p><em>set</em> 要素は、動的に SET キーワードを付加し、余分な末尾のカンマを削除します。</p>
-  <p>疑問に思った方のために、これと同じ処理を行う trim 要素は次のようになります。</p>
+  <p>あるいは、<em>trim</em>という要素を使っても同じ効果が得られます。</p>
   <source><![CDATA[<trim prefix="SET" suffixOverrides=",">
   ...
 </trim>]]></source>
