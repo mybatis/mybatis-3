@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2022 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,28 +15,31 @@
  */
 package org.apache.ibatis.reflection;
 
+import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
+import org.apache.ibatis.reflection.factory.ObjectFactory;
+import org.apache.ibatis.reflection.property.PropertyTokenizer;
+import org.apache.ibatis.reflection.wrapper.*;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.ibatis.reflection.factory.ObjectFactory;
-import org.apache.ibatis.reflection.property.PropertyTokenizer;
-import org.apache.ibatis.reflection.wrapper.BeanWrapper;
-import org.apache.ibatis.reflection.wrapper.CollectionWrapper;
-import org.apache.ibatis.reflection.wrapper.MapWrapper;
-import org.apache.ibatis.reflection.wrapper.ObjectWrapper;
-import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
 
 /**
  * @author Clinton Begin
  */
 public class MetaObject {
 
+  public static final ObjectWrapperFactory DEFAULT_OBJECT_WRAPPER_FACTORY = new DefaultObjectWrapperFactory();
+  public static final ObjectFactory DEFAULT_OBJECT_FACTORY = new DefaultObjectFactory();
+  public static final MetaObject NULL_META_OBJECT = forObject(new NullObject(), DEFAULT_OBJECT_FACTORY, DEFAULT_OBJECT_WRAPPER_FACTORY, new DefaultReflectorFactory());
   private final Object originalObject;
   private final ObjectWrapper objectWrapper;
   private final ObjectFactory objectFactory;
   private final ObjectWrapperFactory objectWrapperFactory;
   private final ReflectorFactory reflectorFactory;
+
+  private static class NullObject {
+  }
 
   private MetaObject(Object object, ObjectFactory objectFactory, ObjectWrapperFactory objectWrapperFactory, ReflectorFactory reflectorFactory) {
     this.originalObject = object;
@@ -59,7 +62,7 @@ public class MetaObject {
 
   public static MetaObject forObject(Object object, ObjectFactory objectFactory, ObjectWrapperFactory objectWrapperFactory, ReflectorFactory reflectorFactory) {
     if (object == null) {
-      return SystemMetaObject.NULL_META_OBJECT;
+      return NULL_META_OBJECT;
     } else {
       return new MetaObject(object, objectFactory, objectWrapperFactory, reflectorFactory);
     }
@@ -113,7 +116,7 @@ public class MetaObject {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
       MetaObject metaValue = metaObjectForProperty(prop.getIndexedName());
-      if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
+      if (metaValue == NULL_META_OBJECT) {
         return null;
       } else {
         return metaValue.getValue(prop.getChildren());
@@ -127,7 +130,7 @@ public class MetaObject {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
       MetaObject metaValue = metaObjectForProperty(prop.getIndexedName());
-      if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
+      if (metaValue == NULL_META_OBJECT) {
         if (value == null) {
           // don't instantiate child path if value is null
           return;
