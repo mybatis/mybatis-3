@@ -15,8 +15,6 @@
  */
 package org.apache.ibatis.reflection.wrapper;
 
-import java.util.List;
-
 import org.apache.ibatis.reflection.ExceptionUtil;
 import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.reflection.MetaObject;
@@ -116,7 +114,7 @@ public class BeanWrapper extends BaseWrapper {
           return metaValue.hasSetter(prop.getChildren());
         }
       } else {
-        return false;
+        return isCollection();
       }
     } else {
       return metaClass.hasSetter(name);
@@ -135,7 +133,7 @@ public class BeanWrapper extends BaseWrapper {
           return metaValue.hasGetter(prop.getChildren());
         }
       } else {
-        return false;
+        return isCollection();
       }
     } else {
       return metaClass.hasGetter(name);
@@ -184,20 +182,4 @@ public class BeanWrapper extends BaseWrapper {
       throw new ReflectionException("Could not set property '" + prop.getName() + "' of '" + object.getClass() + "' with value '" + value + "' Cause: " + t.toString(), t);
     }
   }
-
-  @Override
-  public boolean isCollection() {
-    return false;
-  }
-
-  @Override
-  public void add(Object element) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public <E> void addAll(List<E> list) {
-    throw new UnsupportedOperationException();
-  }
-
 }

@@ -15,13 +15,12 @@
  */
 package org.apache.ibatis.reflection.wrapper;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Clinton Begin
@@ -125,7 +124,7 @@ public class MapWrapper extends BaseWrapper {
           return metaValue.hasGetter(prop.getChildren());
         }
       } else {
-        return false;
+        return super.isCollection();
       }
     } else {
       return map.containsKey(prop.getName());
@@ -138,20 +137,4 @@ public class MapWrapper extends BaseWrapper {
     set(prop, map);
     return MetaObject.forObject(map, metaObject.getObjectFactory(), metaObject.getObjectWrapperFactory(), metaObject.getReflectorFactory());
   }
-
-  @Override
-  public boolean isCollection() {
-    return false;
-  }
-
-  @Override
-  public void add(Object element) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public <E> void addAll(List<E> element) {
-    throw new UnsupportedOperationException();
-  }
-
 }
