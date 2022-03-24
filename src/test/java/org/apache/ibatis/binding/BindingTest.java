@@ -778,5 +778,14 @@ class BindingTest {
     }
   }
 
+  @Test
+  void shouldSelectOneOfPostById(){
+    try (SqlSession session = sqlSessionFactory.openSession()) {
+      BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
+      List<Post> posts = mapper.selectPostsById(1);
+      assertEquals(1, posts.size());
+    }
+  }
+
 }
 
