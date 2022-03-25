@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2022 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,24 +15,14 @@
  */
 package org.apache.ibatis.executor.loader;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.InvalidClassException;
-import java.io.ObjectInput;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
-import java.io.ObjectStreamException;
-import java.io.StreamCorruptedException;
+import org.apache.ibatis.io.SerialFilterChecker;
+import org.apache.ibatis.reflection.factory.ObjectFactory;
+
+import java.io.*;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.ibatis.io.SerialFilterChecker;
-import org.apache.ibatis.reflection.factory.ObjectFactory;
 
 /**
  * @author Eduardo Macarron
@@ -68,21 +58,21 @@ public abstract class AbstractSerialStateHolder implements Externalizable {
   @Override
   public final void writeExternal(final ObjectOutput out) throws IOException {
     boolean firstRound = false;
-    final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    ObjectOutputStream os = stream.get();
-    if (os == null) {
-      os = new ObjectOutputStream(baos);
+    final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    ObjectOutputStream objectOutputStream = stream.get();
+    if (objectOutputStream == null) {
+      objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
       firstRound = true;
-      stream.set(os);
+      stream.set(objectOutputStream);
     }
 
-    os.writeObject(this.userBean);
-    os.writeObject(this.unloadedProperties);
-    os.writeObject(this.objectFactory);
-    os.writeObject(this.constructorArgTypes);
-    os.writeObject(this.constructorArgs);
+    objectOutputStream.writeObject(this.userBean);
+    objectOutputStream.writeObject(this.unloadedProperties);
+    objectOutputStream.writeObject(this.objectFactory);
+    objectOutputStream.writeObject(this.constructorArgTypes);
+    objectOutputStream.writeObject(this.constructorArgs);
 
-    final byte[] bytes = baos.toByteArray();
+    final byte[] bytes = byteArrayOutputStream.toByteArray();
     out.writeObject(bytes);
 
     if (firstRound) {
