@@ -280,7 +280,7 @@ public final class TypeHandlerRegistry {
       }
       if (jdbcHandlerMap != null) {
         // Found a type handler registered to a super interface
-        HashMap<JdbcType, TypeHandler<?>> newMap = new HashMap<>();
+        HashMap<JdbcType, TypeHandler<?>> newMap = new HashMap<>(jdbcHandlerMap.size());
         for (Entry<JdbcType, TypeHandler<?>> entry : jdbcHandlerMap.entrySet()) {
           // Create a type handler instance with enum type as a constructor arg
           newMap.put(entry.getKey(), getInstance(enumClazz, entry.getValue().getClass()));
