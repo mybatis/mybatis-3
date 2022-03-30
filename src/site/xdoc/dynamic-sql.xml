@@ -135,7 +135,7 @@ AND title like ‘someTitle’]]></source>
   where id=#{id}
 </update>]]></source>
   <p>Here, the <em>set</em> element will dynamically prepend the SET keyword, and also eliminate any extraneous commas that might trail the value assignments after the conditions are applied.</p>
-  <p>If you’re curious about what the equivalent <em>trim</em> element would look like, here it is:</p>
+  <p>Alternatively, you can achieve the same effect by using <em>trim</em> element:</p>
   <source><![CDATA[<trim prefix="SET" suffixOverrides=",">
   ...
 </trim>]]></source>

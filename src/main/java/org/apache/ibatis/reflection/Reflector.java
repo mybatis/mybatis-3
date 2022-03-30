@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2022 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,6 +15,9 @@
  */
 package org.apache.ibatis.reflection;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -50,6 +53,7 @@ import org.apache.ibatis.util.MapUtil;
  */
 public class Reflector {
 
+  private static final MethodHandle isRecordMethodHandle = getIsRecordMethodHandle();
   private final Class<?> type;
   private final String[] readablePropertyNames;
   private final String[] writablePropertyNames;
@@ -65,9 +69,13 @@ public class Reflector {
     type = clazz;
     addDefaultConstructor(clazz);
     Method[] classMethods = getClassMethods(clazz);
-    addGetMethods(classMethods);
-    addSetMethods(classMethods);
-    addFields(clazz);
+    if (isRecord(type)) {
+      addRecordGetMethods(classMethods);
+    } else {
+      addGetMethods(classMethods);
+      addSetMethods(classMethods);
+      addFields(clazz);
+    }
     readablePropertyNames = getMethods.keySet().toArray(new String[0]);
     writablePropertyNames = setMethods.keySet().toArray(new String[0]);
     for (String propName : readablePropertyNames) {
@@ -76,6 +84,11 @@ public class Reflector {
     for (String propName : writablePropertyNames) {
       caseInsensitivePropertyMap.put(propName.toUpperCase(Locale.ENGLISH), propName);
     }
+  }
+
+  private void addRecordGetMethods(Method[] methods) {
+    Arrays.stream(methods).filter(m -> m.getParameterTypes().length == 0)
+      .forEach(m -> addGetMethod(m.getName(), m, false));
   }
 
   private void addDefaultConstructor(Class<?> clazz) {
@@ -444,5 +457,26 @@ public class Reflector {
 
   public String findPropertyName(String name) {
     return caseInsensitivePropertyMap.get(name.toUpperCase(Locale.ENGLISH));
+  }
+
+  /**
+   * Class.isRecord() alternative for Java 15 and older.
+   */
+  private static boolean isRecord(Class<?> clazz) {
+    try {
+      return isRecordMethodHandle != null && (boolean)isRecordMethodHandle.invokeExact(clazz);
+    } catch (Throwable e) {
+      throw new ReflectionException("Failed to invoke 'Class.isRecord()'.", e);
+    }
+  }
+
+  private static MethodHandle getIsRecordMethodHandle() {
+    MethodHandles.Lookup lookup = MethodHandles.lookup();
+    MethodType mt = MethodType.methodType(boolean.class);
+    try {
+      return lookup.findVirtual(Class.class, "isRecord", mt);
+    } catch (NoSuchMethodException | IllegalAccessException e) {
+      return null;
+    }
   }
 }

@@ -136,7 +136,7 @@ AND title like ‘someTitle’]]></source>
   where id=#{id}
 </update>]]></source>
   <p>En este caso, el elemento set  prefijará dinámicamente el valor SET y además eliminará todas las comas sobrantes que pudieran quedar tras las asignaciones de valor después de que se hayan aplicado las condiciones.</p>
-  <p>Si tienes curiosidad de qué aspecto tendría el elemento trim equivalente, aquí lo tienes:</p>
+  <p>Alternativamente, puede utilizar el elemento <em>trim</em> para obtener el mismo efecto:</p>
   <source><![CDATA[<trim prefix="SET" suffixOverrides=",">
   ...
 </trim>]]></source>
