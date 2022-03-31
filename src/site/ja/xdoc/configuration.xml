@@ -522,7 +522,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 Lazy Loading（遅延読み込み）に対応したオブジェクトを生成する際に使用するプロクシツールを指定します。
               </td>
               <td>
-                CGLIB | JAVASSIST
+                CGLIB (3.5.10 以降非推奨) | JAVASSIST
               </td>
               <td>
                 JAVASSIST (MyBatis 3.3 以上)
