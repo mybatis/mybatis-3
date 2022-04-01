@@ -507,7 +507,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 마이바티스가 지연로딩을 처리할 객체를 생성할 때 사용할 프록시 툴을 명시
               </td>
               <td>
-                CGLIB | JAVASSIST
+                CGLIB (deprecated since 3.5.10) | JAVASSIST
               </td>
               <td>
                 JAVASSIST (마이바티스 3.3과 이상의 버전)
