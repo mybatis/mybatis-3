@@ -144,7 +144,7 @@ public class ResultSetWrapper {
     return null;
   }
 
-  private void loadMappedAndUnmappedColumnNames(ResultMap resultMap, String columnPrefix) throws SQLException {
+  private void loadMappedAndUnmappedColumnNames(ResultMap resultMap, String columnPrefix) {
     List<String> mappedColumnNames = new ArrayList<>();
     List<String> unmappedColumnNames = new ArrayList<>();
     final String upperColumnPrefix = columnPrefix == null ? null : columnPrefix.toUpperCase(Locale.ENGLISH);
