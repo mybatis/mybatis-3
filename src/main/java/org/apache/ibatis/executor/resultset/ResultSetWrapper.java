@@ -161,7 +161,7 @@ public class ResultSetWrapper {
     unMappedColumnNamesMap.put(getMapKey(resultMap, columnPrefix), unmappedColumnNames);
   }
 
-  public List<String> getMappedColumnNames(ResultMap resultMap, String columnPrefix) throws SQLException {
+  public List<String> getMappedColumnNames(ResultMap resultMap, String columnPrefix) {
     List<String> mappedColumnNames = mappedColumnNamesMap.get(getMapKey(resultMap, columnPrefix));
     if (mappedColumnNames == null) {
       loadMappedAndUnmappedColumnNames(resultMap, columnPrefix);
@@ -170,7 +170,7 @@ public class ResultSetWrapper {
     return mappedColumnNames;
   }
 
-  public List<String> getUnmappedColumnNames(ResultMap resultMap, String columnPrefix) throws SQLException {
+  public List<String> getUnmappedColumnNames(ResultMap resultMap, String columnPrefix) {
     List<String> unMappedColumnNames = unMappedColumnNamesMap.get(getMapKey(resultMap, columnPrefix));
     if (unMappedColumnNames == null) {
       loadMappedAndUnmappedColumnNames(resultMap, columnPrefix);
