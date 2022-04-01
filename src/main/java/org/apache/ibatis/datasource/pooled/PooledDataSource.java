@@ -479,6 +479,8 @@ public class PooledDataSource implements DataSource {
                 state.wait(poolTimeToWait);
                 state.accumulatedWaitTime += System.currentTimeMillis() - wt;
               } catch (InterruptedException e) {
+                // set interrupt flag
+                Thread.currentThread().interrupt();
                 break;
               }
             }
