@@ -333,7 +333,7 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
     try {
       sqlSession.close();
     } finally {
-      localSqlSession.set(null);
+      localSqlSession.remove();
     }
   }
 
