@@ -20,6 +20,7 @@ package org.apache.ibatis.jdbc;
  *
  * @author Jeff Butler
  */
+@Deprecated
 public class SqlBuilder {
 
   private static final ThreadLocal<SQL> localSQL = new ThreadLocal<>();
