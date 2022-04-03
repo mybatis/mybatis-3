@@ -23,6 +23,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.ibatis.cache.Cache;
+import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.apache.ibatis.reflection.ExceptionUtil;
 import org.apache.ibatis.util.MapUtil;
 
@@ -35,14 +37,27 @@ public class Plugin implements InvocationHandler {
   private final Interceptor interceptor;
   private final Map<Class<?>, Set<Method>> signatureMap;
 
+  private static final Cache CACHE = new PerpetualCache(Plugin.class.getName());
+
   private Plugin(Object target, Interceptor interceptor, Map<Class<?>, Set<Method>> signatureMap) {
     this.target = target;
     this.interceptor = interceptor;
     this.signatureMap = signatureMap;
   }
 
+  @SuppressWarnings("unchecked")
   public static Object wrap(Object target, Interceptor interceptor) {
-    Map<Class<?>, Set<Method>> signatureMap = getSignatureMap(interceptor);
+
+    //Optimize: add cache
+    Map<Class<?>, Set<Method>> signatureMap = (Map<Class<?>, Set<Method>>) CACHE.getObject(interceptor);
+    if (signatureMap == null) {
+      synchronized (Plugin.class) {
+        signatureMap = (Map<Class<?>, Set<Method>>) CACHE.getObject(interceptor);
+        if (signatureMap == null)
+          CACHE.putObject(interceptor, signatureMap = getSignatureMap(interceptor));
+      }
+    }
+
     Class<?> type = target.getClass();
     Class<?>[] interfaces = getAllInterfaces(type, signatureMap);
     if (interfaces.length > 0) {
