@@ -254,7 +254,7 @@ public class XPathParser {
         }
 
         @Override
-        public void warning(SAXParseException exception) throws SAXException {
+        public void warning(SAXParseException exception) {
           // NOP
         }
       });
