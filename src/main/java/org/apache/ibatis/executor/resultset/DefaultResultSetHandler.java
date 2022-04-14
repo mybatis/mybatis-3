@@ -704,6 +704,9 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private Object createUsingConstructor(ResultSetWrapper rsw, Class<?> resultType, List<Class<?>> constructorArgTypes, List<Object> constructorArgs, Constructor<?> constructor) throws SQLException {
     boolean foundValues = false;
+    if(constructor.getParameterTypes().length!=rsw.getColumnNames().size()){
+      throw new RuntimeException("The select column : " +  rsw.getColumnNames() +" , doesn't match the constructor parameter of : "+resultType.getName());
+    }
     for (int i = 0; i < constructor.getParameterTypes().length; i++) {
       Class<?> parameterType = constructor.getParameterTypes()[i];
       String columnName = rsw.getColumnNames().get(i);
