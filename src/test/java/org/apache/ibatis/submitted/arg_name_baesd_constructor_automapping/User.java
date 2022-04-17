@@ -24,7 +24,7 @@ public class User {
   public User(Integer id, String name) {
     super();
     this.id = id;
-    this.name = name;
+    this.name = name + "!";
   }
 
   public Integer getId() {

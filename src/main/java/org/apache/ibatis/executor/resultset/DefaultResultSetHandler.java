@@ -100,6 +100,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   // Cached Automappings
   private final Map<String, List<UnMappedColumnAutoMapping>> autoMappingsCache = new HashMap<>();
+  private final Map<String, List<String>> constructorAutoMappingColumns = new HashMap<>();
 
   // temporary marking flag that indicate using constructor mapping (use field to reduce memory usage)
   private boolean useConstructorMappings;
@@ -524,6 +525,10 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     if (autoMapping == null) {
       autoMapping = new ArrayList<>();
       final List<String> unmappedColumnNames = rsw.getUnmappedColumnNames(resultMap, columnPrefix);
+      List<String> mappedInConstructorAutoMapping = constructorAutoMappingColumns.remove(mapKey);
+      if (mappedInConstructorAutoMapping != null) {
+        unmappedColumnNames.removeAll(mappedInConstructorAutoMapping);
+      }
       for (String columnName : unmappedColumnNames) {
         String propertyName = columnName;
         if (columnPrefix != null && !columnPrefix.isEmpty()) {
@@ -660,7 +665,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     } else if (resultType.isInterface() || metaType.hasDefaultConstructor()) {
       return objectFactory.create(resultType);
     } else if (shouldApplyAutomaticMappings(resultMap, false)) {
-      return createByConstructorSignature(rsw, resultType, constructorArgTypes, constructorArgs);
+      return createByConstructorSignature(rsw, resultMap, columnPrefix, resultType, constructorArgTypes, constructorArgs);
     }
     throw new ExecutorException("Do not know how to create an instance of " + resultType);
   }
@@ -692,9 +697,9 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     return foundValues ? objectFactory.create(resultType, constructorArgTypes, constructorArgs) : null;
   }
 
-  private Object createByConstructorSignature(ResultSetWrapper rsw, Class<?> resultType,
+  private Object createByConstructorSignature(ResultSetWrapper rsw, ResultMap resultMap, String columnPrefix, Class<?> resultType,
       List<Class<?>> constructorArgTypes, List<Object> constructorArgs) throws SQLException {
-    return applyConstructorAutomapping(rsw, resultType, constructorArgTypes, constructorArgs,
+    return applyConstructorAutomapping(rsw, resultMap, columnPrefix, resultType, constructorArgTypes, constructorArgs,
         findConstructorForAutomapping(resultType, rsw).orElseThrow(() -> new ExecutorException(
             "No constructor found in " + resultType.getName() + " matching " + rsw.getClassNames())));
   }
@@ -733,10 +738,10 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     return true;
   }
 
-  private Object applyConstructorAutomapping(ResultSetWrapper rsw, Class<?> resultType, List<Class<?>> constructorArgTypes, List<Object> constructorArgs, Constructor<?> constructor) throws SQLException {
+  private Object applyConstructorAutomapping(ResultSetWrapper rsw, ResultMap resultMap, String columnPrefix, Class<?> resultType, List<Class<?>> constructorArgTypes, List<Object> constructorArgs, Constructor<?> constructor) throws SQLException {
     boolean foundValues = false;
     if (configuration.isArgNameBasedConstructorAutoMapping()) {
-      foundValues = applyArgNameBasedConstructorAutoMapping(rsw, resultType, constructorArgTypes, constructorArgs,
+      foundValues = applyArgNameBasedConstructorAutoMapping(rsw, resultMap, columnPrefix, resultType, constructorArgTypes, constructorArgs,
           constructor, foundValues);
     } else {
       foundValues = applyColumnOrderBasedConstructorAutomapping(rsw, constructorArgTypes, constructorArgs, constructor,
@@ -759,7 +764,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     return foundValues;
   }
 
-  private boolean applyArgNameBasedConstructorAutoMapping(ResultSetWrapper rsw, Class<?> resultType,
+  private boolean applyArgNameBasedConstructorAutoMapping(ResultSetWrapper rsw, ResultMap resultMap, String columnPrefix, Class<?> resultType,
       List<Class<?>> constructorArgTypes, List<Object> constructorArgs, Constructor<?> constructor, boolean foundValues)
       throws SQLException {
     List<String> missingArgs = null;
@@ -776,6 +781,10 @@ public class DefaultResultSetHandler implements ResultSetHandler {
           Object value = typeHandler.getResult(rsw.getResultSet(), columnName);
           constructorArgTypes.add(paramType);
           constructorArgs.add(value);
+          final String mapKey = resultMap.getId() + ":" + columnPrefix;
+          if (!autoMappingsCache.containsKey(mapKey)) {
+            constructorAutoMappingColumns.computeIfAbsent(mapKey, k -> new ArrayList<>()).add(columnName);
+          }
           columnNotFound = false;
           foundValues = value != null || foundValues;
         }

@@ -53,7 +53,7 @@ class ArgNameBasedConstructorAutoMappingTest {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.selectNameAndId(1);
       assertEquals(Integer.valueOf(1), user.getId());
-      assertEquals("User1", user.getName());
+      assertEquals("User1!", user.getName());
     }
   }
 
@@ -65,7 +65,7 @@ class ArgNameBasedConstructorAutoMappingTest {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.selectNameAndIdWithBogusLabel(1);
       assertEquals(Integer.valueOf(1), user.getId());
-      assertEquals("User1", user.getName());
+      assertEquals("User1!", user.getName());
     } finally {
       sqlSessionFactory.getConfiguration().setUseColumnLabel(true);
     }
@@ -76,7 +76,7 @@ class ArgNameBasedConstructorAutoMappingTest {
     // This test requires -parameters compiler option
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
-      User user = mapper.selectNameAndIdWithBogusLabel(1);
+      mapper.selectNameAndIdWithBogusLabel(1);
       fail("Exception should be thrown");
     } catch (PersistenceException e) {
       ExecutorException ex = (ExecutorException) e.getCause();
@@ -96,7 +96,7 @@ class ArgNameBasedConstructorAutoMappingTest {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.selectNameTeamAndId(1);
       assertEquals(Integer.valueOf(1), user.getId());
-      assertEquals("User1", user.getName());
+      assertEquals("User1!", user.getName());
       assertEquals(99, user.getTeam());
     }
   }
