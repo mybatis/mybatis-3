@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2022 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -121,6 +121,18 @@ class ArgNameBasedConstructorAutoMappingTest {
       User2 user = mapper.selectUserIdAndUserNameUnderscore(1);
       assertEquals(Integer.valueOf(1), user.getUserId());
       assertEquals("User1", user.getName());
+    }
+  }
+
+  @Test
+  void shouldApplyColumnPrefix() {
+    sqlSessionFactory.getConfiguration().setMapUnderscoreToCamelCase(true);
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      Task task = mapper.selectTask(11);
+      assertEquals(Integer.valueOf(1), task.getAssignee().getId());
+      assertEquals("User1!", task.getAssignee().getName());
+      assertEquals(99, task.getAssignee().getTeam());
     }
   }
 }

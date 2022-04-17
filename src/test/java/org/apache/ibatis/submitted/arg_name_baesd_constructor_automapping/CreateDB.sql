@@ -1,5 +1,5 @@
 --
---    Copyright 2009-2021 the original author or authors.
+--    Copyright 2009-2022 the original author or authors.
 --
 --    Licensed under the Apache License, Version 2.0 (the "License");
 --    you may not use this file except in compliance with the License.
@@ -24,3 +24,14 @@ create table users (
 
 insert into users (id, name, team) values
 (1, 'User1', 99);
+
+drop table tasks if exists;
+
+create table tasks (
+  id int,
+  name varchar(20),
+  assignee_id int
+);
+
+insert into tasks (id, name, assignee_id) values
+(11, 'Task1', 1);

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2022 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -774,8 +774,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       Param paramAnno = param.getAnnotation(Param.class);
       String paramName = paramAnno == null ? param.getName() : paramAnno.value();
       for (String columnName : rsw.getColumnNames()) {
-        if (paramName.equalsIgnoreCase(
-            configuration.isMapUnderscoreToCamelCase() ? columnName.replace("_", "") : columnName)) {
+        if (columnMatchesParam(columnName, paramName, columnPrefix)) {
           Class<?> paramType = param.getType();
           TypeHandler<?> typeHandler = rsw.getTypeHandler(paramType, columnName);
           Object value = typeHandler.getResult(rsw.getResultSet(), columnName);
@@ -803,6 +802,17 @@ public class DefaultResultSetHandler implements ResultSetHandler {
           missingArgs, constructor, rsw.getColumnNames(), configuration.isMapUnderscoreToCamelCase()));
     }
     return foundValues;
+  }
+
+  private boolean columnMatchesParam(String columnName, String paramName, String columnPrefix) {
+    if (columnPrefix != null) {
+      if (!columnName.toUpperCase(Locale.ENGLISH).startsWith(columnPrefix)) {
+        return false;
+      }
+      columnName = columnName.substring(columnPrefix.length());
+    }
+    return paramName
+        .equalsIgnoreCase(configuration.isMapUnderscoreToCamelCase() ? columnName.replace("_", "") : columnName);
   }
 
   private Object createPrimitiveResultObject(ResultSetWrapper rsw, ResultMap resultMap, String columnPrefix) throws SQLException {

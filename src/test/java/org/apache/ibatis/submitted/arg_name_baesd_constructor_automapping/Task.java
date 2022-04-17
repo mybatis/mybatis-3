@@ -15,24 +15,32 @@
  */
 package org.apache.ibatis.submitted.arg_name_baesd_constructor_automapping;
 
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Param;
 
-public interface Mapper {
+public class Task {
+  private final Integer id;
+  private final String name;
+  private User assignee;
 
-  @Select("select name, id from users where id = #{id}")
-  User selectNameAndId(Integer id);
+  public Task(@Param("id") Integer id, @Param("name") String name) {
+    super();
+    this.id = id;
+    this.name = name;
+  }
 
-  @Select("select name, id bar from users where id = #{id}")
-  User selectNameAndIdWithBogusLabel(Integer id);
+  public Integer getId() {
+    return id;
+  }
 
-  @Select("select name, team, id from users where id = #{id}")
-  User selectNameTeamAndId(Integer id);
+  public String getName() {
+    return name;
+  }
 
-  @Select("select name userName, id userId from users where id = #{id}")
-  User2 selectUserIdAndUserName(Integer id);
+  public User getAssignee() {
+    return assignee;
+  }
 
-  @Select("select name user_name, id user_id from users where id = #{id}")
-  User2 selectUserIdAndUserNameUnderscore(Integer id);
-
-  Task selectTask(Integer id);
+  public void setAssignee(User assignee) {
+    this.assignee = assignee;
+  }
 }
