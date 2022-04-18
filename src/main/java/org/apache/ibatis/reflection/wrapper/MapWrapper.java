@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2022 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,14 +15,12 @@
  */
 package org.apache.ibatis.reflection.wrapper;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.ibatis.reflection.MetaObject;
-import org.apache.ibatis.reflection.SystemMetaObject;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Clinton Begin
@@ -76,7 +74,7 @@ public class MapWrapper extends BaseWrapper {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
       MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
-      if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
+      if (metaValue == MetaObject.NULL_META_OBJECT) {
         return Object.class;
       } else {
         return metaValue.getSetterType(prop.getChildren());
@@ -95,7 +93,7 @@ public class MapWrapper extends BaseWrapper {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
       MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
-      if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
+      if (metaValue == MetaObject.NULL_META_OBJECT) {
         return Object.class;
       } else {
         return metaValue.getGetterType(prop.getChildren());
@@ -120,13 +118,13 @@ public class MapWrapper extends BaseWrapper {
     if (prop.hasNext()) {
       if (map.containsKey(prop.getIndexedName())) {
         MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
-        if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
+        if (metaValue == MetaObject.NULL_META_OBJECT) {
           return true;
         } else {
           return metaValue.hasGetter(prop.getChildren());
         }
       } else {
-        return false;
+        return super.isCollection();
       }
     } else {
       return map.containsKey(prop.getName());
@@ -139,20 +137,4 @@ public class MapWrapper extends BaseWrapper {
     set(prop, map);
     return MetaObject.forObject(map, metaObject.getObjectFactory(), metaObject.getObjectWrapperFactory(), metaObject.getReflectorFactory());
   }
-
-  @Override
-  public boolean isCollection() {
-    return false;
-  }
-
-  @Override
-  public void add(Object element) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public <E> void addAll(List<E> element) {
-    throw new UnsupportedOperationException();
-  }
-
 }

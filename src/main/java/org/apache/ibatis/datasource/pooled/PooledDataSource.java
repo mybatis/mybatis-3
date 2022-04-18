@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2022 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,6 +15,11 @@
  */
 package org.apache.ibatis.datasource.pooled;
 
+import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
+import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.logging.LogFactory;
+
+import javax.sql.DataSource;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
@@ -24,12 +29,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
 import java.util.logging.Logger;
-
-import javax.sql.DataSource;
-
-import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
-import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.logging.LogFactory;
 
 /**
  * This is a simple, synchronous, thread-safe database connection pool.
@@ -439,32 +438,7 @@ public class PooledDataSource implements DataSource {
             long longestCheckoutTime = oldestActiveConnection.getCheckoutTime();
             if (longestCheckoutTime > poolMaximumCheckoutTime) {
               // Can claim overdue connection
-              state.claimedOverdueConnectionCount++;
-              state.accumulatedCheckoutTimeOfOverdueConnections += longestCheckoutTime;
-              state.accumulatedCheckoutTime += longestCheckoutTime;
-              state.activeConnections.remove(oldestActiveConnection);
-              if (!oldestActiveConnection.getRealConnection().getAutoCommit()) {
-                try {
-                  oldestActiveConnection.getRealConnection().rollback();
-                } catch (SQLException e) {
-                  /*
-                     Just log a message for debug and continue to execute the following
-                     statement like nothing happened.
-                     Wrap the bad connection with a new PooledConnection, this will help
-                     to not interrupt current executing thread and give current thread a
-                     chance to join the next competition for another valid/good database
-                     connection. At the end of this loop, bad {@link @conn} will be set as null.
-                   */
-                  log.debug("Bad connection. Could not roll back");
-                }
-              }
-              conn = new PooledConnection(oldestActiveConnection.getRealConnection(), this);
-              conn.setCreatedTimestamp(oldestActiveConnection.getCreatedTimestamp());
-              conn.setLastUsedTimestamp(oldestActiveConnection.getLastUsedTimestamp());
-              oldestActiveConnection.invalidate();
-              if (log.isDebugEnabled()) {
-                log.debug("Claimed overdue connection " + conn.getRealHashCode() + ".");
-              }
+              conn = claimOverdueConnection(oldestActiveConnection, longestCheckoutTime);
             } else {
               // Must wait
               try {
@@ -524,6 +498,37 @@ public class PooledDataSource implements DataSource {
       throw new SQLException("PooledDataSource: Unknown severe error condition.  The connection pool returned a null connection.");
     }
 
+    return conn;
+  }
+
+  private PooledConnection claimOverdueConnection(PooledConnection oldestActiveConnection, long longestCheckoutTime) throws SQLException {
+    PooledConnection conn;
+    state.claimedOverdueConnectionCount++;
+    state.accumulatedCheckoutTimeOfOverdueConnections += longestCheckoutTime;
+    state.accumulatedCheckoutTime += longestCheckoutTime;
+    state.activeConnections.remove(oldestActiveConnection);
+    if (!oldestActiveConnection.getRealConnection().getAutoCommit()) {
+      try {
+        oldestActiveConnection.getRealConnection().rollback();
+      } catch (SQLException e) {
+        /*
+           Just log a message for debug and continue to execute the following
+           statement like nothing happened.
+           Wrap the bad connection with a new PooledConnection, this will help
+           to not interrupt current executing thread and give current thread a
+           chance to join the next competition for another valid/good database
+           connection. At the end of this loop, bad {@link @conn} will be set as null.
+         */
+        log.debug("Bad connection. Could not roll back");
+      }
+    }
+    conn = new PooledConnection(oldestActiveConnection.getRealConnection(), this);
+    conn.setCreatedTimestamp(oldestActiveConnection.getCreatedTimestamp());
+    conn.setLastUsedTimestamp(oldestActiveConnection.getLastUsedTimestamp());
+    oldestActiveConnection.invalidate();
+    if (log.isDebugEnabled()) {
+      log.debug("Claimed overdue connection " + conn.getRealHashCode() + ".");
+    }
     return conn;
   }
 

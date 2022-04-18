@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2022 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,13 +15,10 @@
  */
 package org.apache.ibatis.reflection.wrapper;
 
-import java.util.List;
-
 import org.apache.ibatis.reflection.ExceptionUtil;
 import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.ReflectionException;
-import org.apache.ibatis.reflection.SystemMetaObject;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.invoker.Invoker;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
@@ -80,7 +77,7 @@ public class BeanWrapper extends BaseWrapper {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
       MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
-      if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
+      if (metaValue == MetaObject.NULL_META_OBJECT) {
         return metaClass.getSetterType(name);
       } else {
         return metaValue.getSetterType(prop.getChildren());
@@ -95,7 +92,7 @@ public class BeanWrapper extends BaseWrapper {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
       MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
-      if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
+      if (metaValue == MetaObject.NULL_META_OBJECT) {
         return metaClass.getGetterType(name);
       } else {
         return metaValue.getGetterType(prop.getChildren());
@@ -111,13 +108,13 @@ public class BeanWrapper extends BaseWrapper {
     if (prop.hasNext()) {
       if (metaClass.hasSetter(prop.getIndexedName())) {
         MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
-        if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
+        if (metaValue == MetaObject.NULL_META_OBJECT) {
           return metaClass.hasSetter(name);
         } else {
           return metaValue.hasSetter(prop.getChildren());
         }
       } else {
-        return false;
+        return isCollection();
       }
     } else {
       return metaClass.hasSetter(name);
@@ -130,13 +127,13 @@ public class BeanWrapper extends BaseWrapper {
     if (prop.hasNext()) {
       if (metaClass.hasGetter(prop.getIndexedName())) {
         MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
-        if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
+        if (metaValue == MetaObject.NULL_META_OBJECT) {
           return metaClass.hasGetter(name);
         } else {
           return metaValue.hasGetter(prop.getChildren());
         }
       } else {
-        return false;
+        return isCollection();
       }
     } else {
       return metaClass.hasGetter(name);
@@ -185,20 +182,4 @@ public class BeanWrapper extends BaseWrapper {
       throw new ReflectionException("Could not set property '" + prop.getName() + "' of '" + object.getClass() + "' with value '" + value + "' Cause: " + t.toString(), t);
     }
   }
-
-  @Override
-  public boolean isCollection() {
-    return false;
-  }
-
-  @Override
-  public void add(Object element) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public <E> void addAll(List<E> list) {
-    throw new UnsupportedOperationException();
-  }
-
 }

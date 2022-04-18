@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2022 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,16 +15,15 @@
  */
 package org.apache.ibatis.transaction.jdbc;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
-import javax.sql.DataSource;
-
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.session.TransactionIsolationLevel;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.TransactionException;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  * {@link Transaction} that makes use of the JDBC commit and rollback facilities directly.
@@ -38,6 +37,7 @@ import org.apache.ibatis.transaction.TransactionException;
  */
 public class JdbcTransaction implements Transaction {
 
+  private static JdbcTransaction instance;
   private static final Log log = LogFactory.getLog(JdbcTransaction.class);
 
   protected Connection connection;
@@ -45,14 +45,28 @@ public class JdbcTransaction implements Transaction {
   protected TransactionIsolationLevel level;
   protected boolean autoCommit;
 
-  public JdbcTransaction(DataSource ds, TransactionIsolationLevel desiredLevel, boolean desiredAutoCommit) {
+  private JdbcTransaction(DataSource ds, TransactionIsolationLevel desiredLevel, boolean desiredAutoCommit) {
     dataSource = ds;
     level = desiredLevel;
     autoCommit = desiredAutoCommit;
   }
 
-  public JdbcTransaction(Connection connection) {
+  private JdbcTransaction(Connection connection) {
     this.connection = connection;
+  }
+
+  public static JdbcTransaction getInstance(Connection connection) {
+    if (instance == null) {
+      instance = new JdbcTransaction(connection);
+    }
+    return instance;
+  }
+
+  public static JdbcTransaction getInstance(DataSource ds, TransactionIsolationLevel desiredLevel, boolean desiredAutoCommit) {
+    if (instance == null) {
+      instance = new JdbcTransaction(ds, desiredLevel, desiredAutoCommit);
+    }
+    return instance;
   }
 
   @Override

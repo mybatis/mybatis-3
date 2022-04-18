@@ -13,19 +13,17 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.reflection;
+package org.apache.ibatis.scripting.xmltags;
 
-/**
- * @author Clinton Begin
- */
-public final class SystemMetaObject {
-
-  private SystemMetaObject() {
-    // Prevent Instantiation of Static Class
+public class SqlNodeFactory {
+  public static SqlNode createSqlNode(String nodeType, String sqlNodeText) {
+    switch (nodeType) {
+      case "TextSqlNode":
+        return new TextSqlNode(sqlNodeText);
+      case "StaticTextSqlNode":
+        return new StaticTextSqlNode(sqlNodeText);
+      default:
+        return null;
+    }
   }
-
-  public static MetaObject forObject(Object object) {
-    return MetaObject.forObject(object, MetaObject.DEFAULT_OBJECT_FACTORY, MetaObject.DEFAULT_OBJECT_WRAPPER_FACTORY, new DefaultReflectorFactory());
-  }
-
 }
