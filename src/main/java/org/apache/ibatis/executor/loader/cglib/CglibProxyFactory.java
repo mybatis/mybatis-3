@@ -41,7 +41,9 @@ import org.apache.ibatis.session.Configuration;
 
 /**
  * @author Clinton Begin
+ * @deprecated Since 3.5.10, use Javassist instead.
  */
+@Deprecated
 public class CglibProxyFactory implements ProxyFactory {
 
   private static final String FINALIZE_METHOD = "finalize";
@@ -65,6 +67,7 @@ public class CglibProxyFactory implements ProxyFactory {
   }
 
   static Object crateProxy(Class<?> type, Callback callback, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
+    LogHolder.log.warn("CglibProxyFactory is deprecated. Use another proxy factory implementation.");
     Enhancer enhancer = new Enhancer();
     enhancer.setCallback(callback);
     enhancer.setSuperclass(type);

@@ -496,7 +496,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 Permite especificar qué herramienta de generación de proxys se usará para crear los objetos con capacidad de carga lazy.
               </td>
               <td>
-                CGLIB | JAVASSIST
+                CGLIB (deprecated since 3.5.10) | JAVASSIST
               </td>
               <td>
                 JAVASSIST (MyBatis 3.3 or above)

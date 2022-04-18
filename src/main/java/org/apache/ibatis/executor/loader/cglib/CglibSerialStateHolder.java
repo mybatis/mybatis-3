@@ -24,7 +24,9 @@ import org.apache.ibatis.reflection.factory.ObjectFactory;
 
 /**
  * @author Eduardo Macarron
+ * @deprecated Since 3.5.10, use Javassist instead.
  */
+@Deprecated
 class CglibSerialStateHolder extends AbstractSerialStateHolder {
 
   private static final long serialVersionUID = 8940388717901644661L;

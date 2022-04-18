@@ -583,7 +583,7 @@ SqlSessionFactory factory =
                 Specifies the proxy tool that MyBatis will use for creating lazy loading capable objects.
               </td>
               <td>
-                CGLIB | JAVASSIST
+                CGLIB (deprecated since 3.5.10) | JAVASSIST
               </td>
               <td>
                 JAVASSIST (MyBatis 3.3 or above)

@@ -514,7 +514,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 指定 Mybatis 创建可延迟加载对象所用到的代理工具。
               </td>
               <td>
-                CGLIB | JAVASSIST
+                CGLIB (deprecated since 3.5.10) | JAVASSIST
               </td>
               <td>
                 JAVASSIST （MyBatis 3.3 以上）

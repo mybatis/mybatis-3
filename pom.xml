@@ -166,7 +166,7 @@
     <dependency>
       <groupId>ch.qos.reload4j</groupId>
       <artifactId>reload4j</artifactId>
-      <version>1.2.19</version>
+      <version>1.2.20</version>
       <optional>true</optional>
     </dependency>
     <dependency>
@@ -210,7 +210,7 @@
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
-      <version>2.1.210</version>
+      <version>2.1.212</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -259,19 +259,19 @@
     <dependency>
       <groupId>org.testcontainers</groupId>
       <artifactId>junit-jupiter</artifactId>
-      <version>1.16.3</version>
+      <version>1.17.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.testcontainers</groupId>
       <artifactId>postgresql</artifactId>
-      <version>1.16.3</version>
+      <version>1.17.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.testcontainers</groupId>
       <artifactId>mysql</artifactId>
-      <version>1.16.3</version>
+      <version>1.17.0</version>
       <scope>test</scope>
     </dependency>
     <!-- For javadoc link -->
@@ -374,6 +374,16 @@
           </excludes>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>animal-sniffer-maven-plugin</artifactId>
+        <configuration>
+          <ignores>
+            <!-- https://github.com/mojohaus/animal-sniffer/issues/67 -->
+            <ignore>java.lang.invoke.MethodHandle</ignore>
+          </ignores>
+        </configuration>
+      </plugin>
     </plugins>
 
     <resources>
@@ -413,6 +423,38 @@
       </activation>
       <properties>
         <excludedGroups />
+      </properties>
+    </profile>
+    <profile>
+      <id>pre16</id>
+      <activation>
+        <jdk>(,16)</jdk>
+      </activation>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-compiler-plugin</artifactId>
+              <configuration>
+                <testExcludes>
+                  <testExclude>**/record_type/*.java</testExclude>
+                </testExcludes>
+              </configuration>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
+    </profile>
+    <profile>
+      <id>16</id>
+      <activation>
+        <jdk>[16,)</jdk>
+      </activation>
+      <properties>
+        <maven.compiler.testTarget>16</maven.compiler.testTarget>
+        <maven.compiler.testSource>16</maven.compiler.testSource>
+        <excludedGroups>TestcontainersTests,RequireIllegalAccess</excludedGroups>
       </properties>
     </profile>
   </profiles>
