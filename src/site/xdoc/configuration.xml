@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2021 the original author or authors.
+       Copyright 2009-2022 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -1885,7 +1885,10 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, propert
             and
             rollback facilities directly. It relies on the connection
             retrieved from the dataSource to manage the scope of the
-            transaction.
+            transaction. By default, it enables auto-commit when closing the connection for compatibility with some drivers. However, for some drivers, enabling auto-commit is not only unnecesry, but also is an expensive operation. So, since version 3.5.10, you can skip this step by setting the "skipSetAutoCommitOnClose" property to true. For example:
+            <source><![CDATA[<transactionManager type="JDBC">
+  <property name="skipSetAutoCommitOnClose" value="true"/>
+</transactionManager>]]></source>
           </li>
           <li>
             MANAGED – This configuration simply does almost nothing. It

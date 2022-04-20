@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2021 the original author or authors.
+       Copyright 2009-2022 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -1719,7 +1719,10 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
         <ul>
           <li>
             JDBC - JDBC トランザクションマネージャーは、単純に JDBC のコミットとロールバックの機能を直接利用します。
-            この場合、トランザクションのスコープはデータソースから取得した接続に依存します。
+            この場合、トランザクションのスコープはデータソースから取得した接続に依存します。一部のドライバーとの互換性を保つため、デフォルトでは接続をクローズする前にオートコミットを有効化するようになっていますが、この処理は他のドライバにとっては不要なだけでなく負荷の高い操作となる可能性があります。バージョン 3.5.10 以降では skipSetAutoCommitOnClose に false を設定することでオートコミットの有効化処理をスキップできるようになっています。
+            <source><![CDATA[<transactionManager type="JDBC">
+  <property name="skipSetAutoCommitOnClose" value="false"/>
+</transactionManager>]]></source>
           </li>
           <li>
             MANAGED - MANAGED トランザクションマネージャーはコミットもロールバックもしません。

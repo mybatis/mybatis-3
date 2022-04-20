@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2021 the original author or authors.
+       Copyright 2009-2022 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -1647,7 +1647,10 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
         <p>MyBatis incluye dos tipos de TransactionManager (ej. type=”[JDBC|MANAGED]”):
         </p>
         <ul>
-          <li>JDBC – Este TransactionManager simplemente hace uso del las capacidades de commit y rollback de JDBC.  Utiliza la conexión obtenida del DataSource para gestionar la transacción.
+          <li>JDBC – Este TransactionManager simplemente hace uso del las capacidades de commit y rollback de JDBC.  Utiliza la conexión obtenida del DataSource para gestionar la transacción. By default, it enables auto-commit when closing the connection for compatibility with some drivers. However, for some drivers, enabling auto-commit is not only unnecesry, but also is an expensive operation. So, since version 3.5.10, you can skip this step by setting the "skipSetAutoCommitOnClose" property to true. For example:
+            <source><![CDATA[<transactionManager type="JDBC">
+  <property name="skipSetAutoCommitOnClose" value="true"/>
+</transactionManager>]]></source>
           </li>
           <li>MANAGED  – Este TransactionManager no hace nada. No hace commit ni rollback sobre la conexión. En su lugar, permite que el contenedor gestione el ciclo de vida completo de la transacción (ej. Spring o un servidor de aplicaciones JEE).  Por defecto cierra la conexión. Sin embargo, algunos contenedores no esperan que la conexión se cierre y por tanto, si necesitas cambiar este comportamiento, informa la propiedad closeConnection a false. Por ejemplo:
 <source><![CDATA[<transactionManager type="MANAGED">
