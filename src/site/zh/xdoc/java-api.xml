@@ -629,7 +629,7 @@ class UserSqlProvider implements ProviderMethodResolver {
   }
 }]]></source>
 
-    <p>This example shows usage the <code>databaseId</code> attribute on the statement annotation(Available since 3.5.5):</p>
+         <p>这个例子展现了如何在声明注解时使用<code>databaseId</code>属性（3.5.5后可用）：</p>
     <source><![CDATA[
 @Select(value = "SELECT SYS_GUID() FROM dual", databaseId = "oracle") // Use this statement if DatabaseIdProvider provide "oracle"
 @Select(value = "SELECT uuid_generate_v4()", databaseId = "postgres") // Use this statement if DatabaseIdProvider provide "postgres"
