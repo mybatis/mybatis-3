@@ -53,7 +53,9 @@ public class SqlSessionFactoryBuilder {
     } finally {
       ErrorContext.instance().reset();
       try {
-        reader.close();
+      	if (reader != null) {
+      	  reader.close();
+      	}
       } catch (IOException e) {
         // Intentionally ignore. Prefer previous error.
       }
@@ -81,7 +83,9 @@ public class SqlSessionFactoryBuilder {
     } finally {
       ErrorContext.instance().reset();
       try {
-        inputStream.close();
+      	if (inputStream != null) {
+      	  inputStream.close();
+      	}
       } catch (IOException e) {
         // Intentionally ignore. Prefer previous error.
       }
