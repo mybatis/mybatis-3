@@ -525,6 +525,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     if (autoMapping == null) {
       autoMapping = new ArrayList<>();
       final List<String> unmappedColumnNames = rsw.getUnmappedColumnNames(resultMap, columnPrefix);
+      // Remove the entry to release the memory
       List<String> mappedInConstructorAutoMapping = constructorAutoMappingColumns.remove(mapKey);
       if (mappedInConstructorAutoMapping != null) {
         unmappedColumnNames.removeAll(mappedInConstructorAutoMapping);
