@@ -125,7 +125,7 @@ SqlSessionFactory sqlSessionFactory =
         Notice in this case the configuration is adding a mapper class.
         Mapper classes are Java classes that
         contain SQL Mapping Annotations
-        that avoid the need for XML. However, due
+        that avoid the need for XML mapping. However, due
         to some limitations of
         Java Annotations and the complexity of some MyBatis mappings, XML
         mapping is still required for the
