@@ -782,7 +782,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
           constructorArgs.add(value);
           final String mapKey = resultMap.getId() + ":" + columnPrefix;
           if (!autoMappingsCache.containsKey(mapKey)) {
-            constructorAutoMappingColumns.computeIfAbsent(mapKey, k -> new ArrayList<>()).add(columnName);
+            MapUtil.computeIfAbsent(constructorAutoMappingColumns, mapKey, k -> new ArrayList<>()).add(columnName);
           }
           columnNotFound = false;
           foundValues = value != null || foundValues;
