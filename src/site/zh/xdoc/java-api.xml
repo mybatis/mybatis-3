@@ -586,7 +586,7 @@ class UserSqlBuilder {
   }
 }]]></source>
 
-    <p>This example shows usage that share an sql provider class to all mapper methods using global configuration(Available since 3.5.6):</p>
+    <p>这是一个在全局配置下仅用一个 sql provider 类而共享所有的映射方法的例子（3.5.6 后可用）:</p>
     <source><![CDATA[
 Configuration configuration = new Configuration();
 configuration.setDefaultSqlProviderType(TemplateFilePathProvider.class); // Specify an sql provider class for sharing on all mapper methods
