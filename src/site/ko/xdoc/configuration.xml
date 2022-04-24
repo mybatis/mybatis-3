@@ -1613,7 +1613,11 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
         <p>마이바티스는 두 가지 타입의 TransactionManager를 제공한다.</p>
         <ul>
           <li>JDBC - 이 설정은 간단하게 JDBC 커밋과 롤백을 처리하기 위해 사용된다.
-		  트랜잭션의 스코프를 관리하기 위해 dataSource 로 부터 커넥션을 가져온다. </li>
+		  트랜잭션의 스코프를 관리하기 위해 dataSource 로 부터 커넥션을 가져온다. By default, it enables auto-commit when closing the connection for compatibility with some drivers. However, for some drivers, enabling auto-commit is not only unnecesry, but also is an expensive operation. So, since version 3.5.10, you can skip this step by setting the "skipSetAutoCommitOnClose" property to true. For example:
+            <source><![CDATA[<transactionManager type="JDBC">
+  <property name="skipSetAutoCommitOnClose" value="true"/>
+</transactionManager>]]></source>
+          </li>
           <li>MANAGED - 이 설정은 어떤것도 하지 않는다.
 		  결코 커밋이나 롤백을 하지 않는다.
 		  대신 컨테이너가 트랜잭션의 모든 생명주기를 관리한다.
