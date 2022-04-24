@@ -85,6 +85,7 @@ class XmlConfigBuilderTest {
       assertNull(config.getLogImpl());
       assertNull(config.getConfigurationFactory());
       assertFalse(config.isShrinkWhitespacesInSql());
+      assertFalse(config.isArgNameBasedConstructorAutoMapping());
     } finally {
       // System.clearProperty(XPathParser.KEY_USE_XSD);
     }
@@ -123,6 +124,7 @@ class XmlConfigBuilderTest {
       assertEquals(JBoss6VFS.class.getName(), config.getVfsImpl().getName());
       assertEquals(String.class.getName(), config.getConfigurationFactory().getName());
       assertTrue(config.isShrinkWhitespacesInSql());
+      assertTrue(config.isArgNameBasedConstructorAutoMapping());
 
       assertEquals(Author.class, config.getTypeAliasRegistry().getTypeAliases().get("blogauthor"));
       assertEquals(Blog.class, config.getTypeAliasRegistry().getTypeAliases().get("blog"));
