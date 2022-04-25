@@ -27,7 +27,3 @@ updates:
   open-pull-requests-limit: 10
   labels:
   - dependencies
-  ignore:
-  - dependency-name: org.apache.derby:derby
-    versions:
-    - "> 10.14.2.0"
