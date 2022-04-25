@@ -22,7 +22,7 @@
   <parent>
     <groupId>org.mybatis</groupId>
     <artifactId>mybatis-parent</artifactId>
-    <version>34</version>
+    <version>35</version>
     <relativePath />
   </parent>
 
@@ -374,16 +374,6 @@
           </excludes>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>animal-sniffer-maven-plugin</artifactId>
-        <configuration>
-          <ignores>
-            <!-- https://github.com/mojohaus/animal-sniffer/issues/67 -->
-            <ignore>java.lang.invoke.MethodHandle</ignore>
-          </ignores>
-        </configuration>
-      </plugin>
     </plugins>
 
     <resources>
@@ -452,8 +442,8 @@
         <jdk>[16,)</jdk>
       </activation>
       <properties>
-        <maven.compiler.testTarget>16</maven.compiler.testTarget>
-        <maven.compiler.testSource>16</maven.compiler.testSource>
+        <java.version>16</java.version>
+        <java.release.version>16</java.release.version>
         <excludedGroups>TestcontainersTests,RequireIllegalAccess</excludedGroups>
       </properties>
     </profile>
