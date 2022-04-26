@@ -232,7 +232,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
         null,
         null,
         false);
-    Map<String, String> namespaceDiscriminatorMap = new HashMap<>();
+    Map<String, String> namespaceDiscriminatorMap = new HashMap<>(discriminatorMap.size());
     for (Map.Entry<String, String> e : discriminatorMap.entrySet()) {
       String resultMap = e.getValue();
       resultMap = applyCurrentNamespace(resultMap, true);
