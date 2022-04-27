@@ -1684,7 +1684,8 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
   @Override
   public <T> boolean isCollection(Class<T> type) {
     return Collection.class.isAssignableFrom(type);
-  }}
+  }
+}
 ]]></source>
 
         <source><![CDATA[<!-- mybatis-config.xml -->
