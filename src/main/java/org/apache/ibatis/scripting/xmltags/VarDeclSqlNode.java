@@ -23,9 +23,9 @@ public class VarDeclSqlNode implements SqlNode {
   private final String name;
   private final String expression;
 
-  public VarDeclSqlNode(String var, String exp) {
-    name = var;
-    expression = exp;
+  public VarDeclSqlNode(String name, String exp) {
+    this.name = name;
+    this.expression = exp;
   }
 
   @Override
