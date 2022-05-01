@@ -388,7 +388,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td>复杂类型的单个属性映射。属性：
         <code>select</code>，指定可加载合适类型实例的映射语句（也就是映射器方法）全限定名；
         <code>fetchType</code>，指定在该映射中覆盖全局配置参数 <code>lazyLoadingEnabled</code>；
-        <code>resultMap</code>(available since 3.5.5), which is the fully qualified name of a result map that map to a single container object from select result；
+        <code>resultMap</code>（3.5.5以上可用）, which is the fully qualified name of a result map that map to a single container object from select result；
         <code>columnPrefix</code>(available since 3.5.5), which is column prefix for grouping select columns at nested result map.
         <span class="label important">提示</span> 注解 API 不支持联合映射。这是由于 Java 注解不允许产生循环引用。</td>
       </tr>
@@ -470,9 +470,9 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         (The <code>type</code> attribute is alias for <code>value</code>, you must be specify either one.
         But both attributes can be omit when specify the <code>defaultSqlProviderType</code> as global configuration)。
         <code>method</code> 用于指定该类的方法名（从版本 3.5.1 开始，可以省略 <code>method</code> 属性，MyBatis 将会使用 <code>ProviderMethodResolver</code> 接口解析方法的具体实现。如果解析失败，MyBatis 将会使用名为 <code>provideSql</code> 的降级实现）。<span class="label important">提示</span> 接下来的“SQL 语句构建器”一章将会讨论该话题，以帮助你以更清晰、更便于阅读的方式构建动态 SQL。
-        The <code>databaseId</code>(Available since 3.5.5), in case there is a configured <code>DatabaseIdProvider</code>,
-        the MyBatis will use a provider method with no <code>databaseId</code> attribute or with a <code>databaseId</code>
-        that matches the current one. If found with and without the <code>databaseId</code> the latter will be discarded.
+        <code>databaseId</code>（3.5.5 后可用）, 假定有一个配置好的 <code>DatabaseIdProvider</code>,
+        且若在注解中没有指定 <code>databaseId</code> 属性或者 <code>databaseId</code> 不与当前的方法匹配，MyBatis 将会使用它。
+               If found with and without the <code>databaseId</code> the latter will be discarded.
         </td>
       </tr>
       <tr>
@@ -487,9 +487,9 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>&lt;selectKey&gt;</code></td>
         <td>
         这个注解的功能与 <code>&lt;selectKey&gt;</code> 标签完全一致。该注解只能在 <code>@Insert</code> 或 <code>@InsertProvider</code> 或 <code>@Update</code> 或 <code>@UpdateProvider</code> 标注的方法上使用，否则将会被忽略。如果标注了 <code>@SelectKey</code> 注解，MyBatis 将会忽略掉由 <code>@Options</code> 注解所设置的生成主键或设置（configuration）属性。属性：<code>statement</code> 以字符串数组形式指定将会被执行的 SQL 语句，<code>keyProperty</code> 指定作为参数传入的对象对应属性的名称，该属性将会更新成新的值，<code>before</code> 可以指定为 <code>true</code> 或 <code>false</code> 以指明 SQL 语句应被在插入语句的之前还是之后执行。<code>resultType</code> 则指定 <code>keyProperty</code> 的 Java 类型。<code>statementType</code> 则用于选择语句类型，可以选择 <code>STATEMENT</code>、<code>PREPARED</code> 或 <code>CALLABLE</code> 之一，它们分别对应于 <code>Statement</code>、<code>PreparedStatement</code> 和 <code>CallableStatement</code>。默认值是 <code>PREPARED</code>。
-        The <code>databaseId</code>(Available since 3.5.5), in case there is a configured <code>DatabaseIdProvider</code>,
-        the MyBatis will use a statement with no <code>databaseId</code> attribute or with a <code>databaseId</code>
-        that matches the current one. If found with and without the <code>databaseId</code> the latter will be discarded.
+        <code>databaseId</code>（3.5.5 后可用）, 假定有一个配置好的 <code>DatabaseIdProvider</code>,
+        且若在注解中没有指定 <code>databaseId</code> 属性或者 <code>databaseId</code> 不与当前的方法匹配，MyBatis 将会使用它。
+               If found with and without the <code>databaseId</code> the latter will be discarded.
         </td>
       </tr>
       <tr>
@@ -586,26 +586,26 @@ class UserSqlBuilder {
   }
 }]]></source>
 
-    <p>这是一个在全局配置下仅用一个 sql provider 类而共享所有的映射方法的例子（3.5.6 后可用）:</p>
+    <p>这是一个在全局配置下让所有映射方法在同一个 sql provider 类里面的例子（3.5.6 后可用）:</p>
     <source><![CDATA[
 Configuration configuration = new Configuration();
 configuration.setDefaultSqlProviderType(TemplateFilePathProvider.class); // Specify an sql provider class for sharing on all mapper methods
 // ...]]></source>
     <source><![CDATA[
 // Can omit the type/value attribute on sql provider annotation
-// If omit it, the MyBatis apply the class that specified on defaultSqlProviderType.
+// 如果省略，MyBatis 将使用 defaultSqlProviderType 所指定的类.
 public interface UserMapper {
 
-  @SelectProvider // Same with @SelectProvider(TemplateFilePathProvider.class)
+  @SelectProvider // 等价于 @SelectProvider(TemplateFilePathProvider.class)
   User findUser(int id);
 
-  @InsertProvider // Same with @InsertProvider(TemplateFilePathProvider.class)
+  @InsertProvider // 等价于 @InsertProvider(TemplateFilePathProvider.class)
   void createUser(User user);
 
-  @UpdateProvider // Same with @UpdateProvider(TemplateFilePathProvider.class)
+  @UpdateProvider // 等价于 @UpdateProvider(TemplateFilePathProvider.class)
   void updateUser(User user);
 
-  @DeleteProvider // Same with @DeleteProvider(TemplateFilePathProvider.class)
+  @DeleteProvider // 等价于 @DeleteProvider(TemplateFilePathProvider.class)
   void deleteUser(int id);
 }]]></source>
 
@@ -631,9 +631,9 @@ class UserSqlProvider implements ProviderMethodResolver {
 
          <p>这个例子展现了如何在声明注解时使用<code>databaseId</code>属性（3.5.5后可用）：</p>
     <source><![CDATA[
-@Select(value = "SELECT SYS_GUID() FROM dual", databaseId = "oracle") // Use this statement if DatabaseIdProvider provide "oracle"
-@Select(value = "SELECT uuid_generate_v4()", databaseId = "postgres") // Use this statement if DatabaseIdProvider provide "postgres"
-@Select("SELECT RANDOM_UUID()") // Use this statement if the DatabaseIdProvider not configured or not matches databaseId
+@Select(value = "SELECT SYS_GUID() FROM dual", databaseId = "oracle") // 如果 DatabaseIdProvider 提供的是 "oracle"，使用这条语句 
+@Select(value = "SELECT uuid_generate_v4()", databaseId = "postgres") // 如果 DatabaseIdProvider 提供的是 "postgres"，使用这条语句
+@Select("SELECT RANDOM_UUID()") // 如果 DatabaseIdProvider 没有配置或者没有对应的 databaseId, 使用这条语句
 String generateId();
 ]]></source>
 
