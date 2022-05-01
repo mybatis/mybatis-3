@@ -392,7 +392,7 @@ public final class TypeHandlerRegistry {
     if (javaType != null) {
       Map<JdbcType, TypeHandler<?>> map = typeHandlerMap.get(javaType);
       if (map == null || map == NULL_TYPE_HANDLER_MAP) {
-        map = new EnumMap<>(JdbcType.class);
+        map = new HashMap<>();
       }
       map.put(jdbcType, handler);
       typeHandlerMap.put(javaType, map);
