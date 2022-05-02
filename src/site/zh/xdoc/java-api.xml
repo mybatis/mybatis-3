@@ -389,7 +389,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <code>select</code>，指定可加载合适类型实例的映射语句（也就是映射器方法）全限定名；
         <code>fetchType</code>，指定在该映射中覆盖全局配置参数 <code>lazyLoadingEnabled</code>；
         <code>resultMap</code>（3.5.5以上可用）, which is the fully qualified name of a result map that map to a single container object from select result；
-        <code>columnPrefix</code>(available since 3.5.5), which is column prefix for grouping select columns at nested result map.
+        <code>columnPrefix</code>（3.5.5以上可用），结果集的完全限定名，该结果映射到查询结果中的集合对象；
         <span class="label important">提示</span> 注解 API 不支持联合映射。这是由于 Java 注解不允许产生循环引用。</td>
       </tr>
       <tr>
@@ -399,8 +399,8 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td>复杂类型的集合属性映射。属性：
         <code>select</code>，指定可加载合适类型实例集合的映射语句（也就是映射器方法）全限定名；
         <code>fetchType</code>，指定在该映射中覆盖全局配置参数 <code>lazyLoadingEnabled</code>
-        <code>resultMap</code>(available since 3.5.5), which is the fully qualified name of a result map that map to collection object from select result；
-        <code>columnPrefix</code>(available since 3.5.5), which is column prefix for grouping select columns at nested result map.
+        <code>resultMap</code>（3.5.5以上可用），结果集的完全限定名，该结果映射到查询结果中的集合对象；
+        <code>columnPrefix</code>（3.5.5以上可用），在嵌套的结果集中对所查询的列进行分组的列前缀。
         <span class="label important">提示</span> 注解 API 不支持联合映射。这是由于 Java 注解不允许产生循环引用。</td>
       </tr>
       <tr>
