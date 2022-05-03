@@ -1696,7 +1696,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, propert
         <p>在 MyBatis 中有两种类型的事务管理器（也就是 type="[JDBC|MANAGED]"）：</p>
         <ul>
           <li>
-            JDBC – 这个配置直接使用了 JDBC 的提交和回滚设施，它依赖从数据源获得的连接来管理事务作用域。默认情况下，为了与某些驱动程序兼容，它在关闭连接时启用自动提交。然而，对于某些驱动程序来说，启用自动提交不仅是不必要的，而且是一个代价高昂的操作。因此，从 3.5.10 版本开始，你可以通过将 "skipSetAutoCommitOnClose "属性设置为 "true "来跳过这个步骤。 例如：
+            JDBC – 这个配置直接使用了 JDBC 的提交和回滚功能，它依赖从数据源获得的连接来管理事务作用域。默认情况下，为了与某些驱动程序兼容，它在关闭连接时启用自动提交。然而，对于某些驱动程序来说，启用自动提交不仅是不必要的，而且是一个代价高昂的操作。因此，从 3.5.10 版本开始，你可以通过将 "skipSetAutoCommitOnClose" 属性设置为 "true" 来跳过这个步骤。例如：
             <source><![CDATA[<transactionManager type="JDBC">
   <property name="skipSetAutoCommitOnClose" value="true"/>
 </transactionManager>]]></source>
