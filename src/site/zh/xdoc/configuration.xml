@@ -500,7 +500,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 指定 MyBatis 所用日志的具体实现，未指定时将自动查找。
               </td>
               <td>
-                SLF4J | LOG4J(deprecated since 3.5.9) | LOG4J2 | JDK_LOGGING | COMMONS_LOGGING | STDOUT_LOGGING | NO_LOGGING
+                SLF4J | LOG4J（3.5.9 起废弃） | LOG4J2 | JDK_LOGGING | COMMONS_LOGGING | STDOUT_LOGGING | NO_LOGGING
               </td>
               <td>
                 未设置
@@ -514,7 +514,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 指定 Mybatis 创建可延迟加载对象所用到的代理工具。
               </td>
               <td>
-                CGLIB (deprecated since 3.5.10) | JAVASSIST
+                CGLIB （3.5.10 起废弃） | JAVASSIST
               </td>
               <td>
                 JAVASSIST （MyBatis 3.3 以上）
@@ -584,15 +584,14 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 defaultSqlProviderType
               </td>
               <td>
-                Specifies an sql provider class that holds provider method (Since 3.5.6).
-                This class apply to the <code>type</code>(or <code>value</code>) attribute on sql provider annotation(e.g. <code>@SelectProvider</code>),
-                when these attribute was omitted.
+                指定一个拥有 provider 方法的 sql provider 类 （新增于 3.5.6）.
+                这个类适用于指定 sql provider 注解上的<code>type</code>（或 <code>value</code>） 属性（当这些属性在注解中被忽略时）。 (e.g. <code>@SelectProvider</code>)
               </td>
               <td>
-                A type alias or fully qualified class name
+                类型别名或者全限定名
               </td>
               <td>
-                Not set
+                未设置
               </td>
             </tr>
             <tr>
@@ -600,7 +599,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 nullableOnForEach
               </td>
               <td>
-                Specifies the default value of 'nullable' attribute on 'foreach' tag. (Since 3.5.9)
+                为 'foreach' 标签的 'nullable' 属性指定默认值。（新增于 3.5.9）
               </td>
               <td>
                 true | false
@@ -614,7 +613,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 argNameBasedConstructorAutoMapping
               </td>
               <td>
-                When applying constructor auto-mapping, argument name is used to search the column to map instead of relying on the column order. (Since 3.5.10)
+               当应用构造器自动映射时，参数名称被用来搜索要映射的列，而不再依赖列的顺序。（新增于 3.5.10）
               </td>
               <td>
                 true | false
@@ -1697,7 +1696,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, propert
         <p>在 MyBatis 中有两种类型的事务管理器（也就是 type="[JDBC|MANAGED]"）：</p>
         <ul>
           <li>
-            JDBC – 这个配置直接使用了 JDBC 的提交和回滚设施，它依赖从数据源获得的连接来管理事务作用域。 By default, it enables auto-commit when closing the connection for compatibility with some drivers. However, for some drivers, enabling auto-commit is not only unnecesry, but also is an expensive operation. So, since version 3.5.10, you can skip this step by setting the "skipSetAutoCommitOnClose" property to true. For example:
+            JDBC – 这个配置直接使用了 JDBC 的提交和回滚设施，它依赖从数据源获得的连接来管理事务作用域。默认情况下，为了与某些驱动程序兼容，它在关闭连接时启用自动提交。然而，对于某些驱动程序来说，启用自动提交不仅是不必要的，而且是一个代价高昂的操作。因此，从 3.5.10 版本开始，你可以通过将 "skipSetAutoCommitOnClose "属性设置为 "true "来跳过这个步骤。 例如：
             <source><![CDATA[<transactionManager type="JDBC">
   <property name="skipSetAutoCommitOnClose" value="true"/>
 </transactionManager>]]></source>
