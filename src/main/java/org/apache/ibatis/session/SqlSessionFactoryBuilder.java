@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2022 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -53,7 +53,9 @@ public class SqlSessionFactoryBuilder {
     } finally {
       ErrorContext.instance().reset();
       try {
-        reader.close();
+      	if (reader != null) {
+      	  reader.close();
+      	}
       } catch (IOException e) {
         // Intentionally ignore. Prefer previous error.
       }
@@ -81,7 +83,9 @@ public class SqlSessionFactoryBuilder {
     } finally {
       ErrorContext.instance().reset();
       try {
-        inputStream.close();
+      	if (inputStream != null) {
+      	  inputStream.close();
+      	}
       } catch (IOException e) {
         // Intentionally ignore. Prefer previous error.
       }
