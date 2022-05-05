@@ -52,7 +52,7 @@ class OgnlStaticTest {
    * <p>
    * DEBUG [main] - ==> Parameters: 1(Integer), 1(Integer)
    * <p>
-   * There are two parameter mappings but DefaulParameterHandler maps them both to input paremeter (integer)
+   * There are two parameter mappings but DefaultParameterHandler maps them both to input parameter (integer)
    */
   @Test // see issue #448
   void shouldGetAUserStatic() {
