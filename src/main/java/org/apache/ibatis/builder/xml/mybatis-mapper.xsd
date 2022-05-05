@@ -108,10 +108,10 @@
   </xs:element>
   <xs:element name="constructor">
     <xs:complexType>
-      <xs:sequence>
-        <xs:element minOccurs="0" maxOccurs="unbounded" ref="idArg"/>
-        <xs:element minOccurs="0" maxOccurs="unbounded" ref="arg"/>
-      </xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="idArg"/>
+        <xs:element ref="arg"/>
+      </xs:choice>
     </xs:complexType>
   </xs:element>
   <xs:element name="id">
