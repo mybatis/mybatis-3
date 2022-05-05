@@ -125,7 +125,7 @@ public class JBoss6VFS extends VFS {
   }
 
   /**
-   * Verifies that the return type of a method is what it is expected to be. If it is not, then
+   * Verifies that the return type of method is what it is expected to be. If it is not, then
    * this VFS is marked as invalid for the current environment.
    *
    * @param method The method whose return type is to be checked.

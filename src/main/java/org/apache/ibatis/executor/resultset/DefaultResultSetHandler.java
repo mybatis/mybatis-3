@@ -497,7 +497,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
           foundValues = true;
         }
         if (value != null || (configuration.isCallSettersOnNulls() && !metaObject.getSetterType(property).isPrimitive())) {
-          // code issue #377, call setter on nulls (value is not 'found')
+          // gcode issue #377, call setter on nulls (value is not 'found')
           metaObject.setValue(property, value);
         }
       }
@@ -574,7 +574,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
           foundValues = true;
         }
         if (value != null || (configuration.isCallSettersOnNulls() && !mapping.primitive)) {
-          // code issue #377, call setter on nulls (value is not 'found')
+          // gcode issue #377, call setter on nulls (value is not 'found')
           metaObject.setValue(mapping.property, value);
         }
       }
@@ -643,7 +643,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     if (resultObject != null && !hasTypeHandlerForResultObject(rsw, resultMap.getType())) {
       final List<ResultMapping> propertyMappings = resultMap.getPropertyResultMappings();
       for (ResultMapping propertyMapping : propertyMappings) {
-        // issue code #109 && issue #149
+        // issue gcode #109 && issue #149
         if (propertyMapping.getNestedQueryId() != null && propertyMapping.isLazy()) {
           resultObject = configuration.getProxyFactory().createProxy(resultObject, lazyLoader, configuration, objectFactory, constructorArgTypes, constructorArgs);
           break;
