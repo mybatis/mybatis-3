@@ -43,6 +43,8 @@ public class TypeAliasRegistry {
     registerAlias("string", String.class);
 
     registerAlias("byte", Byte.class);
+    registerAlias("char", Character.class);
+    registerAlias("character", Character.class);
     registerAlias("long", Long.class);
     registerAlias("short", Short.class);
     registerAlias("int", Integer.class);
@@ -52,6 +54,8 @@ public class TypeAliasRegistry {
     registerAlias("boolean", Boolean.class);
 
     registerAlias("byte[]", Byte[].class);
+    registerAlias("char[]", Character[].class);
+    registerAlias("character[]", Character[].class);
     registerAlias("long[]", Long[].class);
     registerAlias("short[]", Short[].class);
     registerAlias("int[]", Integer[].class);
@@ -61,6 +65,8 @@ public class TypeAliasRegistry {
     registerAlias("boolean[]", Boolean[].class);
 
     registerAlias("_byte", byte.class);
+    registerAlias("_char", char.class);
+    registerAlias("_character", char.class);
     registerAlias("_long", long.class);
     registerAlias("_short", short.class);
     registerAlias("_int", int.class);
@@ -70,6 +76,8 @@ public class TypeAliasRegistry {
     registerAlias("_boolean", boolean.class);
 
     registerAlias("_byte[]", byte[].class);
+    registerAlias("_char[]", char[].class);
+    registerAlias("_character[]", char[].class);
     registerAlias("_long[]", long[].class);
     registerAlias("_short[]", short[].class);
     registerAlias("_int[]", int[].class);

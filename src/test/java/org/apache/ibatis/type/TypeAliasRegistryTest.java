@@ -67,4 +67,12 @@ class TypeAliasRegistryTest {
     typeAliasRegistry.registerAlias("foo", String.class);
   }
 
+  @Test
+  void shouldFetchCharType() {
+    TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
+    assertEquals(Character.class, typeAliasRegistry.resolveAlias("char"));
+    assertEquals(Character[].class, typeAliasRegistry.resolveAlias("char[]"));
+    assertEquals(char[].class, typeAliasRegistry.resolveAlias("_char[]"));
+  }
+
 }
