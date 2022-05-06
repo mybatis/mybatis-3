@@ -60,7 +60,7 @@ public class BatchExecutorException extends ExecutorException {
    * in the list for each successful sub-executor executed before the failing
    * executor.
    *
-   * @return the previously successful executor results (may be an empty list
+   * @return the previously successful executor results (maybe an empty list
    *         if no executor has executed successfully)
    */
   public List<BatchResult> getSuccessfulBatchResults() {
