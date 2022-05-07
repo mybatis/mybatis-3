@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2022 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -288,51 +288,42 @@ public class XNode {
   }
 
   private void toString(StringBuilder builder, int level) {
-    builder.append("<");
-    builder.append(name);
+    builder.append(indent(level)).append("<").append(name);
     for (Map.Entry<Object, Object> entry : attributes.entrySet()) {
-      builder.append(" ");
-      builder.append(entry.getKey());
-      builder.append("=\"");
-      builder.append(entry.getValue());
-      builder.append("\"");
+      builder.append(" ").append(entry.getKey()).append("=\"").append(entry.getValue()).append("\"");
     }
     List<XNode> children = getAllChildren();
     if (!children.isEmpty()) {
       builder.append(">\n");
       for (XNode child : children) {
-        if (child.node.getNodeType() == Node.TEXT_NODE) {
-          if (child.body != null && !child.body.trim().equals("")) {
-            indent(builder, level + 1);
-            builder.append(child.body.trim());
-            builder.append("\n");
-          }
-        } else {
-          indent(builder, level + 1);
-          child.toString(builder, level + 1);
-        }
+        handleChild(child, builder, level);
       }
-      indent(builder, level);
-      builder.append("</");
-      builder.append(name);
-      builder.append(">");
+      builder.append(indent(level)).append("</").append(name).append(">");
     } else if (body != null) {
-      builder.append(">");
-      builder.append(body);
-      builder.append("</");
-      builder.append(name);
-      builder.append(">");
+      builder.append(">\n").append(indent(level + 1)).append(body.trim()).append("\n")
+        .append(indent(level)).append("</").append(name).append(">");
     } else {
-      builder.append("/>");
-      indent(builder, level);
+      builder.append("/>").append(indent(level));
     }
     builder.append("\n");
   }
 
-  private void indent(StringBuilder builder, int level) {
-    for (int i = 0; i < level; i++) {
-      builder.append("    ");
+  private void handleChild(XNode child, StringBuilder builder, int level) {
+    if (child.node.getNodeType() == Node.TEXT_NODE) {
+      if (!child.body.trim().equals("")) {
+        builder.append(indent(level + 1)).append(child.body.trim()).append("\n");
+      }
+    } else {
+      child.toString(builder, level + 1);
     }
+  }
+
+  private String indent(int level) {
+    StringBuilder s = new StringBuilder();
+    for (int i = 0; i < level; i++) {
+      s.append("\t");
+    }
+    return s.toString();
   }
 
   public List<XNode> getAllChildren() {

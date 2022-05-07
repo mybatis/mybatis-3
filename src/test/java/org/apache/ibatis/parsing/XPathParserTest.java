@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2022 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -204,7 +204,7 @@ class XPathParserTest {
     assertEquals((Float) 3.2f, parser.evalNode("/employee/active").getFloatAttribute("score"));
     assertEquals((Double) 3.2d, parser.evalNode("/employee/active").getDoubleAttribute("score"));
 
-    assertEquals("<id>${id_var}</id>", parser.evalNode("/employee/@id").toString().trim());
+    assertEquals("<id>\n\t${id_var}\n</id>", parser.evalNode("/employee/@id").toString().trim());
     assertEquals(7, parser.evalNodes("/employee/*").size());
     XNode node = parser.evalNode("/employee/height");
     assertEquals("employee/height", node.getPath());
@@ -212,7 +212,7 @@ class XPathParserTest {
   }
 
   @Test
-  void formatXNodeToString() {
+  public void formatXNodeToString() {
     XPathParser parser = new XPathParser("<users><user><id>100</id><name>Tom</name><age>30</age><cars><car index=\"1\">BMW</car><car index=\"2\">Audi</car><car index=\"3\">Benz</car></cars></user></users>");
     String usersNodeToString = parser.evalNode("/users").toString();
     String userNodeToString = parser.evalNode("/users/user").toString();
@@ -220,40 +220,124 @@ class XPathParserTest {
 
     String usersNodeToStringExpect =
       "<users>\n" +
-      "    <user>\n" +
-      "        <id>100</id>\n" +
-      "        <name>Tom</name>\n" +
-      "        <age>30</age>\n" +
-      "        <cars>\n" +
-      "            <car index=\"1\">BMW</car>\n" +
-      "            <car index=\"2\">Audi</car>\n" +
-      "            <car index=\"3\">Benz</car>\n" +
-      "        </cars>\n" +
-      "    </user>\n" +
-      "</users>\n";
+        "\t<user>\n" +
+        "\t\t<id>\n" +
+        "\t\t\t100\n" +
+        "\t\t</id>\n" +
+        "\t\t<name>\n" +
+        "\t\t\tTom\n" +
+        "\t\t</name>\n" +
+        "\t\t<age>\n" +
+        "\t\t\t30\n" +
+        "\t\t</age>\n" +
+        "\t\t<cars>\n" +
+        "\t\t\t<car index=\"1\">\n" +
+        "\t\t\t\tBMW\n" +
+        "\t\t\t</car>\n" +
+        "\t\t\t<car index=\"2\">\n" +
+        "\t\t\t\tAudi\n" +
+        "\t\t\t</car>\n" +
+        "\t\t\t<car index=\"3\">\n" +
+        "\t\t\t\tBenz\n" +
+        "\t\t\t</car>\n" +
+        "\t\t</cars>\n" +
+        "\t</user>\n" +
+        "</users>\n";
 
     String userNodeToStringExpect =
       "<user>\n" +
-      "    <id>100</id>\n" +
-      "    <name>Tom</name>\n" +
-      "    <age>30</age>\n" +
-      "    <cars>\n" +
-      "        <car index=\"1\">BMW</car>\n" +
-      "        <car index=\"2\">Audi</car>\n" +
-      "        <car index=\"3\">Benz</car>\n" +
-      "    </cars>\n" +
-      "</user>\n";
+        "\t<id>\n" +
+        "\t\t100\n" +
+        "\t</id>\n" +
+        "\t<name>\n" +
+        "\t\tTom\n" +
+        "\t</name>\n" +
+        "\t<age>\n" +
+        "\t\t30\n" +
+        "\t</age>\n" +
+        "\t<cars>\n" +
+        "\t\t<car index=\"1\">\n" +
+        "\t\t\tBMW\n" +
+        "\t\t</car>\n" +
+        "\t\t<car index=\"2\">\n" +
+        "\t\t\tAudi\n" +
+        "\t\t</car>\n" +
+        "\t\t<car index=\"3\">\n" +
+        "\t\t\tBenz\n" +
+        "\t\t</car>\n" +
+        "\t</cars>\n" +
+        "</user>\n";
 
-  String carsNodeToStringExpect =
+    String carsNodeToStringExpect =
       "<cars>\n" +
-      "    <car index=\"1\">BMW</car>\n" +
-      "    <car index=\"2\">Audi</car>\n" +
-      "    <car index=\"3\">Benz</car>\n" +
-      "</cars>\n";
+        "\t<car index=\"1\">\n" +
+        "\t\tBMW\n" +
+        "\t</car>\n" +
+        "\t<car index=\"2\">\n" +
+        "\t\tAudi\n" +
+        "\t</car>\n" +
+        "\t<car index=\"3\">\n" +
+        "\t\tBenz\n" +
+        "\t</car>\n" +
+        "</cars>\n";
 
     assertEquals(usersNodeToStringExpect, usersNodeToString);
     assertEquals(userNodeToStringExpect, userNodeToString);
     assertEquals(carsNodeToStringExpect, carsNodeToString);
   }
 
+  @Test
+  public void testIssue2080() {
+    String mapperString =
+      "<mapper namespace=\"demo.StudentMapper\">\n" +
+        "  <select id=\"selectFullStudent\" resultMap=\"fullResult\" databaseId=\"mysql\">\n" +
+        "    select\n" +
+        "      STUDENT.ID ID,\n" +
+        "      STUDENT.SNO SNO,\n" +
+        "      STUDENT.SNAME SNAME,\n" +
+        "      STUDENT.SSEX SSEX,\n" +
+        "      STUDENT.SBIRTHDAY SBIRTHDAY,\n" +
+        "      STUDENT.CLASS CLASS,\n" +
+        "      SCORE.CNO CNO,\n" +
+        "      SCORE.DEGREE DEGREE,\n" +
+        "      HOUSE.HOUSE_ID HOUSE_ID,\n" +
+        "      HOUSE.HOUSE_HOLDER HOUSE_HOLDER,\n" +
+        "      HOUSE.HOUSE_MEMBER HOUSE_MEMBER\n" +
+        "    from STUDENT, SCORE, HOUSE\n" +
+        "    <where>\n" +
+        "      <if test=\"sex != null\">\n" +
+        "        STUDENT.SSEX = #{sex};\n" +
+        "      </if>\n" +
+        "      and STUDENT.SNO = SCORE.SNO and HOUSE.HOUSE_MEMBER = STUDENT.SNO\n" +
+        "    </where>\n" +
+        "  </select>\n" +
+        "</mapper>";
+
+    String expectedSelectString =
+      "<select resultMap=\"fullResult\" databaseId=\"mysql\" id=\"selectFullStudent\">\n" +
+        "\tselect\n" +
+        "      STUDENT.ID ID,\n" +
+        "      STUDENT.SNO SNO,\n" +
+        "      STUDENT.SNAME SNAME,\n" +
+        "      STUDENT.SSEX SSEX,\n" +
+        "      STUDENT.SBIRTHDAY SBIRTHDAY,\n" +
+        "      STUDENT.CLASS CLASS,\n" +
+        "      SCORE.CNO CNO,\n" +
+        "      SCORE.DEGREE DEGREE,\n" +
+        "      HOUSE.HOUSE_ID HOUSE_ID,\n" +
+        "      HOUSE.HOUSE_HOLDER HOUSE_HOLDER,\n" +
+        "      HOUSE.HOUSE_MEMBER HOUSE_MEMBER\n" +
+        "    from STUDENT, SCORE, HOUSE\n" +
+        "\t<where>\n" +
+        "\t\t<if test=\"sex != null\">\n" +
+        "\t\t\tSTUDENT.SSEX = #{sex};\n" +
+        "\t\t</if>\n" +
+        "\t\tand STUDENT.SNO = SCORE.SNO and HOUSE.HOUSE_MEMBER = STUDENT.SNO\n" +
+        "\t</where>\n" +
+        "</select>\n";
+    XPathParser parser = new XPathParser(mapperString);
+    XNode selectNode = parser.evalNode("mapper/select");
+    String selectString = selectNode.toString();
+    assertEquals(expectedSelectString, selectString);
+  }
 }
