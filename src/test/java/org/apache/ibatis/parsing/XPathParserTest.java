@@ -290,7 +290,7 @@ class XPathParserTest {
   public void testIssue2080() {
     String mapperString =
       "<mapper namespace=\"demo.StudentMapper\">\n" +
-        "  <select id=\"selectFullStudent\" resultMap=\"fullResult\" databaseId=\"mysql\">\n" +
+        "  <select id=\"selectFullStudent\">\n" +
         "    select\n" +
         "      STUDENT.ID ID,\n" +
         "      STUDENT.SNO SNO,\n" +
@@ -314,7 +314,7 @@ class XPathParserTest {
         "</mapper>";
 
     String expectedSelectString =
-      "<select resultMap=\"fullResult\" databaseId=\"mysql\" id=\"selectFullStudent\">\n" +
+      "<select id=\"selectFullStudent\">\n" +
         "\tselect\n" +
         "      STUDENT.ID ID,\n" +
         "      STUDENT.SNO SNO,\n" +
