@@ -794,7 +794,15 @@ public class Author {
             </tr>
             <tr>
               <td>
-                _char
+                _char (since 3.5.10)
+              </td>
+              <td>
+                char
+              </td>
+            </tr>
+            <tr>
+              <td>
+                _character (since 3.5.10)
               </td>
               <td>
                 char
@@ -874,7 +882,15 @@ public class Author {
             </tr>
             <tr>
               <td>
-                char
+                char (since 3.5.10)
+              </td>
+              <td>
+                Character
+              </td>
+            </tr>
+            <tr>
+              <td>
+                character (since 3.5.10)
               </td>
               <td>
                 Character
