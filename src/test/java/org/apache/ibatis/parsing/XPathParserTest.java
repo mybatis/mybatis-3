@@ -286,8 +286,11 @@ class XPathParserTest {
     assertEquals(carsNodeToStringExpect, carsNodeToString);
   }
 
+  /**
+   * In order to fix issue #2080, format all not just <code>Node.ELEMENT_NODE</code> type of <code>XNode</code>
+   */
   @Test
-  public void testIssue2080() {
+  public void testTextNodeToString() {
     String mapperString =
       "<mapper namespace=\"demo.StudentMapper\">\n" +
         "  <select id=\"selectFullStudent\">\n" +

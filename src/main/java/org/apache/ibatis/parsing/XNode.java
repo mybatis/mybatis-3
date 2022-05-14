@@ -310,8 +310,9 @@ public class XNode {
 
   private void handleChild(XNode child, StringBuilder builder, int level) {
     if (child.node.getNodeType() == Node.TEXT_NODE) {
-      if (!child.body.trim().equals("")) {
-        builder.append(indent(level + 1)).append(child.body.trim()).append("\n");
+      String trimBody;
+      if (child.body != null && !"".equals(trimBody = child.body.trim())) {
+        builder.append(indent(level + 1)).append(trimBody).append("\n");
       }
     } else {
       child.toString(builder, level + 1);
