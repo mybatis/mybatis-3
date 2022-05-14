@@ -61,7 +61,7 @@ extends CDATA #IMPLIED
 autoMapping (true|false) #IMPLIED
 >
 
-<!ELEMENT constructor (idArg*,arg*)>
+<!ELEMENT constructor ((idArg|arg)*)>
 
 <!ELEMENT id EMPTY>
 <!ATTLIST id
