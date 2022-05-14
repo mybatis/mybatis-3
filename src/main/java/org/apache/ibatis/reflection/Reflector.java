@@ -76,8 +76,8 @@ public class Reflector {
       addSetMethods(classMethods);
       addFields(clazz);
     }
-    readablePropertyNames = getMethods.keySet().toArray(new String[0]);
-    writablePropertyNames = setMethods.keySet().toArray(new String[0]);
+    readablePropertyNames = getMethods.keySet().toArray(new String[getMethods.size()]);
+    writablePropertyNames = setMethods.keySet().toArray(new String[setMethods.size()]);
     for (String propName : readablePropertyNames) {
       caseInsensitivePropertyMap.put(propName.toUpperCase(Locale.ENGLISH), propName);
     }
