@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2021 the original author or authors.
+       Copyright 2009-2022 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -108,10 +108,10 @@
   </xs:element>
   <xs:element name="constructor">
     <xs:complexType>
-      <xs:sequence>
-        <xs:element minOccurs="0" maxOccurs="unbounded" ref="idArg"/>
-        <xs:element minOccurs="0" maxOccurs="unbounded" ref="arg"/>
-      </xs:sequence>
+      <xs:choice minOccurs="1" maxOccurs="unbounded">
+        <xs:element ref="idArg"/>
+        <xs:element ref="arg"/>
+      </xs:choice>
     </xs:complexType>
   </xs:element>
   <xs:element name="id">

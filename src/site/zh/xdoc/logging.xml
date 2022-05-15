@@ -39,7 +39,7 @@
           Log4j 2
         </li>
         <li>
-          Log4j (deprecated since 3.5.9)
+          Log4j （3.5.9 起废弃）
         </li>
         <li>
           JDK logging
@@ -97,7 +97,7 @@ org.apache.ibatis.logging.LogFactory.useStdOutLogging();
         </p>
         <p>对于 web 应用或企业级应用，则需要将 <code>logback-classic.jar</code>, <code>logback-core.jar</code> and <code>slf4j-api.jar</code> 添加到 <code>WEB-INF/lib</code> 目录下；对于独立应用，可以将它添加到JVM 的 <code>-classpath</code> 启动参数中。
         </p>
-        <p>If you use the maven, you can download jar files by adding following settings on your <code>pom.xml</code>.
+        <p>如果你使用 maven, 你可以通过在 <code>pom.xml</code> 中添加下面的依赖来下载 jar 文件。
         </p>
 <source><![CDATA[
 <dependency>
@@ -213,7 +213,7 @@ public interface BlogMapper {
 
     <p></p>
     <h4>
-      Configuration example for Log4j 2
+      Log4j 2 配置示例
     </h4>
 
     <p><code>pom.xml</code></p>
@@ -250,7 +250,7 @@ public interface BlogMapper {
 
     <p></p>
     <h4>
-      Configuration example for Log4j
+      Log4j 配置示例
     </h4>
 
     <p><code>pom.xml</code></p>
@@ -277,7 +277,7 @@ log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n
 
     <p></p>
     <h4>
-      Configuration example for JDK logging
+      JDK logging 配置示例
     </h4>
 
     <p><code>logging.properties</code></p>

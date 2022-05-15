@@ -174,7 +174,7 @@ class ReflectorTest {
   }
 
   @Test
-  void shouldResoleveReadonlySetterWithOverload() {
+  void shouldResolveReadonlySetterWithOverload() {
     class BeanClass implements BeanInterface<String> {
       @Override
       public void setId(String id) {
