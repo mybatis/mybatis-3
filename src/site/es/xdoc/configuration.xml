@@ -686,6 +686,22 @@ public class Author {
             </tr>
             <tr>
               <td>
+                _char (since 3.5.10)
+              </td>
+              <td>
+                char
+              </td>
+            </tr>
+            <tr>
+              <td>
+                _character (since 3.5.10)
+              </td>
+              <td>
+                char
+              </td>
+            </tr>
+            <tr>
+              <td>
                 _long
               </td>
               <td>
@@ -754,6 +770,22 @@ public class Author {
               </td>
               <td>
                 Byte
+              </td>
+            </tr>
+            <tr>
+              <td>
+                char (since 3.5.10)
+              </td>
+              <td>
+                Character
+              </td>
+            </tr>
+            <tr>
+              <td>
+                character (since 3.5.10)
+              </td>
+              <td>
+                Character
               </td>
             </tr>
             <tr>
@@ -838,10 +870,58 @@ public class Author {
             </tr>
             <tr>
               <td>
+                biginteger
+              </td>
+              <td>
+                BigInteger
+              </td>
+            </tr>
+            <tr>
+              <td>
                 object
               </td>
               <td>
                 Object
+              </td>
+            </tr>
+            <tr>
+              <td>
+                date[]
+              </td>
+              <td>
+                Date[]
+              </td>
+            </tr>
+            <tr>
+              <td>
+                decimal[]
+              </td>
+              <td>
+                BigDecimal[]
+              </td>
+            </tr>
+            <tr>
+              <td>
+                bigdecimal[]
+              </td>
+              <td>
+                BigDecimal[]
+              </td>
+            </tr>
+            <tr>
+              <td>
+                biginteger[]
+              </td>
+              <td>
+                BigInteger[]
+              </td>
+            </tr>
+            <tr>
+              <td>
+                object[]
+              </td>
+              <td>
+                Object[]
               </td>
             </tr>
             <tr>
