@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.datasource.unpooled;
 
+import java.util.Map;
 import java.util.Properties;
 
 import javax.sql.DataSource;
@@ -42,13 +43,13 @@ public class UnpooledDataSourceFactory implements DataSourceFactory {
   public void setProperties(Properties properties) {
     Properties driverProperties = new Properties();
     MetaObject metaDataSource = SystemMetaObject.forObject(dataSource);
-    for (Object key : properties.keySet()) {
-      String propertyName = (String) key;
+    for (Map.Entry<Object, Object> entry : properties.entrySet()) {
+      String propertyName = (String) entry.getKey();
       if (propertyName.startsWith(DRIVER_PROPERTY_PREFIX)) {
-        String value = properties.getProperty(propertyName);
+        String value = (String) entry.getValue();
         driverProperties.setProperty(propertyName.substring(DRIVER_PROPERTY_PREFIX_LENGTH), value);
       } else if (metaDataSource.hasSetter(propertyName)) {
-        String value = (String) properties.get(propertyName);
+        String value = (String) entry.getValue();
         Object convertedValue = convertValue(metaDataSource, propertyName, value);
         metaDataSource.setValue(propertyName, convertedValue);
       } else {
