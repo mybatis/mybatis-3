@@ -105,7 +105,7 @@ public class TypeAliasRegistry {
     registerAlias("collection", Collection.class);
     registerAlias("iterator", Iterator.class);
 
-    registerAlias("ResultSet", ResultSet.class);
+    registerAlias("resultset", ResultSet.class);
   }
 
   @SuppressWarnings("unchecked")
