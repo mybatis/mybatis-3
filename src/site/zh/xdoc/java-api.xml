@@ -416,7 +416,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td>该注解允许你指定大部分开关和配置选项，它们通常在映射语句上作为属性出现。与在注解上提供大量的属性相比，<code>Options</code> 注解提供了一致、清晰的方式来指定选项。属性：<code>useCache=true</code>、<code>flushCache=FlushCachePolicy.DEFAULT</code>、<code>resultSetType=DEFAULT</code>、<code>statementType=PREPARED</code>、<code>fetchSize=-1</code>、<code>timeout=-1</code>、<code>useGeneratedKeys=false</code>、<code>keyProperty=""</code>、<code>keyColumn=""</code>、<code>resultSets=""</code>, <code>databaseId=""</code>。注意，Java 注解无法指定 <code>null</code> 值。因此，一旦你使用了 <code>Options</code> 注解，你的语句就会被上述属性的默认值所影响。要注意避免默认值带来的非预期行为。
         <code>databaseId</code>（3.5.5以上可用）, 如果有一个配置好的 <code>DatabaseIdProvider</code>,
         MyBatis 会加载不带 <code>databaseId</code> 属性和带有匹配当前数据库 <code>databaseId</code> 属性的所有语句。如果同时存在带 <code>databaseId</code> 和不带 <code>databaseId</code> 属性的相同语句，则后者会被舍弃。<br/><br/>
-             
+
         注意：<code>keyColumn</code> 属性只在某些数据库中有效（如 Oracle、PostgreSQL 等）。要了解更多关于 <code>keyColumn</code> 和 <code>keyProperty</code> 可选值信息，请查看“insert, update 和 delete”一节。</td>
       </tr>
       <tr>
@@ -585,10 +585,10 @@ class UserSqlBuilder {
     <p>这是一个在全局配置下让所有映射方法在同一个 sql provider 类里面的例子（3.5.6 后可用）:</p>
     <source><![CDATA[
 Configuration configuration = new Configuration();
-configuration.setDefaultSqlProviderType(TemplateFilePathProvider.class); // 让所有映射方法在同一个 sql provider 类里面 
+configuration.setDefaultSqlProviderType(TemplateFilePathProvider.class); // 让所有映射方法在同一个 sql provider 类里面
 // ...]]></source>
     <source><![CDATA[
-// 在 sql provider 注解上可以省略 type/value 属性 
+// 在 sql provider 注解上可以省略 type/value 属性
 // 如果省略，MyBatis 将使用 defaultSqlProviderType 所指定的类
 public interface UserMapper {
 
@@ -627,7 +627,7 @@ class UserSqlProvider implements ProviderMethodResolver {
 
          <p>这个例子展现了如何在声明注解时使用 <code>databaseId</code> 属性（3.5.5后可用）：</p>
     <source><![CDATA[
-@Select(value = "SELECT SYS_GUID() FROM dual", databaseId = "oracle") // 如果 DatabaseIdProvider 提供的是 "oracle"，使用这条语句 
+@Select(value = "SELECT SYS_GUID() FROM dual", databaseId = "oracle") // 如果 DatabaseIdProvider 提供的是 "oracle"，使用这条语句
 @Select(value = "SELECT uuid_generate_v4()", databaseId = "postgres") // 如果 DatabaseIdProvider 提供的是 "postgres"，使用这条语句
 @Select("SELECT RANDOM_UUID()") // 如果 DatabaseIdProvider 没有配置或者没有对应的 databaseId, 使用这条语句
 String generateId();
