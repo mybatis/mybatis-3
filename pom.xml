@@ -388,6 +388,14 @@
 
     <resources>
       <resource>
+          <directory>${project.build.directory}/site</directory>
+          <filtering>true</filtering>
+      </resource>
+      <resource>
+        <directory>${project.basedir}/src/site</directory>
+        <filtering>true</filtering>
+      </resource>
+      <resource>
         <directory>${project.basedir}</directory>
         <targetPath>META-INF</targetPath>
         <includes>
@@ -440,6 +448,14 @@
                 <testExcludes>
                   <testExclude>**/record_type/*.java</testExclude>
                 </testExcludes>
+              </configuration>
+            </plugin>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-site-plugin</artifactId>
+              <configuration>
+                <!-- Build using files that replace a placeholder using project properties -->
+                <siteDirectory>${project.build.directory}/site</siteDirectory>
               </configuration>
             </plugin>
           </plugins>

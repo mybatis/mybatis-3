@@ -30,7 +30,7 @@
     <subsection name="Installation">
       <p>
         To use MyBatis you just need to include the
-          <a href="https://github.com/mybatis/mybatis-3/releases">mybatis-x.x.x.jar</a>
+          <a href="https://github.com/mybatis/mybatis-3/releases">mybatis-${project.version}.jar</a>
         file in the classpath.
       </p>
       <p>
