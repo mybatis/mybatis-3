@@ -23,11 +23,11 @@ under the License.
     <link>http://www.mybatis.org/mybatis-3</link>
     <description>mybatis - Checkstyle report</description>
     <language>en-us</language>
-    <copyright>&#169;2009 - 2021 MyBatis.org</copyright>
+    <copyright>&#169;2009 - 2022 MyBatis.org</copyright>
     <item>
       <title>File: 319,
              Errors: 0,
-             Warnings: 1314,
+             Warnings: 1336,
              Infos: 0
       </title>
             <link>http://www.mybatis.org/mybatis-3/checkstyle.html</link>
@@ -346,7 +346,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  3
+                  4
                 </td>
                 <td>
                   0
@@ -360,7 +360,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  17
+                  18
                 </td>
                 <td>
                   0
@@ -668,7 +668,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  5
+                  6
                 </td>
                 <td>
                   0
@@ -710,7 +710,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  4
+                  5
                 </td>
                 <td>
                   0
@@ -1368,7 +1368,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  5
+                  6
                 </td>
                 <td>
                   0
@@ -1396,7 +1396,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  3
+                  4
                 </td>
                 <td>
                   0
@@ -2236,7 +2236,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  3
+                  4
                 </td>
                 <td>
                   0
@@ -2320,7 +2320,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  3
+                  4
                 </td>
                 <td>
                   0
@@ -2516,7 +2516,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  5
+                  6
                 </td>
                 <td>
                   0
@@ -3258,7 +3258,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  7
+                  8
                 </td>
                 <td>
                   0
@@ -3314,7 +3314,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  3
+                  9
                 </td>
                 <td>
                   0
@@ -3622,7 +3622,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  3
+                  4
                 </td>
                 <td>
                   0
@@ -3720,7 +3720,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  4
+                  5
                 </td>
                 <td>
                   0
@@ -3790,7 +3790,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  5
+                  6
                 </td>
                 <td>
                   0
@@ -4028,7 +4028,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  60
+                  63
                 </td>
                 <td>
                   0

@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../apidocs/org/apache/ibatis/cache/decorators/BlockingCache.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2021 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2022 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -84,7 +84,7 @@
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>  
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>    @Override
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>    <strong class="jxr_keyword">public</strong> Object removeObject(Object key) {
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>      <em class="jxr_comment">// despite of its name, this method is called only to release locks</em>
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>      <em class="jxr_comment">// despite its name, this method is called only to release locks</em>
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>      releaseLock(key);
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>      <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>    }
@@ -135,6 +135,6 @@
 <a class="jxr_linenumber" name="L127" href="#L127">127</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2021 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2022 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>
