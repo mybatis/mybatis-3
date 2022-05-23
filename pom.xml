@@ -27,7 +27,7 @@
   </parent>
 
   <artifactId>mybatis</artifactId>
-  <version>3.5.10-SNAPSHOT</version>
+  <version>3.5.10</version>
   <packaging>jar</packaging>
 
   <name>mybatis</name>
@@ -112,7 +112,7 @@
     <url>http://github.com/mybatis/mybatis-3</url>
     <connection>scm:git:ssh://github.com/mybatis/mybatis-3.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/mybatis/mybatis-3.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>mybatis-3.5.10</tag>
   </scm>
   <issueManagement>
     <system>GitHub Issue Management</system>
@@ -139,7 +139,7 @@
     <osgi.import>*;resolution:=optional</osgi.import>
     <osgi.dynamicImport>*</osgi.dynamicImport>
     <spotbugs.onlyAnalyze>org.apache.ibatis.*</spotbugs.onlyAnalyze>
-    <project.build.outputTimestamp>1645112687</project.build.outputTimestamp>
+    <project.build.outputTimestamp>1653336020</project.build.outputTimestamp>
   </properties>
 
   <dependencies>
