@@ -259,7 +259,7 @@ public final class MappedStatement {
   }
 
   public boolean isUseCache() {
-    return useCache;
+    return useCache && !flushCacheRequired;
   }
 
   public boolean isResultOrdered() {
