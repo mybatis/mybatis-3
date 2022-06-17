@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+       Copyright 2009-2022 the original author or authors.
+
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
+-->
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+  <properties>
+    <title>MyBatis 3 | 簡介</title>
+    <author email="clinton.begin@gmail.com">Clinton Begin</author>
+    <author email="nanlei1987@gmail.com">Nan Lei</author>
+    <author email="echowdx@gmail.com">Dongxu Wang</author>
+  </properties>
+
+  <body>
+    <section name="簡介">
+      <subsection name="什麼是 MyBatis？">
+        <p>MyBatis 是一款優秀的持久層框架，它支援自訂 SQL、儲存過程以及高階對映。MyBatis
+        免除了幾乎所有的 JDBC 程式碼以及設定引數和獲取結果集的工作。MyBatis
+        可以透過簡單的 XML 或註解來配置和對映原始型別、介面和 Java POJO（Plain Old
+        Java Objects，普通老式 Java 物件）為資料庫中的記錄。</p>
+      </subsection>
+
+      <subsection name="幫助改進文件...">
+        <p>如果你發現文件有任何的遺漏，或缺少某一個功能點的說明，最好的解決辦法是先自己學習，然後為遺漏的部份補上相應的文件。</p>
+        <p>該文件 xdoc 格式的原始碼檔案可透過<a
+        href="https://github.com/mybatis/mybatis-3/tree/master/src/site">專案的
+        Git 程式碼函式庫</a>來獲取。fork該原始碼函式庫，作出更新，並提交 Pull Request 吧。</p>
+        <p>還有其他像你一樣的人都需要閱讀這份文件，而你，就是這份文件最好的作者。
+        </p>
+      </subsection>
+
+      <subsection name="文件的翻譯版本">
+        <p>您可以閱讀 MyBatis 文件的其他語言版本：</p>
+        <ul class="i18n">
+          <li class="en"><a href="../index.html">English</a></li>
+          <li class="es"><a href="../es/index.html">Español</a></li>
+          <!--      <li class="fr"><a href="./fr/index.html">Français</a></li> -->
+          <li class="ja"><a href="../ja/index.html">日本語</a></li>
+          <li class="ko"><a href="../ko/index.html">한국어</a></li>
+          <li class="zh"><a href="./getting-started.html">簡體中文</a></li>
+        </ul>
+        <p>想用你的母語來了解 MyBatis 嗎？那就將文件翻譯成你的母語並提供給我們吧！</p>
+      </subsection>
+    </section>
+  </body>
+
+</document>

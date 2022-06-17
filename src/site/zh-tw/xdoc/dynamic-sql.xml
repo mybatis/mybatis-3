@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+       Copyright 2009-2022 the original author or authors.
+
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
+-->
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+  <properties>
+    <title>MyBatis 3 | 動態 SQL</title>
+    <author email="clinton.begin@gmail.com">Clinton Begin</author>
+    <author email="nanlei1987@gmail.com">Nan Lei</author>
+    <author email="echowdx@gmail.com">Dongxu Wang</author>
+    <author email="lu_picc@outlook.com">ZeShen Lu</author>
+  </properties>
+
+  <body>
+    <section name="動態 SQL">
+      <p>動態 SQL 是 MyBatis 的強大特性之一。如果你使用過 JDBC 或其它類似的框架，你應該能理解根據不同條件拼接 SQL 語句有多痛苦，例如拼接時要確保不能忘記新增必要的空格，還要注意去掉列表最後一個列名的逗號。利用動態 SQL，可以徹底擺脫這種痛苦。</p>
+      <p>使用動態 SQL 並非一件易事，但藉助可用於任何 SQL 對映語句中的強大的動態 SQL 語言，MyBatis 顯著地提升了這一特性的易用性。</p>
+      <p>如果你之前用過 JSTL 或任何基於類別 XML 語言的文字處理器，你對動態 SQL 元素可能會感覺似曾相識。在 MyBatis 之前的版本中，需要花時間瞭解大量的元素。藉助功能強大的基於 OGNL 的表示式，MyBatis 3 替換了之前的大部分元素，大大精簡了元素種類，現在要學習的元素種類比原來的一半還要少。</p>
+      <ul>
+        <li>if</li>
+        <li>choose (when, otherwise)</li>
+        <li>trim (where, set)</li>
+        <li>foreach</li>
+      </ul>
+      <subsection name="if" id="if">
+        <p>使用動態 SQL 最常見情景是根據條件包含 where 子句的一部分。比如：</p>
+        <source><![CDATA[<select id="findActiveBlogWithTitleLike"
+     resultType="Blog">
+  SELECT * FROM BLOG
+  WHERE state = ‘ACTIVE’
+  <if test="title != null">
+    AND title like #{title}
+  </if>
+</select>]]></source>
+        <p>這條語句提供了可選的查詢文字功能。如果不傳入 “title”，那麼所有處於 “ACTIVE” 狀態的 BLOG 都會返回；如果傳入了 “title” 引數，那麼就會對 “title” 一列進行模糊查詢並返回對應的 BLOG 結果（細心的讀者可能會發現，“title” 的引數值需要包含查詢掩碼或萬用字元字元）。</p>
+        <p>如果希望透過 “title” 和 “author” 兩個引數進行可選搜尋該怎麼辦呢？首先，我想先將語句名稱修改成更名副其實的名稱；接下來，只需要加入另一個條件即可。</p>
+        <source><![CDATA[<select id="findActiveBlogLike"
+     resultType="Blog">
+  SELECT * FROM BLOG WHERE state = ‘ACTIVE’
+  <if test="title != null">
+    AND title like #{title}
+  </if>
+  <if test="author != null and author.name != null">
+    AND author_name like #{author.name}
+  </if>
+</select>]]></source>
+      </subsection>
+      <subsection name="choose、when、otherwise" id="chooseWhenOtherwise">
+        <p>有時候，我們不想使用所有的條件，而只是想從多個條件中選擇一個使用。針對這種情況，MyBatis 提供了 choose 元素，它有點像 Java 中的 switch 語句。</p>
+        <p>還是上面的例子，但是策略變為：傳入了 “title” 就按 “title” 查詢，傳入了 “author” 就按 “author” 查詢的情形。若兩者都沒有傳入，就返回標記為 featured 的 BLOG（這可能是管理員認為，與其返回大量的無意義隨機 Blog，還不如返回一些由管理員精選的 Blog）。</p>
+        <source><![CDATA[<select id="findActiveBlogLike"
+     resultType="Blog">
+  SELECT * FROM BLOG WHERE state = ‘ACTIVE’
+  <choose>
+    <when test="title != null">
+      AND title like #{title}
+    </when>
+    <when test="author != null and author.name != null">
+      AND author_name like #{author.name}
+    </when>
+    <otherwise>
+      AND featured = 1
+    </otherwise>
+  </choose>
+</select>]]></source>
+      </subsection>
+      <subsection name="trim、where、set" id="trimWhereSet">
+<p>前面幾個例子已經方便地解決了一個臭名昭著的動態 SQL 問題。現在回到之前的 “if” 示例，這次我們將 “state = ‘ACTIVE’” 設定成動態條件，看看會發生什麼。</p>
+        <source><![CDATA[<select id="findActiveBlogLike"
+     resultType="Blog">
+  SELECT * FROM BLOG
+  WHERE
+  <if test="state != null">
+    state = #{state}
+  </if>
+  <if test="title != null">
+    AND title like #{title}
+  </if>
+  <if test="author != null and author.name != null">
+    AND author_name like #{author.name}
+  </if>
+</select>]]></source>
+        <p>如果沒有匹配的條件會怎麼樣？最終這條 SQL 會變成這樣：</p>
+        <source><![CDATA[SELECT * FROM BLOG
+WHERE]]></source>
+<p>這會導致查詢失敗。如果匹配的只是第二個條件又會怎樣？這條 SQL 會是這樣:
+        </p>
+        <source><![CDATA[SELECT * FROM BLOG
+WHERE
+AND title like ‘someTitle’]]></source>
+        <p>這個查詢也會失敗。這個問題不能簡單地用條件元素來解決。這個問題是如此的難以解決，以至於解決過的人不會再想碰到這種問題。</p>
+        <p>MyBatis 有一個簡單且適合大多數場景的解決辦法。而在其他場景中，可以對其進行自訂以符合需求。而這，只需要一處簡單的改動：</p>
+        <source><![CDATA[<select id="findActiveBlogLike"
+     resultType="Blog">
+  SELECT * FROM BLOG
+  <where>
+    <if test="state != null">
+         state = #{state}
+    </if>
+    <if test="title != null">
+        AND title like #{title}
+    </if>
+    <if test="author != null and author.name != null">
+        AND author_name like #{author.name}
+    </if>
+  </where>
+</select>]]></source>
+        <p><em>where</em> 元素只會在子元素返回任何內容的情況下才插入 “WHERE” 子句。而且，若子句的開頭為 “AND” 或 “OR”，<em>where</em> 元素也會將它們去除。</p>
+        <p>如果 <em>where</em> 元素與你期望的不太一樣，你也可以透過自訂 trim 元素來訂製 <em>where</em> 元素的功能。比如，和 <em>where</em> 元素等價的自訂 trim 元素為：</p>
+        <source><![CDATA[<trim prefix="WHERE" prefixOverrides="AND |OR ">
+  ...
+</trim>]]></source>
+        <p><em>prefixOverrides</em> 屬性會忽略透過管道符分隔的文字序列（注意此例中的空格是必要的）。上述例子會移除所有 <em>prefixOverrides</em> 屬性中指定的內容，並且插入 <em>prefix</em> 屬性中指定的內容。</p>
+        <p>用於動態更新語句的類似解決方案叫做 <em>set</em>。<em>set</em> 元素可以用於動態包含需要更新的列，忽略其它不更新的列。比如：</p>
+        <source><![CDATA[<update id="updateAuthorIfNecessary">
+  update Author
+    <set>
+      <if test="username != null">username=#{username},</if>
+      <if test="password != null">password=#{password},</if>
+      <if test="email != null">email=#{email},</if>
+      <if test="bio != null">bio=#{bio}</if>
+    </set>
+  where id=#{id}
+</update>]]></source>
+        <p>這個例子中，<em>set</em> 元素會動態地在行首插入 SET 關鍵字，並會刪掉額外的逗號（這些逗號是在使用條件語句給列賦值時引入的）。</p>
+        <p>或者，你可以透過使用<em>trim</em>元素來達到同樣的效果：</p>
+        <source><![CDATA[<trim prefix="SET" suffixOverrides=",">
+  ...
+</trim>]]></source>
+        <p>注意，我們覆蓋了字尾值設定，並且自訂了字首值。</p>
+      </subsection>
+      <subsection name="foreach">
+        <p>動態 SQL 的另一個常見使用場景是對集合進行遍歷（尤其是在建構 IN 條件語句的時候）。比如：</p>
+        <source><![CDATA[<select id="selectPostIn" resultType="domain.blog.Post">
+  SELECT *
+  FROM POST P
+  <where>
+    <foreach item="item" index="index" collection="list"
+        open="ID in (" separator="," close=")" nullable="true">
+          #{item}
+    </foreach>
+  </where>
+</select>]]></source>
+        <p><em>foreach</em> 元素的功能非常強大，它允許你指定一個集合，宣告可以在元素體內使用的集合項（item）和索引（index）變數。它也允許你指定開頭與結尾的字串以及集合項迭代之間的分隔符。這個元素也不會錯誤地新增多餘的分隔符，看它多智慧！</p>
+        <p><span class="label important">提示</span> 你可以將任何可迭代物件（如 List、Set 等）、Map 物件或者陣列物件作為集合引數傳遞給 <em>foreach</em>。當使用可迭代物件或者陣列時，index 是當前迭代的序號，item 的值是本次迭代獲取到的元素。當使用 Map 物件（或者 Map.Entry 物件的集合）時，index 是鍵，item 是值。</p>
+        <p>至此，我們已經完成了與 XML 配置及對映檔案相關的討論。下一章將詳細探討 Java API，以便你能充分利用已經建立的對映配置。</p>
+      </subsection>
+  <subsection name="script">
+  <p>要在帶註解的對映器介面類別中使用動態 SQL，可以使用 <em>script</em> 元素。比如:</p>
+  <source><![CDATA[
+    @Update({"<script>",
+      "update Author",
+      "  <set>",
+      "    <if test='username != null'>username=#{username},</if>",
+      "    <if test='password != null'>password=#{password},</if>",
+      "    <if test='email != null'>email=#{email},</if>",
+      "    <if test='bio != null'>bio=#{bio}</if>",
+      "  </set>",
+      "where id=#{id}",
+      "</script>"})
+    void updateAuthorValues(Author author);]]></source>
+  </subsection>
+      <subsection name="bind">
+<p><code>bind</code> 元素允許你在 OGNL 表示式以外建立一個變數，並將其繫結到當前的上下文。比如：</p>
+        <source><![CDATA[
+<select id="selectBlogsLike" resultType="Blog">
+  <bind name="pattern" value="'%' + _parameter.getTitle() + '%'" />
+  SELECT * FROM BLOG
+  WHERE title LIKE #{pattern}
+</select>]]></source>
+      </subsection>
+      <subsection name="多資料庫支援">
+        <p>如果配置了 databaseIdProvider，你就可以在動態程式碼中使用名為 “_databaseId” 的變數來為不同的資料庫建構特定的語句。比如下面的例子：</p>
+        <source><![CDATA[<insert id="insert">
+  <selectKey keyProperty="id" resultType="int" order="BEFORE">
+    <if test="_databaseId == 'oracle'">
+      select seq_users.nextval from dual
+    </if>
+    <if test="_databaseId == 'db2'">
+      select nextval for seq_users from sysibm.sysdummy1"
+    </if>
+  </selectKey>
+  insert into users values (#{id}, #{name})
+</insert>
+]]></source>
+      </subsection>
+      <subsection name="動態 SQL 中的插入指令碼語言">
+        <p>MyBatis 從 3.2 版本開始支援插入指令碼語言，這允許你插入一種語言驅動，並基於這種語言來編寫動態 SQL 查詢語句。</p>
+        <p>可以透過實現以下介面來插入一種語言：</p>
+        <source><![CDATA[public interface LanguageDriver {
+  ParameterHandler createParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql);
+  SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType);
+  SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType);
+}]]></source>
+        <p>實現自訂語言驅動後，你就可以在 mybatis-config.xml 檔案中將它設定為預設語言：</p>
+        <source><![CDATA[<typeAliases>
+  <typeAlias type="org.sample.MyLanguageDriver" alias="myLanguage"/>
+</typeAliases>
+<settings>
+  <setting name="defaultScriptingLanguage" value="myLanguage"/>
+</settings>
+]]></source>
+<p>或者，你也可以使用 <code>lang</code> 屬性為特定的語句指定語言：
+        </p>
+        <source><![CDATA[<select id="selectBlog" lang="myLanguage">
+  SELECT * FROM BLOG
+</select>]]></source>
+        <p>或者，在你的 mapper 介面上新增 <code>@Lang</code> 註解：</p>
+        <source><![CDATA[public interface Mapper {
+  @Lang(MyLanguageDriver.class)
+  @Select("SELECT * FROM BLOG")
+  List<Blog> selectBlog();
+}]]></source>
+        <p><span class="label important">提示</span> 可以使用 Apache Velocity 作為動態語言，更多細節請參考 MyBatis-Velocity 專案。</p>
+        <p>你前面看到的所有 xml 標籤都由預設 MyBatis 語言提供，而它由語言驅動 <code>org.apache.ibatis.scripting.xmltags.XmlLanguageDriver</code>（別名為 <code>xml</code>）所提供。</p>
+      </subsection>
+    </section>
+  </body>
+</document>
