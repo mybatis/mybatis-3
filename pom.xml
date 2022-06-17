@@ -361,7 +361,7 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
         <configuration>
-          <locales>en,es,ja,fr,zh_CN,ko</locales>
+          <locales>en,es,ja,fr,zh_CN,zh_TW,ko</locales>
         </configuration>
       </plugin>
       <plugin>

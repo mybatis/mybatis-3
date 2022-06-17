@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+       Copyright 2009-2018 the original author or authors.
+
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
+-->
+<project name="${project.name}" xmlns="http://maven.apache.org/DECORATION/1.7.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/DECORATION/1.7.0 http://maven.apache.org/xsd/decoration-1.7.0.xsd">
+
+  <body>
+    <menu name="參考文件">
+      <item name="簡介" href="index.html"/>
+      <item name="入門" href="getting-started.html"/>
+      <item name="XML 配置" href="configuration.html" collapse="true">
+        <item href="configuration.html#properties" name="屬性" />
+        <item href="configuration.html#settings" name="設定" />
+        <item href="configuration.html#typeAliases" name="型別別名" />
+        <item href="configuration.html#typeHandlers" name="型別處理器" />
+        <item href="configuration.html#objectFactory" name="物件工廠" />
+        <item href="configuration.html#plugins" name="外掛" />
+        <item href="configuration.html#environments" name="環境配置" />
+        <item href="configuration.html#databaseIdProvider" name="資料庫廠商標識" />
+        <item href="configuration.html#mappers" name="對映器" />
+      </item>
+      <item name="XML 對映檔案" href="sqlmap-xml.html" collapse="true">
+        <item href="sqlmap-xml.html#select" name="select" />
+        <item href="sqlmap-xml.html#insert_update_and_delete" name="insert, update 和 delete" />
+        <item href="sqlmap-xml.html#Parameters" name="參數" />
+        <item href="sqlmap-xml.html#Result_Maps" name="結果對映" />
+        <item href="sqlmap-xml.html#Auto-mapping" name="自動對映" />
+        <item href="sqlmap-xml.html#cache" name="快取" />
+      </item>
+      <item name="動態 SQL" href="dynamic-sql.html"/>
+      <item name="Java API" href="java-api.html" collapse="true">
+        <item name="目錄結構" href="java-api.html#directoryStructure" />
+        <item name="SqlSession" href="java-api.html#sqlSessions" />
+      </item>
+      <item name="SQL 語句產生器" href="statement-builders.html" collapse="true" />
+      <item name="日誌" href="logging.html"/>
+    </menu>
+
+    <menu ref="reports"/>
+  </body>
+</project>

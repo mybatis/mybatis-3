@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+       Copyright 2009-2022 the original author or authors.
+
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
+-->
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+  <properties>
+    <title>MyBatis 3 | 日誌</title>
+    <author email="clinton.begin@gmail.com">Clinton Begin</author>
+    <author email="nanlei1987@gmail.com">Nan Lei</author>
+    <author email="doggy.huang@gmail.com">Will Huang</author>
+  </properties>
+
+  <body>
+    <section name="日誌">
+      <p>Mybatis 透過使用內建的日誌工廠提供日誌功能。內建日誌工廠將會把日誌工作委託給下面的實現之一：</p>
+      <ul>
+        <li>
+          SLF4J
+        </li>
+        <li>
+          Apache Commons Logging
+        </li>
+        <li>
+          Log4j 2
+        </li>
+        <li>
+          Log4j （3.5.9 起廢棄）
+        </li>
+        <li>
+          JDK logging
+        </li>
+      </ul>
+      <p>MyBatis 內建日誌工廠基於執行時自省機制選擇合適的日誌工具。它會使用第一個查詢得到的工具（按上文列舉的順序查詢）。如果一個都未找到，日誌功能就會被禁用。</p>
+      <p>不少應用伺服器（如 Tomcat 和 WebShpere）的類別路徑中已經包含 Commons Logging，所以在這種配置環境下的 MyBatis 會把它作為日誌工具，記住這點非常重要。這將意味著，在諸如 WebSphere 的環境中，它提供了 Commons Logging 的私有實現，你的 Log4J 配置將被忽略。MyBatis 將你的 Log4J 配置忽略掉是相當令人鬱悶的（事實上，正是因為在這種配置環境下，MyBatis 才會選擇使用 Commons Logging 而不是 Log4J）。如果你的應用部署在一個類別路徑已經包含 Commons Logging 的環境中，而你又想使用其它日誌工具，你可以透過在 MyBatis 配置檔案 mybatis-config.xml 裡面新增一項 setting 來選擇別的日誌工具。</p>
+<source><![CDATA[
+<configuration>
+  <settings>
+    ...
+    <setting name="logImpl" value="LOG4J"/>
+    ...
+  </settings>
+</configuration>
+]]></source>
+      <p>logImpl 可選的值有：SLF4J、LOG4J、LOG4J2、JDK_LOGGING、COMMONS_LOGGING、STDOUT_LOGGING、NO_LOGGING，或者是實現了介面 <code>org.apache.ibatis.logging.Log</code> 的，且建構式方法是以字串為參數的類別的完全限定名。（譯者注：可以參考org.apache.ibatis.logging.slf4j.Slf4jImpl.java的實現）
+      </p>
+      <p>你也可以呼叫如下任一方法來使用日誌工具：
+      </p>
+<source><![CDATA[
+org.apache.ibatis.logging.LogFactory.useSlf4jLogging();
+org.apache.ibatis.logging.LogFactory.useLog4JLogging();
+org.apache.ibatis.logging.LogFactory.useJdkLogging();
+org.apache.ibatis.logging.LogFactory.useCommonsLogging();
+org.apache.ibatis.logging.LogFactory.useStdOutLogging();
+]]></source>
+      <p>如果你決定要呼叫以上某個方法，請在呼叫其它 MyBatis 方法之前呼叫它。另外，僅當執行時類別路徑中存在該日誌工具時，呼叫與該日誌工具對應的方法才會生效，否則 MyBatis 一概忽略。如你環境中並不存在 Log4J2，你卻呼叫了相應的方法，MyBatis 就會忽略這一呼叫，轉而以預設的查詢順序查詢日誌工具。
+      </p>
+      <p>關於 SLF4J、Apache Commons Logging、Apache Log4J 和 JDK Logging 的 API 介紹不在本文件介紹範圍內。不過，下面的例子可以作為一個快速入門。關於這些日誌框架的更多資訊，可以參考以下連結：</p>
+      <ul>
+        <li>
+          <a href="http://www.slf4j.org/">SLF4J</a>
+        </li>
+        <li>
+          <a href="http://commons.apache.org/logging">Apache Commons Logging</a>
+        </li>
+        <li>
+          <a href="http://logging.apache.org/log4j/">Apache Log4j 1.x and 2.x</a>
+        </li>
+        <li>
+          <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/logging/overview.html">JDK Logging API</a>
+        </li>
+      </ul>
+      <subsection name="日誌配置">
+        <p>你可以對包、對映類別的全限定名、名稱空間或全限定語句名開啟日誌功能來檢視 MyBatis 的日誌語句。
+        </p>
+        <p>再次說明下，具體怎麼做，由使用的日誌工具決定，這裡以 SLF4J(Logback) 為例。配置日誌功能非常簡單：新增一個或多個配置檔案（如 <code>logback.xml</code>），有時需要新增 jar 套件。下面的例子將使用 SLF4J(Logback) 來配置完整的日誌服務，共兩個步驟：
+        </p>
+        <p></p>
+        <h4>
+          步驟 1：新增 SLF4J + Logback 的 jar 包
+        </h4>
+        <p>因為我們使用的是 SLF4J(Logback)，就要確保它的 jar 包在應用中是可用的。要啟用 SLF4J(Logback)，只要將 jar 包新增到應用的類別路徑中即可。SLF4J(Logback) 的 jar 套件可以在上面的連結中下載。
+        </p>
+        <p>對於 web 應用或企業級應用，則需要將 <code>logback-classic.jar</code>, <code>logback-core.jar</code> and <code>slf4j-api.jar</code> 新增到 <code>WEB-INF/lib</code> 目錄下；對於獨立應用，可以將它新增到JVM 的 <code>-classpath</code> 啟動參數中。
+        </p>
+        <p>如果你使用 maven, 你可以透過在 <code>pom.xml</code> 中新增下面的依賴來下載 jar 檔案。
+        </p>
+<source><![CDATA[
+<dependency>
+  <groupId>ch.qos.logback</groupId>
+  <artifactId>logback-classic</artifactId>
+  <version>1.x.x</version>
+</dependency>
+]]></source>
+
+        <p></p>
+        <h4>
+          步驟 2：配置 Logback
+        </h4>
+        <p>配置 Logback 比較簡單，假如你需要記錄這個對映器介面的日誌：
+        </p>
+<source><![CDATA[
+package org.mybatis.example;
+public interface BlogMapper {
+  @Select("SELECT * FROM blog WHERE id = #{id}")
+  Blog selectBlog(int id);
+}
+]]></source>
+        <p>在應用的類別路徑中建立一個名稱為 <code>logback.xml</code> 的檔案，檔案的具體內容如下：
+        </p>
+
+<source><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration>
+<configuration>
+
+  <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%5level [%thread] - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <logger name="org.mybatis.example.BlogMapper">
+    <level value="trace"/>
+  </logger>
+  <root level="error">
+    <appender-ref ref="stdout"/>
+  </root>
+
+</configuration>
+]]></source>
+
+        <p>新增以上配置後，SLF4J(Logback) 就會記錄 <code>org.mybatis.example.BlogMapper</code> 的詳細執行操作，且僅記錄應用中其它類別的錯誤資訊（若有）。</p>
+        <p>你也可以將日誌的記錄方式從介面級別切換到語句級別，從而實現更細粒度的控制。如下配置只對 <code>selectBlog</code> 語句記錄日誌：
+        </p>
+
+<source><![CDATA[
+<logger name="org.mybatis.example.BlogMapper.selectBlog">
+  <level value="trace"/>
+</logger>
+]]></source>
+
+        <p>與此相對，可以對一組對映器介面記錄日誌，只要對對映器介面所在的包開啟日誌功能即可：</p>
+
+<source><![CDATA[
+<logger name="org.mybatis.example">
+  <level value="trace"/>
+</logger>
+]]></source>
+
+        <p>某些查詢可能會回傳龐大的結果集，此時只想記錄其執行的 SQL 語句而不想記錄結果該怎麼辦？為此，Mybatis 中 SQL 語句的日誌級別被設為DEBUG（JDK 日誌設為 FINE），結果的日誌級別為 TRACE（JDK 日誌設為 FINER)。所以，只要將日誌級別調整為 DEBUG 即可達到目的：
+        </p>
+
+<source><![CDATA[
+<logger name="org.mybatis.example">
+  <level value="debug"/>
+</logger>
+]]></source>
+
+        <p>要記錄日誌的是類似下面的對映器檔案而不是對映器介面又該怎麼做呢？
+        </p>
+
+<source><![CDATA[
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.mybatis.example.BlogMapper">
+  <select id="selectBlog" resultType="Blog">
+    select * from Blog where id = #{id}
+  </select>
+</mapper>
+]]></source>
+
+		<p>如需對 XML 檔案記錄日誌，只要對名稱空間增加日誌記錄功能即可：
+		</p>
+
+<source><![CDATA[
+<logger name="org.mybatis.example.BlogMapper">
+  <level value="trace"/>
+</logger>
+]]></source>
+
+		<p>要記錄具體語句的日誌可以這樣做：</p>
+
+<source><![CDATA[
+<logger name="org.mybatis.example.BlogMapper.selectBlog">
+  <level value="trace"/>
+</logger>
+]]></source>
+
+		<p>你應該注意到了，為對映器介面和 XML 檔案新增日誌功能的語句毫無差別。
+		</p>
+
+		<p><span class="label important">注意</span> 如果你使用的是 SLF4J 或 Log4j 2，MyBatis 將以 <code>MYBATIS</code> 這個值進行呼叫。</p>
+
+        <p>配置檔案 <code>log4j.properties</code> 的餘下內容是針對日誌輸出源的，這一內容已經超出本文件範圍。關於 Logback 的更多內容，可以參考<a href="https://logback.qos.ch/">Logback</a> 的網站。不過，你也可以簡單地做做實驗，看看不同的配置會產生怎樣的效果。
+        </p>
+
+    <p></p>
+    <h4>
+      Log4j 2 配置示例
+    </h4>
+
+    <p><code>pom.xml</code></p>
+
+<source><![CDATA[
+<dependency>
+  <groupId>org.apache.logging.log4j</groupId>
+  <artifactId>log4j-core</artifactId>
+  <version>2.x.x</version>
+</dependency>
+]]></source>
+
+    <p><code>log4j2.xml</code></p>
+
+<source><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration xmlns="http://logging.apache.org/log4j/2.0/config">
+
+  <Appenders>
+    <Console name="stdout" target="SYSTEM_OUT">
+      <PatternLayout pattern="%5level [%t] - %msg%n"/>
+    </Console>
+  </Appenders>
+
+  <Loggers>
+    <Logger name="org.mybatis.example.BlogMapper" level="trace"/>
+    <Root level="error" >
+      <AppenderRef ref="stdout"/>
+    </Root>
+  </Loggers>
+
+</Configuration>
+]]></source>
+
+    <p></p>
+    <h4>
+      Log4j 配置示例
+    </h4>
+
+    <p><code>pom.xml</code></p>
+
+<source><![CDATA[
+<dependency>
+  <groupId>log4j</groupId>
+  <artifactId>log4j</artifactId>
+  <version>1.2.17</version>
+</dependency>
+]]></source>
+
+    <p><code>log4j.properties</code></p>
+
+<source><![CDATA[
+log4j.rootLogger=ERROR, stdout
+
+log4j.logger.org.mybatis.example.BlogMapper=TRACE
+
+log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n
+]]></source>
+
+    <p></p>
+    <h4>
+      JDK logging 配置示例
+    </h4>
+
+    <p><code>logging.properties</code></p>
+
+    <source><![CDATA[
+handlers=java.util.logging.ConsoleHandler
+.level=SEVERE
+
+org.mybatis.example.BlogMapper=FINER
+
+java.util.logging.ConsoleHandler.level=ALL
+java.util.logging.ConsoleHandler.formatter=java.util.logging.SimpleFormatter
+java.util.logging.SimpleFormatter.format=%1$tT.%1$tL %4$s %3$s - %5$s%6$s%n
+]]></source>
+
+      </subsection>
+    </section>
+  </body>
+</document>

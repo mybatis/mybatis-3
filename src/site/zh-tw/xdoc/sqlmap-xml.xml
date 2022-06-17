@@ -1,0 +1,2119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+       Copyright 2009-2022 the original author or authors.
+
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
+-->
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+  <properties>
+    <title>MyBatis 3 | XML 對映器</title>
+    <author email="clinton.begin@gmail.com">Clinton Begin</author>
+    <author email="nanlei1987@gmail.com">Nan Lei</author>
+    <author email="echowdx@gmail.com">Dongxu Wang</author>
+    <author email="doggy.huang@gmail.com">Will Huang</author>
+  </properties>
+
+  <body>
+    <section name="XML 對映器">
+      <p>MyBatis 的真正強大在於它的語句對映，這是它的魔力所在。由於它的異常強大，對映器的
+      XML 檔案就顯得相對簡單。如果拿它跟具有相同功能的 JDBC 程式碼進行對比，你會立即發現省掉了將近
+      95% 的程式碼。MyBatis 致力於減少使用成本，讓使用者能更專注於 SQL 程式碼。</p>
+      <p>SQL 對映檔案只有很少的幾個最上層元素（按照應被定義的順序列出）：</p>
+      <ul>
+        <li>
+          <code>cache</code>
+          – 該名稱空間的快取配置。
+        </li>
+        <li>
+          <code>cache-ref</code>
+          – 參考其它名稱空間的快取配置。
+        </li>
+        <li>
+          <code>resultMap</code>
+          – 描述如何從資料庫結果集中載入物件，是最複雜也是最強大的元素。
+        </li>
+        <li>
+          <strike>
+            <code>parameterMap</code>
+            – 老式風格的參數對映。此元素已被廢棄，並可能在將來被移除！請使用行內參數對映。文件中不會介紹此元素。
+          </strike>
+        </li>
+        <li>
+          <code>sql</code>
+          – 可被其它語句參考的可重用語句區塊。
+        </li>
+        <li>
+          <code>insert</code>
+          – 對映插入語句。
+        </li>
+        <li>
+          <code>update</code>
+          – 對映更新語句。
+        </li>
+        <li>
+          <code>delete</code>
+          – 對映刪除語句。
+        </li>
+        <li>
+          <code>select</code>
+          – 對映查詢語句。
+        </li>
+      </ul>
+      <p>下一部分將從語句本身開始來描述每個元素的細節。</p>
+
+      <subsection name="select" id="select">
+        <p>查詢語句是 MyBatis 中最常用的元素之一——光能把資料存到資料庫中價值並不大，還要能重新取出來才有用，多數應用也都是查詢比修改要頻繁。
+        MyBatis 的基本原則之一是：在每個插入、更新或刪除操作之間，通常會執行多個查詢操作。因此，MyBatis
+        在查詢和結果對映做了相當多的改進。一個簡單查詢的 select 元素是非常簡單的。比如：
+        </p>
+
+        <source><![CDATA[<select id="selectPerson" parameterType="int" resultType="hashmap">
+  SELECT * FROM PERSON WHERE ID = #{id}
+</select>]]></source>
+
+        <p>
+          這個語句名為 selectPerson，接受一個 int（或 Integer）型別的參數，並回傳一個
+          HashMap 型別的物件，其中的鍵是列名，值便是結果行中的對應值。
+        </p>
+
+        <p>注意參數符號：</p>
+
+        <source><![CDATA[#{id}]]></source>
+
+        <p>
+          這就告訴 MyBatis 建立一個預處理語句(PreparedStatement)參數，在 JDBC
+          中，這樣的一個參數在 SQL 中會由一個 "?" 來標識，並被傳遞到一個新的預處理語句中，就像這樣：
+        </p>
+
+        <source><![CDATA[// 近似的 JDBC 程式碼，非 MyBatis 程式碼...
+String selectPerson = "SELECT * FROM PERSON WHERE ID=?";
+PreparedStatement ps = conn.prepareStatement(selectPerson);
+ps.setInt(1,id);]]></source>
+
+        <p>
+          當然，使用 JDBC 就意味著使用更多的程式碼，以便提取結果並將它們對映到物件實例中，而這就是 MyBatis
+          的拿手好戲。參數和結果對映的詳細細節會分別在後面單獨的小節中說明。
+        </p>
+
+        <p>
+          select 元素允許你配置很多屬性來配置每條語句的行為細節。
+        </p>
+
+        <source><![CDATA[<select
+  id="selectPerson"
+  parameterType="int"
+  parameterMap="deprecated"
+  resultType="hashmap"
+  resultMap="personResultMap"
+  flushCache="false"
+  useCache="true"
+  timeout="10"
+  fetchSize="256"
+  statementType="PREPARED"
+  resultSetType="FORWARD_ONLY">]]></source>
+
+        <table>
+          <caption>Select 元素的屬性</caption>
+          <thead>
+            <tr>
+              <th>屬性</th>
+              <th>描述</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>id</code></td>
+              <td>
+              在名稱空間中唯一的識別符號，可以被用來參考這條語句。
+              </td>
+            </tr>
+            <tr>
+              <td><code>parameterType</code></td>
+              <td>
+                將會傳入這條語句的參數的類別全限定名或別名。這個屬性是可選的，因為
+                MyBatis 可以透過型別處理器(TypeHandler)推斷出具體傳入語句的參數，預設值為未設定(unset)。
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <strike>parameterMap</strike>
+              </td>
+              <td>
+                <strike>
+                  用於參考外部 parameterMap 的屬性，目前已被廢棄。請使用行內參數對映和 parameterType 屬性。
+                </strike>
+              </td>
+            </tr>
+            <tr>
+              <td><code>resultType</code></td>
+              <td>
+                期望從這條語句中回傳結果的類別全限定名或別名。
+                注意，如果回傳的是集合，那應該設定為集合包含的型別，而不是集合本身的型別。
+                resultType 和 resultMap 之間只能同時使用一個。
+              </td>
+            </tr>
+            <tr>
+              <td><code>resultMap</code></td>
+              <td>
+                對外部 resultMap 的命名參考。結果對映是 MyBatis
+                最強大的特性，如果你對其理解透徹，許多複雜的對映問題都能迎刃而解。
+                resultType 和 resultMap 之間只能同時使用一個。
+              </td>
+            </tr>
+            <tr>
+              <td><code>flushCache</code></td>
+              <td>
+                將其設定為 true 後，只要語句被呼叫，都會導致本地快取和二級快取被清空，預設值：false。
+              </td>
+            </tr>
+            <tr>
+              <td><code>useCache</code></td>
+              <td>
+                將其設定為 true 後，將會導致本條語句的結果被二級快取快取起來，預設值：對 select 元素為 true。
+              </td>
+            </tr>
+            <tr>
+              <td><code>timeout</code></td>
+              <td>
+                這個設定是在拋出異常之前，驅動程式等待資料庫回傳請求結果的秒數。預設值為未設定(unset)（依賴資料庫驅動）。
+              </td>
+            </tr>
+            <tr>
+              <td><code>fetchSize</code></td>
+              <td>
+                這是一個給驅動的建議值，嘗試讓驅動程式每次批量回傳的結果行數等於這個設定值。
+                預設值為未設定(unset)（依賴驅動）。
+              </td>
+            </tr>
+            <tr>
+              <td><code>statementType</code></td>
+              <td>
+                可選 STATEMENT，PREPARED 或 CALLABLE。這會讓 MyBatis 分別使用
+                Statement，PreparedStatement 或 CallableStatement，預設值：PREPARED。
+              </td>
+            </tr>
+            <tr>
+              <td><code>resultSetType</code></td>
+              <td>
+                FORWARD_ONLY，SCROLL_SENSITIVE, SCROLL_INSENSITIVE 或
+                DEFAULT（等價於 unset） 中的一個，預設值為 unset （依賴資料庫驅動）。
+              </td>
+            </tr>
+            <tr>
+              <td><code>databaseId</code></td>
+              <td>
+                如果配置了資料庫廠商標識(databaseIdProvider)，MyBatis
+                會載入所有不帶 databaseId 或匹配當前 databaseId 的語句；如果帶和不帶的語句都有，則不帶的會被忽略。
+              </td>
+            </tr>
+            <tr>
+              <td><code>resultOrdered</code></td>
+              <td>
+                這個設定僅針對巢狀結果 select 語句：如果為
+                true，則假設結果集以正確順序（排序後）執行對映，當回傳新的主結果行時，將不再發生對以前結果行的參考。
+                這樣可以減少記憶體消耗。預設值：<code>false</code>。
+              </td>
+            </tr>
+            <tr>
+              <td><code>resultSets</code></td>
+              <td>
+                這個設定僅適用於多結果集的情況。它將列出語句執行後回傳的結果集並賦予每個結果集一個名稱，多個名稱之間以逗號分隔。
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </subsection>
+
+      <subsection name="insert, update 和 delete" id="insert_update_and_delete">
+        <p>
+          資料變更語句 insert，update 和 delete 的實現非常接近：
+        </p>
+
+        <source><![CDATA[<insert
+  id="insertAuthor"
+  parameterType="domain.blog.Author"
+  flushCache="true"
+  statementType="PREPARED"
+  keyProperty=""
+  keyColumn=""
+  useGeneratedKeys=""
+  timeout="20">
+
+<update
+  id="updateAuthor"
+  parameterType="domain.blog.Author"
+  flushCache="true"
+  statementType="PREPARED"
+  timeout="20">
+
+<delete
+  id="deleteAuthor"
+  parameterType="domain.blog.Author"
+  flushCache="true"
+  statementType="PREPARED"
+  timeout="20">]]></source>
+
+        <table>
+          <caption>Insert, Update, Delete 元素的屬性</caption>
+          <thead>
+            <tr>
+              <th>屬性</th>
+              <th>描述</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>id</code></td>
+              <td>在名稱空間中唯一的識別符號，可以被用來參考這條語句。</td>
+            </tr>
+            <tr>
+              <td><code>parameterType</code></td>
+              <td>
+                將會傳入這條語句的參數的類別全限定名或別名。這個屬性是可選的，因為
+                MyBatis 可以透過型別處理器(TypeHandler)推斷出具體傳入語句的參數，預設值為未設定(unset)。
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <strike><code>parameterMap</code></strike>
+              </td>
+              <td>
+                <strike>用於參考外部 parameterMap 的屬性，目前已被廢棄。請使用行內參數對映和 parameterType 屬性。
+                </strike>
+              </td>
+            </tr>
+            <tr>
+              <td><code>flushCache</code></td>
+              <td>將其設定為 true 後，只要語句被呼叫，都會導致本地快取和二級快取被清空，預設值：（對 insert、update 和 delete 語句）true。
+              </td>
+            </tr>
+            <tr>
+              <td><code>timeout</code></td>
+              <td>這個設定是在拋出異常之前，驅動程式等待資料庫回傳請求結果的秒數。預設值為未設定(unset)（依賴資料庫驅動）。
+              </td>
+            </tr>
+            <tr>
+              <td><code>statementType</code></td>
+              <td>
+                可選 STATEMENT，PREPARED 或 CALLABLE。這會讓 MyBatis 分別使用
+                Statement，PreparedStatement 或 CallableStatement，預設值：PREPARED。
+              </td>
+            </tr>
+            <tr>
+              <td><code>useGeneratedKeys</code></td>
+              <td>
+                （僅適用於 insert 和 update）這會令 MyBatis 使用 JDBC 的
+                getGeneratedKeys 方法來取出由資料庫內部產生的主鍵（比如：像 MySQL 和 SQL Server 這樣的關係型資料庫管理系統的自動遞增欄位），預設值：false。
+              </td>
+            </tr>
+            <tr>
+              <td><code>keyProperty</code></td>
+              <td>
+               （僅適用於 insert 和 update）指定能夠唯一識別物件的屬性，MyBatis 會使用
+                getGeneratedKeys 的回傳值或 insert 語句的 selectKey 子元素設定它的值，預設值：未設定（<code>unset</code>）。如果產生列不止一個，可以用逗號分隔多個屬性名稱。
+              </td>
+            </tr>
+            <tr>
+              <td><code>keyColumn</code></td>
+              <td>
+                （僅適用於 insert 和 update）設定產生鍵值在表中的列名，在某些資料庫（像 PostgreSQL）中，當主鍵列不是表中的第一列的時候，是必須設定的。如果產生列不止一個，可以用逗號分隔多個屬性名稱。
+              </td>
+            </tr>
+            <tr>
+              <td><code>databaseId</code></td>
+              <td>
+                如果配置了資料庫廠商標識(databaseIdProvider)，MyBatis 會載入所有不帶
+                databaseId 或匹配當前 databaseId 的語句；如果帶和不帶的語句都有，則不帶的會被忽略。
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>下面是 insert，update 和 delete 語句的示例：</p>
+
+        <source><![CDATA[<insert id="insertAuthor">
+  insert into Author (id,username,password,email,bio)
+  values (#{id},#{username},#{password},#{email},#{bio})
+</insert>
+
+<update id="updateAuthor">
+  update Author set
+    username = #{username},
+    password = #{password},
+    email = #{email},
+    bio = #{bio}
+  where id = #{id}
+</update>
+
+<delete id="deleteAuthor">
+  delete from Author where id = #{id}
+</delete>]]></source>
+
+        <p>如前所述，插入語句的配置規則更加豐富，在插入語句裡面有一些額外的屬性和子元素用來處理主鍵的產生，並且提供了多種產生方式。</p>
+
+        <p>首先，如果你的資料庫支援自動產生主鍵的欄位（比如 MySQL 和 SQL Server），那麼你可以設定 useGeneratedKeys=" true"，然後再把 keyProperty 設定為目標屬性就 OK 了。例如，如果上面的 Author 表已經在 id 列上使用了自動產生，那麼語句可以修改為：</p>
+
+        <source><![CDATA[<insert id="insertAuthor" useGeneratedKeys="true"
+    keyProperty="id">
+  insert into Author (username,password,email,bio)
+  values (#{username},#{password},#{email},#{bio})
+</insert>]]></source>
+
+        <p>
+          如果你的資料庫還支援多行插入, 你也可以傳入一個 <code>Author</code> 陣列或集合，並回傳自動產生的主鍵。
+        </p>
+
+        <source><![CDATA[<insert id="insertAuthor" useGeneratedKeys="true"
+    keyProperty="id">
+  insert into Author (username, password, email, bio) values
+  <foreach item="item" collection="list" separator=",">
+    (#{item.username}, #{item.password}, #{item.email}, #{item.bio})
+  </foreach>
+</insert>]]></source>
+
+        <p>
+          對於不支援自動產生主鍵列的資料庫和可能不支援自動產生主鍵的 JDBC 驅動，MyBatis 有另外一種方法來產生主鍵。
+        </p>
+
+        <p>
+          這裡有一個簡單（也很傻）的示例，它可以產生一個隨機 ID（不建議實際使用，這裡只是為了展示
+          MyBatis 處理問題的靈活性和寬容度）：
+        </p>
+
+        <source><![CDATA[<insert id="insertAuthor">
+  <selectKey keyProperty="id" resultType="int" order="BEFORE">
+    select CAST(RANDOM()*1000000 as INTEGER) a from SYSIBM.SYSDUMMY1
+  </selectKey>
+  insert into Author
+    (id, username, password, email,bio, favourite_section)
+  values
+    (#{id}, #{username}, #{password}, #{email}, #{bio}, #{favouriteSection,jdbcType=VARCHAR})
+</insert>]]></source>
+        <p>在上面的示例中，首先會執行 selectKey 元素中的語句，並設定 Author 的
+        id，然後才會呼叫插入語句。這樣就實現了資料庫自動產生主鍵類似的行為，同時保持了 Java 程式碼的簡潔。
+        </p>
+        <p>selectKey 元素描述如下：
+        </p>
+        <source><![CDATA[<selectKey
+  keyProperty="id"
+  resultType="int"
+  order="BEFORE"
+  statementType="PREPARED">]]></source>
+
+        <table>
+          <caption>selectKey 元素的屬性</caption>
+          <thead>
+            <tr>
+              <th>屬性</th>
+              <th>描述</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>keyProperty</code></td>
+              <td>
+                <code>selectKey</code> 語句結果應該被設定到的目標屬性。如果產生列不止一個，可以用逗號分隔多個屬性名稱。
+              </td>
+            </tr>
+            <tr>
+              <td><code>keyColumn</code></td>
+              <td>
+                回傳結果集中產生列屬性的列名。如果產生列不止一個，可以用逗號分隔多個屬性名稱。
+              </td>
+            </tr>
+            <tr>
+              <td><code>resultType</code></td>
+              <td>
+                結果的型別。通常 MyBatis 可以推斷出來，但是為了更加準確，寫上也不會有什麼問題。MyBatis
+                允許將任何簡單型別用作主鍵的型別，包括字串。如果產生列不止一個，則可以使用包含期望屬性的
+                Object 或 Map。
+              </td>
+            </tr>
+            <tr>
+              <td><code>order</code></td>
+              <td>
+                可以設定為 <code>BEFORE</code> 或 <code>AFTER</code>。如果設定為
+                <code>BEFORE</code>，那麼它首先會產生主鍵，設定 <code>keyProperty</code> 再執行插入語句。如果設定為
+                <code>AFTER</code>，那麼先執行插入語句，然後是 <code>selectKey</code> 中的語句 - 這和 Oracle
+                資料庫的行為相似，在插入語句內部可能有嵌入索引呼叫。
+              </td>
+            </tr>
+            <tr>
+              <td><code>statementType</code></td>
+              <td>
+                和前面一樣，MyBatis 支援 <code>STATEMENT</code>，<code>PREPARED</code> 和 <code>CALLABLE</code>
+                型別的對映語句，分別代表 <code>Statement</code>, <code>PreparedStatement</code> 和
+                <code>CallableStatement</code> 型別。
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </subsection>
+
+      <subsection name="sql">
+        <p>
+          這個元素可以用來定義可重用的 SQL 程式碼片段，以便在其它語句中使用。
+          參數可以靜態地（在載入的時候）確定下來，並且可以在不同的 include 元素中定義不同的參數值。比如：
+        </p>
+
+        <source><![CDATA[<sql id="userColumns"> ${alias}.id,${alias}.username,${alias}.password </sql>]]></source>
+
+        <p>
+          這個 SQL 片段可以在其它語句中使用，例如：
+        </p>
+
+        <source><![CDATA[<select id="selectUsers" resultType="map">
+  select
+    <include refid="userColumns"><property name="alias" value="t1"/></include>,
+    <include refid="userColumns"><property name="alias" value="t2"/></include>
+  from some_table t1
+    cross join some_table t2
+</select>]]></source>
+
+        <p>
+          也可以在 include 元素的 refid 屬性或內部語句中使用屬性值，例如：
+        </p>
+
+        <source><![CDATA[<sql id="sometable">
+  ${prefix}Table
+</sql>
+
+<sql id="someinclude">
+  from
+    <include refid="${include_target}"/>
+</sql>
+
+<select id="select" resultType="map">
+  select
+    field1, field2, field3
+  <include refid="someinclude">
+    <property name="prefix" value="Some"/>
+    <property name="include_target" value="sometable"/>
+  </include>
+</select>]]></source>
+      </subsection>
+
+      <subsection name="參數" id="Parameters">
+        <p>
+          之前見到的所有語句都使用了簡單的參數形式。但實際上，參數是 MyBatis
+          非常強大的元素。對於大多數簡單的使用場景，你都不需要使用複雜的參數，比如：
+        </p>
+
+        <source><![CDATA[<select id="selectUsers" resultType="User">
+  select id, username, password
+  from users
+  where id = #{id}
+</select>]]></source>
+
+        <p>
+          上面的這個示例說明了一個非常簡單的命名參數對映。鑑於參數型別(parameterType)會被自動設定為
+          <code>int</code>，這個參數可以隨意命名。原始型別或簡單資料型別（比如
+          <code>Integer</code> 和 <code>String</code>）因為沒有其它屬性，會用它們的值來作為參數。
+          然而，如果傳入一個複雜的物件，行為就會有點不一樣了。比如：
+        </p>
+
+        <source><![CDATA[<insert id="insertUser" parameterType="User">
+  insert into users (id, username, password)
+  values (#{id}, #{username}, #{password})
+</insert>]]></source>
+
+        <p>
+          如果 User 型別的參數物件傳遞到了語句中，會查詢 id、username 和 password
+          屬性，然後將它們的值傳入預處理語句的參數中。
+        </p>
+
+        <p>
+          對傳遞語句參數來說，這種方式真是乾脆利落。不過參數對映的功能遠不止於此。
+        </p>
+
+        <p>
+          首先，和 MyBatis 的其它部分一樣，參數也可以指定一個特殊的資料型別。
+        </p>
+
+        <source><![CDATA[#{property,javaType=int,jdbcType=NUMERIC}]]></source>
+
+        <p>
+          和 MyBatis 的其它部分一樣，幾乎總是可以根據參數物件的型別確定 javaType，除非該物件是一個
+          <code>HashMap</code>。這個時候，你需要顯式指定 <code>javaType</code>
+          來確保正確的型別處理器（<code>TypeHandler</code>）被使用。
+        </p>
+
+        <p><span class="label important">提示</span> JDBC 要求，如果一個列允許使用 null
+        值，並且會使用值為 null 的參數，就必須要指定 JDBC 型別(jdbcType)。閱讀
+        <code>PreparedStatement.setNull()</code>的 JavaDoc 來獲取更多資訊。
+        </p>
+
+        <p>
+          要更進一步地自訂型別處理方式，可以指定一個特殊的型別處理器類別（或別名），比如：
+        </p>
+
+        <source><![CDATA[#{age,javaType=int,jdbcType=NUMERIC,typeHandler=MyTypeHandler}]]></source>
+
+        <p>參數的配置好像越來越繁瑣了，但實際上，很少需要如此繁瑣的配置。</p>
+
+        <p>對於數值型別，還可以設定 <code>numericScale</code> 指定小數點後保留的位數。</p>
+
+        <source><![CDATA[#{height,javaType=double,jdbcType=NUMERIC,numericScale=2}]]></source>
+
+        <p>
+          最後，mode 屬性允許你指定 <code>IN</code>，<code>OUT</code> 或
+          <code>INOUT</code> 參數。如果參數的 <code>mode</code> 為 <code>OUT</code>
+          或 <code>INOUT</code>，將會修改參數物件的屬性值，以便作為輸出參數回傳。
+          如果 <code>mode</code> 為 <code>OUT</code>（或 <code>INOUT</code>），而且
+          <code>jdbcType</code> 為 <code>CURSOR</code>（也就是 Oracle 的
+          REFCURSOR），你必須指定一個 <code>resultMap</code> 參考來將結果集
+          <code>ResultSet</code> 對映到參數的型別上。要注意這裡的
+          <code>javaType</code> 屬性是可選的，如果留空並且 jdbcType 是
+          <code>CURSOR</code>，它會被自動地被設為 <code>ResultSet</code>。
+        </p>
+
+        <source><![CDATA[#{department, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=departmentResultMap}]]></source>
+
+        <p>
+          MyBatis 也支援很多進階的資料型別，比如結構體(structs)，但是當使用 out
+          參數時，你必須顯式設定型別的名稱。比如（再次提示，在實際中要像這樣不能換行）：
+        </p>
+
+        <source><![CDATA[#{middleInitial, mode=OUT, jdbcType=STRUCT, jdbcTypeName=MY_TYPE, resultMap=departmentResultMap}]]></source>
+
+        <p>
+          儘管上面這些選項很強大，但大多時候，你只須簡單指定屬性名，頂多要為可能為空的列指定
+          <code>jdbcType</code>，其他的事情交給 MyBatis 自己去推斷就行了。
+        </p>
+
+        <source><![CDATA[#{firstName}
+#{middleInitial,jdbcType=VARCHAR}
+#{lastName}]]></source>
+
+        <h4>
+          字串替換
+        </h4>
+
+	      <p>
+          預設情況下，使用 <code>#{}</code>
+          參數語法時，MyBatis 會建立 <code>PreparedStatement</code>
+          參數佔位符，並透過佔位符安全地設定參數（就像使用 ? 一樣）。
+          這樣做更安全，更迅速，通常也是首選做法，不過有時你就是想直接在 SQL 語句中直接插入一個不轉義的字串。
+          比如 ORDER BY 子句，這時候你可以：
+        </p>
+
+        <source><![CDATA[ORDER BY ${columnName}]]></source>
+
+        <p>這樣，MyBatis 就不會修改或轉義該字串了。</p>
+
+        <p>
+          當 SQL 語句中的元資料（如表名或列名）是動態產生的時候，字串替換將會非常有用。
+          舉個例子，如果你想 <code>select</code> 一個表任意一列的資料時，不需要這樣寫：
+          <source><![CDATA[
+@Select("select * from user where id = #{id}")
+User findById(@Param("id") long id);
+
+@Select("select * from user where name = #{name}")
+User findByName(@Param("name") String name);
+
+@Select("select * from user where email = #{email}")
+User findByEmail(@Param("email") String email);
+
+// 其它的 "findByXxx" 方法
+]]></source>
+          而是可以只寫這樣一個方法：
+          <source><![CDATA[
+@Select("select * from user where ${column} = #{value}")
+User findByColumn(@Param("column") String column, @Param("value") String value);
+]]></source>
+          其中 <code>${column}</code> 會被直接替換，而 <code>#{value}</code> 會使用 <code>?</code> 預處理。
+          這樣，就能完成同樣的任務：
+          <source><![CDATA[
+User userOfId1 = userMapper.findByColumn("id", 1L);
+User userOfNameKid = userMapper.findByColumn("name", "kid");
+User userOfEmail = userMapper.findByColumn("email", "noone@nowhere.com");
+]]></source>
+        </p>
+
+        <p>
+          這種方式也同樣適用於替換表名的情況。
+        </p>
+
+        <p>
+          <span class="label important">提示</span>
+          用這種方式接受使用者的輸入，並用作語句參數是不安全的，會導致潛在的 SQL
+          注入攻擊。因此，要麼不允許使用者輸入這些欄位，要麼自行轉義並檢驗這些參數。
+        </p>
+      </subsection>
+
+      <subsection name="結果對映" id="Result_Maps">
+        <p>
+		  <code>resultMap</code> 元素是 MyBatis 中最重要最強大的元素。它可以讓你從 90%
+          的 JDBC <code>ResultSets</code> 資料提取程式碼中解放出來，並在一些情形下允許你進行一些
+          JDBC 不支援的操作。實際上，在為一些比如連線的複雜語句編寫對映程式碼的時候，一份
+          <code>resultMap</code> 能夠代替實現同等功能的數千行程式碼。ResultMap
+          的設計思想是，對簡單的語句做到零配置，對於複雜一點的語句，只需要描述語句之間的關係就行了。
+        </p>
+
+        <p>
+          之前你已經見過簡單對映語句的示例，它們沒有顯式指定 <code>resultMap</code>。比如：
+        </p>
+
+        <source><![CDATA[<select id="selectUsers" resultType="map">
+  select id, username, hashedPassword
+  from some_table
+  where id = #{id}
+</select>]]></source>
+
+        <p>
+		  上述語句只是簡單地將所有的列對映到 <code>HashMap</code> 的鍵上，這由 <code>resultType</code> 屬性指定。雖然在大部分情況下都夠用，但是 HashMap 並不是一個很好的領域模型。你的程式更可能會使用 JavaBean 或 POJO（Plain Old Java Objects，普通老式 Java 物件）作為領域模型。MyBatis 對兩者都提供了支援。看看下面這個 JavaBean：
+        </p>
+        <source><![CDATA[package com.someapp.model;
+public class User {
+  private int id;
+  private String username;
+  private String hashedPassword;
+
+  public int getId() {
+    return id;
+  }
+  public void setId(int id) {
+    this.id = id;
+  }
+  public String getUsername() {
+    return username;
+  }
+  public void setUsername(String username) {
+    this.username = username;
+  }
+  public String getHashedPassword() {
+    return hashedPassword;
+  }
+  public void setHashedPassword(String hashedPassword) {
+    this.hashedPassword = hashedPassword;
+  }
+}]]></source>
+
+        <p>
+          基於 JavaBean 的規範，上面這個類別有 3 個屬性：id，username 和
+          hashedPassword。這些屬性會對應到 select 語句中的列名。
+        </p>
+
+        <p>
+          這樣的一個 JavaBean 可以被對映到 <code>ResultSet</code>，就像對映到
+          <code>HashMap</code> 一樣簡單。
+        </p>
+
+        <source><![CDATA[<select id="selectUsers" resultType="com.someapp.model.User">
+  select id, username, hashedPassword
+  from some_table
+  where id = #{id}
+</select>]]></source>
+
+        <p>
+          型別別名是你的好幫手。使用它們，你就可以不用輸入類別的全限定名了。比如：
+        </p>
+
+        <source><![CDATA[<!-- mybatis-config.xml 中 -->
+<typeAlias type="com.someapp.model.User" alias="User"/>
+
+<!-- SQL 對映 XML 中 -->
+<select id="selectUsers" resultType="User">
+  select id, username, hashedPassword
+  from some_table
+  where id = #{id}
+</select>]]></source>
+
+        <p>
+          在這些情況下，MyBatis 會在幕後自動建立一個 <code>ResultMap</code>，再根據屬性名來對映列到
+          JavaBean 的屬性上。如果列名和屬性名不能匹配上，可以在 SELECT
+          語句中設定列別名（這是一個基本的 SQL 特性）來完成匹配。比如：
+        </p>
+
+        <source><![CDATA[<select id="selectUsers" resultType="User">
+  select
+    user_id             as "id",
+    user_name           as "userName",
+    hashed_password     as "hashedPassword"
+  from some_table
+  where id = #{id}
+</select>]]></source>
+
+        <p>
+          在學習了上面的知識後，你會發現上面的例子沒有一個需要顯式配置
+          <code>ResultMap</code>，這就是 <code>ResultMap</code>
+          的優秀之處——你完全可以不用顯式地配置它們。
+          雖然上面的例子不用顯式配置 <code>ResultMap</code>。
+          但為了講解，我們來看看如果在剛剛的示例中，顯式使用外部的
+          <code>resultMap</code> 會怎樣，這也是解決列名不匹配的另外一種方式。
+        </p>
+
+        <source><![CDATA[<resultMap id="userResultMap" type="User">
+  <id property="id" column="user_id" />
+  <result property="username" column="user_name"/>
+  <result property="password" column="hashed_password"/>
+</resultMap>]]></source>
+
+        <p>
+          然後在參考它的語句中設定 <code>resultMap</code> 屬性就行了（注意我們去掉了
+          <code>resultType</code> 屬性）。比如:
+        </p>
+
+        <source><![CDATA[<select id="selectUsers" resultMap="userResultMap">
+  select user_id, user_name, hashed_password
+  from some_table
+  where id = #{id}
+</select>]]></source>
+
+        <p>
+          如果這個世界總是這麼簡單就好了。
+        </p>
+
+	      <h4>高階結果對映</h4>
+
+        <p>
+          MyBatis 建立時的一個思想是：資料庫不可能永遠是你所想或所需的那個樣子。
+          我們希望每個資料庫都具備良好的第三正規化或 BCNF 正規化，可惜它們並不都是那樣。
+          如果能有一種資料庫對映模式，完美適配所有的應用程式，那就太好了，但可惜也沒有。
+          而 ResultMap 就是 MyBatis 對這個問題的答案。
+        </p>
+
+        <p>
+          比如，我們如何對映下面這個語句？
+        </p>
+
+        <source><![CDATA[<!-- 非常複雜的語句 -->
+<select id="selectBlogDetails" resultMap="detailedBlogResultMap">
+  select
+       B.id as blog_id,
+       B.title as blog_title,
+       B.author_id as blog_author_id,
+       A.id as author_id,
+       A.username as author_username,
+       A.password as author_password,
+       A.email as author_email,
+       A.bio as author_bio,
+       A.favourite_section as author_favourite_section,
+       P.id as post_id,
+       P.blog_id as post_blog_id,
+       P.author_id as post_author_id,
+       P.created_on as post_created_on,
+       P.section as post_section,
+       P.subject as post_subject,
+       P.draft as draft,
+       P.body as post_body,
+       C.id as comment_id,
+       C.post_id as comment_post_id,
+       C.name as comment_name,
+       C.comment as comment_text,
+       T.id as tag_id,
+       T.name as tag_name
+  from Blog B
+       left outer join Author A on B.author_id = A.id
+       left outer join Post P on B.id = P.blog_id
+       left outer join Comment C on P.id = C.post_id
+       left outer join Post_Tag PT on PT.post_id = P.id
+       left outer join Tag T on PT.tag_id = T.id
+  where B.id = #{id}
+</select>]]></source>
+
+        <p>
+          你可能想把它對映到一個智慧的物件模型，這個物件表示了一篇部落格，它由某位作者所寫，有很多的博文，每篇博文有零或多條的評論和標籤。
+          我們先來看看下面這個完整的例子，它是一個非常複雜的結果對映（假設作者，部落格，博文，評論和標籤都是型別別名）。
+          不用緊張，我們會一步一步地來說明。雖然它看起來令人望而生畏，但其實非常簡單。
+        </p>
+
+        <source><![CDATA[<!-- 非常複雜的結果對映 -->
+<resultMap id="detailedBlogResultMap" type="Blog">
+  <constructor>
+    <idArg column="blog_id" javaType="int"/>
+  </constructor>
+  <result property="title" column="blog_title"/>
+  <association property="author" javaType="Author">
+    <id property="id" column="author_id"/>
+    <result property="username" column="author_username"/>
+    <result property="password" column="author_password"/>
+    <result property="email" column="author_email"/>
+    <result property="bio" column="author_bio"/>
+    <result property="favouriteSection" column="author_favourite_section"/>
+  </association>
+  <collection property="posts" ofType="Post">
+    <id property="id" column="post_id"/>
+    <result property="subject" column="post_subject"/>
+    <association property="author" javaType="Author"/>
+    <collection property="comments" ofType="Comment">
+      <id property="id" column="comment_id"/>
+    </collection>
+    <collection property="tags" ofType="Tag" >
+      <id property="id" column="tag_id"/>
+    </collection>
+    <discriminator javaType="int" column="draft">
+      <case value="1" resultType="DraftPost"/>
+    </discriminator>
+  </collection>
+</resultMap>]]></source>
+
+        <p>
+          <code>resultMap</code> 元素有很多子元素和一個值得深入探討的結構。
+          下面是<code>resultMap</code> 元素的概念檢視。
+        </p>
+
+        <h4>結果對映(resultMap)</h4>
+        <ul>
+          <li>
+            <code>constructor</code> - 用於在實例化類別時，注入結果到建構式方法中
+            <ul>
+              <li><code>idArg</code> - ID 參數；標記出作為 ID 的結果可以幫助提高整體效能</li>
+              <li><code>arg</code> - 將被注入到建構式方法的一個普通結果</li>
+            </ul>
+          </li>
+          <li><code>id</code> – 一個 ID 結果；標記出作為 ID 的結果可以幫助提高整體效能</li>
+          <li><code>result</code> – 注入到欄位或 JavaBean 屬性的普通結果</li>
+          <li>
+            <code>association</code> – 一個複雜型別的關聯；許多結果將包裝成這種型別
+            <ul>
+              <li>巢狀結果對映 – 關聯可以是 <code>resultMap</code> 元素，或是對其它結果對映的參考</li>
+            </ul>
+          </li>
+          <li>
+            <code>collection</code> – 一個複雜型別的集合
+            <ul>
+              <li>巢狀結果對映 – 集合可以是 <code>resultMap</code> 元素，或是對其它結果對映的參考</li>
+            </ul>
+          </li>
+          <li>
+            <code>discriminator</code> – 使用結果值來決定使用哪個 <code>resultMap</code>
+            <ul>
+              <li>
+                <code>case</code> – 基於某些值的結果對映
+                <ul>
+		          <li>巢狀結果對映 – <code>case</code> 也是一個結果對映，因此具有相同的結構和元素；或者參考其它的結果對映</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+
+        <table>
+          <caption>ResultMap 的屬性列表</caption>
+          <thead>
+            <tr>
+              <th>屬性</th>
+              <th>描述</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>id</code></td>
+              <td>當前名稱空間中的一個唯一標識，用於標識一個結果對映。</td>
+            </tr>
+            <tr>
+              <td><code>type</code></td>
+              <td>
+                類別的完全限定名, 或者一個型別別名（關於內建的型別別名，可以參考上面的表格）。
+              </td>
+            </tr>
+            <tr>
+              <td><code>autoMapping</code></td>
+              <td>
+                如果設定這個屬性，MyBatis 將會為本結果對映開啟或者關閉自動對映。
+                這個屬性會覆蓋全域性的屬性 autoMappingBehavior。預設值：未設定(unset)。
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>
+          <span class="label important">最佳實踐</span>
+          最好逐步建立結果對映。單元測試可以在這個過程中起到很大幫助。
+          如果你嘗試一次性建立像上面示例那麼巨大的結果對映，不僅容易出錯，難度也會直線上升。
+          所以，從最簡單的形態開始，逐步迭代。而且別忘了單元測試！
+          有時候，框架的行為像是一個黑盒子（無論是否開源）。因此，為了確保實現的行為與你的期望相一致，最好編寫單元測試。
+          並且單元測試在提交 bug 時也能起到很大的作用。
+        </p>
+
+        <p>
+          下一部分將詳細說明每個元素。
+        </p>
+
+        <h4>id &amp; result</h4>
+
+        <source><![CDATA[<id property="id" column="post_id"/>
+<result property="subject" column="post_subject"/>]]></source>
+
+        <p>
+          這些元素是結果對映的基礎。<i>id</i> 和 <i>result</i>
+          元素都將一個列的值對映到一個簡單資料型別（String, int, double, Date
+          等）的屬性或欄位。
+        </p>
+
+        <p>
+          這兩者之間的唯一不同是，<i>id</i>
+          元素對應的屬性會被標記為物件的識別符號，在比較物件實例時使用。
+          這樣可以提高整體的效能，尤其是進行快取和巢狀結果對映（也就是連線對映）的時候。
+        </p>
+
+        <p>
+          兩個元素都有一些屬性：
+        </p>
+
+        <table>
+          <caption>Id 和 Result 的屬性</caption>
+          <thead>
+            <tr>
+              <th>屬性</th>
+              <th>描述</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>property</code></td>
+              <td>
+                對映到列結果的欄位或屬性。如果 JavaBean
+                有這個名字的屬性(property)，會先使用該屬性。否則 MyBatis 將會尋找給定名稱的欄位(field)。
+                無論是哪一種情形，你都可以使用常見的點式分隔形式進行復雜屬性導航。
+                比如，你可以這樣對映一些簡單的東西： "username"，或者對映到一些複雜的東西上： "address.street.number" 。
+              </td>
+            </tr>
+            <tr>
+              <td><code>column</code></td>
+              <td>
+                資料庫中的列名，或者是列的別名。一般情況下，這和傳遞給
+                <code>resultSet.getString(columnName)</code> 方法的參數一樣。
+              </td>
+            </tr>
+            <tr>
+              <td><code>javaType</code></td>
+              <td>
+                一個 Java 類別的全限定名，或一個型別別名（關於內建的型別別名，可以參考上面的表格）。
+                如果你對映到一個 JavaBean，MyBatis 通常可以推斷型別。然而，如果你對映到的是
+                HashMap，那麼你應該明確地指定 javaType 來保證行為與期望的相一致。
+              </td>
+            </tr>
+            <tr>
+              <td><code>jdbcType</code></td>
+              <td>
+                JDBC 型別，所支援的 JDBC 型別參見這個表格之後的 "支援的 JDBC 型別" 。
+                只需要在可能執行插入、更新和刪除的且允許空值的列上指定 JDBC 型別。這是
+                JDBC 的要求而非 MyBatis 的要求。如果你直接面向 JDBC
+                程式設計，你需要對可以為空值的列指定這個型別。
+              </td>
+            </tr>
+            <tr>
+              <td><code>typeHandler</code></td>
+              <td>
+                我們在前面討論過預設的型別處理器。使用這個屬性，你可以覆蓋預設的型別處理器。
+                這個屬性值是一個型別處理器實現類別的全限定名，或者是型別別名。
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h4>支援的 JDBC 型別</h4>
+
+        <p>
+          為了以後可能的使用場景，MyBatis 透過內建的 jdbcType 列舉型別支援下面的 JDBC 型別。
+        </p>
+
+        <table>
+          <tr>
+            <td><code>BIT</code></td>
+            <td><code>FLOAT</code></td>
+            <td><code>CHAR</code></td>
+            <td><code>TIMESTAMP</code></td>
+            <td><code>OTHER</code></td>
+            <td><code>UNDEFINED</code></td>
+          </tr>
+          <tr>
+            <td><code>TINYINT</code></td>
+            <td><code>REAL</code></td>
+            <td><code>VARCHAR</code></td>
+            <td><code>BINARY</code></td>
+            <td><code>BLOB</code></td>
+            <td><code>NVARCHAR</code></td>
+          </tr>
+          <tr>
+            <td><code>SMALLINT</code></td>
+            <td><code>DOUBLE</code></td>
+            <td><code>LONGVARCHAR</code></td>
+            <td><code>VARBINARY</code></td>
+            <td><code>CLOB</code></td>
+            <td><code>NCHAR</code></td>
+          </tr>
+          <tr>
+            <td><code>INTEGER</code></td>
+            <td><code>NUMERIC</code></td>
+            <td><code>DATE</code></td>
+            <td><code>LONGVARBINARY</code></td>
+            <td><code>BOOLEAN</code></td>
+            <td><code>NCLOB</code></td>
+          </tr>
+          <tr>
+            <td><code>BIGINT</code></td>
+            <td><code>DECIMAL</code></td>
+            <td><code>TIME</code></td>
+            <td><code>NULL</code></td>
+            <td><code>CURSOR</code></td>
+            <td><code>ARRAY</code></td>
+          </tr>
+        </table>
+
+        <h4>建構式方法</h4>
+
+        <p>
+          透過修改物件屬性的方式，可以滿足大多數的資料傳輸物件（Data Transfer Object,
+          DTO）以及絕大部分領域模型的要求。但有些情況下你想使用不可變類別。
+          一般來說，很少改變或基本不變的包含參考或資料的表，很適合使用不可變類別。
+          建構式方法注入允許你在初始化時為類別設定屬性的值，而不用暴露出公有方法。MyBatis
+          也支援私有屬性和私有 JavaBean 屬性來完成注入，但有一些人更青睞於透過建構式方法進行注入。
+          <i>constructor</i> 元素就是為此而生的。
+        </p>
+
+        <p>
+          看看下面這個建構式方法:
+        </p>
+
+        <source><![CDATA[public class User {
+   //...
+   public User(Integer id, String username, int age) {
+     //...
+  }
+//...
+}]]></source>
+
+        <p>
+          為了將結果注入建構式方法，MyBatis 需要透過某種方式定位相應的建構式方法。
+          在下面的例子中，MyBatis 搜尋一個聲明瞭三個形參的建構式方法，參數型別以
+          <code>java.lang.Integer</code>, <code>java.lang.String</code> 和
+          <code>int</code> 的順序給出。
+        </p>
+
+        <source><![CDATA[<constructor>
+   <idArg column="id" javaType="int"/>
+   <arg column="username" javaType="String"/>
+   <arg column="age" javaType="_int"/>
+</constructor>]]></source>
+
+        <p>
+          當你在處理一個帶有多個形參的建構式方法時，很容易搞亂 arg 元素的順序。
+          從版本 3.4.3 開始，可以在指定參數名稱的前提下，以任意順序編寫 arg 元素。
+          為了透過名稱來參考建構式方法參數，你可以新增 <code>@Param</code> 註解，或者使用
+          '-parameters' 編譯選項並啟用 <code>useActualParamName</code>
+          選項（預設開啟）來編譯專案。下面是一個等價的例子，儘管函式簽名中第二和第三個形參的順序與
+          constructor 元素中參數宣告的順序不匹配。
+        </p>
+
+        <source><![CDATA[<constructor>
+   <idArg column="id" javaType="int" name="id" />
+   <arg column="age" javaType="_int" name="age" />
+   <arg column="username" javaType="String" name="username" />
+</constructor>]]></source>
+
+        <p>
+          如果存在名稱和型別相同的屬性，那麼可以省略 <code>javaType</code> 。
+        </p>
+
+        <p>
+          剩餘的屬性和規則和普通的 id 和 result 元素是一樣的。
+        </p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>屬性</th>
+              <th>描述</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>column</code></td>
+              <td>
+                資料庫中的列名，或者是列的別名。一般情況下，這和傳遞給
+                <code>resultSet.getString(columnName)</code> 方法的參數一樣。
+              </td>
+            </tr>
+            <tr>
+              <td><code>javaType</code></td>
+              <td>
+                一個 Java 類別的完全限定名，或一個型別別名（關於內建的型別別名，可以參考上面的表格）。
+                如果你對映到一個 JavaBean，MyBatis 通常可以推斷型別。然而，如果你對映到的是
+                HashMap，那麼你應該明確地指定 javaType 來保證行為與期望的相一致。
+              </td>
+            </tr>
+            <tr>
+              <td><code>jdbcType</code></td>
+              <td>
+                JDBC 型別，所支援的 JDBC 型別參見這個表格之前的 "支援的 JDBC 型別" 。
+                只需要在可能執行插入、更新和刪除的且允許空值的列上指定 JDBC 型別。這是
+                JDBC 的要求而非 MyBatis 的要求。如果你直接面向 JDBC
+                程式設計，你需要對可能存在空值的列指定這個型別。
+              </td>
+            </tr>
+            <tr>
+              <td><code>typeHandler</code></td>
+              <td>
+                我們在前面討論過預設的型別處理器。使用這個屬性，你可以覆蓋預設的型別處理器。
+                這個屬性值是一個型別處理器實現類別的完全限定名，或者是型別別名。
+              </td>
+            </tr>
+            <tr>
+              <td><code>select</code></td>
+              <td>
+                用於載入複雜型別屬性的對映語句的 ID，它會從 column
+                屬性中指定的列檢索資料，作為參數傳遞給此 select 語句。具體請參考關聯元素。
+              </td>
+            </tr>
+            <tr>
+              <td><code>resultMap</code></td>
+              <td>
+                結果對映的 ID，可以將巢狀的結果集對映到一個合適的物件樹中。
+                它可以作為使用額外 select 語句的替代方案。它可以將多表連線操作的結果對映成一個單一的
+                <code>ResultSet</code>。這樣的 <code>ResultSet</code>
+                將會將包含重複或部分資料重複的結果集。為了將結果集正確地對映到巢狀的物件樹中，MyBatis
+                允許你  "串聯" 結果對映，以便解決巢狀結果集的問題。想了解更多內容，請參考下面的關聯元素。
+              </td>
+            </tr>
+            <tr>
+              <td><code>name</code></td>
+              <td>
+                建構式方法形參的名字。從 3.4.3 版本開始，透過指定具體的參數名，你可以以任意順序寫入
+                arg 元素。參看上面的解釋。
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h4>關聯</h4>
+
+        <source><![CDATA[<association property="author" column="blog_author_id" javaType="Author">
+  <id property="id" column="author_id"/>
+  <result property="username" column="author_username"/>
+</association>]]></source>
+
+        <p>
+          關聯(association)元素處理 "有一個" 型別的關係。
+          比如，在我們的示例中，一個部落格有一個使用者。關聯結果對映和其它型別的對映工作方式差不多。
+          你需要指定目標屬性名以及屬性的<code>javaType</code>（很多時候 MyBatis
+          可以自己推斷出來），在必要的情況下你還可以設定 JDBC
+          型別，如果你想覆蓋獲取結果值的過程，還可以設定型別處理器。
+        </p>
+
+        <p>
+          關聯的不同之處是，你需要告訴 MyBatis 如何載入關聯。MyBatis 有兩種不同的方式載入關聯：
+        </p>
+
+        <ul>
+          <li>
+            巢狀 Select 查詢：透過執行另外一個 SQL 對映語句來載入期望的複雜型別。
+          </li>
+          <li>
+            巢狀結果對映：使用巢狀的結果對映來處理連線結果的重複子集。
+          </li>
+        </ul>
+
+        <p>
+          首先，先讓我們來看看這個元素的屬性。你將會發現，和普通的結果對映相比，它只在 select 和 resultMap 屬性上有所不同。
+        </p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>屬性</th>
+              <th>描述</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>property</code></td>
+              <td>
+                對映到列結果的欄位或屬性。如果用來匹配的 JavaBean
+                存在給定名字的屬性，那麼它將會被使用。否則 MyBatis 將會尋找給定名稱的欄位。
+                無論是哪一種情形，你都可以使用通常的點式分隔形式進行復雜屬性導航。
+                比如，你可以這樣對映一些簡單的東西： "username"，或者對映到一些複雜的東西上： "address.street.number" 。
+              </td>
+            </tr>
+            <tr>
+              <td><code>javaType</code></td>
+              <td>
+                一個 Java 類別的完全限定名，或一個型別別名（關於內建的型別別名，可以參考上面的表格）。
+                如果你對映到一個 JavaBean，MyBatis 通常可以推斷型別。然而，如果你對映到的是
+                HashMap，那麼你應該明確地指定 javaType 來保證行為與期望的相一致。
+              </td>
+            </tr>
+            <tr>
+              <td><code>jdbcType</code></td>
+              <td>
+                JDBC 型別，所支援的 JDBC 型別參見這個表格之前的 "支援的 JDBC 型別" 。
+                只需要在可能執行插入、更新和刪除的且允許空值的列上指定 JDBC 型別。這是
+                JDBC 的要求而非 MyBatis 的要求。如果你直接面向
+                JDBC 程式設計，你需要對可能存在空值的列指定這個型別。
+              </td>
+            </tr>
+            <tr>
+              <td><code>typeHandler</code></td>
+              <td>
+                我們在前面討論過預設的型別處理器。使用這個屬性，你可以覆蓋預設的型別處理器。
+                這個屬性值是一個型別處理器實現類別的完全限定名，或者是型別別名。
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h4>關聯的巢狀 Select 查詢</h4>
+
+        <table>
+          <thead>
+            <tr>
+              <th>屬性</th>
+              <th>描述</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>column</code></td>
+              <td>
+              資料庫中的列名，或者是列的別名。一般情況下，這和傳遞給
+              <code>resultSet.getString(columnName)</code> 方法的參數一樣。
+              注意：在使用複合主鍵的時候，你可以使用 <code>column="{prop1=col1,prop2=col2}"</code>
+              這樣的語法來指定多個傳遞給巢狀 Select 查詢語句的列名。這會使得
+              <code>prop1</code> 和 <code>prop2</code> 作為參數物件，被設定為對應巢狀 Select 語句的參數。
+              </td>
+            </tr>
+            <tr>
+              <td><code>select</code></td>
+              <td>
+                用於載入複雜型別屬性的對映語句的 ID，它會從 column
+                屬性指定的列中檢索資料，作為參數傳遞給目標 select 語句。
+                具體請參考下面的例子。注意：在使用複合主鍵的時候，你可以使用
+                <code>column="{prop1=col1,prop2=col2}"</code> 這樣的語法來指定多個傳遞給巢狀
+                Select 查詢語句的列名。這會使得 <code>prop1</code> 和 <code>prop2</code>
+                作為參數物件，被設定為對應巢狀 Select 語句的參數。
+              </td>
+            </tr>
+            <tr>
+              <td><code>fetchType</code></td>
+              <td>
+                可選的。有效值為 <code>lazy</code> 和 <code>eager</code>。
+                指定屬性後，將在對映中忽略全域性配置參數 <code>lazyLoadingEnabled</code>，使用屬性的值。
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>
+          示例：
+        </p>
+
+        <source><![CDATA[<resultMap id="blogResult" type="Blog">
+  <association property="author" column="author_id" javaType="Author" select="selectAuthor"/>
+</resultMap>
+
+<select id="selectBlog" resultMap="blogResult">
+  SELECT * FROM BLOG WHERE ID = #{id}
+</select>
+
+<select id="selectAuthor" resultType="Author">
+  SELECT * FROM AUTHOR WHERE ID = #{id}
+</select>]]></source>
+
+        <p>
+          就是這麼簡單。我們有兩個 select
+          查詢語句：一個用來載入部落格(Blog)，另外一個用來載入作者(Author)，而且部落格的結果對映描述了應該使用
+          <code>selectAuthor</code> 語句載入它的 author 屬性。
+        </p>
+
+        <p>
+          其它所有的屬性將會被自動載入，只要它們的列名和屬性名相匹配。
+        </p>
+
+        <p>
+          這種方式雖然很簡單，但在大型資料集或大型資料表上表現不佳。這個問題被稱為 "N+1 查詢問題" 。
+          概括地講，N+1 查詢問題是這樣子的：
+        </p>
+
+        <ul>
+          <li>你執行了一個單獨的 SQL 語句來獲取結果的一個列表（就是 "+1" ）。</li>
+          <li>對列表回傳的每條記錄，你執行一個 select 查詢語句來為每條記錄載入詳細資訊（就是 "N" ）。
+          </li>
+        </ul>
+
+        <p>
+          這個問題會導致成百上千的 SQL 語句被執行。有時候，我們不希望產生這樣的後果。
+        </p>
+
+        <p>
+          好訊息是，MyBatis 能夠對這樣的查詢進行延遲載入，因此可以將大量語句同時執行的開銷分散開來。
+          然而，如果你載入記錄列表之後立刻就遍歷列表以獲取巢狀的資料，就會觸發所有的延遲載入查詢，效能可能會變得很糟糕。
+        </p>
+
+        <p>
+          所以還有另外一種方法。
+        </p>
+
+        <h4>關聯的巢狀結果對映</h4>
+
+        <table>
+          <thead>
+            <tr>
+              <th>屬性</th>
+              <th>描述</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>resultMap</code></td>
+              <td>
+                結果對映的 ID，可以將此關聯的巢狀結果集對映到一個合適的物件樹中。
+                它可以作為使用額外 select 語句的替代方案。它可以將多表連線操作的結果對映成一個單一的
+                <code>ResultSet</code>。這樣的 <code>ResultSet</code> 有部分資料是重複的。
+                為了將結果集正確地對映到巢狀的物件樹中, MyBatis
+                允許你 "串聯" 結果對映，以便解決巢狀結果集的問題。使用巢狀結果對映的一個例子在表格以後。
+              </td>
+            </tr>
+            <tr>
+              <td><code>columnPrefix</code></td>
+              <td>
+				        當連線多個表時，你可能會不得不使用列別名來避免在 <code>ResultSet</code>
+                中產生重複的列名。指定 columnPrefix 列名字首允許你將帶有這些字首的列對映到一個外部的結果對映中。
+                詳細說明請參考後面的例子。
+              </td>
+            </tr>
+            <tr>
+              <td><code>notNullColumn</code></td>
+              <td>
+                預設情況下，在至少一個被對映到屬性的列不為空時，子物件才會被建立。
+                你可以在這個屬性上指定非空的列來改變預設行為，指定後，Mybatis
+                將只在這些列中任意一列非空時才建立一個子物件。可以使用逗號分隔來指定多個列。預設值：未設定(unset)。
+              </td>
+            </tr>
+            <tr>
+              <td><code>autoMapping</code></td>
+              <td>
+                如果設定這個屬性，MyBatis 將會為本結果對映開啟或者關閉自動對映。
+                這個屬性會覆蓋全域性的屬性 autoMappingBehavior。注意，本屬性對外部的結果對映無效，所以不能搭配
+                <code>select</code> 或 <code>resultMap</code> 元素使用。預設值：未設定(unset)。
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>
+          之前，你已經看到了一個非常複雜的巢狀關聯的例子。
+          下面的例子則是一個非常簡單的例子，用於示範巢狀結果對映如何工作。
+          現在我們將部落格表和作者表連線在一起，而不是執行一個獨立的查詢語句，就像這樣：
+        </p>
+
+        <source><![CDATA[<select id="selectBlog" resultMap="blogResult">
+  select
+    B.id            as blog_id,
+    B.title         as blog_title,
+    B.author_id     as blog_author_id,
+    A.id            as author_id,
+    A.username      as author_username,
+    A.password      as author_password,
+    A.email         as author_email,
+    A.bio           as author_bio
+  from Blog B left outer join Author A on B.author_id = A.id
+  where B.id = #{id}
+</select>]]></source>
+
+        <p>
+          注意查詢中的連線，以及為確保結果能夠擁有唯一且清晰的名字，我們設定的別名。
+          這使得進行對映非常簡單。現在我們可以對映這個結果：
+        </p>
+
+        <source><![CDATA[<resultMap id="blogResult" type="Blog">
+  <id property="id" column="blog_id" />
+  <result property="title" column="blog_title"/>
+  <association property="author" column="blog_author_id" javaType="Author" resultMap="authorResult"/>
+</resultMap>
+
+<resultMap id="authorResult" type="Author">
+  <id property="id" column="author_id"/>
+  <result property="username" column="author_username"/>
+  <result property="password" column="author_password"/>
+  <result property="email" column="author_email"/>
+  <result property="bio" column="author_bio"/>
+</resultMap>]]></source>
+
+        <p>
+          在上面的例子中，你可以看到，部落格(Blog)作者(author)的關聯元素委託名為
+           "authorResult"  的結果對映來載入作者物件的實例。
+        </p>
+
+        <p>
+          <span class="important">非常重要</span>：
+          id 元素在巢狀結果對映中扮演著非常重要的角色。你應該總是指定一個或多個可以唯一標識結果的屬性。
+          雖然，即使不指定這個屬性，MyBatis 仍然可以工作，但是會產生嚴重的效能問題。
+          只需要指定可以唯一標識結果的最少屬性。顯然，你可以選擇主鍵（複合主鍵也可以）。
+        </p>
+
+        <p>
+          現在，上面的示例使用了外部的結果對映元素來對映關聯。這使得 Author 的結果對映可以被重用。
+          然而，如果你不打算重用它，或者你更喜歡將你所有的結果對映放在一個具有描述性的結果對映元素中。
+          你可以直接將結果對映作為子元素巢狀在內。這裡給出使用這種方式的等效例子：
+        </p>
+
+        <source><![CDATA[<resultMap id="blogResult" type="Blog">
+  <id property="id" column="blog_id" />
+  <result property="title" column="blog_title"/>
+  <association property="author" javaType="Author">
+    <id property="id" column="author_id"/>
+    <result property="username" column="author_username"/>
+    <result property="password" column="author_password"/>
+    <result property="email" column="author_email"/>
+    <result property="bio" column="author_bio"/>
+  </association>
+</resultMap>]]></source>
+
+        <p>
+          那如果部落格(blog)有一個共同作者（co-author）該怎麼辦？select 語句看起來會是這樣的：
+        </p>
+
+        <source><![CDATA[<select id="selectBlog" resultMap="blogResult">
+  select
+    B.id            as blog_id,
+    B.title         as blog_title,
+    A.id            as author_id,
+    A.username      as author_username,
+    A.password      as author_password,
+    A.email         as author_email,
+    A.bio           as author_bio,
+    CA.id           as co_author_id,
+    CA.username     as co_author_username,
+    CA.password     as co_author_password,
+    CA.email        as co_author_email,
+    CA.bio          as co_author_bio
+  from Blog B
+  left outer join Author A on B.author_id = A.id
+  left outer join Author CA on B.co_author_id = CA.id
+  where B.id = #{id}
+</select>]]></source>
+
+        <p>
+          回憶一下，Author 的結果對映定義如下：
+        </p>
+
+        <source><![CDATA[<resultMap id="authorResult" type="Author">
+  <id property="id" column="author_id"/>
+  <result property="username" column="author_username"/>
+  <result property="password" column="author_password"/>
+  <result property="email" column="author_email"/>
+  <result property="bio" column="author_bio"/>
+</resultMap>]]></source>
+
+        <p>
+          由於結果中的列名與結果對映中的列名不同。你需要指定 <code>columnPrefix</code>
+          以便重複使用該結果對映來對映 co-author 的結果。
+        </p>
+
+        <source><![CDATA[<resultMap id="blogResult" type="Blog">
+  <id property="id" column="blog_id" />
+  <result property="title" column="blog_title"/>
+  <association property="author"
+    resultMap="authorResult" />
+  <association property="coAuthor"
+    resultMap="authorResult"
+    columnPrefix="co_" />
+</resultMap>]]></source>
+
+        <h4>關聯的多結果集(ResultSet)</h4>
+
+        <table>
+          <thead>
+            <tr>
+              <th>屬性</th>
+              <th>描述</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>column</code></td>
+              <td>
+                當使用多個結果集時，該屬性指定結果集中用於與 <code>foreignColumn</code>
+                匹配的列（多個列名以逗號隔開），以識別關係中的父型別與子型別。
+              </td>
+            </tr>
+            <tr>
+              <td><code>foreignColumn</code></td>
+              <td>
+                指定外來鍵對應的列名，指定的列將與父型別中 <code>column</code> 的給出的列進行匹配。
+              </td>
+            </tr>
+            <tr>
+              <td><code>resultSet</code></td>
+              <td>
+                指定用於載入複雜型別的結果集名字。
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>從版本 3.2.3 開始，MyBatis 提供了另一種解決 N+1 查詢問題的方法。</p>
+
+        <p>
+          某些資料庫允許儲存過程回傳多個結果集，或一次性執行多個語句，每個語句回傳一個結果集。
+          我們可以利用這個特性，在不使用連線的情況下，只訪問資料庫一次就能獲得相關資料。
+        </p>
+
+        <p>在例子中，儲存過程執行下面的查詢並回傳兩個結果集。第一個結果集會回傳部落格(Blog)的結果，第二個則回傳作者(Author)的結果。</p>
+
+        <source><![CDATA[SELECT * FROM BLOG WHERE ID = #{id}
+
+SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
+
+        <p>在對映語句中，必須透過 <code>resultSets</code> 屬性為每個結果集指定一個名字，多個名字使用逗號隔開。</p>
+
+        <source><![CDATA[<select id="selectBlog" resultSets="blogs,authors" resultMap="blogResult" statementType="CALLABLE">
+  {call getBlogsAndAuthors(#{id,jdbcType=INTEGER,mode=IN})}
+</select>
+]]></source>
+
+        <p>
+          現在我們可以指定使用  "authors"  結果集的資料來填充  "author"  關聯：
+        </p>
+
+        <source><![CDATA[<resultMap id="blogResult" type="Blog">
+  <id property="id" column="id" />
+  <result property="title" column="title"/>
+  <association property="author" javaType="Author" resultSet="authors" column="author_id" foreignColumn="id">
+    <id property="id" column="id"/>
+    <result property="username" column="username"/>
+    <result property="password" column="password"/>
+    <result property="email" column="email"/>
+    <result property="bio" column="bio"/>
+  </association>
+</resultMap>]]></source>
+
+        <p>
+          你已經在上面看到了如何處理 "有一個" 型別的關聯。但是該怎麼處理 "有很多個" 型別的關聯呢？這就是我們接下來要介紹的。
+        </p>
+
+        <h4>集合</h4>
+
+        <source><![CDATA[<collection property="posts" ofType="domain.blog.Post">
+  <id property="id" column="post_id"/>
+  <result property="subject" column="post_subject"/>
+  <result property="body" column="post_body"/>
+</collection>]]></source>
+
+        <p>
+          集合元素和關聯元素幾乎是一樣的，它們相似的程度之高，以致於沒有必要再介紹集合元素的相似部分。
+          所以讓我們來關注它們的不同之處吧。
+        </p>
+
+        <p>
+          我們來繼續上面的示例，一個部落格(Blog)只有一個作者（Author)。但一個部落格有很多文章（Post)。
+          在部落格類別中，這可以用下面的寫法來表示：
+        </p>
+
+        <source><![CDATA[private List<Post> posts;]]></source>
+
+        <p>
+          要像上面這樣，對映巢狀結果集合到一個 List 中，可以使用集合元素。
+          和關聯元素一樣，我們可以使用巢狀 Select 查詢，或基於連線的巢狀結果對映集合。
+        </p>
+
+        <h4>集合的巢狀 Select 查詢</h4>
+
+        <p>
+          首先，讓我們看看如何使用巢狀 Select 查詢來為部落格載入文章。
+        </p>
+
+        <source><![CDATA[<resultMap id="blogResult" type="Blog">
+  <collection property="posts" javaType="ArrayList" column="id" ofType="Post" select="selectPostsForBlog"/>
+</resultMap>
+
+<select id="selectBlog" resultMap="blogResult">
+  SELECT * FROM BLOG WHERE ID = #{id}
+</select>
+
+<select id="selectPostsForBlog" resultType="Post">
+  SELECT * FROM POST WHERE BLOG_ID = #{id}
+</select>]]></source>
+
+        <p>
+          你可能會立刻注意到幾個不同，但大部分都和我們上面學習過的關聯元素非常相似。
+          首先，你會注意到我們使用的是集合元素。
+          接下來你會注意到有一個新的  "ofType"  屬性。這個屬性非常重要，它用來將
+          JavaBean（或欄位）屬性的型別和集合儲存的型別區分開來。
+          所以你可以按照下面這樣來閱讀對映：
+        </p>
+
+        <source><![CDATA[<collection property="posts" javaType="ArrayList" column="id" ofType="Post" select="selectPostsForBlog"/>]]></source>
+
+        <p>
+          <span class="important">讀作</span>：  "posts 是一個儲存 Post 的 ArrayList 集合"
+        </p>
+
+        <p>
+          在一般情況下，MyBatis 可以推斷 javaType 屬性，因此並不需要填寫。所以很多時候你可以簡略成：
+        </p>
+
+        <source><![CDATA[<collection property="posts" column="id" ofType="Post" select="selectPostsForBlog"/>]]></source>
+
+        <h4>集合的巢狀結果對映</h4>
+
+        <p>
+          現在你可能已經猜到了集合的巢狀結果對映是怎樣工作的——除了新增的  "ofType"  屬性，它和關聯的完全相同。
+        </p>
+
+        <p>首先, 讓我們看看對應的 SQL 語句：</p>
+
+        <source><![CDATA[<select id="selectBlog" resultMap="blogResult">
+  select
+  B.id as blog_id,
+  B.title as blog_title,
+  B.author_id as blog_author_id,
+  P.id as post_id,
+  P.subject as post_subject,
+  P.body as post_body,
+  from Blog B
+  left outer join Post P on B.id = P.blog_id
+  where B.id = #{id}
+</select>]]></source>
+
+        <p>
+          我們再次連線了部落格表和文章表，並且為每一列都賦予了一個有意義的別名，以便對映保持簡單。
+          要對映部落格裡面的文章集合，就這麼簡單：
+        </p>
+
+        <source><![CDATA[<resultMap id="blogResult" type="Blog">
+  <id property="id" column="blog_id" />
+  <result property="title" column="blog_title"/>
+  <collection property="posts" ofType="Post">
+    <id property="id" column="post_id"/>
+    <result property="subject" column="post_subject"/>
+    <result property="body" column="post_body"/>
+  </collection>
+</resultMap>]]></source>
+
+        <p>
+          再提醒一次，要記得上面 id 元素的重要性，如果你不記得了，請閱讀關聯部分的相關部分。
+        </p>
+
+        <p>
+          如果你喜歡更詳略的、可重用的結果對映，你可以使用下面的等價形式：
+        </p>
+        <source><![CDATA[<resultMap id="blogResult" type="Blog">
+  <id property="id" column="blog_id" />
+  <result property="title" column="blog_title"/>
+  <collection property="posts" ofType="Post" resultMap="blogPostResult" columnPrefix="post_"/>
+</resultMap>
+
+<resultMap id="blogPostResult" type="Post">
+  <id property="id" column="id"/>
+  <result property="subject" column="subject"/>
+  <result property="body" column="body"/>
+</resultMap>]]></source>
+
+        <h4>集合的多結果集(ResultSet)</h4>
+
+        <p>
+          像關聯元素那樣，我們可以透過執行儲存過程實現，它會執行兩個查詢並回傳兩個結果集，一個是部落格的結果集，另一個是文章的結果集：
+        </p>
+
+        <source><![CDATA[SELECT * FROM BLOG WHERE ID = #{id}
+
+SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
+
+        <p>在對映語句中，必須透過 <code>resultSets</code> 屬性為每個結果集指定一個名字，多個名字使用逗號隔開。</p>
+
+        <source><![CDATA[<select id="selectBlog" resultSets="blogs,posts" resultMap="blogResult">
+  {call getBlogsAndPosts(#{id,jdbcType=INTEGER,mode=IN})}
+</select>]]></source>
+
+        <p>我們指定  "posts"  集合將會使用儲存在  "posts"  結果集中的資料進行填充： </p>
+
+        <source><![CDATA[<resultMap id="blogResult" type="Blog">
+  <id property="id" column="id" />
+  <result property="title" column="title"/>
+  <collection property="posts" ofType="Post" resultSet="posts" column="id" foreignColumn="blog_id">
+    <id property="id" column="id"/>
+    <result property="subject" column="subject"/>
+    <result property="body" column="body"/>
+  </collection>
+</resultMap>]]></source>
+
+        <p>
+          <span class="label important">注意</span>
+          對關聯或集合的對映，並沒有深度、廣度或組合上的要求。但在對映時要留意效能問題。
+          在探索最佳實踐的過程中，應用的單元測試和效能測試會是你的好幫手。
+          而 MyBatis 的好處在於，可以在不對你的程式碼引入重大變更（如果有）的情況下，允許你之後改變你的想法。
+        </p>
+
+        <p>
+          高階關聯和集合對映是一個深度話題。文件的介紹只能到此為止。配合少許的實踐，你會很快了解全部的用法。
+        </p>
+
+        <h4>鑑別器</h4>
+
+        <source><![CDATA[<discriminator javaType="int" column="draft">
+  <case value="1" resultType="DraftPost"/>
+</discriminator>]]></source>
+
+        <p>
+          有時候，一個數據函式庫查詢可能會回傳多個不同的結果集（但總體上還是有一定的聯絡的）。
+          鑑別器(discriminator)元素就是被設計來應對這種情況的，另外也能處理其它情況，例如類別的繼承層次結構。
+          鑑別器的概念很好理解——它很像 Java 語言中的 switch 語句。
+        </p>
+
+        <p>
+          一個鑑別器的定義需要指定 column 和 javaType 屬性。column 指定了 MyBatis 查詢被比較值的地方。
+          而 javaType 用來確保使用正確的相等測試（雖然很多情況下字串的相等測試都可以工作）。例如：
+        </p>
+
+        <source><![CDATA[<resultMap id="vehicleResult" type="Vehicle">
+  <id property="id" column="id" />
+  <result property="vin" column="vin"/>
+  <result property="year" column="year"/>
+  <result property="make" column="make"/>
+  <result property="model" column="model"/>
+  <result property="color" column="color"/>
+  <discriminator javaType="int" column="vehicle_type">
+    <case value="1" resultMap="carResult"/>
+    <case value="2" resultMap="truckResult"/>
+    <case value="3" resultMap="vanResult"/>
+    <case value="4" resultMap="suvResult"/>
+  </discriminator>
+</resultMap>]]></source>
+
+        <p>
+          在這個示例中，MyBatis 會從結果集中得到每條記錄，然後比較它的 vehicle type 值。
+          如果它匹配任意一個鑑別器的 case，就會使用這個 case 指定的結果對映。
+          這個過程是互斥的，也就是說，剩餘的結果對映將被忽略（除非它是擴充套件的，我們將在稍後討論它）。
+          如果不能匹配任何一個 case，MyBatis 就只會使用鑑別器塊外定義的結果對映。
+          所以，如果 carResult 的宣告如下：
+        </p>
+
+
+        <source><![CDATA[<resultMap id="carResult" type="Car">
+  <result property="doorCount" column="door_count" />
+</resultMap>]]></source>
+
+        <p>
+          那麼只有 doorCount 屬性會被載入。這是為了即使鑑別器的 case
+          之間都能分為完全獨立的一組，儘管和父結果對映可能沒有什麼關係。在上面的例子中，我們當然知道
+          cars 和 vehicles 之間有關係，也就是 Car 是一個
+          Vehicle。因此，我們希望剩餘的屬性也能被載入。而這隻需要一個小修改。
+        </p>
+
+        <source><![CDATA[<resultMap id="carResult" type="Car" extends="vehicleResult">
+  <result property="doorCount" column="door_count" />
+</resultMap>]]></source>
+
+        <p>
+          現在 vehicleResult 和 carResult 的屬性都會被載入了。
+        </p>
+
+        <p>
+          可能有人又會覺得對映的外部定義有點太冗長了。
+          因此，對於那些更喜歡簡潔的對映風格的人來說，還有另一種語法可以選擇。例如：
+        </p>
+
+        <source><![CDATA[<resultMap id="vehicleResult" type="Vehicle">
+  <id property="id" column="id" />
+  <result property="vin" column="vin"/>
+  <result property="year" column="year"/>
+  <result property="make" column="make"/>
+  <result property="model" column="model"/>
+  <result property="color" column="color"/>
+  <discriminator javaType="int" column="vehicle_type">
+    <case value="1" resultType="carResult">
+      <result property="doorCount" column="door_count" />
+    </case>
+    <case value="2" resultType="truckResult">
+      <result property="boxSize" column="box_size" />
+      <result property="extendedCab" column="extended_cab" />
+    </case>
+    <case value="3" resultType="vanResult">
+      <result property="powerSlidingDoor" column="power_sliding_door" />
+    </case>
+    <case value="4" resultType="suvResult">
+      <result property="allWheelDrive" column="all_wheel_drive" />
+    </case>
+  </discriminator>
+</resultMap>]]></source>
+
+        <p>
+          <span class="label important">提示</span>
+          請注意，這些都是結果對映，如果你完全不設定任何的 result 元素，MyBatis
+          將為你自動匹配列和屬性。所以上面的例子大多都要比實際的更復雜。
+          這也表明，大多數資料庫的複雜度都比較高，我們不太可能一直依賴於這種機制。
+        </p>
+
+      </subsection>
+
+      <subsection name="自動對映" id="Auto-mapping">
+
+        <p>
+           正如你在前面一節看到的，在簡單的場景下，MyBatis
+           可以為你自動對映查詢結果。但如果遇到複雜的場景，你需要建構一個結果對映。
+           但是在本節中，你將看到，你可以混合使用這兩種策略。讓我們深入瞭解一下自動對映是怎樣工作的。
+        </p>
+
+        <p>
+           當自動對映查詢結果時，MyBatis 會獲取結果中回傳的列名並在 Java
+           類別中查詢相同名字的屬性（忽略大小寫）。 這意味著如果發現了 <i>ID</i> 列和
+           <i>id</i> 屬性，MyBatis 會將列 <i>ID</i> 的值賦給 <i>id</i> 屬性。
+        </p>
+
+        <p>
+           通常資料庫列使用大寫字母組成的單詞命名，單詞間用下劃線分隔；而 Java
+           屬性一般遵循駝峰命名法約定。為了在這兩種命名方式之間啟用自動對映，需要將
+           <code>mapUnderscoreToCamelCase</code> 設定為 true。
+        </p>
+
+        <p>
+           甚至在提供了結果對映後，自動對映也能工作。在這種情況下，對於每一個結果對映，在
+           ResultSet 出現的列，如果沒有設定手動對映，將被自動對映。在自動對映處理完畢後，再處理手動對映。
+           在下面的例子中，<i>id</i> 和 <i>userName</i> 列將被自動對映，<i>hashed_password</i> 列將根據配置進行對映。
+        </p>
+        <source><![CDATA[<select id="selectUsers" resultMap="userResultMap">
+  select
+    user_id             as "id",
+    user_name           as "userName",
+    hashed_password
+  from some_table
+  where id = #{id}
+</select>]]></source>
+
+        <source><![CDATA[<resultMap id="userResultMap" type="User">
+  <result property="password" column="hashed_password"/>
+</resultMap>]]></source>
+
+        <p>
+          有三種自動對映等級：
+        </p>
+
+        <ul>
+          <li>
+            <code>NONE</code> - 禁用自動對映。僅對手動對映的屬性進行對映。
+          </li>
+          <li>
+            <code>PARTIAL</code> - 對除在內部定義了巢狀結果對映（也就是連線的屬性）以外的屬性進行對映
+          </li>
+          <li>
+            <code>FULL</code> - 自動對映所有屬性。
+          </li>
+        </ul>
+
+        <p>
+          預設值是 <code>PARTIAL</code>，這是有原因的。當對連線查詢的結果使用
+          <code>FULL</code> 時，連線查詢會在同一行中獲取多個不同實體的資料，因此可能導致非預期的對映。
+          下面的例子將展示這種風險：
+        </p>
+
+        <source><![CDATA[<select id="selectBlog" resultMap="blogResult">
+  select
+    B.id,
+    B.title,
+    A.username,
+  from Blog B left outer join Author A on B.author_id = A.id
+  where B.id = #{id}
+</select>]]></source>
+
+        <source><![CDATA[<resultMap id="blogResult" type="Blog">
+  <association property="author" resultMap="authorResult"/>
+</resultMap>
+
+<resultMap id="authorResult" type="Author">
+  <result property="username" column="author_username"/>
+</resultMap>]]></source>
+
+        <p>
+          在該結果對映中，<i>Blog</i> 和 <i>Author</i> 均將被自動對映。但是注意
+          <i>Author</i> 有一個 <i>id</i> 屬性，在 ResultSet 中也有一個名為 <i>id</i>
+          的列，所以 Author 的 id 將填入 Blog 的 id，這可不是你期望的行為。
+          所以，要謹慎使用 <code>FULL</code>。
+        </p>
+
+        <p>
+          無論設定的自動對映等級是哪種，你都可以透過在結果對映上設定 <code>autoMapping</code>
+          屬性來為指定的結果對映設定啟用/禁用自動對映。
+        </p>
+
+        <source><![CDATA[<resultMap id="userResultMap" type="User" autoMapping="false">
+  <result property="password" column="hashed_password"/>
+</resultMap>]]></source>
+
+      </subsection>
+
+      <subsection name="快取" id="cache">
+        <p>
+          MyBatis 內建了一個強大的交易性查詢快取機制，它可以非常方便地配置和訂製。
+          為了使它更加強大而且易於配置，我們對 MyBatis 3 中的快取實現進行了許多改進。
+        </p>
+
+        <p>
+          預設情況下，只啟用了本地的會話快取，它僅僅對一個會話中的資料進行快取。
+          要啟用全域性的二級快取，只需要在你的 SQL 對映檔案中新增一行：
+        </p>
+
+        <source><![CDATA[<cache/>]]></source>
+
+        <p>
+          基本上就是這樣。這個簡單語句的效果如下:
+        </p>
+
+        <ul>
+          <li>對映語句檔案中的所有 select 語句的結果將會被快取。</li>
+          <li>對映語句檔案中的所有 insert、update 和 delete 語句會重新整理快取。</li>
+          <li>快取會使用最近最少使用演算法（LRU, Least Recently Used）演算法來清除不需要的快取。</li>
+          <li>快取不會定時進行重新整理（也就是說，沒有重新整理間隔）。</li>
+          <li>快取會儲存列表或物件（無論查詢方法回傳哪種）的 1024 個參考。</li>
+          <li>快取會被視為讀/寫快取，這意味著獲取到的物件並不是共享的，可以安全地被呼叫者修改，而不干擾其他呼叫者或執行緒所做的潛在修改。</li>
+        </ul>
+
+        <p>
+          <span class="label important">提示</span>
+          快取只作用於 cache 標籤所在的對映檔案中的語句。如果你混合使用 Java API 和 XML
+          對映檔案，在共用介面中的語句將不會被預設快取。你需要使用 @CacheNamespaceRef 註解指定快取作用域。
+        </p>
+
+        <p>
+          這些屬性可以透過 cache 元素的屬性來修改。比如：
+        </p>
+
+        <source><![CDATA[<cache
+  eviction="FIFO"
+  flushInterval="60000"
+  size="512"
+  readOnly="true"/>]]></source>
+
+        <p>
+          這個更進階的配置建立了一個 FIFO 快取，每隔 60 秒重新整理，最多可以儲存結果物件或列表的 512
+          個參考，而且回傳的物件被認為是隻讀的，因此對它們進行修改可能會在不同執行緒中的呼叫者產生衝突。
+        </p>
+
+        <p>
+          可用的清除策略有：
+        </p>
+
+        <ul>
+          <li>
+            <code>LRU</code> – 最近最少使用：移除最長時間不被使用的物件。
+          </li>
+          <li><code>FIFO</code> – 先進先出：按物件進入快取的順序來移除它們。
+          </li>
+          <li>
+            <code>SOFT</code> – 軟參考：基於垃圾回收器狀態和軟參考規則移除物件。
+          </li>
+          <li>
+            <code>WEAK</code> – 弱參考：更積極地基於垃圾收集器狀態和弱參考規則移除物件。
+          </li>
+        </ul>
+
+        <p>預設的清除策略是 LRU。</p>
+
+        <p>
+          flushInterval（重新整理間隔）屬性可以被設定為任意的正整數，設定的值應該是一個以毫秒為單位的合理時間量。
+          預設情況是不設定，也就是沒有重新整理間隔，快取僅僅會在呼叫語句時重新整理。
+        </p>
+
+        <p>
+          size（參考數目）屬性可以被設定為任意正整數，要注意欲快取物件的大小和執行環境中可用的記憶體資源。預設值是 1024。
+        </p>
+
+        <p>
+          readOnly（唯讀）屬性可以被設定為 true 或 false。唯讀的快取會給所有呼叫者回傳快取物件的相同實例。
+          因此這些物件不能被修改。這就提供了可觀的效能提升。而可讀寫的快取會（透過序列化）回傳快取物件的拷貝。
+          速度上會慢一些，但是更安全，因此預設值是 false。
+        </p>
+
+        <p>
+          <span class="label important">提示</span>
+          二級快取是交易性的。這意味著，當 SqlSession 完成並提交時，或是完成並回滾，但沒有執行
+          flushCache=true 的 insert/delete/update 語句時，快取會獲得更新。
+        </p>
+
+        <h4>使用自訂快取</h4>
+
+        <p>
+          除了上述自訂快取的方式，你也可以透過實現你自己的快取，或為其他第三方快取方案建立介面卡，來完全覆蓋快取行為。
+        </p>
+
+        <source><![CDATA[<cache type="com.domain.something.MyCustomCache"/>]]></source>
+
+        <p>
+          這個示例展示了如何使用一個自訂的快取實現。type 屬性指定的類別必須實現
+          org.apache.ibatis.cache.Cache 介面，且提供一個接受 String 參數作為 id 的構造器。
+          這個介面是 MyBatis 框架中許多複雜的介面之一，但是行為卻非常簡單。
+        </p>
+
+        <source><![CDATA[public interface Cache {
+  String getId();
+  int getSize();
+  void putObject(Object key, Object value);
+  Object getObject(Object key);
+  boolean hasKey(Object key);
+  Object removeObject(Object key);
+  void clear();
+}]]></source>
+
+        <p>
+          為了對你的快取進行配置，只需要簡單地在你的快取實現中新增公有的 JavaBean 屬性，然後透過
+          cache 元素傳遞屬性值，例如，下面的例子將在你的快取實現上呼叫一個名為
+          <code>setCacheFile(String file)</code> 的方法：
+        </p>
+
+        <source><![CDATA[<cache type="com.domain.something.MyCustomCache">
+  <property name="cacheFile" value="/tmp/my-custom-cache.tmp"/>
+</cache>]]></source>
+
+        <p>
+          你可以使用所有簡單型別作為 JavaBean 屬性的型別，MyBatis 會進行轉換。
+          你也可以使用佔位符（如 <code>${cache.file}</code>），以便替換成在<a href="configuration.html#properties">配置檔案屬性</a>中定義的值。
+        </p>
+
+        <p>
+          從版本 3.4.2 開始，MyBatis 已經支援在所有屬性設定完畢之後，呼叫一個初始化方法。
+          如果想要使用這個特性，請在你的自訂快取類別裡實現
+          <code>org.apache.ibatis.builder.InitializingObject</code> 介面。
+        </p>
+
+        <source><![CDATA[public interface InitializingObject {
+  void initialize() throws Exception;
+}]]></source>
+
+        <p><span class="label important">提示</span>
+          上一節中對快取的配置（如清除策略、可讀或可讀寫等），不能應用於自訂快取。
+        </p>
+
+        <p>
+          請注意，快取的配置和快取實例會被繫結到 SQL 對映檔案的名稱空間中。
+          因此，同一名稱空間中的所有語句和快取將透過名稱空間繫結在一起。
+          每條語句可以自訂與快取互動的方式，或將它們完全排除於快取之外，這可以透過在每條語句上使用兩個簡單屬性來達成。
+          預設情況下，語句會這樣來配置：
+        </p>
+
+        <source><![CDATA[<select ... flushCache="false" useCache="true"/>
+<insert ... flushCache="true"/>
+<update ... flushCache="true"/>
+<delete ... flushCache="true"/>]]></source>
+
+        <p>
+          鑑於這是預設行為，顯然你永遠不應該以這樣的方式顯式配置一條語句。但如果你想改變預設的行為，只需要設定 flushCache 和 useCache 屬性。比如，某些情況下你可能希望特定 select 語句的結果排除於快取之外，或希望一條 select 語句清空快取。類似地，你可能希望某些 update 語句執行時不要重新整理快取。
+        </p>
+
+          <h4>cache-ref</h4>
+        <p>
+          回想一下上一節的內容，對某一名稱空間的語句，只會使用該名稱空間的快取進行快取或重新整理。
+          但你可能會想要在多個名稱空間中共享相同的快取配置和實例。要實現這種需求，你可以使用
+          cache-ref 元素來參考另一個快取。
+        </p>
+
+        <source><![CDATA[<cache-ref namespace="com.someone.application.data.SomeMapper"/>]]></source>
+      </subsection>
+    </section>
+  </body>
+</document>

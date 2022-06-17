@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+       Copyright 2009-2022 the original author or authors.
+
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
+-->
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+  <properties>
+    <title>MyBatis 3 | 入門</title>
+    <author email="clinton.begin@gmail.com">Clinton Begin</author>
+    <author email="nanlei1987@gmail.com">Nan Lei</author>
+    <author email="echowdx@gmail.com">Dongxu Wang</author>
+    <author email="doggy.huang@gmail.com">Will Huang</author>
+  </properties>
+
+  <body>
+    <section name="入門">
+
+    <subsection name="安裝">
+      <p>要使用 MyBatis， 只需將
+      <a href="https://github.com/mybatis/mybatis-3/releases">mybatis-x.x.x.jar</a>
+      檔案置於類別路徑(classpath)中即可。</p>
+      <p>如果使用 Maven 來建構專案，則需將下面的依賴程式碼置於 pom.xml 檔案中：</p>
+        <source><![CDATA[
+<dependency>
+  <groupId>org.mybatis</groupId>
+  <artifactId>mybatis</artifactId>
+  <version>x.x.x</version>
+</dependency>]]></source>
+    </subsection>
+
+    <subsection name="從 XML 中建構 SqlSessionFactory">
+      <p>
+        每個基於 MyBatis 的應用都是以一個 SqlSessionFactory
+        的實例為核心的。SqlSessionFactory 的實例可以透過 SqlSessionFactoryBuilder
+        獲得。而 SqlSessionFactoryBuilder 則可以從 XML 配置檔案或一個預先配置的
+        Configuration 實例來構建出 SqlSessionFactory 實例。
+      </p>
+
+      <p>
+        從 XML 檔案中建構 SqlSessionFactory
+        的實例非常簡單，建議使用類別路徑下的資原始檔進行配置。
+        但也可以使用任意的輸入流(InputStream)實例，比如用檔案路徑字串或
+        file:// URL 構造的輸入流。MyBatis 包含一個名叫 Resources
+        的工具類別，它包含一些實用方法，使得從類別路徑或其它位置載入資原始檔更加容易。
+      </p>
+
+      <source><![CDATA[
+String resource = "org/mybatis/example/mybatis-config.xml";
+InputStream inputStream = Resources.getResourceAsStream(resource);
+SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);]]></source>
+      <p>
+        XML 配置檔案中包含了對 MyBatis
+        系統的核心設定，包括獲取資料庫連線實例的資料來源(DataSource)以及決定交易作用域和控制方式的交易管理器(TransactionManager)。後面會再探討
+        XML 配置檔案的詳細內容，這裡先給出一個簡單的示例：
+      </p>
+
+      <source><![CDATA[<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+  <environments default="development">
+    <environment id="development">
+      <transactionManager type="JDBC"/>
+      <dataSource type="POOLED">
+        <property name="driver" value="${driver}"/>
+        <property name="url" value="${url}"/>
+        <property name="username" value="${username}"/>
+        <property name="password" value="${password}"/>
+      </dataSource>
+    </environment>
+  </environments>
+  <mappers>
+    <mapper resource="org/mybatis/example/BlogMapper.xml"/>
+  </mappers>
+</configuration>]]></source>
+      <p>
+        當然，還有很多可以在 XML 檔案中配置的選項，上面的示例僅羅列了最關鍵的部分。
+        注意 XML 頭部的宣告，它用來驗證 XML 文件的正確性。environment
+        元素體中包含了交易管理和連線池的配置。mappers 元素則包含了一組對映器(mapper)，這些對映器的
+        XML 對映檔案包含了 SQL 程式碼和對映定義資訊。
+      </p>
+
+    </subsection>
+
+    <subsection name="不使用 XML 建構 SqlSessionFactory">
+      <p>
+        如果你更願意直接從 Java 程式碼而不是 XML 檔案中建立配置，或者想要建立你自己的配置產生器，MyBatis
+        也提供了完整的配置類別，提供了所有與 XML 檔案等價的配置項。
+      </p>
+
+      <source><![CDATA[DataSource dataSource = BlogDataSourceFactory.getBlogDataSource();
+TransactionFactory transactionFactory = new JdbcTransactionFactory();
+Environment environment = new Environment("development", transactionFactory, dataSource);
+Configuration configuration = new Configuration(environment);
+configuration.addMapper(BlogMapper.class);
+SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);]]></source>
+
+      <p>
+        注意該例中，configuration 添加了一個對映器類別（mapper class）。對映器類別是
+        Java 類別，它們包含 SQL 對映註解從而避免依賴 XML 對映檔案。不過，由於
+        Java 註解的一些限制以及某些 MyBatis 對映的複雜性，要使用大多數高階對映（比如：巢狀聯合對映），仍然需要使用 XML
+        對映檔案進行對映。有鑑於此，如果存在一個同名
+        XML 對映檔案，MyBatis 會自動查詢並載入它（在這個例子中，基於類別路徑和 BlogMapper.class 的類別名稱，會載入
+        BlogMapper.xml）。具體細節稍後討論。
+      </p>
+    </subsection>
+
+    <subsection name="從 SqlSessionFactory 中獲取 SqlSession">
+      <p>
+        既然有了 SqlSessionFactory，顧名思義，我們可以從中獲得 SqlSession 的實例。SqlSession
+        提供了在資料庫執行 SQL 命令所需的所有方法。你可以透過
+        SqlSession 實例來直接執行已對映的 SQL 語句。例如：
+      </p>
+
+      <source><![CDATA[try (SqlSession session = sqlSessionFactory.openSession()) {
+  Blog blog = (Blog) session.selectOne("org.mybatis.example.BlogMapper.selectBlog", 101);
+}]]></source>
+      <p>
+        誠然，這種方式能夠正常工作，對使用舊版本 MyBatis
+        的使用者來說也比較熟悉。但現在有了一種更簡潔的方式——使用和指定語句的參數和回傳值相匹配的介面（比如
+        BlogMapper.class），現在你的程式碼不僅更清晰，更加型別安全，還不用擔心可能出錯的字串字面值以及強制型別轉換。</p>
+
+      <p>例如：</p>
+
+      <source><![CDATA[try (SqlSession session = sqlSessionFactory.openSession()) {
+  BlogMapper mapper = session.getMapper(BlogMapper.class);
+  Blog blog = mapper.selectBlog(101);
+}]]></source>
+      <p>現在我們來探究一下這段程式碼究竟做了些什麼。</p>
+    </subsection>
+
+    <subsection name="探究已對映的 SQL 語句">
+      <p>
+        現在你可能很想知道 SqlSession 和 Mapper 到底具體執行了些什麼操作，但 SQL
+        語句對映是個相當廣泛的話題，可能會佔去文件的大部分篇幅。
+        但為了讓你能夠了解個大概，這裡先給出幾個例子。
+      </p>
+      <p>
+        在上面提到的例子中，一個語句既可以透過 XML 定義，也可以透過註解定義。我們先看看
+        XML 定義語句的方式，事實上 MyBatis 提供的所有特性都可以利用基於 XML 的對映語言來實現，這使得
+        MyBatis 在過去的數年間得以流行。如果你用過舊版本的 MyBatis，你應該對這個概念比較熟悉。
+        但相比於之前的版本，新版本改進了許多 XML 的配置，後面我們會提到這些改進。這裡給出一個基於 XML
+        對映語句的示例，它應該可以滿足上個示例中 SqlSession 的呼叫。
+      </p>
+
+      <source><![CDATA[<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.mybatis.example.BlogMapper">
+  <select id="selectBlog" resultType="Blog">
+    select * from Blog where id = #{id}
+  </select>
+</mapper>]]></source>
+
+      <p>
+        為了這個簡單的例子，我們似乎寫了不少配置，但其實並不多。在一個
+        XML 對映檔案中，可以定義無數個對映語句，這樣一來，XML
+        頭部和文件型別宣告部分就顯得微不足道了。文件的其它部分很直白，容易理解。
+        它在名稱空間  "org.mybatis.example.BlogMapper"  中定義了一個名為  "selectBlog"
+        的對映語句，這樣你就可以用全限定名
+         "org.mybatis.example.BlogMapper.selectBlog"  來呼叫對映語句了，就像上面例子中那樣：
+      </p>
+
+      <source><![CDATA[Blog blog = (Blog) session.selectOne("org.mybatis.example.BlogMapper.selectBlog", 101);]]></source>
+
+      <p>
+        你可能會注意到，這種方式和用全限定名呼叫 Java
+        物件的方法類似。這樣，該命名就可以直接對映到在名稱空間中同名的對映器類別，並將已對映的
+        select 語句匹配到對應名稱、參數和回傳型別的方法。因此你就可以像上面那樣，不費吹灰之力地在對應的對映器介面呼叫方法，就像下面這樣：
+      </p>
+
+      <source><![CDATA[BlogMapper mapper = session.getMapper(BlogMapper.class);
+Blog blog = mapper.selectBlog(101);]]></source>
+
+      <p>
+        第二種方法有很多優勢，首先它不依賴於字串字面值，會更安全一點；其次，如果你的
+        IDE 有程式碼自動完成功能，那麼程式碼自動完成可以幫你快速選擇到對映好的 SQL 語句。
+      </p>
+
+      <hr/>
+
+      <p><span class="label important">提示</span>
+      <strong>對名稱空間的一點補充</strong></p>
+      <p>
+        在之前版本的 MyBatis
+        中，<strong>名稱空間(Namespaces)</strong>的作用並不大，是可選的。
+        但現在，隨著名稱空間越發重要，你必須指定名稱空間。
+      </p>
+      <p>
+        名稱空間的作用有兩個，一個是利用更長的全限定名來將不同的語句隔離開來，同時也實現了你上面見到的介面繫結。就算你覺得暫時用不到介面繫結，你也應該遵循這裡的規定，以防哪天你改變了主意。
+        長遠來看，只要將名稱空間置於合適的 Java
+        包名稱空間之中，你的程式碼會變得更加整潔，也有利於你更方便地使用 MyBatis。
+      </p>
+      <p>
+        <strong>命名解析：</strong>為了減少輸入量，MyBatis
+        對所有具有名稱的配置元素（包括語句，結果對映，快取等）使用瞭如下的命名解析規則。
+      </p>
+
+      <ul>
+        <li>全限定名（比如
+         "com.mypackage.MyMapper.selectAllThings）將被直接用於查詢及使用。
+        </li>
+        <li>短名稱（比如  "selectAllThings" ）如果全域性唯一也可以作為一個單獨的參考。
+        如果不唯一，有兩個或兩個以上的相同名稱（比如  "com.foo.selectAllThings"  和
+         "com.bar.selectAllThings" ），那麼使用時就會產生 "短名稱不唯一" 的錯誤，這種情況下就必須使用全限定名。
+        </li>
+      </ul>
+      <hr/>
+      <p>
+        對於像 BlogMapper 這樣的對映器類別來說，還有另一種方法來完成語句對映。
+        它們對映的語句可以不用 XML 來配置，而可以使用 Java 註解來配置。比如，上面的 XML
+        示例可以被替換成如下的配置：
+      </p>
+      <source><![CDATA[package org.mybatis.example;
+public interface BlogMapper {
+  @Select("SELECT * FROM blog WHERE id = #{id}")
+  Blog selectBlog(int id);
+}]]></source>
+      <p>
+        使用註解來對映簡單語句會使程式碼顯得更加簡潔，但對於稍微複雜一點的語句，Java
+        註解不僅力不從心，還會讓本就複雜的 SQL 語句更加混亂不堪。
+        因此，如果你需要做一些很複雜的操作，最好用 XML 來對映語句。
+      </p>
+      <p>
+        選擇何種方式來配置對映，以及是否應該要統一對映語句定義的形式，完全取決於你和你的團隊。
+        換句話說，永遠不要拘泥於一種方式，你可以很輕鬆地在基於註解和 XML
+        的語句對映方式間自由移植和切換。
+      </p>
+    </subsection>
+    <subsection name="作用域(Scope)和生命週期">
+      <p>理解我們之前討論過的不同作用域和生命週期類別是至關重要的，因為錯誤的使用會導致非常嚴重的併發問題。</p>
+      <hr/>
+      <p>
+        <span class="label important">提示</span>
+        <strong>物件生命週期和依賴注入框架</strong>
+      </p>
+      <p>
+        依賴注入框架可以建立執行緒安全的、基於交易的 SqlSession
+        和對映器，並將它們直接注入到你的 bean 中，因此可以直接忽略它們的生命週期。
+        如果對如何透過依賴注入框架使用 MyBatis 感興趣，可以研究一下 MyBatis-Spring
+        或 MyBatis-Guice 兩個子專案。</p>
+      <hr/>
+      <h4>SqlSessionFactoryBuilder</h4>
+        <p>
+          這個類別可以被實例化、使用和丟棄，一旦建立了 SqlSessionFactory，就不再需要它了。
+          因此 SqlSessionFactoryBuilder 實例的最佳作用域是方法作用域（也就是區域性方法變數）。
+          你可以重用 SqlSessionFactoryBuilder 來建立多個 SqlSessionFactory
+          實例，但最好還是不要一直保留著它，以保證所有的 XML 解析資源可以被釋放給更重要的事情。
+        </p>
+      <h4>SqlSessionFactory</h4>
+        <p>
+          SqlSessionFactory 一旦被建立就應該在應用的執行期間一直存在，沒有任何理由丟棄它或重新建立另一個實例。
+          使用 SqlSessionFactory 的最佳實踐是在應用執行期間不要重複建立多次，多次重建
+          SqlSessionFactory 被視為一種程式碼 "壞習慣" 。因此
+          SqlSessionFactory 的最佳作用域是應用作用域。
+          有很多方法可以做到，最簡單的就是使用獨體模式或者靜態獨體模式。
+        </p>
+      <h4>SqlSession</h4>
+        <p>
+          每個執行緒都應該有它自己的 SqlSession 實例。SqlSession
+          的實例不是執行緒安全的，因此是不能被共享的，所以它的最佳的作用域是請求或方法作用域。
+          絕對不能將 SqlSession 實例的參考放在一個類別的靜態域，甚至一個類別的實例變數也不行。
+          也絕不能將 SqlSession 實例的參考放在任何型別的託管作用域中，比如 Servlet 框架中的 HttpSession。
+          如果你現在正在使用一種 Web 框架，考慮將 SqlSession 放在一個和 HTTP 請求相似的作用域中。
+          換句話說，每次收到 HTTP 請求，就可以開啟一個 SqlSession，回傳一個響應後，就關閉它。
+          這個關閉操作很重要，為了確保每次都能執行關閉操作，你應該把這個關閉操作放到 finally 塊中。
+          下面的示例就是一個確保 SqlSession 關閉的標準模式：
+        </p>
+        <source><![CDATA[try (SqlSession session = sqlSessionFactory.openSession()) {
+  // 你的應用邏輯程式碼
+}]]></source>
+        <p>在所有程式碼中都遵循這種使用模式，可以保證所有資料庫資源都能被正確地關閉。</p>
+
+      <h4>對映器實例</h4>
+        <p>
+          對映器是一些繫結對映語句的介面。對映器介面的實例是從
+          SqlSession 中獲得的。雖然從技術層面上來講，任何對映器實例的最大作用域與請求它們的
+          SqlSession 相同。但方法作用域才是對映器實例的最合適的作用域。
+          也就是說，對映器實例應該在呼叫它們的方法中被獲取，使用完畢之後即可丟棄。
+          對映器實例並不需要被顯式地關閉。儘管在整個請求作用域保留對映器實例不會有什麼問題，但是你很快會發現，在這個作用域上管理太多像
+          SqlSession 的資源會讓你忙不過來。
+          因此，最好將對映器放在方法作用域內。就像下面的例子一樣：
+        </p>
+        <source><![CDATA[try (SqlSession session = sqlSessionFactory.openSession()) {
+  BlogMapper mapper = session.getMapper(BlogMapper.class);
+  // 你的應用邏輯程式碼
+}
+]]></source>
+
+      </subsection>
+    </section>
+  </body>
+</document>

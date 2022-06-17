@@ -1,0 +1,2015 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+       Copyright 2009-2022 the original author or authors.
+
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
+-->
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+  <properties>
+    <title>MyBatis 3 | 配置</title>
+    <author email="clinton.begin@gmail.com">Clinton Begin</author>
+    <author email="nanlei1987@gmail.com">Nan Lei</author>
+    <author email="echowdx@gmail.com">Dongxu Wang</author>
+    <author email="doggy.huang@gmail.com">Will Huang</author>
+  </properties>
+
+  <body>
+    <section name="配置">
+      <p>MyBatis 的配置檔案包含了會深深影響 MyBatis 行為的設定和屬性資訊。
+      配置文件的最上層結構如下：</p>
+
+      <ul>
+        <li>
+          configuration（配置）
+          <ul>
+            <li><a href="#properties">properties（屬性）</a></li>
+            <li><a href="#settings">settings（設定）</a></li>
+            <li><a href="#typeAliases">typeAliases（型別別名）</a></li>
+            <li><a href="#typeHandlers">typeHandlers（型別處理器）</a></li>
+            <li><a href="#objectFactory">objectFactory（物件工廠）</a></li>
+            <li><a href="#plugins">plugins（外掛）</a></li>
+            <li><a href="#environments">environments（環境配置）</a>
+              <ul>
+                <li>
+                  environment（環境變數）
+                  <ul>
+                    <li>transactionManager（交易管理器）</li>
+                    <li>dataSource（資料來源）</li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li><a href="#databaseIdProvider">databaseIdProvider（資料庫廠商標識）</a></li>
+            <li><a href="#mappers">mappers（對映器）</a></li>
+          </ul>
+        </li>
+      </ul>
+      <subsection name="屬性(properties)" id="properties">
+        <p>這些屬性可以在外部進行配置，並可以進行動態替換。你既可以在典型的 Java 屬性檔案中配置這些屬性，也可以在 properties 元素的子元素中設定。例如：</p>
+        <source><![CDATA[<properties resource="org/mybatis/example/config.properties">
+  <property name="username" value="dev_user"/>
+  <property name="password" value="F2Fa3!33TYyg"/>
+</properties>]]></source>
+        <p>設定好的屬性可以在整個配置檔案中用來替換需要動態配置的屬性值。比如:
+        </p>
+        <source><![CDATA[<dataSource type="POOLED">
+  <property name="driver" value="${driver}"/>
+  <property name="url" value="${url}"/>
+  <property name="username" value="${username}"/>
+  <property name="password" value="${password}"/>
+</dataSource>]]></source>
+        <p>這個例子中的 username 和 password 將會由 properties 元素中設定的相應值來替換。
+          driver 和 url 屬性將會由 config.properties 檔案中對應的值來替換。這樣就為配置提供了諸多靈活選擇。</p>
+        <p>也可以在 SqlSessionFactoryBuilder.build() 方法中傳入屬性值。例如：</p>
+        <source><![CDATA[SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, props);
+
+// ... 或者 ...
+
+SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environment, props);
+]]></source>
+        <p>如果一個屬性在不只一個地方進行了配置，那麼，MyBatis 將按照下面的順序來載入：</p>
+        <ul>
+          <li>首先讀取在 properties 元素體內指定的屬性。
+          </li>
+          <li>然後根據 properties 元素中的 resource 屬性讀取類別路徑下屬性檔案，或根據
+          url 屬性指定的路徑讀取屬性檔案，並覆蓋之前讀取過的同名屬性。
+          </li>
+          <li>最後讀取作為方法參數傳遞的屬性，並覆蓋之前讀取過的同名屬性。
+          </li>
+        </ul>
+        <p>因此，透過方法參數傳遞的屬性具有最高優先順序，resource/url
+        屬性中指定的配置檔案次之，最低優先順序的則是 properties 元素中指定的屬性。</p>
+
+        <p>
+		    從 MyBatis 3.4.2 開始，你可以為佔位符指定一個預設值。例如：
+        </p>
+        <source><![CDATA[
+<dataSource type="POOLED">
+  <!-- ... -->
+  <property name="username" value="${username:ut_user}"/> <!-- 如果屬性 'username' 沒有被配置，'username' 屬性的值將為 'ut_user' -->
+</dataSource>]]></source>
+
+        <p>
+		  這個特性預設是關閉的。要啟用這個特性，需要新增一個特定的屬性來開啟這個特性。例如：
+        </p>
+
+        <source><![CDATA[
+<properties resource="org/mybatis/example/config.properties">
+  <!-- ... -->
+  <property name="org.apache.ibatis.parsing.PropertyParser.enable-default-value" value="true"/> <!-- 啟用預設值特性 -->
+</properties>]]></source>
+
+        <p>
+          <span class="label important">提示</span>
+          如果你在屬性名中使用了 <code>":"</code>
+          字元（如：<code>db:username</code>），或者在 SQL
+          對映中使用了 OGNL 表示式的三元運算子（如： <code>${tableName != null ?
+          tableName : 'global_constants'}</code>），就需要設定特定的屬性來修改分隔屬性名和預設值的字元。例如：
+        </p>
+
+        <source><![CDATA[
+<properties resource="org/mybatis/example/config.properties">
+  <!-- ... -->
+  <property name="org.apache.ibatis.parsing.PropertyParser.default-value-separator" value="?:"/> <!-- 修改預設值的分隔符 -->
+</properties>]]></source>
+        <source><![CDATA[
+<dataSource type="POOLED">
+  <!-- ... -->
+  <property name="username" value="${db:username?:ut_user}"/>
+</dataSource>]]></source>
+
+      </subsection>
+      <subsection name="設定(settings)" id="settings">
+        <p>這是 MyBatis 中極為重要的調整設定，它們會改變 MyBatis 的執行時行為。
+        下表描述了設定中各項設定的含義、預設值等。</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>設定名</th>
+              <th>描述</th>
+              <th>有效值</th>
+              <th>預設值</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                cacheEnabled
+              </td>
+              <td>
+                全域性地開啟或關閉所有對映器配置檔案中已配置的任何快取。
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                true
+              </td>
+            </tr>
+            <tr>
+              <td>
+                lazyLoadingEnabled
+              </td>
+              <td>
+                延遲載入的全域性開關。當開啟時，所有關聯物件都會延遲載入。
+                特定關聯關係中可透過設定 <code>fetchType</code>
+                屬性來覆蓋該項的開關狀態。
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
+              </td>
+            </tr>
+            <tr>
+              <td>
+                aggressiveLazyLoading
+              </td>
+              <td>
+                開啟時，任一方法的呼叫都會載入該物件的所有延遲載入屬性。
+                否則，每個延遲載入屬性會依據要求來載入（參考 <code>lazyLoadTriggerMethods</code>)。
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false （在 3.4.1 及之前的版本中預設為 true）
+              </td>
+            </tr>
+            <tr>
+              <td>
+                multipleResultSetsEnabled
+              </td>
+              <td>
+                是否允許單個語句回傳多結果集（需要資料庫驅動支援）。
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                true
+              </td>
+            </tr>
+            <tr>
+              <td>
+                useColumnLabel
+              </td>
+              <td>
+                使用列標籤代替列名。實際表現依賴於資料庫驅動，具體可參考資料庫驅動的相關文件，或透過對比測試來觀察。
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                true
+              </td>
+            </tr>
+            <tr>
+              <td>
+                useGeneratedKeys
+              </td>
+              <td>
+                允許 JDBC 支援自動產生主鍵，需要資料庫驅動支援。如果設定為
+                true，將強制使用自動產生主鍵。儘管一些資料庫驅動不支援此特性，但仍可正常工作（如 Derby）。
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                False
+              </td>
+            </tr>
+            <tr>
+              <td>
+                autoMappingBehavior
+              </td>
+              <td>
+                指定 MyBatis 應如何自動對映列到欄位或屬性。
+                NONE 表示關閉自動對映；PARTIAL 只會自動對映沒有定義巢狀結果對映的欄位。
+                FULL 會自動對映任何複雜的結果集（無論是否巢狀）。
+              </td>
+              <td>
+                NONE, PARTIAL, FULL
+              </td>
+              <td>
+                PARTIAL
+              </td>
+            </tr>
+            <tr>
+              <td>
+                autoMappingUnknownColumnBehavior
+              </td>
+              <td>
+			  指定發現自動對映目標未知列（或未知屬性型別）的行為。
+                <ul>
+                  <li><code>NONE</code>: 不做任何反應</li>
+                  <li><code>WARNING</code>:
+                  輸出警告日誌（<code>'org.apache.ibatis.session.AutoMappingUnknownColumnBehavior'</code>
+                  的日誌等級必須設定為 <code>WARN</code>）</li>
+                  <li><code>FAILING</code>: 對映失敗 (拋出 <code>SqlSessionException</code>)</li>
+                </ul>
+              </td>
+              <td>
+                NONE, WARNING, FAILING
+              </td>
+              <td>
+                NONE
+              </td>
+            </tr>
+            <tr>
+              <td>
+                defaultExecutorType
+              </td>
+              <td>
+                配置預設的執行器。SIMPLE 就是普通的執行器；REUSE 執行器會重用預處理語句(PreparedStatement)；
+                BATCH 執行器不僅重用語句還會執行批量更新。
+              </td>
+              <td>
+                SIMPLE
+                REUSE
+                BATCH
+              </td>
+              <td>
+                SIMPLE
+              </td>
+            </tr>
+            <tr>
+              <td>
+                defaultStatementTimeout
+              </td>
+              <td>
+                設定超時時間，它決定資料庫驅動等待資料庫響應的秒數。
+              </td>
+              <td>
+                任意正整數
+              </td>
+              <td>
+                未設定 (null)
+              </td>
+            </tr>
+            <tr>
+              <td>
+                defaultFetchSize
+              </td>
+              <td>
+                為驅動的結果集獲取數量(fetchSize)設定一個建議值。此參數只可以在查詢設定中被覆蓋。
+              </td>
+              <td>
+                任意正整數
+              </td>
+              <td>
+                未設定 (null)
+              </td>
+            </tr>
+            <tr>
+              <td>
+                defaultResultSetType
+              </td>
+              <td>
+                指定語句預設的滾動策略。（新增於 3.5.2）
+              </td>
+              <td>
+                FORWARD_ONLY | SCROLL_SENSITIVE | SCROLL_INSENSITIVE | DEFAULT（等同於未設定）
+              </td>
+              <td>
+                未設定 (null)
+              </td>
+            </tr>
+            <tr>
+              <td>
+                safeRowBoundsEnabled
+              </td>
+              <td>
+                是否允許在巢狀語句中使用分頁(RowBounds)。如果允許使用則設定為 false。
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                False
+              </td>
+            </tr>
+            <tr>
+              <td>
+                safeResultHandlerEnabled
+              </td>
+              <td>
+                是否允許在巢狀語句中使用結果處理器(ResultHandler)。如果允許使用則設定為 false。
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                True
+              </td>
+            </tr>
+            <tr>
+              <td>
+                mapUnderscoreToCamelCase
+              </td>
+              <td>
+                是否開啟駝峰命名自動對映，即從經典資料庫列名
+                A_COLUMN 對映到經典 Java 屬性名 aColumn。
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                False
+              </td>
+            </tr>
+            <tr>
+              <td>
+                localCacheScope
+              </td>
+              <td>
+                MyBatis 利用本地快取機制（Local Cache）防止迴圈參考和加速重複的巢狀查詢。
+                預設值為 SESSION，會快取一個會話中執行的所有查詢。
+                若設定值為 STATEMENT，本地快取將僅用於執行語句，對相同 SqlSession 的不同查詢將不會進行快取。
+              </td>
+              <td>
+                SESSION | STATEMENT
+              </td>
+              <td>
+                SESSION
+              </td>
+            </tr>
+            <tr>
+              <td>
+                jdbcTypeForNull
+              </td>
+              <td>
+                當沒有為參數指定特定的 JDBC 型別時，空值的預設 JDBC 型別。
+                某些資料庫驅動需要指定列的 JDBC 型別，多數情況直接用一般型別即可，比如 NULL、VARCHAR 或 OTHER。
+              </td>
+              <td>
+                JdbcType 常量，常用值：NULL、VARCHAR 或 OTHER。
+              </td>
+              <td>
+                OTHER
+              </td>
+            </tr>
+            <tr>
+              <td>
+                lazyLoadTriggerMethods
+              </td>
+              <td>
+                指定物件的哪些方法觸發一次延遲載入。
+              </td>
+              <td>
+                用逗號分隔的方法列表。
+              </td>
+              <td>
+                equals,clone,hashCode,toString
+              </td>
+            </tr>
+            <tr>
+              <td>
+                defaultScriptingLanguage
+              </td>
+              <td>
+                指定動態 SQL 產生使用的預設指令碼語言。
+              </td>
+              <td>
+                一個型別別名或全限定類別名稱。
+              </td>
+              <td>
+                org.apache.ibatis.scripting.xmltags.XMLLanguageDriver
+              </td>
+            </tr>
+            <tr>
+              <td>
+                defaultEnumTypeHandler
+              </td>
+              <td>
+                指定 Enum 使用的預設 <code>TypeHandler</code> 。（新增於 3.4.5）
+              </td>
+              <td>
+                一個型別別名或全限定類別名稱。
+              </td>
+              <td>
+                org.apache.ibatis.type.EnumTypeHandler
+              </td>
+            </tr>
+            <tr>
+              <td>
+                callSettersOnNulls
+              </td>
+              <td>
+                指定當結果集中值為 null 的時候是否呼叫對映物件的 setter（map
+                物件時為 put）方法，這在依賴於 Map.keySet() 或 null
+                值進行初始化時比較有用。注意基本型別（int、boolean 等）是不能設定成 null 的。
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
+              </td>
+            </tr>
+            <tr>
+              <td>
+                returnInstanceForEmptyRow
+              </td>
+              <td>
+				當回傳無資料時，MyBatis預設回傳 <code>null</code>。
+				當開啟這個設定時，MyBatis會回傳一個空實例。
+				請注意，它也適用於巢狀的結果集（如集合或關聯）。（新增於 3.4.2）
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
+              </td>
+            </tr>
+            <tr>
+              <td>
+                logPrefix
+              </td>
+              <td>
+                指定 MyBatis 增加到日誌名稱的字首。
+              </td>
+              <td>
+                任何字串
+              </td>
+              <td>
+                未設定
+              </td>
+            </tr>
+            <tr>
+              <td>
+                logImpl
+              </td>
+              <td>
+                指定 MyBatis 所用日誌的具體實現，未指定時將自動查詢。
+              </td>
+              <td>
+                SLF4J | LOG4J（3.5.9 起廢棄） | LOG4J2 | JDK_LOGGING | COMMONS_LOGGING | STDOUT_LOGGING | NO_LOGGING
+              </td>
+              <td>
+                未設定
+              </td>
+            </tr>
+            <tr>
+              <td>
+                proxyFactory
+              </td>
+              <td>
+                指定 Mybatis 建立可延遲載入物件所用到的代理工具。
+              </td>
+              <td>
+                CGLIB （3.5.10 起廢棄） | JAVASSIST
+              </td>
+              <td>
+                JAVASSIST （MyBatis 3.3 以上）
+              </td>
+            </tr>
+            <tr>
+              <td>
+                vfsImpl
+              </td>
+              <td>
+                指定 VFS 的實現
+              </td>
+              <td>
+                自訂 VFS 的實現的類別全限定名，以逗號分隔。
+              </td>
+              <td>
+                未設定
+              </td>
+            </tr>
+            <tr>
+              <td>
+                useActualParamName
+              </td>
+              <td>
+                允許使用方法簽名中的名稱作為語句參數名稱。
+		        為了使用該特性，你的專案必須採用 Java 8 編譯，並且加上 <code>-parameters</code> 選項。（新增於 3.4.1）
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                true
+              </td>
+            </tr>
+            <tr>
+              <td>
+                configurationFactory
+              </td>
+              <td>
+                指定一個提供 <code>Configuration</code> 實例的類別。
+		            這個被回傳的 Configuration 實例用來載入被反序列化物件的延遲載入屬性值。
+		            這個類別必須包含一個簽名為<code>static Configuration getConfiguration()</code> 的方法。（新增於 3.2.3）
+              </td>
+              <td>
+                一個型別別名或完全限定類別名稱。
+              </td>
+              <td>
+                未設定
+              </td>
+            </tr>
+            <tr>
+              <td>
+                shrinkWhitespacesInSql
+              </td>
+              <td>
+                從SQL中刪除多餘的空格字元。請注意，這也會影響SQL中的文字字串。 (新增於 3.5.5)
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
+              </td>
+            </tr>
+            <tr>
+              <td>
+                defaultSqlProviderType
+              </td>
+              <td>
+                指定一個擁有 provider 方法的 sql provider 類別 （新增於 3.5.6）.
+                這個類別適用於指定 sql provider 註解上的<code>type</code>（或 <code>value</code>） 屬性（當這些屬性在註解中被忽略時）。 (e.g. <code>@SelectProvider</code>)
+              </td>
+              <td>
+                型別別名或者全限定名
+              </td>
+              <td>
+                未設定
+              </td>
+            </tr>
+            <tr>
+              <td>
+                nullableOnForEach
+              </td>
+              <td>
+                為 'foreach' 標籤的 'nullable' 屬性指定預設值。（新增於 3.5.9）
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
+              </td>
+            </tr>
+            <tr>
+              <td>
+                argNameBasedConstructorAutoMapping
+              </td>
+              <td>
+               當應用構造器自動對映時，參數名稱被用來搜尋要對映的列，而不再依賴列的順序。（新增於 3.5.10）
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          一個配置完整的 settings 元素的示例如下：
+        </p>
+        <source><![CDATA[<settings>
+  <setting name="cacheEnabled" value="true"/>
+  <setting name="lazyLoadingEnabled" value="true"/>
+  <setting name="multipleResultSetsEnabled" value="true"/>
+  <setting name="useColumnLabel" value="true"/>
+  <setting name="useGeneratedKeys" value="false"/>
+  <setting name="autoMappingBehavior" value="PARTIAL"/>
+  <setting name="autoMappingUnknownColumnBehavior" value="WARNING"/>
+  <setting name="defaultExecutorType" value="SIMPLE"/>
+  <setting name="defaultStatementTimeout" value="25"/>
+  <setting name="defaultFetchSize" value="100"/>
+  <setting name="safeRowBoundsEnabled" value="false"/>
+  <setting name="mapUnderscoreToCamelCase" value="false"/>
+  <setting name="localCacheScope" value="SESSION"/>
+  <setting name="jdbcTypeForNull" value="OTHER"/>
+  <setting name="lazyLoadTriggerMethods" value="equals,clone,hashCode,toString"/>
+</settings>]]></source>
+
+      </subsection>
+      <subsection name="型別別名(typeAliases)" id="typeAliases">
+        <p>型別別名可為 Java 型別設定一個縮寫名字。
+        它僅用於 XML 配置，意在降低冗餘的全限定類別名稱書寫。例如：</p>
+        <source><![CDATA[<typeAliases>
+  <typeAlias alias="Author" type="domain.blog.Author"/>
+  <typeAlias alias="Blog" type="domain.blog.Blog"/>
+  <typeAlias alias="Comment" type="domain.blog.Comment"/>
+  <typeAlias alias="Post" type="domain.blog.Post"/>
+  <typeAlias alias="Section" type="domain.blog.Section"/>
+  <typeAlias alias="Tag" type="domain.blog.Tag"/>
+</typeAliases>
+]]></source>
+        <p>當這樣配置時，<code>Blog</code> 可以用在任何使用 <code>domain.blog.Blog</code> 的地方。</p>
+        <p>也可以指定一個套件名稱，MyBatis 會在套件名稱下面搜尋需要的 Java Bean，比如：
+        </p>
+        <source><![CDATA[<typeAliases>
+  <package name="domain.blog"/>
+</typeAliases>
+]]></source>
+        <p>每一個在包 <code>domain.blog</code> 中的 Java Bean，在沒有註解的情況下，會使用
+        Bean 的首字母小寫的非限定類別名稱來作為它的別名。
+          比如 <code>domain.blog.Author</code> 的別名為
+          <code>author</code>；若有註解，則別名為其註解值。見下面的例子：</p>
+        <source><![CDATA[@Alias("author")
+public class Author {
+    ...
+}
+]]></source>
+        <p>下面是一些為常見的 Java 型別內建的型別別名。它們都是不區分大小寫的，注意，為了應對原始型別的命名重複，採取了特殊的命名風格。</p>
+        <table>
+          <thead>
+            <tr>
+              <th>
+                別名
+              </th>
+              <th>
+                對映的型別
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                _byte
+              </td>
+              <td>
+                byte
+              </td>
+            </tr>
+            <tr>
+              <td>
+                _char (since 3.5.10)
+              </td>
+              <td>
+                char
+              </td>
+            </tr>
+            <tr>
+              <td>
+                _character (since 3.5.10)
+              </td>
+              <td>
+                char
+              </td>
+            </tr>
+            <tr>
+              <td>
+                _long
+              </td>
+              <td>
+                long
+              </td>
+            </tr>
+            <tr>
+              <td>
+                _short
+              </td>
+              <td>
+                short
+              </td>
+            </tr>
+            <tr>
+              <td>
+                _int
+              </td>
+              <td>
+                int
+              </td>
+            </tr>
+            <tr>
+              <td>
+                _integer
+              </td>
+              <td>
+                int
+              </td>
+            </tr>
+            <tr>
+              <td>
+                _double
+              </td>
+              <td>
+                double
+              </td>
+            </tr>
+            <tr>
+              <td>
+                _float
+              </td>
+              <td>
+                float
+              </td>
+            </tr>
+            <tr>
+              <td>
+                _boolean
+              </td>
+              <td>
+                boolean
+              </td>
+            </tr>
+            <tr>
+              <td>
+                string
+              </td>
+              <td>
+                String
+              </td>
+            </tr>
+            <tr>
+              <td>
+                byte
+              </td>
+              <td>
+                Byte
+              </td>
+            </tr>
+            <tr>
+              <td>
+                char (since 3.5.10)
+              </td>
+              <td>
+                Character
+              </td>
+            </tr>
+            <tr>
+              <td>
+                character (since 3.5.10)
+              </td>
+              <td>
+                Character
+              </td>
+            </tr>
+            <tr>
+              <td>
+                long
+              </td>
+              <td>
+                Long
+              </td>
+            </tr>
+            <tr>
+              <td>
+                short
+              </td>
+              <td>
+                Short
+              </td>
+            </tr>
+            <tr>
+              <td>
+                int
+              </td>
+              <td>
+                Integer
+              </td>
+            </tr>
+            <tr>
+              <td>
+                integer
+              </td>
+              <td>
+                Integer
+              </td>
+            </tr>
+            <tr>
+              <td>
+                double
+              </td>
+              <td>
+                Double
+              </td>
+            </tr>
+            <tr>
+              <td>
+                float
+              </td>
+              <td>
+                Float
+              </td>
+            </tr>
+            <tr>
+              <td>
+                boolean
+              </td>
+              <td>
+                Boolean
+              </td>
+            </tr>
+            <tr>
+              <td>
+                date
+              </td>
+              <td>
+                Date
+              </td>
+            </tr>
+            <tr>
+              <td>
+                decimal
+              </td>
+              <td>
+                BigDecimal
+              </td>
+            </tr>
+            <tr>
+              <td>
+                bigdecimal
+              </td>
+              <td>
+                BigDecimal
+              </td>
+            </tr>
+            <tr>
+              <td>
+                biginteger
+              </td>
+              <td>
+                BigInteger
+              </td>
+            </tr>
+            <tr>
+              <td>
+                object
+              </td>
+              <td>
+                Object
+              </td>
+            </tr>
+            <tr>
+              <td>
+                date[]
+              </td>
+              <td>
+                Date[]
+              </td>
+            </tr>
+            <tr>
+              <td>
+                decimal[]
+              </td>
+              <td>
+                BigDecimal[]
+              </td>
+            </tr>
+            <tr>
+              <td>
+                bigdecimal[]
+              </td>
+              <td>
+                BigDecimal[]
+              </td>
+            </tr>
+            <tr>
+              <td>
+                biginteger[]
+              </td>
+              <td>
+                BigInteger[]
+              </td>
+            </tr>
+            <tr>
+              <td>
+                object[]
+              </td>
+              <td>
+                Object[]
+              </td>
+            </tr>
+            <tr>
+              <td>
+                map
+              </td>
+              <td>
+                Map
+              </td>
+            </tr>
+            <tr>
+              <td>
+                hashmap
+              </td>
+              <td>
+                HashMap
+              </td>
+            </tr>
+            <tr>
+              <td>
+                list
+              </td>
+              <td>
+                List
+              </td>
+            </tr>
+            <tr>
+              <td>
+                arraylist
+              </td>
+              <td>
+                ArrayList
+              </td>
+            </tr>
+            <tr>
+              <td>
+                collection
+              </td>
+              <td>
+                Collection
+              </td>
+            </tr>
+            <tr>
+              <td>
+                iterator
+              </td>
+              <td>
+                Iterator
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </subsection>
+      <subsection name="型別處理器(typeHandlers)" id="typeHandlers">
+        <p>MyBatis 在設定預處理語句(PreparedStatement)中的參數或從結果集中取出一個值時，
+          都會用型別處理器將獲取到的值以合適的方式轉換成 Java 型別。下表描述了一些預設的型別處理器。</p>
+        <p>
+          <span class="label important">提示</span>
+         從 3.4.5 開始，MyBatis 預設支援 JSR-310（日期和時間 API） 。
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>
+                型別處理器
+              </th>
+              <th>
+                Java 型別
+              </th>
+              <th>
+                JDBC 型別
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <code>BooleanTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.Boolean</code>, <code>boolean</code>
+              </td>
+              <td>
+                資料庫相容的 <code>BOOLEAN</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>ByteTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.Byte</code>, <code>byte</code>
+              </td>
+              <td>
+                資料庫相容的 <code>NUMERIC</code> 或 <code>BYTE</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>ShortTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.Short</code>, <code>short</code>
+              </td>
+              <td>
+                資料庫相容的 <code>NUMERIC</code> 或 <code>SMALLINT</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>IntegerTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.Integer</code>, <code>int</code>
+              </td>
+              <td>
+                資料庫相容的 <code>NUMERIC</code> 或 <code>INTEGER</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>LongTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.Long</code>, <code>long</code>
+              </td>
+              <td>
+                資料庫相容的 <code>NUMERIC</code> 或 <code>BIGINT</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>FloatTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.Float</code>, <code>float</code>
+              </td>
+              <td>
+                資料庫相容的 <code>NUMERIC</code> 或 <code>FLOAT</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>DoubleTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.Double</code>, <code>double</code>
+              </td>
+              <td>
+                資料庫相容的 <code>NUMERIC</code> 或 <code>DOUBLE</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>BigDecimalTypeHandler</code>
+              </td>
+              <td>
+                <code>java.math.BigDecimal</code>
+              </td>
+              <td>
+                資料庫相容的 <code>NUMERIC</code> 或 <code>DECIMAL</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>StringTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.String</code>
+              </td>
+              <td>
+                <code>CHAR</code>, <code>VARCHAR</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>ClobReaderTypeHandler</code>
+              </td>
+              <td>
+                <code>java.io.Reader</code>
+              </td>
+              <td>
+                -
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>ClobTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.String</code>
+              </td>
+              <td>
+                <code>CLOB</code>, <code>LONGVARCHAR</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>NStringTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.String</code>
+              </td>
+              <td>
+                <code>NVARCHAR</code>, <code>NCHAR</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>NClobTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.String</code>
+              </td>
+              <td>
+                <code>NCLOB</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>BlobInputStreamTypeHandler</code>
+              </td>
+              <td>
+                <code>java.io.InputStream</code>
+              </td>
+              <td>
+                -
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>ByteArrayTypeHandler</code>
+              </td>
+              <td>
+                <code>byte[]</code>
+              </td>
+              <td>
+                資料庫相容的位元組流型別
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>BlobTypeHandler</code>
+              </td>
+              <td>
+                <code>byte[]</code>
+              </td>
+              <td>
+                <code>BLOB</code>, <code>LONGVARBINARY</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>DateTypeHandler</code>
+              </td>
+              <td>
+                <code>java.util.Date</code>
+              </td>
+              <td>
+                <code>TIMESTAMP</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>DateOnlyTypeHandler</code>
+              </td>
+              <td>
+                <code>java.util.Date</code>
+              </td>
+              <td>
+                <code>DATE</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>TimeOnlyTypeHandler</code>
+              </td>
+              <td>
+                <code>java.util.Date</code>
+              </td>
+              <td>
+                <code>TIME</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>SqlTimestampTypeHandler</code>
+              </td>
+              <td>
+                <code>java.sql.Timestamp</code>
+              </td>
+              <td>
+                <code>TIMESTAMP</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>SqlDateTypeHandler</code>
+              </td>
+              <td>
+                <code>java.sql.Date</code>
+              </td>
+              <td>
+                <code>DATE</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>SqlTimeTypeHandler</code>
+              </td>
+              <td>
+                <code>java.sql.Time</code>
+              </td>
+              <td>
+                <code>TIME</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>ObjectTypeHandler</code>
+              </td>
+              <td>
+                Any
+              </td>
+              <td>
+                <code>OTHER</code> 或未指定型別
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>EnumTypeHandler</code>
+              </td>
+              <td>
+                Enumeration Type
+              </td>
+              <td>
+                VARCHAR 或任何相容的字串型別，用來儲存列舉的名稱（而不是索引序數值）
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>EnumOrdinalTypeHandler</code>
+              </td>
+              <td>
+                Enumeration Type
+              </td>
+              <td>
+                任何相容的 <code>NUMERIC</code> 或 <code>DOUBLE</code>
+                型別，用來儲存列舉的序數值（而不是名稱）。
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>SqlxmlTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.String</code>
+              </td>
+              <td>
+                <code>SQLXML</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>InstantTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.Instant</code>
+              </td>
+              <td>
+                <code>TIMESTAMP</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>LocalDateTimeTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.LocalDateTime</code>
+              </td>
+              <td>
+                <code>TIMESTAMP</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>LocalDateTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.LocalDate</code>
+              </td>
+              <td>
+                <code>DATE</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>LocalTimeTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.LocalTime</code>
+              </td>
+              <td>
+                <code>TIME</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>OffsetDateTimeTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.OffsetDateTime</code>
+              </td>
+              <td>
+                <code>TIMESTAMP</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>OffsetTimeTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.OffsetTime</code>
+              </td>
+              <td>
+                <code>TIME</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>ZonedDateTimeTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.ZonedDateTime</code>
+              </td>
+              <td>
+                <code>TIMESTAMP</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>YearTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.Year</code>
+              </td>
+              <td>
+                <code>INTEGER</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>MonthTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.Month</code>
+              </td>
+              <td>
+                <code>INTEGER</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>YearMonthTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.YearMonth</code>
+              </td>
+              <td>
+                <code>VARCHAR</code> 或 <code>LONGVARCHAR</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>JapaneseDateTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.chrono.JapaneseDate</code>
+              </td>
+              <td>
+                <code>DATE</code>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          你可以重寫已有的型別處理器或建立你自己的型別處理器來處理不支援的或非標準的型別。
+          具體做法為：實現 <code>org.apache.ibatis.type.TypeHandler</code> 介面，
+          或繼承一個很便利的類別 <code>org.apache.ibatis.type.BaseTypeHandler</code>，
+          並且可以（可選地）將它對映到一個 JDBC 型別。比如：
+        </p>
+        <source><![CDATA[// ExampleTypeHandler.java
+@MappedJdbcTypes(JdbcType.VARCHAR)
+public class ExampleTypeHandler extends BaseTypeHandler<String> {
+
+  @Override
+  public void setNonNullParameter(PreparedStatement ps, int i, String parameter, JdbcType jdbcType) throws SQLException {
+    ps.setString(i, parameter);
+  }
+
+  @Override
+  public String getNullableResult(ResultSet rs, String columnName) throws SQLException {
+    return rs.getString(columnName);
+  }
+
+  @Override
+  public String getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
+    return rs.getString(columnIndex);
+  }
+
+  @Override
+  public String getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
+    return cs.getString(columnIndex);
+  }
+}
+]]></source>
+
+        <source><![CDATA[<!-- mybatis-config.xml -->
+<typeHandlers>
+  <typeHandler handler="org.mybatis.example.ExampleTypeHandler"/>
+</typeHandlers>
+]]></source>
+
+        <p>
+          使用上述的型別處理器將會覆蓋已有的處理 Java String 型別的屬性以及
+          VARCHAR 型別的參數和結果的型別處理器。
+          要注意 MyBatis 不會透過檢測資料庫元資訊來決定使用哪種型別，所以你必須在參數和結果對映中指明欄位是 VARCHAR 型別，
+          以使其能夠繫結到正確的型別處理器上。這是因為 MyBatis 直到語句被執行時才清楚資料型別。
+        </p>
+        <p>
+          透過型別處理器的泛型，MyBatis 可以得知該型別處理器處理的 Java 型別，不過這種行為可以透過兩種方法改變：
+        </p>
+        <ul>
+          <li>
+            在型別處理器的配置元素（typeHandler 元素）上增加一個
+            <code>javaType</code> 屬性（比如：<code>javaType="String"</code>）；
+            </li>
+          <li>
+            在型別處理器的類別上增加一個
+            <code>@MappedTypes</code> 註解指定與其關聯的 Java 型別列表。
+            如果在 <code>javaType</code> 屬性中也同時指定，則註解上的配置將被忽略。
+          </li>
+        </ul>
+
+        <p>可以透過兩種方式來指定關聯的 JDBC 型別：</p>
+        <ul>
+          <li>
+            在型別處理器的配置元素上增加一個 <code>jdbcType</code>
+            屬性（比如：<code>jdbcType="VARCHAR"</code>）；
+          </li>
+          <li>
+            在型別處理器的類別上增加一個 <code>@MappedJdbcTypes</code>
+            註解指定與其關聯的 JDBC 型別列表。
+            如果在 <code>jdbcType</code> 屬性中也同時指定，則註解上的配置將被忽略。
+          </li>
+        </ul>
+
+        <p>
+          當在 <code>ResultMap</code> 中決定使用哪種型別處理器時，此時 Java
+          型別是已知的（從結果型別中獲得），但是 JDBC 型別是未知的。
+	      因此 Mybatis 使用 <code>javaType=[Java 型別], jdbcType=null</code>
+          的組合來選擇一個型別處理器。
+	      這意味著使用 <code>@MappedJdbcTypes</code>
+          註解可以<i>限制</i>型別處理器的作用範圍，並且可以確保，除非顯式地設定，否則型別處理器在
+          <code>ResultMap</code> 中將不會生效。
+	      如果希望能在 <code>ResultMap</code> 中隱式地使用型別處理器，那麼設定
+          <code>@MappedJdbcTypes</code> 註解的 <code>includeNullJdbcType=true</code> 即可。
+	      然而從 Mybatis 3.4.0 開始，如果某個 Java 型別<b>只有一個</b>註冊的型別處理器，即使沒有設定 <code>includeNullJdbcType=true</code>，那麼這個型別處理器也會是 <code>ResultMap</code> 使用 Java
+          型別時的預設處理器。
+        </p>
+
+        <p>最後，可以讓 MyBatis 幫你查詢型別處理器：</p>
+        <source><![CDATA[<!-- mybatis-config.xml -->
+<typeHandlers>
+  <package name="org.mybatis.example"/>
+</typeHandlers>
+]]></source>
+
+        <p>注意在使用自動發現功能的時候，只能透過註解方式來指定 JDBC 的型別。</p>
+        <p>你可以建立能夠處理多個類別的泛型型別處理器。為了使用泛型型別處理器，
+          需要增加一個接受該類別的 class 作為參數的構造器，這樣 MyBatis
+
+          會在構造一個型別處理器實例的時候傳入一個具體的類別。</p>
+        <source><![CDATA[//GenericTypeHandler.java
+public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
+
+  private Class<E> type;
+
+  public GenericTypeHandler(Class<E> type) {
+    if (type == null) throw new IllegalArgumentException("Type argument cannot be null");
+    this.type = type;
+  }
+  ...
+]]></source>
+
+        <p><code>EnumTypeHandler</code> 和 <code>EnumOrdinalTypeHandler</code>
+        都是泛型型別處理器，我們將會在接下來的部分詳細探討。</p>
+
+      </subsection>
+
+      <subsection name="處理列舉型別">
+        <p>若想對映列舉型別 <code>Enum</code>，則需要從 <code>EnumTypeHandler</code>
+        或者 <code>EnumOrdinalTypeHandler</code> 中選擇一個來使用。</p>
+
+        <p>比如說我們想儲存取近似值時用到的舍入模式。預設情況下，MyBatis 會利用
+        <code>EnumTypeHandler</code> 來把 <code>Enum</code> 值轉換成對應的名字。</p>
+
+        <b>注意 <code>EnumTypeHandler</code>
+        在某種意義上來說是比較特別的，其它的處理器只針對某個特定的類別，而它不同，它會處理任意繼承了
+        <code>Enum</code> 的類別。</b>
+
+        <p>不過，我們可能不想儲存名字，相反我們的 DBA 會堅持使用整形值程式碼。那也一樣簡單：在配置檔案中把
+          <code>EnumOrdinalTypeHandler</code> 加到 <code>typeHandlers</code> 中即可，
+          這樣每個 <code>RoundingMode</code> 將透過他們的序數值來對映成對應的整形數值。
+        </p>
+        <source><![CDATA[<!-- mybatis-config.xml -->
+<typeHandlers>
+  <typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="java.math.RoundingMode"/>
+</typeHandlers>
+]]></source>
+        <p>但要是你想在一個地方將 <code>Enum</code> 對映成字串，在另外一個地方對映成整形值呢？</p>
+        <p>
+          自動對映器（auto-mapper）會自動地選用 <code>EnumOrdinalTypeHandler</code> 來處理列舉型別，
+          所以如果我們想用普通的 <code>EnumTypeHandler</code>，就必須要顯式地為那些 SQL 語句設定要使用的型別處理器。
+        </p>
+        <p>（下一節才開始介紹對映器檔案，如果你是首次閱讀該文件，你可能需要先跳過這裡，過會再來看。）</p>
+        <source><![CDATA[<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.apache.ibatis.submitted.rounding.Mapper">
+	<resultMap type="org.apache.ibatis.submitted.rounding.User" id="usermap">
+		<id column="id" property="id"/>
+		<result column="name" property="name"/>
+		<result column="funkyNumber" property="funkyNumber"/>
+		<result column="roundingMode" property="roundingMode"/>
+	</resultMap>
+
+	<select id="getUser" resultMap="usermap">
+		select * from users
+	</select>
+	<insert id="insert">
+	    insert into users (id, name, funkyNumber, roundingMode) values (
+	    	#{id}, #{name}, #{funkyNumber}, #{roundingMode}
+	    )
+	</insert>
+
+	<resultMap type="org.apache.ibatis.submitted.rounding.User" id="usermap2">
+		<id column="id" property="id"/>
+		<result column="name" property="name"/>
+		<result column="funkyNumber" property="funkyNumber"/>
+		<result column="roundingMode" property="roundingMode" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
+	</resultMap>
+	<select id="getUser2" resultMap="usermap2">
+		select * from users2
+	</select>
+	<insert id="insert2">
+	    insert into users2 (id, name, funkyNumber, roundingMode) values (
+	    	#{id}, #{name}, #{funkyNumber}, #{roundingMode, typeHandler=org.apache.ibatis.type.EnumTypeHandler}
+	    )
+	</insert>
+
+</mapper>
+]]></source>
+        <p>注意，這裡的 select 語句必須指定 <code>resultMap</code> 而不是 <code>resultType</code>。</p>
+      </subsection>
+
+      <subsection name="物件工廠(objectFactory)" id="objectFactory">
+        <p>每次 MyBatis 建立結果物件的新實例時，它都會使用一個物件工廠(ObjectFactory)實例來完成實例化工作。
+          預設的物件工廠需要做的僅僅是實例化目標類別，要麼透過預設無參建構式方法，要麼透過存在的參數對映來呼叫帶有參數的建構式方法。
+          如果想覆蓋物件工廠的預設行為，可以透過建立自己的物件工廠來實現。比如：</p>
+        <source><![CDATA[// ExampleObjectFactory.java
+public class ExampleObjectFactory extends DefaultObjectFactory {
+  @Override
+  public <T> T create(Class<T> type) {
+    return super.create(type);
+  }
+
+  @Override
+  public <T> T create(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
+    return super.create(type, constructorArgTypes, constructorArgs);
+  }
+
+  @Override
+  public void setProperties(Properties properties) {
+    super.setProperties(properties);
+  }
+
+  @Override
+  public <T> boolean isCollection(Class<T> type) {
+    return Collection.class.isAssignableFrom(type);
+  }}
+]]></source>
+
+        <source><![CDATA[<!-- mybatis-config.xml -->
+<objectFactory type="org.mybatis.example.ExampleObjectFactory">
+  <property name="someProperty" value="100"/>
+</objectFactory>]]></source>
+        <p>ObjectFactory 介面很簡單，它包含兩個建立實例用的方法，一個是處理預設無參建構式方法的，另外一個是處理帶參數的建構式方法的。
+          另外，setProperties 方法可以被用來配置 ObjectFactory，在初始化你的 ObjectFactory 實例後，
+          objectFactory 元素體中定義的屬性會被傳遞給 setProperties 方法。</p>
+
+      </subsection>
+      <subsection name="外掛(plugins)" id="plugins">
+        <p>
+          MyBatis 允許你在對映語句執行過程中的某一點進行攔截呼叫。預設情況下，MyBatis 允許使用外掛來攔截的方法呼叫包括：
+        </p>
+        <ul>
+          <li>
+            Executor
+            (update, query, flushStatements, commit, rollback,
+            getTransaction, close,
+            isClosed)
+          </li>
+          <li>
+            ParameterHandler
+            (getParameterObject, setParameters)
+          </li>
+          <li>
+            ResultSetHandler
+            (handleResultSets, handleOutputParameters)
+          </li>
+          <li>
+            StatementHandler
+            (prepare, parameterize, batch, update, query)
+          </li>
+        </ul>
+        <p>這些類別中方法的細節可以透過檢視每個方法的簽名來發現，或者直接檢視 MyBatis 發行套件中的原始碼。
+          如果你想做的不僅僅是監控方法的呼叫，那麼你最好相當瞭解要重寫的方法的行為。
+          因為在試圖修改或重寫已有方法的行為時，很可能會破壞 MyBatis 的核心模組。
+          這些都是更底層的類別和方法，所以使用外掛的時候要特別當心。</p>
+        <p>透過 MyBatis 提供的強大機制，使用外掛是非常簡單的，只需實現 Interceptor 介面，並指定想要攔截的方法簽名即可。</p>
+
+        <source><![CDATA[// ExamplePlugin.java
+@Intercepts({@Signature(
+  type= Executor.class,
+  method = "update",
+  args = {MappedStatement.class,Object.class})})
+public class ExamplePlugin implements Interceptor {
+  private Properties properties = new Properties();
+
+  @Override
+  public Object intercept(Invocation invocation) throws Throwable {
+    // implement pre processing if need
+    Object returnObject = invocation.proceed();
+    // implement post processing if need
+    return returnObject;
+  }
+
+  @Override
+  public void setProperties(Properties properties) {
+    this.properties = properties;
+  }
+}]]></source>
+
+        <source><![CDATA[<!-- mybatis-config.xml -->
+<plugins>
+  <plugin interceptor="org.mybatis.example.ExamplePlugin">
+    <property name="someProperty" value="100"/>
+  </plugin>
+</plugins>]]></source>
+        <p>上面的外掛將會攔截在 Executor 實例中所有的  "update"  方法呼叫，
+          這裡的 Executor 是負責執行底層對映語句的內部物件。</p>
+        <p><span class="label important">提示</span>
+          <strong>覆蓋配置類別</strong>
+        </p>
+        <p>除了用外掛來修改 MyBatis 核心行為以外，還可以透過完全覆蓋配置類別來達到目的。只需繼承配置類別後覆蓋其中的某個方法，再把它傳遞到 SqlSessionFactoryBuilder.build(myConfig) 方法即可。再次重申，這可能會極大影響 MyBatis 的行為，務請慎之又慎。</p>
+      </subsection>
+      <subsection name="環境配置(environments)" id="environments">
+        <p>
+          MyBatis 可以配置成適應多種環境，這種機制有助於將 SQL 對映應用於多種資料庫之中，
+          現實情況下有多種理由需要這麼做。例如，開發、測試和生產環境需要有不同的配置；或者想在具有相同 Schema
+          的多個生產資料庫中使用相同的 SQL 對映。還有許多類似的使用場景。</p>
+        <p>
+          <strong>不過要記住：儘管可以配置多個環境，但每個 SqlSessionFactory
+          實例只能選擇一種環境。</strong>
+        </p>
+        <p>
+          所以，如果你想連線兩個資料庫，就需要建立兩個 SqlSessionFactory
+          實例，每個資料庫對應一個。而如果是三個資料庫，就需要三個實例，依此類別推，記起來很簡單：
+        </p>
+        <ul>
+          <li>
+            <strong>每個資料庫對應一個 SqlSessionFactory 實例</strong>
+          </li>
+        </ul>
+        <p>
+          為了指定建立哪種環境，只要將它作為可選的參數傳遞給
+          SqlSessionFactoryBuilder 即可。可以接受環境配置的兩個方法簽名是：
+        </p>
+
+        <source><![CDATA[SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environment);
+SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environment, properties);]]></source>
+
+        <p>如果忽略了環境參數，那麼將會載入預設環境，如下所示：
+        </p>
+
+        <source><![CDATA[SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader);
+SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, properties);]]></source>
+
+        <p>environments 元素定義瞭如何配置環境。
+        </p>
+
+        <source><![CDATA[<environments default="development">
+  <environment id="development">
+    <transactionManager type="JDBC">
+      <property name="..." value="..."/>
+    </transactionManager>
+    <dataSource type="POOLED">
+      <property name="driver" value="${driver}"/>
+      <property name="url" value="${url}"/>
+      <property name="username" value="${username}"/>
+      <property name="password" value="${password}"/>
+    </dataSource>
+  </environment>
+</environments>]]></source>
+        <p>
+          注意一些關鍵點:
+        </p>
+        <ul>
+          <li>
+            預設使用的環境 ID（比如：default="development"）。
+          </li>
+          <li>
+            每個 environment 元素定義的環境 ID（比如：id="development"）。
+          </li>
+          <li>
+            交易管理器的配置（比如：type="JDBC"）。
+          </li>
+          <li>
+            資料來源的配置（比如：type="POOLED"）。
+          </li>
+        </ul>
+        <p>
+          預設環境和環境 ID 顧名思義。
+          環境可以隨意命名，但務必保證預設的環境 ID 要匹配其中一個環境 ID。
+        </p>
+        <p>
+          <strong>交易管理器(transactionManager)</strong>
+        </p>
+        <p>在 MyBatis 中有兩種型別的交易管理器（也就是 type="[JDBC|MANAGED]"）：</p>
+        <ul>
+          <li>
+            JDBC – 這個配置直接使用了 JDBC 的提交和回滾功能，它依賴從資料來源獲得的連線來管理交易作用域。預設情況下，為了與某些驅動程式相容，它在關閉連線時啟用自動提交。然而，對於某些驅動程式來說，啟用自動提交不僅是不必要的，而且是一個代價高昂的操作。因此，從 3.5.10 版本開始，你可以透過將 "skipSetAutoCommitOnClose" 屬性設定為 "true" 來跳過這個步驟。例如：
+            <source><![CDATA[<transactionManager type="JDBC">
+  <property name="skipSetAutoCommitOnClose" value="true"/>
+</transactionManager>]]></source>
+          </li>
+          <li>
+            MANAGED – 這個配置幾乎沒做什麼。它從不提交或回滾一個連線，而是讓容器來管理交易的整個生命週期（比如 JEE 應用伺服器的上下文）。
+            預設情況下它會關閉連線。然而一些容器並不希望連線被關閉，因此需要將 closeConnection 屬性設定為 false 來阻止預設的關閉行為。例如:
+            <source><![CDATA[<transactionManager type="MANAGED">
+  <property name="closeConnection" value="false"/>
+</transactionManager>]]></source>
+          </li>
+        </ul>
+        <p>
+          <span class="label important">提示</span>
+          如果你正在使用 Spring + MyBatis，則沒有必要配置交易管理器，因為
+          Spring 模組會使用自帶的管理器來覆蓋前面的配置。
+        </p>
+        <p>
+          這兩種交易管理器型別都不需要設定任何屬性。它們其實是型別別名，換句話說，你可以用
+          TransactionFactory 介面實現類別的全限定名或型別別名代替它們。
+        </p>
+        <source><![CDATA[public interface TransactionFactory {
+  default void setProperties(Properties props) { // 從 3.5.2 開始，該方法為預設方法
+    // 空實現
+  }
+  Transaction newTransaction(Connection conn);
+  Transaction newTransaction(DataSource dataSource, TransactionIsolationLevel level, boolean autoCommit);
+}]]></source>
+        <p>在交易管理器實例化後，所有在 XML 中配置的屬性將會被傳遞給 setProperties()
+        方法。你的實現還需要建立一個 Transaction 介面的實現類別，這個介面也很簡單：</p>
+        <source><![CDATA[public interface Transaction {
+  Connection getConnection() throws SQLException;
+  void commit() throws SQLException;
+  void rollback() throws SQLException;
+  void close() throws SQLException;
+  Integer getTimeout() throws SQLException;
+}]]></source>
+        <p>使用這兩個介面，你可以完全自訂 MyBatis 對交易的處理。</p>
+        <p>
+          <strong>資料來源(dataSource)</strong>
+        </p>
+        <p>dataSource 元素使用標準的 JDBC 資料來源介面來配置 JDBC 連線物件的資源。</p>
+        <ul>
+          <li>大多數 MyBatis
+          應用程式會按示例中的例子來配置資料來源。雖然資料來源配置是可選的，但如果要啟用延遲載入特性，就必須配置資料來源。
+          </li>
+        </ul>
+        <p>有三種內建的資料來源型別（也就是 type="[UNPOOLED|POOLED|JNDI]"）：</p>
+        <p>
+          <strong>UNPOOLED</strong>– 這個資料來源的實現會每次請求時開啟和關閉連線。雖然有點慢，但對那些資料庫連線可用性要求不高的簡單應用程式來說，是一個很好的選擇。
+          效能表現則依賴於使用的資料庫，對某些資料庫來說，使用連線池並不重要，這個配置就很適合這種情形。UNPOOLED 型別的資料來源僅僅需要配置以下 5 種屬性：</p>
+        <ul>
+          <li><code>driver</code> – 這是 JDBC 驅動的 Java 類別全限定名（並不是 JDBC 驅動中可能包含的資料來源類別）。
+          </li>
+          <li><code>url</code> – 這是資料庫的 JDBC URL 地址。
+          </li>
+          <li><code>username</code> – 登入資料庫的使用者名稱。
+          </li>
+          <li><code>password</code> – 登入資料庫的密碼。
+          </li>
+          <li><code>defaultTransactionIsolationLevel</code> – 預設的連線交易隔離級別。
+          </li>
+          <li><code>defaultNetworkTimeout</code> – 等待資料庫操作完成的預設網路超時時間（單位：毫秒）。檢視 <code>java.sql.Connection#setNetworkTimeout()</code> 的 API 文件以獲取更多資訊。
+          </li>
+        </ul>
+        <p>作為可選項，你也可以傳遞屬性給資料庫驅動。只需在屬性名加上 "driver." 字首即可，例如：
+        </p>
+        <ul>
+          <li><code>driver.encoding=UTF8</code></li>
+        </ul>
+        <p>這將透過 DriverManager.getConnection(url, driverProperties) 方法傳遞值為
+        <code>UTF8</code> 的 <code>encoding</code> 屬性給資料庫驅動。
+        </p>
+        <p>
+          <strong>POOLED</strong>– 這種資料來源的實現利用 "池" 的概念將 JDBC 連線物件組織起來，避免了建立新的連線實例時所必需的初始化和認證時間。
+          這種處理方式很流行，能使併發 Web 應用快速響應請求。
+        </p>
+        <p>除了上述提到 UNPOOLED 下的屬性外，還有更多屬性用來配置 POOLED 的資料來源：</p>
+        <ul>
+          <li><code>poolMaximumActiveConnections</code> – 在任意時間可存在的活動（正在使用）連線數量，預設值：10
+          </li>
+          <li><code>poolMaximumIdleConnections</code> – 任意時間可能存在的空閒連線數。
+          </li>
+          <li><code>poolMaximumCheckoutTime</code> – 在被強制回傳之前，池中連線被檢出（checked out）時間，預設值：20000 毫秒（即 20 秒）
+          </li>
+          <li><code>poolTimeToWait</code> – 這是一個底層設定，如果獲取連線花費了相當長的時間，連線池會列印狀態日誌並重新嘗試獲取一個連線（避免在誤配置的情況下一直失敗且不列印日誌），預設值：20000 毫秒（即 20 秒）。
+          </li>
+          <li><code>poolMaximumLocalBadConnectionTolerance</code> – 這是一個關於壞連線容忍度的底層設定，
+            作用於每一個嘗試從快取池獲取連線的執行緒。
+            如果這個執行緒獲取到的是一個壞的連線，那麼這個資料來源允許這個執行緒嘗試重新獲取一個新的連線，但是這個重新嘗試的次數不應該超過 <code>poolMaximumIdleConnections</code>
+            與 <code>poolMaximumLocalBadConnectionTolerance</code> 之和。 預設值：3（新增於 3.4.5）
+          </li>
+          <li><code>poolPingQuery</code> – 傳送到資料庫的偵測查詢，用來檢驗連線是否正常工作並準備接受請求。預設是 "NO PING QUERY SET"，這會導致多數資料庫驅動出錯時回傳恰當的錯誤訊息。
+          </li>
+          <li><code>poolPingEnabled</code> – 是否啟用偵測查詢。若開啟，需要設定 <code>poolPingQuery</code> 屬性為一個可執行的 SQL 語句（最好是一個速度非常快的 SQL 語句），預設值：false。
+          </li>
+          <li><code>poolPingConnectionsNotUsedFor</code> – 配置 poolPingQuery 的頻率。可以被設定為和資料庫連線超時時間一樣，來避免不必要的偵測，預設值：0（即所有連線每一時刻都被偵測 — 當然僅當 poolPingEnabled 為 true 時適用）。
+          </li>
+        </ul>
+        <p>
+          <strong>JNDI</strong> – 這個資料來源實現是為了能在如 EJB 或應用伺服器這類別容器中使用，容器可以集中或在外部配置資料來源，然後放置一個 JNDI 上下文的資料來源參考。這種資料來源配置只需要兩個屬性：
+        </p>
+        <ul>
+          <li><code>initial_context</code> – 這個屬性用來在 InitialContext 中尋找上下文（即，initialContext.lookup(initial_context)）。這是個可選屬性，如果忽略，那麼將會直接從 InitialContext 中尋找 data_source 屬性。
+          </li>
+          <li><code>data_source</code> – 這是參考資料來源實例位置的上下文路徑。提供了 initial_context 配置時會在其回傳的上下文中進行查詢，沒有提供時則直接在 InitialContext 中查詢。
+          </li>
+        </ul>
+        <p>和其他資料來源配置類似，可以透過新增字首 "env." 直接把屬性傳遞給 InitialContext。比如：
+        </p>
+        <ul>
+          <li><code>env.encoding=UTF8</code></li>
+        </ul>
+        <p>這就會在 InitialContext 實例化時往它的建構式方法傳遞值為 <code>UTF8</code> 的 <code>encoding</code> 屬性。
+        </p>
+
+        <p>
+          你可以透過實現介面 <code>org.apache.ibatis.datasource.DataSourceFactory</code> 來使用第三方資料來源實現：
+        </p>
+
+        <source><![CDATA[public interface DataSourceFactory {
+  void setProperties(Properties props);
+  DataSource getDataSource();
+}]]></source>
+
+        <p>
+          <code>org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory</code> 可被用作父類別來建構新的資料來源介面卡，比如下面這段插入 C3P0 資料來源所必需的程式碼：
+        </p>
+
+        <source><![CDATA[import org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory;
+import com.mchange.v2.c3p0.ComboPooledDataSource;
+
+public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
+
+  public C3P0DataSourceFactory() {
+    this.dataSource = new ComboPooledDataSource();
+  }
+}]]></source>
+
+        <p>為了令其工作，記得在配置檔案中為每個希望 MyBatis 呼叫的 setter 方法增加對應的屬性。
+        下面是一個可以連線至 PostgreSQL 資料庫的例子：</p>
+
+        <source><![CDATA[<dataSource type="org.myproject.C3P0DataSourceFactory">
+  <property name="driver" value="org.postgresql.Driver"/>
+  <property name="url" value="jdbc:postgresql:mydb"/>
+  <property name="username" value="postgres"/>
+  <property name="password" value="root"/>
+</dataSource>
+]]></source>
+
+      </subsection>
+
+      <subsection name="資料庫廠商標識(databaseIdProvider)" id="databaseIdProvider">
+        <p>
+          MyBatis 可以根據不同的資料庫廠商執行不同的語句，這種多廠商的支援是基於對映語句中的 <code>databaseId</code> 屬性。
+          MyBatis 會載入帶有匹配當前資料庫 <code>databaseId</code> 屬性和所有不帶 <code>databaseId</code> 屬性的語句。
+          如果同時找到帶有 <code>databaseId</code> 和不帶 <code>databaseId</code> 的相同語句，則後者會被捨棄。
+          為支援多廠商特性，只要像下面這樣在 mybatis-config.xml 檔案中加入 <code>databaseIdProvider</code> 即可：
+        </p>
+        <source><![CDATA[<databaseIdProvider type="DB_VENDOR" />
+]]></source>
+
+        <p>
+          databaseIdProvider 對應的 DB_VENDOR 實現會將 databaseId 設定為
+          <code>DatabaseMetaData#getDatabaseProductName()</code> 回傳的字串。
+          由於通常情況下這些字串都非常長，而且相同產品的不同版本會回傳不同的值，你可能想透過設定屬性別名來使其變短：
+        </p>
+
+        <source><![CDATA[<databaseIdProvider type="DB_VENDOR">
+  <property name="SQL Server" value="sqlserver"/>
+  <property name="DB2" value="db2"/>
+  <property name="Oracle" value="oracle" />
+</databaseIdProvider>]]></source>
+
+        <p>
+          在提供了屬性別名時，databaseIdProvider 的 DB_VENDOR 實現會將 databaseId
+          設定為資料庫產品名與屬性中的名稱第一個相匹配的值，如果沒有匹配的屬性，將會設定為  "null" 。
+          在這個例子中，如果 <code>getDatabaseProductName()</code>
+          回傳 "Oracle (DataDirect)"，databaseId 將被設定為 "oracle" 。
+        </p>
+
+        <p>
+          你可以透過實現介面 <code>org.apache.ibatis.mapping.DatabaseIdProvider</code>
+          並在 mybatis-config.xml 中註冊來建構自己的 DatabaseIdProvider：
+        </p>
+
+        <source><![CDATA[public interface DatabaseIdProvider {
+  default void setProperties(Properties p) { // 從 3.5.2 開始，該方法為預設方法
+    // 空實現
+  }
+  String getDatabaseId(DataSource dataSource) throws SQLException;
+}]]></source>
+
+      </subsection>
+
+      <subsection name="對映器(mappers)" id="mappers">
+        <p>
+          既然 MyBatis 的行為已經由上述元素配置完了，我們現在就要來定義 SQL 對映語句了。
+          但首先，我們需要告訴 MyBatis 到哪裡去找到這些語句。
+          在自動查詢資源方面，Java 並沒有提供一個很好的解決方案，所以最好的辦法是直接告訴
+          MyBatis 到哪裡去找對映檔案。
+          你可以使用相對於類別路徑的資源參考，或完全限定資源定位符（包括 <code>file:///</code> 形式的 URL），或類別名稱和套件名稱等。例如：
+        </p>
+        <source><![CDATA[<!-- 使用相對於類別路徑的資源參考 -->
+<mappers>
+  <mapper resource="org/mybatis/builder/AuthorMapper.xml"/>
+  <mapper resource="org/mybatis/builder/BlogMapper.xml"/>
+  <mapper resource="org/mybatis/builder/PostMapper.xml"/>
+</mappers>]]></source>
+
+        <source><![CDATA[<!-- 使用完全限定資源定位符(URL) -->
+<mappers>
+  <mapper url="file:///var/mappers/AuthorMapper.xml"/>
+  <mapper url="file:///var/mappers/BlogMapper.xml"/>
+  <mapper url="file:///var/mappers/PostMapper.xml"/>
+</mappers>]]></source>
+
+        <source><![CDATA[<!-- 使用對映器介面實現類別的完全限定類別名稱 -->
+<mappers>
+  <mapper class="org.mybatis.builder.AuthorMapper"/>
+  <mapper class="org.mybatis.builder.BlogMapper"/>
+  <mapper class="org.mybatis.builder.PostMapper"/>
+</mappers>]]></source>
+
+        <source><![CDATA[<!-- 將包內的對映器介面實現全部註冊為對映器 -->
+<mappers>
+  <package name="org.mybatis.builder"/>
+</mappers>]]></source>
+
+        <p>這些配置會告訴 MyBatis 去哪裡找對映檔案，剩下的細節就應該是每個 SQL
+        對映檔案了，也就是接下來我們要討論的。</p>
+      </subsection>
+    </section>
+  </body>
+</document>
