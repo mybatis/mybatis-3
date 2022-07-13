@@ -332,7 +332,7 @@ public class PooledDataSource implements DataSource {
    */
   public void forceCloseAll() {
     fairLock.lock();
-    synchronized (state) {
+    try {
       expectedConnectionTypeCode = assembleConnectionTypeCode(dataSource.getUrl(), dataSource.getUsername(), dataSource.getPassword());
       for (int i = state.activeConnections.size(); i > 0; i--) {
         try {
@@ -361,6 +361,10 @@ public class PooledDataSource implements DataSource {
         } catch (Exception e) {
           // ignore
         }
+      }
+    } finally {
+      if (fairLock.isLocked()) {
+        fairLock.unlock();
       }
     }
     if (log.isDebugEnabled()) {
