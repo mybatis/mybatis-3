@@ -331,8 +331,8 @@ public class PooledDataSource implements DataSource {
    * Closes all active and idle connections in the pool.
    */
   public void forceCloseAll() {
-    fairLock.lock();
     try {
+      fairLock.lock();
       expectedConnectionTypeCode = assembleConnectionTypeCode(dataSource.getUrl(), dataSource.getUsername(), dataSource.getPassword());
       for (int i = state.activeConnections.size(); i > 0; i--) {
         try {
@@ -381,7 +381,6 @@ public class PooledDataSource implements DataSource {
   }
 
   protected void pushConnection(PooledConnection conn) throws SQLException {
-
     try {
       fairLock.lock();
       state.activeConnections.remove(conn);
@@ -399,7 +398,9 @@ public class PooledDataSource implements DataSource {
           if (log.isDebugEnabled()) {
             log.debug("Returned connection " + newConn.getRealHashCode() + " to pool.");
           }
-          fairLock.unlock();
+          if (fairLock.isLocked()) {
+            fairLock.unlock();
+          }
         } else {
           state.accumulatedCheckoutTime += conn.getCheckoutTime();
           if (!conn.getRealConnection().getAutoCommit()) {
@@ -431,8 +432,8 @@ public class PooledDataSource implements DataSource {
     int localBadConnectionCount = 0;
 
     while (conn == null) {
-      fairLock.lock();
       try {
+        fairLock.lock();
         if (!state.idleConnections.isEmpty()) {
           // Pool has available connection
           conn = state.idleConnections.remove(0);
