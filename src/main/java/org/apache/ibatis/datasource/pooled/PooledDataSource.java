@@ -23,6 +23,10 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
 
 import javax.sql.DataSource;
@@ -55,6 +59,9 @@ public class PooledDataSource implements DataSource {
   protected int poolPingConnectionsNotUsedFor;
 
   private int expectedConnectionTypeCode;
+
+  private final Lock lock = new ReentrantLock();
+  private final Condition condition = lock.newCondition();
 
   public PooledDataSource() {
     dataSource = new UnpooledDataSource();
@@ -328,7 +335,8 @@ public class PooledDataSource implements DataSource {
    * Closes all active and idle connections in the pool.
    */
   public void forceCloseAll() {
-    synchronized (state) {
+    lock.lock();
+    try {
       expectedConnectionTypeCode = assembleConnectionTypeCode(dataSource.getUrl(), dataSource.getUsername(), dataSource.getPassword());
       for (int i = state.activeConnections.size(); i > 0; i--) {
         try {
@@ -358,6 +366,8 @@ public class PooledDataSource implements DataSource {
           // ignore
         }
       }
+    } finally {
+      lock.unlock();
     }
     if (log.isDebugEnabled()) {
       log.debug("PooledDataSource forcefully closed/removed all connections.");
@@ -374,7 +384,8 @@ public class PooledDataSource implements DataSource {
 
   protected void pushConnection(PooledConnection conn) throws SQLException {
 
-    synchronized (state) {
+    lock.lock();
+    try {
       state.activeConnections.remove(conn);
       if (conn.isValid()) {
         if (state.idleConnections.size() < poolMaximumIdleConnections && conn.getConnectionTypeCode() == expectedConnectionTypeCode) {
@@ -390,7 +401,7 @@ public class PooledDataSource implements DataSource {
           if (log.isDebugEnabled()) {
             log.debug("Returned connection " + newConn.getRealHashCode() + " to pool.");
           }
-          state.notifyAll();
+          condition.signal();
         } else {
           state.accumulatedCheckoutTime += conn.getCheckoutTime();
           if (!conn.getRealConnection().getAutoCommit()) {
@@ -408,6 +419,8 @@ public class PooledDataSource implements DataSource {
         }
         state.badConnectionCount++;
       }
+    } finally {
+      lock.unlock();
     }
   }
 
@@ -418,7 +431,8 @@ public class PooledDataSource implements DataSource {
     int localBadConnectionCount = 0;
 
     while (conn == null) {
-      synchronized (state) {
+      lock.lock();
+      try {
         if (!state.idleConnections.isEmpty()) {
           // Pool has available connection
           conn = state.idleConnections.remove(0);
@@ -476,7 +490,7 @@ public class PooledDataSource implements DataSource {
                   log.debug("Waiting as long as " + poolTimeToWait + " milliseconds for connection.");
                 }
                 long wt = System.currentTimeMillis();
-                state.wait(poolTimeToWait);
+                condition.await(poolTimeToWait, TimeUnit.MILLISECONDS);
                 state.accumulatedWaitTime += System.currentTimeMillis() - wt;
               } catch (InterruptedException e) {
                 // set interrupt flag
@@ -513,6 +527,8 @@ public class PooledDataSource implements DataSource {
             }
           }
         }
+      } finally {
+        lock.unlock();
       }
 
     }
