@@ -60,8 +60,8 @@ public class PooledDataSource implements DataSource {
 
   private int expectedConnectionTypeCode;
 
-  private Lock lock = new ReentrantLock();
-  private Condition condition = lock.newCondition();
+  private final Lock lock = new ReentrantLock();
+  private final Condition condition = lock.newCondition();
 
   public PooledDataSource() {
     dataSource = new UnpooledDataSource();
