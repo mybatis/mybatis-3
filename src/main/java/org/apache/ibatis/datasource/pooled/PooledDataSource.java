@@ -23,6 +23,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
+import java.util.concurrent.Executor;
 import java.util.logging.Logger;
 
 import javax.sql.DataSource;
@@ -55,6 +56,9 @@ public class PooledDataSource implements DataSource {
   protected int poolPingConnectionsNotUsedFor;
 
   private int expectedConnectionTypeCode;
+
+  protected int networkPingTimeout = 0;
+  private final static Executor immediateExecutor = Runnable::run;
 
   public PooledDataSource() {
     dataSource = new UnpooledDataSource();
@@ -553,8 +557,18 @@ public class PooledDataSource implements DataSource {
           log.debug("Testing connection " + conn.getRealHashCode() + " ...");
         }
         Connection realConn = conn.getRealConnection();
+
+        final int timeout = realConn.getNetworkTimeout();
+        if (networkPingTimeout != 0) {
+          log.debug("Testing connection " + conn.getRealHashCode() + " with network timeout " + networkPingTimeout + "ms ...");
+          realConn.setNetworkTimeout(immediateExecutor, networkPingTimeout);
+        }
         try (Statement statement = realConn.createStatement()) {
           statement.executeQuery(poolPingQuery).close();
+        } finally {
+          if (networkPingTimeout != 0) {
+            realConn.setNetworkTimeout(immediateExecutor, timeout);
+          }
         }
         if (!realConn.getAutoCommit()) {
           realConn.rollback();

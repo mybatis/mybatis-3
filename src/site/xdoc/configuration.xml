@@ -2153,6 +2153,10 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, propert
             Default: 0 (i.e. all connections are pinged every time – but only
             if poolPingEnabled is true of course).
           </li>
+          <li><code>networkPingTimeout</code> – This configures a timeout (in milliseconds) at the connection level for
+            the ping query. If this time passes, the connection will be invalid. In the event that a firewall or network
+            problem drops packets, connections will not wait indefinitely for a response. Default: 0 (inactive)
+          </li>
         </ul>
         <p>
           <strong>JNDI</strong>

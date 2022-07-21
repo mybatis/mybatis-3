@@ -1847,6 +1847,8 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
           </li>
           <li><code>poolPingConnectionsNotUsedFor</code> – Configura la frecuencia con la que se ejecutará la sentencia poolPingQuery. Normalmente se iguala al timeout de la conexión de base de datos para evitar pings innecesarios. Por defecto: 0 (todas las conexiones se testean continuamente – solo si se ha habilitado poolPingEnabled).
           </li>
+          <li><code>networkPingTimeout</code> – Configura un timeout (en milisegundos) a nivel de la conexión para la query de ping. En caso de que pase este tiempo, la conexión sera inválida. En caso de que un firewall o un problema de red descarte los paquetes, las conexiones no esperaran indefinidamente una respuesta. Por defecto:  0 (inactivo).
+        </li>
         </ul>
         <p>
           <strong>JNDI</strong>
