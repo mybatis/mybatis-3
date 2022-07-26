@@ -135,4 +135,17 @@ class ArgNameBasedConstructorAutoMappingTest {
       assertEquals(99, task.getAssignee().getTeam());
     }
   }
+
+  @Test
+  void shouldBeOnlyOneAutomapConstructorAnnotation() {
+    // This test requires -parameters compiler option
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      mapper.selectNameAndIdWithAmbiguousConstructor(1);
+      fail("Exception should be thrown");
+    } catch (PersistenceException e) {
+      ExecutorException ex = (ExecutorException) e.getCause();
+      assertEquals("@AutomapConstructor should be used in only one constructor.", ex.getMessage());
+    }
+  }
 }
