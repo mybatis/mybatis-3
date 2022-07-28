@@ -22,6 +22,9 @@ import org.apache.ibatis.cache.decorators.SynchronizedCache;
 import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 class PerpetualCacheTest {
 
   @Test
@@ -74,5 +77,14 @@ class PerpetualCacheTest {
     Cache cache = new PerpetualCache(null);
     assertThrows(CacheException.class, () -> cache.hashCode());
     assertThrows(CacheException.class, () -> cache.equals(new Object()));
+  }
+
+  @Test
+  void showRemoveCacheOnChangeCache() {
+    Cache cache = new PerpetualCache("change-cache");
+    List<Object> value = new ArrayList<>();
+    cache.putObject("key", value);
+    value.add(1);
+    assertNull(cache.getObject("key"));
   }
 }

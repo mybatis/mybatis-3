@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2022 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheException;
+import org.apache.ibatis.util.Pair;
 
 /**
  * @author Clinton Begin
@@ -28,7 +29,7 @@ public class PerpetualCache implements Cache {
 
   private final String id;
 
-  private final Map<Object, Object> cache = new HashMap<>();
+  private final Map<Object, Pair<Integer, Object>> cache = new HashMap<>();
 
   public PerpetualCache(String id) {
     this.id = id;
@@ -46,12 +47,17 @@ public class PerpetualCache implements Cache {
 
   @Override
   public void putObject(Object key, Object value) {
-    cache.put(key, value);
+    cache.put(key, new Pair<>(value == null ? 0 : value.hashCode(), value));
   }
 
   @Override
   public Object getObject(Object key) {
-    return cache.get(key);
+    Pair<Integer, Object> cacheValue = cache.get(key);
+    if (cacheValue.getKey() == cacheValue.getValueHashCode()) {
+      return cacheValue.getValue();
+    }
+    this.removeObject(key);
+    return null;
   }
 
   @Override
@@ -87,5 +93,4 @@ public class PerpetualCache implements Cache {
     }
     return getId().hashCode();
   }
-
 }
