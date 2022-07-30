@@ -15,14 +15,12 @@
  */
 package org.apache.ibatis.autoconstructor;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import java.io.Reader;
 import java.util.List;
 
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.exceptions.PersistenceException;
+import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -30,6 +28,8 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class AutoConstructorTest {
   private static SqlSessionFactory sqlSessionFactory;
@@ -68,6 +68,16 @@ class AutoConstructorTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       final AutoConstructorMapper mapper = sqlSession.getMapper(AutoConstructorMapper.class);
       verifySubjects(mapper.getAnnotatedSubjects());
+    }
+  }
+
+  @Test
+  void badMultipleAnnotatedSubject() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      final AutoConstructorMapper mapper = sqlSession.getMapper(AutoConstructorMapper.class);
+      final PersistenceException ex = assertThrows(PersistenceException.class, mapper::getBadAnnotatedSubjects);
+      final ExecutorException cause = (ExecutorException)  ex.getCause();
+      assertEquals("@AutomapConstructor should be used in only one constructor.", cause.getMessage());
     }
   }
 

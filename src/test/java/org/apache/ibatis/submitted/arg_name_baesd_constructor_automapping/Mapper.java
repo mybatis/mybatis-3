@@ -34,8 +34,5 @@ public interface Mapper {
   @Select("select name user_name, id user_id from users where id = #{id}")
   User2 selectUserIdAndUserNameUnderscore(Integer id);
 
-  @Select("select name, id from users where id = #{id}")
-  User3 selectNameAndIdWithAmbiguousConstructor(Integer id);
-
   Task selectTask(Integer id);
 }

@@ -30,6 +30,9 @@ public interface AutoConstructorMapper {
   List<AnnotatedSubject> getAnnotatedSubjects();
 
   @Select("SELECT * FROM subject")
+  List<BadAnnotatedSubject> getBadAnnotatedSubjects();
+
+  @Select("SELECT * FROM subject")
   List<BadSubject> getBadSubjects();
 
   @Select("SELECT * FROM extensive_subject")

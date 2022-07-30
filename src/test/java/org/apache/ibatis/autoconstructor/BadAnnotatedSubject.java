@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2021 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -13,45 +13,32 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.submitted.arg_name_baesd_constructor_automapping;
+package org.apache.ibatis.autoconstructor;
 
 import org.apache.ibatis.annotations.AutomapConstructor;
 
-public class User3 {
-
-  private Integer id;
-  private String name;
-  private Long team;
-
-  @AutomapConstructor
-  public User3(Integer id, String name, Long team) {
-    super();
-    this.id = id;
-    this.name = name;
-    this.team = team;
-  }
+public class BadAnnotatedSubject {
+  private final int id;
+  private final String name;
+  private final int age;
+  private final int height;
+  private final int weight;
 
   @AutomapConstructor
-  public User3(Integer id, String name) {
-    super();
+  public BadAnnotatedSubject(final int id, final String name, final int age, final int height, final int weight) {
     this.id = id;
     this.name = name;
-    this.team = 100L;
+    this.age = age;
+    this.height = height;
+    this.weight = weight;
   }
 
-  public Integer getId() {
-    return id;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setTeam(Long team) {
-    this.team = team;
-  }
-
-  public Long getTeam() {
-    return team;
+  @AutomapConstructor
+  public BadAnnotatedSubject(final int id, final String name, final int age, final Integer height, final Integer weight) {
+    this.id = id;
+    this.name = name;
+    this.age = age;
+    this.height = height == null ? 0 : height;
+    this.weight = weight == null ? 0 : weight;
   }
 }
