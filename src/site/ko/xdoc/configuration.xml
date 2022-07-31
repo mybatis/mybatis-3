@@ -603,7 +603,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 argNameBasedConstructorAutoMapping
               </td>
               <td>
-                생성자 자동 매핑을 적용할 때 열 순서가 아닌 열과 생성자의 인수 이름을 기반으로 매핑한다. (3.5.10 부터)
+                생성자 자동 매핑을 적용할 때 칼럼 순서가 아닌 칼럼 이름과 생성자 인수들의 이름을 기반으로 매핑한다. (3.5.10 부터)
               </td>
               <td>
                 true | false

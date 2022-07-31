@@ -513,7 +513,7 @@ ps.setInt(1,id);]]></source>
 
         <p>
           문자열 대체는 SQL 구문의 메타데이터(예를 들어 테이블 이름, 칼럼 이름)가 동적일 때 매우 유용하게 사용할 수 있다.
-          예를 들면, 테이블의 칼럼 중 하나로 테이블의 데이터를 <code>select</code>하고 싶을 때, 아래와 같이 작성하는 대신:
+          예를 들면, 테이블의 칼럼 중 하나로 테이블의 데이터를 <code>select</code>하고 싶을 때 아래와 같이 작성하는 대신:
           <source><![CDATA[
 @Select("select * from user where id = #{id}")
 User findById(@Param("id") long id);
