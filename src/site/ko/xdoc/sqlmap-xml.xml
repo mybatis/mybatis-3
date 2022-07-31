@@ -512,8 +512,8 @@ ps.setInt(1,id);]]></source>
         <p>여기서 마이바티스는 문자열을 변경하거나 이스케이프 처리하지 않는다.</p>
 
         <p>
-          String Substitution can be very useful when the metadata(i.e. table name or column name) in the sql statement is dynamic,
-          for example, if you want to <code>select</code> from a table by any one of its columns, instead of writing code like:
+          문자열 대체는 SQL 구문의 메타데이터(예를 들어 테이블 이름, 칼럼 이름)가 동적일 때 매우 유용하게 사용할 수 있다.
+          예를 들면, 테이블의 칼럼 중 하나로 테이블의 데이터를 <code>select</code>하고 싶을 때, 아래와 같이 작성하는 대신:
           <source><![CDATA[
 @Select("select * from user where id = #{id}")
 User findById(@Param("id") long id);
@@ -526,13 +526,13 @@ User findByEmail(@Param("email") String email);
 
 // and more "findByXxx" method
 ]]></source>
-          you can just write:
+          다음과 같이 작성할 수 있다:
           <source><![CDATA[
 @Select("select * from user where ${column} = #{value}")
 User findByColumn(@Param("column") String column, @Param("value") String value);
 ]]></source>
-          in which the <code>${column}</code> will be substituted directly and the <code>#{value}</code> will be "prepared".
-          Thus you can just do the same work by:
+          여기서 <code>${column}</code>은 지정한 문자열로 직접 대체되고, <code>#{value}</code>는 "prepared" 될 것이므로
+          아래와 같이 사용할 수 있다:
           <source><![CDATA[
 User userOfId1 = userMapper.findByColumn("id", 1L);
 User userOfNameKid = userMapper.findByColumn("name", "kid");
@@ -541,7 +541,7 @@ User userOfEmail = userMapper.findByColumn("email", "noone@nowhere.com");
         </p>
 
         <p>
-          This idea can be applied to substitute the table name as well.
+          이 아이디어는 테이블 이름을 대체하는 데에도 적용할 수 있다.
         </p>
 
         <p>
@@ -1634,10 +1634,8 @@ public class User {
         </ul>
 
         <p>
-          <span class="label important">NOTE</span> The cache will only apply to statements declared in the mapping file
-          where the cache tag is located. If you are using the Java API in conjunction with the XML mapping files, then
-          statements declared in the companion interface will not be cached by default. You will need to refer to the
-          cache region using the @CacheNamespaceRef annotation.
+          <span class="label important">참고</span> 캐시는 cache 태그를 사용한 매퍼에 선언된 구문에만 적용된다.
+          XML 매퍼와 함께 Java API를 사용하는 경우 Java 매퍼에 작성된 구문을 캐시 적용 대상에 포함시키려면 <code>@CacheNamespaceRef</code>을 사용하여 XML 매퍼의 namespace를 지정해야 한다.
         </p>
 
         <p>모든 프로퍼티는 cache 엘리먼트의 속성을 통해 변경가능하다.

@@ -312,10 +312,10 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 defaultResultSetType
               </td>
               <td>
-                Specifies a scroll strategy when omit it per statement settings. (Since: 3.5.2)
+                각 구문의 설정을 생략할 때 스크롤 하는 방법을 지정한다. (3.5.2 부터)
               </td>
               <td>
-                FORWARD_ONLY | SCROLL_SENSITIVE | SCROLL_INSENSITIVE | DEFAULT(same behavior with 'Not Set')
+                FORWARD_ONLY | SCROLL_SENSITIVE | SCROLL_INSENSITIVE | DEFAULT(설정하지 않을 때와 동일하게 동작)
               </td>
               <td>
                 Not Set (null)
@@ -589,7 +589,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 nullableOnForEach
               </td>
               <td>
-                Specifies the default value of 'nullable' attribute on 'foreach' tag. (Since 3.5.9)
+                'foreach' 태그에서 'nullable' 속성의 기본값을 지정한다. (3.5.9 부터)
               </td>
               <td>
                 true | false
@@ -603,7 +603,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 argNameBasedConstructorAutoMapping
               </td>
               <td>
-                When applying constructor auto-mapping, argument name is used to search the column to map instead of relying on the column order. (Since 3.5.10)
+                생성자 자동 매핑을 적용할 때 열 순서가 아닌 열과 생성자의 인수 이름을 기반으로 매핑한다. (3.5.10 부터)
               </td>
               <td>
                 true | false
