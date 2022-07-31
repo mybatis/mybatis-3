@@ -710,21 +710,22 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     if (constructors.length == 1) {
       return Optional.of(constructors[0]);
     }
-    return Arrays.stream(constructors)
-      .filter(x -> x.isAnnotationPresent(AutomapConstructor.class))
-      .reduce((x, y) -> {
-        throw new ExecutorException("@AutomapConstructor should be used in only one constructor.");
-      }).or(() -> {
-        if (configuration.isArgNameBasedConstructorAutoMapping()) {
-          // Finding-best-match type implementation is possible,
-          // but using @AutomapConstructor seems sufficient.
-          throw new ExecutorException(MessageFormat.format(
-            "'argNameBasedConstructorAutoMapping' is enabled and the class ''{0}'' has multiple constructors, so @AutomapConstructor must be added to one of the constructors.",
-            resultType.getName()));
-        } else {
-          return Arrays.stream(constructors).filter(x -> findUsableConstructorByArgTypes(x, rsw.getJdbcTypes())).findAny();
-        }
-      });
+    Optional<Constructor<?>> reduce = Arrays.stream(constructors)
+        .filter(x -> x.isAnnotationPresent(AutomapConstructor.class))
+        .reduce((x, y) -> {
+          throw new ExecutorException("@AutomapConstructor should be used in only one constructor.");
+        });
+    if (reduce.isPresent()) {
+      return reduce;
+    } else if (configuration.isArgNameBasedConstructorAutoMapping()) {
+      // Finding-best-match type implementation is possible,
+      // but using @AutomapConstructor seems sufficient.
+      throw new ExecutorException(MessageFormat.format(
+          "'argNameBasedConstructorAutoMapping' is enabled and the class ''{0}'' has multiple constructors, so @AutomapConstructor must be added to one of the constructors.",
+          resultType.getName()));
+    } else {
+      return Arrays.stream(constructors).filter(x -> findUsableConstructorByArgTypes(x, rsw.getJdbcTypes())).findAny();
+    }
   }
 
   private boolean findUsableConstructorByArgTypes(final Constructor<?> constructor, final List<JdbcType> jdbcTypes) {
