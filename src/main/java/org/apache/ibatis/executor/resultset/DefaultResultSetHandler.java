@@ -710,13 +710,13 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     if (constructors.length == 1) {
       return Optional.of(constructors[0]);
     }
-    Optional<Constructor<?>> reduce = Arrays.stream(constructors)
+    Optional<Constructor<?>> annotated = Arrays.stream(constructors)
         .filter(x -> x.isAnnotationPresent(AutomapConstructor.class))
         .reduce((x, y) -> {
           throw new ExecutorException("@AutomapConstructor should be used in only one constructor.");
         });
-    if (reduce.isPresent()) {
-      return reduce;
+    if (annotated.isPresent()) {
+      return annotated;
     } else if (configuration.isArgNameBasedConstructorAutoMapping()) {
       // Finding-best-match type implementation is possible,
       // but using @AutomapConstructor seems sufficient.
