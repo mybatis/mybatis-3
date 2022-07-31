@@ -15,26 +15,30 @@
  */
 package org.apache.ibatis.autoconstructor;
 
-import java.util.List;
+import org.apache.ibatis.annotations.AutomapConstructor;
 
-import org.apache.ibatis.annotations.Select;
+public class BadAnnotatedSubject {
+  private final int id;
+  private final String name;
+  private final int age;
+  private final int height;
+  private final int weight;
 
-public interface AutoConstructorMapper {
-  @Select("SELECT * FROM subject WHERE id = #{id}")
-  PrimitiveSubject getSubject(final int id);
+  @AutomapConstructor
+  public BadAnnotatedSubject(final int id, final String name, final int age, final int height, final int weight) {
+    this.id = id;
+    this.name = name;
+    this.age = age;
+    this.height = height;
+    this.weight = weight;
+  }
 
-  @Select("SELECT * FROM subject")
-  List<PrimitiveSubject> getSubjects();
-
-  @Select("SELECT * FROM subject")
-  List<AnnotatedSubject> getAnnotatedSubjects();
-
-  @Select("SELECT * FROM subject")
-  List<BadAnnotatedSubject> getBadAnnotatedSubjects();
-
-  @Select("SELECT * FROM subject")
-  List<BadSubject> getBadSubjects();
-
-  @Select("SELECT * FROM extensive_subject")
-  List<ExtensiveSubject> getExtensiveSubjects();
+  @AutomapConstructor
+  public BadAnnotatedSubject(final int id, final String name, final int age) {
+    this.id = id;
+    this.name = name;
+    this.age = age;
+    this.height = 0;
+    this.weight = 0;
+  }
 }
