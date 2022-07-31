@@ -34,11 +34,11 @@ public class BadAnnotatedSubject {
   }
 
   @AutomapConstructor
-  public BadAnnotatedSubject(final int id, final String name, final int age, final Integer height, final Integer weight) {
+  public BadAnnotatedSubject(final int id, final String name, final int age) {
     this.id = id;
     this.name = name;
     this.age = age;
-    this.height = height == null ? 0 : height;
-    this.weight = weight == null ? 0 : weight;
+    this.height = 0;
+    this.weight = 0;
   }
 }
