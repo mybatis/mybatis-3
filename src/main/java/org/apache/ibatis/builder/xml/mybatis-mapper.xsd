@@ -53,6 +53,7 @@
       <xs:attribute name="size"/>
       <xs:attribute name="readOnly"/>
       <xs:attribute name="blocking"/>
+      <xs:attribute name="useCacheGlobally"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="parameterMap">

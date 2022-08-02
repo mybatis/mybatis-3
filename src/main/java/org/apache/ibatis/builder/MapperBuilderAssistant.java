@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2022 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import org.apache.ibatis.annotations.CacheNamespace;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.decorators.LruCache;
 import org.apache.ibatis.cache.impl.PerpetualCache;
@@ -58,6 +59,13 @@ public class MapperBuilderAssistant extends BaseBuilder {
   private final String resource;
   private Cache currentCache;
   private boolean unresolvedCacheRef; // issue #676
+
+  /**
+   * use Cache globally.
+   *
+   * @see CacheNamespace#useCacheGlobally()
+   */
+  private boolean useCacheGlobally = true;
 
   public MapperBuilderAssistant(Configuration configuration, String resource) {
     super(configuration);
@@ -127,6 +135,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       Integer size,
       boolean readWrite,
       boolean blocking,
+      boolean useCacheGlobally,
       Properties props) {
     Cache cache = new CacheBuilder(currentNamespace)
         .implementation(valueOrDefault(typeClass, PerpetualCache.class))
@@ -139,6 +148,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
         .build();
     configuration.addCache(cache);
     currentCache = cache;
+    this.useCacheGlobally = useCacheGlobally;
     return cache;
   }
 
@@ -557,4 +567,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
     return javaType;
   }
 
+  public boolean isUseCacheGlobally() {
+    return useCacheGlobally;
+  }
 }

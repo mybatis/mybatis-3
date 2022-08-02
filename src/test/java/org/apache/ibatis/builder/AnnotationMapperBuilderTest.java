@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2022 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package org.apache.ibatis.builder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.apache.ibatis.annotations.CacheNamespace;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
@@ -94,6 +95,24 @@ class AnnotationMapperBuilderTest {
     assertThat(mappedStatement.getResultSetType()).isEqualTo(ResultSetType.DEFAULT);
   }
 
+  @Test
+  void testSelectWithCache() {
+    Configuration configuration = new Configuration();
+    MapperAnnotationBuilder builder = new MapperAnnotationBuilder(configuration, NoUseCacheMapper.class);
+    builder.parse();
+    MappedStatement mappedStatement = configuration.getMappedStatement("selectWithCache");
+    assertThat(mappedStatement.isUseCache()).isTrue();
+  }
+
+  @Test
+  void testSelectWithNoCache() {
+    Configuration configuration = new Configuration();
+    MapperAnnotationBuilder builder = new MapperAnnotationBuilder(configuration, NoUseCacheMapper.class);
+    builder.parse();
+    MappedStatement mappedStatement = configuration.getMappedStatement("selectWithNoCache");
+    assertThat(mappedStatement.isUseCache()).isFalse();
+  }
+
   interface Mapper {
 
     @Insert("insert into test (name) values(#{name})")
@@ -111,6 +130,18 @@ class AnnotationMapperBuilderTest {
     @Select("select * from test")
     String selectWithoutOptions(Integer id);
 
+  }
+
+  @CacheNamespace(useCacheGlobally = true)
+  interface NoUseCacheMapper {
+
+    @Select("select * from test")
+    @Options(useCache = true)
+    String selectWithCache(Integer id);
+
+    @Select("select * from test")
+    @Options(useCache = false)
+    String selectWithNoCache(Integer id);
   }
 
 }

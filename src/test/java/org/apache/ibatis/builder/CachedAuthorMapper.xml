@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2022 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
 
 <mapper namespace="org.apache.ibatis.builder.CachedAuthorMapper">
 
-  <cache readOnly="true"/>
+  <cache readOnly="true" useCacheGlobally="true"/>
 
   <select id="selectAllAuthors"
           resultType="org.apache.ibatis.domain.blog.Author">
@@ -52,5 +52,15 @@
           parameterType="int">
     delete from Author where id = #{id}
   </delete>
+
+  <select id="selectAllAuthorsUseCache"
+          resultType="org.apache.ibatis.domain.blog.Author" useCache="true">
+    select * from author
+  </select>
+
+  <select id="selectAllAuthorsNoUseCache"
+          resultType="org.apache.ibatis.domain.blog.Author" useCache="false">
+    select * from author
+  </select>
 
 </mapper>

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2022 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -475,6 +475,36 @@ class SqlSessionTest extends BaseDataTest {
     int second;
     try (SqlSession session = sqlMapper.openSession()) {
       List<Author> authors = session.selectList("org.apache.ibatis.domain.blog.mappers.AuthorMapper.selectAllAuthors");
+      second = System.identityHashCode(authors);
+    }
+    assertTrue(first != second);
+  }
+
+  @Test
+  void shouldNotUseCacheForTestUseCacheGlobally() {
+    int first;
+    try (SqlSession session = sqlMapper.openSession()) {
+      List<Author> authors = session.selectList("org.apache.ibatis.builder.CachedAuthorMapper.selectAllAuthorsUseCache");
+      first = System.identityHashCode(authors);
+    }
+    int second;
+    try (SqlSession session = sqlMapper.openSession()) {
+      List<Author> authors = session.selectList("org.apache.ibatis.builder.CachedAuthorMapper.selectAllAuthorsUseCache");
+      second = System.identityHashCode(authors);
+    }
+    assertEquals(first, second);
+  }
+
+  @Test
+  void shouldUseCacheForTestUseCacheGlobally() {
+    int first;
+    try (SqlSession session = sqlMapper.openSession()) {
+      List<Author> authors = session.selectList("org.apache.ibatis.builder.CachedAuthorMapper.selectAllAuthorsNoUseCache");
+      first = System.identityHashCode(authors);
+    }
+    int second;
+    try (SqlSession session = sqlMapper.openSession()) {
+      List<Author> authors = session.selectList("org.apache.ibatis.builder.CachedAuthorMapper.selectAllAuthorsNoUseCache");
       second = System.identityHashCode(authors);
     }
     assertTrue(first != second);
