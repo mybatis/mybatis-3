@@ -24,7 +24,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macOS-latest, windows-latest]
-        java: [8, 11, 17, 18, 19-ea]
+        java: [8, 11, 17, 18, 19, 20]
         distribution: ['zulu']
       fail-fast: false
       max-parallel: 4
@@ -32,11 +32,20 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - name: Set up JDK
+      - name: Set JDK from jdk.java.net
+        uses: oracle-actions/setup-java@v1
+        with:
+          website: jdk.java.net
+          release: ${{ matrix.java }}
+        if: ${{ matrix.java != '8' && matrix.java != '11' && matrix.java != '17' }}
+      - name: Set up older JDK
         uses: actions/setup-java@v3
         with:
           java-version: ${{ matrix.java }}
           distribution: ${{ matrix.distribution }}
+        if: ${{ matrix.java == '8' || matrix.java == '11' || matrix.java == '17' }}
+      - name: Print JDK Version
+        run: java -version
       - name: Cache local Maven m2
         uses: actions/cache@v3
         with:
