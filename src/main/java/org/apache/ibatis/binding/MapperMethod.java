@@ -99,7 +99,7 @@ public class MapperMethod {
     }
     if (result == null && method.getReturnType().isPrimitive() && !method.returnsVoid()) {
       throw new BindingException("Mapper method '" + command.getName()
-          + " attempted to return null from a method with a primitive return type (" + method.getReturnType() + ").");
+          + "' attempted to return null from a method with a primitive return type (" + method.getReturnType() + ").");
     }
     return result;
   }
