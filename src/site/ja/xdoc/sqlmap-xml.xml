@@ -739,8 +739,8 @@ public class User {
 
         <source><![CDATA[<resultMap id="userResultMap" type="User">
   <id property="id" column="user_id" />
-  <result property="username" column="username"/>
-  <result property="password" column="password"/>
+  <result property="username" column="user_name"/>
+  <result property="password" column="hashed_password"/>
 </resultMap>]]></source>
 
         <p>
