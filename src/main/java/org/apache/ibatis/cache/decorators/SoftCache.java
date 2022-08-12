@@ -65,8 +65,8 @@ public class SoftCache implements Cache {
   @Override
   public Object getObject(Object key) {
     Object result = null;
-    @SuppressWarnings("unchecked") // assumed delegate cache is totally managed by this cache
-    SoftReference<Object> softReference = (SoftReference<Object>) delegate.getObject(key);
+    // assumed delegate cache is totally managed by this cache
+    SoftEntry softReference = (SoftEntry) delegate.getObject(key);
     if (softReference != null) {
       result = softReference.get();
       if (result == null) {
@@ -87,8 +87,7 @@ public class SoftCache implements Cache {
   @Override
   public Object removeObject(Object key) {
     removeGarbageCollectedItems();
-    @SuppressWarnings("unchecked")
-    SoftReference<Object> softReference = (SoftReference<Object>) delegate.removeObject(key);
+    SoftEntry softReference = (SoftEntry) delegate.removeObject(key);
     return softReference == null ? null : softReference.get();
   }
 
