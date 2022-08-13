@@ -28,4 +28,6 @@ public interface BlogMapper {
 
   List<Map> selectAllPosts(RowBounds rowBounds, Object param);
 
+  List<Map> selectBlogJoinedConstructorWithPostsAndAuthor(int id);
+
 }

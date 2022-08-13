@@ -661,6 +661,15 @@ class SqlSessionTest extends BaseDataTest {
     }
   }
 
+  @Test
+  void shouldNotNPEResultsUsingMapperClass() {
+    try (SqlSession session = sqlMapper.openSession()) {
+      BlogMapper mapper = session.getMapper(BlogMapper.class);
+      List<Map> postsAndAuthor = mapper.selectBlogJoinedConstructorWithPostsAndAuthor(1);
+      assertNotNull(postsAndAuthor);
+    }
+  }
+
   private static class TestResultHandler implements ResultHandler {
     int count = 0;
     @Override
