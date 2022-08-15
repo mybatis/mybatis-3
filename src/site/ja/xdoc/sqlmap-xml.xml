@@ -725,7 +725,7 @@ public class User {
         <source><![CDATA[<select id="selectUsers" resultType="User">
   select
     user_id     as "id",
-    user_name     as "username",
+    user_name     as "userName",
     hashed_password   as "hashedPassword"
   from some_table
   where id = #{id}
@@ -740,7 +740,7 @@ public class User {
         <source><![CDATA[<resultMap id="userResultMap" type="User">
   <id property="id" column="user_id" />
   <result property="username" column="user_name"/>
-  <result property="hashedPassword" column="hashed_password"/>
+  <result property="password" column="hashed_password"/>
 </resultMap>]]></source>
 
         <p>
