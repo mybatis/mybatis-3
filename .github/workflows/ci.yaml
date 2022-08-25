@@ -37,13 +37,13 @@ jobs:
         with:
           website: jdk.java.net
           release: ${{ matrix.java }}
-        if: ${{ matrix.java != '8' && matrix.java != '11' && matrix.java != '17' }}
+        if: ${{ matrix.java != '11' && matrix.java != '17' }}
       - name: Set up older JDK
         uses: actions/setup-java@v3
         with:
           java-version: ${{ matrix.java }}
           distribution: ${{ matrix.distribution }}
-        if: ${{ matrix.java == '8' || matrix.java == '11' || matrix.java == '17' }}
+        if: ${{ matrix.java == '11' || matrix.java == '17' }}
       - name: Print JDK Version
         run: java -version
       - name: Cache local Maven m2
