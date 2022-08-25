@@ -140,6 +140,7 @@
     <osgi.dynamicImport>*</osgi.dynamicImport>
     <spotbugs.onlyAnalyze>org.apache.ibatis.*</spotbugs.onlyAnalyze>
     <project.build.outputTimestamp>1653336221</project.build.outputTimestamp>
+    <argLine>-Djdk.attach.allowAttachSelf -Xmx2048m</argLine>
   </properties>
 
   <dependencies>
@@ -331,7 +332,6 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
-          <argLine>${argLine} -Xmx2048m</argLine>
           <systemProperties>
             <property>
               <name>derby.stream.error.file</name>
