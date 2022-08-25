@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -82,7 +83,7 @@ class ExternalResourcesTest {
   void testGetConfiguredTemplate() {
     String templateName = "";
 
-    try (FileWriter fileWriter = new FileWriter(tempFile)) {
+    try (FileWriter fileWriter = new FileWriter(tempFile, StandardCharsets.UTF_8)) {
       fileWriter.append("new_command.template=templates/col_new_template_migration.sql");
       fileWriter.flush();
       templateName = ExternalResources.getConfiguredTemplate(tempFile.getAbsolutePath(), "new_command.template");
