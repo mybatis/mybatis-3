@@ -139,4 +139,23 @@ class ReturnInstanceForEmptyRowTest {
       assertNotNull(parent.getPets().get(0));
     }
   }
+
+  @Test
+  void testConstructorAutomapping() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      ImmutableParent parent = mapper.selectImmutable(1);
+      assertNotNull(parent);
+    }
+  }
+
+  @Test
+  void testArgNameBasedConstructorAutomapping() {
+    sqlSessionFactory.getConfiguration().setArgNameBasedConstructorAutoMapping(true);
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      ImmutableParent parent = mapper.selectImmutable(1);
+      assertNotNull(parent);
+    }
+  }
 }
