@@ -56,4 +56,7 @@ public interface Mapper {
       "left join child c on c.parent_id = p.id",
       "left join pet e on e.parent_id = p.id", "where p.id = #{id}" })
   Parent getTwoCollections(Integer id);
+
+  @Select("select col1, col2 from parent where id = #{id}")
+  ImmutableParent selectImmutable(Integer id);
 }

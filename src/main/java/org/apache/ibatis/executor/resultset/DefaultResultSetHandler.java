@@ -750,7 +750,9 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       foundValues = applyColumnOrderBasedConstructorAutomapping(rsw, constructorArgTypes, constructorArgs, constructor,
           foundValues);
     }
-    return foundValues ? objectFactory.create(resultType, constructorArgTypes, constructorArgs) : null;
+    return foundValues || configuration.isReturnInstanceForEmptyRow()
+        ? objectFactory.create(resultType, constructorArgTypes, constructorArgs)
+        : null;
   }
 
   private boolean applyColumnOrderBasedConstructorAutomapping(ResultSetWrapper rsw, List<Class<?>> constructorArgTypes,
