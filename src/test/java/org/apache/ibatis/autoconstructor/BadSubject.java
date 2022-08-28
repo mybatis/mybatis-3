@@ -21,16 +21,22 @@ public class BadSubject {
   private final int age;
   private final Height height;
   private final Double weight;
+  private final Width width;
 
-  public BadSubject(final int id, final String name, final int age, final Height height, final Double weight) {
+  public BadSubject(final int id, final String name, final int age, final Height height, final Double weight, final Width width) {
     this.id = id;
     this.name = name;
     this.age = age;
     this.height = height;
     this.weight = weight == null ? 0 : weight;
+    this.width = width;
   }
 
   private class Height {
+
+  }
+
+  public static class Width {
 
   }
 }

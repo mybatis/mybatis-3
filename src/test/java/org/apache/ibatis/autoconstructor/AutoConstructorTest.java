@@ -23,12 +23,15 @@ import java.io.Reader;
 import java.util.List;
 
 import org.apache.ibatis.BaseDataTest;
+import org.apache.ibatis.builder.typehandler.WidthTypeHandler;
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.apache.ibatis.type.TypeHandlerRegistry;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -85,6 +88,9 @@ class AutoConstructorTest {
 
   @Test
   void badSubject() {
+    Configuration configuration = sqlSessionFactory.getConfiguration();
+    final TypeHandlerRegistry registry = configuration.getTypeHandlerRegistry();
+    registry.register(BadSubject.Width.class, WidthTypeHandler.class);
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       final AutoConstructorMapper mapper = sqlSession.getMapper(AutoConstructorMapper.class);
       assertThrows(PersistenceException.class, mapper::getBadSubjects);
