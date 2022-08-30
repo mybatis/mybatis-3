@@ -22,11 +22,11 @@
   <parent>
     <groupId>org.mybatis</groupId>
     <artifactId>mybatis-parent</artifactId>
-    <version>34</version>
+    <version>35-SNAPSHOT</version>
     <relativePath />
   </parent>
 
-  <artifactId>mybatis</artifactId>
+  <artifactId>mybatis-3</artifactId>
   <version>3.5.11-SNAPSHOT</version>
   <packaging>jar</packaging>
 
@@ -147,15 +147,15 @@
       <groupId>ognl</groupId>
       <artifactId>ognl</artifactId>
       <version>3.3.2</version>
-      <scope>compile</scope>
-      <optional>true</optional>
+<!--      <scope>compile</scope>-->
+<!--      <optional>true</optional>-->
     </dependency>
     <dependency>
       <groupId>org.javassist</groupId>
       <artifactId>javassist</artifactId>
       <version>3.29.0-GA</version>
-      <scope>compile</scope>
-      <optional>true</optional>
+<!--      <scope>compile</scope>-->
+<!--      <optional>true</optional>-->
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -278,7 +278,7 @@
     <dependency>
       <groupId>com.microsoft.sqlserver</groupId>
       <artifactId>mssql-jdbc</artifactId>
-      <version>11.1.1.jre8-preview</version>
+      <version>11.1.2.jre8-preview</version>
       <scope>provided</scope>
     </dependency>
     <dependency>

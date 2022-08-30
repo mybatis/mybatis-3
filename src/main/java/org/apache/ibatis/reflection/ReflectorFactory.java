@@ -15,6 +15,9 @@
  */
 package org.apache.ibatis.reflection;
 
+/**
+ * 反射工厂类
+ */
 public interface ReflectorFactory {
 
   boolean isClassCacheEnabled();

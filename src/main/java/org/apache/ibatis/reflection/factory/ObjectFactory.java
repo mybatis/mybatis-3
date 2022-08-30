@@ -26,48 +26,40 @@ import java.util.Properties;
 public interface ObjectFactory {
 
   /**
-   * Sets configuration properties.
-   * @param properties configuration properties
+   * 设置配置属性。
+   *
+   * @param properties 配置属性
    */
   default void setProperties(Properties properties) {
     // NOP
   }
 
   /**
-   * Creates a new object with default constructor.
+   * 使用默认构造函数创建一个新对象。
    *
-   * @param <T>
-   *          the generic type
-   * @param type
-   *          Object type
+   * @param <T>  泛型
+   * @param type 对象类型
    * @return the t
    */
   <T> T create(Class<T> type);
 
   /**
-   * Creates a new object with the specified constructor and params.
+   * 使用指定的构造函数和参数创建一个新对象。
    *
-   * @param <T>
-   *          the generic type
-   * @param type
-   *          Object type
-   * @param constructorArgTypes
-   *          Constructor argument types
-   * @param constructorArgs
-   *          Constructor argument values
+   * @param <T>                 泛型
+   * @param type                对象类型
+   * @param constructorArgTypes 构造函数参数类型列表
+   * @param constructorArgs     构造函数参数列表
    * @return the t
    */
   <T> T create(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs);
 
   /**
-   * Returns true if this object can have a set of other objects.
-   * It's main purpose is to support non-java.util.Collection objects like Scala collections.
+   * 判断传入的类型是否属于集合类
    *
-   * @param <T>
-   *          the generic type
-   * @param type
-   *          Object type
-   * @return whether it is a collection or not
+   * @param <T>  泛型
+   * @param type 对象类型
+   * @return 类型是否属于集合类
    * @since 3.1.0
    */
   <T> boolean isCollection(Class<T> type);

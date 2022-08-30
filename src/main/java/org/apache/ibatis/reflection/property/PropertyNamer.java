@@ -36,7 +36,7 @@ public final class PropertyNamer {
     } else {
       throw new ReflectionException("Error parsing property name '" + name + "'.  Didn't start with 'is', 'get' or 'set'.");
     }
-
+    // 长度为1时，或 长度大于1且第二个字符不是大写 isBD时，就是BD
     if (name.length() == 1 || (name.length() > 1 && !Character.isUpperCase(name.charAt(1)))) {
       name = name.substring(0, 1).toLowerCase(Locale.ENGLISH) + name.substring(1);
     }
@@ -55,5 +55,7 @@ public final class PropertyNamer {
   public static boolean isSetter(String name) {
     return name.startsWith("set") && name.length() > 3;
   }
+
+
 
 }

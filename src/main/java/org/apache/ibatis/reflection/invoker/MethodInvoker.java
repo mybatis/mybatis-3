@@ -21,6 +21,7 @@ import java.lang.reflect.Method;
 import org.apache.ibatis.reflection.Reflector;
 
 /**
+ * 负责对象方法的操作
  * @author Clinton Begin
  */
 public class MethodInvoker implements Invoker {
@@ -31,6 +32,7 @@ public class MethodInvoker implements Invoker {
   public MethodInvoker(Method method) {
     this.method = method;
 
+    // 当入参只有一个的时候，type为入参的类型，否则为出参的类型
     if (method.getParameterTypes().length == 1) {
       type = method.getParameterTypes()[0];
     } else {

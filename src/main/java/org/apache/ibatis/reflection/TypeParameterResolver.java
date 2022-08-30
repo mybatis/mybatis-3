@@ -24,8 +24,10 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
 import java.util.Arrays;
+import java.util.List;
 
 /**
+ * 泛型解析器
  * @author Iwao AVE!
  */
 public class TypeParameterResolver {
@@ -74,8 +76,11 @@ public class TypeParameterResolver {
    *         they will be resolved to the actual runtime {@link Type}s.
    */
   public static Type[] resolveParamTypes(Method method, Type srcType) {
+    // 取出方法的所有输入参数
     Type[] paramTypes = method.getGenericParameterTypes();
+    // 定义目标方法的类或接口
     Class<?> declaringClass = method.getDeclaringClass();
+
     Type[] result = new Type[paramTypes.length];
     for (int i = 0; i < paramTypes.length; i++) {
       result[i] = resolveType(paramTypes[i], srcType, declaringClass);
@@ -85,10 +90,13 @@ public class TypeParameterResolver {
 
   private static Type resolveType(Type type, Type srcType, Class<?> declaringClass) {
     if (type instanceof TypeVariable) {
+      // 类型变量,Map<K,V>中 K和V就是类型变量,也就是泛型
       return resolveTypeVar((TypeVariable<?>) type, srcType, declaringClass);
     } else if (type instanceof ParameterizedType) {
+      // 参数化类型.例如Collection<String>
       return resolveParameterizedType((ParameterizedType) type, srcType, declaringClass);
     } else if (type instanceof GenericArrayType) {
+      // 包含ParameterizedType或TypeVariable元素的列表
       return resolveGenericArrayType((GenericArrayType) type, srcType, declaringClass);
     } else {
       return type;
@@ -112,7 +120,15 @@ public class TypeParameterResolver {
     }
   }
 
+  /**
+   * 解析参数化类型的实际结果
+   * @param parameterizedType 参数化类型的变量
+   * @param srcType 变量所属的类
+   * @param declaringClass  变量声明的类
+   * @return  参数化类型的实际结果
+   */
   private static ParameterizedType resolveParameterizedType(ParameterizedType parameterizedType, Type srcType, Class<?> declaringClass) {
+    // 变量的原始类型
     Class<?> rawType = (Class<?>) parameterizedType.getRawType();
     Type[] typeArgs = parameterizedType.getActualTypeArguments();
     Type[] args = new Type[typeArgs.length];

@@ -15,11 +15,7 @@
  */
 package org.apache.ibatis.io;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
@@ -27,12 +23,13 @@ import java.util.Properties;
 
 /**
  * A class to simplify access to resources through the classloader.
+ * 通过类加载器简化对资源的访问的类。
  *
  * @author Clinton Begin
  */
 public class Resources {
 
-  private static ClassLoaderWrapper classLoaderWrapper = new ClassLoaderWrapper();
+  private final static ClassLoaderWrapper classLoaderWrapper = new ClassLoaderWrapper();
 
   /**
    * Charset to use when calling getResourceAsReader.
@@ -102,9 +99,10 @@ public class Resources {
 
   /**
    * Returns a resource on the classpath as a Stream object
+   * 将类路径上的资源作为 Stream 对象返回
    *
-   * @param loader   The classloader used to fetch the resource
-   * @param resource The resource to find
+   * @param loader   用于获取资源的类加载器
+   * @param resource 要查找的资源
    * @return The resource
    * @throws java.io.IOException If the resource cannot be found or read
    */

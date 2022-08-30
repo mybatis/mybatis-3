@@ -48,6 +48,7 @@ public class DefaultObjectFactory implements ObjectFactory, Serializable {
   @SuppressWarnings("unchecked")
   @Override
   public <T> T create(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
+    // 传入的目标类型是接口时，会给出默认的实现类
     Class<?> classToCreate = resolveInterface(type);
     // we know types are assignable
     return (T) instantiateClass(classToCreate, constructorArgTypes, constructorArgs);
@@ -56,11 +57,13 @@ public class DefaultObjectFactory implements ObjectFactory, Serializable {
   private  <T> T instantiateClass(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
     try {
       Constructor<T> constructor;
+      // 如果没有参数类型列表 or 没有参数列表，则使用无参构造器构造函数
       if (constructorArgTypes == null || constructorArgs == null) {
         constructor = type.getDeclaredConstructor();
         try {
           return constructor.newInstance();
         } catch (IllegalAccessException e) {
+          // 发生异常，修改构造函数的访问属性后再次尝试
           if (Reflector.canControlMemberAccessible()) {
             constructor.setAccessible(true);
             return constructor.newInstance();
@@ -69,10 +72,12 @@ public class DefaultObjectFactory implements ObjectFactory, Serializable {
           }
         }
       }
+      // 使用有参构造器构造函数
       constructor = type.getDeclaredConstructor(constructorArgTypes.toArray(new Class[0]));
       try {
         return constructor.newInstance(constructorArgs.toArray(new Object[0]));
       } catch (IllegalAccessException e) {
+        // 发生异常，修改构造函数的访问属性后再次尝试
         if (Reflector.canControlMemberAccessible()) {
           constructor.setAccessible(true);
           return constructor.newInstance(constructorArgs.toArray(new Object[0]));
@@ -110,4 +115,38 @@ public class DefaultObjectFactory implements ObjectFactory, Serializable {
     return Collection.class.isAssignableFrom(type);
   }
 
+
+
+  public static class HoboTest{
+
+
+    private String name;
+    // public HoboTest() {
+    //   name = "default";
+    // }
+
+    public HoboTest(String name) {
+      this.name = name;
+    }
+
+    @Override
+    public String toString() {
+      return "HoboTest{" +
+        "name='" + name + '\'' +
+        '}';
+    }
+  }
+
+  public static void main(String[] args) throws Exception {
+    Constructor<HoboTest> constructor = HoboTest.class.getDeclaredConstructor();
+
+    HoboTest hoboTest1 = constructor.newInstance();
+    System.out.println(hoboTest1);
+
+    Constructor<HoboTest> constructor2 = HoboTest.class.getConstructor(String.class);
+
+    HoboTest hoboTest2 = constructor2.newInstance("hahah");
+
+    System.out.println(hoboTest2);
+  }
 }

@@ -29,13 +29,17 @@ public class PropertyTokenizer implements Iterator<PropertyTokenizer> {
   public PropertyTokenizer(String fullname) {
     int delim = fullname.indexOf('.');
     if (delim > -1) {
+      // 找到了，'.'之前的就是name
       name = fullname.substring(0, delim);
+      // '.'之后的就是children
       children = fullname.substring(delim + 1);
     } else {
+      // 否则就是name
       name = fullname;
       children = null;
     }
     indexedName = name;
+    // 找name是否存在'['，  例如list[0]-> index=0， name=list
     delim = name.indexOf('[');
     if (delim > -1) {
       index = name.substring(delim + 1, name.length() - 1);
@@ -72,5 +76,15 @@ public class PropertyTokenizer implements Iterator<PropertyTokenizer> {
   @Override
   public void remove() {
     throw new UnsupportedOperationException("Remove is not supported, as it has no meaning in the context of properties.");
+  }
+
+  @Override
+  public String toString() {
+    return "PropertyTokenizer{" +
+      "name='" + name + '\'' +
+      ", indexedName='" + indexedName + '\'' +
+      ", index='" + index + '\'' +
+      ", children='" + children + '\'' +
+      '}';
   }
 }

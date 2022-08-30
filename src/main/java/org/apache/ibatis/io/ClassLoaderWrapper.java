@@ -69,6 +69,7 @@ public class ClassLoaderWrapper {
 
   /**
    * Get a resource from the classpath, starting with a specific class loader
+   * 从类路径中获取资源，从特定的类加载器开始
    *
    * @param resource    - the resource to find
    * @param classLoader - the first class loader to try
@@ -112,10 +113,10 @@ public class ClassLoaderWrapper {
     for (ClassLoader cl : classLoader) {
       if (null != cl) {
 
-        // try to find the resource as passed
+        // 尝试查找已传递的资源
         InputStream returnValue = cl.getResourceAsStream(resource);
 
-        // now, some class loaders want this leading "/", so we'll add it and try again if we didn't find the resource
+        // 现在，一些类加载器想要这个前导“/”，所以我们将添加它，如果我们没有找到资源再试一次
         if (null == returnValue) {
           returnValue = cl.getResourceAsStream("/" + resource);
         }

@@ -16,12 +16,24 @@
 package org.apache.ibatis.parsing;
 
 /**
+ * 令牌解析器
+ *
  * @author Clinton Begin
  */
 public class GenericTokenParser {
 
+  /**
+   * 开始记号
+   */
   private final String openToken;
+  /**
+   * 结束记号
+   */
   private final String closeToken;
+
+  /**
+   * 记号处理器
+   */
   private final TokenHandler handler;
 
   public GenericTokenParser(String openToken, String closeToken, TokenHandler handler) {
@@ -34,7 +46,7 @@ public class GenericTokenParser {
     if (text == null || text.isEmpty()) {
       return "";
     }
-    // search open token
+    // 不存在开始标记，直接返回原文本
     int start = text.indexOf(openToken);
     if (start == -1) {
       return text;
@@ -43,13 +55,15 @@ public class GenericTokenParser {
     int offset = 0;
     final StringBuilder builder = new StringBuilder();
     StringBuilder expression = null;
+    // 开始doWhile循环
     do {
+      // 开始记号的前一个字符如果是转义符“\”
       if (start > 0 && src[start - 1] == '\\') {
-        // this open token is escaped. remove the backslash and continue.
+        // 这个开始记号被转义了，删除反斜杠并继续
         builder.append(src, offset, start - offset - 1).append(openToken);
         offset = start + openToken.length();
       } else {
-        // found open token. let's search close token.
+        // 找到开始记号，搜索结束记号
         if (expression == null) {
           expression = new StringBuilder();
         } else {
@@ -59,8 +73,9 @@ public class GenericTokenParser {
         offset = start + openToken.length();
         int end = text.indexOf(closeToken, offset);
         while (end > -1) {
+          // 判断结束记号前一个字符是不是转义符
           if (end > offset && src[end - 1] == '\\') {
-            // this close token is escaped. remove the backslash and continue.
+            // 这个结束记号被转义了，删除反斜杠并继续
             expression.append(src, offset, end - offset - 1).append(closeToken);
             offset = end + closeToken.length();
             end = text.indexOf(closeToken, offset);
@@ -70,7 +85,7 @@ public class GenericTokenParser {
           }
         }
         if (end == -1) {
-          // close token was not found.
+          // 未找到关闭记号，直接结束
           builder.append(src, start, src.length - start);
           offset = src.length;
         } else {

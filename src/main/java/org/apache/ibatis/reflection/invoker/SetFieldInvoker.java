@@ -20,6 +20,7 @@ import java.lang.reflect.Field;
 import org.apache.ibatis.reflection.Reflector;
 
 /**
+ * 负责对象属性的写操作
  * @author Clinton Begin
  */
 public class SetFieldInvoker implements Invoker {

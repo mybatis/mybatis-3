@@ -374,6 +374,7 @@ class TypeParameterResolverTest {
   void testField_GenericField() throws Exception {
     Class<?> clazz = SubCalculator.class;
     Class<?> declaredClass = Calculator.class;
+
     Field field = declaredClass.getDeclaredField("fld");
     Type result = TypeParameterResolver.resolveFieldType(field, clazz);
     assertEquals(String.class, result);
@@ -457,4 +458,62 @@ class TypeParameterResolverTest {
   interface IfaceB extends ParentIface<BB> {}
   interface ParentIface<T> {List<T> m();}
   // @formatter:on
+
+  @Test
+  public void test() throws NoSuchFieldException {
+
+    class Test<T> {
+      private T data;
+
+      public T getData() {
+        return data;
+      }
+
+      public void setData(T data) {
+        this.data = data;
+      }
+    }
+
+    class TestSon extends Test<String> {
+    }
+
+    TestSon testSon = new TestSon();
+    Field data = testSon.getClass().getDeclaredField("data");
+
+    Type genericType = data.getGenericType();
+    // 申明类
+    Class<?> declaringClass = data.getDeclaringClass();
+  }
+
+  @Test
+  public void test2() throws NoSuchFieldException {
+
+    class Test<T> {
+      private List<String> stringList;
+
+      public List<String> getStringList() {
+        return stringList;
+      }
+
+      public void setStringList(List<String> stringList) {
+        this.stringList = stringList;
+      }
+    }
+
+    class TestSon extends Test<String> {
+    }
+
+    TestSon testSon = new TestSon();
+
+    Field field = Test.class .getDeclaredField("stringList");
+
+    Type genericType = field.getGenericType();
+    // 申明类
+    Class<?> declaringClass = field.getDeclaringClass();
+
+    TypeParameterResolver.resolveFieldType(field, testSon.getClass());
+  }
+
+
+
 }

@@ -20,6 +20,7 @@ import java.lang.reflect.Field;
 import org.apache.ibatis.reflection.Reflector;
 
 /**
+ * 负责对象属性的读取操作
  * @author Clinton Begin
  */
 public class GetFieldInvoker implements Invoker {
@@ -29,9 +30,11 @@ public class GetFieldInvoker implements Invoker {
     this.field = field;
   }
 
+
   @Override
   public Object invoke(Object target, Object[] args) throws IllegalAccessException {
     try {
+      // 通过反射获取目标对象的属性
       return field.get(target);
     } catch (IllegalAccessException e) {
       if (Reflector.canControlMemberAccessible()) {
@@ -46,5 +49,35 @@ public class GetFieldInvoker implements Invoker {
   @Override
   public Class<?> getType() {
     return field.getType();
+  }
+
+  public static class Hobo{
+    private String name;
+
+    public Hobo(String name) {
+      this.name = name;
+    }
+  }
+
+  public static void main(String[] args) throws IllegalAccessException {
+    Field[] declaredFields = Hobo.class.getDeclaredFields();
+    Field declaredField = declaredFields[0];
+    Hobo hobo = new Hobo("123");
+
+    try {
+      System.out.println(declaredField.get(hobo));
+    } catch (Exception e){
+      System.out.println("exception");
+      declaredField.setAccessible(true);
+      System.out.println(declaredField.get(hobo));
+    }
+
+    Object o = new Object();
+
+    try {
+      System.out.println(declaredField.get(o));
+    } catch (Exception e){
+      System.out.println("exception:"  + e);
+    }
   }
 }

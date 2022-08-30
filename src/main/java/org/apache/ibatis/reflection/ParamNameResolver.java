@@ -61,6 +61,7 @@ public class ParamNameResolver {
     final SortedMap<Integer, String> map = new TreeMap<>();
     int paramCount = paramAnnotations.length;
     // get names from @Param annotations
+    // 解析参数，将@param注解的value值替换成参数名
     for (int paramIndex = 0; paramIndex < paramCount; paramIndex++) {
       if (isSpecialParameter(paramTypes[paramIndex])) {
         // skip special parameters
@@ -77,6 +78,7 @@ public class ParamNameResolver {
       if (name == null) {
         // @Param was not specified.
         if (useActualParamName) {
+          // 实际的参数名
           name = getActualParamName(method, paramIndex);
         }
         if (name == null) {

@@ -16,6 +16,7 @@
 package org.apache.ibatis.util;
 
 import java.util.AbstractMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
@@ -44,5 +45,12 @@ public class MapUtil {
 
   private MapUtil() {
     super();
+  }
+
+  public static void main(String[] args) {
+    HashMap<String, Object> objectObjectHashMap = new HashMap<>();
+    Object test = MapUtil.computeIfAbsent(objectObjectHashMap, "test", s -> "s");
+    System.out.println(test);
+
   }
 }

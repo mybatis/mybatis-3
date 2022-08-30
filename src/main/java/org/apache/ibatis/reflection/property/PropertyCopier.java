@@ -28,6 +28,9 @@ public final class PropertyCopier {
     // Prevent Instantiation of Static Class
   }
 
+  /**
+   * 对象属性复制
+   */
   public static void copyBeanProperties(Class<?> type, Object sourceBean, Object destinationBean) {
     Class<?> parent = type;
     while (parent != null) {
@@ -48,8 +51,41 @@ public final class PropertyCopier {
           // Nothing useful to do, will only fail on final fields, which will be ignored.
         }
       }
+      // 把父类的属性也会复制
       parent = parent.getSuperclass();
     }
+  }
+
+  public static class Hobo{
+    String name;
+  }
+  public static class HoboSon extends Hobo{
+    String sonName;
+
+    public HoboSon(String sonName, String name) {
+      this.sonName = sonName;
+      this.name = name;
+    }
+
+    public HoboSon() {
+    }
+
+    @Override
+    public String toString() {
+      return "HoboSon{" +
+        "name='" + name + '\'' +
+        ", sonName='" + sonName + '\'' +
+        '}';
+    }
+  }
+
+  public static void main(String[] args) {
+    HoboSon hoboSon = new HoboSon("hobo", "cool");
+    HoboSon hoboSon2 = new HoboSon();
+
+    PropertyCopier.copyBeanProperties(HoboSon.class, hoboSon, hoboSon2);
+
+    System.out.println(hoboSon2);
   }
 
 }
