@@ -16,7 +16,7 @@
        limitations under the License.
 
 -->
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.apache.ibatis.submitted.awful_table.AwfulTableMapper" >
   <resultMap id="BaseResultMap" type="org.apache.ibatis.submitted.awful_table.AwfulTable" >
     <id column="A_CuStOmEr iD" property="customerId" jdbcType="INTEGER" />
