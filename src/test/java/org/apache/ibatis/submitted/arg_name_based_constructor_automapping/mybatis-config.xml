@@ -38,6 +38,6 @@
 
   <mappers>
     <mapper
-      class="org.apache.ibatis.submitted.arg_name_baesd_constructor_automapping.Mapper" />
+      class="org.apache.ibatis.submitted.arg_name_based_constructor_automapping.Mapper" />
   </mappers>
 </configuration>

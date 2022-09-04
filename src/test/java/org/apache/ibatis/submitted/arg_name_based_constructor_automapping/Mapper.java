@@ -13,7 +13,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.submitted.arg_name_baesd_constructor_automapping;
+package org.apache.ibatis.submitted.arg_name_based_constructor_automapping;
 
 import org.apache.ibatis.annotations.Select;
 
