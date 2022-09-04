@@ -147,7 +147,7 @@ class XmlConfigBuilderTest {
   @Test
   void registerJavaTypeInitializingTypeHandler() {
     final String MAPPER_CONFIG = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
-        + "<!DOCTYPE configuration PUBLIC \"-//mybatis.org//DTD Config 3.0//EN\" \"http://mybatis.org/dtd/mybatis-3-config.dtd\">\n"
+        + "<!DOCTYPE configuration PUBLIC \"-//mybatis.org//DTD Config 3.0//EN\" \"https://mybatis.org/dtd/mybatis-3-config.dtd\">\n"
         + "<configuration>\n"
         + "  <typeHandlers>\n"
         + "    <typeHandler javaType=\"org.apache.ibatis.builder.XmlConfigBuilderTest$MyEnum\"\n"
@@ -269,7 +269,7 @@ class XmlConfigBuilderTest {
   @Test
   void unknownSettings() {
     final String MAPPER_CONFIG = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
-            + "<!DOCTYPE configuration PUBLIC \"-//mybatis.org//DTD Config 3.0//EN\" \"http://mybatis.org/dtd/mybatis-3-config.dtd\">\n"
+            + "<!DOCTYPE configuration PUBLIC \"-//mybatis.org//DTD Config 3.0//EN\" \"https://mybatis.org/dtd/mybatis-3-config.dtd\">\n"
             + "<configuration>\n"
             + "  <settings>\n"
             + "    <setting name=\"foo\" value=\"bar\"/>\n"
@@ -285,7 +285,7 @@ class XmlConfigBuilderTest {
   @Test
   void unknownJavaTypeOnTypeHandler() {
     final String MAPPER_CONFIG = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
-            + "<!DOCTYPE configuration PUBLIC \"-//mybatis.org//DTD Config 3.0//EN\" \"http://mybatis.org/dtd/mybatis-3-config.dtd\">\n"
+            + "<!DOCTYPE configuration PUBLIC \"-//mybatis.org//DTD Config 3.0//EN\" \"https://mybatis.org/dtd/mybatis-3-config.dtd\">\n"
             + "<configuration>\n"
             + "  <typeAliases>\n"
             + "    <typeAlias type=\"a.b.c.Foo\"/>\n"
@@ -301,7 +301,7 @@ class XmlConfigBuilderTest {
   @Test
   void propertiesSpecifyResourceAndUrlAtSameTime() {
     final String MAPPER_CONFIG = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
-            + "<!DOCTYPE configuration PUBLIC \"-//mybatis.org//DTD Config 3.0//EN\" \"http://mybatis.org/dtd/mybatis-3-config.dtd\">\n"
+            + "<!DOCTYPE configuration PUBLIC \"-//mybatis.org//DTD Config 3.0//EN\" \"https://mybatis.org/dtd/mybatis-3-config.dtd\">\n"
             + "<configuration>\n"
             + "  <properties resource=\"a/b/c/foo.properties\" url=\"file:./a/b/c/jdbc.properties\"/>\n"
             + "</configuration>\n";

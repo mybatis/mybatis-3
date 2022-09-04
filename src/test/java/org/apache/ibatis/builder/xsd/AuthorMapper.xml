@@ -19,7 +19,7 @@
 <mapper namespace="org.apache.ibatis.builder.xsd.AuthorMapper"
                 xmlns="http://mybatis.org/schema/mybatis-mapper"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                xsi:schemaLocation="http://mybatis.org/schema/mybatis-mapper http://mybatis.org/schema/mybatis-mapper.xsd">
+                xsi:schemaLocation="http://mybatis.org/schema/mybatis-mapper https://mybatis.org/schema/mybatis-mapper.xsd">
 
     <parameterMap id="selectAuthor" type="org.apache.ibatis.domain.blog.Author">
         <parameter property="id" />

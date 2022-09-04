@@ -8,7 +8,7 @@ https://stackoverflow.com/questions/ask?tags=mybatis
 
 Question?
 ======================
-Please use the mailing list. http://groups.google.com/group/mybatis-user
+Please use the mailing list. https://groups.google.com/group/mybatis-user
 Or Stack Overflow with 'mybatis' tag. https://stackoverflow.com/questions/ask?tags=mybatis
 Questions on this tracker will be closed without comment.
 
@@ -26,7 +26,7 @@ And we spend a lot of time just trying to reproduce the reported problem, so ple
 Feature request?
 =======================
 - Please delete the BUG REPORT FORM below and describe the feature.
-- It is a good idea to discuss your changes on the mailing list to get feedback from the community. http://groups.google.com/group/mybatis-user
+- It is a good idea to discuss your changes on the mailing list to get feedback from the community. https://groups.google.com/group/mybatis-user
 - If you have a patch with unit tests, send a pull request. Please see the wiki page : https://github.com/mybatis/mybatis-3/wiki/Contribute
 -->
 

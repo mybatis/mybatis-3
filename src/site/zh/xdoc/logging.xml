@@ -17,7 +17,7 @@
 
 -->
 <document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
 
   <properties>
     <title>MyBatis 3 | 日志</title>
@@ -72,13 +72,13 @@ org.apache.ibatis.logging.LogFactory.useStdOutLogging();
       <p>关于 SLF4J、Apache Commons Logging、Apache Log4J 和 JDK Logging 的 API 介绍不在本文档介绍范围内。不过，下面的例子可以作为一个快速入门。关于这些日志框架的更多信息，可以参考以下链接：</p>
       <ul>
         <li>
-          <a href="http://www.slf4j.org/">SLF4J</a>
+          <a href="https://www.slf4j.org/">SLF4J</a>
         </li>
         <li>
-          <a href="http://commons.apache.org/logging">Apache Commons Logging</a>
+          <a href="https://commons.apache.org/proper/commons-logging/">Apache Commons Logging</a>
         </li>
         <li>
-          <a href="http://logging.apache.org/log4j/">Apache Log4j 1.x and 2.x</a>
+          <a href="https://logging.apache.org/log4j/2.x/">Apache Log4j 2.x</a>
         </li>
         <li>
           <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/logging/overview.html">JDK Logging API</a>
@@ -178,7 +178,7 @@ public interface BlogMapper {
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.mybatis.example.BlogMapper">
   <select id="selectBlog" resultType="Blog">
     select * from Blog where id = #{id}

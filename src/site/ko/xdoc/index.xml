@@ -17,7 +17,7 @@
 
 -->
 <document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
 
   <properties>
     <title>마이바티스 3 | 소개</title>
@@ -48,7 +48,7 @@
       </subsection>
 
       <subsection name="번역에 대하여">
-		<p>번역자 : 이동국(fromm0@gmail.com, http://ldg.pe.kr, https://www.facebook.com/dongguk.lee.3)</p>
+		<p>번역자 : 이동국(fromm0@gmail.com, https://ldg.pe.kr, https://www.facebook.com/dongguk.lee.3)</p>
         <p>다음의 몇가지 언어로 번역된 마이바티스 문서를 읽을수 있다.</p>
         <ul class="i18n">
           <li class="en"><a href="../getting-started.html">영어</a></li>
