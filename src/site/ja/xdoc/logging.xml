@@ -17,7 +17,7 @@
 
 -->
 <document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
 
   <properties>
     <title>MyBatis 3 | ロギング</title>
@@ -77,13 +77,13 @@ org.apache.ibatis.logging.LogFactory.useStdOutLogging();
       </p>
       <ul>
         <li>
-          <a href="http://www.slf4j.org/">SLF4J</a>
+          <a href="https://www.slf4j.org/">SLF4J</a>
         </li>
         <li>
-          <a href="http://commons.apache.org/logging">Apache Commons Logging</a>
+          <a href="https://commons.apache.org/proper/commons-logging/">Apache Commons Logging</a>
         </li>
         <li>
-          <a href="http://logging.apache.org/log4j/">Apache Log4j</a>
+          <a href="https://logging.apache.org/log4j/2.x/">Apache Log4j</a>
         </li>
         <li>
           <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/logging/overview.html">JDK Logging API</a>
