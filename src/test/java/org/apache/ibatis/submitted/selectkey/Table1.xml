@@ -16,7 +16,7 @@
        limitations under the License.
 
 -->
-<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "https://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
 <mapper namespace="org.apache.ibatis.submitted.selectkey.Table1">
   <insert id="insert" parameterType="map">
     insert into table1 (name) values (#{name})
