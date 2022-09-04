@@ -16,9 +16,9 @@
        limitations under the License.
 
 -->
-<document xmlns="http://maven.apache.org/DOCUMENT/1.0.1"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/DOCUMENT/1.0.1 https://maven.apache.org/xsd/document-1.0.1.xsd"
+<document xmlns="https://maven.apache.org/DOCUMENT/1.0.1"
+  xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="https://maven.apache.org/DOCUMENT/1.0.1 https://maven.apache.org/xsd/document-1.0.1.xsd"
   outputName="${project.artifactId}-${project.version}">
 
   <meta>
@@ -42,7 +42,7 @@
     <coverSubTitle>v. ${project.version}</coverSubTitle>
     <coverType>User Guide</coverType>
     <projectName>${project.name}</projectName>
-    <projectLogo>http://mybatis.github.io/images/mybatis-logo.png</projectLogo>
+    <projectLogo>https://mybatis.github.io/images/mybatis-logo.png</projectLogo>
     <companyName>${project.organization.name}</companyName>
   </cover>
 </document>
