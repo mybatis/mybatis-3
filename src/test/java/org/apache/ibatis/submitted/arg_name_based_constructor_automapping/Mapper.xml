@@ -18,17 +18,17 @@
 -->
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper
-  namespace="org.apache.ibatis.submitted.arg_name_baesd_constructor_automapping.Mapper">
+  namespace="org.apache.ibatis.submitted.arg_name_based_constructor_automapping.Mapper">
 
   <resultMap
-    type="org.apache.ibatis.submitted.arg_name_baesd_constructor_automapping.Task"
+    type="org.apache.ibatis.submitted.arg_name_based_constructor_automapping.Task"
     id="taskRM">
     <association property="assignee" resultMap="userRM"
       columnPrefix="u_" />
   </resultMap>
 
   <resultMap autoMapping="true"
-    type="org.apache.ibatis.submitted.arg_name_baesd_constructor_automapping.User"
+    type="org.apache.ibatis.submitted.arg_name_based_constructor_automapping.User"
     id="userRM">
   </resultMap>
 

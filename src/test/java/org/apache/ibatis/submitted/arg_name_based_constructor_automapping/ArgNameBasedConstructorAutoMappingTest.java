@@ -13,7 +13,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.submitted.arg_name_baesd_constructor_automapping;
+package org.apache.ibatis.submitted.arg_name_based_constructor_automapping;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -37,13 +37,13 @@ class ArgNameBasedConstructorAutoMappingTest {
   static void setUp() throws Exception {
     // create an SqlSessionFactory
     try (Reader reader = Resources
-        .getResourceAsReader("org/apache/ibatis/submitted/arg_name_baesd_constructor_automapping/mybatis-config.xml")) {
+        .getResourceAsReader("org/apache/ibatis/submitted/arg_name_based_constructor_automapping/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
     sqlSessionFactory.getConfiguration().setArgNameBasedConstructorAutoMapping(true);
     // populate in-memory database
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-        "org/apache/ibatis/submitted/arg_name_baesd_constructor_automapping/CreateDB.sql");
+        "org/apache/ibatis/submitted/arg_name_based_constructor_automapping/CreateDB.sql");
   }
 
   @Test
@@ -81,7 +81,7 @@ class ArgNameBasedConstructorAutoMappingTest {
     } catch (PersistenceException e) {
       ExecutorException ex = (ExecutorException) e.getCause();
       assertEquals(
-          "Constructor auto-mapping of 'public org.apache.ibatis.submitted.arg_name_baesd_constructor_automapping."
+          "Constructor auto-mapping of 'public org.apache.ibatis.submitted.arg_name_based_constructor_automapping."
               + "User(java.lang.Integer,java.lang.String)' failed "
               + "because '[id]' were not found in the result set; "
               + "Available columns are '[NAME, BAR]' and mapUnderscoreToCamelCase is 'true'.",
