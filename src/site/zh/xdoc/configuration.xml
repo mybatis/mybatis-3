@@ -1561,7 +1561,7 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
         <p>（下一节才开始介绍映射器文件，如果你是首次阅读该文档，你可能需要先跳过这里，过会再来看。）</p>
         <source><![CDATA[<!DOCTYPE mapper
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.apache.ibatis.submitted.rounding.Mapper">
 	<resultMap type="org.apache.ibatis.submitted.rounding.User" id="usermap">
