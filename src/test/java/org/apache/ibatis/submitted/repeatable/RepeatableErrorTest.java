@@ -15,15 +15,15 @@
  */
 package org.apache.ibatis.submitted.repeatable;
 
+import java.io.IOException;
+import java.io.Reader;
+
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
-import java.io.Reader;
 
 class RepeatableErrorTest {
 
