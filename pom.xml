@@ -448,6 +448,8 @@
       <properties>
         <java.version>16</java.version>
         <java.release.version>16</java.release.version>
+        <java.test.version>16</java.test.version>
+        <java.test.release.version>16</java.test.release.version>
         <excludedGroups>TestcontainersTests,RequireIllegalAccess</excludedGroups>
       </properties>
     </profile>
