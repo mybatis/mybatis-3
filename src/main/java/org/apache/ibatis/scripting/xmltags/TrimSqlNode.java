@@ -22,6 +22,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.apache.ibatis.scripting.ScriptingException;
 import org.apache.ibatis.session.Configuration;
 
 /**
@@ -32,20 +33,30 @@ public class TrimSqlNode implements SqlNode {
   private final SqlNode contents;
   private final String prefix;
   private final String suffix;
+  private final String notEmpty;
   private final List<String> prefixesToOverride;
   private final List<String> suffixesToOverride;
   private final Configuration configuration;
 
   public TrimSqlNode(Configuration configuration, SqlNode contents, String prefix, String prefixesToOverride, String suffix, String suffixesToOverride) {
-    this(configuration, contents, prefix, parseOverrides(prefixesToOverride), suffix, parseOverrides(suffixesToOverride));
+    this(configuration, contents, prefix, parseOverrides(prefixesToOverride), suffix, parseOverrides(suffixesToOverride), null);
+  }
+
+  public TrimSqlNode(Configuration configuration, SqlNode contents, String prefix, String prefixesToOverride, String suffix, String suffixesToOverride, String notEmpty) {
+    this(configuration, contents, prefix, parseOverrides(prefixesToOverride), suffix, parseOverrides(suffixesToOverride), notEmpty);
   }
 
   protected TrimSqlNode(Configuration configuration, SqlNode contents, String prefix, List<String> prefixesToOverride, String suffix, List<String> suffixesToOverride) {
+    this(configuration, contents, prefix, prefixesToOverride, suffix, prefixesToOverride, null);
+  }
+
+  protected TrimSqlNode(Configuration configuration, SqlNode contents, String prefix, List<String> prefixesToOverride, String suffix, List<String> suffixesToOverride, String notEmpty) {
     this.contents = contents;
     this.prefix = prefix;
     this.prefixesToOverride = prefixesToOverride;
     this.suffix = suffix;
     this.suffixesToOverride = suffixesToOverride;
+    this.notEmpty = notEmpty;
     this.configuration = configuration;
   }
 
@@ -89,6 +100,9 @@ public class TrimSqlNode implements SqlNode {
       if (trimmedUppercaseSql.length() > 0) {
         applyPrefix(sqlBuffer, trimmedUppercaseSql);
         applySuffix(sqlBuffer, trimmedUppercaseSql);
+      }
+      if (notEmpty != null && (sqlBuffer.length() == 0 || sqlBuffer.toString().trim().isEmpty())) {
+        throw new ScriptingException(notEmpty);
       }
       delegate.appendSql(sqlBuffer.toString());
     }
