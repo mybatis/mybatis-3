@@ -16,9 +16,11 @@
        limitations under the License.
 
 -->
-<configuration xmlns="http://mybatis.org/schema/mybatis-config"
-               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-               xsi:schemaLocation="http://mybatis.org/schema/mybatis-config https://mybatis.org/schema/mybatis-config.xsd">
+<!DOCTYPE configuration
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
 
   <properties resource="org/apache/ibatis/builder/jdbc.properties">
     <property name="prop1" value="aaaa"/>
@@ -38,6 +40,7 @@
     <setting name="defaultExecutorType" value="BATCH"/>
     <setting name="defaultStatementTimeout" value="10"/>
     <setting name="defaultFetchSize" value="100"/>
+    <setting name="defaultResultSetType" value="SCROLL_INSENSITIVE"/>
     <setting name="mapUnderscoreToCamelCase" value="true"/>
     <setting name="safeRowBoundsEnabled" value="true"/>
     <setting name="localCacheScope" value="STATEMENT"/>
@@ -50,8 +53,11 @@
     <setting name="logImpl" value="SLF4J"/>
     <setting name="vfsImpl" value="org.apache.ibatis.io.JBoss6VFS"/>
     <setting name="configurationFactory" value="java.lang.String"/>
+    <setting name="defaultEnumTypeHandler" value="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
     <setting name="shrinkWhitespacesInSql" value="true"/>
     <setting name="argNameBasedConstructorAutoMapping" value="true"/>
+    <setting name="defaultSqlProviderType" value="org.apache.ibatis.builder.XmlConfigBuilderTest$MySqlProvider"/>
+    <setting name="nullableOnForEach" value="true"/>
   </settings>
 
   <typeAliases>
@@ -101,9 +107,9 @@
   </databaseIdProvider>
 
   <mappers>
-    <mapper resource="org/apache/ibatis/builder/xsd/BlogMapper.xml"/>
-    <mapper url="file:./src/test/java/org/apache/ibatis/builder/xsd/NestedBlogMapper.xml"/>
-    <mapper class="org.apache.ibatis.builder.xsd.CachedAuthorMapper"/>
+    <mapper resource="org/apache/ibatis/builder/BlogMapper.xml"/>
+    <mapper url="file:./src/test/resources/org/apache/ibatis/builder/NestedBlogMapper.xml"/>
+    <mapper class="org.apache.ibatis.builder.CachedAuthorMapper"/>
     <package name="org.apache.ibatis.builder.mapper"/>
   </mappers>
 

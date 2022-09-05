@@ -404,31 +404,6 @@
         </configuration>
       </plugin>
     </plugins>
-
-    <resources>
-      <resource>
-        <directory>${project.basedir}</directory>
-        <targetPath>META-INF</targetPath>
-        <includes>
-          <include>LICENSE</include>
-          <include>NOTICE</include>
-        </includes>
-      </resource>
-      <resource>
-        <directory>${project.build.sourceDirectory}</directory>
-        <excludes>
-          <exclude>**/*.java</exclude>
-        </excludes>
-      </resource>
-    </resources>
-    <testResources>
-      <testResource>
-        <directory>${project.build.testSourceDirectory}</directory>
-        <excludes>
-          <exclude>**/*.java</exclude>
-        </excludes>
-      </testResource>
-    </testResources>
   </build>
 
   <profiles>

@@ -16,33 +16,14 @@
        limitations under the License.
 
 -->
-
 <!DOCTYPE configuration
     PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
     "https://mybatis.org/dtd/mybatis-3-config.dtd">
 
 <configuration>
 
-  <properties>
-    <property name="prefix" value="col_" />
-    <property name="sqlToInclude" value="colsStatic" />
+  <properties url="file:./src/test/resources/org/apache/ibatis/builder/jdbc.properties">
+    <property name="prop1" value="bbbb"/>
   </properties>
-
-  <environments default="development">
-    <environment id="development">
-      <transactionManager type="JDBC">
-        <property name="" value="" />
-      </transactionManager>
-      <dataSource type="UNPOOLED">
-        <property name="driver" value="org.hsqldb.jdbcDriver" />
-        <property name="url" value="jdbc:hsqldb:mem:includeproperty" />
-        <property name="username" value="sa" />
-      </dataSource>
-    </environment>
-  </environments>
-
-  <mappers>
-    <mapper resource="org/apache/ibatis/submitted/include_property/Mapper.xml"/>
-  </mappers>
 
 </configuration>
