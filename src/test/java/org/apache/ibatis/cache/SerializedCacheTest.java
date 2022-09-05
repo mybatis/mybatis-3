@@ -15,15 +15,15 @@
  */
 package org.apache.ibatis.cache;
 
-import org.apache.ibatis.cache.decorators.SerializedCache;
-import org.apache.ibatis.cache.impl.PerpetualCache;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.apache.ibatis.cache.decorators.SerializedCache;
+import org.apache.ibatis.cache.impl.PerpetualCache;
+import org.junit.jupiter.api.Test;
 
 class SerializedCacheTest {
 
