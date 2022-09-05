@@ -32,7 +32,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
 class XPathParserTest {
-  private String resource = "resources/nodelet_test.xml";
+  private String resource = "nodelet_test.xml";
 
   // InputStream Source
   @Test
