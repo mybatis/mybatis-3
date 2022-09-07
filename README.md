@@ -9,7 +9,7 @@ MyBatis SQL Mapper Framework for Java
 [![Stack Overflow](https://img.shields.io/:stack%20overflow-mybatis-brightgreen.svg)](https://stackoverflow.com/questions/tagged/mybatis)
 [![Project Stats](https://www.openhub.net/p/mybatis/widgets/project_thin_badge.gif)](https://www.openhub.net/p/mybatis)
 
-![mybatis](http://mybatis.github.io/images/mybatis-logo.png)
+![mybatis](https://mybatis.org/images/mybatis-logo.png)
 
 The MyBatis SQL mapper framework makes it easier to use a relational database with object-oriented applications.
 MyBatis couples objects with stored procedures or SQL statements using an XML descriptor or annotations.
@@ -18,6 +18,6 @@ Simplicity is the biggest advantage of the MyBatis data mapper over object relat
 Essentials
 ----------
 
-* [See the docs](http://mybatis.github.io/mybatis-3)
+* [See the docs](https://mybatis.org/mybatis-3)
 * [Download Latest](https://github.com/mybatis/mybatis-3/releases)
 * [Download Snapshot](https://oss.sonatype.org/content/repositories/snapshots/org/mybatis/mybatis/)
