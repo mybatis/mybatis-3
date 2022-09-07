@@ -42,7 +42,7 @@
     <coverSubTitle>v. ${project.version}</coverSubTitle>
     <coverType>User Guide</coverType>
     <projectName>${project.name}</projectName>
-    <projectLogo>http://mybatis.github.io/images/mybatis-logo.png</projectLogo>
+    <projectLogo>https://mybatis.org/images/mybatis-logo.png</projectLogo>
     <companyName>${project.organization.name}</companyName>
   </cover>
 </document>
