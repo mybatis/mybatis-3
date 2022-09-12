@@ -2013,7 +2013,7 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
   <mapper class="org.mybatis.builder.PostMapper"/>
 </mappers>]]></source>
 
-        <source><![CDATA[<!-- 将包内的映射器接口实现全部注册为映射器 -->
+        <source><![CDATA[<!-- 将包内的映射器接口全部注册为映射器 -->
 <mappers>
   <package name="org.mybatis.builder"/>
 </mappers>]]></source>
