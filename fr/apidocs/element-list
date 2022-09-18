@@ -52,3 +52,4 @@ org.apache.ibatis.transaction
 org.apache.ibatis.transaction.jdbc
 org.apache.ibatis.transaction.managed
 org.apache.ibatis.type
+org.apache.ibatis.util

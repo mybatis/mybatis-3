@@ -7,13 +7,13 @@
 <body>
 <div id="overview"><a href="../../../../../../../testapidocs/org/apache/ibatis/submitted/empty_row/ReturnInstanceForEmptyRowTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2021 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2022 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> *    You may obtain a copy of the License at</em>
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> *</em>
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> *       <a href="https://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">https://www.apache.org/licenses/LICENSE-2.0</a></em>
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_comment"> *    Unless required by applicable law or agreed to in writing, software</em>
 <a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_comment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
@@ -147,7 +147,26 @@
 <a class="jxr_linenumber" name="L139" href="#L139">139</a>       assertNotNull(parent.getPets().get(0));
 <a class="jxr_linenumber" name="L140" href="#L140">140</a>     }
 <a class="jxr_linenumber" name="L141" href="#L141">141</a>   }
-<a class="jxr_linenumber" name="L142" href="#L142">142</a> }
+<a class="jxr_linenumber" name="L142" href="#L142">142</a> 
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>   @Test
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>   <strong class="jxr_keyword">void</strong> testConstructorAutomapping() {
+<a class="jxr_linenumber" name="L145" href="#L145">145</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>       <a name="Mapper" href="../../../../../org/apache/ibatis/submitted/empty_row/Mapper.html#Mapper">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L147" href="#L147">147</a>       <a name="ImmutableParent" href="../../../../../org/apache/ibatis/submitted/empty_row/ImmutableParent.html#ImmutableParent">ImmutableParent</a> parent = mapper.selectImmutable(1);
+<a class="jxr_linenumber" name="L148" href="#L148">148</a>       assertNotNull(parent);
+<a class="jxr_linenumber" name="L149" href="#L149">149</a>     }
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>   }
+<a class="jxr_linenumber" name="L151" href="#L151">151</a> 
+<a class="jxr_linenumber" name="L152" href="#L152">152</a>   @Test
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>   <strong class="jxr_keyword">void</strong> testArgNameBasedConstructorAutomapping() {
+<a class="jxr_linenumber" name="L154" href="#L154">154</a>     sqlSessionFactory.getConfiguration().setArgNameBasedConstructorAutoMapping(<strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L155" href="#L155">155</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+<a class="jxr_linenumber" name="L156" href="#L156">156</a>       <a name="Mapper" href="../../../../../org/apache/ibatis/submitted/empty_row/Mapper.html#Mapper">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L157" href="#L157">157</a>       <a name="ImmutableParent" href="../../../../../org/apache/ibatis/submitted/empty_row/ImmutableParent.html#ImmutableParent">ImmutableParent</a> parent = mapper.selectImmutable(1);
+<a class="jxr_linenumber" name="L158" href="#L158">158</a>       assertNotNull(parent);
+<a class="jxr_linenumber" name="L159" href="#L159">159</a>     }
+<a class="jxr_linenumber" name="L160" href="#L160">160</a>   }
+<a class="jxr_linenumber" name="L161" href="#L161">161</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2022 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>

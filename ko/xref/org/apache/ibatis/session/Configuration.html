@@ -13,7 +13,7 @@
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> *    You may obtain a copy of the License at</em>
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> *</em>
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> *       <a href="https://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">https://www.apache.org/licenses/LICENSE-2.0</a></em>
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_comment"> *    Unless required by applicable law or agreed to in writing, software</em>
 <a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_comment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
@@ -706,396 +706,395 @@
 <a class="jxr_linenumber" name="L698" href="#L698">698</a> 
 <a class="jxr_linenumber" name="L699" href="#L699">699</a>   <strong class="jxr_keyword">public</strong> <a name="Executor" href="../../../../org/apache/ibatis/executor/Executor.html#Executor">Executor</a> newExecutor(<a name="Transaction" href="../../../../org/apache/ibatis/transaction/Transaction.html#Transaction">Transaction</a> transaction, <a name="ExecutorType" href="../../../../org/apache/ibatis/session/ExecutorType.html#ExecutorType">ExecutorType</a> executorType) {
 <a class="jxr_linenumber" name="L700" href="#L700">700</a>     executorType = executorType == <strong class="jxr_keyword">null</strong> ? defaultExecutorType : executorType;
-<a class="jxr_linenumber" name="L701" href="#L701">701</a>     executorType = executorType == <strong class="jxr_keyword">null</strong> ? ExecutorType.SIMPLE : executorType;
-<a class="jxr_linenumber" name="L702" href="#L702">702</a>     <a name="Executor" href="../../../../org/apache/ibatis/executor/Executor.html#Executor">Executor</a> executor;
-<a class="jxr_linenumber" name="L703" href="#L703">703</a>     <strong class="jxr_keyword">if</strong> (ExecutorType.BATCH == executorType) {
-<a class="jxr_linenumber" name="L704" href="#L704">704</a>       executor = <strong class="jxr_keyword">new</strong> <a name="BatchExecutor" href="../../../../org/apache/ibatis/executor/BatchExecutor.html#BatchExecutor">BatchExecutor</a>(<strong class="jxr_keyword">this</strong>, transaction);
-<a class="jxr_linenumber" name="L705" href="#L705">705</a>     } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (ExecutorType.REUSE == executorType) {
-<a class="jxr_linenumber" name="L706" href="#L706">706</a>       executor = <strong class="jxr_keyword">new</strong> <a name="ReuseExecutor" href="../../../../org/apache/ibatis/executor/ReuseExecutor.html#ReuseExecutor">ReuseExecutor</a>(<strong class="jxr_keyword">this</strong>, transaction);
-<a class="jxr_linenumber" name="L707" href="#L707">707</a>     } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L708" href="#L708">708</a>       executor = <strong class="jxr_keyword">new</strong> <a name="SimpleExecutor" href="../../../../org/apache/ibatis/executor/SimpleExecutor.html#SimpleExecutor">SimpleExecutor</a>(<strong class="jxr_keyword">this</strong>, transaction);
-<a class="jxr_linenumber" name="L709" href="#L709">709</a>     }
-<a class="jxr_linenumber" name="L710" href="#L710">710</a>     <strong class="jxr_keyword">if</strong> (cacheEnabled) {
-<a class="jxr_linenumber" name="L711" href="#L711">711</a>       executor = <strong class="jxr_keyword">new</strong> <a name="CachingExecutor" href="../../../../org/apache/ibatis/executor/CachingExecutor.html#CachingExecutor">CachingExecutor</a>(executor);
-<a class="jxr_linenumber" name="L712" href="#L712">712</a>     }
-<a class="jxr_linenumber" name="L713" href="#L713">713</a>     executor = (<a name="Executor" href="../../../../org/apache/ibatis/executor/Executor.html#Executor">Executor</a>) interceptorChain.pluginAll(executor);
-<a class="jxr_linenumber" name="L714" href="#L714">714</a>     <strong class="jxr_keyword">return</strong> executor;
-<a class="jxr_linenumber" name="L715" href="#L715">715</a>   }
-<a class="jxr_linenumber" name="L716" href="#L716">716</a> 
-<a class="jxr_linenumber" name="L717" href="#L717">717</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addKeyGenerator(String id, <a name="KeyGenerator" href="../../../../org/apache/ibatis/executor/keygen/KeyGenerator.html#KeyGenerator">KeyGenerator</a> keyGenerator) {
-<a class="jxr_linenumber" name="L718" href="#L718">718</a>     keyGenerators.put(id, keyGenerator);
-<a class="jxr_linenumber" name="L719" href="#L719">719</a>   }
-<a class="jxr_linenumber" name="L720" href="#L720">720</a> 
-<a class="jxr_linenumber" name="L721" href="#L721">721</a>   <strong class="jxr_keyword">public</strong> Collection&lt;String&gt; getKeyGeneratorNames() {
-<a class="jxr_linenumber" name="L722" href="#L722">722</a>     <strong class="jxr_keyword">return</strong> keyGenerators.keySet();
-<a class="jxr_linenumber" name="L723" href="#L723">723</a>   }
-<a class="jxr_linenumber" name="L724" href="#L724">724</a> 
-<a class="jxr_linenumber" name="L725" href="#L725">725</a>   <strong class="jxr_keyword">public</strong> Collection&lt;KeyGenerator&gt; getKeyGenerators() {
-<a class="jxr_linenumber" name="L726" href="#L726">726</a>     <strong class="jxr_keyword">return</strong> keyGenerators.values();
-<a class="jxr_linenumber" name="L727" href="#L727">727</a>   }
-<a class="jxr_linenumber" name="L728" href="#L728">728</a> 
-<a class="jxr_linenumber" name="L729" href="#L729">729</a>   <strong class="jxr_keyword">public</strong> <a name="KeyGenerator" href="../../../../org/apache/ibatis/executor/keygen/KeyGenerator.html#KeyGenerator">KeyGenerator</a> getKeyGenerator(String id) {
-<a class="jxr_linenumber" name="L730" href="#L730">730</a>     <strong class="jxr_keyword">return</strong> keyGenerators.get(id);
-<a class="jxr_linenumber" name="L731" href="#L731">731</a>   }
-<a class="jxr_linenumber" name="L732" href="#L732">732</a> 
-<a class="jxr_linenumber" name="L733" href="#L733">733</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hasKeyGenerator(String id) {
-<a class="jxr_linenumber" name="L734" href="#L734">734</a>     <strong class="jxr_keyword">return</strong> keyGenerators.containsKey(id);
-<a class="jxr_linenumber" name="L735" href="#L735">735</a>   }
-<a class="jxr_linenumber" name="L736" href="#L736">736</a> 
-<a class="jxr_linenumber" name="L737" href="#L737">737</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addCache(<a name="Cache" href="../../../../org/apache/ibatis/cache/Cache.html#Cache">Cache</a> cache) {
-<a class="jxr_linenumber" name="L738" href="#L738">738</a>     caches.put(cache.getId(), cache);
-<a class="jxr_linenumber" name="L739" href="#L739">739</a>   }
-<a class="jxr_linenumber" name="L740" href="#L740">740</a> 
-<a class="jxr_linenumber" name="L741" href="#L741">741</a>   <strong class="jxr_keyword">public</strong> Collection&lt;String&gt; getCacheNames() {
-<a class="jxr_linenumber" name="L742" href="#L742">742</a>     <strong class="jxr_keyword">return</strong> caches.keySet();
-<a class="jxr_linenumber" name="L743" href="#L743">743</a>   }
-<a class="jxr_linenumber" name="L744" href="#L744">744</a> 
-<a class="jxr_linenumber" name="L745" href="#L745">745</a>   <strong class="jxr_keyword">public</strong> Collection&lt;Cache&gt; getCaches() {
-<a class="jxr_linenumber" name="L746" href="#L746">746</a>     <strong class="jxr_keyword">return</strong> caches.values();
-<a class="jxr_linenumber" name="L747" href="#L747">747</a>   }
-<a class="jxr_linenumber" name="L748" href="#L748">748</a> 
-<a class="jxr_linenumber" name="L749" href="#L749">749</a>   <strong class="jxr_keyword">public</strong> <a name="Cache" href="../../../../org/apache/ibatis/cache/Cache.html#Cache">Cache</a> getCache(String id) {
-<a class="jxr_linenumber" name="L750" href="#L750">750</a>     <strong class="jxr_keyword">return</strong> caches.get(id);
-<a class="jxr_linenumber" name="L751" href="#L751">751</a>   }
-<a class="jxr_linenumber" name="L752" href="#L752">752</a> 
-<a class="jxr_linenumber" name="L753" href="#L753">753</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hasCache(String id) {
-<a class="jxr_linenumber" name="L754" href="#L754">754</a>     <strong class="jxr_keyword">return</strong> caches.containsKey(id);
-<a class="jxr_linenumber" name="L755" href="#L755">755</a>   }
-<a class="jxr_linenumber" name="L756" href="#L756">756</a> 
-<a class="jxr_linenumber" name="L757" href="#L757">757</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addResultMap(<a name="ResultMap" href="../../../../org/apache/ibatis/mapping/ResultMap.html#ResultMap">ResultMap</a> rm) {
-<a class="jxr_linenumber" name="L758" href="#L758">758</a>     resultMaps.put(rm.getId(), rm);
-<a class="jxr_linenumber" name="L759" href="#L759">759</a>     checkLocallyForDiscriminatedNestedResultMaps(rm);
-<a class="jxr_linenumber" name="L760" href="#L760">760</a>     checkGloballyForDiscriminatedNestedResultMaps(rm);
-<a class="jxr_linenumber" name="L761" href="#L761">761</a>   }
-<a class="jxr_linenumber" name="L762" href="#L762">762</a> 
-<a class="jxr_linenumber" name="L763" href="#L763">763</a>   <strong class="jxr_keyword">public</strong> Collection&lt;String&gt; getResultMapNames() {
-<a class="jxr_linenumber" name="L764" href="#L764">764</a>     <strong class="jxr_keyword">return</strong> resultMaps.keySet();
-<a class="jxr_linenumber" name="L765" href="#L765">765</a>   }
-<a class="jxr_linenumber" name="L766" href="#L766">766</a> 
-<a class="jxr_linenumber" name="L767" href="#L767">767</a>   <strong class="jxr_keyword">public</strong> Collection&lt;ResultMap&gt; getResultMaps() {
-<a class="jxr_linenumber" name="L768" href="#L768">768</a>     <strong class="jxr_keyword">return</strong> resultMaps.values();
-<a class="jxr_linenumber" name="L769" href="#L769">769</a>   }
-<a class="jxr_linenumber" name="L770" href="#L770">770</a> 
-<a class="jxr_linenumber" name="L771" href="#L771">771</a>   <strong class="jxr_keyword">public</strong> <a name="ResultMap" href="../../../../org/apache/ibatis/mapping/ResultMap.html#ResultMap">ResultMap</a> getResultMap(String id) {
-<a class="jxr_linenumber" name="L772" href="#L772">772</a>     <strong class="jxr_keyword">return</strong> resultMaps.get(id);
-<a class="jxr_linenumber" name="L773" href="#L773">773</a>   }
-<a class="jxr_linenumber" name="L774" href="#L774">774</a> 
-<a class="jxr_linenumber" name="L775" href="#L775">775</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hasResultMap(String id) {
-<a class="jxr_linenumber" name="L776" href="#L776">776</a>     <strong class="jxr_keyword">return</strong> resultMaps.containsKey(id);
-<a class="jxr_linenumber" name="L777" href="#L777">777</a>   }
-<a class="jxr_linenumber" name="L778" href="#L778">778</a> 
-<a class="jxr_linenumber" name="L779" href="#L779">779</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addParameterMap(<a name="ParameterMap" href="../../../../org/apache/ibatis/mapping/ParameterMap.html#ParameterMap">ParameterMap</a> pm) {
-<a class="jxr_linenumber" name="L780" href="#L780">780</a>     parameterMaps.put(pm.getId(), pm);
-<a class="jxr_linenumber" name="L781" href="#L781">781</a>   }
-<a class="jxr_linenumber" name="L782" href="#L782">782</a> 
-<a class="jxr_linenumber" name="L783" href="#L783">783</a>   <strong class="jxr_keyword">public</strong> Collection&lt;String&gt; getParameterMapNames() {
-<a class="jxr_linenumber" name="L784" href="#L784">784</a>     <strong class="jxr_keyword">return</strong> parameterMaps.keySet();
-<a class="jxr_linenumber" name="L785" href="#L785">785</a>   }
-<a class="jxr_linenumber" name="L786" href="#L786">786</a> 
-<a class="jxr_linenumber" name="L787" href="#L787">787</a>   <strong class="jxr_keyword">public</strong> Collection&lt;ParameterMap&gt; getParameterMaps() {
-<a class="jxr_linenumber" name="L788" href="#L788">788</a>     <strong class="jxr_keyword">return</strong> parameterMaps.values();
-<a class="jxr_linenumber" name="L789" href="#L789">789</a>   }
-<a class="jxr_linenumber" name="L790" href="#L790">790</a> 
-<a class="jxr_linenumber" name="L791" href="#L791">791</a>   <strong class="jxr_keyword">public</strong> <a name="ParameterMap" href="../../../../org/apache/ibatis/mapping/ParameterMap.html#ParameterMap">ParameterMap</a> getParameterMap(String id) {
-<a class="jxr_linenumber" name="L792" href="#L792">792</a>     <strong class="jxr_keyword">return</strong> parameterMaps.get(id);
-<a class="jxr_linenumber" name="L793" href="#L793">793</a>   }
-<a class="jxr_linenumber" name="L794" href="#L794">794</a> 
-<a class="jxr_linenumber" name="L795" href="#L795">795</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hasParameterMap(String id) {
-<a class="jxr_linenumber" name="L796" href="#L796">796</a>     <strong class="jxr_keyword">return</strong> parameterMaps.containsKey(id);
-<a class="jxr_linenumber" name="L797" href="#L797">797</a>   }
-<a class="jxr_linenumber" name="L798" href="#L798">798</a> 
-<a class="jxr_linenumber" name="L799" href="#L799">799</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addMappedStatement(<a name="MappedStatement" href="../../../../org/apache/ibatis/mapping/MappedStatement.html#MappedStatement">MappedStatement</a> ms) {
-<a class="jxr_linenumber" name="L800" href="#L800">800</a>     mappedStatements.put(ms.getId(), ms);
-<a class="jxr_linenumber" name="L801" href="#L801">801</a>   }
-<a class="jxr_linenumber" name="L802" href="#L802">802</a> 
-<a class="jxr_linenumber" name="L803" href="#L803">803</a>   <strong class="jxr_keyword">public</strong> Collection&lt;String&gt; getMappedStatementNames() {
-<a class="jxr_linenumber" name="L804" href="#L804">804</a>     buildAllStatements();
-<a class="jxr_linenumber" name="L805" href="#L805">805</a>     <strong class="jxr_keyword">return</strong> mappedStatements.keySet();
-<a class="jxr_linenumber" name="L806" href="#L806">806</a>   }
-<a class="jxr_linenumber" name="L807" href="#L807">807</a> 
-<a class="jxr_linenumber" name="L808" href="#L808">808</a>   <strong class="jxr_keyword">public</strong> Collection&lt;MappedStatement&gt; getMappedStatements() {
-<a class="jxr_linenumber" name="L809" href="#L809">809</a>     buildAllStatements();
-<a class="jxr_linenumber" name="L810" href="#L810">810</a>     <strong class="jxr_keyword">return</strong> mappedStatements.values();
-<a class="jxr_linenumber" name="L811" href="#L811">811</a>   }
-<a class="jxr_linenumber" name="L812" href="#L812">812</a> 
-<a class="jxr_linenumber" name="L813" href="#L813">813</a>   <strong class="jxr_keyword">public</strong> Collection&lt;XMLStatementBuilder&gt; getIncompleteStatements() {
-<a class="jxr_linenumber" name="L814" href="#L814">814</a>     <strong class="jxr_keyword">return</strong> incompleteStatements;
-<a class="jxr_linenumber" name="L815" href="#L815">815</a>   }
-<a class="jxr_linenumber" name="L816" href="#L816">816</a> 
-<a class="jxr_linenumber" name="L817" href="#L817">817</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addIncompleteStatement(<a name="XMLStatementBuilder" href="../../../../org/apache/ibatis/builder/xml/XMLStatementBuilder.html#XMLStatementBuilder">XMLStatementBuilder</a> incompleteStatement) {
-<a class="jxr_linenumber" name="L818" href="#L818">818</a>     incompleteStatements.add(incompleteStatement);
-<a class="jxr_linenumber" name="L819" href="#L819">819</a>   }
-<a class="jxr_linenumber" name="L820" href="#L820">820</a> 
-<a class="jxr_linenumber" name="L821" href="#L821">821</a>   <strong class="jxr_keyword">public</strong> Collection&lt;CacheRefResolver&gt; getIncompleteCacheRefs() {
-<a class="jxr_linenumber" name="L822" href="#L822">822</a>     <strong class="jxr_keyword">return</strong> incompleteCacheRefs;
-<a class="jxr_linenumber" name="L823" href="#L823">823</a>   }
-<a class="jxr_linenumber" name="L824" href="#L824">824</a> 
-<a class="jxr_linenumber" name="L825" href="#L825">825</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addIncompleteCacheRef(<a name="CacheRefResolver" href="../../../../org/apache/ibatis/builder/CacheRefResolver.html#CacheRefResolver">CacheRefResolver</a> incompleteCacheRef) {
-<a class="jxr_linenumber" name="L826" href="#L826">826</a>     incompleteCacheRefs.add(incompleteCacheRef);
-<a class="jxr_linenumber" name="L827" href="#L827">827</a>   }
-<a class="jxr_linenumber" name="L828" href="#L828">828</a> 
-<a class="jxr_linenumber" name="L829" href="#L829">829</a>   <strong class="jxr_keyword">public</strong> Collection&lt;ResultMapResolver&gt; getIncompleteResultMaps() {
-<a class="jxr_linenumber" name="L830" href="#L830">830</a>     <strong class="jxr_keyword">return</strong> incompleteResultMaps;
-<a class="jxr_linenumber" name="L831" href="#L831">831</a>   }
-<a class="jxr_linenumber" name="L832" href="#L832">832</a> 
-<a class="jxr_linenumber" name="L833" href="#L833">833</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addIncompleteResultMap(<a name="ResultMapResolver" href="../../../../org/apache/ibatis/builder/ResultMapResolver.html#ResultMapResolver">ResultMapResolver</a> resultMapResolver) {
-<a class="jxr_linenumber" name="L834" href="#L834">834</a>     incompleteResultMaps.add(resultMapResolver);
-<a class="jxr_linenumber" name="L835" href="#L835">835</a>   }
-<a class="jxr_linenumber" name="L836" href="#L836">836</a> 
-<a class="jxr_linenumber" name="L837" href="#L837">837</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addIncompleteMethod(<a name="MethodResolver" href="../../../../org/apache/ibatis/builder/annotation/MethodResolver.html#MethodResolver">MethodResolver</a> builder) {
-<a class="jxr_linenumber" name="L838" href="#L838">838</a>     incompleteMethods.add(builder);
-<a class="jxr_linenumber" name="L839" href="#L839">839</a>   }
-<a class="jxr_linenumber" name="L840" href="#L840">840</a> 
-<a class="jxr_linenumber" name="L841" href="#L841">841</a>   <strong class="jxr_keyword">public</strong> Collection&lt;MethodResolver&gt; getIncompleteMethods() {
-<a class="jxr_linenumber" name="L842" href="#L842">842</a>     <strong class="jxr_keyword">return</strong> incompleteMethods;
-<a class="jxr_linenumber" name="L843" href="#L843">843</a>   }
-<a class="jxr_linenumber" name="L844" href="#L844">844</a> 
-<a class="jxr_linenumber" name="L845" href="#L845">845</a>   <strong class="jxr_keyword">public</strong> <a name="MappedStatement" href="../../../../org/apache/ibatis/mapping/MappedStatement.html#MappedStatement">MappedStatement</a> getMappedStatement(String id) {
-<a class="jxr_linenumber" name="L846" href="#L846">846</a>     <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.getMappedStatement(id, <strong class="jxr_keyword">true</strong>);
-<a class="jxr_linenumber" name="L847" href="#L847">847</a>   }
-<a class="jxr_linenumber" name="L848" href="#L848">848</a> 
-<a class="jxr_linenumber" name="L849" href="#L849">849</a>   <strong class="jxr_keyword">public</strong> <a name="MappedStatement" href="../../../../org/apache/ibatis/mapping/MappedStatement.html#MappedStatement">MappedStatement</a> getMappedStatement(String id, <strong class="jxr_keyword">boolean</strong> validateIncompleteStatements) {
-<a class="jxr_linenumber" name="L850" href="#L850">850</a>     <strong class="jxr_keyword">if</strong> (validateIncompleteStatements) {
-<a class="jxr_linenumber" name="L851" href="#L851">851</a>       buildAllStatements();
-<a class="jxr_linenumber" name="L852" href="#L852">852</a>     }
-<a class="jxr_linenumber" name="L853" href="#L853">853</a>     <strong class="jxr_keyword">return</strong> mappedStatements.get(id);
-<a class="jxr_linenumber" name="L854" href="#L854">854</a>   }
-<a class="jxr_linenumber" name="L855" href="#L855">855</a> 
-<a class="jxr_linenumber" name="L856" href="#L856">856</a>   <strong class="jxr_keyword">public</strong> Map&lt;String, XNode&gt; getSqlFragments() {
-<a class="jxr_linenumber" name="L857" href="#L857">857</a>     <strong class="jxr_keyword">return</strong> sqlFragments;
-<a class="jxr_linenumber" name="L858" href="#L858">858</a>   }
-<a class="jxr_linenumber" name="L859" href="#L859">859</a> 
-<a class="jxr_linenumber" name="L860" href="#L860">860</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addInterceptor(<a name="Interceptor" href="../../../../org/apache/ibatis/plugin/Interceptor.html#Interceptor">Interceptor</a> interceptor) {
-<a class="jxr_linenumber" name="L861" href="#L861">861</a>     interceptorChain.addInterceptor(interceptor);
-<a class="jxr_linenumber" name="L862" href="#L862">862</a>   }
-<a class="jxr_linenumber" name="L863" href="#L863">863</a> 
-<a class="jxr_linenumber" name="L864" href="#L864">864</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addMappers(String packageName, Class&lt;?&gt; superType) {
-<a class="jxr_linenumber" name="L865" href="#L865">865</a>     mapperRegistry.addMappers(packageName, superType);
-<a class="jxr_linenumber" name="L866" href="#L866">866</a>   }
-<a class="jxr_linenumber" name="L867" href="#L867">867</a> 
-<a class="jxr_linenumber" name="L868" href="#L868">868</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addMappers(String packageName) {
-<a class="jxr_linenumber" name="L869" href="#L869">869</a>     mapperRegistry.addMappers(packageName);
-<a class="jxr_linenumber" name="L870" href="#L870">870</a>   }
-<a class="jxr_linenumber" name="L871" href="#L871">871</a> 
-<a class="jxr_linenumber" name="L872" href="#L872">872</a>   <strong class="jxr_keyword">public</strong> &lt;T&gt; <strong class="jxr_keyword">void</strong> addMapper(Class&lt;T&gt; type) {
-<a class="jxr_linenumber" name="L873" href="#L873">873</a>     mapperRegistry.addMapper(type);
-<a class="jxr_linenumber" name="L874" href="#L874">874</a>   }
-<a class="jxr_linenumber" name="L875" href="#L875">875</a> 
-<a class="jxr_linenumber" name="L876" href="#L876">876</a>   <strong class="jxr_keyword">public</strong> &lt;T&gt; T getMapper(Class&lt;T&gt; type, <a name="SqlSession" href="../../../../org/apache/ibatis/session/SqlSession.html#SqlSession">SqlSession</a> sqlSession) {
-<a class="jxr_linenumber" name="L877" href="#L877">877</a>     <strong class="jxr_keyword">return</strong> mapperRegistry.getMapper(type, sqlSession);
-<a class="jxr_linenumber" name="L878" href="#L878">878</a>   }
-<a class="jxr_linenumber" name="L879" href="#L879">879</a> 
-<a class="jxr_linenumber" name="L880" href="#L880">880</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hasMapper(Class&lt;?&gt; type) {
-<a class="jxr_linenumber" name="L881" href="#L881">881</a>     <strong class="jxr_keyword">return</strong> mapperRegistry.hasMapper(type);
-<a class="jxr_linenumber" name="L882" href="#L882">882</a>   }
-<a class="jxr_linenumber" name="L883" href="#L883">883</a> 
-<a class="jxr_linenumber" name="L884" href="#L884">884</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hasStatement(String statementName) {
-<a class="jxr_linenumber" name="L885" href="#L885">885</a>     <strong class="jxr_keyword">return</strong> hasStatement(statementName, <strong class="jxr_keyword">true</strong>);
-<a class="jxr_linenumber" name="L886" href="#L886">886</a>   }
-<a class="jxr_linenumber" name="L887" href="#L887">887</a> 
-<a class="jxr_linenumber" name="L888" href="#L888">888</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hasStatement(String statementName, <strong class="jxr_keyword">boolean</strong> validateIncompleteStatements) {
-<a class="jxr_linenumber" name="L889" href="#L889">889</a>     <strong class="jxr_keyword">if</strong> (validateIncompleteStatements) {
-<a class="jxr_linenumber" name="L890" href="#L890">890</a>       buildAllStatements();
-<a class="jxr_linenumber" name="L891" href="#L891">891</a>     }
-<a class="jxr_linenumber" name="L892" href="#L892">892</a>     <strong class="jxr_keyword">return</strong> mappedStatements.containsKey(statementName);
-<a class="jxr_linenumber" name="L893" href="#L893">893</a>   }
-<a class="jxr_linenumber" name="L894" href="#L894">894</a> 
-<a class="jxr_linenumber" name="L895" href="#L895">895</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addCacheRef(String namespace, String referencedNamespace) {
-<a class="jxr_linenumber" name="L896" href="#L896">896</a>     cacheRefMap.put(namespace, referencedNamespace);
-<a class="jxr_linenumber" name="L897" href="#L897">897</a>   }
-<a class="jxr_linenumber" name="L898" href="#L898">898</a> 
-<a class="jxr_linenumber" name="L899" href="#L899">899</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L900" href="#L900">900</a> <em class="jxr_comment">   * Parses all the unprocessed statement nodes in the cache. It is recommended</em>
-<a class="jxr_linenumber" name="L901" href="#L901">901</a> <em class="jxr_comment">   * to call this method once all the mappers are added as it provides fail-fast</em>
-<a class="jxr_linenumber" name="L902" href="#L902">902</a> <em class="jxr_comment">   * statement validation.</em>
-<a class="jxr_linenumber" name="L903" href="#L903">903</a> <em class="jxr_comment">   */</em>
-<a class="jxr_linenumber" name="L904" href="#L904">904</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> buildAllStatements() {
-<a class="jxr_linenumber" name="L905" href="#L905">905</a>     parsePendingResultMaps();
-<a class="jxr_linenumber" name="L906" href="#L906">906</a>     <strong class="jxr_keyword">if</strong> (!incompleteCacheRefs.isEmpty()) {
-<a class="jxr_linenumber" name="L907" href="#L907">907</a>       <strong class="jxr_keyword">synchronized</strong> (incompleteCacheRefs) {
-<a class="jxr_linenumber" name="L908" href="#L908">908</a>         incompleteCacheRefs.removeIf(x -&gt; x.resolveCacheRef() != <strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="L909" href="#L909">909</a>       }
-<a class="jxr_linenumber" name="L910" href="#L910">910</a>     }
-<a class="jxr_linenumber" name="L911" href="#L911">911</a>     <strong class="jxr_keyword">if</strong> (!incompleteStatements.isEmpty()) {
-<a class="jxr_linenumber" name="L912" href="#L912">912</a>       <strong class="jxr_keyword">synchronized</strong> (incompleteStatements) {
-<a class="jxr_linenumber" name="L913" href="#L913">913</a>         incompleteStatements.removeIf(x -&gt; {
-<a class="jxr_linenumber" name="L914" href="#L914">914</a>           x.parseStatementNode();
-<a class="jxr_linenumber" name="L915" href="#L915">915</a>           <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">true</strong>;
-<a class="jxr_linenumber" name="L916" href="#L916">916</a>         });
-<a class="jxr_linenumber" name="L917" href="#L917">917</a>       }
-<a class="jxr_linenumber" name="L918" href="#L918">918</a>     }
-<a class="jxr_linenumber" name="L919" href="#L919">919</a>     <strong class="jxr_keyword">if</strong> (!incompleteMethods.isEmpty()) {
-<a class="jxr_linenumber" name="L920" href="#L920">920</a>       <strong class="jxr_keyword">synchronized</strong> (incompleteMethods) {
-<a class="jxr_linenumber" name="L921" href="#L921">921</a>         incompleteMethods.removeIf(x -&gt; {
-<a class="jxr_linenumber" name="L922" href="#L922">922</a>           x.resolve();
-<a class="jxr_linenumber" name="L923" href="#L923">923</a>           <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">true</strong>;
-<a class="jxr_linenumber" name="L924" href="#L924">924</a>         });
-<a class="jxr_linenumber" name="L925" href="#L925">925</a>       }
-<a class="jxr_linenumber" name="L926" href="#L926">926</a>     }
-<a class="jxr_linenumber" name="L927" href="#L927">927</a>   }
-<a class="jxr_linenumber" name="L928" href="#L928">928</a> 
-<a class="jxr_linenumber" name="L929" href="#L929">929</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> parsePendingResultMaps() {
-<a class="jxr_linenumber" name="L930" href="#L930">930</a>     <strong class="jxr_keyword">if</strong> (incompleteResultMaps.isEmpty()) {
-<a class="jxr_linenumber" name="L931" href="#L931">931</a>       <strong class="jxr_keyword">return</strong>;
-<a class="jxr_linenumber" name="L932" href="#L932">932</a>     }
-<a class="jxr_linenumber" name="L933" href="#L933">933</a>     <strong class="jxr_keyword">synchronized</strong> (incompleteResultMaps) {
-<a class="jxr_linenumber" name="L934" href="#L934">934</a>       <strong class="jxr_keyword">boolean</strong> resolved;
-<a class="jxr_linenumber" name="L935" href="#L935">935</a>       <a name="IncompleteElementException" href="../../../../org/apache/ibatis/builder/IncompleteElementException.html#IncompleteElementException">IncompleteElementException</a> ex = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L936" href="#L936">936</a>       <strong class="jxr_keyword">do</strong> {
-<a class="jxr_linenumber" name="L937" href="#L937">937</a>         resolved = false;
-<a class="jxr_linenumber" name="L938" href="#L938">938</a>         Iterator&lt;ResultMapResolver&gt; iterator = incompleteResultMaps.iterator();
-<a class="jxr_linenumber" name="L939" href="#L939">939</a>         <strong class="jxr_keyword">while</strong> (iterator.hasNext()) {
-<a class="jxr_linenumber" name="L940" href="#L940">940</a>           <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L941" href="#L941">941</a>             iterator.next().resolve();
-<a class="jxr_linenumber" name="L942" href="#L942">942</a>             iterator.remove();
-<a class="jxr_linenumber" name="L943" href="#L943">943</a>             resolved = <strong class="jxr_keyword">true</strong>;
-<a class="jxr_linenumber" name="L944" href="#L944">944</a>           } <strong class="jxr_keyword">catch</strong> (<a name="IncompleteElementException" href="../../../../org/apache/ibatis/builder/IncompleteElementException.html#IncompleteElementException">IncompleteElementException</a> e) {
-<a class="jxr_linenumber" name="L945" href="#L945">945</a>             ex = e;
-<a class="jxr_linenumber" name="L946" href="#L946">946</a>           }
-<a class="jxr_linenumber" name="L947" href="#L947">947</a>         }
-<a class="jxr_linenumber" name="L948" href="#L948">948</a>       } <strong class="jxr_keyword">while</strong> (resolved);
-<a class="jxr_linenumber" name="L949" href="#L949">949</a>       <strong class="jxr_keyword">if</strong> (!incompleteResultMaps.isEmpty() &amp;&amp; ex != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L950" href="#L950">950</a>         <em class="jxr_comment">// At least one result map is unresolvable.</em>
-<a class="jxr_linenumber" name="L951" href="#L951">951</a>         <strong class="jxr_keyword">throw</strong> ex;
-<a class="jxr_linenumber" name="L952" href="#L952">952</a>       }
-<a class="jxr_linenumber" name="L953" href="#L953">953</a>     }
-<a class="jxr_linenumber" name="L954" href="#L954">954</a>   }
-<a class="jxr_linenumber" name="L955" href="#L955">955</a> 
-<a class="jxr_linenumber" name="L956" href="#L956">956</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L957" href="#L957">957</a> <em class="jxr_javadoccomment">   * Extracts namespace from fully qualified statement id.</em>
-<a class="jxr_linenumber" name="L958" href="#L958">958</a> <em class="jxr_javadoccomment">   *</em>
-<a class="jxr_linenumber" name="L959" href="#L959">959</a> <em class="jxr_javadoccomment">   * @param statementId</em>
-<a class="jxr_linenumber" name="L960" href="#L960">960</a> <em class="jxr_javadoccomment">   *          the statement id</em>
-<a class="jxr_linenumber" name="L961" href="#L961">961</a> <em class="jxr_javadoccomment">   * @return namespace or null when id does not contain period.</em>
-<a class="jxr_linenumber" name="L962" href="#L962">962</a> <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L963" href="#L963">963</a>   <strong class="jxr_keyword">protected</strong> String extractNamespace(String statementId) {
-<a class="jxr_linenumber" name="L964" href="#L964">964</a>     <strong class="jxr_keyword">int</strong> lastPeriod = statementId.lastIndexOf('.');
-<a class="jxr_linenumber" name="L965" href="#L965">965</a>     <strong class="jxr_keyword">return</strong> lastPeriod &gt; 0 ? statementId.substring(0, lastPeriod) : <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L966" href="#L966">966</a>   }
-<a class="jxr_linenumber" name="L967" href="#L967">967</a> 
-<a class="jxr_linenumber" name="L968" href="#L968">968</a>   <em class="jxr_comment">// Slow but a one time cost. A better solution is welcome.</em>
-<a class="jxr_linenumber" name="L969" href="#L969">969</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> checkGloballyForDiscriminatedNestedResultMaps(<a name="ResultMap" href="../../../../org/apache/ibatis/mapping/ResultMap.html#ResultMap">ResultMap</a> rm) {
-<a class="jxr_linenumber" name="L970" href="#L970">970</a>     <strong class="jxr_keyword">if</strong> (rm.hasNestedResultMaps()) {
-<a class="jxr_linenumber" name="L971" href="#L971">971</a>       <strong class="jxr_keyword">for</strong> (Map.Entry&lt;String, ResultMap&gt; entry : resultMaps.entrySet()) {
-<a class="jxr_linenumber" name="L972" href="#L972">972</a>         Object value = entry.getValue();
-<a class="jxr_linenumber" name="L973" href="#L973">973</a>         <strong class="jxr_keyword">if</strong> (value instanceof <a name="ResultMap" href="../../../../org/apache/ibatis/mapping/ResultMap.html#ResultMap">ResultMap</a>) {
-<a class="jxr_linenumber" name="L974" href="#L974">974</a>           <a name="ResultMap" href="../../../../org/apache/ibatis/mapping/ResultMap.html#ResultMap">ResultMap</a> entryResultMap = (<a name="ResultMap" href="../../../../org/apache/ibatis/mapping/ResultMap.html#ResultMap">ResultMap</a>) value;
-<a class="jxr_linenumber" name="L975" href="#L975">975</a>           <strong class="jxr_keyword">if</strong> (!entryResultMap.hasNestedResultMaps() &amp;&amp; entryResultMap.getDiscriminator() != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L976" href="#L976">976</a>             Collection&lt;String&gt; discriminatedResultMapNames = entryResultMap.getDiscriminator().getDiscriminatorMap().values();
-<a class="jxr_linenumber" name="L977" href="#L977">977</a>             <strong class="jxr_keyword">if</strong> (discriminatedResultMapNames.contains(rm.getId())) {
-<a class="jxr_linenumber" name="L978" href="#L978">978</a>               entryResultMap.forceNestedResultMaps();
-<a class="jxr_linenumber" name="L979" href="#L979">979</a>             }
-<a class="jxr_linenumber" name="L980" href="#L980">980</a>           }
-<a class="jxr_linenumber" name="L981" href="#L981">981</a>         }
-<a class="jxr_linenumber" name="L982" href="#L982">982</a>       }
-<a class="jxr_linenumber" name="L983" href="#L983">983</a>     }
-<a class="jxr_linenumber" name="L984" href="#L984">984</a>   }
-<a class="jxr_linenumber" name="L985" href="#L985">985</a> 
-<a class="jxr_linenumber" name="L986" href="#L986">986</a>   <em class="jxr_comment">// Slow but a one time cost. A better solution is welcome.</em>
-<a class="jxr_linenumber" name="L987" href="#L987">987</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> checkLocallyForDiscriminatedNestedResultMaps(<a name="ResultMap" href="../../../../org/apache/ibatis/mapping/ResultMap.html#ResultMap">ResultMap</a> rm) {
-<a class="jxr_linenumber" name="L988" href="#L988">988</a>     <strong class="jxr_keyword">if</strong> (!rm.hasNestedResultMaps() &amp;&amp; rm.getDiscriminator() != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L989" href="#L989">989</a>       <strong class="jxr_keyword">for</strong> (Map.Entry&lt;String, String&gt; entry : rm.getDiscriminator().getDiscriminatorMap().entrySet()) {
-<a class="jxr_linenumber" name="L990" href="#L990">990</a>         String discriminatedResultMapName = entry.getValue();
-<a class="jxr_linenumber" name="L991" href="#L991">991</a>         <strong class="jxr_keyword">if</strong> (hasResultMap(discriminatedResultMapName)) {
-<a class="jxr_linenumber" name="L992" href="#L992">992</a>           <a name="ResultMap" href="../../../../org/apache/ibatis/mapping/ResultMap.html#ResultMap">ResultMap</a> discriminatedResultMap = resultMaps.get(discriminatedResultMapName);
-<a class="jxr_linenumber" name="L993" href="#L993">993</a>           <strong class="jxr_keyword">if</strong> (discriminatedResultMap.hasNestedResultMaps()) {
-<a class="jxr_linenumber" name="L994" href="#L994">994</a>             rm.forceNestedResultMaps();
-<a class="jxr_linenumber" name="L995" href="#L995">995</a>             <strong class="jxr_keyword">break</strong>;
-<a class="jxr_linenumber" name="L996" href="#L996">996</a>           }
-<a class="jxr_linenumber" name="L997" href="#L997">997</a>         }
-<a class="jxr_linenumber" name="L998" href="#L998">998</a>       }
-<a class="jxr_linenumber" name="L999" href="#L999">999</a>     }
-<a class="jxr_linenumber" name="L1000" href="#L1000">1000</a>   }
-<a class="jxr_linenumber" name="L1001" href="#L1001">1001</a> 
-<a class="jxr_linenumber" name="L1002" href="#L1002">1002</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> StrictMap&lt;V&gt; <strong class="jxr_keyword">extends</strong> HashMap&lt;String, V&gt; {
-<a class="jxr_linenumber" name="L1003" href="#L1003">1003</a> 
-<a class="jxr_linenumber" name="L1004" href="#L1004">1004</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = -4950446264854982944L;
-<a class="jxr_linenumber" name="L1005" href="#L1005">1005</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> String name;
-<a class="jxr_linenumber" name="L1006" href="#L1006">1006</a>     <strong class="jxr_keyword">private</strong> BiFunction&lt;V, V, String&gt; conflictMessageProducer;
-<a class="jxr_linenumber" name="L1007" href="#L1007">1007</a> 
-<a class="jxr_linenumber" name="L1008" href="#L1008">1008</a>     <strong class="jxr_keyword">public</strong> StrictMap(String name, <strong class="jxr_keyword">int</strong> initialCapacity, <strong class="jxr_keyword">float</strong> loadFactor) {
-<a class="jxr_linenumber" name="L1009" href="#L1009">1009</a>       <strong class="jxr_keyword">super</strong>(initialCapacity, loadFactor);
-<a class="jxr_linenumber" name="L1010" href="#L1010">1010</a>       <strong class="jxr_keyword">this</strong>.name = name;
-<a class="jxr_linenumber" name="L1011" href="#L1011">1011</a>     }
-<a class="jxr_linenumber" name="L1012" href="#L1012">1012</a> 
-<a class="jxr_linenumber" name="L1013" href="#L1013">1013</a>     <strong class="jxr_keyword">public</strong> StrictMap(String name, <strong class="jxr_keyword">int</strong> initialCapacity) {
-<a class="jxr_linenumber" name="L1014" href="#L1014">1014</a>       <strong class="jxr_keyword">super</strong>(initialCapacity);
-<a class="jxr_linenumber" name="L1015" href="#L1015">1015</a>       <strong class="jxr_keyword">this</strong>.name = name;
-<a class="jxr_linenumber" name="L1016" href="#L1016">1016</a>     }
-<a class="jxr_linenumber" name="L1017" href="#L1017">1017</a> 
-<a class="jxr_linenumber" name="L1018" href="#L1018">1018</a>     <strong class="jxr_keyword">public</strong> StrictMap(String name) {
-<a class="jxr_linenumber" name="L1019" href="#L1019">1019</a>       <strong class="jxr_keyword">super</strong>();
-<a class="jxr_linenumber" name="L1020" href="#L1020">1020</a>       <strong class="jxr_keyword">this</strong>.name = name;
-<a class="jxr_linenumber" name="L1021" href="#L1021">1021</a>     }
-<a class="jxr_linenumber" name="L1022" href="#L1022">1022</a> 
-<a class="jxr_linenumber" name="L1023" href="#L1023">1023</a>     <strong class="jxr_keyword">public</strong> StrictMap(String name, Map&lt;String, ? <strong class="jxr_keyword">extends</strong> V&gt; m) {
-<a class="jxr_linenumber" name="L1024" href="#L1024">1024</a>       <strong class="jxr_keyword">super</strong>(m);
-<a class="jxr_linenumber" name="L1025" href="#L1025">1025</a>       <strong class="jxr_keyword">this</strong>.name = name;
-<a class="jxr_linenumber" name="L1026" href="#L1026">1026</a>     }
-<a class="jxr_linenumber" name="L1027" href="#L1027">1027</a> 
-<a class="jxr_linenumber" name="L1028" href="#L1028">1028</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L1029" href="#L1029">1029</a> <em class="jxr_javadoccomment">     * Assign a function for producing a conflict error message when contains value with the same key.</em>
-<a class="jxr_linenumber" name="L1030" href="#L1030">1030</a> <em class="jxr_javadoccomment">     * &lt;p&gt;</em>
-<a class="jxr_linenumber" name="L1031" href="#L1031">1031</a> <em class="jxr_javadoccomment">     * function arguments are 1st is saved value and 2nd is target value.</em>
-<a class="jxr_linenumber" name="L1032" href="#L1032">1032</a> <em class="jxr_javadoccomment">     * @param conflictMessageProducer A function for producing a conflict error message</em>
-<a class="jxr_linenumber" name="L1033" href="#L1033">1033</a> <em class="jxr_javadoccomment">     * @return a conflict error message</em>
-<a class="jxr_linenumber" name="L1034" href="#L1034">1034</a> <em class="jxr_javadoccomment">     * @since 3.5.0</em>
-<a class="jxr_linenumber" name="L1035" href="#L1035">1035</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L1036" href="#L1036">1036</a>     <strong class="jxr_keyword">public</strong> StrictMap&lt;V&gt; conflictMessageProducer(BiFunction&lt;V, V, String&gt; conflictMessageProducer) {
-<a class="jxr_linenumber" name="L1037" href="#L1037">1037</a>       <strong class="jxr_keyword">this</strong>.conflictMessageProducer = conflictMessageProducer;
-<a class="jxr_linenumber" name="L1038" href="#L1038">1038</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
-<a class="jxr_linenumber" name="L1039" href="#L1039">1039</a>     }
-<a class="jxr_linenumber" name="L1040" href="#L1040">1040</a> 
-<a class="jxr_linenumber" name="L1041" href="#L1041">1041</a>     @Override
-<a class="jxr_linenumber" name="L1042" href="#L1042">1042</a>     @SuppressWarnings(<span class="jxr_string">"unchecked"</span>)
-<a class="jxr_linenumber" name="L1043" href="#L1043">1043</a>     <strong class="jxr_keyword">public</strong> V put(String key, V value) {
-<a class="jxr_linenumber" name="L1044" href="#L1044">1044</a>       <strong class="jxr_keyword">if</strong> (containsKey(key)) {
-<a class="jxr_linenumber" name="L1045" href="#L1045">1045</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(name + <span class="jxr_string">" already contains value for "</span> + key
-<a class="jxr_linenumber" name="L1046" href="#L1046">1046</a>             + (conflictMessageProducer == <strong class="jxr_keyword">null</strong> ? <span class="jxr_string">""</span> : conflictMessageProducer.apply(<strong class="jxr_keyword">super</strong>.get(key), value)));
-<a class="jxr_linenumber" name="L1047" href="#L1047">1047</a>       }
-<a class="jxr_linenumber" name="L1048" href="#L1048">1048</a>       <strong class="jxr_keyword">if</strong> (key.contains(<span class="jxr_string">"."</span>)) {
-<a class="jxr_linenumber" name="L1049" href="#L1049">1049</a>         <strong class="jxr_keyword">final</strong> String shortKey = getShortName(key);
-<a class="jxr_linenumber" name="L1050" href="#L1050">1050</a>         <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">super</strong>.get(shortKey) == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L1051" href="#L1051">1051</a>           <strong class="jxr_keyword">super</strong>.put(shortKey, value);
-<a class="jxr_linenumber" name="L1052" href="#L1052">1052</a>         } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L1053" href="#L1053">1053</a>           <strong class="jxr_keyword">super</strong>.put(shortKey, (V) <strong class="jxr_keyword">new</strong> Ambiguity(shortKey));
-<a class="jxr_linenumber" name="L1054" href="#L1054">1054</a>         }
-<a class="jxr_linenumber" name="L1055" href="#L1055">1055</a>       }
-<a class="jxr_linenumber" name="L1056" href="#L1056">1056</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">super</strong>.put(key, value);
-<a class="jxr_linenumber" name="L1057" href="#L1057">1057</a>     }
-<a class="jxr_linenumber" name="L1058" href="#L1058">1058</a> 
-<a class="jxr_linenumber" name="L1059" href="#L1059">1059</a>     @Override
-<a class="jxr_linenumber" name="L1060" href="#L1060">1060</a>     <strong class="jxr_keyword">public</strong> V get(Object key) {
-<a class="jxr_linenumber" name="L1061" href="#L1061">1061</a>       V value = <strong class="jxr_keyword">super</strong>.get(key);
-<a class="jxr_linenumber" name="L1062" href="#L1062">1062</a>       <strong class="jxr_keyword">if</strong> (value == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L1063" href="#L1063">1063</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(name + <span class="jxr_string">" does not contain value for "</span> + key);
-<a class="jxr_linenumber" name="L1064" href="#L1064">1064</a>       }
-<a class="jxr_linenumber" name="L1065" href="#L1065">1065</a>       <strong class="jxr_keyword">if</strong> (value instanceof Ambiguity) {
-<a class="jxr_linenumber" name="L1066" href="#L1066">1066</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(((Ambiguity) value).getSubject() + <span class="jxr_string">" is ambiguous in "</span> + name
-<a class="jxr_linenumber" name="L1067" href="#L1067">1067</a>             + <span class="jxr_string">" (try using the full name including the namespace, or rename one of the entries)"</span>);
-<a class="jxr_linenumber" name="L1068" href="#L1068">1068</a>       }
-<a class="jxr_linenumber" name="L1069" href="#L1069">1069</a>       <strong class="jxr_keyword">return</strong> value;
-<a class="jxr_linenumber" name="L1070" href="#L1070">1070</a>     }
-<a class="jxr_linenumber" name="L1071" href="#L1071">1071</a> 
-<a class="jxr_linenumber" name="L1072" href="#L1072">1072</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> Ambiguity {
-<a class="jxr_linenumber" name="L1073" href="#L1073">1073</a>       <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> String subject;
-<a class="jxr_linenumber" name="L1074" href="#L1074">1074</a> 
-<a class="jxr_linenumber" name="L1075" href="#L1075">1075</a>       <strong class="jxr_keyword">public</strong> Ambiguity(String subject) {
-<a class="jxr_linenumber" name="L1076" href="#L1076">1076</a>         <strong class="jxr_keyword">this</strong>.subject = subject;
-<a class="jxr_linenumber" name="L1077" href="#L1077">1077</a>       }
-<a class="jxr_linenumber" name="L1078" href="#L1078">1078</a> 
-<a class="jxr_linenumber" name="L1079" href="#L1079">1079</a>       <strong class="jxr_keyword">public</strong> String getSubject() {
-<a class="jxr_linenumber" name="L1080" href="#L1080">1080</a>         <strong class="jxr_keyword">return</strong> subject;
-<a class="jxr_linenumber" name="L1081" href="#L1081">1081</a>       }
-<a class="jxr_linenumber" name="L1082" href="#L1082">1082</a>     }
-<a class="jxr_linenumber" name="L1083" href="#L1083">1083</a> 
-<a class="jxr_linenumber" name="L1084" href="#L1084">1084</a>     <strong class="jxr_keyword">private</strong> String getShortName(String key) {
-<a class="jxr_linenumber" name="L1085" href="#L1085">1085</a>       <strong class="jxr_keyword">final</strong> String[] keyParts = key.split(<span class="jxr_string">"&#92;&#92;."</span>);
-<a class="jxr_linenumber" name="L1086" href="#L1086">1086</a>       <strong class="jxr_keyword">return</strong> keyParts[keyParts.length - 1];
-<a class="jxr_linenumber" name="L1087" href="#L1087">1087</a>     }
-<a class="jxr_linenumber" name="L1088" href="#L1088">1088</a>   }
-<a class="jxr_linenumber" name="L1089" href="#L1089">1089</a> 
-<a class="jxr_linenumber" name="L1090" href="#L1090">1090</a> }
+<a class="jxr_linenumber" name="L701" href="#L701">701</a>     <a name="Executor" href="../../../../org/apache/ibatis/executor/Executor.html#Executor">Executor</a> executor;
+<a class="jxr_linenumber" name="L702" href="#L702">702</a>     <strong class="jxr_keyword">if</strong> (ExecutorType.BATCH == executorType) {
+<a class="jxr_linenumber" name="L703" href="#L703">703</a>       executor = <strong class="jxr_keyword">new</strong> <a name="BatchExecutor" href="../../../../org/apache/ibatis/executor/BatchExecutor.html#BatchExecutor">BatchExecutor</a>(<strong class="jxr_keyword">this</strong>, transaction);
+<a class="jxr_linenumber" name="L704" href="#L704">704</a>     } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (ExecutorType.REUSE == executorType) {
+<a class="jxr_linenumber" name="L705" href="#L705">705</a>       executor = <strong class="jxr_keyword">new</strong> <a name="ReuseExecutor" href="../../../../org/apache/ibatis/executor/ReuseExecutor.html#ReuseExecutor">ReuseExecutor</a>(<strong class="jxr_keyword">this</strong>, transaction);
+<a class="jxr_linenumber" name="L706" href="#L706">706</a>     } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L707" href="#L707">707</a>       executor = <strong class="jxr_keyword">new</strong> <a name="SimpleExecutor" href="../../../../org/apache/ibatis/executor/SimpleExecutor.html#SimpleExecutor">SimpleExecutor</a>(<strong class="jxr_keyword">this</strong>, transaction);
+<a class="jxr_linenumber" name="L708" href="#L708">708</a>     }
+<a class="jxr_linenumber" name="L709" href="#L709">709</a>     <strong class="jxr_keyword">if</strong> (cacheEnabled) {
+<a class="jxr_linenumber" name="L710" href="#L710">710</a>       executor = <strong class="jxr_keyword">new</strong> <a name="CachingExecutor" href="../../../../org/apache/ibatis/executor/CachingExecutor.html#CachingExecutor">CachingExecutor</a>(executor);
+<a class="jxr_linenumber" name="L711" href="#L711">711</a>     }
+<a class="jxr_linenumber" name="L712" href="#L712">712</a>     executor = (<a name="Executor" href="../../../../org/apache/ibatis/executor/Executor.html#Executor">Executor</a>) interceptorChain.pluginAll(executor);
+<a class="jxr_linenumber" name="L713" href="#L713">713</a>     <strong class="jxr_keyword">return</strong> executor;
+<a class="jxr_linenumber" name="L714" href="#L714">714</a>   }
+<a class="jxr_linenumber" name="L715" href="#L715">715</a> 
+<a class="jxr_linenumber" name="L716" href="#L716">716</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addKeyGenerator(String id, <a name="KeyGenerator" href="../../../../org/apache/ibatis/executor/keygen/KeyGenerator.html#KeyGenerator">KeyGenerator</a> keyGenerator) {
+<a class="jxr_linenumber" name="L717" href="#L717">717</a>     keyGenerators.put(id, keyGenerator);
+<a class="jxr_linenumber" name="L718" href="#L718">718</a>   }
+<a class="jxr_linenumber" name="L719" href="#L719">719</a> 
+<a class="jxr_linenumber" name="L720" href="#L720">720</a>   <strong class="jxr_keyword">public</strong> Collection&lt;String&gt; getKeyGeneratorNames() {
+<a class="jxr_linenumber" name="L721" href="#L721">721</a>     <strong class="jxr_keyword">return</strong> keyGenerators.keySet();
+<a class="jxr_linenumber" name="L722" href="#L722">722</a>   }
+<a class="jxr_linenumber" name="L723" href="#L723">723</a> 
+<a class="jxr_linenumber" name="L724" href="#L724">724</a>   <strong class="jxr_keyword">public</strong> Collection&lt;KeyGenerator&gt; getKeyGenerators() {
+<a class="jxr_linenumber" name="L725" href="#L725">725</a>     <strong class="jxr_keyword">return</strong> keyGenerators.values();
+<a class="jxr_linenumber" name="L726" href="#L726">726</a>   }
+<a class="jxr_linenumber" name="L727" href="#L727">727</a> 
+<a class="jxr_linenumber" name="L728" href="#L728">728</a>   <strong class="jxr_keyword">public</strong> <a name="KeyGenerator" href="../../../../org/apache/ibatis/executor/keygen/KeyGenerator.html#KeyGenerator">KeyGenerator</a> getKeyGenerator(String id) {
+<a class="jxr_linenumber" name="L729" href="#L729">729</a>     <strong class="jxr_keyword">return</strong> keyGenerators.get(id);
+<a class="jxr_linenumber" name="L730" href="#L730">730</a>   }
+<a class="jxr_linenumber" name="L731" href="#L731">731</a> 
+<a class="jxr_linenumber" name="L732" href="#L732">732</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hasKeyGenerator(String id) {
+<a class="jxr_linenumber" name="L733" href="#L733">733</a>     <strong class="jxr_keyword">return</strong> keyGenerators.containsKey(id);
+<a class="jxr_linenumber" name="L734" href="#L734">734</a>   }
+<a class="jxr_linenumber" name="L735" href="#L735">735</a> 
+<a class="jxr_linenumber" name="L736" href="#L736">736</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addCache(<a name="Cache" href="../../../../org/apache/ibatis/cache/Cache.html#Cache">Cache</a> cache) {
+<a class="jxr_linenumber" name="L737" href="#L737">737</a>     caches.put(cache.getId(), cache);
+<a class="jxr_linenumber" name="L738" href="#L738">738</a>   }
+<a class="jxr_linenumber" name="L739" href="#L739">739</a> 
+<a class="jxr_linenumber" name="L740" href="#L740">740</a>   <strong class="jxr_keyword">public</strong> Collection&lt;String&gt; getCacheNames() {
+<a class="jxr_linenumber" name="L741" href="#L741">741</a>     <strong class="jxr_keyword">return</strong> caches.keySet();
+<a class="jxr_linenumber" name="L742" href="#L742">742</a>   }
+<a class="jxr_linenumber" name="L743" href="#L743">743</a> 
+<a class="jxr_linenumber" name="L744" href="#L744">744</a>   <strong class="jxr_keyword">public</strong> Collection&lt;Cache&gt; getCaches() {
+<a class="jxr_linenumber" name="L745" href="#L745">745</a>     <strong class="jxr_keyword">return</strong> caches.values();
+<a class="jxr_linenumber" name="L746" href="#L746">746</a>   }
+<a class="jxr_linenumber" name="L747" href="#L747">747</a> 
+<a class="jxr_linenumber" name="L748" href="#L748">748</a>   <strong class="jxr_keyword">public</strong> <a name="Cache" href="../../../../org/apache/ibatis/cache/Cache.html#Cache">Cache</a> getCache(String id) {
+<a class="jxr_linenumber" name="L749" href="#L749">749</a>     <strong class="jxr_keyword">return</strong> caches.get(id);
+<a class="jxr_linenumber" name="L750" href="#L750">750</a>   }
+<a class="jxr_linenumber" name="L751" href="#L751">751</a> 
+<a class="jxr_linenumber" name="L752" href="#L752">752</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hasCache(String id) {
+<a class="jxr_linenumber" name="L753" href="#L753">753</a>     <strong class="jxr_keyword">return</strong> caches.containsKey(id);
+<a class="jxr_linenumber" name="L754" href="#L754">754</a>   }
+<a class="jxr_linenumber" name="L755" href="#L755">755</a> 
+<a class="jxr_linenumber" name="L756" href="#L756">756</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addResultMap(<a name="ResultMap" href="../../../../org/apache/ibatis/mapping/ResultMap.html#ResultMap">ResultMap</a> rm) {
+<a class="jxr_linenumber" name="L757" href="#L757">757</a>     resultMaps.put(rm.getId(), rm);
+<a class="jxr_linenumber" name="L758" href="#L758">758</a>     checkLocallyForDiscriminatedNestedResultMaps(rm);
+<a class="jxr_linenumber" name="L759" href="#L759">759</a>     checkGloballyForDiscriminatedNestedResultMaps(rm);
+<a class="jxr_linenumber" name="L760" href="#L760">760</a>   }
+<a class="jxr_linenumber" name="L761" href="#L761">761</a> 
+<a class="jxr_linenumber" name="L762" href="#L762">762</a>   <strong class="jxr_keyword">public</strong> Collection&lt;String&gt; getResultMapNames() {
+<a class="jxr_linenumber" name="L763" href="#L763">763</a>     <strong class="jxr_keyword">return</strong> resultMaps.keySet();
+<a class="jxr_linenumber" name="L764" href="#L764">764</a>   }
+<a class="jxr_linenumber" name="L765" href="#L765">765</a> 
+<a class="jxr_linenumber" name="L766" href="#L766">766</a>   <strong class="jxr_keyword">public</strong> Collection&lt;ResultMap&gt; getResultMaps() {
+<a class="jxr_linenumber" name="L767" href="#L767">767</a>     <strong class="jxr_keyword">return</strong> resultMaps.values();
+<a class="jxr_linenumber" name="L768" href="#L768">768</a>   }
+<a class="jxr_linenumber" name="L769" href="#L769">769</a> 
+<a class="jxr_linenumber" name="L770" href="#L770">770</a>   <strong class="jxr_keyword">public</strong> <a name="ResultMap" href="../../../../org/apache/ibatis/mapping/ResultMap.html#ResultMap">ResultMap</a> getResultMap(String id) {
+<a class="jxr_linenumber" name="L771" href="#L771">771</a>     <strong class="jxr_keyword">return</strong> resultMaps.get(id);
+<a class="jxr_linenumber" name="L772" href="#L772">772</a>   }
+<a class="jxr_linenumber" name="L773" href="#L773">773</a> 
+<a class="jxr_linenumber" name="L774" href="#L774">774</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hasResultMap(String id) {
+<a class="jxr_linenumber" name="L775" href="#L775">775</a>     <strong class="jxr_keyword">return</strong> resultMaps.containsKey(id);
+<a class="jxr_linenumber" name="L776" href="#L776">776</a>   }
+<a class="jxr_linenumber" name="L777" href="#L777">777</a> 
+<a class="jxr_linenumber" name="L778" href="#L778">778</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addParameterMap(<a name="ParameterMap" href="../../../../org/apache/ibatis/mapping/ParameterMap.html#ParameterMap">ParameterMap</a> pm) {
+<a class="jxr_linenumber" name="L779" href="#L779">779</a>     parameterMaps.put(pm.getId(), pm);
+<a class="jxr_linenumber" name="L780" href="#L780">780</a>   }
+<a class="jxr_linenumber" name="L781" href="#L781">781</a> 
+<a class="jxr_linenumber" name="L782" href="#L782">782</a>   <strong class="jxr_keyword">public</strong> Collection&lt;String&gt; getParameterMapNames() {
+<a class="jxr_linenumber" name="L783" href="#L783">783</a>     <strong class="jxr_keyword">return</strong> parameterMaps.keySet();
+<a class="jxr_linenumber" name="L784" href="#L784">784</a>   }
+<a class="jxr_linenumber" name="L785" href="#L785">785</a> 
+<a class="jxr_linenumber" name="L786" href="#L786">786</a>   <strong class="jxr_keyword">public</strong> Collection&lt;ParameterMap&gt; getParameterMaps() {
+<a class="jxr_linenumber" name="L787" href="#L787">787</a>     <strong class="jxr_keyword">return</strong> parameterMaps.values();
+<a class="jxr_linenumber" name="L788" href="#L788">788</a>   }
+<a class="jxr_linenumber" name="L789" href="#L789">789</a> 
+<a class="jxr_linenumber" name="L790" href="#L790">790</a>   <strong class="jxr_keyword">public</strong> <a name="ParameterMap" href="../../../../org/apache/ibatis/mapping/ParameterMap.html#ParameterMap">ParameterMap</a> getParameterMap(String id) {
+<a class="jxr_linenumber" name="L791" href="#L791">791</a>     <strong class="jxr_keyword">return</strong> parameterMaps.get(id);
+<a class="jxr_linenumber" name="L792" href="#L792">792</a>   }
+<a class="jxr_linenumber" name="L793" href="#L793">793</a> 
+<a class="jxr_linenumber" name="L794" href="#L794">794</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hasParameterMap(String id) {
+<a class="jxr_linenumber" name="L795" href="#L795">795</a>     <strong class="jxr_keyword">return</strong> parameterMaps.containsKey(id);
+<a class="jxr_linenumber" name="L796" href="#L796">796</a>   }
+<a class="jxr_linenumber" name="L797" href="#L797">797</a> 
+<a class="jxr_linenumber" name="L798" href="#L798">798</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addMappedStatement(<a name="MappedStatement" href="../../../../org/apache/ibatis/mapping/MappedStatement.html#MappedStatement">MappedStatement</a> ms) {
+<a class="jxr_linenumber" name="L799" href="#L799">799</a>     mappedStatements.put(ms.getId(), ms);
+<a class="jxr_linenumber" name="L800" href="#L800">800</a>   }
+<a class="jxr_linenumber" name="L801" href="#L801">801</a> 
+<a class="jxr_linenumber" name="L802" href="#L802">802</a>   <strong class="jxr_keyword">public</strong> Collection&lt;String&gt; getMappedStatementNames() {
+<a class="jxr_linenumber" name="L803" href="#L803">803</a>     buildAllStatements();
+<a class="jxr_linenumber" name="L804" href="#L804">804</a>     <strong class="jxr_keyword">return</strong> mappedStatements.keySet();
+<a class="jxr_linenumber" name="L805" href="#L805">805</a>   }
+<a class="jxr_linenumber" name="L806" href="#L806">806</a> 
+<a class="jxr_linenumber" name="L807" href="#L807">807</a>   <strong class="jxr_keyword">public</strong> Collection&lt;MappedStatement&gt; getMappedStatements() {
+<a class="jxr_linenumber" name="L808" href="#L808">808</a>     buildAllStatements();
+<a class="jxr_linenumber" name="L809" href="#L809">809</a>     <strong class="jxr_keyword">return</strong> mappedStatements.values();
+<a class="jxr_linenumber" name="L810" href="#L810">810</a>   }
+<a class="jxr_linenumber" name="L811" href="#L811">811</a> 
+<a class="jxr_linenumber" name="L812" href="#L812">812</a>   <strong class="jxr_keyword">public</strong> Collection&lt;XMLStatementBuilder&gt; getIncompleteStatements() {
+<a class="jxr_linenumber" name="L813" href="#L813">813</a>     <strong class="jxr_keyword">return</strong> incompleteStatements;
+<a class="jxr_linenumber" name="L814" href="#L814">814</a>   }
+<a class="jxr_linenumber" name="L815" href="#L815">815</a> 
+<a class="jxr_linenumber" name="L816" href="#L816">816</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addIncompleteStatement(<a name="XMLStatementBuilder" href="../../../../org/apache/ibatis/builder/xml/XMLStatementBuilder.html#XMLStatementBuilder">XMLStatementBuilder</a> incompleteStatement) {
+<a class="jxr_linenumber" name="L817" href="#L817">817</a>     incompleteStatements.add(incompleteStatement);
+<a class="jxr_linenumber" name="L818" href="#L818">818</a>   }
+<a class="jxr_linenumber" name="L819" href="#L819">819</a> 
+<a class="jxr_linenumber" name="L820" href="#L820">820</a>   <strong class="jxr_keyword">public</strong> Collection&lt;CacheRefResolver&gt; getIncompleteCacheRefs() {
+<a class="jxr_linenumber" name="L821" href="#L821">821</a>     <strong class="jxr_keyword">return</strong> incompleteCacheRefs;
+<a class="jxr_linenumber" name="L822" href="#L822">822</a>   }
+<a class="jxr_linenumber" name="L823" href="#L823">823</a> 
+<a class="jxr_linenumber" name="L824" href="#L824">824</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addIncompleteCacheRef(<a name="CacheRefResolver" href="../../../../org/apache/ibatis/builder/CacheRefResolver.html#CacheRefResolver">CacheRefResolver</a> incompleteCacheRef) {
+<a class="jxr_linenumber" name="L825" href="#L825">825</a>     incompleteCacheRefs.add(incompleteCacheRef);
+<a class="jxr_linenumber" name="L826" href="#L826">826</a>   }
+<a class="jxr_linenumber" name="L827" href="#L827">827</a> 
+<a class="jxr_linenumber" name="L828" href="#L828">828</a>   <strong class="jxr_keyword">public</strong> Collection&lt;ResultMapResolver&gt; getIncompleteResultMaps() {
+<a class="jxr_linenumber" name="L829" href="#L829">829</a>     <strong class="jxr_keyword">return</strong> incompleteResultMaps;
+<a class="jxr_linenumber" name="L830" href="#L830">830</a>   }
+<a class="jxr_linenumber" name="L831" href="#L831">831</a> 
+<a class="jxr_linenumber" name="L832" href="#L832">832</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addIncompleteResultMap(<a name="ResultMapResolver" href="../../../../org/apache/ibatis/builder/ResultMapResolver.html#ResultMapResolver">ResultMapResolver</a> resultMapResolver) {
+<a class="jxr_linenumber" name="L833" href="#L833">833</a>     incompleteResultMaps.add(resultMapResolver);
+<a class="jxr_linenumber" name="L834" href="#L834">834</a>   }
+<a class="jxr_linenumber" name="L835" href="#L835">835</a> 
+<a class="jxr_linenumber" name="L836" href="#L836">836</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addIncompleteMethod(<a name="MethodResolver" href="../../../../org/apache/ibatis/builder/annotation/MethodResolver.html#MethodResolver">MethodResolver</a> builder) {
+<a class="jxr_linenumber" name="L837" href="#L837">837</a>     incompleteMethods.add(builder);
+<a class="jxr_linenumber" name="L838" href="#L838">838</a>   }
+<a class="jxr_linenumber" name="L839" href="#L839">839</a> 
+<a class="jxr_linenumber" name="L840" href="#L840">840</a>   <strong class="jxr_keyword">public</strong> Collection&lt;MethodResolver&gt; getIncompleteMethods() {
+<a class="jxr_linenumber" name="L841" href="#L841">841</a>     <strong class="jxr_keyword">return</strong> incompleteMethods;
+<a class="jxr_linenumber" name="L842" href="#L842">842</a>   }
+<a class="jxr_linenumber" name="L843" href="#L843">843</a> 
+<a class="jxr_linenumber" name="L844" href="#L844">844</a>   <strong class="jxr_keyword">public</strong> <a name="MappedStatement" href="../../../../org/apache/ibatis/mapping/MappedStatement.html#MappedStatement">MappedStatement</a> getMappedStatement(String id) {
+<a class="jxr_linenumber" name="L845" href="#L845">845</a>     <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.getMappedStatement(id, <strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L846" href="#L846">846</a>   }
+<a class="jxr_linenumber" name="L847" href="#L847">847</a> 
+<a class="jxr_linenumber" name="L848" href="#L848">848</a>   <strong class="jxr_keyword">public</strong> <a name="MappedStatement" href="../../../../org/apache/ibatis/mapping/MappedStatement.html#MappedStatement">MappedStatement</a> getMappedStatement(String id, <strong class="jxr_keyword">boolean</strong> validateIncompleteStatements) {
+<a class="jxr_linenumber" name="L849" href="#L849">849</a>     <strong class="jxr_keyword">if</strong> (validateIncompleteStatements) {
+<a class="jxr_linenumber" name="L850" href="#L850">850</a>       buildAllStatements();
+<a class="jxr_linenumber" name="L851" href="#L851">851</a>     }
+<a class="jxr_linenumber" name="L852" href="#L852">852</a>     <strong class="jxr_keyword">return</strong> mappedStatements.get(id);
+<a class="jxr_linenumber" name="L853" href="#L853">853</a>   }
+<a class="jxr_linenumber" name="L854" href="#L854">854</a> 
+<a class="jxr_linenumber" name="L855" href="#L855">855</a>   <strong class="jxr_keyword">public</strong> Map&lt;String, XNode&gt; getSqlFragments() {
+<a class="jxr_linenumber" name="L856" href="#L856">856</a>     <strong class="jxr_keyword">return</strong> sqlFragments;
+<a class="jxr_linenumber" name="L857" href="#L857">857</a>   }
+<a class="jxr_linenumber" name="L858" href="#L858">858</a> 
+<a class="jxr_linenumber" name="L859" href="#L859">859</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addInterceptor(<a name="Interceptor" href="../../../../org/apache/ibatis/plugin/Interceptor.html#Interceptor">Interceptor</a> interceptor) {
+<a class="jxr_linenumber" name="L860" href="#L860">860</a>     interceptorChain.addInterceptor(interceptor);
+<a class="jxr_linenumber" name="L861" href="#L861">861</a>   }
+<a class="jxr_linenumber" name="L862" href="#L862">862</a> 
+<a class="jxr_linenumber" name="L863" href="#L863">863</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addMappers(String packageName, Class&lt;?&gt; superType) {
+<a class="jxr_linenumber" name="L864" href="#L864">864</a>     mapperRegistry.addMappers(packageName, superType);
+<a class="jxr_linenumber" name="L865" href="#L865">865</a>   }
+<a class="jxr_linenumber" name="L866" href="#L866">866</a> 
+<a class="jxr_linenumber" name="L867" href="#L867">867</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addMappers(String packageName) {
+<a class="jxr_linenumber" name="L868" href="#L868">868</a>     mapperRegistry.addMappers(packageName);
+<a class="jxr_linenumber" name="L869" href="#L869">869</a>   }
+<a class="jxr_linenumber" name="L870" href="#L870">870</a> 
+<a class="jxr_linenumber" name="L871" href="#L871">871</a>   <strong class="jxr_keyword">public</strong> &lt;T&gt; <strong class="jxr_keyword">void</strong> addMapper(Class&lt;T&gt; type) {
+<a class="jxr_linenumber" name="L872" href="#L872">872</a>     mapperRegistry.addMapper(type);
+<a class="jxr_linenumber" name="L873" href="#L873">873</a>   }
+<a class="jxr_linenumber" name="L874" href="#L874">874</a> 
+<a class="jxr_linenumber" name="L875" href="#L875">875</a>   <strong class="jxr_keyword">public</strong> &lt;T&gt; T getMapper(Class&lt;T&gt; type, <a name="SqlSession" href="../../../../org/apache/ibatis/session/SqlSession.html#SqlSession">SqlSession</a> sqlSession) {
+<a class="jxr_linenumber" name="L876" href="#L876">876</a>     <strong class="jxr_keyword">return</strong> mapperRegistry.getMapper(type, sqlSession);
+<a class="jxr_linenumber" name="L877" href="#L877">877</a>   }
+<a class="jxr_linenumber" name="L878" href="#L878">878</a> 
+<a class="jxr_linenumber" name="L879" href="#L879">879</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hasMapper(Class&lt;?&gt; type) {
+<a class="jxr_linenumber" name="L880" href="#L880">880</a>     <strong class="jxr_keyword">return</strong> mapperRegistry.hasMapper(type);
+<a class="jxr_linenumber" name="L881" href="#L881">881</a>   }
+<a class="jxr_linenumber" name="L882" href="#L882">882</a> 
+<a class="jxr_linenumber" name="L883" href="#L883">883</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hasStatement(String statementName) {
+<a class="jxr_linenumber" name="L884" href="#L884">884</a>     <strong class="jxr_keyword">return</strong> hasStatement(statementName, <strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L885" href="#L885">885</a>   }
+<a class="jxr_linenumber" name="L886" href="#L886">886</a> 
+<a class="jxr_linenumber" name="L887" href="#L887">887</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hasStatement(String statementName, <strong class="jxr_keyword">boolean</strong> validateIncompleteStatements) {
+<a class="jxr_linenumber" name="L888" href="#L888">888</a>     <strong class="jxr_keyword">if</strong> (validateIncompleteStatements) {
+<a class="jxr_linenumber" name="L889" href="#L889">889</a>       buildAllStatements();
+<a class="jxr_linenumber" name="L890" href="#L890">890</a>     }
+<a class="jxr_linenumber" name="L891" href="#L891">891</a>     <strong class="jxr_keyword">return</strong> mappedStatements.containsKey(statementName);
+<a class="jxr_linenumber" name="L892" href="#L892">892</a>   }
+<a class="jxr_linenumber" name="L893" href="#L893">893</a> 
+<a class="jxr_linenumber" name="L894" href="#L894">894</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addCacheRef(String namespace, String referencedNamespace) {
+<a class="jxr_linenumber" name="L895" href="#L895">895</a>     cacheRefMap.put(namespace, referencedNamespace);
+<a class="jxr_linenumber" name="L896" href="#L896">896</a>   }
+<a class="jxr_linenumber" name="L897" href="#L897">897</a> 
+<a class="jxr_linenumber" name="L898" href="#L898">898</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L899" href="#L899">899</a> <em class="jxr_comment">   * Parses all the unprocessed statement nodes in the cache. It is recommended</em>
+<a class="jxr_linenumber" name="L900" href="#L900">900</a> <em class="jxr_comment">   * to call this method once all the mappers are added as it provides fail-fast</em>
+<a class="jxr_linenumber" name="L901" href="#L901">901</a> <em class="jxr_comment">   * statement validation.</em>
+<a class="jxr_linenumber" name="L902" href="#L902">902</a> <em class="jxr_comment">   */</em>
+<a class="jxr_linenumber" name="L903" href="#L903">903</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> buildAllStatements() {
+<a class="jxr_linenumber" name="L904" href="#L904">904</a>     parsePendingResultMaps();
+<a class="jxr_linenumber" name="L905" href="#L905">905</a>     <strong class="jxr_keyword">if</strong> (!incompleteCacheRefs.isEmpty()) {
+<a class="jxr_linenumber" name="L906" href="#L906">906</a>       <strong class="jxr_keyword">synchronized</strong> (incompleteCacheRefs) {
+<a class="jxr_linenumber" name="L907" href="#L907">907</a>         incompleteCacheRefs.removeIf(x -&gt; x.resolveCacheRef() != <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L908" href="#L908">908</a>       }
+<a class="jxr_linenumber" name="L909" href="#L909">909</a>     }
+<a class="jxr_linenumber" name="L910" href="#L910">910</a>     <strong class="jxr_keyword">if</strong> (!incompleteStatements.isEmpty()) {
+<a class="jxr_linenumber" name="L911" href="#L911">911</a>       <strong class="jxr_keyword">synchronized</strong> (incompleteStatements) {
+<a class="jxr_linenumber" name="L912" href="#L912">912</a>         incompleteStatements.removeIf(x -&gt; {
+<a class="jxr_linenumber" name="L913" href="#L913">913</a>           x.parseStatementNode();
+<a class="jxr_linenumber" name="L914" href="#L914">914</a>           <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L915" href="#L915">915</a>         });
+<a class="jxr_linenumber" name="L916" href="#L916">916</a>       }
+<a class="jxr_linenumber" name="L917" href="#L917">917</a>     }
+<a class="jxr_linenumber" name="L918" href="#L918">918</a>     <strong class="jxr_keyword">if</strong> (!incompleteMethods.isEmpty()) {
+<a class="jxr_linenumber" name="L919" href="#L919">919</a>       <strong class="jxr_keyword">synchronized</strong> (incompleteMethods) {
+<a class="jxr_linenumber" name="L920" href="#L920">920</a>         incompleteMethods.removeIf(x -&gt; {
+<a class="jxr_linenumber" name="L921" href="#L921">921</a>           x.resolve();
+<a class="jxr_linenumber" name="L922" href="#L922">922</a>           <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L923" href="#L923">923</a>         });
+<a class="jxr_linenumber" name="L924" href="#L924">924</a>       }
+<a class="jxr_linenumber" name="L925" href="#L925">925</a>     }
+<a class="jxr_linenumber" name="L926" href="#L926">926</a>   }
+<a class="jxr_linenumber" name="L927" href="#L927">927</a> 
+<a class="jxr_linenumber" name="L928" href="#L928">928</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> parsePendingResultMaps() {
+<a class="jxr_linenumber" name="L929" href="#L929">929</a>     <strong class="jxr_keyword">if</strong> (incompleteResultMaps.isEmpty()) {
+<a class="jxr_linenumber" name="L930" href="#L930">930</a>       <strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="L931" href="#L931">931</a>     }
+<a class="jxr_linenumber" name="L932" href="#L932">932</a>     <strong class="jxr_keyword">synchronized</strong> (incompleteResultMaps) {
+<a class="jxr_linenumber" name="L933" href="#L933">933</a>       <strong class="jxr_keyword">boolean</strong> resolved;
+<a class="jxr_linenumber" name="L934" href="#L934">934</a>       <a name="IncompleteElementException" href="../../../../org/apache/ibatis/builder/IncompleteElementException.html#IncompleteElementException">IncompleteElementException</a> ex = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L935" href="#L935">935</a>       <strong class="jxr_keyword">do</strong> {
+<a class="jxr_linenumber" name="L936" href="#L936">936</a>         resolved = false;
+<a class="jxr_linenumber" name="L937" href="#L937">937</a>         Iterator&lt;ResultMapResolver&gt; iterator = incompleteResultMaps.iterator();
+<a class="jxr_linenumber" name="L938" href="#L938">938</a>         <strong class="jxr_keyword">while</strong> (iterator.hasNext()) {
+<a class="jxr_linenumber" name="L939" href="#L939">939</a>           <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L940" href="#L940">940</a>             iterator.next().resolve();
+<a class="jxr_linenumber" name="L941" href="#L941">941</a>             iterator.remove();
+<a class="jxr_linenumber" name="L942" href="#L942">942</a>             resolved = <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L943" href="#L943">943</a>           } <strong class="jxr_keyword">catch</strong> (<a name="IncompleteElementException" href="../../../../org/apache/ibatis/builder/IncompleteElementException.html#IncompleteElementException">IncompleteElementException</a> e) {
+<a class="jxr_linenumber" name="L944" href="#L944">944</a>             ex = e;
+<a class="jxr_linenumber" name="L945" href="#L945">945</a>           }
+<a class="jxr_linenumber" name="L946" href="#L946">946</a>         }
+<a class="jxr_linenumber" name="L947" href="#L947">947</a>       } <strong class="jxr_keyword">while</strong> (resolved);
+<a class="jxr_linenumber" name="L948" href="#L948">948</a>       <strong class="jxr_keyword">if</strong> (!incompleteResultMaps.isEmpty() &amp;&amp; ex != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L949" href="#L949">949</a>         <em class="jxr_comment">// At least one result map is unresolvable.</em>
+<a class="jxr_linenumber" name="L950" href="#L950">950</a>         <strong class="jxr_keyword">throw</strong> ex;
+<a class="jxr_linenumber" name="L951" href="#L951">951</a>       }
+<a class="jxr_linenumber" name="L952" href="#L952">952</a>     }
+<a class="jxr_linenumber" name="L953" href="#L953">953</a>   }
+<a class="jxr_linenumber" name="L954" href="#L954">954</a> 
+<a class="jxr_linenumber" name="L955" href="#L955">955</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L956" href="#L956">956</a> <em class="jxr_javadoccomment">   * Extracts namespace from fully qualified statement id.</em>
+<a class="jxr_linenumber" name="L957" href="#L957">957</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L958" href="#L958">958</a> <em class="jxr_javadoccomment">   * @param statementId</em>
+<a class="jxr_linenumber" name="L959" href="#L959">959</a> <em class="jxr_javadoccomment">   *          the statement id</em>
+<a class="jxr_linenumber" name="L960" href="#L960">960</a> <em class="jxr_javadoccomment">   * @return namespace or null when id does not contain period.</em>
+<a class="jxr_linenumber" name="L961" href="#L961">961</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L962" href="#L962">962</a>   <strong class="jxr_keyword">protected</strong> String extractNamespace(String statementId) {
+<a class="jxr_linenumber" name="L963" href="#L963">963</a>     <strong class="jxr_keyword">int</strong> lastPeriod = statementId.lastIndexOf('.');
+<a class="jxr_linenumber" name="L964" href="#L964">964</a>     <strong class="jxr_keyword">return</strong> lastPeriod &gt; 0 ? statementId.substring(0, lastPeriod) : <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L965" href="#L965">965</a>   }
+<a class="jxr_linenumber" name="L966" href="#L966">966</a> 
+<a class="jxr_linenumber" name="L967" href="#L967">967</a>   <em class="jxr_comment">// Slow but a one time cost. A better solution is welcome.</em>
+<a class="jxr_linenumber" name="L968" href="#L968">968</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> checkGloballyForDiscriminatedNestedResultMaps(<a name="ResultMap" href="../../../../org/apache/ibatis/mapping/ResultMap.html#ResultMap">ResultMap</a> rm) {
+<a class="jxr_linenumber" name="L969" href="#L969">969</a>     <strong class="jxr_keyword">if</strong> (rm.hasNestedResultMaps()) {
+<a class="jxr_linenumber" name="L970" href="#L970">970</a>       <strong class="jxr_keyword">for</strong> (Map.Entry&lt;String, ResultMap&gt; entry : resultMaps.entrySet()) {
+<a class="jxr_linenumber" name="L971" href="#L971">971</a>         Object value = entry.getValue();
+<a class="jxr_linenumber" name="L972" href="#L972">972</a>         <strong class="jxr_keyword">if</strong> (value instanceof <a name="ResultMap" href="../../../../org/apache/ibatis/mapping/ResultMap.html#ResultMap">ResultMap</a>) {
+<a class="jxr_linenumber" name="L973" href="#L973">973</a>           <a name="ResultMap" href="../../../../org/apache/ibatis/mapping/ResultMap.html#ResultMap">ResultMap</a> entryResultMap = (<a name="ResultMap" href="../../../../org/apache/ibatis/mapping/ResultMap.html#ResultMap">ResultMap</a>) value;
+<a class="jxr_linenumber" name="L974" href="#L974">974</a>           <strong class="jxr_keyword">if</strong> (!entryResultMap.hasNestedResultMaps() &amp;&amp; entryResultMap.getDiscriminator() != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L975" href="#L975">975</a>             Collection&lt;String&gt; discriminatedResultMapNames = entryResultMap.getDiscriminator().getDiscriminatorMap().values();
+<a class="jxr_linenumber" name="L976" href="#L976">976</a>             <strong class="jxr_keyword">if</strong> (discriminatedResultMapNames.contains(rm.getId())) {
+<a class="jxr_linenumber" name="L977" href="#L977">977</a>               entryResultMap.forceNestedResultMaps();
+<a class="jxr_linenumber" name="L978" href="#L978">978</a>             }
+<a class="jxr_linenumber" name="L979" href="#L979">979</a>           }
+<a class="jxr_linenumber" name="L980" href="#L980">980</a>         }
+<a class="jxr_linenumber" name="L981" href="#L981">981</a>       }
+<a class="jxr_linenumber" name="L982" href="#L982">982</a>     }
+<a class="jxr_linenumber" name="L983" href="#L983">983</a>   }
+<a class="jxr_linenumber" name="L984" href="#L984">984</a> 
+<a class="jxr_linenumber" name="L985" href="#L985">985</a>   <em class="jxr_comment">// Slow but a one time cost. A better solution is welcome.</em>
+<a class="jxr_linenumber" name="L986" href="#L986">986</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> checkLocallyForDiscriminatedNestedResultMaps(<a name="ResultMap" href="../../../../org/apache/ibatis/mapping/ResultMap.html#ResultMap">ResultMap</a> rm) {
+<a class="jxr_linenumber" name="L987" href="#L987">987</a>     <strong class="jxr_keyword">if</strong> (!rm.hasNestedResultMaps() &amp;&amp; rm.getDiscriminator() != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L988" href="#L988">988</a>       <strong class="jxr_keyword">for</strong> (Map.Entry&lt;String, String&gt; entry : rm.getDiscriminator().getDiscriminatorMap().entrySet()) {
+<a class="jxr_linenumber" name="L989" href="#L989">989</a>         String discriminatedResultMapName = entry.getValue();
+<a class="jxr_linenumber" name="L990" href="#L990">990</a>         <strong class="jxr_keyword">if</strong> (hasResultMap(discriminatedResultMapName)) {
+<a class="jxr_linenumber" name="L991" href="#L991">991</a>           <a name="ResultMap" href="../../../../org/apache/ibatis/mapping/ResultMap.html#ResultMap">ResultMap</a> discriminatedResultMap = resultMaps.get(discriminatedResultMapName);
+<a class="jxr_linenumber" name="L992" href="#L992">992</a>           <strong class="jxr_keyword">if</strong> (discriminatedResultMap.hasNestedResultMaps()) {
+<a class="jxr_linenumber" name="L993" href="#L993">993</a>             rm.forceNestedResultMaps();
+<a class="jxr_linenumber" name="L994" href="#L994">994</a>             <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L995" href="#L995">995</a>           }
+<a class="jxr_linenumber" name="L996" href="#L996">996</a>         }
+<a class="jxr_linenumber" name="L997" href="#L997">997</a>       }
+<a class="jxr_linenumber" name="L998" href="#L998">998</a>     }
+<a class="jxr_linenumber" name="L999" href="#L999">999</a>   }
+<a class="jxr_linenumber" name="L1000" href="#L1000">1000</a> 
+<a class="jxr_linenumber" name="L1001" href="#L1001">1001</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> StrictMap&lt;V&gt; <strong class="jxr_keyword">extends</strong> HashMap&lt;String, V&gt; {
+<a class="jxr_linenumber" name="L1002" href="#L1002">1002</a> 
+<a class="jxr_linenumber" name="L1003" href="#L1003">1003</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = -4950446264854982944L;
+<a class="jxr_linenumber" name="L1004" href="#L1004">1004</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> String name;
+<a class="jxr_linenumber" name="L1005" href="#L1005">1005</a>     <strong class="jxr_keyword">private</strong> BiFunction&lt;V, V, String&gt; conflictMessageProducer;
+<a class="jxr_linenumber" name="L1006" href="#L1006">1006</a> 
+<a class="jxr_linenumber" name="L1007" href="#L1007">1007</a>     <strong class="jxr_keyword">public</strong> StrictMap(String name, <strong class="jxr_keyword">int</strong> initialCapacity, <strong class="jxr_keyword">float</strong> loadFactor) {
+<a class="jxr_linenumber" name="L1008" href="#L1008">1008</a>       <strong class="jxr_keyword">super</strong>(initialCapacity, loadFactor);
+<a class="jxr_linenumber" name="L1009" href="#L1009">1009</a>       <strong class="jxr_keyword">this</strong>.name = name;
+<a class="jxr_linenumber" name="L1010" href="#L1010">1010</a>     }
+<a class="jxr_linenumber" name="L1011" href="#L1011">1011</a> 
+<a class="jxr_linenumber" name="L1012" href="#L1012">1012</a>     <strong class="jxr_keyword">public</strong> StrictMap(String name, <strong class="jxr_keyword">int</strong> initialCapacity) {
+<a class="jxr_linenumber" name="L1013" href="#L1013">1013</a>       <strong class="jxr_keyword">super</strong>(initialCapacity);
+<a class="jxr_linenumber" name="L1014" href="#L1014">1014</a>       <strong class="jxr_keyword">this</strong>.name = name;
+<a class="jxr_linenumber" name="L1015" href="#L1015">1015</a>     }
+<a class="jxr_linenumber" name="L1016" href="#L1016">1016</a> 
+<a class="jxr_linenumber" name="L1017" href="#L1017">1017</a>     <strong class="jxr_keyword">public</strong> StrictMap(String name) {
+<a class="jxr_linenumber" name="L1018" href="#L1018">1018</a>       <strong class="jxr_keyword">super</strong>();
+<a class="jxr_linenumber" name="L1019" href="#L1019">1019</a>       <strong class="jxr_keyword">this</strong>.name = name;
+<a class="jxr_linenumber" name="L1020" href="#L1020">1020</a>     }
+<a class="jxr_linenumber" name="L1021" href="#L1021">1021</a> 
+<a class="jxr_linenumber" name="L1022" href="#L1022">1022</a>     <strong class="jxr_keyword">public</strong> StrictMap(String name, Map&lt;String, ? <strong class="jxr_keyword">extends</strong> V&gt; m) {
+<a class="jxr_linenumber" name="L1023" href="#L1023">1023</a>       <strong class="jxr_keyword">super</strong>(m);
+<a class="jxr_linenumber" name="L1024" href="#L1024">1024</a>       <strong class="jxr_keyword">this</strong>.name = name;
+<a class="jxr_linenumber" name="L1025" href="#L1025">1025</a>     }
+<a class="jxr_linenumber" name="L1026" href="#L1026">1026</a> 
+<a class="jxr_linenumber" name="L1027" href="#L1027">1027</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1028" href="#L1028">1028</a> <em class="jxr_javadoccomment">     * Assign a function for producing a conflict error message when contains value with the same key.</em>
+<a class="jxr_linenumber" name="L1029" href="#L1029">1029</a> <em class="jxr_javadoccomment">     * &lt;p&gt;</em>
+<a class="jxr_linenumber" name="L1030" href="#L1030">1030</a> <em class="jxr_javadoccomment">     * function arguments are 1st is saved value and 2nd is target value.</em>
+<a class="jxr_linenumber" name="L1031" href="#L1031">1031</a> <em class="jxr_javadoccomment">     * @param conflictMessageProducer A function for producing a conflict error message</em>
+<a class="jxr_linenumber" name="L1032" href="#L1032">1032</a> <em class="jxr_javadoccomment">     * @return a conflict error message</em>
+<a class="jxr_linenumber" name="L1033" href="#L1033">1033</a> <em class="jxr_javadoccomment">     * @since 3.5.0</em>
+<a class="jxr_linenumber" name="L1034" href="#L1034">1034</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1035" href="#L1035">1035</a>     <strong class="jxr_keyword">public</strong> StrictMap&lt;V&gt; conflictMessageProducer(BiFunction&lt;V, V, String&gt; conflictMessageProducer) {
+<a class="jxr_linenumber" name="L1036" href="#L1036">1036</a>       <strong class="jxr_keyword">this</strong>.conflictMessageProducer = conflictMessageProducer;
+<a class="jxr_linenumber" name="L1037" href="#L1037">1037</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
+<a class="jxr_linenumber" name="L1038" href="#L1038">1038</a>     }
+<a class="jxr_linenumber" name="L1039" href="#L1039">1039</a> 
+<a class="jxr_linenumber" name="L1040" href="#L1040">1040</a>     @Override
+<a class="jxr_linenumber" name="L1041" href="#L1041">1041</a>     @SuppressWarnings(<span class="jxr_string">"unchecked"</span>)
+<a class="jxr_linenumber" name="L1042" href="#L1042">1042</a>     <strong class="jxr_keyword">public</strong> V put(String key, V value) {
+<a class="jxr_linenumber" name="L1043" href="#L1043">1043</a>       <strong class="jxr_keyword">if</strong> (containsKey(key)) {
+<a class="jxr_linenumber" name="L1044" href="#L1044">1044</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(name + <span class="jxr_string">" already contains value for "</span> + key
+<a class="jxr_linenumber" name="L1045" href="#L1045">1045</a>             + (conflictMessageProducer == <strong class="jxr_keyword">null</strong> ? <span class="jxr_string">""</span> : conflictMessageProducer.apply(<strong class="jxr_keyword">super</strong>.get(key), value)));
+<a class="jxr_linenumber" name="L1046" href="#L1046">1046</a>       }
+<a class="jxr_linenumber" name="L1047" href="#L1047">1047</a>       <strong class="jxr_keyword">if</strong> (key.contains(<span class="jxr_string">"."</span>)) {
+<a class="jxr_linenumber" name="L1048" href="#L1048">1048</a>         <strong class="jxr_keyword">final</strong> String shortKey = getShortName(key);
+<a class="jxr_linenumber" name="L1049" href="#L1049">1049</a>         <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">super</strong>.get(shortKey) == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L1050" href="#L1050">1050</a>           <strong class="jxr_keyword">super</strong>.put(shortKey, value);
+<a class="jxr_linenumber" name="L1051" href="#L1051">1051</a>         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L1052" href="#L1052">1052</a>           <strong class="jxr_keyword">super</strong>.put(shortKey, (V) <strong class="jxr_keyword">new</strong> Ambiguity(shortKey));
+<a class="jxr_linenumber" name="L1053" href="#L1053">1053</a>         }
+<a class="jxr_linenumber" name="L1054" href="#L1054">1054</a>       }
+<a class="jxr_linenumber" name="L1055" href="#L1055">1055</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">super</strong>.put(key, value);
+<a class="jxr_linenumber" name="L1056" href="#L1056">1056</a>     }
+<a class="jxr_linenumber" name="L1057" href="#L1057">1057</a> 
+<a class="jxr_linenumber" name="L1058" href="#L1058">1058</a>     @Override
+<a class="jxr_linenumber" name="L1059" href="#L1059">1059</a>     <strong class="jxr_keyword">public</strong> V get(Object key) {
+<a class="jxr_linenumber" name="L1060" href="#L1060">1060</a>       V value = <strong class="jxr_keyword">super</strong>.get(key);
+<a class="jxr_linenumber" name="L1061" href="#L1061">1061</a>       <strong class="jxr_keyword">if</strong> (value == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L1062" href="#L1062">1062</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(name + <span class="jxr_string">" does not contain value for "</span> + key);
+<a class="jxr_linenumber" name="L1063" href="#L1063">1063</a>       }
+<a class="jxr_linenumber" name="L1064" href="#L1064">1064</a>       <strong class="jxr_keyword">if</strong> (value instanceof Ambiguity) {
+<a class="jxr_linenumber" name="L1065" href="#L1065">1065</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(((Ambiguity) value).getSubject() + <span class="jxr_string">" is ambiguous in "</span> + name
+<a class="jxr_linenumber" name="L1066" href="#L1066">1066</a>             + <span class="jxr_string">" (try using the full name including the namespace, or rename one of the entries)"</span>);
+<a class="jxr_linenumber" name="L1067" href="#L1067">1067</a>       }
+<a class="jxr_linenumber" name="L1068" href="#L1068">1068</a>       <strong class="jxr_keyword">return</strong> value;
+<a class="jxr_linenumber" name="L1069" href="#L1069">1069</a>     }
+<a class="jxr_linenumber" name="L1070" href="#L1070">1070</a> 
+<a class="jxr_linenumber" name="L1071" href="#L1071">1071</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> Ambiguity {
+<a class="jxr_linenumber" name="L1072" href="#L1072">1072</a>       <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> String subject;
+<a class="jxr_linenumber" name="L1073" href="#L1073">1073</a> 
+<a class="jxr_linenumber" name="L1074" href="#L1074">1074</a>       <strong class="jxr_keyword">public</strong> Ambiguity(String subject) {
+<a class="jxr_linenumber" name="L1075" href="#L1075">1075</a>         <strong class="jxr_keyword">this</strong>.subject = subject;
+<a class="jxr_linenumber" name="L1076" href="#L1076">1076</a>       }
+<a class="jxr_linenumber" name="L1077" href="#L1077">1077</a> 
+<a class="jxr_linenumber" name="L1078" href="#L1078">1078</a>       <strong class="jxr_keyword">public</strong> String getSubject() {
+<a class="jxr_linenumber" name="L1079" href="#L1079">1079</a>         <strong class="jxr_keyword">return</strong> subject;
+<a class="jxr_linenumber" name="L1080" href="#L1080">1080</a>       }
+<a class="jxr_linenumber" name="L1081" href="#L1081">1081</a>     }
+<a class="jxr_linenumber" name="L1082" href="#L1082">1082</a> 
+<a class="jxr_linenumber" name="L1083" href="#L1083">1083</a>     <strong class="jxr_keyword">private</strong> String getShortName(String key) {
+<a class="jxr_linenumber" name="L1084" href="#L1084">1084</a>       <strong class="jxr_keyword">final</strong> String[] keyParts = key.split(<span class="jxr_string">"&#92;&#92;."</span>);
+<a class="jxr_linenumber" name="L1085" href="#L1085">1085</a>       <strong class="jxr_keyword">return</strong> keyParts[keyParts.length - 1];
+<a class="jxr_linenumber" name="L1086" href="#L1086">1086</a>     }
+<a class="jxr_linenumber" name="L1087" href="#L1087">1087</a>   }
+<a class="jxr_linenumber" name="L1088" href="#L1088">1088</a> 
+<a class="jxr_linenumber" name="L1089" href="#L1089">1089</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2022 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>

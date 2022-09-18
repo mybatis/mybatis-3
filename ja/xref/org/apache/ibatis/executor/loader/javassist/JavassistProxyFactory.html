@@ -7,13 +7,13 @@
 <body>
 <div id="overview"><a href="../../../../../../../../apidocs/org/apache/ibatis/executor/loader/javassist/JavassistProxyFactory.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2021 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2022 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> *    You may obtain a copy of the License at</em>
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> *</em>
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> *       <a href="https://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">https://www.apache.org/licenses/LICENSE-2.0</a></em>
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_comment"> *    Unless required by applicable law or agreed to in writing, software</em>
 <a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_comment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
@@ -71,7 +71,7 @@
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>      <strong class="jxr_keyword">return</strong> EnhancedDeserializationProxyImpl.createProxy(target, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>    }
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>  
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>    <strong class="jxr_keyword">static</strong> Object crateProxy(Class&lt;?&gt; type, MethodHandler callback, List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs) {
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>    <strong class="jxr_keyword">static</strong> Object createStaticProxy(Class&lt;?&gt; type, MethodHandler callback, List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs) {
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>  
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>      <a name="ProxyFactory" href="../../../../../../org/apache/ibatis/executor/loader/ProxyFactory.html#ProxyFactory">ProxyFactory</a> enhancer = <strong class="jxr_keyword">new</strong> <a name="ProxyFactory" href="../../../../../../org/apache/ibatis/executor/loader/ProxyFactory.html#ProxyFactory">ProxyFactory</a>();
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>      enhancer.setSuperclass(type);
@@ -123,7 +123,7 @@
 <a class="jxr_linenumber" name="L115" href="#L115">115</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> Object createProxy(Object target, <a name="ResultLoaderMap" href="../../../../../../org/apache/ibatis/executor/loader/ResultLoaderMap.html#ResultLoaderMap">ResultLoaderMap</a> lazyLoader, <a name="Configuration" href="../../../../../../org/apache/ibatis/session/Configuration.html#Configuration">Configuration</a> configuration, <a name="ObjectFactory" href="../../../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html#ObjectFactory">ObjectFactory</a> objectFactory, List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs) {
 <a class="jxr_linenumber" name="L116" href="#L116">116</a>       <strong class="jxr_keyword">final</strong> Class&lt;?&gt; type = target.getClass();
 <a class="jxr_linenumber" name="L117" href="#L117">117</a>       EnhancedResultObjectProxyImpl callback = <strong class="jxr_keyword">new</strong> EnhancedResultObjectProxyImpl(type, lazyLoader, configuration, objectFactory, constructorArgTypes, constructorArgs);
-<a class="jxr_linenumber" name="L118" href="#L118">118</a>       Object enhanced = crateProxy(type, callback, constructorArgTypes, constructorArgs);
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>       Object enhanced = createStaticProxy(type, callback, constructorArgTypes, constructorArgs);
 <a class="jxr_linenumber" name="L119" href="#L119">119</a>       PropertyCopier.copyBeanProperties(type, target, enhanced);
 <a class="jxr_linenumber" name="L120" href="#L120">120</a>       <strong class="jxr_keyword">return</strong> enhanced;
 <a class="jxr_linenumber" name="L121" href="#L121">121</a>     }
@@ -180,7 +180,7 @@
 <a class="jxr_linenumber" name="L172" href="#L172">172</a>             List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs) {
 <a class="jxr_linenumber" name="L173" href="#L173">173</a>       <strong class="jxr_keyword">final</strong> Class&lt;?&gt; type = target.getClass();
 <a class="jxr_linenumber" name="L174" href="#L174">174</a>       EnhancedDeserializationProxyImpl callback = <strong class="jxr_keyword">new</strong> EnhancedDeserializationProxyImpl(type, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
-<a class="jxr_linenumber" name="L175" href="#L175">175</a>       Object enhanced = crateProxy(type, callback, constructorArgTypes, constructorArgs);
+<a class="jxr_linenumber" name="L175" href="#L175">175</a>       Object enhanced = createStaticProxy(type, callback, constructorArgTypes, constructorArgs);
 <a class="jxr_linenumber" name="L176" href="#L176">176</a>       PropertyCopier.copyBeanProperties(type, target, enhanced);
 <a class="jxr_linenumber" name="L177" href="#L177">177</a>       <strong class="jxr_keyword">return</strong> enhanced;
 <a class="jxr_linenumber" name="L178" href="#L178">178</a>     }
