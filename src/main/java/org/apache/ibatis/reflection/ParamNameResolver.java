@@ -125,7 +125,7 @@ public class ParamNameResolver {
       return null;
     } else if (!hasParamAnnotation && paramCount == 1) {
       Object value = args[names.firstKey()];
-      return wrapToMapIfCollection(value, useActualParamName ? names.get(0) : null);
+      return wrapToMapIfCollection(value, useActualParamName ? names.get(names.firstKey()) : null);
     } else {
       final Map<String, Object> param = new ParamMap<>();
       int i = 0;

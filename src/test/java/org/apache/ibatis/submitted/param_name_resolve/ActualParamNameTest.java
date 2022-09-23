@@ -25,6 +25,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
+import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -70,6 +71,11 @@ class ActualParamNameTest {
       // use 'list' as alias
       {
         long count = mapper.getUserCountUsingListWithAliasIsList(Arrays.asList(1, 2));
+        assertEquals(2, count);
+      }
+      // use actual name #2693
+      {
+        long count = mapper.getUserCountUsingList_RowBounds(new RowBounds(0, 5), Arrays.asList(1, 2));
         assertEquals(2, count);
       }
     }
@@ -142,6 +148,16 @@ class ActualParamNameTest {
       "</script>"
     })
     Long getUserCountUsingArrayWithAliasArray(Integer... ids);
+
+    @Select({
+      "<script>",
+      "  select count(*) from users u where u.id in",
+      "  <foreach item='item' index='index' collection='ids' open='(' separator=',' close=')'>",
+      "    #{item}",
+      "  </foreach>",
+      "</script>"
+    })
+    Long getUserCountUsingList_RowBounds(RowBounds rowBounds, List<Integer> ids);
   }
 
 }
