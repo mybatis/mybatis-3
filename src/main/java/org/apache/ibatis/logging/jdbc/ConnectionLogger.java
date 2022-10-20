@@ -24,6 +24,7 @@ import java.sql.Statement;
 
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.reflection.ExceptionUtil;
+import org.apache.ibatis.session.Configuration;
 
 /**
  * Connection proxy to add logging.
@@ -36,9 +37,12 @@ public final class ConnectionLogger extends BaseJdbcLogger implements Invocation
 
   private final Connection connection;
 
-  private ConnectionLogger(Connection conn, Log statementLog, int queryStack) {
+  private Configuration configuration;
+
+  private ConnectionLogger(Connection conn, Log statementLog, int queryStack, Configuration configuration) {
     super(statementLog, queryStack);
     this.connection = conn;
+    this.configuration = configuration;
   }
 
   @Override
@@ -49,7 +53,7 @@ public final class ConnectionLogger extends BaseJdbcLogger implements Invocation
         return method.invoke(this, params);
       }
       if ("prepareStatement".equals(method.getName()) || "prepareCall".equals(method.getName())) {
-        if (isDebugEnabled()) {
+        if (isDebugEnabled() && configuration.isPrintPrepareStatement()) {
           debug(" Preparing: " + removeExtraWhitespace((String) params[0]), true);
         }
         PreparedStatement stmt = (PreparedStatement) method.invoke(connection, params);
@@ -78,8 +82,9 @@ public final class ConnectionLogger extends BaseJdbcLogger implements Invocation
    *          the query stack
    * @return the connection with logging
    */
-  public static Connection newInstance(Connection conn, Log statementLog, int queryStack) {
-    InvocationHandler handler = new ConnectionLogger(conn, statementLog, queryStack);
+  public static Connection newInstance(Connection conn, Log statementLog, int queryStack, Configuration configuration) {
+
+    InvocationHandler handler = new ConnectionLogger(conn, statementLog, queryStack, configuration);
     ClassLoader cl = Connection.class.getClassLoader();
     return (Connection) Proxy.newProxyInstance(cl, new Class[]{Connection.class}, handler);
   }

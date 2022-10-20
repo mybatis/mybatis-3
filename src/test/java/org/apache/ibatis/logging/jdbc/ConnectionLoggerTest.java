@@ -26,6 +26,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.session.Configuration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,16 +45,20 @@ class ConnectionLoggerTest {
   @Mock
   Log log;
 
+  @Mock
+  Configuration configuration;
+
   private Connection conn;
 
   @BeforeEach
   void setUp() throws SQLException {
-    conn = ConnectionLogger.newInstance(connection, log, 1);
+    conn = ConnectionLogger.newInstance(connection, log, 1, configuration);
   }
 
   @Test
   void shouldPrintPrepareStatement() throws SQLException {
     when(log.isDebugEnabled()).thenReturn(true);
+    when(configuration.isPrintPrepareStatement()).thenReturn(true);
     conn.prepareStatement("select 1");
     verify(log).debug(contains("Preparing: select 1"));
   }
@@ -61,6 +66,7 @@ class ConnectionLoggerTest {
   @Test
   void shouldPrintPrepareCall() throws SQLException {
     when(log.isDebugEnabled()).thenReturn(true);
+    when(configuration.isPrintPrepareStatement()).thenReturn(true);
     conn.prepareCall("{ call test() }");
     verify(log).debug(contains("Preparing: { call test() }"));
   }
@@ -69,6 +75,22 @@ class ConnectionLoggerTest {
   void shouldNotPrintCreateStatement() throws SQLException {
     conn.createStatement();
     conn.close();
+    verify(log, times(0)).debug(anyString());
+  }
+
+  @Test
+  void shouldNotPrintPrepareStatementByConfiguration() throws SQLException {
+    when(log.isDebugEnabled()).thenReturn(true);
+    when(configuration.isPrintPrepareStatement()).thenReturn(false);
+    conn.prepareStatement("select 1");
+    verify(log, times(0)).debug(anyString());
+  }
+
+  @Test
+  void shouldNotPrintPrepareCallByConfiguration() throws SQLException {
+    when(log.isDebugEnabled()).thenReturn(true);
+    when(configuration.isPrintPrepareStatement()).thenReturn(false);
+    conn.prepareCall("{ call test() }");
     verify(log, times(0)).debug(anyString());
   }
 }

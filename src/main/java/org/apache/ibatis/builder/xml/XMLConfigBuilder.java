@@ -272,6 +272,7 @@ public class XMLConfigBuilder extends BaseBuilder {
     configuration.setArgNameBasedConstructorAutoMapping(booleanValueOf(props.getProperty("argNameBasedConstructorAutoMapping"), false));
     configuration.setDefaultSqlProviderType(resolveClass(props.getProperty("defaultSqlProviderType")));
     configuration.setNullableOnForEach(booleanValueOf(props.getProperty("nullableOnForEach"), false));
+    configuration.setPrintPrepareStatement(booleanValueOf(props.getProperty("printPrepareStatement"), true));
   }
 
   private void environmentsElement(XNode context) throws Exception {

@@ -116,6 +116,8 @@ public class Configuration {
   protected boolean shrinkWhitespacesInSql;
   protected boolean nullableOnForEach;
   protected boolean argNameBasedConstructorAutoMapping;
+  protected boolean printPrepareStatement;
+
 
   protected String logPrefix;
   protected Class<? extends Log> logImpl;
@@ -420,6 +422,16 @@ public class Configuration {
 
   public void setLazyLoadingEnabled(boolean lazyLoadingEnabled) {
     this.lazyLoadingEnabled = lazyLoadingEnabled;
+  }
+
+  public boolean isPrintPrepareStatement()
+  {
+    return printPrepareStatement;
+  }
+
+  public void setPrintPrepareStatement(boolean printPrepareStatement)
+  {
+    this.printPrepareStatement = printPrepareStatement;
   }
 
   public ProxyFactory getProxyFactory() {

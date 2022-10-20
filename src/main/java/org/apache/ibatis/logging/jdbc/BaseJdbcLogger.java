@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 import org.apache.ibatis.builder.SqlSourceBuilder;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.reflection.ArrayUtil;
+import org.apache.ibatis.session.Configuration;
 
 /**
  * Base class for proxies to do logging.
@@ -50,6 +51,7 @@ public abstract class BaseJdbcLogger {
 
   protected final Log statementLog;
   protected final int queryStack;
+
 
   /*
    * Default constructor
