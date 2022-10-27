@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.math.RoundingMode;
@@ -114,7 +115,7 @@ class XmlConfigBuilderTest {
 
   public static class EnumOrderTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E> {
 
-    private E[] constants;
+    private final E[] constants;
 
     public EnumOrderTypeHandler(Class<E> javaType) {
       constants = javaType.getEnumConstants();
@@ -317,6 +318,22 @@ class XmlConfigBuilderTest {
     public static String provideSql() {
       return "SELECT 1";
     }
+  }
+
+  @Test
+  void shouldAllowSubclassedConfiguration() throws IOException {
+    String resource = "org/apache/ibatis/builder/MinimalMapperConfig.xml";
+    try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
+      XMLConfigBuilder builder = new XMLConfigBuilder(
+              new MyConfiguration(), inputStream, null, null);
+      Configuration config = builder.parse();
+
+      assertThat(config).isInstanceOf(MyConfiguration.class);
+    }
+  }
+
+  private static class MyConfiguration extends Configuration {
+    // only using to check configuration was used
   }
 
 }
