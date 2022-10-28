@@ -67,11 +67,11 @@ public class XMLConfigBuilder extends BaseBuilder {
   }
 
   public XMLConfigBuilder(Reader reader, String environment, Properties props) {
-    this(new Configuration(), reader, environment, props);
+    this(Configuration.class, reader, environment, props);
   }
 
-  public XMLConfigBuilder(Configuration configuration, Reader reader, String environment, Properties props) {
-    this(configuration, new XPathParser(reader, true, props, new XMLMapperEntityResolver()), environment, props);
+  public XMLConfigBuilder(Class<? extends Configuration> configClass, Reader reader, String environment, Properties props) {
+    this(configClass, new XPathParser(reader, true, props, new XMLMapperEntityResolver()), environment, props);
   }
 
   public XMLConfigBuilder(InputStream inputStream) {
@@ -83,15 +83,15 @@ public class XMLConfigBuilder extends BaseBuilder {
   }
 
   public XMLConfigBuilder(InputStream inputStream, String environment, Properties props) {
-    this(new Configuration(), inputStream, environment, props);
+    this(Configuration.class, inputStream, environment, props);
   }
 
-  public XMLConfigBuilder(Configuration configuration, InputStream inputStream, String environment, Properties props) {
-    this(configuration, new XPathParser(inputStream, true, props, new XMLMapperEntityResolver()), environment, props);
+  public XMLConfigBuilder(Class<? extends Configuration> configClass, InputStream inputStream, String environment, Properties props) {
+    this(configClass, new XPathParser(inputStream, true, props, new XMLMapperEntityResolver()), environment, props);
   }
 
-  private XMLConfigBuilder(Configuration configuration, XPathParser parser, String environment, Properties props) {
-    super(configuration);
+  private XMLConfigBuilder(Class<? extends Configuration> configClass, XPathParser parser, String environment, Properties props) {
+    super(newConfig(configClass));
     ErrorContext.instance().resource("SQL Mapper Configuration");
     this.configuration.setVariables(props);
     this.parsed = false;
@@ -412,6 +412,14 @@ public class XMLConfigBuilder extends BaseBuilder {
       throw new BuilderException("Environment requires an id attribute.");
     }
     return environment.equals(id);
+  }
+
+  private static Configuration newConfig(Class<? extends Configuration> configClass) {
+    try {
+      return configClass.getDeclaredConstructor().newInstance();
+    } catch (Exception ex) {
+      throw new BuilderException("Failed to create a new Configuration instance.", ex);
+    }
   }
 
 }

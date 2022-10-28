@@ -19,6 +19,7 @@ import static com.googlecode.catchexception.apis.BDDCatchException.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -65,6 +66,7 @@ import org.apache.ibatis.type.EnumTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
@@ -325,15 +327,32 @@ class XmlConfigBuilderTest {
     String resource = "org/apache/ibatis/builder/MinimalMapperConfig.xml";
     try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
       XMLConfigBuilder builder = new XMLConfigBuilder(
-              new MyConfiguration(), inputStream, null, null);
+              MyConfiguration.class, inputStream, null, null);
       Configuration config = builder.parse();
 
       assertThat(config).isInstanceOf(MyConfiguration.class);
     }
   }
 
-  private static class MyConfiguration extends Configuration {
+  @Test
+  void noDefaultConstructorForSubclassedConfiguration() throws IOException {
+    String resource = "org/apache/ibatis/builder/MinimalMapperConfig.xml";
+    try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
+      Exception exception = Assertions.assertThrows(Exception.class, () -> new XMLConfigBuilder(
+              BadConfiguration.class, inputStream, null, null));
+      assertEquals("Failed to create a new Configuration instance.", exception.getMessage());
+    }
+  }
+
+  public static class MyConfiguration extends Configuration {
     // only using to check configuration was used
+  }
+
+  public static class BadConfiguration extends Configuration {
+
+    public BadConfiguration(String parameter) {
+        // should have a default constructor
+    }
   }
 
 }
