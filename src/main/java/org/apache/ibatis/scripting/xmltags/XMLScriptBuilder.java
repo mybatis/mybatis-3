@@ -15,10 +15,12 @@
  */
 package org.apache.ibatis.scripting.xmltags;
 
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -124,12 +126,13 @@ public class XMLScriptBuilder extends BaseBuilder {
 		return new MixedSqlNode(contents);
 	}
 
-	private  String getHash(String str) {
+	private  String getHash(String key) {
 		try {
 			MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
-			return new String(messageDigest.digest(str.getBytes(StandardCharsets.UTF_8)));
+			byte hashBytes[] = messageDigest.digest(key.getBytes(StandardCharsets.UTF_8));
+			return Base64.getEncoder().encodeToString(hashBytes);
 		} catch (NoSuchAlgorithmException e) {
-			return str;
+			return key;
 		}
 	}
 
