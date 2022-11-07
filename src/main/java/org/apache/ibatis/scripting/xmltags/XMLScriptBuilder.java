@@ -15,7 +15,6 @@
  */
 package org.apache.ibatis.scripting.xmltags;
 
-import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -85,8 +84,7 @@ public class XMLScriptBuilder extends BaseBuilder {
 			XNode child = node.newXNode(children.item(i));
 			if (child.getNode().getNodeType() == Node.CDATA_SECTION_NODE
 					|| child.getNode().getNodeType() == Node.TEXT_NODE) {
-				String data = child.getStringBody("");
-				String key =  getHash(child.getStringBody(""));
+				String key = getHash(child.getStringBody(""));
 				if (configuration.containsSqlNode(key)) {
 					SqlNode sqlNode = configuration.getSqlNode(key);
 					if (sqlNode instanceof TextSqlNode) {
@@ -94,6 +92,7 @@ public class XMLScriptBuilder extends BaseBuilder {
 					}
 					contents.add(sqlNode);
 				} else {
+					String data = child.getStringBody("");
 					TextSqlNode textSqlNode = new TextSqlNode(data);
 					if (textSqlNode.isDynamic()) {
 						contents.add(textSqlNode);
@@ -106,7 +105,7 @@ public class XMLScriptBuilder extends BaseBuilder {
 					}
 				}
 			} else if (child.getNode().getNodeType() == Node.ELEMENT_NODE) { // issue #628
-				String key =  getHash(child.toString());
+				String key = getHash(child.toStringWithContent());
 				if (configuration.containsSqlNode(key)) {
 					contents.add(configuration.getSqlNode(key));
 					isDynamic = true;
@@ -126,7 +125,7 @@ public class XMLScriptBuilder extends BaseBuilder {
 		return new MixedSqlNode(contents);
 	}
 
-	private  String getHash(String key) {
+	private String getHash(String key) {
 		try {
 			MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
 			byte hashBytes[] = messageDigest.digest(key.getBytes(StandardCharsets.UTF_8));
