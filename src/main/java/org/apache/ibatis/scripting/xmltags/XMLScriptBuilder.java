@@ -106,12 +106,12 @@ public class XMLScriptBuilder extends BaseBuilder {
 				}
 			} else if (child.getNode().getNodeType() == Node.ELEMENT_NODE) { // issue #628
 				String key = getHash(child.toStringWithContent());
-				if (configuration.containsSqlNode(key)) {
+				String nodeName = child.getNode().getNodeName();
+				NodeHandler handler = nodeHandlerMap.get(nodeName);
+				if (configuration.containsSqlNode(key) && !(handler instanceof ChooseHandler)) {
 					contents.add(configuration.getSqlNode(key));
 					isDynamic = true;
 				} else {
-					String nodeName = child.getNode().getNodeName();
-					NodeHandler handler = nodeHandlerMap.get(nodeName);
 					if (handler == null) {
 						throw new BuilderException("Unknown element <" + nodeName + "> in SQL statement.");
 					}
@@ -255,9 +255,24 @@ public class XMLScriptBuilder extends BaseBuilder {
 				String nodeName = child.getNode().getNodeName();
 				NodeHandler handler = nodeHandlerMap.get(nodeName);
 				if (handler instanceof IfHandler) {
-					ifSqlNodes.add(handler.handleNode(child));
+					String key = getHash(child.toStringWithContent());
+					if (configuration.containsSqlNode(key)) {
+						ifSqlNodes.add(configuration.getSqlNode(key));
+						isDynamic = true;
+					} else {
+						SqlNode sqlNode = handler.handleNode(child);
+						ifSqlNodes.add(sqlNode);
+						configuration.addSqlNode(key, sqlNode);
+					}
 				} else if (handler instanceof OtherwiseHandler) {
-					defaultSqlNodes.add(handler.handleNode(child));
+					String key = getHash(child.toStringWithContent());
+					if (configuration.containsSqlNode(key)) {
+						defaultSqlNodes.add(configuration.getSqlNode(key));
+					} else {
+						SqlNode sqlNode = handler.handleNode(child);
+						defaultSqlNodes.add(sqlNode);
+						configuration.addSqlNode(key, sqlNode);
+					}
 				}
 			}
 		}
