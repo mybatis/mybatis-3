@@ -377,22 +377,14 @@ public class XNode {
 	}
 
 	private void toStringWithContent(StringBuilder builder) {
-		builder.append("<");
-		builder.append(name);
-		builder.append("><");
-		for (Map.Entry<Object, Object> entry : attributes.entrySet()) {
-			builder.append(entry.getKey());
-			builder.append("><");
-			builder.append(entry.getValue());
-			builder.append("><");
-		}
+		builder.append(toString());
 		Node clonedNode = getNode().cloneNode(true);
+		builder.append("<textContent>");
 		builder.append(clonedNode.getTextContent());
-		builder.append("><");
+		builder.append("<textContent>");
+		builder.append("<body>");
 		builder.append(body);
-		builder.append("><");
-		builder.append(name);
-		builder.append("/>");
+		builder.append("<body>");
 	}
 
 	private void indent(StringBuilder builder, int level) {
