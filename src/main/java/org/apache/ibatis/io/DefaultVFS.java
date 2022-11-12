@@ -26,6 +26,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystemException;
 import java.nio.file.InvalidPathException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -107,8 +108,8 @@ public class DefaultVFS extends VFS {
                   break;
                 }
               }
-            } catch (InvalidPathException e) {
-              // #1974
+            } catch (InvalidPathException | FileSystemException e) {
+              // #1974 #2598
               lines.clear();
             }
             if (!lines.isEmpty()) {
