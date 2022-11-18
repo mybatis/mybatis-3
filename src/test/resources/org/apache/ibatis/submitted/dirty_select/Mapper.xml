@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+  namespace="org.apache.ibatis.submitted.dirty_select.Mapper">
+
+  <select id="insertReturnXml"
+    resultType="org.apache.ibatis.submitted.dirty_select.User">
+    insert into users (name) values (#{name})
+    returning id, name
+  </select>
+
+</mapper>
