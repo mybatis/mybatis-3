@@ -268,7 +268,6 @@ public class MapperBuilderAssistant extends BaseBuilder {
     }
 
     id = applyCurrentNamespace(id, false);
-    boolean isSelect = sqlCommandType == SqlCommandType.SELECT;
 
     MappedStatement.Builder statementBuilder = new MappedStatement.Builder(configuration, id, sqlSource, sqlCommandType)
         .resource(resource)
@@ -284,8 +283,8 @@ public class MapperBuilderAssistant extends BaseBuilder {
         .resultSets(resultSets)
         .resultMaps(getStatementResultMaps(resultMap, resultType, id))
         .resultSetType(resultSetType)
-        .flushCacheRequired(valueOrDefault(flushCache, !isSelect))
-        .useCache(valueOrDefault(useCache, isSelect))
+        .flushCacheRequired(flushCache)
+        .useCache(useCache)
         .cache(currentCache);
 
     ParameterMap statementParameterMap = getStatementParameterMap(parameterMap, parameterType, id);
