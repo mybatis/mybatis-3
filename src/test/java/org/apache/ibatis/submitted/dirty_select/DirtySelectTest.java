@@ -101,4 +101,27 @@ class DirtySelectTest {
     }
   }
 
+  @Test
+  void shouldNonDirtySelectNotUnsetDirtyFlag() {
+    Integer id;
+    try (SqlSession sqlSession = sqlSessionFactory.openSession(false)) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      // INSERT
+      User user = new User();
+      user.setName("Bobby");
+      mapper.insert(user);
+      id = user.getId();
+      assertNotNull(id);
+      assertEquals("Bobby", user.getName());
+      // Non-dirty SELECT
+      mapper.selectById(id);
+      sqlSession.rollback();
+    }
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      User user = mapper.selectById(id);
+      assertNull(user);
+    }
+  }
+
 }

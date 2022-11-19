@@ -56,6 +56,7 @@ public final class MappedStatement {
   private Log statementLog;
   private LanguageDriver lang;
   private String[] resultSets;
+  private boolean dirtySelect;
 
   MappedStatement() {
     // constructor disabled
@@ -174,6 +175,11 @@ public final class MappedStatement {
       return this;
     }
 
+    public Builder dirtySelect(boolean dirtySelect) {
+      mappedStatement.dirtySelect = dirtySelect;
+      return this;
+    }
+
     /**
      * Resul sets.
      *
@@ -288,6 +294,10 @@ public final class MappedStatement {
 
   public String[] getResultSets() {
     return resultSets;
+  }
+
+  public boolean isDirtySelect() {
+    return dirtySelect;
   }
 
   /**
