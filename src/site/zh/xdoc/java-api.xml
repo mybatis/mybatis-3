@@ -245,7 +245,7 @@ public interface ResultHandler<T> {
   <p>当你将 <code>ExecutorType</code> 设置为 <code>ExecutorType.BATCH</code> 时，可以使用这个方法清除（执行）缓存在 JDBC 驱动类中的批量更新语句。</p>
   <source><![CDATA[List<BatchResult> flushStatements()]]></source>
 
-  <h5>事务控制方法</h5>
+  <h5 id="transaction-control-methods">事务控制方法</h5>
   <p>
     有四个方法用来控制事务作用域。当然，如果你已经设置了自动提交或你使用了外部事务管理器，这些方法就没什么作用了。然而，如果你正在使用由 Connection 实例控制的 JDBC 事务管理器，那么这四个方法就会派上用场：
   </p>
@@ -253,7 +253,7 @@ public interface ResultHandler<T> {
 void commit(boolean force)
 void rollback()
 void rollback(boolean force)</source>
-  <p>默认情况下 MyBatis 不会自动提交事务，除非它侦测到调用了插入、更新或删除方法改变了数据库。如果你没有使用这些方法提交修改，那么你可以在 commit 和 rollback 方法参数中传入 true 值，来保证事务被正常提交（注意，在自动提交模式或者使用了外部事务管理器的情况下，设置 force 值对 session 无效）。大部分情况下你无需调用 rollback()，因为 MyBatis 会在你没有调用 commit 时替你完成回滚操作。不过，当你要在一个可能多次提交或回滚的 session 中详细控制事务，回滚操作就派上用场了。</p>
+  <p>默认情况下 MyBatis 不会自动提交事务，除非它侦测到调用了插入、更新、删除或 select with <code>affectData</code> enabled 方法改变了数据库。如果你没有使用这些方法提交修改，那么你可以在 commit 和 rollback 方法参数中传入 true 值，来保证事务被正常提交（注意，在自动提交模式或者使用了外部事务管理器的情况下，设置 force 值对 session 无效）。大部分情况下你无需调用 rollback()，因为 MyBatis 会在你没有调用 commit 时替你完成回滚操作。不过，当你要在一个可能多次提交或回滚的 session 中详细控制事务，回滚操作就派上用场了。</p>
   <p><span class="label important">提示</span> MyBatis-Spring 和 MyBatis-Guice 提供了声明式事务处理，所以如果你在使用 Mybatis 的同时使用了 Spring 或者 Guice，请参考它们的手册以获取更多的内容。</p>
 
 <h5>本地缓存</h5>

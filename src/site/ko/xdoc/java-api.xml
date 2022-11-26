@@ -316,7 +316,7 @@ public interface ResultHandler<T> {
   이 방법은 <code>ExecutorType</code>을 <code>ExecutorType.BATCH</code>로 설정한 경우 사용가능하다. </p>
   <source><![CDATA[List<BatchResult> flushStatements()]]></source>
 
-  <h5>트랙잭션 제어 메소드</h5>
+  <h5 id="transaction-control-methods">트랙잭션 제어 메소드</h5>
   <p>트랜잭션을 제어하기 위해 4개의 메소드가 있다.
   물론 자동커밋을 선택하였거나 외부 트랜잭션 관리자를 사용하면 영향이 없다.
   어쨌든 Connection인스턴스에 의해 관리되고 JDBC 트랜잭션 관리자를 사용하면 이 4개의 메소드를 사용할 수 있다.</p>
@@ -324,7 +324,7 @@ public interface ResultHandler<T> {
 void commit(boolean force)
 void rollback()
 void rollback(boolean force)</source>
-  <p>기본적으로 마이바티스는 insert, update 또는 delete 를 호출하여 데이터베이스가 변경된 것으로 감지하지 않는 한 실제로 커밋하지 않는다.
+  <p>기본적으로 마이바티스는 insert, update, delete 또는 <code>affectData</code>가 활성화된select 를 호출하여 데이터베이스가 변경된 것으로 감지하지 않는 한 실제로 커밋하지 않는다.
   이러한 메소드 호출없이 변경되면 커밋된 것으로 보장하기 위해 commit 와 rollback 메소드에 true 값을 전달한다.</p>
   <p><span class="label important">참고</span> MyBatis-Spring 과 MyBatis-Guice는 선언적인 트랜잭션 관리기법을 제공한다.
   그래서 스프링이나 쥬스와 함께 마이바티스를 사용한다면 해당되는 메뉴얼을 꼭 참고하길 바란다. </p>
