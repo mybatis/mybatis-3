@@ -120,6 +120,7 @@ public class DefaultSqlSession implements SqlSession {
   public <T> Cursor<T> selectCursor(String statement, Object parameter, RowBounds rowBounds) {
     try {
       MappedStatement ms = configuration.getMappedStatement(statement);
+      dirty |= ms.isDirtySelect();
       Cursor<T> cursor = executor.queryCursor(ms, wrapCollection(parameter), rowBounds);
       registerCursor(cursor);
       return cursor;

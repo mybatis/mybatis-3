@@ -19,14 +19,21 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectProvider;
+import org.apache.ibatis.cursor.Cursor;
 
 public interface Mapper {
 
   @Select("select * from users where id = #{id}")
   User selectById(Integer id);
 
+  @Select("select * from users where id = #{id}")
+  Cursor<User> selectCursorById(Integer id);
+
   @Select(value = "insert into users (name) values (#{name}) returning id, name", affectData = true)
   User insertReturn(String name);
+
+  @Select(value = "insert into users (name) values (#{name}) returning id, name", affectData = true)
+  Cursor<User> insertReturnCursor(String name);
 
   User insertReturnXml(String name);
 
