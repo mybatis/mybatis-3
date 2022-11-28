@@ -100,6 +100,15 @@ public @interface SelectProvider {
   String databaseId() default "";
 
   /**
+   * Returns whether this select affects DB data.<br>
+   * e.g. RETURNING of PostgreSQL or OUTPUT of MS SQL Server.
+   *
+   * @return {@code true} if this select affects DB data; {@code false} if otherwise
+   * @since 3.5.12
+   */
+  boolean affectData() default false;
+
+  /**
    * The container annotation for {@link SelectProvider}.
    * @author Kazuki Shimizu
    * @since 3.5.5

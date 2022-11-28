@@ -251,13 +251,13 @@ public interface ResultHandler<T> {
   <p>There is method for flushing (executing) batch update statements that are stored in a JDBC driver class at any time. This method can be used when the <code>ExecutorType</code> is <code>ExecutorType.BATCH</code>.</p>
   <source><![CDATA[List<BatchResult> flushStatements()]]></source>
 
-  <h5>Transaction Control Methods</h5>
+  <h5 id="transaction-control-methods">Transaction Control Methods</h5>
   <p>There are four methods for controlling the scope of a transaction. Of course, these have no effect if you've chosen to use auto-commit or if you're using an external transaction manager. However, if you're using the JDBC transaction manager, managed by the <code>Connection</code> instance, then the four methods that will come in handy are:</p>
   <source>void commit()
 void commit(boolean force)
 void rollback()
 void rollback(boolean force)</source>
-  <p>By default MyBatis does not actually commit unless it detects that the database has been changed by a call to <code>insert</code>, <code>update</code> or <code>delete</code>. If you've somehow made changes without calling these methods, then you can pass <code>true</code> into the <code>commit</code> and <code>rollback</code> methods to guarantee that they will be committed (note, you still can't force a session in auto-commit mode, or one that is using an external transaction manager). Most of the time you won't have to call <code>rollback()</code>, as MyBatis will do that for you if you don't call commit. However, if you need more fine-grained control over a session where multiple commits and rollbacks are possible, you have the rollback option there to make that possible.</p>
+  <p>By default MyBatis does not actually commit unless it detects that the database has been changed by a call to <code>insert</code>, <code>update</code>, <code>delete</code> or <code>select</code> with <code>affectData</code> enabled. If you've somehow made changes without calling these methods, then you can pass <code>true</code> into the <code>commit</code> and <code>rollback</code> methods to guarantee that they will be committed (note, you still can't force a session in auto-commit mode, or one that is using an external transaction manager). Most of the time you won't have to call <code>rollback()</code>, as MyBatis will do that for you if you don't call commit. However, if you need more fine-grained control over a session where multiple commits and rollbacks are possible, you have the rollback option there to make that possible.</p>
   <p><span class="label important">NOTE</span> MyBatis-Spring and MyBatis-Guice provide declarative transaction handling. So if you are using MyBatis with Spring or Guice please refer to their specific manuals.</p>
 
   <h5>Local Cache</h5>

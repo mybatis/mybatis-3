@@ -378,7 +378,8 @@ public class MapperAnnotationBuilder {
           statementAnnotation.getDatabaseId(),
           languageDriver,
           // ResultSets
-          options != null ? nullOrEmpty(options.resultSets()) : null);
+          options != null ? nullOrEmpty(options.resultSets()) : null,
+          statementAnnotation.isDirtySelect());
     });
   }
 
@@ -604,7 +605,7 @@ public class MapperAnnotationBuilder {
 
     assistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType, fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass, resultSetTypeEnum,
         flushCache, useCache, false,
-        keyGenerator, keyProperty, keyColumn, databaseId, languageDriver, null);
+        keyGenerator, keyProperty, keyColumn, databaseId, languageDriver, null, false);
 
     id = assistant.applyCurrentNamespace(id, false);
 
@@ -672,6 +673,7 @@ public class MapperAnnotationBuilder {
     private final Annotation annotation;
     private final String databaseId;
     private final SqlCommandType sqlCommandType;
+    private boolean dirtySelect;
 
     AnnotationWrapper(Annotation annotation) {
       super();
@@ -679,6 +681,7 @@ public class MapperAnnotationBuilder {
       if (annotation instanceof Select) {
         databaseId = ((Select) annotation).databaseId();
         sqlCommandType = SqlCommandType.SELECT;
+        dirtySelect = ((Select) annotation).affectData();
       } else if (annotation instanceof Update) {
         databaseId = ((Update) annotation).databaseId();
         sqlCommandType = SqlCommandType.UPDATE;
@@ -691,6 +694,7 @@ public class MapperAnnotationBuilder {
       } else if (annotation instanceof SelectProvider) {
         databaseId = ((SelectProvider) annotation).databaseId();
         sqlCommandType = SqlCommandType.SELECT;
+        dirtySelect = ((SelectProvider) annotation).affectData();
       } else if (annotation instanceof UpdateProvider) {
         databaseId = ((UpdateProvider) annotation).databaseId();
         sqlCommandType = SqlCommandType.UPDATE;
@@ -722,6 +726,10 @@ public class MapperAnnotationBuilder {
 
     String getDatabaseId() {
       return databaseId;
+    }
+
+    boolean isDirtySelect() {
+      return dirtySelect;
     }
   }
 }

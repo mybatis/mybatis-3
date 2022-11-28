@@ -120,6 +120,7 @@ public class DefaultSqlSession implements SqlSession {
   public <T> Cursor<T> selectCursor(String statement, Object parameter, RowBounds rowBounds) {
     try {
       MappedStatement ms = configuration.getMappedStatement(statement);
+      dirty |= ms.isDirtySelect();
       Cursor<T> cursor = executor.queryCursor(ms, wrapCollection(parameter), rowBounds);
       registerCursor(cursor);
       return cursor;
@@ -148,6 +149,7 @@ public class DefaultSqlSession implements SqlSession {
   private <E> List<E> selectList(String statement, Object parameter, RowBounds rowBounds, ResultHandler handler) {
     try {
       MappedStatement ms = configuration.getMappedStatement(statement);
+      dirty |= ms.isDirtySelect();
       return executor.query(ms, wrapCollection(parameter), rowBounds, handler);
     } catch (Exception e) {
       throw ExceptionFactory.wrapException("Error querying database.  Cause: " + e, e);

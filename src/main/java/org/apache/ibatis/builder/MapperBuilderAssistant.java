@@ -261,7 +261,8 @@ public class MapperBuilderAssistant extends BaseBuilder {
       String keyColumn,
       String databaseId,
       LanguageDriver lang,
-      String resultSets) {
+      String resultSets,
+      boolean dirtySelect) {
 
     if (unresolvedCacheRef) {
       throw new IncompleteElementException("Cache-ref not yet resolved");
@@ -285,7 +286,8 @@ public class MapperBuilderAssistant extends BaseBuilder {
         .resultSetType(resultSetType)
         .flushCacheRequired(flushCache)
         .useCache(useCache)
-        .cache(currentCache);
+        .cache(currentCache)
+        .dirtySelect(dirtySelect);
 
     ParameterMap statementParameterMap = getStatementParameterMap(parameterMap, parameterType, id);
     if (statementParameterMap != null) {
@@ -344,12 +346,24 @@ public class MapperBuilderAssistant extends BaseBuilder {
       SqlCommandType sqlCommandType, Integer fetchSize, Integer timeout, String parameterMap, Class<?> parameterType,
       String resultMap, Class<?> resultType, ResultSetType resultSetType, boolean flushCache, boolean useCache,
       boolean resultOrdered, KeyGenerator keyGenerator, String keyProperty, String keyColumn, String databaseId,
-      LanguageDriver lang) {
+      LanguageDriver lang, String resultSets) {
     return addMappedStatement(
       id, sqlSource, statementType, sqlCommandType, fetchSize, timeout,
       parameterMap, parameterType, resultMap, resultType, resultSetType,
       flushCache, useCache, resultOrdered, keyGenerator, keyProperty,
-      keyColumn, databaseId, lang, null);
+      keyColumn, databaseId, lang, null, false);
+  }
+
+  public MappedStatement addMappedStatement(String id, SqlSource sqlSource, StatementType statementType,
+      SqlCommandType sqlCommandType, Integer fetchSize, Integer timeout, String parameterMap, Class<?> parameterType,
+      String resultMap, Class<?> resultType, ResultSetType resultSetType, boolean flushCache, boolean useCache,
+      boolean resultOrdered, KeyGenerator keyGenerator, String keyProperty, String keyColumn, String databaseId,
+      LanguageDriver lang) {
+    return addMappedStatement(
+        id, sqlSource, statementType, sqlCommandType, fetchSize, timeout,
+        parameterMap, parameterType, resultMap, resultType, resultSetType,
+        flushCache, useCache, resultOrdered, keyGenerator, keyProperty,
+        keyColumn, databaseId, lang, null);
   }
 
   private <T> T valueOrDefault(T value, T defaultValue) {
