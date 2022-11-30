@@ -189,6 +189,12 @@ ps.setInt(1,id);]]></source>
               </td>
             </tr>
             <tr>
+              <td><code>resultSets</code></td>
+              <td>This is only applicable for multiple result sets. It lists the result sets that will
+                be returned by the statement and gives a name to each one. Names are separated by commas.
+              </td>
+            </tr>
+            <tr>
               <td><code>affectData</code></td>
               <td>Set this to true when writing a INSERT, UPDATE or DELETE statement that returns data so that the transaction is controlled properly. Also see <a href="./java-api.html#transaction-control-methods">Transaction Control Method</a>. Default: <code>false</code> (since 3.5.12)
               </td>
