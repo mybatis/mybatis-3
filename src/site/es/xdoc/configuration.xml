@@ -1764,7 +1764,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
         <p>MyBatis incluye dos tipos de TransactionManager (ej. type=”[JDBC|MANAGED]”):
         </p>
         <ul>
-          <li>JDBC – Este TransactionManager simplemente hace uso del las capacidades de commit y rollback de JDBC.  Utiliza la conexión obtenida del DataSource para gestionar la transacción. By default, it enables auto-commit when closing the connection for compatibility with some drivers. However, for some drivers, enabling auto-commit is not only unnecesry, but also is an expensive operation. So, since version 3.5.10, you can skip this step by setting the "skipSetAutoCommitOnClose" property to true. For example:
+          <li>JDBC – Este TransactionManager simplemente hace uso del las capacidades de commit y rollback de JDBC.  Utiliza la conexión obtenida del DataSource para gestionar la transacción. By default, it enables auto-commit when closing the connection for compatibility with some drivers. However, for some drivers, enabling auto-commit is not only unnecessary, but also is an expensive operation. So, since version 3.5.10, you can skip this step by setting the "skipSetAutoCommitOnClose" property to true. For example:
             <source><![CDATA[<transactionManager type="JDBC">
   <property name="skipSetAutoCommitOnClose" value="true"/>
 </transactionManager>]]></source>
