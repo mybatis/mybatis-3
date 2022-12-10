@@ -363,6 +363,20 @@
                   <include>org.javassist:javassist</include>
                 </includes>
               </artifactSet>
+              <filters>
+                <filter>
+                  <artifact>ognl:ognl</artifact>
+                  <excludes>
+                    <exclude>META-INF/MANIFEST.MF</exclude>
+                  </excludes>
+                </filter>
+                <filter>
+                  <artifact>org.javassist:javassist</artifact>
+                  <excludes>
+                    <exclude>META-INF/MANIFEST.MF</exclude>
+                  </excludes>
+                </filter>
+              </filters>
               <relocations>
                 <relocation>
                   <pattern>ognl</pattern>
