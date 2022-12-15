@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
+import org.apache.ibatis.reflection.type.ResolvedType;
 import org.apache.ibatis.session.Configuration;
 
 /**
@@ -38,6 +39,7 @@ public class BoundSql {
   private final String sql;
   private final List<ParameterMapping> parameterMappings;
   private final Object parameterObject;
+  private final ResolvedType parameterObjectType;
   private final Map<String, Object> additionalParameters;
   private final MetaObject metaParameters;
 
@@ -47,6 +49,16 @@ public class BoundSql {
     this.parameterObject = parameterObject;
     this.additionalParameters = new HashMap<>();
     this.metaParameters = configuration.newMetaObject(additionalParameters);
+    this.parameterObjectType = null;
+  }
+
+  public BoundSql(Configuration configuration, String sql, List<ParameterMapping> parameterMappings, Object parameterObject, ResolvedType parameterObjectType) {
+    this.sql = sql;
+    this.parameterMappings = parameterMappings;
+    this.parameterObject = parameterObject;
+    this.additionalParameters = new HashMap<>();
+    this.metaParameters = configuration.newMetaObject(additionalParameters);
+    this.parameterObjectType = parameterObjectType;
   }
 
   public String getSql() {
@@ -55,6 +67,10 @@ public class BoundSql {
 
   public List<ParameterMapping> getParameterMappings() {
     return parameterMappings;
+  }
+
+  public ResolvedType getParameterObjectType() {
+    return parameterObjectType;
   }
 
   public Object getParameterObject() {

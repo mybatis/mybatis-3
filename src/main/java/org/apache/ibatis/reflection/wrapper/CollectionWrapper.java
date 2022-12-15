@@ -18,6 +18,7 @@ package org.apache.ibatis.reflection.wrapper;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.ibatis.reflection.type.ResolvedType;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
@@ -59,12 +60,22 @@ public class CollectionWrapper implements ObjectWrapper {
   }
 
   @Override
+  public ResolvedType getSetterResolvedType(String name) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
   public Class<?> getSetterType(String name) {
     throw new UnsupportedOperationException();
   }
 
   @Override
   public Class<?> getGetterType(String name) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public ResolvedType getGetterResolvedType(String name) {
     throw new UnsupportedOperationException();
   }
 

@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import org.apache.ibatis.reflection.type.ResolvedType;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.logging.Log;
@@ -38,7 +39,7 @@ public class ResultMap {
   private Configuration configuration;
 
   private String id;
-  private Class<?> type;
+  private ResolvedType type;
   private List<ResultMapping> resultMappings;
   private List<ResultMapping> idResultMappings;
   private List<ResultMapping> constructorResultMappings;
@@ -62,7 +63,19 @@ public class ResultMap {
       this(configuration, id, type, resultMappings, null);
     }
 
+    public Builder(Configuration configuration, String id, ResolvedType type, List<ResultMapping> resultMappings) {
+      this(configuration, id, type, resultMappings, null);
+    }
+
     public Builder(Configuration configuration, String id, Class<?> type, List<ResultMapping> resultMappings, Boolean autoMapping) {
+      resultMap.configuration = configuration;
+      resultMap.id = id;
+      resultMap.type = configuration.constructType(type);
+      resultMap.resultMappings = resultMappings;
+      resultMap.autoMapping = autoMapping;
+    }
+
+    public Builder(Configuration configuration, String id, ResolvedType type, List<ResultMapping> resultMappings, Boolean autoMapping) {
       resultMap.configuration = configuration;
       resultMap.id = id;
       resultMap.type = type;
@@ -76,7 +89,7 @@ public class ResultMap {
     }
 
     public Class<?> type() {
-      return resultMap.type;
+      return resultMap.type.getRawClass();
     }
 
     public ResultMap build() {
@@ -146,7 +159,7 @@ public class ResultMap {
     }
 
     private List<String> argNamesOfMatchingConstructor(List<String> constructorArgNames) {
-      Constructor<?>[] constructors = resultMap.type.getDeclaredConstructors();
+      Constructor<?>[] constructors = resultMap.type.getRawClass().getDeclaredConstructors();
       for (Constructor<?> constructor : constructors) {
         Class<?>[] paramTypes = constructor.getParameterTypes();
         if (constructorArgNames.size() == paramTypes.length) {
@@ -219,6 +232,10 @@ public class ResultMap {
   }
 
   public Class<?> getType() {
+    return type.getRawClass();
+  }
+
+  public ResolvedType getResolvedType() {
     return type;
   }
 

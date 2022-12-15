@@ -19,6 +19,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.apache.ibatis.binding.MapperMethod;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.mapping.BoundSql;
@@ -26,6 +27,9 @@ import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.mapping.ParameterMode;
 import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.reflection.property.PropertyTokenizer;
+import org.apache.ibatis.reflection.type.ResolvedType;
+import org.apache.ibatis.reflection.type.ResolvedTypeUtil;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeException;
@@ -72,7 +76,7 @@ public class DefaultParameterHandler implements ParameterHandler {
             value = boundSql.getAdditionalParameter(propertyName);
           } else if (parameterObject == null) {
             value = null;
-          } else if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {
+          } else if (parameterObjectIsValue(propertyName)) {
             value = parameterObject;
           } else {
             MetaObject metaObject = configuration.newMetaObject(parameterObject);
@@ -93,4 +97,18 @@ public class DefaultParameterHandler implements ParameterHandler {
     }
   }
 
+  protected boolean parameterObjectIsValue(String propertyName) {
+    Class<?> clazz = parameterObject.getClass();
+    if (clazz == MapperMethod.ParamMap.class) {
+      // BaseExecutorTest HashMapTypeHandlerTest
+      return false;
+    }
+    ResolvedType type = mappedStatement.getParameterMap().getResolvedType();
+    if (ResolvedTypeUtil.isInstance(type, parameterObject)) {
+      ResolvedType realType = configuration.constructType(clazz);
+      return typeHandlerRegistry.hasTypeHandler(type) || typeHandlerRegistry.hasTypeHandler(realType);
+    }
+    type = configuration.constructType(clazz);
+    return typeHandlerRegistry.hasTypeHandler(type);
+  }
 }

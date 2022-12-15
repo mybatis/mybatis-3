@@ -21,6 +21,8 @@ import java.util.Map;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.ReflectionException;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
+import org.apache.ibatis.reflection.type.ResolvedType;
+import org.apache.ibatis.reflection.type.ResolvedTypeFactory;
 
 /**
  * @author Clinton Begin
@@ -28,10 +30,12 @@ import org.apache.ibatis.reflection.property.PropertyTokenizer;
 public abstract class BaseWrapper implements ObjectWrapper {
 
   protected static final Object[] NO_ARGUMENTS = new Object[0];
+  protected final ResolvedTypeFactory resolvedTypeFactory;
   protected final MetaObject metaObject;
 
   protected BaseWrapper(MetaObject metaObject) {
     this.metaObject = metaObject;
+    this.resolvedTypeFactory = metaObject.getReflectorFactory().getResolvedTypeFactory();
   }
 
   protected Object resolveCollection(PropertyTokenizer prop, Object object) {
@@ -102,6 +106,20 @@ public abstract class BaseWrapper implements ObjectWrapper {
         throw new ReflectionException("The '" + prop.getName() + "' property of " + collection + " is not a List or Array.");
       }
     }
+  }
+
+  protected ResolvedType constructType(Class<?> clazz) {
+    return resolvedTypeFactory.constructType(clazz);
+  }
+
+  @Override
+  public Class<?> getSetterType(String name) {
+    return getSetterResolvedType(name).getRawClass();
+  }
+
+  @Override
+  public Class<?> getGetterType(String name) {
+    return getGetterResolvedType(name).getRawClass();
   }
 
 }

@@ -20,6 +20,7 @@ import java.util.List;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.mapping.SqlSource;
+import org.apache.ibatis.reflection.type.ResolvedType;
 import org.apache.ibatis.session.Configuration;
 
 /**
@@ -29,6 +30,7 @@ public class StaticSqlSource implements SqlSource {
 
   private final String sql;
   private final List<ParameterMapping> parameterMappings;
+  private final ResolvedType parameterObjectType;
   private final Configuration configuration;
 
   public StaticSqlSource(Configuration configuration, String sql) {
@@ -39,11 +41,19 @@ public class StaticSqlSource implements SqlSource {
     this.sql = sql;
     this.parameterMappings = parameterMappings;
     this.configuration = configuration;
+    this.parameterObjectType = null;
+  }
+
+  public StaticSqlSource(Configuration configuration, String sql, List<ParameterMapping> parameterMappings, ResolvedType parameterObjectType) {
+    this.sql = sql;
+    this.parameterMappings = parameterMappings;
+    this.configuration = configuration;
+    this.parameterObjectType = parameterObjectType;
   }
 
   @Override
   public BoundSql getBoundSql(Object parameterObject) {
-    return new BoundSql(configuration, sql, parameterMappings, parameterObject);
+    return new BoundSql(configuration, sql, parameterMappings, parameterObject, parameterObjectType);
   }
 
 }

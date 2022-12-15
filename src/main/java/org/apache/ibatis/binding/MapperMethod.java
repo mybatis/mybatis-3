@@ -17,8 +17,6 @@ package org.apache.ibatis.binding;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,11 +30,11 @@ import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.ParamNameResolver;
-import org.apache.ibatis.reflection.TypeParameterResolver;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.reflection.type.ResolvedMethod;
 
 /**
  * @author Clinton Begin
@@ -286,14 +284,12 @@ public class MapperMethod {
     private final ParamNameResolver paramNameResolver;
 
     public MethodSignature(Configuration configuration, Class<?> mapperInterface, Method method) {
-      Type resolvedReturnType = TypeParameterResolver.resolveReturnType(method, mapperInterface);
-      if (resolvedReturnType instanceof Class<?>) {
-        this.returnType = (Class<?>) resolvedReturnType;
-      } else if (resolvedReturnType instanceof ParameterizedType) {
-        this.returnType = (Class<?>) ((ParameterizedType) resolvedReturnType).getRawType();
-      } else {
-        this.returnType = method.getReturnType();
-      }
+      this(configuration, configuration.constructType(mapperInterface).resolveMethod(method));
+    }
+
+    public MethodSignature(Configuration configuration, ResolvedMethod resolvedMethod) {
+      this.returnType = resolvedMethod.getReturnType().getRawClass();
+      Method method = resolvedMethod.getMethod();
       this.returnsVoid = void.class.equals(this.returnType);
       this.returnsMany = configuration.getObjectFactory().isCollection(this.returnType) || this.returnType.isArray();
       this.returnsCursor = Cursor.class.equals(this.returnType);
@@ -302,7 +298,7 @@ public class MapperMethod {
       this.returnsMap = this.mapKey != null;
       this.rowBoundsIndex = getUniqueParamIndex(method, RowBounds.class);
       this.resultHandlerIndex = getUniqueParamIndex(method, ResultHandler.class);
-      this.paramNameResolver = new ParamNameResolver(configuration, method);
+      this.paramNameResolver = new ParamNameResolver(configuration, resolvedMethod);
     }
 
     public Object convertArgsToSqlCommandParam(Object[] args) {

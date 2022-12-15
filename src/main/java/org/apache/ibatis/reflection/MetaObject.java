@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
+import org.apache.ibatis.reflection.type.ResolvedType;
 import org.apache.ibatis.reflection.wrapper.BeanWrapper;
 import org.apache.ibatis.reflection.wrapper.CollectionWrapper;
 import org.apache.ibatis.reflection.wrapper.MapWrapper;
@@ -97,8 +98,16 @@ public class MetaObject {
     return objectWrapper.getSetterType(name);
   }
 
+  public ResolvedType getSetterResolvedType(String name) {
+    return objectWrapper.getSetterResolvedType(name);
+  }
+
   public Class<?> getGetterType(String name) {
     return objectWrapper.getGetterType(name);
+  }
+
+  public ResolvedType getGetterResolvedType(String name) {
+    return objectWrapper.getGetterResolvedType(name);
   }
 
   public boolean hasSetter(String name) {

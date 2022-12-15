@@ -23,6 +23,7 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import org.apache.ibatis.binding.MapperMethod;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.apache.ibatis.cursor.Cursor;
@@ -37,6 +38,8 @@ import org.apache.ibatis.mapping.ParameterMode;
 import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
+import org.apache.ibatis.reflection.type.ResolvedType;
+import org.apache.ibatis.reflection.type.ResolvedTypeUtil;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.LocalCacheScope;
 import org.apache.ibatis.session.ResultHandler;
@@ -202,7 +205,6 @@ public abstract class BaseExecutor implements Executor {
     cacheKey.update(rowBounds.getLimit());
     cacheKey.update(boundSql.getSql());
     List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
-    TypeHandlerRegistry typeHandlerRegistry = ms.getConfiguration().getTypeHandlerRegistry();
     // mimic DefaultParameterHandler logic
     for (ParameterMapping parameterMapping : parameterMappings) {
       if (parameterMapping.getMode() != ParameterMode.OUT) {
@@ -212,7 +214,7 @@ public abstract class BaseExecutor implements Executor {
           value = boundSql.getAdditionalParameter(propertyName);
         } else if (parameterObject == null) {
           value = null;
-        } else if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {
+        } else if (parameterObjectIsValue(ms.getParameterMap().getResolvedType(), parameterObject)) {
           value = parameterObject;
         } else {
           MetaObject metaObject = configuration.newMetaObject(parameterObject);
@@ -345,6 +347,18 @@ public abstract class BaseExecutor implements Executor {
   @Override
   public void setExecutorWrapper(Executor wrapper) {
     this.wrapper = wrapper;
+  }
+
+  private boolean parameterObjectIsValue(ResolvedType type, Object parameterObject) {
+    Class<?> clazz = parameterObject.getClass();
+    if (clazz == MapperMethod.ParamMap.class) {
+      return false;
+    }
+    TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();
+    if (ResolvedTypeUtil.isInstance(type, parameterObject)) {
+      return typeHandlerRegistry.hasTypeHandler(type) || typeHandlerRegistry.hasTypeHandler(clazz);
+    }
+    return typeHandlerRegistry.hasTypeHandler(clazz);
   }
 
   private static class DeferredLoad {

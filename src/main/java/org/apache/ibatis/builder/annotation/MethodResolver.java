@@ -17,14 +17,23 @@ package org.apache.ibatis.builder.annotation;
 
 import java.lang.reflect.Method;
 
+import org.apache.ibatis.reflection.type.ResolvedMethod;
+
 /**
  * @author Eduardo Macarron
  */
 public class MethodResolver {
   private final MapperAnnotationBuilder annotationBuilder;
-  private final Method method;
+  private final ResolvedMethod method;
 
+  @Deprecated
   public MethodResolver(MapperAnnotationBuilder annotationBuilder, Method method) {
+    this.annotationBuilder = annotationBuilder;
+    this.method = annotationBuilder.configuration.constructType(method.getDeclaringClass())
+      .resolveMethod(method);
+  }
+
+  public MethodResolver(MapperAnnotationBuilder annotationBuilder, ResolvedMethod method) {
     this.annotationBuilder = annotationBuilder;
     this.method = method;
   }

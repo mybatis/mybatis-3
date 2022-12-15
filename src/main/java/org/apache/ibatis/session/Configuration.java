@@ -95,6 +95,9 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeAliasRegistry;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
+import org.apache.ibatis.reflection.type.ResolvedType;
+import org.apache.ibatis.reflection.type.ResolvedTypeFactory;
+import org.apache.ibatis.reflection.type.ResolvedTypeUtil;
 
 /**
  * @author Clinton Begin
@@ -133,7 +136,7 @@ public class Configuration {
   protected AutoMappingUnknownColumnBehavior autoMappingUnknownColumnBehavior = AutoMappingUnknownColumnBehavior.NONE;
 
   protected Properties variables = new Properties();
-  protected ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
+  protected ReflectorFactory reflectorFactory;
   protected ObjectFactory objectFactory = new DefaultObjectFactory();
   protected ObjectWrapperFactory objectWrapperFactory = new DefaultObjectWrapperFactory();
 
@@ -149,9 +152,10 @@ public class Configuration {
    */
   protected Class<?> configurationFactory;
 
+  protected final ResolvedTypeFactory resolvedTypeFactory;
   protected final MapperRegistry mapperRegistry = new MapperRegistry(this);
   protected final InterceptorChain interceptorChain = new InterceptorChain();
-  protected final TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry(this);
+  protected final TypeHandlerRegistry typeHandlerRegistry;
   protected final TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
   protected final LanguageDriverRegistry languageRegistry = new LanguageDriverRegistry();
 
@@ -184,6 +188,14 @@ public class Configuration {
   }
 
   public Configuration() {
+    this(ResolvedTypeUtil.getResolvedTypeFactory());
+  }
+
+  public Configuration(ResolvedTypeFactory resolvedTypeFactory) {
+    this.resolvedTypeFactory = resolvedTypeFactory;
+    reflectorFactory = new DefaultReflectorFactory(resolvedTypeFactory);
+    typeHandlerRegistry = new TypeHandlerRegistry(this);
+
     typeAliasRegistry.registerAlias("JDBC", JdbcTransactionFactory.class);
     typeAliasRegistry.registerAlias("MANAGED", ManagedTransactionFactory.class);
 
@@ -592,6 +604,14 @@ public class Configuration {
    */
   public MapperRegistry getMapperRegistry() {
     return mapperRegistry;
+  }
+
+  public ResolvedTypeFactory getResolvedTypeFactory() {
+    return resolvedTypeFactory;
+  }
+
+  public ResolvedType constructType(Class<?> clazz) {
+    return resolvedTypeFactory.constructType(clazz);
   }
 
   public ReflectorFactory getReflectorFactory() {

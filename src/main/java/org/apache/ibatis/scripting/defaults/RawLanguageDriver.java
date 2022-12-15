@@ -20,6 +20,7 @@ import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.scripting.xmltags.XMLLanguageDriver;
 import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.reflection.type.ResolvedType;
 
 /**
  * As of 3.2.4 the default XML language is able to identify static statements
@@ -32,14 +33,14 @@ import org.apache.ibatis.session.Configuration;
 public class RawLanguageDriver extends XMLLanguageDriver {
 
   @Override
-  public SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType) {
+  public SqlSource createSqlSource(Configuration configuration, XNode script, ResolvedType parameterType) {
     SqlSource source = super.createSqlSource(configuration, script, parameterType);
     checkIsNotDynamic(source);
     return source;
   }
 
   @Override
-  public SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType) {
+  public SqlSource createSqlSource(Configuration configuration, String script, ResolvedType parameterType) {
     SqlSource source = super.createSqlSource(configuration, script, parameterType);
     checkIsNotDynamic(source);
     return source;

@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.reflection.type.ResolvedType;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.SystemMetaObject;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
@@ -72,39 +73,39 @@ public class MapWrapper extends BaseWrapper {
   }
 
   @Override
-  public Class<?> getSetterType(String name) {
+  public ResolvedType getSetterResolvedType(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
       MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
       if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
-        return Object.class;
+        return resolvedTypeFactory.getObjectType();
       } else {
-        return metaValue.getSetterType(prop.getChildren());
+        return metaValue.getSetterResolvedType(prop.getChildren());
       }
     } else {
       if (map.get(name) != null) {
-        return map.get(name).getClass();
+        return constructType(map.get(name).getClass());
       } else {
-        return Object.class;
+        return resolvedTypeFactory.getObjectType();
       }
     }
   }
 
   @Override
-  public Class<?> getGetterType(String name) {
+  public ResolvedType getGetterResolvedType(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
       MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
       if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
-        return Object.class;
+        return resolvedTypeFactory.getObjectType();
       } else {
-        return metaValue.getGetterType(prop.getChildren());
+        return metaValue.getGetterResolvedType(prop.getChildren());
       }
     } else {
       if (map.get(name) != null) {
-        return map.get(name).getClass();
+        return resolvedTypeFactory.constructType(map.get(name).getClass());
       } else {
-        return Object.class;
+        return resolvedTypeFactory.getObjectType();
       }
     }
   }

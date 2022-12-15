@@ -17,6 +17,7 @@ package org.apache.ibatis.mapping;
 
 import java.sql.ResultSet;
 
+import org.apache.ibatis.reflection.type.ResolvedType;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
@@ -31,7 +32,7 @@ public class ParameterMapping {
 
   private String property;
   private ParameterMode mode;
-  private Class<?> javaType = Object.class;
+  private ResolvedType resolvedJavaType;
   private JdbcType jdbcType;
   private Integer numericScale;
   private TypeHandler<?> typeHandler;
@@ -49,13 +50,21 @@ public class ParameterMapping {
       parameterMapping.configuration = configuration;
       parameterMapping.property = property;
       parameterMapping.typeHandler = typeHandler;
+      parameterMapping.resolvedJavaType = configuration.getResolvedTypeFactory().getObjectType();
       parameterMapping.mode = ParameterMode.IN;
     }
 
     public Builder(Configuration configuration, String property, Class<?> javaType) {
       parameterMapping.configuration = configuration;
       parameterMapping.property = property;
-      parameterMapping.javaType = javaType;
+      parameterMapping.resolvedJavaType = configuration.constructType(javaType);
+      parameterMapping.mode = ParameterMode.IN;
+    }
+
+    public Builder(Configuration configuration, String property, ResolvedType resolvedJavaType) {
+      parameterMapping.configuration = configuration;
+      parameterMapping.property = property;
+      parameterMapping.resolvedJavaType = resolvedJavaType;
       parameterMapping.mode = ParameterMode.IN;
     }
 
@@ -65,7 +74,12 @@ public class ParameterMapping {
     }
 
     public Builder javaType(Class<?> javaType) {
-      parameterMapping.javaType = javaType;
+      parameterMapping.resolvedJavaType = parameterMapping.configuration.constructType(javaType);
+      return this;
+    }
+
+    public Builder javaType(ResolvedType resolvedJavaType) {
+      parameterMapping.resolvedJavaType = resolvedJavaType;
       return this;
     }
 
@@ -106,7 +120,7 @@ public class ParameterMapping {
     }
 
     private void validate() {
-      if (ResultSet.class.equals(parameterMapping.javaType)) {
+      if (parameterMapping.resolvedJavaType.hasRawClass(ResultSet.class)) {
         if (parameterMapping.resultMapId == null) {
           throw new IllegalStateException("Missing resultmap in property '"
               + parameterMapping.property + "'.  "
@@ -116,16 +130,16 @@ public class ParameterMapping {
         if (parameterMapping.typeHandler == null) {
           throw new IllegalStateException("Type handler was null on parameter mapping for property '"
             + parameterMapping.property + "'. It was either not specified and/or could not be found for the javaType ("
-            + parameterMapping.javaType.getName() + ") : jdbcType (" + parameterMapping.jdbcType + ") combination.");
+            + parameterMapping.resolvedJavaType.toCanonical() + ") : jdbcType (" + parameterMapping.jdbcType + ") combination.");
         }
       }
     }
 
     private void resolveTypeHandler() {
-      if (parameterMapping.typeHandler == null && parameterMapping.javaType != null) {
+      if (parameterMapping.typeHandler == null && parameterMapping.resolvedJavaType != null) {
         Configuration configuration = parameterMapping.configuration;
         TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();
-        parameterMapping.typeHandler = typeHandlerRegistry.getTypeHandler(parameterMapping.javaType, parameterMapping.jdbcType);
+        parameterMapping.typeHandler = typeHandlerRegistry.getTypeHandler(parameterMapping.resolvedJavaType, parameterMapping.jdbcType);
       }
     }
 
@@ -150,7 +164,16 @@ public class ParameterMapping {
    * @return the java type
    */
   public Class<?> getJavaType() {
-    return javaType;
+    return resolvedJavaType.getRawClass();
+  }
+
+  /**
+   * Used for handling output of callable statements.
+   *
+   * @return the java type
+   */
+  public ResolvedType getResolvedJavaType() {
+    return resolvedJavaType;
   }
 
   /**
@@ -213,7 +236,7 @@ public class ParameterMapping {
     //sb.append("configuration=").append(configuration); // configuration doesn't have a useful .toString()
     sb.append("property='").append(property).append('\'');
     sb.append(", mode=").append(mode);
-    sb.append(", javaType=").append(javaType);
+    sb.append(", javaType=").append(resolvedJavaType.toCanonical());
     sb.append(", jdbcType=").append(jdbcType);
     sb.append(", numericScale=").append(numericScale);
     //sb.append(", typeHandler=").append(typeHandler); // typeHandler also doesn't have a useful .toString()

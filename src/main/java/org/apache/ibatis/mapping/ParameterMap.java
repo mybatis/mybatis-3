@@ -18,7 +18,9 @@ package org.apache.ibatis.mapping;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.ibatis.reflection.type.ResolvedType;
 import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.reflection.type.ResolvedTypeUtil;
 
 /**
  * @author Clinton Begin
@@ -26,7 +28,7 @@ import org.apache.ibatis.session.Configuration;
 public class ParameterMap {
 
   private String id;
-  private Class<?> type;
+  private ResolvedType type;
   private List<ParameterMapping> parameterMappings;
 
   private ParameterMap() {
@@ -37,12 +39,18 @@ public class ParameterMap {
 
     public Builder(Configuration configuration, String id, Class<?> type, List<ParameterMapping> parameterMappings) {
       parameterMap.id = id;
+      parameterMap.type = configuration.constructType(type);
+      parameterMap.parameterMappings = parameterMappings;
+    }
+
+    public Builder(Configuration configuration, String id, ResolvedType type, List<ParameterMapping> parameterMappings) {
+      parameterMap.id = id;
       parameterMap.type = type;
       parameterMap.parameterMappings = parameterMappings;
     }
 
     public Class<?> type() {
-      return parameterMap.type;
+      return ResolvedTypeUtil.getRawClass(parameterMap.type);
     }
 
     public ParameterMap build() {
@@ -57,6 +65,10 @@ public class ParameterMap {
   }
 
   public Class<?> getType() {
+    return ResolvedTypeUtil.getRawClass(type);
+  }
+
+  public ResolvedType getResolvedType() {
     return type;
   }
 

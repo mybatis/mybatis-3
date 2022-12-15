@@ -19,6 +19,7 @@ import org.apache.ibatis.builder.SqlSourceBuilder;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.reflection.type.ResolvedType;
 
 /**
  * @author Clinton Begin
@@ -27,10 +28,18 @@ public class DynamicSqlSource implements SqlSource {
 
   private final Configuration configuration;
   private final SqlNode rootSqlNode;
+  private final ResolvedType parameterType;
 
   public DynamicSqlSource(Configuration configuration, SqlNode rootSqlNode) {
     this.configuration = configuration;
     this.rootSqlNode = rootSqlNode;
+    this.parameterType = null;
+  }
+
+  public DynamicSqlSource(Configuration configuration, SqlNode rootSqlNode, ResolvedType parameterType) {
+    this.configuration = configuration;
+    this.rootSqlNode = rootSqlNode;
+    this.parameterType = parameterType;
   }
 
   @Override
@@ -38,8 +47,14 @@ public class DynamicSqlSource implements SqlSource {
     DynamicContext context = new DynamicContext(configuration, parameterObject);
     rootSqlNode.apply(context);
     SqlSourceBuilder sqlSourceParser = new SqlSourceBuilder(configuration);
-    Class<?> parameterType = parameterObject == null ? Object.class : parameterObject.getClass();
-    SqlSource sqlSource = sqlSourceParser.parse(context.getSql(), parameterType, context.getBindings());
+    ResolvedType paramType;
+    if (this.parameterType != null) {
+      paramType = this.parameterType;
+    } else {
+      paramType = parameterObject == null ? configuration.getResolvedTypeFactory().getObjectType()
+        : configuration.getResolvedTypeFactory().constructType(parameterObject.getClass());
+    }
+    SqlSource sqlSource = sqlSourceParser.parse(context.getSql(), paramType, context.getBindings());
     BoundSql boundSql = sqlSource.getBoundSql(parameterObject);
     context.getBindings().forEach(boundSql::setAdditionalParameter);
     return boundSql;

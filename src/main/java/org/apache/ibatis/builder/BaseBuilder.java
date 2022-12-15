@@ -22,6 +22,8 @@ import java.util.regex.Pattern;
 
 import org.apache.ibatis.mapping.ParameterMode;
 import org.apache.ibatis.mapping.ResultSetType;
+import org.apache.ibatis.reflection.type.ResolvedType;
+import org.apache.ibatis.reflection.type.ResolvedTypeFactory;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeAliasRegistry;
@@ -35,11 +37,13 @@ public abstract class BaseBuilder {
   protected final Configuration configuration;
   protected final TypeAliasRegistry typeAliasRegistry;
   protected final TypeHandlerRegistry typeHandlerRegistry;
+  protected final ResolvedTypeFactory resolvedTypeFactory;
 
   public BaseBuilder(Configuration configuration) {
     this.configuration = configuration;
     this.typeAliasRegistry = this.configuration.getTypeAliasRegistry();
     this.typeHandlerRegistry = this.configuration.getTypeHandlerRegistry();
+    this.resolvedTypeFactory = this.configuration.getResolvedTypeFactory();
   }
 
   public Configuration getConfiguration() {
@@ -108,6 +112,11 @@ public abstract class BaseBuilder {
     }
   }
 
+  protected ResolvedType resolveResolvedType(String alias) {
+    Class<?> clazz = resolveClass(alias);
+    return resolvedTypeFactory.constructType(clazz);
+  }
+
   protected <T> Class<? extends T> resolveClass(String alias) {
     if (alias == null) {
       return null;
@@ -120,6 +129,10 @@ public abstract class BaseBuilder {
   }
 
   protected TypeHandler<?> resolveTypeHandler(Class<?> javaType, String typeHandlerAlias) {
+    return resolveTypeHandler(resolvedTypeFactory.constructType(javaType), typeHandlerAlias);
+  }
+
+  protected TypeHandler<?> resolveTypeHandler(ResolvedType resolvedType, String typeHandlerAlias) {
     if (typeHandlerAlias == null) {
       return null;
     }
@@ -129,7 +142,7 @@ public abstract class BaseBuilder {
     }
     @SuppressWarnings("unchecked") // already verified it is a TypeHandler
     Class<? extends TypeHandler<?>> typeHandlerType = (Class<? extends TypeHandler<?>>) type;
-    return resolveTypeHandler(javaType, typeHandlerType);
+    return resolveTypeHandler(resolvedType, typeHandlerType);
   }
 
   protected TypeHandler<?> resolveTypeHandler(Class<?> javaType, Class<? extends TypeHandler<?>> typeHandlerType) {
@@ -145,7 +158,24 @@ public abstract class BaseBuilder {
     return handler;
   }
 
+  protected TypeHandler<?> resolveTypeHandler(ResolvedType resolvedType, Class<? extends TypeHandler<?>> typeHandlerType) {
+    if (typeHandlerType == null) {
+      return null;
+    }
+    // javaType ignored for injected handlers see issue #746 for full detail
+    TypeHandler<?> handler = typeHandlerRegistry.getMappingTypeHandler(typeHandlerType);
+    if (handler == null) {
+      // not in registry, create a new one
+      handler = typeHandlerRegistry.getInstance(resolvedType, typeHandlerType);
+    }
+    return handler;
+  }
+
   protected <T> Class<? extends T> resolveAlias(String alias) {
     return typeAliasRegistry.resolveAlias(alias);
+  }
+
+  protected ResolvedType constructType(Class<?> clazz) {
+    return resolvedTypeFactory.constructType(clazz);
   }
 }

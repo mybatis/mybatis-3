@@ -18,11 +18,7 @@ package org.apache.ibatis.builder.annotation;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Array;
-import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -45,13 +41,11 @@ import org.apache.ibatis.annotations.DeleteProvider;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Lang;
-import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Options.FlushCachePolicy;
 import org.apache.ibatis.annotations.Property;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.ResultMap;
-import org.apache.ibatis.annotations.ResultType;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectKey;
@@ -59,13 +53,11 @@ import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.annotations.TypeDiscriminator;
 import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.annotations.UpdateProvider;
-import org.apache.ibatis.binding.MapperMethod.ParamMap;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.builder.CacheRefResolver;
 import org.apache.ibatis.builder.IncompleteElementException;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
-import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.executor.keygen.NoKeyGenerator;
@@ -81,11 +73,11 @@ import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.parsing.PropertyParser;
-import org.apache.ibatis.reflection.TypeParameterResolver;
+import org.apache.ibatis.reflection.type.ResolvedMethod;
+import org.apache.ibatis.reflection.type.ResolvedType;
+import org.apache.ibatis.reflection.type.ResolvedTypeFactory;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
-import org.apache.ibatis.session.ResultHandler;
-import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.UnknownTypeHandler;
@@ -103,11 +95,15 @@ public class MapperAnnotationBuilder {
 
   private final Configuration configuration;
   private final MapperBuilderAssistant assistant;
+  private final ResolvedTypeFactory resolvedTypeFactory;
   private final Class<?> type;
+  private final ResolvedType resolvedType;
 
   public MapperAnnotationBuilder(Configuration configuration, Class<?> type) {
     String resource = type.getName().replace('.', '/') + ".java (best guess)";
     this.assistant = new MapperBuilderAssistant(configuration, resource);
+    this.resolvedTypeFactory = configuration.getResolvedTypeFactory();
+    this.resolvedType = resolvedTypeFactory.constructType(type);
     this.configuration = configuration;
     this.type = type;
   }
@@ -124,14 +120,15 @@ public class MapperAnnotationBuilder {
         if (!canHaveStatement(method)) {
           continue;
         }
+        ResolvedMethod resolvedMethod = resolvedType.resolveMethod(method);
         if (getAnnotationWrapper(method, false, Select.class, SelectProvider.class).isPresent()
             && method.getAnnotation(ResultMap.class) == null) {
-          parseResultMap(method);
+          parseResultMap(resolvedMethod);
         }
         try {
-          parseStatement(method);
+          parseStatement(resolvedMethod);
         } catch (IncompleteElementException e) {
-          configuration.addIncompleteMethod(new MethodResolver(this, method));
+          configuration.addIncompleteMethod(new MethodResolver(this, resolvedMethod));
         }
       }
     }
@@ -223,8 +220,9 @@ public class MapperAnnotationBuilder {
     }
   }
 
-  private String parseResultMap(Method method) {
-    Class<?> returnType = getReturnType(method);
+  private String parseResultMap(ResolvedMethod resolvedMethod) {
+    Method method = resolvedMethod.getMethod();
+    ResolvedType returnType = getReturnType(resolvedMethod);
     Arg[] args = method.getAnnotationsByType(Arg.class);
     Result[] results = method.getAnnotationsByType(Result.class);
     TypeDiscriminator typeDiscriminator = method.getAnnotation(TypeDiscriminator.class);
@@ -249,7 +247,7 @@ public class MapperAnnotationBuilder {
     return type.getName() + "." + method.getName() + suffix;
   }
 
-  private void applyResultMap(String resultMapId, Class<?> returnType, Arg[] args, Result[] results, TypeDiscriminator discriminator) {
+  private void applyResultMap(String resultMapId, ResolvedType returnType, Arg[] args, Result[] results, TypeDiscriminator discriminator) {
     List<ResultMapping> resultMappings = new ArrayList<>();
     applyConstructorArgs(args, returnType, resultMappings);
     applyResults(results, returnType, resultMappings);
@@ -259,7 +257,7 @@ public class MapperAnnotationBuilder {
     createDiscriminatorResultMaps(resultMapId, returnType, discriminator);
   }
 
-  private void createDiscriminatorResultMaps(String resultMapId, Class<?> resultType, TypeDiscriminator discriminator) {
+  private void createDiscriminatorResultMaps(String resultMapId, ResolvedType resultType, TypeDiscriminator discriminator) {
     if (discriminator != null) {
       for (Case c : discriminator.cases()) {
         String caseResultMapId = resultMapId + "-" + c.value();
@@ -273,10 +271,10 @@ public class MapperAnnotationBuilder {
     }
   }
 
-  private Discriminator applyDiscriminator(String resultMapId, Class<?> resultType, TypeDiscriminator discriminator) {
+  private Discriminator applyDiscriminator(String resultMapId, ResolvedType resultType, TypeDiscriminator discriminator) {
     if (discriminator != null) {
       String column = discriminator.column();
-      Class<?> javaType = discriminator.javaType() == void.class ? String.class : discriminator.javaType();
+      ResolvedType javaType = discriminator.javaType() == void.class ? resolvedTypeFactory.getObjectType() : resolvedTypeFactory.constructType(discriminator.javaType());
       JdbcType jdbcType = discriminator.jdbcType() == JdbcType.UNDEFINED ? null : discriminator.jdbcType();
       @SuppressWarnings("unchecked")
       Class<? extends TypeHandler<?>> typeHandler = (Class<? extends TypeHandler<?>>)
@@ -293,8 +291,9 @@ public class MapperAnnotationBuilder {
     return null;
   }
 
-  void parseStatement(Method method) {
-    final Class<?> parameterTypeClass = getParameterType(method);
+  void parseStatement(ResolvedMethod resolvedMethod) {
+    Method method = resolvedMethod.getMethod();
+    final ResolvedType parameterTypeClass = resolvedMethod.namedParamsType(configuration);
     final LanguageDriver languageDriver = getLanguageDriver(method);
 
     getAnnotationWrapper(method, true, statementAnnotationTypes).ifPresent(statementAnnotation -> {
@@ -310,7 +309,7 @@ public class MapperAnnotationBuilder {
         // first check for SelectKey annotation - that overrides everything else
         SelectKey selectKey = getAnnotationWrapper(method, false, SelectKey.class).map(x -> (SelectKey)x.getAnnotation()).orElse(null);
         if (selectKey != null) {
-          keyGenerator = handleSelectKeyAnnotation(selectKey, mappedStatementId, getParameterType(method), languageDriver);
+          keyGenerator = handleSelectKeyAnnotation(selectKey, mappedStatementId, parameterTypeClass, languageDriver);
           keyProperty = selectKey.keyProperty();
         } else if (options == null) {
           keyGenerator = configuration.isUseGeneratedKeys() ? Jdbc3KeyGenerator.INSTANCE : NoKeyGenerator.INSTANCE;
@@ -366,7 +365,7 @@ public class MapperAnnotationBuilder {
           null,
           parameterTypeClass,
           resultMapId,
-          getReturnType(method),
+          getReturnType(resolvedMethod),
           resultSetType,
           flushCache,
           useCache,
@@ -392,80 +391,11 @@ public class MapperAnnotationBuilder {
     return configuration.getLanguageDriver(langClass);
   }
 
-  private Class<?> getParameterType(Method method) {
-    Class<?> parameterType = null;
-    Class<?>[] parameterTypes = method.getParameterTypes();
-    for (Class<?> currentParameterType : parameterTypes) {
-      if (!RowBounds.class.isAssignableFrom(currentParameterType) && !ResultHandler.class.isAssignableFrom(currentParameterType)) {
-        if (parameterType == null) {
-          parameterType = currentParameterType;
-        } else {
-          // issue #135
-          parameterType = ParamMap.class;
-        }
-      }
-    }
-    return parameterType;
+  private ResolvedType getReturnType(ResolvedMethod resolvedMethod) {
+    return assistant.getReturnType(resolvedMethod);
   }
 
-  private Class<?> getReturnType(Method method) {
-    Class<?> returnType = method.getReturnType();
-    Type resolvedReturnType = TypeParameterResolver.resolveReturnType(method, type);
-    if (resolvedReturnType instanceof Class) {
-      returnType = (Class<?>) resolvedReturnType;
-      if (returnType.isArray()) {
-        returnType = returnType.getComponentType();
-      }
-      // gcode issue #508
-      if (void.class.equals(returnType)) {
-        ResultType rt = method.getAnnotation(ResultType.class);
-        if (rt != null) {
-          returnType = rt.value();
-        }
-      }
-    } else if (resolvedReturnType instanceof ParameterizedType) {
-      ParameterizedType parameterizedType = (ParameterizedType) resolvedReturnType;
-      Class<?> rawType = (Class<?>) parameterizedType.getRawType();
-      if (Collection.class.isAssignableFrom(rawType) || Cursor.class.isAssignableFrom(rawType)) {
-        Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
-        if (actualTypeArguments != null && actualTypeArguments.length == 1) {
-          Type returnTypeParameter = actualTypeArguments[0];
-          if (returnTypeParameter instanceof Class<?>) {
-            returnType = (Class<?>) returnTypeParameter;
-          } else if (returnTypeParameter instanceof ParameterizedType) {
-            // (gcode issue #443) actual type can be a also a parameterized type
-            returnType = (Class<?>) ((ParameterizedType) returnTypeParameter).getRawType();
-          } else if (returnTypeParameter instanceof GenericArrayType) {
-            Class<?> componentType = (Class<?>) ((GenericArrayType) returnTypeParameter).getGenericComponentType();
-            // (gcode issue #525) support List<byte[]>
-            returnType = Array.newInstance(componentType, 0).getClass();
-          }
-        }
-      } else if (method.isAnnotationPresent(MapKey.class) && Map.class.isAssignableFrom(rawType)) {
-        // (gcode issue 504) Do not look into Maps if there is not MapKey annotation
-        Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
-        if (actualTypeArguments != null && actualTypeArguments.length == 2) {
-          Type returnTypeParameter = actualTypeArguments[1];
-          if (returnTypeParameter instanceof Class<?>) {
-            returnType = (Class<?>) returnTypeParameter;
-          } else if (returnTypeParameter instanceof ParameterizedType) {
-            // (gcode issue 443) actual type can be a also a parameterized type
-            returnType = (Class<?>) ((ParameterizedType) returnTypeParameter).getRawType();
-          }
-        }
-      } else if (Optional.class.equals(rawType)) {
-        Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
-        Type returnTypeParameter = actualTypeArguments[0];
-        if (returnTypeParameter instanceof Class<?>) {
-          returnType = (Class<?>) returnTypeParameter;
-        }
-      }
-    }
-
-    return returnType;
-  }
-
-  private void applyResults(Result[] results, Class<?> resultType, List<ResultMapping> resultMappings) {
+  private void applyResults(Result[] results, ResolvedType resultType, List<ResultMapping> resultMappings) {
     for (Result result : results) {
       List<ResultFlag> flags = new ArrayList<>();
       if (result.id()) {
@@ -479,7 +409,7 @@ public class MapperAnnotationBuilder {
           resultType,
           nullOrEmpty(result.property()),
           nullOrEmpty(result.column()),
-          result.javaType() == void.class ? null : result.javaType(),
+          result.javaType() == void.class ? null : resolvedTypeFactory.constructType(result.javaType()),
           result.jdbcType() == JdbcType.UNDEFINED ? null : result.jdbcType(),
           hasNestedSelect(result) ? nestedSelectId(result) : null,
           hasNestedResultMap ? nestedResultMapId(result) : null,
@@ -548,7 +478,7 @@ public class MapperAnnotationBuilder {
     return result.one().select().length() > 0 || result.many().select().length() > 0;
   }
 
-  private void applyConstructorArgs(Arg[] args, Class<?> resultType, List<ResultMapping> resultMappings) {
+  private void applyConstructorArgs(Arg[] args, ResolvedType resultType, List<ResultMapping> resultMappings) {
     for (Arg arg : args) {
       List<ResultFlag> flags = new ArrayList<>();
       flags.add(ResultFlag.CONSTRUCTOR);
@@ -562,7 +492,7 @@ public class MapperAnnotationBuilder {
           resultType,
           nullOrEmpty(arg.name()),
           nullOrEmpty(arg.column()),
-          arg.javaType() == void.class ? null : arg.javaType(),
+          arg.javaType() == void.class ? null : resolvedTypeFactory.constructType(arg.javaType()),
           arg.jdbcType() == JdbcType.UNDEFINED ? null : arg.jdbcType(),
           nullOrEmpty(arg.select()),
           nullOrEmpty(arg.resultMap()),
@@ -581,9 +511,9 @@ public class MapperAnnotationBuilder {
     return value == null || value.trim().length() == 0 ? null : value;
   }
 
-  private KeyGenerator handleSelectKeyAnnotation(SelectKey selectKeyAnnotation, String baseStatementId, Class<?> parameterTypeClass, LanguageDriver languageDriver) {
+  private KeyGenerator handleSelectKeyAnnotation(SelectKey selectKeyAnnotation, String baseStatementId, ResolvedType parameterTypeClass, LanguageDriver languageDriver) {
     String id = baseStatementId + SelectKeyGenerator.SELECT_KEY_SUFFIX;
-    Class<?> resultTypeClass = selectKeyAnnotation.resultType();
+    ResolvedType resultTypeClass = resolvedTypeFactory.constructType(selectKeyAnnotation.resultType());
     StatementType statementType = selectKeyAnnotation.statementType();
     String keyProperty = selectKeyAnnotation.keyProperty();
     String keyColumn = selectKeyAnnotation.keyColumn();
@@ -615,7 +545,7 @@ public class MapperAnnotationBuilder {
     return answer;
   }
 
-  private SqlSource buildSqlSource(Annotation annotation, Class<?> parameterType, LanguageDriver languageDriver,
+  private SqlSource buildSqlSource(Annotation annotation, ResolvedType parameterType, LanguageDriver languageDriver,
       Method method) {
     if (annotation instanceof Select) {
       return buildSqlSourceFromStrings(((Select) annotation).value(), parameterType, languageDriver);
@@ -628,10 +558,10 @@ public class MapperAnnotationBuilder {
     } else if (annotation instanceof SelectKey) {
       return buildSqlSourceFromStrings(((SelectKey) annotation).statement(), parameterType, languageDriver);
     }
-    return new ProviderSqlSource(assistant.getConfiguration(), annotation, type, method);
+    return new ProviderSqlSource(assistant.getConfiguration(), annotation, resolvedType, method);
   }
 
-  private SqlSource buildSqlSourceFromStrings(String[] strings, Class<?> parameterTypeClass,
+  private SqlSource buildSqlSourceFromStrings(String[] strings, ResolvedType parameterTypeClass,
       LanguageDriver languageDriver) {
     return languageDriver.createSqlSource(configuration, String.join(" ", strings).trim(), parameterTypeClass);
   }

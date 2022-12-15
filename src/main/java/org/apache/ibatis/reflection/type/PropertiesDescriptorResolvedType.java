@@ -13,18 +13,13 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.builder;
+package org.apache.ibatis.reflection.type;
 
-import org.apache.ibatis.reflection.DefaultReflectorFactory;
-import org.apache.ibatis.reflection.type.ResolvedTypeFactory;
-import org.apache.ibatis.reflection.type.ResolvedTypeUtil;
+import org.apache.ibatis.reflection.PropertiesDescriptor;
 
-public class CustomReflectorFactory extends DefaultReflectorFactory {
-  public CustomReflectorFactory() {
-    this(ResolvedTypeUtil.getResolvedTypeFactory());
-  }
+/**
+ * {@link ResolvedType} with {@link PropertiesDescriptor} support
+ */
+public interface PropertiesDescriptorResolvedType extends PropertiesDescriptor, ResolvedType {
 
-  public CustomReflectorFactory(ResolvedTypeFactory resolvedTypeFactory) {
-    super(resolvedTypeFactory);
-  }
 }

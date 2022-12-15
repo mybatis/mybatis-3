@@ -17,6 +17,7 @@ package org.apache.ibatis.scripting.defaults;
 
 import java.util.HashMap;
 
+import org.apache.ibatis.reflection.type.ResolvedType;
 import org.apache.ibatis.builder.SqlSourceBuilder;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.SqlSource;
@@ -37,6 +38,10 @@ public class RawSqlSource implements SqlSource {
   private final SqlSource sqlSource;
 
   public RawSqlSource(Configuration configuration, SqlNode rootSqlNode, Class<?> parameterType) {
+    this(configuration, rootSqlNode, configuration.constructType(parameterType));
+  }
+
+  public RawSqlSource(Configuration configuration, SqlNode rootSqlNode, ResolvedType parameterType) {
     this(configuration, getSql(configuration, rootSqlNode), parameterType);
   }
 
@@ -44,6 +49,12 @@ public class RawSqlSource implements SqlSource {
     SqlSourceBuilder sqlSourceParser = new SqlSourceBuilder(configuration);
     Class<?> clazz = parameterType == null ? Object.class : parameterType;
     sqlSource = sqlSourceParser.parse(sql, clazz, new HashMap<>());
+  }
+
+  public RawSqlSource(Configuration configuration, String sql, ResolvedType parameterType) {
+    SqlSourceBuilder sqlSourceParser = new SqlSourceBuilder(configuration);
+    ResolvedType type = parameterType == null ? configuration.getResolvedTypeFactory().getObjectType() : parameterType;
+    sqlSource = sqlSourceParser.parse(sql, type, new HashMap<>());
   }
 
   private static String getSql(Configuration configuration, SqlNode rootSqlNode) {

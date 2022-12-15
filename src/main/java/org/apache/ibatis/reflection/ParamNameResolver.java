@@ -19,6 +19,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -27,6 +28,10 @@ import java.util.TreeMap;
 
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.binding.MapperMethod.ParamMap;
+import org.apache.ibatis.reflection.type.MapDescriptorResolvedType;
+import org.apache.ibatis.reflection.type.PropertiesDescriptorResolvedType;
+import org.apache.ibatis.reflection.type.ResolvedMethod;
+import org.apache.ibatis.reflection.type.ResolvedType;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
@@ -52,17 +57,30 @@ public class ParamNameResolver {
    */
   private final SortedMap<Integer, String> names;
 
+  private final ResolvedMethod resolvedMethod;
+
   private boolean hasParamAnnotation;
 
   public ParamNameResolver(Configuration config, Method method) {
+    this(config, config.constructType(method.getDeclaringClass()).resolveMethod(method));
+  }
+
+  public ParamNameResolver(Configuration config, Method method, Class<?> clazz) {
+    this(config, config.constructType(clazz).resolveMethod(method));
+  }
+
+  public ParamNameResolver(Configuration config, ResolvedMethod resolvedMethod) {
+    this.resolvedMethod = resolvedMethod;
+    Method method = resolvedMethod.getMethod();
     this.useActualParamName = config.isUseActualParamName();
-    final Class<?>[] paramTypes = method.getParameterTypes();
+    final ResolvedType[] parameterTypes = resolvedMethod.getParameterTypes();
     final Annotation[][] paramAnnotations = method.getParameterAnnotations();
     final SortedMap<Integer, String> map = new TreeMap<>();
     int paramCount = paramAnnotations.length;
     // get names from @Param annotations
     for (int paramIndex = 0; paramIndex < paramCount; paramIndex++) {
-      if (isSpecialParameter(paramTypes[paramIndex])) {
+      ResolvedType resolvedType = parameterTypes[paramIndex];
+      if (isSpecialParameter(resolvedType.getRawClass())) {
         // skip special parameters
         continue;
       }
@@ -141,6 +159,56 @@ public class ParamNameResolver {
       }
       return param;
     }
+  }
+
+  public ResolvedType getNamedParamsType() {
+    final int paramCount = names.size();
+    ResolvedType type;
+    ResolvedType[] parameterTypes = resolvedMethod.getParameterTypes();
+    if (paramCount == 0) {
+      return null;
+    }
+    if (!hasParamAnnotation && paramCount == 1) {
+      type = parameterTypes[names.firstKey()];
+      Map<String, ResolvedType> typeMap = new HashMap<>();
+      if (type.isArrayType()) {
+        typeMap.put("array", type);
+      } else if (type.isTypeOrSubTypeOf(Collection.class)) {
+        typeMap.put("collection", type);
+        if (type.isTypeOrSubTypeOf(List.class)) {
+          typeMap.put("list", type);
+        }
+      }
+      if (!typeMap.isEmpty()) {
+        if (useActualParamName) {
+          typeMap.put(names.get(0), type);
+        }
+        return MapDescriptorResolvedType.paramMap(resolvedMethod.getResolvedTypeFactory(), typeMap);
+      }
+      return type;
+    } else {
+      Map<String, ResolvedType> typeMap = new HashMap<>();
+      int i = 0;
+      for (Map.Entry<Integer, String> entry : names.entrySet()) {
+        typeMap.put(entry.getValue(), parameterTypes[entry.getKey()]);
+        // add generic param names (param1, param2, ...)
+        final String genericParamName = GENERIC_NAME_PREFIX + (i + 1);
+        // ensure not to overwrite parameter named with @Param
+        if (!names.containsValue(genericParamName)) {
+          typeMap.put(genericParamName, parameterTypes[entry.getKey()]);
+        }
+        i++;
+      }
+      return MapDescriptorResolvedType.paramMap(resolvedMethod.getResolvedTypeFactory(), typeMap);
+    }
+  }
+
+  /**
+   * @return null if no parameter, return the first type if only one parameter, or {@link PropertiesDescriptorResolvedType} if more than one parameter,
+   * the {@link PropertiesDescriptorResolvedType} contains the types of {@link ParamMap} values
+   */
+  public static ResolvedType namedParamsType(Configuration configuration, ResolvedMethod method) {
+    return new ParamNameResolver(configuration, method).getNamedParamsType();
   }
 
   /**

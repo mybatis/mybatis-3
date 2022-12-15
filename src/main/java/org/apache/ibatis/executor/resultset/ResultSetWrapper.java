@@ -29,6 +29,7 @@ import java.util.Set;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.ResultMap;
+import org.apache.ibatis.reflection.type.ResolvedType;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.ObjectTypeHandler;
@@ -46,7 +47,7 @@ public class ResultSetWrapper {
   private final List<String> columnNames = new ArrayList<>();
   private final List<String> classNames = new ArrayList<>();
   private final List<JdbcType> jdbcTypes = new ArrayList<>();
-  private final Map<String, Map<Class<?>, TypeHandler<?>>> typeHandlerMap = new HashMap<>();
+  private final Map<String, Map<ResolvedType, TypeHandler<?>>> typeHandlerMap = new HashMap<>();
   private final Map<String, List<String>> mappedColumnNamesMap = new HashMap<>();
   private final Map<String, List<String>> unMappedColumnNamesMap = new HashMap<>();
 
@@ -100,8 +101,12 @@ public class ResultSetWrapper {
    * @return the type handler
    */
   public TypeHandler<?> getTypeHandler(Class<?> propertyType, String columnName) {
+    return getTypeHandler(typeHandlerRegistry.getResolvedTypeFactory().constructType(propertyType), columnName);
+  }
+
+  public TypeHandler<?> getTypeHandler(ResolvedType propertyType, String columnName) {
     TypeHandler<?> handler = null;
-    Map<Class<?>, TypeHandler<?>> columnHandlers = typeHandlerMap.get(columnName);
+    Map<ResolvedType, TypeHandler<?>> columnHandlers = typeHandlerMap.get(columnName);
     if (columnHandlers == null) {
       columnHandlers = new HashMap<>();
       typeHandlerMap.put(columnName, columnHandlers);

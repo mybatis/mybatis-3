@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.reflection.type.ResolvedType;
 import org.apache.ibatis.builder.BaseBuilder;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.mapping.SqlSource;
@@ -36,14 +37,21 @@ public class XMLScriptBuilder extends BaseBuilder {
 
   private final XNode context;
   private boolean isDynamic;
-  private final Class<?> parameterType;
+  private final ResolvedType parameterType;
   private final Map<String, NodeHandler> nodeHandlerMap = new HashMap<>();
 
   public XMLScriptBuilder(Configuration configuration, XNode context) {
-    this(configuration, context, null);
+    this(configuration, context, (ResolvedType) null);
   }
 
   public XMLScriptBuilder(Configuration configuration, XNode context, Class<?> parameterType) {
+    super(configuration);
+    this.context = context;
+    this.parameterType = constructType(parameterType);
+    initNodeHandlerMap();
+  }
+
+  public XMLScriptBuilder(Configuration configuration, XNode context, ResolvedType parameterType) {
     super(configuration);
     this.context = context;
     this.parameterType = parameterType;
@@ -67,7 +75,7 @@ public class XMLScriptBuilder extends BaseBuilder {
     MixedSqlNode rootSqlNode = parseDynamicTags(context);
     SqlSource sqlSource;
     if (isDynamic) {
-      sqlSource = new DynamicSqlSource(configuration, rootSqlNode);
+      sqlSource = new DynamicSqlSource(configuration, rootSqlNode, parameterType);
     } else {
       sqlSource = new RawSqlSource(configuration, rootSqlNode, parameterType);
     }

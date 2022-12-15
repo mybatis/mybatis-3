@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.scripting;
 
+import org.apache.ibatis.reflection.type.ResolvedType;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -22,6 +23,7 @@ import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.scripting.defaults.DefaultParameterHandler;
 import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.reflection.type.ResolvedTypeUtil;
 
 public interface LanguageDriver {
 
@@ -46,7 +48,23 @@ public interface LanguageDriver {
    * @param parameterType input parameter type got from a mapper method or specified in the parameterType xml attribute. Can be null.
    * @return the sql source
    */
-  SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType);
+  @Deprecated
+  default SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType) {
+    return createSqlSource(configuration, script, configuration.constructType(parameterType));
+  }
+
+  /**
+   * Creates an {@link SqlSource} that will hold the statement read from a mapper xml file.
+   * It is called during startup, when the mapped statement is read from a class or an xml file.
+   *
+   * @param configuration The MyBatis configuration
+   * @param script XNode parsed from a XML file
+   * @param parameterType input parameter type got from a mapper method or specified in the parameterType xml attribute. Can be null.
+   * @return the sql source
+   */
+  default SqlSource createSqlSource(Configuration configuration, XNode script, ResolvedType parameterType) {
+    return createSqlSource(configuration, script, ResolvedTypeUtil.getRawClass(parameterType));
+  }
 
   /**
    * Creates an {@link SqlSource} that will hold the statement read from an annotation.
@@ -57,6 +75,22 @@ public interface LanguageDriver {
    * @param parameterType input parameter type got from a mapper method or specified in the parameterType xml attribute. Can be null.
    * @return the sql source
    */
-  SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType);
+  @Deprecated
+  default SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType) {
+    return createSqlSource(configuration, script, configuration.constructType(parameterType));
+  }
+
+  /**
+   * Creates an {@link SqlSource} that will hold the statement read from an annotation.
+   * It is called during startup, when the mapped statement is read from a class or an xml file.
+   *
+   * @param configuration The MyBatis configuration
+   * @param script The content of the annotation
+   * @param parameterType input parameter type got from a mapper method or specified in the parameterType xml attribute. Can be null.
+   * @return the sql source
+   */
+  default SqlSource createSqlSource(Configuration configuration, String script, ResolvedType parameterType) {
+    return createSqlSource(configuration, script, ResolvedTypeUtil.getRawClass(parameterType));
+  }
 
 }

@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.builder;
 
+import org.apache.ibatis.reflection.type.ResolvedType;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.session.Configuration;
@@ -37,7 +38,7 @@ public class SqlSourceBuilderTest {
 
   @Test
   void testShrinkWhitespacesInSqlIsFalse() {
-    SqlSource sqlSource = sqlSourceBuilder.parse(sqlFromXml, null, null);
+    SqlSource sqlSource = sqlSourceBuilder.parse(sqlFromXml, (ResolvedType) null, null);
     BoundSql boundSql = sqlSource.getBoundSql(null);
     String actual = boundSql.getSql();
     Assertions.assertEquals(sqlFromXml, actual);
@@ -46,7 +47,7 @@ public class SqlSourceBuilderTest {
   @Test
   void testShrinkWhitespacesInSqlIsTrue() {
     configuration.setShrinkWhitespacesInSql(true);
-    SqlSource sqlSource = sqlSourceBuilder.parse(sqlFromXml, null, null);
+    SqlSource sqlSource = sqlSourceBuilder.parse(sqlFromXml, (ResolvedType) null, null);
     BoundSql boundSql = sqlSource.getBoundSql(null);
     String actual = boundSql.getSql();
 

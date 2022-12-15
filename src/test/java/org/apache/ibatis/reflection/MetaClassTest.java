@@ -19,11 +19,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.domain.misc.RichType;
 import org.apache.ibatis.domain.misc.generics.GenericConcrete;
+import org.apache.ibatis.reflection.type.MapDescriptorResolvedType;
+import org.apache.ibatis.reflection.type.ResolvedType;
+import org.apache.ibatis.reflection.type.ResolvedTypeFactory;
 import org.junit.jupiter.api.Test;
 
 class MetaClassTest {
@@ -98,14 +102,33 @@ class MetaClassTest {
     assertEquals(String.class, meta.getGetterType("richProperty"));
     assertEquals(List.class, meta.getGetterType("richList"));
     assertEquals(Map.class, meta.getGetterType("richMap"));
-    assertEquals(List.class, meta.getGetterType("richList[0]"));
+    assertEquals(String.class, meta.getGetterType("richList[0]"));
 
     assertEquals(RichType.class, meta.getGetterType("richType"));
     assertEquals(String.class, meta.getGetterType("richType.richField"));
     assertEquals(String.class, meta.getGetterType("richType.richProperty"));
     assertEquals(List.class, meta.getGetterType("richType.richList"));
     assertEquals(Map.class, meta.getGetterType("richType.richMap"));
-    assertEquals(List.class, meta.getGetterType("richType.richList[0]"));
+    assertEquals(String.class, meta.getGetterType("richType.richList[0]"));
+
+    ResolvedTypeFactory resolvedTypeFactory = reflectorFactory.getResolvedTypeFactory();
+    HashMap<String, ResolvedType> map = new HashMap<>();
+    map.put("list", resolvedTypeFactory.constructParametricType(List.class, RichType.class));
+    MapDescriptorResolvedType mapResolvedType = MapDescriptorResolvedType.paramMap(resolvedTypeFactory, map);
+    meta = MetaClass.forClass(mapResolvedType, reflectorFactory);
+    assertEquals(RichType.class, meta.getGetterType("list[0].richType"));
+    assertEquals(String.class, meta.getGetterType("list[0].richField"));
+    assertEquals(String.class, meta.getGetterType("list[0].richProperty"));
+    assertEquals(String.class, meta.getGetterType("list[0].richType.richList[0]"));
+  }
+
+  @Test
+  void shouldCheckTypeForMapValue() {
+    ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
+    ResolvedTypeFactory resolvedTypeFactory = reflectorFactory.getResolvedTypeFactory();
+    ResolvedType mapType = resolvedTypeFactory.constructParametricType(Map.class, Object.class, Integer.class);
+    MetaClass meta = MetaClass.forClass(mapType, reflectorFactory);
+    assertEquals(Integer.class, meta.getGetterType("0"));
   }
 
   @Test

@@ -20,6 +20,7 @@ import java.util.List;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
+import org.apache.ibatis.reflection.type.ResolvedType;
 
 /**
  * @author Clinton Begin
@@ -38,7 +39,11 @@ public interface ObjectWrapper {
 
   Class<?> getSetterType(String name);
 
+  ResolvedType getSetterResolvedType(String name);
+
   Class<?> getGetterType(String name);
+
+  ResolvedType getGetterResolvedType(String name);
 
   boolean hasSetter(String name);
 

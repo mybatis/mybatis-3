@@ -17,6 +17,7 @@ package org.apache.ibatis.reflection.wrapper;
 
 import java.util.List;
 
+import org.apache.ibatis.reflection.type.ResolvedType;
 import org.apache.ibatis.reflection.ExceptionUtil;
 import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.reflection.MetaObject;
@@ -76,32 +77,32 @@ public class BeanWrapper extends BaseWrapper {
   }
 
   @Override
-  public Class<?> getSetterType(String name) {
+  public ResolvedType getSetterResolvedType(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
       MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
       if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
-        return metaClass.getSetterType(name);
+        return metaClass.getSetterResolvedType(name);
       } else {
-        return metaValue.getSetterType(prop.getChildren());
+        return metaValue.getSetterResolvedType(prop.getChildren());
       }
     } else {
-      return metaClass.getSetterType(name);
+      return metaClass.getSetterResolvedType(name);
     }
   }
 
   @Override
-  public Class<?> getGetterType(String name) {
+  public ResolvedType getGetterResolvedType(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
       MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
       if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
-        return metaClass.getGetterType(name);
+        return metaClass.getGetterResolvedType(name);
       } else {
-        return metaValue.getGetterType(prop.getChildren());
+        return metaValue.getGetterResolvedType(prop.getChildren());
       }
     } else {
-      return metaClass.getGetterType(name);
+      return metaClass.getGetterResolvedType(name);
     }
   }
 

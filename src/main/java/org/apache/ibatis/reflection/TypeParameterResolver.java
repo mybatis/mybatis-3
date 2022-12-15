@@ -28,6 +28,7 @@ import java.util.Arrays;
 /**
  * @author Iwao AVE!
  */
+@Deprecated
 public class TypeParameterResolver {
 
   /**
