@@ -27,12 +27,6 @@ import java.lang.reflect.Type;
  */
 public abstract class TypeReference<T> {
 
-  private final Type rawType;
-
-  protected TypeReference() {
-    rawType = getSuperclassTypeParameter(getClass());
-  }
-
   Type getSuperclassTypeParameter(Class<?> clazz) {
     Type genericSuperclass = clazz.getGenericSuperclass();
     if (genericSuperclass instanceof Class) {
@@ -55,12 +49,12 @@ public abstract class TypeReference<T> {
   }
 
   public final Type getRawType() {
-    return rawType;
+    return getSuperclassTypeParameter(getClass());
   }
 
   @Override
   public String toString() {
-    return rawType.toString();
+    return getRawType().toString();
   }
 
 }
