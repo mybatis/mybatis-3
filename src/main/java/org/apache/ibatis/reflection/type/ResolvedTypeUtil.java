@@ -39,7 +39,11 @@ public class ResolvedTypeUtil {
   }
 
   public static ResolvedTypeFactory getResolvedTypeFactory() {
-    return getJacksonTypeFactory();
+    ResolvedTypeFactory resolvedTypeFactory = getJacksonTypeFactory();
+    if (resolvedTypeFactory != null) {
+      return resolvedTypeFactory;
+    }
+    return getBuildInJacksonTypeFactory();
   }
 
   private static class JacksonResolvedTypeFactoryHolder {
@@ -59,4 +63,11 @@ public class ResolvedTypeUtil {
     return JacksonResolvedTypeFactoryHolder.instance;
   }
 
+  private static class BuildInJacksonResolvedTypeFactoryHolder {
+    private static final BuildInJacksonBaseResolvedTypeFactory INSTANCE = new BuildInJacksonBaseResolvedTypeFactory();
+  }
+
+  public static ResolvedTypeFactory getBuildInJacksonTypeFactory() {
+    return BuildInJacksonResolvedTypeFactoryHolder.INSTANCE;
+  }
 }
