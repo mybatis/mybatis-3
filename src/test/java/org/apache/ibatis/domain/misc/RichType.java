@@ -52,11 +52,11 @@ public class RichType {
     this.richProperty = richProperty;
   }
 
-  public List getRichList() {
+  public List<String> getRichList() {
     return richList;
   }
 
-  public void setRichList(List richList) {
+  public void setRichList(List<String> richList) {
     this.richList = richList;
   }
 

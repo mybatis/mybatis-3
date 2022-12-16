@@ -16,6 +16,7 @@
 package org.apache.ibatis.submitted.generictypes;
 
 import java.io.Reader;
+import java.util.Collections;
 
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
@@ -46,6 +47,7 @@ class GenericTypesTest {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Group group = mapper.getGroup();
       Assertions.assertNotNull(group.getOwner());
+      Assertions.assertEquals(Collections.singletonList("User1,User2,User3"), group.getMembers());
     }
   }
 

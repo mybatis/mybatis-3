@@ -13,13 +13,24 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.submitted.generictypes;
+package org.apache.ibatis.submitted.list_type_handler;
 
-import org.apache.ibatis.annotations.Select;
+import java.util.List;
 
 public interface Mapper {
 
-  @Select("select id, owner, array[members] members from groups where id=1")
-  Group getGroup();
+  void insert(User user);
 
+  void insertWithoutAssignTypeHandler(User user);
+
+  int getUserCount();
+
+  /**
+   * HSQL returns NULL when asked for the cardinality of an array column with NULL value :-(
+   */
+  Integer getNicknameCount();
+
+  List<User> selectByNicknames(List<String> nicknames);
+
+  void updateNickname(Integer id, List<String> nicknames);
 }

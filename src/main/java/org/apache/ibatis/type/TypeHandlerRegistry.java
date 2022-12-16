@@ -192,6 +192,10 @@ public final class TypeHandlerRegistry {
     // issue #273
     register(Character.class, new CharacterTypeHandler());
     register(char.class, new CharacterTypeHandler());
+
+    ListTypeHandler.register(this);
+    SetTypeHandler.register(this);
+    ArrayTypeHandler.register(this);
   }
 
   public ResolvedTypeFactory getResolvedTypeFactory() {
@@ -532,7 +536,7 @@ public final class TypeHandlerRegistry {
    * This will flag this {@link TypeHandler} need a type for constructor, and will get null when construct without type info
    * @see #getMappingTypeHandler
    */
-  public void putCreator(Class<?> typeHandlerClazz, Function<ResolvedType, ? extends TypeHandler<?>> creator) {
+  public void addCreator(Class<?> typeHandlerClazz, Function<ResolvedType, ? extends TypeHandler<?>> creator) {
     typeHandlerCreatorMap.put(typeHandlerClazz, creator);
   }
 

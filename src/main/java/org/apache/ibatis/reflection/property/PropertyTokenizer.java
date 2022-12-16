@@ -73,4 +73,17 @@ public class PropertyTokenizer implements Iterator<PropertyTokenizer> {
   public void remove() {
     throw new UnsupportedOperationException("Remove is not supported, as it has no meaning in the context of properties.");
   }
+
+  public static boolean isIndexAccess(String propertyName) {
+    if (propertyName == null) {
+      return false;
+    }
+    int i = propertyName.indexOf("[");
+    if (i != -1) {
+      // skip list[0]
+      return propertyName.indexOf("]") > i;
+    }
+    return false;
+  }
+
 }

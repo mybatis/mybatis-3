@@ -13,13 +13,38 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.submitted.generictypes;
+package org.apache.ibatis.submitted.list_type_handler;
 
-import org.apache.ibatis.annotations.Select;
+import java.util.List;
 
-public interface Mapper {
+public class User {
 
-  @Select("select id, owner, array[members] members from groups where id=1")
-  Group getGroup();
+  private Integer id;
+  private String name;
+  private List<String> nicknames;
+
+  public Integer getId() {
+    return id;
+  }
+
+  public void setId(Integer id) {
+    this.id = id;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public List<String> getNicknames() {
+    return nicknames;
+  }
+
+  public void setNicknames(List<String> nicknames) {
+    this.nicknames = nicknames;
+  }
 
 }

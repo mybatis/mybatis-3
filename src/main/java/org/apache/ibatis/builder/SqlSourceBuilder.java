@@ -101,7 +101,7 @@ public class SqlSourceBuilder extends BaseBuilder {
       ResolvedType propertyType;
       if (metaParameters.hasGetter(property)) { // issue #448 get type from additional params
         propertyType = metaParameters.getGetterResolvedType(property);
-      } else if (typeHandlerRegistry.hasTypeHandler(parameterType)) {
+      } else if (parameterTypeToPropertyType(property)) {
         propertyType = parameterType;
       } else if (JdbcType.CURSOR.name().equals(propertiesMap.get("jdbcType"))) {
         propertyType = resolvedTypeFactory.getResultSetType();
@@ -156,6 +156,14 @@ public class SqlSourceBuilder extends BaseBuilder {
       } catch (Exception ex) {
         throw new BuilderException("Parsing error was found in mapping #{" + content + "}.  Check syntax #{property|(expression), var1=value1, var2=value2, ...} ", ex);
       }
+    }
+
+    private boolean parameterTypeToPropertyType(String property) {
+      if (parameterType.hasContentType() && PropertyTokenizer.isIndexAccess(property)) {
+        // TypeHandlerRegistry has ListTypeHandler, skip list[0] indexAccess
+        return false;
+      }
+      return typeHandlerRegistry.hasTypeHandler(parameterType);
     }
 
     private ResolvedType resolveParamTypeByProperty(ResolvedType type, String property) {

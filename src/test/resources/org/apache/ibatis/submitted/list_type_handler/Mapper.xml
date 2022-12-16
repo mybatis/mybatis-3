@@ -17,17 +17,17 @@
 
 -->
 <!DOCTYPE mapper
-    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="org.apache.ibatis.submitted.array_type_handler.Mapper">
+<mapper namespace="org.apache.ibatis.submitted.list_type_handler.Mapper">
 
   <insert id="insert"
-    parameterType="org.apache.ibatis.submitted.array_type_handler.User">
+          parameterType="org.apache.ibatis.submitted.list_type_handler.User">
     insert into users
-      (id, name, nicknames)
+    (id, name, nicknames)
     values
-      (#{id}, #{name}, #{nicknames,typeHandler=org.apache.ibatis.type.ArrayTypeHandler})
+    (#{id}, #{name}, #{nicknames,typeHandler=org.apache.ibatis.type.ListTypeHandler})
   </insert>
 
   <insert id="insertWithoutAssignTypeHandler">
@@ -41,8 +41,17 @@
     select count(*) from users
   </select>
 
-  <select id="getNicknameCount" resultType="int">
+  <select id="getNicknameCount" resultType="java.lang.Integer">
     select sum(cardinality(nicknames)) "nicknames_count" from users
+  </select>
+
+  <resultMap id="selectAllMap" type="org.apache.ibatis.submitted.list_type_handler.User">
+    <id property="id" column="id"/>
+    <result property="nicknames" column="nicknames"/>
+  </resultMap>
+
+  <select id="selectByNicknames" resultType="org.apache.ibatis.submitted.list_type_handler.User">
+    select * from users where nicknames = #{nicknames}
   </select>
 
   <update id="updateNickname">

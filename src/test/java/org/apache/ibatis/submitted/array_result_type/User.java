@@ -15,10 +15,14 @@
  */
 package org.apache.ibatis.submitted.array_result_type;
 
+import java.util.List;
+
 public class User {
 
   private Integer id;
   private String name;
+
+  private List<String> nicknameList;
 
   public Integer getId() {
     return id;
@@ -34,5 +38,13 @@ public class User {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public List<String> getNicknameList() {
+    return nicknameList;
+  }
+
+  public void setNicknameList(List<String> nicknameList) {
+    this.nicknameList = nicknameList;
   }
 }
