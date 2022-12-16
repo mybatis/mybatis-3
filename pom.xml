@@ -27,7 +27,7 @@
   </parent>
 
   <artifactId>mybatis</artifactId>
-  <version>3.5.11</version>
+  <version>3.5.11.2</version>
   <packaging>jar</packaging>
 
   <name>mybatis</name>
@@ -411,9 +411,9 @@
       </properties>
     </profile>
     <profile>
-      <id>pre16</id>
+      <id>pre17</id>
       <activation>
-        <jdk>(,16)</jdk>
+        <jdk>(,17)</jdk>
       </activation>
       <build>
         <pluginManagement>
@@ -432,15 +432,15 @@
       </build>
     </profile>
     <profile>
-      <id>16</id>
+      <id>17</id>
       <activation>
-        <jdk>[16,)</jdk>
+        <jdk>[17,)</jdk>
       </activation>
       <properties>
-        <java.version>16</java.version>
-        <java.release.version>16</java.release.version>
-        <java.test.version>16</java.test.version>
-        <java.test.release.version>16</java.test.release.version>
+        <java.version>17</java.version>
+        <java.release.version>17</java.release.version>
+        <java.test.version>17</java.test.version>
+        <java.test.release.version>17</java.test.release.version>
         <excludedGroups>TestcontainersTests,RequireIllegalAccess</excludedGroups>
       </properties>
     </profile>
