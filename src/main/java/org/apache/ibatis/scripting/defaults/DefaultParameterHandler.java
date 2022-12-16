@@ -42,12 +42,12 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
  */
 public class DefaultParameterHandler implements ParameterHandler {
 
-  private final TypeHandlerRegistry typeHandlerRegistry;
+  protected final TypeHandlerRegistry typeHandlerRegistry;
 
-  private final MappedStatement mappedStatement;
-  private final Object parameterObject;
-  private final BoundSql boundSql;
-  private final Configuration configuration;
+  protected final MappedStatement mappedStatement;
+  protected final Object parameterObject;
+  protected final BoundSql boundSql;
+  protected final Configuration configuration;
 
   public DefaultParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql) {
     this.mappedStatement = mappedStatement;
