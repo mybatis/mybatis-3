@@ -78,6 +78,7 @@ class HashMapTypeHandlerTest {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       HashMap<String, String> map = new HashMap<>();
       map.put("name", "User1");
+      map.put("dummy", "NoSuchUser");
       User user = mapper.getUserWithTypeHandlerXml(map);
       Assertions.assertNotNull(user);
     }
