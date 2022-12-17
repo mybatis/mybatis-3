@@ -45,7 +45,6 @@ public class DynamicContext {
 
   protected final ContextMap bindings;
   private final StringJoiner sqlBuilder = new StringJoiner(" ");
-  private int uniqueNumber = 0;
 
   private final Configuration configuration;
   private final Object parameterObject;
@@ -89,10 +88,6 @@ public class DynamicContext {
 
   public String getSql() {
     return sqlBuilder.toString().trim();
-  }
-
-  public int getUniqueNumber() {
-    return uniqueNumber++;
   }
 
   public List<ParameterMapping> getParameterMappings() {

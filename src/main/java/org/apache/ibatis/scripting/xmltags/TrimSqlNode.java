@@ -95,11 +95,6 @@ public class TrimSqlNode implements SqlNode {
     }
 
     @Override
-    public int getUniqueNumber() {
-      return delegate.getUniqueNumber();
-    }
-
-    @Override
     public void appendSql(String sql) {
       sqlBuffer.append(sql);
     }
