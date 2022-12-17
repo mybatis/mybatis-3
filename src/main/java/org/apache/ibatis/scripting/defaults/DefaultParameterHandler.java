@@ -66,18 +66,7 @@ public class DefaultParameterHandler implements ParameterHandler {
       for (int i = 0; i < parameterMappings.size(); i++) {
         ParameterMapping parameterMapping = parameterMappings.get(i);
         if (parameterMapping.getMode() != ParameterMode.OUT) {
-          Object value;
-          String propertyName = parameterMapping.getProperty();
-          if (boundSql.hasAdditionalParameter(propertyName)) { // issue #448 ask first for additional params
-            value = boundSql.getAdditionalParameter(propertyName);
-          } else if (parameterObject == null) {
-            value = null;
-          } else if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {
-            value = parameterObject;
-          } else {
-            MetaObject metaObject = configuration.newMetaObject(parameterObject);
-            value = metaObject.getValue(propertyName);
-          }
+          Object value = getValue(parameterMapping);
           TypeHandler typeHandler = parameterMapping.getTypeHandler();
           JdbcType jdbcType = parameterMapping.getJdbcType();
           if (value == null && jdbcType == null) {
@@ -90,6 +79,23 @@ public class DefaultParameterHandler implements ParameterHandler {
           }
         }
       }
+    }
+  }
+
+  private Object getValue(ParameterMapping parameterMapping) {
+    if (parameterMapping.hasValue()) {
+      return parameterMapping.getValue();
+    }
+    String propertyName = parameterMapping.getProperty();
+    if (boundSql.hasAdditionalParameter(propertyName)) { // issue #448 ask first for additional params
+      return boundSql.getAdditionalParameter(propertyName);
+    } else if (parameterObject == null) {
+      return null;
+    } else if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {
+      return parameterObject;
+    } else {
+      MetaObject metaObject = configuration.newMetaObject(parameterObject);
+      return metaObject.getValue(propertyName);
     }
   }
 

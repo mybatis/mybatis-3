@@ -15,9 +15,11 @@
  */
 package org.apache.ibatis.scripting.xmltags;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.parsing.GenericTokenParser;
 import org.apache.ibatis.session.Configuration;
 
@@ -74,33 +76,30 @@ public class ForEachSqlNode implements SqlNode {
     applyOpen(context);
     int i = 0;
     for (Object o : iterable) {
-      DynamicContext oldContext = context;
+      DynamicContext scopedContext;
       if (first || separator == null) {
-        context = new PrefixedContext(context, "");
+        scopedContext = new PrefixedContext(context, "");
       } else {
-        context = new PrefixedContext(context, separator);
+        scopedContext = new PrefixedContext(context, separator);
       }
-      int uniqueNumber = context.getUniqueNumber();
+      int uniqueNumber = scopedContext.getUniqueNumber();
       // Issue #709
       if (o instanceof Map.Entry) {
         @SuppressWarnings("unchecked")
         Map.Entry<Object, Object> mapEntry = (Map.Entry<Object, Object>) o;
-        applyIndex(context, mapEntry.getKey(), uniqueNumber);
-        applyItem(context, mapEntry.getValue(), uniqueNumber);
+        applyIndex(scopedContext, mapEntry.getKey(), uniqueNumber);
+        applyItem(scopedContext, mapEntry.getValue(), uniqueNumber);
       } else {
-        applyIndex(context, i, uniqueNumber);
-        applyItem(context, o, uniqueNumber);
+        applyIndex(scopedContext, i, uniqueNumber);
+        applyItem(scopedContext, o, uniqueNumber);
       }
-      contents.apply(new FilteredDynamicContext(configuration, context, index, item, uniqueNumber));
+      contents.apply(new FilteredDynamicContext(configuration, scopedContext, index, item, uniqueNumber));
       if (first) {
-        first = !((PrefixedContext) context).isPrefixApplied();
+        first = !((PrefixedContext) scopedContext).isPrefixApplied();
       }
-      context = oldContext;
       i++;
     }
     applyClose(context);
-    context.getBindings().remove(item);
-    context.getBindings().remove(index);
     return true;
   }
 
@@ -141,21 +140,12 @@ public class ForEachSqlNode implements SqlNode {
     private final String item;
 
     public FilteredDynamicContext(Configuration configuration,DynamicContext delegate, String itemIndex, String item, int i) {
-      super(configuration, null);
+      super(configuration, delegate.getParameterObject(), delegate.getParameterType(), delegate.isParamExists());
       this.delegate = delegate;
       this.index = i;
       this.itemIndex = itemIndex;
       this.item = item;
-    }
-
-    @Override
-    public Map<String, Object> getBindings() {
-      return delegate.getBindings();
-    }
-
-    @Override
-    public void bind(String name, Object value) {
-      delegate.bind(name, value);
+      this.bindings.putAll(delegate.getBindings());
     }
 
     @Override
@@ -181,6 +171,10 @@ public class ForEachSqlNode implements SqlNode {
       return delegate.getUniqueNumber();
     }
 
+    @Override
+    public List<ParameterMapping> getParameterMappings() {
+      return delegate.getParameterMappings();
+    }
   }
 
 
@@ -190,24 +184,15 @@ public class ForEachSqlNode implements SqlNode {
     private boolean prefixApplied;
 
     public PrefixedContext(DynamicContext delegate, String prefix) {
-      super(configuration, null);
+      super(configuration, delegate.getParameterObject(), delegate.getParameterType(), delegate.isParamExists());
       this.delegate = delegate;
       this.prefix = prefix;
       this.prefixApplied = false;
+      this.bindings.putAll(delegate.getBindings());
     }
 
     public boolean isPrefixApplied() {
       return prefixApplied;
-    }
-
-    @Override
-    public Map<String, Object> getBindings() {
-      return delegate.getBindings();
-    }
-
-    @Override
-    public void bind(String name, Object value) {
-      delegate.bind(name, value);
     }
 
     @Override
@@ -227,6 +212,11 @@ public class ForEachSqlNode implements SqlNode {
     @Override
     public int getUniqueNumber() {
       return delegate.getUniqueNumber();
+    }
+
+    @Override
+    public List<ParameterMapping> getParameterMappings() {
+      return delegate.getParameterMappings();
     }
   }
 

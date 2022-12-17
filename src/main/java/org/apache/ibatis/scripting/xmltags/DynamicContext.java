@@ -15,16 +15,21 @@
  */
 package org.apache.ibatis.scripting.xmltags;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
+
+import org.apache.ibatis.builder.ParameterMappingTokenHandler;
+import org.apache.ibatis.mapping.ParameterMapping;
+import org.apache.ibatis.parsing.GenericTokenParser;
+import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.session.Configuration;
 
 import ognl.OgnlContext;
 import ognl.OgnlRuntime;
 import ognl.PropertyAccessor;
-
-import org.apache.ibatis.reflection.MetaObject;
-import org.apache.ibatis.session.Configuration;
 
 /**
  * @author Clinton Begin
@@ -38,20 +43,36 @@ public class DynamicContext {
     OgnlRuntime.setPropertyAccessor(ContextMap.class, new ContextAccessor());
   }
 
-  private final ContextMap bindings;
+  protected final ContextMap bindings;
   private final StringJoiner sqlBuilder = new StringJoiner(" ");
   private int uniqueNumber = 0;
 
-  public DynamicContext(Configuration configuration, Object parameterObject) {
-    if (parameterObject != null && !(parameterObject instanceof Map)) {
+  private final Configuration configuration;
+  private final Object parameterObject;
+  private final Class<?> parameterType;
+  private final boolean paramExists;
+
+  private GenericTokenParser tokenParser;
+  private ParameterMappingTokenHandler tokenHandler;
+
+  public DynamicContext(Configuration configuration, Class<?> parameterType) {
+    this(configuration, null, parameterType, false);
+  }
+
+  public DynamicContext(Configuration configuration, Object parameterObject, Class<?> parameterType, boolean paramExists) {
+    if (parameterObject == null || parameterObject instanceof Map) {
+      bindings = new ContextMap(null, false);
+    } else {
       MetaObject metaObject = configuration.newMetaObject(parameterObject);
       boolean existsTypeHandler = configuration.getTypeHandlerRegistry().hasTypeHandler(parameterObject.getClass());
       bindings = new ContextMap(metaObject, existsTypeHandler);
-    } else {
-      bindings = new ContextMap(null, false);
     }
     bindings.put(PARAMETER_OBJECT_KEY, parameterObject);
     bindings.put(DATABASE_ID_KEY, configuration.getDatabaseId());
+    this.configuration = configuration;
+    this.parameterObject = parameterObject;
+    this.paramExists = paramExists;
+    this.parameterType = parameterType;
   }
 
   public Map<String, Object> getBindings() {
@@ -72,6 +93,30 @@ public class DynamicContext {
 
   public int getUniqueNumber() {
     return uniqueNumber++;
+  }
+
+  public List<ParameterMapping> getParameterMappings() {
+    return tokenHandler == null ? new ArrayList<>() : tokenHandler.getParameterMappings();
+  }
+
+  protected String parseParam(String sql) {
+    if (tokenParser == null) {
+      tokenHandler = new ParameterMappingTokenHandler(getParameterMappings(), configuration, parameterObject, parameterType, bindings, paramExists);
+      tokenParser = new GenericTokenParser("#{", "}", tokenHandler);
+    }
+    return tokenParser.parse(sql);
+  }
+
+  protected Object getParameterObject() {
+    return parameterObject;
+  }
+
+  protected Class<?> getParameterType() {
+    return parameterType;
+  }
+
+  protected boolean isParamExists() {
+    return paramExists;
   }
 
   static class ContextMap extends HashMap<String, Object> {
@@ -117,7 +162,7 @@ public class DynamicContext {
 
       Object parameterObject = map.get(PARAMETER_OBJECT_KEY);
       if (parameterObject instanceof Map) {
-        return ((Map)parameterObject).get(name);
+        return ((Map) parameterObject).get(name);
       }
 
       return null;

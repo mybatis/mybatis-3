@@ -19,9 +19,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.session.Configuration;
 
 /**
@@ -76,11 +76,12 @@ public class TrimSqlNode implements SqlNode {
     private StringBuilder sqlBuffer;
 
     public FilteredDynamicContext(DynamicContext delegate) {
-      super(configuration, null);
+      super(configuration, delegate.getParameterObject(), delegate.getParameterType(), delegate.isParamExists());
       this.delegate = delegate;
       this.prefixApplied = false;
       this.suffixApplied = false;
       this.sqlBuffer = new StringBuilder();
+      this.bindings.putAll(delegate.getBindings());
     }
 
     public void applyAll() {
@@ -91,16 +92,6 @@ public class TrimSqlNode implements SqlNode {
         applySuffix(sqlBuffer, trimmedUppercaseSql);
       }
       delegate.appendSql(sqlBuffer.toString());
-    }
-
-    @Override
-    public Map<String, Object> getBindings() {
-      return delegate.getBindings();
-    }
-
-    @Override
-    public void bind(String name, Object value) {
-      delegate.bind(name, value);
     }
 
     @Override
@@ -116,6 +107,11 @@ public class TrimSqlNode implements SqlNode {
     @Override
     public String getSql() {
       return delegate.getSql();
+    }
+
+    @Override
+    public List<ParameterMapping> getParameterMappings() {
+      return delegate.getParameterMappings();
     }
 
     private void applyPrefix(StringBuilder sql, String trimmedUppercaseSql) {
