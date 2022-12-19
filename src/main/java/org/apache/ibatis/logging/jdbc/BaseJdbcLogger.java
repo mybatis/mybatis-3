@@ -133,7 +133,6 @@ public abstract class BaseJdbcLogger {
   }
 
   protected void debug(String text, boolean input) {
-    System.out.println(text);
     if (statementLog.isDebugEnabled()) {
       statementLog.debug(prefix(input) + text);
     }
