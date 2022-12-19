@@ -193,6 +193,8 @@ public final class TypeHandlerRegistry {
     register(Character.class, new CharacterTypeHandler());
     register(char.class, new CharacterTypeHandler());
 
+    addCreator(EnumTypeHandler.class, t -> new EnumTypeHandler(t.getRawClass()));
+
     ListTypeHandler.register(this);
     SetTypeHandler.register(this);
     ArrayTypeHandler.register(this);
@@ -237,6 +239,9 @@ public final class TypeHandlerRegistry {
   }
 
   public TypeHandler<?> getMappingTypeHandler(Class<? extends TypeHandler<?>> handlerType) {
+    if (typeHandlerCreatorMap.containsKey(handlerType)) {
+      return null;
+    }
     return allTypeHandlersMap.get(handlerType);
   }
 
