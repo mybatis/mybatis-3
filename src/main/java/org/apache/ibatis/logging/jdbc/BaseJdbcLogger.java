@@ -43,10 +43,10 @@ public abstract class BaseJdbcLogger {
   protected static final Set<String> SET_METHODS;
   protected static final Set<String> EXECUTE_METHODS = new HashSet<>();
 
-  private final Map<Object, Object> columnMap = new HashMap<>();
+  protected final Map<Object, Object> columnMap = new HashMap<>();
 
-  private final List<Object> columnNames = new ArrayList<>();
-  private final List<Object> columnValues = new ArrayList<>();
+  protected final List<Object> columnNames = new ArrayList<>();
+  protected final List<Object> columnValues = new ArrayList<>();
 
   protected final Log statementLog;
   protected final int queryStack;
@@ -133,6 +133,7 @@ public abstract class BaseJdbcLogger {
   }
 
   protected void debug(String text, boolean input) {
+    System.out.println(text);
     if (statementLog.isDebugEnabled()) {
       statementLog.debug(prefix(input) + text);
     }

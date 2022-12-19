@@ -36,9 +36,17 @@ public final class PreparedStatementLogger extends BaseJdbcLogger implements Inv
 
   private final PreparedStatement statement;
 
+  private StringBuilder boundSql;
+
   private PreparedStatementLogger(PreparedStatement stmt, Log statementLog, int queryStack) {
     super(statementLog, queryStack);
     this.statement = stmt;
+  }
+
+  private PreparedStatementLogger(PreparedStatement stmt, Log statementLog, int queryStack, String boundSql) {
+    super(statementLog, queryStack);
+    this.statement = stmt;
+    this.boundSql = new StringBuilder(boundSql);
   }
 
   @Override
@@ -50,6 +58,9 @@ public final class PreparedStatementLogger extends BaseJdbcLogger implements Inv
       if (EXECUTE_METHODS.contains(method.getName())) {
         if (isDebugEnabled()) {
           debug("Parameters: " + getParameterValueString(), true);
+          if (boundSql != null && boundSql.length() > 0) {
+            debug(" Executing: " + setParameter(), true);
+          }
         }
         clearColumnInfo();
         if ("executeQuery".equals(method.getName())) {
@@ -97,12 +108,44 @@ public final class PreparedStatementLogger extends BaseJdbcLogger implements Inv
   }
 
   /**
+   * Creates a logging version of a PreparedStatement with boundSql.
+   *
+   * @param stmt - the statement
+   * @param statementLog - the statement log
+   * @param queryStack - the query stack
+   * @param boundSql
+   * @return - the proxy
+   */
+  public static PreparedStatement newInstance(PreparedStatement stmt, Log statementLog, int queryStack, String boundSql) {
+    InvocationHandler handler = new PreparedStatementLogger(stmt, statementLog, queryStack, boundSql);
+    ClassLoader cl = PreparedStatement.class.getClassLoader();
+    return (PreparedStatement) Proxy.newProxyInstance(cl, new Class[]{PreparedStatement.class, CallableStatement.class}, handler);
+  }
+
+  /**
    * Return the wrapped prepared statement.
    *
    * @return the PreparedStatement
    */
   public PreparedStatement getPreparedStatement() {
     return statement;
+  }
+
+  private String setParameter() {
+    char c;
+    int index = 0;
+    for (int i = 0; i < boundSql.length(); i++) {
+      c = boundSql.charAt(i);
+      if (c == '?' && index < columnValues.size()) {
+        Object value = columnValues.get(index++);
+        if (value == null) {
+          boundSql.replace(i, i + 1, "null");
+        } else {
+          boundSql.replace(i, i + 1, objectValueString(value));
+        }
+      }
+    }
+    return boundSql.toString();
   }
 
 }

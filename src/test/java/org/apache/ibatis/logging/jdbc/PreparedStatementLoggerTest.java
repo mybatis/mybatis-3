@@ -95,4 +95,18 @@ class PreparedStatementLoggerTest {
 
     verify(log).debug(contains("Updates: 1"));
   }
+
+  @Test
+  void shouldPrintExecutingLog() throws SQLException {
+    PreparedStatement ps = PreparedStatementLogger.newInstance(this.preparedStatement, log, 1, "update name = ? from test limit ?");
+
+    when(log.isDebugEnabled()).thenReturn(true);
+
+    ps.setNull(1, JdbcType.VARCHAR.TYPE_CODE);
+    ps.setInt(2, 10);
+
+    verify(log).debug(contains("update name = null from test limit 10"));
+    verify(log).debug(contains("Parameters: null"));
+
+  }
 }
