@@ -45,13 +45,7 @@ public abstract class TypeReference<T> {
         + "Remove the extension or add a type parameter to it.");
     }
 
-    Type rawType = ((ParameterizedType) genericSuperclass).getActualTypeArguments()[0];
-    // TODO remove this when Reflector is fixed to return Types
-    if (rawType instanceof ParameterizedType) {
-      rawType = ((ParameterizedType) rawType).getRawType();
-    }
-
-    return rawType;
+    return ((ParameterizedType) genericSuperclass).getActualTypeArguments()[0];
   }
 
   public final Type getRawType() {

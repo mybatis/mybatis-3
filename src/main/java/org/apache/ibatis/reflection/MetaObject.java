@@ -15,9 +15,11 @@
  */
 package org.apache.ibatis.reflection;
 
+import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
@@ -97,8 +99,16 @@ public class MetaObject {
     return objectWrapper.getSetterType(name);
   }
 
+  public Entry<Type, Class<?>> getGenericSetterType(String name) {
+    return objectWrapper.getGenericSetterType(name);
+  }
+
   public Class<?> getGetterType(String name) {
     return objectWrapper.getGetterType(name);
+  }
+
+  public Entry<Type, Class<?>> getGenericGetterType(String name) {
+    return objectWrapper.getGenericGetterType(name);
   }
 
   public boolean hasSetter(String name) {

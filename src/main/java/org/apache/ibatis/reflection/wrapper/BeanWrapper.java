@@ -15,7 +15,9 @@
  */
 package org.apache.ibatis.reflection.wrapper;
 
+import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.apache.ibatis.reflection.ExceptionUtil;
 import org.apache.ibatis.reflection.MetaClass;
@@ -91,6 +93,21 @@ public class BeanWrapper extends BaseWrapper {
   }
 
   @Override
+  public Entry<Type, Class<?>> getGenericSetterType(String name) {
+    PropertyTokenizer prop = new PropertyTokenizer(name);
+    if (prop.hasNext()) {
+      MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
+      if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
+        return metaClass.getGenericSetterType(name);
+      } else {
+        return metaValue.getGenericSetterType(prop.getChildren());
+      }
+    } else {
+      return metaClass.getGenericSetterType(name);
+    }
+  }
+
+  @Override
   public Class<?> getGetterType(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
@@ -102,6 +119,21 @@ public class BeanWrapper extends BaseWrapper {
       }
     } else {
       return metaClass.getGetterType(name);
+    }
+  }
+
+  @Override
+  public Entry<Type, Class<?>> getGenericGetterType(String name) {
+    PropertyTokenizer prop = new PropertyTokenizer(name);
+    if (prop.hasNext()) {
+      MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
+      if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
+        return metaClass.getGenericGetterType(name);
+      } else {
+        return metaValue.getGenericGetterType(prop.getChildren());
+      }
+    } else {
+      return metaClass.getGenericGetterType(name);
     }
   }
 

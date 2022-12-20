@@ -20,6 +20,7 @@ import java.util.HashMap;
 import org.apache.ibatis.builder.SqlSourceBuilder;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.SqlSource;
+import org.apache.ibatis.reflection.ParamNameResolver;
 import org.apache.ibatis.scripting.xmltags.DynamicContext;
 import org.apache.ibatis.scripting.xmltags.DynamicSqlSource;
 import org.apache.ibatis.scripting.xmltags.SqlNode;
@@ -37,13 +38,21 @@ public class RawSqlSource implements SqlSource {
   private final SqlSource sqlSource;
 
   public RawSqlSource(Configuration configuration, SqlNode rootSqlNode, Class<?> parameterType) {
-    this(configuration, getSql(configuration, rootSqlNode), parameterType);
+    this(configuration, rootSqlNode, parameterType, null);
+  }
+
+  public RawSqlSource(Configuration configuration, SqlNode rootSqlNode, Class<?> parameterType, ParamNameResolver paramNameResolver) {
+    this(configuration, getSql(configuration, rootSqlNode), parameterType, paramNameResolver);
   }
 
   public RawSqlSource(Configuration configuration, String sql, Class<?> parameterType) {
+    this(configuration, sql, parameterType, null);
+  }
+
+  public RawSqlSource(Configuration configuration, String sql, Class<?> parameterType, ParamNameResolver paramNameResolver) {
     SqlSourceBuilder sqlSourceParser = new SqlSourceBuilder(configuration);
     Class<?> clazz = parameterType == null ? Object.class : parameterType;
-    sqlSource = sqlSourceParser.parse(sql, clazz, new HashMap<>());
+    sqlSource = sqlSourceParser.parse(sql, clazz, new HashMap<>(), paramNameResolver);
   }
 
   private static String getSql(Configuration configuration, SqlNode rootSqlNode) {

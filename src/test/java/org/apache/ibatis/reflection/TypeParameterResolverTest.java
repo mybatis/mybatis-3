@@ -34,11 +34,13 @@ import org.apache.ibatis.reflection.typeparam.Calculator;
 import org.apache.ibatis.reflection.typeparam.Calculator.SubCalculator;
 import org.apache.ibatis.reflection.typeparam.Level0Mapper;
 import org.apache.ibatis.reflection.typeparam.Level0Mapper.Level0InnerMapper;
+import org.apache.ibatis.type.TypeReference;
 import org.apache.ibatis.reflection.typeparam.Level1Mapper;
 import org.apache.ibatis.reflection.typeparam.Level2Mapper;
 import org.junit.jupiter.api.Test;
 
 class TypeParameterResolverTest {
+
   @Test
   void testReturn_Lv0SimpleClass() throws Exception {
     Class<?> clazz = Level0Mapper.class;
@@ -362,6 +364,19 @@ class TypeParameterResolverTest {
   }
 
   @Test
+  void testParam_Generic() throws Exception {
+    TypeReference<ParentIface<String>> type = new TypeReference<ParentIface<String>>() {};
+    Method method = ParentIface.class.getMethod("m");
+    Type result = TypeParameterResolver.resolveReturnType(method, type.getRawType());
+    assertTrue(result instanceof ParameterizedType);
+    ParameterizedType parameterizedType = (ParameterizedType) result;
+    assertEquals(List.class, parameterizedType.getRawType());
+    Type[] typeArgs = parameterizedType.getActualTypeArguments();
+    assertEquals(1, typeArgs.length);
+    assertEquals(String.class, typeArgs[0]);
+  }
+
+  @Test
   void testReturn_Anonymous() throws Exception {
     Calculator<?> instance = new Calculator<Integer>();
     Class<?> clazz = instance.getClass();
@@ -450,11 +465,39 @@ class TypeParameterResolverTest {
     executor.shutdown();
   }
 
+  @Test
+  void shouldResolveInterfaceTypeParams() {
+    Type[] types = TypeParameterResolver.resolveClassTypeParams(ParentIface.class, IntegerHandler.class);
+    assertEquals(1, types.length);
+    assertEquals(Integer.class, types[0]);
+  }
+
+  @Test
+  void shouldResolveInterfaceTypeParamsDeep() {
+    Type[] types = TypeParameterResolver.resolveClassTypeParams(ParentIface.class, StringHandler.class);
+    assertEquals(1, types.length);
+    assertEquals(String.class, types[0]);
+  }
+
+  @Test
+  void shouldResolveInterfaceTypeParamsDeeper() {
+    Type[] types = TypeParameterResolver.resolveClassTypeParams(ParentIface.class, CustomStringHandler3.class);
+    assertEquals(1, types.length);
+    assertEquals(String.class, types[0]);
+  }
+
   // @formatter:off
   class AA {}
   class BB {}
   interface IfaceA extends ParentIface<AA> {}
   interface IfaceB extends ParentIface<BB> {}
   interface ParentIface<T> {List<T> m();}
+  abstract class BaseHandler<T> implements ParentIface<T> {}
+  class StringHandler extends BaseHandler<String> {public List<String> m() {return null;}}
+  class CustomStringHandler extends StringHandler {}
+  class CustomStringHandler2<T> extends CustomStringHandler {}
+  class CustomStringHandler3 extends CustomStringHandler2<Integer> {}
+  class IntegerHandler implements Cloneable, ParentIface<Integer> {public List<Integer> m() { return null;}}
   // @formatter:on
+
 }

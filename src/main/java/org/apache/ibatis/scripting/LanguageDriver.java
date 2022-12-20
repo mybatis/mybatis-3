@@ -20,6 +20,7 @@ import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.parsing.XNode;
+import org.apache.ibatis.reflection.ParamNameResolver;
 import org.apache.ibatis.scripting.defaults.DefaultParameterHandler;
 import org.apache.ibatis.session.Configuration;
 
@@ -48,6 +49,10 @@ public interface LanguageDriver {
    */
   SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType);
 
+  default SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType, ParamNameResolver paramNameResolver) {
+    return createSqlSource(configuration, script, parameterType);
+  }
+
   /**
    * Creates an {@link SqlSource} that will hold the statement read from an annotation.
    * It is called during startup, when the mapped statement is read from a class or an xml file.
@@ -58,5 +63,9 @@ public interface LanguageDriver {
    * @return the sql source
    */
   SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType);
+
+  default SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType, ParamNameResolver paramNameResolver) {
+    return createSqlSource(configuration, script, parameterType);
+  }
 
 }

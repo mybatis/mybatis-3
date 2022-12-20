@@ -15,14 +15,18 @@
  */
 package org.apache.ibatis.reflection.wrapper;
 
+import java.lang.reflect.Type;
+import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.SystemMetaObject;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
+import org.apache.ibatis.util.MapUtil;
 
 /**
  * @author Clinton Begin
@@ -91,6 +95,12 @@ public class MapWrapper extends BaseWrapper {
   }
 
   @Override
+  public Entry<Type, Class<?>> getGenericSetterType(String name) {
+    Class<?> setterType = getSetterType(name);
+    return MapUtil.entry(setterType, setterType);
+  }
+
+  @Override
   public Class<?> getGetterType(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
@@ -107,6 +117,12 @@ public class MapWrapper extends BaseWrapper {
         return Object.class;
       }
     }
+  }
+
+  @Override
+  public Entry<Type, Class<?>> getGenericGetterType(String name) {
+    Class<?> getterType = getGetterType(name);
+    return MapUtil.entry(getterType, getterType);
   }
 
   @Override

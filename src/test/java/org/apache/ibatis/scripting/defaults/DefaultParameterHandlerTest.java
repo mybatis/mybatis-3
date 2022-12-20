@@ -21,6 +21,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.sql.ParameterMetaData;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -60,6 +61,7 @@ class DefaultParameterHandlerTest {
     DefaultParameterHandler defaultParameterHandler = new DefaultParameterHandler(mappedStatement, parameterObject, boundSql);
 
     PreparedStatement ps = mock(PreparedStatement.class);
+    when(ps.getParameterMetaData()).thenReturn(mock(ParameterMetaData.class));
     try {
       defaultParameterHandler.setParameters(ps);
       Assertions.fail("Should have thrown TypeException");

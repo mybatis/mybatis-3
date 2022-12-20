@@ -35,7 +35,7 @@ import org.apache.ibatis.session.Configuration;
  * @author Simone Tripodi
  * @author Kzuki Shimizu
  */
-public abstract class BaseTypeHandler<T> extends TypeReference<T> implements TypeHandler<T> {
+public abstract class BaseTypeHandler<T> implements TypeHandler<T> {
 
   /**
    * @deprecated Since 3.5.0 - See https://github.com/mybatis/mybatis-3/issues/1203. This field will remove future.

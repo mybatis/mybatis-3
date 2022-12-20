@@ -72,11 +72,11 @@ public class VelocitySqlSourceBuilder extends BaseBuilder {
     private ParameterMapping buildParameterMapping(String content) {
       Map<String, String> propertiesMap = parseParameterMapping(content);
       String property = propertiesMap.get("property");
-      String jdbcType = propertiesMap.get("jdbcType");
+      JdbcType jdbcType = resolveJdbcType(propertiesMap.get("jdbcType"));
       Class<?> propertyType;
       if (typeHandlerRegistry.hasTypeHandler(parameterType)) {
         propertyType = parameterType;
-      } else if (JdbcType.CURSOR.name().equals(jdbcType)) {
+      } else if (JdbcType.CURSOR.equals(jdbcType)) {
         propertyType = java.sql.ResultSet.class;
       } else if (property != null) {
         MetaClass metaClass = MetaClass.forClass(parameterType, configuration.getReflectorFactory());
@@ -90,7 +90,7 @@ public class VelocitySqlSourceBuilder extends BaseBuilder {
       }
       ParameterMapping.Builder builder = new ParameterMapping.Builder(configuration, property, propertyType);
       if (jdbcType != null) {
-        builder.jdbcType(resolveJdbcType(jdbcType));
+        builder.jdbcType(jdbcType);
       }
       Class<?> javaType = null;
       String typeHandlerAlias = null;
@@ -100,8 +100,6 @@ public class VelocitySqlSourceBuilder extends BaseBuilder {
         if ("javaType".equals(name)) {
           javaType = resolveClass(value);
           builder.javaType(javaType);
-        } else if ("jdbcType".equals(name)) {
-          builder.jdbcType(resolveJdbcType(value));
         } else if ("mode".equals(name)) {
           builder.mode(resolveParameterMode(value));
         } else if ("numericScale".equals(name)) {
@@ -122,7 +120,7 @@ public class VelocitySqlSourceBuilder extends BaseBuilder {
         }
       }
       if (typeHandlerAlias != null) {
-        builder.typeHandler(resolveTypeHandler(javaType, typeHandlerAlias));
+        builder.typeHandler(resolveTypeHandler(javaType, property, propertyType, jdbcType, typeHandlerAlias));
       }
       return builder.build();
     }

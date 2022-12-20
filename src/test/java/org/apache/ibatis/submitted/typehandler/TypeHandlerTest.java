@@ -31,6 +31,7 @@ import org.apache.ibatis.submitted.typehandler.Product.ProductIdTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 class TypeHandlerTest {
@@ -133,6 +134,7 @@ class TypeHandlerTest {
     }
   }
 
+  @Disabled("This does not fail anymore because jdbcType resolution is performed at exection time using metadata")
   @Test
   void shouldFailIfMultipleHandlerMappedToAType() {
     sqlSessionFactory.getConfiguration().getTypeHandlerRegistry().register(ProductId.class, JdbcType.BIGINT,
@@ -142,6 +144,8 @@ class TypeHandlerTest {
     Assertions.assertThrows(BuilderException.class, this::addMapper);
   }
 
+  @Disabled("This is no longer the expected behavior. "
+      + "As there is a type handler registered for ProductId:INTEGER combination, it will be used.")
   @Test
   void shouldPickHandlerForNull() {
     sqlSessionFactory.getConfiguration().getTypeHandlerRegistry().register(ProductId.class, null,

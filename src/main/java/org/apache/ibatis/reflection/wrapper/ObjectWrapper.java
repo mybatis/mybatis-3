@@ -15,7 +15,9 @@
  */
 package org.apache.ibatis.reflection.wrapper;
 
+import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
@@ -39,6 +41,14 @@ public interface ObjectWrapper {
   Class<?> getSetterType(String name);
 
   Class<?> getGetterType(String name);
+
+  default Entry<Type, Class<?>> getGenericSetterType(String name) {
+    throw new UnsupportedOperationException("'" + this.getClass() + "' must override the default method 'getGenericSetterType()'.");
+  }
+
+  default Entry<Type, Class<?>> getGenericGetterType(String name) {
+    throw new UnsupportedOperationException("'" + this.getClass() + "' must override the default method 'getGenericGetterType()'.");
+  }
 
   boolean hasSetter(String name);
 

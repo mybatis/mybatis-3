@@ -16,9 +16,13 @@
 package org.apache.ibatis.reflection;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -27,6 +31,7 @@ import java.util.TreeMap;
 
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.binding.MapperMethod.ParamMap;
+import org.apache.ibatis.reflection.property.PropertyTokenizer;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
@@ -51,14 +56,17 @@ public class ParamNameResolver {
    * </ul>
    */
   private final SortedMap<Integer, String> names;
+  private final Map<String, Type> typeMap = new HashMap<>();
 
   private boolean hasParamAnnotation;
+  private boolean useParamMap;
 
-  public ParamNameResolver(Configuration config, Method method) {
+  public ParamNameResolver(Configuration config, Method method, Class<?> mapperClass) {
     this.useActualParamName = config.isUseActualParamName();
     final Class<?>[] paramTypes = method.getParameterTypes();
     final Annotation[][] paramAnnotations = method.getParameterAnnotations();
     final SortedMap<Integer, String> map = new TreeMap<>();
+    Type[] actualParamTypes = TypeParameterResolver.resolveParamTypes(method, mapperClass);
     int paramCount = paramAnnotations.length;
     // get names from @Param annotations
     for (int paramIndex = 0; paramIndex < paramCount; paramIndex++) {
@@ -70,6 +78,7 @@ public class ParamNameResolver {
       for (Annotation annotation : paramAnnotations[paramIndex]) {
         if (annotation instanceof Param) {
           hasParamAnnotation = true;
+          useParamMap = true;
           name = ((Param) annotation).value();
           break;
         }
@@ -86,8 +95,31 @@ public class ParamNameResolver {
         }
       }
       map.put(paramIndex, name);
+      typeMap.put(name, actualParamTypes[paramIndex]);
     }
     names = Collections.unmodifiableSortedMap(map);
+    if (names.size() > 1) {
+      useParamMap = true;
+    }
+    if (names.size() == 1) {
+      Type soleParamType = actualParamTypes[0];
+      if (soleParamType instanceof GenericArrayType) {
+        typeMap.put("array", soleParamType);
+      } else {
+        Class<?> soleParamClass = null;
+        if (soleParamType instanceof ParameterizedType) {
+          soleParamClass = (Class<?>) ((ParameterizedType) soleParamType).getRawType();
+        } else if (soleParamType instanceof Class) {
+          soleParamClass = (Class<?>) soleParamType;
+        }
+        if (Collection.class.isAssignableFrom(soleParamClass)) {
+          typeMap.put("collection", soleParamType);
+          if (List.class.isAssignableFrom(soleParamClass)) {
+            typeMap.put("list", soleParamType);
+          }
+        }
+      }
+    }
   }
 
   private String getActualParamName(Method method, int paramIndex) {
@@ -143,6 +175,21 @@ public class ParamNameResolver {
     }
   }
 
+  public Type getType(String name) {
+    PropertyTokenizer propertyTokenizer = new PropertyTokenizer(name);
+    Type type = typeMap.get(propertyTokenizer.getName());
+    if (propertyTokenizer.getIndex() != null) {
+      if (type instanceof ParameterizedType) {
+        Type[] typeArgs = ((ParameterizedType) type).getActualTypeArguments();
+        return typeArgs[0];
+      } else if (type instanceof Class && ((Class<?>)type).isArray()) {
+        return ((Class<?>)type).getComponentType();
+      }
+    }
+    // TODO: param1, param2
+    return type;
+  }
+
   /**
    * Wrap to a {@link ParamMap} if object is {@link Collection} or array.
    *
@@ -170,4 +217,7 @@ public class ParamNameResolver {
     return object;
   }
 
+  public boolean isUseParamMap() {
+    return useParamMap;
+  }
 }

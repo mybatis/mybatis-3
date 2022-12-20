@@ -15,19 +15,31 @@
  */
 package org.apache.ibatis.scripting.defaults;
 
+import java.lang.reflect.Type;
+import java.sql.CallableStatement;
+import java.sql.ParameterMetaData;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
+import org.apache.ibatis.binding.MapperMethod.ParamMap;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.mapping.ParameterMode;
+import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.reflection.ParamNameResolver;
+import org.apache.ibatis.reflection.property.PropertyTokenizer;
 import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.ObjectTypeHandler;
 import org.apache.ibatis.type.TypeException;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
@@ -45,6 +57,26 @@ public class DefaultParameterHandler implements ParameterHandler {
   private final BoundSql boundSql;
   private final Configuration configuration;
 
+  private ParameterMetaData paramMetaData;
+  private MetaObject paramMetaObject;
+  private HashMap<Class<?>, MetaClass> metaClassCache = new HashMap<>();
+  private static final TypeHandler<?> nullTypeHandler = new ObjectTypeHandler();
+  private static final ParameterMetaData nullParameterMetaData = new ParameterMetaData() {
+    // @formatter:off
+    public <T> T unwrap(Class<T> iface) throws SQLException { return null; }
+    public boolean isWrapperFor(Class<?> iface) throws SQLException { return false; }
+    public boolean isSigned(int param) throws SQLException { return false; }
+    public int isNullable(int param) throws SQLException { return 0; }
+    public int getScale(int param) throws SQLException { return 0; }
+    public int getPrecision(int param) throws SQLException { return 0; }
+    public String getParameterTypeName(int param) throws SQLException { return null; }
+    public int getParameterType(int param) throws SQLException { return 0; }
+    public int getParameterMode(int param) throws SQLException { return 0; }
+    public int getParameterCount() throws SQLException { return 0; }
+    public String getParameterClassName(int param) throws SQLException { return null; }
+    // @formatter:on
+  };
+
   public DefaultParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql) {
     this.mappedStatement = mappedStatement;
     this.configuration = mappedStatement.getConfiguration();
@@ -58,30 +90,83 @@ public class DefaultParameterHandler implements ParameterHandler {
     return parameterObject;
   }
 
+  @SuppressWarnings("rawtypes")
   @Override
   public void setParameters(PreparedStatement ps) {
     ErrorContext.instance().activity("setting parameters").object(mappedStatement.getParameterMap().getId());
     List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
     if (parameterMappings != null) {
+      ParamNameResolver paramNameResolver = mappedStatement.getParamNameResolver();
       for (int i = 0; i < parameterMappings.size(); i++) {
         ParameterMapping parameterMapping = parameterMappings.get(i);
         if (parameterMapping.getMode() != ParameterMode.OUT) {
           Object value;
           String propertyName = parameterMapping.getProperty();
+          JdbcType jdbcType = parameterMapping.getJdbcType();
+          JdbcType actualJdbcType = jdbcType == null ? getParamJdbcType(ps, i + 1) : jdbcType;
+          Type propertyGenericType = null;
+          TypeHandler typeHandler = parameterMapping.getTypeHandler();
           if (boundSql.hasAdditionalParameter(propertyName)) { // issue #448 ask first for additional params
             value = boundSql.getAdditionalParameter(propertyName);
+            if (typeHandler == null) {
+              typeHandler = configuration.getTypeHandlerResolver().resolve(value.getClass(), null, null, actualJdbcType,
+                  null);
+            }
           } else if (parameterObject == null) {
             value = null;
-          } else if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {
-            value = parameterObject;
           } else {
-            MetaObject metaObject = configuration.newMetaObject(parameterObject);
-            value = metaObject.getValue(propertyName);
+            Class<? extends Object> parameterClass = parameterObject.getClass();
+            TypeHandler paramTypeHandler = typeHandlerRegistry.getTypeHandler(parameterClass, actualJdbcType);
+            if (paramTypeHandler != null) {
+              value = parameterObject;
+              typeHandler = paramTypeHandler;
+            } else {
+              MetaObject metaObject = getParamMetaObject();
+              value = metaObject.getValue(propertyName);
+              if (typeHandler == null && value != null) {
+                if (paramNameResolver != null && ParamMap.class.equals(parameterClass)) {
+                  Type actualParamType = paramNameResolver.getType(propertyName);
+                  if (actualParamType instanceof Class) {
+                    Class<?> actualParamClass = (Class<?>) actualParamType;
+                    MetaClass metaClass = metaClassCache.computeIfAbsent(actualParamClass,
+                        k -> MetaClass.forClass(k, configuration.getReflectorFactory()));
+                    PropertyTokenizer propertyTokenizer = new PropertyTokenizer(propertyName);
+                    String multiParamsPropertyName;
+                    if (propertyTokenizer.hasNext()) {
+                      multiParamsPropertyName = propertyTokenizer.getChildren();
+                      if (metaClass.hasGetter(multiParamsPropertyName)) {
+                        Entry<Type, Class<?>> getterType = metaClass.getGenericGetterType(multiParamsPropertyName);
+                        propertyGenericType = getterType.getKey();
+                      }
+                    } else {
+                      propertyGenericType = actualParamClass;
+                    }
+                  }
+                } else {
+                  try {
+                    propertyGenericType = metaObject.getGenericGetterType(propertyName).getKey();
+                    typeHandler = configuration.getTypeHandlerResolver().resolve(parameterClass, propertyGenericType,
+                        propertyName, actualJdbcType, null);
+                  } catch (Exception e) {
+                    // Not always resolvable
+                  }
+                }
+              }
+            }
           }
-          TypeHandler typeHandler = parameterMapping.getTypeHandler();
-          JdbcType jdbcType = parameterMapping.getJdbcType();
-          if (value == null && jdbcType == null) {
-            jdbcType = configuration.getJdbcTypeForNull();
+          if (value == null) {
+            if (jdbcType == null) {
+              jdbcType = configuration.getJdbcTypeForNull();
+            }
+            if (typeHandler == null) {
+              typeHandler = nullTypeHandler;
+            }
+          } else if (typeHandler == null) {
+            if (propertyGenericType == null) {
+              propertyGenericType = value.getClass();
+            }
+            typeHandler = configuration.getTypeHandlerResolver().resolve(parameterObject.getClass(),
+                propertyGenericType, propertyName, actualJdbcType, null);
           }
           try {
             typeHandler.setParameter(ps, i + 1, value, jdbcType);
@@ -90,6 +175,29 @@ public class DefaultParameterHandler implements ParameterHandler {
           }
         }
       }
+    }
+  }
+
+  private MetaObject getParamMetaObject() {
+    if (paramMetaObject != null) {
+      return paramMetaObject;
+    }
+    paramMetaObject = configuration.newMetaObject(parameterObject);
+    return paramMetaObject;
+  }
+
+  private JdbcType getParamJdbcType(PreparedStatement ps, int paramIndex) {
+    try {
+      if (paramMetaData == null) {
+        try {
+          paramMetaData = ps.getParameterMetaData();
+        } catch (SQLException e) {
+          paramMetaData = nullParameterMetaData;
+        }
+      }
+      return JdbcType.forCode(paramMetaData.getParameterType(paramIndex));
+    } catch (SQLException e) {
+      return null;
     }
   }
 

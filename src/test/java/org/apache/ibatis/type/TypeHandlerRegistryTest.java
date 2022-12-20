@@ -17,6 +17,8 @@ package org.apache.ibatis.type;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.net.URI;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
@@ -180,6 +182,10 @@ class TypeHandlerRegistryTest {
 
   @MappedTypes(SomeInterface.class)
   public static class SomeInterfaceTypeHandler<E extends Enum<E> & SomeInterface> extends BaseTypeHandler<E> {
+    public SomeInterfaceTypeHandler(Type type) {
+      super();
+    }
+
     @Override
     public void setNonNullParameter(PreparedStatement ps, int i, E parameter, JdbcType jdbcType) throws SQLException {
     }
@@ -203,7 +209,8 @@ class TypeHandlerRegistryTest {
   @Test
   void demoTypeHandlerForSuperInterface() {
     typeHandlerRegistry.register(SomeInterfaceTypeHandler.class);
-    assertNull(typeHandlerRegistry.getTypeHandler(SomeClass.class), "Registering interface works only for enums.");
+    // Smart type handler works now
+    //assertNull(typeHandlerRegistry.getTypeHandler(SomeClass.class), "Registering interface works only for enums.");
     assertSame(EnumTypeHandler.class, typeHandlerRegistry.getTypeHandler(NoTypeHandlerInterfaceEnum.class).getClass(),
         "When type handler for interface is not exist, apply default enum type handler.");
     assertSame(SomeInterfaceTypeHandler.class, typeHandlerRegistry.getTypeHandler(SomeEnum.class).getClass());
@@ -245,5 +252,54 @@ class TypeHandlerRegistryTest {
     } finally {
       executorService.shutdownNow();
     }
+  }
+
+  public static class TestHandlerBase<E> implements TypeHandler<E> {
+    // @formatter:off
+    public void setParameter(PreparedStatement ps, int i, E parameter, JdbcType jdbcType) throws SQLException {}
+    public E getResult(ResultSet rs, String columnName) throws SQLException {return null;}
+    public E getResult(ResultSet rs, int columnIndex) throws SQLException { return null; }
+    public E getResult(CallableStatement cs, int columnIndex) throws SQLException { return null; }
+    // @formatter:on
+  }
+
+  public static class TypeTestTypeHandler extends TestHandlerBase<Object> {
+    // @formatter:off
+    private final Type type;
+    public TypeTestTypeHandler(Type type) { super(); this.type = type; }
+    public Type getType() { return type; }
+    // @formatter:on
+  }
+
+  @Test
+  void shouldSmartHandlerMatchSameParameterizedType() throws Exception {
+    TypeHandlerRegistry registry = new TypeHandlerRegistry();
+    registry.register(new TypeReference<List<Integer>>() {
+    }.getRawType(), TypeTestTypeHandler.class);
+    TypeHandler<?> result = registry.getTypeHandler(new TypeReference<List<Integer>>() {
+    }.getRawType(), JdbcType.INTEGER);
+    assertTrue(result instanceof TypeTestTypeHandler);
+    TypeTestTypeHandler handler = (TypeTestTypeHandler) result;
+    Type type = handler.getType();
+    assertTrue(type instanceof ParameterizedType);
+    ParameterizedType parameterizedType = (ParameterizedType) type;
+    assertEquals(List.class, parameterizedType.getRawType());
+    assertEquals(Integer.class, parameterizedType.getActualTypeArguments()[0]);
+  }
+
+  @Test
+  void shouldSmartHandlerMatchSameRawType() throws Exception {
+    TypeHandlerRegistry registry = new TypeHandlerRegistry();
+    registry.register(new TypeReference<List<String>>() {
+    }.getRawType(), TypeTestTypeHandler.class);
+    TypeHandler<?> result = registry.getTypeHandler(new TypeReference<List<Integer>>() {
+    }.getRawType(), JdbcType.INTEGER);
+    assertTrue(result instanceof TypeTestTypeHandler);
+    TypeTestTypeHandler handler = (TypeTestTypeHandler) result;
+    Type type = handler.getType();
+    assertTrue(type instanceof ParameterizedType);
+    ParameterizedType parameterizedType = (ParameterizedType) type;
+    assertEquals(List.class, parameterizedType.getRawType());
+    assertEquals(Integer.class, parameterizedType.getActualTypeArguments()[0]);
   }
 }

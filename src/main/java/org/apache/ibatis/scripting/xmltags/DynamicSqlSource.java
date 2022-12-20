@@ -18,6 +18,7 @@ package org.apache.ibatis.scripting.xmltags;
 import org.apache.ibatis.builder.SqlSourceBuilder;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.SqlSource;
+import org.apache.ibatis.reflection.ParamNameResolver;
 import org.apache.ibatis.session.Configuration;
 
 /**
@@ -27,10 +28,16 @@ public class DynamicSqlSource implements SqlSource {
 
   private final Configuration configuration;
   private final SqlNode rootSqlNode;
+  private final ParamNameResolver paramNameResolver;
 
   public DynamicSqlSource(Configuration configuration, SqlNode rootSqlNode) {
+    this(configuration, rootSqlNode, null);
+  }
+
+  public DynamicSqlSource(Configuration configuration, SqlNode rootSqlNode, ParamNameResolver paramNameResolver) {
     this.configuration = configuration;
     this.rootSqlNode = rootSqlNode;
+    this.paramNameResolver = paramNameResolver;
   }
 
   @Override
@@ -39,7 +46,7 @@ public class DynamicSqlSource implements SqlSource {
     rootSqlNode.apply(context);
     SqlSourceBuilder sqlSourceParser = new SqlSourceBuilder(configuration);
     Class<?> parameterType = parameterObject == null ? Object.class : parameterObject.getClass();
-    SqlSource sqlSource = sqlSourceParser.parse(context.getSql(), parameterType, context.getBindings());
+    SqlSource sqlSource = sqlSourceParser.parse(context.getSql(), parameterType, context.getBindings(), paramNameResolver);
     BoundSql boundSql = sqlSource.getBoundSql(parameterObject);
     context.getBindings().forEach(boundSql::setAdditionalParameter);
     return boundSql;

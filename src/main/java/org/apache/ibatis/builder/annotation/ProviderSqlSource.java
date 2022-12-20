@@ -40,7 +40,7 @@ public class ProviderSqlSource implements SqlSource {
   private final LanguageDriver languageDriver;
   private final Method mapperMethod;
   private final Method providerMethod;
-  private final String[] providerMethodArgumentNames;
+  private final ParamNameResolver paramNameResolver;
   private final Class<?>[] providerMethodParameterTypes;
   private final ProviderContext providerContext;
   private final Integer providerContextIndex;
@@ -130,7 +130,7 @@ public class ProviderSqlSource implements SqlSource {
           + candidateProviderMethodName + "' not found in SqlProvider '" + this.providerType.getName() + "'.");
     }
     this.providerMethod = candidateProviderMethod;
-    this.providerMethodArgumentNames = new ParamNameResolver(configuration, this.providerMethod).getNames();
+    this.paramNameResolver = new ParamNameResolver(configuration, this.providerMethod, mapperType);
     this.providerMethodParameterTypes = this.providerMethod.getParameterTypes();
 
     ProviderContext candidateProviderContext = null;
@@ -168,7 +168,7 @@ public class ProviderSqlSource implements SqlSource {
         } else {
           @SuppressWarnings("unchecked")
           Map<String, Object> params = (Map<String, Object>) parameterObject;
-          sql = invokeProviderMethod(extractProviderMethodArguments(params, providerMethodArgumentNames));
+          sql = invokeProviderMethod(extractProviderMethodArguments(params, paramNameResolver.getNames()));
         }
       } else if (providerMethodParameterTypes.length == 0) {
         sql = invokeProviderMethod();
@@ -186,7 +186,7 @@ public class ProviderSqlSource implements SqlSource {
           + "' because SqlProvider method arguments for '" + mapperMethod + "' is an invalid combination.");
       }
       Class<?> parameterType = parameterObject == null ? Object.class : parameterObject.getClass();
-      return languageDriver.createSqlSource(configuration, sql, parameterType);
+      return languageDriver.createSqlSource(configuration, sql, parameterType, paramNameResolver);
     } catch (BuilderException e) {
       throw e;
     } catch (Exception e) {

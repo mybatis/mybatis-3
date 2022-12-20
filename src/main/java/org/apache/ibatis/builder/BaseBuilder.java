@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.builder;
 
+import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -119,30 +120,34 @@ public abstract class BaseBuilder {
     }
   }
 
+  @Deprecated
   protected TypeHandler<?> resolveTypeHandler(Class<?> javaType, String typeHandlerAlias) {
-    if (typeHandlerAlias == null) {
-      return null;
-    }
-    Class<?> type = resolveClass(typeHandlerAlias);
-    if (type != null && !TypeHandler.class.isAssignableFrom(type)) {
-      throw new BuilderException("Type " + type.getName() + " is not a valid TypeHandler because it does not implement TypeHandler interface");
-    }
-    @SuppressWarnings("unchecked") // already verified it is a TypeHandler
-    Class<? extends TypeHandler<?>> typeHandlerType = (Class<? extends TypeHandler<?>>) type;
-    return resolveTypeHandler(javaType, typeHandlerType);
+    return resolveTypeHandler(null, null, javaType, null, typeHandlerAlias);
   }
 
+  @Deprecated
   protected TypeHandler<?> resolveTypeHandler(Class<?> javaType, Class<? extends TypeHandler<?>> typeHandlerType) {
-    if (typeHandlerType == null) {
+    return resolveTypeHandler(null, null, javaType, null, typeHandlerType);
+  }
+
+  protected TypeHandler<?> resolveTypeHandler(Class<?> parameterType, String propertyName, Type propertyType,
+      JdbcType jdbcType, String typeHandlerAlias) {
+    Class<? extends TypeHandler<?>> typeHandlerType = null;
+    typeHandlerType = resolveClass(typeHandlerAlias);
+    if (typeHandlerType != null && !TypeHandler.class.isAssignableFrom(typeHandlerType)) {
+      throw new BuilderException("Type " + typeHandlerType.getName()
+          + " is not a valid TypeHandler because it does not implement TypeHandler interface");
+    }
+    return resolveTypeHandler(parameterType, propertyName, propertyType, jdbcType, typeHandlerType);
+  }
+
+  protected TypeHandler<?> resolveTypeHandler(Class<?> parameterType, String propertyName, Type propertyType,
+      JdbcType jdbcType, Class<? extends TypeHandler<?>> typeHandlerType) {
+    if (typeHandlerType == null && jdbcType == null) {
       return null;
     }
-    // javaType ignored for injected handlers see issue #746 for full detail
-    TypeHandler<?> handler = typeHandlerRegistry.getMappingTypeHandler(typeHandlerType);
-    if (handler == null) {
-      // not in registry, create a new one
-      handler = typeHandlerRegistry.getInstance(javaType, typeHandlerType);
-    }
-    return handler;
+    return configuration.getTypeHandlerResolver().resolve(parameterType, propertyType, propertyName, jdbcType,
+        typeHandlerType);
   }
 
   protected <T> Class<? extends T> resolveAlias(String alias) {

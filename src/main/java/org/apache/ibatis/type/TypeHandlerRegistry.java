@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -38,6 +39,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -46,7 +48,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.ibatis.binding.MapperMethod.ParamMap;
 import org.apache.ibatis.io.ResolverUtil;
 import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.reflection.TypeParameterResolver;
 import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.util.MapUtil;
 
 /**
  * @author Clinton Begin
@@ -56,7 +60,9 @@ public final class TypeHandlerRegistry {
 
   private final Map<JdbcType, TypeHandler<?>> jdbcTypeHandlerMap = new EnumMap<>(JdbcType.class);
   private final Map<Type, Map<JdbcType, TypeHandler<?>>> typeHandlerMap = new ConcurrentHashMap<>();
+  private final Map<Type, Entry<Constructor<?>, Set<JdbcType>>> smartHandlers = new ConcurrentHashMap<>();
   private final TypeHandler<Object> unknownTypeHandler;
+  @Deprecated
   private final Map<Class<?>, TypeHandler<?>> allTypeHandlersMap = new HashMap<>();
 
   private static final Map<JdbcType, TypeHandler<?>> NULL_TYPE_HANDLER_MAP = Collections.emptyMap();
@@ -193,14 +199,16 @@ public final class TypeHandlerRegistry {
     return hasTypeHandler(javaType, null);
   }
 
+  @Deprecated
   public boolean hasTypeHandler(TypeReference<?> javaTypeReference) {
     return hasTypeHandler(javaTypeReference, null);
   }
 
-  public boolean hasTypeHandler(Class<?> javaType, JdbcType jdbcType) {
-    return javaType != null && getTypeHandler((Type) javaType, jdbcType) != null;
+  public boolean hasTypeHandler(Type javaType, JdbcType jdbcType) {
+    return javaType != null && getTypeHandler(javaType, jdbcType) != null;
   }
 
+  @Deprecated
   public boolean hasTypeHandler(TypeReference<?> javaTypeReference, JdbcType jdbcType) {
     return javaTypeReference != null && getTypeHandler(javaTypeReference, jdbcType) != null;
   }
@@ -209,10 +217,17 @@ public final class TypeHandlerRegistry {
     return allTypeHandlersMap.get(handlerType);
   }
 
-  public <T> TypeHandler<T> getTypeHandler(Class<T> type) {
-    return getTypeHandler((Type) type, null);
+  @Deprecated
+  @SuppressWarnings("unchecked")
+  public <T> TypeHandler<T> getTypeHandler(Class<T> clazz) {
+    return (TypeHandler<T>) getTypeHandler((Type)clazz);
   }
 
+  public TypeHandler<?> getTypeHandler(Type type) {
+    return getTypeHandler(type, null);
+  }
+
+  @Deprecated
   public <T> TypeHandler<T> getTypeHandler(TypeReference<T> javaTypeReference) {
     return getTypeHandler(javaTypeReference, null);
   }
@@ -221,16 +236,28 @@ public final class TypeHandlerRegistry {
     return jdbcTypeHandlerMap.get(jdbcType);
   }
 
-  public <T> TypeHandler<T> getTypeHandler(Class<T> type, JdbcType jdbcType) {
-    return getTypeHandler((Type) type, jdbcType);
-  }
-
+  @Deprecated
   public <T> TypeHandler<T> getTypeHandler(TypeReference<T> javaTypeReference, JdbcType jdbcType) {
-    return getTypeHandler(javaTypeReference.getRawType(), jdbcType);
+    return (TypeHandler<T>) getTypeHandler(javaTypeReference.getRawType(), jdbcType);
   }
 
-  @SuppressWarnings("unchecked")
-  private <T> TypeHandler<T> getTypeHandler(Type type, JdbcType jdbcType) {
+  public TypeHandler<?> getTypeHandler(Type type, JdbcType jdbcType, Class<? extends TypeHandler<?>> typeHandlerClass) {
+    TypeHandler<?> typeHandler = getTypeHandler(type, jdbcType);
+    if (typeHandler != null && (typeHandlerClass == null || typeHandler.getClass().equals(typeHandlerClass))) {
+      return typeHandler;
+    }
+    if (typeHandlerClass == null) {
+      typeHandler = getSmartHandler(type, jdbcType);
+    } else {
+      typeHandler = getMappingTypeHandler(typeHandlerClass);
+      if (typeHandler == null) {
+        typeHandler = getInstance(type, typeHandlerClass);
+      }
+    }
+    return typeHandler;
+  }
+
+  public TypeHandler<?> getTypeHandler(Type type, JdbcType jdbcType) {
     if (ParamMap.class.equals(type)) {
       return null;
     }
@@ -246,8 +273,60 @@ public final class TypeHandlerRegistry {
         handler = pickSoleHandler(jdbcHandlerMap);
       }
     }
+    if (handler == null) {
+      handler = getSmartHandler(type, jdbcType);
+    }
+    if (handler == null && type instanceof ParameterizedType) {
+      return getTypeHandler((Class<?>) ((ParameterizedType) type).getRawType(), jdbcType);
+    }
     // type drives generics here
-    return (TypeHandler<T>) handler;
+    return handler;
+  }
+
+  private TypeHandler<?> getSmartHandler(Type type, JdbcType jdbcType) {
+    Entry<Constructor<?>, Set<JdbcType>> candidate = null;
+    for (Entry<Type, Entry<Constructor<?>, Set<JdbcType>>> entry : smartHandlers.entrySet()) {
+      Type registeredType = entry.getKey();
+      if (registeredType.equals(type)) {
+        candidate = entry.getValue();
+        break;
+      }
+      if (registeredType instanceof Class) {
+        if (type instanceof Class && ((Class<?>)registeredType).isAssignableFrom((Class<?>)type)) {
+          candidate = entry.getValue();
+        }
+      } else if (registeredType instanceof ParameterizedType) {
+        Class<?> registeredClass = (Class<?>) ((ParameterizedType) registeredType).getRawType();
+        if (type instanceof ParameterizedType) {
+          Class<?> clazz = (Class<?>) ((ParameterizedType) type).getRawType();
+          if (registeredClass.isAssignableFrom(clazz)) {
+            candidate = entry.getValue();
+          }
+        }
+      }
+    }
+    if (candidate == null) {
+      if (type instanceof Class) {
+        Class<?> clazz = (Class<?>) type;
+        if (Enum.class.isAssignableFrom(clazz)) {
+          Class<?> enumClass = clazz.isAnonymousClass() ? clazz.getSuperclass() : clazz;
+          Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = getJdbcHandlerMapForEnumInterfaces(enumClass, enumClass);
+          if (jdbcHandlerMap == null) {
+            TypeHandler<?> enumHandler = getInstance(enumClass, defaultEnumTypeHandler);
+            register(enumClass, enumHandler);
+            return enumHandler;
+          }
+        }
+      }
+      return null;
+    }
+    try {
+      TypeHandler<?> typeHandler = (TypeHandler<?>) candidate.getKey().newInstance(type);
+      register(type, jdbcType, typeHandler);
+      return typeHandler;
+    } catch (ReflectiveOperationException e) {
+      throw new TypeException("Failed to invoke constructor " + candidate.getKey().toString(), e);
+    }
   }
 
   private Map<JdbcType, TypeHandler<?>> getJdbcHandlerMap(Type type) {
@@ -258,12 +337,6 @@ public final class TypeHandlerRegistry {
     if (type instanceof Class) {
       Class<?> clazz = (Class<?>) type;
       if (Enum.class.isAssignableFrom(clazz)) {
-        Class<?> enumClass = clazz.isAnonymousClass() ? clazz.getSuperclass() : clazz;
-        jdbcHandlerMap = getJdbcHandlerMapForEnumInterfaces(enumClass, enumClass);
-        if (jdbcHandlerMap == null) {
-          register(enumClass, getInstance(enumClass, defaultEnumTypeHandler));
-          return typeHandlerMap.get(enumClass);
-        }
       } else {
         jdbcHandlerMap = getJdbcHandlerMapForSuperclass(clazz);
       }
@@ -331,7 +404,6 @@ public final class TypeHandlerRegistry {
 
   // Only handler
 
-  @SuppressWarnings("unchecked")
   public <T> void register(TypeHandler<T> typeHandler) {
     boolean mappedTypeFound = false;
     MappedTypes mappedTypes = typeHandler.getClass().getAnnotation(MappedTypes.class);
@@ -341,15 +413,9 @@ public final class TypeHandlerRegistry {
         mappedTypeFound = true;
       }
     }
-    // @since 3.1.0 - try to auto-discover the mapped type
-    if (!mappedTypeFound && typeHandler instanceof TypeReference) {
-      try {
-        TypeReference<T> typeReference = (TypeReference<T>) typeHandler;
-        register(typeReference.getRawType(), typeHandler);
-        mappedTypeFound = true;
-      } catch (Throwable t) {
-        // maybe users define the TypeReference with a different type and are not assignable, so just ignore it
-      }
+    if (!mappedTypeFound) {
+      Type detectedMappedType = TypeParameterResolver.resolveClassTypeParams(TypeHandler.class, typeHandler.getClass())[0];
+      register(detectedMappedType, typeHandler);
     }
     if (!mappedTypeFound) {
       register((Class<T>) null, typeHandler);
@@ -358,11 +424,11 @@ public final class TypeHandlerRegistry {
 
   // java type + handler
 
-  public <T> void register(Class<T> javaType, TypeHandler<? extends T> typeHandler) {
+  public void register(Class<?> javaType, TypeHandler<?> typeHandler) {
     register((Type) javaType, typeHandler);
   }
 
-  private <T> void register(Type javaType, TypeHandler<? extends T> typeHandler) {
+  private void register(Type javaType, TypeHandler<?> typeHandler) {
     MappedJdbcTypes mappedJdbcTypes = typeHandler.getClass().getAnnotation(MappedJdbcTypes.class);
     if (mappedJdbcTypes != null) {
       for (JdbcType handledJdbcType : mappedJdbcTypes.value()) {
@@ -376,26 +442,31 @@ public final class TypeHandlerRegistry {
     }
   }
 
+  @Deprecated
   public <T> void register(TypeReference<T> javaTypeReference, TypeHandler<? extends T> handler) {
     register(javaTypeReference.getRawType(), handler);
   }
 
   // java type + jdbc type + handler
 
-  // Cast is required here
-  @SuppressWarnings("cast")
-  public <T> void register(Class<T> type, JdbcType jdbcType, TypeHandler<? extends T> handler) {
-    register((Type) type, jdbcType, handler);
-  }
-
-  private void register(Type javaType, JdbcType jdbcType, TypeHandler<?> handler) {
+  public void register(Type javaType, JdbcType jdbcType, TypeHandler<?> handler) {
     if (javaType != null) {
-      Map<JdbcType, TypeHandler<?>> map = typeHandlerMap.get(javaType);
-      if (map == null || map == NULL_TYPE_HANDLER_MAP) {
-        map = new HashMap<>();
+      typeHandlerMap.compute(javaType, (k, v) -> {
+        Map<JdbcType, TypeHandler<?>> map = (v == null || v == NULL_TYPE_HANDLER_MAP ? new HashMap<>()
+            : v);
+        map.put(jdbcType, handler);
+        return map;
+      });
+      if (javaType instanceof ParameterizedType) {
+        // MEMO: add annotation to skip this?
+        Type rawType = ((ParameterizedType) javaType).getRawType();
+        typeHandlerMap.compute(rawType, (k, v) -> {
+          Map<JdbcType, TypeHandler<?>> map = (v == null || v == NULL_TYPE_HANDLER_MAP ? new HashMap<>() : v);
+          map.merge(jdbcType, handler, (handler1, handler2) -> handler1.equals(handler2) ? handler1
+              : new ConflictedTypeHandler((Class<?>) rawType, jdbcType, handler1, handler2));
+          return map;
+        });
       }
-      map.put(jdbcType, handler);
-      typeHandlerMap.put(javaType, map);
     }
     allTypeHandlersMap.put(handler.getClass(), handler);
   }
@@ -407,16 +478,14 @@ public final class TypeHandlerRegistry {
   // Only handler type
 
   public void register(Class<?> typeHandlerClass) {
-    boolean mappedTypeFound = false;
     MappedTypes mappedTypes = typeHandlerClass.getAnnotation(MappedTypes.class);
-    if (mappedTypes != null) {
+    if (mappedTypes == null) {
+      Type typeFromSignature = TypeParameterResolver.resolveClassTypeParams(TypeHandler.class, typeHandlerClass)[0];
+      register(typeFromSignature, typeHandlerClass);
+    } else {
       for (Class<?> javaTypeClass : mappedTypes.value()) {
         register(javaTypeClass, typeHandlerClass);
-        mappedTypeFound = true;
       }
-    }
-    if (!mappedTypeFound) {
-      register(getInstance(null, typeHandlerClass));
     }
   }
 
@@ -426,35 +495,81 @@ public final class TypeHandlerRegistry {
     register(Resources.classForName(javaTypeClassName), Resources.classForName(typeHandlerClassName));
   }
 
-  public void register(Class<?> javaTypeClass, Class<?> typeHandlerClass) {
-    register(javaTypeClass, getInstance(javaTypeClass, typeHandlerClass));
+  public void register(Type javaTypeClass, Class<?> typeHandlerClass) {
+    // TODO: change the argument type to Class<? extends TypeHandler<?>> ?
+    if (!TypeHandler.class.isAssignableFrom(typeHandlerClass)) {
+      throw new IllegalArgumentException(
+          String.format("'%s' does not implement TypeHandler.", typeHandlerClass.getName()));
+    }
+    @SuppressWarnings("unchecked")
+    Class<? extends TypeHandler<?>> clazz = (Class<? extends TypeHandler<?>>) typeHandlerClass;
+    MappedJdbcTypes mappedJdbcTypes = typeHandlerClass.getAnnotation(MappedJdbcTypes.class);
+    if (mappedJdbcTypes != null) {
+      for (JdbcType handledJdbcType : mappedJdbcTypes.value()) {
+        register(javaTypeClass, handledJdbcType, clazz);
+      }
+      if (mappedJdbcTypes.includeNullJdbcType()) {
+        register(javaTypeClass, null, clazz);
+      }
+    } else {
+      register(javaTypeClass, null, clazz);
+    }
   }
 
   // java type + jdbc type + handler type
 
-  public void register(Class<?> javaTypeClass, JdbcType jdbcType, Class<?> typeHandlerClass) {
+  public void register(Type javaTypeClass, JdbcType jdbcType, Class<?> typeHandlerClass) {
+    @SuppressWarnings("unchecked")
+    Class<? extends TypeHandler<?>> clazz = (Class<? extends TypeHandler<?>>) typeHandlerClass;
+    for (Constructor<?> constructor : typeHandlerClass.getConstructors()) {
+      if (constructor.getParameterCount() != 1) {
+        continue;
+      }
+      Class<?> argType = constructor.getParameterTypes()[0];
+      if (Type.class.equals(argType) || Class.class.equals(argType)) {
+        MapUtil.computeIfAbsent(smartHandlers, javaTypeClass, k -> {
+          for (Entry<Constructor<?>, Set<JdbcType>> entry : smartHandlers.values()) {
+            if (entry.getKey().equals(constructor)) {
+              return entry;
+            }
+          }
+          // Might have to Collections.synchronizedSet(new HashSet<>())
+          return MapUtil.entry(constructor, new HashSet<>());
+        }).getValue().add(jdbcType);
+        return;
+      }
+    }
     register(javaTypeClass, jdbcType, getInstance(javaTypeClass, typeHandlerClass));
   }
 
   // Construct a handler (used also from Builders)
 
   @SuppressWarnings("unchecked")
-  public <T> TypeHandler<T> getInstance(Class<?> javaTypeClass, Class<?> typeHandlerClass) {
-    if (javaTypeClass != null) {
-      try {
-        Constructor<?> c = typeHandlerClass.getConstructor(Class.class);
-        return (TypeHandler<T>) c.newInstance(javaTypeClass);
-      } catch (NoSuchMethodException ignored) {
-        // ignored
-      } catch (Exception e) {
-        throw new TypeException("Failed invoking constructor for handler " + typeHandlerClass, e);
-      }
-    }
+  public <T> TypeHandler<T> getInstance(Type javaTypeClass, Class<?> typeHandlerClass) {
+    Constructor<?> c;
     try {
-      Constructor<?> c = typeHandlerClass.getConstructor();
-      return (TypeHandler<T>) c.newInstance();
-    } catch (Exception e) {
-      throw new TypeException("Unable to find a usable constructor for " + typeHandlerClass, e);
+      if (javaTypeClass != null) {
+        try {
+          c = typeHandlerClass.getConstructor(Type.class);
+          return (TypeHandler<T>) c.newInstance(javaTypeClass);
+        } catch (NoSuchMethodException ignored) {
+        }
+        if (javaTypeClass instanceof Class) {
+          try {
+            c = typeHandlerClass.getConstructor(Class.class);
+            return (TypeHandler<T>) c.newInstance(javaTypeClass);
+          } catch (NoSuchMethodException ignored) {
+          }
+        }
+      }
+      try {
+        c = typeHandlerClass.getConstructor();
+        return (TypeHandler<T>) c.newInstance();
+      } catch (NoSuchMethodException e) {
+        throw new TypeException("Unable to find a usable constructor for " + typeHandlerClass, e);
+      }
+    } catch (ReflectiveOperationException e) {
+      throw new TypeException("Failed to invoke constructor for handler " + typeHandlerClass, e);
     }
   }
 

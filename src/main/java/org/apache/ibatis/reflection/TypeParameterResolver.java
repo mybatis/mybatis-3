@@ -24,11 +24,21 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * @author Iwao AVE!
  */
 public class TypeParameterResolver {
+
+  public static Type[] resolveClassTypeParams(Class<?> classWithTypeParams, Class<?> childClass) {
+    TypeVariable<?>[] typeArgs = classWithTypeParams.getTypeParameters();
+    Type[] result = new Type[typeArgs.length];
+    for (int i = 0; i < typeArgs.length; i++) {
+      result[i] = resolveTypeVar(typeArgs[i], childClass, classWithTypeParams);
+    }
+    return result;
+  }
 
   /**
    * Resolve field type.
@@ -160,6 +170,14 @@ public class TypeParameterResolver {
     } else if (srcType instanceof ParameterizedType) {
       ParameterizedType parameterizedType = (ParameterizedType) srcType;
       clazz = (Class<?>) parameterizedType.getRawType();
+      if (clazz == declaringClass) {
+        TypeVariable<?>[] typeVars = declaringClass.getTypeParameters();
+        for (int i=0 ; i < typeVars.length; i++) {
+          if (typeVar.equals(typeVars[i])) {
+            return parameterizedType.getActualTypeArguments()[i];
+          }
+        }
+      }
     } else {
       throw new IllegalArgumentException("The 2nd arg must be Class or ParameterizedType, but was: " + srcType.getClass());
     }
@@ -264,6 +282,21 @@ public class TypeParameterResolver {
     @Override
     public Type getRawType() {
       return rawType;
+    }
+
+    @Override
+    public int hashCode() {
+      return (ownerType == null ? 0 : ownerType.hashCode()) ^ Arrays.hashCode(actualTypeArguments) ^ rawType.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (!(obj instanceof ParameterizedType)) {
+        return false;
+      }
+      ParameterizedType other = (ParameterizedType) obj;
+      return rawType.equals(other.getRawType()) && Objects.equals(ownerType, other.getOwnerType())
+          && Arrays.equals(actualTypeArguments, other.getActualTypeArguments());
     }
 
     @Override

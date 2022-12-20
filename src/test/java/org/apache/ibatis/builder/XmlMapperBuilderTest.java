@@ -30,6 +30,7 @@ import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.TypeHandler;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 class XmlMapperBuilderTest {
@@ -142,14 +143,14 @@ class XmlMapperBuilderTest {
   @Test
   void resolveTypeHandlerTypeHandlerAliasIsNull() {
     BaseBuilder builder = new BaseBuilder(new Configuration()){{}};
-    TypeHandler<?> typeHandler = builder.resolveTypeHandler(String.class, (String)null);
+    TypeHandler<?> typeHandler = builder.resolveTypeHandler(String.class, null, null, null, (String)null);
     assertThat(typeHandler).isNull();
   }
 
   @Test
   void resolveTypeHandlerNoAssignable() {
     BaseBuilder builder = new BaseBuilder(new Configuration()){{}};
-    when(() -> builder.resolveTypeHandler(String.class, "integer"));
+    when(() -> builder.resolveTypeHandler(String.class, null, null, null, "integer"));
     then(caughtException())
       .isInstanceOf(BuilderException.class)
       .hasMessage("Type java.lang.Integer is not a valid TypeHandler because it does not implement TypeHandler interface");
