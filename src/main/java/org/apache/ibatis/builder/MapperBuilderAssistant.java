@@ -15,19 +15,29 @@
  */
 package org.apache.ibatis.builder;
 
+import java.lang.reflect.Array;
+import java.lang.reflect.GenericArrayType;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import org.apache.ibatis.annotations.MapKey;
+import org.apache.ibatis.annotations.ResultType;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.decorators.LruCache;
 import org.apache.ibatis.cache.impl.PerpetualCache;
+import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.mapping.CacheBuilder;
@@ -44,6 +54,7 @@ import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.reflection.MetaClass;
+import org.apache.ibatis.reflection.TypeParameterResolver;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
@@ -568,6 +579,63 @@ public class MapperBuilderAssistant extends BaseBuilder {
       javaType = Object.class;
     }
     return javaType;
+  }
+
+  public Class<?> getReturnType(Method method, Class<?> type) {
+    Class<?> returnType = method.getReturnType();
+    Type resolvedReturnType = TypeParameterResolver.resolveReturnType(method, type);
+    if (resolvedReturnType instanceof Class) {
+      returnType = (Class<?>) resolvedReturnType;
+      if (returnType.isArray()) {
+        returnType = returnType.getComponentType();
+      }
+      // gcode issue #508
+      if (void.class.equals(returnType)) {
+        ResultType rt = method.getAnnotation(ResultType.class);
+        if (rt != null) {
+          returnType = rt.value();
+        }
+      }
+    } else if (resolvedReturnType instanceof ParameterizedType) {
+      ParameterizedType parameterizedType = (ParameterizedType) resolvedReturnType;
+      Class<?> rawType = (Class<?>) parameterizedType.getRawType();
+      if (Collection.class.isAssignableFrom(rawType) || Cursor.class.isAssignableFrom(rawType)) {
+        Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
+        if (actualTypeArguments != null && actualTypeArguments.length == 1) {
+          Type returnTypeParameter = actualTypeArguments[0];
+          if (returnTypeParameter instanceof Class<?>) {
+            returnType = (Class<?>) returnTypeParameter;
+          } else if (returnTypeParameter instanceof ParameterizedType) {
+            // (gcode issue #443) actual type can be a also a parameterized type
+            returnType = (Class<?>) ((ParameterizedType) returnTypeParameter).getRawType();
+          } else if (returnTypeParameter instanceof GenericArrayType) {
+            Class<?> componentType = (Class<?>) ((GenericArrayType) returnTypeParameter).getGenericComponentType();
+            // (gcode issue #525) support List<byte[]>
+            returnType = Array.newInstance(componentType, 0).getClass();
+          }
+        }
+      } else if (method.isAnnotationPresent(MapKey.class) && Map.class.isAssignableFrom(rawType)) {
+        // (gcode issue 504) Do not look into Maps if there is not MapKey annotation
+        Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
+        if (actualTypeArguments != null && actualTypeArguments.length == 2) {
+          Type returnTypeParameter = actualTypeArguments[1];
+          if (returnTypeParameter instanceof Class<?>) {
+            returnType = (Class<?>) returnTypeParameter;
+          } else if (returnTypeParameter instanceof ParameterizedType) {
+            // (gcode issue 443) actual type can be a also a parameterized type
+            returnType = (Class<?>) ((ParameterizedType) returnTypeParameter).getRawType();
+          }
+        }
+      } else if (Optional.class.equals(rawType)) {
+        Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
+        Type returnTypeParameter = actualTypeArguments[0];
+        if (returnTypeParameter instanceof Class<?>) {
+          returnType = (Class<?>) returnTypeParameter;
+        }
+      }
+    }
+
+    return returnType;
   }
 
 }

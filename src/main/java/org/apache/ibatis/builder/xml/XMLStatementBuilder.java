@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.builder.xml;
 
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Locale;
 
@@ -101,6 +102,10 @@ public class XMLStatementBuilder extends BaseBuilder {
     String resultType = context.getStringAttribute("resultType");
     Class<?> resultTypeClass = resolveClass(resultType);
     String resultMap = context.getStringAttribute("resultMap");
+    if (resultTypeClass == null && resultMap == null) {
+      // Resolve resultType by namespace and id, if not provide resultType and resultMap
+      resultTypeClass = resolveResultType(id);
+    }
     String resultSetType = context.getStringAttribute("resultSetType");
     ResultSetType resultSetTypeEnum = resolveResultSetType(resultSetType);
     if (resultSetTypeEnum == null) {
@@ -199,4 +204,34 @@ public class XMLStatementBuilder extends BaseBuilder {
     return configuration.getLanguageDriver(langClass);
   }
 
+  private Class<?> resolveResultType(String id) {
+    String namespace = builderAssistant.getCurrentNamespace();
+    Class<?> type;
+    try {
+      type = resolveClass(namespace);
+      if (type == null) {
+        return null;
+      }
+    } catch (Exception e) {
+      // ignore
+      return null;
+    }
+    Method mapperMethod = findMapperMethod(type, id);
+    if (mapperMethod != null) {
+      return builderAssistant.getReturnType(mapperMethod, type);
+    }
+    return null;
+  }
+
+  private Method findMapperMethod(Class<?> type, String methodName) {
+    Method[] methods = type.getMethods();
+    Method foundMethod = null;
+    for (Method method : methods) {
+      if (method.getName().equals(methodName) && !method.isBridge() && !method.isDefault()) {
+        foundMethod = method;
+        break;
+      }
+    }
+    return foundMethod;
+  }
 }
