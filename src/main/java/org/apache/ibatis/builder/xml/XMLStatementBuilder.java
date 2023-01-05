@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,12 +15,12 @@
  */
 package org.apache.ibatis.builder.xml;
 
-import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Locale;
 
 import org.apache.ibatis.builder.BaseBuilder;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
+import org.apache.ibatis.builder.annotation.MapperAnnotationBuilder;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.executor.keygen.NoKeyGenerator;
@@ -103,8 +103,7 @@ public class XMLStatementBuilder extends BaseBuilder {
     Class<?> resultTypeClass = resolveClass(resultType);
     String resultMap = context.getStringAttribute("resultMap");
     if (resultTypeClass == null && resultMap == null) {
-      // Resolve resultType by namespace and id, if not provide resultType and resultMap
-      resultTypeClass = resolveResultType(id);
+      resultTypeClass = MapperAnnotationBuilder.getMethodReturnType(builderAssistant.getCurrentNamespace(), id);
     }
     String resultSetType = context.getStringAttribute("resultSetType");
     ResultSetType resultSetTypeEnum = resolveResultSetType(resultSetType);
@@ -204,34 +203,4 @@ public class XMLStatementBuilder extends BaseBuilder {
     return configuration.getLanguageDriver(langClass);
   }
 
-  private Class<?> resolveResultType(String id) {
-    String namespace = builderAssistant.getCurrentNamespace();
-    Class<?> type;
-    try {
-      type = resolveClass(namespace);
-      if (type == null) {
-        return null;
-      }
-    } catch (Exception e) {
-      // ignore
-      return null;
-    }
-    Method mapperMethod = findMapperMethod(type, id);
-    if (mapperMethod != null) {
-      return builderAssistant.getReturnType(mapperMethod, type);
-    }
-    return null;
-  }
-
-  private Method findMapperMethod(Class<?> type, String methodName) {
-    Method[] methods = type.getMethods();
-    Method foundMethod = null;
-    for (Method method : methods) {
-      if (method.getName().equals(methodName) && !method.isBridge() && !method.isDefault()) {
-        foundMethod = method;
-        break;
-      }
-    }
-    return foundMethod;
-  }
 }

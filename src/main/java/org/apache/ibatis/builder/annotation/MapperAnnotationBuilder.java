@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,7 +18,11 @@ package org.apache.ibatis.builder.annotation;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Array;
+import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -41,11 +45,13 @@ import org.apache.ibatis.annotations.DeleteProvider;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Lang;
+import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Options.FlushCachePolicy;
 import org.apache.ibatis.annotations.Property;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.ResultMap;
+import org.apache.ibatis.annotations.ResultType;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectKey;
@@ -59,6 +65,7 @@ import org.apache.ibatis.builder.CacheRefResolver;
 import org.apache.ibatis.builder.IncompleteElementException;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
+import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.executor.keygen.NoKeyGenerator;
@@ -74,6 +81,7 @@ import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.parsing.PropertyParser;
+import org.apache.ibatis.reflection.TypeParameterResolver;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
@@ -130,7 +138,7 @@ public class MapperAnnotationBuilder {
     parsePendingMethods();
   }
 
-  private boolean canHaveStatement(Method method) {
+  private static boolean canHaveStatement(Method method) {
     // issue #237
     return !method.isBridge() && !method.isDefault();
   }
@@ -216,7 +224,7 @@ public class MapperAnnotationBuilder {
   }
 
   private String parseResultMap(Method method) {
-    Class<?> returnType = assistant.getReturnType(method, type);
+    Class<?> returnType = getReturnType(method, type);
     Arg[] args = method.getAnnotationsByType(Arg.class);
     Result[] results = method.getAnnotationsByType(Result.class);
     TypeDiscriminator typeDiscriminator = method.getAnnotation(TypeDiscriminator.class);
@@ -358,7 +366,7 @@ public class MapperAnnotationBuilder {
           null,
           parameterTypeClass,
           resultMapId,
-          assistant.getReturnType(method, type),
+          getReturnType(method, type),
           resultSetType,
           flushCache,
           useCache,
@@ -398,6 +406,63 @@ public class MapperAnnotationBuilder {
       }
     }
     return parameterType;
+  }
+
+  private static Class<?> getReturnType(Method method, Class<?> type) {
+    Class<?> returnType = method.getReturnType();
+    Type resolvedReturnType = TypeParameterResolver.resolveReturnType(method, type);
+    if (resolvedReturnType instanceof Class) {
+      returnType = (Class<?>) resolvedReturnType;
+      if (returnType.isArray()) {
+        returnType = returnType.getComponentType();
+      }
+      // gcode issue #508
+      if (void.class.equals(returnType)) {
+        ResultType rt = method.getAnnotation(ResultType.class);
+        if (rt != null) {
+          returnType = rt.value();
+        }
+      }
+    } else if (resolvedReturnType instanceof ParameterizedType) {
+      ParameterizedType parameterizedType = (ParameterizedType) resolvedReturnType;
+      Class<?> rawType = (Class<?>) parameterizedType.getRawType();
+      if (Collection.class.isAssignableFrom(rawType) || Cursor.class.isAssignableFrom(rawType)) {
+        Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
+        if (actualTypeArguments != null && actualTypeArguments.length == 1) {
+          Type returnTypeParameter = actualTypeArguments[0];
+          if (returnTypeParameter instanceof Class<?>) {
+            returnType = (Class<?>) returnTypeParameter;
+          } else if (returnTypeParameter instanceof ParameterizedType) {
+            // (gcode issue #443) actual type can be a also a parameterized type
+            returnType = (Class<?>) ((ParameterizedType) returnTypeParameter).getRawType();
+          } else if (returnTypeParameter instanceof GenericArrayType) {
+            Class<?> componentType = (Class<?>) ((GenericArrayType) returnTypeParameter).getGenericComponentType();
+            // (gcode issue #525) support List<byte[]>
+            returnType = Array.newInstance(componentType, 0).getClass();
+          }
+        }
+      } else if (method.isAnnotationPresent(MapKey.class) && Map.class.isAssignableFrom(rawType)) {
+        // (gcode issue 504) Do not look into Maps if there is not MapKey annotation
+        Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
+        if (actualTypeArguments != null && actualTypeArguments.length == 2) {
+          Type returnTypeParameter = actualTypeArguments[1];
+          if (returnTypeParameter instanceof Class<?>) {
+            returnType = (Class<?>) returnTypeParameter;
+          } else if (returnTypeParameter instanceof ParameterizedType) {
+            // (gcode issue 443) actual type can be a also a parameterized type
+            returnType = (Class<?>) ((ParameterizedType) returnTypeParameter).getRawType();
+          }
+        }
+      } else if (Optional.class.equals(rawType)) {
+        Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
+        Type returnTypeParameter = actualTypeArguments[0];
+        if (returnTypeParameter instanceof Class<?>) {
+          returnType = (Class<?>) returnTypeParameter;
+        }
+      }
+    }
+
+    return returnType;
   }
 
   private void applyResults(Result[] results, Class<?> resultType, List<ResultMapping> resultMappings) {
@@ -602,6 +667,23 @@ public class MapperAnnotationBuilder {
               method.getDeclaringClass().getName(), method.getName(), databaseId));
     }
     return Optional.ofNullable(annotationWrapper);
+  }
+
+  public static Class<?> getMethodReturnType(String mapperFqn, String localStatementId) {
+    if (mapperFqn == null || localStatementId == null) {
+      return null;
+    }
+    try {
+      Class<?> mapperClass = Resources.classForName(mapperFqn);
+      for (Method method : mapperClass.getMethods()) {
+        if (method.getName().equals(localStatementId) && canHaveStatement(method)) {
+          return getReturnType(method, mapperClass);
+        }
+      }
+    } catch (ClassNotFoundException e) {
+      // No corresponding mapper interface which is OK
+    }
+    return null;
   }
 
   private class AnnotationWrapper {

@@ -15,14 +15,10 @@
  */
 package org.apache.ibatis.submitted.no_result_type_map;
 
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
 
-public interface Mapper extends ParentMapper<User>{
+public interface ParentMapper<T> {
 
-  User getUser(@Param("id") Integer id);
-
-  List<User> getAllUsers();
+  List<T> getAllUsersInParent();
 
 }

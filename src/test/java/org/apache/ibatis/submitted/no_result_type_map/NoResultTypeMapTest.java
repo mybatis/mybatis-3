@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,10 +15,14 @@
  */
 package org.apache.ibatis.submitted.no_result_type_map;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.io.Reader;
 import java.util.List;
 
 import org.apache.ibatis.BaseDataTest;
+import org.apache.ibatis.exceptions.PersistenceException;
+import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -60,6 +64,28 @@ class NoResultTypeMapTest {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<User> users = mapper.getAllUsers();
       Assertions.assertEquals(3, users.size());
+    }
+  }
+
+  @Test
+  void shouldResolveInheritedReturnType() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      List<User> users = mapper.getAllUsersInParent();
+      Assertions.assertEquals(3, users.size());
+    }
+  }
+
+  @Test
+  void shouldFailIfNoMatchingMethod() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      PersistenceException ex = assertThrows(PersistenceException.class,
+          () -> sqlSession.selectList("org.apache.ibatis.submitted.no_result_type_map.Mapper.noMatchingMethod"));
+      ExecutorException cause = (ExecutorException) ex.getCause();
+      assertEquals("A query was run and no Result Maps were found for the Mapped Statement "
+          + "'org.apache.ibatis.submitted.no_result_type_map.Mapper.noMatchingMethod'. "
+          + "'resultType' or 'resultMap' must be specified when there is no corresponding method.",
+          cause.getMessage());
     }
   }
 
