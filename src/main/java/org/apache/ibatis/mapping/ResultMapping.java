@@ -144,15 +144,15 @@ public class ResultMapping {
     private void validate() {
       // Issue #697: cannot define both nestedQueryId and nestedResultMapId
       if (resultMapping.nestedQueryId != null && resultMapping.nestedResultMapId != null) {
-        throw new IllegalStateException("Cannot define both nestedQueryId and nestedResultMapId in property " + resultMapping.property);
+        throw new IllegalStateException("Cannot define both nestedQueryId and nestedResultMapId in property " + resultMapping.property + " for Java type " + resultMapping.javaType);
       }
       // Issue #5: there should be no mappings without typehandler
       if (resultMapping.nestedQueryId == null && resultMapping.nestedResultMapId == null && resultMapping.typeHandler == null) {
-        throw new IllegalStateException("No typehandler found for property " + resultMapping.property);
+        throw new IllegalStateException("No typehandler found for property " + resultMapping.property + " for Java type " + resultMapping.javaType);
       }
       // Issue #4 and GH #39: column is optional only in nested resultmaps but not in the rest
       if (resultMapping.nestedResultMapId == null && resultMapping.column == null && resultMapping.composites.isEmpty()) {
-        throw new IllegalStateException("Mapping is missing column attribute for property " + resultMapping.property);
+        throw new IllegalStateException("Mapping is missing column attribute for property " + resultMapping.property + " for Java type " + resultMapping.javaType);
       }
       if (resultMapping.getResultSet() != null) {
         int numColumns = 0;
@@ -164,7 +164,7 @@ public class ResultMapping {
           numForeignColumns = resultMapping.foreignColumn.split(",").length;
         }
         if (numColumns != numForeignColumns) {
-          throw new IllegalStateException("There should be the same number of columns and foreignColumns in property " + resultMapping.property);
+          throw new IllegalStateException("There should be the same number of columns and foreignColumns in property " + resultMapping.property + " for Java type " + resultMapping.javaType);
         }
       }
     }
