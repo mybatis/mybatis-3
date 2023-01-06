@@ -18,8 +18,10 @@ package org.apache.ibatis.plugin;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -32,13 +34,15 @@ import org.apache.ibatis.util.MapUtil;
 public class Plugin implements InvocationHandler {
 
   private final Object target;
-  private final Interceptor interceptor;
-  private final Map<Class<?>, Set<Method>> signatureMap;
+  private final Map<Method, List<Interceptor>> interceptorMap;
 
-  private Plugin(Object target, Interceptor interceptor, Map<Class<?>, Set<Method>> signatureMap) {
+  private Plugin(Object target, Map<Method, List<Interceptor>> interceptorMap) {
     this.target = target;
-    this.interceptor = interceptor;
-    this.signatureMap = signatureMap;
+    this.interceptorMap = interceptorMap;
+  }
+
+  public Map<Method, List<Interceptor>> getInterceptorMap() {
+    return interceptorMap;
   }
 
   public static Object wrap(Object target, Interceptor interceptor) {
@@ -46,10 +50,18 @@ public class Plugin implements InvocationHandler {
     Class<?> type = target.getClass();
     Class<?>[] interfaces = getAllInterfaces(type, signatureMap);
     if (interfaces.length > 0) {
-      return Proxy.newProxyInstance(
-          type.getClassLoader(),
-          interfaces,
-          new Plugin(target, interceptor, signatureMap));
+      if (Proxy.isProxyClass(target.getClass())) {
+        InvocationHandler invocationHandler = Proxy.getInvocationHandler(target);
+        if (invocationHandler instanceof Plugin) {
+          Map<Method, List<Interceptor>> interceptorMap = ((Plugin) invocationHandler).getInterceptorMap();
+          mapping(interceptor, signatureMap, interceptorMap);
+          return target;
+        }
+      }
+
+      Map<Method, List<Interceptor>> interceptorMap = new HashMap<>();
+      mapping(interceptor, signatureMap, interceptorMap);
+      return Proxy.newProxyInstance(type.getClassLoader(), interfaces, new Plugin(target, interceptorMap));
     }
     return target;
   }
@@ -57,13 +69,21 @@ public class Plugin implements InvocationHandler {
   @Override
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
     try {
-      Set<Method> methods = signatureMap.get(method.getDeclaringClass());
-      if (methods != null && methods.contains(method)) {
-        return interceptor.intercept(new Invocation(target, method, args));
+      List<Interceptor> interceptors = interceptorMap.get(method);
+      if (interceptors != null) {
+        return new Invocation(target, method, args, interceptors).proceed();
       }
       return method.invoke(target, args);
     } catch (Exception e) {
       throw ExceptionUtil.unwrapThrowable(e);
+    }
+  }
+
+  private static void mapping(Interceptor interceptor, Map<Class<?>, Set<Method>> signatureMap, Map<Method, List<Interceptor>> interceptorMap) {
+    for (Set<Method> methods : signatureMap.values()) {
+      for (Method method : methods) {
+        interceptorMap.computeIfAbsent(method, (key) -> new ArrayList<>()).add(interceptor);
+      }
     }
   }
 
