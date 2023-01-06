@@ -15,15 +15,15 @@
  */
 package org.apache.ibatis.mapping;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Clinton Begin
@@ -143,17 +143,19 @@ public class ResultMapping {
 
     private void validate() {
       // Issue #697: cannot define both nestedQueryId and nestedResultMapId
-      if (resultMapping.nestedQueryId != null && resultMapping.nestedResultMapId != null) {
-        throw new IllegalStateException("Cannot define both nestedQueryId and nestedResultMapId in property " + resultMapping.property);
-      }
+      String propertyAlias = resultMapping.property != null ? resultMapping.property : resultMapping.column;
+      String propertyAliasType = resultMapping.property != null ? "property" : "column";
+      if (resultMapping.nestedQueryId != null && resultMapping.nestedResultMapId != null)
+        throw new IllegalStateException("Cannot define both nestedQueryId and nestedResultMapId for " + propertyAliasType + " '" + propertyAlias + "' ");
+
       // Issue #5: there should be no mappings without typehandler
-      if (resultMapping.nestedQueryId == null && resultMapping.nestedResultMapId == null && resultMapping.typeHandler == null) {
-        throw new IllegalStateException("No typehandler found for property " + resultMapping.property);
-      }
+      if (resultMapping.nestedQueryId == null && resultMapping.nestedResultMapId == null && resultMapping.typeHandler == null)
+        throw new IllegalStateException("No typehandler found for " + propertyAliasType + " '" + propertyAlias + "' ");
+
       // Issue #4 and GH #39: column is optional only in nested resultmaps but not in the rest
-      if (resultMapping.nestedResultMapId == null && resultMapping.column == null && resultMapping.composites.isEmpty()) {
-        throw new IllegalStateException("Mapping is missing column attribute for property " + resultMapping.property);
-      }
+      if (resultMapping.nestedResultMapId == null && resultMapping.column == null && resultMapping.composites.isEmpty())
+        throw new IllegalStateException("Mapping is missing column attribute for  " + propertyAliasType + " '" + propertyAlias + "' ");
+
       if (resultMapping.getResultSet() != null) {
         int numColumns = 0;
         if (resultMapping.column != null) {

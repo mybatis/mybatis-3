@@ -15,18 +15,17 @@
  */
 package org.apache.ibatis.builder;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.builder.annotation.MapperAnnotationBuilder;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.session.Configuration;
+import org.junit.Assert;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class AnnotationMapperBuilderTest {
 
@@ -94,6 +93,19 @@ class AnnotationMapperBuilderTest {
     assertThat(mappedStatement.getResultSetType()).isEqualTo(ResultSetType.DEFAULT);
   }
 
+  @Test
+  void withJavaTypeWhenMissingTypeHandler() {
+    Assert.assertThrows(BuilderException.class, () -> {
+      Configuration configuration = new Configuration();
+      MapperAnnotationBuilder builder = new MapperAnnotationBuilder(configuration, BrokenMapper.class);
+      builder.parse();
+    });
+  }
+
+  public static class InvalidJavaTestType {}
+
+  public static class TestResponseType {}
+
   interface Mapper {
 
     @Insert("insert into test (name) values(#{name})")
@@ -111,6 +123,13 @@ class AnnotationMapperBuilderTest {
     @Select("select * from test")
     String selectWithoutOptions(Integer id);
 
+
+  }
+
+  interface BrokenMapper extends Mapper {
+    @Select("SELECT col FROM test")
+    @ConstructorArgs({@Arg(column = "col", javaType = InvalidJavaTestType.class)})
+    TestResponseType getTestResponseType(int a, String b);
   }
 
 }
