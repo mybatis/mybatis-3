@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -138,7 +138,7 @@ public class MapperAnnotationBuilder {
     parsePendingMethods();
   }
 
-  private boolean canHaveStatement(Method method) {
+  private static boolean canHaveStatement(Method method) {
     // issue #237
     return !method.isBridge() && !method.isDefault();
   }
@@ -224,7 +224,7 @@ public class MapperAnnotationBuilder {
   }
 
   private String parseResultMap(Method method) {
-    Class<?> returnType = getReturnType(method);
+    Class<?> returnType = getReturnType(method, type);
     Arg[] args = method.getAnnotationsByType(Arg.class);
     Result[] results = method.getAnnotationsByType(Result.class);
     TypeDiscriminator typeDiscriminator = method.getAnnotation(TypeDiscriminator.class);
@@ -366,7 +366,7 @@ public class MapperAnnotationBuilder {
           null,
           parameterTypeClass,
           resultMapId,
-          getReturnType(method),
+          getReturnType(method, type),
           resultSetType,
           flushCache,
           useCache,
@@ -408,7 +408,7 @@ public class MapperAnnotationBuilder {
     return parameterType;
   }
 
-  private Class<?> getReturnType(Method method) {
+  private static Class<?> getReturnType(Method method, Class<?> type) {
     Class<?> returnType = method.getReturnType();
     Type resolvedReturnType = TypeParameterResolver.resolveReturnType(method, type);
     if (resolvedReturnType instanceof Class) {
@@ -667,6 +667,23 @@ public class MapperAnnotationBuilder {
               method.getDeclaringClass().getName(), method.getName(), databaseId));
     }
     return Optional.ofNullable(annotationWrapper);
+  }
+
+  public static Class<?> getMethodReturnType(String mapperFqn, String localStatementId) {
+    if (mapperFqn == null || localStatementId == null) {
+      return null;
+    }
+    try {
+      Class<?> mapperClass = Resources.classForName(mapperFqn);
+      for (Method method : mapperClass.getMethods()) {
+        if (method.getName().equals(localStatementId) && canHaveStatement(method)) {
+          return getReturnType(method, mapperClass);
+        }
+      }
+    } catch (ClassNotFoundException e) {
+      // No corresponding mapper interface which is OK
+    }
+    return null;
   }
 
   private class AnnotationWrapper {
