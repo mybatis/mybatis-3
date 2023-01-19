@@ -110,21 +110,27 @@ public class MetaObject {
   }
 
   public Object getValue(String name) {
-    PropertyTokenizer prop = new PropertyTokenizer(name);
+    return getValue(PropertyTokenizer.valueOf(name));
+  }
+
+  public void setValue(String name, Object value) {
+    setValue(PropertyTokenizer.valueOf(name), value);
+  }
+
+  private Object getValue(PropertyTokenizer prop) {
     if (prop.hasNext()) {
       MetaObject metaValue = metaObjectForProperty(prop.getIndexedName());
       if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
         return null;
       } else {
-        return metaValue.getValue(prop.getChildren());
+        return metaValue.getValue(prop.next());
       }
     } else {
       return objectWrapper.get(prop);
     }
   }
 
-  public void setValue(String name, Object value) {
-    PropertyTokenizer prop = new PropertyTokenizer(name);
+  private void setValue(PropertyTokenizer prop, Object value) {
     if (prop.hasNext()) {
       MetaObject metaValue = metaObjectForProperty(prop.getIndexedName());
       if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
@@ -132,10 +138,10 @@ public class MetaObject {
           // don't instantiate child path if value is null
           return;
         } else {
-          metaValue = objectWrapper.instantiatePropertyValue(name, prop, objectFactory);
+          metaValue = objectWrapper.instantiatePropertyValue(prop.getName(), prop, objectFactory);
         }
       }
-      metaValue.setValue(prop.getChildren(), value);
+      metaValue.setValue(prop.next(), value);
     } else {
       objectWrapper.set(prop, value);
     }
