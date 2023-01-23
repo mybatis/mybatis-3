@@ -15,6 +15,9 @@
  */
 package org.apache.ibatis.jdbc;
 
+import org.apache.ibatis.jdbc.handler.DefaultDelimiterHandler;
+import org.apache.ibatis.jdbc.handler.DelimiterHandler;
+
 import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.io.Reader;
@@ -24,8 +27,6 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * This is an internal testing utility.<br>
@@ -41,8 +42,6 @@ public class ScriptRunner {
 
   private static final String DEFAULT_DELIMITER = ";";
 
-  private static final Pattern DELIMITER_PATTERN = Pattern.compile("^\\s*((--)|(//))?\\s*(//)?\\s*@DELIMITER\\s+([^\\s]+)", Pattern.CASE_INSENSITIVE);
-
   private final Connection connection;
 
   private boolean stopOnError;
@@ -57,6 +56,8 @@ public class ScriptRunner {
 
   private String delimiter = DEFAULT_DELIMITER;
   private boolean fullLineDelimiter;
+
+  private DelimiterHandler delimiterHandler = new DefaultDelimiterHandler();
 
   public ScriptRunner(Connection connection) {
     this.connection = connection;
@@ -107,6 +108,10 @@ public class ScriptRunner {
 
   public void setFullLineDelimiter(boolean fullLineDelimiter) {
     this.fullLineDelimiter = fullLineDelimiter;
+  }
+
+  public void setDelimiterHandler(DelimiterHandler delimiterHandler) {
+    this.delimiterHandler = delimiterHandler;
   }
 
   public void runScript(Reader reader) {
@@ -210,11 +215,9 @@ public class ScriptRunner {
 
   private void handleLine(StringBuilder command, String line) throws SQLException {
     String trimmedLine = line.trim();
-    if (lineIsComment(trimmedLine)) {
-      Matcher matcher = DELIMITER_PATTERN.matcher(trimmedLine);
-      if (matcher.find()) {
-        delimiter = matcher.group(5);
-      }
+    if (delimiterHandler.resetDelimiter(this, trimmedLine)) {
+      println(trimmedLine);
+    } else if (lineIsComment(trimmedLine)) {
       println(trimmedLine);
     } else if (commandReadyToExecute(trimmedLine)) {
       command.append(line, 0, line.lastIndexOf(delimiter));
@@ -229,7 +232,7 @@ public class ScriptRunner {
   }
 
   private boolean lineIsComment(String trimmedLine) {
-    return trimmedLine.startsWith("//") || trimmedLine.startsWith("--");
+    return trimmedLine.startsWith("//") || trimmedLine.startsWith("--") || trimmedLine.startsWith("/*");
   }
 
   private boolean commandReadyToExecute(String trimmedLine) {

@@ -29,6 +29,8 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.sql.DataSource;
 
@@ -36,6 +38,7 @@ import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.datasource.pooled.PooledDataSource;
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.apache.ibatis.io.Resources;
+import org.junit.Assert;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -43,6 +46,9 @@ import org.mockito.Mockito;
 class ScriptRunnerTest extends BaseDataTest {
 
   private static final String LINE_SEPARATOR = System.lineSeparator();
+
+  private static final Pattern DELIMITER_PATTERN = Pattern.compile("^\\s*((--)|(//))?\\s*(//)?\\s*@?DELIMITER\\s+([^\\s]+)", Pattern.CASE_INSENSITIVE);
+
 
   @Test
   @Disabled("This fails with HSQLDB 2.0 due to the create index statements in the schema script")
@@ -279,6 +285,86 @@ class ScriptRunnerTest extends BaseDataTest {
         + "||\n"
         + "//  @DELIMITER  ;\n"
         + "line 3; \n";
+    Reader reader = new StringReader(sql);
+    runner.runScript(reader);
+
+    verify(stmt, Mockito.times(1)).execute(eq("line 1;" + LINE_SEPARATOR + "line 2;" + LINE_SEPARATOR + LINE_SEPARATOR));
+    verify(stmt, Mockito.times(1)).execute(eq("line 3" + LINE_SEPARATOR));
+  }
+
+  public String findDelimiter(Pattern pattern, String inputStr) {
+    Matcher matcher = pattern.matcher(inputStr);
+    if (matcher.find()) {
+      return matcher.group(5);
+    }
+    return "";
+  }
+
+  @Test
+  public void testDelimiter() {
+    String testStr1 = "delimiter   ;;";
+    String testStr2 = "delimiter  ;";
+    Assert.assertEquals(";;", findDelimiter(DELIMITER_PATTERN, testStr1));
+    Assert.assertEquals(";", findDelimiter(DELIMITER_PATTERN, testStr2));
+  }
+
+  @Test
+  public void testSubDelimiter() {
+    String testStr1 = "delimiter   ;;";
+    String testStr2 = "delimiter  ;";
+    String testStr3 = "sdelimiter  ;";
+    Assert.assertTrue("DELIMITER".equalsIgnoreCase(testStr1.substring(0, "DELIMITER".length())));
+    Assert.assertTrue("DELIMITER".equalsIgnoreCase(testStr2.substring(0, "DELIMITER".length())));
+    Assert.assertFalse("DELIMITER".equalsIgnoreCase(testStr3.substring(0, "DELIMITER".length())));
+  }
+
+  private String regionMatchDelimiter(String inputLine) {
+    String trimLine = inputLine.trim();
+    if (trimLine.regionMatches(true, 0,
+      "Delimiter", 0, "Delimiter".length())) {
+      return inputLine.substring("Delimiter".length()).trim();
+    }
+    return "";
+  }
+
+  @Test
+  public void testRegionMatch() {
+    String testStr1 = "Delimiter ;;";
+    Assert.assertTrue(regionMatchDelimiter(testStr1).length() > 0);
+    Assert.assertEquals(";;", regionMatchDelimiter(testStr1));
+    String testStr2 = "Delimiter ";
+    Assert.assertFalse(regionMatchDelimiter(testStr2).length() > 0);
+  }
+
+  /**
+   * eg: dbeaver export
+   * DELIMITER ;;
+   * CREATE DEFINER=`chengdu`@`localhost` PROCEDURE `insert1`()
+   * begin
+   * declare i int;
+   * set i = 1;
+   * while i < 10 do
+   * set i = i + 1;
+   * end while;
+   * end ;;
+   * DELIMITER ;
+   * DROP TABLE IF EXISTS `testdata_1`;
+   * @throws Exception
+   */
+  @Test
+  void shouldNoCommentDelimiter() throws Exception {
+    Connection conn = mock(Connection.class);
+    Statement stmt = mock(Statement.class);
+    when(conn.createStatement()).thenReturn(stmt);
+    when(stmt.getUpdateCount()).thenReturn(-1);
+    ScriptRunner runner = new ScriptRunner(conn);
+    runner.setDelimiterHandler(new NoCommentDelimiterHandler());
+    String sql = " DELIMITER ;; \n"
+      + "line 1;\n"
+      + "line 2;\n"
+      + ";;\n"
+      + "DELIMITER  ;\n"
+      + "line 3; \n";
     Reader reader = new StringReader(sql);
     runner.runScript(reader);
 
