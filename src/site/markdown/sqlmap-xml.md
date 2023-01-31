@@ -7,7 +7,7 @@ The Mapper XML files have only a few first class elements (in the order that the
 - `cache` – Configuration of the cache for a given namespace.
 - `cache-ref` – Reference to a cache configuration from another namespace.
 - `resultMap` – The most complicated and powerful element that describes how to load your objects from the database result sets.
-- `parameterMap` – Deprecated! Old-school way to map parameters. Inline parameters are preferred and this element may be removed in the future. Not documented here.
+- ~~`parameterMap` – Deprecated! Old-school way to map parameters. Inline parameters are preferred and this element may be removed in the future. Not documented here.~~
 - `sql` – A reusable chunk of SQL that can be referenced by other statements.
 - `insert` – A mapped INSERT statement.
 - `update` – A mapped UPDATE statement.
@@ -62,23 +62,25 @@ The select element has more attributes that allow you to configure the details o
   resultSetType="FORWARD_ONLY">
 ```
 
-| Attribute       | Description                                                  |
-| :-------------- | :----------------------------------------------------------- |
-| `id`            | A unique identifier in this namespace that can be used to reference this statement. |
-| `parameterType` | The fully qualified class name or alias for the parameter that will be passed into this statement. This attribute is optional because MyBatis can calculate the TypeHandler to use out of the actual parameter passed to the statement. Default is `unset`. |
-| `parameterMap`  | This is a deprecated approach to referencing an external `parameterMap`. Use inline parameter mappings and the `parameterType` attribute. |
-| `resultType`    | The fully qualified class name or alias for the expected type that will be returned from this statement. Note that in the case of collections, this should be the type that the collection contains, not the type of the collection itself. Use `resultType` OR `resultMap`, not both. |
-| `resultMap`     | A named reference to an external `resultMap`. Result maps are the most powerful feature of MyBatis, and with a good understanding of them, many difficult mapping cases can be solved. Use `resultMap` OR `resultType`, not both. |
-| `flushCache`    | Setting this to true will cause the local and 2nd level caches to be flushed whenever this statement is called. Default: `false` for select statements. |
-| `useCache`      | Setting this to true will cause the results of this statement to be cached in 2nd level cache. Default: `true` for select statements. |
-| `timeout`       | This sets the number of seconds the driver will wait for the database to return from a request, before throwing an exception. Default is `unset` (driver dependent). |
-| `fetchSize`     | This is a driver hint that will attempt to cause the driver to return results in batches of rows numbering in size equal to this setting. Default is `unset` (driver dependent). |
-| `statementType` | Any one of `STATEMENT`, `PREPARED` or `CALLABLE`. This causes MyBatis to use `Statement`, `PreparedStatement` or `CallableStatement` respectively. Default: `PREPARED`. |
-| `resultSetType` | Any one of `FORWARD_ONLY`                                    |
-| `databaseId`    | In case there is a configured databaseIdProvider, MyBatis will load all statements with no `databaseId` attribute or with a `databaseId` that matches the current one. If case the same statement if found with and without the `databaseId` the latter will be discarded. |
-| `resultOrdered` | This is only applicable for nested result select statements: If this is true, it is assumed that nested results are contained or grouped together such that when a new main result row is returned, no references to a previous result row will occur anymore. This allows nested results to be filled much more memory friendly. Default: `false`. |
-| `resultSets`    | This is only applicable for multiple result sets. It lists the result sets that will be returned by the statement and gives a name to each one. Names are separated by commas. |
-| `affectData`    | Set this to true when writing a INSERT, UPDATE or DELETE statement that returns data so that the transaction is controlled properly. Also see <a href="./java-api.html#transaction-control-methods">Transaction Control Method</a>. Default: `false` (since 3.5.12) |
+<p style="text-align: center">Select Attributes</p>
+
+| Attribute          | Description                                                                                                                                                                                                                                                                                                                                         |
+|:-------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `id`               | A unique identifier in this namespace that can be used to reference this statement.                                                                                                                                                                                                                                                                 |
+| `parameterType`    | The fully qualified class name or alias for the parameter that will be passed into this statement. This attribute is optional because MyBatis can calculate the TypeHandler to use out of the actual parameter passed to the statement. Default is `unset`.                                                                                         |
+| ~~`parameterMap`~~ | ~~This is a deprecated approach to referencing an external `parameterMap`. Use inline parameter mappings and the `parameterType` attribute.~~                                                                                                                                                                                                       |
+| `resultType`       | The fully qualified class name or alias for the expected type that will be returned from this statement. Note that in the case of collections, this should be the type that the collection contains, not the type of the collection itself. Use `resultType` OR `resultMap`, not both.                                                              |
+| `resultMap`        | A named reference to an external `resultMap`. Result maps are the most powerful feature of MyBatis, and with a good understanding of them, many difficult mapping cases can be solved. Use `resultMap` OR `resultType`, not both.                                                                                                                   |
+| `flushCache`       | Setting this to true will cause the local and 2nd level caches to be flushed whenever this statement is called. Default: `false` for select statements.                                                                                                                                                                                             |
+| `useCache`         | Setting this to true will cause the results of this statement to be cached in 2nd level cache. Default: `true` for select statements.                                                                                                                                                                                                               |
+| `timeout`          | This sets the number of seconds the driver will wait for the database to return from a request, before throwing an exception. Default is `unset` (driver dependent).                                                                                                                                                                                |
+| `fetchSize`        | This is a driver hint that will attempt to cause the driver to return results in batches of rows numbering in size equal to this setting. Default is `unset` (driver dependent).                                                                                                                                                                    |
+| `statementType`    | Any one of `STATEMENT`, `PREPARED` or `CALLABLE`. This causes MyBatis to use `Statement`, `PreparedStatement` or `CallableStatement` respectively. Default: `PREPARED`.                                                                                                                                                                             |
+| `resultSetType`    | Any one of `FORWARD_ONLY`                                                                                                                                                                                                                                                                                                                           |
+| `databaseId`       | In case there is a configured databaseIdProvider, MyBatis will load all statements with no `databaseId` attribute or with a `databaseId` that matches the current one. If case the same statement if found with and without the `databaseId` the latter will be discarded.                                                                          |
+| `resultOrdered`    | This is only applicable for nested result select statements: If this is true, it is assumed that nested results are contained or grouped together such that when a new main result row is returned, no references to a previous result row will occur anymore. This allows nested results to be filled much more memory friendly. Default: `false`. |
+| `resultSets`       | This is only applicable for multiple result sets. It lists the result sets that will be returned by the statement and gives a name to each one. Names are separated by commas.                                                                                                                                                                      |
+| `affectData`       | Set this to true when writing a INSERT, UPDATE or DELETE statement that returns data so that the transaction is controlled properly. Also see <a href="./java-api.html#transaction-control-methods">Transaction Control Method</a>. Default: `false` (since 3.5.12)                                                                                 |
 
 
 
@@ -112,18 +114,20 @@ The data modification statements insert, update and delete are very similar in t
   timeout="20">
 ```
 
-| Attribute          | Description                                                  |
-| :----------------- | :----------------------------------------------------------- |
-| `id`               | A unique identifier in this namespace that can be used to reference this statement. |
-| `parameterType`    | The fully qualified class name or alias for the parameter that will be passed into this statement. This attribute is optional because MyBatis can calculate the TypeHandler to use out of the actual parameter passed to the statement. Default is `unset`. |
-| `parameterMap`     | This is a deprecated approach to referencing an external parameterMap. Use inline parameter mappings and the parameterType attribute. |
-| `flushCache`       | Setting this to true will cause the 2nd level and local caches to be flushed whenever this statement is called. Default: `true` for insert, update and delete statements. |
-| `timeout`          | This sets the maximum number of seconds the driver will wait for the database to return from a request, before throwing an exception. Default is `unset` (driver dependent). |
-| `statementType`    | Any one of `STATEMENT`, `PREPARED` or `CALLABLE`. This causes MyBatis to use `Statement`, `PreparedStatement` or `CallableStatement` respectively. Default: `PREPARED`. |
-| `useGeneratedKeys` | (insert and update only) This tells MyBatis to use the JDBC `getGeneratedKeys` method to retrieve keys generated internally by the database (e.g. auto increment fields in RDBMS like MySQL or SQL Server). Default: `false`. |
-| `keyProperty`      | (insert and update only) Identifies a property into which MyBatis will set the key value returned by `getGeneratedKeys`, or by a `selectKey` child element of the insert statement. Default: `unset`. Can be a comma separated list of property names if multiple generated columns are expected. |
+<p style="text-align: center">Insert, Update and Delete Attributes</p>
+
+| Attribute          | Description                                                                                                                                                                                                                                                                                               |
+|:-------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `id`               | A unique identifier in this namespace that can be used to reference this statement.                                                                                                                                                                                                                       |
+| `parameterType`    | The fully qualified class name or alias for the parameter that will be passed into this statement. This attribute is optional because MyBatis can calculate the TypeHandler to use out of the actual parameter passed to the statement. Default is `unset`.                                               |
+| ~~`parameterMap`~~ | ~~This is a deprecated approach to referencing an external parameterMap. Use inline parameter mappings and the parameterType attribute.~~                                                                                                                                                                 |
+| `flushCache`       | Setting this to true will cause the 2nd level and local caches to be flushed whenever this statement is called. Default: `true` for insert, update and delete statements.                                                                                                                                 |
+| `timeout`          | This sets the maximum number of seconds the driver will wait for the database to return from a request, before throwing an exception. Default is `unset` (driver dependent).                                                                                                                              |
+| `statementType`    | Any one of `STATEMENT`, `PREPARED` or `CALLABLE`. This causes MyBatis to use `Statement`, `PreparedStatement` or `CallableStatement` respectively. Default: `PREPARED`.                                                                                                                                   |
+| `useGeneratedKeys` | (insert and update only) This tells MyBatis to use the JDBC `getGeneratedKeys` method to retrieve keys generated internally by the database (e.g. auto increment fields in RDBMS like MySQL or SQL Server). Default: `false`.                                                                             |
+| `keyProperty`      | (insert and update only) Identifies a property into which MyBatis will set the key value returned by `getGeneratedKeys`, or by a `selectKey` child element of the insert statement. Default: `unset`. Can be a comma separated list of property names if multiple generated columns are expected.         |
 | `keyColumn`        | (insert and update only) Sets the name of the column in the table with a generated key. This is only required in certain databases (like PostgreSQL) when the key column is not the first column in the table. Can be a comma separated list of columns names if multiple generated columns are expected. |
-| `databaseId`       | In case there is a configured databaseIdProvider, MyBatis will load all statements with no `databaseId` attribute or with a `databaseId` that matches the current one. If case the same statement if found with and without the `databaseId` the latter will be discarded. |
+| `databaseId`       | In case there is a configured databaseIdProvider, MyBatis will load all statements with no `databaseId` attribute or with a `databaseId` that matches the current one. If case the same statement if found with and without the `databaseId` the latter will be discarded.                                |
 
 The following are some examples of insert, update and delete statements.
 
@@ -198,6 +202,7 @@ The selectKey element is described as follows:
   order="BEFORE"
   statementType="PREPARED">
 ```
+<p style="text-align: center">selectKey Attributes</p>
 
 | Attribute       | Description                                                  |
 | :-------------- | :----------------------------------------------------------- |
