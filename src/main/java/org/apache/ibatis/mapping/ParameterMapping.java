@@ -38,6 +38,8 @@ public class ParameterMapping {
   private String resultMapId;
   private String jdbcTypeName;
   private String expression;
+  private Object value;
+  private boolean hasValue;
 
   private ParameterMapping() {
   }
@@ -96,6 +98,12 @@ public class ParameterMapping {
 
     public Builder expression(String expression) {
       parameterMapping.expression = expression;
+      return this;
+    }
+
+    public Builder value(Object value) {
+      parameterMapping.value = value;
+      parameterMapping.hasValue = true;
       return this;
     }
 
@@ -207,6 +215,14 @@ public class ParameterMapping {
     return expression;
   }
 
+  public Object getValue() {
+    return value;
+  }
+
+  public boolean hasValue() {
+    return hasValue;
+  }
+
   @Override
   public String toString() {
     final StringBuilder sb = new StringBuilder("ParameterMapping{");
@@ -220,6 +236,7 @@ public class ParameterMapping {
     sb.append(", resultMapId='").append(resultMapId).append('\'');
     sb.append(", jdbcTypeName='").append(jdbcTypeName).append('\'');
     sb.append(", expression='").append(expression).append('\'');
+    sb.append(", value='").append(value).append('\'');
     sb.append('}');
     return sb.toString();
   }

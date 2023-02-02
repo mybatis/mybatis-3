@@ -13,19 +13,17 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.builder;
+package org.apache.ibatis.submitted.bind_in_foreach;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import java.util.List;
 
-class SqlSourceBuilderTest {
+import org.apache.ibatis.annotations.Select;
 
-  private final String sqlFromXml = "\t\n\n  SELECT * \n        FROM user\n \t        WHERE user_id = 1\n\t  ";
+public interface Mapper {
 
-  @Test
-  void testShrinkWhitespacesInSqlIsTrue() {
-    String actual = SqlSourceBuilder.removeExtraWhitespaces(sqlFromXml);
-    String shrankWhitespacesInSql = "SELECT * FROM user WHERE user_id = 1";
-    Assertions.assertEquals(shrankWhitespacesInSql, actual);
-  }
+  @Select("select * from users order by id")
+  List<User> selectUsers();
+
+  int createUsers(List<Integer> numbers);
+
 }

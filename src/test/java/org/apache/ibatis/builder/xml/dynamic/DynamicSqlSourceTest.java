@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
@@ -36,6 +37,7 @@ import org.apache.ibatis.scripting.xmltags.IfSqlNode;
 import org.apache.ibatis.scripting.xmltags.MixedSqlNode;
 import org.apache.ibatis.scripting.xmltags.SetSqlNode;
 import org.apache.ibatis.scripting.xmltags.SqlNode;
+import org.apache.ibatis.scripting.xmltags.StaticTextSqlNode;
 import org.apache.ibatis.scripting.xmltags.TextSqlNode;
 import org.apache.ibatis.scripting.xmltags.WhereSqlNode;
 import org.apache.ibatis.session.Configuration;
@@ -43,6 +45,9 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 class DynamicSqlSourceTest extends BaseDataTest {
 
@@ -324,9 +329,9 @@ class DynamicSqlSourceTest extends BaseDataTest {
     BoundSql boundSql = source.getBoundSql(parameterObject);
     assertEquals(expected, boundSql.getSql());
     assertEquals(3, boundSql.getParameterMappings().size());
-    assertEquals("__frch_item_0", boundSql.getParameterMappings().get(0).getProperty());
-    assertEquals("__frch_item_1", boundSql.getParameterMappings().get(1).getProperty());
-    assertEquals("__frch_item_2", boundSql.getParameterMappings().get(2).getProperty());
+    assertEquals("item", boundSql.getParameterMappings().get(0).getProperty());
+    assertEquals("item", boundSql.getParameterMappings().get(1).getProperty());
+    assertEquals("item", boundSql.getParameterMappings().get(2).getProperty());
   }
 
   @Test
@@ -371,9 +376,9 @@ class DynamicSqlSourceTest extends BaseDataTest {
     BoundSql boundSql = source.getBoundSql(param);
     assertEquals(4, boundSql.getParameterMappings().size());
     assertEquals("uuu.u", boundSql.getParameterMappings().get(0).getProperty());
-    assertEquals("__frch_u_0.id", boundSql.getParameterMappings().get(1).getProperty());
-    assertEquals("__frch_u_0", boundSql.getParameterMappings().get(2).getProperty());
-    assertEquals("__frch_u_0", boundSql.getParameterMappings().get(3).getProperty());
+    assertEquals("u.id", boundSql.getParameterMappings().get(1).getProperty());
+    assertEquals("u", boundSql.getParameterMappings().get(2).getProperty());
+    assertEquals("u", boundSql.getParameterMappings().get(3).getProperty());
   }
 
   private DynamicSqlSource createDynamicSqlSource(SqlNode... contents) throws IOException, SQLException {
@@ -412,4 +417,20 @@ class DynamicSqlSourceTest extends BaseDataTest {
     }
   }
 
+  @MethodSource
+  @ParameterizedTest
+  void testShrinkWhitespacesInSql(SqlNode input, boolean shrinkWhitespaces, String expected) {
+    Configuration config = new Configuration();
+    config.setShrinkWhitespacesInSql(shrinkWhitespaces);
+    String actual = new DynamicSqlSource(config, input).getBoundSql(null).getSql();
+    assertEquals(expected, actual);
+  }
+
+  static Stream<Arguments> testShrinkWhitespacesInSql() {
+    return Stream.of(
+        Arguments.arguments(new StaticTextSqlNode("\t\n\n  SELECT * \n        FROM user\n \t        WHERE user_id = 1\n\t  "), false,
+            "SELECT * \n        FROM user\n \t        WHERE user_id = 1"),
+        Arguments.arguments(new StaticTextSqlNode("\t\n\n SELECT * \n FROM user\n \t WHERE user_id = 1\n\t"), true,
+            "SELECT * FROM user WHERE user_id = 1"));
+  }
 }
