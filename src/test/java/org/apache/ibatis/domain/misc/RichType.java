@@ -28,9 +28,9 @@ public class RichType {
 
   private String richProperty;
 
-  private Map richMap = new HashMap();
+  private Map richMap = new HashMap<>();
 
-  private List richList = new ArrayList() {
+  private List richList = new ArrayList<>() {
     {
       add("bar");
     }
