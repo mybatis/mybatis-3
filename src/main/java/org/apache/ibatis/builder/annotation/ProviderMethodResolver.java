@@ -39,8 +39,8 @@ public interface ProviderMethodResolver {
    * <p>
    * The default implementation return a method that matches following conditions.
    * <ul>
-   *   <li>Method name matches with mapper method</li>
-   *   <li>Return type matches the {@link CharSequence}({@link String}, {@link StringBuilder}, etc...)</li>
+   * <li>Method name matches with mapper method</li>
+   * <li>Return type matches the {@link CharSequence}({@link String}, {@link StringBuilder}, etc...)</li>
    * </ul>
    * If matched method is zero or multiple, it throws a {@link BuilderException}.
    *
