@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -95,7 +95,7 @@ class CacheKeyTest {
   @Test
   void throwExceptionWhenTryingToUpdateAllNullCacheKey() {
     CacheKey cacheKey = CacheKey.NULL_CACHE_KEY;
-    assertThrows(CacheException.class, () -> cacheKey.updateAll(new Object[]{"null", "null"}));
+    assertThrows(CacheException.class, () -> cacheKey.updateAll(new Object[] { "null", "null" }));
   }
 
   @Test
@@ -123,11 +123,11 @@ class CacheKeyTest {
   }
 
   private static <T> T serialize(T object) throws Exception {
-      ByteArrayOutputStream baos = new ByteArrayOutputStream();
-      new ObjectOutputStream(baos).writeObject(object);
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    new ObjectOutputStream(baos).writeObject(object);
 
-      ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-      return (T) new ObjectInputStream(bais).readObject();
+    ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+    return (T) new ObjectInputStream(bais).readObject();
   }
 
 }

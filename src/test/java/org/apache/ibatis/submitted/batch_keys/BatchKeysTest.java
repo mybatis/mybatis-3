@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -46,12 +46,13 @@ class BatchKeysTest {
     }
 
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/batch_keys/CreateDB.sql");
+        "org/apache/ibatis/submitted/batch_keys/CreateDB.sql");
   }
 
   public void testJdbc3Support() throws Exception {
     try (Connection conn = sqlSessionFactory.getConfiguration().getEnvironment().getDataSource().getConnection();
-         PreparedStatement stmt = conn.prepareStatement("insert into users2 values(null, 'Pocoyo')", Statement.RETURN_GENERATED_KEYS)) {
+        PreparedStatement stmt = conn.prepareStatement("insert into users2 values(null, 'Pocoyo')",
+            Statement.RETURN_GENERATED_KEYS)) {
       stmt.addBatch();
       stmt.executeBatch();
       try (ResultSet rs = stmt.getGeneratedKeys()) {
@@ -85,7 +86,7 @@ class BatchKeysTest {
     }
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       List<User> users = sqlSession.selectList("select");
-      Assertions.assertEquals( 2, users.size());
+      Assertions.assertEquals(2, users.size());
     }
   }
 

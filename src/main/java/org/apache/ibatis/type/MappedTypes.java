@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -23,15 +23,16 @@ import java.lang.annotation.Target;
 
 /**
  * The annotation that specify java types to map {@link TypeHandler}.
- *
  * <p>
  * <b>How to use:</b>
+ *
  * <pre>
  * &#064;MappedTypes(String.class)
  * public class StringTrimmingTypeHandler implements TypeHandler&lt;String&gt; {
  *   // ...
  * }
  * </pre>
+ *
  * @author Eduardo Macarron
  */
 @Documented

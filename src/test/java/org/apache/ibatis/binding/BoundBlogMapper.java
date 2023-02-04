@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -31,25 +31,25 @@ import org.apache.ibatis.session.RowBounds;
 @CacheNamespace(readWrite = false)
 public interface BoundBlogMapper {
 
-  //======================================================
+  // ======================================================
 
   Blog selectBlogWithPostsUsingSubSelect(int id);
 
-  //======================================================
+  // ======================================================
 
   int selectRandom();
 
-  //======================================================
+  // ======================================================
 
-  @Select({ "SELECT * FROM blog"})
+  @Select({ "SELECT * FROM blog" })
   @MapKey("id")
-  Map<Integer,Blog> selectBlogsAsMapById();
+  Map<Integer, Blog> selectBlogsAsMapById();
 
-  @Select({ "SELECT * FROM blog ORDER BY id"})
+  @Select({ "SELECT * FROM blog ORDER BY id" })
   @MapKey("id")
-  Map<Integer,Blog> selectRangeBlogsAsMapById(RowBounds rowBounds);
+  Map<Integer, Blog> selectRangeBlogsAsMapById(RowBounds rowBounds);
 
-  //======================================================
+  // ======================================================
 
   @Select({
       "SELECT *",
@@ -73,11 +73,11 @@ public interface BoundBlogMapper {
   })
   Cursor<Blog> openRangeBlogs(RowBounds rowBounds);
 
-  //======================================================
+  // ======================================================
 
   List<Blog> selectBlogsFromXML();
 
-  //======================================================
+  // ======================================================
 
   @Select({
       "SELECT *",
@@ -85,12 +85,12 @@ public interface BoundBlogMapper {
   })
   List<Map<String,Object>> selectBlogsAsMaps();
 
-  //======================================================
+  // ======================================================
 
   @SelectProvider(type = BoundBlogSql.class, method = "selectBlogsSql")
   List<Blog> selectBlogsUsingProvider();
 
-  //======================================================
+  // ======================================================
 
   @Select("SELECT * FROM post ORDER BY id")
   @TypeDiscriminator(
@@ -100,7 +100,7 @@ public interface BoundBlogMapper {
   )
   List<Post> selectPosts();
 
-  //======================================================
+  // ======================================================
 
   @Select("SELECT * FROM post ORDER BY id")
   @Results({
@@ -114,13 +114,13 @@ public interface BoundBlogMapper {
   )
   List<Post> selectPostsWithResultMap();
 
-  //======================================================
+  // ======================================================
 
   @Select("SELECT * FROM " +
       "blog WHERE id = #{id}")
   Blog selectBlog(int id);
 
-  //======================================================
+  // ======================================================
 
   @Select("SELECT * FROM " +
       "blog WHERE id = #{id}")
@@ -140,13 +140,13 @@ public interface BoundBlogMapper {
 
   Blog selectBlogByIdUsingConstructor(int id);
 
-  //======================================================
+  // ======================================================
 
   @Select("SELECT * FROM " +
       "blog WHERE id = #{id}")
   Map<String,Object> selectBlogAsMap(Map<String,Object> params);
 
-  //======================================================
+  // ======================================================
 
   @Select("SELECT * FROM " +
     "post WHERE subject like #{query}")
@@ -160,13 +160,13 @@ public interface BoundBlogMapper {
                              @Param("subjectQuery") String subjectQuery,
                              @Param("bodyQuery") String bodyQuery);
 
-  //======================================================
+  // ======================================================
 
   @Select("SELECT * FROM " +
     "post WHERE id = #{id}")
   List<Post> selectPostsById(int id);
 
-  //======================================================
+  // ======================================================
 
   @Select("SELECT * FROM blog " +
           "WHERE id = #{id} AND title = #{nonExistentParam,jdbcType=VARCHAR}")
@@ -179,7 +179,7 @@ public interface BoundBlogMapper {
   @Select("SELECT * FROM blog WHERE id = #{id}")
   Blog selectBlogByNullParam(Integer id);
 
-  //======================================================
+  // ======================================================
 
   @Select("SELECT * FROM blog " +
       "WHERE id = #{0} AND title = #{1}")
@@ -189,13 +189,13 @@ public interface BoundBlogMapper {
       "WHERE id = #{param1} AND title = #{param2}")
   Blog selectBlogByDefault31ParamNames(int id, String title);
 
-  //======================================================
+  // ======================================================
 
   @Select("SELECT * FROM blog " +
       "WHERE ${column} = #{id} AND title = #{value}")
   Blog selectBlogWithAParamNamedValue(@Param("column") String column, @Param("id") int id, @Param("value") String title);
 
-  //======================================================
+  // ======================================================
 
   @Select({
       "SELECT *",

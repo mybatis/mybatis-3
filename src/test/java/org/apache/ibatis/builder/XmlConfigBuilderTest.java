@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -298,21 +298,21 @@ class XmlConfigBuilderTest {
     XMLConfigBuilder builder = new XMLConfigBuilder(new StringReader(MAPPER_CONFIG));
     when(builder::parse);
     then(caughtException()).isInstanceOf(BuilderException.class)
-      .hasMessageContaining("Error registering typeAlias for 'null'. Cause: ");
+        .hasMessageContaining("Error registering typeAlias for 'null'. Cause: ");
   }
 
   @Test
   void propertiesSpecifyResourceAndUrlAtSameTime() {
     final String MAPPER_CONFIG = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
-            + "<!DOCTYPE configuration PUBLIC \"-//mybatis.org//DTD Config 3.0//EN\" \"https://mybatis.org/dtd/mybatis-3-config.dtd\">\n"
-            + "<configuration>\n"
-            + "  <properties resource=\"a/b/c/foo.properties\" url=\"file:./a/b/c/jdbc.properties\"/>\n"
-            + "</configuration>\n";
+        + "<!DOCTYPE configuration PUBLIC \"-//mybatis.org//DTD Config 3.0//EN\" \"https://mybatis.org/dtd/mybatis-3-config.dtd\">\n"
+        + "<configuration>\n"
+        + "  <properties resource=\"a/b/c/foo.properties\" url=\"file:./a/b/c/jdbc.properties\"/>\n"
+        + "</configuration>\n";
 
     XMLConfigBuilder builder = new XMLConfigBuilder(new StringReader(MAPPER_CONFIG));
     when(builder::parse);
-    then(caughtException()).isInstanceOf(BuilderException.class)
-      .hasMessageContaining("The properties element cannot specify both a URL and a resource based property file reference.  Please specify one or the other.");
+    then(caughtException()).isInstanceOf(BuilderException.class).hasMessageContaining(
+        "The properties element cannot specify both a URL and a resource based property file reference.  Please specify one or the other.");
   }
 
   static class MySqlProvider {
@@ -326,8 +326,7 @@ class XmlConfigBuilderTest {
   void shouldAllowSubclassedConfiguration() throws IOException {
     String resource = "org/apache/ibatis/builder/MinimalMapperConfig.xml";
     try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
-      XMLConfigBuilder builder = new XMLConfigBuilder(
-              MyConfiguration.class, inputStream, null, null);
+      XMLConfigBuilder builder = new XMLConfigBuilder(MyConfiguration.class, inputStream, null, null);
       Configuration config = builder.parse();
 
       assertThat(config).isInstanceOf(MyConfiguration.class);
@@ -351,7 +350,7 @@ class XmlConfigBuilderTest {
   public static class BadConfiguration extends Configuration {
 
     public BadConfiguration(String parameter) {
-        // should have a default constructor
+      // should have a default constructor
     }
   }
 

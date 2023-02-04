@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -77,7 +77,8 @@ class XmlConfigBuilderTest {
       assertFalse(config.isSafeRowBoundsEnabled());
       assertEquals(LocalCacheScope.SESSION, config.getLocalCacheScope());
       assertEquals(JdbcType.OTHER, config.getJdbcTypeForNull());
-      assertEquals(new HashSet<>(Arrays.asList("equals", "clone", "hashCode", "toString")), config.getLazyLoadTriggerMethods());
+      assertEquals(new HashSet<>(Arrays.asList("equals", "clone", "hashCode", "toString")),
+          config.getLazyLoadTriggerMethods());
       assertTrue(config.isSafeResultHandlerEnabled());
       assertTrue(config.getDefaultScriptingLanguageInstance() instanceof XMLLanguageDriver);
       assertFalse(config.isCallSettersOnNulls());
@@ -115,7 +116,8 @@ class XmlConfigBuilderTest {
       assertTrue(config.isSafeRowBoundsEnabled());
       assertEquals(LocalCacheScope.STATEMENT, config.getLocalCacheScope());
       assertEquals(JdbcType.NULL, config.getJdbcTypeForNull());
-      assertEquals(new HashSet<>(Arrays.asList("equals", "clone", "hashCode", "toString", "xxx")), config.getLazyLoadTriggerMethods());
+      assertEquals(new HashSet<>(Arrays.asList("equals", "clone", "hashCode", "toString", "xxx")),
+          config.getLazyLoadTriggerMethods());
       assertFalse(config.isSafeResultHandlerEnabled());
       assertTrue(config.getDefaultScriptingLanguageInstance() instanceof RawLanguageDriver);
       assertTrue(config.isCallSettersOnNulls());
@@ -133,9 +135,10 @@ class XmlConfigBuilderTest {
       assertTrue(config.getTypeHandlerRegistry().getTypeHandler(Integer.class) instanceof CustomIntegerTypeHandler);
       assertTrue(config.getTypeHandlerRegistry().getTypeHandler(Long.class) instanceof CustomLongTypeHandler);
       assertTrue(config.getTypeHandlerRegistry().getTypeHandler(String.class) instanceof CustomStringTypeHandler);
-      assertTrue(config.getTypeHandlerRegistry().getTypeHandler(String.class, JdbcType.VARCHAR) instanceof CustomStringTypeHandler);
+      assertTrue(config.getTypeHandlerRegistry().getTypeHandler(String.class,
+          JdbcType.VARCHAR) instanceof CustomStringTypeHandler);
 
-      ExampleObjectFactory objectFactory = (ExampleObjectFactory)config.getObjectFactory();
+      ExampleObjectFactory objectFactory = (ExampleObjectFactory) config.getObjectFactory();
       assertEquals(1, objectFactory.getProperties().size());
       assertEquals("100", objectFactory.getProperties().getProperty("objectFactoryProperty"));
 
@@ -143,7 +146,7 @@ class XmlConfigBuilderTest {
 
       assertTrue(config.getReflectorFactory() instanceof CustomReflectorFactory);
 
-      ExamplePlugin plugin = (ExamplePlugin)config.getInterceptors().get(0);
+      ExamplePlugin plugin = (ExamplePlugin) config.getInterceptors().get(0);
       assertEquals(1, plugin.getProperties().size());
       assertEquals("100", plugin.getProperties().getProperty("pluginProperty"));
 

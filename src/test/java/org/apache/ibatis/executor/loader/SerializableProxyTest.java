@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -46,22 +46,24 @@ public abstract class SerializableProxyTest {
   void shouldKeepGenericTypes() {
     for (int i = 0; i < 10000; i++) {
       Author pc = new Author();
-      Author proxy = (Author) proxyFactory.createProxy(pc, new ResultLoaderMap(), new Configuration(), new DefaultObjectFactory(),
-          new ArrayList<>(), new ArrayList<>());
+      Author proxy = (Author) proxyFactory.createProxy(pc, new ResultLoaderMap(), new Configuration(),
+          new DefaultObjectFactory(), new ArrayList<>(), new ArrayList<>());
       proxy.getBio();
     }
   }
 
   @Test
   void shouldSerializeAProxyForABeanWithDefaultConstructor() throws Exception {
-    Object proxy = proxyFactory.createProxy(author, new ResultLoaderMap(), new Configuration(), new DefaultObjectFactory(), new ArrayList<>(), new ArrayList<>());
+    Object proxy = proxyFactory.createProxy(author, new ResultLoaderMap(), new Configuration(),
+        new DefaultObjectFactory(), new ArrayList<>(), new ArrayList<>());
     Object proxy2 = deserialize(serialize((Serializable) proxy));
     assertEquals(author, proxy2);
   }
 
   @Test
   void shouldSerializeAProxyForABeanWithoutDefaultConstructor() throws Exception {
-    AuthorWithoutDefaultConstructor author = new AuthorWithoutDefaultConstructor(999, "someone", "!@#@!#!@#", "someone@somewhere.com", "blah", Section.NEWS);
+    AuthorWithoutDefaultConstructor author = new AuthorWithoutDefaultConstructor(999, "someone", "!@#@!#!@#",
+        "someone@somewhere.com", "blah", Section.NEWS);
     ArrayList<Class<?>> argTypes = new ArrayList<>();
     argTypes.add(Integer.class);
     argTypes.add(String.class);
@@ -76,14 +78,16 @@ public abstract class SerializableProxyTest {
     argValues.add("someone@somewhere.com");
     argValues.add("blah");
     argValues.add(Section.NEWS);
-    Object proxy = proxyFactory.createProxy(author, new ResultLoaderMap(), new Configuration(), new DefaultObjectFactory(), argTypes, argValues);
+    Object proxy = proxyFactory.createProxy(author, new ResultLoaderMap(), new Configuration(),
+        new DefaultObjectFactory(), argTypes, argValues);
     Object proxy2 = deserialize(serialize((Serializable) proxy));
     assertEquals(author, proxy2);
   }
 
   @Test
   void shouldSerializeAProxyForABeanWithoutDefaultConstructorAndUnloadedProperties() throws Exception {
-    AuthorWithoutDefaultConstructor author = new AuthorWithoutDefaultConstructor(999, "someone", "!@#@!#!@#", "someone@somewhere.com", "blah", Section.NEWS);
+    AuthorWithoutDefaultConstructor author = new AuthorWithoutDefaultConstructor(999, "someone", "!@#@!#!@#",
+        "someone@somewhere.com", "blah", Section.NEWS);
     ArrayList<Class<?>> argTypes = new ArrayList<>();
     argTypes.add(Integer.class);
     argTypes.add(String.class);
@@ -100,14 +104,16 @@ public abstract class SerializableProxyTest {
     argValues.add(Section.NEWS);
     ResultLoaderMap loader = new ResultLoaderMap();
     loader.addLoader("id", null, null);
-    Object proxy = proxyFactory.createProxy(author, loader, new Configuration(), new DefaultObjectFactory(), argTypes, argValues);
+    Object proxy = proxyFactory.createProxy(author, loader, new Configuration(), new DefaultObjectFactory(), argTypes,
+        argValues);
     Object proxy2 = deserialize(serialize((Serializable) proxy));
     assertEquals(author, proxy2);
   }
 
   @Test
   void shouldSerizaliceAFullLoadedObjectToOriginalClass() throws Exception {
-    Object proxy = proxyFactory.createProxy(author, new ResultLoaderMap(), new Configuration(), new DefaultObjectFactory(), new ArrayList<>(), new ArrayList<>());
+    Object proxy = proxyFactory.createProxy(author, new ResultLoaderMap(), new Configuration(),
+        new DefaultObjectFactory(), new ArrayList<>(), new ArrayList<>());
     Object proxy2 = deserialize(serialize((Serializable) proxy));
     assertEquals(author.getClass(), proxy2.getClass());
   }
@@ -120,19 +126,22 @@ public abstract class SerializableProxyTest {
     } catch (NoSuchMethodException e) {
       // ok
     }
-    Object proxy = proxyFactory.createProxy(author, new ResultLoaderMap(), new Configuration(), new DefaultObjectFactory(), new ArrayList<>(), new ArrayList<>());
+    Object proxy = proxyFactory.createProxy(author, new ResultLoaderMap(), new Configuration(),
+        new DefaultObjectFactory(), new ArrayList<>(), new ArrayList<>());
     Method m = proxy.getClass().getDeclaredMethod("writeReplace");
   }
 
   @Test
   void shouldNotGenerateWriteReplaceItThereIsAlreadyOne() {
-    AuthorWithWriteReplaceMethod beanWithWriteReplace = new AuthorWithWriteReplaceMethod(999, "someone", "!@#@!#!@#", "someone@somewhere.com", "blah", Section.NEWS);
+    AuthorWithWriteReplaceMethod beanWithWriteReplace = new AuthorWithWriteReplaceMethod(999, "someone", "!@#@!#!@#",
+        "someone@somewhere.com", "blah", Section.NEWS);
     try {
       beanWithWriteReplace.getClass().getDeclaredMethod("writeReplace");
     } catch (NoSuchMethodException e) {
       fail("Bean should declare a writeReplace method");
     }
-    Object proxy = proxyFactory.createProxy(beanWithWriteReplace, new ResultLoaderMap(), new Configuration(), new DefaultObjectFactory(), new ArrayList<>(), new ArrayList<>());
+    Object proxy = proxyFactory.createProxy(beanWithWriteReplace, new ResultLoaderMap(), new Configuration(),
+        new DefaultObjectFactory(), new ArrayList<>(), new ArrayList<>());
     Class<?>[] interfaces = proxy.getClass().getInterfaces();
     boolean ownInterfaceFound = false;
     for (Class<?> i : interfaces) {
@@ -146,7 +155,8 @@ public abstract class SerializableProxyTest {
 
   @Test
   void shouldNotCreateAProxyForAFullyLoadedBean() throws Exception {
-    Object proxy = proxyFactory.createProxy(author, new ResultLoaderMap(), new Configuration(), new DefaultObjectFactory(), new ArrayList<>(), new ArrayList<>());
+    Object proxy = proxyFactory.createProxy(author, new ResultLoaderMap(), new Configuration(),
+        new DefaultObjectFactory(), new ArrayList<>(), new ArrayList<>());
     Author author2 = (Author) deserialize(serialize((Serializable) proxy));
     assertEquals(author.getClass(), author2.getClass());
   }
@@ -155,7 +165,8 @@ public abstract class SerializableProxyTest {
   void shouldNotLetReadUnloadedPropertyAfterSerialization() throws Exception {
     ResultLoaderMap loader = new ResultLoaderMap();
     loader.addLoader("id", null, null);
-    Object proxy = proxyFactory.createProxy(author, loader, new Configuration(), new DefaultObjectFactory(), new ArrayList<>(), new ArrayList<>());
+    Object proxy = proxyFactory.createProxy(author, loader, new Configuration(), new DefaultObjectFactory(),
+        new ArrayList<>(), new ArrayList<>());
     Author author2 = (Author) deserialize(serialize((Serializable) proxy));
     Assertions.assertThrows(ExecutorException.class, author2::getId);
   }
@@ -164,21 +175,23 @@ public abstract class SerializableProxyTest {
   void shouldNotLetReadUnloadedPropertyAfterTwoSerializations() throws Exception {
     ResultLoaderMap loader = new ResultLoaderMap();
     loader.addLoader("id", null, null);
-    Object proxy = proxyFactory.createProxy(author, loader, new Configuration(), new DefaultObjectFactory(), new ArrayList<>(), new ArrayList<>());
+    Object proxy = proxyFactory.createProxy(author, loader, new Configuration(), new DefaultObjectFactory(),
+        new ArrayList<>(), new ArrayList<>());
     Author author2 = (Author) deserialize(serialize(deserialize(serialize((Serializable) proxy))));
     Assertions.assertThrows(ExecutorException.class, author2::getId);
   }
 
   @Test
   void shouldLetReadALoadedPropertyAfterSerialization() throws Exception {
-    Object proxy = proxyFactory.createProxy(author, new ResultLoaderMap(), new Configuration(), new DefaultObjectFactory(), new ArrayList<>(), new ArrayList<>());
+    Object proxy = proxyFactory.createProxy(author, new ResultLoaderMap(), new Configuration(),
+        new DefaultObjectFactory(), new ArrayList<>(), new ArrayList<>());
     byte[] ser = serialize((Serializable) proxy);
     Author author2 = (Author) deserialize(ser);
     assertEquals(999, author2.getId());
   }
 
   byte[] serialize(Serializable value) throws Exception {
-    try(ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(bos)) {
       oos.writeObject(value);
       oos.flush();
@@ -187,8 +200,8 @@ public abstract class SerializableProxyTest {
   }
 
   Serializable deserialize(byte[] value) throws Exception {
-    try(ByteArrayInputStream bis = new ByteArrayInputStream(value);
-    ObjectInputStream ois = new ObjectInputStream(bis)) {
+    try (ByteArrayInputStream bis = new ByteArrayInputStream(value);
+        ObjectInputStream ois = new ObjectInputStream(bis)) {
       return (Serializable) ois.readObject();
     }
   }
@@ -198,8 +211,9 @@ public abstract class SerializableProxyTest {
     public AuthorWithWriteReplaceMethod() {
     }
 
-    AuthorWithWriteReplaceMethod(Integer id, String username, String password, String email, String bio, Section section) {
-        super(id, username, password, email, bio, section);
+    AuthorWithWriteReplaceMethod(Integer id, String username, String password, String email, String bio,
+        Section section) {
+      super(id, username, password, email, bio, section);
     }
 
     Object writeReplace() throws ObjectStreamException {
@@ -209,8 +223,9 @@ public abstract class SerializableProxyTest {
 
   public static class AuthorWithoutDefaultConstructor extends Author {
 
-    AuthorWithoutDefaultConstructor(Integer id, String username, String password, String email, String bio, Section section) {
-        super(id, username, password, email, bio, section);
+    AuthorWithoutDefaultConstructor(Integer id, String username, String password, String email, String bio,
+        Section section) {
+      super(id, username, password, email, bio, section);
     }
 
     protected Object writeReplace() throws ObjectStreamException {

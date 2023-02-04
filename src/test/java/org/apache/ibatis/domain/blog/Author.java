@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -93,16 +93,23 @@ public class Author implements Serializable {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof Author)) return false;
+    if (this == o)
+      return true;
+    if (!(o instanceof Author))
+      return false;
 
     Author author = (Author) o;
 
-    if (id != author.id) return false;
-    if (bio != null ? !bio.equals(author.bio) : author.bio != null) return false;
-    if (email != null ? !email.equals(author.email) : author.email != null) return false;
-    if (password != null ? !password.equals(author.password) : author.password != null) return false;
-    if (username != null ? !username.equals(author.username) : author.username != null) return false;
+    if (id != author.id)
+      return false;
+    if (bio != null ? !bio.equals(author.bio) : author.bio != null)
+      return false;
+    if (email != null ? !email.equals(author.email) : author.email != null)
+      return false;
+    if (password != null ? !password.equals(author.password) : author.password != null)
+      return false;
+    if (username != null ? !username.equals(author.username) : author.username != null)
+      return false;
     if (favouriteSection != null ? !favouriteSection.equals(author.favouriteSection) : author.favouriteSection != null)
       return false;
 

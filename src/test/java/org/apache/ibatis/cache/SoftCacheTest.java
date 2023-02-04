@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -29,12 +29,12 @@ class SoftCacheTest {
     final int N = 3000000;
     SoftCache cache = new SoftCache(new PerpetualCache("default"));
     for (int i = 0; i < N; i++) {
-      byte[] array = new byte[5001]; //waste a bunch of memory
+      byte[] array = new byte[5001]; // waste a bunch of memory
       array[5000] = 1;
       cache.putObject(i, array);
       Object value = cache.getObject(i);
       if (cache.getSize() < i + 1) {
-        //System.out.println("Cache exceeded with " + (i + 1) + " entries.");
+        // System.out.println("Cache exceeded with " + (i + 1) + " entries.");
         break;
       }
     }
