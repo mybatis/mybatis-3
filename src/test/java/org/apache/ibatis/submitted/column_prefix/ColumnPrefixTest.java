@@ -39,7 +39,7 @@ class ColumnPrefixTest {
     }
 
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/column_prefix/CreateDB.sql");
+        "org/apache/ibatis/submitted/column_prefix/CreateDB.sql");
   }
 
   @Test

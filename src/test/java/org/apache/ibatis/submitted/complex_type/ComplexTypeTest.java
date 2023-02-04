@@ -40,7 +40,7 @@ class ComplexTypeTest {
 
     // populate in-memory database
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/complex_type/CreateDB.sql");
+        "org/apache/ibatis/submitted/complex_type/CreateDB.sql");
   }
 
   // see https://issues.apache.org/jira/browse/IBATIS-653

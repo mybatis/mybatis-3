@@ -41,7 +41,8 @@ public class ScriptRunner {
 
   private static final String DEFAULT_DELIMITER = ";";
 
-  private static final Pattern DELIMITER_PATTERN = Pattern.compile("^\\s*((--)|(//))?\\s*(//)?\\s*@DELIMITER\\s+([^\\s]+)", Pattern.CASE_INSENSITIVE);
+  private static final Pattern DELIMITER_PATTERN = Pattern
+      .compile("^\\s*((--)|(//))?\\s*(//)?\\s*@DELIMITER\\s+([^\\s]+)", Pattern.CASE_INSENSITIVE);
 
   private final Connection connection;
 
@@ -87,6 +88,7 @@ public class ScriptRunner {
    *
    * @param escapeProcessing
    *          the new escape processing
+   *
    * @since 3.1.1
    */
   public void setEscapeProcessing(boolean escapeProcessing) {

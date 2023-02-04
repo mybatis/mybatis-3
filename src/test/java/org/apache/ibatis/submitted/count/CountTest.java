@@ -38,7 +38,7 @@ class CountTest {
     }
 
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/count/CreateDB.sql");
+        "org/apache/ibatis/submitted/count/CreateDB.sql");
   }
 
   @Test

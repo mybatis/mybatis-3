@@ -32,14 +32,15 @@ class CglibNPELazyTest {
 
   @BeforeAll
   static void initDatabase() throws Exception {
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/cglib_lazy_error/ibatisConfigLazy.xml")) {
+    try (Reader reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/cglib_lazy_error/ibatisConfigLazy.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
       sqlSessionFactory.getConfiguration().setLazyLoadingEnabled(true);
       sqlSessionFactory.getConfiguration().setAggressiveLazyLoading(false);
     }
 
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/cglib_lazy_error/CreateDB.sql");
+        "org/apache/ibatis/submitted/cglib_lazy_error/CreateDB.sql");
   }
 
   @Test

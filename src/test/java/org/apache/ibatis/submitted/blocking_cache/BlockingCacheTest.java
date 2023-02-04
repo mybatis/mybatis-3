@@ -36,13 +36,14 @@ class BlockingCacheTest {
   @BeforeEach
   void setUp() throws Exception {
     // create a SqlSessionFactory
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/blocking_cache/mybatis-config.xml")) {
+    try (Reader reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/blocking_cache/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
     // populate in-memory database
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/blocking_cache/CreateDB.sql");
+        "org/apache/ibatis/submitted/blocking_cache/CreateDB.sql");
   }
 
   @Test

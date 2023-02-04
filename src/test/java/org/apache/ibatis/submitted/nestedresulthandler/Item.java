@@ -19,14 +19,8 @@ public class Item {
   private Integer id;
   private String name;
 
-  public String toString(){
-    return new StringBuilder()
-            .append("Item(")
-            .append(id)
-            .append(", ")
-            .append(name)
-            .append(" )")
-            .toString();
+  public String toString() {
+    return new StringBuilder().append("Item(").append(id).append(", ").append(name).append(" )").toString();
   }
 
   public Integer getId() {

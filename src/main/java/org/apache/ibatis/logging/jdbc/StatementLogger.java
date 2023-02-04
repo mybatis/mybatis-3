@@ -29,7 +29,6 @@ import org.apache.ibatis.reflection.ExceptionUtil;
  *
  * @author Clinton Begin
  * @author Eduardo Macarron
- *
  */
 public final class StatementLogger extends BaseJdbcLogger implements InvocationHandler {
 
@@ -76,12 +75,13 @@ public final class StatementLogger extends BaseJdbcLogger implements InvocationH
    *          the statement log
    * @param queryStack
    *          the query stack
+   *
    * @return the proxy
    */
   public static Statement newInstance(Statement stmt, Log statementLog, int queryStack) {
     InvocationHandler handler = new StatementLogger(stmt, statementLog, queryStack);
     ClassLoader cl = Statement.class.getClassLoader();
-    return (Statement) Proxy.newProxyInstance(cl, new Class[]{Statement.class}, handler);
+    return (Statement) Proxy.newProxyInstance(cl, new Class[] { Statement.class }, handler);
   }
 
   /**

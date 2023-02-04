@@ -24,16 +24,9 @@ public class Person {
   private String name;
   private List<Item> items = new ArrayList<>();
 
-  public String toString(){
-    return new StringBuilder()
-            .append("Person(")
-            .append(id)
-            .append(", ")
-            .append(name)
-            .append(", ")
-            .append(items)
-            .append(" )")
-            .toString();
+  public String toString() {
+    return new StringBuilder().append("Person(").append(id).append(", ").append(name).append(", ").append(items)
+        .append(" )").toString();
   }
 
   public Integer getId() {

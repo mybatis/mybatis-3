@@ -40,7 +40,7 @@ class CriterionTest {
     }
 
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/criterion/CreateDB.sql");
+        "org/apache/ibatis/submitted/criterion/CreateDB.sql");
   }
 
   @Test
@@ -52,8 +52,8 @@ class CriterionTest {
       Parameter parameter = new Parameter();
       parameter.setCriterion(criterion);
 
-      List<Map<String, Object>> answer =
-          sqlSession.selectList("org.apache.ibatis.submitted.criterion.simpleSelect", parameter);
+      List<Map<String, Object>> answer = sqlSession.selectList("org.apache.ibatis.submitted.criterion.simpleSelect",
+          parameter);
 
       assertEquals(1, answer.size());
     }

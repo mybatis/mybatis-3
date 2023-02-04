@@ -42,7 +42,7 @@ class CallSettersOnNullsTest {
 
     // populate in-memory database
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/call_setters_on_nulls/CreateDB.sql");
+        "org/apache/ibatis/submitted/call_setters_on_nulls/CreateDB.sql");
   }
 
   @Test

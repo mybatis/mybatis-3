@@ -44,7 +44,8 @@ class ColumnPrefixAutoMappingTest extends ColumnPrefixTest {
   @Test
   void testCaseInsensitivity() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      Brand brand = sqlSession.selectOne("org.apache.ibatis.submitted.column_prefix.MapperAutoMapping.selectBrandWithProducts", 1);
+      Brand brand = sqlSession
+          .selectOne("org.apache.ibatis.submitted.column_prefix.MapperAutoMapping.selectBrandWithProducts", 1);
       assertEquals(Integer.valueOf(1), brand.getId());
       assertEquals(2, brand.getProducts().size());
       assertEquals(Integer.valueOf(10), brand.getProducts().get(0).getId());

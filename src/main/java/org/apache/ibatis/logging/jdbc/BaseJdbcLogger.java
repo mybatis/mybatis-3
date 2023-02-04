@@ -65,10 +65,8 @@ public abstract class BaseJdbcLogger {
 
   static {
     SET_METHODS = Arrays.stream(PreparedStatement.class.getDeclaredMethods())
-            .filter(method -> method.getName().startsWith("set"))
-            .filter(method -> method.getParameterCount() > 1)
-            .map(Method::getName)
-            .collect(Collectors.toSet());
+        .filter(method -> method.getName().startsWith("set")).filter(method -> method.getParameterCount() > 1)
+        .map(Method::getName).collect(Collectors.toSet());
 
     EXECUTE_METHODS.add("execute");
     EXECUTE_METHODS.add("executeUpdate");

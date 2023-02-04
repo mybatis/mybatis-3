@@ -26,10 +26,10 @@ import org.junit.jupiter.api.Test;
 
 class DisallowDotsOnNamesTest {
 
-    @Test
-    void testShouldNotAllowMappedStatementsWithDots() throws IOException {
-        Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/disallowdotsonnames/ibatisConfig.xml");
-        Assertions.assertThrows(PersistenceException.class, () -> new SqlSessionFactoryBuilder().build(reader));
-    }
+  @Test
+  void testShouldNotAllowMappedStatementsWithDots() throws IOException {
+    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/disallowdotsonnames/ibatisConfig.xml");
+    Assertions.assertThrows(PersistenceException.class, () -> new SqlSessionFactoryBuilder().build(reader));
+  }
 
 }

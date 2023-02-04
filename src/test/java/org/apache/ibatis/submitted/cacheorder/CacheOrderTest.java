@@ -41,7 +41,7 @@ class CacheOrderTest {
 
     // populate in-memory database
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/cacheorder/CreateDB.sql");
+        "org/apache/ibatis/submitted/cacheorder/CreateDB.sql");
   }
 
   @Test

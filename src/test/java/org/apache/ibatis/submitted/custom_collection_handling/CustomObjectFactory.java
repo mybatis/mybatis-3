@@ -32,77 +32,78 @@ import org.apache.ibatis.reflection.factory.ObjectFactory;
 
 public class CustomObjectFactory implements ObjectFactory {
 
-    @Override
-    public <T> T create(Class<T> type) {
-        return create(type, null, null);
-    }
+  @Override
+  public <T> T create(Class<T> type) {
+    return create(type, null, null);
+  }
 
-    @Override
-    public <T> T create(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
-        Class<?> classToCreate = resolveInterface(type);
-        @SuppressWarnings("unchecked") // we know types are assignable
-        T created = (T) instantiateClass(classToCreate, constructorArgTypes, constructorArgs);
-        return created;
-    }
+  @Override
+  public <T> T create(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
+    Class<?> classToCreate = resolveInterface(type);
+    @SuppressWarnings("unchecked") // we know types are assignable
+    T created = (T) instantiateClass(classToCreate, constructorArgTypes, constructorArgs);
+    return created;
+  }
 
-    private <T> T instantiateClass(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
-        try {
-            Constructor<T> constructor;
-            if (constructorArgTypes == null || constructorArgs == null) {
-                constructor = type.getDeclaredConstructor();
-                if (!constructor.isAccessible()) {
-                    constructor.setAccessible(true);
-                }
-                return constructor.newInstance();
-            }
-            constructor = type.getDeclaredConstructor(constructorArgTypes.toArray(new Class[constructorArgTypes.size()]));
-            if (!constructor.isAccessible()) {
-                constructor.setAccessible(true);
-            }
-            return constructor.newInstance(constructorArgs.toArray(new Object[constructorArgs.size()]));
-        } catch (Exception e) {
-            StringBuilder argTypes = new StringBuilder();
-            if (constructorArgTypes != null) {
-                for (Class<?> argType : constructorArgTypes) {
-                    argTypes.append(argType.getSimpleName());
-                    argTypes.append(",");
-                }
-            }
-            StringBuilder argValues = new StringBuilder();
-            if (constructorArgs != null) {
-                for (Object argValue : constructorArgs) {
-                    argValues.append(String.valueOf(argValue));
-                    argValues.append(",");
-                }
-            }
-            throw new ReflectionException("Error instantiating " + type + " with invalid types (" + argTypes + ") or values (" + argValues + "). Cause: " + e, e);
+  private <T> T instantiateClass(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
+    try {
+      Constructor<T> constructor;
+      if (constructorArgTypes == null || constructorArgs == null) {
+        constructor = type.getDeclaredConstructor();
+        if (!constructor.isAccessible()) {
+          constructor.setAccessible(true);
         }
-    }
-
-    private Class<?> resolveInterface(Class<?> type) {
-        Class<?> classToCreate;
-        if (type == List.class || type == Collection.class) {
-            classToCreate = LinkedList.class;
-        } else if (type == Map.class) {
-            classToCreate = LinkedHashMap.class;
-        } else if (type == SortedSet.class) { // issue #510 Collections Support
-            classToCreate = TreeSet.class;
-        } else if (type == Set.class) {
-            classToCreate = HashSet.class;
-        } else {
-            classToCreate = type;
+        return constructor.newInstance();
+      }
+      constructor = type.getDeclaredConstructor(constructorArgTypes.toArray(new Class[constructorArgTypes.size()]));
+      if (!constructor.isAccessible()) {
+        constructor.setAccessible(true);
+      }
+      return constructor.newInstance(constructorArgs.toArray(new Object[constructorArgs.size()]));
+    } catch (Exception e) {
+      StringBuilder argTypes = new StringBuilder();
+      if (constructorArgTypes != null) {
+        for (Class<?> argType : constructorArgTypes) {
+          argTypes.append(argType.getSimpleName());
+          argTypes.append(",");
         }
-        return classToCreate;
+      }
+      StringBuilder argValues = new StringBuilder();
+      if (constructorArgs != null) {
+        for (Object argValue : constructorArgs) {
+          argValues.append(String.valueOf(argValue));
+          argValues.append(",");
+        }
+      }
+      throw new ReflectionException("Error instantiating " + type + " with invalid types (" + argTypes + ") or values ("
+          + argValues + "). Cause: " + e, e);
     }
+  }
 
-    @Override
-    public <T> boolean isCollection(Class<T> type) {
-      return CustomCollection.class.isAssignableFrom(type);
+  private Class<?> resolveInterface(Class<?> type) {
+    Class<?> classToCreate;
+    if (type == List.class || type == Collection.class) {
+      classToCreate = LinkedList.class;
+    } else if (type == Map.class) {
+      classToCreate = LinkedHashMap.class;
+    } else if (type == SortedSet.class) { // issue #510 Collections Support
+      classToCreate = TreeSet.class;
+    } else if (type == Set.class) {
+      classToCreate = HashSet.class;
+    } else {
+      classToCreate = type;
     }
+    return classToCreate;
+  }
 
-    @SuppressWarnings("unchecked")
-    public <T> T[] createArray(Class<T> type, int size) {
-      return (T[]) Array.newInstance(type, size);
-    }
+  @Override
+  public <T> boolean isCollection(Class<T> type) {
+    return CustomCollection.class.isAssignableFrom(type);
+  }
+
+  @SuppressWarnings("unchecked")
+  public <T> T[] createArray(Class<T> type, int size) {
+    return (T[]) Array.newInstance(type, size);
+  }
 
 }

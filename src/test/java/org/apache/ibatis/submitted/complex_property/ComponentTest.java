@@ -38,13 +38,13 @@ class ComponentTest {
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
 
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/complex_property/db.sql");
+        "org/apache/ibatis/submitted/complex_property/db.sql");
   }
 
   @Test
   void shouldInsertNestedPasswordFieldOfComplexType() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      //Create User
+      // Create User
       User user = new User();
       user.setId(500000L);
       user.setPassword(new EncryptedString("secret"));

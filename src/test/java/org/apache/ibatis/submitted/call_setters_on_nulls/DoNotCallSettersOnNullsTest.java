@@ -34,13 +34,14 @@ class DoNotCallSettersOnNullsTest {
   @BeforeAll
   static void setUp() throws Exception {
     // create a SqlSessionFactory
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/call_setters_on_nulls/mybatis-config-2.xml")) {
+    try (Reader reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/call_setters_on_nulls/mybatis-config-2.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
     // populate in-memory database
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/call_setters_on_nulls/CreateDB.sql");
+        "org/apache/ibatis/submitted/call_setters_on_nulls/CreateDB.sql");
   }
 
   @Test

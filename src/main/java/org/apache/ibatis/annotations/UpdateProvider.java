@@ -75,10 +75,9 @@ public @interface UpdateProvider {
 
   /**
    * Specify a method for providing an SQL.
-   *
    * <p>
-   * Since 3.5.1, this attribute can omit.
-   * If this attribute omit, the MyBatis will call a method that decide by following rules.
+   * Since 3.5.1, this attribute can omit. If this attribute omit, the MyBatis will call a method that decide by
+   * following rules.
    * <ul>
    *   <li>
    *     If class that specified the {@link #type()} attribute implements the

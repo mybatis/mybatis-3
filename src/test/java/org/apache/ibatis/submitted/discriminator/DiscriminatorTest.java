@@ -35,13 +35,14 @@ class DiscriminatorTest {
   @BeforeAll
   static void setUp() throws Exception {
     // create an SqlSessionFactory
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/discriminator/mybatis-config.xml")) {
+    try (
+        Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/discriminator/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
     // populate in-memory database
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-      "org/apache/ibatis/submitted/discriminator/CreateDB.sql");
+        "org/apache/ibatis/submitted/discriminator/CreateDB.sql");
   }
 
   @Test
@@ -50,9 +51,9 @@ class DiscriminatorTest {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<Vehicle> vehicles = mapper.selectVehicles();
       assertEquals(Car.class, vehicles.get(0).getClass());
-      assertEquals(Integer.valueOf(5), ((Car)vehicles.get(0)).getDoorCount());
+      assertEquals(Integer.valueOf(5), ((Car) vehicles.get(0)).getDoorCount());
       assertEquals(Truck.class, vehicles.get(1).getClass());
-      assertEquals(Float.valueOf(1.5f), ((Truck)vehicles.get(1)).getCarryingCapacity());
+      assertEquals(Float.valueOf(1.5f), ((Truck) vehicles.get(1)).getCarryingCapacity());
     }
   }
 

@@ -39,7 +39,7 @@ class CamelCaseMappingTest {
     }
 
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/camelcase/CreateDB.sql");
+        "org/apache/ibatis/submitted/camelcase/CreateDB.sql");
   }
 
   @Test

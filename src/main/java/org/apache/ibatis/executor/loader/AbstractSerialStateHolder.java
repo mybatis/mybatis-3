@@ -52,12 +52,9 @@ public abstract class AbstractSerialStateHolder implements Externalizable {
   public AbstractSerialStateHolder() {
   }
 
-  public AbstractSerialStateHolder(
-          final Object userBean,
-          final Map<String, ResultLoaderMap.LoadPair> unloadedProperties,
-          final ObjectFactory objectFactory,
-          List<Class<?>> constructorArgTypes,
-          List<Object> constructorArgs) {
+  public AbstractSerialStateHolder(final Object userBean,
+      final Map<String, ResultLoaderMap.LoadPair> unloadedProperties, final ObjectFactory objectFactory,
+      List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
     this.userBean = userBean;
     this.unloadedProperties = new HashMap<>(unloadedProperties);
     this.objectFactory = objectFactory;
@@ -129,6 +126,7 @@ public abstract class AbstractSerialStateHolder implements Externalizable {
     return this.createDeserializationProxy(userBean, arrayProps, objectFactory, arrayTypes, arrayValues);
   }
 
-  protected abstract Object createDeserializationProxy(Object target, Map<String, ResultLoaderMap.LoadPair> unloadedProperties, ObjectFactory objectFactory,
-          List<Class<?>> constructorArgTypes, List<Object> constructorArgs);
+  protected abstract Object createDeserializationProxy(Object target,
+      Map<String, ResultLoaderMap.LoadPair> unloadedProperties, ObjectFactory objectFactory,
+      List<Class<?>> constructorArgTypes, List<Object> constructorArgs);
 }

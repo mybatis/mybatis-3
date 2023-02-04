@@ -35,14 +35,15 @@ class DuplicateStatementsTest {
 
   @BeforeEach
   void setupDb() throws Exception {
-      // create a SqlSessionFactory
-      try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/duplicate_statements/mybatis-config.xml")) {
-        sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-      }
+    // create a SqlSessionFactory
+    try (Reader reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/duplicate_statements/mybatis-config.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    }
 
-      // populate in-memory database
-      BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-              "org/apache/ibatis/submitted/duplicate_statements/CreateDB.sql");
+    // populate in-memory database
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/duplicate_statements/CreateDB.sql");
   }
 
   @Test

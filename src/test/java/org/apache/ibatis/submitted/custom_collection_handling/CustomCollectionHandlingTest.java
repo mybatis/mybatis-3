@@ -31,50 +31,52 @@ import org.junit.jupiter.api.Test;
 
 class CustomCollectionHandlingTest {
 
-    /**
-     * Custom collections with nested resultMap.
-     */
-    @Test
-    void testSelectListWithNestedResultMap() throws Exception {
-        String xmlConfig = "org/apache/ibatis/submitted/custom_collection_handling/MapperConfig.xml";
-        SqlSessionFactory sqlSessionFactory = getSqlSessionFactoryXmlConfig(xmlConfig);
-        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-            List<Person> list = sqlSession.selectList("org.apache.ibatis.submitted.custom_collection_handling.PersonMapper.findWithResultMap");
-            assertEquals(2, list.size());
-            assertEquals(2, list.get(0).getContacts().size());
-            assertEquals(1, list.get(1).getContacts().size());
-            assertEquals("3 Wall Street", list.get(0).getContacts().get(1).getAddress());
-        }
+  /**
+   * Custom collections with nested resultMap.
+   */
+  @Test
+  void testSelectListWithNestedResultMap() throws Exception {
+    String xmlConfig = "org/apache/ibatis/submitted/custom_collection_handling/MapperConfig.xml";
+    SqlSessionFactory sqlSessionFactory = getSqlSessionFactoryXmlConfig(xmlConfig);
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      List<Person> list = sqlSession
+          .selectList("org.apache.ibatis.submitted.custom_collection_handling.PersonMapper.findWithResultMap");
+      assertEquals(2, list.size());
+      assertEquals(2, list.get(0).getContacts().size());
+      assertEquals(1, list.get(1).getContacts().size());
+      assertEquals("3 Wall Street", list.get(0).getContacts().get(1).getAddress());
     }
+  }
 
-    /**
-     * Custom collections with nested select.
-     */
-    @Test
-    void testSelectListWithNestedSelect() throws Exception {
-        String xmlConfig = "org/apache/ibatis/submitted/custom_collection_handling/MapperConfig.xml";
-        SqlSessionFactory sqlSessionFactory = getSqlSessionFactoryXmlConfig(xmlConfig);
-        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-            List<Person> list = sqlSession.selectList("org.apache.ibatis.submitted.custom_collection_handling.PersonMapper.findWithSelect");
-            assertEquals(2, list.size());
-            assertEquals(2, list.get(0).getContacts().size());
-            assertEquals(1, list.get(1).getContacts().size());
-            assertEquals("3 Wall Street", list.get(0).getContacts().get(1).getAddress());
-        }
+  /**
+   * Custom collections with nested select.
+   */
+  @Test
+  void testSelectListWithNestedSelect() throws Exception {
+    String xmlConfig = "org/apache/ibatis/submitted/custom_collection_handling/MapperConfig.xml";
+    SqlSessionFactory sqlSessionFactory = getSqlSessionFactoryXmlConfig(xmlConfig);
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      List<Person> list = sqlSession
+          .selectList("org.apache.ibatis.submitted.custom_collection_handling.PersonMapper.findWithSelect");
+      assertEquals(2, list.size());
+      assertEquals(2, list.get(0).getContacts().size());
+      assertEquals(1, list.get(1).getContacts().size());
+      assertEquals("3 Wall Street", list.get(0).getContacts().get(1).getAddress());
     }
+  }
 
-    private SqlSessionFactory getSqlSessionFactoryXmlConfig(String resource) throws Exception {
-        try (Reader configReader = Resources.getResourceAsReader(resource)) {
-            SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configReader);
+  private SqlSessionFactory getSqlSessionFactoryXmlConfig(String resource) throws Exception {
+    try (Reader configReader = Resources.getResourceAsReader(resource)) {
+      SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configReader);
 
-            initDb(sqlSessionFactory);
+      initDb(sqlSessionFactory);
 
-            return sqlSessionFactory;
-        }
+      return sqlSessionFactory;
     }
+  }
 
-    private static void initDb(SqlSessionFactory sqlSessionFactory) throws IOException, SQLException {
-        BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-                "org/apache/ibatis/submitted/custom_collection_handling/CreateDB.sql");
-    }
+  private static void initDb(SqlSessionFactory sqlSessionFactory) throws IOException, SQLException {
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/custom_collection_handling/CreateDB.sql");
+  }
 }
