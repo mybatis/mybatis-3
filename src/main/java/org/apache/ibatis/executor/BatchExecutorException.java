@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,10 +19,9 @@ import java.sql.BatchUpdateException;
 import java.util.List;
 
 /**
- * This exception is thrown if a <code>java.sql.BatchUpdateException</code> is caught
- * during the execution of any nested batch.  The exception contains the
- * java.sql.BatchUpdateException that is the root cause, as well as
- * the results from any prior nested batch that executed successfully.
+ * This exception is thrown if a <code>java.sql.BatchUpdateException</code> is caught during the execution of any nested
+ * batch. The exception contains the java.sql.BatchUpdateException that is the root cause, as well as the results from
+ * any prior nested batch that executed successfully.
  *
  * @author Jeff Butler
  */
@@ -44,10 +43,8 @@ public class BatchExecutorException extends ExecutorException {
   }
 
   /**
-   * Returns the BatchUpdateException that caused the nested executor
-   * to fail.  That exception contains an array of row counts
-   * that can be used to determine exactly which statement of the
-   * executor caused the failure (or failures).
+   * Returns the BatchUpdateException that caused the nested executor to fail. That exception contains an array of row
+   * counts that can be used to determine exactly which statement of the executor caused the failure (or failures).
    *
    * @return the root BatchUpdateException
    */
@@ -56,20 +53,17 @@ public class BatchExecutorException extends ExecutorException {
   }
 
   /**
-   * Returns a list of BatchResult objects.  There will be one entry
-   * in the list for each successful sub-executor executed before the failing
-   * executor.
+   * Returns a list of BatchResult objects. There will be one entry in the list for each successful sub-executor
+   * executed before the failing executor.
    *
-   * @return the previously successful executor results (maybe an empty list
-   *         if no executor has executed successfully)
+   * @return the previously successful executor results (maybe an empty list if no executor has executed successfully)
    */
   public List<BatchResult> getSuccessfulBatchResults() {
     return successfulBatchResults;
   }
 
   /**
-   * Returns the SQL statement that caused the failure
-   * (not the parameterArray).
+   * Returns the SQL statement that caused the failure (not the parameterArray).
    *
    * @return the failing SQL string
    */

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -65,10 +65,8 @@ public abstract class BaseJdbcLogger {
 
   static {
     SET_METHODS = Arrays.stream(PreparedStatement.class.getDeclaredMethods())
-            .filter(method -> method.getName().startsWith("set"))
-            .filter(method -> method.getParameterCount() > 1)
-            .map(Method::getName)
-            .collect(Collectors.toSet());
+        .filter(method -> method.getName().startsWith("set")).filter(method -> method.getParameterCount() > 1)
+        .map(Method::getName).collect(Collectors.toSet());
 
     EXECUTE_METHODS.add("execute");
     EXECUTE_METHODS.add("executeUpdate");

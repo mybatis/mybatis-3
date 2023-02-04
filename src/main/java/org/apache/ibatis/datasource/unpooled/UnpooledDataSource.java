@@ -75,7 +75,8 @@ public class UnpooledDataSource implements DataSource {
     this.driverProperties = driverProperties;
   }
 
-  public UnpooledDataSource(ClassLoader driverClassLoader, String driver, String url, String username, String password) {
+  public UnpooledDataSource(ClassLoader driverClassLoader, String driver, String url, String username,
+      String password) {
     this.driverClassLoader = driverClassLoader;
     this.driver = driver;
     this.url = url;
@@ -196,7 +197,8 @@ public class UnpooledDataSource implements DataSource {
   }
 
   /**
-   * Sets the default network timeout value to wait for the database operation to complete. See {@link Connection#setNetworkTimeout(java.util.concurrent.Executor, int)}
+   * Sets the default network timeout value to wait for the database operation to complete. See
+   * {@link Connection#setNetworkTimeout(java.util.concurrent.Executor, int)}
    *
    * @param defaultNetworkTimeout
    *          The time in milliseconds to wait for the database operation to complete.

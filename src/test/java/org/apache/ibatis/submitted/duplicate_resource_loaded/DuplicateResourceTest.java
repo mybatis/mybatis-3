@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ class DuplicateResourceTest extends BaseDataTest {
     try (SqlSession sqlSession = factory.openSession()) {
       final Mapper mapper = sqlSession.getMapper(Mapper.class);
       final List<Map<String, Object>> list = mapper.selectAllBlogs();
-      Assertions.assertEquals(2,list.size());
+      Assertions.assertEquals(2, list.size());
     }
   }
 }
