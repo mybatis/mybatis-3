@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -108,13 +108,14 @@ public class JBoss6VFS extends VFS {
   }
 
   /**
-   * Verifies that the provided object reference is null. If it is null, then this VFS is marked
-   * as invalid for the current environment.
+   * Verifies that the provided object reference is null. If it is null, then this VFS is marked as invalid for the
+   * current environment.
    *
    * @param <T>
    *          the generic type
    * @param object
    *          The object reference to check for null.
+   *
    * @return the t
    */
   protected static <T> T checkNotNull(T object) {
@@ -125,11 +126,14 @@ public class JBoss6VFS extends VFS {
   }
 
   /**
-   * Verifies that the return type of method is what it is expected to be. If it is not, then
-   * this VFS is marked as invalid for the current environment.
+   * Verifies that the return type of method is what it is expected to be. If it is not, then this VFS is marked as
+   * invalid for the current environment.
    *
-   * @param method The method whose return type is to be checked.
-   * @param expected A type to which the method's return type must be assignable.
+   * @param method
+   *          The method whose return type is to be checked.
+   * @param expected
+   *          A type to which the method's return type must be assignable.
+   *
    * @see Class#isAssignableFrom(Class)
    */
   protected static void checkReturnType(Method method, Class<?> expected) {

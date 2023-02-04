@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ import java.lang.annotation.Target;
 
 /**
  * The annotation that specify a method that provide an SQL for inserting record(s).
- *
  * <p>
  * <b>How to use:</b>
  *
@@ -55,7 +54,9 @@ public @interface InsertProvider {
    * Specify a type that implements an SQL provider method.
    *
    * @return a type that implements an SQL provider method
+   *
    * @since 3.5.2
+   *
    * @see #type()
    */
   Class<?> value() default void.class;
@@ -67,13 +68,13 @@ public @interface InsertProvider {
    * </p>
    *
    * @return a type that implements an SQL provider method
+   *
    * @see #value()
    */
   Class<?> type() default void.class;
 
   /**
    * Specify a method for providing an SQL.
-   *
    * <p>
    * Since 3.5.1, this attribute can omit.
    * If this attribute omit, the MyBatis will call a method that decide by following rules.
@@ -95,13 +96,16 @@ public @interface InsertProvider {
 
   /**
    * @return A database id that correspond this provider
+   *
    * @since 3.5.5
    */
   String databaseId() default "";
 
   /**
    * The container annotation for {@link InsertProvider}.
+   *
    * @author Kazuki Shimizu
+   *
    * @since 3.5.5
    */
   @Documented

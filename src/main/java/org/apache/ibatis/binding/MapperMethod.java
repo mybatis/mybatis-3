@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -85,8 +85,7 @@ public class MapperMethod {
         } else {
           Object param = method.convertArgsToSqlCommandParam(args);
           result = sqlSession.selectOne(command.getName(), param);
-          if (method.returnsOptional()
-              && (result == null || !method.getReturnType().equals(result.getClass()))) {
+          if (method.returnsOptional() && (result == null || !method.getReturnType().equals(result.getClass()))) {
             result = Optional.ofNullable(result);
           }
         }
@@ -115,7 +114,8 @@ public class MapperMethod {
     } else if (Boolean.class.equals(method.getReturnType()) || Boolean.TYPE.equals(method.getReturnType())) {
       result = rowCount > 0;
     } else {
-      throw new BindingException("Mapper method '" + command.getName() + "' has an unsupported return type: " + method.getReturnType());
+      throw new BindingException(
+          "Mapper method '" + command.getName() + "' has an unsupported return type: " + method.getReturnType());
     }
     return result;
   }
@@ -124,9 +124,9 @@ public class MapperMethod {
     MappedStatement ms = sqlSession.getConfiguration().getMappedStatement(command.getName());
     if (!StatementType.CALLABLE.equals(ms.getStatementType())
         && void.class.equals(ms.getResultMaps().get(0).getType())) {
-      throw new BindingException("method " + command.getName()
-          + " needs either a @ResultMap annotation, a @ResultType annotation,"
-          + " or a resultType attribute in XML so a ResultHandler can be used as a parameter.");
+      throw new BindingException(
+          "method " + command.getName() + " needs either a @ResultMap annotation, a @ResultType annotation,"
+              + " or a resultType attribute in XML so a ResultHandler can be used as a parameter.");
     }
     Object param = method.convertArgsToSqlCommandParam(args);
     if (method.hasRowBounds()) {
@@ -224,15 +224,14 @@ public class MapperMethod {
     public SqlCommand(Configuration configuration, Class<?> mapperInterface, Method method) {
       final String methodName = method.getName();
       final Class<?> declaringClass = method.getDeclaringClass();
-      MappedStatement ms = resolveMappedStatement(mapperInterface, methodName, declaringClass,
-          configuration);
+      MappedStatement ms = resolveMappedStatement(mapperInterface, methodName, declaringClass, configuration);
       if (ms == null) {
         if (method.getAnnotation(Flush.class) != null) {
           name = null;
           type = SqlCommandType.FLUSH;
         } else {
-          throw new BindingException("Invalid bound statement (not found): "
-              + mapperInterface.getName() + "." + methodName);
+          throw new BindingException(
+              "Invalid bound statement (not found): " + mapperInterface.getName() + "." + methodName);
         }
       } else {
         name = ms.getId();
@@ -251,8 +250,8 @@ public class MapperMethod {
       return type;
     }
 
-    private MappedStatement resolveMappedStatement(Class<?> mapperInterface, String methodName,
-        Class<?> declaringClass, Configuration configuration) {
+    private MappedStatement resolveMappedStatement(Class<?> mapperInterface, String methodName, Class<?> declaringClass,
+        Configuration configuration) {
       String statementId = mapperInterface.getName() + "." + methodName;
       if (configuration.hasStatement(statementId)) {
         return configuration.getMappedStatement(statementId);
@@ -261,8 +260,7 @@ public class MapperMethod {
       }
       for (Class<?> superInterface : mapperInterface.getInterfaces()) {
         if (declaringClass.isAssignableFrom(superInterface)) {
-          MappedStatement ms = resolveMappedStatement(superInterface, methodName,
-              declaringClass, configuration);
+          MappedStatement ms = resolveMappedStatement(superInterface, methodName, declaringClass, configuration);
           if (ms != null) {
             return ms;
           }
@@ -349,6 +347,7 @@ public class MapperMethod {
      * return whether return type is {@code java.util.Optional}.
      *
      * @return return {@code true}, if return type is {@code java.util.Optional}
+     *
      * @since 3.5.0
      */
     public boolean returnsOptional() {
@@ -363,7 +362,8 @@ public class MapperMethod {
           if (index == null) {
             index = i;
           } else {
-            throw new BindingException(method.getName() + " cannot have multiple " + paramType.getSimpleName() + " parameters");
+            throw new BindingException(
+                method.getName() + " cannot have multiple " + paramType.getSimpleName() + " parameters");
           }
         }
       }

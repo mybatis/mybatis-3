@@ -175,7 +175,8 @@ public class MapperAnnotationBuilder {
         }
       }
       if (inputStream != null) {
-        XMLMapperBuilder xmlParser = new XMLMapperBuilder(inputStream, assistant.getConfiguration(), xmlResource, configuration.getSqlFragments(), type.getName());
+        XMLMapperBuilder xmlParser = new XMLMapperBuilder(inputStream, assistant.getConfiguration(), xmlResource,
+            configuration.getSqlFragments(), type.getName());
         xmlParser.parse();
       }
     }
@@ -187,7 +188,8 @@ public class MapperAnnotationBuilder {
       Integer size = cacheDomain.size() == 0 ? null : cacheDomain.size();
       Long flushInterval = cacheDomain.flushInterval() == 0 ? null : cacheDomain.flushInterval();
       Properties props = convertToProperties(cacheDomain.properties());
-      assistant.useNewCache(cacheDomain.implementation(), cacheDomain.eviction(), flushInterval, size, cacheDomain.readWrite(), cacheDomain.blocking(), props);
+      assistant.useNewCache(cacheDomain.implementation(), cacheDomain.eviction(), flushInterval, size,
+          cacheDomain.readWrite(), cacheDomain.blocking(), props);
     }
   }
 
@@ -197,8 +199,7 @@ public class MapperAnnotationBuilder {
     }
     Properties props = new Properties();
     for (Property property : properties) {
-      props.setProperty(property.name(),
-          PropertyParser.parse(property.value(), configuration.getVariables()));
+      props.setProperty(property.name(), PropertyParser.parse(property.value(), configuration.getVariables()));
     }
     return props;
   }
@@ -249,7 +250,8 @@ public class MapperAnnotationBuilder {
     return type.getName() + "." + method.getName() + suffix;
   }
 
-  private void applyResultMap(String resultMapId, Class<?> returnType, Arg[] args, Result[] results, TypeDiscriminator discriminator) {
+  private void applyResultMap(String resultMapId, Class<?> returnType, Arg[] args, Result[] results,
+      TypeDiscriminator discriminator) {
     List<ResultMapping> resultMappings = new ArrayList<>();
     applyConstructorArgs(args, returnType, resultMappings);
     applyResults(results, returnType, resultMappings);
@@ -279,8 +281,8 @@ public class MapperAnnotationBuilder {
       Class<?> javaType = discriminator.javaType() == void.class ? String.class : discriminator.javaType();
       JdbcType jdbcType = discriminator.jdbcType() == JdbcType.UNDEFINED ? null : discriminator.jdbcType();
       @SuppressWarnings("unchecked")
-      Class<? extends TypeHandler<?>> typeHandler = (Class<? extends TypeHandler<?>>)
-              (discriminator.typeHandler() == UnknownTypeHandler.class ? null : discriminator.typeHandler());
+      Class<? extends TypeHandler<?>> typeHandler = (Class<? extends TypeHandler<?>>) (discriminator
+          .typeHandler() == UnknownTypeHandler.class ? null : discriminator.typeHandler());
       Case[] cases = discriminator.cases();
       Map<String, String> discriminatorMap = new HashMap<>();
       for (Case c : cases) {
@@ -298,9 +300,11 @@ public class MapperAnnotationBuilder {
     final LanguageDriver languageDriver = getLanguageDriver(method);
 
     getAnnotationWrapper(method, true, statementAnnotationTypes).ifPresent(statementAnnotation -> {
-      final SqlSource sqlSource = buildSqlSource(statementAnnotation.getAnnotation(), parameterTypeClass, languageDriver, method);
+      final SqlSource sqlSource = buildSqlSource(statementAnnotation.getAnnotation(), parameterTypeClass,
+          languageDriver, method);
       final SqlCommandType sqlCommandType = statementAnnotation.getSqlCommandType();
-      final Options options = getAnnotationWrapper(method, false, Options.class).map(x -> (Options)x.getAnnotation()).orElse(null);
+      final Options options = getAnnotationWrapper(method, false, Options.class).map(x -> (Options) x.getAnnotation())
+          .orElse(null);
       final String mappedStatementId = type.getName() + "." + method.getName();
 
       final KeyGenerator keyGenerator;
@@ -308,9 +312,11 @@ public class MapperAnnotationBuilder {
       String keyColumn = null;
       if (SqlCommandType.INSERT.equals(sqlCommandType) || SqlCommandType.UPDATE.equals(sqlCommandType)) {
         // first check for SelectKey annotation - that overrides everything else
-        SelectKey selectKey = getAnnotationWrapper(method, false, SelectKey.class).map(x -> (SelectKey)x.getAnnotation()).orElse(null);
+        SelectKey selectKey = getAnnotationWrapper(method, false, SelectKey.class)
+            .map(x -> (SelectKey) x.getAnnotation()).orElse(null);
         if (selectKey != null) {
-          keyGenerator = handleSelectKeyAnnotation(selectKey, mappedStatementId, getParameterType(method), languageDriver);
+          keyGenerator = handleSelectKeyAnnotation(selectKey, mappedStatementId, getParameterType(method),
+              languageDriver);
           keyProperty = selectKey.keyProperty();
         } else if (options == null) {
           keyGenerator = configuration.isUseGeneratedKeys() ? Jdbc3KeyGenerator.INSTANCE : NoKeyGenerator.INSTANCE;
@@ -337,7 +343,8 @@ public class MapperAnnotationBuilder {
           flushCache = false;
         }
         useCache = options.useCache();
-        fetchSize = options.fetchSize() > -1 || options.fetchSize() == Integer.MIN_VALUE ? options.fetchSize() : null; //issue #348
+        // issue #348
+        fetchSize = options.fetchSize() > -1 || options.fetchSize() == Integer.MIN_VALUE ? options.fetchSize() : null;
         timeout = options.timeout() > -1 ? options.timeout() : null;
         statementType = options.statementType();
         if (options.resultSetType() != ResultSetType.DEFAULT) {
@@ -396,7 +403,8 @@ public class MapperAnnotationBuilder {
     Class<?> parameterType = null;
     Class<?>[] parameterTypes = method.getParameterTypes();
     for (Class<?> currentParameterType : parameterTypes) {
-      if (!RowBounds.class.isAssignableFrom(currentParameterType) && !ResultHandler.class.isAssignableFrom(currentParameterType)) {
+      if (!RowBounds.class.isAssignableFrom(currentParameterType)
+          && !ResultHandler.class.isAssignableFrom(currentParameterType)) {
         if (parameterType == null) {
           parameterType = currentParameterType;
         } else {
@@ -581,7 +589,8 @@ public class MapperAnnotationBuilder {
     return value == null || value.trim().length() == 0 ? null : value;
   }
 
-  private KeyGenerator handleSelectKeyAnnotation(SelectKey selectKeyAnnotation, String baseStatementId, Class<?> parameterTypeClass, LanguageDriver languageDriver) {
+  private KeyGenerator handleSelectKeyAnnotation(SelectKey selectKeyAnnotation, String baseStatementId,
+      Class<?> parameterTypeClass, LanguageDriver languageDriver) {
     String id = baseStatementId + SelectKeyGenerator.SELECT_KEY_SUFFIX;
     Class<?> resultTypeClass = selectKeyAnnotation.resultType();
     StatementType statementType = selectKeyAnnotation.statementType();

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -79,7 +79,7 @@ public class DefaultVFS extends VFS {
               if (log.isDebugEnabled()) {
                 log.debug("Listing " + url);
               }
-              for (JarEntry entry; (entry = jarInput.getNextJarEntry()) != null; ) {
+              for (JarEntry entry; (entry = jarInput.getNextJarEntry()) != null;) {
                 if (log.isDebugEnabled()) {
                   log.debug("Jar entry: " + entry.getName());
                 }
@@ -88,12 +88,11 @@ public class DefaultVFS extends VFS {
             }
           } else {
             /*
-             * Some servlet containers allow reading from directory resources like a
-             * text file, listing the child resources one per line. However, there is no
-             * way to differentiate between directory and file resources just by reading
-             * them. To work around that, as each line is read, try to look it up via
-             * the class loader as a child of the current resource. If any line fails
-             * then we assume the current resource is not a directory.
+             * Some servlet containers allow reading from directory resources like a text file, listing the child
+             * resources one per line. However, there is no way to differentiate between directory and file resources
+             * just by reading them. To work around that, as each line is read, try to look it up via the class loader
+             * as a child of the current resource. If any line fails then we assume the current resource is not a
+             * directory.
              */
             is = url.openStream();
             List<String> lines = new ArrayList<>();
@@ -121,9 +120,8 @@ public class DefaultVFS extends VFS {
           }
         } catch (FileNotFoundException e) {
           /*
-           * For file URLs the openStream() call might fail, depending on the servlet
-           * container, because directories can't be opened for reading. If that happens,
-           * then list the directory directly instead.
+           * For file URLs the openStream() call might fail, depending on the servlet container, because directories
+           * can't be opened for reading. If that happens, then list the directory directly instead.
            */
           if ("file".equals(url.getProtocol())) {
             File file = new File(url.getFile());
@@ -170,13 +168,18 @@ public class DefaultVFS extends VFS {
   }
 
   /**
-   * List the names of the entries in the given {@link JarInputStream} that begin with the
-   * specified {@code path}. Entries will match with or without a leading slash.
+   * List the names of the entries in the given {@link JarInputStream} that begin with the specified {@code path}.
+   * Entries will match with or without a leading slash.
    *
-   * @param jar The JAR input stream
-   * @param path The leading path to match
+   * @param jar
+   *          The JAR input stream
+   * @param path
+   *          The leading path to match
+   *
    * @return The names of all the matching entries
-   * @throws IOException If I/O errors occur
+   *
+   * @throws IOException
+   *           If I/O errors occur
    */
   protected List<String> listResources(JarInputStream jar, String path) throws IOException {
     // Include the leading and trailing slash when matching names
@@ -211,13 +214,15 @@ public class DefaultVFS extends VFS {
   }
 
   /**
-   * Attempts to deconstruct the given URL to find a JAR file containing the resource referenced
-   * by the URL. That is, assuming the URL references a JAR entry, this method will return a URL
-   * that references the JAR file containing the entry. If the JAR cannot be located, then this
-   * method returns null.
+   * Attempts to deconstruct the given URL to find a JAR file containing the resource referenced by the URL. That is,
+   * assuming the URL references a JAR entry, this method will return a URL that references the JAR file containing the
+   * entry. If the JAR cannot be located, then this method returns null.
    *
-   * @param url The URL of the JAR entry.
+   * @param url
+   *          The URL of the JAR entry.
+   *
    * @return The URL of the JAR file, if one is found. Null if not.
+   *
    * @throws MalformedURLException
    *           the malformed URL exception
    */
@@ -303,6 +308,7 @@ public class DefaultVFS extends VFS {
    *
    * @param packageName
    *          The Java package name to convert to a path
+   *
    * @return the package path
    */
   protected String getPackagePath(String packageName) {
@@ -314,6 +320,7 @@ public class DefaultVFS extends VFS {
    *
    * @param url
    *          The URL of the resource to test.
+   *
    * @return true, if is jar
    */
   protected boolean isJar(URL url) {
@@ -328,6 +335,7 @@ public class DefaultVFS extends VFS {
    * @param buffer
    *          A buffer into which the first few bytes of the resource are read. The buffer must be at least the size of
    *          {@link #JAR_MAGIC}. (The same buffer may be reused for multiple calls as an optimization.)
+   *
    * @return true, if is jar
    */
   protected boolean isJar(URL url, byte[] buffer) {
