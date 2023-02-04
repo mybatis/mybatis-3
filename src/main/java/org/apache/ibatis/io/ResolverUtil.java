@@ -29,22 +29,18 @@ import org.apache.ibatis.logging.LogFactory;
  * ResolverUtil is used to locate classes that are available in the/a class path and meet arbitrary conditions. The two
  * most common conditions are that a class implements/extends another class, or that is it annotated with a specific
  * annotation. However, through the use of the {@link Test} class it is possible to search using arbitrary conditions.
- * </p>
  * <p>
  * A ClassLoader is used to locate all locations (directories and jar files) in the class path that contain classes
  * within certain packages, and then to load those classes and check them. By default the ClassLoader returned by
  * {@code Thread.currentThread().getContextClassLoader()} is used, but this can be overridden by calling
  * {@link #setClassLoader(ClassLoader)} prior to invoking any of the {@code find()} methods.
- * </p>
  * <p>
  * General searches are initiated by calling the {@link #find(Test, String)} and supplying a package name and a Test
  * instance. This will cause the named package <b>and all sub-packages</b> to be scanned for classes that meet the test.
  * There are also utility methods for the common use cases of scanning multiple packages for extensions of particular
  * classes, or classes annotated with a specific annotation.
- * </p>
  * <p>
  * The standard usage pattern for the ResolverUtil class is as follows:
- * </p>
  *
  * <pre>
  * ResolverUtil&lt;ActionBean&gt; resolver = new ResolverUtil&lt;ActionBean&gt;();
