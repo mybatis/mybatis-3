@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -33,7 +33,8 @@ public interface Mapper {
 
   int itemVariableConflict(@Param("id") Integer id, @Param("ids") List<Integer> ids, @Param("ids2") List<Integer> ids2);
 
-  int indexVariableConflict(@Param("idx") Integer id, @Param("idxs") List<Integer> ids, @Param("idxs2") List<Integer> ids2);
+  int indexVariableConflict(@Param("idx") Integer id, @Param("idxs") List<Integer> ids,
+      @Param("idxs2") List<Integer> ids2);
 
   int countUserWithNullableIsOmit(User user);
 

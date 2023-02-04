@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -53,8 +53,8 @@ class InlineCollectionWithDotTest {
   }
 
   /*
-   * Load an element with an element with and element with a value. Expect that this is
-   * possible bij using an inline 'association' map.
+   * Load an element with an element with and element with a value. Expect that this is possible bij using an inline
+   * 'association' map.
    */
   @Test
   void selectElementValueInContainerUsingInline() throws Exception {
@@ -66,8 +66,8 @@ class InlineCollectionWithDotTest {
   }
 
   /*
-   * Load an element with an element with and element with a value. Expect that this is
-   * possible bij using an sub-'association' map.
+   * Load an element with an element with and element with a value. Expect that this is possible bij using an
+   * sub-'association' map.
    */
   @Test
   void selectElementValueInContainerUsingSubMap() throws Exception {
