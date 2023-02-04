@@ -188,6 +188,7 @@ public class UnpooledDataSource implements DataSource {
    * Gets the default network timeout.
    *
    * @return the default network timeout
+   *
    * @since 3.5.2
    */
   public Integer getDefaultNetworkTimeout() {
@@ -199,6 +200,7 @@ public class UnpooledDataSource implements DataSource {
    *
    * @param defaultNetworkTimeout
    *          The time in milliseconds to wait for the database operation to complete.
+   *
    * @since 3.5.2
    */
   public void setDefaultNetworkTimeout(Integer defaultNetworkTimeout) {

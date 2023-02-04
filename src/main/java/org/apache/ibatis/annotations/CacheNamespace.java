@@ -27,7 +27,6 @@ import org.apache.ibatis.cache.impl.PerpetualCache;
 
 /**
  * The annotation that specify to use cache on namespace(e.g. mapper interface).
- *
  * <p>
  * <b>How to use:</b>
  *
@@ -96,6 +95,7 @@ public @interface CacheNamespace {
    * Returns property values for a implementation object.
    *
    * @return property values
+   *
    * @since 3.4.2
    */
   Property[] properties() default {};

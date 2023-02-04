@@ -24,7 +24,6 @@ import java.lang.annotation.Target;
 
 /**
  * The annotation that specify an SQL for inserting record(s).
- *
  * <p>
  * <b>How to use:</b>
  *
@@ -51,13 +50,16 @@ public @interface Insert {
 
   /**
    * @return A database id that correspond this statement
+   *
    * @since 3.5.5
    */
   String databaseId() default "";
 
   /**
    * The container annotation for {@link Insert}.
+   *
    * @author Kazuki Shimizu
+   *
    * @since 3.5.5
    */
   @Documented

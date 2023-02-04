@@ -23,7 +23,6 @@ import java.lang.annotation.Target;
 
 /**
  * The maker annotation that invoke a flush statements via Mapper interface.
- *
  * <p>
  * <b>How to use:</b>
  *
@@ -35,6 +34,7 @@ import java.lang.annotation.Target;
  * </pre>
  *
  * @since 3.3.0
+ *
  * @author Kazuki Shimizu
  */
 @Documented

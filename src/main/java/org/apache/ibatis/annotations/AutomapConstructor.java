@@ -23,7 +23,6 @@ import java.lang.annotation.Target;
 
 /**
  * The marker annotation that indicate a constructor for automatic mapping.
- *
  * <p>
  * <b>How to use:</b>
  *
@@ -47,6 +46,7 @@ import java.lang.annotation.Target;
  * </pre>
  *
  * @author Tim Chen
+ *
  * @since 3.4.3
  */
 @Documented

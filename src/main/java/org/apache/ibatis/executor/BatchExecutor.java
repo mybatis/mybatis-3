@@ -68,7 +68,7 @@ public class BatchExecutor extends BaseExecutor {
     } else {
       Connection connection = getConnection(ms.getStatementLog());
       stmt = handler.prepare(connection, transaction.getTimeout());
-      handler.parameterize(stmt);    // fix Issues 322
+      handler.parameterize(stmt); // fix Issues 322
       currentSql = sql;
       currentStatement = ms;
       statementList.add(stmt);

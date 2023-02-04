@@ -215,6 +215,7 @@ class PooledConnection implements InvocationHandler {
    *
    * @param obj
    *          - the other connection to test for equality
+   *
    * @see Object#equals(Object)
    */
   @Override
@@ -237,6 +238,7 @@ class PooledConnection implements InvocationHandler {
    *          - the method to be executed
    * @param args
    *          - the parameters to be passed to the method
+   *
    * @see java.lang.reflect.InvocationHandler#invoke(Object, java.lang.reflect.Method, Object[])
    */
   @Override

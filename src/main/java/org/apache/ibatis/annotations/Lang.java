@@ -25,7 +25,6 @@ import org.apache.ibatis.scripting.LanguageDriver;
 
 /**
  * The annotation that specify a {@link LanguageDriver} to use.
- *
  * <p>
  * <b>How to use:</b>
  *

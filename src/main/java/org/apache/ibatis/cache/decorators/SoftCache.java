@@ -23,7 +23,8 @@ import java.util.LinkedList;
 import org.apache.ibatis.cache.Cache;
 
 /**
- * Soft Reference cache decorator
+ * Soft Reference cache decorator.
+ * <p>
  * Thanks to Dr. Heinz Kabutz for his guidance here.
  *
  * @author Clinton Begin

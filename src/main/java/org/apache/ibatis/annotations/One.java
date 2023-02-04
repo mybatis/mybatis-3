@@ -27,6 +27,7 @@ import org.apache.ibatis.mapping.FetchType;
  *
  * @see Result
  * @see Results
+ *
  * @author Clinton Begin
  */
 @Documented
@@ -37,6 +38,7 @@ public @interface One {
    * Returns the columnPrefix.
    *
    * @return the columnPrefix.
+   *
    * @since 3.5.5
    */
   String columnPrefix() default "";
@@ -45,6 +47,7 @@ public @interface One {
    * Returns the result map id used to map single object.
    *
    * @return the result map id
+   *
    * @since 3.5.5
    */
   String resultMap() default "";

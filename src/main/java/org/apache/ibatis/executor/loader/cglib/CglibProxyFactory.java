@@ -41,6 +41,7 @@ import org.apache.ibatis.session.Configuration;
 
 /**
  * @author Clinton Begin
+ *
  * @deprecated Since 3.5.10, use Javassist instead.
  */
 @Deprecated

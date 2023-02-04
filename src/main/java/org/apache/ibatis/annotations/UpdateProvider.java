@@ -24,7 +24,6 @@ import java.lang.annotation.Target;
 
 /**
  * The annotation that specify a method that provide an SQL for updating record(s).
- *
  * <p>
  * <b>How to use:</b>
  *
@@ -55,7 +54,9 @@ public @interface UpdateProvider {
    * Specify a type that implements an SQL provider method.
    *
    * @return a type that implements an SQL provider method
+   *
    * @since 3.5.2
+   *
    * @see #type()
    */
   Class<?> value() default void.class;
@@ -67,6 +68,7 @@ public @interface UpdateProvider {
    * </p>
    *
    * @return a type that implements an SQL provider method
+   *
    * @see #value()
    */
   Class<?> type() default void.class;
@@ -95,13 +97,16 @@ public @interface UpdateProvider {
 
   /**
    * @return A database id that correspond this provider
+   *
    * @since 3.5.5
    */
   String databaseId() default "";
 
   /**
    * The container annotation for {@link UpdateProvider}.
+   *
    * @author Kazuki Shimizu
+   *
    * @since 3.5.5
    */
   @Documented

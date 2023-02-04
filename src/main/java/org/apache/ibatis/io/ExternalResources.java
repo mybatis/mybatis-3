@@ -44,13 +44,14 @@ public class ExternalResources {
     }
 
     try (FileInputStream source = new FileInputStream(sourceFile);
-         FileOutputStream destination = new FileOutputStream(destFile)) {
+        FileOutputStream destination = new FileOutputStream(destFile)) {
       destination.getChannel().transferFrom(source.getChannel(), 0, source.getChannel().size());
     }
 
   }
 
-  public static String getConfiguredTemplate(String templatePath, String templateProperty) throws FileNotFoundException {
+  public static String getConfiguredTemplate(String templatePath, String templateProperty)
+      throws FileNotFoundException {
     String templateName = "";
     Properties migrationProperties = new Properties();
 

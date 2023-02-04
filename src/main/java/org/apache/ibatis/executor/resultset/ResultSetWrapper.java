@@ -89,14 +89,14 @@ public class ResultSetWrapper {
   }
 
   /**
-   * Gets the type handler to use when reading the result set.
-   * Tries to get from the TypeHandlerRegistry by searching for the property type.
-   * If not found it gets the column JDBC type and tries to get a handler for it.
+   * Gets the type handler to use when reading the result set. Tries to get from the TypeHandlerRegistry by searching
+   * for the property type. If not found it gets the column JDBC type and tries to get a handler for it.
    *
    * @param propertyType
    *          the property type
    * @param columnName
    *          the column name
+   *
    * @return the type handler
    */
   public TypeHandler<?> getTypeHandler(Class<?> propertyType, String columnName) {

@@ -23,7 +23,6 @@ import java.lang.annotation.Target;
 
 /**
  * The annotation that be grouping mapping definitions for constructor.
- *
  * <p>
  * <b>How to use:</b>
  *

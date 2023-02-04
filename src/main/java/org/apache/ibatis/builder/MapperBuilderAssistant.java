@@ -75,8 +75,8 @@ public class MapperBuilderAssistant extends BaseBuilder {
     }
 
     if (this.currentNamespace != null && !this.currentNamespace.equals(currentNamespace)) {
-      throw new BuilderException("Wrong namespace. Expected '"
-          + this.currentNamespace + "' but found '" + currentNamespace + "'.");
+      throw new BuilderException(
+          "Wrong namespace. Expected '" + this.currentNamespace + "' but found '" + currentNamespace + "'.");
     }
 
     this.currentNamespace = currentNamespace;
@@ -204,8 +204,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       resultMappings.addAll(extendedResultMappings);
     }
     ResultMap resultMap = new ResultMap.Builder(configuration, id, type, resultMappings, autoMapping)
-        .discriminator(discriminator)
-        .build();
+        .discriminator(discriminator).build();
     configuration.addResultMap(resultMap);
     return resultMap;
   }
@@ -340,6 +339,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
    *          the database id
    * @param lang
    *          the lang
+   *
    * @return the mapped statement
    */
   public MappedStatement addMappedStatement(String id, SqlSource sqlSource, StatementType statementType,
@@ -484,6 +484,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
    *          the type handler
    * @param flags
    *          the flags
+   *
    * @return the result mapping
    */
   public ResultMapping buildResultMapping(Class<?> resultType, String property, String column, Class<?> javaType,
@@ -499,7 +500,9 @@ public class MapperBuilderAssistant extends BaseBuilder {
    *
    * @param langClass
    *          the lang class
+   *
    * @return the language driver
+   *
    * @deprecated Use {@link Configuration#getLanguageDriver(Class)}
    */
   @Deprecated

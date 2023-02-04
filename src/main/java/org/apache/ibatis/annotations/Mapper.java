@@ -24,7 +24,6 @@ import java.lang.annotation.Target;
 
 /**
  * Marker interface for MyBatis mappers.
- *
  * <p>
  * <b>How to use:</b>
  *

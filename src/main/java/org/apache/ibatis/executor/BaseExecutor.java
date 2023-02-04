@@ -292,9 +292,12 @@ public abstract class BaseExecutor implements Executor {
    *
    * @param statement
    *          a current statement
+   *
    * @throws SQLException
    *           if a database access error occurs, this method is called on a closed <code>Statement</code>
+   *
    * @since 3.4.0
+   *
    * @see StatementUtil#applyTransactionTimeout(Statement, Integer, Integer)
    */
   protected void applyTransactionTimeout(Statement statement) throws SQLException {

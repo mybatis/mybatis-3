@@ -26,7 +26,6 @@ import org.apache.ibatis.mapping.StatementType;
 
 /**
  * The annotation that specify an SQL for retrieving a key value.
- *
  * <p>
  * <b>How to use:</b>
  *
@@ -95,13 +94,16 @@ public @interface SelectKey {
 
   /**
    * @return A database id that correspond this select key
+   *
    * @since 3.5.5
    */
   String databaseId() default "";
 
   /**
    * The container annotation for {@link SelectKey}.
+   *
    * @author Kazuki Shimizu
+   *
    * @since 3.5.5
    */
   @Documented

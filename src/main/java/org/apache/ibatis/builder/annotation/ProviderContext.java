@@ -21,6 +21,7 @@ import java.lang.reflect.Method;
  * The context object for sql provider method.
  *
  * @author Kazuki Shimizu
+ *
  * @since 3.4.5
  */
 public final class ProviderContext {
@@ -67,6 +68,7 @@ public final class ProviderContext {
    * Get a database id that provided from {@link org.apache.ibatis.mapping.DatabaseIdProvider}.
    *
    * @return A database id
+   *
    * @since 3.5.1
    */
   public String getDatabaseId() {

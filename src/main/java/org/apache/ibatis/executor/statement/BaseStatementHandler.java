@@ -131,7 +131,7 @@ public abstract class BaseStatementHandler implements StatementHandler {
         statement.close();
       }
     } catch (SQLException e) {
-      //ignore
+      // ignore
     }
   }
 

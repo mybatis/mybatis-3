@@ -27,10 +27,10 @@ import org.apache.ibatis.logging.LogFactory;
 /**
  * The 2nd level cache transactional buffer.
  * <p>
- * This class holds all cache entries that are to be added to the 2nd level cache during a Session.
- * Entries are sent to the cache when commit is called or discarded if the Session is rolled back.
- * Blocking cache support has been added. Therefore any get() that returns a cache miss
- * will be followed by a put() so any lock associated with the key can be released.
+ * This class holds all cache entries that are to be added to the 2nd level cache during a Session. Entries are sent to
+ * the cache when commit is called or discarded if the Session is rolled back. Blocking cache support has been added.
+ * Therefore any get() that returns a cache miss will be followed by a put() so any lock associated with the key can be
+ * released.
  *
  * @author Clinton Begin
  * @author Eduardo Macarron

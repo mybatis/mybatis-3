@@ -57,23 +57,20 @@ public interface Cache {
   /**
    * @param key
    *          The key
+   *
    * @return The object stored in the cache.
    */
   Object getObject(Object key);
 
   /**
-   * As of 3.3.0 this method is only called during a rollback
-   * for any previous value that was missing in the cache.
-   * This lets any blocking cache to release the lock that
-   * may have previously put on the key.
-   * A blocking cache puts a lock when a value is null
-   * and releases it when the value is back again.
-   * This way other threads will wait for the value to be
-   * available instead of hitting the database.
-   *
+   * As of 3.3.0 this method is only called during a rollback for any previous value that was missing in the cache. This
+   * lets any blocking cache to release the lock that may have previously put on the key. A blocking cache puts a lock
+   * when a value is null and releases it when the value is back again. This way other threads will wait for the value
+   * to be available instead of hitting the database.
    *
    * @param key
    *          The key
+   *
    * @return Not used
    */
   Object removeObject(Object key);

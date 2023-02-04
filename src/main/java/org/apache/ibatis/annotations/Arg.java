@@ -30,6 +30,7 @@ import org.apache.ibatis.type.UnknownTypeHandler;
  * The annotation that specify a mapping definition for the constructor argument.
  *
  * @see ConstructorArgs
+ *
  * @author Clinton Begin
  */
 @Documented
@@ -91,6 +92,7 @@ public @interface Arg {
    * Returns the parameter name for applying this mapping.
    *
    * @return the parameter name
+   *
    * @since 3.4.3
    */
   String name() default "";
@@ -99,6 +101,7 @@ public @interface Arg {
    * Returns the column prefix that use when applying {@link #resultMap()}.
    *
    * @return the column prefix
+   *
    * @since 3.5.0
    */
   String columnPrefix() default "";

@@ -23,7 +23,6 @@ import java.lang.annotation.Target;
 
 /**
  * The annotation that specify result map names to use.
- *
  * <p>
  * <b>How to use:</b><br>
  * Mapper interface:
@@ -39,7 +38,9 @@ import java.lang.annotation.Target;
  *   User selectByEmail(String email);
  * }
  * </pre>
+ *
  * Mapper XML:
+ *
  * <pre>{@code
  * <mapper namespace="com.example.mapper.UserMapper">
  *   <resultMap id="userMap" type="com.example.model.User">

@@ -113,6 +113,7 @@ public class XMLIncludeTransformer {
    *          Include node instance
    * @param inheritedVariablesContext
    *          Current context used for replace variables in new variables values
+   *
    * @return variables context from include instance (no inherited values)
    */
   private Properties getVariablesContext(Node node, Properties inheritedVariablesContext) {

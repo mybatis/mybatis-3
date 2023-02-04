@@ -17,6 +17,7 @@ package org.apache.ibatis.cache;
 
 /**
  * @author Clinton Begin
+ *
  * @deprecated Since 3.5.3, This class never used and will be removed future version.
  */
 @Deprecated

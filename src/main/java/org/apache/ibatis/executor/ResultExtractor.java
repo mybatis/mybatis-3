@@ -51,7 +51,7 @@ public class ResultExtractor {
         }
         value = array;
       } else {
-        value = list.toArray((Object[])array);
+        value = list.toArray((Object[]) array);
       }
     } else {
       if (list != null && list.size() > 1) {
