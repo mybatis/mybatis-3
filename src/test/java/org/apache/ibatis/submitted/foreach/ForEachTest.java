@@ -49,7 +49,7 @@ class ForEachTest {
 
     // populate in-memory database
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/foreach/CreateDB.sql");
+        "org/apache/ibatis/submitted/foreach/CreateDB.sql");
   }
 
   @Test
@@ -118,8 +118,8 @@ class ForEachTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       when(() -> mapper.typoInItemProperty(Collections.singletonList(new User())));
-      then(caughtException()).isInstanceOf(PersistenceException.class)
-        .hasMessageContaining("There is no getter for property named 'idd' in 'class org.apache.ibatis.submitted.foreach.User'");
+      then(caughtException()).isInstanceOf(PersistenceException.class).hasMessageContaining(
+          "There is no getter for property named 'idd' in 'class org.apache.ibatis.submitted.foreach.User'");
     }
   }
 
@@ -148,7 +148,7 @@ class ForEachTest {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-      "org/apache/ibatis/submitted/foreach/CreateDB.sql");
+        "org/apache/ibatis/submitted/foreach/CreateDB.sql");
 
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);

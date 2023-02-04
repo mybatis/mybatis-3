@@ -31,7 +31,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * See issue #135
- *
  */
 class MapTypeHandlerTest {
 

@@ -38,7 +38,7 @@ class ExtendTest {
     }
 
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/extend/CreateDB.sql");
+        "org/apache/ibatis/submitted/extend/CreateDB.sql");
   }
 
   @Test

@@ -53,8 +53,8 @@ class InlineCollectionWithDotTest {
   }
 
   /*
-   * Load an element with an element with and element with a value. Expect that this is
-   * possible bij using an inline 'association' map.
+   * Load an element with an element with and element with a value. Expect that this is possible bij using an inline
+   * 'association' map.
    */
   @Test
   void selectElementValueInContainerUsingInline() throws Exception {
@@ -66,8 +66,8 @@ class InlineCollectionWithDotTest {
   }
 
   /*
-   * Load an element with an element with and element with a value. Expect that this is
-   * possible bij using an sub-'association' map.
+   * Load an element with an element with and element with a value. Expect that this is possible bij using an
+   * sub-'association' map.
    */
   @Test
   void selectElementValueInContainerUsingSubMap() throws Exception {

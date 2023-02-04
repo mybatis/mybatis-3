@@ -17,7 +17,6 @@ package org.apache.ibatis.submitted.resultmapwithassociationstest;
 
 /**
  * @author Herman Bovens
- *
  */
 public class Address {
   private int id;

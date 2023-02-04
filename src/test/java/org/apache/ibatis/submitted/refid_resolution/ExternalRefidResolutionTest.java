@@ -24,7 +24,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * @see <a href="https://github.com/mybatis/old-google-code-issues/issues/291>Issue 291</a>
- *
  */
 class ExternalRefidResolutionTest {
   @Test

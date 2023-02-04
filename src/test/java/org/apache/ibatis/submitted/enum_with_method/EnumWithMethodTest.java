@@ -28,40 +28,40 @@ import org.junit.jupiter.api.Test;
 
 class EnumWithMethodTest {
 
-    private static SqlSessionFactory sqlSessionFactory;
+  private static SqlSessionFactory sqlSessionFactory;
 
-    @BeforeAll
-    static void setUp() throws Exception {
-        // create an SqlSessionFactory
-        try (Reader reader = Resources
-                .getResourceAsReader("org/apache/ibatis/submitted/enum_with_method/mybatis-config.xml")) {
-            sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-        }
-
-        // populate in-memory database
-        BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-                "org/apache/ibatis/submitted/enum_with_method/CreateDB.sql");
+  @BeforeAll
+  static void setUp() throws Exception {
+    // create an SqlSessionFactory
+    try (Reader reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/enum_with_method/mybatis-config.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
-    @Test
-    void shouldGetAUser() {
-        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-            Mapper mapper = sqlSession.getMapper(Mapper.class);
-            User user = mapper.getUser(1);
-            Assertions.assertEquals("User1", user.getName());
-        }
-    }
+    // populate in-memory database
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/enum_with_method/CreateDB.sql");
+  }
 
-    @Test
-    void shouldInsertAUser() {
-        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-            Mapper mapper = sqlSession.getMapper(Mapper.class);
-            User user = new User();
-            user.setId(2);
-            user.setName("User2");
-            user.setCur(Currency.Dollar);
-            mapper.insertUser(user);
-        }
+  @Test
+  void shouldGetAUser() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      User user = mapper.getUser(1);
+      Assertions.assertEquals("User1", user.getName());
     }
+  }
+
+  @Test
+  void shouldInsertAUser() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      User user = new User();
+      user.setId(2);
+      user.setName("User2");
+      user.setCur(Currency.Dollar);
+      mapper.insertUser(user);
+    }
+  }
 
 }

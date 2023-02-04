@@ -46,7 +46,7 @@ class InvalidNamedConstructorArgsTest {
 
     // populate in-memory database
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/named_constructor_args/CreateDB.sql");
+        "org/apache/ibatis/submitted/named_constructor_args/CreateDB.sql");
   }
 
   interface NoMatchingConstructorMapper {

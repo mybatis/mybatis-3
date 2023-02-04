@@ -41,7 +41,7 @@ class DynSqlTest {
     }
 
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/dynsql2/CreateDB.sql");
+        "org/apache/ibatis/submitted/dynsql2/CreateDB.sql");
   }
 
   @Test
@@ -62,7 +62,8 @@ class DynSqlTest {
       Parameter parameter = new Parameter();
       parameter.setNames(names);
 
-      List<Map<String, Object>> answer = sqlSession.selectList("org.apache.ibatis.submitted.dynsql2.dynamicSelectWithTypeHandler", parameter);
+      List<Map<String, Object>> answer = sqlSession
+          .selectList("org.apache.ibatis.submitted.dynsql2.dynamicSelectWithTypeHandler", parameter);
 
       assertEquals(2, answer.size());
     }

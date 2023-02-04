@@ -36,7 +36,8 @@ class XmlMapperTest {
     Properties props = new Properties();
     props.setProperty(PropertyParser.KEY_ENABLE_DEFAULT_VALUE, "true");
 
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/global_variables_defaults/mybatis-config.xml");
+    Reader reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/global_variables_defaults/mybatis-config.xml");
     SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, props);
     Configuration configuration = factory.getConfiguration();
     configuration.addMapper(XmlMapper.class);
@@ -63,7 +64,8 @@ class XmlMapperTest {
     props.setProperty("cache.name", "custom");
     props.setProperty("select.columns", "'5555'");
 
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/global_variables_defaults/mybatis-config.xml");
+    Reader reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/global_variables_defaults/mybatis-config.xml");
     SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, props);
     Configuration configuration = factory.getConfiguration();
     configuration.addMapper(XmlMapper.class);

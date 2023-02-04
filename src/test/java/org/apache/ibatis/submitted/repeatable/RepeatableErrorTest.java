@@ -48,8 +48,8 @@ class RepeatableErrorTest {
       Assertions.assertTrue(message.contains("'@org.apache.ibatis.annotations.Select("));
       Assertions.assertTrue(message.contains("'@org.apache.ibatis.annotations.SelectProvider("));
       Assertions.assertTrue(message.matches(".*databaseId=[\"]*,.*"));
-      Assertions.assertTrue(message.endsWith(
-          "'org.apache.ibatis.submitted.repeatable.BothSelectAndSelectProviderMapper.getUser'."));
+      Assertions.assertTrue(
+          message.endsWith("'org.apache.ibatis.submitted.repeatable.BothSelectAndSelectProviderMapper.getUser'."));
     }
   }
 
@@ -57,8 +57,8 @@ class RepeatableErrorTest {
   void bothSpecifySelectContainerAndSelectProviderContainer() throws IOException {
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/repeatable/mybatis-config.xml")) {
       SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader, "development-derby");
-      BuilderException exception = Assertions.assertThrows(BuilderException.class, () ->
-          sqlSessionFactory.getConfiguration().addMapper(BothSelectContainerAndSelectProviderContainerMapper.class));
+      BuilderException exception = Assertions.assertThrows(BuilderException.class, () -> sqlSessionFactory
+          .getConfiguration().addMapper(BothSelectContainerAndSelectProviderContainerMapper.class));
       String message = exception.getMessage();
       Assertions.assertTrue(message.startsWith("Detected conflicting annotations "));
       Assertions.assertTrue(message.contains("'@org.apache.ibatis.annotations.Select("));

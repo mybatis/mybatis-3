@@ -34,7 +34,8 @@ class NestedResultHandlerTest {
   @BeforeAll
   static void setUp() throws Exception {
     // create a SqlSessionFactory
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/nestedresulthandler/mybatis-config.xml")) {
+    try (Reader reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/nestedresulthandler/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
@@ -95,9 +96,8 @@ class NestedResultHandlerTest {
   }
 
   /**
-   * Fix bug caused by issue #542, see new issue #22 on github If we order by a
-   * nested result map attribute we can miss some records and end up with
-   * duplicates instead.
+   * Fix bug caused by issue #542, see new issue #22 on github If we order by a nested result map attribute we can miss
+   * some records and end up with duplicates instead.
    */
   @Test
   void testGetPersonOrderedByItem() {

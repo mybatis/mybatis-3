@@ -17,8 +17,7 @@ package org.apache.ibatis.submitted.ognl_enum;
 
 public class Person {
   public enum Type {
-    EMPLOYEE,
-    DIRECTOR
+    EMPLOYEE, DIRECTOR
   }
 
   private Long id;

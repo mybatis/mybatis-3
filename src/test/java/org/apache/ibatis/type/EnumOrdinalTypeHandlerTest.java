@@ -25,8 +25,7 @@ import org.junit.jupiter.api.Test;
 class EnumOrdinalTypeHandlerTest extends BaseTypeHandlerTest {
 
   enum MyEnum {
-    ONE,
-    TWO
+    ONE, TWO
   }
 
   private static final TypeHandler<MyEnum> TYPE_HANDLER = new EnumOrdinalTypeHandler<MyEnum>(MyEnum.class);

@@ -222,8 +222,7 @@ class TypeHandlerRegistryTest {
   }
 
   enum TestEnum {
-    ONE,
-    TWO
+    ONE, TWO
   }
 
   @Test

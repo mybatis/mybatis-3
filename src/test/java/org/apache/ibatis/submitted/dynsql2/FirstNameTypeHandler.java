@@ -23,26 +23,22 @@ import org.apache.ibatis.type.TypeHandler;
 public class FirstNameTypeHandler implements TypeHandler {
 
   @Override
-  public Object getResult(CallableStatement cs, int columnIndex)
-      throws SQLException {
+  public Object getResult(CallableStatement cs, int columnIndex) throws SQLException {
     return cs.getString(columnIndex);
   }
 
   @Override
-  public Object getResult(ResultSet rs, String columnName)
-      throws SQLException {
+  public Object getResult(ResultSet rs, String columnName) throws SQLException {
     return rs.getString(columnName);
   }
 
   @Override
-  public Object getResult(ResultSet rs, int columnIndex)
-      throws SQLException {
+  public Object getResult(ResultSet rs, int columnIndex) throws SQLException {
     return rs.getString(columnIndex);
   }
 
   @Override
-  public void setParameter(PreparedStatement ps, int i, Object parameter,
-                           JdbcType jdbcType) throws SQLException {
+  public void setParameter(PreparedStatement ps, int i, Object parameter, JdbcType jdbcType) throws SQLException {
     if (parameter == null) {
       ps.setNull(i, Types.VARCHAR);
     } else {

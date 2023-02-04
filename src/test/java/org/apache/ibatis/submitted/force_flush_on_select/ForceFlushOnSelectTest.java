@@ -39,12 +39,13 @@ class ForceFlushOnSelectTest {
 
   @BeforeEach
   void initDatabase() throws Exception {
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/force_flush_on_select/ibatisConfig.xml")) {
+    try (Reader reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/force_flush_on_select/ibatisConfig.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/force_flush_on_select/CreateDB.sql");
+        "org/apache/ibatis/submitted/force_flush_on_select/CreateDB.sql");
   }
 
   @Test

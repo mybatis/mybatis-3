@@ -34,6 +34,7 @@ import org.mockito.Mockito;
  * Tests for support the {@code java.util.Optional} as return type of mapper method.
  *
  * @since 3.5.0
+ *
  * @author Kazuki Shimizu
  */
 class OptionalOnMapperMethodTest {

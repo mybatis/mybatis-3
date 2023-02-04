@@ -42,7 +42,8 @@ class JdbcTransactionTest {
     DataSource ds = mock(DataSource.class);
     when(ds.getConnection()).thenReturn(con);
 
-    JdbcTransaction transaction = new JdbcTransaction(ds, TransactionIsolationLevel.NONE, desiredAutoCommit, skipSetAutoCommitOnClose);
+    JdbcTransaction transaction = new JdbcTransaction(ds, TransactionIsolationLevel.NONE, desiredAutoCommit,
+        skipSetAutoCommitOnClose);
     transaction.getConnection();
     transaction.commit();
     transaction.close();

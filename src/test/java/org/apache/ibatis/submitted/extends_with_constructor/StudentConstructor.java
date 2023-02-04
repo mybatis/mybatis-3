@@ -20,8 +20,7 @@ import java.util.List;
 
 public class StudentConstructor {
   public enum Constructor {
-    ID,
-    ID_NAME
+    ID, ID_NAME
   }
 
   private List<Constructor> constructors = new LinkedList<>();

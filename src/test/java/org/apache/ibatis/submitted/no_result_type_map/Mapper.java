@@ -19,7 +19,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
-public interface Mapper extends ParentMapper<User>{
+public interface Mapper extends ParentMapper<User> {
 
   User getUser(@Param("id") Integer id);
 

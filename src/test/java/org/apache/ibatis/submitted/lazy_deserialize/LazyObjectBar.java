@@ -19,6 +19,7 @@ import java.io.Serializable;
 
 /**
  * @since 2011-04-06T10:57:41+0200
+ *
  * @author Franta Mejta
  */
 public class LazyObjectBar implements Serializable {

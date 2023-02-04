@@ -33,7 +33,8 @@ class NestedResultHandlerGh1551Test {
   @BeforeAll
   static void setUp() throws Exception {
     // create a SqlSessionFactory
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/nestedresulthandler_gh1551/mybatis-config.xml")) {
+    try (Reader reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/nestedresulthandler_gh1551/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
@@ -74,8 +75,10 @@ class NestedResultHandlerGh1551Test {
     sqlSessionFactory.getConfiguration().setUseColumnLabel(false);
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       ProductMapper mapper = sqlSession.getMapper(ProductMapper.class);
-      PersistenceException exception = Assertions.assertThrows(PersistenceException.class, () -> mapper.selectAllInfo("P001"));
-      Assertions.assertTrue(exception.getMessage().contains("Error attempting to get column 'ID' from result set.  Cause: java.sql.SQLSyntaxErrorException: incompatible data type in conversion: from SQL type VARCHAR to java.lang.Integer, value: 10000000000000000000000000000001"));
+      PersistenceException exception = Assertions.assertThrows(PersistenceException.class,
+          () -> mapper.selectAllInfo("P001"));
+      Assertions.assertTrue(exception.getMessage().contains(
+          "Error attempting to get column 'ID' from result set.  Cause: java.sql.SQLSyntaxErrorException: incompatible data type in conversion: from SQL type VARCHAR to java.lang.Integer, value: 10000000000000000000000000000001"));
     }
   }
 

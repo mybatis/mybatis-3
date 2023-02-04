@@ -24,7 +24,6 @@ import org.apache.ibatis.executor.result.ResultMapException;
 import org.junit.jupiter.api.Test;
 
 /**
- *
  * @author Eduardo Macarron
  */
 class MonthTypeHandlerTest extends BaseTypeHandlerTest {

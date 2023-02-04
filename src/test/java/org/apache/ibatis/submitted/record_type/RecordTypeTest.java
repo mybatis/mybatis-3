@@ -71,7 +71,7 @@ class RecordTypeTest {
     }
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       RecordTypeMapper mapper = sqlSession.getMapper(RecordTypeMapper.class);
-      Property prop  = mapper.selectProperty(2);
+      Property prop = mapper.selectProperty(2);
       assertEquals("Val2!!", prop.value());
       assertEquals("https://mybatis.org", prop.URL());
     }

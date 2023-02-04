@@ -98,12 +98,15 @@ public interface Mapper {
     public static String getUserUsingProvider() {
       return "SELECT id, name, 'HSQL' as databaseName FROM users WHERE id = #{id}";
     }
+
     public static String insertUserUsingProvider() {
       return "INSERT INTO users (id, name) VALUES(#{id}, #{name} || ' HSQL')";
     }
+
     public static String updateUserNameUsingProvider() {
       return "UPDATE users SET name = name || ' HSQL' WHERE id = #{id}";
     }
+
     public static String delete() {
       return "DELETE FROM users WHERE name LIKE '%HSQL%'";
     }
@@ -113,12 +116,15 @@ public interface Mapper {
     public static String getUserUsingProvider() {
       return "SELECT id, name, 'DERBY' as databaseName FROM users WHERE id = #{id}";
     }
+
     public static String insertUserUsingProvider() {
       return "INSERT INTO users (id, name) VALUES(#{id}, #{name} || ' DERBY')";
     }
+
     public static String updateUserNameUsingProvider() {
       return "UPDATE users SET name = name || ' DERBY' WHERE id = #{id}";
     }
+
     public static String delete() {
       return "DELETE FROM users WHERE name LIKE '%DERBY%'";
     }
@@ -132,9 +138,11 @@ public interface Mapper {
     public static String insertUserUsingProvider() {
       return "INSERT INTO users (id, name) VALUES(#{id}, #{name} || ' DEFAULT')";
     }
+
     public static String updateUserNameUsingProvider() {
       return "UPDATE users SET name = name || ' DEFAULT' WHERE id = #{id}";
     }
+
     public static String delete() {
       return "DELETE FROM users WHERE name LIKE '%DEFAULT%'";
     }

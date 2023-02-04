@@ -45,16 +45,14 @@ public class Binome<T, U> {
 
   @Override
   public int hashCode() {
-    return (one != null ? one.hashCode() : 0)
-        + (two != null ? two.hashCode() : 0);
+    return (one != null ? one.hashCode() : 0) + (two != null ? two.hashCode() : 0);
   }
 
   @Override
   public boolean equals(final Object obj) {
     if (obj instanceof Binome<?, ?>) {
       Binome<?, ?> bin = (Binome<?, ?>) obj;
-      return one != null && one.equals(bin.getOne()) && two != null
-          && two.equals(bin.getTwo());
+      return one != null && one.equals(bin.getOne()) && two != null && two.equals(bin.getTwo());
     }
     return super.equals(obj);
   }

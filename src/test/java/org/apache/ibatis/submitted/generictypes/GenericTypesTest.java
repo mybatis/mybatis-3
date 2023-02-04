@@ -37,7 +37,7 @@ class GenericTypesTest {
     }
 
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/generictypes/CreateDB.sql");
+        "org/apache/ibatis/submitted/generictypes/CreateDB.sql");
   }
 
   @Test

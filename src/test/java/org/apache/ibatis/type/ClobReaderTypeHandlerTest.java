@@ -44,6 +44,7 @@ import org.mockito.Mock;
  * Tests for {@link ClobReaderTypeHandler}.
  *
  * @since 3.4.0
+ *
  * @author Kazuki Shimizu
  */
 class ClobReaderTypeHandlerTest extends BaseTypeHandlerTest {

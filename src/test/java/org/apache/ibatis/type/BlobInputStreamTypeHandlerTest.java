@@ -42,6 +42,7 @@ import org.mockito.Mock;
  * Tests for {@link BlobInputStreamTypeHandler}.
  *
  * @since 3.4.0
+ *
  * @author Kazuki Shimizu
  */
 class BlobInputStreamTypeHandlerTest extends BaseTypeHandlerTest {
