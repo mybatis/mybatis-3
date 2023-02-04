@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -60,7 +60,8 @@ class SqlRunnerTest extends BaseDataTest {
     try (Connection connection = ds.getConnection()) {
       SqlRunner exec = new SqlRunner(connection);
       exec.setUseGeneratedKeySupport(true);
-      int id = exec.insert("INSERT INTO author (username, password, email, bio) VALUES (?,?,?,?)", "someone", "******", "someone@apache.org", Null.LONGVARCHAR);
+      int id = exec.insert("INSERT INTO author (username, password, email, bio) VALUES (?,?,?,?)", "someone", "******",
+          "someone@apache.org", Null.LONGVARCHAR);
       Map<String, Object> row = exec.selectOne("SELECT * FROM author WHERE username = ?", "someone");
       connection.rollback();
       assertTrue(SqlRunner.NO_GENERATED_KEY != id);

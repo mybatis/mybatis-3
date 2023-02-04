@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ import org.junit.jupiter.api.Test;
  * Unit tests for {@link ResolverUtil}.
  *
  * @author Pi Chen
+ *
  * @since 3.5.2
  */
 
@@ -73,10 +74,10 @@ class ResolverUtilTest {
     ResolverUtil<VFS> resolverUtil = new ResolverUtil<>();
     resolverUtil.findImplementations(VFS.class, "org.apache.ibatis.io");
     Set<Class<? extends VFS>> classSets = resolverUtil.getClasses();
-    //org.apache.ibatis.io.VFS
-    //org.apache.ibatis.io.DefaultVFS
-    //org.apache.ibatis.io.JBoss6VFS
-    assertEquals(classSets.size(), 3); //fail if add a new VFS implementation in this package!!!
+    // org.apache.ibatis.io.VFS
+    // org.apache.ibatis.io.DefaultVFS
+    // org.apache.ibatis.io.JBoss6VFS
+    assertEquals(classSets.size(), 3); // fail if add a new VFS implementation in this package!!!
     classSets.forEach(c -> assertTrue(VFS.class.isAssignableFrom(c)));
   }
 
@@ -92,7 +93,7 @@ class ResolverUtilTest {
     ResolverUtil<Object> resolverUtil = new ResolverUtil<>();
     resolverUtil.findAnnotated(CacheNamespace.class, this.getClass().getPackage().getName());
     Set<Class<?>> classSets = resolverUtil.getClasses();
-    //org.apache.ibatis.io.ResolverUtilTest.TestMapper
+    // org.apache.ibatis.io.ResolverUtilTest.TestMapper
     assertEquals(classSets.size(), 1);
     classSets.forEach(c -> assertNotNull(c.getAnnotation(CacheNamespace.class)));
   }
@@ -102,9 +103,9 @@ class ResolverUtilTest {
     ResolverUtil<VFS> resolverUtil = new ResolverUtil<>();
     resolverUtil.find(new ResolverUtil.IsA(VFS.class), "org.apache.ibatis.io");
     Set<Class<? extends VFS>> classSets = resolverUtil.getClasses();
-    //org.apache.ibatis.io.VFS
-    //org.apache.ibatis.io.DefaultVFS
-    //org.apache.ibatis.io.JBoss6VFS
+    // org.apache.ibatis.io.VFS
+    // org.apache.ibatis.io.DefaultVFS
+    // org.apache.ibatis.io.JBoss6VFS
     assertEquals(classSets.size(), 3);
     classSets.forEach(c -> assertTrue(VFS.class.isAssignableFrom(c)));
   }
@@ -142,10 +143,9 @@ class ResolverUtilTest {
     assertTrue(annotatedWith.toString().contains("@" + CacheNamespace.class.getSimpleName()));
   }
 
-
   @CacheNamespace(readWrite = false)
   private interface TestMapper {
-    //test ResolverUtil.findAnnotated method
+    // test ResolverUtil.findAnnotated method
   }
 
 }

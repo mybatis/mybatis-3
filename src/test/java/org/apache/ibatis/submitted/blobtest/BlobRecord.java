@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,31 +16,31 @@
 package org.apache.ibatis.submitted.blobtest;
 
 public class BlobRecord {
-    private int id;
-    private byte[] blob;
+  private int id;
+  private byte[] blob;
 
-    public BlobRecord(int id, byte[] blob) {
-        super();
-        this.id = id;
-        this.blob = blob;
-    }
+  public BlobRecord(int id, byte[] blob) {
+    super();
+    this.id = id;
+    this.blob = blob;
+  }
 
-    public BlobRecord(int id, Byte[] blob) {
-        super();
-        this.id = id;
-        final byte[] newBytes = new byte[blob.length];
-        for (int i = 0; i < blob.length; i++) {
-          Byte b = blob[i];
-          newBytes[i] = b;
-        }
-        this.blob = newBytes;
+  public BlobRecord(int id, Byte[] blob) {
+    super();
+    this.id = id;
+    final byte[] newBytes = new byte[blob.length];
+    for (int i = 0; i < blob.length; i++) {
+      Byte b = blob[i];
+      newBytes[i] = b;
     }
+    this.blob = newBytes;
+  }
 
-    public int getId() {
-        return id;
-    }
+  public int getId() {
+    return id;
+  }
 
-    public byte[] getBlob() {
-        return blob;
-    }
+  public byte[] getBlob() {
+    return blob;
+  }
 }

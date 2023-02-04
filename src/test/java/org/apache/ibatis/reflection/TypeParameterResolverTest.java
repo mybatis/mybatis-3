@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -420,8 +420,14 @@ class TypeParameterResolverTest {
     @SuppressWarnings("unused")
     abstract class A<S> {
       protected S id;
-      public S getId() { return this.id;}
-      public void setId(S id) {this.id = id;}
+
+      public S getId() {
+        return this.id;
+      }
+
+      public void setId(S id) {
+        this.id = id;
+      }
     }
     abstract class B<T> extends A<T> {}
     abstract class C<U> extends B<U> {}

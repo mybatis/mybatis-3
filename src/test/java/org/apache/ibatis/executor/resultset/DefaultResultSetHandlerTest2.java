@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -136,7 +136,7 @@ class DefaultResultSetHandlerTest2 {
     final BoundSql boundSql = null;
     final RowBounds rowBounds = new RowBounds(5, 1);
     final DefaultResultSetHandler resultSetHandler = new DefaultResultSetHandler(executor, ms, parameterHandler,
-      resultHandler, boundSql, rowBounds);
+        resultHandler, boundSql, rowBounds);
 
     when(stmt.getResultSet()).thenReturn(rs);
     when(rsmd.getColumnCount()).thenReturn(2);

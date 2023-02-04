@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -28,14 +28,12 @@ import java.util.Date;
 public class TimeOnlyTypeHandler extends BaseTypeHandler<Date> {
 
   @Override
-  public void setNonNullParameter(PreparedStatement ps, int i, Date parameter, JdbcType jdbcType)
-      throws SQLException {
+  public void setNonNullParameter(PreparedStatement ps, int i, Date parameter, JdbcType jdbcType) throws SQLException {
     ps.setTime(i, new Time(parameter.getTime()));
   }
 
   @Override
-  public Date getNullableResult(ResultSet rs, String columnName)
-      throws SQLException {
+  public Date getNullableResult(ResultSet rs, String columnName) throws SQLException {
     Time sqlTime = rs.getTime(columnName);
     if (sqlTime != null) {
       return new Date(sqlTime.getTime());
@@ -44,8 +42,7 @@ public class TimeOnlyTypeHandler extends BaseTypeHandler<Date> {
   }
 
   @Override
-  public Date getNullableResult(ResultSet rs, int columnIndex)
-      throws SQLException {
+  public Date getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
     Time sqlTime = rs.getTime(columnIndex);
     if (sqlTime != null) {
       return new Date(sqlTime.getTime());
@@ -54,8 +51,7 @@ public class TimeOnlyTypeHandler extends BaseTypeHandler<Date> {
   }
 
   @Override
-  public Date getNullableResult(CallableStatement cs, int columnIndex)
-      throws SQLException {
+  public Date getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
     Time sqlTime = cs.getTime(columnIndex);
     if (sqlTime != null) {
       return new Date(sqlTime.getTime());

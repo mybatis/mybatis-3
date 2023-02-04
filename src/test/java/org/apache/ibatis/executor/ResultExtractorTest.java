@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -72,7 +72,7 @@ class ResultExtractorTest {
     final Object result = resultExtractor.extractObjectFromList(list, Integer[].class);
     assertThat(result).isInstanceOf(Integer[].class);
     final Integer[] resultArray = (Integer[]) result;
-    assertThat(resultArray).isEqualTo(new Integer[]{1, 2, 3});
+    assertThat(resultArray).isEqualTo(new Integer[] { 1, 2, 3 });
   }
 
   @Test

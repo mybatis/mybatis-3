@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ class BoundSqlTest {
     bean.id = 1;
     boundSql.setAdditionalParameter("person", bean);
 
-    String[] array = new String[] {"User1", "User2"};
+    String[] array = new String[] { "User1", "User2" };
     boundSql.setAdditionalParameter("array", array);
 
     assertFalse(boundSql.hasAdditionalParameter("pet"));
@@ -48,11 +48,13 @@ class BoundSqlTest {
 
     assertTrue(boundSql.hasAdditionalParameter("map"));
     assertTrue(boundSql.hasAdditionalParameter("map.key1"));
-    assertTrue(boundSql.hasAdditionalParameter("map.key2"), "should return true even if the child property does not exists.");
+    assertTrue(boundSql.hasAdditionalParameter("map.key2"),
+        "should return true even if the child property does not exists.");
 
     assertTrue(boundSql.hasAdditionalParameter("person"));
     assertTrue(boundSql.hasAdditionalParameter("person.id"));
-    assertTrue(boundSql.hasAdditionalParameter("person.name"), "should return true even if the child property does not exists.");
+    assertTrue(boundSql.hasAdditionalParameter("person.name"),
+        "should return true even if the child property does not exists.");
 
     assertTrue(boundSql.hasAdditionalParameter("array[0]"));
     assertTrue(boundSql.hasAdditionalParameter("array[99]"), "should return true even if the element does not exists.");

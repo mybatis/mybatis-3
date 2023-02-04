@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -111,7 +111,7 @@ class BindingTest {
   void shouldFindPostsInArray() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       BoundAuthorMapper mapper = session.getMapper(BoundAuthorMapper.class);
-      Integer[] params = new Integer[]{1, 3, 5};
+      Integer[] params = new Integer[] { 1, 3, 5 };
       List<Post> posts = mapper.findPostsInArray(params);
       assertEquals(3, posts.size());
       session.rollback();
@@ -211,9 +211,9 @@ class BindingTest {
   void shouldExecuteBoundSelectMapOfBlogsById() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
-      Map<Integer,Blog> blogs = mapper.selectBlogsAsMapById();
+      Map<Integer, Blog> blogs = mapper.selectBlogsAsMapById();
       assertEquals(2, blogs.size());
-      for(Map.Entry<Integer,Blog> blogEntry : blogs.entrySet()) {
+      for (Map.Entry<Integer, Blog> blogEntry : blogs.entrySet()) {
         assertEquals(blogEntry.getKey(), (Integer) blogEntry.getValue().getId());
       }
     }
@@ -252,14 +252,14 @@ class BindingTest {
   void shouldExecuteMultipleBoundSelectMapOfBlogsByIdInSameSessionWithoutClearingLocalCache() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
-      Map<Integer,Blog> blogs = mapper.selectBlogsAsMapById();
-      Map<Integer,Blog> moreBlogs = mapper.selectBlogsAsMapById();
+      Map<Integer, Blog> blogs = mapper.selectBlogsAsMapById();
+      Map<Integer, Blog> moreBlogs = mapper.selectBlogsAsMapById();
       assertEquals(2, blogs.size());
       assertEquals(2, moreBlogs.size());
-      for(Map.Entry<Integer,Blog> blogEntry : blogs.entrySet()) {
+      for (Map.Entry<Integer, Blog> blogEntry : blogs.entrySet()) {
         assertEquals(blogEntry.getKey(), (Integer) blogEntry.getValue().getId());
       }
-      for(Map.Entry<Integer,Blog> blogEntry : moreBlogs.entrySet()) {
+      for (Map.Entry<Integer, Blog> blogEntry : moreBlogs.entrySet()) {
         assertEquals(blogEntry.getKey(), (Integer) blogEntry.getValue().getId());
       }
     }
@@ -267,20 +267,20 @@ class BindingTest {
 
   @Test
   void shouldExecuteMultipleBoundSelectMapOfBlogsByIdBetweenTwoSessionsWithGlobalCacheEnabled() {
-    Map<Integer,Blog> blogs;
+    Map<Integer, Blog> blogs;
     try (SqlSession session = sqlSessionFactory.openSession()) {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
       blogs = mapper.selectBlogsAsMapById();
     }
     try (SqlSession session = sqlSessionFactory.openSession()) {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
-      Map<Integer,Blog> moreBlogs = mapper.selectBlogsAsMapById();
+      Map<Integer, Blog> moreBlogs = mapper.selectBlogsAsMapById();
       assertEquals(2, blogs.size());
       assertEquals(2, moreBlogs.size());
-      for(Map.Entry<Integer,Blog> blogEntry : blogs.entrySet()) {
+      for (Map.Entry<Integer, Blog> blogEntry : blogs.entrySet()) {
         assertEquals(blogEntry.getKey(), (Integer) blogEntry.getValue().getId());
       }
-      for(Map.Entry<Integer,Blog> blogEntry : moreBlogs.entrySet()) {
+      for (Map.Entry<Integer, Blog> blogEntry : moreBlogs.entrySet()) {
         assertEquals(blogEntry.getKey(), (Integer) blogEntry.getValue().getId());
       }
     }
@@ -308,7 +308,7 @@ class BindingTest {
   void shouldExecuteBoundSelectListOfBlogsAsMaps() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
-      List<Map<String,Object>> blogs = mapper.selectBlogsAsMaps();
+      List<Map<String, Object>> blogs = mapper.selectBlogsAsMaps();
       assertEquals(2, blogs.size());
     }
   }
@@ -317,7 +317,7 @@ class BindingTest {
   void shouldSelectListOfPostsLike() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
-      List<Post> posts = mapper.selectPostsLike(new RowBounds(1,1),"%a%");
+      List<Post> posts = mapper.selectPostsLike(new RowBounds(1, 1), "%a%");
       assertEquals(1, posts.size());
     }
   }
@@ -326,7 +326,7 @@ class BindingTest {
   void shouldSelectListOfPostsLikeTwoParameters() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
-      List<Post> posts = mapper.selectPostsLikeSubjectAndBody(new RowBounds(1,1),"%a%","%a%");
+      List<Post> posts = mapper.selectPostsLikeSubjectAndBody(new RowBounds(1, 1), "%a%", "%a%");
       assertEquals(1, posts.size());
     }
   }
@@ -417,7 +417,7 @@ class BindingTest {
   void shouldSelectOneBlogAsMap() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
-      Map<String,Object> blog = mapper.selectBlogAsMap(new HashMap<String, Object>() {
+      Map<String, Object> blog = mapper.selectBlogAsMap(new HashMap<String, Object>() {
         {
           put("id", 1);
         }
@@ -670,7 +670,7 @@ class BindingTest {
   void executeWithCursorAndRowBounds() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
-      try (Cursor<Blog> blogs = mapper.openRangeBlogs(new RowBounds(1, 1)) ) {
+      try (Cursor<Blog> blogs = mapper.openRangeBlogs(new RowBounds(1, 1))) {
         Iterator<Blog> blogIterator = blogs.iterator();
         Blog blog = blogIterator.next();
         assertEquals(2, blog.getId());
@@ -779,4 +779,3 @@ class BindingTest {
   }
 
 }
-

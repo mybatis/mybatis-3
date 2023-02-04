@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -27,15 +27,15 @@ import org.apache.ibatis.session.RowBounds;
 @CacheNamespace(readWrite = false)
 public interface BoundAuthorMapper {
 
-  //======================================================
+  // ======================================================
 
   List<Post> findPostsInArray(Integer[] ids);
 
-  //======================================================
+  // ======================================================
 
   List<Post> findPostsInList(List<Integer> ids);
 
-  //======================================================
+  // ======================================================
 
   int insertAuthor(Author author);
 
@@ -66,7 +66,7 @@ public interface BoundAuthorMapper {
       "FROM AUTHOR WHERE ID = #{id}"})
   Author selectAuthor(int id);
 
-  //======================================================
+  // ======================================================
 
   @Result(property = "id", column = "AUTHOR_ID", id = true)
   @Result(property = "username", column = "AUTHOR_USERNAME")
@@ -83,7 +83,7 @@ public interface BoundAuthorMapper {
     "FROM AUTHOR WHERE ID = #{id}"})
   Author selectAuthorMapToPropertiesUsingRepeatable(int id);
 
-  //======================================================
+  // ======================================================
 
   @ConstructorArgs({
       @Arg(column = "AUTHOR_ID", javaType = Integer.class),
@@ -104,7 +104,7 @@ public interface BoundAuthorMapper {
       "FROM AUTHOR WHERE ID = #{id}"})
   Author selectAuthorConstructor(int id);
 
-  //======================================================
+  // ======================================================
 
   @Arg(column = "AUTHOR_ID", javaType = Integer.class, id = true)
   @Arg(column = "AUTHOR_USERNAME", javaType = String.class)
@@ -123,7 +123,7 @@ public interface BoundAuthorMapper {
     "FROM AUTHOR WHERE ID = #{id}"})
   Author selectAuthorMapToConstructorUsingRepeatable(int id);
 
-  //======================================================
+  // ======================================================
 
   @Arg(column = "AUTHOR_ID", javaType = int.class)
   @Result(property = "username", column = "AUTHOR_USERNAME")
@@ -137,7 +137,7 @@ public interface BoundAuthorMapper {
     "FROM AUTHOR WHERE ID = #{id}"})
   Author selectAuthorUsingSingleRepeatable(int id);
 
-  //======================================================
+  // ======================================================
 
   @ConstructorArgs({
     @Arg(column = "AUTHOR_ID", javaType = Integer.class),
@@ -158,7 +158,7 @@ public interface BoundAuthorMapper {
     "FROM AUTHOR WHERE ID = #{id}"})
   Author selectAuthorUsingBothArgAndConstructorArgs(int id);
 
-  //======================================================
+  // ======================================================
 
   @Results(
     @Result(property = "id", column = "AUTHOR_ID")
@@ -171,7 +171,7 @@ public interface BoundAuthorMapper {
     "FROM AUTHOR WHERE ID = #{id}"})
   Author selectAuthorUsingBothResultAndResults(int id);
 
-  //======================================================
+  // ======================================================
 
   List<Post> findThreeSpecificPosts(@Param("one") int one,
                                     RowBounds rowBounds,
