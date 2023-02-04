@@ -83,11 +83,9 @@ class InvalidNamedConstructorArgsTest {
   void wrongJavaType() {
     Configuration configuration = sqlSessionFactory.getConfiguration();
     when(() -> configuration.addMapper(ConstructorWithWrongJavaType.class));
-    then(caughtException()).isInstanceOf(BuilderException.class)
-      .hasMessageContaining(
-          "'org.apache.ibatis.submitted.named_constructor_args.InvalidNamedConstructorArgsTest$ConstructorWithWrongJavaType.select-void'")
-      .hasMessageContaining("'org.apache.ibatis.submitted.named_constructor_args.User'")
-      .hasMessageContaining("[id]");
+    then(caughtException()).isInstanceOf(BuilderException.class).hasMessageContaining(
+        "'org.apache.ibatis.submitted.named_constructor_args.InvalidNamedConstructorArgsTest$ConstructorWithWrongJavaType.select-void'")
+        .hasMessageContaining("'org.apache.ibatis.submitted.named_constructor_args.User'").hasMessageContaining("[id]");
   }
 
   interface ConstructorMissingRequiresJavaType {
@@ -106,10 +104,8 @@ class InvalidNamedConstructorArgsTest {
   void missingRequiredJavaType() {
     Configuration configuration = sqlSessionFactory.getConfiguration();
     when(() -> configuration.addMapper(ConstructorMissingRequiresJavaType.class));
-    then(caughtException()).isInstanceOf(BuilderException.class)
-      .hasMessageContaining(
-            "'org.apache.ibatis.submitted.named_constructor_args.InvalidNamedConstructorArgsTest$ConstructorMissingRequiresJavaType.select-void'")
-      .hasMessageContaining("'org.apache.ibatis.submitted.named_constructor_args.User'")
-      .hasMessageContaining("[id]");
+    then(caughtException()).isInstanceOf(BuilderException.class).hasMessageContaining(
+        "'org.apache.ibatis.submitted.named_constructor_args.InvalidNamedConstructorArgsTest$ConstructorMissingRequiresJavaType.select-void'")
+        .hasMessageContaining("'org.apache.ibatis.submitted.named_constructor_args.User'").hasMessageContaining("[id]");
   }
 }

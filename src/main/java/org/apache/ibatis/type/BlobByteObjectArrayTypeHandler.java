@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -35,22 +35,19 @@ public class BlobByteObjectArrayTypeHandler extends BaseTypeHandler<Byte[]> {
   }
 
   @Override
-  public Byte[] getNullableResult(ResultSet rs, String columnName)
-      throws SQLException {
+  public Byte[] getNullableResult(ResultSet rs, String columnName) throws SQLException {
     Blob blob = rs.getBlob(columnName);
     return getBytes(blob);
   }
 
   @Override
-  public Byte[] getNullableResult(ResultSet rs, int columnIndex)
-      throws SQLException {
+  public Byte[] getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
     Blob blob = rs.getBlob(columnIndex);
     return getBytes(blob);
   }
 
   @Override
-  public Byte[] getNullableResult(CallableStatement cs, int columnIndex)
-      throws SQLException {
+  public Byte[] getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
     Blob blob = cs.getBlob(columnIndex);
     return getBytes(blob);
   }

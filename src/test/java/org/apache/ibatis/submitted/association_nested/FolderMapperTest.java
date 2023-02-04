@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ class FolderMapperTest {
   @Test
   void testFindWithChildren() throws Exception {
     try (Connection conn = DriverManager.getConnection("jdbc:hsqldb:mem:association_nested", "SA", "");
-         Statement stmt = conn.createStatement()) {
+        Statement stmt = conn.createStatement()) {
       stmt.execute("create table folder (id int, name varchar(100), parent_id int)");
       stmt.execute("insert into folder (id, name) values(1, 'Root')");
       stmt.execute("insert into folder values(2, 'Folder 1', 1)");

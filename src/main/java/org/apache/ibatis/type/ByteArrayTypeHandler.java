@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -32,20 +32,17 @@ public class ByteArrayTypeHandler extends BaseTypeHandler<byte[]> {
   }
 
   @Override
-  public byte[] getNullableResult(ResultSet rs, String columnName)
-      throws SQLException {
+  public byte[] getNullableResult(ResultSet rs, String columnName) throws SQLException {
     return rs.getBytes(columnName);
   }
 
   @Override
-  public byte[] getNullableResult(ResultSet rs, int columnIndex)
-      throws SQLException {
+  public byte[] getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
     return rs.getBytes(columnIndex);
   }
 
   @Override
-  public byte[] getNullableResult(CallableStatement cs, int columnIndex)
-      throws SQLException {
+  public byte[] getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
     return cs.getBytes(columnIndex);
   }
 }
