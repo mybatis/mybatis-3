@@ -86,12 +86,13 @@ class NestedResultHandlerTest {
   @Test
   void testUnorderedGetPersonWithHandler() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      Assertions.assertThrows(PersistenceException.class, () -> sqlSession.select("getPersonsWithItemsOrdered", context -> {
-        Person person = (Person) context.getResultObject();
-        if ("grandma".equals(person.getName())) {
-          person.getItems().size();
-        }
-      }));
+      Assertions.assertThrows(PersistenceException.class,
+          () -> sqlSession.select("getPersonsWithItemsOrdered", context -> {
+            Person person = (Person) context.getResultObject();
+            if ("grandma".equals(person.getName())) {
+              person.getItems().size();
+            }
+          }));
     }
   }
 

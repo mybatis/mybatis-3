@@ -41,8 +41,8 @@ class RepeatableErrorTest {
   void bothSpecifySelectAndSelectProvider() throws IOException {
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/repeatable/mybatis-config.xml")) {
       SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader, "development-derby");
-      BuilderException exception = Assertions.assertThrows(BuilderException.class, () ->
-          sqlSessionFactory.getConfiguration().addMapper(BothSelectAndSelectProviderMapper.class));
+      BuilderException exception = Assertions.assertThrows(BuilderException.class,
+          () -> sqlSessionFactory.getConfiguration().addMapper(BothSelectAndSelectProviderMapper.class));
       String message = exception.getMessage();
       Assertions.assertTrue(message.startsWith("Detected conflicting annotations "));
       Assertions.assertTrue(message.contains("'@org.apache.ibatis.annotations.Select("));

@@ -92,7 +92,8 @@ public class NestedBeanMapEntry {
 
   @Override
   public String toString() {
-    return "NestedBeanMapEntry{" + "keya=" + keya + ", valuea=" + valuea + ", keyb=" + keyb + ", valueb=" + valueb + '}';
+    return "NestedBeanMapEntry{" + "keya=" + keya + ", valuea=" + valuea + ", keyb=" + keyb + ", valueb=" + valueb
+        + '}';
   }
 
   private Integer keya;

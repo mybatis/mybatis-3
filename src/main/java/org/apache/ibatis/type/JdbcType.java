@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -70,7 +70,7 @@ public enum JdbcType {
   TIMESTAMP_WITH_TIMEZONE(Types.TIMESTAMP_WITH_TIMEZONE); // JDBC 4.2 JDK8
 
   public final int TYPE_CODE;
-  private static Map<Integer,JdbcType> codeLookup = new HashMap<>();
+  private static Map<Integer, JdbcType> codeLookup = new HashMap<>();
 
   static {
     for (JdbcType type : JdbcType.values()) {
@@ -82,7 +82,7 @@ public enum JdbcType {
     this.TYPE_CODE = code;
   }
 
-  public static JdbcType forCode(int code)  {
+  public static JdbcType forCode(int code) {
     return codeLookup.get(code);
   }
 

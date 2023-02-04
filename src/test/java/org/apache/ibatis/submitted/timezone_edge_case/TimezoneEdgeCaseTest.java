@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -83,8 +83,7 @@ class TimezoneEdgeCaseTest {
       mapper.insert(record);
       sqlSession.commit();
     }
-    try (SqlSession sqlSession = sqlSessionFactory.openSession();
-        Connection con = sqlSession.getConnection();
+    try (SqlSession sqlSession = sqlSessionFactory.openSession(); Connection con = sqlSession.getConnection();
         Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery("select count(*) from records where id = 2 and ts = '2019-03-10 02:30:00'")) {
       rs.next();
@@ -114,8 +113,7 @@ class TimezoneEdgeCaseTest {
       mapper.insert(record);
       sqlSession.commit();
     }
-    try (SqlSession sqlSession = sqlSessionFactory.openSession();
-        Connection con = sqlSession.getConnection();
+    try (SqlSession sqlSession = sqlSessionFactory.openSession(); Connection con = sqlSession.getConnection();
         Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery("select count(*) from records where id = 3 and d = '2011-12-30'")) {
       rs.next();

@@ -97,11 +97,13 @@ class BindingTest {
   void shouldFindPostsInList() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       BoundAuthorMapper mapper = session.getMapper(BoundAuthorMapper.class);
-      List<Post> posts = mapper.findPostsInList(new ArrayList<Integer>() {{
-        add(1);
-        add(3);
-        add(5);
-      }});
+      List<Post> posts = mapper.findPostsInList(new ArrayList<Integer>() {
+        {
+          add(1);
+          add(3);
+          add(5);
+        }
+      });
       assertEquals(3, posts.size());
       session.rollback();
     }
@@ -147,10 +149,11 @@ class BindingTest {
         BoundAuthorMapper mapper = session.getMapper(BoundAuthorMapper.class);
         Author author = new Author(-1, "cbegin", "******", "cbegin@nowhere.com", "N/A", Section.NEWS);
         when(() -> mapper.insertAuthorInvalidSelectKey(author));
-        then(caughtException()).isInstanceOf(PersistenceException.class).hasMessageContaining(
-            "### The error may exist in org/apache/ibatis/binding/BoundAuthorMapper.xml" + System.lineSeparator() +
-                "### The error may involve org.apache.ibatis.binding.BoundAuthorMapper.insertAuthorInvalidSelectKey!selectKey" + System.lineSeparator() +
-                "### The error occurred while executing a query");
+        then(caughtException()).isInstanceOf(PersistenceException.class)
+            .hasMessageContaining("### The error may exist in org/apache/ibatis/binding/BoundAuthorMapper.xml"
+                + System.lineSeparator()
+                + "### The error may involve org.apache.ibatis.binding.BoundAuthorMapper.insertAuthorInvalidSelectKey!selectKey"
+                + System.lineSeparator() + "### The error occurred while executing a query");
       } finally {
         session.rollback();
       }
@@ -165,9 +168,9 @@ class BindingTest {
         Author author = new Author(-1, "cbegin", "******", "cbegin@nowhere.com", "N/A", Section.NEWS);
         when(() -> mapper.insertAuthorInvalidInsert(author));
         then(caughtException()).isInstanceOf(PersistenceException.class).hasMessageContaining(
-            "### The error may exist in org/apache/ibatis/binding/BoundAuthorMapper.xml" + System.lineSeparator() +
-                "### The error may involve org.apache.ibatis.binding.BoundAuthorMapper.insertAuthorInvalidInsert" + System.lineSeparator() +
-                "### The error occurred while executing an update");
+            "### The error may exist in org/apache/ibatis/binding/BoundAuthorMapper.xml" + System.lineSeparator()
+                + "### The error may involve org.apache.ibatis.binding.BoundAuthorMapper.insertAuthorInvalidInsert"
+                + System.lineSeparator() + "### The error occurred while executing an update");
       } finally {
         session.rollback();
       }
@@ -576,7 +579,8 @@ class BindingTest {
     try (SqlSession session = sqlSessionFactory.openSession()) {
 
       // Create another mapper instance with a method cache we can test against:
-      final MapperProxyFactory<BoundBlogMapper> mapperProxyFactory = new MapperProxyFactory<BoundBlogMapper>(BoundBlogMapper.class);
+      final MapperProxyFactory<BoundBlogMapper> mapperProxyFactory = new MapperProxyFactory<BoundBlogMapper>(
+          BoundBlogMapper.class);
       assertEquals(BoundBlogMapper.class, mapperProxyFactory.getMapperInterface());
       final BoundBlogMapper mapper = mapperProxyFactory.newInstance(session);
       assertNotSame(mapper, mapperProxyFactory.newInstance(session));
@@ -584,7 +588,8 @@ class BindingTest {
 
       // Mapper methods we will call later:
       final Method selectBlog = BoundBlogMapper.class.getMethod("selectBlog", Integer.TYPE);
-      final Method selectBlogByIdUsingConstructor = BoundBlogMapper.class.getMethod("selectBlogByIdUsingConstructor", Integer.TYPE);
+      final Method selectBlogByIdUsingConstructor = BoundBlogMapper.class.getMethod("selectBlogByIdUsingConstructor",
+          Integer.TYPE);
 
       // Call mapper method and verify it is cached:
       mapper.selectBlog(1);

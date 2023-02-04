@@ -222,12 +222,12 @@ class ReflectorTest {
     assertTrue(String.class.equals(paramType) || Integer.class.equals(paramType) || boolean.class.equals(paramType));
 
     Invoker ambiguousInvoker = reflector.getSetInvoker("prop2");
-    Object[] param = String.class.equals(paramType)? new String[]{"x"} : new Integer[]{1};
+    Object[] param = String.class.equals(paramType) ? new String[] { "x" } : new Integer[] { 1 };
     when(() -> ambiguousInvoker.invoke(new BeanClass(), param));
     then(caughtException()).isInstanceOf(ReflectionException.class)
-        .hasMessageMatching(
-            "Ambiguous setters defined for property 'prop2' in class '" + BeanClass.class.getName().replace("$", "\\$")
-                + "' with types '(java.lang.String|java.lang.Integer|boolean)' and '(java.lang.String|java.lang.Integer|boolean)'\\.");
+        .hasMessageMatching("Ambiguous setters defined for property 'prop2' in class '"
+            + BeanClass.class.getName().replace("$", "\\$")
+            + "' with types '(java.lang.String|java.lang.Integer|boolean)' and '(java.lang.String|java.lang.Integer|boolean)'\\.");
   }
 
   @Test
@@ -355,9 +355,8 @@ class ReflectorTest {
     Object[] param = boolean.class.equals(paramType) ? new Boolean[] { true } : new Integer[] { 1 };
     Invoker ambiguousInvoker = reflector.getSetInvoker("bool");
     when(() -> ambiguousInvoker.invoke(new Bean(), param));
-    then(caughtException()).isInstanceOf(ReflectionException.class)
-        .hasMessageMatching(
-            "Ambiguous setters defined for property 'bool' in class '" + Bean.class.getName().replace("$", "\\$")
-                + "' with types '(java.lang.Integer|boolean)' and '(java.lang.Integer|boolean)'\\.");
+    then(caughtException()).isInstanceOf(ReflectionException.class).hasMessageMatching(
+        "Ambiguous setters defined for property 'bool' in class '" + Bean.class.getName().replace("$", "\\$")
+            + "' with types '(java.lang.Integer|boolean)' and '(java.lang.Integer|boolean)'\\.");
   }
 }
