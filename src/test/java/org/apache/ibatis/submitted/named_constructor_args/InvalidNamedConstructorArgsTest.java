@@ -50,9 +50,11 @@ class InvalidNamedConstructorArgsTest {
   }
 
   interface NoMatchingConstructorMapper {
+    // @formatter:off
     @ConstructorArgs({
         @Arg(column = "id", name = "noSuchConstructorArg"),
-    })
+      })
+    // @formatter:on
     @Select("select * from users ")
     User select();
   }
@@ -62,19 +64,20 @@ class InvalidNamedConstructorArgsTest {
     Configuration configuration = sqlSessionFactory.getConfiguration();
     when(() -> configuration.addMapper(NoMatchingConstructorMapper.class));
 
-    then(caughtException()).isInstanceOf(BuilderException.class)
-      .hasMessageContaining(
-          "'org.apache.ibatis.submitted.named_constructor_args.InvalidNamedConstructorArgsTest$NoMatchingConstructorMapper.select-void'")
-      .hasMessageContaining("'org.apache.ibatis.submitted.named_constructor_args.User'")
-      .hasMessageContaining("[noSuchConstructorArg]");
+    then(caughtException()).isInstanceOf(BuilderException.class).hasMessageContaining(
+        "'org.apache.ibatis.submitted.named_constructor_args.InvalidNamedConstructorArgsTest$NoMatchingConstructorMapper.select-void'")
+        .hasMessageContaining("'org.apache.ibatis.submitted.named_constructor_args.User'")
+        .hasMessageContaining("[noSuchConstructorArg]");
   }
 
   interface ConstructorWithWrongJavaType {
     // There is a constructor with arg name 'id', but
     // its type is different from the specified javaType.
+    // @formatter:off
     @ConstructorArgs({
         @Arg(column = "id", name = "id", javaType = Integer.class),
-    })
+      })
+    // @formatter:on
     @Select("select * from users ")
     User select();
   }
@@ -93,9 +96,11 @@ class InvalidNamedConstructorArgsTest {
     // is different from the type of a property with the same name.
     // javaType is required in this case.
     // Debug log shows the detail of the matching error.
+    // @formatter:off
     @ConstructorArgs({
         @Arg(column = "id", name = "id"),
-    })
+      })
+    // @formatter:on
     @Select("select * from users ")
     User select();
   }

@@ -68,16 +68,16 @@ class DefaultResultSetHandlerTest2 {
     final Configuration config = new Configuration();
     final TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
     final MappedStatement ms = new MappedStatement.Builder(config, "testSelect",
-      new StaticSqlSource(config, "some select statement"), SqlCommandType.SELECT).resultMaps(
-        new ArrayList<ResultMap>() {
-          {
-            add(new ResultMap.Builder(config, "testMap", HashMap.class, new ArrayList<ResultMapping>() {
+        new StaticSqlSource(config, "some select statement"), SqlCommandType.SELECT)
+            .resultMaps(new ArrayList<ResultMap>() {
               {
-                add(new ResultMapping.Builder(config, "id", "id", registry.getTypeHandler(Integer.class)).build());
+                add(new ResultMap.Builder(config, "testMap", HashMap.class, new ArrayList<ResultMapping>() {
+                  {
+                    add(new ResultMapping.Builder(config, "id", "id", registry.getTypeHandler(Integer.class)).build());
+                  }
+                }).build());
               }
-            }).build());
-          }
-        }).build();
+            }).build();
 
     final Executor executor = null;
     final ParameterHandler parameterHandler = null;
@@ -85,7 +85,7 @@ class DefaultResultSetHandlerTest2 {
     final BoundSql boundSql = null;
     final RowBounds rowBounds = new RowBounds(5, 1);
     final DefaultResultSetHandler resultSetHandler = new DefaultResultSetHandler(executor, ms, parameterHandler,
-      resultHandler, boundSql, rowBounds);
+        resultHandler, boundSql, rowBounds);
 
     when(stmt.getResultSet()).thenReturn(rs);
     when(rsmd.getColumnCount()).thenReturn(1);
@@ -106,29 +106,23 @@ class DefaultResultSetHandlerTest2 {
     final Configuration config = new Configuration();
     final TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
     final ResultMap nestedResultMap = new ResultMap.Builder(config, "roleMap", HashMap.class,
-      new ArrayList<ResultMapping>() {
-        {
-          add(new ResultMapping.Builder(config, "role", "role", registry.getTypeHandler(String.class))
-            .build());
-        }
-      }).build();
+        new ArrayList<ResultMapping>() {
+          {
+            add(new ResultMapping.Builder(config, "role", "role", registry.getTypeHandler(String.class)).build());
+          }
+        }).build();
     config.addResultMap(nestedResultMap);
     final MappedStatement ms = new MappedStatement.Builder(config, "selectPerson",
-      new StaticSqlSource(config, "select person..."),
-      SqlCommandType.SELECT).resultMaps(
-        new ArrayList<ResultMap>() {
+        new StaticSqlSource(config, "select person..."), SqlCommandType.SELECT).resultMaps(new ArrayList<ResultMap>() {
           {
             add(new ResultMap.Builder(config, "personMap", HashMap.class, new ArrayList<ResultMapping>() {
               {
-                add(new ResultMapping.Builder(config, "id", "id", registry.getTypeHandler(Integer.class))
-                  .build());
+                add(new ResultMapping.Builder(config, "id", "id", registry.getTypeHandler(Integer.class)).build());
                 add(new ResultMapping.Builder(config, "roles").nestedResultMapId("roleMap").build());
               }
             }).build());
           }
-        })
-        .resultOrdered(true)
-        .build();
+        }).resultOrdered(true).build();
 
     final Executor executor = null;
     final ParameterHandler parameterHandler = null;

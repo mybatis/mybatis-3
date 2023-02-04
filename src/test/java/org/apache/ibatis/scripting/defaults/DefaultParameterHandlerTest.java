@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -52,12 +52,15 @@ class DefaultParameterHandlerTest {
     final BoundSql boundSql = mock(BoundSql.class);
 
     TypeHandler<Object> typeHandler = mock(TypeHandler.class);
-    doThrow(new SQLException("foo")).when(typeHandler).setParameter(any(PreparedStatement.class), anyInt(), any(), any(JdbcType.class));
-    ParameterMapping parameterMapping = new ParameterMapping.Builder(mappedStatement.getConfiguration(), "prop", typeHandler).build();
+    doThrow(new SQLException("foo")).when(typeHandler).setParameter(any(PreparedStatement.class), anyInt(), any(),
+        any(JdbcType.class));
+    ParameterMapping parameterMapping = new ParameterMapping.Builder(mappedStatement.getConfiguration(), "prop",
+        typeHandler).build();
     List<ParameterMapping> parameterMappings = Collections.singletonList(parameterMapping);
     when(boundSql.getParameterMappings()).thenReturn(parameterMappings);
 
-    DefaultParameterHandler defaultParameterHandler = new DefaultParameterHandler(mappedStatement, parameterObject, boundSql);
+    DefaultParameterHandler defaultParameterHandler = new DefaultParameterHandler(mappedStatement, parameterObject,
+        boundSql);
 
     PreparedStatement ps = mock(PreparedStatement.class);
     try {
@@ -73,12 +76,13 @@ class DefaultParameterHandlerTest {
   MappedStatement getMappedStatement() {
     final Configuration config = new Configuration();
     final TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
-    return new MappedStatement.Builder(config, "testSelect", new StaticSqlSource(config, "some select statement"), SqlCommandType.SELECT).resultMaps(
-        new ArrayList<ResultMap>() {
+    return new MappedStatement.Builder(config, "testSelect", new StaticSqlSource(config, "some select statement"),
+        SqlCommandType.SELECT).resultMaps(new ArrayList<ResultMap>() {
           {
             add(new ResultMap.Builder(config, "testMap", HashMap.class, new ArrayList<ResultMapping>() {
               {
-                add(new ResultMapping.Builder(config, "cOlUmN1", "CoLuMn1", registry.getTypeHandler(Integer.class)).build());
+                add(new ResultMapping.Builder(config, "cOlUmN1", "CoLuMn1", registry.getTypeHandler(Integer.class))
+                    .build());
               }
             }).build());
           }

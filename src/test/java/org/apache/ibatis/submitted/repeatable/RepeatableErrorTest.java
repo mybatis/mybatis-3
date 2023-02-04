@@ -31,9 +31,11 @@ class RepeatableErrorTest {
   void noSuchStatementByCurrentDatabase() throws IOException {
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/repeatable/mybatis-config.xml")) {
       SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader, "development-derby");
-      BuilderException exception = Assertions.assertThrows(BuilderException.class, () ->
-          sqlSessionFactory.getConfiguration().addMapper(NoDefineDefaultDatabaseMapper.class));
-      Assertions.assertEquals("Could not find a statement annotation that correspond a current database or default statement on method 'org.apache.ibatis.submitted.repeatable.NoDefineDefaultDatabaseMapper.getUser'. Current database id is [derby].", exception.getMessage());
+      BuilderException exception = Assertions.assertThrows(BuilderException.class,
+          () -> sqlSessionFactory.getConfiguration().addMapper(NoDefineDefaultDatabaseMapper.class));
+      Assertions.assertEquals(
+          "Could not find a statement annotation that correspond a current database or default statement on method 'org.apache.ibatis.submitted.repeatable.NoDefineDefaultDatabaseMapper.getUser'. Current database id is [derby].",
+          exception.getMessage());
     }
   }
 

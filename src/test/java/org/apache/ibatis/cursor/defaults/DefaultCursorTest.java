@@ -104,30 +104,24 @@ class DefaultCursorTest {
     final Configuration config = new Configuration();
     final TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
 
-    ResultMap nestedResultMap = new ResultMap.Builder(config, "roleMap", HashMap.class,
-      new ArrayList<ResultMapping>() {
-        {
-          add(new ResultMapping.Builder(config, "role", "role", registry.getTypeHandler(String.class))
-            .build());
-        }
-      }).build();
+    ResultMap nestedResultMap = new ResultMap.Builder(config, "roleMap", HashMap.class, new ArrayList<ResultMapping>() {
+      {
+        add(new ResultMapping.Builder(config, "role", "role", registry.getTypeHandler(String.class)).build());
+      }
+    }).build();
     config.addResultMap(nestedResultMap);
 
     return new MappedStatement.Builder(config, "selectPerson", new StaticSqlSource(config, "select person..."),
-      SqlCommandType.SELECT).resultMaps(
-        new ArrayList<ResultMap>() {
+        SqlCommandType.SELECT).resultMaps(new ArrayList<ResultMap>() {
           {
             add(new ResultMap.Builder(config, "personMap", HashMap.class, new ArrayList<ResultMapping>() {
               {
-                add(new ResultMapping.Builder(config, "id", "id", registry.getTypeHandler(Integer.class))
-                  .build());
+                add(new ResultMapping.Builder(config, "id", "id", registry.getTypeHandler(Integer.class)).build());
                 add(new ResultMapping.Builder(config, "roles").nestedResultMapId("roleMap").build());
               }
             }).build());
           }
-        })
-        .resultOrdered(true)
-        .build();
+        }).resultOrdered(true).build();
   }
 
   /*
