@@ -96,14 +96,16 @@ class XmlConfigBuilderTest {
       assertThat(config.isSafeRowBoundsEnabled()).isFalse();
       assertThat(config.getLocalCacheScope()).isEqualTo(LocalCacheScope.SESSION);
       assertThat(config.getJdbcTypeForNull()).isEqualTo(JdbcType.OTHER);
-      assertThat(config.getLazyLoadTriggerMethods()).isEqualTo(new HashSet<>(Arrays.asList("equals", "clone", "hashCode", "toString")));
+      assertThat(config.getLazyLoadTriggerMethods())
+          .isEqualTo(new HashSet<>(Arrays.asList("equals", "clone", "hashCode", "toString")));
       assertThat(config.isSafeResultHandlerEnabled()).isTrue();
       assertThat(config.getDefaultScriptingLanuageInstance()).isInstanceOf(XMLLanguageDriver.class);
       assertThat(config.isCallSettersOnNulls()).isFalse();
       assertNull(config.getLogPrefix());
       assertNull(config.getLogImpl());
       assertNull(config.getConfigurationFactory());
-      assertThat(config.getTypeHandlerRegistry().getTypeHandler(RoundingMode.class)).isInstanceOf(EnumTypeHandler.class);
+      assertThat(config.getTypeHandlerRegistry().getTypeHandler(RoundingMode.class))
+          .isInstanceOf(EnumTypeHandler.class);
       assertThat(config.isShrinkWhitespacesInSql()).isFalse();
       assertThat(config.isArgNameBasedConstructorAutoMapping()).isFalse();
       assertThat(config.getDefaultSqlProviderType()).isNull();
@@ -195,7 +197,8 @@ class XmlConfigBuilderTest {
       assertThat(config.isSafeRowBoundsEnabled()).isTrue();
       assertThat(config.getLocalCacheScope()).isEqualTo(LocalCacheScope.STATEMENT);
       assertThat(config.getJdbcTypeForNull()).isEqualTo(JdbcType.NULL);
-      assertThat(config.getLazyLoadTriggerMethods()).isEqualTo(new HashSet<>(Arrays.asList("equals", "clone", "hashCode", "toString", "xxx")));
+      assertThat(config.getLazyLoadTriggerMethods())
+          .isEqualTo(new HashSet<>(Arrays.asList("equals", "clone", "hashCode", "toString", "xxx")));
       assertThat(config.isSafeResultHandlerEnabled()).isFalse();
       assertThat(config.getDefaultScriptingLanuageInstance()).isInstanceOf(RawLanguageDriver.class);
       assertThat(config.isCallSettersOnNulls()).isTrue();
@@ -212,11 +215,15 @@ class XmlConfigBuilderTest {
       assertThat(config.getTypeAliasRegistry().getTypeAliases().get("blog")).isEqualTo(Blog.class);
       assertThat(config.getTypeAliasRegistry().getTypeAliases().get("cart")).isEqualTo(Cart.class);
 
-      assertThat(config.getTypeHandlerRegistry().getTypeHandler(Integer.class)).isInstanceOf(CustomIntegerTypeHandler.class);
+      assertThat(config.getTypeHandlerRegistry().getTypeHandler(Integer.class))
+          .isInstanceOf(CustomIntegerTypeHandler.class);
       assertThat(config.getTypeHandlerRegistry().getTypeHandler(Long.class)).isInstanceOf(CustomLongTypeHandler.class);
-      assertThat(config.getTypeHandlerRegistry().getTypeHandler(String.class)).isInstanceOf(CustomStringTypeHandler.class);
-      assertThat(config.getTypeHandlerRegistry().getTypeHandler(String.class, JdbcType.VARCHAR)).isInstanceOf(CustomStringTypeHandler.class);
-      assertThat(config.getTypeHandlerRegistry().getTypeHandler(RoundingMode.class)).isInstanceOf(EnumOrdinalTypeHandler.class);
+      assertThat(config.getTypeHandlerRegistry().getTypeHandler(String.class))
+          .isInstanceOf(CustomStringTypeHandler.class);
+      assertThat(config.getTypeHandlerRegistry().getTypeHandler(String.class, JdbcType.VARCHAR))
+          .isInstanceOf(CustomStringTypeHandler.class);
+      assertThat(config.getTypeHandlerRegistry().getTypeHandler(RoundingMode.class))
+          .isInstanceOf(EnumOrdinalTypeHandler.class);
 
       ExampleObjectFactory objectFactory = (ExampleObjectFactory) config.getObjectFactory();
       assertThat(objectFactory.getProperties().size()).isEqualTo(1);
@@ -265,7 +272,7 @@ class XmlConfigBuilderTest {
 
       when(builder::parse);
       then(caughtException()).isInstanceOf(BuilderException.class)
-              .hasMessage("Each XMLConfigBuilder can only be used once.");
+          .hasMessage("Each XMLConfigBuilder can only be used once.");
     }
   }
 
@@ -282,7 +289,7 @@ class XmlConfigBuilderTest {
     XMLConfigBuilder builder = new XMLConfigBuilder(new StringReader(MAPPER_CONFIG));
     when(builder::parse);
     then(caughtException()).isInstanceOf(BuilderException.class)
-      .hasMessageContaining("The setting foo is not known.  Make sure you spelled it correctly (case sensitive).");
+        .hasMessageContaining("The setting foo is not known.  Make sure you spelled it correctly (case sensitive).");
   }
 
   @Test
@@ -337,8 +344,8 @@ class XmlConfigBuilderTest {
   void noDefaultConstructorForSubclassedConfiguration() throws IOException {
     String resource = "org/apache/ibatis/builder/MinimalMapperConfig.xml";
     try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
-      Exception exception = Assertions.assertThrows(Exception.class, () -> new XMLConfigBuilder(
-              BadConfiguration.class, inputStream, null, null));
+      Exception exception = Assertions.assertThrows(Exception.class,
+          () -> new XMLConfigBuilder(BadConfiguration.class, inputStream, null, null));
       assertEquals("Failed to create a new Configuration instance.", exception.getMessage());
     }
   }

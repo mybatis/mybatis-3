@@ -73,10 +73,12 @@ public @interface InsertProvider {
    */
   Class<?> type() default void.class;
 
+  // @formatter:off
   /**
    * Specify a method for providing an SQL.
    * <p>
    * Since 3.5.1, this attribute can omit.
+   * <p>
    * If this attribute omit, the MyBatis will call a method that decide by following rules.
    * <ul>
    *   <li>
@@ -92,6 +94,7 @@ public @interface InsertProvider {
    *
    * @return a method name of method for providing an SQL
    */
+  // @formatter:on
   String method() default "";
 
   /**

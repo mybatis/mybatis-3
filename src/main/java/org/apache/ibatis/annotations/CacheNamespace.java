@@ -25,6 +25,7 @@ import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.decorators.LruCache;
 import org.apache.ibatis.cache.impl.PerpetualCache;
 
+// @formatter:off
 /**
  * The annotation that specify to use cache on namespace(e.g. mapper interface).
  * <p>
@@ -44,6 +45,7 @@ import org.apache.ibatis.cache.impl.PerpetualCache;
  * @author Clinton Begin
  * @author Kazuki Shimizu
  */
+// @formatter:on
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

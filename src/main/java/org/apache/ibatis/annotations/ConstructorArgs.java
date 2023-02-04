@@ -21,6 +21,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+// @formatter:off
 /**
  * The annotation that be grouping mapping definitions for constructor.
  * <p>
@@ -40,6 +41,7 @@ import java.lang.annotation.Target;
  *
  * @author Clinton Begin
  */
+// @formatter:on
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

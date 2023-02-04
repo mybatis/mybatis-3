@@ -46,13 +46,14 @@ class FolderMapperTest {
     }
 
     /**
+     * <pre>
      * Root/
-     *    Folder 1/
-     *    Folder 2/
-     *      Folder 2_1
-     *      Folder 2_2
+     *  Folder 1/
+     *  Folder 2/
+     *    Folder 2_1
+     *    Folder 2_2
+     * </pre>
      */
-
     String resource = "org/apache/ibatis/submitted/association_nested/mybatis-config.xml";
     try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
       SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
