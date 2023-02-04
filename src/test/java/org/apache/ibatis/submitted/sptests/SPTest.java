@@ -661,8 +661,7 @@ class SPTest {
   /**
    * This test shows how to call procedures that return multiple result sets.
    * <p>
-   * This test shows using annotations for stored procedures and referring to multiple
-   * resultMaps in XML.
+   * This test shows using annotations for stored procedures and referring to multiple resultMaps in XML.
    *
    * @throws SQLException
    */

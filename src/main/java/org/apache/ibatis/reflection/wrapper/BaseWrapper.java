@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -68,7 +68,8 @@ public abstract class BaseWrapper implements ObjectWrapper {
       } else if (collection instanceof short[]) {
         return ((short[]) collection)[i];
       } else {
-        throw new ReflectionException("The '" + prop.getName() + "' property of " + collection + " is not a List or Array.");
+        throw new ReflectionException(
+            "The '" + prop.getName() + "' property of " + collection + " is not a List or Array.");
       }
     }
   }
@@ -99,7 +100,8 @@ public abstract class BaseWrapper implements ObjectWrapper {
       } else if (collection instanceof short[]) {
         ((short[]) collection)[i] = (Short) value;
       } else {
-        throw new ReflectionException("The '" + prop.getName() + "' property of " + collection + " is not a List or Array.");
+        throw new ReflectionException(
+            "The '" + prop.getName() + "' property of " + collection + " is not a List or Array.");
       }
     }
   }

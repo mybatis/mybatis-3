@@ -107,8 +107,8 @@ class DefaultResultSetHandlerTest {
     final MappedStatement ms = getMappedStatement();
     final RowBounds rowBounds = new RowBounds(0, 100);
 
-    final DefaultResultSetHandler defaultResultSetHandler = new DefaultResultSetHandler(null/*executor*/, ms,
-            null/*parameterHandler*/, null/*resultHandler*/, null/*boundSql*/, rowBounds);
+    final DefaultResultSetHandler defaultResultSetHandler = new DefaultResultSetHandler(null/* executor */, ms,
+        null/* parameterHandler */, null/* resultHandler */, null/* boundSql */, rowBounds);
 
     final ResultSetWrapper rsw = mock(ResultSetWrapper.class);
     when(rsw.getResultSet()).thenReturn(mock(ResultSet.class));
@@ -121,8 +121,8 @@ class DefaultResultSetHandlerTest {
     List<ResultMapping> constructorMappings = Collections.singletonList(resultMapping);
 
     try {
-      defaultResultSetHandler.createParameterizedResultObject(rsw, null/*resultType*/, constructorMappings,
-              null/*constructorArgTypes*/, null/*constructorArgs*/, null/*columnPrefix*/);
+      defaultResultSetHandler.createParameterizedResultObject(rsw, null/* resultType */, constructorMappings,
+          null/* constructorArgTypes */, null/* constructorArgs */, null/* columnPrefix */);
       Assertions.fail("Should have thrown ExecutorException");
     } catch (Exception e) {
       Assertions.assertTrue(e instanceof ExecutorException, "Expected ExecutorException");
@@ -133,12 +133,13 @@ class DefaultResultSetHandlerTest {
   MappedStatement getMappedStatement() {
     final Configuration config = new Configuration();
     final TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
-    return new MappedStatement.Builder(config, "testSelect", new StaticSqlSource(config, "some select statement"), SqlCommandType.SELECT).resultMaps(
-        new ArrayList<ResultMap>() {
+    return new MappedStatement.Builder(config, "testSelect", new StaticSqlSource(config, "some select statement"),
+        SqlCommandType.SELECT).resultMaps(new ArrayList<ResultMap>() {
           {
             add(new ResultMap.Builder(config, "testMap", HashMap.class, new ArrayList<ResultMapping>() {
               {
-                add(new ResultMapping.Builder(config, "cOlUmN1", "CoLuMn1", registry.getTypeHandler(Integer.class)).build());
+                add(new ResultMapping.Builder(config, "cOlUmN1", "CoLuMn1", registry.getTypeHandler(Integer.class))
+                    .build());
               }
             }).build());
           }
