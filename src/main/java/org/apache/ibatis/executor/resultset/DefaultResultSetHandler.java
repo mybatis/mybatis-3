@@ -124,8 +124,8 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     }
   }
 
-  public DefaultResultSetHandler(Executor executor, MappedStatement mappedStatement, ParameterHandler parameterHandler, ResultHandler<?> resultHandler, BoundSql boundSql,
-                                 RowBounds rowBounds) {
+  public DefaultResultSetHandler(Executor executor, MappedStatement mappedStatement, ParameterHandler parameterHandler,
+      ResultHandler<?> resultHandler, BoundSql boundSql, RowBounds rowBounds) {
     this.executor = executor;
     this.configuration = mappedStatement.getConfiguration();
     this.mappedStatement = mappedStatement;
@@ -294,8 +294,9 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private void validateResultMapsCount(ResultSetWrapper rsw, int resultMapCount) {
     if (rsw != null && resultMapCount < 1) {
-      throw new ExecutorException("A query was run and no Result Maps were found for the Mapped Statement '" + mappedStatement.getId()
-          + "'. 'resultType' or 'resultMap' must be specified when there is no corresponding method.");
+      throw new ExecutorException(
+          "A query was run and no Result Maps were found for the Mapped Statement '" + mappedStatement.getId()
+              + "'. 'resultType' or 'resultMap' must be specified when there is no corresponding method.");
     }
   }
 
@@ -340,17 +341,20 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   }
 
   private void ensureNoRowBounds() {
-    if (configuration.isSafeRowBoundsEnabled() && rowBounds != null && (rowBounds.getLimit() < RowBounds.NO_ROW_LIMIT || rowBounds.getOffset() > RowBounds.NO_ROW_OFFSET)) {
-      throw new ExecutorException("Mapped Statements with nested result mappings cannot be safely constrained by RowBounds. "
-          + "Use safeRowBoundsEnabled=false setting to bypass this check.");
+    if (configuration.isSafeRowBoundsEnabled() && rowBounds != null
+        && (rowBounds.getLimit() < RowBounds.NO_ROW_LIMIT || rowBounds.getOffset() > RowBounds.NO_ROW_OFFSET)) {
+      throw new ExecutorException(
+          "Mapped Statements with nested result mappings cannot be safely constrained by RowBounds. "
+              + "Use safeRowBoundsEnabled=false setting to bypass this check.");
     }
   }
 
   protected void checkResultHandler() {
     if (resultHandler != null && configuration.isSafeResultHandlerEnabled() && !mappedStatement.isResultOrdered()) {
-      throw new ExecutorException("Mapped Statements with nested result mappings cannot be safely used with a custom ResultHandler. "
-          + "Use safeResultHandlerEnabled=false setting to bypass this check "
-          + "or ensure your statement returns ordered data and set resultOrdered=true on it.");
+      throw new ExecutorException(
+          "Mapped Statements with nested result mappings cannot be safely used with a custom ResultHandler. "
+              + "Use safeResultHandlerEnabled=false setting to bypass this check "
+              + "or ensure your statement returns ordered data and set resultOrdered=true on it.");
     }
   }
 

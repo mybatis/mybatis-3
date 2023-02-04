@@ -32,10 +32,8 @@ public class BatchExecutorException extends ExecutorException {
   private final BatchUpdateException batchUpdateException;
   private final BatchResult batchResult;
 
-  public BatchExecutorException(String message,
-                                BatchUpdateException cause,
-                                List<BatchResult> successfulBatchResults,
-                                BatchResult batchResult) {
+  public BatchExecutorException(String message, BatchUpdateException cause, List<BatchResult> successfulBatchResults,
+      BatchResult batchResult) {
     super(message + " Cause: " + cause, cause);
     this.batchUpdateException = cause;
     this.successfulBatchResults = successfulBatchResults;
