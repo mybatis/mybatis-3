@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -82,13 +82,11 @@ public class XNode {
         builder.insert(0, "_");
       }
       String value = current.getStringAttribute("id",
-          current.getStringAttribute("value",
-              current.getStringAttribute("property", (String) null)));
+          current.getStringAttribute("value", current.getStringAttribute("property", (String) null)));
       if (value != null) {
         value = value.replace('.', '_');
         builder.insert(0, "]");
-        builder.insert(0,
-            value);
+        builder.insert(0, value);
         builder.insert(0, "[");
       }
       builder.insert(0, current.getName());
@@ -179,12 +177,11 @@ public class XNode {
 
   public <T extends Enum<T>> T getEnumAttribute(Class<T> enumType, String name, T def) {
     String value = getStringAttribute(name);
-    return value == null ? def : Enum.valueOf(enumType,value);
+    return value == null ? def : Enum.valueOf(enumType, value);
   }
 
   /**
    * Return a attribute value as String.
-   *
    * <p>
    * If attribute value is absent, return value that provided from supplier of default value.
    *
@@ -192,7 +189,9 @@ public class XNode {
    *          attribute name
    * @param defSupplier
    *          a supplier of default value
+   *
    * @return the string attribute
+   *
    * @since 3.5.4
    */
   public String getStringAttribute(String name, Supplier<String> defSupplier) {
@@ -356,8 +355,7 @@ public class XNode {
   }
 
   private String getBodyData(Node child) {
-    if (child.getNodeType() == Node.CDATA_SECTION_NODE
-        || child.getNodeType() == Node.TEXT_NODE) {
+    if (child.getNodeType() == Node.CDATA_SECTION_NODE || child.getNodeType() == Node.TEXT_NODE) {
       String data = ((CharacterData) child).getData();
       data = PropertyParser.parse(data, variables);
       return data;

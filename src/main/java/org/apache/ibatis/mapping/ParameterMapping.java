@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -108,15 +108,15 @@ public class ParameterMapping {
     private void validate() {
       if (ResultSet.class.equals(parameterMapping.javaType)) {
         if (parameterMapping.resultMapId == null) {
-          throw new IllegalStateException("Missing resultmap in property '"
-              + parameterMapping.property + "'.  "
+          throw new IllegalStateException("Missing resultmap in property '" + parameterMapping.property + "'.  "
               + "Parameters of type java.sql.ResultSet require a resultmap.");
         }
       } else {
         if (parameterMapping.typeHandler == null) {
           throw new IllegalStateException("Type handler was null on parameter mapping for property '"
-            + parameterMapping.property + "'. It was either not specified and/or could not be found for the javaType ("
-            + parameterMapping.javaType.getName() + ") : jdbcType (" + parameterMapping.jdbcType + ") combination.");
+              + parameterMapping.property
+              + "'. It was either not specified and/or could not be found for the javaType ("
+              + parameterMapping.javaType.getName() + ") : jdbcType (" + parameterMapping.jdbcType + ") combination.");
         }
       }
     }
@@ -125,7 +125,8 @@ public class ParameterMapping {
       if (parameterMapping.typeHandler == null && parameterMapping.javaType != null) {
         Configuration configuration = parameterMapping.configuration;
         TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();
-        parameterMapping.typeHandler = typeHandlerRegistry.getTypeHandler(parameterMapping.javaType, parameterMapping.jdbcType);
+        parameterMapping.typeHandler = typeHandlerRegistry.getTypeHandler(parameterMapping.javaType,
+            parameterMapping.jdbcType);
       }
     }
 
@@ -210,13 +211,13 @@ public class ParameterMapping {
   @Override
   public String toString() {
     final StringBuilder sb = new StringBuilder("ParameterMapping{");
-    //sb.append("configuration=").append(configuration); // configuration doesn't have a useful .toString()
+    // sb.append("configuration=").append(configuration); // configuration doesn't have a useful .toString()
     sb.append("property='").append(property).append('\'');
     sb.append(", mode=").append(mode);
     sb.append(", javaType=").append(javaType);
     sb.append(", jdbcType=").append(jdbcType);
     sb.append(", numericScale=").append(numericScale);
-    //sb.append(", typeHandler=").append(typeHandler); // typeHandler also doesn't have a useful .toString()
+    // sb.append(", typeHandler=").append(typeHandler); // typeHandler also doesn't have a useful .toString()
     sb.append(", resultMapId='").append(resultMapId).append('\'');
     sb.append(", jdbcTypeName='").append(jdbcTypeName).append('\'');
     sb.append(", expression='").append(expression).append('\'');

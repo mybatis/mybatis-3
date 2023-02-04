@@ -612,9 +612,9 @@ public class MapperAnnotationBuilder {
     SqlSource sqlSource = buildSqlSource(selectKeyAnnotation, parameterTypeClass, languageDriver, null);
     SqlCommandType sqlCommandType = SqlCommandType.SELECT;
 
-    assistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType, fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass, resultSetTypeEnum,
-        flushCache, useCache, false,
-        keyGenerator, keyProperty, keyColumn, databaseId, languageDriver, null, false);
+    assistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType, fetchSize, timeout, parameterMap,
+        parameterTypeClass, resultMap, resultTypeClass, resultSetTypeEnum, flushCache, useCache, false, keyGenerator,
+        keyProperty, keyColumn, databaseId, languageDriver, null, false);
 
     id = assistant.applyCurrentNamespace(id, false);
 
@@ -657,9 +657,9 @@ public class MapperAnnotationBuilder {
     Map<String, AnnotationWrapper> statementAnnotations = targetTypes.stream()
         .flatMap(x -> Arrays.stream(method.getAnnotationsByType(x))).map(AnnotationWrapper::new)
         .collect(Collectors.toMap(AnnotationWrapper::getDatabaseId, x -> x, (existing, duplicate) -> {
-          throw new BuilderException(String.format("Detected conflicting annotations '%s' and '%s' on '%s'.",
-              existing.getAnnotation(), duplicate.getAnnotation(),
-              method.getDeclaringClass().getName() + "." + method.getName()));
+          throw new BuilderException(
+              String.format("Detected conflicting annotations '%s' and '%s' on '%s'.", existing.getAnnotation(),
+                  duplicate.getAnnotation(), method.getDeclaringClass().getName() + "." + method.getName()));
         }));
     AnnotationWrapper annotationWrapper = null;
     if (databaseId != null) {
@@ -670,10 +670,9 @@ public class MapperAnnotationBuilder {
     }
     if (errorIfNoMatch && annotationWrapper == null && !statementAnnotations.isEmpty()) {
       // Annotations exist, but there is no matching one for the specified databaseId
-      throw new BuilderException(
-          String.format(
-              "Could not find a statement annotation that correspond a current database or default statement on method '%s.%s'. Current database id is [%s].",
-              method.getDeclaringClass().getName(), method.getName(), databaseId));
+      throw new BuilderException(String.format(
+          "Could not find a statement annotation that correspond a current database or default statement on method '%s.%s'. Current database id is [%s].",
+          method.getDeclaringClass().getName(), method.getName(), databaseId));
     }
     return Optional.ofNullable(annotationWrapper);
   }

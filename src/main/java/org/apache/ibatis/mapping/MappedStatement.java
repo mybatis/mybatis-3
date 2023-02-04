@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -71,10 +71,12 @@ public final class MappedStatement {
       mappedStatement.sqlSource = sqlSource;
       mappedStatement.statementType = StatementType.PREPARED;
       mappedStatement.resultSetType = ResultSetType.DEFAULT;
-      mappedStatement.parameterMap = new ParameterMap.Builder(configuration, "defaultParameterMap", null, new ArrayList<>()).build();
+      mappedStatement.parameterMap = new ParameterMap.Builder(configuration, "defaultParameterMap", null,
+          new ArrayList<>()).build();
       mappedStatement.resultMaps = new ArrayList<>();
       mappedStatement.sqlCommandType = sqlCommandType;
-      mappedStatement.keyGenerator = configuration.isUseGeneratedKeys() && SqlCommandType.INSERT.equals(sqlCommandType) ? Jdbc3KeyGenerator.INSTANCE : NoKeyGenerator.INSTANCE;
+      mappedStatement.keyGenerator = configuration.isUseGeneratedKeys() && SqlCommandType.INSERT.equals(sqlCommandType)
+          ? Jdbc3KeyGenerator.INSTANCE : NoKeyGenerator.INSTANCE;
       String logId = id;
       if (configuration.getLogPrefix() != null) {
         logId = configuration.getLogPrefix() + id;
@@ -185,7 +187,9 @@ public final class MappedStatement {
      *
      * @param resultSet
      *          the result set
+     *
      * @return the builder
+     *
      * @deprecated Use {@link #resultSets}
      */
     @Deprecated
@@ -304,6 +308,7 @@ public final class MappedStatement {
    * Gets the resul sets.
    *
    * @return the resul sets
+   *
    * @deprecated Use {@link #getResultSets()}
    */
   @Deprecated

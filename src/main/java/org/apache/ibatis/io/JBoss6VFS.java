@@ -95,10 +95,9 @@ public class JBoss6VFS extends VFS {
 
       // Look up and verify required methods
       VFS.getChild = checkNotNull(getMethod(VFS.VFS, "getChild", URL.class));
-      VirtualFile.getChildrenRecursively = checkNotNull(getMethod(VirtualFile.VirtualFile,
-          "getChildrenRecursively"));
-      VirtualFile.getPathNameRelativeTo = checkNotNull(getMethod(VirtualFile.VirtualFile,
-          "getPathNameRelativeTo", VirtualFile.VirtualFile));
+      VirtualFile.getChildrenRecursively = checkNotNull(getMethod(VirtualFile.VirtualFile, "getChildrenRecursively"));
+      VirtualFile.getPathNameRelativeTo = checkNotNull(
+          getMethod(VirtualFile.VirtualFile, "getPathNameRelativeTo", VirtualFile.VirtualFile));
 
       // Verify that the API has not changed
       checkReturnType(VFS.getChild, VirtualFile.VirtualFile);
@@ -138,9 +137,8 @@ public class JBoss6VFS extends VFS {
    */
   protected static void checkReturnType(Method method, Class<?> expected) {
     if (method != null && !expected.isAssignableFrom(method.getReturnType())) {
-      log.error("Method " + method.getClass().getName() + "." + method.getName()
-          + "(..) should return " + expected.getName() + " but returns "
-          + method.getReturnType().getName() + " instead.");
+      log.error("Method " + method.getClass().getName() + "." + method.getName() + "(..) should return "
+          + expected.getName() + " but returns " + method.getReturnType().getName() + " instead.");
       setInvalid();
     }
   }
