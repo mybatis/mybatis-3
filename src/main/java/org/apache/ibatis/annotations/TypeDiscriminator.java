@@ -25,6 +25,7 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.UnknownTypeHandler;
 
+// @formatter:off
 /**
  * The annotation that be grouping conditional mapping definitions.
  * <p>
@@ -48,6 +49,7 @@ import org.apache.ibatis.type.UnknownTypeHandler;
  *
  * @author Clinton Begin
  */
+// @formatter:on
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

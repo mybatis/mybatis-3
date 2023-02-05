@@ -47,8 +47,8 @@ class HeavyInitialLoadTest {
   /**
    * Test to demonstrate the effect of the https://issues.apache.org/jira/browse/OGNL-121 issue in ognl on mybatis.
    * <p>
-   * Use the thing mapper for the first time in multiple threads. The mapper contains a lot of ognl references to
-   * static final class members like:
+   * Use the thing mapper for the first time in multiple threads. The mapper contains a lot of ognl references to static
+   * final class members like:
    * <p>
    * <code>@org.apache.ibatis.submitted.heavy_initial_load.Code@_1.equals(code)</code>
    * <p>

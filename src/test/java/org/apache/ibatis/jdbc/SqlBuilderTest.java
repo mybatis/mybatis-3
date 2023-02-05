@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,45 +24,54 @@ class SqlBuilderTest {
 
   @Test
   void shouldProduceExpectedSimpleSelectStatement() {
+    // @formatter:off
     String expected =
         "SELECT P.ID, P.USERNAME, P.PASSWORD, P.FIRST_NAME, P.LAST_NAME\n" +
             "FROM PERSON P\n" +
             "WHERE (P.ID like #id# AND P.FIRST_NAME like #firstName# AND P.LAST_NAME like #lastName#)\n" +
             "ORDER BY P.LAST_NAME";
+    // @formatter:on
     assertEquals(expected, example2("a", "b", "c"));
   }
 
   @Test
   void shouldProduceExpectedSimpleSelectStatementMissingFirstParam() {
+    // @formatter:off
     String expected =
         "SELECT P.ID, P.USERNAME, P.PASSWORD, P.FIRST_NAME, P.LAST_NAME\n" +
             "FROM PERSON P\n" +
             "WHERE (P.FIRST_NAME like #firstName# AND P.LAST_NAME like #lastName#)\n" +
             "ORDER BY P.LAST_NAME";
+    // @formatter:on
     assertEquals(expected, example2(null, "b", "c"));
   }
 
   @Test
   void shouldProduceExpectedSimpleSelectStatementMissingFirstTwoParams() {
+    // @formatter:off
     String expected =
         "SELECT P.ID, P.USERNAME, P.PASSWORD, P.FIRST_NAME, P.LAST_NAME\n" +
             "FROM PERSON P\n" +
             "WHERE (P.LAST_NAME like #lastName#)\n" +
             "ORDER BY P.LAST_NAME";
+    // @formatter:on
     assertEquals(expected, example2(null, null, "c"));
   }
 
   @Test
   void shouldProduceExpectedSimpleSelectStatementMissingAllParams() {
+    // @formatter:off
     String expected =
         "SELECT P.ID, P.USERNAME, P.PASSWORD, P.FIRST_NAME, P.LAST_NAME\n" +
             "FROM PERSON P\n" +
             "ORDER BY P.LAST_NAME";
+    // @formatter:on
     assertEquals(expected, example2(null, null, null));
   }
 
   @Test
   void shouldProduceExpectedComplexSelectStatement() {
+    // @formatter:off
     String expected =
         "SELECT P.ID, P.USERNAME, P.PASSWORD, P.FULL_NAME, P.LAST_NAME, P.CREATED_ON, P.UPDATED_ON\n" +
             "FROM PERSON P, ACCOUNT A\n" +
@@ -74,6 +83,7 @@ class SqlBuilderTest {
             "HAVING (P.LAST_NAME like ?) \n" +
             "OR (P.FIRST_NAME like ?)\n" +
             "ORDER BY P.ID, P.FULL_NAME";
+    // @formatter:on
     assertEquals(expected, example1());
   }
 

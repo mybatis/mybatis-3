@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -23,61 +23,71 @@ import org.apache.ibatis.annotations.*;
  * @author lvyang
  */
 public interface UserDao {
+  // @formatter:off
   @Select({ "select",
-    "     u.id, u.username, r.id role_id, r.role_name",
-    "    from user u",
-    "    left join user_role ur on u.id = ur.user_id",
-    "    left join role r on ur.role_id = r.id" })
+      "     u.id, u.username, r.id role_id, r.role_name",
+      "    from user u",
+      "    left join user_role ur on u.id = ur.user_id",
+      "    left join role r on ur.role_id = r.id" })
   @Results({
-    @Result(id = true, column = "id", property = "id"),
-    @Result(column = "username", property = "username"),
-    @Result(property = "roles", many = @Many(resultMap = "org.apache.ibatis.submitted.annotion_many_one_add_resultmapid.RoleDao.roleMap1"))
-  })
+      @Result(id = true, column = "id", property = "id"),
+      @Result(column = "username", property = "username"),
+      @Result(property = "roles", many = @Many(resultMap = "org.apache.ibatis.submitted.annotion_many_one_add_resultmapid.RoleDao.roleMap1"))
+    })
+  // @formatter:on
   public List<User> findAll();
 
+  // @formatter:off
   @Select({ "select",
-    "     u.id, u.username, r.id role_id, r.role_name",
-    "    from user u",
-    "    left join user_role ur on u.id = ur.user_id",
-    "    left join role r on ur.role_id = r.id" })
+      "     u.id, u.username, r.id role_id, r.role_name",
+      "    from user u",
+      "    left join user_role ur on u.id = ur.user_id",
+      "    left join role r on ur.role_id = r.id" })
   @Results({
-    @Result(id = true, column = "id", property = "id"),
-    @Result(column = "username", property = "username"),
-    @Result(property = "roles", many = @Many(resultMap = "org.apache.ibatis.submitted.annotion_many_one_add_resultmapid.RoleDao.roleMap2"))
-  })
+      @Result(id = true, column = "id", property = "id"),
+      @Result(column = "username", property = "username"),
+      @Result(property = "roles", many = @Many(resultMap = "org.apache.ibatis.submitted.annotion_many_one_add_resultmapid.RoleDao.roleMap2"))
+    })
+  // @formatter:on
   public List<User> findAll2();
 
+  // @formatter:off
   @Select({ "select",
-    "     u.id, u.username, r.id role_id, r.role_name",
-    "    from user u",
-    "    left join user_role ur on u.id = ur.user_id",
-    "    left join role r on ur.role_id = r.id where u.id in (2, 3)" })
+      "     u.id, u.username, r.id role_id, r.role_name",
+      "    from user u",
+      "    left join user_role ur on u.id = ur.user_id",
+      "    left join role r on ur.role_id = r.id where u.id in (2, 3)" })
   @Results({
-    @Result(id = true, column = "id", property = "id"),
-    @Result(column = "username", property = "username"),
-    @Result(property = "role", one = @One(resultMap = "org.apache.ibatis.submitted.annotion_many_one_add_resultmapid.RoleDao.roleMap2"))
-  })
+      @Result(id = true, column = "id", property = "id"),
+      @Result(column = "username", property = "username"),
+      @Result(property = "role", one = @One(resultMap = "org.apache.ibatis.submitted.annotion_many_one_add_resultmapid.RoleDao.roleMap2"))
+    })
+  // @formatter:on
   public List<User> findAll3();
 
+  // @formatter:off
   @Select("select id teacher_id, username teacher_name from user")
   @Results(id = "userMap", value = {
-    @Result(id = true, column = "teacher_id", property = "id"),
-    @Result(column = "teacher_name", property = "username")
-  })
+      @Result(id = true, column = "teacher_id", property = "id"),
+      @Result(column = "teacher_name", property = "username")
+    })
+  // @formatter:on
   public List<User> justUseResult();
 
+  // @formatter:off
   @Select({ "select",
-    "u.id, u.username, r.id role_id, r.role_name, ut.id teacher_id, ut.username teacher_name",
-    "from user u",
-    "left join user_role ur on u.id = ur.user_id",
-    "left join role r on ur.role_id = r.id",
-    "left join user ut on ut.id != u.id",
-    "where role_id = 3" })
+      "u.id, u.username, r.id role_id, r.role_name, ut.id teacher_id, ut.username teacher_name",
+      "from user u",
+      "left join user_role ur on u.id = ur.user_id",
+      "left join role r on ur.role_id = r.id",
+      "left join user ut on ut.id != u.id",
+      "where role_id = 3" })
   @Results({
-    @Result(id = true, column = "id", property = "id"),
-    @Result(column = "username", property = "username"),
-    @Result(property = "role", one = @One(resultMap = "org.apache.ibatis.submitted.annotion_many_one_add_resultmapid.RoleDao.roleMap2")),
-    @Result(property = "teachers", many = @Many(resultMap = "userMap"))
-  })
+      @Result(id = true, column = "id", property = "id"),
+      @Result(column = "username", property = "username"),
+      @Result(property = "role", one = @One(resultMap = "org.apache.ibatis.submitted.annotion_many_one_add_resultmapid.RoleDao.roleMap2")),
+      @Result(property = "teachers", many = @Many(resultMap = "userMap"))
+    })
+  // @formatter:on
   public User findHeadmaster();
 }

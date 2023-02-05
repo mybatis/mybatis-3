@@ -219,6 +219,7 @@ class XPathParserTest {
     String userNodeToString = parser.evalNode("/users/user").toString();
     String carsNodeToString = parser.evalNode("/users/user/cars").toString();
 
+    // @formatter:off
     String usersNodeToStringExpect =
       "<users>\n" +
       "    <user>\n" +
@@ -232,7 +233,9 @@ class XPathParserTest {
       "        </cars>\n" +
       "    </user>\n" +
       "</users>\n";
+    // @formatter:on
 
+    // @formatter:off
     String userNodeToStringExpect =
       "<user>\n" +
       "    <id>100</id>\n" +
@@ -244,13 +247,16 @@ class XPathParserTest {
       "        <car index=\"3\">Benz</car>\n" +
       "    </cars>\n" +
       "</user>\n";
+    // @formatter:on
 
-  String carsNodeToStringExpect =
+    // @formatter:off
+    String carsNodeToStringExpect =
       "<cars>\n" +
       "    <car index=\"1\">BMW</car>\n" +
       "    <car index=\"2\">Audi</car>\n" +
       "    <car index=\"3\">Benz</car>\n" +
       "</cars>\n";
+    // @formatter:on
 
     assertEquals(usersNodeToStringExpect, usersNodeToString);
     assertEquals(userNodeToStringExpect, userNodeToString);
