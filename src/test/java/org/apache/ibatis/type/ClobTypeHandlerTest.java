@@ -38,7 +38,7 @@ class ClobTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldSetParameter() throws Exception {
     TYPE_HANDLER.setParameter(ps, 1, "Hello", null);
-    verify(ps).setCharacterStream(Mockito.eq(1), Mockito.any(Reader.class), Mockito.eq(5));
+    verify(ps).setClob(Mockito.eq(1), Mockito.any(Reader.class), Mockito.eq(5L));
   }
 
   @Override

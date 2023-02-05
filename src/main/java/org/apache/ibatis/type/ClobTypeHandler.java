@@ -31,7 +31,7 @@ public class ClobTypeHandler extends BaseTypeHandler<String> {
   public void setNonNullParameter(PreparedStatement ps, int i, String parameter, JdbcType jdbcType)
       throws SQLException {
     StringReader reader = new StringReader(parameter);
-    ps.setCharacterStream(i, reader, parameter.length());
+    ps.setClob(i, reader, parameter.length());
   }
 
   @Override
