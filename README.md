@@ -21,3 +21,13 @@ Essentials
 * [See the docs](https://mybatis.org/mybatis-3)
 * [Download Latest](https://github.com/mybatis/mybatis-3/releases)
 * [Download Snapshot](https://oss.sonatype.org/content/repositories/snapshots/org/mybatis/mybatis/)
+
+Contributions
+-------------
+
+Mybatis-core is now being auto formatted.  Given nature of some code logic with mybatis, it is more appropriate to force a formatting structure manually for snippets such as sql statements.  To do so, add following blocks around code.
+
+```// @formatter:off``` - to start the block of unformatted code
+```// @formatter:off``` - to end the block of unformatted code
+
+If comment sections need same behaviour such as javadocs, note that the entire block must be around entire comment as direct usage does not properly indicate that formatter treats it all as one comment block regardless.
