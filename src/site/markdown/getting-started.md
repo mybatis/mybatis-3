@@ -20,7 +20,7 @@ Every MyBatis application centers around an instance of SqlSessionFactory. A Sql
 
 Building a SqlSessionFactory instance from an XML file is very simple. It is recommended that you use a classpath resource for this configuration, but you could use any InputStream instance, including one created from a literal file path or a file:// URL. MyBatis includes a utility class, called Resources, that contains a number of methods that make it simpler to load resources from the classpath and other locations.
 
-```
+```java
 String resource = "org/mybatis/example/mybatis-config.xml";
 InputStream inputStream = Resources.getResourceAsStream(resource);
 SqlSessionFactory sqlSessionFactory =
@@ -39,10 +39,10 @@ The configuration XML file contains settings for the core of the MyBatis system,
     <environment id="development">
       <transactionManager type="JDBC"/>
       <dataSource type="POOLED">
-        <property name="driver" value="${driver}"/>
-        <property name="url" value="${url}"/>
-        <property name="username" value="${username}"/>
-        <property name="password" value="${password}"/>
+        <property name="driver" value="\${driver}"/>
+        <property name="url" value="\${url}"/>
+        <property name="username" value="\${username}"/>
+        <property name="password" value="\${password}"/>
       </dataSource>
     </environment>
   </environments>
@@ -195,7 +195,7 @@ Using this pattern consistently throughout your code will ensure that all databa
 
 Mappers are interfaces that you create to bind to your mapped statements. Instances of the mapper interfaces are acquired from the SqlSession. As such, technically the broadest scope of any mapper instance is the same as the SqlSession from which they were requested. However, the best scope for mapper instances is method scope. That is, they should be requested within the method that they are used, and then be discarded. They do not need to be closed explicitly. While it's not a problem to keep them around throughout a request, similar to the SqlSession, you might find that managing too many resources at this level will quickly get out of hand. Keep it simple, keep Mappers in the method scope. The following example demonstrates this practice.
 
-```
+```java
 try (SqlSession session = sqlSessionFactory.openSession()) {
   BlogMapper mapper = session.getMapper(BlogMapper.class);
   // do work

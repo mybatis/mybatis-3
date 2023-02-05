@@ -11,13 +11,11 @@ The Dynamic SQL elements should be familiar to anyone who has used JSTL or any s
 - trim (where, set)
 - foreach
 
-
-
 ### if
 
 The most common thing to do in dynamic SQL is conditionally include a part of a where clause. For example:
 
-```
+```xml
 <select id="findActiveBlogWithTitleLike"
      resultType="Blog">
   SELECT * FROM BLOG
@@ -68,8 +66,6 @@ Let’s use the example above, but now let’s search only on title if one is pr
   </choose>
 </select>
 ```
-
-
 
 ### trim, where, set
 
@@ -160,7 +156,7 @@ Here, the *set* element will dynamically prepend the SET keyword, and also elimi
 
 Alternatively, you can achieve the same effect by using *trim* element:
 
-```
+```xml
 <trim prefix="SET" suffixOverrides=",">
   ...
 </trim>
@@ -195,7 +191,7 @@ This wraps up the discussion regarding the XML configuration file and XML mappin
 
 For using dynamic SQL in annotated mapper class, *script* element can be used. For example:
 
-```xml
+```java
     @Update({"<script>",
       "update Author",
       "  <set>",

@@ -50,8 +50,6 @@ To see MyBatis logging statements you may enable logging on a package, a mapper 
 
 Again, how you do this is dependent on the logging implementation in use. We'll show how to do it with SLF4J(Logback). Configuring the logging services is simply a matter of including one or more extra configuration files (e.g. `logback.xml`) and sometimes a new JAR file. The following example configuration will configure full logging services using SLF4J(Logback) as a provider. There are 2 steps.
 
-
-
 #### Step 1: Add the SLF4J + Logback JAR files 
 
 Because we are using SLF4J(Logback), we will need to ensure its JAR file is available to our application. To use SLF4J(Logback), you need to add the JAR file to your application classpath.
@@ -67,8 +65,6 @@ If you use the maven, you can download jar files by adding following settings on
   <version>1.x.x</version>
 </dependency>
 ```
-
-
 
 #### Step 2: Configure Logback 
 
@@ -167,18 +163,18 @@ Yes, as you may have noticed, there is no difference in configuring logging for 
 
 The remaining configuration in the `logback.xml` file is used to configure the appenders, which is beyond the scope of this document. However, you can find more information at the [Logback](https://logback.qos.ch/) website. Or, you could simply experiment with it to see what effects the different configuration options have.
 
-
-
 #### Configuration example for Log4j 2 
 
 ```xml
-pom.xml
+<!-- pom.xml -->
 <dependency>
   <groupId>org.apache.logging.log4j</groupId>
   <artifactId>log4j-core</artifactId>
   <version>2.x.x</version>
 </dependency>
-log4j2.xml
+```
+```xml
+<!-- log4j2.xml -->
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration xmlns="http://logging.apache.org/log4j/2.0/config">
 
@@ -198,18 +194,18 @@ log4j2.xml
 </Configuration>
 ```
 
-
-
 #### Configuration example for Log4j 
 
-```properties
-pom.xml
+```xml
+<!-- pom.xml -->
 <dependency>
   <groupId>log4j</groupId>
   <artifactId>log4j</artifactId>
   <version>1.2.17</version>
 </dependency>
-log4j.properties
+```
+```properties
+# log4j.properties
 log4j.rootLogger=ERROR, stdout
 
 log4j.logger.org.mybatis.example.BlogMapper=TRACE
@@ -219,12 +215,10 @@ log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
 log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n
 ```
 
-
-
 #### Configuration example for JDK logging 
 
 ```properties
-logging.properties
+# logging.properties
 handlers=java.util.logging.ConsoleHandler
 .level=SEVERE
 

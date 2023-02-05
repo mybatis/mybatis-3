@@ -3,18 +3,18 @@
 The MyBatis configuration contains settings and properties that have a dramatic effect on how MyBatis behaves. The high level structure of the document is as follows:
 
 - configuration
-  - [properties](https://mybatis.org/mybatis-3/configuration.html#properties)
-  - [settings](https://mybatis.org/mybatis-3/configuration.html#settings)
-  - [typeAliases](https://mybatis.org/mybatis-3/configuration.html#typeAliases)
-  - [typeHandlers](https://mybatis.org/mybatis-3/configuration.html#typeHandlers)
-  - [objectFactory](https://mybatis.org/mybatis-3/configuration.html#objectFactory)
-  - [plugins](https://mybatis.org/mybatis-3/configuration.html#plugins)
+  - [properties](#properties)
+  - [settings](#settings)
+  - [typeAliases](#typeAliases)
+  - [typeHandlers](#typeHandlers)
+  - [objectFactory](#objectFactory)
+  - [plugins](#plugins)
   - environments
     - environment
       - transactionManager
       - dataSource
-  - [databaseIdProvider](https://mybatis.org/mybatis-3/configuration.html#databaseIdProvider)
-  - [mappers](https://mybatis.org/mybatis-3/configuration.html#mappers)
+  - [databaseIdProvider](#databaseIdProvider)
+  - [mappers](#mappers)
 
 ### properties
 
@@ -31,10 +31,10 @@ The properties can then be used throughout the configuration files to substitute
 
 ```xml
 <dataSource type="POOLED">
-  <property name="driver" value="${driver}"/>
-  <property name="url" value="${url}"/>
-  <property name="username" value="${username}"/>
-  <property name="password" value="${password}"/>
+  <property name="driver" value="\${driver}"/>
+  <property name="url" value="\${url}"/>
+  <property name="username" value="\${username}"/>
+  <property name="password" value="\${password}"/>
 </dataSource>
 ```
 
@@ -65,7 +65,7 @@ Since the MyBatis 3.4.2, your can specify a default value into placeholder as fo
 ```xml
 <dataSource type="POOLED">
   <!-- ... -->
-  <property name="username" value="${username:ut_user}"/> <!-- If 'username' property not present, username become 'ut_user' -->
+  <property name="username" value="\${username:ut_user}"/> <!-- If 'username' property not present, username become 'ut_user' -->
 </dataSource>
 ```
 
@@ -78,7 +78,7 @@ This feature is disabled by default. If you specify a default value into placeho
 </properties>
 ```
 
-<span class="label important">NOTE</span> This will conflict with the `":"` character in property keys (e.g. `db:username`) or the ternary operator of OGNL expressions (e.g. `${tableName != null ? tableName : 'global_constants'}`) on a SQL definition. If you use either and want default property values, you must change the default value separator by adding this special property:
+<span class="label important">NOTE</span> This will conflict with the `":"` character in property keys (e.g. `db:username`) or the ternary operator of OGNL expressions (e.g. `\${tableName != null ? tableName : 'global_constants'}`) on a SQL definition. If you use either and want default property values, you must change the default value separator by adding this special property:
 
 ```xml
 <properties resource="org/mybatis/example/config.properties">
@@ -87,7 +87,7 @@ This feature is disabled by default. If you specify a default value into placeho
 </properties>
 <dataSource type="POOLED">
   <!-- ... -->
-  <property name="username" value="${db:username?:ut_user}"/>
+  <property name="username" value="\${db:username?:ut_user}"/>
 </dataSource>
 ```
 
@@ -95,40 +95,523 @@ This feature is disabled by default. If you specify a default value into placeho
 
 These are extremely important tweaks that modify the way that MyBatis behaves at runtime. The following table describes the settings, their meanings and their default values.
 
-| Setting                            | Description                                                  | Valid Values                                                 | Default                                               |
-| :--------------------------------- | :----------------------------------------------------------- | :----------------------------------------------------------- | :---------------------------------------------------- |
-| cacheEnabled                       | Globally enables or disables any caches configured in any mapper under this configuration. | true \| false                                                | true                                                  |
-| lazyLoadingEnabled                 | Globally enables or disables lazy loading. When enabled, all relations will be lazily loaded. This value can be superseded for a specific relation by using the `fetchType` attribute on it. | true \| false                                                | false                                                 |
-| aggressiveLazyLoading              | When enabled, any method call will load all the lazy properties of the object. Otherwise, each property is loaded on demand (see also `lazyLoadTriggerMethods`). | true \| false                                                | false (true in ≤3.4.1)                                |
-| multipleResultSetsEnabled          | Allows or disallows multiple ResultSets to be returned from a single statement (compatible driver required). | true \| false                                                | true                                                  |
-| useColumnLabel                     | Uses the column label instead of the column name. Different drivers behave differently in this respect. Refer to the driver documentation, or test out both modes to determine how your driver behaves. | true \| false                                                | true                                                  |
-| useGeneratedKeys                   | Allows JDBC support for generated keys. A compatible driver is required. This setting forces generated keys to be used if set to true, as some drivers deny compatibility but still work (e.g. Derby). | true \| false                                                | False                                                 |
-| autoMappingBehavior                | Specifies if and how MyBatis should automatically map columns to fields/properties. NONE disables auto-mapping. PARTIAL will only auto-map results with no nested result mappings defined inside. FULL will auto-map result mappings of any complexity (containing nested or otherwise). | NONE, PARTIAL, FULL                                          | PARTIAL                                               |
-| autoMappingUnknownColumnBehavior   | Specify the behavior when detects an unknown column (or unknown property type) of automatic mapping target.`NONE`: Do nothing`WARNING`: Output warning log (The log level of `'org.apache.ibatis.session.AutoMappingUnknownColumnBehavior'` must be set to `WARN`)`FAILING`: Fail mapping (Throw `SqlSessionException`) | NONE, WARNING, FAILING                                       | NONE                                                  |
-| defaultExecutorType                | Configures the default executor. SIMPLE executor does nothing special. REUSE executor reuses prepared statements. BATCH executor reuses statements and batches updates. | SIMPLE REUSE BATCH                                           | SIMPLE                                                |
-| defaultStatementTimeout            | Sets the number of seconds the driver will wait for a response from the database. | Any positive integer                                         | Not Set (null)                                        |
-| defaultFetchSize                   | Sets the driver a hint as to control fetching size for return results. This parameter value can be override by a query setting. | Any positive integer                                         | Not Set (null)                                        |
-| defaultResultSetType               | Specifies a scroll strategy when omit it per statement settings. (Since: 3.5.2) | FORWARD_ONLY \| SCROLL_SENSITIVE \| SCROLL_INSENSITIVE \| DEFAULT(same behavior with 'Not Set') | Not Set (null)                                        |
-| safeRowBoundsEnabled               | Allows using RowBounds on nested statements. If allow, set the false. | true \| false                                                | False                                                 |
-| safeResultHandlerEnabled           | Allows using ResultHandler on nested statements. If allow, set the false. | true \| false                                                | True                                                  |
-| mapUnderscoreToCamelCase           | Enables automatic mapping from classic database column names A_COLUMN to camel case classic Java property names aColumn. | true \| false                                                | False                                                 |
-| localCacheScope                    | MyBatis uses local cache to prevent circular references and speed up repeated nested queries. By default (SESSION) all queries executed during a session are cached. If localCacheScope=STATEMENT local session will be used just for statement execution, no data will be shared between two different calls to the same SqlSession. | SESSION \| STATEMENT                                         | SESSION                                               |
-| jdbcTypeForNull                    | Specifies the JDBC type for null values when no specific JDBC type was provided for the parameter. Some drivers require specifying the column JDBC type but others work with generic values like NULL, VARCHAR or OTHER. | JdbcType enumeration. Most common are: NULL, VARCHAR and OTHER | OTHER                                                 |
-| lazyLoadTriggerMethods             | Specifies which Object's methods trigger a lazy load         | A method name list separated by commas                       | equals,clone,hashCode,toString                        |
-| defaultScriptingLanguage           | Specifies the language used by default for dynamic SQL generation. | A type alias or fully qualified class name.                  | org.apache.ibatis.scripting.xmltags.XMLLanguageDriver |
-| defaultEnumTypeHandler             | Specifies the `TypeHandler` used by default for Enum. (Since: 3.4.5) | A type alias or fully qualified class name.                  | org.apache.ibatis.type.EnumTypeHandler                |
-| callSettersOnNulls                 | Specifies if setters or map's put method will be called when a retrieved value is null. It is useful when you rely on Map.keySet() or null value initialization. Note primitives such as (int,boolean,etc.) will not be set to null. | true \| false                                                | false                                                 |
-| returnInstanceForEmptyRow          | MyBatis, by default, returns `null` when all the columns of a returned row are NULL. When this setting is enabled, MyBatis returns an empty instance instead. Note that it is also applied to nested results (i.e. collectioin and association). Since: 3.4.2 | true \| false                                                | false                                                 |
-| logPrefix                          | Specifies the prefix string that MyBatis will add to the logger names. | Any String                                                   | Not set                                               |
-| logImpl                            | Specifies which logging implementation MyBatis should use. If this setting is not present logging implementation will be autodiscovered. | SLF4J \| LOG4J(deprecated since 3.5.9) \| LOG4J2 \| JDK_LOGGING \| COMMONS_LOGGING \| STDOUT_LOGGING \| NO_LOGGING | Not set                                               |
-| proxyFactory                       | Specifies the proxy tool that MyBatis will use for creating lazy loading capable objects. | CGLIB (deprecated since 3.5.10) \| JAVASSIST                 | JAVASSIST (MyBatis 3.3 or above)                      |
-| vfsImpl                            | Specifies VFS implementations                                | Fully qualified class names of custom VFS implementation separated by commas. | Not set                                               |
-| useActualParamName                 | Allow referencing statement parameters by their actual names declared in the method signature. To use this feature, your project must be compiled in Java 8 with `-parameters` option. (Since: 3.4.1) | true \| false                                                | true                                                  |
-| configurationFactory               | Specifies the class that provides an instance of `Configuration`. The returned Configuration instance is used to load lazy properties of deserialized objects. This class must have a method with a signature `static Configuration getConfiguration()`. (Since: 3.2.3) | A type alias or fully qualified class name.                  | Not set                                               |
-| shrinkWhitespacesInSql             | Removes extra whitespace characters from the SQL. Note that this also affects literal strings in SQL. (Since 3.5.5) | true \| false                                                | false                                                 |
-| defaultSqlProviderType             | Specifies an sql provider class that holds provider method (Since 3.5.6). This class apply to the `type`(or `value`) attribute on sql provider annotation(e.g. `@SelectProvider`), when these attribute was omitted. | A type alias or fully qualified class name                   | Not set                                               |
-| nullableOnForEach                  | Specifies the default value of 'nullable' attribute on 'foreach' tag. (Since 3.5.9) | true \| false                                                | false                                                 |
-| argNameBasedConstructorAutoMapping | When applying constructor auto-mapping, argument name is used to search the column to map instead of relying on the column order. (Since 3.5.10) | true \| false                                                | false                                                 |
+<table>
+          <thead>
+            <tr>
+              <th>Setting</th>
+              <th>Description</th>
+              <th>Valid Values</th>
+              <th>Default</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                cacheEnabled
+              </td>
+              <td>
+                Globally enables or disables any
+                caches configured in any
+                mapper under this configuration.
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                true
+              </td>
+            </tr>
+            <tr>
+              <td>
+                lazyLoadingEnabled
+              </td>
+              <td>
+                Globally enables or disables lazy loading. When enabled, all relations will be lazily loaded.
+                This value can be superseded for a specific relation by using the <code>fetchType</code> attribute on it.
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
+              </td>
+            </tr>
+            <tr>
+              <td>
+                aggressiveLazyLoading
+              </td>
+              <td>
+                When enabled, any method call will load all the lazy properties of the object. Otherwise, each property is loaded on demand (see also <code>lazyLoadTriggerMethods</code>).
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false (true in ≤3.4.1)
+              </td>
+            </tr>
+            <tr>
+              <td>
+                multipleResultSetsEnabled
+              </td>
+              <td>
+                Allows or disallows multiple
+                ResultSets to be returned from a
+                single statement (compatible
+                driver required).
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                true
+              </td>
+            </tr>
+            <tr>
+              <td>
+                useColumnLabel
+              </td>
+              <td>
+                Uses the column label instead of
+                the column name. Different
+                drivers behave differently in this
+                respect. Refer to the driver
+                documentation, or test out both
+                modes to determine how your
+                driver
+                behaves.
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                true
+              </td>
+            </tr>
+            <tr>
+              <td>
+                useGeneratedKeys
+              </td>
+              <td>
+                Allows JDBC support for generated
+                keys. A compatible driver is
+                required. This setting forces
+                generated keys to be used if set to
+                true, as some drivers deny
+                compatibility but still work (e.g.
+                Derby).
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                False
+              </td>
+            </tr>
+            <tr>
+              <td>
+                autoMappingBehavior
+              </td>
+              <td>
+                Specifies if and how MyBatis
+                should automatically map columns
+                to fields/properties.
+                NONE disables auto-mapping.
+                PARTIAL will only auto-map results
+                with no nested result mappings defined inside.
+                FULL will auto-map result mappings of any
+                complexity (containing nested or otherwise).
+              </td>
+              <td>
+                NONE, PARTIAL, FULL
+              </td>
+              <td>
+                PARTIAL
+              </td>
+            </tr>
+            <tr>
+              <td>
+                autoMappingUnknownColumnBehavior
+              </td>
+              <td>
+                Specify the behavior when detects an unknown column (or unknown property type) of automatic mapping target.
+                <ul>
+                  <li><code>NONE</code>: Do nothing</li>
+                  <li><code>WARNING</code>: Output warning log (The log level of <code>'org.apache.ibatis.session.AutoMappingUnknownColumnBehavior'</code> must be set to <code>WARN</code>)</li>
+                  <li><code>FAILING</code>: Fail mapping (Throw <code>SqlSessionException</code>)</li>
+                </ul>
+              </td>
+              <td>
+                NONE, WARNING, FAILING
+              </td>
+              <td>
+                NONE
+              </td>
+            </tr>
+            <tr>
+              <td>
+                defaultExecutorType
+              </td>
+              <td>
+                Configures the default executor.
+                SIMPLE executor does nothing
+                special. REUSE executor reuses
+                prepared statements. BATCH
+                executor
+                reuses statements and
+                batches updates.
+              </td>
+              <td>
+                SIMPLE
+                REUSE
+                BATCH
+              </td>
+              <td>
+                SIMPLE
+              </td>
+            </tr>
+            <tr>
+              <td>
+                defaultStatementTimeout
+              </td>
+              <td>
+                Sets the number of seconds
+                the driver will wait
+                for a response from the database.
+              </td>
+              <td>
+                Any positive integer
+              </td>
+              <td>
+                Not Set (null)
+              </td>
+            </tr>
+            <tr>
+              <td>
+                defaultFetchSize
+              </td>
+              <td>
+                Sets the driver a hint as to control fetching size for return results.
+                This parameter value can be override by a query setting.
+              </td>
+              <td>
+                Any positive integer
+              </td>
+              <td>
+                Not Set (null)
+              </td>
+            </tr>
+            <tr>
+              <td>
+                defaultResultSetType
+              </td>
+              <td>
+                Specifies a scroll strategy when omit it per statement settings. (Since: 3.5.2)
+              </td>
+              <td>
+                FORWARD_ONLY | SCROLL_SENSITIVE | SCROLL_INSENSITIVE | DEFAULT(same behavior with 'Not Set')
+              </td>
+              <td>
+                Not Set (null)
+              </td>
+            </tr>
+            <tr>
+              <td>
+                safeRowBoundsEnabled
+              </td>
+              <td>
+                Allows using RowBounds on nested
+                statements. If allow, set the false.
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                False
+              </td>
+            </tr>
+            <tr>
+              <td>
+                safeResultHandlerEnabled
+              </td>
+              <td>
+                Allows using ResultHandler on nested statements.
+                If allow, set the false.
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                True
+              </td>
+            </tr>
+            <tr>
+              <td>
+                mapUnderscoreToCamelCase
+              </td>
+              <td>
+                Enables automatic mapping from
+                classic database column names
+                A_COLUMN to camel case classic Java
+                property names aColumn.
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                False
+              </td>
+            </tr>
+            <tr>
+              <td>
+                localCacheScope
+              </td>
+              <td>
+                MyBatis uses local cache to prevent circular references and speed up repeated nested queries.
+                By default (SESSION) all queries executed during a session are cached. If localCacheScope=STATEMENT local session will be used just for
+                statement execution, no data will be shared between two different calls to the same SqlSession.
+              </td>
+              <td>
+                SESSION | STATEMENT
+              </td>
+              <td>
+                SESSION
+              </td>
+            </tr>
+            <tr>
+              <td>
+                jdbcTypeForNull
+              </td>
+              <td>
+                Specifies the JDBC type for null values when no specific JDBC type was provided for the parameter.
+                Some drivers require specifying the column JDBC type but others work with generic values like NULL, VARCHAR or OTHER.
+              </td>
+              <td>
+                JdbcType enumeration. Most common are: NULL, VARCHAR and OTHER
+              </td>
+              <td>
+                OTHER
+              </td>
+            </tr>
+            <tr>
+              <td>
+                lazyLoadTriggerMethods
+              </td>
+              <td>
+                Specifies which Object's methods trigger a lazy load
+              </td>
+              <td>
+                A method name list separated by commas
+              </td>
+              <td>
+                equals,clone,hashCode,toString
+              </td>
+            </tr>
+            <tr>
+              <td>
+                defaultScriptingLanguage
+              </td>
+              <td>
+                Specifies the language used by default for dynamic SQL generation.
+              </td>
+              <td>
+                A type alias or fully qualified class name.
+              </td>
+              <td>
+                org.apache.ibatis.scripting.xmltags.XMLLanguageDriver
+              </td>
+            </tr>
+            <tr>
+              <td>
+                defaultEnumTypeHandler
+              </td>
+              <td>
+                Specifies the <code>TypeHandler</code> used by default for Enum. (Since: 3.4.5)
+              </td>
+              <td>
+                A type alias or fully qualified class name.
+              </td>
+              <td>
+                org.apache.ibatis.type.EnumTypeHandler
+              </td>
+            </tr>
+            <tr>
+              <td>
+                callSettersOnNulls
+              </td>
+              <td>
+                Specifies if setters or map's put method will be called when a retrieved value is null. It is useful when you rely on Map.keySet() or null value initialization. Note primitives such as (int,boolean,etc.) will not be set to null.
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
+              </td>
+            </tr>
+            <tr>
+              <td>
+                returnInstanceForEmptyRow
+              </td>
+              <td>
+                MyBatis, by default, returns <code>null</code> when all the columns of a returned row are NULL.
+                When this setting is enabled, MyBatis returns an empty instance instead.
+                Note that it is also applied to nested results (i.e. collectioin and association). Since: 3.4.2
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
+              </td>
+            </tr>
+            <tr>
+              <td>
+                logPrefix
+              </td>
+              <td>
+                Specifies the prefix string that MyBatis will add to the logger names.
+              </td>
+              <td>
+                Any String
+              </td>
+              <td>
+                Not set
+              </td>
+            </tr>
+            <tr>
+              <td>
+                logImpl
+              </td>
+              <td>
+                Specifies which logging implementation MyBatis should use. If this setting is not present logging implementation will be autodiscovered.
+              </td>
+              <td>
+                SLF4J | LOG4J(deprecated since 3.5.9) | LOG4J2 | JDK_LOGGING | COMMONS_LOGGING | STDOUT_LOGGING | NO_LOGGING
+              </td>
+              <td>
+                Not set
+              </td>
+            </tr>
+            <tr>
+              <td>
+                proxyFactory
+              </td>
+              <td>
+                Specifies the proxy tool that MyBatis will use for creating lazy loading capable objects.
+              </td>
+              <td>
+                CGLIB (deprecated since 3.5.10) | JAVASSIST
+              </td>
+              <td>
+                JAVASSIST (MyBatis 3.3 or above)
+              </td>
+            </tr>
+            <tr>
+              <td>
+                vfsImpl
+              </td>
+              <td>
+                Specifies VFS implementations
+              </td>
+              <td>
+                Fully qualified class names of custom VFS implementation separated by commas.
+              </td>
+              <td>
+                Not set
+              </td>
+            </tr>
+            <tr>
+              <td>
+                useActualParamName
+              </td>
+              <td>
+                Allow referencing statement parameters by their actual names declared in the method signature.
+                To use this feature, your project must be compiled in Java 8 with <code>-parameters</code> option. (Since: 3.4.1)
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                true
+              </td>
+            </tr>
+            <tr>
+              <td>
+                configurationFactory
+              </td>
+              <td>
+                Specifies the class that provides an instance of <code>Configuration</code>.
+                The returned Configuration instance is used to load lazy properties of deserialized objects.
+                This class must have a method with a signature <code>static Configuration getConfiguration()</code>. (Since: 3.2.3)
+              </td>
+              <td>
+                A type alias or fully qualified class name.
+              </td>
+              <td>
+                Not set
+              </td>
+            </tr>
+            <tr>
+              <td>
+                shrinkWhitespacesInSql
+              </td>
+              <td>
+                Removes extra whitespace characters from the SQL. Note that this also affects literal strings in SQL. (Since 3.5.5)
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
+              </td>
+            </tr>
+            <tr>
+              <td>
+                defaultSqlProviderType
+              </td>
+              <td>
+                Specifies an sql provider class that holds provider method (Since 3.5.6).
+                This class apply to the <code>type</code>(or <code>value</code>) attribute on sql provider annotation(e.g. <code>@SelectProvider</code>),
+                when these attribute was omitted.
+              </td>
+              <td>
+                A type alias or fully qualified class name
+              </td>
+              <td>
+                Not set
+              </td>
+            </tr>
+            <tr>
+              <td>
+                nullableOnForEach
+              </td>
+              <td>
+                Specifies the default value of 'nullable' attribute on 'foreach' tag. (Since 3.5.9)
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
+              </td>
+            </tr>
+            <tr>
+              <td>
+                argNameBasedConstructorAutoMapping
+              </td>
+              <td>
+                When applying constructor auto-mapping, argument name is used to search the column to map instead of relying on the column order. (Since 3.5.10)
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
 An example of the settings element fully configured is as follows:
 
@@ -200,45 +683,316 @@ public class Author {
 
 There are many built-in type aliases for common Java types. They are all case insensitive, note the special handling of primitives due to the overloaded names.
 
-| Alias                     | Mapped Type  |
-| :------------------------ | :----------- |
-| _byte                     | byte         |
-| _char (since 3.5.10)      | char         |
-| _character (since 3.5.10) | char         |
-| _long                     | long         |
-| _short                    | short        |
-| _int                      | int          |
-| _integer                  | int          |
-| _double                   | double       |
-| _float                    | float        |
-| _boolean                  | boolean      |
-| string                    | String       |
-| byte                      | Byte         |
-| char (since 3.5.10)       | Character    |
-| character (since 3.5.10)  | Character    |
-| long                      | Long         |
-| short                     | Short        |
-| int                       | Integer      |
-| integer                   | Integer      |
-| double                    | Double       |
-| float                     | Float        |
-| boolean                   | Boolean      |
-| date                      | Date         |
-| decimal                   | BigDecimal   |
-| bigdecimal                | BigDecimal   |
-| biginteger                | BigInteger   |
-| object                    | Object       |
-| date[]                    | Date[]       |
-| decimal[]                 | BigDecimal[] |
-| bigdecimal[]              | BigDecimal[] |
-| biginteger[]              | BigInteger[] |
-| object[]                  | Object[]     |
-| map                       | Map          |
-| hashmap                   | HashMap      |
-| list                      | List         |
-| arraylist                 | ArrayList    |
-| collection                | Collection   |
-| iterator                  | Iterator     |
+<table>
+          <thead>
+            <tr>
+              <th>
+                Alias
+              </th>
+              <th>
+                Mapped Type
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                _byte
+              </td>
+              <td>
+                byte
+              </td>
+            </tr>
+            <tr>
+              <td>
+                _char (since 3.5.10)
+              </td>
+              <td>
+                char
+              </td>
+            </tr>
+            <tr>
+              <td>
+                _character (since 3.5.10)
+              </td>
+              <td>
+                char
+              </td>
+            </tr>
+            <tr>
+              <td>
+                _long
+              </td>
+              <td>
+                long
+              </td>
+            </tr>
+            <tr>
+              <td>
+                _short
+              </td>
+              <td>
+                short
+              </td>
+            </tr>
+            <tr>
+              <td>
+                _int
+              </td>
+              <td>
+                int
+              </td>
+            </tr>
+            <tr>
+              <td>
+                _integer
+              </td>
+              <td>
+                int
+              </td>
+            </tr>
+            <tr>
+              <td>
+                _double
+              </td>
+              <td>
+                double
+              </td>
+            </tr>
+            <tr>
+              <td>
+                _float
+              </td>
+              <td>
+                float
+              </td>
+            </tr>
+            <tr>
+              <td>
+                _boolean
+              </td>
+              <td>
+                boolean
+              </td>
+            </tr>
+            <tr>
+              <td>
+                string
+              </td>
+              <td>
+                String
+              </td>
+            </tr>
+            <tr>
+              <td>
+                byte
+              </td>
+              <td>
+                Byte
+              </td>
+            </tr>
+            <tr>
+              <td>
+                char (since 3.5.10)
+              </td>
+              <td>
+                Character
+              </td>
+            </tr>
+            <tr>
+              <td>
+                character (since 3.5.10)
+              </td>
+              <td>
+                Character
+              </td>
+            </tr>
+            <tr>
+              <td>
+                long
+              </td>
+              <td>
+                Long
+              </td>
+            </tr>
+            <tr>
+              <td>
+                short
+              </td>
+              <td>
+                Short
+              </td>
+            </tr>
+            <tr>
+              <td>
+                int
+              </td>
+              <td>
+                Integer
+              </td>
+            </tr>
+            <tr>
+              <td>
+                integer
+              </td>
+              <td>
+                Integer
+              </td>
+            </tr>
+            <tr>
+              <td>
+                double
+              </td>
+              <td>
+                Double
+              </td>
+            </tr>
+            <tr>
+              <td>
+                float
+              </td>
+              <td>
+                Float
+              </td>
+            </tr>
+            <tr>
+              <td>
+                boolean
+              </td>
+              <td>
+                Boolean
+              </td>
+            </tr>
+            <tr>
+              <td>
+                date
+              </td>
+              <td>
+                Date
+              </td>
+            </tr>
+            <tr>
+              <td>
+                decimal
+              </td>
+              <td>
+                BigDecimal
+              </td>
+            </tr>
+            <tr>
+              <td>
+                bigdecimal
+              </td>
+              <td>
+                BigDecimal
+              </td>
+            </tr>
+            <tr>
+              <td>
+                biginteger
+              </td>
+              <td>
+                BigInteger
+              </td>
+            </tr>
+            <tr>
+              <td>
+                object
+              </td>
+              <td>
+                Object
+              </td>
+            </tr>
+            <tr>
+              <td>
+                date[]
+              </td>
+              <td>
+                Date[]
+              </td>
+            </tr>
+            <tr>
+              <td>
+                decimal[]
+              </td>
+              <td>
+                BigDecimal[]
+              </td>
+            </tr>
+            <tr>
+              <td>
+                bigdecimal[]
+              </td>
+              <td>
+                BigDecimal[]
+              </td>
+            </tr>
+            <tr>
+              <td>
+                biginteger[]
+              </td>
+              <td>
+                BigInteger[]
+              </td>
+            </tr>
+            <tr>
+              <td>
+                object[]
+              </td>
+              <td>
+                Object[]
+              </td>
+            </tr>
+            <tr>
+              <td>
+                map
+              </td>
+              <td>
+                Map
+              </td>
+            </tr>
+            <tr>
+              <td>
+                hashmap
+              </td>
+              <td>
+                HashMap
+              </td>
+            </tr>
+            <tr>
+              <td>
+                list
+              </td>
+              <td>
+                List
+              </td>
+            </tr>
+            <tr>
+              <td>
+                arraylist
+              </td>
+              <td>
+                ArrayList
+              </td>
+            </tr>
+            <tr>
+              <td>
+                collection
+              </td>
+              <td>
+                Collection
+              </td>
+            </tr>
+            <tr>
+              <td>
+                iterator
+              </td>
+              <td>
+                Iterator
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
 ### typeHandlers
 
@@ -246,45 +1000,431 @@ Whenever MyBatis sets a parameter on a PreparedStatement or retrieves a value fr
 
 <span class="label important">NOTE</span> Since version 3.4.5, MyBatis supports JSR-310 (Date and Time API) by default.
 
-| Type Handler                 | Java Types                      | JDBC Types                                                   |
-| :--------------------------- | :------------------------------ | :----------------------------------------------------------- |
-| `BooleanTypeHandler`         | `java.lang.Boolean`, `boolean`  | Any compatible `BOOLEAN`                                     |
-| `ByteTypeHandler`            | `java.lang.Byte`, `byte`        | Any compatible `NUMERIC` or `BYTE`                           |
-| `ShortTypeHandler`           | `java.lang.Short`, `short`      | Any compatible `NUMERIC` or `SMALLINT`                       |
-| `IntegerTypeHandler`         | `java.lang.Integer`, `int`      | Any compatible `NUMERIC` or `INTEGER`                        |
-| `LongTypeHandler`            | `java.lang.Long`, `long`        | Any compatible `NUMERIC` or `BIGINT`                         |
-| `FloatTypeHandler`           | `java.lang.Float`, `float`      | Any compatible `NUMERIC` or `FLOAT`                          |
-| `DoubleTypeHandler`          | `java.lang.Double`, `double`    | Any compatible `NUMERIC` or `DOUBLE`                         |
-| `BigDecimalTypeHandler`      | `java.math.BigDecimal`          | Any compatible `NUMERIC` or `DECIMAL`                        |
-| `StringTypeHandler`          | `java.lang.String`              | `CHAR`, `VARCHAR`                                            |
-| `ClobReaderTypeHandler`      | `java.io.Reader`                | -                                                            |
-| `ClobTypeHandler`            | `java.lang.String`              | `CLOB`, `LONGVARCHAR`                                        |
-| `NStringTypeHandler`         | `java.lang.String`              | `NVARCHAR`, `NCHAR`                                          |
-| `NClobTypeHandler`           | `java.lang.String`              | `NCLOB`                                                      |
-| `BlobInputStreamTypeHandler` | `java.io.InputStream`           | -                                                            |
-| `ByteArrayTypeHandler`       | `byte[]`                        | Any compatible byte stream type                              |
-| `BlobTypeHandler`            | `byte[]`                        | `BLOB`, `LONGVARBINARY`                                      |
-| `DateTypeHandler`            | `java.util.Date`                | `TIMESTAMP`                                                  |
-| `DateOnlyTypeHandler`        | `java.util.Date`                | `DATE`                                                       |
-| `TimeOnlyTypeHandler`        | `java.util.Date`                | `TIME`                                                       |
-| `SqlTimestampTypeHandler`    | `java.sql.Timestamp`            | `TIMESTAMP`                                                  |
-| `SqlDateTypeHandler`         | `java.sql.Date`                 | `DATE`                                                       |
-| `SqlTimeTypeHandler`         | `java.sql.Time`                 | `TIME`                                                       |
-| `ObjectTypeHandler`          | Any                             | `OTHER`, or unspecified                                      |
-| `EnumTypeHandler`            | Enumeration Type                | `VARCHAR` any string compatible type, as the code is stored (not index). |
-| `EnumOrdinalTypeHandler`     | Enumeration Type                | Any compatible `NUMERIC` or `DOUBLE`, as the position is stored (not the code itself). |
-| `SqlxmlTypeHandler`          | `java.lang.String`              | `SQLXML`                                                     |
-| `InstantTypeHandler`         | `java.time.Instant`             | `TIMESTAMP`                                                  |
-| `LocalDateTimeTypeHandler`   | `java.time.LocalDateTime`       | `TIMESTAMP`                                                  |
-| `LocalDateTypeHandler`       | `java.time.LocalDate`           | `DATE`                                                       |
-| `LocalTimeTypeHandler`       | `java.time.LocalTime`           | `TIME`                                                       |
-| `OffsetDateTimeTypeHandler`  | `java.time.OffsetDateTime`      | `TIMESTAMP`                                                  |
-| `OffsetTimeTypeHandler`      | `java.time.OffsetTime`          | `TIME`                                                       |
-| `ZonedDateTimeTypeHandler`   | `java.time.ZonedDateTime`       | `TIMESTAMP`                                                  |
-| `YearTypeHandler`            | `java.time.Year`                | `INTEGER`                                                    |
-| `MonthTypeHandler`           | `java.time.Month`               | `INTEGER`                                                    |
-| `YearMonthTypeHandler`       | `java.time.YearMonth`           | `VARCHAR` or `LONGVARCHAR`                                   |
-| `JapaneseDateTypeHandler`    | `java.time.chrono.JapaneseDate` | `DATE`                                                       |
+<table>
+          <thead>
+            <tr>
+              <th>
+                Type Handler
+              </th>
+              <th>
+                Java Types
+              </th>
+              <th>
+                JDBC Types
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <code>BooleanTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.Boolean</code>, <code>boolean</code>
+              </td>
+              <td>
+                Any compatible <code>BOOLEAN</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>ByteTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.Byte</code>, <code>byte</code>
+              </td>
+              <td>
+                Any compatible <code>NUMERIC</code> or <code>BYTE</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>ShortTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.Short</code>, <code>short</code>
+              </td>
+              <td>
+                Any compatible <code>NUMERIC</code> or <code>SMALLINT</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>IntegerTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.Integer</code>, <code>int</code>
+              </td>
+              <td>
+                Any compatible <code>NUMERIC</code> or <code>INTEGER</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>LongTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.Long</code>, <code>long</code>
+              </td>
+              <td>
+                Any compatible <code>NUMERIC</code> or <code>BIGINT</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>FloatTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.Float</code>, <code>float</code>
+              </td>
+              <td>
+                Any compatible <code>NUMERIC</code> or <code>FLOAT</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>DoubleTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.Double</code>, <code>double</code>
+              </td>
+              <td>
+                Any compatible <code>NUMERIC</code> or <code>DOUBLE</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>BigDecimalTypeHandler</code>
+              </td>
+              <td>
+                <code>java.math.BigDecimal</code>
+              </td>
+              <td>
+                Any compatible <code>NUMERIC</code> or <code>DECIMAL</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>StringTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.String</code>
+              </td>
+              <td>
+                <code>CHAR</code>, <code>VARCHAR</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>ClobReaderTypeHandler</code>
+              </td>
+              <td>
+                <code>java.io.Reader</code>
+              </td>
+              <td>
+                -
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>ClobTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.String</code>
+              </td>
+              <td>
+                <code>CLOB</code>, <code>LONGVARCHAR</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>NStringTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.String</code>
+              </td>
+              <td>
+                <code>NVARCHAR</code>, <code>NCHAR</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>NClobTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.String</code>
+              </td>
+              <td>
+                <code>NCLOB</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>BlobInputStreamTypeHandler</code>
+              </td>
+              <td>
+                <code>java.io.InputStream</code>
+              </td>
+              <td>
+                -
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>ByteArrayTypeHandler</code>
+              </td>
+              <td>
+                <code>byte[]</code>
+              </td>
+              <td>
+                Any compatible byte stream type
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>BlobTypeHandler</code>
+              </td>
+              <td>
+                <code>byte[]</code>
+              </td>
+              <td>
+                <code>BLOB</code>, <code>LONGVARBINARY</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>DateTypeHandler</code>
+              </td>
+              <td>
+                <code>java.util.Date</code>
+              </td>
+              <td>
+                <code>TIMESTAMP</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>DateOnlyTypeHandler</code>
+              </td>
+              <td>
+                <code>java.util.Date</code>
+              </td>
+              <td>
+                <code>DATE</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>TimeOnlyTypeHandler</code>
+              </td>
+              <td>
+                <code>java.util.Date</code>
+              </td>
+              <td>
+                <code>TIME</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>SqlTimestampTypeHandler</code>
+              </td>
+              <td>
+                <code>java.sql.Timestamp</code>
+              </td>
+              <td>
+                <code>TIMESTAMP</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>SqlDateTypeHandler</code>
+              </td>
+              <td>
+                <code>java.sql.Date</code>
+              </td>
+              <td>
+                <code>DATE</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>SqlTimeTypeHandler</code>
+              </td>
+              <td>
+                <code>java.sql.Time</code>
+              </td>
+              <td>
+                <code>TIME</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>ObjectTypeHandler</code>
+              </td>
+              <td>
+                Any
+              </td>
+              <td>
+                <code>OTHER</code>, or unspecified
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>EnumTypeHandler</code>
+              </td>
+              <td>
+                Enumeration Type
+              </td>
+              <td>
+                <code>VARCHAR</code> any string compatible type, as the code is stored (not  index).
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>EnumOrdinalTypeHandler</code>
+              </td>
+              <td>
+                Enumeration Type
+              </td>
+              <td>
+                Any compatible <code>NUMERIC</code> or <code>DOUBLE</code>, as the position is stored
+                (not the code itself).
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>SqlxmlTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.String</code>
+              </td>
+              <td>
+                <code>SQLXML</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>InstantTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.Instant</code>
+              </td>
+              <td>
+                <code>TIMESTAMP</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>LocalDateTimeTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.LocalDateTime</code>
+              </td>
+              <td>
+                <code>TIMESTAMP</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>LocalDateTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.LocalDate</code>
+              </td>
+              <td>
+                <code>DATE</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>LocalTimeTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.LocalTime</code>
+              </td>
+              <td>
+                <code>TIME</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>OffsetDateTimeTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.OffsetDateTime</code>
+              </td>
+              <td>
+                <code>TIMESTAMP</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>OffsetTimeTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.OffsetTime</code>
+              </td>
+              <td>
+                <code>TIME</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>ZonedDateTimeTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.ZonedDateTime</code>
+              </td>
+              <td>
+                <code>TIMESTAMP</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>YearTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.Year</code>
+              </td>
+              <td>
+                <code>INTEGER</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>MonthTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.Month</code>
+              </td>
+              <td>
+                <code>INTEGER</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>YearMonthTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.YearMonth</code>
+              </td>
+              <td>
+                <code>VARCHAR</code> or <code>LONGVARCHAR</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>JapaneseDateTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.chrono.JapaneseDate</code>
+              </td>
+              <td>
+                <code>DATE</code>
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
 You can override the type handlers or create your own to deal with unsupported or non-standard types. To do so, implement the interface `org.apache.ibatis.type.TypeHandler` or extend the convenience class `org.apache.ibatis.type.BaseTypeHandler` and optionally map it to a JDBC type. For example:
 
@@ -317,6 +1457,8 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
     return cs.getString(columnIndex);
   }
 }
+```
+```xml
 <!-- mybatis-config.xml -->
 <typeHandlers>
   <typeHandler handler="org.mybatis.example.ExampleTypeHandler"/>
@@ -339,7 +1481,7 @@ When deciding which TypeHandler to use in a `ResultMap`, the Java type is known 
 
 And finally you can let MyBatis search for your TypeHandlers:
 
-```
+```xml
 <!-- mybatis-config.xml -->
 <typeHandlers>
   <package name="org.mybatis.example"/>
@@ -375,7 +1517,7 @@ For example, let's say that we need to store the rounding mode that should be us
 
 However, we may not want to store names. Our DBA may insist on an integer code instead. That's just as easy: add `EnumOrdinalTypeHandler` to the `typeHandlers` in your config file, and now each `RoundingMode` will be mapped to an integer using its ordinal value.
 
-```
+```xml
 <!-- mybatis-config.xml -->
 <typeHandlers>
   <typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler"
@@ -459,6 +1601,8 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
     return Collection.class.isAssignableFrom(type);
   }
 }
+```
+```xml
 <!-- mybatis-config.xml -->
 <objectFactory type="org.mybatis.example.ExampleObjectFactory">
   <property name="someProperty" value="100"/>
@@ -551,10 +1695,10 @@ The environments element defines how the environment is configured.
       <property name="..." value="..."/>
     </transactionManager>
     <dataSource type="POOLED">
-      <property name="driver" value="${driver}"/>
-      <property name="url" value="${url}"/>
-      <property name="username" value="${username}"/>
-      <property name="password" value="${password}"/>
+      <property name="driver" value="\${driver}"/>
+      <property name="url" value="\${url}"/>
+      <property name="username" value="\${username}"/>
+      <property name="password" value="\${password}"/>
     </dataSource>
   </environment>
 </environments>
@@ -740,18 +1884,24 @@ Now that the behavior of MyBatis is configured with the above configuration elem
   <mapper resource="org/mybatis/builder/BlogMapper.xml"/>
   <mapper resource="org/mybatis/builder/PostMapper.xml"/>
 </mappers>
+```
+```xml
 <!-- Using url fully qualified paths -->
 <mappers>
   <mapper url="file:///var/mappers/AuthorMapper.xml"/>
   <mapper url="file:///var/mappers/BlogMapper.xml"/>
   <mapper url="file:///var/mappers/PostMapper.xml"/>
 </mappers>
+```
+```xml
 <!-- Using mapper interface classes -->
 <mappers>
   <mapper class="org.mybatis.builder.AuthorMapper"/>
   <mapper class="org.mybatis.builder.BlogMapper"/>
   <mapper class="org.mybatis.builder.PostMapper"/>
 </mappers>
+```
+```xml
 <!-- Register all interfaces in a package as mappers -->
 <mappers>
   <package name="org.mybatis.builder"/>
