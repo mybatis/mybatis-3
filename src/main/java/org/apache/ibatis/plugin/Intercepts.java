@@ -21,6 +21,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+// @formatter:off
 /**
  * The annotation that specify target methods to intercept.
  * <p>
@@ -44,6 +45,7 @@ import java.lang.annotation.Target;
  *
  * @author Clinton Begin
  */
+// @formatter:on
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

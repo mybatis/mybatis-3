@@ -362,31 +362,13 @@ public class MapperAnnotationBuilder {
         }
       }
 
-      assistant.addMappedStatement(
-          mappedStatementId,
-          sqlSource,
-          statementType,
-          sqlCommandType,
-          fetchSize,
-          timeout,
+      assistant.addMappedStatement(mappedStatementId, sqlSource, statementType, sqlCommandType, fetchSize, timeout,
           // ParameterMapID
-          null,
-          parameterTypeClass,
-          resultMapId,
-          getReturnType(method, type),
-          resultSetType,
-          flushCache,
-          useCache,
+          null, parameterTypeClass, resultMapId, getReturnType(method, type), resultSetType, flushCache, useCache,
           // TODO gcode issue #577
-          false,
-          keyGenerator,
-          keyProperty,
-          keyColumn,
-          statementAnnotation.getDatabaseId(),
-          languageDriver,
+          false, keyGenerator, keyProperty, keyColumn, statementAnnotation.getDatabaseId(), languageDriver,
           // ResultSets
-          options != null ? nullOrEmpty(options.resultSets()) : null,
-          statementAnnotation.isDirtySelect());
+          options != null ? nullOrEmpty(options.resultSets()) : null, statementAnnotation.isDirtySelect());
     });
   }
 
@@ -480,24 +462,15 @@ public class MapperAnnotationBuilder {
         flags.add(ResultFlag.ID);
       }
       @SuppressWarnings("unchecked")
-      Class<? extends TypeHandler<?>> typeHandler = (Class<? extends TypeHandler<?>>)
-              ((result.typeHandler() == UnknownTypeHandler.class) ? null : result.typeHandler());
+      Class<? extends TypeHandler<?>> typeHandler = (Class<? extends TypeHandler<?>>) ((result
+          .typeHandler() == UnknownTypeHandler.class) ? null : result.typeHandler());
       boolean hasNestedResultMap = hasNestedResultMap(result);
-      ResultMapping resultMapping = assistant.buildResultMapping(
-          resultType,
-          nullOrEmpty(result.property()),
-          nullOrEmpty(result.column()),
-          result.javaType() == void.class ? null : result.javaType(),
+      ResultMapping resultMapping = assistant.buildResultMapping(resultType, nullOrEmpty(result.property()),
+          nullOrEmpty(result.column()), result.javaType() == void.class ? null : result.javaType(),
           result.jdbcType() == JdbcType.UNDEFINED ? null : result.jdbcType(),
           hasNestedSelect(result) ? nestedSelectId(result) : null,
-          hasNestedResultMap ? nestedResultMapId(result) : null,
-          null,
-          hasNestedResultMap ? findColumnPrefix(result) : null,
-          typeHandler,
-          flags,
-          null,
-          null,
-          isLazy(result));
+          hasNestedResultMap ? nestedResultMapId(result) : null, null,
+          hasNestedResultMap ? findColumnPrefix(result) : null, typeHandler, flags, null, null, isLazy(result));
       resultMappings.add(resultMapping);
     }
   }
@@ -564,23 +537,12 @@ public class MapperAnnotationBuilder {
         flags.add(ResultFlag.ID);
       }
       @SuppressWarnings("unchecked")
-      Class<? extends TypeHandler<?>> typeHandler = (Class<? extends TypeHandler<?>>)
-              (arg.typeHandler() == UnknownTypeHandler.class ? null : arg.typeHandler());
-      ResultMapping resultMapping = assistant.buildResultMapping(
-          resultType,
-          nullOrEmpty(arg.name()),
-          nullOrEmpty(arg.column()),
-          arg.javaType() == void.class ? null : arg.javaType(),
-          arg.jdbcType() == JdbcType.UNDEFINED ? null : arg.jdbcType(),
-          nullOrEmpty(arg.select()),
-          nullOrEmpty(arg.resultMap()),
-          null,
-          nullOrEmpty(arg.columnPrefix()),
-          typeHandler,
-          flags,
-          null,
-          null,
-          false);
+      Class<? extends TypeHandler<?>> typeHandler = (Class<? extends TypeHandler<?>>) (arg
+          .typeHandler() == UnknownTypeHandler.class ? null : arg.typeHandler());
+      ResultMapping resultMapping = assistant.buildResultMapping(resultType, nullOrEmpty(arg.name()),
+          nullOrEmpty(arg.column()), arg.javaType() == void.class ? null : arg.javaType(),
+          arg.jdbcType() == JdbcType.UNDEFINED ? null : arg.jdbcType(), nullOrEmpty(arg.select()),
+          nullOrEmpty(arg.resultMap()), null, nullOrEmpty(arg.columnPrefix()), typeHandler, flags, null, null, false);
       resultMappings.add(resultMapping);
     }
   }

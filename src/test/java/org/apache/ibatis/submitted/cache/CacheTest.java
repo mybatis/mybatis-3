@@ -53,7 +53,8 @@ class CacheTest {
         "org/apache/ibatis/submitted/cache/CreateDB.sql");
   }
 
-  /*
+  // @formatter:off
+  /**
    * Test Plan:
    *  1) SqlSession 1 executes "select * from A".
    *  2) SqlSession 1 closes.
@@ -63,6 +64,7 @@ class CacheTest {
    * Assert:
    *   Step 4 returns 1 row. (This case fails when caching is enabled.)
    */
+  // @formatter:on
   @Test
   void testplan1() {
     try (SqlSession sqlSession1 = sqlSessionFactory.openSession(false)) {
@@ -81,7 +83,8 @@ class CacheTest {
     }
   }
 
-  /*
+  // @formatter:off
+  /**
    * Test Plan:
    *  1) SqlSession 1 executes "select * from A".
    *  2) SqlSession 1 closes.
@@ -93,6 +96,7 @@ class CacheTest {
    * Assert:
    *   Step 6 returns 2 rows.
    */
+  // @formatter:on
   @Test
   void testplan2() {
     try (SqlSession sqlSession1 = sqlSessionFactory.openSession(false)) {
@@ -115,7 +119,8 @@ class CacheTest {
     }
   }
 
-  /*
+  // @formatter:off
+  /**
    * Test Plan with Autocommit on:
    *  1) SqlSession 1 executes "select * from A".
    *  2) SqlSession 1 closes.
@@ -127,6 +132,7 @@ class CacheTest {
    * Assert:
    *   Step 6 returns 1 row.
    */
+  // @formatter:on
   @Test
   void testplan3() {
     try (SqlSession sqlSession1 = sqlSessionFactory.openSession(true)) {
@@ -145,7 +151,8 @@ class CacheTest {
     }
   }
 
-  /*-
+  // @formatter:off
+  /**
    * Test case for #405
    *
    * Test Plan with Autocommit on:
@@ -159,6 +166,7 @@ class CacheTest {
    * Assert:
    *   Step 5 returns 3 row.
    */
+  // @formatter:on
   @Test
   void shouldInsertWithOptionsFlushesCache() {
     try (SqlSession sqlSession1 = sqlSessionFactory.openSession(true)) {
@@ -178,7 +186,8 @@ class CacheTest {
     }
   }
 
-  /*-
+  // @formatter:off
+  /**
    * Test Plan with Autocommit on:
    *  1) SqlSession 1 executes select to cache result
    *  2) SqlSession 1 closes.
@@ -193,6 +202,7 @@ class CacheTest {
    *   Step 5 returns 2 row.
    *   Step 7 returns 3 row.
    */
+  // @formatter:on
   @Test
   void shouldApplyFlushCacheOptions() {
     try (SqlSession sqlSession1 = sqlSessionFactory.openSession(true)) {
@@ -328,9 +338,11 @@ class CacheTest {
     }
   }
 
+  // @formatter:off
   @CacheNamespace(implementation = CustomCache.class, properties = {
-    @Property(name = "date", value = "2016/11/21")
-  })
+      @Property(name = "date", value = "2016/11/21")
+    })
+  // @formatter:on
   private interface CustomCacheUnsupportedPropertyMapper {
   }
 
