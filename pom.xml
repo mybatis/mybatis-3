@@ -447,6 +447,13 @@
                 </testExcludes>
               </configuration>
             </plugin>
+            <plugin>
+              <groupId>net.revelc.code</groupId>
+              <artifactId>impsort-maven-plugin</artifactId>
+              <configuration>
+                <skip>true</skip>
+              </configuration>
+            </plugin>
           </plugins>
         </pluginManagement>
       </build>
