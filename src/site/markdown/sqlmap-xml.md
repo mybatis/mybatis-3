@@ -62,119 +62,23 @@ The select element has more attributes that allow you to configure the details o
   resultSetType="FORWARD_ONLY">
 ```
 
-<table>
-          <caption>Select Attributes</caption>
-          <thead>
-            <tr>
-              <th>Attribute</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>id</code></td>
-              <td>A unique identifier in this namespace that can be used to reference this statement.</td>
-            </tr>
-            <tr>
-              <td><code>parameterType</code></td>
-              <td>The fully qualified class name or alias for the parameter that will be passed into this
-                statement. This attribute is optional because MyBatis can calculate the TypeHandler to use out of
-                the actual parameter passed to the statement. Default is <code>unset</code>.
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <strike><code>parameterMap</code></strike>
-              </td>
-              <td>
-                <strike>This is a deprecated approach to referencing an external <code>parameterMap</code>. Use
-                  inline parameter mappings and the <code>parameterType</code> attribute.
-                </strike>
-              </td>
-            </tr>
-            <tr>
-              <td><code>resultType</code></td>
-              <td>The fully qualified class name or alias for the expected type that will be returned from
-                this statement. Note that in the case of collections, this should be the type that the
-                collection contains, not the type of the collection itself. Use <code>resultType</code> OR
-                <code>resultMap</code>, not both.
-              </td>
-            </tr>
-            <tr>
-              <td><code>resultMap</code></td>
-              <td>A named reference to an external <code>resultMap</code>. Result maps are the most powerful feature of
-                MyBatis, and with a good understanding of them, many difficult mapping cases can be
-                solved. Use <code>resultMap</code> OR <code>resultType</code>, not both.
-              </td>
-            </tr>
-            <tr>
-              <td><code>flushCache</code></td>
-              <td>Setting this to true will cause the local and 2nd level caches to be flushed whenever this statement is
-                called. Default: <code>false</code> for select statements.
-              </td>
-            </tr>
-            <tr>
-              <td><code>useCache</code></td>
-              <td>Setting this to true will cause the results of this statement to be cached in 2nd level cache. Default:
-                <code>true</code> for select statements.
-              </td>
-            </tr>
-            <tr>
-              <td><code>timeout</code></td>
-              <td>This sets the number of seconds the driver will wait for the database to return from a
-                request, before throwing an exception. Default is <code>unset</code> (driver dependent).
-              </td>
-            </tr>
-            <tr>
-              <td><code>fetchSize</code></td>
-              <td>This is a driver hint that will attempt to cause the driver to return results in batches
-                of rows numbering in size equal to this setting. Default is <code>unset</code> (driver dependent).
-              </td>
-            </tr>
-            <tr>
-              <td><code>statementType</code></td>
-              <td>Any one of <code>STATEMENT</code>, <code>PREPARED</code> or <code>CALLABLE</code>.
-              This causes MyBatis to use <code>Statement</code>,
-                <code>PreparedStatement</code> or <code>CallableStatement</code> respectively. Default: <code>PREPARED</code>.
-              </td>
-            </tr>
-            <tr>
-              <td><code>resultSetType</code></td>
-              <td>Any one of <code>FORWARD_ONLY</code>|<code>SCROLL_SENSITIVE</code>|<code>SCROLL_INSENSITIVE</code>|<code>DEFAULT</code>(same as unset).
-              Default is <code>unset</code> (driver dependent).
-              </td>
-            </tr>
-            <tr>
-              <td><code>databaseId</code></td>
-              <td>In case there is a configured databaseIdProvider, MyBatis will load all statements with no <code>databaseId</code>
-              attribute or with a <code>databaseId</code> that matches the current one. If case the same statement
-              if found with and without the <code>databaseId</code> the latter will be discarded.
-              </td>
-            </tr>
-            <tr>
-              <td><code>resultOrdered</code></td>
-              <td>This is only applicable for nested result select statements: If this is true, it
-                is assumed that nested results are contained or grouped together such that when a
-                new main result row is returned, no references to a previous result row will occur
-                anymore. This allows nested results to be filled much more memory friendly. Default:
-                <code>false</code>.
-              </td>
-            </tr>
-            <tr>
-              <td><code>resultSets</code></td>
-              <td>This is only applicable for multiple result sets. It lists the result sets that will
-                be returned by the statement and gives a name to each one. Names are separated by commas.
-              </td>
-            </tr>
-            <tr>
-              <td><code>affectData</code></td>
-              <td>Set this to true when writing a INSERT, UPDATE or DELETE statement that returns data so that the transaction is controlled properly. Also see <a href="./java-api.html#transaction-control-methods">Transaction Control Method</a>. Default: <code>false</code> (since 3.5.12)
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
-
+| Attribute           | Description                                                  |
+| ------------------- | ------------------------------------------------------------ |
+| `id`                | A unique identifier in this namespace that can be used to reference this statement. |
+| `parameterType`     | The fully qualified class name or alias for the parameter that will be passed into this statement. This attribute is optional because MyBatis can calculate the TypeHandler to use out of the actual parameter passed to the statement. Default is `unset`. |
+| ~~`parameterMap`~~      | ~~This is a deprecated approach to referencing an external `parameterMap`. Use inline parameter mappings and the `parameterType` attribute.~~ |
+| `resultType`        | The fully qualified class name or alias for the expected type that will be returned from this statement. Note that in the case of collections, this should be the type that the collection contains, not the type of the collection itself. Use `resultType` OR `resultMap`, not both. |
+| `resultMap`         | A named reference to an external `resultMap`. Result maps are the most powerful feature of MyBatis, and with a good understanding of them, many difficult mapping cases can be solved. Use `resultMap` OR `resultType`, not both. |
+| `flushCache`        | Setting this to true will cause the local and 2nd level caches to be flushed whenever this statement is called. Default: `false` for select statements. |
+| `useCache`          | Setting this to true will cause the results of this statement to be cached in 2nd level cache. Default: `true` for select statements. |
+| `timeout`           | This sets the number of seconds the driver will wait for the database to return from a request, before throwing an exception. Default is `unset` (driver dependent). |
+| `fetchSize`         | This is a driver hint that will attempt to cause the driver to return results in batches of rows numbering in size equal to this setting. Default is `unset` (driver dependent). |
+| `statementType`     | Any one of `STATEMENT`, `PREPARED` or `CALLABLE`. This causes MyBatis to use `Statement`, `PreparedStatement` or `CallableStatement` respectively. Default: `PREPARED`. |
+| `resultSetType`     | Any one of `FORWARD_ONLY`\|`SCROLL_SENSITIVE`\|`SCROLL_INSENSITIVE`\|`DEFAULT`(same as unset). Default is `unset` (driver dependent). |
+| `databaseId`        | In case there is a configured databaseIdProvider, MyBatis will load all statements with no `databaseId` attribute or with a `databaseId` that matches the current one. If case the same statement if found with and without the `databaseId` the latter will be discarded. |
+| `resultOrdered`     | This is only applicable for nested result select statements: If this is true, it is assumed that nested results are contained or grouped together such that when a new main result row is returned, no references to a previous result row will occur anymore. This allows nested results to be filled much more memory friendly. Default: `false`. |
+| `resultSets`        | This is only applicable for multiple result sets. It lists the result sets that will be returned by the statement and gives a name to each one. Names are separated by commas. |
+|[Select Attributes]                                                            ||
 
 ### insert, update and delete
 
@@ -206,87 +110,20 @@ The data modification statements insert, update and delete are very similar in t
   timeout="20">
 ```
 
-<table>
-          <caption>Insert, Update and Delete Attributes</caption>
-          <thead>
-            <tr>
-              <th>Attribute</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>id</code></td>
-              <td>A unique identifier in this namespace that can be used to reference this statement.</td>
-            </tr>
-            <tr>
-              <td><code>parameterType</code></td>
-              <td>The fully qualified class name or alias for the parameter that will be passed into this
-                statement. This attribute is optional because MyBatis can calculate the TypeHandler to use out of
-                the actual parameter passed to the statement. Default is <code>unset</code>.
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <strike><code>parameterMap</code></strike>
-              </td>
-              <td>
-                <strike>This is a deprecated approach to referencing an external parameterMap. Use
-                  inline parameter mappings and the parameterType attribute.
-                </strike>
-              </td>
-            </tr>
-            <tr>
-              <td><code>flushCache</code></td>
-              <td>Setting this to true will cause the 2nd level and local caches to be flushed whenever this statement is
-                called. Default: <code>true</code> for insert, update and delete statements.
-              </td>
-            </tr>
-            <tr>
-              <td><code>timeout</code></td>
-              <td>This sets the maximum number of seconds the driver will wait for the database to return from a
-                request, before throwing an exception. Default is <code>unset</code> (driver dependent).
-              </td>
-            </tr>
-            <tr>
-              <td><code>statementType</code></td>
-              <td>Any one of <code>STATEMENT</code>, <code>PREPARED</code> or <code>CALLABLE</code>.
-              This causes MyBatis to use <code>Statement</code>,
-                <code>PreparedStatement</code> or <code>CallableStatement</code> respectively. Default: <code>PREPARED</code>.
-              </td>
-            </tr>
-            <tr>
-              <td><code>useGeneratedKeys</code></td>
-              <td>(insert and update only) This tells MyBatis to use the JDBC <code>getGeneratedKeys</code> method to retrieve
-                keys generated internally by the database (e.g. auto increment fields in RDBMS like
-                MySQL or SQL Server). Default: <code>false</code>.
-              </td>
-            </tr>
-            <tr>
-              <td><code>keyProperty</code></td>
-              <td>(insert and update only) Identifies a property into which MyBatis will set the key value returned
-                by <code>getGeneratedKeys</code>, or by a <code>selectKey</code> child element of the insert statement.
-                Default: <code>unset</code>.  Can be a comma separated list of property names if multiple
-                generated columns are expected.
-              </td>
-            </tr>
-            <tr>
-              <td><code>keyColumn</code></td>
-              <td>(insert and update only) Sets the name of the column in the table with a generated key. This is
-                only required in certain databases (like PostgreSQL) when the key column is not the
-                first column in the table. Can be a comma separated list of columns names if multiple
-                generated columns are expected.
-              </td>
-            </tr>
-            <tr>
-              <td><code>databaseId</code></td>
-              <td>In case there is a configured databaseIdProvider, MyBatis will load all statements with no <code>databaseId</code>
-              attribute or with a <code>databaseId</code> that matches the current one. If case the same statement
-              if found with and without the <code>databaseId</code> the latter will be discarded.
-              </td>
-            </tr>
-          </tbody>
-        </table>
+| Attribute          | Description                                                  |
+| ----------------- | ----------------------------------------------------------- |
+| `id`               | A unique identifier in this namespace that can be used to reference this statement. |
+| `parameterType`    | The fully qualified class name or alias for the parameter that will be passed into this statement. This attribute is optional because MyBatis can calculate the TypeHandler to use out of the actual parameter passed to the statement. Default is `unset`. |
+| ~~`parameterMap`~~ | ~~This is a deprecated approach to referencing an external parameterMap. Use inline parameter mappings and the parameterType attribute.~~ |
+| `flushCache`       | Setting this to true will cause the 2nd level and local caches to be flushed whenever this statement is called. Default: `true` for insert, update and delete statements. |
+| `timeout`          | This sets the maximum number of seconds the driver will wait for the database to return from a request, before throwing an exception. Default is `unset` (driver dependent). |
+| `statementType`    | Any one of `STATEMENT`, `PREPARED` or `CALLABLE`. This causes MyBatis to use `Statement`, `PreparedStatement` or `CallableStatement` respectively. Default: `PREPARED`. |
+| `useGeneratedKeys` | (insert and update only) This tells MyBatis to use the JDBC `getGeneratedKeys` method to retrieve keys generated internally by the database (e.g. auto increment fields in RDBMS like MySQL or SQL Server). Default: `false`. |
+| `keyProperty`      | (insert and update only) Identifies a property into which MyBatis will set the key value returned by `getGeneratedKeys`, or by a `selectKey` child element of the insert statement. Default: `unset`. Can be a comma separated list of property names if multiple generated columns are expected. |
+| `keyColumn`        | (insert and update only) Sets the name of the column in the table with a generated key. This is only required in certain databases (like PostgreSQL) when the key column is not the first column in the table. Can be a comma separated list of columns names if multiple generated columns are expected. |
+| `databaseId`       | In case there is a configured databaseIdProvider, MyBatis will load all statements with no `databaseId` attribute or with a `databaseId` that matches the current one. If case the same statement if found with and without the `databaseId` the latter will be discarded. |
+[Insert, Update and Delete Attributes]
+
 
 The following are some examples of insert, update and delete statements.
 
@@ -361,56 +198,15 @@ The selectKey element is described as follows:
   order="BEFORE"
   statementType="PREPARED">
 ```
- <table>
-          <caption>selectKey Attributes</caption>
-          <thead>
-            <tr>
-              <th>Attribute</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>keyProperty</code></td>
-              <td>The target property where the result of the <code>selectKey</code> statement should be set.
-                Can be a comma separated list of property names if multiple generated columns
-                are expected.
-              </td>
-            </tr>
-            <tr>
-              <td><code>keyColumn</code></td>
-              <td>The column name(s) in the returned result set that match the properties.
-                Can be a comma separated list of column names if multiple generated columns
-                are expected.
-              </td>
-            </tr>
-            <tr>
-              <td><code>resultType</code></td>
-              <td>
-                The type of the result. MyBatis can usually figure this out, but it doesn't hurt to
-                add it to be sure. MyBatis allows any simple type to be used as the key,
-                including Strings.  If you are expecting multiple generated columns, then
-                you can use an Object that contains the expected properties, or a Map.
-              </td>
-            </tr>
-            <tr>
-              <td><code>order</code></td>
-              <td>
-                This can be set to <code>BEFORE</code> or <code>AFTER</code>. If set to <code>BEFORE</code>, then it will select the key
-                first, set the <code>keyProperty</code> and then execute the insert statement. If set to <code>AFTER</code>,
-                it runs the insert statement and then the <code>selectKey</code> statement – which is common with
-                databases like Oracle that may have embedded sequence calls inside of insert statements.
-              </td>
-            </tr>
-            <tr>
-              <td><code>statementType</code></td>
-              <td>
-                Same as above, MyBatis supports <code>STATEMENT</code>, <code>PREPARED</code> and <code>CALLABLE</code> statement types that
-                map to <code>Statement</code>, <code>PreparedStatement</code> and <code>CallableStatement</code> respectively.
-              </td>
-            </tr>
-          </tbody>
-        </table>
+| Attribute       | Description                                                  |
+| -------------- | ----------------------------------------------------------- |
+| `keyProperty`   | The target property where the result of the `selectKey` statement should be set. Can be a comma separated list of property names if multiple generated columns are expected. |
+| `keyColumn`     | The column name(s) in the returned result set that match the properties. Can be a comma separated list of column names if multiple generated columns are expected. |
+| `resultType`    | The type of the result. MyBatis can usually figure this out, but it doesn't hurt to add it to be sure. MyBatis allows any simple type to be used as the key, including Strings. If you are expecting multiple generated columns, then you can use an Object that contains the expected properties, or a Map. |
+| `order`         | This can be set to `BEFORE` or `AFTER`. If set to `BEFORE`, then it will select the key first, set the `keyProperty` and then execute the insert statement. If set to `AFTER`, it runs the insert statement and then the `selectKey` statement – which is common with databases like Oracle that may have embedded sequence calls inside of insert statements. |
+| `statementType` | Same as above, MyBatis supports `STATEMENT`, `PREPARED` and `CALLABLE` statement types that map to `Statement`, `PreparedStatement` and `CallableStatement` respectively. |
+[selectKey Attributes]
+
 
 As an irregular case, some databases allow INSERT, UPDATE or DELETE statement to return result set (e.g. `RETURNING` clause of PostgreSQL and MariaDB or `OUTPUT` clause of MS SQL Server). This type of statement must be written as `<select>` to map the returned data.
 
@@ -777,32 +573,12 @@ The `resultMap` element has a number of sub-elements and a structure worthy of s
   - `case` – a case is a result map based on some value
     - nested result mappings – a case is also a result map itself, and thus can contain many of these same elements, or it can refer to an external resultMap.
 
-<table>
-          <caption>ResultMap Attributes</caption>
-          <thead>
-            <tr>
-              <th>Attribute</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>id</code></td>
-              <td>A unique identifier in this namespace that can be used to reference this result map.</td>
-            </tr>
-            <tr>
-              <td><code>type</code></td>
-              <td>A fully qualified Java class name, or a type alias (see the table above for the list of built-in type aliases).
-              </td>
-            </tr>
-            <tr>
-              <td><code>autoMapping</code></td>
-              <td>If present, MyBatis will enable or disable the automapping for this ResultMap.
-                This attribute overrides the global autoMappingBehavior. Default: unset.
-              </td>
-            </tr>
-          </tbody>
-        </table>
+| Attribute     | Description                                                  |
+| ------------ | ------------------------------------------------------------ |
+| `id`          | A unique identifier in this namespace that can be used to reference this result map. |
+| `type`        | A fully qualified Java class name, or a type alias (see the table above for the list of built-in type aliases). |
+| `autoMapping` | If present, MyBatis will enable or disable the automapping for this ResultMap. This attribute overrides the global autoMappingBehavior. Default: unset. |
+[ResultMap Attributes]
 
 <span class="label important">Best Practice</span> Always build ResultMaps incrementally. Unit tests really help out here. If you try to build a gigantic `resultMap` like the one above all at once, it's likely you'll get it wrong and it will be hard to work with. Start simple, and evolve it a step at a time. And unit test! The downside to using frameworks is that they are sometimes a bit of a black box (open source or not). Your best bet to ensure that you're achieving the behaviour that you intend, is to write unit tests. It also helps to have them when submitting bugs.
 
@@ -821,112 +597,26 @@ The only difference between the two is that *id* will flag the result as an iden
 
 Each has a number of attributes:
 
-<table>
-          <caption>Id and Result Attributes</caption>
-          <thead>
-            <tr>
-              <th>Attribute</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>property</code></td>
-              <td>
-                The field or property to map the column result to. If a matching JavaBeans property
-                exists for
-                the given name, then that will be used. Otherwise, MyBatis will look for a field of the
-                given
-                name. In both cases you can use complex property navigation using the usual dot
-                notation. For
-                example, you can map to something simple like: <code>username</code>, or to something more
-                complicated
-                like: <code>address.street.number</code>.
-              </td>
-            </tr>
-            <tr>
-              <td><code>column</code></td>
-              <td>
-                The column name from the database, or the aliased column label. This is the same string
-                that
-                would normally be passed to <code>resultSet.getString(columnName)</code>.
-              </td>
-            </tr>
-            <tr>
-              <td><code>javaType</code></td>
-              <td>
-                A fully qualified Java class name, or a type alias (see the table above for the list of
-                built-in type aliases). MyBatis can usually figure out the type if you're mapping to a
-                JavaBean. However, if you are mapping to a HashMap, then you should specify the javaType
-                explicitly to ensure the desired behaviour.
-              </td>
-            </tr>
-            <tr>
-              <td><code>jdbcType</code></td>
-              <td>
-                The JDBC Type from the list of supported types that follows this table. The JDBC type is
-                only required for nullable columns upon insert, update or delete. This is a JDBC
-                requirement, not a MyBatis one. So even if you were coding JDBC directly, you'd need to
-                specify this type – but only for nullable values.
-              </td>
-            </tr>
-            <tr>
-              <td><code>typeHandler</code></td>
-              <td>
-                We discussed default type handlers previously in this documentation. Using this property
-                you can override the default type handler on a mapping-by-mapping basis. The value is
-                either a fully qualified class name of a TypeHandler implementation, or a type alias.
-              </td>
-            </tr>
-          </tbody>
-        </table>
+| Attribute     | Description                                                  |
+| ------------ | ------------------------------------------------------------ |
+| `property`    | The field or property to map the column result to. If a matching JavaBeans property exists for the given name, then that will be used. Otherwise, MyBatis will look for a field of the given name. In both cases you can use complex property navigation using the usual dot notation. For example, you can map to something simple like: `username`, or to something more complicated like: `address.street.number`. |
+| `column`      | The column name from the database, or the aliased column label. This is the same string that would normally be passed to `resultSet.getString(columnName)`. |
+| `javaType`    | A fully qualified Java class name, or a type alias (see the table above for the list of built-in type aliases). MyBatis can usually figure out the type if you're mapping to a JavaBean. However, if you are mapping to a HashMap, then you should specify the javaType explicitly to ensure the desired behaviour. |
+| `jdbcType`    | The JDBC Type from the list of supported types that follows this table. The JDBC type is only required for nullable columns upon insert, update or delete. This is a JDBC requirement, not a MyBatis one. So even if you were coding JDBC directly, you'd need to specify this type – but only for nullable values. |
+| `typeHandler` | We discussed default type handlers previously in this documentation. Using this property you can override the default type handler on a mapping-by-mapping basis. The value is either a fully qualified class name of a TypeHandler implementation, or a type alias. |
+[Id and Result Attributes]
 
 #### Supported JDBC Types
 
 For future reference, MyBatis supports the following JDBC Types via the included JdbcType enumeration.
 
-<table>
-          <tr>
-            <td><code>BIT</code></td>
-            <td><code>FLOAT</code></td>
-            <td><code>CHAR</code></td>
-            <td><code>TIMESTAMP</code></td>
-            <td><code>OTHER</code></td>
-            <td><code>UNDEFINED</code></td>
-          </tr>
-          <tr>
-            <td><code>TINYINT</code></td>
-            <td><code>REAL</code></td>
-            <td><code>VARCHAR</code></td>
-            <td><code>BINARY</code></td>
-            <td><code>BLOB</code></td>
-            <td><code>NVARCHAR</code></td>
-          </tr>
-          <tr>
-            <td><code>SMALLINT</code></td>
-            <td><code>DOUBLE</code></td>
-            <td><code>LONGVARCHAR</code></td>
-            <td><code>VARBINARY</code></td>
-            <td><code>CLOB</code></td>
-            <td><code>NCHAR</code></td>
-          </tr>
-          <tr>
-            <td><code>INTEGER</code></td>
-            <td><code>NUMERIC</code></td>
-            <td><code>DATE</code></td>
-            <td><code>LONGVARBINARY</code></td>
-            <td><code>BOOLEAN</code></td>
-            <td><code>NCLOB</code></td>
-          </tr>
-          <tr>
-            <td><code>BIGINT</code></td>
-            <td><code>DECIMAL</code></td>
-            <td><code>TIME</code></td>
-            <td><code>NULL</code></td>
-            <td><code>CURSOR</code></td>
-            <td><code>ARRAY</code></td>
-          </tr>
-        </table>
+| ---------- | --------- | ------------- | --------------- | --------- | ----------- |
+| `BIT`      | `FLOAT`   | `CHAR`        | `TIMESTAMP`     | `OTHER`   | `UNDEFINED` |
+| `TINYINT`  | `REAL`    | `VARCHAR`     | `BINARY`        | `BLOB`    | `NVARCHAR`  |
+| `SMALLINT` | `DOUBLE`  | `LONGVARCHAR` | `VARBINARY`     | `CLOB`    | `NCHAR`     |
+| `INTEGER`  | `NUMERIC` | `DATE`        | `LONGVARBINARY` | `BOOLEAN` | `NCLOB`     |
+| `BIGINT`   | `DECIMAL` | `TIME`        | `NULL`          | `CURSOR`  | `ARRAY`     |
+
 
 #### constructor
 
@@ -969,76 +659,16 @@ Since 3.4.3, by specifying the name of each parameter, you can write arg element
 
 The rest of the attributes and rules are the same as for the regular id and result elements.
 
- <table>
-          <thead>
-            <tr>
-              <th>Attribute</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>column</code></td>
-              <td>
-                The column name from the database, or the aliased column label. This is the same string
-                that would normally be passed to <code>resultSet.getString(columnName)</code>.
-              </td>
-            </tr>
-            <tr>
-              <td><code>javaType</code></td>
-              <td>
-                A fully qualified Java class name, or a type alias (see the table above for the list of
-                built-in type aliases). MyBatis can usually figure out the type if you're mapping to a
-                JavaBean. However, if you are mapping to a HashMap, then you should specify the javaType
-                explicitly to ensure the desired behaviour.
-              </td>
-            </tr>
-            <tr>
-              <td><code>jdbcType</code></td>
-              <td>
-                The JDBC Type from the list of supported types that follows this table. The JDBC type is
-                only required for nullable columns upon insert, update or delete. This is a JDBC
-                requirement, not an MyBatis one. So even if you were coding JDBC directly, you'd need to
-                specify this type – but only for nullable values.
-              </td>
-            </tr>
-            <tr>
-              <td><code>typeHandler</code></td>
-              <td>
-                We discussed default type handlers previously in this documentation. Using this property
-                you can override the default type handler on a mapping-by-mapping basis. The value is
-                either a fully qualified class name of a <code>TypeHandler</code> implementation, or a type alias.
-              </td>
-            </tr>
-            <tr>
-              <td><code>select</code></td>
-              <td>
-                The ID of another mapped statement that will load the complex type required by this
-                property mapping. The values retrieved from columns specified in the column attribute
-                will be passed to the target select statement as parameters. See the Association element
-                for more.
-              </td>
-            </tr>
-            <tr>
-              <td><code>resultMap</code></td>
-              <td>
-                This is the ID of a ResultMap that can map the nested results of this argument into an
-                appropriate object graph. This is an alternative to using a call to another select
-                statement. It allows you to join multiple tables together into a single <code>ResultSet</code>. Such
-                a <code>ResultSet</code> will contain duplicated, repeating groups of data that needs to be
-                decomposed and mapped properly to a nested object graph. To facilitate this, MyBatis
-                lets you "chain" result maps together, to deal with the nested results. See the
-                Association element below for more.
-              </td>
-            </tr>
-            <tr>
-              <td><code>name</code></td>
-              <td>
-                The name of the constructor parameter. Specifying name allows you to write arg elements in any order. See the above explanation. Since 3.4.3.
-              </td>
-            </tr>
-          </tbody>
-        </table>
+| Attribute     | Description                                                  |
+| ------------ | ------------------------------------------------------------ |
+| `column`      | The column name from the database, or the aliased column label. This is the same string that would normally be passed to `resultSet.getString(columnName)`. |
+| `javaType`    | A fully qualified Java class name, or a type alias (see the table above for the list of built-in type aliases). MyBatis can usually figure out the type if you're mapping to a JavaBean. However, if you are mapping to a HashMap, then you should specify the javaType explicitly to ensure the desired behaviour. |
+| `jdbcType`    | The JDBC Type from the list of supported types that follows this table. The JDBC type is only required for nullable columns upon insert, update or delete. This is a JDBC requirement, not an MyBatis one. So even if you were coding JDBC directly, you'd need to specify this type – but only for nullable values. |
+| `typeHandler` | We discussed default type handlers previously in this documentation. Using this property you can override the default type handler on a mapping-by-mapping basis. The value is either a fully qualified class name of a `TypeHandler` implementation, or a type alias. |
+| `select`      | The ID of another mapped statement that will load the complex type required by this property mapping. The values retrieved from columns specified in the column attribute will be passed to the target select statement as parameters. See the Association element for more. |
+| `resultMap`   | This is the ID of a ResultMap that can map the nested results of this argument into an appropriate object graph. This is an alternative to using a call to another select statement. It allows you to join multiple tables together into a single `ResultSet`. Such a `ResultSet` will contain duplicated, repeating groups of data that needs to be decomposed and mapped properly to a nested object graph. To facilitate this, MyBatis lets you "chain" result maps together, to deal with the nested results. See the Association element below for more. |
+| `name`        | The name of the constructor parameter. Specifying name allows you to write arg elements in any order. See the above explanation. Since 3.4.3. |
+
 
 #### association
 
@@ -1058,97 +688,21 @@ Where the association differs is that you need to tell MyBatis how to load the a
 
 First, let's examine the properties of the element. As you'll see, it differs from a normal result mapping only by the select and resultMap attributes.
 
-<table>
-          <thead>
-            <tr>
-              <th>Attribute</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>property</code></td>
-              <td>
-                The field or property to map the column result to. If a matching JavaBeans property
-                exists for the given name, then that will be used. Otherwise, MyBatis will look for a
-                field of the given name. In both cases you can use complex property navigation using the
-                usual dot notation. For example, you can map to something simple like: <code>username</code>, or to
-                something more complicated like: <code>address.street.number</code>.
-              </td>
-            </tr>
-            <tr>
-              <td><code>javaType</code></td>
-              <td>
-                A fully qualified Java class name, or a type alias (see the table above for the list of
-                built- in type aliases). MyBatis can usually figure out the type if you're mapping to a
-                JavaBean. However, if you are mapping to a <code>HashMap</code>, then you should specify the javaType
-                explicitly to ensure the desired behaviour.
-              </td>
-            </tr>
-            <tr>
-              <td><code>jdbcType</code></td>
-              <td>
-                The JDBC Type from the list of supported types that follows this table. The JDBC type is
-                only required for nullable columns upon insert, update or delete. This is a JDBC
-                requirement, not an MyBatis one. So even if you were coding JDBC directly, you'd need to
-                specify this type – but only for nullable values.
-              </td>
-            </tr>
-            <tr>
-              <td><code>typeHandler</code></td>
-              <td>
-                We discussed default type handlers previously in this documentation. Using this property
-                you can override the default type handler on a mapping-by-mapping basis. The value is
-                either a fully qualified class name of a TypeHandler implementation, or a type alias.
-              </td>
-            </tr>
-          </tbody>
-        </table>
+| Attribute     | Description                                                  |
+| ------------ | ----------------------------------------------------------- |
+| `property`    | The field or property to map the column result to. If a matching JavaBeans property exists for the given name, then that will be used. Otherwise, MyBatis will look for a field of the given name. In both cases you can use complex property navigation using the usual dot notation. For example, you can map to something simple like: `username`, or to something more complicated like: `address.street.number`. |
+| `javaType`    | A fully qualified Java class name, or a type alias (see the table above for the list of built- in type aliases). MyBatis can usually figure out the type if you're mapping to a JavaBean. However, if you are mapping to a `HashMap`, then you should specify the javaType explicitly to ensure the desired behaviour. |
+| `jdbcType`    | The JDBC Type from the list of supported types that follows this table. The JDBC type is only required for nullable columns upon insert, update or delete. This is a JDBC requirement, not an MyBatis one. So even if you were coding JDBC directly, you'd need to specify this type – but only for nullable values. |
+| `typeHandler` | We discussed default type handlers previously in this documentation. Using this property you can override the default type handler on a mapping-by-mapping basis. The value is either a fully qualified class name of a TypeHandler implementation, or a type alias. |
+
 
 #### Nested Select for Association
 
- <table>
-          <thead>
-            <tr>
-              <th>Attribute</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>column</code></td>
-              <td>
-                The column name from the database, or the aliased column label that holds the value that will be passed to the nested
-                statement as an input parameter.
-                This is the same string that would normally be passed to <code>resultSet.getString(columnName)</code>.
-                Note: To deal with composite keys, you can specify multiple column names to pass to the
-                nested select statement by using the syntax <code>column="{prop1=col1,prop2=col2}"</code>. This will
-                cause <code>prop1</code> and <code>prop2</code> to be set against the parameter object for the target nested
-                select statement.
-              </td>
-            </tr>
-            <tr>
-              <td><code>select</code></td>
-              <td>
-                The ID of another mapped statement that will load the complex type required by this
-                property mapping. The values retrieved from columns specified in the column attribute
-                will be passed to the target select statement as parameters. A detailed example follows
-                this table.
-                Note: To deal with composite keys, you can specify multiple column names to pass to the
-                nested select statement by using the syntax <code>column="{prop1=col1,prop2=col2}"</code>. This will
-                cause <code>prop1</code> and <code>prop2</code> to be set against the parameter object for the target nested
-                select statement.
-              </td>
-            </tr>
-            <tr>
-              <td><code>fetchType</code></td>
-              <td>
-                Optional. Valid values are <code>lazy</code> and <code>eager</code>. If present, it supersedes
-                the global configuration parameter <code>lazyLoadingEnabled</code> for this mapping.
-              </td>
-            </tr>
-          </tbody>
-        </table>
+| Attribute   | Description                                                  |
+| ----------- | ----------------------------------------------------------- |
+| `column`    | The column name from the database, or the aliased column label that holds the value that will be passed to the nested statement as an input parameter. This is the same string that would normally be passed to `resultSet.getString(columnName)`. Note: To deal with composite keys, you can specify multiple column names to pass to the nested select statement by using the syntax `column="{prop1=col1,prop2=col2}"`. This will cause `prop1` and `prop2` to be set against the parameter object for the target nested select statement. |
+| `select`    | The ID of another mapped statement that will load the complex type required by this property mapping. The values retrieved from columns specified in the column attribute will be passed to the target select statement as parameters. A detailed example follows this table. Note: To deal with composite keys, you can specify multiple column names to pass to the nested select statement by using the syntax `column="{prop1=col1,prop2=col2}"`. This will cause `prop1` and `prop2` to be set against the parameter object for the target nested select statement. |
+| `fetchType` | Optional. Valid values are `lazy` and `eager`. If present, it supersedes the global configuration parameter `lazyLoadingEnabled` for this mapping. |
 
 For example:
 
@@ -1183,46 +737,12 @@ And so, there is another way.
 
 #### Nested Results for Association
 
-<table>
-        <thead>
-            <tr>
-                <th>Attribute</th>
-                <th>Description</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><code>resultMap</code></td>
-                <td> This is the ID of a ResultMap that can map the nested results of this association into an
-                    appropriate object graph. This is an alternative to using a call to another select statement. It
-                    allows you to join multiple tables together into a single ResultSet. Such a ResultSet will contain
-                    duplicated, repeating groups of data that needs to be decomposed and mapped properly to a nested
-                    object graph. To facilitate this, MyBatis lets you "chain" result maps together, to deal with the
-                    nested results. An example will be far easier to follow, and one follows this table. </td>
-            </tr>
-            <tr>
-                <td><code>columnPrefix</code></td>
-                <td> When joining multiple tables, you would have to use column alias to avoid duplicated column names
-                    in the ResultSet. Specifying columnPrefix allows you to map such columns to an external resultMap.
-                    Please see the example explained later in this section. </td>
-            </tr>
-            <tr>
-                <td><code>notNullColumn</code></td>
-                <td> By default a child object is created only if at least one of the columns mapped to the child's
-                    properties is non null. With this attribute you can change this behaviour by specifiying which
-                    columns must have a value so MyBatis will create a child object only if any of those columns is not
-                    null. Multiple column names can be specified using a comma as a separator. Default value: unset.
-                </td>
-            </tr>
-            <tr>
-                <td><code>autoMapping</code></td>
-                <td>If present, MyBatis will enable or disable automapping when mapping the result to this property.
-                    This attribute overrides the global autoMappingBehavior. Note that it has no effect on an external
-                    resultMap, so it is pointless to use it with <code>select</code> or <code>resultMap</code>
-                    attribute. Default value: unset. </td>
-            </tr>
-        </tbody>
-    </table>
+| Attribute       | Description                                                  |
+| --------------- | ----------------------------------------------------------- |
+| `resultMap`     | This is the ID of a ResultMap that can map the nested results of this association into an appropriate object graph. This is an alternative to using a call to another select statement. It allows you to join multiple tables together into a single ResultSet. Such a ResultSet will contain duplicated, repeating groups of data that needs to be decomposed and mapped properly to a nested object graph. To facilitate this, MyBatis lets you "chain" result maps together, to deal with the nested results. An example will be far easier to follow, and one follows this table. |
+| `columnPrefix`  | When joining multiple tables, you would have to use column alias to avoid duplicated column names in the ResultSet. Specifying columnPrefix allows you to map such columns to an external resultMap. Please see the example explained later in this section. |
+| `notNullColumn` | By default a child object is created only if at least one of the columns mapped to the child's properties is non null. With this attribute you can change this behaviour by specifiying which columns must have a value so MyBatis will create a child object only if any of those columns is not null. Multiple column names can be specified using a comma as a separator. Default value: unset. |
+| `autoMapping`   | If present, MyBatis will enable or disable automapping when mapping the result to this property. This attribute overrides the global autoMappingBehavior. Note that it has no effect on an external resultMap, so it is pointless to use it with `select` or `resultMap` attribute. Default value: unset. |
 
 You've already seen a very complicated example of nested associations above. The following is a far simpler example to demonstrate how this works. Instead of executing a separate statement, we'll join the Blog and Author tables together, like so:
 
@@ -1332,36 +852,12 @@ Because the column names in the results differ from the columns defined in the r
 
 #### Multiple ResultSets for Association
 
-<table>
-          <thead>
-            <tr>
-              <th>Attribute</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>column</code></td>
-              <td>
-                When using multiple resultset this attribute specifies the columns (separated by commas) that will be correlated
-                with the <code>foreignColumn</code> to identify the parent and the child of a relationship.
-              </td>
-            </tr>
-            <tr>
-              <td><code>foreignColumn</code></td>
-              <td>
-                Identifies the name of the columns that contains the foreign keys which values will be matched against the
-                values of the columns specified in the <code>column</code> attibute of the parent type.
-              </td>
-            </tr>
-            <tr>
-              <td><code>resultSet</code></td>
-              <td>
-                Identifies the name of the result set where this complex type will be loaded from.
-              </td>
-            </tr>
-          </tbody>
-        </table>
+| Attribute       | Description                                                  |
+| -------------- | ------------------------------------------------------------ |
+| `column`        | When using multiple resultset this attribute specifies the columns (separated by commas) that will be correlated with the `foreignColumn` to identify the parent and the child of a relationship. |
+| `foreignColumn` | Identifies the name of the columns that contains the foreign keys which values will be matched against the values of the columns specified in the `column` attibute of the parent type. |
+| `resultSet`     | Identifies the name of the result set where this complex type will be loaded from. |
+
 
 Starting from version 3.2.3 MyBatis provides yet another way to solve the N+1 problem.
 

@@ -2,8 +2,6 @@
 
 Now that you know how to configure MyBatis and create mappings, you're ready for the good stuff. The MyBatis Java API is where you get to reap the rewards of your efforts. As you'll see, compared to JDBC, MyBatis greatly simplifies your code and keeps it clean, easy to understand and maintain. MyBatis 3 has introduced a number of significant improvements to make working with SQL Maps even better.
 
-
-
 ### Directory Structure
 
 Before we dive in to the Java API itself, it's important to understand the best practices surrounding directory structures. MyBatis is very flexible, and you can do almost anything with your files. But as with any framework, there's a preferred way.
@@ -42,8 +40,6 @@ Let's look at a typical application directory structure:
 Remember, these are preferences, not requirements, but others will thank you for using a common directory structure.
 
 The rest of the examples in this section will assume you're following this directory structure.
-
-
 
 ### SqlSessions
 
@@ -392,283 +388,28 @@ Since the very beginning, MyBatis has been an XML driven framework. The configur
 
 **The annotations are as follows:**
 
- <table>
-    <thead>
-      <tr>
-        <th>Annotation</th>
-        <th>Target</th>
-        <th>XML equivalent</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><code>@CacheNamespace</code></td>
-        <td><code>Class</code></td>
-        <td><code>&lt;cache&gt;</code></td>
-        <td>
-          Configures the cache for the given namespace (i.e. class). Attributes: <code>implementation</code>,
-          <code>eviction</code>, <code>flushInterval</code>, <code>size</code>, <code>readWrite</code>,
-          <code>blocking</code>, <code>properties</code>.
-        </td>
-      </tr>
-      <tr>
-        <td><code>@Property</code></td>
-        <td>N/A</td>
-        <td><code>&lt;property&gt;</code></td>
-        <td>Specifies the property value or placeholder(can replace by configuration properties that defined at the <code>mybatis-config.xml</code>). Attributes: <code>name</code>, <code>value</code>. (Available on MyBatis 3.4.2+)</td>
-      </tr>
-      <tr>
-        <td><code>@CacheNamespaceRef</code></td>
-        <td><code>Class</code></td>
-        <td><code>&lt;cacheRef&gt;</code></td>
-        <td>
-          References the cache of another namespace to use. Note that caches declared in an XML mapper file are considered
-          a separate namespace, even if they share the same FQCN. Attributes: <code>value</code> and <code>name</code>.
-          If you use this annotation, you should be specified either <code>value</code> or <code>name</code> attribute.
-          For the <code>value</code> attribute specify a java type indicating the namespace(the namespace name become a FQCN of specified java type),
-          and for the <code>name</code> attribute(this attribute is available since 3.4.2) specify a name indicating the namespace.
-        </td>
-      </tr>
-      <tr>
-        <td><code>@ConstructorArgs</code></td>
-        <td><code>Method</code></td>
-        <td><code>&lt;constructor&gt;</code></td>
-        <td>Collects a group of results to be passed to a result object constructor. Attributes: <code>value</code>, which is an array of <code>Arg</code>s.</td>
-      </tr>
-      <tr>
-        <td><code>@Arg</code></td>
-        <td>N/A</td>
-        <td>
-          <ul>
-            <li><code>&lt;arg&gt;</code></li>
-            <li><code>&lt;idArg&gt;</code></li>
-          </ul>
-        </td>
-        <td>A single constructor argument that is part of a ConstructorArgs collection. Attributes: <code>id</code>,
-        <code>column</code>, <code>javaType</code>, <code>jdbcType</code>, <code>typeHandler</code>, <code>select</code>,
-        <code>resultMap</code>. The id attribute is a boolean value that identifies the property to be used for comparisons,
-        similar to the <code>&lt;idArg&gt;</code> XML element. Since 3.5.4, it can be used as repeatable annotation.</td>
-      </tr>
-      <tr>
-        <td><code>@TypeDiscriminator</code></td>
-        <td><code>Method</code></td>
-        <td><code>&lt;discriminator&gt;</code></td>
-        <td>A group of value cases that can be used to determine the result mapping to perform. Attributes: <code>column</code>,
-        <code>javaType</code>, <code>jdbcType</code>, <code>typeHandler</code>, <code>cases</code>. The cases attribute is an array of <code>Case</code>s.</td>
-      </tr>
-      <tr>
-        <td><code>@Case</code></td>
-        <td>N/A</td>
-        <td><code>&lt;case&gt;</code></td>
-        <td>A single case of a value and its corresponding mappings. Attributes: <code>value</code>, <code>type</code>,
-        <code>results</code>. The results attribute is an array of Results, thus this <code>Case</code> Annotation is
-        similar to an actual <code>ResultMap</code>, specified by the <code>Results</code> annotation below.</td>
-      </tr>
-      <tr>
-        <td><code>@Results</code></td>
-        <td><code>Method</code></td>
-        <td><code>&lt;resultMap&gt;</code></td>
-        <td>A list of Result mappings that contain details of how a particular result column is mapped to a property or field.
-        Attributes: <code>value</code>, <code>id</code>. The value attribute is an array of <code>Result</code> annotations. The id attribute is the name of the result mapping.</td>
-      </tr>
-      <tr>
-        <td><code>@Result</code></td>
-        <td>N/A</td>
-        <td>
-          <ul>
-            <li><code>&lt;result&gt;</code></li>
-            <li><code>&lt;id&gt;</code></li>
-          </ul>
-        </td>
-        <td>A single result mapping between a column and a property or field. Attributes: <code>id</code>, <code>column</code>,
-        <code>property</code>, <code>javaType</code>, <code>jdbcType</code>, <code>typeHandler</code>, <code>one</code>,
-        <code>many</code>. The id attribute is a boolean value that indicates that the property should be used for comparisons
-        (similar to <code>&lt;id&gt;</code> in the XML mappings).
-        The one attribute is for single associations, similar to <code>&lt;association&gt;</code>, and the many attribute
-        is for collections, similar to <code>&lt;collection&gt;</code>. They are named as they are to avoid class naming conflicts.
-        Since 3.5.4, it can be used as repeatable annotation.</td>
-      </tr>
-      <tr>
-        <td><code>@One</code></td>
-        <td>N/A</td>
-        <td><code>&lt;association&gt;</code></td>
-        <td>A mapping to a single property value of a complex type. Attributes: <code>select</code>, which is the fully
-        qualified name of a mapped statement (i.e. mapper method) that can load an instance of the appropriate type.
-        <code>fetchType</code>, which supersedes the global configuration parameter <code>lazyLoadingEnabled</code> for this
-        mapping.
-        <code>resultMap</code>(available since 3.5.5), which is the fully qualified name of a result map that map to
-        a single container object from select result.
-        <code>columnPrefix</code>(available since 3.5.5), which is column prefix for grouping select columns at nested result map.
-        <span class="label important">NOTE</span> You will notice that join mapping is not supported via the Annotations API.
-        This is due to the limitation in Java Annotations that does not allow for circular references.</td>
-      </tr>
-      <tr>
-        <td><code>@Many</code></td>
-        <td>N/A</td>
-        <td><code>&lt;collection&gt;</code></td>
-        <td>A mapping to a collection property of a complex type. Attributes: <code>select</code>, which is the fully
-        qualified name of a mapped statement (i.e. mapper method) that can load a collection of instances of the appropriate
-        types. <code>fetchType</code>, which supersedes the global configuration parameter <code>lazyLoadingEnabled</code> for this
-        mapping.
-        <code>resultMap</code>(available since 3.5.5), which is the fully qualified name of a result map that map to
-        collection object from select result.
-        <code>columnPrefix</code>(available since 3.5.5), which is column prefix for grouping select columns at nested result map.
-        <span class="label important">NOTE</span> You will notice that join mapping is not supported via the
-        Annotations API. This is due to the limitation in Java Annotations that does not allow for circular references.</td>
-      </tr>
-      <tr>
-        <td><code>@MapKey</code></td>
-        <td><code>Method</code></td>
-        <td> </td>
-        <td>This is used on methods which return type is a Map. It is used to convert a List of result objects as a Map
-        based on a property of those objects. Attributes: <code>value</code>, which is a property used as the key of the map.</td>
-      </tr>
-      <tr>
-        <td><code>@Options</code></td>
-        <td><code>Method</code></td>
-        <td>Attributes of mapped statements.</td>
-        <td>This annotation provides access to the wide range of switches and configuration options that are normally
-        present on the mapped statement as attributes. Rather than complicate each statement annotation, the
-        <code>Options</code> annotation provides a consistent and clear way to access these. Attributes:
-        <code>useCache=true</code>, <code>flushCache=FlushCachePolicy.DEFAULT</code>, <code>resultSetType=DEFAULT</code>,
-        <code>statementType=PREPARED</code>, <code>fetchSize=-1</code>, <code>timeout=-1</code>,
-        <code>useGeneratedKeys=false</code>, <code>keyProperty=""</code>, <code>keyColumn=""</code>, <code>resultSets=""</code>
-        and <code>databaseId=""</code>.
-        It's important to understand that with Java Annotations, there is no way to specify <code>null</code> as a value.
-        Therefore, once you engage the <code>Options</code> annotation, your statement is subject to all of the default
-        values. Pay attention to what the default values are to avoid unexpected behavior.
-        The <code>databaseId</code>(Available since 3.5.5), in case there is a configured <code>DatabaseIdProvider</code>,
-        the MyBatis use the <code>Options</code> with no <code>databaseId</code> attribute or with a <code>databaseId</code>
-        that matches the current one. If found with and without the <code>databaseId</code> the latter will be discarded.<br/><br/>
-        Note that <code>keyColumn</code> is only required in certain databases (like Oracle and PostgreSQL).
-        See the discussion about <code>keyColumn</code> and <code>keyProperty</code> above in the discussion of the
-        insert statement for more information about allowable values in these attributes.
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <ul>
-            <li><code>@Insert</code></li>
-            <li><code>@Update</code></li>
-            <li><code>@Delete</code></li>
-            <li><code>@Select</code></li>
-          </ul>
-        </td>
-        <td><code>Method</code></td>
-        <td>
-          <ul>
-            <li><code>&lt;insert&gt;</code></li>
-            <li><code>&lt;update&gt;</code></li>
-            <li><code>&lt;delete&gt;</code></li>
-            <li><code>&lt;select&gt;</code></li>
-          </ul>
-        </td>
-        <td>Each of these annotations represents the actual SQL that is to be executed. They each take an array of strings
-        (or a single string will do). If an array of strings is passed, they are concatenated with a single space between
-        each to separate them. This helps avoid the "missing space" problem when building SQL in Java code. However,
-        you're also welcome to concatenate together a single string if you like.
-        Attributes: <code>value</code>, which is the array of Strings to form the single SQL statement.
-        The <code>databaseId</code>(Available since 3.5.5), in case there is a configured <code>DatabaseIdProvider</code>,
-        the MyBatis use a statement with no <code>databaseId</code> attribute or with a <code>databaseId</code>
-        that matches the current one. If found with and without the <code>databaseId</code> the latter will be discarded.
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <ul>
-            <li><code>@InsertProvider</code></li>
-            <li><code>@UpdateProvider</code></li>
-            <li><code>@DeleteProvider</code></li>
-            <li><code>@SelectProvider</code></li>
-          </ul>
-        </td>
-        <td><code>Method</code></td>
-        <td>
-          <ul>
-            <li><code>&lt;insert&gt;</code></li>
-            <li><code>&lt;update&gt;</code></li>
-            <li><code>&lt;delete&gt;</code></li>
-            <li><code>&lt;select&gt;</code></li>
-          </ul>
-        </td>
-        <td>Allows for creation of dynamic SQL. These alternative SQL annotations allow you to specify a class and
-        a method name that will return the SQL to run at execution time
-        (Since 3.4.6, you can specify the <code>CharSequence</code> instead of <code>String</code> as a method return type).
-        Upon executing the mapped statement, MyBatis will instantiate the class, and execute the method, as specified by the provider.
-        You can pass objects that passed to arguments of a mapper method, "Mapper interface type", "Mapper method" and "Database ID"
-        via the <code>ProviderContext</code>(available since MyBatis 3.4.5 or later) as method argument.
-        (In MyBatis 3.4 or later, it's allow multiple parameters)
-        Attributes: <code>value</code>, <code>type</code>, <code>method</code> and <code>databaseId</code>.
-        The <code>value</code> and <code>type</code> attribute is a class
-        (The <code>type</code> attribute is alias for <code>value</code>, you must be specify either one.
-        But both attributes can be omit when specify the <code>defaultSqlProviderType</code> as global configuration).
-        The <code>method</code> is the name of the method on that class
-        (Since 3.5.1, you can omit <code>method</code> attribute, the MyBatis will resolve a target method via the
-        <code>ProviderMethodResolver</code> interface.
-        If not resolve by it, the MyBatis use the reserved fallback method that named <code>provideSql</code>).
-        The <code>databaseId</code>(Available since 3.5.5), in case there is a configured <code>DatabaseIdProvider</code>,
-        the MyBatis will use a provider method with no <code>databaseId</code> attribute or with a <code>databaseId</code>
-        that matches the current one. If found with and without the <code>databaseId</code> the latter will be discarded.<span class="label important">NOTE</span>
-    Following this section is a discussion about the class, which can help build dynamic SQL in a cleaner, easier to read way.</td>
-  </tr>
-  <tr>
-    <td><code>@Param</code></td>
-    <td><code>Parameter</code></td>
-    <td>N/A</td>
-    <td>If your mapper method takes multiple parameters, this annotation can be applied to a mapper method parameter
-    to give each of them a name. Otherwise, multiple parameters will be named by their position prefixed with "param"
-    (not including any <code>RowBounds</code> parameters). For example <code>#{param1}</code>, <code>#{param2}</code> etc. is the default.
-    With <code>@Param("person")</code>, the parameter would be named <code>#{person}</code>.</td>
-  </tr>
-  <tr>
-    <td><code>@SelectKey</code></td>
-    <td><code>Method</code></td>
-    <td><code>&lt;selectKey&gt;</code></td>
-    <td>This annotation duplicates the <code>&lt;selectKey&gt;</code> functionality for methods annotated with
-    <code>@Insert</code>, <code>@InsertProvider</code>, <code>@Update</code>, or <code>@UpdateProvider</code>.
-    It is ignored for other methods. If you specify a
-    <code>@SelectKey</code> annotation, then MyBatis will ignore any generated key properties set via the
-    <code>@Options</code> annotation, or configuration properties.
-    Attributes: <code>statement</code> an array of strings which is the SQL statement to execute, <code>keyProperty</code> which
-    is the property of the parameter object that will be updated with the new value, <code>before</code> which must be either
-    <code>true</code> or <code>false</code> to denote if the SQL statement should be executed before or after the insert,
-    <code>resultType</code> which is the Java type of the <code>keyProperty</code>, and <code>statementType</code> is a type of the statement that is any one of <code>STATEMENT</code>, <code>PREPARED</code> or <code>CALLABLE</code> that is mapped to <code>Statement</code>, <code>PreparedStatement</code> and <code>CallableStatement</code> respectively. The default is <code>PREPARED</code>.
-    The <code>databaseId</code>(Available since 3.5.5), in case there is a configured <code>DatabaseIdProvider</code>,
-    the MyBatis will use a statement with no <code>databaseId</code> attribute or with a <code>databaseId</code>
-    that matches the current one. If found with and without the <code>databaseId</code> the latter will be discarded.
-    </td>
-  </tr>
-  <tr>
-    <td><code>@ResultMap</code></td>
-    <td><code>Method</code></td>
-    <td>N/A</td>
-    <td>This annotation is used to provide the id of a <code>&lt;resultMap&gt;</code> element in an XML mapper to a
-    <code>@Select</code> or <code>@SelectProvider</code> annotation. This allows annotated selects to reuse resultmaps
-    that are defined in XML. This annotation will override any <code>@Results</code> or <code>@ConstructorArgs</code>
-    annotation if both are specified on an annotated select.</td>
-  </tr>
-  <tr>
-    <td><code>@ResultType</code></td>
-    <td><code>Method</code></td>
-    <td>N/A</td>
-    <td>This annotation is used when using a result handler.  In that case, the return type is void
-    so MyBatis must have a way to determine the type of object to construct for each row.
-    If there is an XML result map, use the @ResultMap annotation.  If the result type is
-    specified in XML on the <code>&lt;select&gt;</code> element, then no other annotation is
-    necessary.  In other cases, use this annotation.  For example, if a @Select annotated method
-    will use a result handler, the return type must be void and this annotation (or @ResultMap)
-    is required.  This annotation is ignored unless the method return type is void.</td>
-  </tr>
-  <tr>
-    <td><code>@Flush</code></td>
-    <td><code>Method</code></td>
-    <td>N/A</td>
-    <td>If this annotation is used, it can be called the <code>SqlSession#flushStatements()</code> via method defined at a Mapper interface.(MyBatis 3.3 or above)</td>
-  </tr>
-</tbody>
-</table>
-
+| Annotation                                                   | Target      | XML equivalent                           | Description                                                  |
+| ----------------------------------------------------------- | ---------- | --------------------------------------- | ----------------------------------------------------------- |
+| `@CacheNamespace`                                            | `Class`     | `<cache>`                                | Configures the cache for the given namespace (i.e. class). Attributes: `implementation`, `eviction`, `flushInterval`, `size`, `readWrite`, `blocking`, `properties`. |
+| `@Property`                                                  | N/A         | `<property>`                             | Specifies the property value or placeholder(can replace by configuration properties that defined at the `mybatis-config.xml`). Attributes: `name`, `value`. (Available on MyBatis 3.4.2+) |
+| `@CacheNamespaceRef`                                         | `Class`     | `<cacheRef>`                             | References the cache of another namespace to use. Note that caches declared in an XML mapper file are considered a separate namespace, even if they share the same FQCN. Attributes: `value` and `name`. If you use this annotation, you should be specified either `value` or `name` attribute. For the `value` attribute specify a java type indicating the namespace(the namespace name become a FQCN of specified java type), and for the `name` attribute(this attribute is available since 3.4.2) specify a name indicating the namespace. |
+| `@ConstructorArgs`                                           | `Method`    | `<constructor>`                          | Collects a group of results to be passed to a result object constructor. Attributes: `value`, which is an array of `Arg`s. |
+| `@Arg`                                                       | N/A         |<ul><li> `<arg>`</li><li>`<idArg>`</li></ul>                         | A single constructor argument that is part of a ConstructorArgs collection. Attributes: `id`, `column`, `javaType`, `jdbcType`, `typeHandler`, `select`, `resultMap`. The id attribute is a boolean value that identifies the property to be used for comparisons, similar to the `<idArg>` XML element. Since 3.5.4, it can be used as repeatable annotation. |
+| `@TypeDiscriminator`                                         | `Method`    | `<discriminator>`                        | A group of value cases that can be used to determine the result mapping to perform. Attributes: `column`, `javaType`, `jdbcType`, `typeHandler`, `cases`. The cases attribute is an array of `Case`s. |
+| `@Case`                                                      | N/A         | `<case>`                                 | A single case of a value and its corresponding mappings. Attributes: `value`, `type`, `results`. The results attribute is an array of Results, thus this `Case` Annotation is similar to an actual `ResultMap`, specified by the `Results` annotation below. |
+| `@Results`                                                   | `Method`    | `<resultMap>`                            | A list of Result mappings that contain details of how a particular result column is mapped to a property or field. Attributes: `value`, `id`. The value attribute is an array of `Result` annotations. The id attribute is the name of the result mapping. |
+| `@Result`                                                    | N/A         | <ul><li>`<result>`</li><li>`<id>`</li>                         | A single result mapping between a column and a property or field. Attributes: `id`, `column`, `property`, `javaType`, `jdbcType`, `typeHandler`, `one`, `many`. The id attribute is a boolean value that indicates that the property should be used for comparisons (similar to `<id>` in the XML mappings). The one attribute is for single associations, similar to `<association>`, and the many attribute is for collections, similar to `<collection>`. They are named as they are to avoid class naming conflicts. Since 3.5.4, it can be used as repeatable annotation. |
+| `@One`                                                       | N/A         | `<association>`                          | A mapping to a single property value of a complex type. Attributes: `select`, which is the fully qualified name of a mapped statement (i.e. mapper method) that can load an instance of the appropriate type. `fetchType`, which supersedes the global configuration parameter `lazyLoadingEnabled` for this mapping. `resultMap`(available since 3.5.5), which is the fully qualified name of a result map that map to a single container object from select result. `columnPrefix`(available since 3.5.5), which is column prefix for grouping select columns at nested result map. <span class="label important">NOTE</span> You will notice that join mapping is not supported via the Annotations API. This is due to the limitation in Java Annotations that does not allow for circular references. |
+| `@Many`                                                      | N/A         | `<collection>`                           | A mapping to a collection property of a complex type. Attributes: `select`, which is the fully qualified name of a mapped statement (i.e. mapper method) that can load a collection of instances of the appropriate types. `fetchType`, which supersedes the global configuration parameter `lazyLoadingEnabled` for this mapping. `resultMap`(available since 3.5.5), which is the fully qualified name of a result map that map to collection object from select result. `columnPrefix`(available since 3.5.5), which is column prefix for grouping select columns at nested result map. <span class="label important">NOTE</span> You will notice that join mapping is not supported via the Annotations API. This is due to the limitation in Java Annotations that does not allow for circular references. |
+| `@MapKey`                                                    | `Method`    |                                          | This is used on methods which return type is a Map. It is used to convert a List of result objects as a Map based on a property of those objects. Attributes: `value`, which is a property used as the key of the map. |
+| `@Options`                                                   | `Method`    | Attributes of mapped statements.         | This annotation provides access to the wide range of switches and configuration options that are normally present on the mapped statement as attributes. Rather than complicate each statement annotation, the `Options` annotation provides a consistent and clear way to access these. Attributes: `useCache=true`, `flushCache=FlushCachePolicy.DEFAULT`, `resultSetType=DEFAULT`, `statementType=PREPARED`, `fetchSize=-1`, `timeout=-1`, `useGeneratedKeys=false`, `keyProperty=""`, `keyColumn=""`, `resultSets=""` and `databaseId=""`. It's important to understand that with Java Annotations, there is no way to specify `null` as a value. Therefore, once you engage the `Options` annotation, your statement is subject to all of the default values. Pay attention to what the default values are to avoid unexpected behavior. The `databaseId`(Available since 3.5.5), in case there is a configured `DatabaseIdProvider`, the MyBatis use the `Options` with no `databaseId` attribute or with a `databaseId` that matches the current one. If found with and without the `databaseId` the latter will be discarded.  Note that `keyColumn` is only required in certain databases (like Oracle and PostgreSQL). See the discussion about `keyColumn` and `keyProperty` above in the discussion of the insert statement for more information about allowable values in these attributes. |
+|                          | `Method`    | <ul><li>`<insert>`</li><li>`<update>`</li><li>`<delete>`</li><li>`<select>`<li/></ul> | Each of these annotations represents the actual SQL that is to be executed. They each take an array of strings (or a single string will do). If an array of strings is passed, they are concatenated with a single space between each to separate them. This helps avoid the "missing space" problem when building SQL in Java code. However, you're also welcome to concatenate together a single string if you like. Attributes: `value`, which is the array of Strings to form the single SQL statement. The `databaseId`(Available since 3.5.5), in case there is a configured `DatabaseIdProvider`, the MyBatis use a statement with no `databaseId` attribute or with a `databaseId` that matches the current one. If found with and without the `databaseId` the latter will be discarded. |
+| <ul><li>`@InsertProvider`</li><li>`@UpdateProvider`</li><li>`@DeleteProvider`</li><li>`@Select`</li></ul> | `Method`    |<ul><li>`<insert>`</li><li>`<update>`</li><li>`<delete>`</li><li>`<select>`<li/></ul>| Allows for creation of dynamic SQL. These alternative SQL annotations allow you to specify a class and a method name that will return the SQL to run at execution time (Since 3.4.6, you can specify the `CharSequence` instead of `String` as a method return type). Upon executing the mapped statement, MyBatis will instantiate the class, and execute the method, as specified by the provider. You can pass objects that passed to arguments of a mapper method, "Mapper interface type", "Mapper method" and "Database ID" via the `ProviderContext`(available since MyBatis 3.4.5 or later) as method argument. (In MyBatis 3.4 or later, it's allow multiple parameters) Attributes: `value`, `type`, `method` and `databaseId`. The `value` and `type` attribute is a class (The `type` attribute is alias for `value`, you must be specify either one. But both attributes can be omit when specify the `defaultSqlProviderType` as global configuration). The `method` is the name of the method on that class (Since 3.5.1, you can omit `method` attribute, the MyBatis will resolve a target method via the `ProviderMethodResolver` interface. If not resolve by it, the MyBatis use the reserved fallback method that named `provideSql`). The `databaseId`(Available since 3.5.5), in case there is a configured `DatabaseIdProvider`, the MyBatis will use a provider method with no `databaseId` attribute or with a `databaseId` that matches the current one. If found with and without the `databaseId` the latter will be discarded. <span class="label important">NOTE</span> Following this section is a discussion about the class, which can help build dynamic SQL in a cleaner, easier to read way. |
+| `@Param`                                                     | `Parameter` | N/A                                      | If your mapper method takes multiple parameters, this annotation can be applied to a mapper method parameter to give each of them a name. Otherwise, multiple parameters will be named by their position prefixed with "param" (not including any `RowBounds` parameters). For example `#{param1}`, `#{param2}` etc. is the default. With `@Param("person")`, the parameter would be named `#{person}`. |
+| `@SelectKey`                                                 | `Method`    | `<selectKey>`                            | This annotation duplicates the `<selectKey>` functionality for methods annotated with `@Insert`, `@InsertProvider`, `@Update`, or `@UpdateProvider`. It is ignored for other methods. If you specify a `@SelectKey` annotation, then MyBatis will ignore any generated key properties set via the `@Options` annotation, or configuration properties. Attributes: `statement` an array of strings which is the SQL statement to execute, `keyProperty` which is the property of the parameter object that will be updated with the new value, `before` which must be either `true` or `false` to denote if the SQL statement should be executed before or after the insert, `resultType` which is the Java type of the `keyProperty`, and `statementType` is a type of the statement that is any one of `STATEMENT`, `PREPARED` or `CALLABLE` that is mapped to `Statement`, `PreparedStatement` and `CallableStatement` respectively. The default is `PREPARED`. The `databaseId`(Available since 3.5.5), in case there is a configured `DatabaseIdProvider`, the MyBatis will use a statement with no `databaseId` attribute or with a `databaseId` that matches the current one. If found with and without the `databaseId` the latter will be discarded. |
+| `@ResultMap`                                                 | `Method`    | N/A                                      | This annotation is used to provide the id of a `<resultMap>` element in an XML mapper to a `@Select` or `@SelectProvider` annotation. This allows annotated selects to reuse resultmaps that are defined in XML. This annotation will override any `@Results` or `@ConstructorArgs` annotation if both are specified on an annotated select. |
+| `@ResultType`                                                | `Method`    | N/A                                      | This annotation is used when using a result handler. In that case, the return type is void so MyBatis must have a way to determine the type of object to construct for each row. If there is an XML result map, use the @ResultMap annotation. If the result type is specified in XML on the `<select>` element, then no other annotation is necessary. In other cases, use this annotation. For example, if a @Select annotated method will use a result handler, the return type must be void and this annotation (or @ResultMap) is required. This annotation is ignored unless the method return type is void. |
+| `@Flush`                                                     | `Method`    | N/A                                      | If this annotation is used, it can be called the `SqlSession#flushStatements()` via method defined at a Mapper interface.(MyBatis 3.3 or above) |
 
 
 ##### Mapper Annotation Examples

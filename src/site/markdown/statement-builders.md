@@ -112,349 +112,31 @@ public String updatePersonSql() {
 }
 ```
 
- <table>
-          <thead>
-            <tr>
-              <th>Method</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <ul>
-                  <li>
-                    <code>SELECT(String)</code>
-                  </li>
-                  <li>
-                    <code>SELECT(String...)</code>
-                  </li>
-                </ul>
-              </td>
-              <td>Starts or appends to a
-                <code>SELECT</code>
-                clause. Can be called more than once, and parameters will be appended to
-                the
-                <code>SELECT</code>
-                clause. The parameters are usually a comma separated list of columns and aliases, but can be
-                anything acceptable to the driver.
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <ul>
-                  <li>
-                    <code>SELECT_DISTINCT(String)</code>
-                  </li>
-                  <li>
-                    <code>SELECT_DISTINCT(String...)</code>
-                  </li>
-                </ul>
-              </td>
-              <td>Starts or appends to a
-                <code>SELECT</code>
-                clause, also adds the
-                <code>DISTINCT</code>
-                keyword to the generated query.
-                Can be called more than once, and parameters will be appended to the
-                <code>SELECT</code>
-                clause. The parameters
-                are usually a comma separated list of columns and aliases, but can be anything acceptable to the driver.
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <ul>
-                  <li>
-                    <code>FROM(String)</code>
-                  </li>
-                  <li>
-                    <code>FROM(String...)</code>
-                  </li>
-                </ul>
-              </td>
-              <td>Starts or appends to a
-                <code>FROM</code>
-                clause. Can be called more than once, and parameters will be appended to the
-                <code>FROM</code>
-                clause. Parameters are usually a table name and an alias, or anything acceptable to the driver.
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <ul>
-                  <li>
-                    <code>JOIN(String)</code>
-                  </li>
-                  <li>
-                    <code>JOIN(String...)</code>
-                  </li>
-                  <li>
-                    <code>INNER_JOIN(String)</code>
-                  </li>
-                  <li>
-                    <code>INNER_JOIN(String...)</code>
-                  </li>
-                  <li>
-                    <code>LEFT_OUTER_JOIN(String)</code>
-                  </li>
-                  <li>
-                    <code>LEFT_OUTER_JOIN(String...)</code>
-                  </li>
-                  <li>
-                    <code>RIGHT_OUTER_JOIN(String)</code>
-                  </li>
-                  <li>
-                    <code>RIGHT_OUTER_JOIN(String...)</code>
-                  </li>
-                </ul>
-              </td>
-              <td>Adds a new
-                <code>JOIN</code>
-                clause of the appropriate type, depending on the method called. The parameter can include
-                a standard join consisting of the columns and the conditions to join on.
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <ul>
-                  <li>
-                    <code>WHERE(String)</code>
-                  </li>
-                  <li>
-                    <code>WHERE(String...)</code>
-                  </li>
-                </ul>
-              </td>
-              <td>Appends a new
-                <code>WHERE</code>
-                clause condition, concatenated by<code>AND</code>. Can be called multiple times, which causes it
-                to concatenate the new conditions each time with<code>AND</code>. Use
-                <code>OR()</code>
-                to split with an<code>OR</code>.
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <code>OR()</code>
-              </td>
-              <td>Splits the current
-                <code>WHERE</code>
-                clause conditions with an<code>OR</code>. Can be called more than once, but calling more
-                than once in a row will generate erratic<code>SQL</code>.
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <code>AND()</code>
-              </td>
-              <td>Splits the current
-                <code>WHERE</code>
-                clause conditions with an<code>AND</code>. Can be called more than once, but calling more
-                than once in a row will generate erratic<code>SQL</code>. Because
-                <code>WHERE</code>
-                and
-                <code>HAVING</code>
-                both automatically concatenate with
-                <code>AND</code>, this is a very uncommon method to use and is only really included for completeness.
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <ul>
-                  <li>
-                    <code>GROUP_BY(String)</code>
-                  </li>
-                  <li>
-                    <code>GROUP_BY(String...)</code>
-                  </li>
-                </ul>
-              </td>
-              <td>Appends a new
-                <code>GROUP BY</code>
-                clause elements, concatenated by a comma. Can be called multiple times, which
-                causes it to concatenate the new conditions each time with a comma.
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <ul>
-                  <li>
-                    <code>HAVING(String)</code>
-                  </li>
-                  <li>
-                    <code>HAVING(String...)</code>
-                  </li>
-                </ul>
-              </td>
-              <td>Appends a new
-                <code>HAVING</code>
-                clause condition, concatenated by AND. Can be called multiple times, which causes it
-                to concatenate the new conditions each time with<code>AND</code>. Use
-                <code>OR()</code>
-                to split with an<code>OR</code>.
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <ul>
-                  <li>
-                    <code>ORDER_BY(String)</code>
-                  </li>
-                  <li>
-                    <code>ORDER_BY(String...)</code>
-                  </li>
-                </ul>
-              </td>
-              <td>Appends a new
-                <code>ORDER BY</code>
-                clause elements, concatenated by a comma. Can be called multiple times, which
-                causes it to concatenate the new conditions each time with a comma.
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <ul>
-                  <li>
-                    <code>LIMIT(String)</code>
-                  </li>
-                  <li>
-                    <code>LIMIT(int)</code>
-                  </li>
-                </ul>
-              </td>
-              <td>
-                Appends a <code>LIMIT</code> clause.
-                This method valid when use together with SELECT(), UPDATE() and DELETE().
-                And this method is designed to use together with OFFSET() when use SELECT(). (Available since 3.5.2)
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <ul>
-                  <li>
-                    <code>OFFSET(String)</code>
-                  </li>
-                  <li>
-                    <code>OFFSET(long)</code>
-                  </li>
-                </ul>
-              </td>
-              <td>
-                Appends a <code>OFFSET</code> clause.
-                This method valid when use together with SELECT().
-                And this method is designed to use together with LIMIT(). (Available since 3.5.2)
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <ul>
-                  <li>
-                    <code>OFFSET_ROWS(String)</code>
-                  </li>
-                  <li>
-                    <code>OFFSET_ROWS(long)</code>
-                  </li>
-                </ul>
-              </td>
-              <td>
-                Appends a <code>OFFSET n ROWS</code> clause.
-                This method valid when use together with SELECT().
-                And this method is designed to use together with FETCH_FIRST_ROWS_ONLY(). (Available since 3.5.2)
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <ul>
-                  <li>
-                    <code>FETCH_FIRST_ROWS_ONLY(String)</code>
-                  </li>
-                  <li>
-                    <code>FETCH_FIRST_ROWS_ONLY(int)</code>
-                  </li>
-                </ul>
-              </td>
-              <td>
-                Appends a <code>FETCH FIRST n ROWS ONLY</code> clause.
-                This method valid when use together with SELECT().
-                And this method is designed to use together with OFFSET_ROWS(). (Available since 3.5.2)
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <code>DELETE_FROM(String)</code>
-              </td>
-              <td>Starts a delete statement and specifies the table to delete from. Generally this should be followed by
-                a
-                WHERE statement!
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <code>INSERT_INTO(String)</code>
-              </td>
-              <td>Starts an insert statement and specifies the table to insert into. This should be followed by one or
-                more VALUES() or INTO_COLUMNS() and INTO_VALUES() calls.
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <ul>
-                  <li>
-                    <code>SET(String)</code>
-                  </li>
-                  <li>
-                    <code>SET(String...)</code>
-                  </li>
-                </ul>
-              </td>
-              <td>Appends to the "set" list for an update statement.</td>
-            </tr>
-            <tr>
-              <td>
-                <code>UPDATE(String)</code>
-              </td>
-              <td>Starts an update statement and specifies the table to update. This should be followed by one or more
-                SET() calls, and usually a WHERE() call.
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <code>VALUES(String, String)</code>
-              </td>
-              <td>Appends to an insert statement. The first parameter is the column(s) to insert, the second parameter
-                is
-                the value(s).
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <code>INTO_COLUMNS(String...)</code>
-              </td>
-              <td>
-                Appends columns phrase to an insert statement.
-                This should be call INTO_VALUES() with together.
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <code>INTO_VALUES(String...)</code>
-              </td>
-              <td>
-                Appends values phrase to an insert statement.
-                This should be call INTO_COLUMNS() with together.
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <code>ADD_ROW()</code>
-              </td>
-              <td>
-                Add new row for bulk insert. (Available since 3.5.2)
-              </td>
-            </tr>
-          </tbody>
-        </table>
+| Method                                                       | Description                                                  |
+| ------------------------------------------------------------ | ----------------------------------------------------------- |
+| <ul><li>`SELECT(String)`</li><li>`SELECT(String...)`</li></ul> | Starts or appends to a `SELECT` clause. Can be called more than once, and parameters will be appended to the `SELECT` clause. The parameters are usually a comma separated list of columns and aliases, but can be anything acceptable to the driver. |
+| <ul><li>`SELECT_DISTINCT(String)`</li><li>`SELECT_DISTINCT(String...)`</li></ul> | Starts or appends to a `SELECT` clause, also adds the `DISTINCT` keyword to the generated query. Can be called more than once, and parameters will be appended to the `SELECT` clause. The parameters are usually a comma separated list of columns and aliases, but can be anything acceptable to the driver. |
+| <ul><li>`FROM(String)`</li><li>`FROM(String...)`</li></ul>   | Starts or appends to a `FROM` clause. Can be called more than once, and parameters will be appended to the `FROM` clause. Parameters are usually a table name and an alias, or anything acceptable to the driver. |
+| <ul><li>`JOIN(String)`</li><li>`JOIN(String...)`</li><li>`INNER_JOIN(String)`</li><li>`INNER_JOIN(String...)`</li><li>`LEFT_OUTER_JOIN(String)`</li><li>`LEFT_OUTER_JOIN(String...)`</li><li>`RIGHT_OUTER_JOIN(String)`</li><li>`RIGHT_OUTER_JOIN(String...)`</li></ul> | Adds a new `JOIN` clause of the appropriate type, depending on the method called. The parameter can include a standard join consisting of the columns and the conditions to join on. |
+| <li>`WHERE(String)`</li><li>`WHERE(String...)`</li></ul>     | Appends a new `WHERE` clause condition, concatenated by`AND`. Can be called multiple times, which causes it to concatenate the new conditions each time with`AND`. Use `OR()` to split with an`OR`. |
+| `OR()`                                                       | Splits the current `WHERE` clause conditions with an`OR`. Can be called more than once, but calling more than once in a row will generate erratic`SQL`. |
+| `AND()`                                                      | Splits the current `WHERE` clause conditions with an`AND`. Can be called more than once, but calling more than once in a row will generate erratic`SQL`. Because `WHERE` and `HAVING` both automatically concatenate with `AND`, this is a very uncommon method to use and is only really included for completeness. |
+| <ul><li>`GROUP_BY(String)`</li><li>`GROUP_BY(String...)`</li></ul> | Appends a new `GROUP BY` clause elements, concatenated by a comma. Can be called multiple times, which causes it to concatenate the new conditions each time with a comma. |
+| <ul><li>`HAVING(String)`</li><li>`HAVING(String...)`</li></ul> | Appends a new `HAVING` clause condition, concatenated by AND. Can be called multiple times, which causes it to concatenate the new conditions each time with`AND`. Use `OR()` to split with an`OR`. |
+| <ul><li>`ORDER_BY(String)`</li><li>`ORDER_BY(String...)`</li></ul> | Appends a new `ORDER BY` clause elements, concatenated by a comma. Can be called multiple times, which causes it to concatenate the new conditions each time with a comma. |
+| <ul><li>`LIMIT(String)`</li><li>`LIMIT(int)`</li></ul>       | Appends a `LIMIT` clause. This method valid when use together with SELECT(), UPDATE() and DELETE(). And this method is designed to use together with OFFSET() when use SELECT(). (Available since 3.5.2) |
+| <ul><li>`OFFSET(String)`</li><li>`OFFSET(long)`              | Appends a `OFFSET` clause. This method valid when use together with SELECT(). And this method is designed to use together with LIMIT(). (Available since 3.5.2) |
+| <ul><li>`OFFSET_ROWS(String)`</li><li>`OFFSET_ROWS(long)`</li></ul> | Appends a `OFFSET n ROWS` clause. This method valid when use together with SELECT(). And this method is designed to use together with FETCH_FIRST_ROWS_ONLY(). (Available since 3.5.2) |
+| <ul><li>`FETCH_FIRST_ROWS_ONLY(String)`</li><li>`FETCH_FIRST_ROWS_ONLY(int)`</li></ul> | Appends a `FETCH FIRST n ROWS ONLY` clause. This method valid when use together with SELECT(). And this method is designed to use together with OFFSET_ROWS(). (Available since 3.5.2) |
+| `DELETE_FROM(String)`                                        | Starts a delete statement and specifies the table to delete from. Generally this should be followed by a WHERE statement! |
+| `INSERT_INTO(String)`                                        | Starts an insert statement and specifies the table to insert into. This should be followed by one or more VALUES() or INTO_COLUMNS() and INTO_VALUES() calls. |
+| <ul><li>`SET(String)`</li><li>`SET(String...)`</li></ul>     | Appends to the "set" list for an update statement.           |
+| `UPDATE(String)`                                             | Starts an update statement and specifies the table to update. This should be followed by one or more SET() calls, and usually a WHERE() call. |
+| `VALUES(String, String)`                                     | Appends to an insert statement. The first parameter is the column(s) to insert, the second parameter is the value(s). |
+| `INTO_COLUMNS(String...)`                                    | Appends columns phrase to an insert statement. This should be call INTO_VALUES() with together. |
+| `INTO_VALUES(String...)`                                     | Appends values phrase to an insert statement. This should be call INTO_COLUMNS() with together. |
+| `ADD_ROW()`                                                  | Add new row for bulk insert. (Available since 3.5.2)         |
+
 
 <span class="label important">NOTE</span> It is important to note that SQL class writes `LIMIT`, `OFFSET`, `OFFSET n ROWS` and `FETCH FIRST n ROWS ONLY` clauses into the generated statement as is. In other words, the library does not attempt to normalize those values for databases that don’t support these clauses directly. Therefore, it is very important for users to understand whether or not the target database supports these clauses. If the target database does not support these clauses, then it is likely that using this support will create SQL that has runtime errors.
 
@@ -536,50 +218,11 @@ Before version 3.2 we took a bit of a different approach, by utilizing a ThreadL
 
 The following methods apply to only the deprecated SqlBuilder and SelectBuilder classes.
 
-<table>
-        <thead>
-          <tr>
-            <th>Method</th>
-            <th>Description</th>
-          </tr>
-        </thead>
-        <tbody>
-        <tr>
-          <td>
-            <code>BEGIN()</code>
-            /
-            <code>RESET()</code>
-          </td>
-          <td>These methods clear the ThreadLocal state of the SelectBuilder class, and prepare it for a new
-            statement to be
-            built.
-            <code>BEGIN()</code>
-            reads best when starting a new statement.
-            <code>RESET()</code>
-            reads best when clearing a
-            statement in the middle of execution for some reason (perhaps if the logic demands a completely
-            different
-            statement under some conditions).
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <code>SQL()</code>
-          </td>
-          <td>This returns the generated
-            <code>SQL()</code>
-            and resets the
-            <code>SelectBuilder</code>
-            state (as if
-            <code>BEGIN()</code>
-            or
-            <code>RESET()</code>
-            were called).
-            Thus, this method can only be called ONCE!
-          </td>
-        </tr>
-        </tbody>
-        </table>
+| Method                | Description                                                  |
+| -------------------- | ----------------------------------------------------------- |
+| `BEGIN()` / `RESET()` | These methods clear the ThreadLocal state of the SelectBuilder class, and prepare it for a new statement to be built. `BEGIN()` reads best when starting a new statement. `RESET()` reads best when clearing a statement in the middle of execution for some reason (perhaps if the logic demands a completely different statement under some conditions). |
+| `SQL()`               | This returns the generated `SQL()` and resets the `SelectBuilder` state (as if `BEGIN()` or `RESET()` were called). Thus, this method can only be called ONCE! |
+
 
 The SelectBuilder and SqlBuilder classes are not magical, but it's important to know how they work. SelectBuilder and SqlBuilder use a combination of Static Imports and a ThreadLocal variable to enable a clean syntax that can be easily interlaced with conditionals. To use them, you statically import the methods from the classes like this (one or the other, not both):
 
