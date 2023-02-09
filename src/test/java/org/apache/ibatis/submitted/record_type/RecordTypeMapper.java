@@ -32,6 +32,12 @@ public interface RecordTypeMapper {
   @Select("select val, id, url from prop where id = #{id}")
   Property selectProperty(int id);
 
+  @Arg(name = "id", column = "id", id = true)
+  @Arg(name = "value", column = "val")
+  @Arg(name = "URL", column = "url")
+  @Select("select val, id, url from prop where id = #{id}")
+  Property selectPropertyNoJavaType(int id);
+
   @Insert("insert into prop (id, val, url) values (#{id}, #{value}, #{URL})")
   int insertProperty(Property property);
 
