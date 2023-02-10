@@ -437,7 +437,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
     if (javaType == null && property != null) {
       try {
         MetaClass metaResultType = MetaClass.forClass(resultType, configuration.getReflectorFactory());
-        javaType = metaResultType.getSetterType(property);
+        javaType = metaResultType.getGetterType(property);
       } catch (Exception e) {
         // ignore, following null check statement will deal with the situation
       }
