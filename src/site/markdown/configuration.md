@@ -677,7 +677,7 @@ This would send the property `encoding` with the value of `UTF8` to the construc
 
 You can plug any 3rd party DataSource by implementing the interface `org.apache.ibatis.datasource.DataSourceFactory`:
 
-```
+```java
 public interface DataSourceFactory {
   void setProperties(Properties props);
   DataSource getDataSource();
