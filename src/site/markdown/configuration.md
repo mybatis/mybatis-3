@@ -1,3 +1,6 @@
+title: MyBatis 3 | Configuration
+author: Clinton Begin
+
 ## Configuration
 
 The MyBatis configuration contains settings and properties that have a dramatic effect on how MyBatis behaves. The high level structure of the document is as follows:

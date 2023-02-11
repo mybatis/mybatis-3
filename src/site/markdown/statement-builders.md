@@ -1,3 +1,6 @@
+title: MyBatis 3 | The SQL Builder Class
+author: Clinton Begin
+
 ## The SQL Builder Class
 
 ### The Problem

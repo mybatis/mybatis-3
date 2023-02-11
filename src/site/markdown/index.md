@@ -1,3 +1,6 @@
+title: MyBatis 3 | Introduction
+author: Clinton Begin
+
 ## Introduction
 
 ### What is MyBatis?

@@ -1,3 +1,6 @@
+title: MyBatis 3 | Getting Started
+author: Clinton Begin
+
 ## Getting started
 
 ### Installation

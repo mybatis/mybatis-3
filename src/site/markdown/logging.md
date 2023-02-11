@@ -1,3 +1,6 @@
+title: MyBatis 3 | Logging
+author: Clinton Begin
+
 ## Logging
 
 MyBatis provides logging information through the use of an internal log factory. The internal log factory will delegate logging information to one of the following log implementations:
