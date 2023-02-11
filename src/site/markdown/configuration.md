@@ -9,7 +9,7 @@ The MyBatis configuration contains settings and properties that have a dramatic 
   - [typeHandlers](#typeHandlers)
   - [objectFactory](#objectFactory)
   - [plugins](#plugins)
-  - environments
+  - [environments](#environments)
     - environment
       - transactionManager
       - dataSource
@@ -85,6 +85,9 @@ This feature is disabled by default. If you specify a default value into placeho
   <!-- ... -->
   <property name="org.apache.ibatis.parsing.PropertyParser.default-value-separator" value="?:"/> <!-- Change default value of separator -->
 </properties>
+```
+
+```xml
 <dataSource type="POOLED">
   <!-- ... -->
   <property name="username" value="\${db:username?:ut_user}"/>
