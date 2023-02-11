@@ -253,8 +253,10 @@ class BaseExecutorTest extends BaseDataTest {
       for (Map<String, String> m : products) {
         if ("IMAGES".equals(m.get("SECTION"))) {
           assertNull(m.get("subject"));
+          assertNotNull(m.get("id"));
         } else {
           assertNotNull(m.get("subject"));
+          assertNull(m.get("id"));
         }
       }
     } finally {
@@ -274,8 +276,10 @@ class BaseExecutorTest extends BaseDataTest {
       for (Map<String, String> m : products) {
         if ("IMAGES".equals(m.get("SECTION"))) {
           assertNull(m.get("subject"));
+          assertNotNull(m.get("id"));
         } else {
           assertNotNull(m.get("subject"));
+          assertNull(m.get("id"));
         }
       }
     } finally {
