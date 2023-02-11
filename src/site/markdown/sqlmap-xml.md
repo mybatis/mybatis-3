@@ -570,7 +570,7 @@ The `resultMap` element has a number of sub-elements and a structure worthy of s
 - `result` – a normal result injected into a field or JavaBean property
 - `association` – a complex type association; many results will roll up into this type
   - nested result mappings – associations are `resultMap`s themselves, or can refer to one
-- collection – a collection of complex types
+- `collection` – a collection of complex types
   - nested result mappings – collections are `resultMap`s themselves, or can refer to one
 - `discriminator` – uses a result value to determine which `resultMap` to use
   - `case` – a case is a result map based on some value
@@ -647,7 +647,7 @@ In order to inject the results into the constructor, MyBatis needs to identify t
 </constructor>
 ```
 
-When you are dealing with a constructor with many parameters, maintaining the order of arg elements is error-prone.
+When you are dealing with a constructor with many parameters, maintaining the order of arg elements is error-prone.  
 Since 3.4.3, by specifying the name of each parameter, you can write arg elements in any order. To reference constructor parameters by their names, you can either add `@Param` annotation to them or compile the project with '-parameters' compiler option and enable `useActualParamName` (this option is enabled by default). The following example is valid for the same constructor even though the order of the second and the third parameters does not match with the declared order.
 
 ```xml
@@ -1137,6 +1137,9 @@ Auto-mapping works even when there is an specific result map. When this happens,
   from some_table
   where id = #{id}
 </select>
+```
+
+```xml
 <resultMap id="userResultMap" type="User">
   <result property="password" column="hashed_password"/>
 </resultMap>
@@ -1159,6 +1162,9 @@ The default value is `PARTIAL`, and it is so for a reason. When `FULL` is used a
   from Blog B left outer join Author A on B.author_id = A.id
   where B.id = #{id}
 </select>
+```
+
+```xml
 <resultMap id="blogResult" type="Blog">
   <association property="author" resultMap="authorResult"/>
 </resultMap>
@@ -1258,7 +1264,7 @@ To configure your cache, simply add public JavaBeans properties to your Cache im
 </cache>
 ```
 
-You can use JavaBeans properties of all simple types, MyBatis will do the conversion. And you can specify a placeholder(e.g. `\${cache.file}`) to replace value defined at [configuration properties](https://mybatis.org/mybatis-3/configuration.html#properties).
+You can use JavaBeans properties of all simple types, MyBatis will do the conversion. And you can specify a placeholder(e.g. `\${cache.file}`) to replace value defined at [configuration properties](configuration.html#properties).
 
 Since 3.4.2, the MyBatis has been supported to call an initialization method after it's set all properties. If you want to use this feature, please implements the `org.apache.ibatis.builder.InitializingObject` interface on your custom cache class.
 
