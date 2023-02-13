@@ -305,7 +305,7 @@ class ExecutorTestHelper {
                     put("NEWS", discriminatorResultMap.getId());
                     put("VIDEOS", discriminatorResultMap.getId());
                     put("PODCASTS", discriminatorResultMap.getId());
-                    // NEWS left out on purpose.
+                    // IMAGES left out on purpose.
                   }
                 }).build()).build());
 
