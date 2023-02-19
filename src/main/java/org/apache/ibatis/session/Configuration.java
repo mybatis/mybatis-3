@@ -994,16 +994,14 @@ public class Configuration {
   // Slow but a one time cost. A better solution is welcome.
   protected void checkGloballyForDiscriminatedNestedResultMaps(ResultMap rm) {
     if (rm.hasNestedResultMaps()) {
-      for (Map.Entry<String, ResultMap> entry : resultMaps.entrySet()) {
-        Object value = entry.getValue();
-        if (value instanceof ResultMap) {
-          ResultMap entryResultMap = (ResultMap) value;
-          if (!entryResultMap.hasNestedResultMaps() && entryResultMap.getDiscriminator() != null) {
-            Collection<String> discriminatedResultMapNames = entryResultMap.getDiscriminator().getDiscriminatorMap()
-                .values();
-            if (discriminatedResultMapNames.contains(rm.getId())) {
-              entryResultMap.forceNestedResultMaps();
-            }
+      for (ResultMap entryResultMap : resultMaps.values()) {
+        if (entryResultMap != null && !entryResultMap.hasNestedResultMaps() && entryResultMap.getDiscriminator() != null) {
+          Collection<String> discriminatedResultMapNames = entryResultMap.getDiscriminator().getDiscriminatorMap()
+              .values();
+          if (discriminatedResultMapNames.contains(rm.getId())) {
+            entryResultMap.forceNestedResultMaps();
+            // No need to cycle to the end, break the loop in advance to improve performance. By PanLongfei
+            break;
           }
         }
       }
@@ -1013,8 +1011,7 @@ public class Configuration {
   // Slow but a one time cost. A better solution is welcome.
   protected void checkLocallyForDiscriminatedNestedResultMaps(ResultMap rm) {
     if (!rm.hasNestedResultMaps() && rm.getDiscriminator() != null) {
-      for (Map.Entry<String, String> entry : rm.getDiscriminator().getDiscriminatorMap().entrySet()) {
-        String discriminatedResultMapName = entry.getValue();
+      for (String discriminatedResultMapName : rm.getDiscriminator().getDiscriminatorMap().values()) {
         if (hasResultMap(discriminatedResultMapName)) {
           ResultMap discriminatedResultMap = resultMaps.get(discriminatedResultMapName);
           if (discriminatedResultMap.hasNestedResultMaps()) {

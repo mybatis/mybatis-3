@@ -66,7 +66,7 @@ public class StringStringMapEntry {
 
   @Override
   public String toString() {
-    return '{' + key.toString() + '=' + value + '}';
+    return '{' + key + '=' + value + '}';
   }
 
   private String key;

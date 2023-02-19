@@ -261,8 +261,8 @@ public class ResultLoaderMap {
             + FACTORY_METHOD + "] didn't return [" + Configuration.class + "] but ["
             + (configurationObject == null ? "null" : configurationObject.getClass()) + "].");
       }
-
-      return Configuration.class.cast(configurationObject);
+      // The type of Configuration has been checked before, cast directly by SeasonPan
+      return (Configuration) configurationObject;
     }
 
     private Log getLogger() {
