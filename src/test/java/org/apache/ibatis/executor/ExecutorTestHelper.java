@@ -642,7 +642,7 @@ class ExecutorTestHelper {
           {
             add(new ResultMapping.Builder(config, "id", "tag_id", registry.getTypeHandler(int.class))
                 .flags(new ArrayList<ResultFlag>() {
-                   private static final long serialVersionUID = 1L;
+                  private static final long serialVersionUID = 1L;
                   {
                     add(ResultFlag.ID);
                   }
