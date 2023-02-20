@@ -18,6 +18,7 @@ package org.apache.ibatis.domain.blog;
 import java.io.Serializable;
 
 public class ComplexImmutableAuthor implements Serializable {
+  private static final long serialVersionUID = 1L;
   private final ComplexImmutableAuthorId theComplexImmutableAuthorId;
   protected final String bio;
   protected final Section favouriteSection;

@@ -294,6 +294,7 @@ class BaseExecutorTest extends BaseDataTest {
     try {
       MappedStatement selectStatement = ExecutorTestHelper.prepareSelectTwoSetsOfAuthorsProc(config);
       List<List<Author>> authorSets = executor.query(selectStatement, new HashMap<String, Object>() {
+        private static final long serialVersionUID = 1L;
         {
           put("id1", 101);
           put("id2", 102);

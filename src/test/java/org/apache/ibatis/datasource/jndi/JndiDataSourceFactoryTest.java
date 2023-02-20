@@ -51,6 +51,7 @@ class JndiDataSourceFactoryTest extends BaseDataTest {
     createJndiDataSource();
     JndiDataSourceFactory factory = new JndiDataSourceFactory();
     factory.setProperties(new Properties() {
+      private static final long serialVersionUID = 1L;
       {
         setProperty(JndiDataSourceFactory.ENV_PREFIX + Context.INITIAL_CONTEXT_FACTORY, TEST_INITIAL_CONTEXT_FACTORY);
         setProperty(JndiDataSourceFactory.INITIAL_CONTEXT, TEST_INITIAL_CONTEXT);

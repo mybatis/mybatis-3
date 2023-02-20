@@ -31,6 +31,7 @@ public class RichType {
   private Map richMap = new HashMap<>();
 
   private List richList = new ArrayList<>() {
+    private static final long serialVersionUID = 1L;
     {
       add("bar");
     }

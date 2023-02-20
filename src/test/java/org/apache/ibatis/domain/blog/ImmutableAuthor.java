@@ -18,6 +18,7 @@ package org.apache.ibatis.domain.blog;
 import java.io.Serializable;
 
 public class ImmutableAuthor implements Serializable {
+  private static final long serialVersionUID = 1L;
   protected final int id;
   protected final String username;
   protected final String password;

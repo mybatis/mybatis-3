@@ -19,6 +19,7 @@ import java.io.Serializable;
 
 public class Bar implements Serializable {
 
+  private static final long serialVersionUID = 1L;
   private long field1;
   private long field2;
   private long field3;

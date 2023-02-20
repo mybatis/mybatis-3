@@ -107,6 +107,7 @@ class BindingTest {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       BoundAuthorMapper mapper = session.getMapper(BoundAuthorMapper.class);
       List<Post> posts = mapper.findPostsInList(new ArrayList<Integer>() {
+        private static final long serialVersionUID = 1L;
         {
           add(1);
           add(3);
@@ -430,6 +431,7 @@ class BindingTest {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
       Map<String, Object> blog = mapper.selectBlogAsMap(new HashMap<String, Object>() {
+        private static final long serialVersionUID = 1L;
         {
           put("id", 1);
         }

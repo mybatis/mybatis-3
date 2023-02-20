@@ -50,6 +50,8 @@ class GenericTokenParserTest {
   void shouldDemonstrateGenericTokenReplacement(String expected, String text) {
     GenericTokenParser parser = new GenericTokenParser("${", "}",
         new VariableTokenHandler(new HashMap<String, String>() {
+          private static final long serialVersionUID = 1L;
+
           {
             put("first_name", "James");
             put("initial", "T");
@@ -103,6 +105,8 @@ class GenericTokenParserTest {
       // issue #760
       GenericTokenParser parser = new GenericTokenParser("${", "}",
           new VariableTokenHandler(new HashMap<String, String>() {
+            private static final long serialVersionUID = 1L;
+
             {
               put("first_name", "James");
               put("initial", "T");

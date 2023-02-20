@@ -56,6 +56,7 @@ class SerializedCacheTest {
   }
 
   static class CachingObject implements Serializable {
+    private static final long serialVersionUID = 1L;
     int x;
 
     public CachingObject(int x) {

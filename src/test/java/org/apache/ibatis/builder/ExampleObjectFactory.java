@@ -21,6 +21,7 @@ import java.util.Properties;
 import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
 
 public class ExampleObjectFactory extends DefaultObjectFactory {
+  private static final long serialVersionUID = 1L;
   private Properties properties;
 
   @Override

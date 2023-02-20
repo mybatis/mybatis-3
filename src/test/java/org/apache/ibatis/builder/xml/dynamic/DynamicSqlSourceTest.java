@@ -87,6 +87,7 @@ class DynamicSqlSourceTest extends BaseDataTest {
     final String expected = "SELECT * FROM BLOG WHERE CATEGORY = 'DEFAULT'";
     DynamicSqlSource source = createDynamicSqlSource(new TextSqlNode("SELECT * FROM BLOG"),
         new ChooseSqlNode(new ArrayList<SqlNode>() {
+          private static final long serialVersionUID = 1L;
           {
             add(new IfSqlNode(mixedContents(new TextSqlNode("WHERE CATEGORY = ?")), "false"));
             add(new IfSqlNode(mixedContents(new TextSqlNode("WHERE CATEGORY = 'NONE'")), "false"));
@@ -101,6 +102,7 @@ class DynamicSqlSourceTest extends BaseDataTest {
     final String expected = "SELECT * FROM BLOG WHERE CATEGORY = ?";
     DynamicSqlSource source = createDynamicSqlSource(new TextSqlNode("SELECT * FROM BLOG"),
         new ChooseSqlNode(new ArrayList<SqlNode>() {
+          private static final long serialVersionUID = 1L;
           {
             add(new IfSqlNode(mixedContents(new TextSqlNode("WHERE CATEGORY = ?")), "true"));
             add(new IfSqlNode(mixedContents(new TextSqlNode("WHERE CATEGORY = 'NONE'")), "false"));
@@ -115,6 +117,7 @@ class DynamicSqlSourceTest extends BaseDataTest {
     final String expected = "SELECT * FROM BLOG WHERE CATEGORY = 'NONE'";
     DynamicSqlSource source = createDynamicSqlSource(new TextSqlNode("SELECT * FROM BLOG"),
         new ChooseSqlNode(new ArrayList<SqlNode>() {
+          private static final long serialVersionUID = 1L;
           {
             add(new IfSqlNode(mixedContents(new TextSqlNode("WHERE CATEGORY = ?")), "false"));
             add(new IfSqlNode(mixedContents(new TextSqlNode("WHERE CATEGORY = 'NONE'")), "true"));
@@ -262,6 +265,7 @@ class DynamicSqlSourceTest extends BaseDataTest {
   @Test
   void shouldIterateOnceForEachItemInCollection() throws Exception {
     final HashMap<String, String[]> parameterObject = new HashMap<>() {
+      private static final long serialVersionUID = 1L;
       {
         put("array", new String[] { "one", "two", "three" });
       }
@@ -281,6 +285,7 @@ class DynamicSqlSourceTest extends BaseDataTest {
   @Test
   void shouldHandleOgnlExpression() throws Exception {
     final HashMap<String, String> parameterObject = new HashMap<>() {
+      private static final long serialVersionUID = 1L;
       {
         put("name", "Steve");
       }
@@ -295,6 +300,7 @@ class DynamicSqlSourceTest extends BaseDataTest {
   @Test
   void shouldSkipForEachWhenCollectionIsEmpty() throws Exception {
     final HashMap<String, Integer[]> parameterObject = new HashMap<>() {
+      private static final long serialVersionUID = 1L;
       {
         put("array", new Integer[] {});
       }
