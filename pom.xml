@@ -132,6 +132,7 @@
 
   <properties>
     <clirr.comparisonVersion>3.4.6</clirr.comparisonVersion>
+    <!-- Excluded groups are ran on github ci, to force here, pass -d"excludedGroups=" -->
     <excludedGroups>TestcontainersTests</excludedGroups>
     <maven.compiler.testCompilerArgument>-parameters</maven.compiler.testCompilerArgument>
     <module.name>org.mybatis</module.name>
