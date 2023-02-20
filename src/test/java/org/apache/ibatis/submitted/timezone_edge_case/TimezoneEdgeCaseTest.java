@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.submitted.timezone_edge_case;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.Reader;
 import java.sql.Connection;

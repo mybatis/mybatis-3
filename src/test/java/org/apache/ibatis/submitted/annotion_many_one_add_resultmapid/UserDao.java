@@ -17,7 +17,11 @@ package org.apache.ibatis.submitted.annotion_many_one_add_resultmapid;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Many;
+import org.apache.ibatis.annotations.One;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.Results;
+import org.apache.ibatis.annotations.Select;
 
 /**
  * @author lvyang

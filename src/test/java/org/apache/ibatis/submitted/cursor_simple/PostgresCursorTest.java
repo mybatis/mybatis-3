@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.submitted.cursor_simple;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.util.Iterator;

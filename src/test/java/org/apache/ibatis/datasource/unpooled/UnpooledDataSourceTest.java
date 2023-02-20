@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.datasource.unpooled;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.net.URL;
 import java.net.URLClassLoader;

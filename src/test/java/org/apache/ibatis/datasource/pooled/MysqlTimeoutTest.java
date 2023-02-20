@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.datasource.pooled;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

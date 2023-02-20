@@ -15,7 +15,8 @@
  */
 package org.apache.ibatis.submitted.generictyperesolution;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.Reader;
 

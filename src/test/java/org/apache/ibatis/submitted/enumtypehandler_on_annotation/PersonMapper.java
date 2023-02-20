@@ -15,7 +15,13 @@
  */
 package org.apache.ibatis.submitted.enumtypehandler_on_annotation;
 
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Arg;
+import org.apache.ibatis.annotations.Case;
+import org.apache.ibatis.annotations.ConstructorArgs;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.Results;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.TypeDiscriminator;
 import org.apache.ibatis.submitted.enumtypehandler_on_annotation.Person.PersonType;
 import org.apache.ibatis.type.EnumOrdinalTypeHandler;
 

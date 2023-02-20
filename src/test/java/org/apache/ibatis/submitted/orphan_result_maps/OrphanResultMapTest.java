@@ -15,7 +15,9 @@
  */
 package org.apache.ibatis.submitted.orphan_result_maps;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.apache.ibatis.session.Configuration;
 import org.junit.jupiter.api.Test;
