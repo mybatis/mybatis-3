@@ -82,8 +82,6 @@ class XmlMapperBuilderTest {
   @Test
   void parseExpression() {
     BaseBuilder builder = new BaseBuilder(new Configuration()) {
-      {
-      }
     };
     {
       Pattern pattern = builder.parseExpression("[0-9]", "[a-z]");
@@ -100,8 +98,6 @@ class XmlMapperBuilderTest {
   @Test
   void resolveJdbcTypeWithUndefinedValue() {
     BaseBuilder builder = new BaseBuilder(new Configuration()) {
-      {
-      }
     };
     when(() -> builder.resolveJdbcType("aaa"));
     then(caughtException()).isInstanceOf(BuilderException.class)
@@ -112,8 +108,6 @@ class XmlMapperBuilderTest {
   @Test
   void resolveResultSetTypeWithUndefinedValue() {
     BaseBuilder builder = new BaseBuilder(new Configuration()) {
-      {
-      }
     };
     when(() -> builder.resolveResultSetType("bbb"));
     then(caughtException()).isInstanceOf(BuilderException.class)
@@ -124,8 +118,6 @@ class XmlMapperBuilderTest {
   @Test
   void resolveParameterModeWithUndefinedValue() {
     BaseBuilder builder = new BaseBuilder(new Configuration()) {
-      {
-      }
     };
     when(() -> builder.resolveParameterMode("ccc"));
     then(caughtException()).isInstanceOf(BuilderException.class)
@@ -136,8 +128,6 @@ class XmlMapperBuilderTest {
   @Test
   void createInstanceWithAbstractClass() {
     BaseBuilder builder = new BaseBuilder(new Configuration()) {
-      {
-      }
     };
     when(() -> builder.createInstance("org.apache.ibatis.builder.BaseBuilder"));
     then(caughtException()).isInstanceOf(BuilderException.class).hasMessage(
@@ -147,8 +137,6 @@ class XmlMapperBuilderTest {
   @Test
   void resolveClassWithNotFound() {
     BaseBuilder builder = new BaseBuilder(new Configuration()) {
-      {
-      }
     };
     when(() -> builder.resolveClass("ddd"));
     then(caughtException()).isInstanceOf(BuilderException.class).hasMessage(
@@ -158,8 +146,6 @@ class XmlMapperBuilderTest {
   @Test
   void resolveTypeHandlerTypeHandlerAliasIsNull() {
     BaseBuilder builder = new BaseBuilder(new Configuration()) {
-      {
-      }
     };
     TypeHandler<?> typeHandler = builder.resolveTypeHandler(String.class, (String) null);
     assertThat(typeHandler).isNull();
@@ -168,8 +154,6 @@ class XmlMapperBuilderTest {
   @Test
   void resolveTypeHandlerNoAssignable() {
     BaseBuilder builder = new BaseBuilder(new Configuration()) {
-      {
-      }
     };
     when(() -> builder.resolveTypeHandler(String.class, "integer"));
     then(caughtException()).isInstanceOf(BuilderException.class).hasMessage(

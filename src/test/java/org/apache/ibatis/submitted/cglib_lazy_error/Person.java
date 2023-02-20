@@ -32,15 +32,18 @@ public class Person {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o)
+    if (this == o) {
       return true;
-    if (!(o instanceof Person))
+    }
+    if (!(o instanceof Person)) {
       return false;
+    }
 
     Person person = (Person) o;
 
-    if (id != null ? !id.equals(person.id) : person.id != null)
+    if (id != null ? !id.equals(person.id) : person.id != null) {
       return false;
+    }
 
     return true;
   }

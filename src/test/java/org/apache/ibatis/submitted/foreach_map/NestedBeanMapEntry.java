@@ -62,21 +62,27 @@ public class NestedBeanMapEntry {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o)
+    if (this == o) {
       return true;
-    if (o == null || getClass() != o.getClass())
+    }
+    if (o == null || getClass() != o.getClass()) {
       return false;
+    }
 
     NestedBeanMapEntry map3Entry = (NestedBeanMapEntry) o;
 
-    if (!Objects.equals(keya, map3Entry.keya))
+    if (!Objects.equals(keya, map3Entry.keya)) {
       return false;
-    if (!Objects.equals(keyb, map3Entry.keyb))
+    }
+    if (!Objects.equals(keyb, map3Entry.keyb)) {
       return false;
-    if (!Objects.equals(valuea, map3Entry.valuea))
+    }
+    if (!Objects.equals(valuea, map3Entry.valuea)) {
       return false;
-    if (!Objects.equals(valueb, map3Entry.valueb))
+    }
+    if (!Objects.equals(valueb, map3Entry.valueb)) {
       return false;
+    }
 
     return true;
   }

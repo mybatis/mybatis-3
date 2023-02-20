@@ -93,25 +93,34 @@ public class Author implements Serializable {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o)
+    if (this == o) {
       return true;
-    if (!(o instanceof Author))
+    }
+    if (!(o instanceof Author)) {
       return false;
+    }
 
     Author author = (Author) o;
 
-    if (id != author.id)
+    if (id != author.id) {
       return false;
-    if (bio != null ? !bio.equals(author.bio) : author.bio != null)
+    }
+    if (bio != null ? !bio.equals(author.bio) : author.bio != null) {
       return false;
-    if (email != null ? !email.equals(author.email) : author.email != null)
+    }
+    if (email != null ? !email.equals(author.email) : author.email != null) {
       return false;
-    if (password != null ? !password.equals(author.password) : author.password != null)
+    }
+    if (password != null ? !password.equals(author.password) : author.password != null) {
       return false;
-    if (username != null ? !username.equals(author.username) : author.username != null)
+    }
+    if (username != null ? !username.equals(author.username) : author.username != null) {
       return false;
-    if (favouriteSection != null ? !favouriteSection.equals(author.favouriteSection) : author.favouriteSection != null)
+    }
+    if (favouriteSection != null ? !favouriteSection.equals(author.favouriteSection)
+        : author.favouriteSection != null) {
       return false;
+    }
 
     return true;
   }
