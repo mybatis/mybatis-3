@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Test;
 
 class ExpressionEvaluatorTest {
 
-  private ExpressionEvaluator evaluator = new ExpressionEvaluator();
+  private final ExpressionEvaluator evaluator = new ExpressionEvaluator();
 
   @Test
   void shouldCompareStringsReturnTrue() {

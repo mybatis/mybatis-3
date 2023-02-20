@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@ package org.apache.ibatis.submitted.arg_name_based_constructor_automapping;
 
 public class User {
 
-  private Integer id;
-  private String name;
+  private final Integer id;
+  private final String name;
   private Long team;
 
   public User(Integer id, String name) {

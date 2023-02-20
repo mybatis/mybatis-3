@@ -56,7 +56,7 @@ public class ResultMap {
   public static class Builder {
     private static final Log log = LogFactory.getLog(Builder.class);
 
-    private ResultMap resultMap = new ResultMap();
+    private final ResultMap resultMap = new ResultMap();
 
     public Builder(Configuration configuration, String id, Class<?> type, List<ResultMapping> resultMappings) {
       this(configuration, id, type, resultMappings, null);

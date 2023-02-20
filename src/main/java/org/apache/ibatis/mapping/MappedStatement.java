@@ -63,7 +63,7 @@ public final class MappedStatement {
   }
 
   public static class Builder {
-    private MappedStatement mappedStatement = new MappedStatement();
+    private final MappedStatement mappedStatement = new MappedStatement();
 
     public Builder(Configuration configuration, String id, SqlSource sqlSource, SqlCommandType sqlCommandType) {
       mappedStatement.configuration = configuration;

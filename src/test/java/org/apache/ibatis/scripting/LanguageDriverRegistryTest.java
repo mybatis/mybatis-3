@@ -33,7 +33,7 @@ import org.junit.jupiter.api.Test;
  */
 class LanguageDriverRegistryTest {
 
-  private LanguageDriverRegistry registry = new LanguageDriverRegistry();
+  private final LanguageDriverRegistry registry = new LanguageDriverRegistry();
 
   @Test
   void registerByType() {

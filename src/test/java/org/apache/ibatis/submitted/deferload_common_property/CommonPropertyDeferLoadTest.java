@@ -55,7 +55,7 @@ class CommonPropertyDeferLoadTest {
   void testDeferLoadAfterResultHandler() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       class MyResultHandler implements ResultHandler {
-        private List<Child> children = new ArrayList<>();
+        private final List<Child> children = new ArrayList<>();
 
         @Override
         public void handleResult(ResultContext context) {
@@ -90,7 +90,7 @@ class CommonPropertyDeferLoadTest {
   void testDeferLoadAfterResultHandlerWithLazyLoad() {
     try (SqlSession sqlSession = lazyLoadSqlSessionFactory.openSession()) {
       class MyResultHandler implements ResultHandler {
-        private List<Child> children = new ArrayList<>();
+        private final List<Child> children = new ArrayList<>();
 
         @Override
         public void handleResult(ResultContext context) {

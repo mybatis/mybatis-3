@@ -19,7 +19,7 @@ import java.util.*;
 
 public class CustomCollection<T> {
 
-  private List<T> data = new ArrayList<>();
+  private final List<T> data = new ArrayList<>();
 
   public <K> K[] toArray(K[] a) {
     return data.toArray(a);

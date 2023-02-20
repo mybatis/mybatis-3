@@ -32,7 +32,7 @@ import java.util.Properties;
  */
 public class Resources {
 
-  private static ClassLoaderWrapper classLoaderWrapper = new ClassLoaderWrapper();
+  private static final ClassLoaderWrapper classLoaderWrapper = new ClassLoaderWrapper();
 
   /**
    * Charset to use when calling getResourceAsReader. null means use the system default.

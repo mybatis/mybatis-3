@@ -17,7 +17,7 @@ package org.apache.ibatis.submitted.bringrags;
 
 public class SimpleChildObject {
 
-  private String id;
+  private final String id;
   private SimpleObject parentSimpleObject;
 
   public SimpleChildObject(String id) {

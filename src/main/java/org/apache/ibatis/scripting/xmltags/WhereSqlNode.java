@@ -25,7 +25,7 @@ import org.apache.ibatis.session.Configuration;
  */
 public class WhereSqlNode extends TrimSqlNode {
 
-  private static List<String> prefixList = Arrays.asList("AND ", "OR ", "AND\n", "OR\n", "AND\r", "OR\r", "AND\t",
+  private static final List<String> prefixList = Arrays.asList("AND ", "OR ", "AND\n", "OR\n", "AND\r", "OR\r", "AND\t",
       "OR\t");
 
   public WhereSqlNode(Configuration configuration, SqlNode contents) {
