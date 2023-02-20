@@ -20,13 +20,11 @@ public class BlobRecord {
   private byte[] blob;
 
   public BlobRecord(int id, byte[] blob) {
-    super();
     this.id = id;
     this.blob = blob;
   }
 
   public BlobRecord(int id, Byte[] blob) {
-    super();
     this.id = id;
     final byte[] newBytes = new byte[blob.length];
     for (int i = 0; i < blob.length; i++) {

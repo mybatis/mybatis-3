@@ -25,7 +25,6 @@ import java.util.Properties;
 
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.datasource.pooled.PooledDataSource;
-import org.hsqldb.jdbc.JDBCConnection;
 import org.junit.jupiter.api.Test;
 
 class PooledDataSourceTest extends BaseDataTest {
@@ -37,6 +36,7 @@ class PooledDataSourceTest extends BaseDataTest {
       runScript(ds, JPETSTORE_DDL);
       ds.setDefaultAutoCommit(false);
       ds.setDriverProperties(new Properties() {
+        private static final long serialVersionUID = 1L;
         {
           setProperty("username", "sa");
           setProperty("password", "");
@@ -83,7 +83,7 @@ class PooledDataSourceTest extends BaseDataTest {
   void ShouldReturnRealConnection() throws Exception {
     PooledDataSource ds = createPooledDataSource(JPETSTORE_PROPERTIES);
     Connection c = ds.getConnection();
-    JDBCConnection realConnection = (JDBCConnection) PooledDataSource.unwrapConnection(c);
+    PooledDataSource.unwrapConnection(c);
     c.close();
   }
 

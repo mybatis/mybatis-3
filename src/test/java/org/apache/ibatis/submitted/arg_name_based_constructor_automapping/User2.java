@@ -23,7 +23,6 @@ public class User2 {
   private final String name;
 
   public User2(Integer userId, @Param("userName") String name) {
-    super();
     this.userId = userId;
     this.name = name;
   }

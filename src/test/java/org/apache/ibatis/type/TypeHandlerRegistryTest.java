@@ -62,7 +62,7 @@ class TypeHandlerRegistryTest {
 
   @Test
   void shouldRegisterAndRetrieveComplexTypeHandler() {
-    TypeHandler<List<URI>> fakeHandler = new TypeHandler<List<URI>>() {
+    TypeHandler<List<URI>> fakeHandler = new TypeHandler<>() {
 
       @Override
       public void setParameter(PreparedStatement ps, int i, List<URI> parameter, JdbcType jdbcType) {
@@ -89,7 +89,7 @@ class TypeHandlerRegistryTest {
 
     };
 
-    TypeReference<List<URI>> type = new TypeReference<List<URI>>() {
+    TypeReference<List<URI>> type = new TypeReference<>() {
     };
 
     typeHandlerRegistry.register(type, fakeHandler);
@@ -98,7 +98,7 @@ class TypeHandlerRegistryTest {
 
   @Test
   void shouldAutoRegisterAndRetrieveComplexTypeHandler() {
-    TypeHandler<List<URI>> fakeHandler = new BaseTypeHandler<List<URI>>() {
+    TypeHandler<List<URI>> fakeHandler = new BaseTypeHandler<>() {
 
       @Override
       public void setNonNullParameter(PreparedStatement ps, int i, List<URI> parameter, JdbcType jdbcType) {

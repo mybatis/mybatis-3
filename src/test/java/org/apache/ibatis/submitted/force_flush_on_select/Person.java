@@ -18,6 +18,8 @@ package org.apache.ibatis.submitted.force_flush_on_select;
 import java.io.Serializable;
 
 public class Person implements Serializable {
+
+  private static final long serialVersionUID = 1L;
   private Integer id;
   private String firstName;
   private String lastName;

@@ -104,7 +104,7 @@ class ArrayUtilTest {
     arr = new Object[] { "str" };
     assertEquals(Arrays.toString((Object[]) arr), ArrayUtil.toString(arr));
 
-    assertEquals(Integer.valueOf(1).toString(), ArrayUtil.toString(1));
+    assertEquals(Integer.toString(1), ArrayUtil.toString(1));
     assertEquals("null", ArrayUtil.toString(null));
   }
 

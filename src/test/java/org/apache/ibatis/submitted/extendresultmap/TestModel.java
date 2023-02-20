@@ -24,7 +24,6 @@ public class TestModel {
   }
 
   public TestModel(String a, String b) {
-    super();
     this.a = a;
     this.b = b;
   }
@@ -59,10 +58,7 @@ public class TestModel {
     if (this == obj) {
       return true;
     }
-    if (obj == null) {
-      return false;
-    }
-    if (getClass() != obj.getClass()) {
+    if ((obj == null) || (getClass() != obj.getClass())) {
       return false;
     }
     TestModel other = (TestModel) obj;

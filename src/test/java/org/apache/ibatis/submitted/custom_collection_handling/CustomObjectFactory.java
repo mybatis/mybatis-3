@@ -40,9 +40,7 @@ public class CustomObjectFactory implements ObjectFactory {
   @Override
   public <T> T create(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
     Class<?> classToCreate = resolveInterface(type);
-    @SuppressWarnings("unchecked") // we know types are assignable
-    T created = (T) instantiateClass(classToCreate, constructorArgTypes, constructorArgs);
-    return created;
+    return (T) instantiateClass(classToCreate, constructorArgTypes, constructorArgs);
   }
 
   private <T> T instantiateClass(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {

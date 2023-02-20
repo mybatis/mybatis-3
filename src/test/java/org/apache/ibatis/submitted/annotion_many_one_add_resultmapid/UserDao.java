@@ -39,7 +39,7 @@ public interface UserDao {
       @Result(property = "roles", many = @Many(resultMap = "org.apache.ibatis.submitted.annotion_many_one_add_resultmapid.RoleDao.roleMap1"))
     })
   // @formatter:on
-  public List<User> findAll();
+  List<User> findAll();
 
   // @formatter:off
   @Select({"select",
@@ -53,7 +53,7 @@ public interface UserDao {
       @Result(property = "roles", many = @Many(resultMap = "org.apache.ibatis.submitted.annotion_many_one_add_resultmapid.RoleDao.roleMap2"))
     })
   // @formatter:on
-  public List<User> findAll2();
+  List<User> findAll2();
 
   // @formatter:off
   @Select({"select",
@@ -67,7 +67,7 @@ public interface UserDao {
       @Result(property = "role", one = @One(resultMap = "org.apache.ibatis.submitted.annotion_many_one_add_resultmapid.RoleDao.roleMap2"))
     })
   // @formatter:on
-  public List<User> findAll3();
+  List<User> findAll3();
 
   // @formatter:off
   @Select("select id teacher_id, username teacher_name from user")
@@ -76,7 +76,7 @@ public interface UserDao {
       @Result(column = "teacher_name", property = "username")
     })
   // @formatter:on
-  public List<User> justUseResult();
+  List<User> justUseResult();
 
   // @formatter:off
   @Select({"select",
@@ -93,5 +93,5 @@ public interface UserDao {
       @Result(property = "teachers", many = @Many(resultMap = "userMap"))
     })
   // @formatter:on
-  public User findHeadmaster();
+  User findHeadmaster();
 }

@@ -22,7 +22,6 @@ public class User {
   private Long team;
 
   public User(Integer id, String name) {
-    super();
     this.id = id;
     this.name = name + "!";
   }

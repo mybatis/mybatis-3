@@ -83,7 +83,8 @@ class ExpressionEvaluatorTest {
 
   @Test
   void shouldIterateOverIterable() {
-    final HashMap<String, String[]> parameterObject = new HashMap<String, String[]>() {
+    final HashMap<String, String[]> parameterObject = new HashMap<>() {
+      private static final long serialVersionUID = 1L;
       {
         put("array", new String[] { "1", "2", "3" });
       }

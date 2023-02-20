@@ -116,13 +116,11 @@ class ColumnPrefixTest {
   }
 
   protected List<Pet> getPetAndRoom(SqlSession sqlSession) {
-    List<Pet> pets = sqlSession.selectList("org.apache.ibatis.submitted.column_prefix.Mapper.selectPets");
-    return pets;
+    return sqlSession.selectList("org.apache.ibatis.submitted.column_prefix.Mapper.selectPets");
   }
 
   protected List<Person> getPersons(SqlSession sqlSession) {
-    List<Person> list = sqlSession.selectList("org.apache.ibatis.submitted.column_prefix.Mapper.selectPersons");
-    return list;
+    return sqlSession.selectList("org.apache.ibatis.submitted.column_prefix.Mapper.selectPersons");
   }
 
   protected String getConfigPath() {
