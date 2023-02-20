@@ -25,11 +25,9 @@ public class Foo implements Serializable {
   private boolean field3;
 
   public Foo() {
-    super();
   }
 
   public Foo(long field1, Bar field2, boolean field3) {
-    super();
     this.field1 = field1;
     this.field2 = field2;
     this.field3 = field3;

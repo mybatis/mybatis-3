@@ -43,6 +43,5 @@ public class PgContainer {
   }
 
   private PgContainer() {
-    super();
   }
 }

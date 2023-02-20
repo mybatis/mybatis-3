@@ -25,7 +25,6 @@ public class UserResultHandler implements ResultHandler {
   private final List<User> users;
 
   public UserResultHandler() {
-    super();
     users = new ArrayList<>();
   }
 

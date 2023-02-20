@@ -20,7 +20,6 @@ public class ImmutableParent {
   private final String col2;
 
   public ImmutableParent(String col1, String col2) {
-    super();
     this.col1 = col1;
     this.col2 = col2;
   }

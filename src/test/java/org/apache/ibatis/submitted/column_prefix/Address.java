@@ -33,7 +33,6 @@ public class Address {
   private Zip zip;
 
   public Address(Integer id, String state) {
-    super();
     this.id = id;
     this.state = state;
   }

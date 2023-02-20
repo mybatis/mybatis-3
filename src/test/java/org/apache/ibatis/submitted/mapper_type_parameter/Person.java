@@ -21,21 +21,17 @@ public class Person {
   private String name;
 
   public Person() {
-    super();
   }
 
   public Person(Integer id) {
-    super();
     this.id = id;
   }
 
   public Person(String name) {
-    super();
     this.name = name;
   }
 
   public Person(Integer id, String name) {
-    super();
     this.id = id;
     this.name = name;
   }

@@ -26,7 +26,6 @@ public class Foo implements Serializable {
   private Integer field4;
 
   public Foo() {
-    super();
   }
 
   public Foo(Long field1, Bar field2, Integer field3, Integer field4) {

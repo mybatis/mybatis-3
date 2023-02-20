@@ -24,7 +24,6 @@ public class TestModel {
   }
 
   public TestModel(String a, String b) {
-    super();
     this.a = a;
     this.b = b;
   }

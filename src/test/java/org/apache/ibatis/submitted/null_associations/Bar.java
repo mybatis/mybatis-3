@@ -25,11 +25,9 @@ public class Bar implements Serializable {
   private long field3;
 
   public Bar() {
-    super();
   }
 
   public Bar(long field1, long field2, long field3) {
-    super();
     this.field1 = field1;
     this.field2 = field2;
     this.field3 = field3;

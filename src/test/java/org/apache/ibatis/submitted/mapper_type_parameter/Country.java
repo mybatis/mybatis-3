@@ -21,16 +21,13 @@ public class Country {
   private String name;
 
   public Country() {
-    super();
   }
 
   public Country(Long id) {
-    super();
     this.id = id;
   }
 
   public Country(Long id, String name) {
-    super();
     this.id = id;
     this.name = name;
   }

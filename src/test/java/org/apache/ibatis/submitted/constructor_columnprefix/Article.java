@@ -26,7 +26,6 @@ public class Article {
   private final Author coauthor;
 
   public Article(EntityKey id, String name, Author author, Author coauthor) {
-    super();
     this.id = id;
     this.name = name;
     this.author = author;

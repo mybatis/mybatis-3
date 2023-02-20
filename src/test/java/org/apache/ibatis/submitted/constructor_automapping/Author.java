@@ -21,7 +21,6 @@ public class Author {
   private String name;
 
   private Author(Integer id) {
-    super();
     this.id = id;
   }
 

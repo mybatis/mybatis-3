@@ -49,6 +49,5 @@ public class MysqlContainer {
   }
 
   private MysqlContainer() {
-    super();
   }
 }

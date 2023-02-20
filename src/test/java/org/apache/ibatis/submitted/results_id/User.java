@@ -37,11 +37,9 @@ public class User {
   }
 
   public User() {
-    super();
   }
 
   public User(Integer id, String name) {
-    super();
     this.id = id;
     this.name = name;
   }

@@ -23,7 +23,6 @@ public class Bar implements Serializable {
   private Long field1;
 
   public Bar() {
-    super();
   }
 
   public Bar(long field1) {

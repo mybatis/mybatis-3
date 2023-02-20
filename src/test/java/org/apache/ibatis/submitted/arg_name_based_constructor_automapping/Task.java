@@ -23,7 +23,6 @@ public class Task {
   private User assignee;
 
   public Task(@Param("id") Integer id, @Param("name") String name) {
-    super();
     this.id = id;
     this.name = name;
   }

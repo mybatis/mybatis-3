@@ -38,7 +38,6 @@ class TestConnection implements Connection {
   private boolean autoCommit;
 
   TestConnection(boolean autoCommit) {
-    super();
     this.autoCommit = autoCommit;
   }
 

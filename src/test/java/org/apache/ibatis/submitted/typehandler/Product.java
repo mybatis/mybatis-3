@@ -30,11 +30,9 @@ public class Product {
   private String name;
 
   public Product() {
-    super();
   }
 
   public Product(ProductId id, String name) {
-    super();
     this.id = id;
     this.name = name;
   }
