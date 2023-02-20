@@ -64,7 +64,7 @@ public class UserStateTypeHandler<E> implements TypeHandler<Object> {
         key = entry.getKey();
       }
     }
-    ps.setInt(i, Integer.valueOf(key));
+    ps.setInt(i, Integer.parseInt(key));
   }
 
   private String lookupValue(int val) {
