@@ -326,12 +326,11 @@ class BaseExecutorTest extends BaseDataTest {
       assertEquals("sally@ibatis.apache.org", author.getEmail());
       assertNull(author.getBio());
     } catch (ExecutorException e) {
-      if (executor instanceof CachingExecutor) {
-        // TODO see issue #464. Fail is OK.
-        assertTrue(e.getMessage().contains("OUT params is not supported"));
-      } else {
+      if (!(executor instanceof CachingExecutor)) {
         throw e;
       }
+      // TODO see issue #464. Fail is OK.
+      assertTrue(e.getMessage().contains("OUT params is not supported"));
     } finally {
       executor.rollback(true);
       executor.close(false);

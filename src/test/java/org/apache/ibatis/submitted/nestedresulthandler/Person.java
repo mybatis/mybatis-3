@@ -24,6 +24,7 @@ public class Person {
   private String name;
   private final List<Item> items = new ArrayList<>();
 
+  @Override
   public String toString() {
     return new StringBuilder().append("Person(").append(id).append(", ").append(name).append(", ").append(items)
         .append(" )").toString();
