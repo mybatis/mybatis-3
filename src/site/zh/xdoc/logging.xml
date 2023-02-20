@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2022 the original author or authors.
+       Copyright 2009-2023 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -186,8 +186,8 @@ public interface BlogMapper {
 </mapper>
 ]]></source>
 
-		<p>如需对 XML 文件记录日志，只要对命名空间增加日志记录功能即可：
-		</p>
+    <p>如需对 XML 文件记录日志，只要对命名空间增加日志记录功能即可：
+    </p>
 
 <source><![CDATA[
 <logger name="org.mybatis.example.BlogMapper">
@@ -195,7 +195,7 @@ public interface BlogMapper {
 </logger>
 ]]></source>
 
-		<p>要记录具体语句的日志可以这样做：</p>
+    <p>要记录具体语句的日志可以这样做：</p>
 
 <source><![CDATA[
 <logger name="org.mybatis.example.BlogMapper.selectBlog">
@@ -203,10 +203,10 @@ public interface BlogMapper {
 </logger>
 ]]></source>
 
-		<p>你应该注意到了，为映射器接口和 XML 文件添加日志功能的语句毫无差别。
-		</p>
+    <p>你应该注意到了，为映射器接口和 XML 文件添加日志功能的语句毫无差别。
+    </p>
 
-		<p><span class="label important">注意</span> 如果你使用的是 SLF4J 或 Log4j 2，MyBatis 将以 <code>MYBATIS</code> 这个值进行调用。</p>
+    <p><span class="label important">注意</span> 如果你使用的是 SLF4J 或 Log4j 2，MyBatis 将以 <code>MYBATIS</code> 这个值进行调用。</p>
 
         <p>配置文件 <code>log4j.properties</code> 的余下内容是针对日志输出源的，这一内容已经超出本文档范围。关于 Logback 的更多内容，可以参考<a href="https://logback.qos.ch/">Logback</a> 的网站。不过，你也可以简单地做做实验，看看不同的配置会产生怎样的效果。
         </p>
