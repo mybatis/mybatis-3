@@ -56,9 +56,8 @@ public class XNode {
     Node parent = node.getParentNode();
     if (!(parent instanceof Element)) {
       return null;
-    } else {
-      return new XNode(xpathParser, parent, variables);
     }
+    return new XNode(xpathParser, parent, variables);
   }
 
   public String getPath() {
@@ -357,8 +356,7 @@ public class XNode {
   private String getBodyData(Node child) {
     if (child.getNodeType() == Node.CDATA_SECTION_NODE || child.getNodeType() == Node.TEXT_NODE) {
       String data = ((CharacterData) child).getData();
-      data = PropertyParser.parse(data, variables);
-      return data;
+      return PropertyParser.parse(data, variables);
     }
     return null;
   }

@@ -51,12 +51,11 @@ public final class ConnectionLogger extends BaseJdbcLogger implements Invocation
           debug(" Preparing: " + removeExtraWhitespace((String) params[0]), true);
         }
         PreparedStatement stmt = (PreparedStatement) method.invoke(connection, params);
-        stmt = PreparedStatementLogger.newInstance(stmt, statementLog, queryStack);
-        return stmt;
-      } else if ("createStatement".equals(method.getName())) {
+        return PreparedStatementLogger.newInstance(stmt, statementLog, queryStack);
+      }
+      if ("createStatement".equals(method.getName())) {
         Statement stmt = (Statement) method.invoke(connection, params);
-        stmt = StatementLogger.newInstance(stmt, statementLog, queryStack);
-        return stmt;
+        return StatementLogger.newInstance(stmt, statementLog, queryStack);
       } else {
         return method.invoke(connection, params);
       }

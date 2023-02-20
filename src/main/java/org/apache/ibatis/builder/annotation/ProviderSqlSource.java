@@ -180,21 +180,26 @@ public class ProviderSqlSource implements SqlSource {
           Map<String, Object> params = (Map<String, Object>) parameterObject;
           sql = invokeProviderMethod(extractProviderMethodArguments(params, providerMethodArgumentNames));
         }
-      } else if (providerMethodParameterTypes.length == 0) {
-        sql = invokeProviderMethod();
-      } else if (providerMethodParameterTypes.length == 1) {
-        if (providerContext == null) {
-          sql = invokeProviderMethod(parameterObject);
-        } else {
-          sql = invokeProviderMethod(providerContext);
+      } else
+        switch (providerMethodParameterTypes.length) {
+          case 0:
+            sql = invokeProviderMethod();
+            break;
+          case 1:
+            if (providerContext == null) {
+              sql = invokeProviderMethod(parameterObject);
+            } else {
+              sql = invokeProviderMethod(providerContext);
+            }
+            break;
+          case 2:
+            sql = invokeProviderMethod(extractProviderMethodArguments(parameterObject));
+            break;
+          default:
+            throw new BuilderException("Cannot invoke SqlProvider method '" + providerMethod
+                + "' with specify parameter '" + (parameterObject == null ? null : parameterObject.getClass())
+                + "' because SqlProvider method arguments for '" + mapperMethod + "' is an invalid combination.");
         }
-      } else if (providerMethodParameterTypes.length == 2) {
-        sql = invokeProviderMethod(extractProviderMethodArguments(parameterObject));
-      } else {
-        throw new BuilderException("Cannot invoke SqlProvider method '" + providerMethod + "' with specify parameter '"
-            + (parameterObject == null ? null : parameterObject.getClass())
-            + "' because SqlProvider method arguments for '" + mapperMethod + "' is an invalid combination.");
-      }
       Class<?> parameterType = parameterObject == null ? Object.class : parameterObject.getClass();
       return languageDriver.createSqlSource(configuration, sql, parameterType);
     } catch (BuilderException e) {
@@ -219,9 +224,8 @@ public class ProviderSqlSource implements SqlSource {
       args[providerContextIndex == 0 ? 1 : 0] = parameterObject;
       args[providerContextIndex] = providerContext;
       return args;
-    } else {
-      return new Object[] { parameterObject };
     }
+    return new Object[] { parameterObject };
   }
 
   private Object[] extractProviderMethodArguments(Map<String, Object> params, String[] argumentNames) {

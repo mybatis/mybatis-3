@@ -447,62 +447,59 @@ public class PooledDataSource implements DataSource {
           if (log.isDebugEnabled()) {
             log.debug("Checked out connection " + conn.getRealHashCode() + " from pool.");
           }
+        } else if (state.activeConnections.size() < poolMaximumActiveConnections) {
+          // Pool does not have available connection and can create a new connection
+          conn = new PooledConnection(dataSource.getConnection(), this);
+          if (log.isDebugEnabled()) {
+            log.debug("Created connection " + conn.getRealHashCode() + ".");
+          }
         } else {
-          // Pool does not have available connection
-          if (state.activeConnections.size() < poolMaximumActiveConnections) {
-            // Can create new connection
-            conn = new PooledConnection(dataSource.getConnection(), this);
+          // Cannot create new connection
+          PooledConnection oldestActiveConnection = state.activeConnections.get(0);
+          long longestCheckoutTime = oldestActiveConnection.getCheckoutTime();
+          if (longestCheckoutTime > poolMaximumCheckoutTime) {
+            // Can claim overdue connection
+            state.claimedOverdueConnectionCount++;
+            state.accumulatedCheckoutTimeOfOverdueConnections += longestCheckoutTime;
+            state.accumulatedCheckoutTime += longestCheckoutTime;
+            state.activeConnections.remove(oldestActiveConnection);
+            if (!oldestActiveConnection.getRealConnection().getAutoCommit()) {
+              try {
+                oldestActiveConnection.getRealConnection().rollback();
+              } catch (SQLException e) {
+                /*
+                 * Just log a message for debug and continue to execute the following statement like nothing happened.
+                 * Wrap the bad connection with a new PooledConnection, this will help to not interrupt current
+                 * executing thread and give current thread a chance to join the next competition for another valid/good
+                 * database connection. At the end of this loop, bad {@link @conn} will be set as null.
+                 */
+                log.debug("Bad connection. Could not roll back");
+              }
+            }
+            conn = new PooledConnection(oldestActiveConnection.getRealConnection(), this);
+            conn.setCreatedTimestamp(oldestActiveConnection.getCreatedTimestamp());
+            conn.setLastUsedTimestamp(oldestActiveConnection.getLastUsedTimestamp());
+            oldestActiveConnection.invalidate();
             if (log.isDebugEnabled()) {
-              log.debug("Created connection " + conn.getRealHashCode() + ".");
+              log.debug("Claimed overdue connection " + conn.getRealHashCode() + ".");
             }
           } else {
-            // Cannot create new connection
-            PooledConnection oldestActiveConnection = state.activeConnections.get(0);
-            long longestCheckoutTime = oldestActiveConnection.getCheckoutTime();
-            if (longestCheckoutTime > poolMaximumCheckoutTime) {
-              // Can claim overdue connection
-              state.claimedOverdueConnectionCount++;
-              state.accumulatedCheckoutTimeOfOverdueConnections += longestCheckoutTime;
-              state.accumulatedCheckoutTime += longestCheckoutTime;
-              state.activeConnections.remove(oldestActiveConnection);
-              if (!oldestActiveConnection.getRealConnection().getAutoCommit()) {
-                try {
-                  oldestActiveConnection.getRealConnection().rollback();
-                } catch (SQLException e) {
-                  /*
-                   * Just log a message for debug and continue to execute the following statement like nothing happened.
-                   * Wrap the bad connection with a new PooledConnection, this will help to not interrupt current
-                   * executing thread and give current thread a chance to join the next competition for another
-                   * valid/good database connection. At the end of this loop, bad {@link @conn} will be set as null.
-                   */
-                  log.debug("Bad connection. Could not roll back");
-                }
+            // Must wait
+            try {
+              if (!countedWait) {
+                state.hadToWaitCount++;
+                countedWait = true;
               }
-              conn = new PooledConnection(oldestActiveConnection.getRealConnection(), this);
-              conn.setCreatedTimestamp(oldestActiveConnection.getCreatedTimestamp());
-              conn.setLastUsedTimestamp(oldestActiveConnection.getLastUsedTimestamp());
-              oldestActiveConnection.invalidate();
               if (log.isDebugEnabled()) {
-                log.debug("Claimed overdue connection " + conn.getRealHashCode() + ".");
+                log.debug("Waiting as long as " + poolTimeToWait + " milliseconds for connection.");
               }
-            } else {
-              // Must wait
-              try {
-                if (!countedWait) {
-                  state.hadToWaitCount++;
-                  countedWait = true;
-                }
-                if (log.isDebugEnabled()) {
-                  log.debug("Waiting as long as " + poolTimeToWait + " milliseconds for connection.");
-                }
-                long wt = System.currentTimeMillis();
-                condition.await(poolTimeToWait, TimeUnit.MILLISECONDS);
-                state.accumulatedWaitTime += System.currentTimeMillis() - wt;
-              } catch (InterruptedException e) {
-                // set interrupt flag
-                Thread.currentThread().interrupt();
-                break;
-              }
+              long wt = System.currentTimeMillis();
+              condition.await(poolTimeToWait, TimeUnit.MILLISECONDS);
+              state.accumulatedWaitTime += System.currentTimeMillis() - wt;
+            } catch (InterruptedException e) {
+              // set interrupt flag
+              Thread.currentThread().interrupt();
+              break;
             }
           }
         }

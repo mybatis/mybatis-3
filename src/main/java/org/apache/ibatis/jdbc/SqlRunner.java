@@ -217,7 +217,8 @@ public class SqlRunner {
       if (args[i] == null) {
         throw new SQLException(
             "SqlRunner requires an instance of Null to represent typed null values for JDBC compatibility");
-      } else if (args[i] instanceof Null) {
+      }
+      if (args[i] instanceof Null) {
         ((Null) args[i]).getTypeHandler().setParameter(ps, i + 1, null, ((Null) args[i]).getJdbcType());
       } else {
         TypeHandler typeHandler = typeHandlerRegistry.getTypeHandler(args[i].getClass());

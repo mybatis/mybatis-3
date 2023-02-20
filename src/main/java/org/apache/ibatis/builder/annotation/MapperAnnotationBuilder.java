@@ -590,7 +590,8 @@ public class MapperAnnotationBuilder {
       Method method) {
     if (annotation instanceof Select) {
       return buildSqlSourceFromStrings(((Select) annotation).value(), parameterType, languageDriver);
-    } else if (annotation instanceof Update) {
+    }
+    if (annotation instanceof Update) {
       return buildSqlSourceFromStrings(((Update) annotation).value(), parameterType, languageDriver);
     } else if (annotation instanceof Insert) {
       return buildSqlSourceFromStrings(((Insert) annotation).value(), parameterType, languageDriver);

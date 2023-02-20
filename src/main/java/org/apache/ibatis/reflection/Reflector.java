@@ -120,7 +120,8 @@ public class Reflector {
           if (!boolean.class.equals(candidateType)) {
             isAmbiguous = true;
             break;
-          } else if (candidate.getName().startsWith("is")) {
+          }
+          if (candidate.getName().startsWith("is")) {
             winner = candidate;
           }
         } else if (candidateType.isAssignableFrom(winnerType)) {
@@ -192,7 +193,8 @@ public class Reflector {
     Class<?> paramType2 = setter2.getParameterTypes()[0];
     if (paramType1.isAssignableFrom(paramType2)) {
       return setter2;
-    } else if (paramType2.isAssignableFrom(paramType1)) {
+    }
+    if (paramType2.isAssignableFrom(paramType1)) {
       return setter1;
     }
     MethodInvoker invoker = new AmbiguousMethodInvoker(setter1,
@@ -363,9 +365,8 @@ public class Reflector {
   public Constructor<?> getDefaultConstructor() {
     if (defaultConstructor != null) {
       return defaultConstructor;
-    } else {
-      throw new ReflectionException("There is no default constructor for " + type);
     }
+    throw new ReflectionException("There is no default constructor for " + type);
   }
 
   public boolean hasDefaultConstructor() {

@@ -345,9 +345,8 @@ public abstract class BaseExecutor implements Executor {
     Connection connection = transaction.getConnection();
     if (statementLog.isDebugEnabled()) {
       return ConnectionLogger.newInstance(connection, statementLog, queryStack);
-    } else {
-      return connection;
     }
+    return connection;
   }
 
   @Override

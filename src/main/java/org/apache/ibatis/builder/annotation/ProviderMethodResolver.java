@@ -67,10 +67,9 @@ public interface ProviderMethodResolver {
     if (targetMethods.isEmpty()) {
       throw new BuilderException("Cannot resolve the provider method because '" + context.getMapperMethod().getName()
           + "' does not return the CharSequence or its subclass in SqlProvider '" + getClass().getName() + "'.");
-    } else {
-      throw new BuilderException("Cannot resolve the provider method because '" + context.getMapperMethod().getName()
-          + "' is found multiple in SqlProvider '" + getClass().getName() + "'.");
     }
+    throw new BuilderException("Cannot resolve the provider method because '" + context.getMapperMethod().getName()
+        + "' is found multiple in SqlProvider '" + getClass().getName() + "'.");
   }
 
 }

@@ -45,9 +45,8 @@ public class BeanWrapper extends BaseWrapper {
     if (prop.getIndex() != null) {
       Object collection = resolveCollection(prop, object);
       return getCollectionValue(prop, collection);
-    } else {
-      return getBeanProperty(prop, object);
     }
+    return getBeanProperty(prop, object);
   }
 
   @Override
@@ -78,68 +77,64 @@ public class BeanWrapper extends BaseWrapper {
   @Override
   public Class<?> getSetterType(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
-    if (prop.hasNext()) {
-      MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
-      if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
-        return metaClass.getSetterType(name);
-      } else {
-        return metaValue.getSetterType(prop.getChildren());
-      }
-    } else {
+    if (!prop.hasNext()) {
       return metaClass.getSetterType(name);
+    }
+    MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
+    if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
+      return metaClass.getSetterType(name);
+    } else {
+      return metaValue.getSetterType(prop.getChildren());
     }
   }
 
   @Override
   public Class<?> getGetterType(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
-    if (prop.hasNext()) {
-      MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
-      if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
-        return metaClass.getGetterType(name);
-      } else {
-        return metaValue.getGetterType(prop.getChildren());
-      }
-    } else {
+    if (!prop.hasNext()) {
       return metaClass.getGetterType(name);
+    }
+    MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
+    if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
+      return metaClass.getGetterType(name);
+    } else {
+      return metaValue.getGetterType(prop.getChildren());
     }
   }
 
   @Override
   public boolean hasSetter(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
-    if (prop.hasNext()) {
-      if (metaClass.hasSetter(prop.getIndexedName())) {
-        MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
-        if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
-          return metaClass.hasSetter(name);
-        } else {
-          return metaValue.hasSetter(prop.getChildren());
-        }
+    if (!prop.hasNext()) {
+      return metaClass.hasSetter(name);
+    }
+    if (metaClass.hasSetter(prop.getIndexedName())) {
+      MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
+      if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
+        return metaClass.hasSetter(name);
       } else {
-        return false;
+        return metaValue.hasSetter(prop.getChildren());
       }
     } else {
-      return metaClass.hasSetter(name);
+      return false;
     }
   }
 
   @Override
   public boolean hasGetter(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
-    if (prop.hasNext()) {
-      if (metaClass.hasGetter(prop.getIndexedName())) {
-        MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
-        if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
-          return metaClass.hasGetter(name);
-        } else {
-          return metaValue.hasGetter(prop.getChildren());
-        }
+    if (!prop.hasNext()) {
+      return metaClass.hasGetter(name);
+    }
+    if (metaClass.hasGetter(prop.getIndexedName())) {
+      MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
+      if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
+        return metaClass.hasGetter(name);
       } else {
-        return false;
+        return metaValue.hasGetter(prop.getChildren());
       }
     } else {
-      return metaClass.hasGetter(name);
+      return false;
     }
   }
 
