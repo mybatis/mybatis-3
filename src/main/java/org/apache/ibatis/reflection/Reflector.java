@@ -63,7 +63,7 @@ public class Reflector {
   private final Map<String, Class<?>> getTypes = new HashMap<>();
   private Constructor<?> defaultConstructor;
 
-  private Map<String, String> caseInsensitivePropertyMap = new HashMap<>();
+  private final Map<String, String> caseInsensitivePropertyMap = new HashMap<>();
 
   public Reflector(Class<?> clazz) {
     type = clazz;

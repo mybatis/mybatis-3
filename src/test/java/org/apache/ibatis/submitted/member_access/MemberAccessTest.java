@@ -305,7 +305,7 @@ class MemberAccessTest {
   }
 
   static class Params {
-    private String privateField = "privateField";
+    private final String privateField = "privateField";
     String packagePrivateField = "packagePrivateField";
     protected String protectedField = "protectedField";
     public String publicField = "publicField";

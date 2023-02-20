@@ -43,7 +43,7 @@ public class ParameterMapping {
   }
 
   public static class Builder {
-    private ParameterMapping parameterMapping = new ParameterMapping();
+    private final ParameterMapping parameterMapping = new ParameterMapping();
 
     public Builder(Configuration configuration, String property, TypeHandler<?> typeHandler) {
       parameterMapping.configuration = configuration;

@@ -22,7 +22,7 @@ import java.util.List;
 public class Person {
   private Integer id;
   private String name;
-  private List<Item> items = new ArrayList<>();
+  private final List<Item> items = new ArrayList<>();
 
   public String toString() {
     return new StringBuilder().append("Person(").append(id).append(", ").append(name).append(", ").append(items)

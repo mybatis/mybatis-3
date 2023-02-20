@@ -50,7 +50,7 @@ public class ResultMapping {
   }
 
   public static class Builder {
-    private ResultMapping resultMapping = new ResultMapping();
+    private final ResultMapping resultMapping = new ResultMapping();
 
     public Builder(Configuration configuration, String property, String column, TypeHandler<?> typeHandler) {
       this(configuration, property);

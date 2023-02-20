@@ -33,7 +33,7 @@ public class ParameterMap {
   }
 
   public static class Builder {
-    private ParameterMap parameterMap = new ParameterMap();
+    private final ParameterMap parameterMap = new ParameterMap();
 
     public Builder(Configuration configuration, String id, Class<?> type, List<ParameterMapping> parameterMappings) {
       parameterMap.id = id;
