@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.submitted.custom_collection_handling;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.io.Reader;

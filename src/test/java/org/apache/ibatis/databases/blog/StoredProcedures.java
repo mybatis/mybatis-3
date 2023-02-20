@@ -15,7 +15,11 @@
  */
 package org.apache.ibatis.databases.blog;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class StoredProcedures {
   public static void selectTwoSetsOfTwoAuthors(int p1, int p2, ResultSet[] rs1, ResultSet[] rs2) throws SQLException {

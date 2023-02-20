@@ -15,7 +15,8 @@
  */
 package org.apache.ibatis.submitted.annotion_many_one_add_columnprefix;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.Reader;
 import java.util.List;

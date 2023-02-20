@@ -15,7 +15,15 @@
  */
 package org.apache.ibatis.jdbc;
 
-import static org.apache.ibatis.jdbc.SqlBuilder.*;
+import static org.apache.ibatis.jdbc.SqlBuilder.FROM;
+import static org.apache.ibatis.jdbc.SqlBuilder.GROUP_BY;
+import static org.apache.ibatis.jdbc.SqlBuilder.HAVING;
+import static org.apache.ibatis.jdbc.SqlBuilder.INNER_JOIN;
+import static org.apache.ibatis.jdbc.SqlBuilder.OR;
+import static org.apache.ibatis.jdbc.SqlBuilder.ORDER_BY;
+import static org.apache.ibatis.jdbc.SqlBuilder.SELECT;
+import static org.apache.ibatis.jdbc.SqlBuilder.SQL;
+import static org.apache.ibatis.jdbc.SqlBuilder.WHERE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;

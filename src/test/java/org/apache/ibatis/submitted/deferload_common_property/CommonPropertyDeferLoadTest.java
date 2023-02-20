@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.submitted.deferload_common_property;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.Reader;
 import java.util.ArrayList;

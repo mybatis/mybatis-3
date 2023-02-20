@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.submitted.array_result_type;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.Reader;
 

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,7 +17,14 @@ package org.apache.ibatis.cache;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.apache.ibatis.cache.decorators.*;
+import org.apache.ibatis.cache.decorators.FifoCache;
+import org.apache.ibatis.cache.decorators.LruCache;
+import org.apache.ibatis.cache.decorators.ScheduledCache;
+import org.apache.ibatis.cache.decorators.SerializedCache;
+import org.apache.ibatis.cache.decorators.SoftCache;
+import org.apache.ibatis.cache.decorators.SynchronizedCache;
+import org.apache.ibatis.cache.decorators.TransactionalCache;
+import org.apache.ibatis.cache.decorators.WeakCache;
 import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.junit.jupiter.api.Test;
 

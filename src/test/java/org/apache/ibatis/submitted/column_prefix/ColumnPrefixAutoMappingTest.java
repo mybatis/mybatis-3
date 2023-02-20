@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.submitted.column_prefix;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 

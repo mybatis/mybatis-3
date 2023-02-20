@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.submitted.enum_interface_type_handler;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.Reader;
 
