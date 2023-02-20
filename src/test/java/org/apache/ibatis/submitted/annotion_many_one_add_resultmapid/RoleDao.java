@@ -32,5 +32,5 @@ public interface RoleDao {
       @Result(column = "role_name", property = "roleName")
     })
   // @formatter:on
-  public List<Role> findAll();
+  List<Role> findAll();
 }
