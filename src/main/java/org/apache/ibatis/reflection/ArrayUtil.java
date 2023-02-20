@@ -152,4 +152,7 @@ public class ArrayUtil {
     }
   }
 
+  private ArrayUtil() {
+  }
+
 }

@@ -76,6 +76,9 @@ public abstract class VFS {
 
       return vfs;
     }
+
+    private VFSHolder() {
+    }
   }
 
   /**

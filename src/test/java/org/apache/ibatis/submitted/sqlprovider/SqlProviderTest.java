@@ -723,6 +723,9 @@ class SqlProviderTest {
         }
       }
 
+      private SqlProvider() {
+      }
+
     }
 
   }
@@ -920,6 +923,9 @@ class SqlProviderTest {
         return "SELECT '" + map1.get("value") + map2.get("value") + "' FROM INFORMATION_SCHEMA.SYSTEM_USERS";
       }
 
+      private SqlProvider() {
+      }
+
     }
 
   }
@@ -995,6 +1001,9 @@ class SqlProviderTest {
         } else {
           return "SELECT '" + context.getDatabaseId() + "' FROM SYSIBM.SYSDUMMY1";
         }
+      }
+
+      private SqlProvider() {
       }
     }
   }
