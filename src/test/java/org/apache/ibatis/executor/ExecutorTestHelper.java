@@ -682,4 +682,7 @@ class ExecutorTestHelper {
             }).build()).cache(authorCache).keyGenerator(new SelectKeyGenerator(kms, true)).keyProperty("id").build();
   }
 
+  private ExecutorTestHelper() {
+  }
+
 }

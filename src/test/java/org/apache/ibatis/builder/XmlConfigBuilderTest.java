@@ -339,6 +339,9 @@ class XmlConfigBuilderTest {
     public static String provideSql() {
       return "SELECT 1";
     }
+
+    private MySqlProvider() {
+    }
   }
 
   @Test

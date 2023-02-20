@@ -56,4 +56,7 @@ public class StoredProcedures {
       bio[0] = rs.getString("bio");
     }
   }
+
+  private StoredProcedures() {
+  }
 }
