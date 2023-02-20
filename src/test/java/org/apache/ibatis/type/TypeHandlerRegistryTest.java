@@ -238,11 +238,11 @@ class TypeHandlerRegistryTest {
     try {
       for (int iteration = 0; iteration < 2000; iteration++) {
         TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry();
-        List<Future<Boolean>> taskResults = IntStream.range(0, 2).mapToObj(taskIndex -> executorService.submit(() -> {
-          return typeHandlerRegistry.hasTypeHandler(TestEnum.class, JdbcType.VARCHAR);
-        })).collect(Collectors.toList());
-        for (int i = 0; i < taskResults.size(); i++) {
-          Future<Boolean> future = taskResults.get(i);
+        List<Future<Boolean>> taskResults = IntStream.range(0, 2)
+            .mapToObj(taskIndex -> executorService
+                .submit(() -> typeHandlerRegistry.hasTypeHandler(TestEnum.class, JdbcType.VARCHAR)))
+            .collect(Collectors.toList());
+        for (Future<Boolean> future : taskResults) {
           assertTrue(future.get(), "false is returned at round " + iteration);
         }
       }

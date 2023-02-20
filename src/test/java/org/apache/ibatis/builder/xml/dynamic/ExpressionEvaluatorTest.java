@@ -92,7 +92,8 @@ class ExpressionEvaluatorTest {
     final Iterable<?> iterable = evaluator.evaluateIterable("array", parameterObject);
     int i = 0;
     for (Object o : iterable) {
-      assertEquals(String.valueOf(++i), o);
+      i++;
+      assertEquals(String.valueOf(i), o);
     }
   }
 

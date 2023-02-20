@@ -97,7 +97,7 @@ class VFSTest {
 
   }
 
-  private class InstanceGetterProcedure implements Runnable {
+  private static class InstanceGetterProcedure implements Runnable {
 
     volatile VFS instanceGot;
 
