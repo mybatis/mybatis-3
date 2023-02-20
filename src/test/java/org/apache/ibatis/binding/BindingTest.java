@@ -588,8 +588,7 @@ class BindingTest {
     try (SqlSession session = sqlSessionFactory.openSession()) {
 
       // Create another mapper instance with a method cache we can test against:
-      final MapperProxyFactory<BoundBlogMapper> mapperProxyFactory = new MapperProxyFactory<BoundBlogMapper>(
-          BoundBlogMapper.class);
+      final MapperProxyFactory<BoundBlogMapper> mapperProxyFactory = new MapperProxyFactory<>(BoundBlogMapper.class);
       assertEquals(BoundBlogMapper.class, mapperProxyFactory.getMapperInterface());
       final BoundBlogMapper mapper = mapperProxyFactory.newInstance(session);
       assertNotSame(mapper, mapperProxyFactory.newInstance(session));

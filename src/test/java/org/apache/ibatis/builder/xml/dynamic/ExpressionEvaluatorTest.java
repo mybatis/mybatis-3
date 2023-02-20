@@ -83,7 +83,7 @@ class ExpressionEvaluatorTest {
 
   @Test
   void shouldIterateOverIterable() {
-    final HashMap<String, String[]> parameterObject = new HashMap<String, String[]>() {
+    final HashMap<String, String[]> parameterObject = new HashMap<>() {
       {
         put("array", new String[] { "1", "2", "3" });
       }

@@ -284,7 +284,7 @@ public class OurSqlBuilder {
   private Map<String, String> getColumnMap(ProviderContext context) {
     Class<?> entityClass = getEntityClass(context);
     Field[] fields = entityClass.getDeclaredFields();
-    Map<String, String> columnMap = new LinkedHashMap<String, String>();
+    Map<String, String> columnMap = new LinkedHashMap<>();
     for (Field field : fields) {
       BaseMapper.Column column = field.getAnnotation(BaseMapper.Column.class);
       if (column != null) {

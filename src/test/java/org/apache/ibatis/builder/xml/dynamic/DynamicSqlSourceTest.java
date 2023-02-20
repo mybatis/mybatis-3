@@ -261,7 +261,7 @@ class DynamicSqlSourceTest extends BaseDataTest {
 
   @Test
   void shouldIterateOnceForEachItemInCollection() throws Exception {
-    final HashMap<String, String[]> parameterObject = new HashMap<String, String[]>() {
+    final HashMap<String, String[]> parameterObject = new HashMap<>() {
       {
         put("array", new String[] { "one", "two", "three" });
       }
@@ -280,7 +280,7 @@ class DynamicSqlSourceTest extends BaseDataTest {
 
   @Test
   void shouldHandleOgnlExpression() throws Exception {
-    final HashMap<String, String> parameterObject = new HashMap<String, String>() {
+    final HashMap<String, String> parameterObject = new HashMap<>() {
       {
         put("name", "Steve");
       }
@@ -294,7 +294,7 @@ class DynamicSqlSourceTest extends BaseDataTest {
 
   @Test
   void shouldSkipForEachWhenCollectionIsEmpty() throws Exception {
-    final HashMap<String, Integer[]> parameterObject = new HashMap<String, Integer[]>() {
+    final HashMap<String, Integer[]> parameterObject = new HashMap<>() {
       {
         put("array", new Integer[] {});
       }

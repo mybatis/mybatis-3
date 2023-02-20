@@ -28,7 +28,7 @@ class EnumOrdinalTypeHandlerTest extends BaseTypeHandlerTest {
     ONE, TWO
   }
 
-  private static final TypeHandler<MyEnum> TYPE_HANDLER = new EnumOrdinalTypeHandler<MyEnum>(MyEnum.class);
+  private static final TypeHandler<MyEnum> TYPE_HANDLER = new EnumOrdinalTypeHandler<>(MyEnum.class);
 
   @Override
   @Test
