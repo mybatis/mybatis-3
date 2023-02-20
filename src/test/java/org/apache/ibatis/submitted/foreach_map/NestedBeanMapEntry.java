@@ -92,8 +92,7 @@ public class NestedBeanMapEntry {
     int result = keya != null ? keya.hashCode() : 0;
     result = 31 * result + (valuea != null ? valuea.hashCode() : 0);
     result = 31 * result + (keyb != null ? keyb.hashCode() : 0);
-    result = 31 * result + (valueb != null ? valueb.hashCode() : 0);
-    return result;
+    return 31 * result + (valueb != null ? valueb.hashCode() : 0);
   }
 
   @Override

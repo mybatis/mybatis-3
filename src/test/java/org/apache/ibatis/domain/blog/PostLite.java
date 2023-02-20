@@ -67,7 +67,6 @@ public class PostLite {
   @Override
   public int hashCode() {
     int myresult = theId != null ? theId.hashCode() : 0;
-    myresult = 31 * myresult + blogId;
-    return myresult;
+    return 31 * myresult + blogId;
   }
 }

@@ -52,8 +52,7 @@ public class StringTrimmingTypeHandler implements TypeHandler<String> {
   private String trim(String s) {
     if (s == null) {
       return null;
-    } else {
-      return s.trim();
     }
+    return s.trim();
   }
 }

@@ -41,9 +41,7 @@ public class UtilityTester {
         myObjectOutputStream.writeObject(myObject);
       }
 
-      // Get the bytes of the serialized object
-      byte[] myResult = myByteArrayOutputStream.toByteArray();
-      return myResult;
+      return myByteArrayOutputStream.toByteArray();
     } catch (Exception anException) {
       throw new RuntimeException("Problem serializing: " + anException.toString(), anException);
     }

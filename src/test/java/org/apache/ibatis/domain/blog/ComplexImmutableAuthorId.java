@@ -76,7 +76,6 @@ public class ComplexImmutableAuthorId {
     int myresult = id;
     myresult = 31 * myresult + (email != null ? email.hashCode() : 0);
     myresult = 31 * myresult + (username != null ? username.hashCode() : 0);
-    myresult = 31 * myresult + (password != null ? password.hashCode() : 0);
-    return myresult;
+    return 31 * myresult + (password != null ? password.hashCode() : 0);
   }
 }

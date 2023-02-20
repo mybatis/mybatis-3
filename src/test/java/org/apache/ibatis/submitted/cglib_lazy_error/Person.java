@@ -25,9 +25,8 @@ public class Person {
   public Person getAncestor() {
     if (getParent() == null) {
       return this;
-    } else {
-      return getParent().getAncestor();
     }
+    return getParent().getAncestor();
   }
 
   @Override

@@ -25,9 +25,8 @@ public class CustomBeanWrapperFactory implements ObjectWrapperFactory {
   public boolean hasWrapperFor(Object object) {
     if (object instanceof Author) {
       return true;
-    } else {
-      return false;
     }
+    return false;
   }
 
   @Override

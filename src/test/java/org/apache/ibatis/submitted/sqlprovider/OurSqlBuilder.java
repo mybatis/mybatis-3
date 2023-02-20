@@ -273,8 +273,7 @@ public class OurSqlBuilder {
       if (type instanceof ParameterizedType) {
         ParameterizedType t = (ParameterizedType) type;
         if (t.getRawType() == declaringClass || mapperClass.isAssignableFrom((Class<?>) t.getRawType())) {
-          Class<?> returnType = (Class<?>) t.getActualTypeArguments()[0];
-          return returnType;
+          return (Class<?>) t.getActualTypeArguments()[0];
         }
       }
     }

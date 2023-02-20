@@ -101,8 +101,7 @@ public class ImmutableAuthor implements Serializable {
     result = 31 * result + (password != null ? password.hashCode() : 0);
     result = 31 * result + (email != null ? email.hashCode() : 0);
     result = 31 * result + (bio != null ? bio.hashCode() : 0);
-    result = 31 * result + (favouriteSection != null ? favouriteSection.hashCode() : 0);
-    return result;
+    return 31 * result + (favouriteSection != null ? favouriteSection.hashCode() : 0);
   }
 
   @Override

@@ -64,10 +64,9 @@ public class Cart implements Serializable {
     CartItem cartItem = itemMap.remove(itemId);
     if (cartItem == null) {
       return null;
-    } else {
-      itemList.remove(cartItem);
-      return cartItem.getItem();
     }
+    itemList.remove(cartItem);
+    return cartItem.getItem();
   }
 
   public void incrementQuantityByItemId(String itemId) {

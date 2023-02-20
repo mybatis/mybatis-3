@@ -998,9 +998,8 @@ class SqlProviderTest {
       public static String provideSql(ProviderContext context) {
         if ("hsql".equals(context.getDatabaseId())) {
           return "SELECT '" + context.getDatabaseId() + "' FROM INFORMATION_SCHEMA.SYSTEM_USERS";
-        } else {
-          return "SELECT '" + context.getDatabaseId() + "' FROM SYSIBM.SYSDUMMY1";
         }
+        return "SELECT '" + context.getDatabaseId() + "' FROM SYSIBM.SYSDUMMY1";
       }
 
       private SqlProvider() {

@@ -70,7 +70,6 @@ public class ComplexImmutableAuthor implements Serializable {
   public int hashCode() {
     int myresult = theComplexImmutableAuthorId != null ? theComplexImmutableAuthorId.hashCode() : 0;
     myresult = 31 * myresult + (bio != null ? bio.hashCode() : 0);
-    myresult = 31 * myresult + (favouriteSection != null ? favouriteSection.hashCode() : 0);
-    return myresult;
+    return 31 * myresult + (favouriteSection != null ? favouriteSection.hashCode() : 0);
   }
 }
