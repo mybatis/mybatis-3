@@ -24,8 +24,8 @@ import java.io.InputStream;
 import java.sql.Blob;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 
 class BlobTypeHandlerTest extends BaseTypeHandlerTest {
 
@@ -38,7 +38,7 @@ class BlobTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldSetParameter() throws Exception {
     TYPE_HANDLER.setParameter(ps, 1, new byte[] { 1, 2, 3 }, null);
-    verify(ps).setBinaryStream(Mockito.eq(1), Mockito.any(InputStream.class), Mockito.eq(3));
+    verify(ps).setBinaryStream(ArgumentMatchers.eq(1), ArgumentMatchers.any(InputStream.class), ArgumentMatchers.eq(3));
   }
 
   @Override

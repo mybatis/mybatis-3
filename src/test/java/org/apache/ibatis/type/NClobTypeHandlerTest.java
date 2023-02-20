@@ -24,8 +24,8 @@ import java.io.Reader;
 import java.sql.Clob;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 
 class NClobTypeHandlerTest extends BaseTypeHandlerTest {
 
@@ -38,7 +38,7 @@ class NClobTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldSetParameter() throws Exception {
     TYPE_HANDLER.setParameter(ps, 1, "Hello", null);
-    verify(ps).setCharacterStream(Mockito.eq(1), Mockito.any(Reader.class), Mockito.eq(5));
+    verify(ps).setCharacterStream(ArgumentMatchers.eq(1), ArgumentMatchers.any(Reader.class), ArgumentMatchers.eq(5));
   }
 
   @Override
