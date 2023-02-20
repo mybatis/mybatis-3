@@ -31,8 +31,8 @@ class UnpooledDataSourceTest {
   @Test
   void shouldNotRegisterTheSameDriverMultipleTimes() throws Exception {
     // https://github.com/mybatis/old-google-code-issues/issues/430
-    UnpooledDataSource dataSource = null;
-    dataSource = new UnpooledDataSource("org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:multipledrivers", "sa", "");
+    UnpooledDataSource dataSource = new UnpooledDataSource("org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:multipledrivers",
+        "sa", "");
     dataSource.getConnection().close();
     int before = countRegisteredDrivers();
     dataSource = new UnpooledDataSource("org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:multipledrivers", "sa", "");
@@ -44,12 +44,10 @@ class UnpooledDataSourceTest {
   @Test
   void shouldRegisterDynamicallyLoadedDriver() throws Exception {
     int before = countRegisteredDrivers();
-    ClassLoader driverClassLoader = null;
-    UnpooledDataSource dataSource = null;
-    driverClassLoader = new URLClassLoader(
+    ClassLoader driverClassLoader = new URLClassLoader(
         new URL[] { new URL("jar:file:/PATH_TO/mysql-connector-java-5.1.25.jar!/") });
-    dataSource = new UnpooledDataSource(driverClassLoader, "com.mysql.jdbc.Driver", "jdbc:mysql://127.0.0.1/test",
-        "root", "");
+    UnpooledDataSource dataSource = new UnpooledDataSource(driverClassLoader, "com.mysql.jdbc.Driver",
+        "jdbc:mysql://127.0.0.1/test", "root", "");
     dataSource.getConnection().close();
     assertEquals(before + 1, countRegisteredDrivers());
     driverClassLoader = new URLClassLoader(

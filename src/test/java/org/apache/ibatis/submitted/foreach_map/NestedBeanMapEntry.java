@@ -71,16 +71,8 @@ public class NestedBeanMapEntry {
 
     NestedBeanMapEntry map3Entry = (NestedBeanMapEntry) o;
 
-    if (!Objects.equals(keya, map3Entry.keya)) {
-      return false;
-    }
-    if (!Objects.equals(keyb, map3Entry.keyb)) {
-      return false;
-    }
-    if (!Objects.equals(valuea, map3Entry.valuea)) {
-      return false;
-    }
-    if (!Objects.equals(valueb, map3Entry.valueb)) {
+    if (!Objects.equals(keya, map3Entry.keya) || !Objects.equals(keyb, map3Entry.keyb)
+        || !Objects.equals(valuea, map3Entry.valuea) || !Objects.equals(valueb, map3Entry.valueb)) {
       return false;
     }
 

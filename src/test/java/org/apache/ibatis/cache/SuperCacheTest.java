@@ -47,7 +47,7 @@ class SuperCacheTest {
       cache.putObject(i, i);
       ((TransactionalCache) cache).commit();
       Object o = cache.getObject(i);
-      assertTrue(o == null || i == ((Integer) o));
+      assertTrue(o == null || i == (Integer) o);
     }
     assertTrue(cache.getSize() < N);
   }

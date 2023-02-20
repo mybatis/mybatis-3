@@ -51,10 +51,8 @@ public class StringStringMapEntry {
 
     StringStringMapEntry mapEntry = (StringStringMapEntry) o;
 
-    if (key != null ? !key.equals(mapEntry.key) : mapEntry.key != null) {
-      return false;
-    }
-    if (value != null ? !value.equals(mapEntry.value) : mapEntry.value != null) {
+    if ((key != null ? !key.equals(mapEntry.key) : mapEntry.key != null)
+        || (value != null ? !value.equals(mapEntry.value) : mapEntry.value != null)) {
       return false;
     }
 

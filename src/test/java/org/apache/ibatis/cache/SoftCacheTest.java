@@ -34,7 +34,7 @@ class SoftCacheTest {
       byte[] array = new byte[5001]; // waste a bunch of memory
       array[5000] = 1;
       cache.putObject(i, array);
-      Object value = cache.getObject(i);
+      cache.getObject(i);
       if (cache.getSize() < i + 1) {
         // System.out.println("Cache exceeded with " + (i + 1) + " entries.");
         break;

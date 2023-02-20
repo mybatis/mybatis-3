@@ -54,10 +54,7 @@ public class PostLite {
 
     final PostLite that = (PostLite) o;
 
-    if (blogId != that.blogId) {
-      return false;
-    }
-    if (theId != null ? !theId.equals(that.theId) : that.theId != null) {
+    if ((blogId != that.blogId) || (theId != null ? !theId.equals(that.theId) : that.theId != null)) {
       return false;
     }
 

@@ -16,7 +16,6 @@
 package org.apache.ibatis.submitted.includes;
 
 import java.io.Reader;
-import java.util.Map;
 
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
@@ -54,8 +53,7 @@ class IncludeTest {
   @Test
   void testParametrizedIncludes() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      final Map<String, Object> result = sqlSession.selectOne("org.apache.ibatis.submitted.includes.mapper.select");
-      // Assertions.assertEquals(Integer.valueOf(1), result);
+      sqlSession.selectOne("org.apache.ibatis.submitted.includes.mapper.select");
     }
   }
 

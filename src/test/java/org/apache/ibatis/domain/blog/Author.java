@@ -103,16 +103,9 @@ public class Author implements Serializable {
 
     Author author = (Author) o;
 
-    if (id != author.id) {
-      return false;
-    }
-    if (bio != null ? !bio.equals(author.bio) : author.bio != null) {
-      return false;
-    }
-    if (email != null ? !email.equals(author.email) : author.email != null) {
-      return false;
-    }
-    if (password != null ? !password.equals(author.password) : author.password != null) {
+    if ((id != author.id) || (bio != null ? !bio.equals(author.bio) : author.bio != null)
+        || (email != null ? !email.equals(author.email) : author.email != null)
+        || (password != null ? !password.equals(author.password) : author.password != null)) {
       return false;
     }
     if (username != null ? !username.equals(author.username) : author.username != null) {
