@@ -132,6 +132,8 @@
 
   <properties>
     <clirr.comparisonVersion>3.4.6</clirr.comparisonVersion>
+    <!-- Add slow test groups here and annotate classes similar to @Tag('groupName'). -->
+    <!-- Excluded groups are ran on github ci, to force here, pass -d"excludedGroups=" -->
     <excludedGroups>TestcontainersTests</excludedGroups>
     <maven.compiler.testCompilerArgument>-parameters</maven.compiler.testCompilerArgument>
     <module.name>org.mybatis</module.name>
@@ -335,7 +337,7 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
-          <systemProperties>
+          <systemPropertyVariables>
             <property>
               <name>derby.stream.error.file</name>
               <value>${project.build.directory}/derby.log</value>
@@ -344,7 +346,7 @@
               <name>derby.system.home</name>
               <value>${project.build.directory}</value>
             </property>
-          </systemProperties>
+          </systemPropertyVariables>
         </configuration>
       </plugin>
       <plugin>
@@ -418,18 +420,6 @@
   </build>
 
   <profiles>
-    <profile>
-      <!-- Run slow tests only on github ci, to force run otherwise use -D"env.GITHUB" -->
-      <id>github-ci</id>
-      <activation>
-        <property>
-          <name>env.GITHUB</name>
-        </property>
-      </activation>
-      <properties>
-        <excludedGroups />
-      </properties>
-    </profile>
     <profile>
       <id>pre16</id>
       <activation>
