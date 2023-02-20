@@ -114,7 +114,11 @@ class XmlConfigBuilderTest {
   }
 
   enum MyEnum {
-    ONE, TWO
+
+    ONE,
+
+    TWO
+
   }
 
   public static class EnumOrderTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E> {

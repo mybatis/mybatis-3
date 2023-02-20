@@ -85,4 +85,5 @@ class PooledDataSourceTest extends BaseDataTest {
     JDBCConnection realConnection = (JDBCConnection) PooledDataSource.unwrapConnection(c);
     c.close();
   }
+
 }
