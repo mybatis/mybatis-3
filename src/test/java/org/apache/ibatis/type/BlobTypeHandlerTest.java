@@ -45,7 +45,7 @@ class BlobTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldGetResultFromResultSetByName() throws Exception {
     when(rs.getBlob("column")).thenReturn(blob);
-    when(blob.length()).thenReturn(3l);
+    when(blob.length()).thenReturn(3L);
     when(blob.getBytes(1, 3)).thenReturn(new byte[] { 1, 2, 3 });
     assertArrayEquals(new byte[] { 1, 2, 3 }, TYPE_HANDLER.getResult(rs, "column"));
   }
@@ -61,7 +61,7 @@ class BlobTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldGetResultFromResultSetByPosition() throws Exception {
     when(rs.getBlob(1)).thenReturn(blob);
-    when(blob.length()).thenReturn(3l);
+    when(blob.length()).thenReturn(3L);
     when(blob.getBytes(1, 3)).thenReturn(new byte[] { 1, 2, 3 });
     assertArrayEquals(new byte[] { 1, 2, 3 }, TYPE_HANDLER.getResult(rs, 1));
   }
@@ -77,7 +77,7 @@ class BlobTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
     when(cs.getBlob(1)).thenReturn(blob);
-    when(blob.length()).thenReturn(3l);
+    when(blob.length()).thenReturn(3L);
     when(blob.getBytes(1, 3)).thenReturn(new byte[] { 1, 2, 3 });
     assertArrayEquals(new byte[] { 1, 2, 3 }, TYPE_HANDLER.getResult(cs, 1));
   }

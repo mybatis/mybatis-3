@@ -45,7 +45,7 @@ class NClobTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldGetResultFromResultSetByName() throws Exception {
     when(rs.getClob("column")).thenReturn(clob);
-    when(clob.length()).thenReturn(3l);
+    when(clob.length()).thenReturn(3L);
     when(clob.getSubString(1, 3)).thenReturn("Hello");
     assertEquals("Hello", TYPE_HANDLER.getResult(rs, "column"));
   }
