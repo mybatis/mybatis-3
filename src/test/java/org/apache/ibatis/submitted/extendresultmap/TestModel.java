@@ -15,6 +15,8 @@
  */
 package org.apache.ibatis.submitted.extendresultmap;
 
+import java.util.Objects;
+
 public class TestModel {
 
   private String a;
@@ -46,11 +48,7 @@ public class TestModel {
 
   @Override
   public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + ((a == null) ? 0 : a.hashCode());
-    result = prime * result + ((b == null) ? 0 : b.hashCode());
-    return result;
+    return Objects.hash(a, b);
   }
 
   @Override
@@ -62,18 +60,10 @@ public class TestModel {
       return false;
     }
     TestModel other = (TestModel) obj;
-    if (a == null) {
-      if (other.a != null) {
-        return false;
-      }
-    } else if (!a.equals(other.a)) {
+    if (!Objects.equals(a, other.a)) {
       return false;
     }
-    if (b == null) {
-      if (other.b != null) {
-        return false;
-      }
-    } else if (!b.equals(other.b)) {
+    if (!Objects.equals(b, other.b)) {
       return false;
     }
     return true;
