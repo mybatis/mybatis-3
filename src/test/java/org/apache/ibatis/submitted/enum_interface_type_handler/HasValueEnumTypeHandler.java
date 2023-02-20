@@ -30,12 +30,14 @@ public class HasValueEnumTypeHandler<E extends Enum<E> & HasValue> extends BaseT
   private final E[] enums;
 
   public HasValueEnumTypeHandler(Class<E> type) {
-    if (type == null)
+    if (type == null) {
       throw new IllegalArgumentException("Type argument cannot be null");
+    }
     this.type = type;
     this.enums = type.getEnumConstants();
-    if (!type.isInterface() && this.enums == null)
+    if (!type.isInterface() && this.enums == null) {
       throw new IllegalArgumentException(type.getSimpleName() + " does not represent an enum type.");
+    }
   }
 
   @Override

@@ -74,8 +74,9 @@ class NestedResultHandlerAssociationTest {
       sqlSession.select("collectPageByBirthMonth", targetMonth, context -> {
         Account account = (Account) context.getResultObject();
         accounts.add(account);
-        if (accounts.size() > 1)
+        if (accounts.size() > 1) {
           context.stop();
+        }
       });
     }
     assertEquals(2, accounts.size());

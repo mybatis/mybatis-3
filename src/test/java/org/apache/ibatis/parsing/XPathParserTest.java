@@ -32,7 +32,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
 class XPathParserTest {
-  private String resource = "nodelet_test.xml";
+  private final String resource = "nodelet_test.xml";
 
   // InputStream Source
   @Test
@@ -221,41 +221,41 @@ class XPathParserTest {
 
     // @formatter:off
     String usersNodeToStringExpect =
-      "<users>\n" +
-      "    <user>\n" +
-      "        <id>100</id>\n" +
-      "        <name>Tom</name>\n" +
-      "        <age>30</age>\n" +
-      "        <cars>\n" +
-      "            <car index=\"1\">BMW</car>\n" +
-      "            <car index=\"2\">Audi</car>\n" +
-      "            <car index=\"3\">Benz</car>\n" +
-      "        </cars>\n" +
-      "    </user>\n" +
-      "</users>\n";
+      "<users>\n"
+      + "    <user>\n"
+      + "        <id>100</id>\n"
+      + "        <name>Tom</name>\n"
+      + "        <age>30</age>\n"
+      + "        <cars>\n"
+      + "            <car index=\"1\">BMW</car>\n"
+      + "            <car index=\"2\">Audi</car>\n"
+      + "            <car index=\"3\">Benz</car>\n"
+      + "        </cars>\n"
+      + "    </user>\n"
+      + "</users>\n";
     // @formatter:on
 
     // @formatter:off
     String userNodeToStringExpect =
-      "<user>\n" +
-      "    <id>100</id>\n" +
-      "    <name>Tom</name>\n" +
-      "    <age>30</age>\n" +
-      "    <cars>\n" +
-      "        <car index=\"1\">BMW</car>\n" +
-      "        <car index=\"2\">Audi</car>\n" +
-      "        <car index=\"3\">Benz</car>\n" +
-      "    </cars>\n" +
-      "</user>\n";
+      "<user>\n"
+      + "    <id>100</id>\n"
+      + "    <name>Tom</name>\n"
+      + "    <age>30</age>\n"
+      + "    <cars>\n"
+      + "        <car index=\"1\">BMW</car>\n"
+      + "        <car index=\"2\">Audi</car>\n"
+      + "        <car index=\"3\">Benz</car>\n"
+      + "    </cars>\n"
+      + "</user>\n";
     // @formatter:on
 
     // @formatter:off
     String carsNodeToStringExpect =
-      "<cars>\n" +
-      "    <car index=\"1\">BMW</car>\n" +
-      "    <car index=\"2\">Audi</car>\n" +
-      "    <car index=\"3\">Benz</car>\n" +
-      "</cars>\n";
+      "<cars>\n"
+      + "    <car index=\"1\">BMW</car>\n"
+      + "    <car index=\"2\">Audi</car>\n"
+      + "    <car index=\"3\">Benz</car>\n"
+      + "</cars>\n";
     // @formatter:on
 
     assertEquals(usersNodeToStringExpect, usersNodeToString);

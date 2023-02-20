@@ -24,11 +24,11 @@ import org.apache.ibatis.annotations.*;
  */
 public interface UserDao {
   // @formatter:off
-  @Select({ "select",
+  @Select({"select",
       "     u.id, u.username, r.id role_id, r.role_name",
       "    from user u",
       "    left join user_role ur on u.id = ur.user_id",
-      "    left join role r on ur.role_id = r.id" })
+      "    left join role r on ur.role_id = r.id"})
   @Results({
       @Result(id = true, column = "id", property = "id"),
       @Result(column = "username", property = "username"),
@@ -38,11 +38,11 @@ public interface UserDao {
   public List<User> findAll();
 
   // @formatter:off
-  @Select({ "select",
+  @Select({"select",
       "     u.id, u.username, r.id role_id, r.role_name",
       "    from user u",
       "    left join user_role ur on u.id = ur.user_id",
-      "    left join role r on ur.role_id = r.id" })
+      "    left join role r on ur.role_id = r.id"})
   @Results({
       @Result(id = true, column = "id", property = "id"),
       @Result(column = "username", property = "username"),
@@ -52,11 +52,11 @@ public interface UserDao {
   public List<User> findAll2();
 
   // @formatter:off
-  @Select({ "select",
+  @Select({"select",
       "     u.id, u.username, r.id role_id, r.role_name",
       "    from user u",
       "    left join user_role ur on u.id = ur.user_id",
-      "    left join role r on ur.role_id = r.id where u.id in (2, 3)" })
+      "    left join role r on ur.role_id = r.id where u.id in (2, 3)"})
   @Results({
       @Result(id = true, column = "id", property = "id"),
       @Result(column = "username", property = "username"),
@@ -75,13 +75,13 @@ public interface UserDao {
   public List<User> justUseResult();
 
   // @formatter:off
-  @Select({ "select",
+  @Select({"select",
       "u.id, u.username, r.id role_id, r.role_name, ut.id teacher_id, ut.username teacher_name",
       "from user u",
       "left join user_role ur on u.id = ur.user_id",
       "left join role r on ur.role_id = r.id",
       "left join user ut on ut.id != u.id",
-      "where role_id = 3" })
+      "where role_id = 3"})
   @Results({
       @Result(id = true, column = "id", property = "id"),
       @Result(column = "username", property = "username"),

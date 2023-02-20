@@ -24,10 +24,10 @@ public interface PostMapper {
   @Select("select * from post where author_id = #{id} order by id")
   // @formatter:off
   @Results(value = {
-      @Result(property="id", column="id"),
-      @Result(property="subject", column="subject"),
-      @Result(property="body", column="body"),
-      @Result(property="tags", javaType=List.class, column="id", many=@Many(select="getTagsForPost"))
+      @Result(property = "id", column = "id"),
+      @Result(property = "subject", column = "subject"),
+      @Result(property = "body", column = "body"),
+      @Result(property = "tags", javaType = List.class, column = "id", many = @Many(select = "getTagsForPost"))
     })
   // @formatter:on
   List<AnnoPost> getPosts(int authorId);
@@ -35,8 +35,8 @@ public interface PostMapper {
   @Select("select t.id, t.name from tag t inner join post_tag pt on pt.tag_id = t.id where pt.post_id = #{postId} order by id")
   // @formatter:off
   @ConstructorArgs(value = {
-      @Arg(column="id",javaType=int.class),
-      @Arg(column="name",javaType=String.class)
+      @Arg(column = "id", javaType = int.class),
+      @Arg(column = "name", javaType = String.class)
     })
   // @formatter:on
   List<AnnoPostTag> getTagsForPost(int postId);

@@ -104,8 +104,8 @@ public interface BoundAuthorMapper {
       "  USERNAME as AUTHOR_USERNAME,",
       "  PASSWORD as AUTHOR_PASSWORD,",
       "  EMAIL as AUTHOR_EMAIL,",
-      "  BIO as AUTHOR_BIO," +
-          "  FAVOURITE_SECTION as AUTHOR_SECTION",
+      "  BIO as AUTHOR_BIO,"
+          + "  FAVOURITE_SECTION as AUTHOR_SECTION",
       "FROM AUTHOR WHERE ID = #{id}"})
   // @formatter:on
   Author selectAuthorConstructor(int id);
@@ -125,8 +125,8 @@ public interface BoundAuthorMapper {
     "  USERNAME as AUTHOR_USERNAME,",
     "  PASSWORD as AUTHOR_PASSWORD,",
     "  EMAIL as AUTHOR_EMAIL,",
-    "  BIO as AUTHOR_BIO," +
-      "  FAVOURITE_SECTION as AUTHOR_SECTION",
+    "  BIO as AUTHOR_BIO,"
+      + "  FAVOURITE_SECTION as AUTHOR_SECTION",
     "FROM AUTHOR WHERE ID = #{id}"})
   // @formatter:on
   Author selectAuthorMapToConstructorUsingRepeatable(int id);
@@ -164,8 +164,8 @@ public interface BoundAuthorMapper {
     "  USERNAME as AUTHOR_USERNAME,",
     "  PASSWORD as AUTHOR_PASSWORD,",
     "  EMAIL as AUTHOR_EMAIL,",
-    "  BIO as AUTHOR_BIO," +
-      "  FAVOURITE_SECTION as AUTHOR_SECTION",
+    "  BIO as AUTHOR_BIO,"
+      + "  FAVOURITE_SECTION as AUTHOR_SECTION",
     "FROM AUTHOR WHERE ID = #{id}"})
   // @formatter:on
   Author selectAuthorUsingBothArgAndConstructorArgs(int id);

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -56,23 +56,30 @@ public class TestModel {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
+    if (this == obj) {
       return true;
-    if (obj == null)
+    }
+    if (obj == null) {
       return false;
-    if (getClass() != obj.getClass())
+    }
+    if (getClass() != obj.getClass()) {
       return false;
+    }
     TestModel other = (TestModel) obj;
     if (a == null) {
-      if (other.a != null)
+      if (other.a != null) {
         return false;
-    } else if (!a.equals(other.a))
+      }
+    } else if (!a.equals(other.a)) {
       return false;
+    }
     if (b == null) {
-      if (other.b != null)
+      if (other.b != null) {
         return false;
-    } else if (!b.equals(other.b))
+      }
+    } else if (!b.equals(other.b)) {
       return false;
+    }
     return true;
   }
 

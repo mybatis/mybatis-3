@@ -40,7 +40,7 @@ public class DynamicContext {
 
   private final ContextMap bindings;
   private final StringJoiner sqlBuilder = new StringJoiner(" ");
-  private int uniqueNumber = 0;
+  private int uniqueNumber;
 
   public DynamicContext(Configuration configuration, Object parameterObject) {
     if (parameterObject != null && !(parameterObject instanceof Map)) {

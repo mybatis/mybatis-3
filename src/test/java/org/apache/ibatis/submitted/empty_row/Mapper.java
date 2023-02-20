@@ -53,9 +53,9 @@ public interface Mapper {
 
   @ResultMap("twoCollectionsRM")
   // @formatter:off
-  @Select({ "select p.id, c.name child_name, e.name pet_name from parent p",
+  @Select({"select p.id, c.name child_name, e.name pet_name from parent p",
       "left join child c on c.parent_id = p.id",
-      "left join pet e on e.parent_id = p.id", "where p.id = #{id}" })
+      "left join pet e on e.parent_id = p.id", "where p.id = #{id}"})
   // @formatter:on
   Parent getTwoCollections(Integer id);
 

@@ -672,7 +672,7 @@ class SqlSessionTest extends BaseDataTest {
   }
 
   private static class TestResultHandler implements ResultHandler {
-    int count = 0;
+    int count;
 
     @Override
     public void handleResult(ResultContext context) {
@@ -690,13 +690,14 @@ class SqlSessionTest extends BaseDataTest {
   }
 
   private static class TestResultStopHandler implements ResultHandler {
-    int count = 0;
+    int count;
 
     @Override
     public void handleResult(ResultContext context) {
       count++;
-      if (count == 2)
+      if (count == 2) {
         context.stop();
+      }
     }
   }
 
