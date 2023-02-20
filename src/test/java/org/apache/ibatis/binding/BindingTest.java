@@ -123,7 +123,7 @@ class BindingTest {
   void shouldFindPostsInArray() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       BoundAuthorMapper mapper = session.getMapper(BoundAuthorMapper.class);
-      Integer[] params = new Integer[] { 1, 3, 5 };
+      Integer[] params = { 1, 3, 5 };
       List<Post> posts = mapper.findPostsInArray(params);
       assertEquals(3, posts.size());
       session.rollback();

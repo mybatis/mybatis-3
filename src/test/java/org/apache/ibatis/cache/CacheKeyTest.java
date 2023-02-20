@@ -81,8 +81,8 @@ class CacheKeyTest {
 
   @Test
   void shouldTestCacheKeysWithBinaryArrays() {
-    byte[] array1 = new byte[] { 1 };
-    byte[] array2 = new byte[] { 1 };
+    byte[] array1 = { 1 };
+    byte[] array2 = { 1 };
     CacheKey key1 = new CacheKey(new Object[] { array1 });
     CacheKey key2 = new CacheKey(new Object[] { array2 });
     assertEquals(key1, key2);

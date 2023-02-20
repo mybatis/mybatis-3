@@ -63,7 +63,7 @@ class NestedForEachTest {
   void testSimpleSelectWithPrimitives() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Map<String, Object> parameter = new HashMap<>();
-      int[] array = new int[] { 1, 3, 5 };
+      int[] array = { 1, 3, 5 };
       parameter.put("ids", array);
 
       List<Map<String, Object>> answer = sqlSession
