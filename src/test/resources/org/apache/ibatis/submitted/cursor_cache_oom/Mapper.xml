@@ -30,7 +30,7 @@
         insert into users values(#{id}, #{name})
     </insert>
 
-    <select id="fetchUsers" resultMap="User">
+    <select id="fetchUsers" resultMap="User" resultOrdered="true">
         select u.id as id, u.name as name, f.name as friend_name
         from users as u
         left join users as f on u.friend_id = f.id
