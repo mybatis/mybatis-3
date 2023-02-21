@@ -22,7 +22,6 @@ public class IncompleteElementException extends BuilderException {
   private static final long serialVersionUID = -3697292286890900315L;
 
   public IncompleteElementException() {
-    super();
   }
 
   public IncompleteElementException(String message, Throwable cause) {

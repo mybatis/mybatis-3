@@ -37,6 +37,5 @@ public class ParamNameUtil {
   }
 
   private ParamNameUtil() {
-    super();
   }
 }

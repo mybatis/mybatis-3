@@ -28,6 +28,5 @@ public abstract class OptionalUtil {
   }
 
   private OptionalUtil() {
-    super();
   }
 }

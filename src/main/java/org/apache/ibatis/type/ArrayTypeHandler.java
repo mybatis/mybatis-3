@@ -73,7 +73,6 @@ public class ArrayTypeHandler extends BaseTypeHandler<Object> {
   }
 
   public ArrayTypeHandler() {
-    super();
   }
 
   @Override

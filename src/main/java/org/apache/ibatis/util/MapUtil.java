@@ -44,6 +44,5 @@ public class MapUtil {
   }
 
   private MapUtil() {
-    super();
   }
 }

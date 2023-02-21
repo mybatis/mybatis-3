@@ -25,7 +25,6 @@ public class CacheException extends PersistenceException {
   private static final long serialVersionUID = -193202262468464650L;
 
   public CacheException() {
-    super();
   }
 
   public CacheException(String message) {

@@ -538,7 +538,6 @@ public abstract class AbstractSQL<T> {
     private boolean empty = true;
 
     public SafeAppendable(Appendable a) {
-      super();
       this.appendable = a;
     }
 

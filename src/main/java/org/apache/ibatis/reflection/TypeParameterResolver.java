@@ -242,7 +242,6 @@ public class TypeParameterResolver {
   }
 
   private TypeParameterResolver() {
-    super();
   }
 
   static class ParameterizedTypeImpl implements ParameterizedType {
@@ -253,7 +252,6 @@ public class TypeParameterResolver {
     private final Type[] actualTypeArguments;
 
     public ParameterizedTypeImpl(Class<?> rawType, Type ownerType, Type[] actualTypeArguments) {
-      super();
       this.rawType = rawType;
       this.ownerType = ownerType;
       this.actualTypeArguments = actualTypeArguments;
@@ -287,7 +285,6 @@ public class TypeParameterResolver {
     private final Type[] upperBounds;
 
     WildcardTypeImpl(Type[] lowerBounds, Type[] upperBounds) {
-      super();
       this.lowerBounds = lowerBounds;
       this.upperBounds = upperBounds;
     }
@@ -307,7 +304,6 @@ public class TypeParameterResolver {
     private final Type genericComponentType;
 
     GenericArrayTypeImpl(Type genericComponentType) {
-      super();
       this.genericComponentType = genericComponentType;
     }
 

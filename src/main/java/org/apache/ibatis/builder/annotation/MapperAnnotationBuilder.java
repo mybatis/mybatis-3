@@ -664,7 +664,6 @@ public class MapperAnnotationBuilder {
     private boolean dirtySelect;
 
     AnnotationWrapper(Annotation annotation) {
-      super();
       this.annotation = annotation;
       if (annotation instanceof Select) {
         databaseId = ((Select) annotation).databaseId();

@@ -25,7 +25,6 @@ public class TransactionException extends PersistenceException {
   private static final long serialVersionUID = -433589569461084605L;
 
   public TransactionException() {
-    super();
   }
 
   public TransactionException(String message) {

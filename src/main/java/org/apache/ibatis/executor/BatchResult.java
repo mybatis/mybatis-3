@@ -32,7 +32,6 @@ public class BatchResult {
   private int[] updateCounts;
 
   public BatchResult(MappedStatement mappedStatement, String sql) {
-    super();
     this.mappedStatement = mappedStatement;
     this.sql = sql;
     this.parameterObjects = new ArrayList<>();

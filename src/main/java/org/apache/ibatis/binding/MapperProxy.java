@@ -134,7 +134,6 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
     private final MapperMethod mapperMethod;
 
     public PlainMethodInvoker(MapperMethod mapperMethod) {
-      super();
       this.mapperMethod = mapperMethod;
     }
 
@@ -148,7 +147,6 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
     private final MethodHandle methodHandle;
 
     public DefaultMethodInvoker(MethodHandle methodHandle) {
-      super();
       this.methodHandle = methodHandle;
     }
 

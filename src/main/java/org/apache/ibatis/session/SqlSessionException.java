@@ -25,7 +25,6 @@ public class SqlSessionException extends PersistenceException {
   private static final long serialVersionUID = 3833184690240265047L;
 
   public SqlSessionException() {
-    super();
   }
 
   public SqlSessionException(String message) {
