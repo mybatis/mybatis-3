@@ -764,8 +764,8 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       throws SQLException {
     boolean foundValues = false;
     if (configuration.isArgNameBasedConstructorAutoMapping()) {
-      foundValues = applyArgNameBasedConstructorAutoMapping(rsw, resultMap, columnPrefix, resultType,
-          constructorArgTypes, constructorArgs, constructor, foundValues);
+      foundValues = applyArgNameBasedConstructorAutoMapping(rsw, resultMap, columnPrefix, constructorArgTypes,
+          constructorArgs, constructor, foundValues);
     } else {
       foundValues = applyColumnOrderBasedConstructorAutomapping(rsw, constructorArgTypes, constructorArgs, constructor,
           foundValues);
@@ -789,8 +789,8 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   }
 
   private boolean applyArgNameBasedConstructorAutoMapping(ResultSetWrapper rsw, ResultMap resultMap,
-      String columnPrefix, Class<?> resultType, List<Class<?>> constructorArgTypes, List<Object> constructorArgs,
-      Constructor<?> constructor, boolean foundValues) throws SQLException {
+      String columnPrefix, List<Class<?>> constructorArgTypes, List<Object> constructorArgs, Constructor<?> constructor,
+      boolean foundValues) throws SQLException {
     List<String> missingArgs = null;
     Parameter[] params = constructor.getParameters();
     for (Parameter param : params) {
