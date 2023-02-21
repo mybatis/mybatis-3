@@ -70,7 +70,7 @@ public class PropertyParser {
     }
 
     private String getPropertyValue(String key, String defaultValue) {
-      return (variables == null) ? defaultValue : variables.getProperty(key, defaultValue);
+      return variables == null ? defaultValue : variables.getProperty(key, defaultValue);
     }
 
     @Override

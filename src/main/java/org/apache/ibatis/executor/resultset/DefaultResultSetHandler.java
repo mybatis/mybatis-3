@@ -486,7 +486,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         column = null;
       }
       if (propertyMapping.isCompositeResult()
-          || (column != null && mappedColumnNames.contains(column.toUpperCase(Locale.ENGLISH)))
+          || column != null && mappedColumnNames.contains(column.toUpperCase(Locale.ENGLISH))
           || propertyMapping.getResultSet() != null) {
         Object value = getPropertyMappingValue(rsw.getResultSet(), metaObject, propertyMapping, lazyLoader,
             columnPrefix);
@@ -503,7 +503,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
           foundValues = true;
         }
         if (value != null
-            || (configuration.isCallSettersOnNulls() && !metaObject.getSetterType(property).isPrimitive())) {
+            || configuration.isCallSettersOnNulls() && !metaObject.getSetterType(property).isPrimitive()) {
           // gcode issue #377, call setter on nulls (value is not 'found')
           metaObject.setValue(property, value);
         }
@@ -565,7 +565,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
           }
         } else {
           configuration.getAutoMappingUnknownColumnBehavior().doAction(mappedStatement, columnName,
-              (property != null) ? property : propertyName, null);
+              property != null ? property : propertyName, null);
         }
       }
       autoMappingsCache.put(mapKey, autoMapping);
@@ -583,7 +583,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         if (value != null) {
           foundValues = true;
         }
-        if (value != null || (configuration.isCallSettersOnNulls() && !mapping.primitive)) {
+        if (value != null || configuration.isCallSettersOnNulls() && !mapping.primitive) {
           // gcode issue #377, call setter on nulls (value is not 'found')
           metaObject.setValue(mapping.property, value);
         }
@@ -764,8 +764,8 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       throws SQLException {
     boolean foundValues = false;
     if (configuration.isArgNameBasedConstructorAutoMapping()) {
-      foundValues = applyArgNameBasedConstructorAutoMapping(rsw, resultMap, columnPrefix, resultType,
-          constructorArgTypes, constructorArgs, constructor, foundValues);
+      foundValues = applyArgNameBasedConstructorAutoMapping(rsw, resultMap, columnPrefix, constructorArgTypes,
+          constructorArgs, constructor, foundValues);
     } else {
       foundValues = applyColumnOrderBasedConstructorAutomapping(rsw, constructorArgTypes, constructorArgs, constructor,
           foundValues);
@@ -789,8 +789,8 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   }
 
   private boolean applyArgNameBasedConstructorAutoMapping(ResultSetWrapper rsw, ResultMap resultMap,
-      String columnPrefix, Class<?> resultType, List<Class<?>> constructorArgTypes, List<Object> constructorArgs,
-      Constructor<?> constructor, boolean foundValues) throws SQLException {
+      String columnPrefix, List<Class<?>> constructorArgTypes, List<Object> constructorArgs, Constructor<?> constructor,
+      boolean foundValues) throws SQLException {
     List<String> missingArgs = null;
     Parameter[] params = constructor.getParameters();
     for (Parameter param : params) {

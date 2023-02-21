@@ -248,7 +248,7 @@ public class ScriptRunner {
       }
       try {
         boolean hasResults = statement.execute(sql);
-        while (!(!hasResults && statement.getUpdateCount() == -1)) {
+        while ((hasResults || (statement.getUpdateCount() != -1))) {
           checkWarnings(statement);
           printResults(statement, hasResults);
           hasResults = statement.getMoreResults();

@@ -1039,7 +1039,6 @@ public class Configuration {
     }
 
     public StrictMap(String name) {
-      super();
       this.name = name;
     }
 

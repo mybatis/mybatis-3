@@ -93,7 +93,7 @@ public class ResultMap {
       for (ResultMapping resultMapping : resultMap.resultMappings) {
         resultMap.hasNestedQueries = resultMap.hasNestedQueries || resultMapping.getNestedQueryId() != null;
         resultMap.hasNestedResultMaps = resultMap.hasNestedResultMaps
-            || (resultMapping.getNestedResultMapId() != null && resultMapping.getResultSet() == null);
+            || resultMapping.getNestedResultMapId() != null && resultMapping.getResultSet() == null;
         final String column = resultMapping.getColumn();
         if (column != null) {
           resultMap.mappedColumns.add(column.toUpperCase(Locale.ENGLISH));

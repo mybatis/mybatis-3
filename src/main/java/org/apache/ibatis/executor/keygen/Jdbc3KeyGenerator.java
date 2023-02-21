@@ -229,7 +229,7 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
     }
   }
 
-  private class KeyAssigner {
+  private static class KeyAssigner {
     private final Configuration configuration;
     private final ResultSetMetaData rsmd;
     private final TypeHandlerRegistry typeHandlerRegistry;
@@ -240,7 +240,6 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
 
     protected KeyAssigner(Configuration configuration, ResultSetMetaData rsmd, int columnPosition, String paramName,
         String propertyName) {
-      super();
       this.configuration = configuration;
       this.rsmd = rsmd;
       this.typeHandlerRegistry = configuration.getTypeHandlerRegistry();

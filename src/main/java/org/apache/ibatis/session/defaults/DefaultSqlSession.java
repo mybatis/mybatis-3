@@ -313,7 +313,7 @@ public class DefaultSqlSession implements SqlSession {
   }
 
   private boolean isCommitOrRollbackRequired(boolean force) {
-    return (!autoCommit && dirty) || force;
+    return !autoCommit && dirty || force;
   }
 
   private Object wrapCollection(final Object object) {

@@ -104,7 +104,7 @@ public class XMLScriptBuilder extends BaseBuilder {
     void handleNode(XNode nodeToHandle, List<SqlNode> targetContents);
   }
 
-  private class BindHandler implements NodeHandler {
+  private static class BindHandler implements NodeHandler {
     public BindHandler() {
       // Prevent Synthetic Access
     }
