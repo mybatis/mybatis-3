@@ -15,6 +15,8 @@
  */
 package org.apache.ibatis.submitted.constructor_columnprefix;
 
+import java.util.Objects;
+
 public class EntityKey {
   private Integer id;
 
@@ -28,10 +30,7 @@ public class EntityKey {
 
   @Override
   public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + ((id == null) ? 0 : id.hashCode());
-    return result;
+    return Objects.hash(id);
   }
 
   @Override
@@ -43,11 +42,7 @@ public class EntityKey {
       return false;
     }
     EntityKey other = (EntityKey) obj;
-    if (id == null) {
-      if (other.id != null) {
-        return false;
-      }
-    } else if (!id.equals(other.id)) {
+    if (!Objects.equals(id, other.id)) {
       return false;
     }
     return true;
