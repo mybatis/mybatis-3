@@ -229,7 +229,7 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
     }
   }
 
-  private class KeyAssigner {
+  private static class KeyAssigner {
     private final Configuration configuration;
     private final ResultSetMetaData rsmd;
     private final TypeHandlerRegistry typeHandlerRegistry;

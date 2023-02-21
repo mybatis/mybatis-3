@@ -657,7 +657,7 @@ public class MapperAnnotationBuilder {
     return null;
   }
 
-  private class AnnotationWrapper {
+  private static class AnnotationWrapper {
     private final Annotation annotation;
     private final String databaseId;
     private final SqlCommandType sqlCommandType;
