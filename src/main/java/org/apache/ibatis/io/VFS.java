@@ -50,8 +50,7 @@ public abstract class VFS {
     @SuppressWarnings("unchecked")
     static VFS createVFS() {
       // Try the user implementations first, then the built-ins
-      List<Class<? extends VFS>> impls = new ArrayList<>();
-      impls.addAll(USER_IMPLEMENTATIONS);
+      List<Class<? extends VFS>> impls = new ArrayList<>(USER_IMPLEMENTATIONS);
       impls.addAll(Arrays.asList((Class<? extends VFS>[]) IMPLEMENTATIONS));
 
       // Try each implementation class until a valid one is found
