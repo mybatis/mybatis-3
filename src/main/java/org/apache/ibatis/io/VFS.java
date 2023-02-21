@@ -180,9 +180,8 @@ public abstract class VFS {
     } catch (InvocationTargetException e) {
       if (e.getTargetException() instanceof IOException) {
         throw (IOException) e.getTargetException();
-      } else {
-        throw new RuntimeException(e);
       }
+      throw new RuntimeException(e);
     }
   }
 

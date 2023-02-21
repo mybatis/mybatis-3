@@ -64,9 +64,8 @@ public class DefaultObjectFactory implements ObjectFactory, Serializable {
           if (Reflector.canControlMemberAccessible()) {
             constructor.setAccessible(true);
             return constructor.newInstance();
-          } else {
-            throw e;
           }
+          throw e;
         }
       }
       constructor = type.getDeclaredConstructor(constructorArgTypes.toArray(new Class[0]));
@@ -76,9 +75,8 @@ public class DefaultObjectFactory implements ObjectFactory, Serializable {
         if (Reflector.canControlMemberAccessible()) {
           constructor.setAccessible(true);
           return constructor.newInstance(constructorArgs.toArray(new Object[0]));
-        } else {
-          throw e;
         }
+        throw e;
       }
     } catch (Exception e) {
       String argTypes = Optional.ofNullable(constructorArgTypes).orElseGet(Collections::emptyList).stream()

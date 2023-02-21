@@ -258,10 +258,9 @@ public class ScriptRunner {
       } catch (SQLException e) {
         if (stopOnError) {
           throw e;
-        } else {
-          String message = "Error executing: " + command + ".  Cause: " + e;
-          printlnError(message);
         }
+        String message = "Error executing: " + command + ".  Cause: " + e;
+        printlnError(message);
       }
     }
   }

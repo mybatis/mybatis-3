@@ -75,9 +75,8 @@ public class ClobReaderTypeHandler extends BaseTypeHandler<Reader> {
   private Reader toReader(Clob clob) throws SQLException {
     if (clob == null) {
       return null;
-    } else {
-      return clob.getCharacterStream();
     }
+    return clob.getCharacterStream();
   }
 
 }

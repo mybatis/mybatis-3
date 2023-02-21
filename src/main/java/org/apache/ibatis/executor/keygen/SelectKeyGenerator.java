@@ -67,7 +67,8 @@ public class SelectKeyGenerator implements KeyGenerator {
         List<Object> values = keyExecutor.query(keyStatement, parameter, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
         if (values.size() == 0) {
           throw new ExecutorException("SelectKey returned no data.");
-        } else if (values.size() > 1) {
+        }
+        if (values.size() > 1) {
           throw new ExecutorException("SelectKey returned more than one value.");
         } else {
           MetaObject metaResult = configuration.newMetaObject(values.get(0));
@@ -111,11 +112,10 @@ public class SelectKeyGenerator implements KeyGenerator {
   }
 
   private void setValue(MetaObject metaParam, String property, Object value) {
-    if (metaParam.hasSetter(property)) {
-      metaParam.setValue(property, value);
-    } else {
+    if (!metaParam.hasSetter(property)) {
       throw new ExecutorException("No setter found for the keyProperty '" + property + "' in "
           + metaParam.getOriginalObject().getClass().getName() + ".");
     }
+    metaParam.setValue(property, value);
   }
 }

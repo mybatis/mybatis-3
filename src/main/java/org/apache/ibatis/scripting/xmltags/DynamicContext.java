@@ -97,10 +97,9 @@ public class DynamicContext {
 
       if (fallbackParameterObject && !parameterMetaObject.hasGetter(strKey)) {
         return parameterMetaObject.getOriginalObject();
-      } else {
-        // issue #61 do not modify the context when reading
-        return parameterMetaObject.getValue(strKey);
       }
+      // issue #61 do not modify the context when reading
+      return parameterMetaObject.getValue(strKey);
     }
   }
 

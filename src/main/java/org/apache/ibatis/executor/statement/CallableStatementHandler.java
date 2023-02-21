@@ -86,9 +86,8 @@ public class CallableStatementHandler extends BaseStatementHandler {
     String sql = boundSql.getSql();
     if (mappedStatement.getResultSetType() == ResultSetType.DEFAULT) {
       return connection.prepareCall(sql);
-    } else {
-      return connection.prepareCall(sql, mappedStatement.getResultSetType().getValue(), ResultSet.CONCUR_READ_ONLY);
     }
+    return connection.prepareCall(sql, mappedStatement.getResultSetType().getValue(), ResultSet.CONCUR_READ_ONLY);
   }
 
   @Override
@@ -105,18 +104,16 @@ public class CallableStatementHandler extends BaseStatementHandler {
         if (null == parameterMapping.getJdbcType()) {
           throw new ExecutorException(
               "The JDBC Type must be specified for output parameter.  Parameter: " + parameterMapping.getProperty());
+        }
+        if (parameterMapping.getNumericScale() != null && (parameterMapping.getJdbcType() == JdbcType.NUMERIC
+            || parameterMapping.getJdbcType() == JdbcType.DECIMAL)) {
+          cs.registerOutParameter(i + 1, parameterMapping.getJdbcType().TYPE_CODE, parameterMapping.getNumericScale());
         } else {
-          if (parameterMapping.getNumericScale() != null && (parameterMapping.getJdbcType() == JdbcType.NUMERIC
-              || parameterMapping.getJdbcType() == JdbcType.DECIMAL)) {
-            cs.registerOutParameter(i + 1, parameterMapping.getJdbcType().TYPE_CODE,
-                parameterMapping.getNumericScale());
+          if (parameterMapping.getJdbcTypeName() == null) {
+            cs.registerOutParameter(i + 1, parameterMapping.getJdbcType().TYPE_CODE);
           } else {
-            if (parameterMapping.getJdbcTypeName() == null) {
-              cs.registerOutParameter(i + 1, parameterMapping.getJdbcType().TYPE_CODE);
-            } else {
-              cs.registerOutParameter(i + 1, parameterMapping.getJdbcType().TYPE_CODE,
-                  parameterMapping.getJdbcTypeName());
-            }
+            cs.registerOutParameter(i + 1, parameterMapping.getJdbcType().TYPE_CODE,
+                parameterMapping.getJdbcTypeName());
           }
         }
       }

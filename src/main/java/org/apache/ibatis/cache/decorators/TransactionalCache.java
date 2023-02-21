@@ -71,9 +71,8 @@ public class TransactionalCache implements Cache {
     // issue #146
     if (clearOnCommit) {
       return null;
-    } else {
-      return object;
     }
+    return object;
   }
 
   @Override

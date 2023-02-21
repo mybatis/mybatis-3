@@ -150,9 +150,8 @@ public class MapperMethod {
     if (!method.getReturnType().isAssignableFrom(result.getClass())) {
       if (method.getReturnType().isArray()) {
         return convertToArray(result);
-      } else {
-        return convertToDeclaredCollection(sqlSession.getConfiguration(), result);
       }
+      return convertToDeclaredCollection(sqlSession.getConfiguration(), result);
     }
     return result;
   }
@@ -180,14 +179,13 @@ public class MapperMethod {
   private <E> Object convertToArray(List<E> list) {
     Class<?> arrayComponentType = method.getReturnType().getComponentType();
     Object array = Array.newInstance(arrayComponentType, list.size());
-    if (arrayComponentType.isPrimitive()) {
-      for (int i = 0; i < list.size(); i++) {
-        Array.set(array, i, list.get(i));
-      }
-      return array;
-    } else {
+    if (!arrayComponentType.isPrimitive()) {
       return list.toArray((E[]) array);
     }
+    for (int i = 0; i < list.size(); i++) {
+      Array.set(array, i, list.get(i));
+    }
+    return array;
   }
 
   private <K, V> Map<K, V> executeForMap(SqlSession sqlSession, Object[] args) {
@@ -226,13 +224,12 @@ public class MapperMethod {
       final Class<?> declaringClass = method.getDeclaringClass();
       MappedStatement ms = resolveMappedStatement(mapperInterface, methodName, declaringClass, configuration);
       if (ms == null) {
-        if (method.getAnnotation(Flush.class) != null) {
-          name = null;
-          type = SqlCommandType.FLUSH;
-        } else {
+        if (method.getAnnotation(Flush.class) == null) {
           throw new BindingException(
               "Invalid bound statement (not found): " + mapperInterface.getName() + "." + methodName);
         }
+        name = null;
+        type = SqlCommandType.FLUSH;
       } else {
         name = ms.getId();
         type = ms.getSqlCommandType();
@@ -255,7 +252,8 @@ public class MapperMethod {
       String statementId = mapperInterface.getName() + "." + methodName;
       if (configuration.hasStatement(statementId)) {
         return configuration.getMappedStatement(statementId);
-      } else if (mapperInterface.equals(declaringClass)) {
+      }
+      if (mapperInterface.equals(declaringClass)) {
         return null;
       }
       for (Class<?> superInterface : mapperInterface.getInterfaces()) {
@@ -359,12 +357,11 @@ public class MapperMethod {
       final Class<?>[] argTypes = method.getParameterTypes();
       for (int i = 0; i < argTypes.length; i++) {
         if (paramType.isAssignableFrom(argTypes[i])) {
-          if (index == null) {
-            index = i;
-          } else {
+          if (index != null) {
             throw new BindingException(
                 method.getName() + " cannot have multiple " + paramType.getSimpleName() + " parameters");
           }
+          index = i;
         }
       }
       return index;

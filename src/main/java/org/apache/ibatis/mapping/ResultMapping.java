@@ -277,7 +277,8 @@ public class ResultMapping {
   public int hashCode() {
     if (property != null) {
       return property.hashCode();
-    } else if (column != null) {
+    }
+    if (column != null) {
       return column.hashCode();
     } else {
       return 0;

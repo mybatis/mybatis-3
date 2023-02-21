@@ -135,11 +135,10 @@ public class XMLIncludeTransformer {
     }
     if (declaredProperties == null) {
       return inheritedVariablesContext;
-    } else {
-      Properties newProperties = new Properties();
-      newProperties.putAll(inheritedVariablesContext);
-      newProperties.putAll(declaredProperties);
-      return newProperties;
     }
+    Properties newProperties = new Properties();
+    newProperties.putAll(inheritedVariablesContext);
+    newProperties.putAll(declaredProperties);
+    return newProperties;
   }
 }

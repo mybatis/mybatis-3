@@ -340,9 +340,8 @@ public final class MappedStatement {
   private static String[] delimitedStringToArray(String in) {
     if (in == null || in.trim().length() == 0) {
       return null;
-    } else {
-      return in.split(",");
     }
+    return in.split(",");
   }
 
 }

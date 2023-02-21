@@ -62,9 +62,8 @@ public class MetaObject {
       ObjectWrapperFactory objectWrapperFactory, ReflectorFactory reflectorFactory) {
     if (object == null) {
       return SystemMetaObject.NULL_META_OBJECT;
-    } else {
-      return new MetaObject(object, objectFactory, objectWrapperFactory, reflectorFactory);
     }
+    return new MetaObject(object, objectFactory, objectWrapperFactory, reflectorFactory);
   }
 
   public ObjectFactory getObjectFactory() {
@@ -113,15 +112,14 @@ public class MetaObject {
 
   public Object getValue(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
-    if (prop.hasNext()) {
-      MetaObject metaValue = metaObjectForProperty(prop.getIndexedName());
-      if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
-        return null;
-      } else {
-        return metaValue.getValue(prop.getChildren());
-      }
-    } else {
+    if (!prop.hasNext()) {
       return objectWrapper.get(prop);
+    }
+    MetaObject metaValue = metaObjectForProperty(prop.getIndexedName());
+    if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
+      return null;
+    } else {
+      return metaValue.getValue(prop.getChildren());
     }
   }
 
@@ -133,9 +131,8 @@ public class MetaObject {
         if (value == null) {
           // don't instantiate child path if value is null
           return;
-        } else {
-          metaValue = objectWrapper.instantiatePropertyValue(name, prop, objectFactory);
         }
+        metaValue = objectWrapper.instantiatePropertyValue(name, prop, objectFactory);
       }
       metaValue.setValue(prop.getChildren(), value);
     } else {
