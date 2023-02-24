@@ -67,9 +67,11 @@ class PooledDataSourceTest {
   @Test
   void PoppedConnectionShouldBeNotEqualToClosedConnection() throws Exception {
     Connection connectionToClose = dataSource.getConnection();
+    CountDownLatch latch = new CountDownLatch(1);
 
     new Thread(() -> {
       try {
+        latch.await();
         assertNotEquals(connectionToClose, dataSource.getConnection());
       } catch (Exception e) {
         throw new RuntimeException(e);
@@ -77,6 +79,7 @@ class PooledDataSourceTest {
     }).start();
 
     connectionToClose.close();
+    latch.countDown();
   }
 
   @Test
