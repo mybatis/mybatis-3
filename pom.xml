@@ -132,15 +132,24 @@
 
   <properties>
     <clirr.comparisonVersion>3.4.6</clirr.comparisonVersion>
+
     <!-- Add slow test groups here and annotate classes similar to @Tag('groupName'). -->
     <!-- Excluded groups are ran on github ci, to force here, pass -d"excludedGroups=" -->
     <excludedGroups>TestcontainersTests</excludedGroups>
     <maven.compiler.testCompilerArgument>-parameters</maven.compiler.testCompilerArgument>
+
+    <!-- Automatic Module Name -->
     <module.name>org.mybatis</module.name>
+
+    <!-- OSGI Data -->
     <osgi.export>org.apache.ibatis.*;version=${project.version};-noimport:=true</osgi.export>
     <osgi.import>*;resolution:=optional</osgi.import>
     <osgi.dynamicImport>*</osgi.dynamicImport>
+
+    <!-- Spotbugs Setup -->
     <spotbugs.onlyAnalyze>org.apache.ibatis.*</spotbugs.onlyAnalyze>
+
+    <!-- Surefire Setup -->
     <argLine>-Djdk.attach.allowAttachSelf -Xmx2048m</argLine>
 
     <!-- Reproducible Builds -->
