@@ -27,7 +27,7 @@
   </parent>
 
   <artifactId>mybatis</artifactId>
-  <version>3.5.12</version>
+  <version>3.5.13-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>mybatis</name>
@@ -152,7 +152,7 @@
     <argLine>-Djdk.attach.allowAttachSelf -Xmx2048m</argLine>
 
     <!-- Reproducible Builds -->
-    <project.build.outputTimestamp>1677641606</project.build.outputTimestamp>
+    <project.build.outputTimestamp>1677642303</project.build.outputTimestamp>
   </properties>
 
   <dependencies>
