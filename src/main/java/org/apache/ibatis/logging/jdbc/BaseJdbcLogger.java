@@ -102,7 +102,7 @@ public abstract class BaseJdbcLogger {
       try {
         return ArrayUtil.toString(((Array) value).getArray());
       } catch (SQLException e) {
-        return value.toString();
+        // Intentialy fall through to return value.toString()
       }
     }
     return value.toString();

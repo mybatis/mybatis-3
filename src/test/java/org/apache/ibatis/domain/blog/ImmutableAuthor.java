@@ -18,6 +18,7 @@ package org.apache.ibatis.domain.blog;
 import java.io.Serializable;
 
 public class ImmutableAuthor implements Serializable {
+  private static final long serialVersionUID = 1L;
   protected final int id;
   protected final String username;
   protected final String password;
@@ -60,25 +61,27 @@ public class ImmutableAuthor implements Serializable {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o)
+    if (this == o) {
       return true;
-    if (!(o instanceof Author))
+    }
+    if (!(o instanceof Author)) {
       return false;
+    }
 
     Author author = (Author) o;
 
-    if (id != author.id)
+    if ((id != author.id) || (bio != null ? !bio.equals(author.bio) : author.bio != null)
+        || (email != null ? !email.equals(author.email) : author.email != null)
+        || (password != null ? !password.equals(author.password) : author.password != null)) {
       return false;
-    if (bio != null ? !bio.equals(author.bio) : author.bio != null)
+    }
+    if (username != null ? !username.equals(author.username) : author.username != null) {
       return false;
-    if (email != null ? !email.equals(author.email) : author.email != null)
+    }
+    if (favouriteSection != null ? !favouriteSection.equals(author.favouriteSection)
+        : author.favouriteSection != null) {
       return false;
-    if (password != null ? !password.equals(author.password) : author.password != null)
-      return false;
-    if (username != null ? !username.equals(author.username) : author.username != null)
-      return false;
-    if (favouriteSection != null ? !favouriteSection.equals(author.favouriteSection) : author.favouriteSection != null)
-      return false;
+    }
 
     return true;
   }
@@ -91,8 +94,7 @@ public class ImmutableAuthor implements Serializable {
     result = 31 * result + (password != null ? password.hashCode() : 0);
     result = 31 * result + (email != null ? email.hashCode() : 0);
     result = 31 * result + (bio != null ? bio.hashCode() : 0);
-    result = 31 * result + (favouriteSection != null ? favouriteSection.hashCode() : 0);
-    return result;
+    return 31 * result + (favouriteSection != null ? favouriteSection.hashCode() : 0);
   }
 
   @Override

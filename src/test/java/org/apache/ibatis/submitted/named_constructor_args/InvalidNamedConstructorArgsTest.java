@@ -15,7 +15,8 @@
  */
 package org.apache.ibatis.submitted.named_constructor_args;
 
-import static com.googlecode.catchexception.apis.BDDCatchException.*;
+import static com.googlecode.catchexception.apis.BDDCatchException.caughtException;
+import static com.googlecode.catchexception.apis.BDDCatchException.when;
 import static org.assertj.core.api.BDDAssertions.then;
 
 import java.io.Reader;

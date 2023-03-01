@@ -122,7 +122,8 @@ public class ParamNameResolver {
     final int paramCount = names.size();
     if (args == null || paramCount == 0) {
       return null;
-    } else if (!hasParamAnnotation && paramCount == 1) {
+    }
+    if (!hasParamAnnotation && paramCount == 1) {
       Object value = args[names.firstKey()];
       return wrapToMapIfCollection(value, useActualParamName ? names.get(names.firstKey()) : null);
     } else {
@@ -163,7 +164,8 @@ public class ParamNameResolver {
       }
       Optional.ofNullable(actualParamName).ifPresent(name -> map.put(name, object));
       return map;
-    } else if (object != null && object.getClass().isArray()) {
+    }
+    if (object != null && object.getClass().isArray()) {
       ParamMap<Object> map = new ParamMap<>();
       map.put("array", object);
       Optional.ofNullable(actualParamName).ifPresent(name -> map.put(name, object));

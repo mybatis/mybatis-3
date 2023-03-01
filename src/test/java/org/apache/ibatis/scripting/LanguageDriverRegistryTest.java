@@ -15,7 +15,8 @@
  */
 package org.apache.ibatis.scripting;
 
-import static com.googlecode.catchexception.apis.BDDCatchException.*;
+import static com.googlecode.catchexception.apis.BDDCatchException.caughtException;
+import static com.googlecode.catchexception.apis.BDDCatchException.when;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.BDDAssertions.then;
 
@@ -33,7 +34,7 @@ import org.junit.jupiter.api.Test;
  */
 class LanguageDriverRegistryTest {
 
-  private LanguageDriverRegistry registry = new LanguageDriverRegistry();
+  private final LanguageDriverRegistry registry = new LanguageDriverRegistry();
 
   @Test
   void registerByType() {

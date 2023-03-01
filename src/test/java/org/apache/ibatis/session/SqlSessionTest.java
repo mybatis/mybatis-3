@@ -672,7 +672,7 @@ class SqlSessionTest extends BaseDataTest {
   }
 
   private static class TestResultHandler implements ResultHandler {
-    int count = 0;
+    int count;
 
     @Override
     public void handleResult(ResultContext context) {
@@ -690,13 +690,14 @@ class SqlSessionTest extends BaseDataTest {
   }
 
   private static class TestResultStopHandler implements ResultHandler {
-    int count = 0;
+    int count;
 
     @Override
     public void handleResult(ResultContext context) {
       count++;
-      if (count == 2)
+      if (count == 2) {
         context.stop();
+      }
     }
   }
 
@@ -734,6 +735,7 @@ class SqlSessionTest extends BaseDataTest {
     try (SqlSession session = sqlMapper.openSession()) {
       List<Post> posts = session.selectList("org.apache.ibatis.domain.blog.mappers.PostMapper.findPost",
           new HashMap<String, Integer>() {
+            private static final long serialVersionUID = 1L;
             {
               put("id", 1);
             }
@@ -747,8 +749,10 @@ class SqlSessionTest extends BaseDataTest {
     try (SqlSession session = sqlMapper.openSession()) {
       List<Post> posts = session.selectList("org.apache.ibatis.domain.blog.mappers.PostMapper.findPost",
           new HashMap<String, List<Integer>>() {
+            private static final long serialVersionUID = 1L;
             {
               put("ids", new ArrayList<Integer>() {
+                private static final long serialVersionUID = 1L;
                 {
                   add(1);
                   add(2);
@@ -766,6 +770,7 @@ class SqlSessionTest extends BaseDataTest {
     try (SqlSession session = sqlMapper.openSession()) {
       List<Post> posts = session.selectList("org.apache.ibatis.domain.blog.mappers.PostMapper.findPost",
           new HashMap<String, Integer>() {
+            private static final long serialVersionUID = 1L;
             {
               put("blog_id", 1);
             }
@@ -779,6 +784,7 @@ class SqlSessionTest extends BaseDataTest {
     try (SqlSession session = sqlMapper.openSession()) {
       List<Post> posts = session.selectList("org.apache.ibatis.domain.blog.mappers.PostMapper.findPost",
           new HashMap<String, Integer>() {
+            private static final long serialVersionUID = 1L;
             {
               put("author_id", 101);
             }
@@ -792,8 +798,10 @@ class SqlSessionTest extends BaseDataTest {
     try (SqlSession session = sqlMapper.openSession()) {
       List<Post> posts = session.selectList("org.apache.ibatis.domain.blog.mappers.PostMapper.findPost",
           new HashMap<String, Object>() {
+            private static final long serialVersionUID = 1L;
             {
               put("ids", new ArrayList<Integer>() {
+                private static final long serialVersionUID = 1L;
                 {
                   add(1);
                   add(2);
@@ -812,6 +820,7 @@ class SqlSessionTest extends BaseDataTest {
     try (SqlSession session = sqlMapper.openSession()) {
       List<Post> posts = session.selectList("org.apache.ibatis.domain.blog.mappers.PostMapper.selectPostIn",
           new ArrayList<Integer>() {
+            private static final long serialVersionUID = 1L;
             {
               add(1);
               add(3);
@@ -827,6 +836,7 @@ class SqlSessionTest extends BaseDataTest {
     try (SqlSession session = sqlMapper.openSession()) {
       List<Post> posts = session.selectList("org.apache.ibatis.domain.blog.mappers.PostMapper.selectOddPostsIn",
           new ArrayList<Integer>() {
+            private static final long serialVersionUID = 1L;
             {
               add(0);
               add(1);
@@ -847,8 +857,10 @@ class SqlSessionTest extends BaseDataTest {
     try (SqlSession session = sqlMapper.openSession()) {
       List<Post> posts = session.selectList("org.apache.ibatis.domain.blog.mappers.PostMapper.selectOddPostsInKeysList",
           new HashMap<String, List<Integer>>() {
+            private static final long serialVersionUID = 1L;
             {
               put("keys", new ArrayList<Integer>() {
+                private static final long serialVersionUID = 1L;
                 {
                   add(0);
                   add(1);

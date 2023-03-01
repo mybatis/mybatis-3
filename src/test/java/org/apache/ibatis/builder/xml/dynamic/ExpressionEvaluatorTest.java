@@ -15,7 +15,9 @@
  */
 package org.apache.ibatis.builder.xml.dynamic;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashMap;
 
@@ -26,7 +28,7 @@ import org.junit.jupiter.api.Test;
 
 class ExpressionEvaluatorTest {
 
-  private ExpressionEvaluator evaluator = new ExpressionEvaluator();
+  private final ExpressionEvaluator evaluator = new ExpressionEvaluator();
 
   @Test
   void shouldCompareStringsReturnTrue() {
@@ -81,7 +83,8 @@ class ExpressionEvaluatorTest {
 
   @Test
   void shouldIterateOverIterable() {
-    final HashMap<String, String[]> parameterObject = new HashMap<String, String[]>() {
+    final HashMap<String, String[]> parameterObject = new HashMap<>() {
+      private static final long serialVersionUID = 1L;
       {
         put("array", new String[] { "1", "2", "3" });
       }
@@ -89,7 +92,8 @@ class ExpressionEvaluatorTest {
     final Iterable<?> iterable = evaluator.evaluateIterable("array", parameterObject);
     int i = 0;
     for (Object o : iterable) {
-      assertEquals(String.valueOf(++i), o);
+      i++;
+      assertEquals(String.valueOf(i), o);
     }
   }
 

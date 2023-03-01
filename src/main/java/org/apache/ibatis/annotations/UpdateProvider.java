@@ -73,13 +73,13 @@ public @interface UpdateProvider {
    */
   Class<?> type() default void.class;
 
+  // @formatter:off
   /**
    * Specify a method for providing an SQL.
    * <p>
    * Since 3.5.1, this attribute can omit. If this attribute omit, the MyBatis will call a method that decide by
    * following rules.
    *
-   * <pre>
    * <ul>
    *   <li>
    *     If class that specified the {@link #type()} attribute implements the
@@ -92,10 +92,10 @@ public @interface UpdateProvider {
    *     the MyBatis will search and use a fallback method that named <code>provideSql</code> from specified type
    *   </li>
    * </ul>
-   * </pre>
    *
    * @return a method name of method for providing an SQL
    */
+  // @formatter:on
   String method() default "";
 
   /**

@@ -63,7 +63,7 @@ public final class MappedStatement {
   }
 
   public static class Builder {
-    private MappedStatement mappedStatement = new MappedStatement();
+    private final MappedStatement mappedStatement = new MappedStatement();
 
     public Builder(Configuration configuration, String id, SqlSource sqlSource, SqlCommandType sqlCommandType) {
       mappedStatement.configuration = configuration;
@@ -340,9 +340,8 @@ public final class MappedStatement {
   private static String[] delimitedStringToArray(String in) {
     if (in == null || in.trim().length() == 0) {
       return null;
-    } else {
-      return in.split(",");
     }
+    return in.split(",");
   }
 
 }

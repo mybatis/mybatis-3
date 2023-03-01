@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,8 @@
  */
 package org.apache.ibatis.scripting.xmltags;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,9 +42,7 @@ class OgnlCacheTest {
     context.put("data", new DataClass());
     ExecutorService executor = Executors.newCachedThreadPool();
     IntStream.range(0, run).forEach(i -> {
-      futures.add(executor.submit(() -> {
-        return OgnlCache.getValue("data.id", context);
-      }));
+      futures.add(executor.submit(() -> OgnlCache.getValue("data.id", context)));
     });
     for (int i = 0; i < run; i++) {
       assertNotNull(futures.get(i).get());

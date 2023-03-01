@@ -55,9 +55,8 @@ public class ExpressionEvaluator {
     if (value == null) {
       if (nullable) {
         return null;
-      } else {
-        throw new BuilderException("The expression '" + expression + "' evaluated to a null value.");
       }
+      throw new BuilderException("The expression '" + expression + "' evaluated to a null value.");
     }
     if (value instanceof Iterable) {
       return (Iterable<?>) value;

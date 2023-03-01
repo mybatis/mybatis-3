@@ -15,7 +15,8 @@
  */
 package org.apache.ibatis.submitted.force_flush_on_select;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 
 import java.io.Reader;
 import java.sql.Connection;

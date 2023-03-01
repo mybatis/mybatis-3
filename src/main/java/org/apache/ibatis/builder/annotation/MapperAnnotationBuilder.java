@@ -215,7 +215,7 @@ public class MapperAnnotationBuilder {
       if (refType != void.class && !refName.isEmpty()) {
         throw new BuilderException("Cannot use both value() and name() attribute in the @CacheNamespaceRef");
       }
-      String namespace = (refType != void.class) ? refType.getName() : refName;
+      String namespace = refType != void.class ? refType.getName() : refName;
       try {
         assistant.useCacheRef(namespace);
       } catch (IncompleteElementException e) {
@@ -462,8 +462,8 @@ public class MapperAnnotationBuilder {
         flags.add(ResultFlag.ID);
       }
       @SuppressWarnings("unchecked")
-      Class<? extends TypeHandler<?>> typeHandler = (Class<? extends TypeHandler<?>>) ((result
-          .typeHandler() == UnknownTypeHandler.class) ? null : result.typeHandler());
+      Class<? extends TypeHandler<?>> typeHandler = (Class<? extends TypeHandler<?>>) (result
+          .typeHandler() == UnknownTypeHandler.class ? null : result.typeHandler());
       boolean hasNestedResultMap = hasNestedResultMap(result);
       ResultMapping resultMapping = assistant.buildResultMapping(resultType, nullOrEmpty(result.property()),
           nullOrEmpty(result.column()), result.javaType() == void.class ? null : result.javaType(),
@@ -590,7 +590,8 @@ public class MapperAnnotationBuilder {
       Method method) {
     if (annotation instanceof Select) {
       return buildSqlSourceFromStrings(((Select) annotation).value(), parameterType, languageDriver);
-    } else if (annotation instanceof Update) {
+    }
+    if (annotation instanceof Update) {
       return buildSqlSourceFromStrings(((Update) annotation).value(), parameterType, languageDriver);
     } else if (annotation instanceof Insert) {
       return buildSqlSourceFromStrings(((Insert) annotation).value(), parameterType, languageDriver);
@@ -656,14 +657,13 @@ public class MapperAnnotationBuilder {
     return null;
   }
 
-  private class AnnotationWrapper {
+  private static class AnnotationWrapper {
     private final Annotation annotation;
     private final String databaseId;
     private final SqlCommandType sqlCommandType;
     private boolean dirtySelect;
 
     AnnotationWrapper(Annotation annotation) {
-      super();
       this.annotation = annotation;
       if (annotation instanceof Select) {
         databaseId = ((Select) annotation).databaseId();

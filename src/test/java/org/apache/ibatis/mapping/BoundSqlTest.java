@@ -15,7 +15,8 @@
  */
 package org.apache.ibatis.mapping;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -40,7 +41,7 @@ class BoundSqlTest {
     bean.id = 1;
     boundSql.setAdditionalParameter("person", bean);
 
-    String[] array = new String[] { "User1", "User2" };
+    String[] array = { "User1", "User2" };
     boundSql.setAdditionalParameter("array", array);
 
     assertFalse(boundSql.hasAdditionalParameter("pet"));

@@ -42,7 +42,8 @@ public class ArrayUtil {
     final Class<?> componentType = clazz.getComponentType();
     if (long.class.equals(componentType)) {
       return Arrays.hashCode((long[]) obj);
-    } else if (int.class.equals(componentType)) {
+    }
+    if (int.class.equals(componentType)) {
       return Arrays.hashCode((int[]) obj);
     } else if (short.class.equals(componentType)) {
       return Arrays.hashCode((short[]) obj);
@@ -81,7 +82,8 @@ public class ArrayUtil {
   public static boolean equals(Object thisObj, Object thatObj) {
     if (thisObj == null) {
       return thatObj == null;
-    } else if (thatObj == null) {
+    }
+    if (thatObj == null) {
       return false;
     }
     final Class<?> clazz = thisObj.getClass();
@@ -94,7 +96,8 @@ public class ArrayUtil {
     final Class<?> componentType = clazz.getComponentType();
     if (long.class.equals(componentType)) {
       return Arrays.equals((long[]) thisObj, (long[]) thatObj);
-    } else if (int.class.equals(componentType)) {
+    }
+    if (int.class.equals(componentType)) {
       return Arrays.equals((int[]) thisObj, (int[]) thatObj);
     } else if (short.class.equals(componentType)) {
       return Arrays.equals((short[]) thisObj, (short[]) thatObj);
@@ -133,7 +136,8 @@ public class ArrayUtil {
     final Class<?> componentType = obj.getClass().getComponentType();
     if (long.class.equals(componentType)) {
       return Arrays.toString((long[]) obj);
-    } else if (int.class.equals(componentType)) {
+    }
+    if (int.class.equals(componentType)) {
       return Arrays.toString((int[]) obj);
     } else if (short.class.equals(componentType)) {
       return Arrays.toString((short[]) obj);
@@ -150,6 +154,9 @@ public class ArrayUtil {
     } else {
       return Arrays.toString((Object[]) obj);
     }
+  }
+
+  private ArrayUtil() {
   }
 
 }

@@ -50,7 +50,7 @@ class BlobTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       BlobMapper blobMapper = sqlSession.getMapper(BlobMapper.class);
 
-      byte[] myblob = new byte[] { 1, 2, 3, 4, 5 };
+      byte[] myblob = { 1, 2, 3, 4, 5 };
       BlobRecord blobRecord = new BlobRecord(1, myblob);
       int rows = blobMapper.insert(blobRecord);
       assertEquals(1, rows);
@@ -73,7 +73,7 @@ class BlobTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       BlobMapper blobMapper = sqlSession.getMapper(BlobMapper.class);
 
-      Byte[] myblob = new Byte[] { 1, 2, 3, 4, 5 };
+      Byte[] myblob = { 1, 2, 3, 4, 5 };
       BlobRecord blobRecord = new BlobRecord(1, myblob);
       int rows = blobMapper.insert(blobRecord);
       assertEquals(1, rows);

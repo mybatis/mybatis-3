@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.submitted.nestedresulthandler_association;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.Reader;
 import java.text.SimpleDateFormat;
@@ -74,8 +74,9 @@ class NestedResultHandlerAssociationTest {
       sqlSession.select("collectPageByBirthMonth", targetMonth, context -> {
         Account account = (Account) context.getResultObject();
         accounts.add(account);
-        if (accounts.size() > 1)
+        if (accounts.size() > 1) {
           context.stop();
+        }
       });
     }
     assertEquals(2, accounts.size());

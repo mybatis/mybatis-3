@@ -15,11 +15,15 @@
  */
 package org.apache.ibatis.submitted.custom_collection_handling;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 public class CustomCollection<T> {
 
-  private List<T> data = new ArrayList<>();
+  private final List<T> data = new ArrayList<>();
 
   public <K> K[] toArray(K[] a) {
     return data.toArray(a);
@@ -92,8 +96,9 @@ public class CustomCollection<T> {
 
   @Override
   public boolean equals(Object o) {
-    if (!(o instanceof CustomCollection))
+    if (!(o instanceof CustomCollection)) {
       return false;
+    }
     return data.equals(((CustomCollection) o).data);
   }
 

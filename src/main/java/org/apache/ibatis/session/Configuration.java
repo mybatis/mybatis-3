@@ -138,7 +138,7 @@ public class Configuration {
   protected ObjectFactory objectFactory = new DefaultObjectFactory();
   protected ObjectWrapperFactory objectWrapperFactory = new DefaultObjectWrapperFactory();
 
-  protected boolean lazyLoadingEnabled = false;
+  protected boolean lazyLoadingEnabled;
   protected ProxyFactory proxyFactory = new JavassistProxyFactory(); // #224 Using internal Javassist instead of OGNL
 
   protected String databaseId;
@@ -699,24 +699,21 @@ public class Configuration {
       BoundSql boundSql) {
     ParameterHandler parameterHandler = mappedStatement.getLang().createParameterHandler(mappedStatement,
         parameterObject, boundSql);
-    parameterHandler = (ParameterHandler) interceptorChain.pluginAll(parameterHandler);
-    return parameterHandler;
+    return (ParameterHandler) interceptorChain.pluginAll(parameterHandler);
   }
 
   public ResultSetHandler newResultSetHandler(Executor executor, MappedStatement mappedStatement, RowBounds rowBounds,
       ParameterHandler parameterHandler, ResultHandler resultHandler, BoundSql boundSql) {
     ResultSetHandler resultSetHandler = new DefaultResultSetHandler(executor, mappedStatement, parameterHandler,
         resultHandler, boundSql, rowBounds);
-    resultSetHandler = (ResultSetHandler) interceptorChain.pluginAll(resultSetHandler);
-    return resultSetHandler;
+    return (ResultSetHandler) interceptorChain.pluginAll(resultSetHandler);
   }
 
   public StatementHandler newStatementHandler(Executor executor, MappedStatement mappedStatement,
       Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
     StatementHandler statementHandler = new RoutingStatementHandler(executor, mappedStatement, parameterObject,
         rowBounds, resultHandler, boundSql);
-    statementHandler = (StatementHandler) interceptorChain.pluginAll(statementHandler);
-    return statementHandler;
+    return (StatementHandler) interceptorChain.pluginAll(statementHandler);
   }
 
   public Executor newExecutor(Transaction transaction) {
@@ -736,8 +733,7 @@ public class Configuration {
     if (cacheEnabled) {
       executor = new CachingExecutor(executor);
     }
-    executor = (Executor) interceptorChain.pluginAll(executor);
-    return executor;
+    return (Executor) interceptorChain.pluginAll(executor);
   }
 
   public void addKeyGenerator(String id, KeyGenerator keyGenerator) {
@@ -1038,7 +1034,6 @@ public class Configuration {
     }
 
     public StrictMap(String name) {
-      super();
       this.name = name;
     }
 

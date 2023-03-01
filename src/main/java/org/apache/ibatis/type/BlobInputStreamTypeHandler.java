@@ -75,9 +75,8 @@ public class BlobInputStreamTypeHandler extends BaseTypeHandler<InputStream> {
   private InputStream toInputStream(Blob blob) throws SQLException {
     if (blob == null) {
       return null;
-    } else {
-      return blob.getBinaryStream();
     }
+    return blob.getBinaryStream();
   }
 
 }

@@ -248,7 +248,7 @@ public class ScriptRunner {
       }
       try {
         boolean hasResults = statement.execute(sql);
-        while (!(!hasResults && statement.getUpdateCount() == -1)) {
+        while ((hasResults || (statement.getUpdateCount() != -1))) {
           checkWarnings(statement);
           printResults(statement, hasResults);
           hasResults = statement.getMoreResults();
@@ -258,10 +258,9 @@ public class ScriptRunner {
       } catch (SQLException e) {
         if (stopOnError) {
           throw e;
-        } else {
-          String message = "Error executing: " + command + ".  Cause: " + e;
-          printlnError(message);
         }
+        String message = "Error executing: " + command + ".  Cause: " + e;
+        printlnError(message);
       }
     }
   }

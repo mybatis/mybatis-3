@@ -50,8 +50,7 @@ public abstract class VFS {
     @SuppressWarnings("unchecked")
     static VFS createVFS() {
       // Try the user implementations first, then the built-ins
-      List<Class<? extends VFS>> impls = new ArrayList<>();
-      impls.addAll(USER_IMPLEMENTATIONS);
+      List<Class<? extends VFS>> impls = new ArrayList<>(USER_IMPLEMENTATIONS);
       impls.addAll(Arrays.asList((Class<? extends VFS>[]) IMPLEMENTATIONS));
 
       // Try each implementation class until a valid one is found
@@ -75,6 +74,9 @@ public abstract class VFS {
       }
 
       return vfs;
+    }
+
+    private VFSHolder() {
     }
   }
 
@@ -177,9 +179,8 @@ public abstract class VFS {
     } catch (InvocationTargetException e) {
       if (e.getTargetException() instanceof IOException) {
         throw (IOException) e.getTargetException();
-      } else {
-        throw new RuntimeException(e);
       }
+      throw new RuntimeException(e);
     }
   }
 

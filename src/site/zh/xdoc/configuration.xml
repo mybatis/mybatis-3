@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2022 the original author or authors.
+       Copyright 2009-2023 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -94,7 +94,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
         属性中指定的配置文件次之，最低优先级的则是 properties 元素中指定的属性。</p>
 
         <p>
-		    从 MyBatis 3.4.2 开始，你可以为占位符指定一个默认值。例如：
+        从 MyBatis 3.4.2 开始，你可以为占位符指定一个默认值。例如：
         </p>
         <source><![CDATA[
 <dataSource type="POOLED">
@@ -103,7 +103,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
 </dataSource>]]></source>
 
         <p>
-		  这个特性默认是关闭的。要启用这个特性，需要添加一个特定的属性来开启这个特性。例如：
+      这个特性默认是关闭的。要启用这个特性，需要添加一个特定的属性来开启这个特性。例如：
         </p>
 
         <source><![CDATA[
@@ -255,7 +255,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 autoMappingUnknownColumnBehavior
               </td>
               <td>
-			  指定发现自动映射目标未知列（或未知属性类型）的行为。
+        指定发现自动映射目标未知列（或未知属性类型）的行为。
                 <ul>
                   <li><code>NONE</code>: 不做任何反应</li>
                   <li><code>WARNING</code>:
@@ -467,9 +467,9 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 returnInstanceForEmptyRow
               </td>
               <td>
-				当返回行的所有列都是空时，MyBatis默认返回 <code>null</code>。
-				当开启这个设置时，MyBatis会返回一个空实例。
-				请注意，它也适用于嵌套的结果集（如集合或关联）。（新增于 3.4.2）
+        当返回行的所有列都是空时，MyBatis默认返回 <code>null</code>。
+        当开启这个设置时，MyBatis会返回一个空实例。
+        请注意，它也适用于嵌套的结果集（如集合或关联）。（新增于 3.4.2）
               </td>
               <td>
                 true | false
@@ -540,7 +540,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               </td>
               <td>
                 允许使用方法签名中的名称作为语句参数名称。
-		        为了使用该特性，你的项目必须采用 Java 8 编译，并且加上 <code>-parameters</code> 选项。（新增于 3.4.1）
+            为了使用该特性，你的项目必须采用 Java 8 编译，并且加上 <code>-parameters</code> 选项。（新增于 3.4.1）
               </td>
               <td>
                 true | false
@@ -555,8 +555,8 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               </td>
               <td>
                 指定一个提供 <code>Configuration</code> 实例的类。
-		            这个被返回的 Configuration 实例用来加载被反序列化对象的延迟加载属性值。
-		            这个类必须包含一个签名为<code>static Configuration getConfiguration()</code> 的方法。（新增于 3.2.3）
+                这个被返回的 Configuration 实例用来加载被反序列化对象的延迟加载属性值。
+                这个类必须包含一个签名为<code>static Configuration getConfiguration()</code> 的方法。（新增于 3.2.3）
               </td>
               <td>
                 一个类型别名或完全限定类名。
@@ -1505,14 +1505,14 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
         <p>
           当在 <code>ResultMap</code> 中决定使用哪种类型处理器时，此时 Java
           类型是已知的（从结果类型中获得），但是 JDBC 类型是未知的。
-	      因此 Mybatis 使用 <code>javaType=[Java 类型], jdbcType=null</code>
+        因此 Mybatis 使用 <code>javaType=[Java 类型], jdbcType=null</code>
           的组合来选择一个类型处理器。
-	      这意味着使用 <code>@MappedJdbcTypes</code>
+        这意味着使用 <code>@MappedJdbcTypes</code>
           注解可以<i>限制</i>类型处理器的作用范围，并且可以确保，除非显式地设置，否则类型处理器在
           <code>ResultMap</code> 中将不会生效。
-	      如果希望能在 <code>ResultMap</code> 中隐式地使用类型处理器，那么设置
+        如果希望能在 <code>ResultMap</code> 中隐式地使用类型处理器，那么设置
           <code>@MappedJdbcTypes</code> 注解的 <code>includeNullJdbcType=true</code> 即可。
-	      然而从 Mybatis 3.4.0 开始，如果某个 Java 类型<b>只有一个</b>注册的类型处理器，即使没有设置 <code>includeNullJdbcType=true</code>，那么这个类型处理器也会是 <code>ResultMap</code> 使用 Java
+        然而从 Mybatis 3.4.0 开始，如果某个 Java 类型<b>只有一个</b>注册的类型处理器，即使没有设置 <code>includeNullJdbcType=true</code>，那么这个类型处理器也会是 <code>ResultMap</code> 使用 Java
           类型时的默认处理器。
         </p>
 
@@ -1576,36 +1576,36 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.apache.ibatis.submitted.rounding.Mapper">
-	<resultMap type="org.apache.ibatis.submitted.rounding.User" id="usermap">
-		<id column="id" property="id"/>
-		<result column="name" property="name"/>
-		<result column="funkyNumber" property="funkyNumber"/>
-		<result column="roundingMode" property="roundingMode"/>
-	</resultMap>
+  <resultMap type="org.apache.ibatis.submitted.rounding.User" id="usermap">
+    <id column="id" property="id"/>
+    <result column="name" property="name"/>
+    <result column="funkyNumber" property="funkyNumber"/>
+    <result column="roundingMode" property="roundingMode"/>
+  </resultMap>
 
-	<select id="getUser" resultMap="usermap">
-		select * from users
-	</select>
-	<insert id="insert">
-	    insert into users (id, name, funkyNumber, roundingMode) values (
-	    	#{id}, #{name}, #{funkyNumber}, #{roundingMode}
-	    )
-	</insert>
+  <select id="getUser" resultMap="usermap">
+    select * from users
+  </select>
+  <insert id="insert">
+      insert into users (id, name, funkyNumber, roundingMode) values (
+        #{id}, #{name}, #{funkyNumber}, #{roundingMode}
+      )
+  </insert>
 
-	<resultMap type="org.apache.ibatis.submitted.rounding.User" id="usermap2">
-		<id column="id" property="id"/>
-		<result column="name" property="name"/>
-		<result column="funkyNumber" property="funkyNumber"/>
-		<result column="roundingMode" property="roundingMode" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
-	</resultMap>
-	<select id="getUser2" resultMap="usermap2">
-		select * from users2
-	</select>
-	<insert id="insert2">
-	    insert into users2 (id, name, funkyNumber, roundingMode) values (
-	    	#{id}, #{name}, #{funkyNumber}, #{roundingMode, typeHandler=org.apache.ibatis.type.EnumTypeHandler}
-	    )
-	</insert>
+  <resultMap type="org.apache.ibatis.submitted.rounding.User" id="usermap2">
+    <id column="id" property="id"/>
+    <result column="name" property="name"/>
+    <result column="funkyNumber" property="funkyNumber"/>
+    <result column="roundingMode" property="roundingMode" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
+  </resultMap>
+  <select id="getUser2" resultMap="usermap2">
+    select * from users2
+  </select>
+  <insert id="insert2">
+      insert into users2 (id, name, funkyNumber, roundingMode) values (
+        #{id}, #{name}, #{funkyNumber}, #{roundingMode, typeHandler=org.apache.ibatis.type.EnumTypeHandler}
+      )
+  </insert>
 
 </mapper>
 ]]></source>

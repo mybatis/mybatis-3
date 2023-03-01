@@ -63,7 +63,7 @@ public class Reflector {
   private final Map<String, Class<?>> getTypes = new HashMap<>();
   private Constructor<?> defaultConstructor;
 
-  private Map<String, String> caseInsensitivePropertyMap = new HashMap<>();
+  private final Map<String, String> caseInsensitivePropertyMap = new HashMap<>();
 
   public Reflector(Class<?> clazz) {
     type = clazz;
@@ -120,7 +120,8 @@ public class Reflector {
           if (!boolean.class.equals(candidateType)) {
             isAmbiguous = true;
             break;
-          } else if (candidate.getName().startsWith("is")) {
+          }
+          if (candidate.getName().startsWith("is")) {
             winner = candidate;
           }
         } else if (candidateType.isAssignableFrom(winnerType)) {
@@ -192,7 +193,8 @@ public class Reflector {
     Class<?> paramType2 = setter2.getParameterTypes()[0];
     if (paramType1.isAssignableFrom(paramType2)) {
       return setter2;
-    } else if (paramType2.isAssignableFrom(paramType1)) {
+    }
+    if (paramType2.isAssignableFrom(paramType1)) {
       return setter1;
     }
     MethodInvoker invoker = new AmbiguousMethodInvoker(setter1,
@@ -241,7 +243,7 @@ public class Reflector {
         // modification of final fields through reflection (JSR-133). (JGB)
         // pr #16 - final static can only be set by the classloader
         int modifiers = field.getModifiers();
-        if (!(Modifier.isFinal(modifiers) && Modifier.isStatic(modifiers))) {
+        if ((!Modifier.isFinal(modifiers) || !Modifier.isStatic(modifiers))) {
           addSetField(field);
         }
       }
@@ -271,7 +273,7 @@ public class Reflector {
   }
 
   private boolean isValidPropertyName(String name) {
-    return !(name.startsWith("$") || "serialVersionUID".equals(name) || "class".equals(name));
+    return (!name.startsWith("$") && !"serialVersionUID".equals(name) && !"class".equals(name));
   }
 
   /**
@@ -363,9 +365,8 @@ public class Reflector {
   public Constructor<?> getDefaultConstructor() {
     if (defaultConstructor != null) {
       return defaultConstructor;
-    } else {
-      throw new ReflectionException("There is no default constructor for " + type);
     }
+    throw new ReflectionException("There is no default constructor for " + type);
   }
 
   public boolean hasDefaultConstructor() {

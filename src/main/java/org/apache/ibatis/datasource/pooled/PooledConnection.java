@@ -29,7 +29,7 @@ import org.apache.ibatis.reflection.ExceptionUtil;
 class PooledConnection implements InvocationHandler {
 
   private static final String CLOSE = "close";
-  private static final Class<?>[] IFACES = new Class<?>[] { Connection.class };
+  private static final Class<?>[] IFACES = { Connection.class };
 
   private final int hashCode;
   private final PooledDataSource dataSource;
@@ -222,7 +222,8 @@ class PooledConnection implements InvocationHandler {
   public boolean equals(Object obj) {
     if (obj instanceof PooledConnection) {
       return realConnection.hashCode() == ((PooledConnection) obj).realConnection.hashCode();
-    } else if (obj instanceof Connection) {
+    }
+    if (obj instanceof Connection) {
       return hashCode == obj.hashCode();
     } else {
       return false;

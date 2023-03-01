@@ -134,7 +134,7 @@ public class ResultLoaderMap {
     /**
      * Name of the unread property.
      */
-    private String property;
+    private final String property;
     /**
      * ID of SQL statement which loads the property.
      */

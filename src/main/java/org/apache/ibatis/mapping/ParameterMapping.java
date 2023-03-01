@@ -43,7 +43,7 @@ public class ParameterMapping {
   }
 
   public static class Builder {
-    private ParameterMapping parameterMapping = new ParameterMapping();
+    private final ParameterMapping parameterMapping = new ParameterMapping();
 
     public Builder(Configuration configuration, String property, TypeHandler<?> typeHandler) {
       parameterMapping.configuration = configuration;
@@ -111,13 +111,10 @@ public class ParameterMapping {
           throw new IllegalStateException("Missing resultmap in property '" + parameterMapping.property + "'.  "
               + "Parameters of type java.sql.ResultSet require a resultmap.");
         }
-      } else {
-        if (parameterMapping.typeHandler == null) {
-          throw new IllegalStateException("Type handler was null on parameter mapping for property '"
-              + parameterMapping.property
-              + "'. It was either not specified and/or could not be found for the javaType ("
-              + parameterMapping.javaType.getName() + ") : jdbcType (" + parameterMapping.jdbcType + ") combination.");
-        }
+      } else if (parameterMapping.typeHandler == null) {
+        throw new IllegalStateException("Type handler was null on parameter mapping for property '"
+            + parameterMapping.property + "'. It was either not specified and/or could not be found for the javaType ("
+            + parameterMapping.javaType.getName() + ") : jdbcType (" + parameterMapping.jdbcType + ") combination.");
       }
     }
 

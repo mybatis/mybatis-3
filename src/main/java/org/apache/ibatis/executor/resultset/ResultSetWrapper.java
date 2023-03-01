@@ -51,7 +51,6 @@ public class ResultSetWrapper {
   private final Map<String, List<String>> unMappedColumnNamesMap = new HashMap<>();
 
   public ResultSetWrapper(ResultSet rs, Configuration configuration) throws SQLException {
-    super();
     this.typeHandlerRegistry = configuration.getTypeHandlerRegistry();
     this.resultSet = rs;
     final ResultSetMetaData metaData = rs.getMetaData();

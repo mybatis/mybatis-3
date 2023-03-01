@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,16 +15,18 @@
  */
 package org.apache.ibatis.submitted.orphan_result_maps;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.apache.ibatis.session.Configuration;
 import org.junit.jupiter.api.Test;
 
 class OrphanResultMapTest {
 
-  private static String RESULT_MAP_BLOG = "BlogResultMap";
-  private static String RESULT_MAP_POST = "PostResultMap";
-  private static String RESULT_MAP_INNER = "mapper_resultMap[BlogResultMap]_collection[posts]";
+  private static final String RESULT_MAP_BLOG = "BlogResultMap";
+  private static final String RESULT_MAP_POST = "PostResultMap";
+  private static final String RESULT_MAP_INNER = "mapper_resultMap[BlogResultMap]_collection[posts]";
 
   @Test
   void testSeparateResultMaps() {

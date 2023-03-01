@@ -55,7 +55,8 @@ public final class StatementLogger extends BaseJdbcLogger implements InvocationH
         } else {
           return method.invoke(statement, params);
         }
-      } else if ("getResultSet".equals(method.getName())) {
+      }
+      if ("getResultSet".equals(method.getName())) {
         ResultSet rs = (ResultSet) method.invoke(statement, params);
         return rs == null ? null : ResultSetLogger.newInstance(rs, statementLog, queryStack);
       } else {

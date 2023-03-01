@@ -54,10 +54,7 @@ public class PostLite {
 
     final PostLite that = (PostLite) o;
 
-    if (blogId != that.blogId) {
-      return false;
-    }
-    if (theId != null ? !theId.equals(that.theId) : that.theId != null) {
+    if ((blogId != that.blogId) || (theId != null ? !theId.equals(that.theId) : that.theId != null)) {
       return false;
     }
 
@@ -67,7 +64,6 @@ public class PostLite {
   @Override
   public int hashCode() {
     int myresult = theId != null ? theId.hashCode() : 0;
-    myresult = 31 * myresult + blogId;
-    return myresult;
+    return 31 * myresult + blogId;
   }
 }

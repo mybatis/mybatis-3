@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.submitted.member_access;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.Reader;
 import java.util.HashMap;
@@ -225,7 +225,7 @@ class MemberAccessTest {
 
           , "FROM INFORMATION_SCHEMA.SYSTEM_USERS"
 
-        ,"</script>"}
+        , "</script>"}
     )
     // @formatter:on
     Bean resultAutoMappingUsingOgnl(Params params);
@@ -233,13 +233,13 @@ class MemberAccessTest {
     // @formatter:off
     @Results({
         @Result(property = "privateField", column = "private_field")
-        ,@Result(property = "packagePrivateField", column = "package_private_field")
-        ,@Result(property = "protectedField", column = "protected_field")
-        ,@Result(property = "publicField", column = "public_field")
-        ,@Result(property = "privateProperty", column = "private_property")
-        ,@Result(property = "packagePrivateProperty", column = "package_private_property")
-        ,@Result(property = "protectedProperty", column = "protected_property")
-        ,@Result(property = "publicProperty", column = "public_property")
+        , @Result(property = "packagePrivateField", column = "package_private_field")
+        , @Result(property = "protectedField", column = "protected_field")
+        , @Result(property = "publicField", column = "public_field")
+        , @Result(property = "privateProperty", column = "private_property")
+        , @Result(property = "packagePrivateProperty", column = "package_private_property")
+        , @Result(property = "protectedProperty", column = "protected_property")
+        , @Result(property = "publicProperty", column = "public_property")
     })
     @Select({
           "SELECT"
@@ -305,7 +305,7 @@ class MemberAccessTest {
   }
 
   static class Params {
-    private String privateField = "privateField";
+    private final String privateField = "privateField";
     String packagePrivateField = "packagePrivateField";
     protected String protectedField = "protectedField";
     public String publicField = "publicField";

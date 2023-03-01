@@ -15,9 +15,18 @@
  */
 package org.apache.ibatis.binding;
 
-import static com.googlecode.catchexception.apis.BDDCatchException.*;
+import static com.googlecode.catchexception.apis.BDDCatchException.caughtException;
+import static com.googlecode.catchexception.apis.BDDCatchException.when;
 import static org.assertj.core.api.BDDAssertions.then;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -98,6 +107,7 @@ class BindingTest {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       BoundAuthorMapper mapper = session.getMapper(BoundAuthorMapper.class);
       List<Post> posts = mapper.findPostsInList(new ArrayList<Integer>() {
+        private static final long serialVersionUID = 1L;
         {
           add(1);
           add(3);
@@ -113,7 +123,7 @@ class BindingTest {
   void shouldFindPostsInArray() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       BoundAuthorMapper mapper = session.getMapper(BoundAuthorMapper.class);
-      Integer[] params = new Integer[] { 1, 3, 5 };
+      Integer[] params = { 1, 3, 5 };
       List<Post> posts = mapper.findPostsInArray(params);
       assertEquals(3, posts.size());
       session.rollback();
@@ -421,6 +431,7 @@ class BindingTest {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
       Map<String, Object> blog = mapper.selectBlogAsMap(new HashMap<String, Object>() {
+        private static final long serialVersionUID = 1L;
         {
           put("id", 1);
         }
@@ -579,8 +590,7 @@ class BindingTest {
     try (SqlSession session = sqlSessionFactory.openSession()) {
 
       // Create another mapper instance with a method cache we can test against:
-      final MapperProxyFactory<BoundBlogMapper> mapperProxyFactory = new MapperProxyFactory<BoundBlogMapper>(
-          BoundBlogMapper.class);
+      final MapperProxyFactory<BoundBlogMapper> mapperProxyFactory = new MapperProxyFactory<>(BoundBlogMapper.class);
       assertEquals(BoundBlogMapper.class, mapperProxyFactory.getMapperInterface());
       final BoundBlogMapper mapper = mapperProxyFactory.newInstance(session);
       assertNotSame(mapper, mapperProxyFactory.newInstance(session));

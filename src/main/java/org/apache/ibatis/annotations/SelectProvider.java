@@ -72,6 +72,7 @@ public @interface SelectProvider {
    */
   Class<?> type() default void.class;
 
+  // @formatter:off
   /**
    * Specify a method for providing an SQL.
    * <p>
@@ -79,7 +80,6 @@ public @interface SelectProvider {
    * <p>
    * If this attribute omit, the MyBatis will call a method that decide by following rules.
    *
-   * <pre>
    * <ul>
    *   <li>
    *     If class that specified the {@link #type()} attribute implements the
@@ -93,10 +93,10 @@ public @interface SelectProvider {
    *     specified type.
    *   </li>
    * </ul>
-   * </pre>
    *
    * @return a method name of method for providing an SQL
    */
+  // @formatter:on
   String method() default "";
 
   /**

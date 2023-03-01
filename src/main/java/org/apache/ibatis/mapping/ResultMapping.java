@@ -50,7 +50,7 @@ public class ResultMapping {
   }
 
   public static class Builder {
-    private ResultMapping resultMapping = new ResultMapping();
+    private final ResultMapping resultMapping = new ResultMapping();
 
     public Builder(Configuration configuration, String property, String column, TypeHandler<?> typeHandler) {
       this(configuration, property);
@@ -277,7 +277,8 @@ public class ResultMapping {
   public int hashCode() {
     if (property != null) {
       return property.hashCode();
-    } else if (column != null) {
+    }
+    if (column != null) {
       return column.hashCode();
     } else {
       return 0;

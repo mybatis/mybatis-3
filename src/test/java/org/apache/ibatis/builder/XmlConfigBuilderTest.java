@@ -15,7 +15,8 @@
  */
 package org.apache.ibatis.builder;
 
-import static com.googlecode.catchexception.apis.BDDCatchException.*;
+import static com.googlecode.catchexception.apis.BDDCatchException.caughtException;
+import static com.googlecode.catchexception.apis.BDDCatchException.when;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -114,7 +115,11 @@ class XmlConfigBuilderTest {
   }
 
   enum MyEnum {
-    ONE, TWO
+
+    ONE,
+
+    TWO
+
   }
 
   public static class EnumOrderTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E> {
@@ -334,6 +339,9 @@ class XmlConfigBuilderTest {
     @SuppressWarnings("unused")
     public static String provideSql() {
       return "SELECT 1";
+    }
+
+    private MySqlProvider() {
     }
   }
 

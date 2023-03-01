@@ -110,6 +110,9 @@ public interface Mapper {
     public static String delete() {
       return "DELETE FROM users WHERE name LIKE '%HSQL%'";
     }
+
+    private HsqlSqlProvider() {
+    }
   }
 
   class DerbySqlProvider {
@@ -128,6 +131,9 @@ public interface Mapper {
     public static String delete() {
       return "DELETE FROM users WHERE name LIKE '%DERBY%'";
     }
+
+    private DerbySqlProvider() {
+    }
   }
 
   class DefaultSqlProvider {
@@ -145,6 +151,9 @@ public interface Mapper {
 
     public static String delete() {
       return "DELETE FROM users WHERE name LIKE '%DEFAULT%'";
+    }
+
+    private DefaultSqlProvider() {
     }
   }
 

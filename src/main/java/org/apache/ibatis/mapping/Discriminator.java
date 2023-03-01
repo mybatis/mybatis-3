@@ -32,7 +32,7 @@ public class Discriminator {
   }
 
   public static class Builder {
-    private Discriminator discriminator = new Discriminator();
+    private final Discriminator discriminator = new Discriminator();
 
     public Builder(Configuration configuration, ResultMapping resultMapping, Map<String, String> discriminatorMap) {
       discriminator.resultMapping = resultMapping;

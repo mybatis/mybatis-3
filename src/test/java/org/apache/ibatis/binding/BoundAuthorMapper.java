@@ -17,7 +17,14 @@ package org.apache.ibatis.binding;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Arg;
+import org.apache.ibatis.annotations.CacheNamespace;
+import org.apache.ibatis.annotations.ConstructorArgs;
+import org.apache.ibatis.annotations.Flush;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.Results;
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.domain.blog.Author;
 import org.apache.ibatis.domain.blog.Post;
 import org.apache.ibatis.domain.blog.Section;
@@ -104,8 +111,8 @@ public interface BoundAuthorMapper {
       "  USERNAME as AUTHOR_USERNAME,",
       "  PASSWORD as AUTHOR_PASSWORD,",
       "  EMAIL as AUTHOR_EMAIL,",
-      "  BIO as AUTHOR_BIO," +
-          "  FAVOURITE_SECTION as AUTHOR_SECTION",
+      "  BIO as AUTHOR_BIO,"
+          + "  FAVOURITE_SECTION as AUTHOR_SECTION",
       "FROM AUTHOR WHERE ID = #{id}"})
   // @formatter:on
   Author selectAuthorConstructor(int id);
@@ -125,8 +132,8 @@ public interface BoundAuthorMapper {
     "  USERNAME as AUTHOR_USERNAME,",
     "  PASSWORD as AUTHOR_PASSWORD,",
     "  EMAIL as AUTHOR_EMAIL,",
-    "  BIO as AUTHOR_BIO," +
-      "  FAVOURITE_SECTION as AUTHOR_SECTION",
+    "  BIO as AUTHOR_BIO,"
+      + "  FAVOURITE_SECTION as AUTHOR_SECTION",
     "FROM AUTHOR WHERE ID = #{id}"})
   // @formatter:on
   Author selectAuthorMapToConstructorUsingRepeatable(int id);
@@ -164,8 +171,8 @@ public interface BoundAuthorMapper {
     "  USERNAME as AUTHOR_USERNAME,",
     "  PASSWORD as AUTHOR_PASSWORD,",
     "  EMAIL as AUTHOR_EMAIL,",
-    "  BIO as AUTHOR_BIO," +
-      "  FAVOURITE_SECTION as AUTHOR_SECTION",
+    "  BIO as AUTHOR_BIO,"
+      + "  FAVOURITE_SECTION as AUTHOR_SECTION",
     "FROM AUTHOR WHERE ID = #{id}"})
   // @formatter:on
   Author selectAuthorUsingBothArgAndConstructorArgs(int id);

@@ -167,7 +167,7 @@ class BaseExecutorTest extends BaseDataTest {
       Author author = new Author(97, "someone", "******", "someone@apache.org", null, null);
       MappedStatement insertStatement = ExecutorTestHelper.prepareInsertAuthorProc(config);
       MappedStatement selectStatement = ExecutorTestHelper.prepareSelectOneAuthorMappedStatement(config);
-      int rows = executor.update(insertStatement, author);
+      executor.update(insertStatement, author);
       List<Author> authors = executor.query(selectStatement, 97, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
       executor.flushStatements();
       executor.rollback(true);
@@ -294,6 +294,7 @@ class BaseExecutorTest extends BaseDataTest {
     try {
       MappedStatement selectStatement = ExecutorTestHelper.prepareSelectTwoSetsOfAuthorsProc(config);
       List<List<Author>> authorSets = executor.query(selectStatement, new HashMap<String, Object>() {
+        private static final long serialVersionUID = 1L;
         {
           put("id1", 101);
           put("id2", 102);
@@ -325,12 +326,11 @@ class BaseExecutorTest extends BaseDataTest {
       assertEquals("sally@ibatis.apache.org", author.getEmail());
       assertNull(author.getBio());
     } catch (ExecutorException e) {
-      if (executor instanceof CachingExecutor) {
-        // TODO see issue #464. Fail is OK.
-        assertTrue(e.getMessage().contains("OUT params is not supported"));
-      } else {
+      if (!(executor instanceof CachingExecutor)) {
         throw e;
       }
+      // TODO see issue #464. Fail is OK.
+      assertTrue(e.getMessage().contains("OUT params is not supported"));
     } finally {
       executor.rollback(true);
       executor.close(false);

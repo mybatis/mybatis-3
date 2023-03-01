@@ -67,33 +67,32 @@ public abstract class AbstractEnhancedDeserializationProxy {
         PropertyCopier.copyBeanProperties(type, enhanced, original);
         return this.newSerialStateHolder(original, unloadedProperties, objectFactory, constructorArgTypes,
             constructorArgs);
-      } else {
-        synchronized (this.reloadingPropertyLock) {
-          if (!FINALIZE_METHOD.equals(methodName) && PropertyNamer.isProperty(methodName) && !reloadingProperty) {
-            final String property = PropertyNamer.methodToProperty(methodName);
-            final String propertyKey = property.toUpperCase(Locale.ENGLISH);
-            if (unloadedProperties.containsKey(propertyKey)) {
-              final ResultLoaderMap.LoadPair loadPair = unloadedProperties.remove(propertyKey);
-              if (loadPair != null) {
-                try {
-                  reloadingProperty = true;
-                  loadPair.load(enhanced);
-                } finally {
-                  reloadingProperty = false;
-                }
-              } else {
-                /*
-                 * I'm not sure if this case can really happen or is just in tests - we have an unread property but no
-                 * loadPair to load it.
-                 */
-                throw new ExecutorException("An attempt has been made to read a not loaded lazy property '" + property
-                    + "' of a disconnected object");
+      }
+      synchronized (this.reloadingPropertyLock) {
+        if (!FINALIZE_METHOD.equals(methodName) && PropertyNamer.isProperty(methodName) && !reloadingProperty) {
+          final String property = PropertyNamer.methodToProperty(methodName);
+          final String propertyKey = property.toUpperCase(Locale.ENGLISH);
+          if (unloadedProperties.containsKey(propertyKey)) {
+            final ResultLoaderMap.LoadPair loadPair = unloadedProperties.remove(propertyKey);
+            if (loadPair != null) {
+              try {
+                reloadingProperty = true;
+                loadPair.load(enhanced);
+              } finally {
+                reloadingProperty = false;
               }
+            } else {
+              /*
+               * I'm not sure if this case can really happen or is just in tests - we have an unread property but no
+               * loadPair to load it.
+               */
+              throw new ExecutorException("An attempt has been made to read a not loaded lazy property '" + property
+                  + "' of a disconnected object");
             }
           }
-
-          return enhanced;
         }
+
+        return enhanced;
       }
     } catch (Throwable t) {
       throw ExceptionUtil.unwrapThrowable(t);

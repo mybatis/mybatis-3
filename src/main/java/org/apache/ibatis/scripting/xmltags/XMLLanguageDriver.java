@@ -51,15 +51,14 @@ public class XMLLanguageDriver implements LanguageDriver {
     if (script.startsWith("<script>")) {
       XPathParser parser = new XPathParser(script, false, configuration.getVariables(), new XMLMapperEntityResolver());
       return createSqlSource(configuration, parser.evalNode("/script"), parameterType);
+    }
+    // issue #127
+    script = PropertyParser.parse(script, configuration.getVariables());
+    TextSqlNode textSqlNode = new TextSqlNode(script);
+    if (textSqlNode.isDynamic()) {
+      return new DynamicSqlSource(configuration, textSqlNode);
     } else {
-      // issue #127
-      script = PropertyParser.parse(script, configuration.getVariables());
-      TextSqlNode textSqlNode = new TextSqlNode(script);
-      if (textSqlNode.isDynamic()) {
-        return new DynamicSqlSource(configuration, textSqlNode);
-      } else {
-        return new RawSqlSource(configuration, script, parameterType);
-      }
+      return new RawSqlSource(configuration, script, parameterType);
     }
   }
 

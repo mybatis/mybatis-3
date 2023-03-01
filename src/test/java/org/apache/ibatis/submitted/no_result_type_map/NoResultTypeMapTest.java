@@ -15,7 +15,8 @@
  */
 package org.apache.ibatis.submitted.no_result_type_map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.Reader;
 import java.util.List;

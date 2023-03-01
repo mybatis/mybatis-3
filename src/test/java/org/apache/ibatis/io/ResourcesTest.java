@@ -170,8 +170,4 @@ class ResourcesTest extends BaseDataTest {
 
   }
 
-  @Test
-  void stupidJustForCoverage() {
-    assertNotNull(new Resources());
-  }
 }

@@ -41,9 +41,8 @@ public class MapWrapper extends BaseWrapper {
     if (prop.getIndex() != null) {
       Object collection = resolveCollection(prop, map);
       return getCollectionValue(prop, collection);
-    } else {
-      return map.get(prop.getName());
     }
+    return map.get(prop.getName());
   }
 
   @Override
@@ -81,12 +80,11 @@ public class MapWrapper extends BaseWrapper {
       } else {
         return metaValue.getSetterType(prop.getChildren());
       }
+    }
+    if (map.get(name) != null) {
+      return map.get(name).getClass();
     } else {
-      if (map.get(name) != null) {
-        return map.get(name).getClass();
-      } else {
-        return Object.class;
-      }
+      return Object.class;
     }
   }
 
@@ -100,12 +98,11 @@ public class MapWrapper extends BaseWrapper {
       } else {
         return metaValue.getGetterType(prop.getChildren());
       }
+    }
+    if (map.get(name) != null) {
+      return map.get(name).getClass();
     } else {
-      if (map.get(name) != null) {
-        return map.get(name).getClass();
-      } else {
-        return Object.class;
-      }
+      return Object.class;
     }
   }
 
@@ -117,19 +114,18 @@ public class MapWrapper extends BaseWrapper {
   @Override
   public boolean hasGetter(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
-    if (prop.hasNext()) {
-      if (map.containsKey(prop.getIndexedName())) {
-        MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
-        if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
-          return true;
-        } else {
-          return metaValue.hasGetter(prop.getChildren());
-        }
+    if (!prop.hasNext()) {
+      return map.containsKey(prop.getName());
+    }
+    if (map.containsKey(prop.getIndexedName())) {
+      MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
+      if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
+        return true;
       } else {
-        return false;
+        return metaValue.hasGetter(prop.getChildren());
       }
     } else {
-      return map.containsKey(prop.getName());
+      return false;
     }
   }
 

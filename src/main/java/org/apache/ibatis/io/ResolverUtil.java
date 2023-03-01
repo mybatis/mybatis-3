@@ -87,7 +87,7 @@ public class ResolverUtil<T> {
   public static class IsA implements Test {
 
     /** The parent. */
-    private Class<?> parent;
+    private final Class<?> parent;
 
     /**
      * Constructs an IsA test using the supplied Class as the parent class/interface.
@@ -118,7 +118,7 @@ public class ResolverUtil<T> {
   public static class AnnotatedWith implements Test {
 
     /** The annotation. */
-    private Class<? extends Annotation> annotation;
+    private final Class<? extends Annotation> annotation;
 
     /**
      * Constructs an AnnotatedWith test for the specified annotation type.

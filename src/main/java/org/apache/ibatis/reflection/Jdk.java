@@ -76,6 +76,5 @@ public class Jdk {
   }
 
   private Jdk() {
-    super();
   }
 }

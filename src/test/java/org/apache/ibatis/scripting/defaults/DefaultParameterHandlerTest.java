@@ -29,7 +29,12 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.builder.StaticSqlSource;
-import org.apache.ibatis.mapping.*;
+import org.apache.ibatis.mapping.BoundSql;
+import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.ParameterMapping;
+import org.apache.ibatis.mapping.ResultMap;
+import org.apache.ibatis.mapping.ResultMapping;
+import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeException;
@@ -78,8 +83,12 @@ class DefaultParameterHandlerTest {
     final TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
     return new MappedStatement.Builder(config, "testSelect", new StaticSqlSource(config, "some select statement"),
         SqlCommandType.SELECT).resultMaps(new ArrayList<ResultMap>() {
+          private static final long serialVersionUID = 1L;
+
           {
             add(new ResultMap.Builder(config, "testMap", HashMap.class, new ArrayList<ResultMapping>() {
+              private static final long serialVersionUID = 1L;
+
               {
                 add(new ResultMapping.Builder(config, "cOlUmN1", "CoLuMn1", registry.getTypeHandler(Integer.class))
                     .build());

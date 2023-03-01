@@ -150,18 +150,17 @@ public class CglibProxyFactory implements ProxyFactory {
             } else {
               return original;
             }
-          } else {
-            if (lazyLoader.size() > 0 && !FINALIZE_METHOD.equals(methodName)) {
-              if (aggressive || lazyLoadTriggerMethods.contains(methodName)) {
-                lazyLoader.loadAll();
-              } else if (PropertyNamer.isSetter(methodName)) {
-                final String property = PropertyNamer.methodToProperty(methodName);
-                lazyLoader.remove(property);
-              } else if (PropertyNamer.isGetter(methodName)) {
-                final String property = PropertyNamer.methodToProperty(methodName);
-                if (lazyLoader.hasLoader(property)) {
-                  lazyLoader.load(property);
-                }
+          }
+          if (lazyLoader.size() > 0 && !FINALIZE_METHOD.equals(methodName)) {
+            if (aggressive || lazyLoadTriggerMethods.contains(methodName)) {
+              lazyLoader.loadAll();
+            } else if (PropertyNamer.isSetter(methodName)) {
+              final String property = PropertyNamer.methodToProperty(methodName);
+              lazyLoader.remove(property);
+            } else if (PropertyNamer.isGetter(methodName)) {
+              final String property = PropertyNamer.methodToProperty(methodName);
+              if (lazyLoader.hasLoader(property)) {
+                lazyLoader.load(property);
               }
             }
           }

@@ -17,53 +17,57 @@ package org.apache.ibatis.submitted.annotion_many_one_add_resultmapid;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Many;
+import org.apache.ibatis.annotations.One;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.Results;
+import org.apache.ibatis.annotations.Select;
 
 /**
  * @author lvyang
  */
 public interface UserDao {
   // @formatter:off
-  @Select({ "select",
+  @Select({"select",
       "     u.id, u.username, r.id role_id, r.role_name",
       "    from user u",
       "    left join user_role ur on u.id = ur.user_id",
-      "    left join role r on ur.role_id = r.id" })
+      "    left join role r on ur.role_id = r.id"})
   @Results({
       @Result(id = true, column = "id", property = "id"),
       @Result(column = "username", property = "username"),
       @Result(property = "roles", many = @Many(resultMap = "org.apache.ibatis.submitted.annotion_many_one_add_resultmapid.RoleDao.roleMap1"))
     })
   // @formatter:on
-  public List<User> findAll();
+  List<User> findAll();
 
   // @formatter:off
-  @Select({ "select",
+  @Select({"select",
       "     u.id, u.username, r.id role_id, r.role_name",
       "    from user u",
       "    left join user_role ur on u.id = ur.user_id",
-      "    left join role r on ur.role_id = r.id" })
+      "    left join role r on ur.role_id = r.id"})
   @Results({
       @Result(id = true, column = "id", property = "id"),
       @Result(column = "username", property = "username"),
       @Result(property = "roles", many = @Many(resultMap = "org.apache.ibatis.submitted.annotion_many_one_add_resultmapid.RoleDao.roleMap2"))
     })
   // @formatter:on
-  public List<User> findAll2();
+  List<User> findAll2();
 
   // @formatter:off
-  @Select({ "select",
+  @Select({"select",
       "     u.id, u.username, r.id role_id, r.role_name",
       "    from user u",
       "    left join user_role ur on u.id = ur.user_id",
-      "    left join role r on ur.role_id = r.id where u.id in (2, 3)" })
+      "    left join role r on ur.role_id = r.id where u.id in (2, 3)"})
   @Results({
       @Result(id = true, column = "id", property = "id"),
       @Result(column = "username", property = "username"),
       @Result(property = "role", one = @One(resultMap = "org.apache.ibatis.submitted.annotion_many_one_add_resultmapid.RoleDao.roleMap2"))
     })
   // @formatter:on
-  public List<User> findAll3();
+  List<User> findAll3();
 
   // @formatter:off
   @Select("select id teacher_id, username teacher_name from user")
@@ -72,16 +76,16 @@ public interface UserDao {
       @Result(column = "teacher_name", property = "username")
     })
   // @formatter:on
-  public List<User> justUseResult();
+  List<User> justUseResult();
 
   // @formatter:off
-  @Select({ "select",
+  @Select({"select",
       "u.id, u.username, r.id role_id, r.role_name, ut.id teacher_id, ut.username teacher_name",
       "from user u",
       "left join user_role ur on u.id = ur.user_id",
       "left join role r on ur.role_id = r.id",
       "left join user ut on ut.id != u.id",
-      "where role_id = 3" })
+      "where role_id = 3"})
   @Results({
       @Result(id = true, column = "id", property = "id"),
       @Result(column = "username", property = "username"),
@@ -89,5 +93,5 @@ public interface UserDao {
       @Result(property = "teachers", many = @Many(resultMap = "userMap"))
     })
   // @formatter:on
-  public User findHeadmaster();
+  User findHeadmaster();
 }

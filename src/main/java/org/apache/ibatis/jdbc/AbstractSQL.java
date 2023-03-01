@@ -538,7 +538,6 @@ public abstract class AbstractSQL<T> {
     private boolean empty = true;
 
     public SafeAppendable(Appendable a) {
-      super();
       this.appendable = a;
     }
 
@@ -563,7 +562,15 @@ public abstract class AbstractSQL<T> {
   private static class SQLStatement {
 
     public enum StatementType {
-      DELETE, INSERT, SELECT, UPDATE
+
+      DELETE,
+
+      INSERT,
+
+      SELECT,
+
+      UPDATE
+
     }
 
     private enum LimitingRowsStrategy {

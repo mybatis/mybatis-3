@@ -22,8 +22,9 @@ import java.util.List;
 public class Person {
   private Integer id;
   private String name;
-  private List<Item> items = new ArrayList<>();
+  private final List<Item> items = new ArrayList<>();
 
+  @Override
   public String toString() {
     return new StringBuilder().append("Person(").append(id).append(", ").append(name).append(", ").append(items)
         .append(" )").toString();
@@ -51,8 +52,9 @@ public class Person {
 
   public boolean owns(String name) {
     for (Item item : getItems()) {
-      if (item.getName().equals(name))
+      if (item.getName().equals(name)) {
         return true;
+      }
     }
     return false;
   }

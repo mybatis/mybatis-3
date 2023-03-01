@@ -27,14 +27,14 @@ public class PoolState {
 
   protected final List<PooledConnection> idleConnections = new ArrayList<>();
   protected final List<PooledConnection> activeConnections = new ArrayList<>();
-  protected long requestCount = 0;
-  protected long accumulatedRequestTime = 0;
-  protected long accumulatedCheckoutTime = 0;
-  protected long claimedOverdueConnectionCount = 0;
-  protected long accumulatedCheckoutTimeOfOverdueConnections = 0;
-  protected long accumulatedWaitTime = 0;
-  protected long hadToWaitCount = 0;
-  protected long badConnectionCount = 0;
+  protected long requestCount;
+  protected long accumulatedRequestTime;
+  protected long accumulatedCheckoutTime;
+  protected long claimedOverdueConnectionCount;
+  protected long accumulatedCheckoutTimeOfOverdueConnections;
+  protected long accumulatedWaitTime;
+  protected long hadToWaitCount;
+  protected long badConnectionCount;
 
   public PoolState(PooledDataSource dataSource) {
     this.dataSource = dataSource;

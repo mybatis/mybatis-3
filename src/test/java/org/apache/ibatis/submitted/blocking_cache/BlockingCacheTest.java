@@ -59,6 +59,7 @@ class BlockingCacheTest {
     defaultThreadPool.shutdown();
 
     while (!defaultThreadPool.isTerminated()) {
+      continue;
     }
 
     long totalTime = System.currentTimeMillis() - init;

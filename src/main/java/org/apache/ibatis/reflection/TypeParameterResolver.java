@@ -89,7 +89,8 @@ public class TypeParameterResolver {
   private static Type resolveType(Type type, Type srcType, Class<?> declaringClass) {
     if (type instanceof TypeVariable) {
       return resolveTypeVar((TypeVariable<?>) type, srcType, declaringClass);
-    } else if (type instanceof ParameterizedType) {
+    }
+    if (type instanceof ParameterizedType) {
       return resolveParameterizedType((ParameterizedType) type, srcType, declaringClass);
     } else if (type instanceof GenericArrayType) {
       return resolveGenericArrayType((GenericArrayType) type, srcType, declaringClass);
@@ -111,9 +112,8 @@ public class TypeParameterResolver {
     }
     if (resolvedComponentType instanceof Class) {
       return Array.newInstance((Class<?>) resolvedComponentType, 0).getClass();
-    } else {
-      return new GenericArrayTypeImpl(resolvedComponentType);
     }
+    return new GenericArrayTypeImpl(resolvedComponentType);
   }
 
   private static ParameterizedType resolveParameterizedType(ParameterizedType parameterizedType, Type srcType,
@@ -242,18 +242,16 @@ public class TypeParameterResolver {
   }
 
   private TypeParameterResolver() {
-    super();
   }
 
   static class ParameterizedTypeImpl implements ParameterizedType {
-    private Class<?> rawType;
+    private final Class<?> rawType;
 
-    private Type ownerType;
+    private final Type ownerType;
 
-    private Type[] actualTypeArguments;
+    private final Type[] actualTypeArguments;
 
     public ParameterizedTypeImpl(Class<?> rawType, Type ownerType, Type[] actualTypeArguments) {
-      super();
       this.rawType = rawType;
       this.ownerType = ownerType;
       this.actualTypeArguments = actualTypeArguments;
@@ -282,12 +280,11 @@ public class TypeParameterResolver {
   }
 
   static class WildcardTypeImpl implements WildcardType {
-    private Type[] lowerBounds;
+    private final Type[] lowerBounds;
 
-    private Type[] upperBounds;
+    private final Type[] upperBounds;
 
     WildcardTypeImpl(Type[] lowerBounds, Type[] upperBounds) {
-      super();
       this.lowerBounds = lowerBounds;
       this.upperBounds = upperBounds;
     }
@@ -304,10 +301,9 @@ public class TypeParameterResolver {
   }
 
   static class GenericArrayTypeImpl implements GenericArrayType {
-    private Type genericComponentType;
+    private final Type genericComponentType;
 
     GenericArrayTypeImpl(Type genericComponentType) {
-      super();
       this.genericComponentType = genericComponentType;
     }
 

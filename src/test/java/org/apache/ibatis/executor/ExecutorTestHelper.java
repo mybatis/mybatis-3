@@ -70,6 +70,7 @@ class ExecutorTestHelper {
             "INSERT INTO author (id,username,password,email,bio,favourite_section) values(?,?,?,?,?,?)"),
         SqlCommandType.INSERT).parameterMap(
             new ParameterMap.Builder(config, "defaultParameterMap", Author.class, new ArrayList<ParameterMapping>() {
+              private static final long serialVersionUID = 1L;
               {
                 add(new ParameterMapping.Builder(config, "id", registry.getTypeHandler(int.class)).build());
                 add(new ParameterMapping.Builder(config, "username", registry.getTypeHandler(String.class)).build());
@@ -90,6 +91,7 @@ class ExecutorTestHelper {
             "INSERT INTO author (username,password,email,bio,favourite_section) values(?,?,?,?,?)"),
         SqlCommandType.INSERT).parameterMap(
             new ParameterMap.Builder(config, "defaultParameterMap", Author.class, new ArrayList<ParameterMapping>() {
+              private static final long serialVersionUID = 1L;
               {
                 add(new ParameterMapping.Builder(config, "username", registry.getTypeHandler(String.class)).build());
                 add(new ParameterMapping.Builder(config, "password", registry.getTypeHandler(String.class)).build());
@@ -107,6 +109,7 @@ class ExecutorTestHelper {
     return new MappedStatement.Builder(config, "insertAuthorProc",
         new StaticSqlSource(config, "{call insertAuthor(?,?,?,?)}"), SqlCommandType.INSERT).parameterMap(
             new ParameterMap.Builder(config, "defaultParameterMap", Author.class, new ArrayList<ParameterMapping>() {
+              private static final long serialVersionUID = 1L;
               {
                 add(new ParameterMapping.Builder(config, "id", registry.getTypeHandler(int.class)).build());
                 add(new ParameterMapping.Builder(config, "username", registry.getTypeHandler(String.class)).build());
@@ -122,6 +125,7 @@ class ExecutorTestHelper {
         new StaticSqlSource(config, "UPDATE author SET username = ?, password = ?, email = ?, bio = ? WHERE id = ?"),
         SqlCommandType.UPDATE).parameterMap(
             new ParameterMap.Builder(config, "defaultParameterMap", Author.class, new ArrayList<ParameterMapping>() {
+              private static final long serialVersionUID = 1L;
               {
                 add(new ParameterMapping.Builder(config, "username", registry.getTypeHandler(String.class)).build());
                 add(new ParameterMapping.Builder(config, "password", registry.getTypeHandler(String.class)).build());
@@ -138,6 +142,7 @@ class ExecutorTestHelper {
     return new MappedStatement.Builder(config, "deleteAuthor",
         new StaticSqlSource(config, "DELETE FROM author WHERE id = ?"), SqlCommandType.DELETE).parameterMap(
             new ParameterMap.Builder(config, "defaultParameterMap", Author.class, new ArrayList<ParameterMapping>() {
+              private static final long serialVersionUID = 1L;
               {
                 add(new ParameterMapping.Builder(config, "id", registry.getTypeHandler(int.class)).build());
               }
@@ -149,6 +154,7 @@ class ExecutorTestHelper {
 
     final ResultMap rm = new ResultMap.Builder(config, "defaultResultMap", Author.class,
         new ArrayList<ResultMapping>() {
+          private static final long serialVersionUID = 1L;
           {
             add(new ResultMapping.Builder(config, "id", "id", registry.getTypeHandler(int.class)).build());
             add(new ResultMapping.Builder(config, "username", "username", registry.getTypeHandler(String.class))
@@ -165,10 +171,12 @@ class ExecutorTestHelper {
     return new MappedStatement.Builder(config, "selectAuthor",
         new StaticSqlSource(config, "SELECT * FROM author WHERE id = ?"), SqlCommandType.SELECT).parameterMap(
             new ParameterMap.Builder(config, "defaultParameterMap", Author.class, new ArrayList<ParameterMapping>() {
+              private static final long serialVersionUID = 1L;
               {
                 add(new ParameterMapping.Builder(config, "id", registry.getTypeHandler(int.class)).build());
               }
             }).build()).resultMaps(new ArrayList<ResultMap>() {
+              private static final long serialVersionUID = 1L;
               {
                 add(rm);
               }
@@ -180,8 +188,10 @@ class ExecutorTestHelper {
     return new MappedStatement.Builder(config, "selectAuthorAutoMap",
         new StaticSqlSource(config, "SELECT * FROM author ORDER BY id"), SqlCommandType.SELECT)
             .resultMaps(new ArrayList<ResultMap>() {
+              private static final long serialVersionUID = 1L;
               {
                 add(new ResultMap.Builder(config, "defaultResultMap", Author.class, new ArrayList<ResultMapping>() {
+                  private static final long serialVersionUID = 1L;
                   {
                     add(new ResultMapping.Builder(config, "favouriteSection", "favourite_section",
                         registry.getTypeHandler(Section.class)).build());
@@ -197,15 +207,19 @@ class ExecutorTestHelper {
     return new MappedStatement.Builder(config, "selectAuthor",
         new StaticSqlSource(config, "SELECT * FROM author WHERE id = ?"), SqlCommandType.SELECT).parameterMap(
             new ParameterMap.Builder(config, "defaultParameterMap", Author.class, new ArrayList<ParameterMapping>() {
+              private static final long serialVersionUID = 1L;
               {
                 add(new ParameterMapping.Builder(config, "id", registry.getTypeHandler(int.class)).build());
               }
             }).build()).resultMaps(new ArrayList<ResultMap>() {
+              private static final long serialVersionUID = 1L;
               {
                 add(new ResultMap.Builder(config, "defaultResultMap", Author.class, new ArrayList<ResultMapping>() {
+                  private static final long serialVersionUID = 1L;
                   {
                     add(new ResultMapping.Builder(config, null, "id", registry.getTypeHandler(Integer.class))
                         .javaType(int.class).flags(new ArrayList<ResultFlag>() {
+                          private static final long serialVersionUID = 1L;
                           {
                             add(ResultFlag.CONSTRUCTOR);
                           }
@@ -231,15 +245,18 @@ class ExecutorTestHelper {
         new StaticSqlSource(config, "{call selectTwoSetsOfAuthors(?,?)}"), SqlCommandType.SELECT)
             .statementType(StatementType.CALLABLE).parameterMap(new ParameterMap.Builder(config, "defaultParameterMap",
                 Author.class, new ArrayList<ParameterMapping>() {
+                  private static final long serialVersionUID = 1L;
                   {
                     add(new ParameterMapping.Builder(config, "id1", registry.getTypeHandler(int.class)).build());
                     add(new ParameterMapping.Builder(config, "id2", registry.getTypeHandler(int.class)).build());
                   }
                 }).build())
             .resultMaps(new ArrayList<ResultMap>() {
+              private static final long serialVersionUID = 1L;
               {
                 ResultMap map = new ResultMap.Builder(config, "defaultResultMap", Author.class,
                     new ArrayList<ResultMapping>() {
+                      private static final long serialVersionUID = 1L;
                       {
                         add(new ResultMapping.Builder(config, "id", "id", registry.getTypeHandler(int.class)).build());
                         add(new ResultMapping.Builder(config, "username", "username",
@@ -264,6 +281,7 @@ class ExecutorTestHelper {
         new StaticSqlSource(config, "{call selectAuthorViaOutParams(?,?,?,?,?)}"), SqlCommandType.SELECT)
             .statementType(StatementType.CALLABLE).parameterMap(new ParameterMap.Builder(config, "defaultParameterMap",
                 Author.class, new ArrayList<ParameterMapping>() {
+                  private static final long serialVersionUID = 1L;
                   {
                     add(new ParameterMapping.Builder(config, "id", registry.getTypeHandler(int.class)).build());
                     add(new ParameterMapping.Builder(config, "username", registry.getTypeHandler(String.class))
@@ -283,6 +301,7 @@ class ExecutorTestHelper {
     final TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
     final ResultMap discriminatorResultMap = new ResultMap.Builder(config, "postResultMap", HashMap.class,
         new ArrayList<ResultMapping>() {
+          private static final long serialVersionUID = 1L;
           {
             add(new ResultMapping.Builder(config, "subject", "subject", registry.getTypeHandler(String.class)).build());
             add(new ResultMapping.Builder(config, "body", "body", registry.getTypeHandler(String.class)).build());
@@ -291,8 +310,10 @@ class ExecutorTestHelper {
     config.addResultMap(discriminatorResultMap);
     return new MappedStatement.Builder(config, "selectPosts", new StaticSqlSource(config, "SELECT * FROM post"),
         SqlCommandType.SELECT).resultMaps(new ArrayList<ResultMap>() {
+          private static final long serialVersionUID = 1L;
           {
             add(new ResultMap.Builder(config, "defaultResultMap", HashMap.class, new ArrayList<ResultMapping>() {
+              private static final long serialVersionUID = 1L;
               {
                 add(new ResultMapping.Builder(config, "id", "id", registry.getTypeHandler(int.class)).build());
                 add(new ResultMapping.Builder(config, "blog_id", "blog_id", registry.getTypeHandler(int.class))
@@ -301,6 +322,7 @@ class ExecutorTestHelper {
             }).discriminator(new Discriminator.Builder(config,
                 new ResultMapping.Builder(config, "section", "section", registry.getTypeHandler(String.class)).build(),
                 new HashMap<String, String>() {
+                  private static final long serialVersionUID = 1L;
                   {
                     put("NEWS", discriminatorResultMap.getId());
                     put("VIDEOS", discriminatorResultMap.getId());
@@ -331,8 +353,10 @@ class ExecutorTestHelper {
             .parameterMap(
                 new ParameterMap.Builder(config, "defaultParameterMap", Author.class, new ArrayList<>()).build())
             .resultMaps(new ArrayList<ResultMap>() {
+              private static final long serialVersionUID = 1L;
               {
                 add(new ResultMap.Builder(config, "defaultResultMap", Author.class, new ArrayList<ResultMapping>() {
+                  private static final long serialVersionUID = 1L;
                   {
                     add(new ResultMapping.Builder(config, "id", "id", registry.getTypeHandler(int.class)).build());
                     add(new ResultMapping.Builder(config, "username", "username", registry.getTypeHandler(String.class))
@@ -355,15 +379,18 @@ class ExecutorTestHelper {
             + " INNER JOIN author a ON b.author_id = a.id" + " WHERE b.id = ?");
     final ParameterMap parameterMap = new ParameterMap.Builder(config, "defaultParameterMap", int.class,
         new ArrayList<ParameterMapping>() {
+          private static final long serialVersionUID = 1L;
           {
             add(new ParameterMapping.Builder(config, "id", registry.getTypeHandler(int.class)).build());
           }
         }).build();
     final ResultMap resultMap = new ResultMap.Builder(config, "defaultResultMap", Blog.class,
         new ArrayList<ResultMapping>() {
+          private static final long serialVersionUID = 1L;
           {
             add(new ResultMapping.Builder(config, "id", "id", registry.getTypeHandler(int.class))
                 .flags(new ArrayList<ResultFlag>() {
+                  private static final long serialVersionUID = 1L;
                   {
                     add(ResultFlag.ID);
                   }
@@ -385,6 +412,7 @@ class ExecutorTestHelper {
 
     return new MappedStatement.Builder(config, "selectBlogById", sqlSource, SqlCommandType.SELECT)
         .parameterMap(parameterMap).resultMaps(new ArrayList<ResultMap>() {
+          private static final long serialVersionUID = 1L;
           {
             add(resultMap);
           }
@@ -398,6 +426,7 @@ class ExecutorTestHelper {
             + " INNER JOIN author a ON b.author_id = a.id" + " WHERE b.id = ? and a.id = ?");
     final ParameterMap parameterMap = new ParameterMap.Builder(config, "defaultParameterMap", Map.class,
         new ArrayList<ParameterMapping>() {
+          private static final long serialVersionUID = 1L;
           {
             add(new ParameterMapping.Builder(config, "blogId", registry.getTypeHandler(int.class)).build());
             add(new ParameterMapping.Builder(config, "authorId", registry.getTypeHandler(int.class)).build());
@@ -405,9 +434,11 @@ class ExecutorTestHelper {
         }).build();
     final ResultMap resultMap = new ResultMap.Builder(config, "defaultResultMap", Blog.class,
         new ArrayList<ResultMapping>() {
+          private static final long serialVersionUID = 1L;
           {
             add(new ResultMapping.Builder(config, "id", "id", registry.getTypeHandler(int.class))
                 .flags(new ArrayList<ResultFlag>() {
+                  private static final long serialVersionUID = 1L;
                   {
                     add(ResultFlag.ID);
                   }
@@ -429,6 +460,7 @@ class ExecutorTestHelper {
 
     return new MappedStatement.Builder(config, "selectBlogByIdAndAuthor", sqlSource, SqlCommandType.SELECT)
         .parameterMap(parameterMap).resultMaps(new ArrayList<ResultMap>() {
+          private static final long serialVersionUID = 1L;
           {
             add(resultMap);
           }
@@ -445,15 +477,18 @@ class ExecutorTestHelper {
             + " LEFT OUTER JOIN comment c ON c.post_id = p.id" + " WHERE p.blog_id = ?");
     final ParameterMap parameterMap = new ParameterMap.Builder(config, "defaultParameterMap", Author.class,
         new ArrayList<ParameterMapping>() {
+          private static final long serialVersionUID = 1L;
           {
             add(new ParameterMapping.Builder(config, "id", registry.getTypeHandler(int.class)).build());
           }
         }).build();
     final ResultMap tagResultMap = new ResultMap.Builder(config, "tagResultMap", Tag.class,
         new ArrayList<ResultMapping>() {
+          private static final long serialVersionUID = 1L;
           {
             add(new ResultMapping.Builder(config, "id", "tag_id", registry.getTypeHandler(int.class))
                 .flags(new ArrayList<ResultFlag>() {
+                  private static final long serialVersionUID = 1L;
                   {
                     add(ResultFlag.ID);
                   }
@@ -463,9 +498,11 @@ class ExecutorTestHelper {
         }).build();
     final ResultMap commentResultMap = new ResultMap.Builder(config, "commentResultMap", Comment.class,
         new ArrayList<ResultMapping>() {
+          private static final long serialVersionUID = 1L;
           {
             add(new ResultMapping.Builder(config, "id", "comment_id", registry.getTypeHandler(int.class))
                 .flags(new ArrayList<ResultFlag>() {
+                  private static final long serialVersionUID = 1L;
                   {
                     add(ResultFlag.ID);
                   }
@@ -479,9 +516,11 @@ class ExecutorTestHelper {
     config.addResultMap(commentResultMap);
     final ResultMap postResultMap = new ResultMap.Builder(config, "defaultResultMap", Post.class,
         new ArrayList<ResultMapping>() {
+          private static final long serialVersionUID = 1L;
           {
             add(new ResultMapping.Builder(config, "id", "id", registry.getTypeHandler(int.class))
                 .flags(new ArrayList<ResultFlag>() {
+                  private static final long serialVersionUID = 1L;
                   {
                     add(ResultFlag.ID);
                   }
@@ -500,6 +539,7 @@ class ExecutorTestHelper {
         }).build();
     return new MappedStatement.Builder(config, "selectPostsForBlog", sqlSource, SqlCommandType.SELECT)
         .parameterMap(parameterMap).resultMaps(new ArrayList<ResultMap>() {
+          private static final long serialVersionUID = 1L;
           {
             add(postResultMap);
           }
@@ -515,15 +555,18 @@ class ExecutorTestHelper {
             + " LEFT OUTER JOIN comment c ON c.post_id = p.id" + " WHERE p.id = ?");
     final ParameterMap parameterMap = new ParameterMap.Builder(config, "defaultParameterMap", Author.class,
         new ArrayList<ParameterMapping>() {
+          private static final long serialVersionUID = 1L;
           {
             add(new ParameterMapping.Builder(config, "id", registry.getTypeHandler(int.class)).build());
           }
         }).build();
     final ResultMap tagResultMap = new ResultMap.Builder(config, "tagResultMap", Tag.class,
         new ArrayList<ResultMapping>() {
+          private static final long serialVersionUID = 1L;
           {
             add(new ResultMapping.Builder(config, "id", "tag_id", registry.getTypeHandler(int.class))
                 .flags(new ArrayList<ResultFlag>() {
+                  private static final long serialVersionUID = 1L;
                   {
                     add(ResultFlag.ID);
                   }
@@ -533,9 +576,11 @@ class ExecutorTestHelper {
         }).build();
     final ResultMap commentResultMap = new ResultMap.Builder(config, "commentResultMap", Comment.class,
         new ArrayList<ResultMapping>() {
+          private static final long serialVersionUID = 1L;
           {
             add(new ResultMapping.Builder(config, "id", "comment_id", registry.getTypeHandler(int.class))
                 .flags(new ArrayList<ResultFlag>() {
+                  private static final long serialVersionUID = 1L;
                   {
                     add(ResultFlag.ID);
                   }
@@ -548,9 +593,11 @@ class ExecutorTestHelper {
     config.addResultMap(tagResultMap);
     config.addResultMap(commentResultMap);
     final ResultMap postResultMap = new ResultMap.Builder(config, "", Post.class, new ArrayList<ResultMapping>() {
+      private static final long serialVersionUID = 1L;
       {
         add(new ResultMapping.Builder(config, "id", "id", registry.getTypeHandler(int.class))
             .flags(new ArrayList<ResultFlag>() {
+              private static final long serialVersionUID = 1L;
               {
                 add(ResultFlag.ID);
               }
@@ -568,6 +615,7 @@ class ExecutorTestHelper {
 
     return new MappedStatement.Builder(config, "selectPostsForBlog", sqlSource, SqlCommandType.SELECT)
         .parameterMap(parameterMap).resultMaps(new ArrayList<ResultMap>() {
+          private static final long serialVersionUID = 1L;
           {
             add(postResultMap);
           }
@@ -583,15 +631,18 @@ class ExecutorTestHelper {
             + " LEFT OUTER JOIN comment c ON c.post_id = p.id" + " WHERE p.id = ?");
     final ParameterMap parameterMap = new ParameterMap.Builder(config, "defaultParameterMap", Author.class,
         new ArrayList<ParameterMapping>() {
+          private static final long serialVersionUID = 1L;
           {
             add(new ParameterMapping.Builder(config, "id", registry.getTypeHandler(int.class)).build());
           }
         }).build();
     final ResultMap tagResultMap = new ResultMap.Builder(config, "tagResultMap", Tag.class,
         new ArrayList<ResultMapping>() {
+          private static final long serialVersionUID = 1L;
           {
             add(new ResultMapping.Builder(config, "id", "tag_id", registry.getTypeHandler(int.class))
                 .flags(new ArrayList<ResultFlag>() {
+                  private static final long serialVersionUID = 1L;
                   {
                     add(ResultFlag.ID);
                   }
@@ -601,9 +652,11 @@ class ExecutorTestHelper {
         }).build();
     final ResultMap commentResultMap = new ResultMap.Builder(config, "commentResultMap", Comment.class,
         new ArrayList<ResultMapping>() {
+          private static final long serialVersionUID = 1L;
           {
             add(new ResultMapping.Builder(config, "id", "comment_id", registry.getTypeHandler(int.class))
                 .flags(new ArrayList<ResultFlag>() {
+                  private static final long serialVersionUID = 1L;
                   {
                     add(ResultFlag.ID);
                   }
@@ -617,9 +670,11 @@ class ExecutorTestHelper {
     config.addResultMap(commentResultMap);
     final ResultMap postResultMap = new ResultMap.Builder(config, "postResultMap", Post.class,
         new ArrayList<ResultMapping>() {
+          private static final long serialVersionUID = 1L;
           {
             add(new ResultMapping.Builder(config, "id", "id", registry.getTypeHandler(int.class))
                 .flags(new ArrayList<ResultFlag>() {
+                  private static final long serialVersionUID = 1L;
                   {
                     add(ResultFlag.ID);
                   }
@@ -627,6 +682,7 @@ class ExecutorTestHelper {
 
             add(new ResultMapping.Builder(config, "blog").nestedQueryId("selectBlogByIdAndAuthor")
                 .composites(new ArrayList<ResultMapping>() {
+                  private static final long serialVersionUID = 1L;
                   {
                     add(new ResultMapping.Builder(config, "authorId", "author_id", registry.getTypeHandler(int.class))
                         .build());
@@ -647,6 +703,7 @@ class ExecutorTestHelper {
 
     return new MappedStatement.Builder(config, "selectPostsForBlog", sqlSource, SqlCommandType.SELECT)
         .parameterMap(parameterMap).resultMaps(new ArrayList<ResultMap>() {
+          private static final long serialVersionUID = 1L;
           {
             add(postResultMap);
           }
@@ -660,6 +717,7 @@ class ExecutorTestHelper {
     MappedStatement kms = new MappedStatement.Builder(config, "insertAuthor!selectKey",
         new StaticSqlSource(config, "SELECT 123456 as id FROM SYSIBM.SYSDUMMY1"), SqlCommandType.SELECT)
             .keyProperty("id").resultMaps(new ArrayList<ResultMap>() {
+              private static final long serialVersionUID = 1L;
               {
                 add(rm);
               }
@@ -669,6 +727,7 @@ class ExecutorTestHelper {
         "INSERT INTO author (id,username,password,email,bio,favourite_section) values(#{id},#{username},#{password},#{email},#{bio:VARCHAR},#{favouriteSection})")),
         SqlCommandType.INSERT).parameterMap(
             new ParameterMap.Builder(config, "defaultParameterMap", Author.class, new ArrayList<ParameterMapping>() {
+              private static final long serialVersionUID = 1L;
               {
                 add(new ParameterMapping.Builder(config, "id", registry.getTypeHandler(Integer.class)).build());
                 add(new ParameterMapping.Builder(config, "username", registry.getTypeHandler(String.class)).build());
@@ -680,6 +739,9 @@ class ExecutorTestHelper {
                     .jdbcType(JdbcType.VARCHAR).build());
               }
             }).build()).cache(authorCache).keyGenerator(new SelectKeyGenerator(kms, true)).keyProperty("id").build();
+  }
+
+  private ExecutorTestHelper() {
   }
 
 }
