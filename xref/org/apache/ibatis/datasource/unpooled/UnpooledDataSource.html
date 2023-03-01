@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../apidocs/org/apache/ibatis/datasource/unpooled/UnpooledDataSource.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2022 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -48,7 +48,7 @@
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>  
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>    <strong class="jxr_keyword">private</strong> ClassLoader driverClassLoader;
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>    <strong class="jxr_keyword">private</strong> Properties driverProperties;
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> Map&lt;String, Driver&gt; registeredDrivers = <strong class="jxr_keyword">new</strong> ConcurrentHashMap&lt;&gt;();
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> Map&lt;String, Driver&gt; registeredDrivers = <strong class="jxr_keyword">new</strong> ConcurrentHashMap&lt;&gt;();
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>  
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>    <strong class="jxr_keyword">private</strong> String driver;
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>    <strong class="jxr_keyword">private</strong> String url;
@@ -83,251 +83,255 @@
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>      <strong class="jxr_keyword">this</strong>.driverProperties = driverProperties;
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>    }
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>  
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>    <strong class="jxr_keyword">public</strong> <a name="UnpooledDataSource" href="../../../../../org/apache/ibatis/datasource/unpooled/UnpooledDataSource.html#UnpooledDataSource">UnpooledDataSource</a>(ClassLoader driverClassLoader, String driver, String url, String username, String password) {
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>      <strong class="jxr_keyword">this</strong>.driverClassLoader = driverClassLoader;
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>      <strong class="jxr_keyword">this</strong>.driver = driver;
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>      <strong class="jxr_keyword">this</strong>.url = url;
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>      <strong class="jxr_keyword">this</strong>.username = username;
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>      <strong class="jxr_keyword">this</strong>.password = password;
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>    }
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>  
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>    <strong class="jxr_keyword">public</strong> <a name="UnpooledDataSource" href="../../../../../org/apache/ibatis/datasource/unpooled/UnpooledDataSource.html#UnpooledDataSource">UnpooledDataSource</a>(ClassLoader driverClassLoader, String driver, String url, Properties driverProperties) {
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>      <strong class="jxr_keyword">this</strong>.driverClassLoader = driverClassLoader;
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>      <strong class="jxr_keyword">this</strong>.driver = driver;
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>      <strong class="jxr_keyword">this</strong>.url = url;
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>      <strong class="jxr_keyword">this</strong>.driverProperties = driverProperties;
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>    }
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>  
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>    @Override
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>    <strong class="jxr_keyword">public</strong> Connection getConnection() <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>      <strong class="jxr_keyword">return</strong> doGetConnection(username, password);
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>    }
-<a class="jxr_linenumber" name="L97" href="#L97">97</a>  
-<a class="jxr_linenumber" name="L98" href="#L98">98</a>    @Override
-<a class="jxr_linenumber" name="L99" href="#L99">99</a>    <strong class="jxr_keyword">public</strong> Connection getConnection(String username, String password) <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L100" href="#L100">100</a>     <strong class="jxr_keyword">return</strong> doGetConnection(username, password);
-<a class="jxr_linenumber" name="L101" href="#L101">101</a>   }
-<a class="jxr_linenumber" name="L102" href="#L102">102</a> 
-<a class="jxr_linenumber" name="L103" href="#L103">103</a>   @Override
-<a class="jxr_linenumber" name="L104" href="#L104">104</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setLoginTimeout(<strong class="jxr_keyword">int</strong> loginTimeout) {
-<a class="jxr_linenumber" name="L105" href="#L105">105</a>     DriverManager.setLoginTimeout(loginTimeout);
-<a class="jxr_linenumber" name="L106" href="#L106">106</a>   }
-<a class="jxr_linenumber" name="L107" href="#L107">107</a> 
-<a class="jxr_linenumber" name="L108" href="#L108">108</a>   @Override
-<a class="jxr_linenumber" name="L109" href="#L109">109</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> getLoginTimeout() {
-<a class="jxr_linenumber" name="L110" href="#L110">110</a>     <strong class="jxr_keyword">return</strong> DriverManager.getLoginTimeout();
-<a class="jxr_linenumber" name="L111" href="#L111">111</a>   }
-<a class="jxr_linenumber" name="L112" href="#L112">112</a> 
-<a class="jxr_linenumber" name="L113" href="#L113">113</a>   @Override
-<a class="jxr_linenumber" name="L114" href="#L114">114</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setLogWriter(PrintWriter logWriter) {
-<a class="jxr_linenumber" name="L115" href="#L115">115</a>     DriverManager.setLogWriter(logWriter);
-<a class="jxr_linenumber" name="L116" href="#L116">116</a>   }
-<a class="jxr_linenumber" name="L117" href="#L117">117</a> 
-<a class="jxr_linenumber" name="L118" href="#L118">118</a>   @Override
-<a class="jxr_linenumber" name="L119" href="#L119">119</a>   <strong class="jxr_keyword">public</strong> PrintWriter getLogWriter() {
-<a class="jxr_linenumber" name="L120" href="#L120">120</a>     <strong class="jxr_keyword">return</strong> DriverManager.getLogWriter();
-<a class="jxr_linenumber" name="L121" href="#L121">121</a>   }
-<a class="jxr_linenumber" name="L122" href="#L122">122</a> 
-<a class="jxr_linenumber" name="L123" href="#L123">123</a>   <strong class="jxr_keyword">public</strong> ClassLoader getDriverClassLoader() {
-<a class="jxr_linenumber" name="L124" href="#L124">124</a>     <strong class="jxr_keyword">return</strong> driverClassLoader;
-<a class="jxr_linenumber" name="L125" href="#L125">125</a>   }
-<a class="jxr_linenumber" name="L126" href="#L126">126</a> 
-<a class="jxr_linenumber" name="L127" href="#L127">127</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setDriverClassLoader(ClassLoader driverClassLoader) {
-<a class="jxr_linenumber" name="L128" href="#L128">128</a>     <strong class="jxr_keyword">this</strong>.driverClassLoader = driverClassLoader;
-<a class="jxr_linenumber" name="L129" href="#L129">129</a>   }
-<a class="jxr_linenumber" name="L130" href="#L130">130</a> 
-<a class="jxr_linenumber" name="L131" href="#L131">131</a>   <strong class="jxr_keyword">public</strong> Properties getDriverProperties() {
-<a class="jxr_linenumber" name="L132" href="#L132">132</a>     <strong class="jxr_keyword">return</strong> driverProperties;
-<a class="jxr_linenumber" name="L133" href="#L133">133</a>   }
-<a class="jxr_linenumber" name="L134" href="#L134">134</a> 
-<a class="jxr_linenumber" name="L135" href="#L135">135</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setDriverProperties(Properties driverProperties) {
-<a class="jxr_linenumber" name="L136" href="#L136">136</a>     <strong class="jxr_keyword">this</strong>.driverProperties = driverProperties;
-<a class="jxr_linenumber" name="L137" href="#L137">137</a>   }
-<a class="jxr_linenumber" name="L138" href="#L138">138</a> 
-<a class="jxr_linenumber" name="L139" href="#L139">139</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">synchronized</strong> String getDriver() {
-<a class="jxr_linenumber" name="L140" href="#L140">140</a>     <strong class="jxr_keyword">return</strong> driver;
-<a class="jxr_linenumber" name="L141" href="#L141">141</a>   }
-<a class="jxr_linenumber" name="L142" href="#L142">142</a> 
-<a class="jxr_linenumber" name="L143" href="#L143">143</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">synchronized</strong> <strong class="jxr_keyword">void</strong> setDriver(String driver) {
-<a class="jxr_linenumber" name="L144" href="#L144">144</a>     <strong class="jxr_keyword">this</strong>.driver = driver;
-<a class="jxr_linenumber" name="L145" href="#L145">145</a>   }
-<a class="jxr_linenumber" name="L146" href="#L146">146</a> 
-<a class="jxr_linenumber" name="L147" href="#L147">147</a>   <strong class="jxr_keyword">public</strong> String getUrl() {
-<a class="jxr_linenumber" name="L148" href="#L148">148</a>     <strong class="jxr_keyword">return</strong> url;
-<a class="jxr_linenumber" name="L149" href="#L149">149</a>   }
-<a class="jxr_linenumber" name="L150" href="#L150">150</a> 
-<a class="jxr_linenumber" name="L151" href="#L151">151</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setUrl(String url) {
-<a class="jxr_linenumber" name="L152" href="#L152">152</a>     <strong class="jxr_keyword">this</strong>.url = url;
-<a class="jxr_linenumber" name="L153" href="#L153">153</a>   }
-<a class="jxr_linenumber" name="L154" href="#L154">154</a> 
-<a class="jxr_linenumber" name="L155" href="#L155">155</a>   <strong class="jxr_keyword">public</strong> String getUsername() {
-<a class="jxr_linenumber" name="L156" href="#L156">156</a>     <strong class="jxr_keyword">return</strong> username;
-<a class="jxr_linenumber" name="L157" href="#L157">157</a>   }
-<a class="jxr_linenumber" name="L158" href="#L158">158</a> 
-<a class="jxr_linenumber" name="L159" href="#L159">159</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setUsername(String username) {
-<a class="jxr_linenumber" name="L160" href="#L160">160</a>     <strong class="jxr_keyword">this</strong>.username = username;
-<a class="jxr_linenumber" name="L161" href="#L161">161</a>   }
-<a class="jxr_linenumber" name="L162" href="#L162">162</a> 
-<a class="jxr_linenumber" name="L163" href="#L163">163</a>   <strong class="jxr_keyword">public</strong> String getPassword() {
-<a class="jxr_linenumber" name="L164" href="#L164">164</a>     <strong class="jxr_keyword">return</strong> password;
-<a class="jxr_linenumber" name="L165" href="#L165">165</a>   }
-<a class="jxr_linenumber" name="L166" href="#L166">166</a> 
-<a class="jxr_linenumber" name="L167" href="#L167">167</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setPassword(String password) {
-<a class="jxr_linenumber" name="L168" href="#L168">168</a>     <strong class="jxr_keyword">this</strong>.password = password;
-<a class="jxr_linenumber" name="L169" href="#L169">169</a>   }
-<a class="jxr_linenumber" name="L170" href="#L170">170</a> 
-<a class="jxr_linenumber" name="L171" href="#L171">171</a>   <strong class="jxr_keyword">public</strong> Boolean isAutoCommit() {
-<a class="jxr_linenumber" name="L172" href="#L172">172</a>     <strong class="jxr_keyword">return</strong> autoCommit;
-<a class="jxr_linenumber" name="L173" href="#L173">173</a>   }
-<a class="jxr_linenumber" name="L174" href="#L174">174</a> 
-<a class="jxr_linenumber" name="L175" href="#L175">175</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setAutoCommit(Boolean autoCommit) {
-<a class="jxr_linenumber" name="L176" href="#L176">176</a>     <strong class="jxr_keyword">this</strong>.autoCommit = autoCommit;
-<a class="jxr_linenumber" name="L177" href="#L177">177</a>   }
-<a class="jxr_linenumber" name="L178" href="#L178">178</a> 
-<a class="jxr_linenumber" name="L179" href="#L179">179</a>   <strong class="jxr_keyword">public</strong> Integer getDefaultTransactionIsolationLevel() {
-<a class="jxr_linenumber" name="L180" href="#L180">180</a>     <strong class="jxr_keyword">return</strong> defaultTransactionIsolationLevel;
-<a class="jxr_linenumber" name="L181" href="#L181">181</a>   }
-<a class="jxr_linenumber" name="L182" href="#L182">182</a> 
-<a class="jxr_linenumber" name="L183" href="#L183">183</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setDefaultTransactionIsolationLevel(Integer defaultTransactionIsolationLevel) {
-<a class="jxr_linenumber" name="L184" href="#L184">184</a>     <strong class="jxr_keyword">this</strong>.defaultTransactionIsolationLevel = defaultTransactionIsolationLevel;
-<a class="jxr_linenumber" name="L185" href="#L185">185</a>   }
-<a class="jxr_linenumber" name="L186" href="#L186">186</a> 
-<a class="jxr_linenumber" name="L187" href="#L187">187</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L188" href="#L188">188</a> <em class="jxr_javadoccomment">   * Gets the default network timeout.</em>
-<a class="jxr_linenumber" name="L189" href="#L189">189</a> <em class="jxr_javadoccomment">   *</em>
-<a class="jxr_linenumber" name="L190" href="#L190">190</a> <em class="jxr_javadoccomment">   * @return the default network timeout</em>
-<a class="jxr_linenumber" name="L191" href="#L191">191</a> <em class="jxr_javadoccomment">   * @since 3.5.2</em>
-<a class="jxr_linenumber" name="L192" href="#L192">192</a> <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L193" href="#L193">193</a>   <strong class="jxr_keyword">public</strong> Integer getDefaultNetworkTimeout() {
-<a class="jxr_linenumber" name="L194" href="#L194">194</a>     <strong class="jxr_keyword">return</strong> defaultNetworkTimeout;
-<a class="jxr_linenumber" name="L195" href="#L195">195</a>   }
-<a class="jxr_linenumber" name="L196" href="#L196">196</a> 
-<a class="jxr_linenumber" name="L197" href="#L197">197</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L198" href="#L198">198</a> <em class="jxr_javadoccomment">   * Sets the default network timeout value to wait for the database operation to complete. See {@link Connection#setNetworkTimeout(java.util.concurrent.Executor, int)}</em>
-<a class="jxr_linenumber" name="L199" href="#L199">199</a> <em class="jxr_javadoccomment">   *</em>
-<a class="jxr_linenumber" name="L200" href="#L200">200</a> <em class="jxr_javadoccomment">   * @param defaultNetworkTimeout</em>
-<a class="jxr_linenumber" name="L201" href="#L201">201</a> <em class="jxr_javadoccomment">   *          The time in milliseconds to wait for the database operation to complete.</em>
-<a class="jxr_linenumber" name="L202" href="#L202">202</a> <em class="jxr_javadoccomment">   * @since 3.5.2</em>
-<a class="jxr_linenumber" name="L203" href="#L203">203</a> <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L204" href="#L204">204</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setDefaultNetworkTimeout(Integer defaultNetworkTimeout) {
-<a class="jxr_linenumber" name="L205" href="#L205">205</a>     <strong class="jxr_keyword">this</strong>.defaultNetworkTimeout = defaultNetworkTimeout;
-<a class="jxr_linenumber" name="L206" href="#L206">206</a>   }
-<a class="jxr_linenumber" name="L207" href="#L207">207</a> 
-<a class="jxr_linenumber" name="L208" href="#L208">208</a>   <strong class="jxr_keyword">private</strong> Connection doGetConnection(String username, String password) <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L209" href="#L209">209</a>     Properties props = <strong class="jxr_keyword">new</strong> Properties();
-<a class="jxr_linenumber" name="L210" href="#L210">210</a>     <strong class="jxr_keyword">if</strong> (driverProperties != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L211" href="#L211">211</a>       props.putAll(driverProperties);
-<a class="jxr_linenumber" name="L212" href="#L212">212</a>     }
-<a class="jxr_linenumber" name="L213" href="#L213">213</a>     <strong class="jxr_keyword">if</strong> (username != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L214" href="#L214">214</a>       props.setProperty(<span class="jxr_string">"user"</span>, username);
-<a class="jxr_linenumber" name="L215" href="#L215">215</a>     }
-<a class="jxr_linenumber" name="L216" href="#L216">216</a>     <strong class="jxr_keyword">if</strong> (password != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L217" href="#L217">217</a>       props.setProperty(<span class="jxr_string">"password"</span>, password);
-<a class="jxr_linenumber" name="L218" href="#L218">218</a>     }
-<a class="jxr_linenumber" name="L219" href="#L219">219</a>     <strong class="jxr_keyword">return</strong> doGetConnection(props);
-<a class="jxr_linenumber" name="L220" href="#L220">220</a>   }
-<a class="jxr_linenumber" name="L221" href="#L221">221</a> 
-<a class="jxr_linenumber" name="L222" href="#L222">222</a>   <strong class="jxr_keyword">private</strong> Connection doGetConnection(Properties properties) <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L223" href="#L223">223</a>     initializeDriver();
-<a class="jxr_linenumber" name="L224" href="#L224">224</a>     Connection connection = DriverManager.getConnection(url, properties);
-<a class="jxr_linenumber" name="L225" href="#L225">225</a>     configureConnection(connection);
-<a class="jxr_linenumber" name="L226" href="#L226">226</a>     <strong class="jxr_keyword">return</strong> connection;
-<a class="jxr_linenumber" name="L227" href="#L227">227</a>   }
-<a class="jxr_linenumber" name="L228" href="#L228">228</a> 
-<a class="jxr_linenumber" name="L229" href="#L229">229</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">synchronized</strong> <strong class="jxr_keyword">void</strong> initializeDriver() <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L230" href="#L230">230</a>     <strong class="jxr_keyword">if</strong> (!registeredDrivers.containsKey(driver)) {
-<a class="jxr_linenumber" name="L231" href="#L231">231</a>       Class&lt;?&gt; driverType;
-<a class="jxr_linenumber" name="L232" href="#L232">232</a>       <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L233" href="#L233">233</a>         <strong class="jxr_keyword">if</strong> (driverClassLoader != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L234" href="#L234">234</a>           driverType = Class.forName(driver, <strong class="jxr_keyword">true</strong>, driverClassLoader);
-<a class="jxr_linenumber" name="L235" href="#L235">235</a>         } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L236" href="#L236">236</a>           driverType = Resources.classForName(driver);
-<a class="jxr_linenumber" name="L237" href="#L237">237</a>         }
-<a class="jxr_linenumber" name="L238" href="#L238">238</a>         <em class="jxr_comment">// DriverManager requires the driver to be loaded via the system ClassLoader.</em>
-<a class="jxr_linenumber" name="L239" href="#L239">239</a>         <em class="jxr_comment">// https://www.kfu.com/~nsayer/Java/dyn-jdbc.html</em>
-<a class="jxr_linenumber" name="L240" href="#L240">240</a>         Driver driverInstance = (Driver) driverType.getDeclaredConstructor().newInstance();
-<a class="jxr_linenumber" name="L241" href="#L241">241</a>         DriverManager.registerDriver(<strong class="jxr_keyword">new</strong> DriverProxy(driverInstance));
-<a class="jxr_linenumber" name="L242" href="#L242">242</a>         registeredDrivers.put(driver, driverInstance);
-<a class="jxr_linenumber" name="L243" href="#L243">243</a>       } <strong class="jxr_keyword">catch</strong> (Exception e) {
-<a class="jxr_linenumber" name="L244" href="#L244">244</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> SQLException(<span class="jxr_string">"Error setting driver on UnpooledDataSource. Cause: "</span> + e);
-<a class="jxr_linenumber" name="L245" href="#L245">245</a>       }
-<a class="jxr_linenumber" name="L246" href="#L246">246</a>     }
-<a class="jxr_linenumber" name="L247" href="#L247">247</a>   }
-<a class="jxr_linenumber" name="L248" href="#L248">248</a> 
-<a class="jxr_linenumber" name="L249" href="#L249">249</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> configureConnection(Connection conn) <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L250" href="#L250">250</a>     <strong class="jxr_keyword">if</strong> (defaultNetworkTimeout != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L251" href="#L251">251</a>       conn.setNetworkTimeout(Executors.newSingleThreadExecutor(), defaultNetworkTimeout);
-<a class="jxr_linenumber" name="L252" href="#L252">252</a>     }
-<a class="jxr_linenumber" name="L253" href="#L253">253</a>     <strong class="jxr_keyword">if</strong> (autoCommit != <strong class="jxr_keyword">null</strong> &amp;&amp; autoCommit != conn.getAutoCommit()) {
-<a class="jxr_linenumber" name="L254" href="#L254">254</a>       conn.setAutoCommit(autoCommit);
-<a class="jxr_linenumber" name="L255" href="#L255">255</a>     }
-<a class="jxr_linenumber" name="L256" href="#L256">256</a>     <strong class="jxr_keyword">if</strong> (defaultTransactionIsolationLevel != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L257" href="#L257">257</a>       conn.setTransactionIsolation(defaultTransactionIsolationLevel);
-<a class="jxr_linenumber" name="L258" href="#L258">258</a>     }
-<a class="jxr_linenumber" name="L259" href="#L259">259</a>   }
-<a class="jxr_linenumber" name="L260" href="#L260">260</a> 
-<a class="jxr_linenumber" name="L261" href="#L261">261</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> DriverProxy <strong class="jxr_keyword">implements</strong> Driver {
-<a class="jxr_linenumber" name="L262" href="#L262">262</a>     <strong class="jxr_keyword">private</strong> Driver driver;
-<a class="jxr_linenumber" name="L263" href="#L263">263</a> 
-<a class="jxr_linenumber" name="L264" href="#L264">264</a>     DriverProxy(Driver d) {
-<a class="jxr_linenumber" name="L265" href="#L265">265</a>       <strong class="jxr_keyword">this</strong>.driver = d;
-<a class="jxr_linenumber" name="L266" href="#L266">266</a>     }
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>    <strong class="jxr_keyword">public</strong> <a name="UnpooledDataSource" href="../../../../../org/apache/ibatis/datasource/unpooled/UnpooledDataSource.html#UnpooledDataSource">UnpooledDataSource</a>(ClassLoader driverClassLoader, String driver, String url, String username,
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>        String password) {
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>      <strong class="jxr_keyword">this</strong>.driverClassLoader = driverClassLoader;
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>      <strong class="jxr_keyword">this</strong>.driver = driver;
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>      <strong class="jxr_keyword">this</strong>.url = url;
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>      <strong class="jxr_keyword">this</strong>.username = username;
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>      <strong class="jxr_keyword">this</strong>.password = password;
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>    }
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>  
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>    <strong class="jxr_keyword">public</strong> <a name="UnpooledDataSource" href="../../../../../org/apache/ibatis/datasource/unpooled/UnpooledDataSource.html#UnpooledDataSource">UnpooledDataSource</a>(ClassLoader driverClassLoader, String driver, String url, Properties driverProperties) {
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>      <strong class="jxr_keyword">this</strong>.driverClassLoader = driverClassLoader;
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>      <strong class="jxr_keyword">this</strong>.driver = driver;
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>      <strong class="jxr_keyword">this</strong>.url = url;
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>      <strong class="jxr_keyword">this</strong>.driverProperties = driverProperties;
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>    }
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>  
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>    @Override
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>    <strong class="jxr_keyword">public</strong> Connection getConnection() <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>      <strong class="jxr_keyword">return</strong> doGetConnection(username, password);
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>    }
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>  
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>    @Override
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>   <strong class="jxr_keyword">public</strong> Connection getConnection(String username, String password) <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>     <strong class="jxr_keyword">return</strong> doGetConnection(username, password);
+<a class="jxr_linenumber" name="L102" href="#L102">102</a>   }
+<a class="jxr_linenumber" name="L103" href="#L103">103</a> 
+<a class="jxr_linenumber" name="L104" href="#L104">104</a>   @Override
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setLoginTimeout(<strong class="jxr_keyword">int</strong> loginTimeout) {
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>     DriverManager.setLoginTimeout(loginTimeout);
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>   }
+<a class="jxr_linenumber" name="L108" href="#L108">108</a> 
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>   @Override
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> getLoginTimeout() {
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>     <strong class="jxr_keyword">return</strong> DriverManager.getLoginTimeout();
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>   }
+<a class="jxr_linenumber" name="L113" href="#L113">113</a> 
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>   @Override
+<a class="jxr_linenumber" name="L115" href="#L115">115</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setLogWriter(PrintWriter logWriter) {
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>     DriverManager.setLogWriter(logWriter);
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>   }
+<a class="jxr_linenumber" name="L118" href="#L118">118</a> 
+<a class="jxr_linenumber" name="L119" href="#L119">119</a>   @Override
+<a class="jxr_linenumber" name="L120" href="#L120">120</a>   <strong class="jxr_keyword">public</strong> PrintWriter getLogWriter() {
+<a class="jxr_linenumber" name="L121" href="#L121">121</a>     <strong class="jxr_keyword">return</strong> DriverManager.getLogWriter();
+<a class="jxr_linenumber" name="L122" href="#L122">122</a>   }
+<a class="jxr_linenumber" name="L123" href="#L123">123</a> 
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>   <strong class="jxr_keyword">public</strong> ClassLoader getDriverClassLoader() {
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>     <strong class="jxr_keyword">return</strong> driverClassLoader;
+<a class="jxr_linenumber" name="L126" href="#L126">126</a>   }
+<a class="jxr_linenumber" name="L127" href="#L127">127</a> 
+<a class="jxr_linenumber" name="L128" href="#L128">128</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setDriverClassLoader(ClassLoader driverClassLoader) {
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>     <strong class="jxr_keyword">this</strong>.driverClassLoader = driverClassLoader;
+<a class="jxr_linenumber" name="L130" href="#L130">130</a>   }
+<a class="jxr_linenumber" name="L131" href="#L131">131</a> 
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>   <strong class="jxr_keyword">public</strong> Properties getDriverProperties() {
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>     <strong class="jxr_keyword">return</strong> driverProperties;
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>   }
+<a class="jxr_linenumber" name="L135" href="#L135">135</a> 
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setDriverProperties(Properties driverProperties) {
+<a class="jxr_linenumber" name="L137" href="#L137">137</a>     <strong class="jxr_keyword">this</strong>.driverProperties = driverProperties;
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>   }
+<a class="jxr_linenumber" name="L139" href="#L139">139</a> 
+<a class="jxr_linenumber" name="L140" href="#L140">140</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">synchronized</strong> String getDriver() {
+<a class="jxr_linenumber" name="L141" href="#L141">141</a>     <strong class="jxr_keyword">return</strong> driver;
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>   }
+<a class="jxr_linenumber" name="L143" href="#L143">143</a> 
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">synchronized</strong> <strong class="jxr_keyword">void</strong> setDriver(String driver) {
+<a class="jxr_linenumber" name="L145" href="#L145">145</a>     <strong class="jxr_keyword">this</strong>.driver = driver;
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>   }
+<a class="jxr_linenumber" name="L147" href="#L147">147</a> 
+<a class="jxr_linenumber" name="L148" href="#L148">148</a>   <strong class="jxr_keyword">public</strong> String getUrl() {
+<a class="jxr_linenumber" name="L149" href="#L149">149</a>     <strong class="jxr_keyword">return</strong> url;
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>   }
+<a class="jxr_linenumber" name="L151" href="#L151">151</a> 
+<a class="jxr_linenumber" name="L152" href="#L152">152</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setUrl(String url) {
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>     <strong class="jxr_keyword">this</strong>.url = url;
+<a class="jxr_linenumber" name="L154" href="#L154">154</a>   }
+<a class="jxr_linenumber" name="L155" href="#L155">155</a> 
+<a class="jxr_linenumber" name="L156" href="#L156">156</a>   <strong class="jxr_keyword">public</strong> String getUsername() {
+<a class="jxr_linenumber" name="L157" href="#L157">157</a>     <strong class="jxr_keyword">return</strong> username;
+<a class="jxr_linenumber" name="L158" href="#L158">158</a>   }
+<a class="jxr_linenumber" name="L159" href="#L159">159</a> 
+<a class="jxr_linenumber" name="L160" href="#L160">160</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setUsername(String username) {
+<a class="jxr_linenumber" name="L161" href="#L161">161</a>     <strong class="jxr_keyword">this</strong>.username = username;
+<a class="jxr_linenumber" name="L162" href="#L162">162</a>   }
+<a class="jxr_linenumber" name="L163" href="#L163">163</a> 
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>   <strong class="jxr_keyword">public</strong> String getPassword() {
+<a class="jxr_linenumber" name="L165" href="#L165">165</a>     <strong class="jxr_keyword">return</strong> password;
+<a class="jxr_linenumber" name="L166" href="#L166">166</a>   }
+<a class="jxr_linenumber" name="L167" href="#L167">167</a> 
+<a class="jxr_linenumber" name="L168" href="#L168">168</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setPassword(String password) {
+<a class="jxr_linenumber" name="L169" href="#L169">169</a>     <strong class="jxr_keyword">this</strong>.password = password;
+<a class="jxr_linenumber" name="L170" href="#L170">170</a>   }
+<a class="jxr_linenumber" name="L171" href="#L171">171</a> 
+<a class="jxr_linenumber" name="L172" href="#L172">172</a>   <strong class="jxr_keyword">public</strong> Boolean isAutoCommit() {
+<a class="jxr_linenumber" name="L173" href="#L173">173</a>     <strong class="jxr_keyword">return</strong> autoCommit;
+<a class="jxr_linenumber" name="L174" href="#L174">174</a>   }
+<a class="jxr_linenumber" name="L175" href="#L175">175</a> 
+<a class="jxr_linenumber" name="L176" href="#L176">176</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setAutoCommit(Boolean autoCommit) {
+<a class="jxr_linenumber" name="L177" href="#L177">177</a>     <strong class="jxr_keyword">this</strong>.autoCommit = autoCommit;
+<a class="jxr_linenumber" name="L178" href="#L178">178</a>   }
+<a class="jxr_linenumber" name="L179" href="#L179">179</a> 
+<a class="jxr_linenumber" name="L180" href="#L180">180</a>   <strong class="jxr_keyword">public</strong> Integer getDefaultTransactionIsolationLevel() {
+<a class="jxr_linenumber" name="L181" href="#L181">181</a>     <strong class="jxr_keyword">return</strong> defaultTransactionIsolationLevel;
+<a class="jxr_linenumber" name="L182" href="#L182">182</a>   }
+<a class="jxr_linenumber" name="L183" href="#L183">183</a> 
+<a class="jxr_linenumber" name="L184" href="#L184">184</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setDefaultTransactionIsolationLevel(Integer defaultTransactionIsolationLevel) {
+<a class="jxr_linenumber" name="L185" href="#L185">185</a>     <strong class="jxr_keyword">this</strong>.defaultTransactionIsolationLevel = defaultTransactionIsolationLevel;
+<a class="jxr_linenumber" name="L186" href="#L186">186</a>   }
+<a class="jxr_linenumber" name="L187" href="#L187">187</a> 
+<a class="jxr_linenumber" name="L188" href="#L188">188</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L189" href="#L189">189</a> <em class="jxr_javadoccomment">   * Gets the default network timeout.</em>
+<a class="jxr_linenumber" name="L190" href="#L190">190</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L191" href="#L191">191</a> <em class="jxr_javadoccomment">   * @return the default network timeout</em>
+<a class="jxr_linenumber" name="L192" href="#L192">192</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L193" href="#L193">193</a> <em class="jxr_javadoccomment">   * @since 3.5.2</em>
+<a class="jxr_linenumber" name="L194" href="#L194">194</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L195" href="#L195">195</a>   <strong class="jxr_keyword">public</strong> Integer getDefaultNetworkTimeout() {
+<a class="jxr_linenumber" name="L196" href="#L196">196</a>     <strong class="jxr_keyword">return</strong> defaultNetworkTimeout;
+<a class="jxr_linenumber" name="L197" href="#L197">197</a>   }
+<a class="jxr_linenumber" name="L198" href="#L198">198</a> 
+<a class="jxr_linenumber" name="L199" href="#L199">199</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L200" href="#L200">200</a> <em class="jxr_javadoccomment">   * Sets the default network timeout value to wait for the database operation to complete. See</em>
+<a class="jxr_linenumber" name="L201" href="#L201">201</a> <em class="jxr_javadoccomment">   * {@link Connection#setNetworkTimeout(java.util.concurrent.Executor, int)}</em>
+<a class="jxr_linenumber" name="L202" href="#L202">202</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L203" href="#L203">203</a> <em class="jxr_javadoccomment">   * @param defaultNetworkTimeout</em>
+<a class="jxr_linenumber" name="L204" href="#L204">204</a> <em class="jxr_javadoccomment">   *          The time in milliseconds to wait for the database operation to complete.</em>
+<a class="jxr_linenumber" name="L205" href="#L205">205</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L206" href="#L206">206</a> <em class="jxr_javadoccomment">   * @since 3.5.2</em>
+<a class="jxr_linenumber" name="L207" href="#L207">207</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L208" href="#L208">208</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setDefaultNetworkTimeout(Integer defaultNetworkTimeout) {
+<a class="jxr_linenumber" name="L209" href="#L209">209</a>     <strong class="jxr_keyword">this</strong>.defaultNetworkTimeout = defaultNetworkTimeout;
+<a class="jxr_linenumber" name="L210" href="#L210">210</a>   }
+<a class="jxr_linenumber" name="L211" href="#L211">211</a> 
+<a class="jxr_linenumber" name="L212" href="#L212">212</a>   <strong class="jxr_keyword">private</strong> Connection doGetConnection(String username, String password) <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L213" href="#L213">213</a>     Properties props = <strong class="jxr_keyword">new</strong> Properties();
+<a class="jxr_linenumber" name="L214" href="#L214">214</a>     <strong class="jxr_keyword">if</strong> (driverProperties != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L215" href="#L215">215</a>       props.putAll(driverProperties);
+<a class="jxr_linenumber" name="L216" href="#L216">216</a>     }
+<a class="jxr_linenumber" name="L217" href="#L217">217</a>     <strong class="jxr_keyword">if</strong> (username != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L218" href="#L218">218</a>       props.setProperty(<span class="jxr_string">"user"</span>, username);
+<a class="jxr_linenumber" name="L219" href="#L219">219</a>     }
+<a class="jxr_linenumber" name="L220" href="#L220">220</a>     <strong class="jxr_keyword">if</strong> (password != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L221" href="#L221">221</a>       props.setProperty(<span class="jxr_string">"password"</span>, password);
+<a class="jxr_linenumber" name="L222" href="#L222">222</a>     }
+<a class="jxr_linenumber" name="L223" href="#L223">223</a>     <strong class="jxr_keyword">return</strong> doGetConnection(props);
+<a class="jxr_linenumber" name="L224" href="#L224">224</a>   }
+<a class="jxr_linenumber" name="L225" href="#L225">225</a> 
+<a class="jxr_linenumber" name="L226" href="#L226">226</a>   <strong class="jxr_keyword">private</strong> Connection doGetConnection(Properties properties) <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L227" href="#L227">227</a>     initializeDriver();
+<a class="jxr_linenumber" name="L228" href="#L228">228</a>     Connection connection = DriverManager.getConnection(url, properties);
+<a class="jxr_linenumber" name="L229" href="#L229">229</a>     configureConnection(connection);
+<a class="jxr_linenumber" name="L230" href="#L230">230</a>     <strong class="jxr_keyword">return</strong> connection;
+<a class="jxr_linenumber" name="L231" href="#L231">231</a>   }
+<a class="jxr_linenumber" name="L232" href="#L232">232</a> 
+<a class="jxr_linenumber" name="L233" href="#L233">233</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">synchronized</strong> <strong class="jxr_keyword">void</strong> initializeDriver() <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L234" href="#L234">234</a>     <strong class="jxr_keyword">if</strong> (!registeredDrivers.containsKey(driver)) {
+<a class="jxr_linenumber" name="L235" href="#L235">235</a>       Class&lt;?&gt; driverType;
+<a class="jxr_linenumber" name="L236" href="#L236">236</a>       <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L237" href="#L237">237</a>         <strong class="jxr_keyword">if</strong> (driverClassLoader != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L238" href="#L238">238</a>           driverType = Class.forName(driver, <strong class="jxr_keyword">true</strong>, driverClassLoader);
+<a class="jxr_linenumber" name="L239" href="#L239">239</a>         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L240" href="#L240">240</a>           driverType = Resources.classForName(driver);
+<a class="jxr_linenumber" name="L241" href="#L241">241</a>         }
+<a class="jxr_linenumber" name="L242" href="#L242">242</a>         <em class="jxr_comment">// DriverManager requires the driver to be loaded via the system ClassLoader.</em>
+<a class="jxr_linenumber" name="L243" href="#L243">243</a>         <em class="jxr_comment">// https://www.kfu.com/~nsayer/Java/dyn-jdbc.html</em>
+<a class="jxr_linenumber" name="L244" href="#L244">244</a>         Driver driverInstance = (Driver) driverType.getDeclaredConstructor().newInstance();
+<a class="jxr_linenumber" name="L245" href="#L245">245</a>         DriverManager.registerDriver(<strong class="jxr_keyword">new</strong> DriverProxy(driverInstance));
+<a class="jxr_linenumber" name="L246" href="#L246">246</a>         registeredDrivers.put(driver, driverInstance);
+<a class="jxr_linenumber" name="L247" href="#L247">247</a>       } <strong class="jxr_keyword">catch</strong> (Exception e) {
+<a class="jxr_linenumber" name="L248" href="#L248">248</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> SQLException(<span class="jxr_string">"Error setting driver on UnpooledDataSource. Cause: "</span> + e);
+<a class="jxr_linenumber" name="L249" href="#L249">249</a>       }
+<a class="jxr_linenumber" name="L250" href="#L250">250</a>     }
+<a class="jxr_linenumber" name="L251" href="#L251">251</a>   }
+<a class="jxr_linenumber" name="L252" href="#L252">252</a> 
+<a class="jxr_linenumber" name="L253" href="#L253">253</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> configureConnection(Connection conn) <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L254" href="#L254">254</a>     <strong class="jxr_keyword">if</strong> (defaultNetworkTimeout != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L255" href="#L255">255</a>       conn.setNetworkTimeout(Executors.newSingleThreadExecutor(), defaultNetworkTimeout);
+<a class="jxr_linenumber" name="L256" href="#L256">256</a>     }
+<a class="jxr_linenumber" name="L257" href="#L257">257</a>     <strong class="jxr_keyword">if</strong> (autoCommit != <strong class="jxr_keyword">null</strong> &amp;&amp; autoCommit != conn.getAutoCommit()) {
+<a class="jxr_linenumber" name="L258" href="#L258">258</a>       conn.setAutoCommit(autoCommit);
+<a class="jxr_linenumber" name="L259" href="#L259">259</a>     }
+<a class="jxr_linenumber" name="L260" href="#L260">260</a>     <strong class="jxr_keyword">if</strong> (defaultTransactionIsolationLevel != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L261" href="#L261">261</a>       conn.setTransactionIsolation(defaultTransactionIsolationLevel);
+<a class="jxr_linenumber" name="L262" href="#L262">262</a>     }
+<a class="jxr_linenumber" name="L263" href="#L263">263</a>   }
+<a class="jxr_linenumber" name="L264" href="#L264">264</a> 
+<a class="jxr_linenumber" name="L265" href="#L265">265</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> DriverProxy <strong class="jxr_keyword">implements</strong> Driver {
+<a class="jxr_linenumber" name="L266" href="#L266">266</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Driver driver;
 <a class="jxr_linenumber" name="L267" href="#L267">267</a> 
-<a class="jxr_linenumber" name="L268" href="#L268">268</a>     @Override
-<a class="jxr_linenumber" name="L269" href="#L269">269</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> acceptsURL(String u) <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L270" href="#L270">270</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.driver.acceptsURL(u);
-<a class="jxr_linenumber" name="L271" href="#L271">271</a>     }
-<a class="jxr_linenumber" name="L272" href="#L272">272</a> 
-<a class="jxr_linenumber" name="L273" href="#L273">273</a>     @Override
-<a class="jxr_linenumber" name="L274" href="#L274">274</a>     <strong class="jxr_keyword">public</strong> Connection connect(String u, Properties p) <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L275" href="#L275">275</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.driver.connect(u, p);
-<a class="jxr_linenumber" name="L276" href="#L276">276</a>     }
-<a class="jxr_linenumber" name="L277" href="#L277">277</a> 
-<a class="jxr_linenumber" name="L278" href="#L278">278</a>     @Override
-<a class="jxr_linenumber" name="L279" href="#L279">279</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> getMajorVersion() {
-<a class="jxr_linenumber" name="L280" href="#L280">280</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.driver.getMajorVersion();
-<a class="jxr_linenumber" name="L281" href="#L281">281</a>     }
-<a class="jxr_linenumber" name="L282" href="#L282">282</a> 
-<a class="jxr_linenumber" name="L283" href="#L283">283</a>     @Override
-<a class="jxr_linenumber" name="L284" href="#L284">284</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> getMinorVersion() {
-<a class="jxr_linenumber" name="L285" href="#L285">285</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.driver.getMinorVersion();
-<a class="jxr_linenumber" name="L286" href="#L286">286</a>     }
-<a class="jxr_linenumber" name="L287" href="#L287">287</a> 
-<a class="jxr_linenumber" name="L288" href="#L288">288</a>     @Override
-<a class="jxr_linenumber" name="L289" href="#L289">289</a>     <strong class="jxr_keyword">public</strong> DriverPropertyInfo[] getPropertyInfo(String u, Properties p) <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L290" href="#L290">290</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.driver.getPropertyInfo(u, p);
-<a class="jxr_linenumber" name="L291" href="#L291">291</a>     }
-<a class="jxr_linenumber" name="L292" href="#L292">292</a> 
-<a class="jxr_linenumber" name="L293" href="#L293">293</a>     @Override
-<a class="jxr_linenumber" name="L294" href="#L294">294</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> jdbcCompliant() {
-<a class="jxr_linenumber" name="L295" href="#L295">295</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.driver.jdbcCompliant();
-<a class="jxr_linenumber" name="L296" href="#L296">296</a>     }
-<a class="jxr_linenumber" name="L297" href="#L297">297</a> 
-<a class="jxr_linenumber" name="L298" href="#L298">298</a>     @Override
-<a class="jxr_linenumber" name="L299" href="#L299">299</a>     <strong class="jxr_keyword">public</strong> Logger getParentLogger() {
-<a class="jxr_linenumber" name="L300" href="#L300">300</a>       <strong class="jxr_keyword">return</strong> Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-<a class="jxr_linenumber" name="L301" href="#L301">301</a>     }
-<a class="jxr_linenumber" name="L302" href="#L302">302</a>   }
-<a class="jxr_linenumber" name="L303" href="#L303">303</a> 
-<a class="jxr_linenumber" name="L304" href="#L304">304</a>   @Override
-<a class="jxr_linenumber" name="L305" href="#L305">305</a>   <strong class="jxr_keyword">public</strong> &lt;T&gt; T unwrap(Class&lt;T&gt; iface) <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L306" href="#L306">306</a>     <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> SQLException(getClass().getName() + <span class="jxr_string">" is not a wrapper."</span>);
-<a class="jxr_linenumber" name="L307" href="#L307">307</a>   }
-<a class="jxr_linenumber" name="L308" href="#L308">308</a> 
-<a class="jxr_linenumber" name="L309" href="#L309">309</a>   @Override
-<a class="jxr_linenumber" name="L310" href="#L310">310</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> isWrapperFor(Class&lt;?&gt; iface) <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L311" href="#L311">311</a>     <strong class="jxr_keyword">return</strong> false;
-<a class="jxr_linenumber" name="L312" href="#L312">312</a>   }
-<a class="jxr_linenumber" name="L313" href="#L313">313</a> 
-<a class="jxr_linenumber" name="L314" href="#L314">314</a>   @Override
-<a class="jxr_linenumber" name="L315" href="#L315">315</a>   <strong class="jxr_keyword">public</strong> Logger getParentLogger() {
-<a class="jxr_linenumber" name="L316" href="#L316">316</a>     <em class="jxr_comment">// requires JDK version 1.6</em>
-<a class="jxr_linenumber" name="L317" href="#L317">317</a>     <strong class="jxr_keyword">return</strong> Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-<a class="jxr_linenumber" name="L318" href="#L318">318</a>   }
-<a class="jxr_linenumber" name="L319" href="#L319">319</a> 
-<a class="jxr_linenumber" name="L320" href="#L320">320</a> }
+<a class="jxr_linenumber" name="L268" href="#L268">268</a>     DriverProxy(Driver d) {
+<a class="jxr_linenumber" name="L269" href="#L269">269</a>       <strong class="jxr_keyword">this</strong>.driver = d;
+<a class="jxr_linenumber" name="L270" href="#L270">270</a>     }
+<a class="jxr_linenumber" name="L271" href="#L271">271</a> 
+<a class="jxr_linenumber" name="L272" href="#L272">272</a>     @Override
+<a class="jxr_linenumber" name="L273" href="#L273">273</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> acceptsURL(String u) <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L274" href="#L274">274</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.driver.acceptsURL(u);
+<a class="jxr_linenumber" name="L275" href="#L275">275</a>     }
+<a class="jxr_linenumber" name="L276" href="#L276">276</a> 
+<a class="jxr_linenumber" name="L277" href="#L277">277</a>     @Override
+<a class="jxr_linenumber" name="L278" href="#L278">278</a>     <strong class="jxr_keyword">public</strong> Connection connect(String u, Properties p) <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L279" href="#L279">279</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.driver.connect(u, p);
+<a class="jxr_linenumber" name="L280" href="#L280">280</a>     }
+<a class="jxr_linenumber" name="L281" href="#L281">281</a> 
+<a class="jxr_linenumber" name="L282" href="#L282">282</a>     @Override
+<a class="jxr_linenumber" name="L283" href="#L283">283</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> getMajorVersion() {
+<a class="jxr_linenumber" name="L284" href="#L284">284</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.driver.getMajorVersion();
+<a class="jxr_linenumber" name="L285" href="#L285">285</a>     }
+<a class="jxr_linenumber" name="L286" href="#L286">286</a> 
+<a class="jxr_linenumber" name="L287" href="#L287">287</a>     @Override
+<a class="jxr_linenumber" name="L288" href="#L288">288</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> getMinorVersion() {
+<a class="jxr_linenumber" name="L289" href="#L289">289</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.driver.getMinorVersion();
+<a class="jxr_linenumber" name="L290" href="#L290">290</a>     }
+<a class="jxr_linenumber" name="L291" href="#L291">291</a> 
+<a class="jxr_linenumber" name="L292" href="#L292">292</a>     @Override
+<a class="jxr_linenumber" name="L293" href="#L293">293</a>     <strong class="jxr_keyword">public</strong> DriverPropertyInfo[] getPropertyInfo(String u, Properties p) <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L294" href="#L294">294</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.driver.getPropertyInfo(u, p);
+<a class="jxr_linenumber" name="L295" href="#L295">295</a>     }
+<a class="jxr_linenumber" name="L296" href="#L296">296</a> 
+<a class="jxr_linenumber" name="L297" href="#L297">297</a>     @Override
+<a class="jxr_linenumber" name="L298" href="#L298">298</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> jdbcCompliant() {
+<a class="jxr_linenumber" name="L299" href="#L299">299</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.driver.jdbcCompliant();
+<a class="jxr_linenumber" name="L300" href="#L300">300</a>     }
+<a class="jxr_linenumber" name="L301" href="#L301">301</a> 
+<a class="jxr_linenumber" name="L302" href="#L302">302</a>     @Override
+<a class="jxr_linenumber" name="L303" href="#L303">303</a>     <strong class="jxr_keyword">public</strong> Logger getParentLogger() {
+<a class="jxr_linenumber" name="L304" href="#L304">304</a>       <strong class="jxr_keyword">return</strong> Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+<a class="jxr_linenumber" name="L305" href="#L305">305</a>     }
+<a class="jxr_linenumber" name="L306" href="#L306">306</a>   }
+<a class="jxr_linenumber" name="L307" href="#L307">307</a> 
+<a class="jxr_linenumber" name="L308" href="#L308">308</a>   @Override
+<a class="jxr_linenumber" name="L309" href="#L309">309</a>   <strong class="jxr_keyword">public</strong> &lt;T&gt; T unwrap(Class&lt;T&gt; iface) <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L310" href="#L310">310</a>     <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> SQLException(getClass().getName() + <span class="jxr_string">" is not a wrapper."</span>);
+<a class="jxr_linenumber" name="L311" href="#L311">311</a>   }
+<a class="jxr_linenumber" name="L312" href="#L312">312</a> 
+<a class="jxr_linenumber" name="L313" href="#L313">313</a>   @Override
+<a class="jxr_linenumber" name="L314" href="#L314">314</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> isWrapperFor(Class&lt;?&gt; iface) <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L315" href="#L315">315</a>     <strong class="jxr_keyword">return</strong> false;
+<a class="jxr_linenumber" name="L316" href="#L316">316</a>   }
+<a class="jxr_linenumber" name="L317" href="#L317">317</a> 
+<a class="jxr_linenumber" name="L318" href="#L318">318</a>   @Override
+<a class="jxr_linenumber" name="L319" href="#L319">319</a>   <strong class="jxr_keyword">public</strong> Logger getParentLogger() {
+<a class="jxr_linenumber" name="L320" href="#L320">320</a>     <em class="jxr_comment">// requires JDK version 1.6</em>
+<a class="jxr_linenumber" name="L321" href="#L321">321</a>     <strong class="jxr_keyword">return</strong> Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+<a class="jxr_linenumber" name="L322" href="#L322">322</a>   }
+<a class="jxr_linenumber" name="L323" href="#L323">323</a> 
+<a class="jxr_linenumber" name="L324" href="#L324">324</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2022 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2023 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

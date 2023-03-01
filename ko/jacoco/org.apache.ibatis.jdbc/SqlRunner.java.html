@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SqlRunner.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.jdbc</a> &gt; <span class="el_source">SqlRunner.java</span></div><h1>SqlRunner.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2019 the original author or authors.
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SqlRunner.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.jdbc</a> &gt; <span class="el_source">SqlRunner.java</span></div><h1>SqlRunner.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
@@ -55,206 +55,211 @@ public class SqlRunner {
   /**
    * Executes a SELECT statement that returns one row.
    *
-   * @param sql  The SQL
-   * @param args The arguments to be set on the statement.
+   * @param sql
+   *          The SQL
+   * @param args
+   *          The arguments to be set on the statement.
+   *
    * @return The row expected.
-   * @throws SQLException If less or more than one row is returned
+   *
+   * @throws SQLException
+   *           If less or more than one row is returned
    */
   public Map&lt;String, Object&gt; selectOne(String sql, Object... args) throws SQLException {
-<span class="fc" id="L64">    List&lt;Map&lt;String, Object&gt;&gt; results = selectAll(sql, args);</span>
-<span class="pc bpc" id="L65" title="1 of 2 branches missed.">    if (results.size() != 1) {</span>
-<span class="nc" id="L66">      throw new SQLException(&quot;Statement returned &quot; + results.size() + &quot; results where exactly one (1) was expected.&quot;);</span>
+<span class="fc" id="L69">    List&lt;Map&lt;String, Object&gt;&gt; results = selectAll(sql, args);</span>
+<span class="pc bpc" id="L70" title="1 of 2 branches missed.">    if (results.size() != 1) {</span>
+<span class="nc" id="L71">      throw new SQLException(&quot;Statement returned &quot; + results.size() + &quot; results where exactly one (1) was expected.&quot;);</span>
     }
-<span class="fc" id="L68">    return results.get(0);</span>
+<span class="fc" id="L73">    return results.get(0);</span>
   }
 
   /**
    * Executes a SELECT statement that returns multiple rows.
    *
-   * @param sql  The SQL
-   * @param args The arguments to be set on the statement.
+   * @param sql
+   *          The SQL
+   * @param args
+   *          The arguments to be set on the statement.
+   *
    * @return The list of rows expected.
-   * @throws SQLException If statement preparation or execution fails
+   *
+   * @throws SQLException
+   *           If statement preparation or execution fails
    */
   public List&lt;Map&lt;String, Object&gt;&gt; selectAll(String sql, Object... args) throws SQLException {
-<span class="fc" id="L80">    PreparedStatement ps = connection.prepareStatement(sql);</span>
-    try {
-<span class="fc" id="L82">      setParameters(ps, args);</span>
-<span class="fc" id="L83">      ResultSet rs = ps.executeQuery();</span>
-<span class="fc" id="L84">      return getResults(rs);</span>
-    } finally {
-      try {
-<span class="fc" id="L87">        ps.close();</span>
-<span class="nc" id="L88">      } catch (SQLException e) {</span>
-        //ignore
-<span class="fc" id="L90">      }</span>
+<span class="fc" id="L90">    try (PreparedStatement ps = connection.prepareStatement(sql)) {</span>
+<span class="fc" id="L91">      setParameters(ps, args);</span>
+<span class="fc" id="L92">      try (ResultSet rs = ps.executeQuery()) {</span>
+<span class="fc" id="L93">        return getResults(rs);</span>
+      }
     }
   }
 
   /**
    * Executes an INSERT statement.
    *
-   * @param sql  The SQL
-   * @param args The arguments to be set on the statement.
+   * @param sql
+   *          The SQL
+   * @param args
+   *          The arguments to be set on the statement.
+   *
    * @return The number of rows impacted or BATCHED_RESULTS if the statements are being batched.
-   * @throws SQLException If statement preparation or execution fails
+   *
+   * @throws SQLException
+   *           If statement preparation or execution fails
    */
   public int insert(String sql, Object... args) throws SQLException {
     PreparedStatement ps;
-<span class="pc bpc" id="L104" title="1 of 2 branches missed.">    if (useGeneratedKeySupport) {</span>
-<span class="fc" id="L105">      ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);</span>
+<span class="pc bpc" id="L113" title="1 of 2 branches missed.">    if (useGeneratedKeySupport) {</span>
+<span class="fc" id="L114">      ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);</span>
     } else {
-<span class="nc" id="L107">      ps = connection.prepareStatement(sql);</span>
+<span class="nc" id="L116">      ps = connection.prepareStatement(sql);</span>
     }
 
     try {
-<span class="fc" id="L111">      setParameters(ps, args);</span>
-<span class="fc" id="L112">      ps.executeUpdate();</span>
-<span class="pc bpc" id="L113" title="1 of 2 branches missed.">      if (useGeneratedKeySupport) {</span>
-<span class="fc" id="L114">        List&lt;Map&lt;String, Object&gt;&gt; keys = getResults(ps.getGeneratedKeys());</span>
-<span class="pc bpc" id="L115" title="1 of 2 branches missed.">        if (keys.size() == 1) {</span>
-<span class="fc" id="L116">          Map&lt;String, Object&gt; key = keys.get(0);</span>
-<span class="fc" id="L117">          Iterator&lt;Object&gt; i = key.values().iterator();</span>
-<span class="pc bpc" id="L118" title="1 of 2 branches missed.">          if (i.hasNext()) {</span>
-<span class="fc" id="L119">            Object genkey = i.next();</span>
-<span class="pc bpc" id="L120" title="1 of 2 branches missed.">            if (genkey != null) {</span>
-              try {
-<span class="fc" id="L122">                return Integer.parseInt(genkey.toString());</span>
-<span class="nc" id="L123">              } catch (NumberFormatException e) {</span>
-                //ignore, no numeric key support
+<span class="fc" id="L120">      setParameters(ps, args);</span>
+<span class="fc" id="L121">      ps.executeUpdate();</span>
+<span class="pc bpc" id="L122" title="1 of 2 branches missed.">      if (useGeneratedKeySupport) {</span>
+<span class="fc" id="L123">        try (ResultSet generatedKeys = ps.getGeneratedKeys()) {</span>
+<span class="fc" id="L124">          List&lt;Map&lt;String, Object&gt;&gt; keys = getResults(generatedKeys);</span>
+<span class="pc bpc" id="L125" title="1 of 2 branches missed.">          if (keys.size() == 1) {</span>
+<span class="fc" id="L126">            Map&lt;String, Object&gt; key = keys.get(0);</span>
+<span class="fc" id="L127">            Iterator&lt;Object&gt; i = key.values().iterator();</span>
+<span class="pc bpc" id="L128" title="1 of 2 branches missed.">            if (i.hasNext()) {</span>
+<span class="fc" id="L129">              Object genkey = i.next();</span>
+<span class="pc bpc" id="L130" title="1 of 2 branches missed.">              if (genkey != null) {</span>
+                try {
+<span class="fc" id="L132">                  return Integer.parseInt(genkey.toString());</span>
+<span class="nc" id="L133">                } catch (NumberFormatException e) {</span>
+                  // ignore, no numeric key support
+                }
               }
             }
           }
-        }
+<span class="pc bpc" id="L139" title="1 of 2 branches missed.">        }</span>
       }
-<span class="nc" id="L130">      return NO_GENERATED_KEY;</span>
+<span class="nc" id="L141">      return NO_GENERATED_KEY;</span>
     } finally {
       try {
-<span class="fc" id="L133">        ps.close();</span>
-<span class="nc" id="L134">      } catch (SQLException e) {</span>
-        //ignore
-<span class="fc" id="L136">      }</span>
+<span class="fc" id="L144">        ps.close();</span>
+<span class="nc" id="L145">      } catch (SQLException e) {</span>
+        // ignore
+<span class="fc" id="L147">      }</span>
     }
   }
 
   /**
    * Executes an UPDATE statement.
    *
-   * @param sql  The SQL
-   * @param args The arguments to be set on the statement.
+   * @param sql
+   *          The SQL
+   * @param args
+   *          The arguments to be set on the statement.
+   *
    * @return The number of rows impacted or BATCHED_RESULTS if the statements are being batched.
-   * @throws SQLException If statement preparation or execution fails
+   *
+   * @throws SQLException
+   *           If statement preparation or execution fails
    */
   public int update(String sql, Object... args) throws SQLException {
-<span class="fc" id="L149">    PreparedStatement ps = connection.prepareStatement(sql);</span>
-    try {
-<span class="fc" id="L151">      setParameters(ps, args);</span>
-<span class="fc" id="L152">      return ps.executeUpdate();</span>
-    } finally {
-      try {
-<span class="fc" id="L155">        ps.close();</span>
-<span class="nc" id="L156">      } catch (SQLException e) {</span>
-        //ignore
-<span class="fc" id="L158">      }</span>
+<span class="fc" id="L165">    try (PreparedStatement ps = connection.prepareStatement(sql)) {</span>
+<span class="fc" id="L166">      setParameters(ps, args);</span>
+<span class="fc" id="L167">      return ps.executeUpdate();</span>
     }
   }
 
   /**
    * Executes a DELETE statement.
    *
-   * @param sql  The SQL
-   * @param args The arguments to be set on the statement.
+   * @param sql
+   *          The SQL
+   * @param args
+   *          The arguments to be set on the statement.
+   *
    * @return The number of rows impacted or BATCHED_RESULTS if the statements are being batched.
-   * @throws SQLException If statement preparation or execution fails
+   *
+   * @throws SQLException
+   *           If statement preparation or execution fails
    */
   public int delete(String sql, Object... args) throws SQLException {
-<span class="fc" id="L171">    return update(sql, args);</span>
+<span class="fc" id="L185">    return update(sql, args);</span>
   }
 
   /**
-   * Executes any string as a JDBC Statement.
-   * Good for DDL
+   * Executes any string as a JDBC Statement. Good for DDL
    *
-   * @param sql The SQL
-   * @throws SQLException If statement preparation or execution fails
+   * @param sql
+   *          The SQL
+   *
+   * @throws SQLException
+   *           If statement preparation or execution fails
    */
   public void run(String sql) throws SQLException {
-<span class="fc" id="L182">    Statement stmt = connection.createStatement();</span>
-    try {
-<span class="fc" id="L184">      stmt.execute(sql);</span>
-    } finally {
-      try {
-<span class="fc" id="L187">        stmt.close();</span>
-<span class="nc" id="L188">      } catch (SQLException e) {</span>
-        //ignore
-<span class="fc" id="L190">      }</span>
+<span class="fc" id="L198">    try (Statement stmt = connection.createStatement()) {</span>
+<span class="fc" id="L199">      stmt.execute(sql);</span>
     }
-<span class="fc" id="L192">  }</span>
+<span class="fc" id="L201">  }</span>
 
+  /**
+   * @deprecated Since 3.5.4, this method is deprecated. Please close the {@link Connection} outside of this class.
+   */
+  @Deprecated
   public void closeConnection() {
     try {
-<span class="nc" id="L196">      connection.close();</span>
-<span class="nc" id="L197">    } catch (SQLException e) {</span>
-      //ignore
-<span class="nc" id="L199">    }</span>
-<span class="nc" id="L200">  }</span>
+<span class="nc" id="L209">      connection.close();</span>
+<span class="nc" id="L210">    } catch (SQLException e) {</span>
+      // ignore
+<span class="nc" id="L212">    }</span>
+<span class="nc" id="L213">  }</span>
 
   private void setParameters(PreparedStatement ps, Object... args) throws SQLException {
-<span class="fc bfc" id="L203" title="All 2 branches covered.">    for (int i = 0, n = args.length; i &lt; n; i++) {</span>
-<span class="pc bpc" id="L204" title="1 of 2 branches missed.">      if (args[i] == null) {</span>
-<span class="nc" id="L205">        throw new SQLException(&quot;SqlRunner requires an instance of Null to represent typed null values for JDBC compatibility&quot;);</span>
-<span class="fc bfc" id="L206" title="All 2 branches covered.">      } else if (args[i] instanceof Null) {</span>
-<span class="fc" id="L207">        ((Null) args[i]).getTypeHandler().setParameter(ps, i + 1, null, ((Null) args[i]).getJdbcType());</span>
+<span class="fc bfc" id="L216" title="All 2 branches covered.">    for (int i = 0, n = args.length; i &lt; n; i++) {</span>
+<span class="pc bpc" id="L217" title="1 of 2 branches missed.">      if (args[i] == null) {</span>
+<span class="nc" id="L218">        throw new SQLException(</span>
+            &quot;SqlRunner requires an instance of Null to represent typed null values for JDBC compatibility&quot;);
+      }
+<span class="fc bfc" id="L221" title="All 2 branches covered.">      if (args[i] instanceof Null) {</span>
+<span class="fc" id="L222">        ((Null) args[i]).getTypeHandler().setParameter(ps, i + 1, null, ((Null) args[i]).getJdbcType());</span>
       } else {
-<span class="fc" id="L209">        TypeHandler typeHandler = typeHandlerRegistry.getTypeHandler(args[i].getClass());</span>
-<span class="pc bpc" id="L210" title="1 of 2 branches missed.">        if (typeHandler == null) {</span>
-<span class="nc" id="L211">          throw new SQLException(&quot;SqlRunner could not find a TypeHandler instance for &quot; + args[i].getClass());</span>
+<span class="fc" id="L224">        TypeHandler typeHandler = typeHandlerRegistry.getTypeHandler(args[i].getClass());</span>
+<span class="pc bpc" id="L225" title="1 of 2 branches missed.">        if (typeHandler == null) {</span>
+<span class="nc" id="L226">          throw new SQLException(&quot;SqlRunner could not find a TypeHandler instance for &quot; + args[i].getClass());</span>
         } else {
-<span class="fc" id="L213">          typeHandler.setParameter(ps, i + 1, args[i], null);</span>
+<span class="fc" id="L228">          typeHandler.setParameter(ps, i + 1, args[i], null);</span>
         }
       }
     }
-<span class="fc" id="L217">  }</span>
+<span class="fc" id="L232">  }</span>
 
   private List&lt;Map&lt;String, Object&gt;&gt; getResults(ResultSet rs) throws SQLException {
-    try {
-<span class="fc" id="L221">      List&lt;Map&lt;String, Object&gt;&gt; list = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L222">      List&lt;String&gt; columns = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L223">      List&lt;TypeHandler&lt;?&gt;&gt; typeHandlers = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L224">      ResultSetMetaData rsmd = rs.getMetaData();</span>
-<span class="fc bfc" id="L225" title="All 2 branches covered.">      for (int i = 0, n = rsmd.getColumnCount(); i &lt; n; i++) {</span>
-<span class="fc" id="L226">        columns.add(rsmd.getColumnLabel(i + 1));</span>
-        try {
-<span class="fc" id="L228">          Class&lt;?&gt; type = Resources.classForName(rsmd.getColumnClassName(i + 1));</span>
-<span class="fc" id="L229">          TypeHandler&lt;?&gt; typeHandler = typeHandlerRegistry.getTypeHandler(type);</span>
-<span class="fc bfc" id="L230" title="All 2 branches covered.">          if (typeHandler == null) {</span>
-<span class="fc" id="L231">            typeHandler = typeHandlerRegistry.getTypeHandler(Object.class);</span>
-          }
-<span class="fc" id="L233">          typeHandlers.add(typeHandler);</span>
-<span class="nc" id="L234">        } catch (Exception e) {</span>
-<span class="nc" id="L235">          typeHandlers.add(typeHandlerRegistry.getTypeHandler(Object.class));</span>
-<span class="fc" id="L236">        }</span>
-      }
-<span class="fc bfc" id="L238" title="All 2 branches covered.">      while (rs.next()) {</span>
-<span class="fc" id="L239">        Map&lt;String, Object&gt; row = new HashMap&lt;&gt;();</span>
-<span class="fc bfc" id="L240" title="All 2 branches covered.">        for (int i = 0, n = columns.size(); i &lt; n; i++) {</span>
-<span class="fc" id="L241">          String name = columns.get(i);</span>
-<span class="fc" id="L242">          TypeHandler&lt;?&gt; handler = typeHandlers.get(i);</span>
-<span class="fc" id="L243">          row.put(name.toUpperCase(Locale.ENGLISH), handler.getResult(rs, name));</span>
+<span class="fc" id="L235">    List&lt;Map&lt;String, Object&gt;&gt; list = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L236">    List&lt;String&gt; columns = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L237">    List&lt;TypeHandler&lt;?&gt;&gt; typeHandlers = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L238">    ResultSetMetaData rsmd = rs.getMetaData();</span>
+<span class="fc bfc" id="L239" title="All 2 branches covered.">    for (int i = 0, n = rsmd.getColumnCount(); i &lt; n; i++) {</span>
+<span class="fc" id="L240">      columns.add(rsmd.getColumnLabel(i + 1));</span>
+      try {
+<span class="fc" id="L242">        Class&lt;?&gt; type = Resources.classForName(rsmd.getColumnClassName(i + 1));</span>
+<span class="fc" id="L243">        TypeHandler&lt;?&gt; typeHandler = typeHandlerRegistry.getTypeHandler(type);</span>
+<span class="fc bfc" id="L244" title="All 2 branches covered.">        if (typeHandler == null) {</span>
+<span class="fc" id="L245">          typeHandler = typeHandlerRegistry.getTypeHandler(Object.class);</span>
         }
-<span class="fc" id="L245">        list.add(row);</span>
-<span class="fc" id="L246">      }</span>
-<span class="fc" id="L247">      return list;</span>
-    } finally {
-<span class="pc bpc" id="L249" title="1 of 2 branches missed.">      if (rs != null) {</span>
-        try {
-<span class="fc" id="L251">          rs.close();</span>
-<span class="nc" id="L252">        } catch (Exception e) {</span>
-          // ignore
-<span class="fc" id="L254">        }</span>
-      }
+<span class="fc" id="L247">        typeHandlers.add(typeHandler);</span>
+<span class="nc" id="L248">      } catch (Exception e) {</span>
+<span class="nc" id="L249">        typeHandlers.add(typeHandlerRegistry.getTypeHandler(Object.class));</span>
+<span class="fc" id="L250">      }</span>
     }
+<span class="fc bfc" id="L252" title="All 2 branches covered.">    while (rs.next()) {</span>
+<span class="fc" id="L253">      Map&lt;String, Object&gt; row = new HashMap&lt;&gt;();</span>
+<span class="fc bfc" id="L254" title="All 2 branches covered.">      for (int i = 0, n = columns.size(); i &lt; n; i++) {</span>
+<span class="fc" id="L255">        String name = columns.get(i);</span>
+<span class="fc" id="L256">        TypeHandler&lt;?&gt; handler = typeHandlers.get(i);</span>
+<span class="fc" id="L257">        row.put(name.toUpperCase(Locale.ENGLISH), handler.getResult(rs, name));</span>
+      }
+<span class="fc" id="L259">      list.add(row);</span>
+<span class="fc" id="L260">    }</span>
+<span class="fc" id="L261">    return list;</span>
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

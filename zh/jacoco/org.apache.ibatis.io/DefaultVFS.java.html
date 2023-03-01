@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultVFS.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.io</a> &gt; <span class="el_source">DefaultVFS.java</span></div><h1>DefaultVFS.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2019 the original author or authors.
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultVFS.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.io</a> &gt; <span class="el_source">DefaultVFS.java</span></div><h1>DefaultVFS.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
@@ -25,6 +25,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystemException;
+import java.nio.file.InvalidPathException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -39,103 +42,100 @@ import org.apache.ibatis.logging.LogFactory;
  *
  * @author Ben Gunter
  */
-<span class="fc" id="L42">public class DefaultVFS extends VFS {</span>
-<span class="fc" id="L43">  private static final Log log = LogFactory.getLog(DefaultVFS.class);</span>
+<span class="fc" id="L45">public class DefaultVFS extends VFS {</span>
+<span class="fc" id="L46">  private static final Log log = LogFactory.getLog(DefaultVFS.class);</span>
 
   /** The magic header that indicates a JAR (ZIP) file. */
-<span class="fc" id="L46">  private static final byte[] JAR_MAGIC = { 'P', 'K', 3, 4 };</span>
+<span class="fc" id="L49">  private static final byte[] JAR_MAGIC = { 'P', 'K', 3, 4 };</span>
 
   @Override
   public boolean isValid() {
-<span class="fc" id="L50">    return true;</span>
+<span class="fc" id="L53">    return true;</span>
   }
 
   @Override
   public List&lt;String&gt; list(URL url, String path) throws IOException {
-<span class="fc" id="L55">    InputStream is = null;</span>
+<span class="fc" id="L58">    InputStream is = null;</span>
     try {
-<span class="fc" id="L57">      List&lt;String&gt; resources = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L60">      List&lt;String&gt; resources = new ArrayList&lt;&gt;();</span>
 
       // First, try to find the URL of a JAR file containing the requested resource. If a JAR
       // file is found, then we'll list child resources by reading the JAR.
-<span class="fc" id="L61">      URL jarUrl = findJarForResource(url);</span>
-<span class="pc bpc" id="L62" title="1 of 2 branches missed.">      if (jarUrl != null) {</span>
-<span class="nc" id="L63">        is = jarUrl.openStream();</span>
-<span class="nc bnc" id="L64" title="All 2 branches missed.">        if (log.isDebugEnabled()) {</span>
-<span class="nc" id="L65">          log.debug(&quot;Listing &quot; + url);</span>
+<span class="fc" id="L64">      URL jarUrl = findJarForResource(url);</span>
+<span class="pc bpc" id="L65" title="1 of 2 branches missed.">      if (jarUrl != null) {</span>
+<span class="nc" id="L66">        is = jarUrl.openStream();</span>
+<span class="nc bnc" id="L67" title="All 2 branches missed.">        if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L68">          log.debug(&quot;Listing &quot; + url);</span>
         }
-<span class="nc" id="L67">        resources = listResources(new JarInputStream(is), path);</span>
-      }
-      else {
-<span class="fc" id="L70">        List&lt;String&gt; children = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L70">        resources = listResources(new JarInputStream(is), path);</span>
+      } else {
+<span class="fc" id="L72">        List&lt;String&gt; children = new ArrayList&lt;&gt;();</span>
         try {
-<span class="pc bpc" id="L72" title="1 of 2 branches missed.">          if (isJar(url)) {</span>
+<span class="pc bpc" id="L74" title="1 of 2 branches missed.">          if (isJar(url)) {</span>
             // Some versions of JBoss VFS might give a JAR stream even if the resource
             // referenced by the URL isn't actually a JAR
-<span class="nc" id="L75">            is = url.openStream();</span>
-<span class="nc" id="L76">            try (JarInputStream jarInput = new JarInputStream(is)) {</span>
-<span class="nc bnc" id="L77" title="All 2 branches missed.">              if (log.isDebugEnabled()) {</span>
-<span class="nc" id="L78">                log.debug(&quot;Listing &quot; + url);</span>
+<span class="nc" id="L77">            is = url.openStream();</span>
+<span class="nc" id="L78">            try (JarInputStream jarInput = new JarInputStream(is)) {</span>
+<span class="nc bnc" id="L79" title="All 2 branches missed.">              if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L80">                log.debug(&quot;Listing &quot; + url);</span>
               }
-<span class="nc bnc" id="L80" title="All 2 branches missed.">              for (JarEntry entry; (entry = jarInput.getNextJarEntry()) != null; ) {</span>
-<span class="nc bnc" id="L81" title="All 2 branches missed.">                if (log.isDebugEnabled()) {</span>
-<span class="nc" id="L82">                  log.debug(&quot;Jar entry: &quot; + entry.getName());</span>
+<span class="nc bnc" id="L82" title="All 2 branches missed.">              for (JarEntry entry; (entry = jarInput.getNextJarEntry()) != null;) {</span>
+<span class="nc bnc" id="L83" title="All 2 branches missed.">                if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L84">                  log.debug(&quot;Jar entry: &quot; + entry.getName());</span>
                 }
-<span class="nc" id="L84">                children.add(entry.getName());</span>
+<span class="nc" id="L86">                children.add(entry.getName());</span>
               }
             }
-          }
-          else {
+          } else {
             /*
-             * Some servlet containers allow reading from directory resources like a
-             * text file, listing the child resources one per line. However, there is no
-             * way to differentiate between directory and file resources just by reading
-             * them. To work around that, as each line is read, try to look it up via
-             * the class loader as a child of the current resource. If any line fails
-             * then we assume the current resource is not a directory.
+             * Some servlet containers allow reading from directory resources like a text file, listing the child
+             * resources one per line. However, there is no way to differentiate between directory and file resources
+             * just by reading them. To work around that, as each line is read, try to look it up via the class loader
+             * as a child of the current resource. If any line fails then we assume the current resource is not a
+             * directory.
              */
 <span class="fc" id="L97">            is = url.openStream();</span>
-<span class="fc" id="L98">            BufferedReader reader = new BufferedReader(new InputStreamReader(is));</span>
-<span class="fc" id="L99">            List&lt;String&gt; lines = new ArrayList&lt;&gt;();</span>
-<span class="fc bfc" id="L100" title="All 2 branches covered.">            for (String line; (line = reader.readLine()) != null;) {</span>
-<span class="pc bpc" id="L101" title="1 of 2 branches missed.">              if (log.isDebugEnabled()) {</span>
-<span class="nc" id="L102">                log.debug(&quot;Reader entry: &quot; + line);</span>
+<span class="fc" id="L98">            List&lt;String&gt; lines = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L99">            try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">              for (String line; (line = reader.readLine()) != null;) {</span>
+<span class="pc bpc" id="L101" title="1 of 2 branches missed.">                if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L102">                  log.debug(&quot;Reader entry: &quot; + line);</span>
+                }
+<span class="fc" id="L104">                lines.add(line);</span>
+<span class="fc bfc" id="L105" title="All 2 branches covered.">                if (getResources(path + &quot;/&quot; + line).isEmpty()) {</span>
+<span class="fc" id="L106">                  lines.clear();</span>
+<span class="fc" id="L107">                  break;</span>
+                }
               }
-<span class="fc" id="L104">              lines.add(line);</span>
-<span class="fc bfc" id="L105" title="All 2 branches covered.">              if (getResources(path + &quot;/&quot; + line).isEmpty()) {</span>
-<span class="fc" id="L106">                lines.clear();</span>
-<span class="fc" id="L107">                break;</span>
+<span class="nc" id="L110">            } catch (InvalidPathException | FileSystemException e) {</span>
+              // #1974 #2598
+<span class="nc" id="L112">              lines.clear();</span>
+<span class="fc" id="L113">            }</span>
+<span class="fc bfc" id="L114" title="All 2 branches covered.">            if (!lines.isEmpty()) {</span>
+<span class="pc bpc" id="L115" title="1 of 2 branches missed.">              if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L116">                log.debug(&quot;Listing &quot; + url);</span>
               }
-            }
-
-<span class="fc bfc" id="L111" title="All 2 branches covered.">            if (!lines.isEmpty()) {</span>
-<span class="pc bpc" id="L112" title="1 of 2 branches missed.">              if (log.isDebugEnabled()) {</span>
-<span class="nc" id="L113">                log.debug(&quot;Listing &quot; + url);</span>
-              }
-<span class="fc" id="L115">              children.addAll(lines);</span>
+<span class="fc" id="L118">              children.addAll(lines);</span>
             }
           }
-<span class="nc" id="L118">        } catch (FileNotFoundException e) {</span>
+<span class="nc" id="L121">        } catch (FileNotFoundException e) {</span>
           /*
-           * For file URLs the openStream() call might fail, depending on the servlet
-           * container, because directories can't be opened for reading. If that happens,
-           * then list the directory directly instead.
+           * For file URLs the openStream() call might fail, depending on the servlet container, because directories
+           * can't be opened for reading. If that happens, then list the directory directly instead.
            */
-<span class="nc bnc" id="L124" title="All 2 branches missed.">          if (&quot;file&quot;.equals(url.getProtocol())) {</span>
-<span class="nc" id="L125">            File file = new File(url.getFile());</span>
-<span class="nc bnc" id="L126" title="All 2 branches missed.">            if (log.isDebugEnabled()) {</span>
-<span class="nc" id="L127">                log.debug(&quot;Listing directory &quot; + file.getAbsolutePath());</span>
-            }
-<span class="nc bnc" id="L129" title="All 2 branches missed.">            if (file.isDirectory()) {</span>
-<span class="nc bnc" id="L130" title="All 2 branches missed.">              if (log.isDebugEnabled()) {</span>
-<span class="nc" id="L131">                  log.debug(&quot;Listing &quot; + url);</span>
-              }
-<span class="nc" id="L133">              children = Arrays.asList(file.list());</span>
-            }
-<span class="nc" id="L135">          }</span>
-          else {
+<span class="nc bnc" id="L126" title="All 2 branches missed.">          if (!&quot;file&quot;.equals(url.getProtocol())) {</span>
             // No idea where the exception came from so rethrow it
-<span class="nc" id="L138">            throw e;</span>
+<span class="nc" id="L128">            throw e;</span>
+          }
+<span class="nc" id="L130">          File file = new File(url.getFile());</span>
+<span class="nc bnc" id="L131" title="All 2 branches missed.">          if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L132">            log.debug(&quot;Listing directory &quot; + file.getAbsolutePath());</span>
+          }
+<span class="nc bnc" id="L134" title="All 2 branches missed.">          if (file.isDirectory()) {</span>
+<span class="nc bnc" id="L135" title="All 2 branches missed.">            if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L136">              log.debug(&quot;Listing &quot; + url);</span>
+            }
+<span class="nc" id="L138">            children = Arrays.asList(file.list());</span>
           }
 <span class="fc" id="L140">        }</span>
 
@@ -145,7 +145,7 @@ import org.apache.ibatis.logging.LogFactory;
 <span class="fc" id="L145">          prefix = prefix + &quot;/&quot;;</span>
         }
 
-        // Iterate over immediate children, adding files and recursing into directories
+        // Iterate over immediate children, adding files and recurring into directories
 <span class="fc bfc" id="L149" title="All 2 branches covered.">        for (String child : children) {</span>
 <span class="fc" id="L150">          String resourcePath = path + &quot;/&quot; + child;</span>
 <span class="fc" id="L151">          resources.add(resourcePath);</span>
@@ -167,183 +167,188 @@ import org.apache.ibatis.logging.LogFactory;
   }
 
   /**
-   * List the names of the entries in the given {@link JarInputStream} that begin with the
-   * specified {@code path}. Entries will match with or without a leading slash.
+   * List the names of the entries in the given {@link JarInputStream} that begin with the specified {@code path}.
+   * Entries will match with or without a leading slash.
    *
-   * @param jar The JAR input stream
-   * @param path The leading path to match
+   * @param jar
+   *          The JAR input stream
+   * @param path
+   *          The leading path to match
+   *
    * @return The names of all the matching entries
-   * @throws IOException If I/O errors occur
+   *
+   * @throws IOException
+   *           If I/O errors occur
    */
   protected List&lt;String&gt; listResources(JarInputStream jar, String path) throws IOException {
     // Include the leading and trailing slash when matching names
-<span class="nc bnc" id="L180" title="All 2 branches missed.">    if (!path.startsWith(&quot;/&quot;)) {</span>
-<span class="nc" id="L181">      path = &quot;/&quot; + path;</span>
+<span class="nc bnc" id="L185" title="All 2 branches missed.">    if (!path.startsWith(&quot;/&quot;)) {</span>
+<span class="nc" id="L186">      path = &quot;/&quot; + path;</span>
     }
-<span class="nc bnc" id="L183" title="All 2 branches missed.">    if (!path.endsWith(&quot;/&quot;)) {</span>
-<span class="nc" id="L184">      path = path + &quot;/&quot;;</span>
+<span class="nc bnc" id="L188" title="All 2 branches missed.">    if (!path.endsWith(&quot;/&quot;)) {</span>
+<span class="nc" id="L189">      path = path + &quot;/&quot;;</span>
     }
 
     // Iterate over the entries and collect those that begin with the requested path
-<span class="nc" id="L188">    List&lt;String&gt; resources = new ArrayList&lt;&gt;();</span>
-<span class="nc bnc" id="L189" title="All 2 branches missed.">    for (JarEntry entry; (entry = jar.getNextJarEntry()) != null;) {</span>
-<span class="nc bnc" id="L190" title="All 2 branches missed.">      if (!entry.isDirectory()) {</span>
+<span class="nc" id="L193">    List&lt;String&gt; resources = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L194" title="All 2 branches missed.">    for (JarEntry entry; (entry = jar.getNextJarEntry()) != null;) {</span>
+<span class="nc bnc" id="L195" title="All 2 branches missed.">      if (!entry.isDirectory()) {</span>
         // Add leading slash if it's missing
-<span class="nc" id="L192">        StringBuilder name = new StringBuilder(entry.getName());</span>
-<span class="nc bnc" id="L193" title="All 2 branches missed.">        if (name.charAt(0) != '/') {</span>
-<span class="nc" id="L194">          name.insert(0, '/');</span>
+<span class="nc" id="L197">        StringBuilder name = new StringBuilder(entry.getName());</span>
+<span class="nc bnc" id="L198" title="All 2 branches missed.">        if (name.charAt(0) != '/') {</span>
+<span class="nc" id="L199">          name.insert(0, '/');</span>
         }
 
         // Check file name
-<span class="nc bnc" id="L198" title="All 2 branches missed.">        if (name.indexOf(path) == 0) {</span>
-<span class="nc bnc" id="L199" title="All 2 branches missed.">          if (log.isDebugEnabled()) {</span>
-<span class="nc" id="L200">            log.debug(&quot;Found resource: &quot; + name);</span>
+<span class="nc bnc" id="L203" title="All 2 branches missed.">        if (name.indexOf(path) == 0) {</span>
+<span class="nc bnc" id="L204" title="All 2 branches missed.">          if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L205">            log.debug(&quot;Found resource: &quot; + name);</span>
           }
           // Trim leading slash
-<span class="nc" id="L203">          resources.add(name.substring(1));</span>
+<span class="nc" id="L208">          resources.add(name.substring(1));</span>
         }
-<span class="nc" id="L205">      }</span>
+<span class="nc" id="L210">      }</span>
     }
-<span class="nc" id="L207">    return resources;</span>
+<span class="nc" id="L212">    return resources;</span>
   }
 
   /**
-   * Attempts to deconstruct the given URL to find a JAR file containing the resource referenced
-   * by the URL. That is, assuming the URL references a JAR entry, this method will return a URL
-   * that references the JAR file containing the entry. If the JAR cannot be located, then this
-   * method returns null.
+   * Attempts to deconstruct the given URL to find a JAR file containing the resource referenced by the URL. That is,
+   * assuming the URL references a JAR entry, this method will return a URL that references the JAR file containing the
+   * entry. If the JAR cannot be located, then this method returns null.
    *
-   * @param url The URL of the JAR entry.
+   * @param url
+   *          The URL of the JAR entry.
+   *
    * @return The URL of the JAR file, if one is found. Null if not.
+   *
    * @throws MalformedURLException
+   *           the malformed URL exception
    */
   protected URL findJarForResource(URL url) throws MalformedURLException {
-<span class="pc bpc" id="L221" title="1 of 2 branches missed.">    if (log.isDebugEnabled()) {</span>
-<span class="nc" id="L222">      log.debug(&quot;Find JAR URL: &quot; + url);</span>
+<span class="pc bpc" id="L229" title="1 of 2 branches missed.">    if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L230">      log.debug(&quot;Find JAR URL: &quot; + url);</span>
     }
 
     // If the file part of the URL is itself a URL, then that URL probably points to the JAR
-    try {
-      for (;;) {
-<span class="nc" id="L228">        url = new URL(url.getFile());</span>
-<span class="nc bnc" id="L229" title="All 2 branches missed.">        if (log.isDebugEnabled()) {</span>
-<span class="nc" id="L230">          log.debug(&quot;Inner URL: &quot; + url);</span>
+<span class="fc" id="L234">    boolean continueLoop = true;</span>
+<span class="fc bfc" id="L235" title="All 2 branches covered.">    while (continueLoop) {</span>
+      try {
+<span class="nc" id="L237">        url = new URL(url.getFile());</span>
+<span class="nc bnc" id="L238" title="All 2 branches missed.">        if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L239">          log.debug(&quot;Inner URL: &quot; + url);</span>
         }
-      }
-<span class="fc" id="L233">    } catch (MalformedURLException e) {</span>
-      // This will happen at some point and serves as a break in the loop
+<span class="fc" id="L241">      } catch (MalformedURLException e) {</span>
+        // This will happen at some point and serves as a break in the loop
+<span class="fc" id="L243">        continueLoop = false;</span>
+<span class="pc" id="L244">      }</span>
     }
 
     // Look for the .jar extension and chop off everything after that
-<span class="fc" id="L238">    StringBuilder jarUrl = new StringBuilder(url.toExternalForm());</span>
-<span class="fc" id="L239">    int index = jarUrl.lastIndexOf(&quot;.jar&quot;);</span>
-<span class="pc bpc" id="L240" title="1 of 2 branches missed.">    if (index &gt;= 0) {</span>
-<span class="nc" id="L241">      jarUrl.setLength(index + 4);</span>
-<span class="nc bnc" id="L242" title="All 2 branches missed.">      if (log.isDebugEnabled()) {</span>
-<span class="nc" id="L243">        log.debug(&quot;Extracted JAR URL: &quot; + jarUrl);</span>
+<span class="fc" id="L248">    StringBuilder jarUrl = new StringBuilder(url.toExternalForm());</span>
+<span class="fc" id="L249">    int index = jarUrl.lastIndexOf(&quot;.jar&quot;);</span>
+<span class="pc bpc" id="L250" title="1 of 2 branches missed.">    if (index &lt; 0) {</span>
+<span class="pc bpc" id="L251" title="1 of 2 branches missed.">      if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L252">        log.debug(&quot;Not a JAR: &quot; + jarUrl);</span>
       }
+<span class="fc" id="L254">      return null;</span>
     }
-    else {
-<span class="pc bpc" id="L247" title="1 of 2 branches missed.">      if (log.isDebugEnabled()) {</span>
-<span class="nc" id="L248">        log.debug(&quot;Not a JAR: &quot; + jarUrl);</span>
-      }
-<span class="fc" id="L250">      return null;</span>
+<span class="nc" id="L256">    jarUrl.setLength(index + 4);</span>
+<span class="nc bnc" id="L257" title="All 2 branches missed.">    if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L258">      log.debug(&quot;Extracted JAR URL: &quot; + jarUrl);</span>
     }
 
     // Try to open and test it
     try {
-<span class="nc" id="L255">      URL testUrl = new URL(jarUrl.toString());</span>
-<span class="nc bnc" id="L256" title="All 2 branches missed.">      if (isJar(testUrl)) {</span>
-<span class="nc" id="L257">        return testUrl;</span>
+<span class="nc" id="L263">      URL testUrl = new URL(jarUrl.toString());</span>
+<span class="nc bnc" id="L264" title="All 2 branches missed.">      if (isJar(testUrl)) {</span>
+<span class="nc" id="L265">        return testUrl;</span>
       }
-      else {
-        // WebLogic fix: check if the URL's file exists in the filesystem.
-<span class="nc bnc" id="L261" title="All 2 branches missed.">        if (log.isDebugEnabled()) {</span>
-<span class="nc" id="L262">          log.debug(&quot;Not a JAR: &quot; + jarUrl);</span>
-        }
-<span class="nc" id="L264">        jarUrl.replace(0, jarUrl.length(), testUrl.getFile());</span>
-<span class="nc" id="L265">        File file = new File(jarUrl.toString());</span>
+      // WebLogic fix: check if the URL's file exists in the filesystem.
+<span class="nc bnc" id="L268" title="All 2 branches missed.">      if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L269">        log.debug(&quot;Not a JAR: &quot; + jarUrl);</span>
+      }
+<span class="nc" id="L271">      jarUrl.replace(0, jarUrl.length(), testUrl.getFile());</span>
+<span class="nc" id="L272">      File file = new File(jarUrl.toString());</span>
 
-        // File name might be URL-encoded
-<span class="nc bnc" id="L268" title="All 2 branches missed.">        if (!file.exists()) {</span>
-          try {
-<span class="nc" id="L270">            file = new File(URLEncoder.encode(jarUrl.toString(), &quot;UTF-8&quot;));</span>
-<span class="nc" id="L271">          } catch (UnsupportedEncodingException e) {</span>
-<span class="nc" id="L272">            throw new RuntimeException(&quot;Unsupported encoding?  UTF-8?  That's unpossible.&quot;);</span>
-<span class="nc" id="L273">          }</span>
-        }
+      // File name might be URL-encoded
+<span class="nc bnc" id="L275" title="All 2 branches missed.">      if (!file.exists()) {</span>
+        try {
+<span class="nc" id="L277">          file = new File(URLEncoder.encode(jarUrl.toString(), StandardCharsets.UTF_8.name()));</span>
+<span class="nc" id="L278">        } catch (UnsupportedEncodingException e) {</span>
+<span class="nc" id="L279">          throw new RuntimeException(&quot;Unsupported encoding?  UTF-8?  That's impossible.&quot;);</span>
+<span class="nc" id="L280">        }</span>
+      }
 
-<span class="nc bnc" id="L276" title="All 2 branches missed.">        if (file.exists()) {</span>
-<span class="nc bnc" id="L277" title="All 2 branches missed.">          if (log.isDebugEnabled()) {</span>
-<span class="nc" id="L278">            log.debug(&quot;Trying real file: &quot; + file.getAbsolutePath());</span>
-          }
-<span class="nc" id="L280">          testUrl = file.toURI().toURL();</span>
-<span class="nc bnc" id="L281" title="All 2 branches missed.">          if (isJar(testUrl)) {</span>
-<span class="nc" id="L282">            return testUrl;</span>
-          }
+<span class="nc bnc" id="L283" title="All 2 branches missed.">      if (file.exists()) {</span>
+<span class="nc bnc" id="L284" title="All 2 branches missed.">        if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L285">          log.debug(&quot;Trying real file: &quot; + file.getAbsolutePath());</span>
+        }
+<span class="nc" id="L287">        testUrl = file.toURI().toURL();</span>
+<span class="nc bnc" id="L288" title="All 2 branches missed.">        if (isJar(testUrl)) {</span>
+<span class="nc" id="L289">          return testUrl;</span>
         }
       }
-<span class="nc" id="L286">    } catch (MalformedURLException e) {</span>
-<span class="nc" id="L287">      log.warn(&quot;Invalid JAR URL: &quot; + jarUrl);</span>
-<span class="nc" id="L288">    }</span>
+<span class="nc" id="L292">    } catch (MalformedURLException e) {</span>
+<span class="nc" id="L293">      log.warn(&quot;Invalid JAR URL: &quot; + jarUrl);</span>
+<span class="nc" id="L294">    }</span>
 
-<span class="nc bnc" id="L290" title="All 2 branches missed.">    if (log.isDebugEnabled()) {</span>
-<span class="nc" id="L291">      log.debug(&quot;Not a JAR: &quot; + jarUrl);</span>
+<span class="nc bnc" id="L296" title="All 2 branches missed.">    if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L297">      log.debug(&quot;Not a JAR: &quot; + jarUrl);</span>
     }
-<span class="nc" id="L293">    return null;</span>
+<span class="nc" id="L299">    return null;</span>
   }
 
   /**
    * Converts a Java package name to a path that can be looked up with a call to
    * {@link ClassLoader#getResources(String)}.
    *
-   * @param packageName The Java package name to convert to a path
+   * @param packageName
+   *          The Java package name to convert to a path
+   *
+   * @return the package path
    */
   protected String getPackagePath(String packageName) {
-<span class="nc bnc" id="L303" title="All 2 branches missed.">    return packageName == null ? null : packageName.replace('.', '/');</span>
+<span class="nc bnc" id="L312" title="All 2 branches missed.">    return packageName == null ? null : packageName.replace('.', '/');</span>
   }
 
   /**
    * Returns true if the resource located at the given URL is a JAR file.
    *
-   * @param url The URL of the resource to test.
+   * @param url
+   *          The URL of the resource to test.
+   *
+   * @return true, if is jar
    */
   protected boolean isJar(URL url) {
-<span class="fc" id="L312">    return isJar(url, new byte[JAR_MAGIC.length]);</span>
+<span class="fc" id="L324">    return isJar(url, new byte[JAR_MAGIC.length]);</span>
   }
 
   /**
    * Returns true if the resource located at the given URL is a JAR file.
    *
-   * @param url The URL of the resource to test.
-   * @param buffer A buffer into which the first few bytes of the resource are read. The buffer
-   *            must be at least the size of {@link #JAR_MAGIC}. (The same buffer may be reused
-   *            for multiple calls as an optimization.)
+   * @param url
+   *          The URL of the resource to test.
+   * @param buffer
+   *          A buffer into which the first few bytes of the resource are read. The buffer must be at least the size of
+   *          {@link #JAR_MAGIC}. (The same buffer may be reused for multiple calls as an optimization.)
+   *
+   * @return true, if is jar
    */
   protected boolean isJar(URL url, byte[] buffer) {
-<span class="fc" id="L324">    InputStream is = null;</span>
-    try {
-<span class="fc" id="L326">      is = url.openStream();</span>
-<span class="fc" id="L327">      is.read(buffer, 0, JAR_MAGIC.length);</span>
-<span class="pc bpc" id="L328" title="1 of 2 branches missed.">      if (Arrays.equals(buffer, JAR_MAGIC)) {</span>
-<span class="nc bnc" id="L329" title="All 2 branches missed.">        if (log.isDebugEnabled()) {</span>
-<span class="nc" id="L330">          log.debug(&quot;Found JAR: &quot; + url);</span>
+<span class="fc" id="L339">    try (InputStream is = url.openStream()) {</span>
+<span class="fc" id="L340">      is.read(buffer, 0, JAR_MAGIC.length);</span>
+<span class="pc bpc" id="L341" title="1 of 2 branches missed.">      if (Arrays.equals(buffer, JAR_MAGIC)) {</span>
+<span class="nc bnc" id="L342" title="All 2 branches missed.">        if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L343">          log.debug(&quot;Found JAR: &quot; + url);</span>
         }
-<span class="nc" id="L332">        return true;</span>
+<span class="nc" id="L345">        return true;</span>
       }
-<span class="nc" id="L334">    } catch (Exception e) {</span>
+<span class="nc bnc" id="L347" title="All 2 branches missed.">    } catch (Exception e) {</span>
       // Failure to read the stream means this is not a JAR
-    } finally {
-<span class="pc bpc" id="L337" title="1 of 2 branches missed.">      if (is != null) {</span>
-        try {
-<span class="fc" id="L339">          is.close();</span>
-<span class="nc" id="L340">        } catch (Exception e) {</span>
-          // Ignore
-<span class="fc" id="L342">        }</span>
-      }
-    }
+<span class="fc" id="L349">    }</span>
 
-<span class="fc" id="L346">    return false;</span>
+<span class="fc" id="L351">    return false;</span>
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

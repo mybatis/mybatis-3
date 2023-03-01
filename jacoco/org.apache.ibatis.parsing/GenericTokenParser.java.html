@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GenericTokenParser.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.parsing</a> &gt; <span class="el_source">GenericTokenParser.java</span></div><h1>GenericTokenParser.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2019 the original author or authors.
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GenericTokenParser.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.parsing</a> &gt; <span class="el_source">GenericTokenParser.java</span></div><h1>GenericTokenParser.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
@@ -43,7 +43,7 @@ public class GenericTokenParser {
 <span class="fc" id="L43">    int offset = 0;</span>
 <span class="fc" id="L44">    final StringBuilder builder = new StringBuilder();</span>
 <span class="fc" id="L45">    StringBuilder expression = null;</span>
-<span class="fc bfc" id="L46" title="All 2 branches covered.">    while (start &gt; -1) {</span>
+    do {
 <span class="fc bfc" id="L47" title="All 4 branches covered.">      if (start &gt; 0 &amp;&amp; src[start - 1] == '\\') {</span>
         // this open token is escaped. remove the backslash and continue.
 <span class="fc" id="L49">        builder.append(src, offset, start - offset - 1).append(openToken);</span>
@@ -59,31 +59,30 @@ public class GenericTokenParser {
 <span class="fc" id="L59">        offset = start + openToken.length();</span>
 <span class="fc" id="L60">        int end = text.indexOf(closeToken, offset);</span>
 <span class="fc bfc" id="L61" title="All 2 branches covered.">        while (end &gt; -1) {</span>
-<span class="fc bfc" id="L62" title="All 4 branches covered.">          if (end &gt; offset &amp;&amp; src[end - 1] == '\\') {</span>
-            // this close token is escaped. remove the backslash and continue.
-<span class="fc" id="L64">            expression.append(src, offset, end - offset - 1).append(closeToken);</span>
-<span class="fc" id="L65">            offset = end + closeToken.length();</span>
-<span class="fc" id="L66">            end = text.indexOf(closeToken, offset);</span>
-          } else {
-<span class="fc" id="L68">            expression.append(src, offset, end - offset);</span>
-<span class="fc" id="L69">            break;</span>
+<span class="fc bfc" id="L62" title="All 4 branches covered.">          if ((end &lt;= offset) || (src[end - 1] != '\\')) {</span>
+<span class="fc" id="L63">            expression.append(src, offset, end - offset);</span>
+<span class="fc" id="L64">            break;</span>
           }
+          // this close token is escaped. remove the backslash and continue.
+<span class="fc" id="L67">          expression.append(src, offset, end - offset - 1).append(closeToken);</span>
+<span class="fc" id="L68">          offset = end + closeToken.length();</span>
+<span class="fc" id="L69">          end = text.indexOf(closeToken, offset);</span>
         }
-<span class="fc bfc" id="L72" title="All 2 branches covered.">        if (end == -1) {</span>
+<span class="fc bfc" id="L71" title="All 2 branches covered.">        if (end == -1) {</span>
           // close token was not found.
-<span class="fc" id="L74">          builder.append(src, start, src.length - start);</span>
-<span class="fc" id="L75">          offset = src.length;</span>
+<span class="fc" id="L73">          builder.append(src, start, src.length - start);</span>
+<span class="fc" id="L74">          offset = src.length;</span>
         } else {
-<span class="fc" id="L77">          builder.append(handler.handleToken(expression.toString()));</span>
-<span class="fc" id="L78">          offset = end + closeToken.length();</span>
+<span class="fc" id="L76">          builder.append(handler.handleToken(expression.toString()));</span>
+<span class="fc" id="L77">          offset = end + closeToken.length();</span>
         }
       }
-<span class="fc" id="L81">      start = text.indexOf(openToken, offset);</span>
+<span class="fc" id="L80">      start = text.indexOf(openToken, offset);</span>
+<span class="fc bfc" id="L81" title="All 2 branches covered.">    } while (start &gt; -1);</span>
+<span class="fc bfc" id="L82" title="All 2 branches covered.">    if (offset &lt; src.length) {</span>
+<span class="fc" id="L83">      builder.append(src, offset, src.length - offset);</span>
     }
-<span class="fc bfc" id="L83" title="All 2 branches covered.">    if (offset &lt; src.length) {</span>
-<span class="fc" id="L84">      builder.append(src, offset, src.length - offset);</span>
-    }
-<span class="fc" id="L86">    return builder.toString();</span>
+<span class="fc" id="L85">    return builder.toString();</span>
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

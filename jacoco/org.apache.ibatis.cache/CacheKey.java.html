@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CacheKey.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.cache</a> &gt; <span class="el_source">CacheKey.java</span></div><h1>CacheKey.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2019 the original author or authors.
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CacheKey.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.cache</a> &gt; <span class="el_source">CacheKey.java</span></div><h1>CacheKey.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
@@ -29,103 +29,111 @@ public class CacheKey implements Cloneable, Serializable {
 
   private static final long serialVersionUID = 1146682552656046210L;
 
-<span class="fc" id="L32">  public static final CacheKey NULL_CACHE_KEY = new NullCacheKey();</span>
+<span class="fc" id="L32">  public static final CacheKey NULL_CACHE_KEY = new CacheKey() {</span>
 
-  private static final int DEFAULT_MULTIPLYER = 37;
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    public void update(Object object) {
+<span class="fc" id="L38">      throw new CacheException(&quot;Not allowed to update a null cache key instance.&quot;);</span>
+    }
+
+    @Override
+    public void updateAll(Object[] objects) {
+<span class="fc" id="L43">      throw new CacheException(&quot;Not allowed to update a null cache key instance.&quot;);</span>
+    }
+  };
+
+  private static final int DEFAULT_MULTIPLIER = 37;
   private static final int DEFAULT_HASHCODE = 17;
 
   private final int multiplier;
   private int hashcode;
   private long checksum;
   private int count;
-  // 8/21/2017 - Sonarlint flags this as needing to be marked transient.  While true if content is not serializable, this is not always true and thus should not be marked transient.
+  // 8/21/2017 - Sonarlint flags this as needing to be marked transient. While true if content is not serializable, this
+  // is not always true and thus should not be marked transient.
   private List&lt;Object&gt; updateList;
 
-<span class="fc" id="L44">  public CacheKey() {</span>
-<span class="fc" id="L45">    this.hashcode = DEFAULT_HASHCODE;</span>
-<span class="fc" id="L46">    this.multiplier = DEFAULT_MULTIPLYER;</span>
-<span class="fc" id="L47">    this.count = 0;</span>
-<span class="fc" id="L48">    this.updateList = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L49">  }</span>
+<span class="fc" id="L58">  public CacheKey() {</span>
+<span class="fc" id="L59">    this.hashcode = DEFAULT_HASHCODE;</span>
+<span class="fc" id="L60">    this.multiplier = DEFAULT_MULTIPLIER;</span>
+<span class="fc" id="L61">    this.count = 0;</span>
+<span class="fc" id="L62">    this.updateList = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L63">  }</span>
 
   public CacheKey(Object[] objects) {
-<span class="fc" id="L52">    this();</span>
-<span class="fc" id="L53">    updateAll(objects);</span>
-<span class="fc" id="L54">  }</span>
+<span class="fc" id="L66">    this();</span>
+<span class="fc" id="L67">    updateAll(objects);</span>
+<span class="fc" id="L68">  }</span>
 
   public int getUpdateCount() {
-<span class="fc" id="L57">    return updateList.size();</span>
+<span class="fc" id="L71">    return updateList.size();</span>
   }
 
   public void update(Object object) {
-<span class="fc bfc" id="L61" title="All 2 branches covered.">    int baseHashCode = object == null ? 1 : ArrayUtil.hashCode(object);</span>
+<span class="fc bfc" id="L75" title="All 2 branches covered.">    int baseHashCode = object == null ? 1 : ArrayUtil.hashCode(object);</span>
 
-<span class="fc" id="L63">    count++;</span>
-<span class="fc" id="L64">    checksum += baseHashCode;</span>
-<span class="fc" id="L65">    baseHashCode *= count;</span>
+<span class="fc" id="L77">    count++;</span>
+<span class="fc" id="L78">    checksum += baseHashCode;</span>
+<span class="fc" id="L79">    baseHashCode *= count;</span>
 
-<span class="fc" id="L67">    hashcode = multiplier * hashcode + baseHashCode;</span>
+<span class="fc" id="L81">    hashcode = multiplier * hashcode + baseHashCode;</span>
 
-<span class="fc" id="L69">    updateList.add(object);</span>
-<span class="fc" id="L70">  }</span>
+<span class="fc" id="L83">    updateList.add(object);</span>
+<span class="fc" id="L84">  }</span>
 
   public void updateAll(Object[] objects) {
-<span class="fc bfc" id="L73" title="All 2 branches covered.">    for (Object o : objects) {</span>
-<span class="fc" id="L74">      update(o);</span>
+<span class="fc bfc" id="L87" title="All 2 branches covered.">    for (Object o : objects) {</span>
+<span class="fc" id="L88">      update(o);</span>
     }
-<span class="fc" id="L76">  }</span>
+<span class="fc" id="L90">  }</span>
 
   @Override
   public boolean equals(Object object) {
-<span class="pc bpc" id="L80" title="1 of 2 branches missed.">    if (this == object) {</span>
-<span class="nc" id="L81">      return true;</span>
+<span class="pc bpc" id="L94" title="1 of 2 branches missed.">    if (this == object) {</span>
+<span class="nc" id="L95">      return true;</span>
     }
-<span class="pc bpc" id="L83" title="1 of 2 branches missed.">    if (!(object instanceof CacheKey)) {</span>
-<span class="nc" id="L84">      return false;</span>
-    }
-
-<span class="fc" id="L87">    final CacheKey cacheKey = (CacheKey) object;</span>
-
-<span class="fc bfc" id="L89" title="All 2 branches covered.">    if (hashcode != cacheKey.hashcode) {</span>
-<span class="fc" id="L90">      return false;</span>
-    }
-<span class="pc bpc" id="L92" title="1 of 2 branches missed.">    if (checksum != cacheKey.checksum) {</span>
-<span class="nc" id="L93">      return false;</span>
-    }
-<span class="pc bpc" id="L95" title="1 of 2 branches missed.">    if (count != cacheKey.count) {</span>
-<span class="nc" id="L96">      return false;</span>
+<span class="pc bpc" id="L97" title="1 of 2 branches missed.">    if (!(object instanceof CacheKey)) {</span>
+<span class="nc" id="L98">      return false;</span>
     }
 
-<span class="fc bfc" id="L99" title="All 2 branches covered.">    for (int i = 0; i &lt; updateList.size(); i++) {</span>
-<span class="fc" id="L100">      Object thisObject = updateList.get(i);</span>
-<span class="fc" id="L101">      Object thatObject = cacheKey.updateList.get(i);</span>
-<span class="pc bpc" id="L102" title="1 of 2 branches missed.">      if (!ArrayUtil.equals(thisObject, thatObject)) {</span>
-<span class="nc" id="L103">        return false;</span>
+<span class="fc" id="L101">    final CacheKey cacheKey = (CacheKey) object;</span>
+
+<span class="pc bpc" id="L103" title="2 of 6 branches missed.">    if ((hashcode != cacheKey.hashcode) || (checksum != cacheKey.checksum) || (count != cacheKey.count)) {</span>
+<span class="fc" id="L104">      return false;</span>
+    }
+
+<span class="fc bfc" id="L107" title="All 2 branches covered.">    for (int i = 0; i &lt; updateList.size(); i++) {</span>
+<span class="fc" id="L108">      Object thisObject = updateList.get(i);</span>
+<span class="fc" id="L109">      Object thatObject = cacheKey.updateList.get(i);</span>
+<span class="pc bpc" id="L110" title="1 of 2 branches missed.">      if (!ArrayUtil.equals(thisObject, thatObject)) {</span>
+<span class="nc" id="L111">        return false;</span>
       }
     }
-<span class="fc" id="L106">    return true;</span>
+<span class="fc" id="L114">    return true;</span>
   }
 
   @Override
   public int hashCode() {
-<span class="fc" id="L111">    return hashcode;</span>
+<span class="fc" id="L119">    return hashcode;</span>
   }
 
   @Override
   public String toString() {
-<span class="fc" id="L116">    StringJoiner returnValue = new StringJoiner(&quot;:&quot;);</span>
-<span class="fc" id="L117">    returnValue.add(String.valueOf(hashcode));</span>
-<span class="fc" id="L118">    returnValue.add(String.valueOf(checksum));</span>
-<span class="fc" id="L119">    updateList.stream().map(ArrayUtil::toString).forEach(returnValue::add);</span>
-<span class="fc" id="L120">    return returnValue.toString();</span>
+<span class="fc" id="L124">    StringJoiner returnValue = new StringJoiner(&quot;:&quot;);</span>
+<span class="fc" id="L125">    returnValue.add(String.valueOf(hashcode));</span>
+<span class="fc" id="L126">    returnValue.add(String.valueOf(checksum));</span>
+<span class="fc" id="L127">    updateList.stream().map(ArrayUtil::toString).forEach(returnValue::add);</span>
+<span class="fc" id="L128">    return returnValue.toString();</span>
   }
 
   @Override
   public CacheKey clone() throws CloneNotSupportedException {
-<span class="fc" id="L125">    CacheKey clonedCacheKey = (CacheKey) super.clone();</span>
-<span class="fc" id="L126">    clonedCacheKey.updateList = new ArrayList&lt;&gt;(updateList);</span>
-<span class="fc" id="L127">    return clonedCacheKey;</span>
+<span class="fc" id="L133">    CacheKey clonedCacheKey = (CacheKey) super.clone();</span>
+<span class="fc" id="L134">    clonedCacheKey.updateList = new ArrayList&lt;&gt;(updateList);</span>
+<span class="fc" id="L135">    return clonedCacheKey;</span>
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

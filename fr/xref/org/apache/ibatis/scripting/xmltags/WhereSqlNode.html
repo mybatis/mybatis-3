@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../../apidocs/org/apache/ibatis/scripting/xmltags/WhereSqlNode.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2022 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -33,15 +33,16 @@
 <a class="jxr_linenumber" name="L25" href="#L25">25</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="WhereSqlNode" href="../../../../../org/apache/ibatis/scripting/xmltags/WhereSqlNode.html#WhereSqlNode">WhereSqlNode</a> <strong class="jxr_keyword">extends</strong> <a name="TrimSqlNode" href="../../../../../org/apache/ibatis/scripting/xmltags/TrimSqlNode.html#TrimSqlNode">TrimSqlNode</a> {
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>  
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> List&lt;String&gt; prefixList = Arrays.asList(<span class="jxr_string">"AND "</span>,<span class="jxr_string">"OR "</span>,<span class="jxr_string">"AND\n"</span>, <span class="jxr_string">"OR\n"</span>, <span class="jxr_string">"AND\r"</span>, <span class="jxr_string">"OR\r"</span>, <span class="jxr_string">"AND\t"</span>, <span class="jxr_string">"OR\t"</span>);
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>  
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>    <strong class="jxr_keyword">public</strong> <a name="WhereSqlNode" href="../../../../../org/apache/ibatis/scripting/xmltags/WhereSqlNode.html#WhereSqlNode">WhereSqlNode</a>(<a name="Configuration" href="../../../../../org/apache/ibatis/session/Configuration.html#Configuration">Configuration</a> configuration, <a name="SqlNode" href="../../../../../org/apache/ibatis/scripting/xmltags/SqlNode.html#SqlNode">SqlNode</a> contents) {
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>      <strong class="jxr_keyword">super</strong>(configuration, contents, <span class="jxr_string">"WHERE"</span>, prefixList, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>    }
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>  
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>  }
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> List&lt;String&gt; prefixList = Arrays.asList(<span class="jxr_string">"AND "</span>, <span class="jxr_string">"OR "</span>, <span class="jxr_string">"AND\n"</span>, <span class="jxr_string">"OR\n"</span>, <span class="jxr_string">"AND\r"</span>, <span class="jxr_string">"OR\r"</span>, <span class="jxr_string">"AND\t"</span>,
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>        <span class="jxr_string">"OR\t"</span>);
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>    <strong class="jxr_keyword">public</strong> <a name="WhereSqlNode" href="../../../../../org/apache/ibatis/scripting/xmltags/WhereSqlNode.html#WhereSqlNode">WhereSqlNode</a>(<a name="Configuration" href="../../../../../org/apache/ibatis/session/Configuration.html#Configuration">Configuration</a> configuration, <a name="SqlNode" href="../../../../../org/apache/ibatis/scripting/xmltags/SqlNode.html#SqlNode">SqlNode</a> contents) {
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>      <strong class="jxr_keyword">super</strong>(configuration, contents, <span class="jxr_string">"WHERE"</span>, prefixList, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>    }
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2022 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2023 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

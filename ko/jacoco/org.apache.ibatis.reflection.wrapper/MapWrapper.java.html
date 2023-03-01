@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MapWrapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.reflection.wrapper</a> &gt; <span class="el_source">MapWrapper.java</span></div><h1>MapWrapper.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2018 the original author or authors.
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MapWrapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.reflection.wrapper</a> &gt; <span class="el_source">MapWrapper.java</span></div><h1>MapWrapper.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
@@ -41,119 +41,116 @@ public class MapWrapper extends BaseWrapper {
 <span class="fc bfc" id="L41" title="All 2 branches covered.">    if (prop.getIndex() != null) {</span>
 <span class="fc" id="L42">      Object collection = resolveCollection(prop, map);</span>
 <span class="fc" id="L43">      return getCollectionValue(prop, collection);</span>
-    } else {
-<span class="fc" id="L45">      return map.get(prop.getName());</span>
     }
+<span class="fc" id="L45">    return map.get(prop.getName());</span>
   }
 
   @Override
   public void set(PropertyTokenizer prop, Object value) {
-<span class="pc bpc" id="L51" title="1 of 2 branches missed.">    if (prop.getIndex() != null) {</span>
-<span class="nc" id="L52">      Object collection = resolveCollection(prop, map);</span>
-<span class="nc" id="L53">      setCollectionValue(prop, collection, value);</span>
-<span class="nc" id="L54">    } else {</span>
-<span class="fc" id="L55">      map.put(prop.getName(), value);</span>
+<span class="pc bpc" id="L50" title="1 of 2 branches missed.">    if (prop.getIndex() != null) {</span>
+<span class="nc" id="L51">      Object collection = resolveCollection(prop, map);</span>
+<span class="nc" id="L52">      setCollectionValue(prop, collection, value);</span>
+<span class="nc" id="L53">    } else {</span>
+<span class="fc" id="L54">      map.put(prop.getName(), value);</span>
     }
-<span class="fc" id="L57">  }</span>
+<span class="fc" id="L56">  }</span>
 
   @Override
   public String findProperty(String name, boolean useCamelCaseMapping) {
-<span class="fc" id="L61">    return name;</span>
+<span class="fc" id="L60">    return name;</span>
   }
 
   @Override
   public String[] getGetterNames() {
-<span class="fc" id="L66">    return map.keySet().toArray(new String[map.keySet().size()]);</span>
+<span class="fc" id="L65">    return map.keySet().toArray(new String[0]);</span>
   }
 
   @Override
   public String[] getSetterNames() {
-<span class="fc" id="L71">    return map.keySet().toArray(new String[map.keySet().size()]);</span>
+<span class="fc" id="L70">    return map.keySet().toArray(new String[0]);</span>
   }
 
   @Override
   public Class&lt;?&gt; getSetterType(String name) {
-<span class="fc" id="L76">    PropertyTokenizer prop = new PropertyTokenizer(name);</span>
-<span class="pc bpc" id="L77" title="1 of 2 branches missed.">    if (prop.hasNext()) {</span>
-<span class="nc" id="L78">      MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());</span>
-<span class="nc bnc" id="L79" title="All 2 branches missed.">      if (metaValue == SystemMetaObject.NULL_META_OBJECT) {</span>
-<span class="nc" id="L80">        return Object.class;</span>
+<span class="fc" id="L75">    PropertyTokenizer prop = new PropertyTokenizer(name);</span>
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">    if (prop.hasNext()) {</span>
+<span class="nc" id="L77">      MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());</span>
+<span class="nc bnc" id="L78" title="All 2 branches missed.">      if (metaValue == SystemMetaObject.NULL_META_OBJECT) {</span>
+<span class="nc" id="L79">        return Object.class;</span>
       } else {
-<span class="nc" id="L82">        return metaValue.getSetterType(prop.getChildren());</span>
+<span class="nc" id="L81">        return metaValue.getSetterType(prop.getChildren());</span>
       }
+    }
+<span class="pc bpc" id="L84" title="1 of 2 branches missed.">    if (map.get(name) != null) {</span>
+<span class="nc" id="L85">      return map.get(name).getClass();</span>
     } else {
-<span class="pc bpc" id="L85" title="1 of 2 branches missed.">      if (map.get(name) != null) {</span>
-<span class="nc" id="L86">        return map.get(name).getClass();</span>
-      } else {
-<span class="fc" id="L88">        return Object.class;</span>
-      }
+<span class="fc" id="L87">      return Object.class;</span>
     }
   }
 
   @Override
   public Class&lt;?&gt; getGetterType(String name) {
-<span class="fc" id="L95">    PropertyTokenizer prop = new PropertyTokenizer(name);</span>
-<span class="fc bfc" id="L96" title="All 2 branches covered.">    if (prop.hasNext()) {</span>
-<span class="fc" id="L97">      MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());</span>
-<span class="fc bfc" id="L98" title="All 2 branches covered.">      if (metaValue == SystemMetaObject.NULL_META_OBJECT) {</span>
-<span class="fc" id="L99">        return Object.class;</span>
+<span class="fc" id="L93">    PropertyTokenizer prop = new PropertyTokenizer(name);</span>
+<span class="fc bfc" id="L94" title="All 2 branches covered.">    if (prop.hasNext()) {</span>
+<span class="fc" id="L95">      MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());</span>
+<span class="fc bfc" id="L96" title="All 2 branches covered.">      if (metaValue == SystemMetaObject.NULL_META_OBJECT) {</span>
+<span class="fc" id="L97">        return Object.class;</span>
       } else {
-<span class="fc" id="L101">        return metaValue.getGetterType(prop.getChildren());</span>
+<span class="fc" id="L99">        return metaValue.getGetterType(prop.getChildren());</span>
       }
+    }
+<span class="pc bpc" id="L102" title="1 of 2 branches missed.">    if (map.get(name) != null) {</span>
+<span class="fc" id="L103">      return map.get(name).getClass();</span>
     } else {
-<span class="pc bpc" id="L104" title="1 of 2 branches missed.">      if (map.get(name) != null) {</span>
-<span class="fc" id="L105">        return map.get(name).getClass();</span>
-      } else {
-<span class="nc" id="L107">        return Object.class;</span>
-      }
+<span class="nc" id="L105">      return Object.class;</span>
     }
   }
 
   @Override
   public boolean hasSetter(String name) {
-<span class="fc" id="L114">    return true;</span>
+<span class="fc" id="L111">    return true;</span>
   }
 
   @Override
   public boolean hasGetter(String name) {
-<span class="fc" id="L119">    PropertyTokenizer prop = new PropertyTokenizer(name);</span>
-<span class="fc bfc" id="L120" title="All 2 branches covered.">    if (prop.hasNext()) {</span>
-<span class="fc bfc" id="L121" title="All 2 branches covered.">      if (map.containsKey(prop.getIndexedName())) {</span>
-<span class="fc" id="L122">        MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());</span>
-<span class="fc bfc" id="L123" title="All 2 branches covered.">        if (metaValue == SystemMetaObject.NULL_META_OBJECT) {</span>
-<span class="fc" id="L124">          return true;</span>
-        } else {
-<span class="fc" id="L126">          return metaValue.hasGetter(prop.getChildren());</span>
-        }
+<span class="fc" id="L116">    PropertyTokenizer prop = new PropertyTokenizer(name);</span>
+<span class="fc bfc" id="L117" title="All 2 branches covered.">    if (!prop.hasNext()) {</span>
+<span class="fc" id="L118">      return map.containsKey(prop.getName());</span>
+    }
+<span class="fc bfc" id="L120" title="All 2 branches covered.">    if (map.containsKey(prop.getIndexedName())) {</span>
+<span class="fc" id="L121">      MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());</span>
+<span class="fc bfc" id="L122" title="All 2 branches covered.">      if (metaValue == SystemMetaObject.NULL_META_OBJECT) {</span>
+<span class="fc" id="L123">        return true;</span>
       } else {
-<span class="fc" id="L129">        return false;</span>
+<span class="fc" id="L125">        return metaValue.hasGetter(prop.getChildren());</span>
       }
     } else {
-<span class="fc" id="L132">      return map.containsKey(prop.getName());</span>
+<span class="fc" id="L128">      return false;</span>
     }
   }
 
   @Override
   public MetaObject instantiatePropertyValue(String name, PropertyTokenizer prop, ObjectFactory objectFactory) {
-<span class="fc" id="L138">    HashMap&lt;String, Object&gt; map = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L139">    set(prop, map);</span>
-<span class="fc" id="L140">    return MetaObject.forObject(map, metaObject.getObjectFactory(), metaObject.getObjectWrapperFactory(), metaObject.getReflectorFactory());</span>
+<span class="fc" id="L134">    HashMap&lt;String, Object&gt; map = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L135">    set(prop, map);</span>
+<span class="fc" id="L136">    return MetaObject.forObject(map, metaObject.getObjectFactory(), metaObject.getObjectWrapperFactory(),</span>
+<span class="fc" id="L137">        metaObject.getReflectorFactory());</span>
   }
 
   @Override
   public boolean isCollection() {
-<span class="nc" id="L145">    return false;</span>
+<span class="nc" id="L142">    return false;</span>
   }
 
   @Override
   public void add(Object element) {
-<span class="nc" id="L150">    throw new UnsupportedOperationException();</span>
+<span class="nc" id="L147">    throw new UnsupportedOperationException();</span>
   }
 
   @Override
   public &lt;E&gt; void addAll(List&lt;E&gt; element) {
-<span class="nc" id="L155">    throw new UnsupportedOperationException();</span>
+<span class="nc" id="L152">    throw new UnsupportedOperationException();</span>
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

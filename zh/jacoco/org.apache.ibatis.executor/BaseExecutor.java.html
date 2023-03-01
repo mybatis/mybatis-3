@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BaseExecutor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.executor</a> &gt; <span class="el_source">BaseExecutor.java</span></div><h1>BaseExecutor.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2019 the original author or authors.
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BaseExecutor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.executor</a> &gt; <span class="el_source">BaseExecutor.java</span></div><h1>BaseExecutor.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
@@ -91,7 +91,7 @@ public abstract class BaseExecutor implements Executor {
         }
       }
 <span class="fc" id="L93">    } catch (SQLException e) {</span>
-      // Ignore.  There's nothing that can be done at this point.
+      // Ignore. There's nothing that can be done at this point.
 <span class="fc" id="L95">      log.warn(&quot;Unexpected exception on closing transaction.  Cause: &quot; + e);</span>
     } finally {
 <span class="fc" id="L97">      transaction = null;</span>
@@ -130,221 +130,229 @@ public abstract class BaseExecutor implements Executor {
   }
 
   @Override
-  public &lt;E&gt; List&lt;E&gt; query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler) throws SQLException {
-<span class="fc" id="L134">    BoundSql boundSql = ms.getBoundSql(parameter);</span>
-<span class="fc" id="L135">    CacheKey key = createCacheKey(ms, parameter, rowBounds, boundSql);</span>
-<span class="fc" id="L136">    return query(ms, parameter, rowBounds, resultHandler, key, boundSql);</span>
+  public &lt;E&gt; List&lt;E&gt; query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler)
+      throws SQLException {
+<span class="fc" id="L135">    BoundSql boundSql = ms.getBoundSql(parameter);</span>
+<span class="fc" id="L136">    CacheKey key = createCacheKey(ms, parameter, rowBounds, boundSql);</span>
+<span class="fc" id="L137">    return query(ms, parameter, rowBounds, resultHandler, key, boundSql);</span>
   }
 
   @SuppressWarnings(&quot;unchecked&quot;)
   @Override
-  public &lt;E&gt; List&lt;E&gt; query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql) throws SQLException {
-<span class="fc" id="L142">    ErrorContext.instance().resource(ms.getResource()).activity(&quot;executing a query&quot;).object(ms.getId());</span>
-<span class="pc bpc" id="L143" title="1 of 2 branches missed.">    if (closed) {</span>
-<span class="nc" id="L144">      throw new ExecutorException(&quot;Executor was closed.&quot;);</span>
+  public &lt;E&gt; List&lt;E&gt; query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler,
+      CacheKey key, BoundSql boundSql) throws SQLException {
+<span class="fc" id="L144">    ErrorContext.instance().resource(ms.getResource()).activity(&quot;executing a query&quot;).object(ms.getId());</span>
+<span class="pc bpc" id="L145" title="1 of 2 branches missed.">    if (closed) {</span>
+<span class="nc" id="L146">      throw new ExecutorException(&quot;Executor was closed.&quot;);</span>
     }
-<span class="fc bfc" id="L146" title="All 4 branches covered.">    if (queryStack == 0 &amp;&amp; ms.isFlushCacheRequired()) {</span>
-<span class="fc" id="L147">      clearLocalCache();</span>
+<span class="fc bfc" id="L148" title="All 4 branches covered.">    if (queryStack == 0 &amp;&amp; ms.isFlushCacheRequired()) {</span>
+<span class="fc" id="L149">      clearLocalCache();</span>
     }
     List&lt;E&gt; list;
     try {
-<span class="fc" id="L151">      queryStack++;</span>
-<span class="fc bfc" id="L152" title="All 2 branches covered.">      list = resultHandler == null ? (List&lt;E&gt;) localCache.getObject(key) : null;</span>
-<span class="fc bfc" id="L153" title="All 2 branches covered.">      if (list != null) {</span>
-<span class="fc" id="L154">        handleLocallyCachedOutputParameters(ms, key, parameter, boundSql);</span>
+<span class="fc" id="L153">      queryStack++;</span>
+<span class="fc bfc" id="L154" title="All 2 branches covered.">      list = resultHandler == null ? (List&lt;E&gt;) localCache.getObject(key) : null;</span>
+<span class="fc bfc" id="L155" title="All 2 branches covered.">      if (list != null) {</span>
+<span class="fc" id="L156">        handleLocallyCachedOutputParameters(ms, key, parameter, boundSql);</span>
       } else {
-<span class="fc" id="L156">        list = queryFromDatabase(ms, parameter, rowBounds, resultHandler, key, boundSql);</span>
+<span class="fc" id="L158">        list = queryFromDatabase(ms, parameter, rowBounds, resultHandler, key, boundSql);</span>
       }
     } finally {
-<span class="fc" id="L159">      queryStack--;</span>
+<span class="fc" id="L161">      queryStack--;</span>
     }
-<span class="fc bfc" id="L161" title="All 2 branches covered.">    if (queryStack == 0) {</span>
-<span class="fc bfc" id="L162" title="All 2 branches covered.">      for (DeferredLoad deferredLoad : deferredLoads) {</span>
-<span class="fc" id="L163">        deferredLoad.load();</span>
-<span class="fc" id="L164">      }</span>
+<span class="fc bfc" id="L163" title="All 2 branches covered.">    if (queryStack == 0) {</span>
+<span class="fc bfc" id="L164" title="All 2 branches covered.">      for (DeferredLoad deferredLoad : deferredLoads) {</span>
+<span class="fc" id="L165">        deferredLoad.load();</span>
+<span class="fc" id="L166">      }</span>
       // issue #601
-<span class="fc" id="L166">      deferredLoads.clear();</span>
-<span class="fc bfc" id="L167" title="All 2 branches covered.">      if (configuration.getLocalCacheScope() == LocalCacheScope.STATEMENT) {</span>
+<span class="fc" id="L168">      deferredLoads.clear();</span>
+<span class="fc bfc" id="L169" title="All 2 branches covered.">      if (configuration.getLocalCacheScope() == LocalCacheScope.STATEMENT) {</span>
         // issue #482
-<span class="fc" id="L169">        clearLocalCache();</span>
+<span class="fc" id="L171">        clearLocalCache();</span>
       }
     }
-<span class="fc" id="L172">    return list;</span>
+<span class="fc" id="L174">    return list;</span>
   }
 
   @Override
   public &lt;E&gt; Cursor&lt;E&gt; queryCursor(MappedStatement ms, Object parameter, RowBounds rowBounds) throws SQLException {
-<span class="fc" id="L177">    BoundSql boundSql = ms.getBoundSql(parameter);</span>
-<span class="fc" id="L178">    return doQueryCursor(ms, parameter, rowBounds, boundSql);</span>
+<span class="fc" id="L179">    BoundSql boundSql = ms.getBoundSql(parameter);</span>
+<span class="fc" id="L180">    return doQueryCursor(ms, parameter, rowBounds, boundSql);</span>
   }
 
   @Override
-  public void deferLoad(MappedStatement ms, MetaObject resultObject, String property, CacheKey key, Class&lt;?&gt; targetType) {
-<span class="pc bpc" id="L183" title="1 of 2 branches missed.">    if (closed) {</span>
-<span class="nc" id="L184">      throw new ExecutorException(&quot;Executor was closed.&quot;);</span>
+  public void deferLoad(MappedStatement ms, MetaObject resultObject, String property, CacheKey key,
+      Class&lt;?&gt; targetType) {
+<span class="pc bpc" id="L186" title="1 of 2 branches missed.">    if (closed) {</span>
+<span class="nc" id="L187">      throw new ExecutorException(&quot;Executor was closed.&quot;);</span>
     }
-<span class="fc" id="L186">    DeferredLoad deferredLoad = new DeferredLoad(resultObject, property, key, localCache, configuration, targetType);</span>
-<span class="fc bfc" id="L187" title="All 2 branches covered.">    if (deferredLoad.canLoad()) {</span>
-<span class="fc" id="L188">      deferredLoad.load();</span>
+<span class="fc" id="L189">    DeferredLoad deferredLoad = new DeferredLoad(resultObject, property, key, localCache, configuration, targetType);</span>
+<span class="fc bfc" id="L190" title="All 2 branches covered.">    if (deferredLoad.canLoad()) {</span>
+<span class="fc" id="L191">      deferredLoad.load();</span>
     } else {
-<span class="fc" id="L190">      deferredLoads.add(new DeferredLoad(resultObject, property, key, localCache, configuration, targetType));</span>
+<span class="fc" id="L193">      deferredLoads.add(new DeferredLoad(resultObject, property, key, localCache, configuration, targetType));</span>
     }
-<span class="fc" id="L192">  }</span>
+<span class="fc" id="L195">  }</span>
 
   @Override
   public CacheKey createCacheKey(MappedStatement ms, Object parameterObject, RowBounds rowBounds, BoundSql boundSql) {
-<span class="pc bpc" id="L196" title="1 of 2 branches missed.">    if (closed) {</span>
-<span class="nc" id="L197">      throw new ExecutorException(&quot;Executor was closed.&quot;);</span>
+<span class="pc bpc" id="L199" title="1 of 2 branches missed.">    if (closed) {</span>
+<span class="nc" id="L200">      throw new ExecutorException(&quot;Executor was closed.&quot;);</span>
     }
-<span class="fc" id="L199">    CacheKey cacheKey = new CacheKey();</span>
-<span class="fc" id="L200">    cacheKey.update(ms.getId());</span>
-<span class="fc" id="L201">    cacheKey.update(rowBounds.getOffset());</span>
-<span class="fc" id="L202">    cacheKey.update(rowBounds.getLimit());</span>
-<span class="fc" id="L203">    cacheKey.update(boundSql.getSql());</span>
-<span class="fc" id="L204">    List&lt;ParameterMapping&gt; parameterMappings = boundSql.getParameterMappings();</span>
-<span class="fc" id="L205">    TypeHandlerRegistry typeHandlerRegistry = ms.getConfiguration().getTypeHandlerRegistry();</span>
+<span class="fc" id="L202">    CacheKey cacheKey = new CacheKey();</span>
+<span class="fc" id="L203">    cacheKey.update(ms.getId());</span>
+<span class="fc" id="L204">    cacheKey.update(rowBounds.getOffset());</span>
+<span class="fc" id="L205">    cacheKey.update(rowBounds.getLimit());</span>
+<span class="fc" id="L206">    cacheKey.update(boundSql.getSql());</span>
+<span class="fc" id="L207">    List&lt;ParameterMapping&gt; parameterMappings = boundSql.getParameterMappings();</span>
+<span class="fc" id="L208">    TypeHandlerRegistry typeHandlerRegistry = ms.getConfiguration().getTypeHandlerRegistry();</span>
     // mimic DefaultParameterHandler logic
-<span class="fc bfc" id="L207" title="All 2 branches covered.">    for (ParameterMapping parameterMapping : parameterMappings) {</span>
-<span class="fc bfc" id="L208" title="All 2 branches covered.">      if (parameterMapping.getMode() != ParameterMode.OUT) {</span>
+<span class="fc bfc" id="L210" title="All 2 branches covered.">    for (ParameterMapping parameterMapping : parameterMappings) {</span>
+<span class="fc bfc" id="L211" title="All 2 branches covered.">      if (parameterMapping.getMode() != ParameterMode.OUT) {</span>
         Object value;
-<span class="fc" id="L210">        String propertyName = parameterMapping.getProperty();</span>
-<span class="fc bfc" id="L211" title="All 2 branches covered.">        if (boundSql.hasAdditionalParameter(propertyName)) {</span>
-<span class="fc" id="L212">          value = boundSql.getAdditionalParameter(propertyName);</span>
-<span class="fc bfc" id="L213" title="All 2 branches covered.">        } else if (parameterObject == null) {</span>
-<span class="fc" id="L214">          value = null;</span>
-<span class="fc bfc" id="L215" title="All 2 branches covered.">        } else if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {</span>
-<span class="fc" id="L216">          value = parameterObject;</span>
+<span class="fc" id="L213">        String propertyName = parameterMapping.getProperty();</span>
+<span class="fc bfc" id="L214" title="All 2 branches covered.">        if (boundSql.hasAdditionalParameter(propertyName)) {</span>
+<span class="fc" id="L215">          value = boundSql.getAdditionalParameter(propertyName);</span>
+<span class="fc bfc" id="L216" title="All 2 branches covered.">        } else if (parameterObject == null) {</span>
+<span class="fc" id="L217">          value = null;</span>
+<span class="fc bfc" id="L218" title="All 2 branches covered.">        } else if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {</span>
+<span class="fc" id="L219">          value = parameterObject;</span>
         } else {
-<span class="fc" id="L218">          MetaObject metaObject = configuration.newMetaObject(parameterObject);</span>
-<span class="fc" id="L219">          value = metaObject.getValue(propertyName);</span>
+<span class="fc" id="L221">          MetaObject metaObject = configuration.newMetaObject(parameterObject);</span>
+<span class="fc" id="L222">          value = metaObject.getValue(propertyName);</span>
         }
-<span class="fc" id="L221">        cacheKey.update(value);</span>
+<span class="fc" id="L224">        cacheKey.update(value);</span>
       }
-<span class="fc" id="L223">    }</span>
-<span class="fc bfc" id="L224" title="All 2 branches covered.">    if (configuration.getEnvironment() != null) {</span>
+<span class="fc" id="L226">    }</span>
+<span class="fc bfc" id="L227" title="All 2 branches covered.">    if (configuration.getEnvironment() != null) {</span>
       // issue #176
-<span class="fc" id="L226">      cacheKey.update(configuration.getEnvironment().getId());</span>
+<span class="fc" id="L229">      cacheKey.update(configuration.getEnvironment().getId());</span>
     }
-<span class="fc" id="L228">    return cacheKey;</span>
+<span class="fc" id="L231">    return cacheKey;</span>
   }
 
   @Override
   public boolean isCached(MappedStatement ms, CacheKey key) {
-<span class="fc bfc" id="L233" title="All 2 branches covered.">    return localCache.getObject(key) != null;</span>
+<span class="fc bfc" id="L236" title="All 2 branches covered.">    return localCache.getObject(key) != null;</span>
   }
 
   @Override
   public void commit(boolean required) throws SQLException {
-<span class="pc bpc" id="L238" title="1 of 2 branches missed.">    if (closed) {</span>
-<span class="nc" id="L239">      throw new ExecutorException(&quot;Cannot commit, transaction is already closed&quot;);</span>
+<span class="pc bpc" id="L241" title="1 of 2 branches missed.">    if (closed) {</span>
+<span class="nc" id="L242">      throw new ExecutorException(&quot;Cannot commit, transaction is already closed&quot;);</span>
     }
-<span class="fc" id="L241">    clearLocalCache();</span>
-<span class="fc" id="L242">    flushStatements();</span>
-<span class="fc bfc" id="L243" title="All 2 branches covered.">    if (required) {</span>
-<span class="fc" id="L244">      transaction.commit();</span>
+<span class="fc" id="L244">    clearLocalCache();</span>
+<span class="fc" id="L245">    flushStatements();</span>
+<span class="fc bfc" id="L246" title="All 2 branches covered.">    if (required) {</span>
+<span class="fc" id="L247">      transaction.commit();</span>
     }
-<span class="fc" id="L246">  }</span>
+<span class="fc" id="L249">  }</span>
 
   @Override
   public void rollback(boolean required) throws SQLException {
-<span class="pc bpc" id="L250" title="1 of 2 branches missed.">    if (!closed) {</span>
+<span class="pc bpc" id="L253" title="1 of 2 branches missed.">    if (!closed) {</span>
       try {
-<span class="fc" id="L252">        clearLocalCache();</span>
-<span class="fc" id="L253">        flushStatements(true);</span>
+<span class="fc" id="L255">        clearLocalCache();</span>
+<span class="fc" id="L256">        flushStatements(true);</span>
       } finally {
-<span class="fc bfc" id="L255" title="All 2 branches covered.">        if (required) {</span>
-<span class="fc" id="L256">          transaction.rollback();</span>
+<span class="fc bfc" id="L258" title="All 2 branches covered.">        if (required) {</span>
+<span class="fc" id="L259">          transaction.rollback();</span>
         }
       }
     }
-<span class="fc" id="L260">  }</span>
+<span class="fc" id="L263">  }</span>
 
   @Override
   public void clearLocalCache() {
-<span class="pc bpc" id="L264" title="1 of 2 branches missed.">    if (!closed) {</span>
-<span class="fc" id="L265">      localCache.clear();</span>
-<span class="fc" id="L266">      localOutputParameterCache.clear();</span>
+<span class="pc bpc" id="L267" title="1 of 2 branches missed.">    if (!closed) {</span>
+<span class="fc" id="L268">      localCache.clear();</span>
+<span class="fc" id="L269">      localOutputParameterCache.clear();</span>
     }
-<span class="fc" id="L268">  }</span>
+<span class="fc" id="L271">  }</span>
 
-  protected abstract int doUpdate(MappedStatement ms, Object parameter)
-      throws SQLException;
+  protected abstract int doUpdate(MappedStatement ms, Object parameter) throws SQLException;
 
-  protected abstract List&lt;BatchResult&gt; doFlushStatements(boolean isRollback)
-      throws SQLException;
+  protected abstract List&lt;BatchResult&gt; doFlushStatements(boolean isRollback) throws SQLException;
 
-  protected abstract &lt;E&gt; List&lt;E&gt; doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql)
-      throws SQLException;
+  protected abstract &lt;E&gt; List&lt;E&gt; doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds,
+      ResultHandler resultHandler, BoundSql boundSql) throws SQLException;
 
-  protected abstract &lt;E&gt; Cursor&lt;E&gt; doQueryCursor(MappedStatement ms, Object parameter, RowBounds rowBounds, BoundSql boundSql)
-      throws SQLException;
+  protected abstract &lt;E&gt; Cursor&lt;E&gt; doQueryCursor(MappedStatement ms, Object parameter, RowBounds rowBounds,
+      BoundSql boundSql) throws SQLException;
 
   protected void closeStatement(Statement statement) {
-<span class="fc bfc" id="L283" title="All 2 branches covered.">    if (statement != null) {</span>
+<span class="fc bfc" id="L284" title="All 2 branches covered.">    if (statement != null) {</span>
       try {
-<span class="fc" id="L285">        statement.close();</span>
-<span class="nc" id="L286">      } catch (SQLException e) {</span>
+<span class="fc" id="L286">        statement.close();</span>
+<span class="nc" id="L287">      } catch (SQLException e) {</span>
         // ignore
-<span class="fc" id="L288">      }</span>
+<span class="fc" id="L289">      }</span>
     }
-<span class="fc" id="L290">  }</span>
+<span class="fc" id="L291">  }</span>
 
   /**
    * Apply a transaction timeout.
-   * @param statement a current statement
-   * @throws SQLException if a database access error occurs, this method is called on a closed &lt;code&gt;Statement&lt;/code&gt;
+   *
+   * @param statement
+   *          a current statement
+   *
+   * @throws SQLException
+   *           if a database access error occurs, this method is called on a closed &lt;code&gt;Statement&lt;/code&gt;
+   *
    * @since 3.4.0
+   *
    * @see StatementUtil#applyTransactionTimeout(Statement, Integer, Integer)
    */
   protected void applyTransactionTimeout(Statement statement) throws SQLException {
-<span class="fc" id="L300">    StatementUtil.applyTransactionTimeout(statement, statement.getQueryTimeout(), transaction.getTimeout());</span>
-<span class="fc" id="L301">  }</span>
+<span class="fc" id="L307">    StatementUtil.applyTransactionTimeout(statement, statement.getQueryTimeout(), transaction.getTimeout());</span>
+<span class="fc" id="L308">  }</span>
 
-  private void handleLocallyCachedOutputParameters(MappedStatement ms, CacheKey key, Object parameter, BoundSql boundSql) {
-<span class="fc bfc" id="L304" title="All 2 branches covered.">    if (ms.getStatementType() == StatementType.CALLABLE) {</span>
-<span class="fc" id="L305">      final Object cachedParameter = localOutputParameterCache.getObject(key);</span>
-<span class="pc bpc" id="L306" title="2 of 4 branches missed.">      if (cachedParameter != null &amp;&amp; parameter != null) {</span>
-<span class="fc" id="L307">        final MetaObject metaCachedParameter = configuration.newMetaObject(cachedParameter);</span>
-<span class="fc" id="L308">        final MetaObject metaParameter = configuration.newMetaObject(parameter);</span>
-<span class="fc bfc" id="L309" title="All 2 branches covered.">        for (ParameterMapping parameterMapping : boundSql.getParameterMappings()) {</span>
-<span class="fc bfc" id="L310" title="All 2 branches covered.">          if (parameterMapping.getMode() != ParameterMode.IN) {</span>
-<span class="fc" id="L311">            final String parameterName = parameterMapping.getProperty();</span>
-<span class="fc" id="L312">            final Object cachedValue = metaCachedParameter.getValue(parameterName);</span>
-<span class="fc" id="L313">            metaParameter.setValue(parameterName, cachedValue);</span>
+  private void handleLocallyCachedOutputParameters(MappedStatement ms, CacheKey key, Object parameter,
+      BoundSql boundSql) {
+<span class="fc bfc" id="L312" title="All 2 branches covered.">    if (ms.getStatementType() == StatementType.CALLABLE) {</span>
+<span class="fc" id="L313">      final Object cachedParameter = localOutputParameterCache.getObject(key);</span>
+<span class="pc bpc" id="L314" title="2 of 4 branches missed.">      if (cachedParameter != null &amp;&amp; parameter != null) {</span>
+<span class="fc" id="L315">        final MetaObject metaCachedParameter = configuration.newMetaObject(cachedParameter);</span>
+<span class="fc" id="L316">        final MetaObject metaParameter = configuration.newMetaObject(parameter);</span>
+<span class="fc bfc" id="L317" title="All 2 branches covered.">        for (ParameterMapping parameterMapping : boundSql.getParameterMappings()) {</span>
+<span class="fc bfc" id="L318" title="All 2 branches covered.">          if (parameterMapping.getMode() != ParameterMode.IN) {</span>
+<span class="fc" id="L319">            final String parameterName = parameterMapping.getProperty();</span>
+<span class="fc" id="L320">            final Object cachedValue = metaCachedParameter.getValue(parameterName);</span>
+<span class="fc" id="L321">            metaParameter.setValue(parameterName, cachedValue);</span>
           }
-<span class="fc" id="L315">        }</span>
+<span class="fc" id="L323">        }</span>
       }
     }
-<span class="fc" id="L318">  }</span>
+<span class="fc" id="L326">  }</span>
 
-  private &lt;E&gt; List&lt;E&gt; queryFromDatabase(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql) throws SQLException {
+  private &lt;E&gt; List&lt;E&gt; queryFromDatabase(MappedStatement ms, Object parameter, RowBounds rowBounds,
+      ResultHandler resultHandler, CacheKey key, BoundSql boundSql) throws SQLException {
     List&lt;E&gt; list;
-<span class="fc" id="L322">    localCache.putObject(key, EXECUTION_PLACEHOLDER);</span>
+<span class="fc" id="L331">    localCache.putObject(key, EXECUTION_PLACEHOLDER);</span>
     try {
-<span class="fc" id="L324">      list = doQuery(ms, parameter, rowBounds, resultHandler, boundSql);</span>
+<span class="fc" id="L333">      list = doQuery(ms, parameter, rowBounds, resultHandler, boundSql);</span>
     } finally {
-<span class="fc" id="L326">      localCache.removeObject(key);</span>
+<span class="fc" id="L335">      localCache.removeObject(key);</span>
     }
-<span class="fc" id="L328">    localCache.putObject(key, list);</span>
-<span class="fc bfc" id="L329" title="All 2 branches covered.">    if (ms.getStatementType() == StatementType.CALLABLE) {</span>
-<span class="fc" id="L330">      localOutputParameterCache.putObject(key, parameter);</span>
+<span class="fc" id="L337">    localCache.putObject(key, list);</span>
+<span class="fc bfc" id="L338" title="All 2 branches covered.">    if (ms.getStatementType() == StatementType.CALLABLE) {</span>
+<span class="fc" id="L339">      localOutputParameterCache.putObject(key, parameter);</span>
     }
-<span class="fc" id="L332">    return list;</span>
+<span class="fc" id="L341">    return list;</span>
   }
 
   protected Connection getConnection(Log statementLog) throws SQLException {
-<span class="fc" id="L336">    Connection connection = transaction.getConnection();</span>
-<span class="pc bpc" id="L337" title="1 of 2 branches missed.">    if (statementLog.isDebugEnabled()) {</span>
-<span class="nc" id="L338">      return ConnectionLogger.newInstance(connection, statementLog, queryStack);</span>
-    } else {
-<span class="fc" id="L340">      return connection;</span>
+<span class="fc" id="L345">    Connection connection = transaction.getConnection();</span>
+<span class="pc bpc" id="L346" title="1 of 2 branches missed.">    if (statementLog.isDebugEnabled()) {</span>
+<span class="nc" id="L347">      return ConnectionLogger.newInstance(connection, statementLog, queryStack);</span>
     }
+<span class="fc" id="L349">    return connection;</span>
   }
 
   @Override
   public void setExecutorWrapper(Executor wrapper) {
-<span class="fc" id="L346">    this.wrapper = wrapper;</span>
-<span class="fc" id="L347">  }</span>
+<span class="fc" id="L354">    this.wrapper = wrapper;</span>
+<span class="fc" id="L355">  }</span>
 
   private static class DeferredLoad {
 
@@ -357,34 +365,30 @@ public abstract class BaseExecutor implements Executor {
     private final ResultExtractor resultExtractor;
 
     // issue #781
-    public DeferredLoad(MetaObject resultObject,
-                        String property,
-                        CacheKey key,
-                        PerpetualCache localCache,
-                        Configuration configuration,
-<span class="fc" id="L365">                        Class&lt;?&gt; targetType) {</span>
-<span class="fc" id="L366">      this.resultObject = resultObject;</span>
-<span class="fc" id="L367">      this.property = property;</span>
-<span class="fc" id="L368">      this.key = key;</span>
-<span class="fc" id="L369">      this.localCache = localCache;</span>
-<span class="fc" id="L370">      this.objectFactory = configuration.getObjectFactory();</span>
-<span class="fc" id="L371">      this.resultExtractor = new ResultExtractor(configuration, objectFactory);</span>
-<span class="fc" id="L372">      this.targetType = targetType;</span>
-<span class="fc" id="L373">    }</span>
+    public DeferredLoad(MetaObject resultObject, String property, CacheKey key, PerpetualCache localCache,
+<span class="fc" id="L369">        Configuration configuration, Class&lt;?&gt; targetType) {</span>
+<span class="fc" id="L370">      this.resultObject = resultObject;</span>
+<span class="fc" id="L371">      this.property = property;</span>
+<span class="fc" id="L372">      this.key = key;</span>
+<span class="fc" id="L373">      this.localCache = localCache;</span>
+<span class="fc" id="L374">      this.objectFactory = configuration.getObjectFactory();</span>
+<span class="fc" id="L375">      this.resultExtractor = new ResultExtractor(configuration, objectFactory);</span>
+<span class="fc" id="L376">      this.targetType = targetType;</span>
+<span class="fc" id="L377">    }</span>
 
     public boolean canLoad() {
-<span class="pc bpc" id="L376" title="1 of 4 branches missed.">      return localCache.getObject(key) != null &amp;&amp; localCache.getObject(key) != EXECUTION_PLACEHOLDER;</span>
+<span class="pc bpc" id="L380" title="1 of 4 branches missed.">      return localCache.getObject(key) != null &amp;&amp; localCache.getObject(key) != EXECUTION_PLACEHOLDER;</span>
     }
 
     public void load() {
       @SuppressWarnings(&quot;unchecked&quot;)
       // we suppose we get back a List
-<span class="fc" id="L382">      List&lt;Object&gt; list = (List&lt;Object&gt;) localCache.getObject(key);</span>
-<span class="fc" id="L383">      Object value = resultExtractor.extractObjectFromList(list, targetType);</span>
-<span class="fc" id="L384">      resultObject.setValue(property, value);</span>
-<span class="fc" id="L385">    }</span>
+<span class="fc" id="L386">      List&lt;Object&gt; list = (List&lt;Object&gt;) localCache.getObject(key);</span>
+<span class="fc" id="L387">      Object value = resultExtractor.extractObjectFromList(list, targetType);</span>
+<span class="fc" id="L388">      resultObject.setValue(property, value);</span>
+<span class="fc" id="L389">    }</span>
 
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

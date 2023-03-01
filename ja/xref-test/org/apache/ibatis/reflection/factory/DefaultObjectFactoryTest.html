@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../../testapidocs/org/apache/ibatis/reflection/factory/DefaultObjectFactoryTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2022 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -49,8 +49,8 @@
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>    @Test
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>    <strong class="jxr_keyword">void</strong> createClass() {
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>      DefaultObjectFactory defaultObjectFactory = <strong class="jxr_keyword">new</strong> DefaultObjectFactory();
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>      <a name="TestClass" href="../../../../../org/apache/ibatis/reflection/factory/TestClass.html#TestClass">TestClass</a> testClass = defaultObjectFactory.create(TestClass.<strong class="jxr_keyword">class</strong>,
-<a class="jxr_linenumber" name="L45" href="#L45">45</a>          Arrays.asList(String.<strong class="jxr_keyword">class</strong>, Integer.<strong class="jxr_keyword">class</strong>), Arrays.asList(<span class="jxr_string">"foo"</span>, 0));
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>      <a name="TestClass" href="../../../../../org/apache/ibatis/reflection/factory/TestClass.html#TestClass">TestClass</a> testClass = defaultObjectFactory.create(TestClass.<strong class="jxr_keyword">class</strong>, Arrays.asList(String.<strong class="jxr_keyword">class</strong>, Integer.<strong class="jxr_keyword">class</strong>),
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>          Arrays.asList(<span class="jxr_string">"foo"</span>, 0));
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>  
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>      Assertions.assertEquals((Integer) 0, testClass.myInteger, <span class="jxr_string">"myInteger didn't match expected"</span>);
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>      Assertions.assertEquals(<span class="jxr_string">"foo"</span>, testClass.myString, <span class="jxr_string">"myString didn't match expected"</span>);
@@ -60,51 +60,52 @@
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>    <strong class="jxr_keyword">void</strong> createClassThrowsProperErrorMsg() {
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>      DefaultObjectFactory defaultObjectFactory = <strong class="jxr_keyword">new</strong> DefaultObjectFactory();
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>        defaultObjectFactory.create(TestClass.<strong class="jxr_keyword">class</strong>, Collections.singletonList(String.<strong class="jxr_keyword">class</strong>), Collections.singletonList(<span class="jxr_string">"foo"</span>));
-<a class="jxr_linenumber" name="L56" href="#L56">56</a>        Assertions.fail(<span class="jxr_string">"Should have thrown ReflectionException"</span>);
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>      } <strong class="jxr_keyword">catch</strong> (Exception e) {
-<a class="jxr_linenumber" name="L58" href="#L58">58</a>        Assertions.assertTrue(e instanceof ReflectionException, <span class="jxr_string">"Should be ReflectionException"</span>);
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>        Assertions.assertTrue(e.getMessage().contains(<span class="jxr_string">"(String)"</span>), <span class="jxr_string">"Should not have trailing commas in types list"</span>);
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>        Assertions.assertTrue(e.getMessage().contains(<span class="jxr_string">"(foo)"</span>), <span class="jxr_string">"Should not have trailing commas in values list"</span>);
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>      }
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>    }
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>  
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>    @Test
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>    <strong class="jxr_keyword">void</strong> createHashMap() {
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>       DefaultObjectFactory defaultObjectFactory=<strong class="jxr_keyword">new</strong> DefaultObjectFactory();
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>       Map  map= defaultObjectFactory.create(Map.<strong class="jxr_keyword">class</strong>,<strong class="jxr_keyword">null</strong>,<strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>       Assertions.assertTrue(map instanceof HashMap, <span class="jxr_string">"Should be HashMap"</span>);
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>    }
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>  
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>    @Test
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>    <strong class="jxr_keyword">void</strong> createArrayList() {
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>      DefaultObjectFactory defaultObjectFactory = <strong class="jxr_keyword">new</strong> DefaultObjectFactory();
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>      List list = defaultObjectFactory.create(List.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>      Assertions.assertTrue(list instanceof ArrayList, <span class="jxr_string">" list should be ArrayList"</span>);
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>  
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>      Collection collection = defaultObjectFactory.create(Collection.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>      Assertions.assertTrue(collection instanceof ArrayList, <span class="jxr_string">" collection should be ArrayList"</span>);
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>  
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>      Iterable iterable = defaultObjectFactory.create(Iterable.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>      Assertions.assertTrue(iterable instanceof ArrayList, <span class="jxr_string">" iterable should be ArrayList"</span>);
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>    }
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>  
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>    @Test
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>    <strong class="jxr_keyword">void</strong> createTreeSet() {
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>      DefaultObjectFactory defaultObjectFactory = <strong class="jxr_keyword">new</strong> DefaultObjectFactory();
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>      SortedSet sortedSet = defaultObjectFactory.create(SortedSet.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>      Assertions.assertTrue(sortedSet instanceof TreeSet, <span class="jxr_string">" sortedSet should be TreeSet"</span>);
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>    }
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>  
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>    @Test
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>    <strong class="jxr_keyword">void</strong> createHashSet() {
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>      DefaultObjectFactory defaultObjectFactory = <strong class="jxr_keyword">new</strong> DefaultObjectFactory();
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>      Set set = defaultObjectFactory.create(Set.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>      Assertions.assertTrue(set instanceof HashSet, <span class="jxr_string">" set should be HashSet"</span>);
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>    }
-<a class="jxr_linenumber" name="L97" href="#L97">97</a>  }
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>        defaultObjectFactory.create(TestClass.<strong class="jxr_keyword">class</strong>, Collections.singletonList(String.<strong class="jxr_keyword">class</strong>),
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>            Collections.singletonList(<span class="jxr_string">"foo"</span>));
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>        Assertions.fail(<span class="jxr_string">"Should have thrown ReflectionException"</span>);
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>      } <strong class="jxr_keyword">catch</strong> (Exception e) {
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>        Assertions.assertTrue(e instanceof ReflectionException, <span class="jxr_string">"Should be ReflectionException"</span>);
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>        Assertions.assertTrue(e.getMessage().contains(<span class="jxr_string">"(String)"</span>), <span class="jxr_string">"Should not have trailing commas in types list"</span>);
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>        Assertions.assertTrue(e.getMessage().contains(<span class="jxr_string">"(foo)"</span>), <span class="jxr_string">"Should not have trailing commas in values list"</span>);
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>      }
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>    }
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>  
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>    @Test
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>    <strong class="jxr_keyword">void</strong> createHashMap() {
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>      DefaultObjectFactory defaultObjectFactory = <strong class="jxr_keyword">new</strong> DefaultObjectFactory();
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>      Map map = defaultObjectFactory.create(Map.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>      Assertions.assertTrue(map instanceof HashMap, <span class="jxr_string">"Should be HashMap"</span>);
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>    }
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>  
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>    @Test
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>    <strong class="jxr_keyword">void</strong> createArrayList() {
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>      DefaultObjectFactory defaultObjectFactory = <strong class="jxr_keyword">new</strong> DefaultObjectFactory();
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>      List list = defaultObjectFactory.create(List.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>      Assertions.assertTrue(list instanceof ArrayList, <span class="jxr_string">" list should be ArrayList"</span>);
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>  
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>      Collection collection = defaultObjectFactory.create(Collection.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>      Assertions.assertTrue(collection instanceof ArrayList, <span class="jxr_string">" collection should be ArrayList"</span>);
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>  
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>      Iterable iterable = defaultObjectFactory.create(Iterable.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>      Assertions.assertTrue(iterable instanceof ArrayList, <span class="jxr_string">" iterable should be ArrayList"</span>);
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>    }
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>  
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>    @Test
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>    <strong class="jxr_keyword">void</strong> createTreeSet() {
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>      DefaultObjectFactory defaultObjectFactory = <strong class="jxr_keyword">new</strong> DefaultObjectFactory();
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>      SortedSet sortedSet = defaultObjectFactory.create(SortedSet.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>      Assertions.assertTrue(sortedSet instanceof TreeSet, <span class="jxr_string">" sortedSet should be TreeSet"</span>);
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>    }
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>  
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>    @Test
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>    <strong class="jxr_keyword">void</strong> createHashSet() {
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>      DefaultObjectFactory defaultObjectFactory = <strong class="jxr_keyword">new</strong> DefaultObjectFactory();
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>      Set set = defaultObjectFactory.create(Set.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>      Assertions.assertTrue(set instanceof HashSet, <span class="jxr_string">" set should be HashSet"</span>);
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>    }
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2022 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2023 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

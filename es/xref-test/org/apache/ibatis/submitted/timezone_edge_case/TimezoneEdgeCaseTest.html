@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../../testapidocs/org/apache/ibatis/submitted/timezone_edge_case/TimezoneEdgeCaseTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2022 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -23,7 +23,7 @@
 <a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> */</em>
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">package</strong> org.apache.ibatis.submitted.timezone_edge_<strong class="jxr_keyword">case</strong>;
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  
-<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.jupiter.api.Assertions.*;
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.jupiter.api.Assertions.assertEquals;
 <a class="jxr_linenumber" name="L19" href="#L19">19</a>  
 <a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> java.io.Reader;
 <a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> java.sql.Connection;
@@ -91,48 +91,46 @@
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>        mapper.insert(record);
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>        sqlSession.commit();
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>      }
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession();
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>          Connection con = sqlSession.getConnection();
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>          Statement stmt = con.createStatement();
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>          ResultSet rs = stmt.executeQuery(<span class="jxr_string">"select count(*) from records where id = 2 and ts = '2019-03-10 02:30:00'"</span>)) {
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>        rs.next();
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>        assertEquals(1, rs.getInt(1));
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>      }
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>    }
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>  
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>    @Test
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>    <strong class="jxr_keyword">void</strong> shouldSelectNonExistentLocalDateAsIs() {
-<a class="jxr_linenumber" name="L97" href="#L97">97</a>      TimeZone.setDefault(TimeZone.getTimeZone(<span class="jxr_string">"Pacific/Apia"</span>));
-<a class="jxr_linenumber" name="L98" href="#L98">98</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-<a class="jxr_linenumber" name="L99" href="#L99">99</a>        <a name="Mapper" href="../../../../../org/apache/ibatis/submitted/timezone_edge_case/Mapper.html#Mapper">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L100" href="#L100">100</a>       <a name="Record" href="../../../../../org/apache/ibatis/submitted/timezone_edge_case/Record.html#Record">Record</a> record = mapper.selectById(1);
-<a class="jxr_linenumber" name="L101" href="#L101">101</a>       assertEquals(LocalDate.of(2011, 12, 30), record.getD());
-<a class="jxr_linenumber" name="L102" href="#L102">102</a>     }
-<a class="jxr_linenumber" name="L103" href="#L103">103</a>   }
-<a class="jxr_linenumber" name="L104" href="#L104">104</a> 
-<a class="jxr_linenumber" name="L105" href="#L105">105</a>   @Test
-<a class="jxr_linenumber" name="L106" href="#L106">106</a>   <strong class="jxr_keyword">void</strong> shouldInsertNonExistentLocalDateAsIs() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L107" href="#L107">107</a>     TimeZone.setDefault(TimeZone.getTimeZone(<span class="jxr_string">"Pacific/Apia"</span>));
-<a class="jxr_linenumber" name="L108" href="#L108">108</a>     LocalDate localDate = LocalDate.of(2011, 12, 30);
-<a class="jxr_linenumber" name="L109" href="#L109">109</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-<a class="jxr_linenumber" name="L110" href="#L110">110</a>       <a name="Mapper" href="../../../../../org/apache/ibatis/submitted/timezone_edge_case/Mapper.html#Mapper">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L111" href="#L111">111</a>       <a name="Record" href="../../../../../org/apache/ibatis/submitted/timezone_edge_case/Record.html#Record">Record</a> record = <strong class="jxr_keyword">new</strong> <a name="Record" href="../../../../../org/apache/ibatis/submitted/timezone_edge_case/Record.html#Record">Record</a>();
-<a class="jxr_linenumber" name="L112" href="#L112">112</a>       record.setId(3);
-<a class="jxr_linenumber" name="L113" href="#L113">113</a>       record.setD(localDate);
-<a class="jxr_linenumber" name="L114" href="#L114">114</a>       mapper.insert(record);
-<a class="jxr_linenumber" name="L115" href="#L115">115</a>       sqlSession.commit();
-<a class="jxr_linenumber" name="L116" href="#L116">116</a>     }
-<a class="jxr_linenumber" name="L117" href="#L117">117</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession();
-<a class="jxr_linenumber" name="L118" href="#L118">118</a>         Connection con = sqlSession.getConnection();
-<a class="jxr_linenumber" name="L119" href="#L119">119</a>         Statement stmt = con.createStatement();
-<a class="jxr_linenumber" name="L120" href="#L120">120</a>         ResultSet rs = stmt.executeQuery(<span class="jxr_string">"select count(*) from records where id = 3 and d = '2011-12-30'"</span>)) {
-<a class="jxr_linenumber" name="L121" href="#L121">121</a>       rs.next();
-<a class="jxr_linenumber" name="L122" href="#L122">122</a>       assertEquals(1, rs.getInt(1));
-<a class="jxr_linenumber" name="L123" href="#L123">123</a>     }
-<a class="jxr_linenumber" name="L124" href="#L124">124</a>   }
-<a class="jxr_linenumber" name="L125" href="#L125">125</a> }
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession(); Connection con = sqlSession.getConnection();
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>          Statement stmt = con.createStatement();
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>          ResultSet rs = stmt.executeQuery(<span class="jxr_string">"select count(*) from records where id = 2 and ts = '2019-03-10 02:30:00'"</span>)) {
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>        rs.next();
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>        assertEquals(1, rs.getInt(1));
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>      }
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>    }
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>  
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>    @Test
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>    <strong class="jxr_keyword">void</strong> shouldSelectNonExistentLocalDateAsIs() {
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>      TimeZone.setDefault(TimeZone.getTimeZone(<span class="jxr_string">"Pacific/Apia"</span>));
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>        <a name="Mapper" href="../../../../../org/apache/ibatis/submitted/timezone_edge_case/Mapper.html#Mapper">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>        <a name="Record" href="../../../../../org/apache/ibatis/submitted/timezone_edge_case/Record.html#Record">Record</a> record = mapper.selectById(1);
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>       assertEquals(LocalDate.of(2011, 12, 30), record.getD());
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>     }
+<a class="jxr_linenumber" name="L102" href="#L102">102</a>   }
+<a class="jxr_linenumber" name="L103" href="#L103">103</a> 
+<a class="jxr_linenumber" name="L104" href="#L104">104</a>   @Test
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>   <strong class="jxr_keyword">void</strong> shouldInsertNonExistentLocalDateAsIs() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>     TimeZone.setDefault(TimeZone.getTimeZone(<span class="jxr_string">"Pacific/Apia"</span>));
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>     LocalDate localDate = LocalDate.of(2011, 12, 30);
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>       <a name="Mapper" href="../../../../../org/apache/ibatis/submitted/timezone_edge_case/Mapper.html#Mapper">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>       <a name="Record" href="../../../../../org/apache/ibatis/submitted/timezone_edge_case/Record.html#Record">Record</a> record = <strong class="jxr_keyword">new</strong> <a name="Record" href="../../../../../org/apache/ibatis/submitted/timezone_edge_case/Record.html#Record">Record</a>();
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>       record.setId(3);
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>       record.setD(localDate);
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>       mapper.insert(record);
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>       sqlSession.commit();
+<a class="jxr_linenumber" name="L115" href="#L115">115</a>     }
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession(); Connection con = sqlSession.getConnection();
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>         Statement stmt = con.createStatement();
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>         ResultSet rs = stmt.executeQuery(<span class="jxr_string">"select count(*) from records where id = 3 and d = '2011-12-30'"</span>)) {
+<a class="jxr_linenumber" name="L119" href="#L119">119</a>       rs.next();
+<a class="jxr_linenumber" name="L120" href="#L120">120</a>       assertEquals(1, rs.getInt(1));
+<a class="jxr_linenumber" name="L121" href="#L121">121</a>     }
+<a class="jxr_linenumber" name="L122" href="#L122">122</a>   }
+<a class="jxr_linenumber" name="L123" href="#L123">123</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2022 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2023 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

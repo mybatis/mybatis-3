@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../apidocs/org/apache/ibatis/mapping/CacheBuilder.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2022 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -157,81 +157,75 @@
 <a class="jxr_linenumber" name="L149" href="#L149">149</a>           Class&lt;?&gt; type = metaCache.getSetterType(name);
 <a class="jxr_linenumber" name="L150" href="#L150">150</a>           <strong class="jxr_keyword">if</strong> (String.<strong class="jxr_keyword">class</strong> == type) {
 <a class="jxr_linenumber" name="L151" href="#L151">151</a>             metaCache.setValue(name, value);
-<a class="jxr_linenumber" name="L152" href="#L152">152</a>           } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">int</strong>.<strong class="jxr_keyword">class</strong> == type
-<a class="jxr_linenumber" name="L153" href="#L153">153</a>               || Integer.<strong class="jxr_keyword">class</strong> == type) {
-<a class="jxr_linenumber" name="L154" href="#L154">154</a>             metaCache.setValue(name, Integer.valueOf(value));
-<a class="jxr_linenumber" name="L155" href="#L155">155</a>           } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">long</strong>.<strong class="jxr_keyword">class</strong> == type
-<a class="jxr_linenumber" name="L156" href="#L156">156</a>               || Long.<strong class="jxr_keyword">class</strong> == type) {
-<a class="jxr_linenumber" name="L157" href="#L157">157</a>             metaCache.setValue(name, Long.valueOf(value));
-<a class="jxr_linenumber" name="L158" href="#L158">158</a>           } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">short</strong>.<strong class="jxr_keyword">class</strong> == type
-<a class="jxr_linenumber" name="L159" href="#L159">159</a>               || Short.<strong class="jxr_keyword">class</strong> == type) {
-<a class="jxr_linenumber" name="L160" href="#L160">160</a>             metaCache.setValue(name, Short.valueOf(value));
-<a class="jxr_linenumber" name="L161" href="#L161">161</a>           } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (byte.<strong class="jxr_keyword">class</strong> == type
-<a class="jxr_linenumber" name="L162" href="#L162">162</a>               || Byte.<strong class="jxr_keyword">class</strong> == type) {
-<a class="jxr_linenumber" name="L163" href="#L163">163</a>             metaCache.setValue(name, Byte.valueOf(value));
-<a class="jxr_linenumber" name="L164" href="#L164">164</a>           } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">float</strong>.<strong class="jxr_keyword">class</strong> == type
-<a class="jxr_linenumber" name="L165" href="#L165">165</a>               || Float.<strong class="jxr_keyword">class</strong> == type) {
-<a class="jxr_linenumber" name="L166" href="#L166">166</a>             metaCache.setValue(name, Float.valueOf(value));
-<a class="jxr_linenumber" name="L167" href="#L167">167</a>           } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">boolean</strong>.<strong class="jxr_keyword">class</strong> == type
-<a class="jxr_linenumber" name="L168" href="#L168">168</a>               || Boolean.<strong class="jxr_keyword">class</strong> == type) {
-<a class="jxr_linenumber" name="L169" href="#L169">169</a>             metaCache.setValue(name, Boolean.valueOf(value));
-<a class="jxr_linenumber" name="L170" href="#L170">170</a>           } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">double</strong>.<strong class="jxr_keyword">class</strong> == type
-<a class="jxr_linenumber" name="L171" href="#L171">171</a>               || Double.<strong class="jxr_keyword">class</strong> == type) {
-<a class="jxr_linenumber" name="L172" href="#L172">172</a>             metaCache.setValue(name, Double.valueOf(value));
-<a class="jxr_linenumber" name="L173" href="#L173">173</a>           } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L174" href="#L174">174</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="CacheException" href="../../../../org/apache/ibatis/cache/CacheException.html#CacheException">CacheException</a>(<span class="jxr_string">"Unsupported property type for cache: '"</span> + name + <span class="jxr_string">"' of type "</span> + type);
-<a class="jxr_linenumber" name="L175" href="#L175">175</a>           }
-<a class="jxr_linenumber" name="L176" href="#L176">176</a>         }
-<a class="jxr_linenumber" name="L177" href="#L177">177</a>       }
-<a class="jxr_linenumber" name="L178" href="#L178">178</a>     }
-<a class="jxr_linenumber" name="L179" href="#L179">179</a>     <strong class="jxr_keyword">if</strong> (InitializingObject.<strong class="jxr_keyword">class</strong>.isAssignableFrom(cache.getClass())) {
-<a class="jxr_linenumber" name="L180" href="#L180">180</a>       <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L181" href="#L181">181</a>         ((<a name="InitializingObject" href="../../../../org/apache/ibatis/builder/InitializingObject.html#InitializingObject">InitializingObject</a>) cache).initialize();
-<a class="jxr_linenumber" name="L182" href="#L182">182</a>       } <strong class="jxr_keyword">catch</strong> (Exception e) {
-<a class="jxr_linenumber" name="L183" href="#L183">183</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="CacheException" href="../../../../org/apache/ibatis/cache/CacheException.html#CacheException">CacheException</a>(<span class="jxr_string">"Failed cache initialization for '"</span>
-<a class="jxr_linenumber" name="L184" href="#L184">184</a>           + cache.getId() + <span class="jxr_string">"' on '"</span> + cache.getClass().getName() + <span class="jxr_string">"'"</span>, e);
-<a class="jxr_linenumber" name="L185" href="#L185">185</a>       }
-<a class="jxr_linenumber" name="L186" href="#L186">186</a>     }
-<a class="jxr_linenumber" name="L187" href="#L187">187</a>   }
-<a class="jxr_linenumber" name="L188" href="#L188">188</a> 
-<a class="jxr_linenumber" name="L189" href="#L189">189</a>   <strong class="jxr_keyword">private</strong> <a name="Cache" href="../../../../org/apache/ibatis/cache/Cache.html#Cache">Cache</a> newBaseCacheInstance(Class&lt;? <strong class="jxr_keyword">extends</strong> Cache&gt; cacheClass, String id) {
-<a class="jxr_linenumber" name="L190" href="#L190">190</a>     Constructor&lt;? <strong class="jxr_keyword">extends</strong> Cache&gt; cacheConstructor = getBaseCacheConstructor(cacheClass);
-<a class="jxr_linenumber" name="L191" href="#L191">191</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L192" href="#L192">192</a>       <strong class="jxr_keyword">return</strong> cacheConstructor.newInstance(id);
-<a class="jxr_linenumber" name="L193" href="#L193">193</a>     } <strong class="jxr_keyword">catch</strong> (Exception e) {
-<a class="jxr_linenumber" name="L194" href="#L194">194</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="CacheException" href="../../../../org/apache/ibatis/cache/CacheException.html#CacheException">CacheException</a>(<span class="jxr_string">"Could not instantiate cache implementation ("</span> + cacheClass + <span class="jxr_string">"). Cause: "</span> + e, e);
-<a class="jxr_linenumber" name="L195" href="#L195">195</a>     }
-<a class="jxr_linenumber" name="L196" href="#L196">196</a>   }
-<a class="jxr_linenumber" name="L197" href="#L197">197</a> 
-<a class="jxr_linenumber" name="L198" href="#L198">198</a>   <strong class="jxr_keyword">private</strong> Constructor&lt;? <strong class="jxr_keyword">extends</strong> Cache&gt; getBaseCacheConstructor(Class&lt;? <strong class="jxr_keyword">extends</strong> Cache&gt; cacheClass) {
-<a class="jxr_linenumber" name="L199" href="#L199">199</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L200" href="#L200">200</a>       <strong class="jxr_keyword">return</strong> cacheClass.getConstructor(String.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L201" href="#L201">201</a>     } <strong class="jxr_keyword">catch</strong> (Exception e) {
-<a class="jxr_linenumber" name="L202" href="#L202">202</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="CacheException" href="../../../../org/apache/ibatis/cache/CacheException.html#CacheException">CacheException</a>(<span class="jxr_string">"Invalid base cache implementation ("</span> + cacheClass + <span class="jxr_string">").  "</span>
-<a class="jxr_linenumber" name="L203" href="#L203">203</a>         + <span class="jxr_string">"Base cache implementations must have a constructor that takes a String id as a parameter.  Cause: "</span> + e, e);
-<a class="jxr_linenumber" name="L204" href="#L204">204</a>     }
-<a class="jxr_linenumber" name="L205" href="#L205">205</a>   }
-<a class="jxr_linenumber" name="L206" href="#L206">206</a> 
-<a class="jxr_linenumber" name="L207" href="#L207">207</a>   <strong class="jxr_keyword">private</strong> <a name="Cache" href="../../../../org/apache/ibatis/cache/Cache.html#Cache">Cache</a> newCacheDecoratorInstance(Class&lt;? <strong class="jxr_keyword">extends</strong> Cache&gt; cacheClass, <a name="Cache" href="../../../../org/apache/ibatis/cache/Cache.html#Cache">Cache</a> base) {
-<a class="jxr_linenumber" name="L208" href="#L208">208</a>     Constructor&lt;? <strong class="jxr_keyword">extends</strong> Cache&gt; cacheConstructor = getCacheDecoratorConstructor(cacheClass);
-<a class="jxr_linenumber" name="L209" href="#L209">209</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L210" href="#L210">210</a>       <strong class="jxr_keyword">return</strong> cacheConstructor.newInstance(base);
-<a class="jxr_linenumber" name="L211" href="#L211">211</a>     } <strong class="jxr_keyword">catch</strong> (Exception e) {
-<a class="jxr_linenumber" name="L212" href="#L212">212</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="CacheException" href="../../../../org/apache/ibatis/cache/CacheException.html#CacheException">CacheException</a>(<span class="jxr_string">"Could not instantiate cache decorator ("</span> + cacheClass + <span class="jxr_string">"). Cause: "</span> + e, e);
-<a class="jxr_linenumber" name="L213" href="#L213">213</a>     }
-<a class="jxr_linenumber" name="L214" href="#L214">214</a>   }
-<a class="jxr_linenumber" name="L215" href="#L215">215</a> 
-<a class="jxr_linenumber" name="L216" href="#L216">216</a>   <strong class="jxr_keyword">private</strong> Constructor&lt;? <strong class="jxr_keyword">extends</strong> Cache&gt; getCacheDecoratorConstructor(Class&lt;? <strong class="jxr_keyword">extends</strong> Cache&gt; cacheClass) {
-<a class="jxr_linenumber" name="L217" href="#L217">217</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L218" href="#L218">218</a>       <strong class="jxr_keyword">return</strong> cacheClass.getConstructor(Cache.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L219" href="#L219">219</a>     } <strong class="jxr_keyword">catch</strong> (Exception e) {
-<a class="jxr_linenumber" name="L220" href="#L220">220</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="CacheException" href="../../../../org/apache/ibatis/cache/CacheException.html#CacheException">CacheException</a>(<span class="jxr_string">"Invalid cache decorator ("</span> + cacheClass + <span class="jxr_string">").  "</span>
-<a class="jxr_linenumber" name="L221" href="#L221">221</a>         + <span class="jxr_string">"Cache decorators must have a constructor that takes a Cache instance as a parameter.  Cause: "</span> + e, e);
-<a class="jxr_linenumber" name="L222" href="#L222">222</a>     }
-<a class="jxr_linenumber" name="L223" href="#L223">223</a>   }
-<a class="jxr_linenumber" name="L224" href="#L224">224</a> }
+<a class="jxr_linenumber" name="L152" href="#L152">152</a>           } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">int</strong>.<strong class="jxr_keyword">class</strong> == type || Integer.<strong class="jxr_keyword">class</strong> == type) {
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>             metaCache.setValue(name, Integer.valueOf(value));
+<a class="jxr_linenumber" name="L154" href="#L154">154</a>           } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">long</strong>.<strong class="jxr_keyword">class</strong> == type || Long.<strong class="jxr_keyword">class</strong> == type) {
+<a class="jxr_linenumber" name="L155" href="#L155">155</a>             metaCache.setValue(name, Long.valueOf(value));
+<a class="jxr_linenumber" name="L156" href="#L156">156</a>           } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">short</strong>.<strong class="jxr_keyword">class</strong> == type || Short.<strong class="jxr_keyword">class</strong> == type) {
+<a class="jxr_linenumber" name="L157" href="#L157">157</a>             metaCache.setValue(name, Short.valueOf(value));
+<a class="jxr_linenumber" name="L158" href="#L158">158</a>           } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (byte.<strong class="jxr_keyword">class</strong> == type || Byte.<strong class="jxr_keyword">class</strong> == type) {
+<a class="jxr_linenumber" name="L159" href="#L159">159</a>             metaCache.setValue(name, Byte.valueOf(value));
+<a class="jxr_linenumber" name="L160" href="#L160">160</a>           } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">float</strong>.<strong class="jxr_keyword">class</strong> == type || Float.<strong class="jxr_keyword">class</strong> == type) {
+<a class="jxr_linenumber" name="L161" href="#L161">161</a>             metaCache.setValue(name, Float.valueOf(value));
+<a class="jxr_linenumber" name="L162" href="#L162">162</a>           } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">boolean</strong>.<strong class="jxr_keyword">class</strong> == type || Boolean.<strong class="jxr_keyword">class</strong> == type) {
+<a class="jxr_linenumber" name="L163" href="#L163">163</a>             metaCache.setValue(name, Boolean.valueOf(value));
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>           } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">double</strong>.<strong class="jxr_keyword">class</strong> == type || Double.<strong class="jxr_keyword">class</strong> == type) {
+<a class="jxr_linenumber" name="L165" href="#L165">165</a>             metaCache.setValue(name, Double.valueOf(value));
+<a class="jxr_linenumber" name="L166" href="#L166">166</a>           } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L167" href="#L167">167</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="CacheException" href="../../../../org/apache/ibatis/cache/CacheException.html#CacheException">CacheException</a>(<span class="jxr_string">"Unsupported property type for cache: '"</span> + name + <span class="jxr_string">"' of type "</span> + type);
+<a class="jxr_linenumber" name="L168" href="#L168">168</a>           }
+<a class="jxr_linenumber" name="L169" href="#L169">169</a>         }
+<a class="jxr_linenumber" name="L170" href="#L170">170</a>       }
+<a class="jxr_linenumber" name="L171" href="#L171">171</a>     }
+<a class="jxr_linenumber" name="L172" href="#L172">172</a>     <strong class="jxr_keyword">if</strong> (InitializingObject.<strong class="jxr_keyword">class</strong>.isAssignableFrom(cache.getClass())) {
+<a class="jxr_linenumber" name="L173" href="#L173">173</a>       <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L174" href="#L174">174</a>         ((<a name="InitializingObject" href="../../../../org/apache/ibatis/builder/InitializingObject.html#InitializingObject">InitializingObject</a>) cache).initialize();
+<a class="jxr_linenumber" name="L175" href="#L175">175</a>       } <strong class="jxr_keyword">catch</strong> (Exception e) {
+<a class="jxr_linenumber" name="L176" href="#L176">176</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="CacheException" href="../../../../org/apache/ibatis/cache/CacheException.html#CacheException">CacheException</a>(
+<a class="jxr_linenumber" name="L177" href="#L177">177</a>             <span class="jxr_string">"Failed cache initialization for '"</span> + cache.getId() + <span class="jxr_string">"' on '"</span> + cache.getClass().getName() + <span class="jxr_string">"'"</span>, e);
+<a class="jxr_linenumber" name="L178" href="#L178">178</a>       }
+<a class="jxr_linenumber" name="L179" href="#L179">179</a>     }
+<a class="jxr_linenumber" name="L180" href="#L180">180</a>   }
+<a class="jxr_linenumber" name="L181" href="#L181">181</a> 
+<a class="jxr_linenumber" name="L182" href="#L182">182</a>   <strong class="jxr_keyword">private</strong> <a name="Cache" href="../../../../org/apache/ibatis/cache/Cache.html#Cache">Cache</a> newBaseCacheInstance(Class&lt;? <strong class="jxr_keyword">extends</strong> Cache&gt; cacheClass, String id) {
+<a class="jxr_linenumber" name="L183" href="#L183">183</a>     Constructor&lt;? <strong class="jxr_keyword">extends</strong> Cache&gt; cacheConstructor = getBaseCacheConstructor(cacheClass);
+<a class="jxr_linenumber" name="L184" href="#L184">184</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L185" href="#L185">185</a>       <strong class="jxr_keyword">return</strong> cacheConstructor.newInstance(id);
+<a class="jxr_linenumber" name="L186" href="#L186">186</a>     } <strong class="jxr_keyword">catch</strong> (Exception e) {
+<a class="jxr_linenumber" name="L187" href="#L187">187</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="CacheException" href="../../../../org/apache/ibatis/cache/CacheException.html#CacheException">CacheException</a>(<span class="jxr_string">"Could not instantiate cache implementation ("</span> + cacheClass + <span class="jxr_string">"). Cause: "</span> + e, e);
+<a class="jxr_linenumber" name="L188" href="#L188">188</a>     }
+<a class="jxr_linenumber" name="L189" href="#L189">189</a>   }
+<a class="jxr_linenumber" name="L190" href="#L190">190</a> 
+<a class="jxr_linenumber" name="L191" href="#L191">191</a>   <strong class="jxr_keyword">private</strong> Constructor&lt;? <strong class="jxr_keyword">extends</strong> Cache&gt; getBaseCacheConstructor(Class&lt;? <strong class="jxr_keyword">extends</strong> Cache&gt; cacheClass) {
+<a class="jxr_linenumber" name="L192" href="#L192">192</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L193" href="#L193">193</a>       <strong class="jxr_keyword">return</strong> cacheClass.getConstructor(String.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L194" href="#L194">194</a>     } <strong class="jxr_keyword">catch</strong> (Exception e) {
+<a class="jxr_linenumber" name="L195" href="#L195">195</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="CacheException" href="../../../../org/apache/ibatis/cache/CacheException.html#CacheException">CacheException</a>(<span class="jxr_string">"Invalid base cache implementation ("</span> + cacheClass + <span class="jxr_string">").  "</span>
+<a class="jxr_linenumber" name="L196" href="#L196">196</a>           + <span class="jxr_string">"Base cache implementations must have a constructor that takes a String id as a parameter.  Cause: "</span> + e,
+<a class="jxr_linenumber" name="L197" href="#L197">197</a>           e);
+<a class="jxr_linenumber" name="L198" href="#L198">198</a>     }
+<a class="jxr_linenumber" name="L199" href="#L199">199</a>   }
+<a class="jxr_linenumber" name="L200" href="#L200">200</a> 
+<a class="jxr_linenumber" name="L201" href="#L201">201</a>   <strong class="jxr_keyword">private</strong> <a name="Cache" href="../../../../org/apache/ibatis/cache/Cache.html#Cache">Cache</a> newCacheDecoratorInstance(Class&lt;? <strong class="jxr_keyword">extends</strong> Cache&gt; cacheClass, <a name="Cache" href="../../../../org/apache/ibatis/cache/Cache.html#Cache">Cache</a> base) {
+<a class="jxr_linenumber" name="L202" href="#L202">202</a>     Constructor&lt;? <strong class="jxr_keyword">extends</strong> Cache&gt; cacheConstructor = getCacheDecoratorConstructor(cacheClass);
+<a class="jxr_linenumber" name="L203" href="#L203">203</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L204" href="#L204">204</a>       <strong class="jxr_keyword">return</strong> cacheConstructor.newInstance(base);
+<a class="jxr_linenumber" name="L205" href="#L205">205</a>     } <strong class="jxr_keyword">catch</strong> (Exception e) {
+<a class="jxr_linenumber" name="L206" href="#L206">206</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="CacheException" href="../../../../org/apache/ibatis/cache/CacheException.html#CacheException">CacheException</a>(<span class="jxr_string">"Could not instantiate cache decorator ("</span> + cacheClass + <span class="jxr_string">"). Cause: "</span> + e, e);
+<a class="jxr_linenumber" name="L207" href="#L207">207</a>     }
+<a class="jxr_linenumber" name="L208" href="#L208">208</a>   }
+<a class="jxr_linenumber" name="L209" href="#L209">209</a> 
+<a class="jxr_linenumber" name="L210" href="#L210">210</a>   <strong class="jxr_keyword">private</strong> Constructor&lt;? <strong class="jxr_keyword">extends</strong> Cache&gt; getCacheDecoratorConstructor(Class&lt;? <strong class="jxr_keyword">extends</strong> Cache&gt; cacheClass) {
+<a class="jxr_linenumber" name="L211" href="#L211">211</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L212" href="#L212">212</a>       <strong class="jxr_keyword">return</strong> cacheClass.getConstructor(Cache.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L213" href="#L213">213</a>     } <strong class="jxr_keyword">catch</strong> (Exception e) {
+<a class="jxr_linenumber" name="L214" href="#L214">214</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="CacheException" href="../../../../org/apache/ibatis/cache/CacheException.html#CacheException">CacheException</a>(<span class="jxr_string">"Invalid cache decorator ("</span> + cacheClass + <span class="jxr_string">").  "</span>
+<a class="jxr_linenumber" name="L215" href="#L215">215</a>           + <span class="jxr_string">"Cache decorators must have a constructor that takes a Cache instance as a parameter.  Cause: "</span> + e, e);
+<a class="jxr_linenumber" name="L216" href="#L216">216</a>     }
+<a class="jxr_linenumber" name="L217" href="#L217">217</a>   }
+<a class="jxr_linenumber" name="L218" href="#L218">218</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2022 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2023 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BatchExecutorException.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.executor</a> &gt; <span class="el_source">BatchExecutorException.java</span></div><h1>BatchExecutorException.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2019 the original author or authors.
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BatchExecutorException.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.executor</a> &gt; <span class="el_source">BatchExecutorException.java</span></div><h1>BatchExecutorException.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
@@ -19,10 +19,9 @@ import java.sql.BatchUpdateException;
 import java.util.List;
 
 /**
- * This exception is thrown if a &lt;code&gt;java.sql.BatchUpdateException&lt;/code&gt; is caught
- * during the execution of any nested batch.  The exception contains the
- * java.sql.BatchUpdateException that is the root cause, as well as
- * the results from any prior nested batch that executed successfully.
+ * This exception is thrown if a &lt;code&gt;java.sql.BatchUpdateException&lt;/code&gt; is caught during the execution of any nested
+ * batch. The exception contains the java.sql.BatchUpdateException that is the root cause, as well as the results from
+ * any prior nested batch that executed successfully.
  *
  * @author Jeff Butler
  */
@@ -33,48 +32,41 @@ public class BatchExecutorException extends ExecutorException {
   private final BatchUpdateException batchUpdateException;
   private final BatchResult batchResult;
 
-  public BatchExecutorException(String message,
-                                BatchUpdateException cause,
-                                List&lt;BatchResult&gt; successfulBatchResults,
-                                BatchResult batchResult) {
-<span class="nc" id="L40">    super(message + &quot; Cause: &quot; + cause, cause);</span>
-<span class="nc" id="L41">    this.batchUpdateException = cause;</span>
-<span class="nc" id="L42">    this.successfulBatchResults = successfulBatchResults;</span>
-<span class="nc" id="L43">    this.batchResult = batchResult;</span>
-<span class="nc" id="L44">  }</span>
+  public BatchExecutorException(String message, BatchUpdateException cause, List&lt;BatchResult&gt; successfulBatchResults,
+      BatchResult batchResult) {
+<span class="nc" id="L37">    super(message + &quot; Cause: &quot; + cause, cause);</span>
+<span class="nc" id="L38">    this.batchUpdateException = cause;</span>
+<span class="nc" id="L39">    this.successfulBatchResults = successfulBatchResults;</span>
+<span class="nc" id="L40">    this.batchResult = batchResult;</span>
+<span class="nc" id="L41">  }</span>
 
   /**
-   * Returns the BatchUpdateException that caused the nested executor
-   * to fail.  That exception contains an array of row counts
-   * that can be used to determine exactly which statement of the
-   * executor caused the failure (or failures).
+   * Returns the BatchUpdateException that caused the nested executor to fail. That exception contains an array of row
+   * counts that can be used to determine exactly which statement of the executor caused the failure (or failures).
    *
    * @return the root BatchUpdateException
    */
   public BatchUpdateException getBatchUpdateException() {
-<span class="nc" id="L55">    return batchUpdateException;</span>
+<span class="nc" id="L50">    return batchUpdateException;</span>
   }
 
   /**
-   * Returns a list of BatchResult objects.  There will be one entry
-   * in the list for each successful sub-executor executed before the failing
-   * executor.
+   * Returns a list of BatchResult objects. There will be one entry in the list for each successful sub-executor
+   * executed before the failing executor.
    *
-   * @return the previously successful executor results (may be an empty list
-   *         if no executor has executed successfully)
+   * @return the previously successful executor results (maybe an empty list if no executor has executed successfully)
    */
   public List&lt;BatchResult&gt; getSuccessfulBatchResults() {
-<span class="nc" id="L67">    return successfulBatchResults;</span>
+<span class="nc" id="L60">    return successfulBatchResults;</span>
   }
 
   /**
-   * Returns the SQL statement that caused the failure
-   * (not the parameterArray).
+   * Returns the SQL statement that caused the failure (not the parameterArray).
    *
    * @return the failing SQL string
    */
   public String getFailingSqlStatement() {
-<span class="nc" id="L77">    return batchResult.getSql();</span>
+<span class="nc" id="L69">    return batchResult.getSql();</span>
   }
 
   /**
@@ -83,7 +75,7 @@ public class BatchExecutorException extends ExecutorException {
    * @return the statement id
    */
   public String getFailingStatementId() {
-<span class="nc" id="L86">    return batchResult.getMappedStatement().getId();</span>
+<span class="nc" id="L78">    return batchResult.getMappedStatement().getId();</span>
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

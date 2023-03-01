@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../../testapidocs/org/apache/ibatis/submitted/results_id/IdConflictTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2022 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -23,25 +23,26 @@
 <a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> */</em>
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">package</strong> org.apache.ibatis.submitted.results_id;
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  
-<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> com.googlecode.catchexception.apis.BDDCatchException.*;
-<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.assertj.core.api.BDDAssertions.then;
-<a class="jxr_linenumber" name="L20" href="#L20">20</a>  
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.session.Configuration;
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.api.Test;
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>  
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">class</strong> <a name="IdConflictTest" href="../../../../../org/apache/ibatis/submitted/results_id/IdConflictTest.html#IdConflictTest">IdConflictTest</a> {
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>  
-<a class="jxr_linenumber" name="L26" href="#L26">26</a>    @Test
-<a class="jxr_linenumber" name="L27" href="#L27">27</a>    <strong class="jxr_keyword">void</strong> shouldFailOnDuplicatedId() {
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>      Configuration configuration = <strong class="jxr_keyword">new</strong> Configuration();
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>      when(() -&gt; configuration.addMapper(IdConflictMapper.<strong class="jxr_keyword">class</strong>));
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>      then(caughtException()).isInstanceOf(RuntimeException.<strong class="jxr_keyword">class</strong>).hasMessage(
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>          <span class="jxr_string">"Result Maps collection already contains value for org.apache.ibatis.submitted.results_id.IdConflictMapper.userResult"</span>);
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>    }
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>  
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>  }
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> com.googlecode.catchexception.apis.BDDCatchException.caughtException;
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> com.googlecode.catchexception.apis.BDDCatchException.when;
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.assertj.core.api.BDDAssertions.then;
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.session.Configuration;
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.api.Test;
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">class</strong> <a name="IdConflictTest" href="../../../../../org/apache/ibatis/submitted/results_id/IdConflictTest.html#IdConflictTest">IdConflictTest</a> {
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>    @Test
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>    <strong class="jxr_keyword">void</strong> shouldFailOnDuplicatedId() {
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>      Configuration configuration = <strong class="jxr_keyword">new</strong> Configuration();
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>      when(() -&gt; configuration.addMapper(IdConflictMapper.<strong class="jxr_keyword">class</strong>));
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>      then(caughtException()).isInstanceOf(RuntimeException.<strong class="jxr_keyword">class</strong>).hasMessage(
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>          <span class="jxr_string">"Result Maps collection already contains value for org.apache.ibatis.submitted.results_id.IdConflictMapper.userResult"</span>);
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>    }
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2022 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2023 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

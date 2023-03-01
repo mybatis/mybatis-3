@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultSqlSession.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.session.defaults</a> &gt; <span class="el_source">DefaultSqlSession.java</span></div><h1>DefaultSqlSession.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2019 the original author or authors.
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultSqlSession.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.session.defaults</a> &gt; <span class="el_source">DefaultSqlSession.java</span></div><h1>DefaultSqlSession.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,14 +33,14 @@ import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.result.DefaultMapResultHandler;
 import org.apache.ibatis.executor.result.DefaultResultContext;
 import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.reflection.ParamNameResolver;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 
 /**
- * The default implementation for {@link SqlSession}.
- * Note that this class is not Thread-Safe.
+ * The default implementation for {@link SqlSession}. Note that this class is not Thread-Safe.
  *
  * @author Clinton Begin
  */
@@ -54,124 +53,125 @@ public class DefaultSqlSession implements SqlSession {
   private boolean dirty;
   private List&lt;Cursor&lt;?&gt;&gt; cursorList;
 
-<span class="fc" id="L57">  public DefaultSqlSession(Configuration configuration, Executor executor, boolean autoCommit) {</span>
-<span class="fc" id="L58">    this.configuration = configuration;</span>
-<span class="fc" id="L59">    this.executor = executor;</span>
-<span class="fc" id="L60">    this.dirty = false;</span>
-<span class="fc" id="L61">    this.autoCommit = autoCommit;</span>
-<span class="fc" id="L62">  }</span>
+<span class="fc" id="L56">  public DefaultSqlSession(Configuration configuration, Executor executor, boolean autoCommit) {</span>
+<span class="fc" id="L57">    this.configuration = configuration;</span>
+<span class="fc" id="L58">    this.executor = executor;</span>
+<span class="fc" id="L59">    this.dirty = false;</span>
+<span class="fc" id="L60">    this.autoCommit = autoCommit;</span>
+<span class="fc" id="L61">  }</span>
 
   public DefaultSqlSession(Configuration configuration, Executor executor) {
-<span class="nc" id="L65">    this(configuration, executor, false);</span>
-<span class="nc" id="L66">  }</span>
+<span class="nc" id="L64">    this(configuration, executor, false);</span>
+<span class="nc" id="L65">  }</span>
 
   @Override
   public &lt;T&gt; T selectOne(String statement) {
-<span class="fc" id="L70">    return this.selectOne(statement, null);</span>
+<span class="fc" id="L69">    return this.selectOne(statement, null);</span>
   }
 
   @Override
   public &lt;T&gt; T selectOne(String statement, Object parameter) {
     // Popular vote was to return null on 0 results and throw exception on too many.
-<span class="fc" id="L76">    List&lt;T&gt; list = this.selectList(statement, parameter);</span>
-<span class="fc bfc" id="L77" title="All 2 branches covered.">    if (list.size() == 1) {</span>
-<span class="fc" id="L78">      return list.get(0);</span>
-<span class="fc bfc" id="L79" title="All 2 branches covered.">    } else if (list.size() &gt; 1) {</span>
-<span class="fc" id="L80">      throw new TooManyResultsException(&quot;Expected one result (or null) to be returned by selectOne(), but found: &quot; + list.size());</span>
+<span class="fc" id="L75">    List&lt;T&gt; list = this.selectList(statement, parameter);</span>
+<span class="fc bfc" id="L76" title="All 2 branches covered.">    if (list.size() == 1) {</span>
+<span class="fc" id="L77">      return list.get(0);</span>
+    }
+<span class="fc bfc" id="L79" title="All 2 branches covered.">    if (list.size() &gt; 1) {</span>
+<span class="fc" id="L80">      throw new TooManyResultsException(</span>
+<span class="fc" id="L81">          &quot;Expected one result (or null) to be returned by selectOne(), but found: &quot; + list.size());</span>
     } else {
-<span class="fc" id="L82">      return null;</span>
+<span class="fc" id="L83">      return null;</span>
     }
   }
 
   @Override
   public &lt;K, V&gt; Map&lt;K, V&gt; selectMap(String statement, String mapKey) {
-<span class="fc" id="L88">    return this.selectMap(statement, null, mapKey, RowBounds.DEFAULT);</span>
+<span class="fc" id="L89">    return this.selectMap(statement, null, mapKey, RowBounds.DEFAULT);</span>
   }
 
   @Override
   public &lt;K, V&gt; Map&lt;K, V&gt; selectMap(String statement, Object parameter, String mapKey) {
-<span class="fc" id="L93">    return this.selectMap(statement, parameter, mapKey, RowBounds.DEFAULT);</span>
+<span class="fc" id="L94">    return this.selectMap(statement, parameter, mapKey, RowBounds.DEFAULT);</span>
   }
 
   @Override
   public &lt;K, V&gt; Map&lt;K, V&gt; selectMap(String statement, Object parameter, String mapKey, RowBounds rowBounds) {
-<span class="fc" id="L98">    final List&lt;? extends V&gt; list = selectList(statement, parameter, rowBounds);</span>
-<span class="fc" id="L99">    final DefaultMapResultHandler&lt;K, V&gt; mapResultHandler = new DefaultMapResultHandler&lt;&gt;(mapKey,</span>
-<span class="fc" id="L100">            configuration.getObjectFactory(), configuration.getObjectWrapperFactory(), configuration.getReflectorFactory());</span>
-<span class="fc" id="L101">    final DefaultResultContext&lt;V&gt; context = new DefaultResultContext&lt;&gt;();</span>
-<span class="fc bfc" id="L102" title="All 2 branches covered.">    for (V o : list) {</span>
-<span class="fc" id="L103">      context.nextResultObject(o);</span>
-<span class="fc" id="L104">      mapResultHandler.handleResult(context);</span>
-<span class="fc" id="L105">    }</span>
-<span class="fc" id="L106">    return mapResultHandler.getMappedResults();</span>
+<span class="fc" id="L99">    final List&lt;? extends V&gt; list = selectList(statement, parameter, rowBounds);</span>
+<span class="fc" id="L100">    final DefaultMapResultHandler&lt;K, V&gt; mapResultHandler = new DefaultMapResultHandler&lt;&gt;(mapKey,</span>
+<span class="fc" id="L101">        configuration.getObjectFactory(), configuration.getObjectWrapperFactory(), configuration.getReflectorFactory());</span>
+<span class="fc" id="L102">    final DefaultResultContext&lt;V&gt; context = new DefaultResultContext&lt;&gt;();</span>
+<span class="fc bfc" id="L103" title="All 2 branches covered.">    for (V o : list) {</span>
+<span class="fc" id="L104">      context.nextResultObject(o);</span>
+<span class="fc" id="L105">      mapResultHandler.handleResult(context);</span>
+<span class="fc" id="L106">    }</span>
+<span class="fc" id="L107">    return mapResultHandler.getMappedResults();</span>
   }
 
   @Override
   public &lt;T&gt; Cursor&lt;T&gt; selectCursor(String statement) {
-<span class="nc" id="L111">    return selectCursor(statement, null);</span>
+<span class="nc" id="L112">    return selectCursor(statement, null);</span>
   }
 
   @Override
   public &lt;T&gt; Cursor&lt;T&gt; selectCursor(String statement, Object parameter) {
-<span class="fc" id="L116">    return selectCursor(statement, parameter, RowBounds.DEFAULT);</span>
+<span class="fc" id="L117">    return selectCursor(statement, parameter, RowBounds.DEFAULT);</span>
   }
 
   @Override
   public &lt;T&gt; Cursor&lt;T&gt; selectCursor(String statement, Object parameter, RowBounds rowBounds) {
     try {
-<span class="fc" id="L122">      MappedStatement ms = configuration.getMappedStatement(statement);</span>
-<span class="fc" id="L123">      Cursor&lt;T&gt; cursor = executor.queryCursor(ms, wrapCollection(parameter), rowBounds);</span>
-<span class="fc" id="L124">      registerCursor(cursor);</span>
-<span class="fc" id="L125">      return cursor;</span>
-<span class="nc" id="L126">    } catch (Exception e) {</span>
-<span class="nc" id="L127">      throw ExceptionFactory.wrapException(&quot;Error querying database.  Cause: &quot; + e, e);</span>
+<span class="fc" id="L123">      MappedStatement ms = configuration.getMappedStatement(statement);</span>
+<span class="fc" id="L124">      dirty |= ms.isDirtySelect();</span>
+<span class="fc" id="L125">      Cursor&lt;T&gt; cursor = executor.queryCursor(ms, wrapCollection(parameter), rowBounds);</span>
+<span class="fc" id="L126">      registerCursor(cursor);</span>
+<span class="fc" id="L127">      return cursor;</span>
+<span class="nc" id="L128">    } catch (Exception e) {</span>
+<span class="nc" id="L129">      throw ExceptionFactory.wrapException(&quot;Error querying database.  Cause: &quot; + e, e);</span>
     } finally {
-<span class="fc" id="L129">      ErrorContext.instance().reset();</span>
+<span class="fc" id="L131">      ErrorContext.instance().reset();</span>
     }
   }
 
   @Override
   public &lt;E&gt; List&lt;E&gt; selectList(String statement) {
-<span class="fc" id="L135">    return this.selectList(statement, null);</span>
+<span class="fc" id="L137">    return this.selectList(statement, null);</span>
   }
 
   @Override
   public &lt;E&gt; List&lt;E&gt; selectList(String statement, Object parameter) {
-<span class="fc" id="L140">    return this.selectList(statement, parameter, RowBounds.DEFAULT);</span>
+<span class="fc" id="L142">    return this.selectList(statement, parameter, RowBounds.DEFAULT);</span>
   }
 
   @Override
   public &lt;E&gt; List&lt;E&gt; selectList(String statement, Object parameter, RowBounds rowBounds) {
+<span class="fc" id="L147">    return selectList(statement, parameter, rowBounds, Executor.NO_RESULT_HANDLER);</span>
+  }
+
+  private &lt;E&gt; List&lt;E&gt; selectList(String statement, Object parameter, RowBounds rowBounds, ResultHandler handler) {
     try {
-<span class="fc" id="L146">      MappedStatement ms = configuration.getMappedStatement(statement);</span>
-<span class="fc" id="L147">      return executor.query(ms, wrapCollection(parameter), rowBounds, Executor.NO_RESULT_HANDLER);</span>
-<span class="fc" id="L148">    } catch (Exception e) {</span>
-<span class="fc" id="L149">      throw ExceptionFactory.wrapException(&quot;Error querying database.  Cause: &quot; + e, e);</span>
+<span class="fc" id="L152">      MappedStatement ms = configuration.getMappedStatement(statement);</span>
+<span class="fc" id="L153">      dirty |= ms.isDirtySelect();</span>
+<span class="fc" id="L154">      return executor.query(ms, wrapCollection(parameter), rowBounds, handler);</span>
+<span class="fc" id="L155">    } catch (Exception e) {</span>
+<span class="fc" id="L156">      throw ExceptionFactory.wrapException(&quot;Error querying database.  Cause: &quot; + e, e);</span>
     } finally {
-<span class="fc" id="L151">      ErrorContext.instance().reset();</span>
+<span class="fc" id="L158">      ErrorContext.instance().reset();</span>
     }
   }
 
   @Override
   public void select(String statement, Object parameter, ResultHandler handler) {
-<span class="fc" id="L157">    select(statement, parameter, RowBounds.DEFAULT, handler);</span>
-<span class="fc" id="L158">  }</span>
+<span class="fc" id="L164">    select(statement, parameter, RowBounds.DEFAULT, handler);</span>
+<span class="fc" id="L165">  }</span>
 
   @Override
   public void select(String statement, ResultHandler handler) {
-<span class="fc" id="L162">    select(statement, null, RowBounds.DEFAULT, handler);</span>
-<span class="fc" id="L163">  }</span>
+<span class="fc" id="L169">    select(statement, null, RowBounds.DEFAULT, handler);</span>
+<span class="fc" id="L170">  }</span>
 
   @Override
   public void select(String statement, Object parameter, RowBounds rowBounds, ResultHandler handler) {
-    try {
-<span class="fc" id="L168">      MappedStatement ms = configuration.getMappedStatement(statement);</span>
-<span class="fc" id="L169">      executor.query(ms, wrapCollection(parameter), rowBounds, handler);</span>
-<span class="fc" id="L170">    } catch (Exception e) {</span>
-<span class="fc" id="L171">      throw ExceptionFactory.wrapException(&quot;Error querying database.  Cause: &quot; + e, e);</span>
-    } finally {
-<span class="fc" id="L173">      ErrorContext.instance().reset();</span>
-    }
+<span class="fc" id="L174">    selectList(statement, parameter, rowBounds, handler);</span>
 <span class="fc" id="L175">  }</span>
 
   @Override
@@ -269,7 +269,7 @@ public class DefaultSqlSession implements SqlSession {
 <span class="fc" id="L269">  }</span>
 
   private void closeCursors() {
-<span class="pc bpc" id="L272" title="1 of 4 branches missed.">    if (cursorList != null &amp;&amp; cursorList.size() != 0) {</span>
+<span class="pc bpc" id="L272" title="1 of 4 branches missed.">    if (cursorList != null &amp;&amp; !cursorList.isEmpty()) {</span>
 <span class="fc bfc" id="L273" title="All 2 branches covered.">      for (Cursor&lt;?&gt; cursor : cursorList) {</span>
         try {
 <span class="fc" id="L275">          cursor.close();</span>
@@ -313,38 +313,30 @@ public class DefaultSqlSession implements SqlSession {
 <span class="fc" id="L313">  }</span>
 
   private boolean isCommitOrRollbackRequired(boolean force) {
-<span class="fc bfc" id="L316" title="All 6 branches covered.">    return (!autoCommit &amp;&amp; dirty) || force;</span>
+<span class="fc bfc" id="L316" title="All 6 branches covered.">    return !autoCommit &amp;&amp; dirty || force;</span>
   }
 
   private Object wrapCollection(final Object object) {
-<span class="fc bfc" id="L320" title="All 2 branches covered.">    if (object instanceof Collection) {</span>
-<span class="fc" id="L321">      StrictMap&lt;Object&gt; map = new StrictMap&lt;&gt;();</span>
-<span class="fc" id="L322">      map.put(&quot;collection&quot;, object);</span>
-<span class="fc bfc" id="L323" title="All 2 branches covered.">      if (object instanceof List) {</span>
-<span class="fc" id="L324">        map.put(&quot;list&quot;, object);</span>
-      }
-<span class="fc" id="L326">      return map;</span>
-<span class="fc bfc" id="L327" title="All 4 branches covered.">    } else if (object != null &amp;&amp; object.getClass().isArray()) {</span>
-<span class="fc" id="L328">      StrictMap&lt;Object&gt; map = new StrictMap&lt;&gt;();</span>
-<span class="fc" id="L329">      map.put(&quot;array&quot;, object);</span>
-<span class="fc" id="L330">      return map;</span>
-    }
-<span class="fc" id="L332">    return object;</span>
+<span class="fc" id="L320">    return ParamNameResolver.wrapToMapIfCollection(object, null);</span>
   }
 
-<span class="fc" id="L335">  public static class StrictMap&lt;V&gt; extends HashMap&lt;String, V&gt; {</span>
+  /**
+   * @deprecated Since 3.5.5
+   */
+  @Deprecated
+<span class="nc" id="L327">  public static class StrictMap&lt;V&gt; extends HashMap&lt;String, V&gt; {</span>
 
     private static final long serialVersionUID = -5741767162221585340L;
 
     @Override
     public V get(Object key) {
-<span class="fc bfc" id="L341" title="All 2 branches covered.">      if (!super.containsKey(key)) {</span>
-<span class="fc" id="L342">        throw new BindingException(&quot;Parameter '&quot; + key + &quot;' not found. Available parameters are &quot; + this.keySet());</span>
+<span class="nc bnc" id="L333" title="All 2 branches missed.">      if (!super.containsKey(key)) {</span>
+<span class="nc" id="L334">        throw new BindingException(&quot;Parameter '&quot; + key + &quot;' not found. Available parameters are &quot; + this.keySet());</span>
       }
-<span class="fc" id="L344">      return super.get(key);</span>
+<span class="nc" id="L336">      return super.get(key);</span>
     }
 
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

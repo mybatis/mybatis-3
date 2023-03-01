@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SqlBuilder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.jdbc</a> &gt; <span class="el_source">SqlBuilder.java</span></div><h1>SqlBuilder.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2018 the original author or authors.
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SqlBuilder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.jdbc</a> &gt; <span class="el_source">SqlBuilder.java</span></div><h1>SqlBuilder.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2022 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
@@ -20,113 +20,114 @@ package org.apache.ibatis.jdbc;
  *
  * @author Jeff Butler
  */
+@Deprecated
 public class SqlBuilder {
 
-<span class="fc" id="L25">  private static final ThreadLocal&lt;SQL&gt; localSQL = new ThreadLocal&lt;&gt;();</span>
+<span class="fc" id="L26">  private static final ThreadLocal&lt;SQL&gt; localSQL = new ThreadLocal&lt;&gt;();</span>
 
   static {
-<span class="fc" id="L28">    BEGIN();</span>
-<span class="fc" id="L29">  }</span>
+<span class="fc" id="L29">    BEGIN();</span>
+<span class="fc" id="L30">  }</span>
 
   private SqlBuilder() {
     // Prevent Instantiation
   }
 
   public static void BEGIN() {
-<span class="fc" id="L36">    RESET();</span>
-<span class="fc" id="L37">  }</span>
+<span class="fc" id="L37">    RESET();</span>
+<span class="fc" id="L38">  }</span>
 
   public static void RESET() {
-<span class="fc" id="L40">    localSQL.set(new SQL());</span>
-<span class="fc" id="L41">  }</span>
+<span class="fc" id="L41">    localSQL.set(new SQL());</span>
+<span class="fc" id="L42">  }</span>
 
   public static void UPDATE(String table) {
-<span class="nc" id="L44">    sql().UPDATE(table);</span>
-<span class="nc" id="L45">  }</span>
+<span class="nc" id="L45">    sql().UPDATE(table);</span>
+<span class="nc" id="L46">  }</span>
 
   public static void SET(String sets) {
-<span class="nc" id="L48">    sql().SET(sets);</span>
-<span class="nc" id="L49">  }</span>
+<span class="nc" id="L49">    sql().SET(sets);</span>
+<span class="nc" id="L50">  }</span>
 
   public static String SQL() {
     try {
-<span class="fc" id="L53">      return sql().toString();</span>
+<span class="fc" id="L54">      return sql().toString();</span>
     } finally {
-<span class="fc" id="L55">        RESET();</span>
+<span class="fc" id="L56">      RESET();</span>
     }
   }
 
   public static void INSERT_INTO(String tableName) {
-<span class="nc" id="L60">    sql().INSERT_INTO(tableName);</span>
-<span class="nc" id="L61">  }</span>
+<span class="nc" id="L61">    sql().INSERT_INTO(tableName);</span>
+<span class="nc" id="L62">  }</span>
 
   public static void VALUES(String columns, String values) {
-<span class="nc" id="L64">    sql().VALUES(columns, values);</span>
-<span class="nc" id="L65">  }</span>
+<span class="nc" id="L65">    sql().VALUES(columns, values);</span>
+<span class="nc" id="L66">  }</span>
 
   public static void SELECT(String columns) {
-<span class="fc" id="L68">    sql().SELECT(columns);</span>
-<span class="fc" id="L69">  }</span>
+<span class="fc" id="L69">    sql().SELECT(columns);</span>
+<span class="fc" id="L70">  }</span>
 
   public static void SELECT_DISTINCT(String columns) {
-<span class="nc" id="L72">    sql().SELECT_DISTINCT(columns);</span>
-<span class="nc" id="L73">  }</span>
+<span class="nc" id="L73">    sql().SELECT_DISTINCT(columns);</span>
+<span class="nc" id="L74">  }</span>
 
   public static void DELETE_FROM(String table) {
-<span class="nc" id="L76">    sql().DELETE_FROM(table);</span>
-<span class="nc" id="L77">  }</span>
+<span class="nc" id="L77">    sql().DELETE_FROM(table);</span>
+<span class="nc" id="L78">  }</span>
 
   public static void FROM(String table) {
-<span class="fc" id="L80">    sql().FROM(table);</span>
-<span class="fc" id="L81">  }</span>
+<span class="fc" id="L81">    sql().FROM(table);</span>
+<span class="fc" id="L82">  }</span>
 
   public static void JOIN(String join) {
-<span class="nc" id="L84">    sql().JOIN(join);</span>
-<span class="nc" id="L85">  }</span>
+<span class="nc" id="L85">    sql().JOIN(join);</span>
+<span class="nc" id="L86">  }</span>
 
   public static void INNER_JOIN(String join) {
-<span class="fc" id="L88">    sql().INNER_JOIN(join);</span>
-<span class="fc" id="L89">  }</span>
+<span class="fc" id="L89">    sql().INNER_JOIN(join);</span>
+<span class="fc" id="L90">  }</span>
 
   public static void LEFT_OUTER_JOIN(String join) {
-<span class="nc" id="L92">    sql().LEFT_OUTER_JOIN(join);</span>
-<span class="nc" id="L93">  }</span>
+<span class="nc" id="L93">    sql().LEFT_OUTER_JOIN(join);</span>
+<span class="nc" id="L94">  }</span>
 
   public static void RIGHT_OUTER_JOIN(String join) {
-<span class="nc" id="L96">    sql().RIGHT_OUTER_JOIN(join);</span>
-<span class="nc" id="L97">  }</span>
+<span class="nc" id="L97">    sql().RIGHT_OUTER_JOIN(join);</span>
+<span class="nc" id="L98">  }</span>
 
   public static void OUTER_JOIN(String join) {
-<span class="nc" id="L100">    sql().OUTER_JOIN(join);</span>
-<span class="nc" id="L101">  }</span>
+<span class="nc" id="L101">    sql().OUTER_JOIN(join);</span>
+<span class="nc" id="L102">  }</span>
 
   public static void WHERE(String conditions) {
-<span class="fc" id="L104">    sql().WHERE(conditions);</span>
-<span class="fc" id="L105">  }</span>
+<span class="fc" id="L105">    sql().WHERE(conditions);</span>
+<span class="fc" id="L106">  }</span>
 
   public static void OR() {
-<span class="fc" id="L108">    sql().OR();</span>
-<span class="fc" id="L109">  }</span>
+<span class="fc" id="L109">    sql().OR();</span>
+<span class="fc" id="L110">  }</span>
 
   public static void AND() {
-<span class="nc" id="L112">    sql().AND();</span>
-<span class="nc" id="L113">  }</span>
+<span class="nc" id="L113">    sql().AND();</span>
+<span class="nc" id="L114">  }</span>
 
   public static void GROUP_BY(String columns) {
-<span class="fc" id="L116">    sql().GROUP_BY(columns);</span>
-<span class="fc" id="L117">  }</span>
+<span class="fc" id="L117">    sql().GROUP_BY(columns);</span>
+<span class="fc" id="L118">  }</span>
 
   public static void HAVING(String conditions) {
-<span class="fc" id="L120">    sql().HAVING(conditions);</span>
-<span class="fc" id="L121">  }</span>
+<span class="fc" id="L121">    sql().HAVING(conditions);</span>
+<span class="fc" id="L122">  }</span>
 
   public static void ORDER_BY(String columns) {
-<span class="fc" id="L124">    sql().ORDER_BY(columns);</span>
-<span class="fc" id="L125">  }</span>
+<span class="fc" id="L125">    sql().ORDER_BY(columns);</span>
+<span class="fc" id="L126">  }</span>
 
   private static SQL sql() {
-<span class="fc" id="L128">    return localSQL.get();</span>
+<span class="fc" id="L129">    return localSQL.get();</span>
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

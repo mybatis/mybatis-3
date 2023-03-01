@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BeanWrapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.reflection.wrapper</a> &gt; <span class="el_source">BeanWrapper.java</span></div><h1>BeanWrapper.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2017 the original author or authors.
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BeanWrapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.reflection.wrapper</a> &gt; <span class="el_source">BeanWrapper.java</span></div><h1>BeanWrapper.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
@@ -45,161 +45,160 @@ public class BeanWrapper extends BaseWrapper {
 <span class="fc bfc" id="L45" title="All 2 branches covered.">    if (prop.getIndex() != null) {</span>
 <span class="fc" id="L46">      Object collection = resolveCollection(prop, object);</span>
 <span class="fc" id="L47">      return getCollectionValue(prop, collection);</span>
-    } else {
-<span class="fc" id="L49">      return getBeanProperty(prop, object);</span>
     }
+<span class="fc" id="L49">    return getBeanProperty(prop, object);</span>
   }
 
   @Override
   public void set(PropertyTokenizer prop, Object value) {
-<span class="fc bfc" id="L55" title="All 2 branches covered.">    if (prop.getIndex() != null) {</span>
-<span class="fc" id="L56">      Object collection = resolveCollection(prop, object);</span>
-<span class="fc" id="L57">      setCollectionValue(prop, collection, value);</span>
-<span class="fc" id="L58">    } else {</span>
-<span class="fc" id="L59">      setBeanProperty(prop, object, value);</span>
+<span class="fc bfc" id="L54" title="All 2 branches covered.">    if (prop.getIndex() != null) {</span>
+<span class="fc" id="L55">      Object collection = resolveCollection(prop, object);</span>
+<span class="fc" id="L56">      setCollectionValue(prop, collection, value);</span>
+<span class="fc" id="L57">    } else {</span>
+<span class="fc" id="L58">      setBeanProperty(prop, object, value);</span>
     }
-<span class="fc" id="L61">  }</span>
+<span class="fc" id="L60">  }</span>
 
   @Override
   public String findProperty(String name, boolean useCamelCaseMapping) {
-<span class="fc" id="L65">    return metaClass.findProperty(name, useCamelCaseMapping);</span>
+<span class="fc" id="L64">    return metaClass.findProperty(name, useCamelCaseMapping);</span>
   }
 
   @Override
   public String[] getGetterNames() {
-<span class="fc" id="L70">    return metaClass.getGetterNames();</span>
+<span class="fc" id="L69">    return metaClass.getGetterNames();</span>
   }
 
   @Override
   public String[] getSetterNames() {
-<span class="fc" id="L75">    return metaClass.getSetterNames();</span>
+<span class="fc" id="L74">    return metaClass.getSetterNames();</span>
   }
 
   @Override
   public Class&lt;?&gt; getSetterType(String name) {
-<span class="fc" id="L80">    PropertyTokenizer prop = new PropertyTokenizer(name);</span>
-<span class="pc bpc" id="L81" title="1 of 2 branches missed.">    if (prop.hasNext()) {</span>
-<span class="nc" id="L82">      MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());</span>
-<span class="nc bnc" id="L83" title="All 2 branches missed.">      if (metaValue == SystemMetaObject.NULL_META_OBJECT) {</span>
-<span class="nc" id="L84">        return metaClass.getSetterType(name);</span>
-      } else {
-<span class="nc" id="L86">        return metaValue.getSetterType(prop.getChildren());</span>
-      }
+<span class="fc" id="L79">    PropertyTokenizer prop = new PropertyTokenizer(name);</span>
+<span class="pc bpc" id="L80" title="1 of 2 branches missed.">    if (!prop.hasNext()) {</span>
+<span class="fc" id="L81">      return metaClass.getSetterType(name);</span>
+    }
+<span class="nc" id="L83">    MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());</span>
+<span class="nc bnc" id="L84" title="All 2 branches missed.">    if (metaValue == SystemMetaObject.NULL_META_OBJECT) {</span>
+<span class="nc" id="L85">      return metaClass.getSetterType(name);</span>
     } else {
-<span class="fc" id="L89">      return metaClass.getSetterType(name);</span>
+<span class="nc" id="L87">      return metaValue.getSetterType(prop.getChildren());</span>
     }
   }
 
   @Override
   public Class&lt;?&gt; getGetterType(String name) {
-<span class="fc" id="L95">    PropertyTokenizer prop = new PropertyTokenizer(name);</span>
-<span class="fc bfc" id="L96" title="All 2 branches covered.">    if (prop.hasNext()) {</span>
-<span class="fc" id="L97">      MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());</span>
-<span class="pc bpc" id="L98" title="1 of 2 branches missed.">      if (metaValue == SystemMetaObject.NULL_META_OBJECT) {</span>
-<span class="nc" id="L99">        return metaClass.getGetterType(name);</span>
-      } else {
-<span class="fc" id="L101">        return metaValue.getGetterType(prop.getChildren());</span>
-      }
+<span class="fc" id="L93">    PropertyTokenizer prop = new PropertyTokenizer(name);</span>
+<span class="fc bfc" id="L94" title="All 2 branches covered.">    if (!prop.hasNext()) {</span>
+<span class="fc" id="L95">      return metaClass.getGetterType(name);</span>
+    }
+<span class="fc" id="L97">    MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());</span>
+<span class="pc bpc" id="L98" title="1 of 2 branches missed.">    if (metaValue == SystemMetaObject.NULL_META_OBJECT) {</span>
+<span class="nc" id="L99">      return metaClass.getGetterType(name);</span>
     } else {
-<span class="fc" id="L104">      return metaClass.getGetterType(name);</span>
+<span class="fc" id="L101">      return metaValue.getGetterType(prop.getChildren());</span>
     }
   }
 
   @Override
   public boolean hasSetter(String name) {
-<span class="fc" id="L110">    PropertyTokenizer prop = new PropertyTokenizer(name);</span>
-<span class="fc bfc" id="L111" title="All 2 branches covered.">    if (prop.hasNext()) {</span>
-<span class="pc bpc" id="L112" title="1 of 2 branches missed.">      if (metaClass.hasSetter(prop.getIndexedName())) {</span>
-<span class="fc" id="L113">        MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());</span>
-<span class="pc bpc" id="L114" title="1 of 2 branches missed.">        if (metaValue == SystemMetaObject.NULL_META_OBJECT) {</span>
-<span class="fc" id="L115">          return metaClass.hasSetter(name);</span>
-        } else {
-<span class="nc" id="L117">          return metaValue.hasSetter(prop.getChildren());</span>
-        }
+<span class="fc" id="L107">    PropertyTokenizer prop = new PropertyTokenizer(name);</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">    if (!prop.hasNext()) {</span>
+<span class="fc" id="L109">      return metaClass.hasSetter(name);</span>
+    }
+<span class="pc bpc" id="L111" title="1 of 2 branches missed.">    if (metaClass.hasSetter(prop.getIndexedName())) {</span>
+<span class="fc" id="L112">      MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());</span>
+<span class="pc bpc" id="L113" title="1 of 2 branches missed.">      if (metaValue == SystemMetaObject.NULL_META_OBJECT) {</span>
+<span class="fc" id="L114">        return metaClass.hasSetter(name);</span>
       } else {
-<span class="nc" id="L120">        return false;</span>
+<span class="nc" id="L116">        return metaValue.hasSetter(prop.getChildren());</span>
       }
     } else {
-<span class="fc" id="L123">      return metaClass.hasSetter(name);</span>
+<span class="nc" id="L119">      return false;</span>
     }
   }
 
   @Override
   public boolean hasGetter(String name) {
-<span class="fc" id="L129">    PropertyTokenizer prop = new PropertyTokenizer(name);</span>
-<span class="fc bfc" id="L130" title="All 2 branches covered.">    if (prop.hasNext()) {</span>
-<span class="pc bpc" id="L131" title="1 of 2 branches missed.">      if (metaClass.hasGetter(prop.getIndexedName())) {</span>
-<span class="fc" id="L132">        MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());</span>
-<span class="fc bfc" id="L133" title="All 2 branches covered.">        if (metaValue == SystemMetaObject.NULL_META_OBJECT) {</span>
-<span class="fc" id="L134">          return metaClass.hasGetter(name);</span>
-        } else {
-<span class="fc" id="L136">          return metaValue.hasGetter(prop.getChildren());</span>
-        }
+<span class="fc" id="L125">    PropertyTokenizer prop = new PropertyTokenizer(name);</span>
+<span class="fc bfc" id="L126" title="All 2 branches covered.">    if (!prop.hasNext()) {</span>
+<span class="fc" id="L127">      return metaClass.hasGetter(name);</span>
+    }
+<span class="pc bpc" id="L129" title="1 of 2 branches missed.">    if (metaClass.hasGetter(prop.getIndexedName())) {</span>
+<span class="fc" id="L130">      MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());</span>
+<span class="fc bfc" id="L131" title="All 2 branches covered.">      if (metaValue == SystemMetaObject.NULL_META_OBJECT) {</span>
+<span class="fc" id="L132">        return metaClass.hasGetter(name);</span>
       } else {
-<span class="nc" id="L139">        return false;</span>
+<span class="fc" id="L134">        return metaValue.hasGetter(prop.getChildren());</span>
       }
     } else {
-<span class="fc" id="L142">      return metaClass.hasGetter(name);</span>
+<span class="nc" id="L137">      return false;</span>
     }
   }
 
   @Override
   public MetaObject instantiatePropertyValue(String name, PropertyTokenizer prop, ObjectFactory objectFactory) {
     MetaObject metaValue;
-<span class="fc" id="L149">    Class&lt;?&gt; type = getSetterType(prop.getName());</span>
+<span class="fc" id="L144">    Class&lt;?&gt; type = getSetterType(prop.getName());</span>
     try {
-<span class="fc" id="L151">      Object newObject = objectFactory.create(type);</span>
-<span class="fc" id="L152">      metaValue = MetaObject.forObject(newObject, metaObject.getObjectFactory(), metaObject.getObjectWrapperFactory(), metaObject.getReflectorFactory());</span>
-<span class="fc" id="L153">      set(prop, newObject);</span>
-<span class="nc" id="L154">    } catch (Exception e) {</span>
-<span class="nc" id="L155">      throw new ReflectionException(&quot;Cannot set value of property '&quot; + name + &quot;' because '&quot; + name + &quot;' is null and cannot be instantiated on instance of &quot; + type.getName() + &quot;. Cause:&quot; + e.toString(), e);</span>
-<span class="fc" id="L156">    }</span>
-<span class="fc" id="L157">    return metaValue;</span>
+<span class="fc" id="L146">      Object newObject = objectFactory.create(type);</span>
+<span class="fc" id="L147">      metaValue = MetaObject.forObject(newObject, metaObject.getObjectFactory(), metaObject.getObjectWrapperFactory(),</span>
+<span class="fc" id="L148">          metaObject.getReflectorFactory());</span>
+<span class="fc" id="L149">      set(prop, newObject);</span>
+<span class="nc" id="L150">    } catch (Exception e) {</span>
+<span class="nc" id="L151">      throw new ReflectionException(&quot;Cannot set value of property '&quot; + name + &quot;' because '&quot; + name</span>
+<span class="nc" id="L152">          + &quot;' is null and cannot be instantiated on instance of &quot; + type.getName() + &quot;. Cause:&quot; + e.toString(), e);</span>
+<span class="fc" id="L153">    }</span>
+<span class="fc" id="L154">    return metaValue;</span>
   }
 
   private Object getBeanProperty(PropertyTokenizer prop, Object object) {
     try {
-<span class="fc" id="L162">      Invoker method = metaClass.getGetInvoker(prop.getName());</span>
+<span class="fc" id="L159">      Invoker method = metaClass.getGetInvoker(prop.getName());</span>
       try {
-<span class="fc" id="L164">        return method.invoke(object, NO_ARGUMENTS);</span>
-<span class="nc" id="L165">      } catch (Throwable t) {</span>
-<span class="nc" id="L166">        throw ExceptionUtil.unwrapThrowable(t);</span>
+<span class="fc" id="L161">        return method.invoke(object, NO_ARGUMENTS);</span>
+<span class="nc" id="L162">      } catch (Throwable t) {</span>
+<span class="nc" id="L163">        throw ExceptionUtil.unwrapThrowable(t);</span>
       }
-<span class="fc" id="L168">    } catch (RuntimeException e) {</span>
-<span class="fc" id="L169">      throw e;</span>
-<span class="nc" id="L170">    } catch (Throwable t) {</span>
-<span class="nc" id="L171">      throw new ReflectionException(&quot;Could not get property '&quot; + prop.getName() + &quot;' from &quot; + object.getClass() + &quot;.  Cause: &quot; + t.toString(), t);</span>
+<span class="fc" id="L165">    } catch (RuntimeException e) {</span>
+<span class="fc" id="L166">      throw e;</span>
+<span class="nc" id="L167">    } catch (Throwable t) {</span>
+<span class="nc" id="L168">      throw new ReflectionException(</span>
+<span class="nc" id="L169">          &quot;Could not get property '&quot; + prop.getName() + &quot;' from &quot; + object.getClass() + &quot;.  Cause: &quot; + t.toString(), t);</span>
     }
   }
 
   private void setBeanProperty(PropertyTokenizer prop, Object object, Object value) {
     try {
-<span class="fc" id="L177">      Invoker method = metaClass.getSetInvoker(prop.getName());</span>
-<span class="fc" id="L178">      Object[] params = {value};</span>
+<span class="fc" id="L175">      Invoker method = metaClass.getSetInvoker(prop.getName());</span>
+<span class="fc" id="L176">      Object[] params = { value };</span>
       try {
-<span class="fc" id="L180">        method.invoke(object, params);</span>
-<span class="nc" id="L181">      } catch (Throwable t) {</span>
-<span class="nc" id="L182">        throw ExceptionUtil.unwrapThrowable(t);</span>
-<span class="fc" id="L183">      }</span>
-<span class="nc" id="L184">    } catch (Throwable t) {</span>
-<span class="nc" id="L185">      throw new ReflectionException(&quot;Could not set property '&quot; + prop.getName() + &quot;' of '&quot; + object.getClass() + &quot;' with value '&quot; + value + &quot;' Cause: &quot; + t.toString(), t);</span>
-<span class="fc" id="L186">    }</span>
-<span class="fc" id="L187">  }</span>
+<span class="fc" id="L178">        method.invoke(object, params);</span>
+<span class="nc" id="L179">      } catch (Throwable t) {</span>
+<span class="nc" id="L180">        throw ExceptionUtil.unwrapThrowable(t);</span>
+<span class="fc" id="L181">      }</span>
+<span class="nc" id="L182">    } catch (Throwable t) {</span>
+<span class="nc" id="L183">      throw new ReflectionException(&quot;Could not set property '&quot; + prop.getName() + &quot;' of '&quot; + object.getClass()</span>
+<span class="nc" id="L184">          + &quot;' with value '&quot; + value + &quot;' Cause: &quot; + t.toString(), t);</span>
+<span class="fc" id="L185">    }</span>
+<span class="fc" id="L186">  }</span>
 
   @Override
   public boolean isCollection() {
-<span class="nc" id="L191">    return false;</span>
+<span class="nc" id="L190">    return false;</span>
   }
 
   @Override
   public void add(Object element) {
-<span class="nc" id="L196">    throw new UnsupportedOperationException();</span>
+<span class="nc" id="L195">    throw new UnsupportedOperationException();</span>
   }
 
   @Override
   public &lt;E&gt; void addAll(List&lt;E&gt; list) {
-<span class="nc" id="L201">    throw new UnsupportedOperationException();</span>
+<span class="nc" id="L200">    throw new UnsupportedOperationException();</span>
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

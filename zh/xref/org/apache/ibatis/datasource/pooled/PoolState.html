@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../../apidocs/org/apache/ibatis/datasource/pooled/PoolState.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2022 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -35,14 +35,14 @@
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>  
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>    <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">final</strong> List&lt;PooledConnection&gt; idleConnections = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>    <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">final</strong> List&lt;PooledConnection&gt; activeConnections = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>    <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">long</strong> requestCount = 0;
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>    <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">long</strong> accumulatedRequestTime = 0;
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>    <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">long</strong> accumulatedCheckoutTime = 0;
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>    <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">long</strong> claimedOverdueConnectionCount = 0;
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>    <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">long</strong> accumulatedCheckoutTimeOfOverdueConnections = 0;
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>    <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">long</strong> accumulatedWaitTime = 0;
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>    <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">long</strong> hadToWaitCount = 0;
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>    <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">long</strong> badConnectionCount = 0;
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>    <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">long</strong> requestCount;
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>    <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">long</strong> accumulatedRequestTime;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>    <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">long</strong> accumulatedCheckoutTime;
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>    <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">long</strong> claimedOverdueConnectionCount;
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>    <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">long</strong> accumulatedCheckoutTimeOfOverdueConnections;
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>    <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">long</strong> accumulatedWaitTime;
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>    <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">long</strong> hadToWaitCount;
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>    <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">long</strong> badConnectionCount;
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>  
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>    <strong class="jxr_keyword">public</strong> <a name="PoolState" href="../../../../../org/apache/ibatis/datasource/pooled/PoolState.html#PoolState">PoolState</a>(<a name="PooledDataSource" href="../../../../../org/apache/ibatis/datasource/pooled/PooledDataSource.html#PooledDataSource">PooledDataSource</a> dataSource) {
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>      <strong class="jxr_keyword">this</strong>.dataSource = dataSource;
@@ -74,54 +74,56 @@
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>    }
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>  
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">synchronized</strong> <strong class="jxr_keyword">long</strong> getAverageOverdueCheckoutTime() {
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>      <strong class="jxr_keyword">return</strong> claimedOverdueConnectionCount == 0 ? 0 : accumulatedCheckoutTimeOfOverdueConnections / claimedOverdueConnectionCount;
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>    }
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>  
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">synchronized</strong> <strong class="jxr_keyword">long</strong> getAverageCheckoutTime() {
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>      <strong class="jxr_keyword">return</strong> requestCount == 0 ? 0 : accumulatedCheckoutTime / requestCount;
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>    }
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>  
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">synchronized</strong> <strong class="jxr_keyword">int</strong> getIdleConnectionCount() {
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>      <strong class="jxr_keyword">return</strong> idleConnections.size();
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>    }
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>  
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">synchronized</strong> <strong class="jxr_keyword">int</strong> getActiveConnectionCount() {
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>      <strong class="jxr_keyword">return</strong> activeConnections.size();
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>    }
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>  
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>    @Override
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">synchronized</strong> String toString() {
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>      StringBuilder builder = <strong class="jxr_keyword">new</strong> StringBuilder();
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>      builder.append(<span class="jxr_string">"\n===CONFIGURATION=============================================="</span>);
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>      builder.append(<span class="jxr_string">"\n jdbcDriver                     "</span>).append(dataSource.getDriver());
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>      builder.append(<span class="jxr_string">"\n jdbcUrl                        "</span>).append(dataSource.getUrl());
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>      builder.append(<span class="jxr_string">"\n jdbcUsername                   "</span>).append(dataSource.getUsername());
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>      builder.append(<span class="jxr_string">"\n jdbcPassword                   "</span>).append(dataSource.getPassword() == <strong class="jxr_keyword">null</strong> ? <span class="jxr_string">"NULL"</span> : <span class="jxr_string">"************"</span>);
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>      builder.append(<span class="jxr_string">"\n poolMaxActiveConnections       "</span>).append(dataSource.poolMaximumActiveConnections);
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>      builder.append(<span class="jxr_string">"\n poolMaxIdleConnections         "</span>).append(dataSource.poolMaximumIdleConnections);
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>      builder.append(<span class="jxr_string">"\n poolMaxCheckoutTime            "</span>).append(dataSource.poolMaximumCheckoutTime);
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>      builder.append(<span class="jxr_string">"\n poolTimeToWait                 "</span>).append(dataSource.poolTimeToWait);
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>      builder.append(<span class="jxr_string">"\n poolPingEnabled                "</span>).append(dataSource.poolPingEnabled);
-<a class="jxr_linenumber" name="L97" href="#L97">97</a>      builder.append(<span class="jxr_string">"\n poolPingQuery                  "</span>).append(dataSource.poolPingQuery);
-<a class="jxr_linenumber" name="L98" href="#L98">98</a>      builder.append(<span class="jxr_string">"\n poolPingConnectionsNotUsedFor  "</span>).append(dataSource.poolPingConnectionsNotUsedFor);
-<a class="jxr_linenumber" name="L99" href="#L99">99</a>      builder.append(<span class="jxr_string">"\n ---STATUS-----------------------------------------------------"</span>);
-<a class="jxr_linenumber" name="L100" href="#L100">100</a>     builder.append(<span class="jxr_string">"\n activeConnections              "</span>).append(getActiveConnectionCount());
-<a class="jxr_linenumber" name="L101" href="#L101">101</a>     builder.append(<span class="jxr_string">"\n idleConnections                "</span>).append(getIdleConnectionCount());
-<a class="jxr_linenumber" name="L102" href="#L102">102</a>     builder.append(<span class="jxr_string">"\n requestCount                   "</span>).append(getRequestCount());
-<a class="jxr_linenumber" name="L103" href="#L103">103</a>     builder.append(<span class="jxr_string">"\n averageRequestTime             "</span>).append(getAverageRequestTime());
-<a class="jxr_linenumber" name="L104" href="#L104">104</a>     builder.append(<span class="jxr_string">"\n averageCheckoutTime            "</span>).append(getAverageCheckoutTime());
-<a class="jxr_linenumber" name="L105" href="#L105">105</a>     builder.append(<span class="jxr_string">"\n claimedOverdue                 "</span>).append(getClaimedOverdueConnectionCount());
-<a class="jxr_linenumber" name="L106" href="#L106">106</a>     builder.append(<span class="jxr_string">"\n averageOverdueCheckoutTime     "</span>).append(getAverageOverdueCheckoutTime());
-<a class="jxr_linenumber" name="L107" href="#L107">107</a>     builder.append(<span class="jxr_string">"\n hadToWait                      "</span>).append(getHadToWaitCount());
-<a class="jxr_linenumber" name="L108" href="#L108">108</a>     builder.append(<span class="jxr_string">"\n averageWaitTime                "</span>).append(getAverageWaitTime());
-<a class="jxr_linenumber" name="L109" href="#L109">109</a>     builder.append(<span class="jxr_string">"\n badConnectionCount             "</span>).append(getBadConnectionCount());
-<a class="jxr_linenumber" name="L110" href="#L110">110</a>     builder.append(<span class="jxr_string">"\n==============================================================="</span>);
-<a class="jxr_linenumber" name="L111" href="#L111">111</a>     <strong class="jxr_keyword">return</strong> builder.toString();
-<a class="jxr_linenumber" name="L112" href="#L112">112</a>   }
-<a class="jxr_linenumber" name="L113" href="#L113">113</a> 
-<a class="jxr_linenumber" name="L114" href="#L114">114</a> }
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>      <strong class="jxr_keyword">return</strong> claimedOverdueConnectionCount == 0 ? 0
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>          : accumulatedCheckoutTimeOfOverdueConnections / claimedOverdueConnectionCount;
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>    }
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>  
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">synchronized</strong> <strong class="jxr_keyword">long</strong> getAverageCheckoutTime() {
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>      <strong class="jxr_keyword">return</strong> requestCount == 0 ? 0 : accumulatedCheckoutTime / requestCount;
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>    }
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>  
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">synchronized</strong> <strong class="jxr_keyword">int</strong> getIdleConnectionCount() {
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>      <strong class="jxr_keyword">return</strong> idleConnections.size();
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>    }
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>  
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">synchronized</strong> <strong class="jxr_keyword">int</strong> getActiveConnectionCount() {
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>      <strong class="jxr_keyword">return</strong> activeConnections.size();
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>    }
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>  
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>    @Override
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">synchronized</strong> String toString() {
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>      StringBuilder builder = <strong class="jxr_keyword">new</strong> StringBuilder();
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>      builder.append(<span class="jxr_string">"\n===CONFIGURATION=============================================="</span>);
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>      builder.append(<span class="jxr_string">"\n jdbcDriver                     "</span>).append(dataSource.getDriver());
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>      builder.append(<span class="jxr_string">"\n jdbcUrl                        "</span>).append(dataSource.getUrl());
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>      builder.append(<span class="jxr_string">"\n jdbcUsername                   "</span>).append(dataSource.getUsername());
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>      builder.append(<span class="jxr_string">"\n jdbcPassword                   "</span>)
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>          .append(dataSource.getPassword() == <strong class="jxr_keyword">null</strong> ? <span class="jxr_string">"NULL"</span> : <span class="jxr_string">"************"</span>);
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>      builder.append(<span class="jxr_string">"\n poolMaxActiveConnections       "</span>).append(dataSource.poolMaximumActiveConnections);
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>      builder.append(<span class="jxr_string">"\n poolMaxIdleConnections         "</span>).append(dataSource.poolMaximumIdleConnections);
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>      builder.append(<span class="jxr_string">"\n poolMaxCheckoutTime            "</span>).append(dataSource.poolMaximumCheckoutTime);
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>      builder.append(<span class="jxr_string">"\n poolTimeToWait                 "</span>).append(dataSource.poolTimeToWait);
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>      builder.append(<span class="jxr_string">"\n poolPingEnabled                "</span>).append(dataSource.poolPingEnabled);
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>      builder.append(<span class="jxr_string">"\n poolPingQuery                  "</span>).append(dataSource.poolPingQuery);
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>     builder.append(<span class="jxr_string">"\n poolPingConnectionsNotUsedFor  "</span>).append(dataSource.poolPingConnectionsNotUsedFor);
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>     builder.append(<span class="jxr_string">"\n ---STATUS-----------------------------------------------------"</span>);
+<a class="jxr_linenumber" name="L102" href="#L102">102</a>     builder.append(<span class="jxr_string">"\n activeConnections              "</span>).append(getActiveConnectionCount());
+<a class="jxr_linenumber" name="L103" href="#L103">103</a>     builder.append(<span class="jxr_string">"\n idleConnections                "</span>).append(getIdleConnectionCount());
+<a class="jxr_linenumber" name="L104" href="#L104">104</a>     builder.append(<span class="jxr_string">"\n requestCount                   "</span>).append(getRequestCount());
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>     builder.append(<span class="jxr_string">"\n averageRequestTime             "</span>).append(getAverageRequestTime());
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>     builder.append(<span class="jxr_string">"\n averageCheckoutTime            "</span>).append(getAverageCheckoutTime());
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>     builder.append(<span class="jxr_string">"\n claimedOverdue                 "</span>).append(getClaimedOverdueConnectionCount());
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>     builder.append(<span class="jxr_string">"\n averageOverdueCheckoutTime     "</span>).append(getAverageOverdueCheckoutTime());
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>     builder.append(<span class="jxr_string">"\n hadToWait                      "</span>).append(getHadToWaitCount());
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>     builder.append(<span class="jxr_string">"\n averageWaitTime                "</span>).append(getAverageWaitTime());
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>     builder.append(<span class="jxr_string">"\n badConnectionCount             "</span>).append(getBadConnectionCount());
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>     builder.append(<span class="jxr_string">"\n==============================================================="</span>);
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>     <strong class="jxr_keyword">return</strong> builder.toString();
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>   }
+<a class="jxr_linenumber" name="L115" href="#L115">115</a> 
+<a class="jxr_linenumber" name="L116" href="#L116">116</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2022 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2023 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

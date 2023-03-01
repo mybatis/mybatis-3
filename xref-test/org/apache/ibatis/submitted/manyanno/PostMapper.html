@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/submitted/manyanno/PostMapper.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2022 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -25,30 +25,38 @@
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> java.util.List;
 <a class="jxr_linenumber" name="L19" href="#L19">19</a>  
-<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.annotations.*;
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>  
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">interface</strong> <a name="PostMapper" href="../../../../../org/apache/ibatis/submitted/manyanno/PostMapper.html#PostMapper">PostMapper</a> {
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>  
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>  
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>      @Select(<span class="jxr_string">"select * from post where author_id = #{id} order by id"</span>)
-<a class="jxr_linenumber" name="L26" href="#L26">26</a>      @Results(value = {
-<a class="jxr_linenumber" name="L27" href="#L27">27</a>                        @Result(property=<span class="jxr_string">"id"</span>, column=<span class="jxr_string">"id"</span>),
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>                        @Result(property=<span class="jxr_string">"subject"</span>, column=<span class="jxr_string">"subject"</span>),
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>                        @Result(property=<span class="jxr_string">"body"</span>, column=<span class="jxr_string">"body"</span>),
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>                        @Result(property=<span class="jxr_string">"tags"</span>, javaType=List.<strong class="jxr_keyword">class</strong>, column=<span class="jxr_string">"id"</span>, many=@Many(select=<span class="jxr_string">"getTagsForPost"</span>))
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>                        })
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>      List&lt;AnnoPost&gt; getPosts(<strong class="jxr_keyword">int</strong> authorId);
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>  
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>      @Select(<span class="jxr_string">"select t.id, t.name from tag t inner join post_tag pt on pt.tag_id = t.id where pt.post_id = #{postId} order by id"</span>)
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>      @ConstructorArgs(value = {
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>                    @Arg(column=<span class="jxr_string">"id"</span>,javaType=<strong class="jxr_keyword">int</strong>.<strong class="jxr_keyword">class</strong>),
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>                    @Arg(column=<span class="jxr_string">"name"</span>,javaType=String.<strong class="jxr_keyword">class</strong>)
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>                    })
-<a class="jxr_linenumber" name="L39" href="#L39">39</a>      List&lt;AnnoPostTag&gt; getTagsForPost(<strong class="jxr_keyword">int</strong> postId);
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>  
-<a class="jxr_linenumber" name="L41" href="#L41">41</a>  }
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.annotations.Arg;
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.annotations.ConstructorArgs;
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.annotations.Many;
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.annotations.Result;
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.annotations.Results;
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.annotations.Select;
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">interface</strong> <a name="PostMapper" href="../../../../../org/apache/ibatis/submitted/manyanno/PostMapper.html#PostMapper">PostMapper</a> {
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>    @Select(<span class="jxr_string">"select * from post where author_id = #{id} order by id"</span>)
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>    <em class="jxr_comment">// @formatter:off</em>
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>    @Results(value = {
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>        @Result(property = <span class="jxr_string">"id"</span>, column = <span class="jxr_string">"id"</span>),
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>        @Result(property = <span class="jxr_string">"subject"</span>, column = <span class="jxr_string">"subject"</span>),
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>        @Result(property = <span class="jxr_string">"body"</span>, column = <span class="jxr_string">"body"</span>),
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>        @Result(property = <span class="jxr_string">"tags"</span>, javaType = List.<strong class="jxr_keyword">class</strong>, column = <span class="jxr_string">"id"</span>, many = @Many(select = <span class="jxr_string">"getTagsForPost"</span>))
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>      })
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>    <em class="jxr_comment">// @formatter:on</em>
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>    List&lt;AnnoPost&gt; getPosts(<strong class="jxr_keyword">int</strong> authorId);
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>    @Select(<span class="jxr_string">"select t.id, t.name from tag t inner join post_tag pt on pt.tag_id = t.id where pt.post_id = #{postId} order by id"</span>)
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>    <em class="jxr_comment">// @formatter:off</em>
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>    @ConstructorArgs(value = {
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>        @Arg(column = <span class="jxr_string">"id"</span>, javaType = <strong class="jxr_keyword">int</strong>.<strong class="jxr_keyword">class</strong>),
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>        @Arg(column = <span class="jxr_string">"name"</span>, javaType = String.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>      })
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>    <em class="jxr_comment">// @formatter:on</em>
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>    List&lt;AnnoPostTag&gt; getTagsForPost(<strong class="jxr_keyword">int</strong> postId);
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>  
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2022 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2023 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../../apidocs/org/apache/ibatis/executor/loader/javassist/JavassistSerialStateHolder.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2022 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -40,23 +40,21 @@
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>    <strong class="jxr_keyword">public</strong> <a name="JavassistSerialStateHolder" href="../../../../../../org/apache/ibatis/executor/loader/javassist/JavassistSerialStateHolder.html#JavassistSerialStateHolder">JavassistSerialStateHolder</a>() {
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>    }
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>  
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>    <strong class="jxr_keyword">public</strong> <a name="JavassistSerialStateHolder" href="../../../../../../org/apache/ibatis/executor/loader/javassist/JavassistSerialStateHolder.html#JavassistSerialStateHolder">JavassistSerialStateHolder</a>(
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>            <strong class="jxr_keyword">final</strong> Object userBean,
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>            <strong class="jxr_keyword">final</strong> Map&lt;String, ResultLoaderMap.LoadPair&gt; unloadedProperties,
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>            <strong class="jxr_keyword">final</strong> <a name="ObjectFactory" href="../../../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html#ObjectFactory">ObjectFactory</a> objectFactory,
-<a class="jxr_linenumber" name="L39" href="#L39">39</a>            List&lt;Class&lt;?&gt;&gt; constructorArgTypes,
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>            List&lt;Object&gt; constructorArgs) {
-<a class="jxr_linenumber" name="L41" href="#L41">41</a>      <strong class="jxr_keyword">super</strong>(userBean, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>    }
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>  
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>    @Override
-<a class="jxr_linenumber" name="L45" href="#L45">45</a>    <strong class="jxr_keyword">protected</strong> Object createDeserializationProxy(Object target, Map&lt;String, ResultLoaderMap.LoadPair&gt; unloadedProperties, <a name="ObjectFactory" href="../../../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html#ObjectFactory">ObjectFactory</a> objectFactory,
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>            List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs) {
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>      <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a name="JavassistProxyFactory" href="../../../../../../org/apache/ibatis/executor/loader/JavassistProxyFactory.html#JavassistProxyFactory">JavassistProxyFactory</a>().createDeserializationProxy(target, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>    }
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>  }
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>    <strong class="jxr_keyword">public</strong> <a name="JavassistSerialStateHolder" href="../../../../../../org/apache/ibatis/executor/loader/javassist/JavassistSerialStateHolder.html#JavassistSerialStateHolder">JavassistSerialStateHolder</a>(<strong class="jxr_keyword">final</strong> Object userBean,
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>        <strong class="jxr_keyword">final</strong> Map&lt;String, ResultLoaderMap.LoadPair&gt; unloadedProperties, <strong class="jxr_keyword">final</strong> <a name="ObjectFactory" href="../../../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html#ObjectFactory">ObjectFactory</a> objectFactory,
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>        List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs) {
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>      <strong class="jxr_keyword">super</strong>(userBean, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>    }
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>    @Override
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>    <strong class="jxr_keyword">protected</strong> Object createDeserializationProxy(Object target, Map&lt;String, ResultLoaderMap.LoadPair&gt; unloadedProperties,
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>        <a name="ObjectFactory" href="../../../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html#ObjectFactory">ObjectFactory</a> objectFactory, List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs) {
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>      <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a name="JavassistProxyFactory" href="../../../../../../org/apache/ibatis/executor/loader/JavassistProxyFactory.html#JavassistProxyFactory">JavassistProxyFactory</a>().createDeserializationProxy(target, unloadedProperties, objectFactory,
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>          constructorArgTypes, constructorArgs);
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>    }
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2022 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2023 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MetaObject.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.reflection</a> &gt; <span class="el_source">MetaObject.java</span></div><h1>MetaObject.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2019 the original author or authors.
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MetaObject.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.reflection</a> &gt; <span class="el_source">MetaObject.java</span></div><h1>MetaObject.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
@@ -38,88 +38,88 @@ public class MetaObject {
   private final ObjectWrapperFactory objectWrapperFactory;
   private final ReflectorFactory reflectorFactory;
 
-<span class="fc" id="L41">  private MetaObject(Object object, ObjectFactory objectFactory, ObjectWrapperFactory objectWrapperFactory, ReflectorFactory reflectorFactory) {</span>
-<span class="fc" id="L42">    this.originalObject = object;</span>
-<span class="fc" id="L43">    this.objectFactory = objectFactory;</span>
-<span class="fc" id="L44">    this.objectWrapperFactory = objectWrapperFactory;</span>
-<span class="fc" id="L45">    this.reflectorFactory = reflectorFactory;</span>
+  private MetaObject(Object object, ObjectFactory objectFactory, ObjectWrapperFactory objectWrapperFactory,
+<span class="fc" id="L42">      ReflectorFactory reflectorFactory) {</span>
+<span class="fc" id="L43">    this.originalObject = object;</span>
+<span class="fc" id="L44">    this.objectFactory = objectFactory;</span>
+<span class="fc" id="L45">    this.objectWrapperFactory = objectWrapperFactory;</span>
+<span class="fc" id="L46">    this.reflectorFactory = reflectorFactory;</span>
 
-<span class="pc bpc" id="L47" title="1 of 2 branches missed.">    if (object instanceof ObjectWrapper) {</span>
-<span class="nc" id="L48">      this.objectWrapper = (ObjectWrapper) object;</span>
-<span class="fc bfc" id="L49" title="All 2 branches covered.">    } else if (objectWrapperFactory.hasWrapperFor(object)) {</span>
-<span class="fc" id="L50">      this.objectWrapper = objectWrapperFactory.getWrapperFor(this, object);</span>
-<span class="fc bfc" id="L51" title="All 2 branches covered.">    } else if (object instanceof Map) {</span>
-<span class="fc" id="L52">      this.objectWrapper = new MapWrapper(this, (Map) object);</span>
-<span class="fc bfc" id="L53" title="All 2 branches covered.">    } else if (object instanceof Collection) {</span>
-<span class="fc" id="L54">      this.objectWrapper = new CollectionWrapper(this, (Collection) object);</span>
+<span class="pc bpc" id="L48" title="1 of 2 branches missed.">    if (object instanceof ObjectWrapper) {</span>
+<span class="nc" id="L49">      this.objectWrapper = (ObjectWrapper) object;</span>
+<span class="fc bfc" id="L50" title="All 2 branches covered.">    } else if (objectWrapperFactory.hasWrapperFor(object)) {</span>
+<span class="fc" id="L51">      this.objectWrapper = objectWrapperFactory.getWrapperFor(this, object);</span>
+<span class="fc bfc" id="L52" title="All 2 branches covered.">    } else if (object instanceof Map) {</span>
+<span class="fc" id="L53">      this.objectWrapper = new MapWrapper(this, (Map) object);</span>
+<span class="fc bfc" id="L54" title="All 2 branches covered.">    } else if (object instanceof Collection) {</span>
+<span class="fc" id="L55">      this.objectWrapper = new CollectionWrapper(this, (Collection) object);</span>
     } else {
-<span class="fc" id="L56">      this.objectWrapper = new BeanWrapper(this, object);</span>
+<span class="fc" id="L57">      this.objectWrapper = new BeanWrapper(this, object);</span>
     }
-<span class="fc" id="L58">  }</span>
+<span class="fc" id="L59">  }</span>
 
-  public static MetaObject forObject(Object object, ObjectFactory objectFactory, ObjectWrapperFactory objectWrapperFactory, ReflectorFactory reflectorFactory) {
-<span class="fc bfc" id="L61" title="All 2 branches covered.">    if (object == null) {</span>
-<span class="fc" id="L62">      return SystemMetaObject.NULL_META_OBJECT;</span>
-    } else {
-<span class="fc" id="L64">      return new MetaObject(object, objectFactory, objectWrapperFactory, reflectorFactory);</span>
+  public static MetaObject forObject(Object object, ObjectFactory objectFactory,
+      ObjectWrapperFactory objectWrapperFactory, ReflectorFactory reflectorFactory) {
+<span class="fc bfc" id="L63" title="All 2 branches covered.">    if (object == null) {</span>
+<span class="fc" id="L64">      return SystemMetaObject.NULL_META_OBJECT;</span>
     }
+<span class="fc" id="L66">    return new MetaObject(object, objectFactory, objectWrapperFactory, reflectorFactory);</span>
   }
 
   public ObjectFactory getObjectFactory() {
-<span class="fc" id="L69">    return objectFactory;</span>
+<span class="fc" id="L70">    return objectFactory;</span>
   }
 
   public ObjectWrapperFactory getObjectWrapperFactory() {
-<span class="fc" id="L73">    return objectWrapperFactory;</span>
+<span class="fc" id="L74">    return objectWrapperFactory;</span>
   }
 
   public ReflectorFactory getReflectorFactory() {
-<span class="fc" id="L77">    return reflectorFactory;</span>
+<span class="fc" id="L78">    return reflectorFactory;</span>
   }
 
   public Object getOriginalObject() {
-<span class="fc" id="L81">    return originalObject;</span>
+<span class="fc" id="L82">    return originalObject;</span>
   }
 
   public String findProperty(String propName, boolean useCamelCaseMapping) {
-<span class="fc" id="L85">    return objectWrapper.findProperty(propName, useCamelCaseMapping);</span>
+<span class="fc" id="L86">    return objectWrapper.findProperty(propName, useCamelCaseMapping);</span>
   }
 
   public String[] getGetterNames() {
-<span class="fc" id="L89">    return objectWrapper.getGetterNames();</span>
+<span class="fc" id="L90">    return objectWrapper.getGetterNames();</span>
   }
 
   public String[] getSetterNames() {
-<span class="fc" id="L93">    return objectWrapper.getSetterNames();</span>
+<span class="fc" id="L94">    return objectWrapper.getSetterNames();</span>
   }
 
   public Class&lt;?&gt; getSetterType(String name) {
-<span class="fc" id="L97">    return objectWrapper.getSetterType(name);</span>
+<span class="fc" id="L98">    return objectWrapper.getSetterType(name);</span>
   }
 
   public Class&lt;?&gt; getGetterType(String name) {
-<span class="fc" id="L101">    return objectWrapper.getGetterType(name);</span>
+<span class="fc" id="L102">    return objectWrapper.getGetterType(name);</span>
   }
 
   public boolean hasSetter(String name) {
-<span class="fc" id="L105">    return objectWrapper.hasSetter(name);</span>
+<span class="fc" id="L106">    return objectWrapper.hasSetter(name);</span>
   }
 
   public boolean hasGetter(String name) {
-<span class="fc" id="L109">    return objectWrapper.hasGetter(name);</span>
+<span class="fc" id="L110">    return objectWrapper.hasGetter(name);</span>
   }
 
   public Object getValue(String name) {
-<span class="fc" id="L113">    PropertyTokenizer prop = new PropertyTokenizer(name);</span>
-<span class="fc bfc" id="L114" title="All 2 branches covered.">    if (prop.hasNext()) {</span>
-<span class="fc" id="L115">      MetaObject metaValue = metaObjectForProperty(prop.getIndexedName());</span>
-<span class="fc bfc" id="L116" title="All 2 branches covered.">      if (metaValue == SystemMetaObject.NULL_META_OBJECT) {</span>
-<span class="fc" id="L117">        return null;</span>
-      } else {
-<span class="fc" id="L119">        return metaValue.getValue(prop.getChildren());</span>
-      }
+<span class="fc" id="L114">    PropertyTokenizer prop = new PropertyTokenizer(name);</span>
+<span class="fc bfc" id="L115" title="All 2 branches covered.">    if (!prop.hasNext()) {</span>
+<span class="fc" id="L116">      return objectWrapper.get(prop);</span>
+    }
+<span class="fc" id="L118">    MetaObject metaValue = metaObjectForProperty(prop.getIndexedName());</span>
+<span class="fc bfc" id="L119" title="All 2 branches covered.">    if (metaValue == SystemMetaObject.NULL_META_OBJECT) {</span>
+<span class="fc" id="L120">      return null;</span>
     } else {
-<span class="fc" id="L122">      return objectWrapper.get(prop);</span>
+<span class="fc" id="L122">      return metaValue.getValue(prop.getChildren());</span>
     }
   }
 
@@ -131,36 +131,35 @@ public class MetaObject {
 <span class="fc bfc" id="L131" title="All 2 branches covered.">        if (value == null) {</span>
           // don't instantiate child path if value is null
 <span class="fc" id="L133">          return;</span>
-        } else {
-<span class="fc" id="L135">          metaValue = objectWrapper.instantiatePropertyValue(name, prop, objectFactory);</span>
         }
+<span class="fc" id="L135">        metaValue = objectWrapper.instantiatePropertyValue(name, prop, objectFactory);</span>
       }
-<span class="fc" id="L138">      metaValue.setValue(prop.getChildren(), value);</span>
-<span class="fc" id="L139">    } else {</span>
-<span class="fc" id="L140">      objectWrapper.set(prop, value);</span>
+<span class="fc" id="L137">      metaValue.setValue(prop.getChildren(), value);</span>
+<span class="fc" id="L138">    } else {</span>
+<span class="fc" id="L139">      objectWrapper.set(prop, value);</span>
     }
-<span class="fc" id="L142">  }</span>
+<span class="fc" id="L141">  }</span>
 
   public MetaObject metaObjectForProperty(String name) {
-<span class="fc" id="L145">    Object value = getValue(name);</span>
-<span class="fc" id="L146">    return MetaObject.forObject(value, objectFactory, objectWrapperFactory, reflectorFactory);</span>
+<span class="fc" id="L144">    Object value = getValue(name);</span>
+<span class="fc" id="L145">    return MetaObject.forObject(value, objectFactory, objectWrapperFactory, reflectorFactory);</span>
   }
 
   public ObjectWrapper getObjectWrapper() {
-<span class="fc" id="L150">    return objectWrapper;</span>
+<span class="fc" id="L149">    return objectWrapper;</span>
   }
 
   public boolean isCollection() {
-<span class="nc" id="L154">    return objectWrapper.isCollection();</span>
+<span class="nc" id="L153">    return objectWrapper.isCollection();</span>
   }
 
   public void add(Object element) {
-<span class="fc" id="L158">    objectWrapper.add(element);</span>
-<span class="fc" id="L159">  }</span>
+<span class="fc" id="L157">    objectWrapper.add(element);</span>
+<span class="fc" id="L158">  }</span>
 
   public &lt;E&gt; void addAll(List&lt;E&gt; list) {
-<span class="fc" id="L162">    objectWrapper.addAll(list);</span>
-<span class="fc" id="L163">  }</span>
+<span class="fc" id="L161">    objectWrapper.addAll(list);</span>
+<span class="fc" id="L162">  }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

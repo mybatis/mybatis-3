@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BaseStatementHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.executor.statement</a> &gt; <span class="el_source">BaseStatementHandler.java</span></div><h1>BaseStatementHandler.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2016 the original author or authors.
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BaseStatementHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.executor.statement</a> &gt; <span class="el_source">BaseStatementHandler.java</span></div><h1>BaseStatementHandler.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
@@ -50,97 +50,99 @@ public abstract class BaseStatementHandler implements StatementHandler {
 
   protected BoundSql boundSql;
 
-<span class="fc" id="L53">  protected BaseStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {</span>
-<span class="fc" id="L54">    this.configuration = mappedStatement.getConfiguration();</span>
-<span class="fc" id="L55">    this.executor = executor;</span>
-<span class="fc" id="L56">    this.mappedStatement = mappedStatement;</span>
-<span class="fc" id="L57">    this.rowBounds = rowBounds;</span>
+  protected BaseStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameterObject,
+<span class="fc" id="L54">      RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {</span>
+<span class="fc" id="L55">    this.configuration = mappedStatement.getConfiguration();</span>
+<span class="fc" id="L56">    this.executor = executor;</span>
+<span class="fc" id="L57">    this.mappedStatement = mappedStatement;</span>
+<span class="fc" id="L58">    this.rowBounds = rowBounds;</span>
 
-<span class="fc" id="L59">    this.typeHandlerRegistry = configuration.getTypeHandlerRegistry();</span>
-<span class="fc" id="L60">    this.objectFactory = configuration.getObjectFactory();</span>
+<span class="fc" id="L60">    this.typeHandlerRegistry = configuration.getTypeHandlerRegistry();</span>
+<span class="fc" id="L61">    this.objectFactory = configuration.getObjectFactory();</span>
 
-<span class="fc bfc" id="L62" title="All 2 branches covered.">    if (boundSql == null) { // issue #435, get the key before calculating the statement</span>
-<span class="fc" id="L63">      generateKeys(parameterObject);</span>
-<span class="fc" id="L64">      boundSql = mappedStatement.getBoundSql(parameterObject);</span>
+<span class="fc bfc" id="L63" title="All 2 branches covered.">    if (boundSql == null) { // issue #435, get the key before calculating the statement</span>
+<span class="fc" id="L64">      generateKeys(parameterObject);</span>
+<span class="fc" id="L65">      boundSql = mappedStatement.getBoundSql(parameterObject);</span>
     }
 
-<span class="fc" id="L67">    this.boundSql = boundSql;</span>
+<span class="fc" id="L68">    this.boundSql = boundSql;</span>
 
-<span class="fc" id="L69">    this.parameterHandler = configuration.newParameterHandler(mappedStatement, parameterObject, boundSql);</span>
-<span class="fc" id="L70">    this.resultSetHandler = configuration.newResultSetHandler(executor, mappedStatement, rowBounds, parameterHandler, resultHandler, boundSql);</span>
-<span class="fc" id="L71">  }</span>
+<span class="fc" id="L70">    this.parameterHandler = configuration.newParameterHandler(mappedStatement, parameterObject, boundSql);</span>
+<span class="fc" id="L71">    this.resultSetHandler = configuration.newResultSetHandler(executor, mappedStatement, rowBounds, parameterHandler,</span>
+        resultHandler, boundSql);
+<span class="fc" id="L73">  }</span>
 
   @Override
   public BoundSql getBoundSql() {
-<span class="fc" id="L75">    return boundSql;</span>
+<span class="fc" id="L77">    return boundSql;</span>
   }
 
   @Override
   public ParameterHandler getParameterHandler() {
-<span class="nc" id="L80">    return parameterHandler;</span>
+<span class="nc" id="L82">    return parameterHandler;</span>
   }
 
   @Override
   public Statement prepare(Connection connection, Integer transactionTimeout) throws SQLException {
-<span class="fc" id="L85">    ErrorContext.instance().sql(boundSql.getSql());</span>
-<span class="fc" id="L86">    Statement statement = null;</span>
+<span class="fc" id="L87">    ErrorContext.instance().sql(boundSql.getSql());</span>
+<span class="fc" id="L88">    Statement statement = null;</span>
     try {
-<span class="fc" id="L88">      statement = instantiateStatement(connection);</span>
-<span class="fc" id="L89">      setStatementTimeout(statement, transactionTimeout);</span>
-<span class="fc" id="L90">      setFetchSize(statement);</span>
-<span class="fc" id="L91">      return statement;</span>
-<span class="fc" id="L92">    } catch (SQLException e) {</span>
-<span class="fc" id="L93">      closeStatement(statement);</span>
-<span class="fc" id="L94">      throw e;</span>
-<span class="nc" id="L95">    } catch (Exception e) {</span>
-<span class="nc" id="L96">      closeStatement(statement);</span>
-<span class="nc" id="L97">      throw new ExecutorException(&quot;Error preparing statement.  Cause: &quot; + e, e);</span>
+<span class="fc" id="L90">      statement = instantiateStatement(connection);</span>
+<span class="fc" id="L91">      setStatementTimeout(statement, transactionTimeout);</span>
+<span class="fc" id="L92">      setFetchSize(statement);</span>
+<span class="fc" id="L93">      return statement;</span>
+<span class="fc" id="L94">    } catch (SQLException e) {</span>
+<span class="fc" id="L95">      closeStatement(statement);</span>
+<span class="fc" id="L96">      throw e;</span>
+<span class="nc" id="L97">    } catch (Exception e) {</span>
+<span class="nc" id="L98">      closeStatement(statement);</span>
+<span class="nc" id="L99">      throw new ExecutorException(&quot;Error preparing statement.  Cause: &quot; + e, e);</span>
     }
   }
 
   protected abstract Statement instantiateStatement(Connection connection) throws SQLException;
 
   protected void setStatementTimeout(Statement stmt, Integer transactionTimeout) throws SQLException {
-<span class="fc" id="L104">    Integer queryTimeout = null;</span>
-<span class="fc bfc" id="L105" title="All 2 branches covered.">    if (mappedStatement.getTimeout() != null) {</span>
-<span class="fc" id="L106">      queryTimeout = mappedStatement.getTimeout();</span>
-<span class="fc bfc" id="L107" title="All 2 branches covered.">    } else if (configuration.getDefaultStatementTimeout() != null) {</span>
-<span class="fc" id="L108">      queryTimeout = configuration.getDefaultStatementTimeout();</span>
+<span class="fc" id="L106">    Integer queryTimeout = null;</span>
+<span class="fc bfc" id="L107" title="All 2 branches covered.">    if (mappedStatement.getTimeout() != null) {</span>
+<span class="fc" id="L108">      queryTimeout = mappedStatement.getTimeout();</span>
+<span class="fc bfc" id="L109" title="All 2 branches covered.">    } else if (configuration.getDefaultStatementTimeout() != null) {</span>
+<span class="fc" id="L110">      queryTimeout = configuration.getDefaultStatementTimeout();</span>
     }
-<span class="fc bfc" id="L110" title="All 2 branches covered.">    if (queryTimeout != null) {</span>
-<span class="fc" id="L111">      stmt.setQueryTimeout(queryTimeout);</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">    if (queryTimeout != null) {</span>
+<span class="fc" id="L113">      stmt.setQueryTimeout(queryTimeout);</span>
     }
-<span class="fc" id="L113">    StatementUtil.applyTransactionTimeout(stmt, queryTimeout, transactionTimeout);</span>
-<span class="fc" id="L114">  }</span>
+<span class="fc" id="L115">    StatementUtil.applyTransactionTimeout(stmt, queryTimeout, transactionTimeout);</span>
+<span class="fc" id="L116">  }</span>
 
   protected void setFetchSize(Statement stmt) throws SQLException {
-<span class="fc" id="L117">    Integer fetchSize = mappedStatement.getFetchSize();</span>
-<span class="fc bfc" id="L118" title="All 2 branches covered.">    if (fetchSize != null) {</span>
-<span class="fc" id="L119">      stmt.setFetchSize(fetchSize);</span>
-<span class="fc" id="L120">      return;</span>
+<span class="fc" id="L119">    Integer fetchSize = mappedStatement.getFetchSize();</span>
+<span class="fc bfc" id="L120" title="All 2 branches covered.">    if (fetchSize != null) {</span>
+<span class="fc" id="L121">      stmt.setFetchSize(fetchSize);</span>
+<span class="fc" id="L122">      return;</span>
     }
-<span class="fc" id="L122">    Integer defaultFetchSize = configuration.getDefaultFetchSize();</span>
-<span class="fc bfc" id="L123" title="All 2 branches covered.">    if (defaultFetchSize != null) {</span>
-<span class="fc" id="L124">      stmt.setFetchSize(defaultFetchSize);</span>
+<span class="fc" id="L124">    Integer defaultFetchSize = configuration.getDefaultFetchSize();</span>
+<span class="fc bfc" id="L125" title="All 2 branches covered.">    if (defaultFetchSize != null) {</span>
+<span class="fc" id="L126">      stmt.setFetchSize(defaultFetchSize);</span>
     }
-<span class="fc" id="L126">  }</span>
+<span class="fc" id="L128">  }</span>
 
   protected void closeStatement(Statement statement) {
     try {
-<span class="pc bpc" id="L130" title="1 of 2 branches missed.">      if (statement != null) {</span>
-<span class="nc" id="L131">        statement.close();</span>
+<span class="pc bpc" id="L132" title="1 of 2 branches missed.">      if (statement != null) {</span>
+<span class="nc" id="L133">        statement.close();</span>
       }
-<span class="nc" id="L133">    } catch (SQLException e) {</span>
-      //ignore
-<span class="fc" id="L135">    }</span>
-<span class="fc" id="L136">  }</span>
+<span class="nc" id="L135">    } catch (SQLException e) {</span>
+      // ignore
+<span class="fc" id="L137">    }</span>
+<span class="fc" id="L138">  }</span>
 
   protected void generateKeys(Object parameter) {
-<span class="fc" id="L139">    KeyGenerator keyGenerator = mappedStatement.getKeyGenerator();</span>
-<span class="fc" id="L140">    ErrorContext.instance().store();</span>
-<span class="fc" id="L141">    keyGenerator.processBefore(executor, mappedStatement, null, parameter);</span>
-<span class="fc" id="L142">    ErrorContext.instance().recall();</span>
-<span class="fc" id="L143">  }</span>
+<span class="fc" id="L141">    KeyGenerator keyGenerator = mappedStatement.getKeyGenerator();</span>
+<span class="fc" id="L142">    ErrorContext.instance().store();</span>
+<span class="fc" id="L143">    keyGenerator.processBefore(executor, mappedStatement, null, parameter);</span>
+<span class="fc" id="L144">    ErrorContext.instance().recall();</span>
+<span class="fc" id="L145">  }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

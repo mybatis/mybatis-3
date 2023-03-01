@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SelectKeyGenerator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.executor.keygen</a> &gt; <span class="el_source">SelectKeyGenerator.java</span></div><h1>SelectKeyGenerator.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2019 the original author or authors.
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SelectKeyGenerator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.executor.keygen</a> &gt; <span class="el_source">SelectKeyGenerator.java</span></div><h1>SelectKeyGenerator.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
@@ -61,63 +61,62 @@ public class SelectKeyGenerator implements KeyGenerator {
 <span class="fc" id="L61">        String[] keyProperties = keyStatement.getKeyProperties();</span>
 <span class="fc" id="L62">        final Configuration configuration = ms.getConfiguration();</span>
 <span class="fc" id="L63">        final MetaObject metaParam = configuration.newMetaObject(parameter);</span>
-<span class="pc bpc" id="L64" title="1 of 2 branches missed.">        if (keyProperties != null) {</span>
-          // Do not close keyExecutor.
-          // The transaction will be closed by parent executor.
-<span class="fc" id="L67">          Executor keyExecutor = configuration.newExecutor(executor.getTransaction(), ExecutorType.SIMPLE);</span>
-<span class="fc" id="L68">          List&lt;Object&gt; values = keyExecutor.query(keyStatement, parameter, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);</span>
-<span class="fc bfc" id="L69" title="All 2 branches covered.">          if (values.size() == 0) {</span>
-<span class="fc" id="L70">            throw new ExecutorException(&quot;SelectKey returned no data.&quot;);</span>
-<span class="fc bfc" id="L71" title="All 2 branches covered.">          } else if (values.size() &gt; 1) {</span>
-<span class="fc" id="L72">            throw new ExecutorException(&quot;SelectKey returned more than one value.&quot;);</span>
-          } else {
-<span class="fc" id="L74">            MetaObject metaResult = configuration.newMetaObject(values.get(0));</span>
-<span class="fc bfc" id="L75" title="All 2 branches covered.">            if (keyProperties.length == 1) {</span>
-<span class="fc bfc" id="L76" title="All 2 branches covered.">              if (metaResult.hasGetter(keyProperties[0])) {</span>
-<span class="fc" id="L77">                setValue(metaParam, keyProperties[0], metaResult.getValue(keyProperties[0]));</span>
-              } else {
-                // no getter for the property - maybe just a single value object
-                // so try that
-<span class="fc" id="L81">                setValue(metaParam, keyProperties[0], values.get(0));</span>
-              }
+        // Do not close keyExecutor.
+        // The transaction will be closed by parent executor.
+<span class="fc" id="L66">        Executor keyExecutor = configuration.newExecutor(executor.getTransaction(), ExecutorType.SIMPLE);</span>
+<span class="fc" id="L67">        List&lt;Object&gt; values = keyExecutor.query(keyStatement, parameter, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">        if (values.size() == 0) {</span>
+<span class="fc" id="L69">          throw new ExecutorException(&quot;SelectKey returned no data.&quot;);</span>
+        }
+<span class="fc bfc" id="L71" title="All 2 branches covered.">        if (values.size() &gt; 1) {</span>
+<span class="fc" id="L72">          throw new ExecutorException(&quot;SelectKey returned more than one value.&quot;);</span>
+        } else {
+<span class="fc" id="L74">          MetaObject metaResult = configuration.newMetaObject(values.get(0));</span>
+<span class="fc bfc" id="L75" title="All 2 branches covered.">          if (keyProperties.length == 1) {</span>
+<span class="fc bfc" id="L76" title="All 2 branches covered.">            if (metaResult.hasGetter(keyProperties[0])) {</span>
+<span class="fc" id="L77">              setValue(metaParam, keyProperties[0], metaResult.getValue(keyProperties[0]));</span>
             } else {
-<span class="fc" id="L84">              handleMultipleProperties(keyProperties, metaParam, metaResult);</span>
+              // no getter for the property - maybe just a single value object
+              // so try that
+<span class="fc" id="L81">              setValue(metaParam, keyProperties[0], values.get(0));</span>
             }
+          } else {
+<span class="fc" id="L84">            handleMultipleProperties(keyProperties, metaParam, metaResult);</span>
           }
         }
       }
-<span class="fc" id="L89">    } catch (ExecutorException e) {</span>
-<span class="fc" id="L90">      throw e;</span>
-<span class="fc" id="L91">    } catch (Exception e) {</span>
-<span class="fc" id="L92">      throw new ExecutorException(&quot;Error selecting key or setting result to parameter object. Cause: &quot; + e, e);</span>
-<span class="fc" id="L93">    }</span>
-<span class="fc" id="L94">  }</span>
+<span class="fc" id="L88">    } catch (ExecutorException e) {</span>
+<span class="fc" id="L89">      throw e;</span>
+<span class="fc" id="L90">    } catch (Exception e) {</span>
+<span class="fc" id="L91">      throw new ExecutorException(&quot;Error selecting key or setting result to parameter object. Cause: &quot; + e, e);</span>
+<span class="fc" id="L92">    }</span>
+<span class="fc" id="L93">  }</span>
 
-  private void handleMultipleProperties(String[] keyProperties,
-      MetaObject metaParam, MetaObject metaResult) {
-<span class="fc" id="L98">    String[] keyColumns = keyStatement.getKeyColumns();</span>
+  private void handleMultipleProperties(String[] keyProperties, MetaObject metaParam, MetaObject metaResult) {
+<span class="fc" id="L96">    String[] keyColumns = keyStatement.getKeyColumns();</span>
 
-<span class="pc bpc" id="L100" title="1 of 4 branches missed.">    if (keyColumns == null || keyColumns.length == 0) {</span>
+<span class="pc bpc" id="L98" title="1 of 4 branches missed.">    if (keyColumns == null || keyColumns.length == 0) {</span>
       // no key columns specified, just use the property names
-<span class="fc bfc" id="L102" title="All 2 branches covered.">      for (String keyProperty : keyProperties) {</span>
-<span class="fc" id="L103">        setValue(metaParam, keyProperty, metaResult.getValue(keyProperty));</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">      for (String keyProperty : keyProperties) {</span>
+<span class="fc" id="L101">        setValue(metaParam, keyProperty, metaResult.getValue(keyProperty));</span>
       }
     } else {
-<span class="pc bpc" id="L106" title="1 of 2 branches missed.">      if (keyColumns.length != keyProperties.length) {</span>
-<span class="nc" id="L107">        throw new ExecutorException(&quot;If SelectKey has key columns, the number must match the number of key properties.&quot;);</span>
+<span class="pc bpc" id="L104" title="1 of 2 branches missed.">      if (keyColumns.length != keyProperties.length) {</span>
+<span class="nc" id="L105">        throw new ExecutorException(</span>
+            &quot;If SelectKey has key columns, the number must match the number of key properties.&quot;);
       }
-<span class="fc bfc" id="L109" title="All 2 branches covered.">      for (int i = 0; i &lt; keyProperties.length; i++) {</span>
-<span class="fc" id="L110">        setValue(metaParam, keyProperties[i], metaResult.getValue(keyColumns[i]));</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">      for (int i = 0; i &lt; keyProperties.length; i++) {</span>
+<span class="fc" id="L109">        setValue(metaParam, keyProperties[i], metaResult.getValue(keyColumns[i]));</span>
       }
     }
-<span class="fc" id="L113">  }</span>
+<span class="fc" id="L112">  }</span>
 
   private void setValue(MetaObject metaParam, String property, Object value) {
-<span class="fc bfc" id="L116" title="All 2 branches covered.">    if (metaParam.hasSetter(property)) {</span>
-<span class="fc" id="L117">      metaParam.setValue(property, value);</span>
-    } else {
-<span class="fc" id="L119">      throw new ExecutorException(&quot;No setter found for the keyProperty '&quot; + property + &quot;' in &quot; + metaParam.getOriginalObject().getClass().getName() + &quot;.&quot;);</span>
+<span class="fc bfc" id="L115" title="All 2 branches covered.">    if (!metaParam.hasSetter(property)) {</span>
+<span class="fc" id="L116">      throw new ExecutorException(&quot;No setter found for the keyProperty '&quot; + property + &quot;' in &quot;</span>
+<span class="fc" id="L117">          + metaParam.getOriginalObject().getClass().getName() + &quot;.&quot;);</span>
     }
-<span class="fc" id="L121">  }</span>
+<span class="fc" id="L119">    metaParam.setValue(property, value);</span>
+<span class="fc" id="L120">  }</span>
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

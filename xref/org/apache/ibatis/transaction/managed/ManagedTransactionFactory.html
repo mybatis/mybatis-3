@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../apidocs/org/apache/ibatis/transaction/managed/ManagedTransactionFactory.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2022 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -61,13 +61,13 @@
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>    @Override
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>    <strong class="jxr_keyword">public</strong> <a name="Transaction" href="../../../../../org/apache/ibatis/transaction/Transaction.html#Transaction">Transaction</a> newTransaction(DataSource ds, <a name="TransactionIsolationLevel" href="../../../../../org/apache/ibatis/session/TransactionIsolationLevel.html#TransactionIsolationLevel">TransactionIsolationLevel</a> level, <strong class="jxr_keyword">boolean</strong> autoCommit) {
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>      <em class="jxr_comment">// Silently ignores autocommit and isolation level, as managed transactions are entirely</em>
-<a class="jxr_linenumber" name="L56" href="#L56">56</a>      <em class="jxr_comment">// controlled by an external manager.  It's silently ignored so that</em>
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>      <em class="jxr_comment">// controlled by an external manager. It's silently ignored so that</em>
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>      <em class="jxr_comment">// code remains portable between managed and unmanaged configurations.</em>
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>      <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a name="ManagedTransaction" href="../../../../../org/apache/ibatis/transaction/managed/ManagedTransaction.html#ManagedTransaction">ManagedTransaction</a>(ds, level, closeConnection);
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>    }
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2022 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2023 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

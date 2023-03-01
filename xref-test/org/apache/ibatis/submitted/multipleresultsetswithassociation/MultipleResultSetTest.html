@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/submitted/multipleresultsetswithassociation/MultipleResultSetTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2022 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -55,9 +55,9 @@
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>      <em class="jxr_comment">// populate in-memory database</em>
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>      <em class="jxr_comment">// Could not get the table creation, procedure creation, and data population to work from the same script.</em>
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>      <em class="jxr_comment">// Once it was in three scripts, all seemed well.</em>
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>      <strong class="jxr_keyword">try</strong> (SqlSession session = sqlSessionFactory.openSession();
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>           Connection conn = session.getConnection()) {
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>        <strong class="jxr_keyword">try</strong> (Reader reader = Resources.getResourceAsReader(<span class="jxr_string">"org/apache/ibatis/submitted/multipleresultsetswithassociation/CreateDB1.sql"</span>)) {
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>      <strong class="jxr_keyword">try</strong> (SqlSession session = sqlSessionFactory.openSession(); Connection conn = session.getConnection()) {
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>        <strong class="jxr_keyword">try</strong> (Reader reader = Resources
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>            .getResourceAsReader(<span class="jxr_string">"org/apache/ibatis/submitted/multipleresultsetswithassociation/CreateDB1.sql"</span>)) {
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>          runReaderScript(conn, reader);
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>        }
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>        <strong class="jxr_keyword">try</strong> (Reader reader = Resources
@@ -119,6 +119,6 @@
 <a class="jxr_linenumber" name="L111" href="#L111">111</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2022 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2023 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

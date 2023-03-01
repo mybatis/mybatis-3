@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../apidocs/org/apache/ibatis/transaction/jdbc/JdbcTransaction.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2022 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -35,30 +35,30 @@
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.transaction.TransactionException;
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>  
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>  <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <em class="jxr_javadoccomment"> * {@link Transaction} that makes use of the JDBC commit and rollback facilities directly.</em>
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <em class="jxr_javadoccomment"> * It relies on the connection retrieved from the dataSource to manage the scope of the transaction.</em>
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <em class="jxr_javadoccomment"> * Delays connection retrieval until getConnection() is called.</em>
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <em class="jxr_javadoccomment"> * Ignores commit or rollback requests when autocommit is on.</em>
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <em class="jxr_javadoccomment"> * @author Clinton Begin</em>
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <em class="jxr_javadoccomment"> * @see JdbcTransactionFactory</em>
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <em class="jxr_javadoccomment"> */</em>
-<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="JdbcTransaction" href="../../../../../org/apache/ibatis/transaction/jdbc/JdbcTransaction.html#JdbcTransaction">JdbcTransaction</a> <strong class="jxr_keyword">implements</strong> <a name="Transaction" href="../../../../../org/apache/ibatis/transaction/Transaction.html#Transaction">Transaction</a> {
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>  
-<a class="jxr_linenumber" name="L41" href="#L41">41</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a name="Log" href="../../../../../org/apache/ibatis/logging/Log.html#Log">Log</a> log = LogFactory.getLog(JdbcTransaction.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>  
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>    <strong class="jxr_keyword">protected</strong> Connection connection;
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>    <strong class="jxr_keyword">protected</strong> DataSource dataSource;
-<a class="jxr_linenumber" name="L45" href="#L45">45</a>    <strong class="jxr_keyword">protected</strong> <a name="TransactionIsolationLevel" href="../../../../../org/apache/ibatis/session/TransactionIsolationLevel.html#TransactionIsolationLevel">TransactionIsolationLevel</a> level;
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>    <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">boolean</strong> autoCommit;
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>    <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">boolean</strong> skipSetAutoCommitOnClose;
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>  
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>    <strong class="jxr_keyword">public</strong> <a name="JdbcTransaction" href="../../../../../org/apache/ibatis/transaction/jdbc/JdbcTransaction.html#JdbcTransaction">JdbcTransaction</a>(DataSource ds, <a name="TransactionIsolationLevel" href="../../../../../org/apache/ibatis/session/TransactionIsolationLevel.html#TransactionIsolationLevel">TransactionIsolationLevel</a> desiredLevel, <strong class="jxr_keyword">boolean</strong> desiredAutoCommit) {
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>      <strong class="jxr_keyword">this</strong>(ds, desiredLevel, desiredAutoCommit, false);
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>    }
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>  
-<a class="jxr_linenumber" name="L53" href="#L53">53</a>    <strong class="jxr_keyword">public</strong> <a name="JdbcTransaction" href="../../../../../org/apache/ibatis/transaction/jdbc/JdbcTransaction.html#JdbcTransaction">JdbcTransaction</a>(DataSource ds, <a name="TransactionIsolationLevel" href="../../../../../org/apache/ibatis/session/TransactionIsolationLevel.html#TransactionIsolationLevel">TransactionIsolationLevel</a> desiredLevel, <strong class="jxr_keyword">boolean</strong> desiredAutoCommit, <strong class="jxr_keyword">boolean</strong> skipSetAutoCommitOnClose) {
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <em class="jxr_javadoccomment"> * {@link Transaction} that makes use of the JDBC commit and rollback facilities directly. It relies on the connection</em>
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <em class="jxr_javadoccomment"> * retrieved from the dataSource to manage the scope of the transaction. Delays connection retrieval until</em>
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <em class="jxr_javadoccomment"> * getConnection() is called. Ignores commit or rollback requests when autocommit is on.</em>
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <em class="jxr_javadoccomment"> * @author Clinton Begin</em>
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <em class="jxr_javadoccomment"> * @see JdbcTransactionFactory</em>
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="JdbcTransaction" href="../../../../../org/apache/ibatis/transaction/jdbc/JdbcTransaction.html#JdbcTransaction">JdbcTransaction</a> <strong class="jxr_keyword">implements</strong> <a name="Transaction" href="../../../../../org/apache/ibatis/transaction/Transaction.html#Transaction">Transaction</a> {
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a name="Log" href="../../../../../org/apache/ibatis/logging/Log.html#Log">Log</a> log = LogFactory.getLog(JdbcTransaction.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>    <strong class="jxr_keyword">protected</strong> Connection connection;
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>    <strong class="jxr_keyword">protected</strong> DataSource dataSource;
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>    <strong class="jxr_keyword">protected</strong> <a name="TransactionIsolationLevel" href="../../../../../org/apache/ibatis/session/TransactionIsolationLevel.html#TransactionIsolationLevel">TransactionIsolationLevel</a> level;
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>    <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">boolean</strong> autoCommit;
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>    <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">boolean</strong> skipSetAutoCommitOnClose;
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>    <strong class="jxr_keyword">public</strong> <a name="JdbcTransaction" href="../../../../../org/apache/ibatis/transaction/jdbc/JdbcTransaction.html#JdbcTransaction">JdbcTransaction</a>(DataSource ds, <a name="TransactionIsolationLevel" href="../../../../../org/apache/ibatis/session/TransactionIsolationLevel.html#TransactionIsolationLevel">TransactionIsolationLevel</a> desiredLevel, <strong class="jxr_keyword">boolean</strong> desiredAutoCommit) {
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>      <strong class="jxr_keyword">this</strong>(ds, desiredLevel, desiredAutoCommit, false);
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>    }
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>  
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>    <strong class="jxr_keyword">public</strong> <a name="JdbcTransaction" href="../../../../../org/apache/ibatis/transaction/jdbc/JdbcTransaction.html#JdbcTransaction">JdbcTransaction</a>(DataSource ds, <a name="TransactionIsolationLevel" href="../../../../../org/apache/ibatis/session/TransactionIsolationLevel.html#TransactionIsolationLevel">TransactionIsolationLevel</a> desiredLevel, <strong class="jxr_keyword">boolean</strong> desiredAutoCommit,
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>        <strong class="jxr_keyword">boolean</strong> skipSetAutoCommitOnClose) {
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>      dataSource = ds;
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>      level = desiredLevel;
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>      autoCommit = desiredAutoCommit;
@@ -119,29 +119,29 @@
 <a class="jxr_linenumber" name="L111" href="#L111">111</a>     } <strong class="jxr_keyword">catch</strong> (SQLException e) {
 <a class="jxr_linenumber" name="L112" href="#L112">112</a>       <em class="jxr_comment">// Only a very poorly implemented driver would fail here,</em>
 <a class="jxr_linenumber" name="L113" href="#L113">113</a>       <em class="jxr_comment">// and there's not much we can do about that.</em>
-<a class="jxr_linenumber" name="L114" href="#L114">114</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="TransactionException" href="../../../../../org/apache/ibatis/transaction/TransactionException.html#TransactionException">TransactionException</a>(<span class="jxr_string">"Error configuring AutoCommit.  "</span>
-<a class="jxr_linenumber" name="L115" href="#L115">115</a>           + <span class="jxr_string">"Your driver may not support getAutoCommit() or setAutoCommit(). "</span>
-<a class="jxr_linenumber" name="L116" href="#L116">116</a>           + <span class="jxr_string">"Requested setting: "</span> + desiredAutoCommit + <span class="jxr_string">".  Cause: "</span> + e, e);
-<a class="jxr_linenumber" name="L117" href="#L117">117</a>     }
-<a class="jxr_linenumber" name="L118" href="#L118">118</a>   }
-<a class="jxr_linenumber" name="L119" href="#L119">119</a> 
-<a class="jxr_linenumber" name="L120" href="#L120">120</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> resetAutoCommit() {
-<a class="jxr_linenumber" name="L121" href="#L121">121</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L122" href="#L122">122</a>       <strong class="jxr_keyword">if</strong> (!skipSetAutoCommitOnClose &amp;&amp; !connection.getAutoCommit()) {
-<a class="jxr_linenumber" name="L123" href="#L123">123</a>         <em class="jxr_comment">// MyBatis does not call commit/rollback on a connection if just selects were performed.</em>
-<a class="jxr_linenumber" name="L124" href="#L124">124</a>         <em class="jxr_comment">// Some databases start transactions with select statements</em>
-<a class="jxr_linenumber" name="L125" href="#L125">125</a>         <em class="jxr_comment">// and they mandate a commit/rollback before closing the connection.</em>
-<a class="jxr_linenumber" name="L126" href="#L126">126</a>         <em class="jxr_comment">// A workaround is setting the autocommit to true before closing the connection.</em>
-<a class="jxr_linenumber" name="L127" href="#L127">127</a>         <em class="jxr_comment">// Sybase throws an exception here.</em>
-<a class="jxr_linenumber" name="L128" href="#L128">128</a>         <strong class="jxr_keyword">if</strong> (log.isDebugEnabled()) {
-<a class="jxr_linenumber" name="L129" href="#L129">129</a>           log.debug(<span class="jxr_string">"Resetting autocommit to true on JDBC Connection ["</span> + connection + <span class="jxr_string">"]"</span>);
-<a class="jxr_linenumber" name="L130" href="#L130">130</a>         }
-<a class="jxr_linenumber" name="L131" href="#L131">131</a>         connection.setAutoCommit(<strong class="jxr_keyword">true</strong>);
-<a class="jxr_linenumber" name="L132" href="#L132">132</a>       }
-<a class="jxr_linenumber" name="L133" href="#L133">133</a>     } <strong class="jxr_keyword">catch</strong> (SQLException e) {
-<a class="jxr_linenumber" name="L134" href="#L134">134</a>       <strong class="jxr_keyword">if</strong> (log.isDebugEnabled()) {
-<a class="jxr_linenumber" name="L135" href="#L135">135</a>         log.debug(<span class="jxr_string">"Error resetting autocommit to true "</span>
-<a class="jxr_linenumber" name="L136" href="#L136">136</a>             + <span class="jxr_string">"before closing the connection.  Cause: "</span> + e);
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="TransactionException" href="../../../../../org/apache/ibatis/transaction/TransactionException.html#TransactionException">TransactionException</a>(
+<a class="jxr_linenumber" name="L115" href="#L115">115</a>           <span class="jxr_string">"Error configuring AutoCommit.  "</span> + <span class="jxr_string">"Your driver may not support getAutoCommit() or setAutoCommit(). "</span>
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>               + <span class="jxr_string">"Requested setting: "</span> + desiredAutoCommit + <span class="jxr_string">".  Cause: "</span> + e,
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>           e);
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>     }
+<a class="jxr_linenumber" name="L119" href="#L119">119</a>   }
+<a class="jxr_linenumber" name="L120" href="#L120">120</a> 
+<a class="jxr_linenumber" name="L121" href="#L121">121</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> resetAutoCommit() {
+<a class="jxr_linenumber" name="L122" href="#L122">122</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L123" href="#L123">123</a>       <strong class="jxr_keyword">if</strong> (!skipSetAutoCommitOnClose &amp;&amp; !connection.getAutoCommit()) {
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>         <em class="jxr_comment">// MyBatis does not call commit/rollback on a connection if just selects were performed.</em>
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>         <em class="jxr_comment">// Some databases start transactions with select statements</em>
+<a class="jxr_linenumber" name="L126" href="#L126">126</a>         <em class="jxr_comment">// and they mandate a commit/rollback before closing the connection.</em>
+<a class="jxr_linenumber" name="L127" href="#L127">127</a>         <em class="jxr_comment">// A workaround is setting the autocommit to true before closing the connection.</em>
+<a class="jxr_linenumber" name="L128" href="#L128">128</a>         <em class="jxr_comment">// Sybase throws an exception here.</em>
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>         <strong class="jxr_keyword">if</strong> (log.isDebugEnabled()) {
+<a class="jxr_linenumber" name="L130" href="#L130">130</a>           log.debug(<span class="jxr_string">"Resetting autocommit to true on JDBC Connection ["</span> + connection + <span class="jxr_string">"]"</span>);
+<a class="jxr_linenumber" name="L131" href="#L131">131</a>         }
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>         connection.setAutoCommit(<strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>       }
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>     } <strong class="jxr_keyword">catch</strong> (SQLException e) {
+<a class="jxr_linenumber" name="L135" href="#L135">135</a>       <strong class="jxr_keyword">if</strong> (log.isDebugEnabled()) {
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>         log.debug(<span class="jxr_string">"Error resetting autocommit to true "</span> + <span class="jxr_string">"before closing the connection.  Cause: "</span> + e);
 <a class="jxr_linenumber" name="L137" href="#L137">137</a>       }
 <a class="jxr_linenumber" name="L138" href="#L138">138</a>     }
 <a class="jxr_linenumber" name="L139" href="#L139">139</a>   }
@@ -165,6 +165,6 @@
 <a class="jxr_linenumber" name="L157" href="#L157">157</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2022 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2023 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

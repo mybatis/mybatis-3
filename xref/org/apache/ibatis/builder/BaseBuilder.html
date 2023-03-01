@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../apidocs/org/apache/ibatis/builder/BaseBuilder.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2022 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -133,32 +133,33 @@
 <a class="jxr_linenumber" name="L125" href="#L125">125</a>     }
 <a class="jxr_linenumber" name="L126" href="#L126">126</a>     Class&lt;?&gt; type = resolveClass(typeHandlerAlias);
 <a class="jxr_linenumber" name="L127" href="#L127">127</a>     <strong class="jxr_keyword">if</strong> (type != <strong class="jxr_keyword">null</strong> &amp;&amp; !TypeHandler.<strong class="jxr_keyword">class</strong>.isAssignableFrom(type)) {
-<a class="jxr_linenumber" name="L128" href="#L128">128</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="BuilderException" href="../../../../org/apache/ibatis/builder/BuilderException.html#BuilderException">BuilderException</a>(<span class="jxr_string">"Type "</span> + type.getName() + <span class="jxr_string">" is not a valid TypeHandler because it does not implement TypeHandler interface"</span>);
-<a class="jxr_linenumber" name="L129" href="#L129">129</a>     }
-<a class="jxr_linenumber" name="L130" href="#L130">130</a>     @SuppressWarnings(<span class="jxr_string">"unchecked"</span>) <em class="jxr_comment">// already verified it is a TypeHandler</em>
-<a class="jxr_linenumber" name="L131" href="#L131">131</a>     Class&lt;? <strong class="jxr_keyword">extends</strong> TypeHandler&lt;?&gt;&gt; typeHandlerType = (Class&lt;? <strong class="jxr_keyword">extends</strong> TypeHandler&lt;?&gt;&gt;) type;
-<a class="jxr_linenumber" name="L132" href="#L132">132</a>     <strong class="jxr_keyword">return</strong> resolveTypeHandler(javaType, typeHandlerType);
-<a class="jxr_linenumber" name="L133" href="#L133">133</a>   }
-<a class="jxr_linenumber" name="L134" href="#L134">134</a> 
-<a class="jxr_linenumber" name="L135" href="#L135">135</a>   <strong class="jxr_keyword">protected</strong> TypeHandler&lt;?&gt; resolveTypeHandler(Class&lt;?&gt; javaType, Class&lt;? <strong class="jxr_keyword">extends</strong> TypeHandler&lt;?&gt;&gt; typeHandlerType) {
-<a class="jxr_linenumber" name="L136" href="#L136">136</a>     <strong class="jxr_keyword">if</strong> (typeHandlerType == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L137" href="#L137">137</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L138" href="#L138">138</a>     }
-<a class="jxr_linenumber" name="L139" href="#L139">139</a>     <em class="jxr_comment">// javaType ignored for injected handlers see issue #746 for full detail</em>
-<a class="jxr_linenumber" name="L140" href="#L140">140</a>     TypeHandler&lt;?&gt; handler = typeHandlerRegistry.getMappingTypeHandler(typeHandlerType);
-<a class="jxr_linenumber" name="L141" href="#L141">141</a>     <strong class="jxr_keyword">if</strong> (handler == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L142" href="#L142">142</a>       <em class="jxr_comment">// not in registry, create a new one</em>
-<a class="jxr_linenumber" name="L143" href="#L143">143</a>       handler = typeHandlerRegistry.getInstance(javaType, typeHandlerType);
-<a class="jxr_linenumber" name="L144" href="#L144">144</a>     }
-<a class="jxr_linenumber" name="L145" href="#L145">145</a>     <strong class="jxr_keyword">return</strong> handler;
-<a class="jxr_linenumber" name="L146" href="#L146">146</a>   }
-<a class="jxr_linenumber" name="L147" href="#L147">147</a> 
-<a class="jxr_linenumber" name="L148" href="#L148">148</a>   <strong class="jxr_keyword">protected</strong> &lt;T&gt; Class&lt;? <strong class="jxr_keyword">extends</strong> T&gt; resolveAlias(String alias) {
-<a class="jxr_linenumber" name="L149" href="#L149">149</a>     <strong class="jxr_keyword">return</strong> typeAliasRegistry.resolveAlias(alias);
-<a class="jxr_linenumber" name="L150" href="#L150">150</a>   }
-<a class="jxr_linenumber" name="L151" href="#L151">151</a> }
+<a class="jxr_linenumber" name="L128" href="#L128">128</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="BuilderException" href="../../../../org/apache/ibatis/builder/BuilderException.html#BuilderException">BuilderException</a>(
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>           <span class="jxr_string">"Type "</span> + type.getName() + <span class="jxr_string">" is not a valid TypeHandler because it does not implement TypeHandler interface"</span>);
+<a class="jxr_linenumber" name="L130" href="#L130">130</a>     }
+<a class="jxr_linenumber" name="L131" href="#L131">131</a>     @SuppressWarnings(<span class="jxr_string">"unchecked"</span>) <em class="jxr_comment">// already verified it is a TypeHandler</em>
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>     Class&lt;? <strong class="jxr_keyword">extends</strong> TypeHandler&lt;?&gt;&gt; typeHandlerType = (Class&lt;? <strong class="jxr_keyword">extends</strong> TypeHandler&lt;?&gt;&gt;) type;
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>     <strong class="jxr_keyword">return</strong> resolveTypeHandler(javaType, typeHandlerType);
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>   }
+<a class="jxr_linenumber" name="L135" href="#L135">135</a> 
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>   <strong class="jxr_keyword">protected</strong> TypeHandler&lt;?&gt; resolveTypeHandler(Class&lt;?&gt; javaType, Class&lt;? <strong class="jxr_keyword">extends</strong> TypeHandler&lt;?&gt;&gt; typeHandlerType) {
+<a class="jxr_linenumber" name="L137" href="#L137">137</a>     <strong class="jxr_keyword">if</strong> (typeHandlerType == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L139" href="#L139">139</a>     }
+<a class="jxr_linenumber" name="L140" href="#L140">140</a>     <em class="jxr_comment">// javaType ignored for injected handlers see issue #746 for full detail</em>
+<a class="jxr_linenumber" name="L141" href="#L141">141</a>     TypeHandler&lt;?&gt; handler = typeHandlerRegistry.getMappingTypeHandler(typeHandlerType);
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>     <strong class="jxr_keyword">if</strong> (handler == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>       <em class="jxr_comment">// not in registry, create a new one</em>
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>       handler = typeHandlerRegistry.getInstance(javaType, typeHandlerType);
+<a class="jxr_linenumber" name="L145" href="#L145">145</a>     }
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>     <strong class="jxr_keyword">return</strong> handler;
+<a class="jxr_linenumber" name="L147" href="#L147">147</a>   }
+<a class="jxr_linenumber" name="L148" href="#L148">148</a> 
+<a class="jxr_linenumber" name="L149" href="#L149">149</a>   <strong class="jxr_keyword">protected</strong> &lt;T&gt; Class&lt;? <strong class="jxr_keyword">extends</strong> T&gt; resolveAlias(String alias) {
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>     <strong class="jxr_keyword">return</strong> typeAliasRegistry.resolveAlias(alias);
+<a class="jxr_linenumber" name="L151" href="#L151">151</a>   }
+<a class="jxr_linenumber" name="L152" href="#L152">152</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2022 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2023 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ja"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractEnhancedDeserializationProxy.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.executor.loader</a> &gt; <span class="el_source">AbstractEnhancedDeserializationProxy.java</span></div><h1>AbstractEnhancedDeserializationProxy.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2017 the original author or authors.
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ja"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractEnhancedDeserializationProxy.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.executor.loader</a> &gt; <span class="el_source">AbstractEnhancedDeserializationProxy.java</span></div><h1>AbstractEnhancedDeserializationProxy.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
@@ -19,8 +19,8 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import org.apache.ibatis.executor.ExecutorException;
 
+import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.reflection.ExceptionUtil;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.property.PropertyCopier;
@@ -41,67 +41,67 @@ public abstract class AbstractEnhancedDeserializationProxy {
   private final Object reloadingPropertyLock;
   private boolean reloadingProperty;
 
-  protected AbstractEnhancedDeserializationProxy(Class&lt;?&gt; type, Map&lt;String, ResultLoaderMap.LoadPair&gt; unloadedProperties,
-<span class="fc" id="L45">          ObjectFactory objectFactory, List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs) {</span>
-<span class="fc" id="L46">    this.type = type;</span>
-<span class="fc" id="L47">    this.unloadedProperties = unloadedProperties;</span>
-<span class="fc" id="L48">    this.objectFactory = objectFactory;</span>
-<span class="fc" id="L49">    this.constructorArgTypes = constructorArgTypes;</span>
-<span class="fc" id="L50">    this.constructorArgs = constructorArgs;</span>
-<span class="fc" id="L51">    this.reloadingPropertyLock = new Object();</span>
-<span class="fc" id="L52">    this.reloadingProperty = false;</span>
-<span class="fc" id="L53">  }</span>
+  protected AbstractEnhancedDeserializationProxy(Class&lt;?&gt; type,
+      Map&lt;String, ResultLoaderMap.LoadPair&gt; unloadedProperties, ObjectFactory objectFactory,
+<span class="fc" id="L46">      List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs) {</span>
+<span class="fc" id="L47">    this.type = type;</span>
+<span class="fc" id="L48">    this.unloadedProperties = unloadedProperties;</span>
+<span class="fc" id="L49">    this.objectFactory = objectFactory;</span>
+<span class="fc" id="L50">    this.constructorArgTypes = constructorArgTypes;</span>
+<span class="fc" id="L51">    this.constructorArgs = constructorArgs;</span>
+<span class="fc" id="L52">    this.reloadingPropertyLock = new Object();</span>
+<span class="fc" id="L53">    this.reloadingProperty = false;</span>
+<span class="fc" id="L54">  }</span>
 
   public final Object invoke(Object enhanced, Method method, Object[] args) throws Throwable {
-<span class="fc" id="L56">    final String methodName = method.getName();</span>
+<span class="fc" id="L57">    final String methodName = method.getName();</span>
     try {
-<span class="fc bfc" id="L58" title="All 2 branches covered.">      if (WRITE_REPLACE_METHOD.equals(methodName)) {</span>
+<span class="fc bfc" id="L59" title="All 2 branches covered.">      if (WRITE_REPLACE_METHOD.equals(methodName)) {</span>
         final Object original;
-<span class="pc bpc" id="L60" title="1 of 2 branches missed.">        if (constructorArgTypes.isEmpty()) {</span>
-<span class="fc" id="L61">          original = objectFactory.create(type);</span>
+<span class="pc bpc" id="L61" title="1 of 2 branches missed.">        if (constructorArgTypes.isEmpty()) {</span>
+<span class="fc" id="L62">          original = objectFactory.create(type);</span>
         } else {
-<span class="nc" id="L63">          original = objectFactory.create(type, constructorArgTypes, constructorArgs);</span>
+<span class="nc" id="L64">          original = objectFactory.create(type, constructorArgTypes, constructorArgs);</span>
         }
 
-<span class="fc" id="L66">        PropertyCopier.copyBeanProperties(type, enhanced, original);</span>
-<span class="fc" id="L67">        return this.newSerialStateHolder(original, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);</span>
-      } else {
-<span class="fc" id="L69">        synchronized (this.reloadingPropertyLock) {</span>
-<span class="pc bpc" id="L70" title="1 of 6 branches missed.">          if (!FINALIZE_METHOD.equals(methodName) &amp;&amp; PropertyNamer.isProperty(methodName) &amp;&amp; !reloadingProperty) {</span>
-<span class="fc" id="L71">            final String property = PropertyNamer.methodToProperty(methodName);</span>
-<span class="fc" id="L72">            final String propertyKey = property.toUpperCase(Locale.ENGLISH);</span>
-<span class="fc bfc" id="L73" title="All 2 branches covered.">            if (unloadedProperties.containsKey(propertyKey)) {</span>
-<span class="fc" id="L74">              final ResultLoaderMap.LoadPair loadPair = unloadedProperties.remove(propertyKey);</span>
-<span class="fc bfc" id="L75" title="All 2 branches covered.">              if (loadPair != null) {</span>
-                try {
-<span class="fc" id="L77">                  reloadingProperty = true;</span>
-<span class="fc" id="L78">                  loadPair.load(enhanced);</span>
-                } finally {
-<span class="fc" id="L80">                  reloadingProperty = false;</span>
-<span class="fc" id="L81">                }</span>
-              } else {
-                /* I'm not sure if this case can really happen or is just in tests -
-                 * we have an unread property but no loadPair to load it. */
-<span class="fc" id="L85">                throw new ExecutorException(&quot;An attempt has been made to read a not loaded lazy property '&quot;</span>
-                        + property + &quot;' of a disconnected object&quot;);
-              }
+<span class="fc" id="L67">        PropertyCopier.copyBeanProperties(type, enhanced, original);</span>
+<span class="fc" id="L68">        return this.newSerialStateHolder(original, unloadedProperties, objectFactory, constructorArgTypes,</span>
+            constructorArgs);
+      }
+<span class="fc" id="L71">      synchronized (this.reloadingPropertyLock) {</span>
+<span class="pc bpc" id="L72" title="1 of 6 branches missed.">        if (!FINALIZE_METHOD.equals(methodName) &amp;&amp; PropertyNamer.isProperty(methodName) &amp;&amp; !reloadingProperty) {</span>
+<span class="fc" id="L73">          final String property = PropertyNamer.methodToProperty(methodName);</span>
+<span class="fc" id="L74">          final String propertyKey = property.toUpperCase(Locale.ENGLISH);</span>
+<span class="fc bfc" id="L75" title="All 2 branches covered.">          if (unloadedProperties.containsKey(propertyKey)) {</span>
+<span class="fc" id="L76">            final ResultLoaderMap.LoadPair loadPair = unloadedProperties.remove(propertyKey);</span>
+<span class="fc bfc" id="L77" title="All 2 branches covered.">            if (loadPair != null) {</span>
+              try {
+<span class="fc" id="L79">                reloadingProperty = true;</span>
+<span class="fc" id="L80">                loadPair.load(enhanced);</span>
+              } finally {
+<span class="fc" id="L82">                reloadingProperty = false;</span>
+<span class="fc" id="L83">              }</span>
+            } else {
+              /*
+               * I'm not sure if this case can really happen or is just in tests - we have an unread property but no
+               * loadPair to load it.
+               */
+<span class="fc" id="L89">              throw new ExecutorException(&quot;An attempt has been made to read a not loaded lazy property '&quot; + property</span>
+                  + &quot;' of a disconnected object&quot;);
             }
           }
-
-<span class="fc" id="L91">          return enhanced;</span>
         }
+
+<span class="fc" id="L95">        return enhanced;</span>
       }
-<span class="fc" id="L94">    } catch (Throwable t) {</span>
-<span class="fc" id="L95">      throw ExceptionUtil.unwrapThrowable(t);</span>
+<span class="fc" id="L97">    } catch (Throwable t) {</span>
+<span class="fc" id="L98">      throw ExceptionUtil.unwrapThrowable(t);</span>
     }
   }
 
-  protected abstract AbstractSerialStateHolder newSerialStateHolder(
-          Object userBean,
-          Map&lt;String, ResultLoaderMap.LoadPair&gt; unloadedProperties,
-          ObjectFactory objectFactory,
-          List&lt;Class&lt;?&gt;&gt; constructorArgTypes,
-          List&lt;Object&gt; constructorArgs);
+  protected abstract AbstractSerialStateHolder newSerialStateHolder(Object userBean,
+      Map&lt;String, ResultLoaderMap.LoadPair&gt; unloadedProperties, ObjectFactory objectFactory,
+      List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs);
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

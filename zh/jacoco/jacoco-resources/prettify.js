@@ -1112,7 +1112,7 @@ window['_pr_isIE6'] = function () {
       for (var i = 0; i < 10; ++i) {
         lineBreaks[i] = lineBreakHtml + '</li><li class="L' + i + '">';
       }
-      var lineNum = numberLines[1] && numberLines[1].length 
+      var lineNum = numberLines[1] && numberLines[1].length
           ? numberLines[1] - 1 : 0;  // Lines are 1-indexed
       html.push('<ol class="linenums"><li class="L', (lineNum) % 10, '"');
       if (lineNum) {
@@ -1403,7 +1403,7 @@ window['_pr_isIE6'] = function () {
                      Infinity);
       for (; k < elements.length && clock.now() < endTime; k++) {
         var cs = elements[k];
-        // [JACOCO] 'prettyprint' -> 'source' 
+        // [JACOCO] 'prettyprint' -> 'source'
         if (cs.className && cs.className.indexOf('source') >= 0) {
           // If the classes includes a language extensions, use it.
           // Language extensions can be specified like
@@ -1418,7 +1418,7 @@ window['_pr_isIE6'] = function () {
           for (var p = cs.parentNode; p; p = p.parentNode) {
             if ((p.tagName === 'pre' || p.tagName === 'code' ||
                  p.tagName === 'xmp') &&
-                // [JACOCO] 'prettyprint' -> 'source' 
+                // [JACOCO] 'prettyprint' -> 'source'
                 p.className && p.className.indexOf('source') >= 0) {
               nested = true;
               break;

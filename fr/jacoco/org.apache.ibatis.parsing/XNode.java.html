@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>XNode.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.parsing</a> &gt; <span class="el_source">XNode.java</span></div><h1>XNode.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2019 the original author or authors.
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>XNode.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.parsing</a> &gt; <span class="el_source">XNode.java</span></div><h1>XNode.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.function.Supplier;
 
 import org.w3c.dom.CharacterData;
 import org.w3c.dom.Element;
@@ -38,26 +39,25 @@ public class XNode {
   private final Properties variables;
   private final XPathParser xpathParser;
 
-<span class="fc" id="L41">  public XNode(XPathParser xpathParser, Node node, Properties variables) {</span>
-<span class="fc" id="L42">    this.xpathParser = xpathParser;</span>
-<span class="fc" id="L43">    this.node = node;</span>
-<span class="fc" id="L44">    this.name = node.getNodeName();</span>
-<span class="fc" id="L45">    this.variables = variables;</span>
-<span class="fc" id="L46">    this.attributes = parseAttributes(node);</span>
-<span class="fc" id="L47">    this.body = parseBody(node);</span>
-<span class="fc" id="L48">  }</span>
+<span class="fc" id="L42">  public XNode(XPathParser xpathParser, Node node, Properties variables) {</span>
+<span class="fc" id="L43">    this.xpathParser = xpathParser;</span>
+<span class="fc" id="L44">    this.node = node;</span>
+<span class="fc" id="L45">    this.name = node.getNodeName();</span>
+<span class="fc" id="L46">    this.variables = variables;</span>
+<span class="fc" id="L47">    this.attributes = parseAttributes(node);</span>
+<span class="fc" id="L48">    this.body = parseBody(node);</span>
+<span class="fc" id="L49">  }</span>
 
   public XNode newXNode(Node node) {
-<span class="fc" id="L51">    return new XNode(xpathParser, node, variables);</span>
+<span class="fc" id="L52">    return new XNode(xpathParser, node, variables);</span>
   }
 
   public XNode getParent() {
-<span class="fc" id="L55">    Node parent = node.getParentNode();</span>
-<span class="fc bfc" id="L56" title="All 2 branches covered.">    if (!(parent instanceof Element)) {</span>
-<span class="fc" id="L57">      return null;</span>
-    } else {
-<span class="fc" id="L59">      return new XNode(xpathParser, parent, variables);</span>
+<span class="fc" id="L56">    Node parent = node.getParentNode();</span>
+<span class="fc bfc" id="L57" title="All 2 branches covered.">    if (!(parent instanceof Element)) {</span>
+<span class="fc" id="L58">      return null;</span>
     }
+<span class="fc" id="L60">    return new XNode(xpathParser, parent, variables);</span>
   }
 
   public String getPath() {
@@ -81,309 +81,285 @@ public class XNode {
 <span class="fc" id="L81">        builder.insert(0, &quot;_&quot;);</span>
       }
 <span class="fc" id="L83">      String value = current.getStringAttribute(&quot;id&quot;,</span>
-<span class="fc" id="L84">          current.getStringAttribute(&quot;value&quot;,</span>
-<span class="fc" id="L85">              current.getStringAttribute(&quot;property&quot;, null)));</span>
-<span class="fc bfc" id="L86" title="All 2 branches covered.">      if (value != null) {</span>
-<span class="fc" id="L87">        value = value.replace('.', '_');</span>
-<span class="fc" id="L88">        builder.insert(0, &quot;]&quot;);</span>
-<span class="fc" id="L89">        builder.insert(0,</span>
-            value);
-<span class="fc" id="L91">        builder.insert(0, &quot;[&quot;);</span>
+<span class="fc" id="L84">          current.getStringAttribute(&quot;value&quot;, current.getStringAttribute(&quot;property&quot;, (String) null)));</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">      if (value != null) {</span>
+<span class="fc" id="L86">        value = value.replace('.', '_');</span>
+<span class="fc" id="L87">        builder.insert(0, &quot;]&quot;);</span>
+<span class="fc" id="L88">        builder.insert(0, value);</span>
+<span class="fc" id="L89">        builder.insert(0, &quot;[&quot;);</span>
       }
-<span class="fc" id="L93">      builder.insert(0, current.getName());</span>
-<span class="fc" id="L94">      current = current.getParent();</span>
-<span class="fc" id="L95">    }</span>
-<span class="fc" id="L96">    return builder.toString();</span>
+<span class="fc" id="L91">      builder.insert(0, current.getName());</span>
+<span class="fc" id="L92">      current = current.getParent();</span>
+<span class="fc" id="L93">    }</span>
+<span class="fc" id="L94">    return builder.toString();</span>
   }
 
   public String evalString(String expression) {
-<span class="nc" id="L100">    return xpathParser.evalString(node, expression);</span>
+<span class="fc" id="L98">    return xpathParser.evalString(node, expression);</span>
   }
 
   public Boolean evalBoolean(String expression) {
-<span class="nc" id="L104">    return xpathParser.evalBoolean(node, expression);</span>
+<span class="fc" id="L102">    return xpathParser.evalBoolean(node, expression);</span>
   }
 
   public Double evalDouble(String expression) {
-<span class="nc" id="L108">    return xpathParser.evalDouble(node, expression);</span>
+<span class="fc" id="L106">    return xpathParser.evalDouble(node, expression);</span>
   }
 
   public List&lt;XNode&gt; evalNodes(String expression) {
-<span class="fc" id="L112">    return xpathParser.evalNodes(node, expression);</span>
+<span class="fc" id="L110">    return xpathParser.evalNodes(node, expression);</span>
   }
 
   public XNode evalNode(String expression) {
-<span class="fc" id="L116">    return xpathParser.evalNode(node, expression);</span>
+<span class="fc" id="L114">    return xpathParser.evalNode(node, expression);</span>
   }
 
   public Node getNode() {
-<span class="fc" id="L120">    return node;</span>
+<span class="fc" id="L118">    return node;</span>
   }
 
   public String getName() {
-<span class="fc" id="L124">    return name;</span>
+<span class="fc" id="L122">    return name;</span>
   }
 
   public String getStringBody() {
-<span class="nc" id="L128">    return getStringBody(null);</span>
+<span class="fc" id="L126">    return getStringBody(null);</span>
   }
 
   public String getStringBody(String def) {
-<span class="pc bpc" id="L132" title="1 of 2 branches missed.">    if (body == null) {</span>
-<span class="nc" id="L133">      return def;</span>
-    } else {
-<span class="fc" id="L135">      return body;</span>
-    }
+<span class="pc bpc" id="L130" title="1 of 2 branches missed.">    return body == null ? def : body;</span>
   }
 
   public Boolean getBooleanBody() {
-<span class="nc" id="L140">    return getBooleanBody(null);</span>
+<span class="fc" id="L134">    return getBooleanBody(null);</span>
   }
 
   public Boolean getBooleanBody(Boolean def) {
-<span class="nc bnc" id="L144" title="All 2 branches missed.">    if (body == null) {</span>
-<span class="nc" id="L145">      return def;</span>
-    } else {
-<span class="nc" id="L147">      return Boolean.valueOf(body);</span>
-    }
+<span class="pc bpc" id="L138" title="1 of 2 branches missed.">    return body == null ? def : Boolean.valueOf(body);</span>
   }
 
   public Integer getIntBody() {
-<span class="nc" id="L152">    return getIntBody(null);</span>
+<span class="fc" id="L142">    return getIntBody(null);</span>
   }
 
   public Integer getIntBody(Integer def) {
-<span class="nc bnc" id="L156" title="All 2 branches missed.">    if (body == null) {</span>
-<span class="nc" id="L157">      return def;</span>
-    } else {
-<span class="nc" id="L159">      return Integer.parseInt(body);</span>
-    }
+<span class="pc bpc" id="L146" title="1 of 2 branches missed.">    return body == null ? def : Integer.valueOf(body);</span>
   }
 
   public Long getLongBody() {
-<span class="nc" id="L164">    return getLongBody(null);</span>
+<span class="fc" id="L150">    return getLongBody(null);</span>
   }
 
   public Long getLongBody(Long def) {
-<span class="nc bnc" id="L168" title="All 2 branches missed.">    if (body == null) {</span>
-<span class="nc" id="L169">      return def;</span>
-    } else {
-<span class="nc" id="L171">      return Long.parseLong(body);</span>
-    }
+<span class="pc bpc" id="L154" title="1 of 2 branches missed.">    return body == null ? def : Long.valueOf(body);</span>
   }
 
   public Double getDoubleBody() {
-<span class="nc" id="L176">    return getDoubleBody(null);</span>
+<span class="fc" id="L158">    return getDoubleBody(null);</span>
   }
 
   public Double getDoubleBody(Double def) {
-<span class="nc bnc" id="L180" title="All 2 branches missed.">    if (body == null) {</span>
-<span class="nc" id="L181">      return def;</span>
-    } else {
-<span class="nc" id="L183">      return Double.parseDouble(body);</span>
-    }
+<span class="pc bpc" id="L162" title="1 of 2 branches missed.">    return body == null ? def : Double.valueOf(body);</span>
   }
 
   public Float getFloatBody() {
-<span class="nc" id="L188">    return getFloatBody(null);</span>
+<span class="fc" id="L166">    return getFloatBody(null);</span>
   }
 
   public Float getFloatBody(Float def) {
-<span class="nc bnc" id="L192" title="All 2 branches missed.">    if (body == null) {</span>
-<span class="nc" id="L193">      return def;</span>
-    } else {
-<span class="nc" id="L195">      return Float.parseFloat(body);</span>
-    }
+<span class="pc bpc" id="L170" title="1 of 2 branches missed.">    return body == null ? def : Float.valueOf(body);</span>
   }
 
   public &lt;T extends Enum&lt;T&gt;&gt; T getEnumAttribute(Class&lt;T&gt; enumType, String name) {
-<span class="nc" id="L200">    return getEnumAttribute(enumType, name, null);</span>
+<span class="fc" id="L174">    return getEnumAttribute(enumType, name, null);</span>
   }
 
   public &lt;T extends Enum&lt;T&gt;&gt; T getEnumAttribute(Class&lt;T&gt; enumType, String name, T def) {
-<span class="nc" id="L204">    String value = getStringAttribute(name);</span>
-<span class="nc bnc" id="L205" title="All 2 branches missed.">    if (value == null) {</span>
-<span class="nc" id="L206">      return def;</span>
-    } else {
-<span class="nc" id="L208">      return Enum.valueOf(enumType, value);</span>
-    }
+<span class="fc" id="L178">    String value = getStringAttribute(name);</span>
+<span class="pc bpc" id="L179" title="1 of 2 branches missed.">    return value == null ? def : Enum.valueOf(enumType, value);</span>
+  }
+
+  /**
+   * Return a attribute value as String.
+   * &lt;p&gt;
+   * If attribute value is absent, return value that provided from supplier of default value.
+   *
+   * @param name
+   *          attribute name
+   * @param defSupplier
+   *          a supplier of default value
+   *
+   * @return the string attribute
+   *
+   * @since 3.5.4
+   */
+  public String getStringAttribute(String name, Supplier&lt;String&gt; defSupplier) {
+<span class="fc" id="L197">    String value = attributes.getProperty(name);</span>
+<span class="fc bfc" id="L198" title="All 2 branches covered.">    return value == null ? defSupplier.get() : value;</span>
   }
 
   public String getStringAttribute(String name) {
-<span class="fc" id="L213">    return getStringAttribute(name, null);</span>
+<span class="fc" id="L202">    return getStringAttribute(name, (String) null);</span>
   }
 
   public String getStringAttribute(String name, String def) {
-<span class="fc" id="L217">    String value = attributes.getProperty(name);</span>
-<span class="fc bfc" id="L218" title="All 2 branches covered.">    if (value == null) {</span>
-<span class="fc" id="L219">      return def;</span>
-    } else {
-<span class="fc" id="L221">      return value;</span>
-    }
+<span class="fc" id="L206">    String value = attributes.getProperty(name);</span>
+<span class="fc bfc" id="L207" title="All 2 branches covered.">    return value == null ? def : value;</span>
   }
 
   public Boolean getBooleanAttribute(String name) {
-<span class="fc" id="L226">    return getBooleanAttribute(name, null);</span>
+<span class="fc" id="L211">    return getBooleanAttribute(name, null);</span>
   }
 
   public Boolean getBooleanAttribute(String name, Boolean def) {
-<span class="fc" id="L230">    String value = attributes.getProperty(name);</span>
-<span class="fc bfc" id="L231" title="All 2 branches covered.">    if (value == null) {</span>
-<span class="fc" id="L232">      return def;</span>
-    } else {
-<span class="fc" id="L234">      return Boolean.valueOf(value);</span>
-    }
+<span class="fc" id="L215">    String value = attributes.getProperty(name);</span>
+<span class="fc bfc" id="L216" title="All 2 branches covered.">    return value == null ? def : Boolean.valueOf(value);</span>
   }
 
   public Integer getIntAttribute(String name) {
-<span class="fc" id="L239">    return getIntAttribute(name, null);</span>
+<span class="fc" id="L220">    return getIntAttribute(name, null);</span>
   }
 
   public Integer getIntAttribute(String name, Integer def) {
-<span class="fc" id="L243">    String value = attributes.getProperty(name);</span>
-<span class="fc bfc" id="L244" title="All 2 branches covered.">    if (value == null) {</span>
-<span class="fc" id="L245">      return def;</span>
-    } else {
-<span class="fc" id="L247">      return Integer.parseInt(value);</span>
-    }
+<span class="fc" id="L224">    String value = attributes.getProperty(name);</span>
+<span class="fc bfc" id="L225" title="All 2 branches covered.">    return value == null ? def : Integer.valueOf(value);</span>
   }
 
   public Long getLongAttribute(String name) {
-<span class="fc" id="L252">    return getLongAttribute(name, null);</span>
+<span class="fc" id="L229">    return getLongAttribute(name, null);</span>
   }
 
   public Long getLongAttribute(String name, Long def) {
-<span class="fc" id="L256">    String value = attributes.getProperty(name);</span>
-<span class="fc bfc" id="L257" title="All 2 branches covered.">    if (value == null) {</span>
-<span class="fc" id="L258">      return def;</span>
-    } else {
-<span class="fc" id="L260">      return Long.parseLong(value);</span>
-    }
+<span class="fc" id="L233">    String value = attributes.getProperty(name);</span>
+<span class="fc bfc" id="L234" title="All 2 branches covered.">    return value == null ? def : Long.valueOf(value);</span>
   }
 
   public Double getDoubleAttribute(String name) {
-<span class="nc" id="L265">    return getDoubleAttribute(name, null);</span>
+<span class="fc" id="L238">    return getDoubleAttribute(name, null);</span>
   }
 
   public Double getDoubleAttribute(String name, Double def) {
-<span class="nc" id="L269">    String value = attributes.getProperty(name);</span>
-<span class="nc bnc" id="L270" title="All 2 branches missed.">    if (value == null) {</span>
-<span class="nc" id="L271">      return def;</span>
-    } else {
-<span class="nc" id="L273">      return Double.parseDouble(value);</span>
-    }
+<span class="fc" id="L242">    String value = attributes.getProperty(name);</span>
+<span class="pc bpc" id="L243" title="1 of 2 branches missed.">    return value == null ? def : Double.valueOf(value);</span>
   }
 
   public Float getFloatAttribute(String name) {
-<span class="nc" id="L278">    return getFloatAttribute(name, null);</span>
+<span class="fc" id="L247">    return getFloatAttribute(name, null);</span>
   }
 
   public Float getFloatAttribute(String name, Float def) {
-<span class="nc" id="L282">    String value = attributes.getProperty(name);</span>
-<span class="nc bnc" id="L283" title="All 2 branches missed.">    if (value == null) {</span>
-<span class="nc" id="L284">      return def;</span>
-    } else {
-<span class="nc" id="L286">      return Float.parseFloat(value);</span>
-    }
+<span class="fc" id="L251">    String value = attributes.getProperty(name);</span>
+<span class="pc bpc" id="L252" title="1 of 2 branches missed.">    return value == null ? def : Float.valueOf(value);</span>
   }
 
   public List&lt;XNode&gt; getChildren() {
-<span class="fc" id="L291">    List&lt;XNode&gt; children = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L292">    NodeList nodeList = node.getChildNodes();</span>
-<span class="pc bpc" id="L293" title="1 of 2 branches missed.">    if (nodeList != null) {</span>
-<span class="fc bfc" id="L294" title="All 2 branches covered.">      for (int i = 0, n = nodeList.getLength(); i &lt; n; i++) {</span>
-<span class="fc" id="L295">        Node node = nodeList.item(i);</span>
-<span class="fc bfc" id="L296" title="All 2 branches covered.">        if (node.getNodeType() == Node.ELEMENT_NODE) {</span>
-<span class="fc" id="L297">          children.add(new XNode(xpathParser, node, variables));</span>
+<span class="fc" id="L256">    List&lt;XNode&gt; children = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L257">    NodeList nodeList = node.getChildNodes();</span>
+<span class="pc bpc" id="L258" title="1 of 2 branches missed.">    if (nodeList != null) {</span>
+<span class="fc bfc" id="L259" title="All 2 branches covered.">      for (int i = 0, n = nodeList.getLength(); i &lt; n; i++) {</span>
+<span class="fc" id="L260">        Node node = nodeList.item(i);</span>
+<span class="fc bfc" id="L261" title="All 2 branches covered.">        if (node.getNodeType() == Node.ELEMENT_NODE) {</span>
+<span class="fc" id="L262">          children.add(new XNode(xpathParser, node, variables));</span>
         }
       }
     }
-<span class="fc" id="L301">    return children;</span>
+<span class="fc" id="L266">    return children;</span>
   }
 
   public Properties getChildrenAsProperties() {
-<span class="fc" id="L305">    Properties properties = new Properties();</span>
-<span class="fc bfc" id="L306" title="All 2 branches covered.">    for (XNode child : getChildren()) {</span>
-<span class="fc" id="L307">      String name = child.getStringAttribute(&quot;name&quot;);</span>
-<span class="fc" id="L308">      String value = child.getStringAttribute(&quot;value&quot;);</span>
-<span class="pc bpc" id="L309" title="2 of 4 branches missed.">      if (name != null &amp;&amp; value != null) {</span>
-<span class="fc" id="L310">        properties.setProperty(name, value);</span>
+<span class="fc" id="L270">    Properties properties = new Properties();</span>
+<span class="fc bfc" id="L271" title="All 2 branches covered.">    for (XNode child : getChildren()) {</span>
+<span class="fc" id="L272">      String name = child.getStringAttribute(&quot;name&quot;);</span>
+<span class="fc" id="L273">      String value = child.getStringAttribute(&quot;value&quot;);</span>
+<span class="pc bpc" id="L274" title="2 of 4 branches missed.">      if (name != null &amp;&amp; value != null) {</span>
+<span class="fc" id="L275">        properties.setProperty(name, value);</span>
       }
-<span class="fc" id="L312">    }</span>
-<span class="fc" id="L313">    return properties;</span>
+<span class="fc" id="L277">    }</span>
+<span class="fc" id="L278">    return properties;</span>
   }
 
   @Override
   public String toString() {
-<span class="fc" id="L318">    StringBuilder builder = new StringBuilder();</span>
-<span class="fc" id="L319">    builder.append(&quot;&lt;&quot;);</span>
-<span class="fc" id="L320">    builder.append(name);</span>
-<span class="pc bpc" id="L321" title="1 of 2 branches missed.">    for (Map.Entry&lt;Object, Object&gt; entry : attributes.entrySet()) {</span>
-<span class="nc" id="L322">      builder.append(&quot; &quot;);</span>
-<span class="nc" id="L323">      builder.append(entry.getKey());</span>
-<span class="nc" id="L324">      builder.append(&quot;=\&quot;&quot;);</span>
-<span class="nc" id="L325">      builder.append(entry.getValue());</span>
-<span class="nc" id="L326">      builder.append(&quot;\&quot;&quot;);</span>
-<span class="nc" id="L327">    }</span>
-<span class="fc" id="L328">    List&lt;XNode&gt; children = getChildren();</span>
-<span class="pc bpc" id="L329" title="1 of 2 branches missed.">    if (!children.isEmpty()) {</span>
-<span class="nc" id="L330">      builder.append(&quot;&gt;\n&quot;);</span>
-<span class="nc bnc" id="L331" title="All 2 branches missed.">      for (XNode node : children) {</span>
-<span class="nc" id="L332">        builder.append(node.toString());</span>
-<span class="nc" id="L333">      }</span>
-<span class="nc" id="L334">      builder.append(&quot;&lt;/&quot;);</span>
-<span class="nc" id="L335">      builder.append(name);</span>
-<span class="nc" id="L336">      builder.append(&quot;&gt;&quot;);</span>
-<span class="pc bpc" id="L337" title="1 of 2 branches missed.">    } else if (body != null) {</span>
-<span class="fc" id="L338">      builder.append(&quot;&gt;&quot;);</span>
-<span class="fc" id="L339">      builder.append(body);</span>
-<span class="fc" id="L340">      builder.append(&quot;&lt;/&quot;);</span>
-<span class="fc" id="L341">      builder.append(name);</span>
-<span class="fc" id="L342">      builder.append(&quot;&gt;&quot;);</span>
-    } else {
-<span class="nc" id="L344">      builder.append(&quot;/&gt;&quot;);</span>
-    }
-<span class="fc" id="L346">    builder.append(&quot;\n&quot;);</span>
-<span class="fc" id="L347">    return builder.toString();</span>
+<span class="fc" id="L283">    StringBuilder builder = new StringBuilder();</span>
+<span class="fc" id="L284">    toString(builder, 0);</span>
+<span class="fc" id="L285">    return builder.toString();</span>
   }
 
+  private void toString(StringBuilder builder, int level) {
+<span class="fc" id="L289">    builder.append(&quot;&lt;&quot;);</span>
+<span class="fc" id="L290">    builder.append(name);</span>
+<span class="fc bfc" id="L291" title="All 2 branches covered.">    for (Map.Entry&lt;Object, Object&gt; entry : attributes.entrySet()) {</span>
+<span class="fc" id="L292">      builder.append(&quot; &quot;);</span>
+<span class="fc" id="L293">      builder.append(entry.getKey());</span>
+<span class="fc" id="L294">      builder.append(&quot;=\&quot;&quot;);</span>
+<span class="fc" id="L295">      builder.append(entry.getValue());</span>
+<span class="fc" id="L296">      builder.append(&quot;\&quot;&quot;);</span>
+<span class="fc" id="L297">    }</span>
+<span class="fc" id="L298">    List&lt;XNode&gt; children = getChildren();</span>
+<span class="fc bfc" id="L299" title="All 2 branches covered.">    if (!children.isEmpty()) {</span>
+<span class="fc" id="L300">      builder.append(&quot;&gt;\n&quot;);</span>
+<span class="fc bfc" id="L301" title="All 2 branches covered.">      for (XNode child : children) {</span>
+<span class="fc" id="L302">        indent(builder, level + 1);</span>
+<span class="fc" id="L303">        child.toString(builder, level + 1);</span>
+<span class="fc" id="L304">      }</span>
+<span class="fc" id="L305">      indent(builder, level);</span>
+<span class="fc" id="L306">      builder.append(&quot;&lt;/&quot;);</span>
+<span class="fc" id="L307">      builder.append(name);</span>
+<span class="fc" id="L308">      builder.append(&quot;&gt;&quot;);</span>
+<span class="pc bpc" id="L309" title="1 of 2 branches missed.">    } else if (body != null) {</span>
+<span class="fc" id="L310">      builder.append(&quot;&gt;&quot;);</span>
+<span class="fc" id="L311">      builder.append(body);</span>
+<span class="fc" id="L312">      builder.append(&quot;&lt;/&quot;);</span>
+<span class="fc" id="L313">      builder.append(name);</span>
+<span class="fc" id="L314">      builder.append(&quot;&gt;&quot;);</span>
+    } else {
+<span class="nc" id="L316">      builder.append(&quot;/&gt;&quot;);</span>
+<span class="nc" id="L317">      indent(builder, level);</span>
+    }
+<span class="fc" id="L319">    builder.append(&quot;\n&quot;);</span>
+<span class="fc" id="L320">  }</span>
+
+  private void indent(StringBuilder builder, int level) {
+<span class="fc bfc" id="L323" title="All 2 branches covered.">    for (int i = 0; i &lt; level; i++) {</span>
+<span class="fc" id="L324">      builder.append(&quot;    &quot;);</span>
+    }
+<span class="fc" id="L326">  }</span>
+
   private Properties parseAttributes(Node n) {
-<span class="fc" id="L351">    Properties attributes = new Properties();</span>
-<span class="fc" id="L352">    NamedNodeMap attributeNodes = n.getAttributes();</span>
-<span class="fc bfc" id="L353" title="All 2 branches covered.">    if (attributeNodes != null) {</span>
-<span class="fc bfc" id="L354" title="All 2 branches covered.">      for (int i = 0; i &lt; attributeNodes.getLength(); i++) {</span>
-<span class="fc" id="L355">        Node attribute = attributeNodes.item(i);</span>
-<span class="fc" id="L356">        String value = PropertyParser.parse(attribute.getNodeValue(), variables);</span>
-<span class="fc" id="L357">        attributes.put(attribute.getNodeName(), value);</span>
+<span class="fc" id="L329">    Properties attributes = new Properties();</span>
+<span class="fc" id="L330">    NamedNodeMap attributeNodes = n.getAttributes();</span>
+<span class="fc bfc" id="L331" title="All 2 branches covered.">    if (attributeNodes != null) {</span>
+<span class="fc bfc" id="L332" title="All 2 branches covered.">      for (int i = 0; i &lt; attributeNodes.getLength(); i++) {</span>
+<span class="fc" id="L333">        Node attribute = attributeNodes.item(i);</span>
+<span class="fc" id="L334">        String value = PropertyParser.parse(attribute.getNodeValue(), variables);</span>
+<span class="fc" id="L335">        attributes.put(attribute.getNodeName(), value);</span>
       }
     }
-<span class="fc" id="L360">    return attributes;</span>
+<span class="fc" id="L338">    return attributes;</span>
   }
 
   private String parseBody(Node node) {
-<span class="fc" id="L364">    String data = getBodyData(node);</span>
-<span class="fc bfc" id="L365" title="All 2 branches covered.">    if (data == null) {</span>
-<span class="fc" id="L366">      NodeList children = node.getChildNodes();</span>
-<span class="fc bfc" id="L367" title="All 2 branches covered.">      for (int i = 0; i &lt; children.getLength(); i++) {</span>
-<span class="fc" id="L368">        Node child = children.item(i);</span>
-<span class="fc" id="L369">        data = getBodyData(child);</span>
-<span class="fc bfc" id="L370" title="All 2 branches covered.">        if (data != null) {</span>
-<span class="fc" id="L371">          break;</span>
+<span class="fc" id="L342">    String data = getBodyData(node);</span>
+<span class="fc bfc" id="L343" title="All 2 branches covered.">    if (data == null) {</span>
+<span class="fc" id="L344">      NodeList children = node.getChildNodes();</span>
+<span class="fc bfc" id="L345" title="All 2 branches covered.">      for (int i = 0; i &lt; children.getLength(); i++) {</span>
+<span class="fc" id="L346">        Node child = children.item(i);</span>
+<span class="fc" id="L347">        data = getBodyData(child);</span>
+<span class="fc bfc" id="L348" title="All 2 branches covered.">        if (data != null) {</span>
+<span class="fc" id="L349">          break;</span>
         }
       }
     }
-<span class="fc" id="L375">    return data;</span>
+<span class="fc" id="L353">    return data;</span>
   }
 
   private String getBodyData(Node child) {
-<span class="fc bfc" id="L379" title="All 2 branches covered.">    if (child.getNodeType() == Node.CDATA_SECTION_NODE</span>
-<span class="fc bfc" id="L380" title="All 2 branches covered.">        || child.getNodeType() == Node.TEXT_NODE) {</span>
-<span class="fc" id="L381">      String data = ((CharacterData) child).getData();</span>
-<span class="fc" id="L382">      data = PropertyParser.parse(data, variables);</span>
-<span class="fc" id="L383">      return data;</span>
+<span class="fc bfc" id="L357" title="All 4 branches covered.">    if (child.getNodeType() == Node.CDATA_SECTION_NODE || child.getNodeType() == Node.TEXT_NODE) {</span>
+<span class="fc" id="L358">      String data = ((CharacterData) child).getData();</span>
+<span class="fc" id="L359">      return PropertyParser.parse(data, variables);</span>
     }
-<span class="fc" id="L385">    return null;</span>
+<span class="fc" id="L361">    return null;</span>
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

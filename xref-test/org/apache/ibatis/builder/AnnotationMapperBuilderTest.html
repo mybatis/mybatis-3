@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../testapidocs/org/apache/ibatis/builder/AnnotationMapperBuilderTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2022 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -70,60 +70,59 @@
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>      assertThat(mappedStatement.getResultSetType()).isEqualTo(ResultSetType.SCROLL_INSENSITIVE);
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>    }
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>  
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>  
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>    @Test
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>    <strong class="jxr_keyword">void</strong> withOptionsAndWithoutOptionsAttributesWhenNotSpecifyDefaultValue() {
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>      Configuration configuration = <strong class="jxr_keyword">new</strong> Configuration();
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>      MapperAnnotationBuilder builder = <strong class="jxr_keyword">new</strong> MapperAnnotationBuilder(configuration, Mapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>      builder.parse();
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>  
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>      MappedStatement mappedStatement = configuration.getMappedStatement(<span class="jxr_string">"selectWithOptionsAndWithoutOptionsAttributes"</span>);
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>      assertThat(mappedStatement.getResultSetType()).isEqualTo(ResultSetType.DEFAULT);
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>    }
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>  
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>    @Test
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>    <strong class="jxr_keyword">void</strong> withoutOptionsWhenSpecifyDefaultValue() {
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>      Configuration configuration = <strong class="jxr_keyword">new</strong> Configuration();
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>      configuration.setDefaultResultSetType(ResultSetType.SCROLL_INSENSITIVE);
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>      MapperAnnotationBuilder builder = <strong class="jxr_keyword">new</strong> MapperAnnotationBuilder(configuration, Mapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>      builder.parse();
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>  
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>      MappedStatement mappedStatement = configuration.getMappedStatement(<span class="jxr_string">"selectWithoutOptions"</span>);
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>      assertThat(mappedStatement.getResultSetType()).isEqualTo(ResultSetType.SCROLL_INSENSITIVE);
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>    }
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>  
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>    @Test
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>    <strong class="jxr_keyword">void</strong> withoutOptionsWhenNotSpecifyDefaultValue() {
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>      Configuration configuration = <strong class="jxr_keyword">new</strong> Configuration();
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>      MapperAnnotationBuilder builder = <strong class="jxr_keyword">new</strong> MapperAnnotationBuilder(configuration, Mapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>      builder.parse();
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>  
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>      MappedStatement mappedStatement = configuration.getMappedStatement(<span class="jxr_string">"selectWithoutOptions"</span>);
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>      assertThat(mappedStatement.getResultSetType()).isEqualTo(ResultSetType.DEFAULT);
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>    }
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>  
-<a class="jxr_linenumber" name="L97" href="#L97">97</a>    <strong class="jxr_keyword">interface</strong> Mapper {
-<a class="jxr_linenumber" name="L98" href="#L98">98</a>  
-<a class="jxr_linenumber" name="L99" href="#L99">99</a>      @Insert(<span class="jxr_string">"insert into test (name) values(#{name})"</span>)
-<a class="jxr_linenumber" name="L100" href="#L100">100</a>     @Options(useGeneratedKeys = <strong class="jxr_keyword">true</strong>, keyColumn = <span class="jxr_string">"key_column"</span>, keyProperty = <span class="jxr_string">"keyProperty"</span>)
-<a class="jxr_linenumber" name="L101" href="#L101">101</a>     <strong class="jxr_keyword">void</strong> insertWithOptions(String name);
-<a class="jxr_linenumber" name="L102" href="#L102">102</a> 
-<a class="jxr_linenumber" name="L103" href="#L103">103</a>     @Select(<span class="jxr_string">"select * from test"</span>)
-<a class="jxr_linenumber" name="L104" href="#L104">104</a>     @Options(fetchSize = 200, timeout = 10, statementType = StatementType.STATEMENT, resultSetType = ResultSetType.SCROLL_INSENSITIVE, flushCache = Options.FlushCachePolicy.TRUE, useCache = false, resultSets = <span class="jxr_string">"resultSets"</span>)
-<a class="jxr_linenumber" name="L105" href="#L105">105</a>     String selectWithOptions(Integer id);
-<a class="jxr_linenumber" name="L106" href="#L106">106</a> 
-<a class="jxr_linenumber" name="L107" href="#L107">107</a>     @Select(<span class="jxr_string">"select * from test"</span>)
-<a class="jxr_linenumber" name="L108" href="#L108">108</a>     @Options
-<a class="jxr_linenumber" name="L109" href="#L109">109</a>     String selectWithOptionsAndWithoutOptionsAttributes(Integer id);
-<a class="jxr_linenumber" name="L110" href="#L110">110</a> 
-<a class="jxr_linenumber" name="L111" href="#L111">111</a>     @Select(<span class="jxr_string">"select * from test"</span>)
-<a class="jxr_linenumber" name="L112" href="#L112">112</a>     String selectWithoutOptions(Integer id);
-<a class="jxr_linenumber" name="L113" href="#L113">113</a> 
-<a class="jxr_linenumber" name="L114" href="#L114">114</a>   }
-<a class="jxr_linenumber" name="L115" href="#L115">115</a> 
-<a class="jxr_linenumber" name="L116" href="#L116">116</a> }
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>    @Test
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>    <strong class="jxr_keyword">void</strong> withOptionsAndWithoutOptionsAttributesWhenNotSpecifyDefaultValue() {
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>      Configuration configuration = <strong class="jxr_keyword">new</strong> Configuration();
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>      MapperAnnotationBuilder builder = <strong class="jxr_keyword">new</strong> MapperAnnotationBuilder(configuration, Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>      builder.parse();
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>  
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>      MappedStatement mappedStatement = configuration.getMappedStatement(<span class="jxr_string">"selectWithOptionsAndWithoutOptionsAttributes"</span>);
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>      assertThat(mappedStatement.getResultSetType()).isEqualTo(ResultSetType.DEFAULT);
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>    }
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>  
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>    @Test
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>    <strong class="jxr_keyword">void</strong> withoutOptionsWhenSpecifyDefaultValue() {
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>      Configuration configuration = <strong class="jxr_keyword">new</strong> Configuration();
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>      configuration.setDefaultResultSetType(ResultSetType.SCROLL_INSENSITIVE);
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>      MapperAnnotationBuilder builder = <strong class="jxr_keyword">new</strong> MapperAnnotationBuilder(configuration, Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>      builder.parse();
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>  
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>      MappedStatement mappedStatement = configuration.getMappedStatement(<span class="jxr_string">"selectWithoutOptions"</span>);
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>      assertThat(mappedStatement.getResultSetType()).isEqualTo(ResultSetType.SCROLL_INSENSITIVE);
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>    }
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>  
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>    @Test
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>    <strong class="jxr_keyword">void</strong> withoutOptionsWhenNotSpecifyDefaultValue() {
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>      Configuration configuration = <strong class="jxr_keyword">new</strong> Configuration();
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>      MapperAnnotationBuilder builder = <strong class="jxr_keyword">new</strong> MapperAnnotationBuilder(configuration, Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>      builder.parse();
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>  
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>      MappedStatement mappedStatement = configuration.getMappedStatement(<span class="jxr_string">"selectWithoutOptions"</span>);
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>      assertThat(mappedStatement.getResultSetType()).isEqualTo(ResultSetType.DEFAULT);
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>    }
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>  
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>    <strong class="jxr_keyword">interface</strong> Mapper {
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>  
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>      @Insert(<span class="jxr_string">"insert into test (name) values(#{name})"</span>)
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>      @Options(useGeneratedKeys = <strong class="jxr_keyword">true</strong>, keyColumn = <span class="jxr_string">"key_column"</span>, keyProperty = <span class="jxr_string">"keyProperty"</span>)
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>     <strong class="jxr_keyword">void</strong> insertWithOptions(String name);
+<a class="jxr_linenumber" name="L101" href="#L101">101</a> 
+<a class="jxr_linenumber" name="L102" href="#L102">102</a>     @Select(<span class="jxr_string">"select * from test"</span>)
+<a class="jxr_linenumber" name="L103" href="#L103">103</a>     @Options(fetchSize = 200, timeout = 10, statementType = StatementType.STATEMENT, resultSetType = ResultSetType.SCROLL_INSENSITIVE, flushCache = Options.FlushCachePolicy.TRUE, useCache = false, resultSets = <span class="jxr_string">"resultSets"</span>)
+<a class="jxr_linenumber" name="L104" href="#L104">104</a>     String selectWithOptions(Integer id);
+<a class="jxr_linenumber" name="L105" href="#L105">105</a> 
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>     @Select(<span class="jxr_string">"select * from test"</span>)
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>     @Options
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>     String selectWithOptionsAndWithoutOptionsAttributes(Integer id);
+<a class="jxr_linenumber" name="L109" href="#L109">109</a> 
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>     @Select(<span class="jxr_string">"select * from test"</span>)
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>     String selectWithoutOptions(Integer id);
+<a class="jxr_linenumber" name="L112" href="#L112">112</a> 
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>   }
+<a class="jxr_linenumber" name="L114" href="#L114">114</a> 
+<a class="jxr_linenumber" name="L115" href="#L115">115</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2022 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2023 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

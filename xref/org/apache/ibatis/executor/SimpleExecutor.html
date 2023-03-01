@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../apidocs/org/apache/ibatis/executor/SimpleExecutor.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2022 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -62,44 +62,47 @@
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>    }
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>  
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>    @Override
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>    <strong class="jxr_keyword">public</strong> &lt;E&gt; List&lt;E&gt; doQuery(<a name="MappedStatement" href="../../../../org/apache/ibatis/mapping/MappedStatement.html#MappedStatement">MappedStatement</a> ms, Object parameter, <a name="RowBounds" href="../../../../org/apache/ibatis/session/RowBounds.html#RowBounds">RowBounds</a> rowBounds, <a name="ResultHandler" href="../../../../org/apache/ibatis/session/ResultHandler.html#ResultHandler">ResultHandler</a> resultHandler, <a name="BoundSql" href="../../../../org/apache/ibatis/mapping/BoundSql.html#BoundSql">BoundSql</a> boundSql) <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L58" href="#L58">58</a>      Statement stmt = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>        <a name="Configuration" href="../../../../org/apache/ibatis/session/Configuration.html#Configuration">Configuration</a> configuration = ms.getConfiguration();
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>        <a name="StatementHandler" href="../../../../org/apache/ibatis/executor/statement/StatementHandler.html#StatementHandler">StatementHandler</a> handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, resultHandler, boundSql);
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>        stmt = prepareStatement(handler, ms.getStatementLog());
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>        <strong class="jxr_keyword">return</strong> handler.query(stmt, resultHandler);
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>      } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>        closeStatement(stmt);
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>      }
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>    }
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>  
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>    @Override
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>    <strong class="jxr_keyword">protected</strong> &lt;E&gt; Cursor&lt;E&gt; doQueryCursor(<a name="MappedStatement" href="../../../../org/apache/ibatis/mapping/MappedStatement.html#MappedStatement">MappedStatement</a> ms, Object parameter, <a name="RowBounds" href="../../../../org/apache/ibatis/session/RowBounds.html#RowBounds">RowBounds</a> rowBounds, <a name="BoundSql" href="../../../../org/apache/ibatis/mapping/BoundSql.html#BoundSql">BoundSql</a> boundSql) <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>      <a name="Configuration" href="../../../../org/apache/ibatis/session/Configuration.html#Configuration">Configuration</a> configuration = ms.getConfiguration();
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>      <a name="StatementHandler" href="../../../../org/apache/ibatis/executor/statement/StatementHandler.html#StatementHandler">StatementHandler</a> handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, <strong class="jxr_keyword">null</strong>, boundSql);
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>      Statement stmt = prepareStatement(handler, ms.getStatementLog());
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>      Cursor&lt;E&gt; cursor = handler.queryCursor(stmt);
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>      stmt.closeOnCompletion();
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>      <strong class="jxr_keyword">return</strong> cursor;
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>    }
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>  
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>    @Override
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>    <strong class="jxr_keyword">public</strong> List&lt;BatchResult&gt; doFlushStatements(<strong class="jxr_keyword">boolean</strong> isRollback) {
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>      <strong class="jxr_keyword">return</strong> Collections.emptyList();
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>    }
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>  
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>    <strong class="jxr_keyword">private</strong> Statement prepareStatement(<a name="StatementHandler" href="../../../../org/apache/ibatis/executor/statement/StatementHandler.html#StatementHandler">StatementHandler</a> handler, <a name="Log" href="../../../../org/apache/ibatis/logging/Log.html#Log">Log</a> statementLog) <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>      Statement stmt;
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>      Connection connection = getConnection(statementLog);
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>      stmt = handler.prepare(connection, transaction.getTimeout());
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>      handler.parameterize(stmt);
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>      <strong class="jxr_keyword">return</strong> stmt;
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>    }
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>  
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>  }
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>    <strong class="jxr_keyword">public</strong> &lt;E&gt; List&lt;E&gt; doQuery(<a name="MappedStatement" href="../../../../org/apache/ibatis/mapping/MappedStatement.html#MappedStatement">MappedStatement</a> ms, Object parameter, <a name="RowBounds" href="../../../../org/apache/ibatis/session/RowBounds.html#RowBounds">RowBounds</a> rowBounds, <a name="ResultHandler" href="../../../../org/apache/ibatis/session/ResultHandler.html#ResultHandler">ResultHandler</a> resultHandler,
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>        <a name="BoundSql" href="../../../../org/apache/ibatis/mapping/BoundSql.html#BoundSql">BoundSql</a> boundSql) <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>      Statement stmt = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>      <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>        <a name="Configuration" href="../../../../org/apache/ibatis/session/Configuration.html#Configuration">Configuration</a> configuration = ms.getConfiguration();
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>        <a name="StatementHandler" href="../../../../org/apache/ibatis/executor/statement/StatementHandler.html#StatementHandler">StatementHandler</a> handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, resultHandler,
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>            boundSql);
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>        stmt = prepareStatement(handler, ms.getStatementLog());
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>        <strong class="jxr_keyword">return</strong> handler.query(stmt, resultHandler);
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>      } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>        closeStatement(stmt);
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>      }
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>    }
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>  
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>    @Override
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>    <strong class="jxr_keyword">protected</strong> &lt;E&gt; Cursor&lt;E&gt; doQueryCursor(<a name="MappedStatement" href="../../../../org/apache/ibatis/mapping/MappedStatement.html#MappedStatement">MappedStatement</a> ms, Object parameter, <a name="RowBounds" href="../../../../org/apache/ibatis/session/RowBounds.html#RowBounds">RowBounds</a> rowBounds, <a name="BoundSql" href="../../../../org/apache/ibatis/mapping/BoundSql.html#BoundSql">BoundSql</a> boundSql)
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>        <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>      <a name="Configuration" href="../../../../org/apache/ibatis/session/Configuration.html#Configuration">Configuration</a> configuration = ms.getConfiguration();
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>      <a name="StatementHandler" href="../../../../org/apache/ibatis/executor/statement/StatementHandler.html#StatementHandler">StatementHandler</a> handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, <strong class="jxr_keyword">null</strong>, boundSql);
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>      Statement stmt = prepareStatement(handler, ms.getStatementLog());
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>      Cursor&lt;E&gt; cursor = handler.queryCursor(stmt);
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>      stmt.closeOnCompletion();
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>      <strong class="jxr_keyword">return</strong> cursor;
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>    }
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>  
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>    @Override
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>    <strong class="jxr_keyword">public</strong> List&lt;BatchResult&gt; doFlushStatements(<strong class="jxr_keyword">boolean</strong> isRollback) {
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>      <strong class="jxr_keyword">return</strong> Collections.emptyList();
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>    }
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>  
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>    <strong class="jxr_keyword">private</strong> Statement prepareStatement(<a name="StatementHandler" href="../../../../org/apache/ibatis/executor/statement/StatementHandler.html#StatementHandler">StatementHandler</a> handler, <a name="Log" href="../../../../org/apache/ibatis/logging/Log.html#Log">Log</a> statementLog) <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>      Statement stmt;
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>      Connection connection = getConnection(statementLog);
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>      stmt = handler.prepare(connection, transaction.getTimeout());
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>      handler.parameterize(stmt);
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>      <strong class="jxr_keyword">return</strong> stmt;
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>    }
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>  
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2022 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2023 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../apidocs/org/apache/ibatis/type/FloatTypeHandler.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2022 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -34,34 +34,30 @@
 <a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="FloatTypeHandler" href="../../../../org/apache/ibatis/type/FloatTypeHandler.html#FloatTypeHandler">FloatTypeHandler</a> <strong class="jxr_keyword">extends</strong> BaseTypeHandler&lt;Float&gt; {
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>  
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>    @Override
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setNonNullParameter(PreparedStatement ps, <strong class="jxr_keyword">int</strong> i, Float parameter, <a name="JdbcType" href="../../../../org/apache/ibatis/type/JdbcType.html#JdbcType">JdbcType</a> jdbcType)
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>        <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>      ps.setFloat(i, parameter);
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>    }
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>  
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>    @Override
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>    <strong class="jxr_keyword">public</strong> Float getNullableResult(ResultSet rs, String columnName)
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>        <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>      <strong class="jxr_keyword">float</strong> result = rs.getFloat(columnName);
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>      <strong class="jxr_keyword">return</strong> result == 0 &amp;&amp; rs.wasNull() ? <strong class="jxr_keyword">null</strong> : result;
-<a class="jxr_linenumber" name="L39" href="#L39">39</a>    }
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>  
-<a class="jxr_linenumber" name="L41" href="#L41">41</a>    @Override
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>    <strong class="jxr_keyword">public</strong> Float getNullableResult(ResultSet rs, <strong class="jxr_keyword">int</strong> columnIndex)
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>        <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>      <strong class="jxr_keyword">float</strong> result = rs.getFloat(columnIndex);
-<a class="jxr_linenumber" name="L45" href="#L45">45</a>      <strong class="jxr_keyword">return</strong> result == 0 &amp;&amp; rs.wasNull() ? <strong class="jxr_keyword">null</strong> : result;
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>    }
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>  
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>    @Override
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>    <strong class="jxr_keyword">public</strong> Float getNullableResult(CallableStatement cs, <strong class="jxr_keyword">int</strong> columnIndex)
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>        <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>      <strong class="jxr_keyword">float</strong> result = cs.getFloat(columnIndex);
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>      <strong class="jxr_keyword">return</strong> result == 0 &amp;&amp; cs.wasNull() ? <strong class="jxr_keyword">null</strong> : result;
-<a class="jxr_linenumber" name="L53" href="#L53">53</a>    }
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>  }
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setNonNullParameter(PreparedStatement ps, <strong class="jxr_keyword">int</strong> i, Float parameter, <a name="JdbcType" href="../../../../org/apache/ibatis/type/JdbcType.html#JdbcType">JdbcType</a> jdbcType) <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>      ps.setFloat(i, parameter);
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>    }
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>    @Override
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>    <strong class="jxr_keyword">public</strong> Float getNullableResult(ResultSet rs, String columnName) <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>      <strong class="jxr_keyword">float</strong> result = rs.getFloat(columnName);
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>      <strong class="jxr_keyword">return</strong> result == 0 &amp;&amp; rs.wasNull() ? <strong class="jxr_keyword">null</strong> : result;
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>    }
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>    @Override
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>    <strong class="jxr_keyword">public</strong> Float getNullableResult(ResultSet rs, <strong class="jxr_keyword">int</strong> columnIndex) <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>      <strong class="jxr_keyword">float</strong> result = rs.getFloat(columnIndex);
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>      <strong class="jxr_keyword">return</strong> result == 0 &amp;&amp; rs.wasNull() ? <strong class="jxr_keyword">null</strong> : result;
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>    }
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>    @Override
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>    <strong class="jxr_keyword">public</strong> Float getNullableResult(CallableStatement cs, <strong class="jxr_keyword">int</strong> columnIndex) <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>      <strong class="jxr_keyword">float</strong> result = cs.getFloat(columnIndex);
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>      <strong class="jxr_keyword">return</strong> result == 0 &amp;&amp; cs.wasNull() ? <strong class="jxr_keyword">null</strong> : result;
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>    }
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2022 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2023 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

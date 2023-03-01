@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TypeAliasRegistry.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.type</a> &gt; <span class="el_source">TypeAliasRegistry.java</span></div><h1>TypeAliasRegistry.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2019 the original author or authors.
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TypeAliasRegistry.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.type</a> &gt; <span class="el_source">TypeAliasRegistry.java</span></div><h1>TypeAliasRegistry.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
@@ -43,136 +43,149 @@ public class TypeAliasRegistry {
 <span class="fc" id="L43">    registerAlias(&quot;string&quot;, String.class);</span>
 
 <span class="fc" id="L45">    registerAlias(&quot;byte&quot;, Byte.class);</span>
-<span class="fc" id="L46">    registerAlias(&quot;long&quot;, Long.class);</span>
-<span class="fc" id="L47">    registerAlias(&quot;short&quot;, Short.class);</span>
-<span class="fc" id="L48">    registerAlias(&quot;int&quot;, Integer.class);</span>
-<span class="fc" id="L49">    registerAlias(&quot;integer&quot;, Integer.class);</span>
-<span class="fc" id="L50">    registerAlias(&quot;double&quot;, Double.class);</span>
-<span class="fc" id="L51">    registerAlias(&quot;float&quot;, Float.class);</span>
-<span class="fc" id="L52">    registerAlias(&quot;boolean&quot;, Boolean.class);</span>
+<span class="fc" id="L46">    registerAlias(&quot;char&quot;, Character.class);</span>
+<span class="fc" id="L47">    registerAlias(&quot;character&quot;, Character.class);</span>
+<span class="fc" id="L48">    registerAlias(&quot;long&quot;, Long.class);</span>
+<span class="fc" id="L49">    registerAlias(&quot;short&quot;, Short.class);</span>
+<span class="fc" id="L50">    registerAlias(&quot;int&quot;, Integer.class);</span>
+<span class="fc" id="L51">    registerAlias(&quot;integer&quot;, Integer.class);</span>
+<span class="fc" id="L52">    registerAlias(&quot;double&quot;, Double.class);</span>
+<span class="fc" id="L53">    registerAlias(&quot;float&quot;, Float.class);</span>
+<span class="fc" id="L54">    registerAlias(&quot;boolean&quot;, Boolean.class);</span>
 
-<span class="fc" id="L54">    registerAlias(&quot;byte[]&quot;, Byte[].class);</span>
-<span class="fc" id="L55">    registerAlias(&quot;long[]&quot;, Long[].class);</span>
-<span class="fc" id="L56">    registerAlias(&quot;short[]&quot;, Short[].class);</span>
-<span class="fc" id="L57">    registerAlias(&quot;int[]&quot;, Integer[].class);</span>
-<span class="fc" id="L58">    registerAlias(&quot;integer[]&quot;, Integer[].class);</span>
-<span class="fc" id="L59">    registerAlias(&quot;double[]&quot;, Double[].class);</span>
-<span class="fc" id="L60">    registerAlias(&quot;float[]&quot;, Float[].class);</span>
-<span class="fc" id="L61">    registerAlias(&quot;boolean[]&quot;, Boolean[].class);</span>
+<span class="fc" id="L56">    registerAlias(&quot;byte[]&quot;, Byte[].class);</span>
+<span class="fc" id="L57">    registerAlias(&quot;char[]&quot;, Character[].class);</span>
+<span class="fc" id="L58">    registerAlias(&quot;character[]&quot;, Character[].class);</span>
+<span class="fc" id="L59">    registerAlias(&quot;long[]&quot;, Long[].class);</span>
+<span class="fc" id="L60">    registerAlias(&quot;short[]&quot;, Short[].class);</span>
+<span class="fc" id="L61">    registerAlias(&quot;int[]&quot;, Integer[].class);</span>
+<span class="fc" id="L62">    registerAlias(&quot;integer[]&quot;, Integer[].class);</span>
+<span class="fc" id="L63">    registerAlias(&quot;double[]&quot;, Double[].class);</span>
+<span class="fc" id="L64">    registerAlias(&quot;float[]&quot;, Float[].class);</span>
+<span class="fc" id="L65">    registerAlias(&quot;boolean[]&quot;, Boolean[].class);</span>
 
-<span class="fc" id="L63">    registerAlias(&quot;_byte&quot;, byte.class);</span>
-<span class="fc" id="L64">    registerAlias(&quot;_long&quot;, long.class);</span>
-<span class="fc" id="L65">    registerAlias(&quot;_short&quot;, short.class);</span>
-<span class="fc" id="L66">    registerAlias(&quot;_int&quot;, int.class);</span>
-<span class="fc" id="L67">    registerAlias(&quot;_integer&quot;, int.class);</span>
-<span class="fc" id="L68">    registerAlias(&quot;_double&quot;, double.class);</span>
-<span class="fc" id="L69">    registerAlias(&quot;_float&quot;, float.class);</span>
-<span class="fc" id="L70">    registerAlias(&quot;_boolean&quot;, boolean.class);</span>
+<span class="fc" id="L67">    registerAlias(&quot;_byte&quot;, byte.class);</span>
+<span class="fc" id="L68">    registerAlias(&quot;_char&quot;, char.class);</span>
+<span class="fc" id="L69">    registerAlias(&quot;_character&quot;, char.class);</span>
+<span class="fc" id="L70">    registerAlias(&quot;_long&quot;, long.class);</span>
+<span class="fc" id="L71">    registerAlias(&quot;_short&quot;, short.class);</span>
+<span class="fc" id="L72">    registerAlias(&quot;_int&quot;, int.class);</span>
+<span class="fc" id="L73">    registerAlias(&quot;_integer&quot;, int.class);</span>
+<span class="fc" id="L74">    registerAlias(&quot;_double&quot;, double.class);</span>
+<span class="fc" id="L75">    registerAlias(&quot;_float&quot;, float.class);</span>
+<span class="fc" id="L76">    registerAlias(&quot;_boolean&quot;, boolean.class);</span>
 
-<span class="fc" id="L72">    registerAlias(&quot;_byte[]&quot;, byte[].class);</span>
-<span class="fc" id="L73">    registerAlias(&quot;_long[]&quot;, long[].class);</span>
-<span class="fc" id="L74">    registerAlias(&quot;_short[]&quot;, short[].class);</span>
-<span class="fc" id="L75">    registerAlias(&quot;_int[]&quot;, int[].class);</span>
-<span class="fc" id="L76">    registerAlias(&quot;_integer[]&quot;, int[].class);</span>
-<span class="fc" id="L77">    registerAlias(&quot;_double[]&quot;, double[].class);</span>
-<span class="fc" id="L78">    registerAlias(&quot;_float[]&quot;, float[].class);</span>
-<span class="fc" id="L79">    registerAlias(&quot;_boolean[]&quot;, boolean[].class);</span>
+<span class="fc" id="L78">    registerAlias(&quot;_byte[]&quot;, byte[].class);</span>
+<span class="fc" id="L79">    registerAlias(&quot;_char[]&quot;, char[].class);</span>
+<span class="fc" id="L80">    registerAlias(&quot;_character[]&quot;, char[].class);</span>
+<span class="fc" id="L81">    registerAlias(&quot;_long[]&quot;, long[].class);</span>
+<span class="fc" id="L82">    registerAlias(&quot;_short[]&quot;, short[].class);</span>
+<span class="fc" id="L83">    registerAlias(&quot;_int[]&quot;, int[].class);</span>
+<span class="fc" id="L84">    registerAlias(&quot;_integer[]&quot;, int[].class);</span>
+<span class="fc" id="L85">    registerAlias(&quot;_double[]&quot;, double[].class);</span>
+<span class="fc" id="L86">    registerAlias(&quot;_float[]&quot;, float[].class);</span>
+<span class="fc" id="L87">    registerAlias(&quot;_boolean[]&quot;, boolean[].class);</span>
 
-<span class="fc" id="L81">    registerAlias(&quot;date&quot;, Date.class);</span>
-<span class="fc" id="L82">    registerAlias(&quot;decimal&quot;, BigDecimal.class);</span>
-<span class="fc" id="L83">    registerAlias(&quot;bigdecimal&quot;, BigDecimal.class);</span>
-<span class="fc" id="L84">    registerAlias(&quot;biginteger&quot;, BigInteger.class);</span>
-<span class="fc" id="L85">    registerAlias(&quot;object&quot;, Object.class);</span>
+<span class="fc" id="L89">    registerAlias(&quot;date&quot;, Date.class);</span>
+<span class="fc" id="L90">    registerAlias(&quot;decimal&quot;, BigDecimal.class);</span>
+<span class="fc" id="L91">    registerAlias(&quot;bigdecimal&quot;, BigDecimal.class);</span>
+<span class="fc" id="L92">    registerAlias(&quot;biginteger&quot;, BigInteger.class);</span>
+<span class="fc" id="L93">    registerAlias(&quot;object&quot;, Object.class);</span>
 
-<span class="fc" id="L87">    registerAlias(&quot;date[]&quot;, Date[].class);</span>
-<span class="fc" id="L88">    registerAlias(&quot;decimal[]&quot;, BigDecimal[].class);</span>
-<span class="fc" id="L89">    registerAlias(&quot;bigdecimal[]&quot;, BigDecimal[].class);</span>
-<span class="fc" id="L90">    registerAlias(&quot;biginteger[]&quot;, BigInteger[].class);</span>
-<span class="fc" id="L91">    registerAlias(&quot;object[]&quot;, Object[].class);</span>
+<span class="fc" id="L95">    registerAlias(&quot;date[]&quot;, Date[].class);</span>
+<span class="fc" id="L96">    registerAlias(&quot;decimal[]&quot;, BigDecimal[].class);</span>
+<span class="fc" id="L97">    registerAlias(&quot;bigdecimal[]&quot;, BigDecimal[].class);</span>
+<span class="fc" id="L98">    registerAlias(&quot;biginteger[]&quot;, BigInteger[].class);</span>
+<span class="fc" id="L99">    registerAlias(&quot;object[]&quot;, Object[].class);</span>
 
-<span class="fc" id="L93">    registerAlias(&quot;map&quot;, Map.class);</span>
-<span class="fc" id="L94">    registerAlias(&quot;hashmap&quot;, HashMap.class);</span>
-<span class="fc" id="L95">    registerAlias(&quot;list&quot;, List.class);</span>
-<span class="fc" id="L96">    registerAlias(&quot;arraylist&quot;, ArrayList.class);</span>
-<span class="fc" id="L97">    registerAlias(&quot;collection&quot;, Collection.class);</span>
-<span class="fc" id="L98">    registerAlias(&quot;iterator&quot;, Iterator.class);</span>
+<span class="fc" id="L101">    registerAlias(&quot;map&quot;, Map.class);</span>
+<span class="fc" id="L102">    registerAlias(&quot;hashmap&quot;, HashMap.class);</span>
+<span class="fc" id="L103">    registerAlias(&quot;list&quot;, List.class);</span>
+<span class="fc" id="L104">    registerAlias(&quot;arraylist&quot;, ArrayList.class);</span>
+<span class="fc" id="L105">    registerAlias(&quot;collection&quot;, Collection.class);</span>
+<span class="fc" id="L106">    registerAlias(&quot;iterator&quot;, Iterator.class);</span>
 
-<span class="fc" id="L100">    registerAlias(&quot;ResultSet&quot;, ResultSet.class);</span>
-<span class="fc" id="L101">  }</span>
+<span class="fc" id="L108">    registerAlias(&quot;ResultSet&quot;, ResultSet.class);</span>
+<span class="fc" id="L109">  }</span>
 
   @SuppressWarnings(&quot;unchecked&quot;)
   // throws class cast exception as well if types cannot be assigned
   public &lt;T&gt; Class&lt;T&gt; resolveAlias(String string) {
     try {
-<span class="pc bpc" id="L107" title="1 of 2 branches missed.">      if (string == null) {</span>
-<span class="nc" id="L108">        return null;</span>
+<span class="pc bpc" id="L115" title="1 of 2 branches missed.">      if (string == null) {</span>
+<span class="nc" id="L116">        return null;</span>
       }
       // issue #748
-<span class="fc" id="L111">      String key = string.toLowerCase(Locale.ENGLISH);</span>
+<span class="fc" id="L119">      String key = string.toLowerCase(Locale.ENGLISH);</span>
       Class&lt;T&gt; value;
-<span class="fc bfc" id="L113" title="All 2 branches covered.">      if (typeAliases.containsKey(key)) {</span>
-<span class="fc" id="L114">        value = (Class&lt;T&gt;) typeAliases.get(key);</span>
+<span class="fc bfc" id="L121" title="All 2 branches covered.">      if (typeAliases.containsKey(key)) {</span>
+<span class="fc" id="L122">        value = (Class&lt;T&gt;) typeAliases.get(key);</span>
       } else {
-<span class="fc" id="L116">        value = (Class&lt;T&gt;) Resources.classForName(string);</span>
+<span class="fc" id="L124">        value = (Class&lt;T&gt;) Resources.classForName(string);</span>
       }
-<span class="fc" id="L118">      return value;</span>
-<span class="fc" id="L119">    } catch (ClassNotFoundException e) {</span>
-<span class="fc" id="L120">      throw new TypeException(&quot;Could not resolve type alias '&quot; + string + &quot;'.  Cause: &quot; + e, e);</span>
+<span class="fc" id="L126">      return value;</span>
+<span class="fc" id="L127">    } catch (ClassNotFoundException e) {</span>
+<span class="fc" id="L128">      throw new TypeException(&quot;Could not resolve type alias '&quot; + string + &quot;'.  Cause: &quot; + e, e);</span>
     }
   }
 
   public void registerAliases(String packageName) {
-<span class="fc" id="L125">    registerAliases(packageName, Object.class);</span>
-<span class="fc" id="L126">  }</span>
+<span class="fc" id="L133">    registerAliases(packageName, Object.class);</span>
+<span class="fc" id="L134">  }</span>
 
   public void registerAliases(String packageName, Class&lt;?&gt; superType) {
-<span class="fc" id="L129">    ResolverUtil&lt;Class&lt;?&gt;&gt; resolverUtil = new ResolverUtil&lt;&gt;();</span>
-<span class="fc" id="L130">    resolverUtil.find(new ResolverUtil.IsA(superType), packageName);</span>
-<span class="fc" id="L131">    Set&lt;Class&lt;? extends Class&lt;?&gt;&gt;&gt; typeSet = resolverUtil.getClasses();</span>
-<span class="fc bfc" id="L132" title="All 2 branches covered.">    for (Class&lt;?&gt; type : typeSet) {</span>
+<span class="fc" id="L137">    ResolverUtil&lt;Class&lt;?&gt;&gt; resolverUtil = new ResolverUtil&lt;&gt;();</span>
+<span class="fc" id="L138">    resolverUtil.find(new ResolverUtil.IsA(superType), packageName);</span>
+<span class="fc" id="L139">    Set&lt;Class&lt;? extends Class&lt;?&gt;&gt;&gt; typeSet = resolverUtil.getClasses();</span>
+<span class="fc bfc" id="L140" title="All 2 branches covered.">    for (Class&lt;?&gt; type : typeSet) {</span>
       // Ignore inner classes and interfaces (including package-info.java)
       // Skip also inner classes. See issue #6
-<span class="pc bpc" id="L135" title="2 of 6 branches missed.">      if (!type.isAnonymousClass() &amp;&amp; !type.isInterface() &amp;&amp; !type.isMemberClass()) {</span>
-<span class="fc" id="L136">        registerAlias(type);</span>
+<span class="pc bpc" id="L143" title="2 of 6 branches missed.">      if (!type.isAnonymousClass() &amp;&amp; !type.isInterface() &amp;&amp; !type.isMemberClass()) {</span>
+<span class="fc" id="L144">        registerAlias(type);</span>
       }
-<span class="fc" id="L138">    }</span>
-<span class="fc" id="L139">  }</span>
+<span class="fc" id="L146">    }</span>
+<span class="fc" id="L147">  }</span>
 
   public void registerAlias(Class&lt;?&gt; type) {
-<span class="fc" id="L142">    String alias = type.getSimpleName();</span>
-<span class="fc" id="L143">    Alias aliasAnnotation = type.getAnnotation(Alias.class);</span>
-<span class="fc bfc" id="L144" title="All 2 branches covered.">    if (aliasAnnotation != null) {</span>
-<span class="fc" id="L145">      alias = aliasAnnotation.value();</span>
+<span class="fc" id="L150">    String alias = type.getSimpleName();</span>
+<span class="fc" id="L151">    Alias aliasAnnotation = type.getAnnotation(Alias.class);</span>
+<span class="fc bfc" id="L152" title="All 2 branches covered.">    if (aliasAnnotation != null) {</span>
+<span class="fc" id="L153">      alias = aliasAnnotation.value();</span>
     }
-<span class="fc" id="L147">    registerAlias(alias, type);</span>
-<span class="fc" id="L148">  }</span>
+<span class="fc" id="L155">    registerAlias(alias, type);</span>
+<span class="fc" id="L156">  }</span>
 
   public void registerAlias(String alias, Class&lt;?&gt; value) {
-<span class="pc bpc" id="L151" title="1 of 2 branches missed.">    if (alias == null) {</span>
-<span class="nc" id="L152">      throw new TypeException(&quot;The parameter alias cannot be null&quot;);</span>
+<span class="pc bpc" id="L159" title="1 of 2 branches missed.">    if (alias == null) {</span>
+<span class="nc" id="L160">      throw new TypeException(&quot;The parameter alias cannot be null&quot;);</span>
     }
     // issue #748
-<span class="fc" id="L155">    String key = alias.toLowerCase(Locale.ENGLISH);</span>
-<span class="fc bfc" id="L156" title="All 6 branches covered.">    if (typeAliases.containsKey(key) &amp;&amp; typeAliases.get(key) != null &amp;&amp; !typeAliases.get(key).equals(value)) {</span>
-<span class="fc" id="L157">      throw new TypeException(&quot;The alias '&quot; + alias + &quot;' is already mapped to the value '&quot; + typeAliases.get(key).getName() + &quot;'.&quot;);</span>
+<span class="fc" id="L163">    String key = alias.toLowerCase(Locale.ENGLISH);</span>
+<span class="fc bfc" id="L164" title="All 6 branches covered.">    if (typeAliases.containsKey(key) &amp;&amp; typeAliases.get(key) != null &amp;&amp; !typeAliases.get(key).equals(value)) {</span>
+<span class="fc" id="L165">      throw new TypeException(</span>
+<span class="fc" id="L166">          &quot;The alias '&quot; + alias + &quot;' is already mapped to the value '&quot; + typeAliases.get(key).getName() + &quot;'.&quot;);</span>
     }
-<span class="fc" id="L159">    typeAliases.put(key, value);</span>
-<span class="fc" id="L160">  }</span>
+<span class="fc" id="L168">    typeAliases.put(key, value);</span>
+<span class="fc" id="L169">  }</span>
 
   public void registerAlias(String alias, String value) {
     try {
-<span class="fc" id="L164">      registerAlias(alias, Resources.classForName(value));</span>
-<span class="nc" id="L165">    } catch (ClassNotFoundException e) {</span>
-<span class="nc" id="L166">      throw new TypeException(&quot;Error registering type alias &quot; + alias + &quot; for &quot; + value + &quot;. Cause: &quot; + e, e);</span>
-<span class="fc" id="L167">    }</span>
-<span class="fc" id="L168">  }</span>
+<span class="fc" id="L173">      registerAlias(alias, Resources.classForName(value));</span>
+<span class="nc" id="L174">    } catch (ClassNotFoundException e) {</span>
+<span class="nc" id="L175">      throw new TypeException(&quot;Error registering type alias &quot; + alias + &quot; for &quot; + value + &quot;. Cause: &quot; + e, e);</span>
+<span class="fc" id="L176">    }</span>
+<span class="fc" id="L177">  }</span>
 
   /**
+   * Gets the type aliases.
+   *
+   * @return the type aliases
+   *
    * @since 3.2.2
    */
   public Map&lt;String, Class&lt;?&gt;&gt; getTypeAliases() {
-<span class="fc" id="L174">    return Collections.unmodifiableMap(typeAliases);</span>
+<span class="fc" id="L187">    return Collections.unmodifiableMap(typeAliases);</span>
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

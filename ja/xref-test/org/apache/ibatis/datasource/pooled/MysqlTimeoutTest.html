@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../../testapidocs/org/apache/ibatis/datasource/pooled/MysqlTimeoutTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2022 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -23,7 +23,7 @@
 <a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> */</em>
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">package</strong> org.apache.ibatis.datasource.pooled;
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  
-<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.jupiter.api.Assertions.*;
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.jupiter.api.Assertions.assertEquals;
 <a class="jxr_linenumber" name="L19" href="#L19">19</a>  
 <a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> java.sql.Connection;
 <a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> java.sql.PreparedStatement;
@@ -74,17 +74,16 @@
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>    }
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>  
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> executeQuery(Connection con) <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>      <strong class="jxr_keyword">try</strong> (PreparedStatement st = con.prepareStatement(<span class="jxr_string">"select 1"</span>);
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>          ResultSet rs = st.executeQuery()) {
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>        <strong class="jxr_keyword">while</strong> (rs.next()) {
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>          assertEquals(1, rs.getInt(1));
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>        }
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>      }
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>    }
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>  
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>  }
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>      <strong class="jxr_keyword">try</strong> (PreparedStatement st = con.prepareStatement(<span class="jxr_string">"select 1"</span>); ResultSet rs = st.executeQuery()) {
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>        <strong class="jxr_keyword">while</strong> (rs.next()) {
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>          assertEquals(1, rs.getInt(1));
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>        }
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>      }
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>    }
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>  
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2022 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2023 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

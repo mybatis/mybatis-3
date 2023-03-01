@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RoutingStatementHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.executor.statement</a> &gt; <span class="el_source">RoutingStatementHandler.java</span></div><h1>RoutingStatementHandler.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2019 the original author or authors.
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RoutingStatementHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.executor.statement</a> &gt; <span class="el_source">RoutingStatementHandler.java</span></div><h1>RoutingStatementHandler.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
@@ -36,62 +36,63 @@ public class RoutingStatementHandler implements StatementHandler {
 
   private final StatementHandler delegate;
 
-<span class="fc" id="L39">  public RoutingStatementHandler(Executor executor, MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {</span>
+  public RoutingStatementHandler(Executor executor, MappedStatement ms, Object parameter, RowBounds rowBounds,
+<span class="fc" id="L40">      ResultHandler resultHandler, BoundSql boundSql) {</span>
 
-<span class="pc bpc" id="L41" title="1 of 4 branches missed.">    switch (ms.getStatementType()) {</span>
+<span class="pc bpc" id="L42" title="1 of 4 branches missed.">    switch (ms.getStatementType()) {</span>
       case STATEMENT:
-<span class="fc" id="L43">        delegate = new SimpleStatementHandler(executor, ms, parameter, rowBounds, resultHandler, boundSql);</span>
-<span class="fc" id="L44">        break;</span>
+<span class="fc" id="L44">        delegate = new SimpleStatementHandler(executor, ms, parameter, rowBounds, resultHandler, boundSql);</span>
+<span class="fc" id="L45">        break;</span>
       case PREPARED:
-<span class="fc" id="L46">        delegate = new PreparedStatementHandler(executor, ms, parameter, rowBounds, resultHandler, boundSql);</span>
-<span class="fc" id="L47">        break;</span>
+<span class="fc" id="L47">        delegate = new PreparedStatementHandler(executor, ms, parameter, rowBounds, resultHandler, boundSql);</span>
+<span class="fc" id="L48">        break;</span>
       case CALLABLE:
-<span class="fc" id="L49">        delegate = new CallableStatementHandler(executor, ms, parameter, rowBounds, resultHandler, boundSql);</span>
-<span class="fc" id="L50">        break;</span>
+<span class="fc" id="L50">        delegate = new CallableStatementHandler(executor, ms, parameter, rowBounds, resultHandler, boundSql);</span>
+<span class="fc" id="L51">        break;</span>
       default:
-<span class="nc" id="L52">        throw new ExecutorException(&quot;Unknown statement type: &quot; + ms.getStatementType());</span>
+<span class="nc" id="L53">        throw new ExecutorException(&quot;Unknown statement type: &quot; + ms.getStatementType());</span>
     }
 
-<span class="fc" id="L55">  }</span>
+<span class="fc" id="L56">  }</span>
 
   @Override
   public Statement prepare(Connection connection, Integer transactionTimeout) throws SQLException {
-<span class="fc" id="L59">    return delegate.prepare(connection, transactionTimeout);</span>
+<span class="fc" id="L60">    return delegate.prepare(connection, transactionTimeout);</span>
   }
 
   @Override
   public void parameterize(Statement statement) throws SQLException {
-<span class="fc" id="L64">    delegate.parameterize(statement);</span>
-<span class="fc" id="L65">  }</span>
+<span class="fc" id="L65">    delegate.parameterize(statement);</span>
+<span class="fc" id="L66">  }</span>
 
   @Override
   public void batch(Statement statement) throws SQLException {
-<span class="fc" id="L69">    delegate.batch(statement);</span>
-<span class="fc" id="L70">  }</span>
+<span class="fc" id="L70">    delegate.batch(statement);</span>
+<span class="fc" id="L71">  }</span>
 
   @Override
   public int update(Statement statement) throws SQLException {
-<span class="fc" id="L74">    return delegate.update(statement);</span>
+<span class="fc" id="L75">    return delegate.update(statement);</span>
   }
 
   @Override
   public &lt;E&gt; List&lt;E&gt; query(Statement statement, ResultHandler resultHandler) throws SQLException {
-<span class="fc" id="L79">    return delegate.query(statement, resultHandler);</span>
+<span class="fc" id="L80">    return delegate.query(statement, resultHandler);</span>
   }
 
   @Override
   public &lt;E&gt; Cursor&lt;E&gt; queryCursor(Statement statement) throws SQLException {
-<span class="fc" id="L84">    return delegate.queryCursor(statement);</span>
+<span class="fc" id="L85">    return delegate.queryCursor(statement);</span>
   }
 
   @Override
   public BoundSql getBoundSql() {
-<span class="fc" id="L89">    return delegate.getBoundSql();</span>
+<span class="fc" id="L90">    return delegate.getBoundSql();</span>
   }
 
   @Override
   public ParameterHandler getParameterHandler() {
-<span class="nc" id="L94">    return delegate.getParameterHandler();</span>
+<span class="nc" id="L95">    return delegate.getParameterHandler();</span>
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

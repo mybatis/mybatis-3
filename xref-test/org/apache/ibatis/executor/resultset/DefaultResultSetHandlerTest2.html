@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/executor/resultset/DefaultResultSetHandlerTest2.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2022 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -70,155 +70,152 @@
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>    @Mock
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>    <strong class="jxr_keyword">private</strong> DatabaseMetaData dbmd;
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>  
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>    @SuppressWarnings(<span class="jxr_string">"serial"</span>)
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>    @Test
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>    <strong class="jxr_keyword">void</strong> shouldNotCallNextOnClosedResultSet_SimpleResult() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>      <strong class="jxr_keyword">final</strong> Configuration config = <strong class="jxr_keyword">new</strong> Configuration();
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>      <strong class="jxr_keyword">final</strong> TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>      <strong class="jxr_keyword">final</strong> MappedStatement ms = <strong class="jxr_keyword">new</strong> MappedStatement.Builder(config, <span class="jxr_string">"testSelect"</span>,
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>        <strong class="jxr_keyword">new</strong> StaticSqlSource(config, <span class="jxr_string">"some select statement"</span>), SqlCommandType.SELECT).resultMaps(
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>          <strong class="jxr_keyword">new</strong> ArrayList&lt;ResultMap&gt;() {
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>            {
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>              add(<strong class="jxr_keyword">new</strong> ResultMap.Builder(config, <span class="jxr_string">"testMap"</span>, HashMap.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> ArrayList&lt;ResultMapping&gt;() {
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>                {
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>                  add(<strong class="jxr_keyword">new</strong> ResultMapping.Builder(config, <span class="jxr_string">"id"</span>, <span class="jxr_string">"id"</span>, registry.getTypeHandler(Integer.<strong class="jxr_keyword">class</strong>)).build());
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>                }
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>              }).build());
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>            }
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>          }).build();
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>  
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>      <strong class="jxr_keyword">final</strong> Executor executor = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>      <strong class="jxr_keyword">final</strong> ParameterHandler parameterHandler = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>      <strong class="jxr_keyword">final</strong> ResultHandler&lt;?&gt; resultHandler = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>      <strong class="jxr_keyword">final</strong> BoundSql boundSql = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>      <strong class="jxr_keyword">final</strong> RowBounds rowBounds = <strong class="jxr_keyword">new</strong> RowBounds(5, 1);
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>      <strong class="jxr_keyword">final</strong> DefaultResultSetHandler resultSetHandler = <strong class="jxr_keyword">new</strong> DefaultResultSetHandler(executor, ms, parameterHandler,
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>        resultHandler, boundSql, rowBounds);
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>  
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>      when(stmt.getResultSet()).thenReturn(rs);
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>      when(rsmd.getColumnCount()).thenReturn(1);
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>      when(rsmd.getColumnLabel(1)).thenReturn(<span class="jxr_string">"id"</span>);
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>      when(rsmd.getColumnType(1)).thenReturn(Types.INTEGER);
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>      when(rsmd.getColumnClassName(1)).thenReturn(Integer.<strong class="jxr_keyword">class</strong>.getCanonicalName());
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>      when(stmt.getConnection()).thenReturn(conn);
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>      when(conn.getMetaData()).thenReturn(dbmd);
-<a class="jxr_linenumber" name="L97" href="#L97">97</a>      when(dbmd.supportsMultipleResultSets()).thenReturn(false); <em class="jxr_comment">// for simplicity.</em>
-<a class="jxr_linenumber" name="L98" href="#L98">98</a>  
-<a class="jxr_linenumber" name="L99" href="#L99">99</a>      <strong class="jxr_keyword">final</strong> List&lt;Object&gt; results = resultSetHandler.handleResultSets(stmt);
-<a class="jxr_linenumber" name="L100" href="#L100">100</a>     assertEquals(0, results.size());
-<a class="jxr_linenumber" name="L101" href="#L101">101</a>   }
-<a class="jxr_linenumber" name="L102" href="#L102">102</a> 
-<a class="jxr_linenumber" name="L103" href="#L103">103</a>   @SuppressWarnings(<span class="jxr_string">"serial"</span>)
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>    @Test
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>    <strong class="jxr_keyword">void</strong> shouldNotCallNextOnClosedResultSet_SimpleResult() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>      <strong class="jxr_keyword">final</strong> Configuration config = <strong class="jxr_keyword">new</strong> Configuration();
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>      <strong class="jxr_keyword">final</strong> TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>      <strong class="jxr_keyword">final</strong> MappedStatement ms = <strong class="jxr_keyword">new</strong> MappedStatement.Builder(config, <span class="jxr_string">"testSelect"</span>,
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>          <strong class="jxr_keyword">new</strong> StaticSqlSource(config, <span class="jxr_string">"some select statement"</span>), SqlCommandType.SELECT)
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>              .resultMaps(<strong class="jxr_keyword">new</strong> ArrayList&lt;ResultMap&gt;() {
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>                <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = 1L;
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>                {
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>                  add(<strong class="jxr_keyword">new</strong> ResultMap.Builder(config, <span class="jxr_string">"testMap"</span>, HashMap.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> ArrayList&lt;ResultMapping&gt;() {
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>                    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = 1L;
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>                    {
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>                      add(<strong class="jxr_keyword">new</strong> ResultMapping.Builder(config, <span class="jxr_string">"id"</span>, <span class="jxr_string">"id"</span>, registry.getTypeHandler(Integer.<strong class="jxr_keyword">class</strong>)).build());
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>                    }
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>                  }).build());
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>                }
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>              }).build();
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>  
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>      <strong class="jxr_keyword">final</strong> Executor executor = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>      <strong class="jxr_keyword">final</strong> ParameterHandler parameterHandler = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>      <strong class="jxr_keyword">final</strong> ResultHandler&lt;?&gt; resultHandler = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>      <strong class="jxr_keyword">final</strong> BoundSql boundSql = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>      <strong class="jxr_keyword">final</strong> RowBounds rowBounds = <strong class="jxr_keyword">new</strong> RowBounds(5, 1);
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>      <strong class="jxr_keyword">final</strong> DefaultResultSetHandler resultSetHandler = <strong class="jxr_keyword">new</strong> DefaultResultSetHandler(executor, ms, parameterHandler,
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>          resultHandler, boundSql, rowBounds);
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>  
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>      when(stmt.getResultSet()).thenReturn(rs);
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>      when(rsmd.getColumnCount()).thenReturn(1);
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>      when(rsmd.getColumnLabel(1)).thenReturn(<span class="jxr_string">"id"</span>);
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>      when(rsmd.getColumnType(1)).thenReturn(Types.INTEGER);
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>      when(rsmd.getColumnClassName(1)).thenReturn(Integer.<strong class="jxr_keyword">class</strong>.getCanonicalName());
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>      when(stmt.getConnection()).thenReturn(conn);
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>      when(conn.getMetaData()).thenReturn(dbmd);
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>      when(dbmd.supportsMultipleResultSets()).thenReturn(false); <em class="jxr_comment">// for simplicity.</em>
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>  
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>     <strong class="jxr_keyword">final</strong> List&lt;Object&gt; results = resultSetHandler.handleResultSets(stmt);
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>     assertEquals(0, results.size());
+<a class="jxr_linenumber" name="L102" href="#L102">102</a>   }
+<a class="jxr_linenumber" name="L103" href="#L103">103</a> 
 <a class="jxr_linenumber" name="L104" href="#L104">104</a>   @Test
 <a class="jxr_linenumber" name="L105" href="#L105">105</a>   <strong class="jxr_keyword">void</strong> shouldNotCallNextOnClosedResultSet_NestedResult() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L106" href="#L106">106</a>     <strong class="jxr_keyword">final</strong> Configuration config = <strong class="jxr_keyword">new</strong> Configuration();
 <a class="jxr_linenumber" name="L107" href="#L107">107</a>     <strong class="jxr_keyword">final</strong> TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
 <a class="jxr_linenumber" name="L108" href="#L108">108</a>     <strong class="jxr_keyword">final</strong> ResultMap nestedResultMap = <strong class="jxr_keyword">new</strong> ResultMap.Builder(config, <span class="jxr_string">"roleMap"</span>, HashMap.<strong class="jxr_keyword">class</strong>,
-<a class="jxr_linenumber" name="L109" href="#L109">109</a>       <strong class="jxr_keyword">new</strong> ArrayList&lt;ResultMapping&gt;() {
-<a class="jxr_linenumber" name="L110" href="#L110">110</a>         {
-<a class="jxr_linenumber" name="L111" href="#L111">111</a>           add(<strong class="jxr_keyword">new</strong> ResultMapping.Builder(config, <span class="jxr_string">"role"</span>, <span class="jxr_string">"role"</span>, registry.getTypeHandler(String.<strong class="jxr_keyword">class</strong>))
-<a class="jxr_linenumber" name="L112" href="#L112">112</a>             .build());
-<a class="jxr_linenumber" name="L113" href="#L113">113</a>         }
-<a class="jxr_linenumber" name="L114" href="#L114">114</a>       }).build();
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>         <strong class="jxr_keyword">new</strong> ArrayList&lt;ResultMapping&gt;() {
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>           <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = 1L;
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>           {
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>             add(<strong class="jxr_keyword">new</strong> ResultMapping.Builder(config, <span class="jxr_string">"role"</span>, <span class="jxr_string">"role"</span>, registry.getTypeHandler(String.<strong class="jxr_keyword">class</strong>)).build());
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>           }
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>         }).build();
 <a class="jxr_linenumber" name="L115" href="#L115">115</a>     config.addResultMap(nestedResultMap);
 <a class="jxr_linenumber" name="L116" href="#L116">116</a>     <strong class="jxr_keyword">final</strong> MappedStatement ms = <strong class="jxr_keyword">new</strong> MappedStatement.Builder(config, <span class="jxr_string">"selectPerson"</span>,
-<a class="jxr_linenumber" name="L117" href="#L117">117</a>       <strong class="jxr_keyword">new</strong> StaticSqlSource(config, <span class="jxr_string">"select person..."</span>),
-<a class="jxr_linenumber" name="L118" href="#L118">118</a>       SqlCommandType.SELECT).resultMaps(
-<a class="jxr_linenumber" name="L119" href="#L119">119</a>         <strong class="jxr_keyword">new</strong> ArrayList&lt;ResultMap&gt;() {
-<a class="jxr_linenumber" name="L120" href="#L120">120</a>           {
-<a class="jxr_linenumber" name="L121" href="#L121">121</a>             add(<strong class="jxr_keyword">new</strong> ResultMap.Builder(config, <span class="jxr_string">"personMap"</span>, HashMap.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> ArrayList&lt;ResultMapping&gt;() {
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>         <strong class="jxr_keyword">new</strong> StaticSqlSource(config, <span class="jxr_string">"select person..."</span>), SqlCommandType.SELECT).resultMaps(<strong class="jxr_keyword">new</strong> ArrayList&lt;ResultMap&gt;() {
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>           <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = 1L;
+<a class="jxr_linenumber" name="L119" href="#L119">119</a>           {
+<a class="jxr_linenumber" name="L120" href="#L120">120</a>             add(<strong class="jxr_keyword">new</strong> ResultMap.Builder(config, <span class="jxr_string">"personMap"</span>, HashMap.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> ArrayList&lt;ResultMapping&gt;() {
+<a class="jxr_linenumber" name="L121" href="#L121">121</a>               <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = 1L;
 <a class="jxr_linenumber" name="L122" href="#L122">122</a>               {
-<a class="jxr_linenumber" name="L123" href="#L123">123</a>                 add(<strong class="jxr_keyword">new</strong> ResultMapping.Builder(config, <span class="jxr_string">"id"</span>, <span class="jxr_string">"id"</span>, registry.getTypeHandler(Integer.<strong class="jxr_keyword">class</strong>))
-<a class="jxr_linenumber" name="L124" href="#L124">124</a>                   .build());
-<a class="jxr_linenumber" name="L125" href="#L125">125</a>                 add(<strong class="jxr_keyword">new</strong> ResultMapping.Builder(config, <span class="jxr_string">"roles"</span>).nestedResultMapId(<span class="jxr_string">"roleMap"</span>).build());
-<a class="jxr_linenumber" name="L126" href="#L126">126</a>               }
-<a class="jxr_linenumber" name="L127" href="#L127">127</a>             }).build());
-<a class="jxr_linenumber" name="L128" href="#L128">128</a>           }
-<a class="jxr_linenumber" name="L129" href="#L129">129</a>         })
-<a class="jxr_linenumber" name="L130" href="#L130">130</a>         .resultOrdered(<strong class="jxr_keyword">true</strong>)
-<a class="jxr_linenumber" name="L131" href="#L131">131</a>         .build();
-<a class="jxr_linenumber" name="L132" href="#L132">132</a> 
-<a class="jxr_linenumber" name="L133" href="#L133">133</a>     <strong class="jxr_keyword">final</strong> Executor executor = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L134" href="#L134">134</a>     <strong class="jxr_keyword">final</strong> ParameterHandler parameterHandler = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L135" href="#L135">135</a>     <strong class="jxr_keyword">final</strong> ResultHandler&lt;?&gt; resultHandler = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L136" href="#L136">136</a>     <strong class="jxr_keyword">final</strong> BoundSql boundSql = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L137" href="#L137">137</a>     <strong class="jxr_keyword">final</strong> RowBounds rowBounds = <strong class="jxr_keyword">new</strong> RowBounds(5, 1);
-<a class="jxr_linenumber" name="L138" href="#L138">138</a>     <strong class="jxr_keyword">final</strong> DefaultResultSetHandler resultSetHandler = <strong class="jxr_keyword">new</strong> DefaultResultSetHandler(executor, ms, parameterHandler,
-<a class="jxr_linenumber" name="L139" href="#L139">139</a>       resultHandler, boundSql, rowBounds);
-<a class="jxr_linenumber" name="L140" href="#L140">140</a> 
-<a class="jxr_linenumber" name="L141" href="#L141">141</a>     when(stmt.getResultSet()).thenReturn(rs);
-<a class="jxr_linenumber" name="L142" href="#L142">142</a>     when(rsmd.getColumnCount()).thenReturn(2);
-<a class="jxr_linenumber" name="L143" href="#L143">143</a>     when(rsmd.getColumnLabel(1)).thenReturn(<span class="jxr_string">"id"</span>);
-<a class="jxr_linenumber" name="L144" href="#L144">144</a>     when(rsmd.getColumnType(1)).thenReturn(Types.INTEGER);
-<a class="jxr_linenumber" name="L145" href="#L145">145</a>     when(rsmd.getColumnClassName(1)).thenReturn(Integer.<strong class="jxr_keyword">class</strong>.getCanonicalName());
-<a class="jxr_linenumber" name="L146" href="#L146">146</a> 
-<a class="jxr_linenumber" name="L147" href="#L147">147</a>     <strong class="jxr_keyword">final</strong> List&lt;Object&gt; results = resultSetHandler.handleResultSets(stmt);
-<a class="jxr_linenumber" name="L148" href="#L148">148</a>     assertEquals(0, results.size());
-<a class="jxr_linenumber" name="L149" href="#L149">149</a>   }
-<a class="jxr_linenumber" name="L150" href="#L150">150</a> 
-<a class="jxr_linenumber" name="L151" href="#L151">151</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L152" href="#L152">152</a> <em class="jxr_comment">   * Simulate a driver that closes ResultSet automatically when next() returns false (e.g. DB2).</em>
-<a class="jxr_linenumber" name="L153" href="#L153">153</a> <em class="jxr_comment">   */</em>
-<a class="jxr_linenumber" name="L154" href="#L154">154</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">abstract</strong> <strong class="jxr_keyword">class</strong> ImpatientResultSet <strong class="jxr_keyword">implements</strong> ResultSet {
-<a class="jxr_linenumber" name="L155" href="#L155">155</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">int</strong> rowIndex = -1;
-<a class="jxr_linenumber" name="L156" href="#L156">156</a>     <strong class="jxr_keyword">private</strong> List&lt;Map&lt;String, Object&gt;&gt; rows = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
-<a class="jxr_linenumber" name="L157" href="#L157">157</a> 
-<a class="jxr_linenumber" name="L158" href="#L158">158</a>     <strong class="jxr_keyword">protected</strong> ImpatientResultSet() {
-<a class="jxr_linenumber" name="L159" href="#L159">159</a>       Map&lt;String, Object&gt; row = <strong class="jxr_keyword">new</strong> HashMap&lt;&gt;();
-<a class="jxr_linenumber" name="L160" href="#L160">160</a>       row.put(<span class="jxr_string">"id"</span>, 1);
-<a class="jxr_linenumber" name="L161" href="#L161">161</a>       row.put(<span class="jxr_string">"role"</span>, <span class="jxr_string">"CEO"</span>);
-<a class="jxr_linenumber" name="L162" href="#L162">162</a>       rows.add(row);
-<a class="jxr_linenumber" name="L163" href="#L163">163</a>     }
-<a class="jxr_linenumber" name="L164" href="#L164">164</a> 
-<a class="jxr_linenumber" name="L165" href="#L165">165</a>     @Override
-<a class="jxr_linenumber" name="L166" href="#L166">166</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> next() <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L167" href="#L167">167</a>       throwIfClosed();
-<a class="jxr_linenumber" name="L168" href="#L168">168</a>       <strong class="jxr_keyword">return</strong> ++rowIndex &lt; rows.size();
-<a class="jxr_linenumber" name="L169" href="#L169">169</a>     }
-<a class="jxr_linenumber" name="L170" href="#L170">170</a> 
-<a class="jxr_linenumber" name="L171" href="#L171">171</a>     @Override
-<a class="jxr_linenumber" name="L172" href="#L172">172</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> isClosed() {
-<a class="jxr_linenumber" name="L173" href="#L173">173</a>       <strong class="jxr_keyword">return</strong> rowIndex &gt;= rows.size();
-<a class="jxr_linenumber" name="L174" href="#L174">174</a>     }
-<a class="jxr_linenumber" name="L175" href="#L175">175</a> 
-<a class="jxr_linenumber" name="L176" href="#L176">176</a>     @Override
-<a class="jxr_linenumber" name="L177" href="#L177">177</a>     <strong class="jxr_keyword">public</strong> String getString(String columnLabel) <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L178" href="#L178">178</a>       throwIfClosed();
-<a class="jxr_linenumber" name="L179" href="#L179">179</a>       <strong class="jxr_keyword">return</strong> (String) rows.get(rowIndex).get(columnLabel);
-<a class="jxr_linenumber" name="L180" href="#L180">180</a>     }
-<a class="jxr_linenumber" name="L181" href="#L181">181</a> 
-<a class="jxr_linenumber" name="L182" href="#L182">182</a>     @Override
-<a class="jxr_linenumber" name="L183" href="#L183">183</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> getInt(String columnLabel) <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L184" href="#L184">184</a>       throwIfClosed();
-<a class="jxr_linenumber" name="L185" href="#L185">185</a>       <strong class="jxr_keyword">return</strong> (Integer) rows.get(rowIndex).get(columnLabel);
-<a class="jxr_linenumber" name="L186" href="#L186">186</a>     }
-<a class="jxr_linenumber" name="L187" href="#L187">187</a> 
-<a class="jxr_linenumber" name="L188" href="#L188">188</a>     @Override
-<a class="jxr_linenumber" name="L189" href="#L189">189</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> wasNull() <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L190" href="#L190">190</a>       throwIfClosed();
-<a class="jxr_linenumber" name="L191" href="#L191">191</a>       <strong class="jxr_keyword">return</strong> false;
-<a class="jxr_linenumber" name="L192" href="#L192">192</a>     }
-<a class="jxr_linenumber" name="L193" href="#L193">193</a> 
-<a class="jxr_linenumber" name="L194" href="#L194">194</a>     @Override
-<a class="jxr_linenumber" name="L195" href="#L195">195</a>     <strong class="jxr_keyword">public</strong> ResultSetMetaData getMetaData() {
-<a class="jxr_linenumber" name="L196" href="#L196">196</a>       <strong class="jxr_keyword">return</strong> rsmd;
-<a class="jxr_linenumber" name="L197" href="#L197">197</a>     }
-<a class="jxr_linenumber" name="L198" href="#L198">198</a> 
-<a class="jxr_linenumber" name="L199" href="#L199">199</a>     @Override
-<a class="jxr_linenumber" name="L200" href="#L200">200</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> getType() <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L201" href="#L201">201</a>       throwIfClosed();
-<a class="jxr_linenumber" name="L202" href="#L202">202</a>       <strong class="jxr_keyword">return</strong> ResultSet.TYPE_FORWARD_ONLY;
-<a class="jxr_linenumber" name="L203" href="#L203">203</a>     }
-<a class="jxr_linenumber" name="L204" href="#L204">204</a> 
-<a class="jxr_linenumber" name="L205" href="#L205">205</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> throwIfClosed() <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L206" href="#L206">206</a>       <strong class="jxr_keyword">if</strong> (rowIndex &gt;= rows.size()) {
-<a class="jxr_linenumber" name="L207" href="#L207">207</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> SQLException(<span class="jxr_string">"Invalid operation: result set is closed."</span>);
-<a class="jxr_linenumber" name="L208" href="#L208">208</a>       }
-<a class="jxr_linenumber" name="L209" href="#L209">209</a>     }
-<a class="jxr_linenumber" name="L210" href="#L210">210</a>   }
-<a class="jxr_linenumber" name="L211" href="#L211">211</a> }
+<a class="jxr_linenumber" name="L123" href="#L123">123</a>                 add(<strong class="jxr_keyword">new</strong> ResultMapping.Builder(config, <span class="jxr_string">"id"</span>, <span class="jxr_string">"id"</span>, registry.getTypeHandler(Integer.<strong class="jxr_keyword">class</strong>)).build());
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>                 add(<strong class="jxr_keyword">new</strong> ResultMapping.Builder(config, <span class="jxr_string">"roles"</span>).nestedResultMapId(<span class="jxr_string">"roleMap"</span>).build());
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>               }
+<a class="jxr_linenumber" name="L126" href="#L126">126</a>             }).build());
+<a class="jxr_linenumber" name="L127" href="#L127">127</a>           }
+<a class="jxr_linenumber" name="L128" href="#L128">128</a>         }).resultOrdered(<strong class="jxr_keyword">true</strong>).build();
+<a class="jxr_linenumber" name="L129" href="#L129">129</a> 
+<a class="jxr_linenumber" name="L130" href="#L130">130</a>     <strong class="jxr_keyword">final</strong> Executor executor = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L131" href="#L131">131</a>     <strong class="jxr_keyword">final</strong> ParameterHandler parameterHandler = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>     <strong class="jxr_keyword">final</strong> ResultHandler&lt;?&gt; resultHandler = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>     <strong class="jxr_keyword">final</strong> BoundSql boundSql = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>     <strong class="jxr_keyword">final</strong> RowBounds rowBounds = <strong class="jxr_keyword">new</strong> RowBounds(5, 1);
+<a class="jxr_linenumber" name="L135" href="#L135">135</a>     <strong class="jxr_keyword">final</strong> DefaultResultSetHandler resultSetHandler = <strong class="jxr_keyword">new</strong> DefaultResultSetHandler(executor, ms, parameterHandler,
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>         resultHandler, boundSql, rowBounds);
+<a class="jxr_linenumber" name="L137" href="#L137">137</a> 
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>     when(stmt.getResultSet()).thenReturn(rs);
+<a class="jxr_linenumber" name="L139" href="#L139">139</a>     when(rsmd.getColumnCount()).thenReturn(2);
+<a class="jxr_linenumber" name="L140" href="#L140">140</a>     when(rsmd.getColumnLabel(1)).thenReturn(<span class="jxr_string">"id"</span>);
+<a class="jxr_linenumber" name="L141" href="#L141">141</a>     when(rsmd.getColumnType(1)).thenReturn(Types.INTEGER);
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>     when(rsmd.getColumnClassName(1)).thenReturn(Integer.<strong class="jxr_keyword">class</strong>.getCanonicalName());
+<a class="jxr_linenumber" name="L143" href="#L143">143</a> 
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>     <strong class="jxr_keyword">final</strong> List&lt;Object&gt; results = resultSetHandler.handleResultSets(stmt);
+<a class="jxr_linenumber" name="L145" href="#L145">145</a>     assertEquals(0, results.size());
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>   }
+<a class="jxr_linenumber" name="L147" href="#L147">147</a> 
+<a class="jxr_linenumber" name="L148" href="#L148">148</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L149" href="#L149">149</a> <em class="jxr_comment">   * Simulate a driver that closes ResultSet automatically when next() returns false (e.g. DB2).</em>
+<a class="jxr_linenumber" name="L150" href="#L150">150</a> <em class="jxr_comment">   */</em>
+<a class="jxr_linenumber" name="L151" href="#L151">151</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">abstract</strong> <strong class="jxr_keyword">class</strong> ImpatientResultSet <strong class="jxr_keyword">implements</strong> ResultSet {
+<a class="jxr_linenumber" name="L152" href="#L152">152</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">int</strong> rowIndex = -1;
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>     <strong class="jxr_keyword">private</strong> List&lt;Map&lt;String, Object&gt;&gt; rows = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
+<a class="jxr_linenumber" name="L154" href="#L154">154</a> 
+<a class="jxr_linenumber" name="L155" href="#L155">155</a>     <strong class="jxr_keyword">protected</strong> ImpatientResultSet() {
+<a class="jxr_linenumber" name="L156" href="#L156">156</a>       Map&lt;String, Object&gt; row = <strong class="jxr_keyword">new</strong> HashMap&lt;&gt;();
+<a class="jxr_linenumber" name="L157" href="#L157">157</a>       row.put(<span class="jxr_string">"id"</span>, 1);
+<a class="jxr_linenumber" name="L158" href="#L158">158</a>       row.put(<span class="jxr_string">"role"</span>, <span class="jxr_string">"CEO"</span>);
+<a class="jxr_linenumber" name="L159" href="#L159">159</a>       rows.add(row);
+<a class="jxr_linenumber" name="L160" href="#L160">160</a>     }
+<a class="jxr_linenumber" name="L161" href="#L161">161</a> 
+<a class="jxr_linenumber" name="L162" href="#L162">162</a>     @Override
+<a class="jxr_linenumber" name="L163" href="#L163">163</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> next() <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>       throwIfClosed();
+<a class="jxr_linenumber" name="L165" href="#L165">165</a>       <strong class="jxr_keyword">return</strong> ++rowIndex &lt; rows.size();
+<a class="jxr_linenumber" name="L166" href="#L166">166</a>     }
+<a class="jxr_linenumber" name="L167" href="#L167">167</a> 
+<a class="jxr_linenumber" name="L168" href="#L168">168</a>     @Override
+<a class="jxr_linenumber" name="L169" href="#L169">169</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> isClosed() {
+<a class="jxr_linenumber" name="L170" href="#L170">170</a>       <strong class="jxr_keyword">return</strong> rowIndex &gt;= rows.size();
+<a class="jxr_linenumber" name="L171" href="#L171">171</a>     }
+<a class="jxr_linenumber" name="L172" href="#L172">172</a> 
+<a class="jxr_linenumber" name="L173" href="#L173">173</a>     @Override
+<a class="jxr_linenumber" name="L174" href="#L174">174</a>     <strong class="jxr_keyword">public</strong> String getString(String columnLabel) <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L175" href="#L175">175</a>       throwIfClosed();
+<a class="jxr_linenumber" name="L176" href="#L176">176</a>       <strong class="jxr_keyword">return</strong> (String) rows.get(rowIndex).get(columnLabel);
+<a class="jxr_linenumber" name="L177" href="#L177">177</a>     }
+<a class="jxr_linenumber" name="L178" href="#L178">178</a> 
+<a class="jxr_linenumber" name="L179" href="#L179">179</a>     @Override
+<a class="jxr_linenumber" name="L180" href="#L180">180</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> getInt(String columnLabel) <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L181" href="#L181">181</a>       throwIfClosed();
+<a class="jxr_linenumber" name="L182" href="#L182">182</a>       <strong class="jxr_keyword">return</strong> (Integer) rows.get(rowIndex).get(columnLabel);
+<a class="jxr_linenumber" name="L183" href="#L183">183</a>     }
+<a class="jxr_linenumber" name="L184" href="#L184">184</a> 
+<a class="jxr_linenumber" name="L185" href="#L185">185</a>     @Override
+<a class="jxr_linenumber" name="L186" href="#L186">186</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> wasNull() <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L187" href="#L187">187</a>       throwIfClosed();
+<a class="jxr_linenumber" name="L188" href="#L188">188</a>       <strong class="jxr_keyword">return</strong> false;
+<a class="jxr_linenumber" name="L189" href="#L189">189</a>     }
+<a class="jxr_linenumber" name="L190" href="#L190">190</a> 
+<a class="jxr_linenumber" name="L191" href="#L191">191</a>     @Override
+<a class="jxr_linenumber" name="L192" href="#L192">192</a>     <strong class="jxr_keyword">public</strong> ResultSetMetaData getMetaData() {
+<a class="jxr_linenumber" name="L193" href="#L193">193</a>       <strong class="jxr_keyword">return</strong> rsmd;
+<a class="jxr_linenumber" name="L194" href="#L194">194</a>     }
+<a class="jxr_linenumber" name="L195" href="#L195">195</a> 
+<a class="jxr_linenumber" name="L196" href="#L196">196</a>     @Override
+<a class="jxr_linenumber" name="L197" href="#L197">197</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> getType() <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L198" href="#L198">198</a>       throwIfClosed();
+<a class="jxr_linenumber" name="L199" href="#L199">199</a>       <strong class="jxr_keyword">return</strong> ResultSet.TYPE_FORWARD_ONLY;
+<a class="jxr_linenumber" name="L200" href="#L200">200</a>     }
+<a class="jxr_linenumber" name="L201" href="#L201">201</a> 
+<a class="jxr_linenumber" name="L202" href="#L202">202</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> throwIfClosed() <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L203" href="#L203">203</a>       <strong class="jxr_keyword">if</strong> (rowIndex &gt;= rows.size()) {
+<a class="jxr_linenumber" name="L204" href="#L204">204</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> SQLException(<span class="jxr_string">"Invalid operation: result set is closed."</span>);
+<a class="jxr_linenumber" name="L205" href="#L205">205</a>       }
+<a class="jxr_linenumber" name="L206" href="#L206">206</a>     }
+<a class="jxr_linenumber" name="L207" href="#L207">207</a>   }
+<a class="jxr_linenumber" name="L208" href="#L208">208</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2022 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2023 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

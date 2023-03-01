@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultSqlSessionFactory.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.session.defaults</a> &gt; <span class="el_source">DefaultSqlSessionFactory.java</span></div><h1>DefaultSqlSessionFactory.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2019 the original author or authors.
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultSqlSessionFactory.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.session.defaults</a> &gt; <span class="el_source">DefaultSqlSessionFactory.java</span></div><h1>DefaultSqlSessionFactory.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
@@ -87,19 +87,20 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
 <span class="fc" id="L87">    return configuration;</span>
   }
 
-  private SqlSession openSessionFromDataSource(ExecutorType execType, TransactionIsolationLevel level, boolean autoCommit) {
-<span class="fc" id="L91">    Transaction tx = null;</span>
+  private SqlSession openSessionFromDataSource(ExecutorType execType, TransactionIsolationLevel level,
+      boolean autoCommit) {
+<span class="fc" id="L92">    Transaction tx = null;</span>
     try {
-<span class="fc" id="L93">      final Environment environment = configuration.getEnvironment();</span>
-<span class="fc" id="L94">      final TransactionFactory transactionFactory = getTransactionFactoryFromEnvironment(environment);</span>
-<span class="fc" id="L95">      tx = transactionFactory.newTransaction(environment.getDataSource(), level, autoCommit);</span>
-<span class="fc" id="L96">      final Executor executor = configuration.newExecutor(tx, execType);</span>
-<span class="fc" id="L97">      return new DefaultSqlSession(configuration, executor, autoCommit);</span>
-<span class="nc" id="L98">    } catch (Exception e) {</span>
-<span class="nc" id="L99">      closeTransaction(tx); // may have fetched a connection so lets call close()</span>
-<span class="nc" id="L100">      throw ExceptionFactory.wrapException(&quot;Error opening session.  Cause: &quot; + e, e);</span>
+<span class="fc" id="L94">      final Environment environment = configuration.getEnvironment();</span>
+<span class="fc" id="L95">      final TransactionFactory transactionFactory = getTransactionFactoryFromEnvironment(environment);</span>
+<span class="fc" id="L96">      tx = transactionFactory.newTransaction(environment.getDataSource(), level, autoCommit);</span>
+<span class="fc" id="L97">      final Executor executor = configuration.newExecutor(tx, execType);</span>
+<span class="fc" id="L98">      return new DefaultSqlSession(configuration, executor, autoCommit);</span>
+<span class="nc" id="L99">    } catch (Exception e) {</span>
+<span class="nc" id="L100">      closeTransaction(tx); // may have fetched a connection so lets call close()</span>
+<span class="nc" id="L101">      throw ExceptionFactory.wrapException(&quot;Error opening session.  Cause: &quot; + e, e);</span>
     } finally {
-<span class="fc" id="L102">      ErrorContext.instance().reset();</span>
+<span class="fc" id="L103">      ErrorContext.instance().reset();</span>
     }
   }
 
@@ -107,40 +108,40 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
     try {
       boolean autoCommit;
       try {
-<span class="nc" id="L110">        autoCommit = connection.getAutoCommit();</span>
-<span class="nc" id="L111">      } catch (SQLException e) {</span>
+<span class="nc" id="L111">        autoCommit = connection.getAutoCommit();</span>
+<span class="nc" id="L112">      } catch (SQLException e) {</span>
         // Failover to true, as most poor drivers
         // or databases won't support transactions
-<span class="nc" id="L114">        autoCommit = true;</span>
-<span class="nc" id="L115">      }</span>
-<span class="nc" id="L116">      final Environment environment = configuration.getEnvironment();</span>
-<span class="nc" id="L117">      final TransactionFactory transactionFactory = getTransactionFactoryFromEnvironment(environment);</span>
-<span class="nc" id="L118">      final Transaction tx = transactionFactory.newTransaction(connection);</span>
-<span class="nc" id="L119">      final Executor executor = configuration.newExecutor(tx, execType);</span>
-<span class="nc" id="L120">      return new DefaultSqlSession(configuration, executor, autoCommit);</span>
-<span class="nc" id="L121">    } catch (Exception e) {</span>
-<span class="nc" id="L122">      throw ExceptionFactory.wrapException(&quot;Error opening session.  Cause: &quot; + e, e);</span>
+<span class="nc" id="L115">        autoCommit = true;</span>
+<span class="nc" id="L116">      }</span>
+<span class="nc" id="L117">      final Environment environment = configuration.getEnvironment();</span>
+<span class="nc" id="L118">      final TransactionFactory transactionFactory = getTransactionFactoryFromEnvironment(environment);</span>
+<span class="nc" id="L119">      final Transaction tx = transactionFactory.newTransaction(connection);</span>
+<span class="nc" id="L120">      final Executor executor = configuration.newExecutor(tx, execType);</span>
+<span class="nc" id="L121">      return new DefaultSqlSession(configuration, executor, autoCommit);</span>
+<span class="nc" id="L122">    } catch (Exception e) {</span>
+<span class="nc" id="L123">      throw ExceptionFactory.wrapException(&quot;Error opening session.  Cause: &quot; + e, e);</span>
     } finally {
-<span class="nc" id="L124">      ErrorContext.instance().reset();</span>
+<span class="nc" id="L125">      ErrorContext.instance().reset();</span>
     }
   }
 
   private TransactionFactory getTransactionFactoryFromEnvironment(Environment environment) {
-<span class="pc bpc" id="L129" title="2 of 4 branches missed.">    if (environment == null || environment.getTransactionFactory() == null) {</span>
-<span class="nc" id="L130">      return new ManagedTransactionFactory();</span>
+<span class="pc bpc" id="L130" title="2 of 4 branches missed.">    if (environment == null || environment.getTransactionFactory() == null) {</span>
+<span class="nc" id="L131">      return new ManagedTransactionFactory();</span>
     }
-<span class="fc" id="L132">    return environment.getTransactionFactory();</span>
+<span class="fc" id="L133">    return environment.getTransactionFactory();</span>
   }
 
   private void closeTransaction(Transaction tx) {
-<span class="nc bnc" id="L136" title="All 2 branches missed.">    if (tx != null) {</span>
+<span class="nc bnc" id="L137" title="All 2 branches missed.">    if (tx != null) {</span>
       try {
-<span class="nc" id="L138">        tx.close();</span>
-<span class="nc" id="L139">      } catch (SQLException ignore) {</span>
+<span class="nc" id="L139">        tx.close();</span>
+<span class="nc" id="L140">      } catch (SQLException ignore) {</span>
         // Intentionally ignore. Prefer previous error.
-<span class="nc" id="L141">      }</span>
+<span class="nc" id="L142">      }</span>
     }
-<span class="nc" id="L143">  }</span>
+<span class="nc" id="L144">  }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BlockingCache.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.cache.decorators</a> &gt; <span class="el_source">BlockingCache.java</span></div><h1>BlockingCache.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2019 the original author or authors.
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BlockingCache.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.cache.decorators</a> &gt; <span class="el_source">BlockingCache.java</span></div><h1>BlockingCache.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
@@ -16,108 +16,113 @@
 package org.apache.ibatis.cache.decorators;
 
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheException;
 
 /**
+ * &lt;p&gt;
  * Simple blocking decorator
- *
- * Simple and inefficient version of EhCache's BlockingCache decorator.
- * It sets a lock over a cache key when the element is not found in cache.
- * This way, other threads will wait until this element is filled instead of hitting the database.
+ * &lt;p&gt;
+ * Simple and inefficient version of EhCache's BlockingCache decorator. It sets a lock over a cache key when the element
+ * is not found in cache. This way, other threads will wait until this element is filled instead of hitting the
+ * database.
+ * &lt;p&gt;
+ * By its nature, this implementation can cause deadlock when used incorrectly.
  *
  * @author Eduardo Macarron
- *
  */
 public class BlockingCache implements Cache {
 
   private long timeout;
   private final Cache delegate;
-  private final ConcurrentHashMap&lt;Object, ReentrantLock&gt; locks;
+  private final ConcurrentHashMap&lt;Object, CountDownLatch&gt; locks;
 
-<span class="fc" id="L42">  public BlockingCache(Cache delegate) {</span>
-<span class="fc" id="L43">    this.delegate = delegate;</span>
-<span class="fc" id="L44">    this.locks = new ConcurrentHashMap&lt;&gt;();</span>
-<span class="fc" id="L45">  }</span>
+<span class="fc" id="L43">  public BlockingCache(Cache delegate) {</span>
+<span class="fc" id="L44">    this.delegate = delegate;</span>
+<span class="fc" id="L45">    this.locks = new ConcurrentHashMap&lt;&gt;();</span>
+<span class="fc" id="L46">  }</span>
 
   @Override
   public String getId() {
-<span class="fc" id="L49">    return delegate.getId();</span>
+<span class="fc" id="L50">    return delegate.getId();</span>
   }
 
   @Override
   public int getSize() {
-<span class="nc" id="L54">    return delegate.getSize();</span>
+<span class="nc" id="L55">    return delegate.getSize();</span>
   }
 
   @Override
   public void putObject(Object key, Object value) {
     try {
-<span class="fc" id="L60">      delegate.putObject(key, value);</span>
+<span class="fc" id="L61">      delegate.putObject(key, value);</span>
     } finally {
-<span class="fc" id="L62">      releaseLock(key);</span>
+<span class="fc" id="L63">      releaseLock(key);</span>
     }
-<span class="fc" id="L64">  }</span>
+<span class="fc" id="L65">  }</span>
 
   @Override
   public Object getObject(Object key) {
-<span class="fc" id="L68">    acquireLock(key);</span>
-<span class="fc" id="L69">    Object value = delegate.getObject(key);</span>
-<span class="fc bfc" id="L70" title="All 2 branches covered.">    if (value != null) {</span>
-<span class="fc" id="L71">      releaseLock(key);</span>
+<span class="fc" id="L69">    acquireLock(key);</span>
+<span class="fc" id="L70">    Object value = delegate.getObject(key);</span>
+<span class="fc bfc" id="L71" title="All 2 branches covered.">    if (value != null) {</span>
+<span class="fc" id="L72">      releaseLock(key);</span>
     }
-<span class="fc" id="L73">    return value;</span>
+<span class="fc" id="L74">    return value;</span>
   }
 
   @Override
   public Object removeObject(Object key) {
-    // despite of its name, this method is called only to release locks
-<span class="nc" id="L79">    releaseLock(key);</span>
-<span class="nc" id="L80">    return null;</span>
+    // despite its name, this method is called only to release locks
+<span class="fc" id="L80">    releaseLock(key);</span>
+<span class="fc" id="L81">    return null;</span>
   }
 
   @Override
   public void clear() {
-<span class="nc" id="L85">    delegate.clear();</span>
-<span class="nc" id="L86">  }</span>
-
-  private ReentrantLock getLockForKey(Object key) {
-<span class="fc" id="L89">    return locks.computeIfAbsent(key, k -&gt; new ReentrantLock());</span>
-  }
+<span class="fc" id="L86">    delegate.clear();</span>
+<span class="fc" id="L87">  }</span>
 
   private void acquireLock(Object key) {
-<span class="fc" id="L93">    Lock lock = getLockForKey(key);</span>
-<span class="pc bpc" id="L94" title="1 of 2 branches missed.">    if (timeout &gt; 0) {</span>
+<span class="fc" id="L90">    CountDownLatch newLatch = new CountDownLatch(1);</span>
+    while (true) {
+<span class="fc" id="L92">      CountDownLatch latch = locks.putIfAbsent(key, newLatch);</span>
+<span class="fc bfc" id="L93" title="All 2 branches covered.">      if (latch == null) {</span>
+<span class="fc" id="L94">        break;</span>
+      }
       try {
-<span class="nc" id="L96">        boolean acquired = lock.tryLock(timeout, TimeUnit.MILLISECONDS);</span>
-<span class="nc bnc" id="L97" title="All 2 branches missed.">        if (!acquired) {</span>
-<span class="nc" id="L98">          throw new CacheException(&quot;Couldn't get a lock in &quot; + timeout + &quot; for the key &quot; +  key + &quot; at the cache &quot; + delegate.getId());</span>
+<span class="pc bpc" id="L97" title="1 of 2 branches missed.">        if (timeout &gt; 0) {</span>
+<span class="nc" id="L98">          boolean acquired = latch.await(timeout, TimeUnit.MILLISECONDS);</span>
+<span class="nc bnc" id="L99" title="All 2 branches missed.">          if (!acquired) {</span>
+<span class="nc" id="L100">            throw new CacheException(</span>
+<span class="nc" id="L101">                &quot;Couldn't get a lock in &quot; + timeout + &quot; for the key &quot; + key + &quot; at the cache &quot; + delegate.getId());</span>
+          }
+<span class="nc" id="L103">        } else {</span>
+<span class="fc" id="L104">          latch.await();</span>
         }
-<span class="nc" id="L100">      } catch (InterruptedException e) {</span>
-<span class="nc" id="L101">        throw new CacheException(&quot;Got interrupted while trying to acquire lock for key &quot; + key, e);</span>
-<span class="nc" id="L102">      }</span>
-    } else {
-<span class="fc" id="L104">      lock.lock();</span>
-    }
-<span class="fc" id="L106">  }</span>
+<span class="nc" id="L106">      } catch (InterruptedException e) {</span>
+<span class="nc" id="L107">        throw new CacheException(&quot;Got interrupted while trying to acquire lock for key &quot; + key, e);</span>
+<span class="fc" id="L108">      }</span>
+<span class="fc" id="L109">    }</span>
+<span class="fc" id="L110">  }</span>
 
   private void releaseLock(Object key) {
-<span class="fc" id="L109">    ReentrantLock lock = locks.get(key);</span>
-<span class="pc bpc" id="L110" title="1 of 2 branches missed.">    if (lock.isHeldByCurrentThread()) {</span>
-<span class="fc" id="L111">      lock.unlock();</span>
+<span class="fc" id="L113">    CountDownLatch latch = locks.remove(key);</span>
+<span class="pc bpc" id="L114" title="1 of 2 branches missed.">    if (latch == null) {</span>
+<span class="nc" id="L115">      throw new IllegalStateException(&quot;Detected an attempt at releasing unacquired lock. This should never happen.&quot;);</span>
     }
-<span class="fc" id="L113">  }</span>
+<span class="fc" id="L117">    latch.countDown();</span>
+<span class="fc" id="L118">  }</span>
 
   public long getTimeout() {
-<span class="nc" id="L116">    return timeout;</span>
+<span class="nc" id="L121">    return timeout;</span>
   }
 
   public void setTimeout(long timeout) {
-<span class="nc" id="L120">    this.timeout = timeout;</span>
-<span class="nc" id="L121">  }</span>
+<span class="nc" id="L125">    this.timeout = timeout;</span>
+<span class="nc" id="L126">  }</span>
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

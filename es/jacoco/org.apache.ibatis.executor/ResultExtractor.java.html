@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ResultExtractor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.executor</a> &gt; <span class="el_source">ResultExtractor.java</span></div><h1>ResultExtractor.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2019 the original author or authors.
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ResultExtractor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.executor</a> &gt; <span class="el_source">ResultExtractor.java</span></div><h1>ResultExtractor.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
@@ -51,16 +51,14 @@ public class ResultExtractor {
         }
 <span class="fc" id="L52">        value = array;</span>
       } else {
-<span class="fc" id="L54">        value = list.toArray((Object[])array);</span>
+<span class="fc" id="L54">        value = list.toArray((Object[]) array);</span>
       }
-<span class="fc" id="L56">    } else {</span>
-<span class="fc bfc" id="L57" title="All 4 branches covered.">      if (list != null &amp;&amp; list.size() &gt; 1) {</span>
-<span class="fc" id="L58">        throw new ExecutorException(&quot;Statement returned more than one row, where no more than one was expected.&quot;);</span>
-<span class="pc bpc" id="L59" title="1 of 4 branches missed.">      } else if (list != null &amp;&amp; list.size() == 1) {</span>
-<span class="fc" id="L60">        value = list.get(0);</span>
-      }
+<span class="fc bfc" id="L56" title="All 4 branches covered.">    } else if (list != null &amp;&amp; list.size() &gt; 1) {</span>
+<span class="fc" id="L57">      throw new ExecutorException(&quot;Statement returned more than one row, where no more than one was expected.&quot;);</span>
+<span class="pc bpc" id="L58" title="1 of 4 branches missed.">    } else if (list != null &amp;&amp; list.size() == 1) {</span>
+<span class="fc" id="L59">      value = list.get(0);</span>
     }
-<span class="fc" id="L63">    return value;</span>
+<span class="fc" id="L61">    return value;</span>
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

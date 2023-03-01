@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BaseJdbcLogger.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.logging.jdbc</a> &gt; <span class="el_source">BaseJdbcLogger.java</span></div><h1>BaseJdbcLogger.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2019 the original author or authors.
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BaseJdbcLogger.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.logging.jdbc</a> &gt; <span class="el_source">BaseJdbcLogger.java</span></div><h1>BaseJdbcLogger.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
@@ -26,9 +26,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 
+import org.apache.ibatis.builder.SqlSourceBuilder;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.reflection.ArrayUtil;
 
@@ -65,102 +65,94 @@ public abstract class BaseJdbcLogger {
 
   static {
 <span class="fc" id="L67">    SET_METHODS = Arrays.stream(PreparedStatement.class.getDeclaredMethods())</span>
-<span class="fc" id="L68">            .filter(method -&gt; method.getName().startsWith(&quot;set&quot;))</span>
-<span class="pc bpc" id="L69" title="1 of 2 branches missed.">            .filter(method -&gt; method.getParameterCount() &gt; 1)</span>
-<span class="fc" id="L70">            .map(Method::getName)</span>
-<span class="fc" id="L71">            .collect(Collectors.toSet());</span>
+<span class="pc bpc" id="L68" title="1 of 2 branches missed.">        .filter(method -&gt; method.getName().startsWith(&quot;set&quot;)).filter(method -&gt; method.getParameterCount() &gt; 1)</span>
+<span class="fc" id="L69">        .map(Method::getName).collect(Collectors.toSet());</span>
 
-<span class="fc" id="L73">    EXECUTE_METHODS.add(&quot;execute&quot;);</span>
-<span class="fc" id="L74">    EXECUTE_METHODS.add(&quot;executeUpdate&quot;);</span>
-<span class="fc" id="L75">    EXECUTE_METHODS.add(&quot;executeQuery&quot;);</span>
-<span class="fc" id="L76">    EXECUTE_METHODS.add(&quot;addBatch&quot;);</span>
-<span class="fc" id="L77">  }</span>
+<span class="fc" id="L71">    EXECUTE_METHODS.add(&quot;execute&quot;);</span>
+<span class="fc" id="L72">    EXECUTE_METHODS.add(&quot;executeUpdate&quot;);</span>
+<span class="fc" id="L73">    EXECUTE_METHODS.add(&quot;executeQuery&quot;);</span>
+<span class="fc" id="L74">    EXECUTE_METHODS.add(&quot;addBatch&quot;);</span>
+<span class="fc" id="L75">  }</span>
 
   protected void setColumn(Object key, Object value) {
-<span class="fc" id="L80">    columnMap.put(key, value);</span>
-<span class="fc" id="L81">    columnNames.add(key);</span>
-<span class="fc" id="L82">    columnValues.add(value);</span>
-<span class="fc" id="L83">  }</span>
+<span class="fc" id="L78">    columnMap.put(key, value);</span>
+<span class="fc" id="L79">    columnNames.add(key);</span>
+<span class="fc" id="L80">    columnValues.add(value);</span>
+<span class="fc" id="L81">  }</span>
 
   protected Object getColumn(Object key) {
-<span class="nc" id="L86">    return columnMap.get(key);</span>
+<span class="nc" id="L84">    return columnMap.get(key);</span>
   }
 
   protected String getParameterValueString() {
-<span class="fc" id="L90">    List&lt;Object&gt; typeList = new ArrayList&lt;&gt;(columnValues.size());</span>
-<span class="fc bfc" id="L91" title="All 2 branches covered.">    for (Object value : columnValues) {</span>
-<span class="fc bfc" id="L92" title="All 2 branches covered.">      if (value == null) {</span>
-<span class="fc" id="L93">        typeList.add(&quot;null&quot;);</span>
+<span class="fc" id="L88">    List&lt;Object&gt; typeList = new ArrayList&lt;&gt;(columnValues.size());</span>
+<span class="fc bfc" id="L89" title="All 2 branches covered.">    for (Object value : columnValues) {</span>
+<span class="fc bfc" id="L90" title="All 2 branches covered.">      if (value == null) {</span>
+<span class="fc" id="L91">        typeList.add(&quot;null&quot;);</span>
       } else {
-<span class="fc" id="L95">        typeList.add(objectValueString(value) + &quot;(&quot; + value.getClass().getSimpleName() + &quot;)&quot;);</span>
+<span class="fc" id="L93">        typeList.add(objectValueString(value) + &quot;(&quot; + value.getClass().getSimpleName() + &quot;)&quot;);</span>
       }
-<span class="fc" id="L97">    }</span>
-<span class="fc" id="L98">    final String parameters = typeList.toString();</span>
-<span class="fc" id="L99">    return parameters.substring(1, parameters.length() - 1);</span>
+<span class="fc" id="L95">    }</span>
+<span class="fc" id="L96">    final String parameters = typeList.toString();</span>
+<span class="fc" id="L97">    return parameters.substring(1, parameters.length() - 1);</span>
   }
 
   protected String objectValueString(Object value) {
-<span class="fc bfc" id="L103" title="All 2 branches covered.">    if (value instanceof Array) {</span>
+<span class="fc bfc" id="L101" title="All 2 branches covered.">    if (value instanceof Array) {</span>
       try {
-<span class="fc" id="L105">        return ArrayUtil.toString(((Array) value).getArray());</span>
-<span class="nc" id="L106">      } catch (SQLException e) {</span>
-<span class="nc" id="L107">        return value.toString();</span>
+<span class="fc" id="L103">        return ArrayUtil.toString(((Array) value).getArray());</span>
+<span class="nc" id="L104">      } catch (SQLException e) {</span>
+        // Intentialy fall through to return value.toString()
       }
     }
-<span class="fc" id="L110">    return value.toString();</span>
+<span class="fc" id="L108">    return value.toString();</span>
   }
 
   protected String getColumnString() {
-<span class="nc" id="L114">    return columnNames.toString();</span>
+<span class="nc" id="L112">    return columnNames.toString();</span>
   }
 
   protected void clearColumnInfo() {
-<span class="fc" id="L118">    columnMap.clear();</span>
-<span class="fc" id="L119">    columnNames.clear();</span>
-<span class="fc" id="L120">    columnValues.clear();</span>
-<span class="fc" id="L121">  }</span>
+<span class="fc" id="L116">    columnMap.clear();</span>
+<span class="fc" id="L117">    columnNames.clear();</span>
+<span class="fc" id="L118">    columnValues.clear();</span>
+<span class="fc" id="L119">  }</span>
 
-  protected String removeBreakingWhitespace(String original) {
-<span class="fc" id="L124">    StringTokenizer whitespaceStripper = new StringTokenizer(original);</span>
-<span class="fc" id="L125">    StringBuilder builder = new StringBuilder();</span>
-<span class="fc bfc" id="L126" title="All 2 branches covered.">    while (whitespaceStripper.hasMoreTokens()) {</span>
-<span class="fc" id="L127">      builder.append(whitespaceStripper.nextToken());</span>
-<span class="fc" id="L128">      builder.append(&quot; &quot;);</span>
-    }
-<span class="fc" id="L130">    return builder.toString();</span>
+  protected String removeExtraWhitespace(String original) {
+<span class="fc" id="L122">    return SqlSourceBuilder.removeExtraWhitespaces(original);</span>
   }
 
   protected boolean isDebugEnabled() {
-<span class="fc" id="L134">    return statementLog.isDebugEnabled();</span>
+<span class="fc" id="L126">    return statementLog.isDebugEnabled();</span>
   }
 
   protected boolean isTraceEnabled() {
-<span class="fc" id="L138">    return statementLog.isTraceEnabled();</span>
+<span class="fc" id="L130">    return statementLog.isTraceEnabled();</span>
   }
 
   protected void debug(String text, boolean input) {
-<span class="pc bpc" id="L142" title="1 of 2 branches missed.">    if (statementLog.isDebugEnabled()) {</span>
-<span class="fc" id="L143">      statementLog.debug(prefix(input) + text);</span>
+<span class="pc bpc" id="L134" title="1 of 2 branches missed.">    if (statementLog.isDebugEnabled()) {</span>
+<span class="fc" id="L135">      statementLog.debug(prefix(input) + text);</span>
     }
-<span class="fc" id="L145">  }</span>
+<span class="fc" id="L137">  }</span>
 
   protected void trace(String text, boolean input) {
-<span class="pc bpc" id="L148" title="1 of 2 branches missed.">    if (statementLog.isTraceEnabled()) {</span>
-<span class="fc" id="L149">      statementLog.trace(prefix(input) + text);</span>
+<span class="pc bpc" id="L140" title="1 of 2 branches missed.">    if (statementLog.isTraceEnabled()) {</span>
+<span class="fc" id="L141">      statementLog.trace(prefix(input) + text);</span>
     }
-<span class="fc" id="L151">  }</span>
+<span class="fc" id="L143">  }</span>
 
   private String prefix(boolean isInput) {
-<span class="fc" id="L154">    char[] buffer = new char[queryStack * 2 + 2];</span>
-<span class="fc" id="L155">    Arrays.fill(buffer, '=');</span>
-<span class="fc" id="L156">    buffer[queryStack * 2 + 1] = ' ';</span>
-<span class="fc bfc" id="L157" title="All 2 branches covered.">    if (isInput) {</span>
-<span class="fc" id="L158">      buffer[queryStack * 2] = '&gt;';</span>
+<span class="fc" id="L146">    char[] buffer = new char[queryStack * 2 + 2];</span>
+<span class="fc" id="L147">    Arrays.fill(buffer, '=');</span>
+<span class="fc" id="L148">    buffer[queryStack * 2 + 1] = ' ';</span>
+<span class="fc bfc" id="L149" title="All 2 branches covered.">    if (isInput) {</span>
+<span class="fc" id="L150">      buffer[queryStack * 2] = '&gt;';</span>
     } else {
-<span class="fc" id="L160">      buffer[0] = '&lt;';</span>
+<span class="fc" id="L152">      buffer[0] = '&lt;';</span>
     }
-<span class="fc" id="L162">    return new String(buffer);</span>
+<span class="fc" id="L154">    return new String(buffer);</span>
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

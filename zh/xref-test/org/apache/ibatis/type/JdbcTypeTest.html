@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/type/JdbcTypeTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2022 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -30,32 +30,28 @@
 <a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.api.Test;
 <a class="jxr_linenumber" name="L23" href="#L23">23</a>  
 <a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">class</strong> <a name="JdbcTypeTest" href="../../../../org/apache/ibatis/type/JdbcTypeTest.html#JdbcTypeTest">JdbcTypeTest</a> {
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String[] requiredStandardTypeNames = {
-<a class="jxr_linenumber" name="L26" href="#L26">26</a>      <span class="jxr_string">"ARRAY"</span>, <span class="jxr_string">"BIGINT"</span>, <span class="jxr_string">"BINARY"</span>, <span class="jxr_string">"BIT"</span>, <span class="jxr_string">"BLOB"</span>, <span class="jxr_string">"BOOLEAN"</span>, <span class="jxr_string">"CHAR"</span>, <span class="jxr_string">"CLOB"</span>,
-<a class="jxr_linenumber" name="L27" href="#L27">27</a>      <span class="jxr_string">"DATALINK"</span>, <span class="jxr_string">"DATE"</span>, <span class="jxr_string">"DECIMAL"</span>, <span class="jxr_string">"DISTINCT"</span>, <span class="jxr_string">"DOUBLE"</span>, <span class="jxr_string">"FLOAT"</span>, <span class="jxr_string">"INTEGER"</span>,
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>      <span class="jxr_string">"JAVA_OBJECT"</span>, <span class="jxr_string">"LONGNVARCHAR"</span>, <span class="jxr_string">"LONGVARBINARY"</span>, <span class="jxr_string">"LONGVARCHAR"</span>, <span class="jxr_string">"NCHAR"</span>,
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>      <span class="jxr_string">"NCLOB"</span>, <span class="jxr_string">"NULL"</span>, <span class="jxr_string">"NUMERIC"</span>,<span class="jxr_string">"NVARCHAR"</span>, <span class="jxr_string">"OTHER"</span>, <span class="jxr_string">"REAL"</span>, <span class="jxr_string">"REF"</span>, <span class="jxr_string">"ROWID"</span>,
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>      <span class="jxr_string">"SMALLINT"</span>, <span class="jxr_string">"SQLXML"</span>, <span class="jxr_string">"STRUCT"</span>, <span class="jxr_string">"TIME"</span>, <span class="jxr_string">"TIMESTAMP"</span>, <span class="jxr_string">"TINYINT"</span>,
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>      <span class="jxr_string">"VARBINARY"</span>, <span class="jxr_string">"VARCHAR"</span>
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>    };
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>  
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>    @Test
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>    <strong class="jxr_keyword">void</strong> shouldHaveRequiredStandardConstants() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>      <strong class="jxr_keyword">for</strong> (String typeName : requiredStandardTypeNames) {
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>        <strong class="jxr_keyword">int</strong> typeCode = Types.<strong class="jxr_keyword">class</strong>.getField(typeName).getInt(<strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>        JdbcType jdbcType = JdbcType.valueOf(typeName);
-<a class="jxr_linenumber" name="L39" href="#L39">39</a>        assertEquals(typeCode, jdbcType.TYPE_CODE);
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>      }
-<a class="jxr_linenumber" name="L41" href="#L41">41</a>    }
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>  
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>    @Test
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>    <strong class="jxr_keyword">void</strong> shouldHaveDateTimeOffsetConstant() {
-<a class="jxr_linenumber" name="L45" href="#L45">45</a>      JdbcType jdbcType = JdbcType.valueOf(<span class="jxr_string">"DATETIMEOFFSET"</span>);
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>      assertEquals(-155, jdbcType.TYPE_CODE);
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>    }
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>  }
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String[] requiredStandardTypeNames = { <span class="jxr_string">"ARRAY"</span>, <span class="jxr_string">"BIGINT"</span>, <span class="jxr_string">"BINARY"</span>, <span class="jxr_string">"BIT"</span>, <span class="jxr_string">"BLOB"</span>, <span class="jxr_string">"BOOLEAN"</span>,
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>        <span class="jxr_string">"CHAR"</span>, <span class="jxr_string">"CLOB"</span>, <span class="jxr_string">"DATALINK"</span>, <span class="jxr_string">"DATE"</span>, <span class="jxr_string">"DECIMAL"</span>, <span class="jxr_string">"DISTINCT"</span>, <span class="jxr_string">"DOUBLE"</span>, <span class="jxr_string">"FLOAT"</span>, <span class="jxr_string">"INTEGER"</span>, <span class="jxr_string">"JAVA_OBJECT"</span>,
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>        <span class="jxr_string">"LONGNVARCHAR"</span>, <span class="jxr_string">"LONGVARBINARY"</span>, <span class="jxr_string">"LONGVARCHAR"</span>, <span class="jxr_string">"NCHAR"</span>, <span class="jxr_string">"NCLOB"</span>, <span class="jxr_string">"NULL"</span>, <span class="jxr_string">"NUMERIC"</span>, <span class="jxr_string">"NVARCHAR"</span>, <span class="jxr_string">"OTHER"</span>, <span class="jxr_string">"REAL"</span>,
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>        <span class="jxr_string">"REF"</span>, <span class="jxr_string">"ROWID"</span>, <span class="jxr_string">"SMALLINT"</span>, <span class="jxr_string">"SQLXML"</span>, <span class="jxr_string">"STRUCT"</span>, <span class="jxr_string">"TIME"</span>, <span class="jxr_string">"TIMESTAMP"</span>, <span class="jxr_string">"TINYINT"</span>, <span class="jxr_string">"VARBINARY"</span>, <span class="jxr_string">"VARCHAR"</span> };
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>    @Test
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>    <strong class="jxr_keyword">void</strong> shouldHaveRequiredStandardConstants() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>      <strong class="jxr_keyword">for</strong> (String typeName : requiredStandardTypeNames) {
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>        <strong class="jxr_keyword">int</strong> typeCode = Types.<strong class="jxr_keyword">class</strong>.getField(typeName).getInt(<strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>        JdbcType jdbcType = JdbcType.valueOf(typeName);
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>        assertEquals(typeCode, jdbcType.TYPE_CODE);
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>      }
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>    }
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>    @Test
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>    <strong class="jxr_keyword">void</strong> shouldHaveDateTimeOffsetConstant() {
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>      JdbcType jdbcType = JdbcType.valueOf(<span class="jxr_string">"DATETIMEOFFSET"</span>);
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>      assertEquals(-155, jdbcType.TYPE_CODE);
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>    }
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2022 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2023 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

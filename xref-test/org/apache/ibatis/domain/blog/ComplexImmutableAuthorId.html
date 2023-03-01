@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/domain/blog/ComplexImmutableAuthorId.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2022 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -63,33 +63,25 @@
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>  
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>      <strong class="jxr_keyword">final</strong> <a name="ComplexImmutableAuthorId" href="../../../../../org/apache/ibatis/domain/blog/ComplexImmutableAuthorId.html#ComplexImmutableAuthorId">ComplexImmutableAuthorId</a> that = (<a name="ComplexImmutableAuthorId" href="../../../../../org/apache/ibatis/domain/blog/ComplexImmutableAuthorId.html#ComplexImmutableAuthorId">ComplexImmutableAuthorId</a>) o;
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>  
-<a class="jxr_linenumber" name="L58" href="#L58">58</a>      <strong class="jxr_keyword">if</strong> (id != that.id) {
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>        <strong class="jxr_keyword">return</strong> false;
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>      }
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>      <strong class="jxr_keyword">if</strong> (email != <strong class="jxr_keyword">null</strong> ? !email.equals(that.email) : that.email != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>        <strong class="jxr_keyword">return</strong> false;
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>      }
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>      <strong class="jxr_keyword">if</strong> (password != <strong class="jxr_keyword">null</strong> ? !password.equals(that.password) : that.password != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>        <strong class="jxr_keyword">return</strong> false;
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>      }
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>      <strong class="jxr_keyword">if</strong> (username != <strong class="jxr_keyword">null</strong> ? !username.equals(that.username) : that.username != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>        <strong class="jxr_keyword">return</strong> false;
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>      }
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>  
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>      <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">true</strong>;
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>    }
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>  
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>    @Override
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> hashCode() {
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>      <strong class="jxr_keyword">int</strong> myresult = id;
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>      myresult = 31 * myresult + (email != <strong class="jxr_keyword">null</strong> ? email.hashCode() : 0);
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>      myresult = 31 * myresult + (username != <strong class="jxr_keyword">null</strong> ? username.hashCode() : 0);
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>      myresult = 31 * myresult + (password != <strong class="jxr_keyword">null</strong> ? password.hashCode() : 0);
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>      <strong class="jxr_keyword">return</strong> myresult;
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>    }
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>  }
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>      <strong class="jxr_keyword">if</strong> ((id != that.id) || (email != <strong class="jxr_keyword">null</strong> ? !email.equals(that.email) : that.email != <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>          || (password != <strong class="jxr_keyword">null</strong> ? !password.equals(that.password) : that.password != <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>          || (username != <strong class="jxr_keyword">null</strong> ? !username.equals(that.username) : that.username != <strong class="jxr_keyword">null</strong>)) {
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>        <strong class="jxr_keyword">return</strong> false;
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>      }
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>  
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>      <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>    }
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>  
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>    @Override
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> hashCode() {
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>      <strong class="jxr_keyword">int</strong> myresult = id;
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>      myresult = 31 * myresult + (email != <strong class="jxr_keyword">null</strong> ? email.hashCode() : 0);
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>      myresult = 31 * myresult + (username != <strong class="jxr_keyword">null</strong> ? username.hashCode() : 0);
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>      <strong class="jxr_keyword">return</strong> 31 * myresult + (password != <strong class="jxr_keyword">null</strong> ? password.hashCode() : 0);
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>    }
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2022 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2023 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../apidocs/org/apache/ibatis/mapping/ResultMap.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2022 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -64,122 +64,122 @@
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> Builder {
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a name="Log" href="../../../../org/apache/ibatis/logging/Log.html#Log">Log</a> log = LogFactory.getLog(Builder.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>  
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>      <strong class="jxr_keyword">private</strong> <a name="ResultMap" href="../../../../org/apache/ibatis/annotations/ResultMap.html#ResultMap">ResultMap</a> resultMap = <strong class="jxr_keyword">new</strong> <a name="ResultMap" href="../../../../org/apache/ibatis/annotations/ResultMap.html#ResultMap">ResultMap</a>();
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a name="ResultMap" href="../../../../org/apache/ibatis/annotations/ResultMap.html#ResultMap">ResultMap</a> resultMap = <strong class="jxr_keyword">new</strong> <a name="ResultMap" href="../../../../org/apache/ibatis/annotations/ResultMap.html#ResultMap">ResultMap</a>();
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>  
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>      <strong class="jxr_keyword">public</strong> Builder(<a name="Configuration" href="../../../../org/apache/ibatis/session/Configuration.html#Configuration">Configuration</a> configuration, String id, Class&lt;?&gt; type, List&lt;ResultMapping&gt; resultMappings) {
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>        <strong class="jxr_keyword">this</strong>(configuration, id, type, resultMappings, <strong class="jxr_keyword">null</strong>);
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>      }
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>  
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>      <strong class="jxr_keyword">public</strong> Builder(<a name="Configuration" href="../../../../org/apache/ibatis/session/Configuration.html#Configuration">Configuration</a> configuration, String id, Class&lt;?&gt; type, List&lt;ResultMapping&gt; resultMappings, Boolean autoMapping) {
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>        resultMap.configuration = configuration;
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>        resultMap.id = id;
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>        resultMap.type = type;
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>        resultMap.resultMappings = resultMappings;
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>        resultMap.autoMapping = autoMapping;
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>      }
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>  
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>      <strong class="jxr_keyword">public</strong> Builder discriminator(<a name="Discriminator" href="../../../../org/apache/ibatis/mapping/Discriminator.html#Discriminator">Discriminator</a> discriminator) {
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>        resultMap.discriminator = discriminator;
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>        <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>      }
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>  
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>      <strong class="jxr_keyword">public</strong> Class&lt;?&gt; type() {
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>        <strong class="jxr_keyword">return</strong> resultMap.type;
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>      }
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>  
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>      <strong class="jxr_keyword">public</strong> <a name="ResultMap" href="../../../../org/apache/ibatis/annotations/ResultMap.html#ResultMap">ResultMap</a> build() {
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>        <strong class="jxr_keyword">if</strong> (resultMap.id == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>          <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(<span class="jxr_string">"ResultMaps must have an id"</span>);
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>        }
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>        resultMap.mappedColumns = <strong class="jxr_keyword">new</strong> HashSet&lt;&gt;();
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>        resultMap.mappedProperties = <strong class="jxr_keyword">new</strong> HashSet&lt;&gt;();
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>        resultMap.idResultMappings = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>        resultMap.constructorResultMappings = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>        resultMap.propertyResultMappings = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>        <strong class="jxr_keyword">final</strong> List&lt;String&gt; constructorArgNames = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>        <strong class="jxr_keyword">for</strong> (<a name="ResultMapping" href="../../../../org/apache/ibatis/mapping/ResultMapping.html#ResultMapping">ResultMapping</a> resultMapping : resultMap.resultMappings) {
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>          resultMap.hasNestedQueries = resultMap.hasNestedQueries || resultMapping.getNestedQueryId() != <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>          resultMap.hasNestedResultMaps = resultMap.hasNestedResultMaps || (resultMapping.getNestedResultMapId() != <strong class="jxr_keyword">null</strong> &amp;&amp; resultMapping.getResultSet() == <strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>          <strong class="jxr_keyword">final</strong> String column = resultMapping.getColumn();
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>          <strong class="jxr_keyword">if</strong> (column != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L97" href="#L97">97</a>            resultMap.mappedColumns.add(column.toUpperCase(Locale.ENGLISH));
-<a class="jxr_linenumber" name="L98" href="#L98">98</a>          } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (resultMapping.isCompositeResult()) {
-<a class="jxr_linenumber" name="L99" href="#L99">99</a>            <strong class="jxr_keyword">for</strong> (<a name="ResultMapping" href="../../../../org/apache/ibatis/mapping/ResultMapping.html#ResultMapping">ResultMapping</a> compositeResultMapping : resultMapping.getComposites()) {
-<a class="jxr_linenumber" name="L100" href="#L100">100</a>             <strong class="jxr_keyword">final</strong> String compositeColumn = compositeResultMapping.getColumn();
-<a class="jxr_linenumber" name="L101" href="#L101">101</a>             <strong class="jxr_keyword">if</strong> (compositeColumn != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L102" href="#L102">102</a>               resultMap.mappedColumns.add(compositeColumn.toUpperCase(Locale.ENGLISH));
-<a class="jxr_linenumber" name="L103" href="#L103">103</a>             }
-<a class="jxr_linenumber" name="L104" href="#L104">104</a>           }
-<a class="jxr_linenumber" name="L105" href="#L105">105</a>         }
-<a class="jxr_linenumber" name="L106" href="#L106">106</a>         <strong class="jxr_keyword">final</strong> String property = resultMapping.getProperty();
-<a class="jxr_linenumber" name="L107" href="#L107">107</a>         <strong class="jxr_keyword">if</strong> (property != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L108" href="#L108">108</a>           resultMap.mappedProperties.add(property);
-<a class="jxr_linenumber" name="L109" href="#L109">109</a>         }
-<a class="jxr_linenumber" name="L110" href="#L110">110</a>         <strong class="jxr_keyword">if</strong> (resultMapping.getFlags().contains(ResultFlag.CONSTRUCTOR)) {
-<a class="jxr_linenumber" name="L111" href="#L111">111</a>           resultMap.constructorResultMappings.add(resultMapping);
-<a class="jxr_linenumber" name="L112" href="#L112">112</a>           <strong class="jxr_keyword">if</strong> (resultMapping.getProperty() != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L113" href="#L113">113</a>             constructorArgNames.add(resultMapping.getProperty());
-<a class="jxr_linenumber" name="L114" href="#L114">114</a>           }
-<a class="jxr_linenumber" name="L115" href="#L115">115</a>         } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L116" href="#L116">116</a>           resultMap.propertyResultMappings.add(resultMapping);
-<a class="jxr_linenumber" name="L117" href="#L117">117</a>         }
-<a class="jxr_linenumber" name="L118" href="#L118">118</a>         <strong class="jxr_keyword">if</strong> (resultMapping.getFlags().contains(ResultFlag.ID)) {
-<a class="jxr_linenumber" name="L119" href="#L119">119</a>           resultMap.idResultMappings.add(resultMapping);
-<a class="jxr_linenumber" name="L120" href="#L120">120</a>         }
-<a class="jxr_linenumber" name="L121" href="#L121">121</a>       }
-<a class="jxr_linenumber" name="L122" href="#L122">122</a>       <strong class="jxr_keyword">if</strong> (resultMap.idResultMappings.isEmpty()) {
-<a class="jxr_linenumber" name="L123" href="#L123">123</a>         resultMap.idResultMappings.addAll(resultMap.resultMappings);
-<a class="jxr_linenumber" name="L124" href="#L124">124</a>       }
-<a class="jxr_linenumber" name="L125" href="#L125">125</a>       <strong class="jxr_keyword">if</strong> (!constructorArgNames.isEmpty()) {
-<a class="jxr_linenumber" name="L126" href="#L126">126</a>         <strong class="jxr_keyword">final</strong> List&lt;String&gt; actualArgNames = argNamesOfMatchingConstructor(constructorArgNames);
-<a class="jxr_linenumber" name="L127" href="#L127">127</a>         <strong class="jxr_keyword">if</strong> (actualArgNames == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L128" href="#L128">128</a>           <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="BuilderException" href="../../../../org/apache/ibatis/builder/BuilderException.html#BuilderException">BuilderException</a>(<span class="jxr_string">"Error in result map '"</span> + resultMap.id
-<a class="jxr_linenumber" name="L129" href="#L129">129</a>               + <span class="jxr_string">"'. Failed to find a constructor in '"</span>
-<a class="jxr_linenumber" name="L130" href="#L130">130</a>               + resultMap.getType().getName() + <span class="jxr_string">"' by arg names "</span> + constructorArgNames
-<a class="jxr_linenumber" name="L131" href="#L131">131</a>               + <span class="jxr_string">". There might be more info in debug log."</span>);
-<a class="jxr_linenumber" name="L132" href="#L132">132</a>         }
-<a class="jxr_linenumber" name="L133" href="#L133">133</a>         resultMap.constructorResultMappings.sort((o1, o2) -&gt; {
-<a class="jxr_linenumber" name="L134" href="#L134">134</a>           <strong class="jxr_keyword">int</strong> paramIdx1 = actualArgNames.indexOf(o1.getProperty());
-<a class="jxr_linenumber" name="L135" href="#L135">135</a>           <strong class="jxr_keyword">int</strong> paramIdx2 = actualArgNames.indexOf(o2.getProperty());
-<a class="jxr_linenumber" name="L136" href="#L136">136</a>           <strong class="jxr_keyword">return</strong> paramIdx1 - paramIdx2;
-<a class="jxr_linenumber" name="L137" href="#L137">137</a>         });
-<a class="jxr_linenumber" name="L138" href="#L138">138</a>       }
-<a class="jxr_linenumber" name="L139" href="#L139">139</a>       <em class="jxr_comment">// lock down collections</em>
-<a class="jxr_linenumber" name="L140" href="#L140">140</a>       resultMap.resultMappings = Collections.unmodifiableList(resultMap.resultMappings);
-<a class="jxr_linenumber" name="L141" href="#L141">141</a>       resultMap.idResultMappings = Collections.unmodifiableList(resultMap.idResultMappings);
-<a class="jxr_linenumber" name="L142" href="#L142">142</a>       resultMap.constructorResultMappings = Collections.unmodifiableList(resultMap.constructorResultMappings);
-<a class="jxr_linenumber" name="L143" href="#L143">143</a>       resultMap.propertyResultMappings = Collections.unmodifiableList(resultMap.propertyResultMappings);
-<a class="jxr_linenumber" name="L144" href="#L144">144</a>       resultMap.mappedColumns = Collections.unmodifiableSet(resultMap.mappedColumns);
-<a class="jxr_linenumber" name="L145" href="#L145">145</a>       <strong class="jxr_keyword">return</strong> resultMap;
-<a class="jxr_linenumber" name="L146" href="#L146">146</a>     }
-<a class="jxr_linenumber" name="L147" href="#L147">147</a> 
-<a class="jxr_linenumber" name="L148" href="#L148">148</a>     <strong class="jxr_keyword">private</strong> List&lt;String&gt; argNamesOfMatchingConstructor(List&lt;String&gt; constructorArgNames) {
-<a class="jxr_linenumber" name="L149" href="#L149">149</a>       Constructor&lt;?&gt;[] constructors = resultMap.type.getDeclaredConstructors();
-<a class="jxr_linenumber" name="L150" href="#L150">150</a>       <strong class="jxr_keyword">for</strong> (Constructor&lt;?&gt; constructor : constructors) {
-<a class="jxr_linenumber" name="L151" href="#L151">151</a>         Class&lt;?&gt;[] paramTypes = constructor.getParameterTypes();
-<a class="jxr_linenumber" name="L152" href="#L152">152</a>         <strong class="jxr_keyword">if</strong> (constructorArgNames.size() == paramTypes.length) {
-<a class="jxr_linenumber" name="L153" href="#L153">153</a>           List&lt;String&gt; paramNames = getArgNames(constructor);
-<a class="jxr_linenumber" name="L154" href="#L154">154</a>           <strong class="jxr_keyword">if</strong> (constructorArgNames.containsAll(paramNames)
-<a class="jxr_linenumber" name="L155" href="#L155">155</a>               &amp;&amp; argTypesMatch(constructorArgNames, paramTypes, paramNames)) {
-<a class="jxr_linenumber" name="L156" href="#L156">156</a>             <strong class="jxr_keyword">return</strong> paramNames;
-<a class="jxr_linenumber" name="L157" href="#L157">157</a>           }
-<a class="jxr_linenumber" name="L158" href="#L158">158</a>         }
-<a class="jxr_linenumber" name="L159" href="#L159">159</a>       }
-<a class="jxr_linenumber" name="L160" href="#L160">160</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L161" href="#L161">161</a>     }
-<a class="jxr_linenumber" name="L162" href="#L162">162</a> 
-<a class="jxr_linenumber" name="L163" href="#L163">163</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> argTypesMatch(<strong class="jxr_keyword">final</strong> List&lt;String&gt; constructorArgNames,
-<a class="jxr_linenumber" name="L164" href="#L164">164</a>         Class&lt;?&gt;[] paramTypes, List&lt;String&gt; paramNames) {
-<a class="jxr_linenumber" name="L165" href="#L165">165</a>       <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; constructorArgNames.size(); i++) {
-<a class="jxr_linenumber" name="L166" href="#L166">166</a>         Class&lt;?&gt; actualType = paramTypes[paramNames.indexOf(constructorArgNames.get(i))];
-<a class="jxr_linenumber" name="L167" href="#L167">167</a>         Class&lt;?&gt; specifiedType = resultMap.constructorResultMappings.get(i).getJavaType();
-<a class="jxr_linenumber" name="L168" href="#L168">168</a>         <strong class="jxr_keyword">if</strong> (!actualType.equals(specifiedType)) {
-<a class="jxr_linenumber" name="L169" href="#L169">169</a>           <strong class="jxr_keyword">if</strong> (log.isDebugEnabled()) {
-<a class="jxr_linenumber" name="L170" href="#L170">170</a>             log.debug(<span class="jxr_string">"While building result map '"</span> + resultMap.id
-<a class="jxr_linenumber" name="L171" href="#L171">171</a>                 + <span class="jxr_string">"', found a constructor with arg names "</span> + constructorArgNames
-<a class="jxr_linenumber" name="L172" href="#L172">172</a>                 + <span class="jxr_string">", but the type of '"</span> + constructorArgNames.get(i)
-<a class="jxr_linenumber" name="L173" href="#L173">173</a>                 + <span class="jxr_string">"' did not match. Specified: ["</span> + specifiedType.getName() + <span class="jxr_string">"] Declared: ["</span>
-<a class="jxr_linenumber" name="L174" href="#L174">174</a>                 + actualType.getName() + <span class="jxr_string">"]"</span>);
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>      <strong class="jxr_keyword">public</strong> Builder(<a name="Configuration" href="../../../../org/apache/ibatis/session/Configuration.html#Configuration">Configuration</a> configuration, String id, Class&lt;?&gt; type, List&lt;ResultMapping&gt; resultMappings,
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>          Boolean autoMapping) {
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>        resultMap.configuration = configuration;
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>        resultMap.id = id;
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>        resultMap.type = type;
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>        resultMap.resultMappings = resultMappings;
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>        resultMap.autoMapping = autoMapping;
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>      }
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>  
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>      <strong class="jxr_keyword">public</strong> Builder discriminator(<a name="Discriminator" href="../../../../org/apache/ibatis/mapping/Discriminator.html#Discriminator">Discriminator</a> discriminator) {
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>        resultMap.discriminator = discriminator;
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>        <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>      }
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>  
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>      <strong class="jxr_keyword">public</strong> Class&lt;?&gt; type() {
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>        <strong class="jxr_keyword">return</strong> resultMap.type;
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>      }
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>  
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>      <strong class="jxr_keyword">public</strong> <a name="ResultMap" href="../../../../org/apache/ibatis/annotations/ResultMap.html#ResultMap">ResultMap</a> build() {
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>        <strong class="jxr_keyword">if</strong> (resultMap.id == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>          <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(<span class="jxr_string">"ResultMaps must have an id"</span>);
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>        }
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>        resultMap.mappedColumns = <strong class="jxr_keyword">new</strong> HashSet&lt;&gt;();
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>        resultMap.mappedProperties = <strong class="jxr_keyword">new</strong> HashSet&lt;&gt;();
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>        resultMap.idResultMappings = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>        resultMap.constructorResultMappings = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>        resultMap.propertyResultMappings = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>        <strong class="jxr_keyword">final</strong> List&lt;String&gt; constructorArgNames = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>        <strong class="jxr_keyword">for</strong> (<a name="ResultMapping" href="../../../../org/apache/ibatis/mapping/ResultMapping.html#ResultMapping">ResultMapping</a> resultMapping : resultMap.resultMappings) {
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>          resultMap.hasNestedQueries = resultMap.hasNestedQueries || resultMapping.getNestedQueryId() != <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>          resultMap.hasNestedResultMaps = resultMap.hasNestedResultMaps
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>              || resultMapping.getNestedResultMapId() != <strong class="jxr_keyword">null</strong> &amp;&amp; resultMapping.getResultSet() == <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>          <strong class="jxr_keyword">final</strong> String column = resultMapping.getColumn();
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>          <strong class="jxr_keyword">if</strong> (column != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>            resultMap.mappedColumns.add(column.toUpperCase(Locale.ENGLISH));
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>         } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (resultMapping.isCompositeResult()) {
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>           <strong class="jxr_keyword">for</strong> (<a name="ResultMapping" href="../../../../org/apache/ibatis/mapping/ResultMapping.html#ResultMapping">ResultMapping</a> compositeResultMapping : resultMapping.getComposites()) {
+<a class="jxr_linenumber" name="L102" href="#L102">102</a>             <strong class="jxr_keyword">final</strong> String compositeColumn = compositeResultMapping.getColumn();
+<a class="jxr_linenumber" name="L103" href="#L103">103</a>             <strong class="jxr_keyword">if</strong> (compositeColumn != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L104" href="#L104">104</a>               resultMap.mappedColumns.add(compositeColumn.toUpperCase(Locale.ENGLISH));
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>             }
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>           }
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>         }
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>         <strong class="jxr_keyword">final</strong> String property = resultMapping.getProperty();
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>         <strong class="jxr_keyword">if</strong> (property != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>           resultMap.mappedProperties.add(property);
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>         }
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>         <strong class="jxr_keyword">if</strong> (resultMapping.getFlags().contains(ResultFlag.CONSTRUCTOR)) {
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>           resultMap.constructorResultMappings.add(resultMapping);
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>           <strong class="jxr_keyword">if</strong> (resultMapping.getProperty() != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L115" href="#L115">115</a>             constructorArgNames.add(resultMapping.getProperty());
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>           }
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>           resultMap.propertyResultMappings.add(resultMapping);
+<a class="jxr_linenumber" name="L119" href="#L119">119</a>         }
+<a class="jxr_linenumber" name="L120" href="#L120">120</a>         <strong class="jxr_keyword">if</strong> (resultMapping.getFlags().contains(ResultFlag.ID)) {
+<a class="jxr_linenumber" name="L121" href="#L121">121</a>           resultMap.idResultMappings.add(resultMapping);
+<a class="jxr_linenumber" name="L122" href="#L122">122</a>         }
+<a class="jxr_linenumber" name="L123" href="#L123">123</a>       }
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>       <strong class="jxr_keyword">if</strong> (resultMap.idResultMappings.isEmpty()) {
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>         resultMap.idResultMappings.addAll(resultMap.resultMappings);
+<a class="jxr_linenumber" name="L126" href="#L126">126</a>       }
+<a class="jxr_linenumber" name="L127" href="#L127">127</a>       <strong class="jxr_keyword">if</strong> (!constructorArgNames.isEmpty()) {
+<a class="jxr_linenumber" name="L128" href="#L128">128</a>         <strong class="jxr_keyword">final</strong> List&lt;String&gt; actualArgNames = argNamesOfMatchingConstructor(constructorArgNames);
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>         <strong class="jxr_keyword">if</strong> (actualArgNames == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L130" href="#L130">130</a>           <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="BuilderException" href="../../../../org/apache/ibatis/builder/BuilderException.html#BuilderException">BuilderException</a>(<span class="jxr_string">"Error in result map '"</span> + resultMap.id + <span class="jxr_string">"'. Failed to find a constructor in '"</span>
+<a class="jxr_linenumber" name="L131" href="#L131">131</a>               + resultMap.getType().getName() + <span class="jxr_string">"' with arg names "</span> + constructorArgNames
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>               + <span class="jxr_string">". Note that 'javaType' is required when there is no readable property with the same name ('name' is optional, BTW). There might be more info in debug log."</span>);
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>         }
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>         resultMap.constructorResultMappings.sort((o1, o2) -&gt; {
+<a class="jxr_linenumber" name="L135" href="#L135">135</a>           <strong class="jxr_keyword">int</strong> paramIdx1 = actualArgNames.indexOf(o1.getProperty());
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>           <strong class="jxr_keyword">int</strong> paramIdx2 = actualArgNames.indexOf(o2.getProperty());
+<a class="jxr_linenumber" name="L137" href="#L137">137</a>           <strong class="jxr_keyword">return</strong> paramIdx1 - paramIdx2;
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>         });
+<a class="jxr_linenumber" name="L139" href="#L139">139</a>       }
+<a class="jxr_linenumber" name="L140" href="#L140">140</a>       <em class="jxr_comment">// lock down collections</em>
+<a class="jxr_linenumber" name="L141" href="#L141">141</a>       resultMap.resultMappings = Collections.unmodifiableList(resultMap.resultMappings);
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>       resultMap.idResultMappings = Collections.unmodifiableList(resultMap.idResultMappings);
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>       resultMap.constructorResultMappings = Collections.unmodifiableList(resultMap.constructorResultMappings);
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>       resultMap.propertyResultMappings = Collections.unmodifiableList(resultMap.propertyResultMappings);
+<a class="jxr_linenumber" name="L145" href="#L145">145</a>       resultMap.mappedColumns = Collections.unmodifiableSet(resultMap.mappedColumns);
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>       <strong class="jxr_keyword">return</strong> resultMap;
+<a class="jxr_linenumber" name="L147" href="#L147">147</a>     }
+<a class="jxr_linenumber" name="L148" href="#L148">148</a> 
+<a class="jxr_linenumber" name="L149" href="#L149">149</a>     <strong class="jxr_keyword">private</strong> List&lt;String&gt; argNamesOfMatchingConstructor(List&lt;String&gt; constructorArgNames) {
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>       Constructor&lt;?&gt;[] constructors = resultMap.type.getDeclaredConstructors();
+<a class="jxr_linenumber" name="L151" href="#L151">151</a>       <strong class="jxr_keyword">for</strong> (Constructor&lt;?&gt; constructor : constructors) {
+<a class="jxr_linenumber" name="L152" href="#L152">152</a>         Class&lt;?&gt;[] paramTypes = constructor.getParameterTypes();
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>         <strong class="jxr_keyword">if</strong> (constructorArgNames.size() == paramTypes.length) {
+<a class="jxr_linenumber" name="L154" href="#L154">154</a>           List&lt;String&gt; paramNames = getArgNames(constructor);
+<a class="jxr_linenumber" name="L155" href="#L155">155</a>           <strong class="jxr_keyword">if</strong> (constructorArgNames.containsAll(paramNames)
+<a class="jxr_linenumber" name="L156" href="#L156">156</a>               &amp;&amp; argTypesMatch(constructorArgNames, paramTypes, paramNames)) {
+<a class="jxr_linenumber" name="L157" href="#L157">157</a>             <strong class="jxr_keyword">return</strong> paramNames;
+<a class="jxr_linenumber" name="L158" href="#L158">158</a>           }
+<a class="jxr_linenumber" name="L159" href="#L159">159</a>         }
+<a class="jxr_linenumber" name="L160" href="#L160">160</a>       }
+<a class="jxr_linenumber" name="L161" href="#L161">161</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L162" href="#L162">162</a>     }
+<a class="jxr_linenumber" name="L163" href="#L163">163</a> 
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> argTypesMatch(<strong class="jxr_keyword">final</strong> List&lt;String&gt; constructorArgNames, Class&lt;?&gt;[] paramTypes,
+<a class="jxr_linenumber" name="L165" href="#L165">165</a>         List&lt;String&gt; paramNames) {
+<a class="jxr_linenumber" name="L166" href="#L166">166</a>       <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; constructorArgNames.size(); i++) {
+<a class="jxr_linenumber" name="L167" href="#L167">167</a>         Class&lt;?&gt; actualType = paramTypes[paramNames.indexOf(constructorArgNames.get(i))];
+<a class="jxr_linenumber" name="L168" href="#L168">168</a>         Class&lt;?&gt; specifiedType = resultMap.constructorResultMappings.get(i).getJavaType();
+<a class="jxr_linenumber" name="L169" href="#L169">169</a>         <strong class="jxr_keyword">if</strong> (!actualType.equals(specifiedType)) {
+<a class="jxr_linenumber" name="L170" href="#L170">170</a>           <strong class="jxr_keyword">if</strong> (log.isDebugEnabled()) {
+<a class="jxr_linenumber" name="L171" href="#L171">171</a>             log.debug(<span class="jxr_string">"While building result map '"</span> + resultMap.id + <span class="jxr_string">"', found a constructor with arg names "</span>
+<a class="jxr_linenumber" name="L172" href="#L172">172</a>                 + constructorArgNames + <span class="jxr_string">", but the type of '"</span> + constructorArgNames.get(i)
+<a class="jxr_linenumber" name="L173" href="#L173">173</a>                 + <span class="jxr_string">"' did not match. Specified: ["</span> + specifiedType.getName() + <span class="jxr_string">"] Declared: ["</span> + actualType.getName()
+<a class="jxr_linenumber" name="L174" href="#L174">174</a>                 + <span class="jxr_string">"]"</span>);
 <a class="jxr_linenumber" name="L175" href="#L175">175</a>           }
 <a class="jxr_linenumber" name="L176" href="#L176">176</a>           <strong class="jxr_keyword">return</strong> false;
 <a class="jxr_linenumber" name="L177" href="#L177">177</a>         }
@@ -269,6 +269,6 @@
 <a class="jxr_linenumber" name="L261" href="#L261">261</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2022 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2023 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

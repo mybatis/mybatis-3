@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ja"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JBoss6VFS.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.io</a> &gt; <span class="el_source">JBoss6VFS.java</span></div><h1>JBoss6VFS.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2019 the original author or authors.
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ja"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JBoss6VFS.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.io</a> &gt; <span class="el_source">JBoss6VFS.java</span></div><h1>JBoss6VFS.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
@@ -36,31 +36,32 @@ import org.apache.ibatis.logging.LogFactory;
   /** A class that mimics a tiny subset of the JBoss VirtualFile class. */
   static class VirtualFile {
     static Class&lt;?&gt; VirtualFile;
-    static Method getPathNameRelativeTo, getChildrenRecursively;
+    static Method getPathNameRelativeTo;
+    static Method getChildrenRecursively;
 
     Object virtualFile;
 
-<span class="nc" id="L43">    VirtualFile(Object virtualFile) {</span>
-<span class="nc" id="L44">      this.virtualFile = virtualFile;</span>
-<span class="nc" id="L45">    }</span>
+<span class="nc" id="L44">    VirtualFile(Object virtualFile) {</span>
+<span class="nc" id="L45">      this.virtualFile = virtualFile;</span>
+<span class="nc" id="L46">    }</span>
 
     String getPathNameRelativeTo(VirtualFile parent) {
       try {
-<span class="nc" id="L49">        return invoke(getPathNameRelativeTo, virtualFile, parent.virtualFile);</span>
-<span class="nc" id="L50">      } catch (IOException e) {</span>
+<span class="nc" id="L50">        return invoke(getPathNameRelativeTo, virtualFile, parent.virtualFile);</span>
+<span class="nc" id="L51">      } catch (IOException e) {</span>
         // This exception is not thrown by the called method
-<span class="nc" id="L52">        log.error(&quot;This should not be possible. VirtualFile.getPathNameRelativeTo() threw IOException.&quot;);</span>
-<span class="nc" id="L53">        return null;</span>
+<span class="nc" id="L53">        log.error(&quot;This should not be possible. VirtualFile.getPathNameRelativeTo() threw IOException.&quot;);</span>
+<span class="nc" id="L54">        return null;</span>
       }
     }
 
     List&lt;VirtualFile&gt; getChildren() throws IOException {
-<span class="nc" id="L58">      List&lt;?&gt; objects = invoke(getChildrenRecursively, virtualFile);</span>
-<span class="nc" id="L59">      List&lt;VirtualFile&gt; children = new ArrayList&lt;&gt;(objects.size());</span>
-<span class="nc bnc" id="L60" title="All 2 branches missed.">      for (Object object : objects) {</span>
-<span class="nc" id="L61">        children.add(new VirtualFile(object));</span>
-<span class="nc" id="L62">      }</span>
-<span class="nc" id="L63">      return children;</span>
+<span class="nc" id="L59">      List&lt;?&gt; objects = invoke(getChildrenRecursively, virtualFile);</span>
+<span class="nc" id="L60">      List&lt;VirtualFile&gt; children = new ArrayList&lt;&gt;(objects.size());</span>
+<span class="nc bnc" id="L61" title="All 2 branches missed.">      for (Object object : objects) {</span>
+<span class="nc" id="L62">        children.add(new VirtualFile(object));</span>
+<span class="nc" id="L63">      }</span>
+<span class="nc" id="L64">      return children;</span>
     }
   }
 
@@ -74,8 +75,8 @@ import org.apache.ibatis.logging.LogFactory;
     }
 
     static VirtualFile getChild(URL url) throws IOException {
-<span class="nc" id="L77">      Object o = invoke(getChild, VFS, url);</span>
-<span class="nc bnc" id="L78" title="All 2 branches missed.">      return o == null ? null : new VirtualFile(o);</span>
+<span class="nc" id="L78">      Object o = invoke(getChild, VFS, url);</span>
+<span class="nc bnc" id="L79" title="All 2 branches missed.">      return o == null ? null : new VirtualFile(o);</span>
     }
   }
 
@@ -84,20 +85,19 @@ import org.apache.ibatis.logging.LogFactory;
 
   /** Find all the classes and methods that are required to access the JBoss 6 VFS. */
   protected static synchronized void initialize() {
-<span class="pc bpc" id="L87" title="1 of 2 branches missed.">    if (valid == null) {</span>
+<span class="pc bpc" id="L88" title="1 of 2 branches missed.">    if (valid == null) {</span>
       // Assume valid. It will get flipped later if something goes wrong.
-<span class="fc" id="L89">      valid = Boolean.TRUE;</span>
+<span class="fc" id="L90">      valid = Boolean.TRUE;</span>
 
       // Look up and verify required classes
-<span class="fc" id="L92">      VFS.VFS = checkNotNull(getClass(&quot;org.jboss.vfs.VFS&quot;));</span>
-<span class="fc" id="L93">      VirtualFile.VirtualFile = checkNotNull(getClass(&quot;org.jboss.vfs.VirtualFile&quot;));</span>
+<span class="fc" id="L93">      VFS.VFS = checkNotNull(getClass(&quot;org.jboss.vfs.VFS&quot;));</span>
+<span class="fc" id="L94">      VirtualFile.VirtualFile = checkNotNull(getClass(&quot;org.jboss.vfs.VirtualFile&quot;));</span>
 
       // Look up and verify required methods
-<span class="fc" id="L96">      VFS.getChild = checkNotNull(getMethod(VFS.VFS, &quot;getChild&quot;, URL.class));</span>
-<span class="fc" id="L97">      VirtualFile.getChildrenRecursively = checkNotNull(getMethod(VirtualFile.VirtualFile,</span>
-          &quot;getChildrenRecursively&quot;));
-<span class="fc" id="L99">      VirtualFile.getPathNameRelativeTo = checkNotNull(getMethod(VirtualFile.VirtualFile,</span>
-          &quot;getPathNameRelativeTo&quot;, VirtualFile.VirtualFile));
+<span class="fc" id="L97">      VFS.getChild = checkNotNull(getMethod(VFS.VFS, &quot;getChild&quot;, URL.class));</span>
+<span class="fc" id="L98">      VirtualFile.getChildrenRecursively = checkNotNull(getMethod(VirtualFile.VirtualFile, &quot;getChildrenRecursively&quot;));</span>
+<span class="fc" id="L99">      VirtualFile.getPathNameRelativeTo = checkNotNull(</span>
+<span class="fc" id="L100">          getMethod(VirtualFile.VirtualFile, &quot;getPathNameRelativeTo&quot;, VirtualFile.VirtualFile));</span>
 
       // Verify that the API has not changed
 <span class="fc" id="L103">      checkReturnType(VFS.getChild, VirtualFile.VirtualFile);</span>
@@ -107,71 +107,80 @@ import org.apache.ibatis.logging.LogFactory;
 <span class="fc" id="L107">  }</span>
 
   /**
-   * Verifies that the provided object reference is null. If it is null, then this VFS is marked
-   * as invalid for the current environment.
+   * Verifies that the provided object reference is null. If it is null, then this VFS is marked as invalid for the
+   * current environment.
    *
-   * @param object The object reference to check for null.
+   * @param &lt;T&gt;
+   *          the generic type
+   * @param object
+   *          The object reference to check for null.
+   *
+   * @return the t
    */
   protected static &lt;T&gt; T checkNotNull(T object) {
-<span class="pc bpc" id="L116" title="1 of 2 branches missed.">    if (object == null) {</span>
-<span class="fc" id="L117">      setInvalid();</span>
+<span class="pc bpc" id="L121" title="1 of 2 branches missed.">    if (object == null) {</span>
+<span class="fc" id="L122">      setInvalid();</span>
     }
-<span class="fc" id="L119">    return object;</span>
+<span class="fc" id="L124">    return object;</span>
   }
 
   /**
-   * Verifies that the return type of a method is what it is expected to be. If it is not, then
-   * this VFS is marked as invalid for the current environment.
+   * Verifies that the return type of method is what it is expected to be. If it is not, then this VFS is marked as
+   * invalid for the current environment.
    *
-   * @param method The method whose return type is to be checked.
-   * @param expected A type to which the method's return type must be assignable.
+   * @param method
+   *          The method whose return type is to be checked.
+   * @param expected
+   *          A type to which the method's return type must be assignable.
+   *
    * @see Class#isAssignableFrom(Class)
    */
   protected static void checkReturnType(Method method, Class&lt;?&gt; expected) {
-<span class="pc bpc" id="L131" title="3 of 4 branches missed.">    if (method != null &amp;&amp; !expected.isAssignableFrom(method.getReturnType())) {</span>
-<span class="nc" id="L132">      log.error(&quot;Method &quot; + method.getClass().getName() + &quot;.&quot; + method.getName()</span>
-<span class="nc" id="L133">          + &quot;(..) should return &quot; + expected.getName() + &quot; but returns &quot;</span>
-<span class="nc" id="L134">          + method.getReturnType().getName() + &quot; instead.&quot;);</span>
-<span class="nc" id="L135">      setInvalid();</span>
+<span class="pc bpc" id="L139" title="3 of 4 branches missed.">    if (method != null &amp;&amp; !expected.isAssignableFrom(method.getReturnType())) {</span>
+<span class="nc" id="L140">      log.error(&quot;Method &quot; + method.getClass().getName() + &quot;.&quot; + method.getName() + &quot;(..) should return &quot;</span>
+<span class="nc" id="L141">          + expected.getName() + &quot; but returns &quot; + method.getReturnType().getName() + &quot; instead.&quot;);</span>
+<span class="nc" id="L142">      setInvalid();</span>
     }
-<span class="fc" id="L137">  }</span>
+<span class="fc" id="L144">  }</span>
 
-  /** Mark this {@link VFS} as invalid for the current environment. */
+  /**
+   * Mark this {@link VFS} as invalid for the current environment.
+   */
   protected static void setInvalid() {
-<span class="fc bfc" id="L141" title="All 2 branches covered.">    if (JBoss6VFS.valid == Boolean.TRUE) {</span>
-<span class="fc" id="L142">      log.debug(&quot;JBoss 6 VFS API is not available in this environment.&quot;);</span>
-<span class="fc" id="L143">      JBoss6VFS.valid = Boolean.FALSE;</span>
+<span class="fc bfc" id="L150" title="All 2 branches covered.">    if (JBoss6VFS.valid.booleanValue()) {</span>
+<span class="fc" id="L151">      log.debug(&quot;JBoss 6 VFS API is not available in this environment.&quot;);</span>
+<span class="fc" id="L152">      JBoss6VFS.valid = Boolean.FALSE;</span>
     }
-<span class="fc" id="L145">  }</span>
+<span class="fc" id="L154">  }</span>
 
   static {
-<span class="fc" id="L148">    initialize();</span>
-<span class="fc" id="L149">  }</span>
+<span class="fc" id="L157">    initialize();</span>
+<span class="fc" id="L158">  }</span>
 
   @Override
   public boolean isValid() {
-<span class="fc" id="L153">    return valid;</span>
+<span class="fc" id="L162">    return valid;</span>
   }
 
   @Override
   public List&lt;String&gt; list(URL url, String path) throws IOException {
     VirtualFile directory;
-<span class="nc" id="L159">    directory = VFS.getChild(url);</span>
-<span class="nc bnc" id="L160" title="All 2 branches missed.">    if (directory == null) {</span>
-<span class="nc" id="L161">      return Collections.emptyList();</span>
+<span class="nc" id="L168">    directory = VFS.getChild(url);</span>
+<span class="nc bnc" id="L169" title="All 2 branches missed.">    if (directory == null) {</span>
+<span class="nc" id="L170">      return Collections.emptyList();</span>
     }
 
-<span class="nc bnc" id="L164" title="All 2 branches missed.">    if (!path.endsWith(&quot;/&quot;)) {</span>
-<span class="nc" id="L165">      path += &quot;/&quot;;</span>
+<span class="nc bnc" id="L173" title="All 2 branches missed.">    if (!path.endsWith(&quot;/&quot;)) {</span>
+<span class="nc" id="L174">      path += &quot;/&quot;;</span>
     }
 
-<span class="nc" id="L168">    List&lt;VirtualFile&gt; children = directory.getChildren();</span>
-<span class="nc" id="L169">    List&lt;String&gt; names = new ArrayList&lt;&gt;(children.size());</span>
-<span class="nc bnc" id="L170" title="All 2 branches missed.">    for (VirtualFile vf : children) {</span>
-<span class="nc" id="L171">      names.add(path + vf.getPathNameRelativeTo(directory));</span>
-<span class="nc" id="L172">    }</span>
+<span class="nc" id="L177">    List&lt;VirtualFile&gt; children = directory.getChildren();</span>
+<span class="nc" id="L178">    List&lt;String&gt; names = new ArrayList&lt;&gt;(children.size());</span>
+<span class="nc bnc" id="L179" title="All 2 branches missed.">    for (VirtualFile vf : children) {</span>
+<span class="nc" id="L180">      names.add(path + vf.getPathNameRelativeTo(directory));</span>
+<span class="nc" id="L181">    }</span>
 
-<span class="nc" id="L174">    return names;</span>
+<span class="nc" id="L183">    return names;</span>
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../apidocs/org/apache/ibatis/reflection/ParamNameResolver.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2022 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -48,9 +48,9 @@
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>    <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>  <em class="jxr_javadoccomment">   * &lt;p&gt;</em>
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>  <em class="jxr_javadoccomment">   * The key is the index and the value is the name of the parameter.&lt;br /&gt;</em>
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>  <em class="jxr_javadoccomment">   * The name is obtained from {@link Param} if specified. When {@link Param} is not specified,</em>
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>  <em class="jxr_javadoccomment">   * the parameter index is used. Note that this index could be different from the actual index</em>
-<a class="jxr_linenumber" name="L45" href="#L45">45</a>  <em class="jxr_javadoccomment">   * when the method has special parameters (i.e. {@link RowBounds} or {@link ResultHandler}).</em>
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  <em class="jxr_javadoccomment">   * The name is obtained from {@link Param} if specified. When {@link Param} is not specified, the parameter index is</em>
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  <em class="jxr_javadoccomment">   * used. Note that this index could be different from the actual index when the method has special parameters (i.e.</em>
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>  <em class="jxr_javadoccomment">   * {@link RowBounds} or {@link ResultHandler}).</em>
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>  <em class="jxr_javadoccomment">   * &lt;/p&gt;</em>
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>  <em class="jxr_javadoccomment">   * &lt;ul&gt;</em>
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>  <em class="jxr_javadoccomment">   * &lt;li&gt;aMethod(@Param("M") int a, @Param("N") int b) -&amp;gt; {{0, "M"}, {1, "N"}}&lt;/li&gt;</em>
@@ -117,23 +117,23 @@
 <a class="jxr_linenumber" name="L109" href="#L109">109</a> 
 <a class="jxr_linenumber" name="L110" href="#L110">110</a>   <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L111" href="#L111">111</a> <em class="jxr_javadoccomment">   * &lt;p&gt;</em>
-<a class="jxr_linenumber" name="L112" href="#L112">112</a> <em class="jxr_javadoccomment">   * A single non-special parameter is returned without a name.</em>
-<a class="jxr_linenumber" name="L113" href="#L113">113</a> <em class="jxr_javadoccomment">   * Multiple parameters are named using the naming rule.</em>
-<a class="jxr_linenumber" name="L114" href="#L114">114</a> <em class="jxr_javadoccomment">   * In addition to the default names, this method also adds the generic names (param1, param2,</em>
-<a class="jxr_linenumber" name="L115" href="#L115">115</a> <em class="jxr_javadoccomment">   * ...).</em>
-<a class="jxr_linenumber" name="L116" href="#L116">116</a> <em class="jxr_javadoccomment">   * &lt;/p&gt;</em>
-<a class="jxr_linenumber" name="L117" href="#L117">117</a> <em class="jxr_javadoccomment">   *</em>
-<a class="jxr_linenumber" name="L118" href="#L118">118</a> <em class="jxr_javadoccomment">   * @param args</em>
-<a class="jxr_linenumber" name="L119" href="#L119">119</a> <em class="jxr_javadoccomment">   *          the args</em>
-<a class="jxr_linenumber" name="L120" href="#L120">120</a> <em class="jxr_javadoccomment">   * @return the named params</em>
-<a class="jxr_linenumber" name="L121" href="#L121">121</a> <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L122" href="#L122">122</a>   <strong class="jxr_keyword">public</strong> Object getNamedParams(Object[] args) {
-<a class="jxr_linenumber" name="L123" href="#L123">123</a>     <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> paramCount = names.size();
-<a class="jxr_linenumber" name="L124" href="#L124">124</a>     <strong class="jxr_keyword">if</strong> (args == <strong class="jxr_keyword">null</strong> || paramCount == 0) {
-<a class="jxr_linenumber" name="L125" href="#L125">125</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L126" href="#L126">126</a>     } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (!hasParamAnnotation &amp;&amp; paramCount == 1) {
+<a class="jxr_linenumber" name="L112" href="#L112">112</a> <em class="jxr_javadoccomment">   * A single non-special parameter is returned without a name. Multiple parameters are named using the naming rule. In</em>
+<a class="jxr_linenumber" name="L113" href="#L113">113</a> <em class="jxr_javadoccomment">   * addition to the default names, this method also adds the generic names (param1, param2, ...).</em>
+<a class="jxr_linenumber" name="L114" href="#L114">114</a> <em class="jxr_javadoccomment">   * &lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L115" href="#L115">115</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L116" href="#L116">116</a> <em class="jxr_javadoccomment">   * @param args</em>
+<a class="jxr_linenumber" name="L117" href="#L117">117</a> <em class="jxr_javadoccomment">   *          the args</em>
+<a class="jxr_linenumber" name="L118" href="#L118">118</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L119" href="#L119">119</a> <em class="jxr_javadoccomment">   * @return the named params</em>
+<a class="jxr_linenumber" name="L120" href="#L120">120</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L121" href="#L121">121</a>   <strong class="jxr_keyword">public</strong> Object getNamedParams(Object[] args) {
+<a class="jxr_linenumber" name="L122" href="#L122">122</a>     <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> paramCount = names.size();
+<a class="jxr_linenumber" name="L123" href="#L123">123</a>     <strong class="jxr_keyword">if</strong> (args == <strong class="jxr_keyword">null</strong> || paramCount == 0) {
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>     }
+<a class="jxr_linenumber" name="L126" href="#L126">126</a>     <strong class="jxr_keyword">if</strong> (!hasParamAnnotation &amp;&amp; paramCount == 1) {
 <a class="jxr_linenumber" name="L127" href="#L127">127</a>       Object value = args[names.firstKey()];
-<a class="jxr_linenumber" name="L128" href="#L128">128</a>       <strong class="jxr_keyword">return</strong> wrapToMapIfCollection(value, useActualParamName ? names.get(0) : <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L128" href="#L128">128</a>       <strong class="jxr_keyword">return</strong> wrapToMapIfCollection(value, useActualParamName ? names.get(names.firstKey()) : <strong class="jxr_keyword">null</strong>);
 <a class="jxr_linenumber" name="L129" href="#L129">129</a>     } <strong class="jxr_keyword">else</strong> {
 <a class="jxr_linenumber" name="L130" href="#L130">130</a>       <strong class="jxr_keyword">final</strong> Map&lt;String, Object&gt; param = <strong class="jxr_keyword">new</strong> ParamMap&lt;&gt;();
 <a class="jxr_linenumber" name="L131" href="#L131">131</a>       <strong class="jxr_keyword">int</strong> i = 0;
@@ -154,33 +154,37 @@
 <a class="jxr_linenumber" name="L146" href="#L146">146</a>   <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L147" href="#L147">147</a> <em class="jxr_javadoccomment">   * Wrap to a {@link ParamMap} if object is {@link Collection} or array.</em>
 <a class="jxr_linenumber" name="L148" href="#L148">148</a> <em class="jxr_javadoccomment">   *</em>
-<a class="jxr_linenumber" name="L149" href="#L149">149</a> <em class="jxr_javadoccomment">   * @param object a parameter object</em>
-<a class="jxr_linenumber" name="L150" href="#L150">150</a> <em class="jxr_javadoccomment">   * @param actualParamName an actual parameter name</em>
-<a class="jxr_linenumber" name="L151" href="#L151">151</a> <em class="jxr_javadoccomment">   *                        (If specify a name, set an object to {@link ParamMap} with specified name)</em>
-<a class="jxr_linenumber" name="L152" href="#L152">152</a> <em class="jxr_javadoccomment">   * @return a {@link ParamMap}</em>
-<a class="jxr_linenumber" name="L153" href="#L153">153</a> <em class="jxr_javadoccomment">   * @since 3.5.5</em>
-<a class="jxr_linenumber" name="L154" href="#L154">154</a> <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L155" href="#L155">155</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> Object wrapToMapIfCollection(Object object, String actualParamName) {
-<a class="jxr_linenumber" name="L156" href="#L156">156</a>     <strong class="jxr_keyword">if</strong> (object instanceof Collection) {
-<a class="jxr_linenumber" name="L157" href="#L157">157</a>       ParamMap&lt;Object&gt; map = <strong class="jxr_keyword">new</strong> ParamMap&lt;&gt;();
-<a class="jxr_linenumber" name="L158" href="#L158">158</a>       map.put(<span class="jxr_string">"collection"</span>, object);
-<a class="jxr_linenumber" name="L159" href="#L159">159</a>       <strong class="jxr_keyword">if</strong> (object instanceof List) {
-<a class="jxr_linenumber" name="L160" href="#L160">160</a>         map.put(<span class="jxr_string">"list"</span>, object);
-<a class="jxr_linenumber" name="L161" href="#L161">161</a>       }
-<a class="jxr_linenumber" name="L162" href="#L162">162</a>       Optional.ofNullable(actualParamName).ifPresent(name -&gt; map.put(name, object));
-<a class="jxr_linenumber" name="L163" href="#L163">163</a>       <strong class="jxr_keyword">return</strong> map;
-<a class="jxr_linenumber" name="L164" href="#L164">164</a>     } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (object != <strong class="jxr_keyword">null</strong> &amp;&amp; object.getClass().isArray()) {
-<a class="jxr_linenumber" name="L165" href="#L165">165</a>       ParamMap&lt;Object&gt; map = <strong class="jxr_keyword">new</strong> ParamMap&lt;&gt;();
-<a class="jxr_linenumber" name="L166" href="#L166">166</a>       map.put(<span class="jxr_string">"array"</span>, object);
-<a class="jxr_linenumber" name="L167" href="#L167">167</a>       Optional.ofNullable(actualParamName).ifPresent(name -&gt; map.put(name, object));
-<a class="jxr_linenumber" name="L168" href="#L168">168</a>       <strong class="jxr_keyword">return</strong> map;
-<a class="jxr_linenumber" name="L169" href="#L169">169</a>     }
-<a class="jxr_linenumber" name="L170" href="#L170">170</a>     <strong class="jxr_keyword">return</strong> object;
-<a class="jxr_linenumber" name="L171" href="#L171">171</a>   }
-<a class="jxr_linenumber" name="L172" href="#L172">172</a> 
-<a class="jxr_linenumber" name="L173" href="#L173">173</a> }
+<a class="jxr_linenumber" name="L149" href="#L149">149</a> <em class="jxr_javadoccomment">   * @param object</em>
+<a class="jxr_linenumber" name="L150" href="#L150">150</a> <em class="jxr_javadoccomment">   *          a parameter object</em>
+<a class="jxr_linenumber" name="L151" href="#L151">151</a> <em class="jxr_javadoccomment">   * @param actualParamName</em>
+<a class="jxr_linenumber" name="L152" href="#L152">152</a> <em class="jxr_javadoccomment">   *          an actual parameter name (If specify a name, set an object to {@link ParamMap} with specified name)</em>
+<a class="jxr_linenumber" name="L153" href="#L153">153</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L154" href="#L154">154</a> <em class="jxr_javadoccomment">   * @return a {@link ParamMap}</em>
+<a class="jxr_linenumber" name="L155" href="#L155">155</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L156" href="#L156">156</a> <em class="jxr_javadoccomment">   * @since 3.5.5</em>
+<a class="jxr_linenumber" name="L157" href="#L157">157</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L158" href="#L158">158</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> Object wrapToMapIfCollection(Object object, String actualParamName) {
+<a class="jxr_linenumber" name="L159" href="#L159">159</a>     <strong class="jxr_keyword">if</strong> (object instanceof Collection) {
+<a class="jxr_linenumber" name="L160" href="#L160">160</a>       ParamMap&lt;Object&gt; map = <strong class="jxr_keyword">new</strong> ParamMap&lt;&gt;();
+<a class="jxr_linenumber" name="L161" href="#L161">161</a>       map.put(<span class="jxr_string">"collection"</span>, object);
+<a class="jxr_linenumber" name="L162" href="#L162">162</a>       <strong class="jxr_keyword">if</strong> (object instanceof List) {
+<a class="jxr_linenumber" name="L163" href="#L163">163</a>         map.put(<span class="jxr_string">"list"</span>, object);
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>       }
+<a class="jxr_linenumber" name="L165" href="#L165">165</a>       Optional.ofNullable(actualParamName).ifPresent(name -&gt; map.put(name, object));
+<a class="jxr_linenumber" name="L166" href="#L166">166</a>       <strong class="jxr_keyword">return</strong> map;
+<a class="jxr_linenumber" name="L167" href="#L167">167</a>     }
+<a class="jxr_linenumber" name="L168" href="#L168">168</a>     <strong class="jxr_keyword">if</strong> (object != <strong class="jxr_keyword">null</strong> &amp;&amp; object.getClass().isArray()) {
+<a class="jxr_linenumber" name="L169" href="#L169">169</a>       ParamMap&lt;Object&gt; map = <strong class="jxr_keyword">new</strong> ParamMap&lt;&gt;();
+<a class="jxr_linenumber" name="L170" href="#L170">170</a>       map.put(<span class="jxr_string">"array"</span>, object);
+<a class="jxr_linenumber" name="L171" href="#L171">171</a>       Optional.ofNullable(actualParamName).ifPresent(name -&gt; map.put(name, object));
+<a class="jxr_linenumber" name="L172" href="#L172">172</a>       <strong class="jxr_keyword">return</strong> map;
+<a class="jxr_linenumber" name="L173" href="#L173">173</a>     }
+<a class="jxr_linenumber" name="L174" href="#L174">174</a>     <strong class="jxr_keyword">return</strong> object;
+<a class="jxr_linenumber" name="L175" href="#L175">175</a>   }
+<a class="jxr_linenumber" name="L176" href="#L176">176</a> 
+<a class="jxr_linenumber" name="L177" href="#L177">177</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2022 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2023 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

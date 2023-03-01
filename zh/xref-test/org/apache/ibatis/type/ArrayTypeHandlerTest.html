@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/type/ArrayTypeHandlerTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2022 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -83,7 +83,7 @@
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>    @Test
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldGetResultFromResultSetByName() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>      when(rs.getArray(<span class="jxr_string">"column"</span>)).thenReturn(mockArray);
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>      String[] stringArray = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"a"</span>, <span class="jxr_string">"b"</span> };
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>      String[] stringArray = { <span class="jxr_string">"a"</span>, <span class="jxr_string">"b"</span> };
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>      when(mockArray.getArray()).thenReturn(stringArray);
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>      assertEquals(stringArray, TYPE_HANDLER.getResult(rs, <span class="jxr_string">"column"</span>));
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>      verify(mockArray).free();
@@ -100,7 +100,7 @@
 <a class="jxr_linenumber" name="L92" href="#L92">92</a>    @Test
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldGetResultFromResultSetByPosition() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>      when(rs.getArray(1)).thenReturn(mockArray);
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>      String[] stringArray = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"a"</span>, <span class="jxr_string">"b"</span> };
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>      String[] stringArray = { <span class="jxr_string">"a"</span>, <span class="jxr_string">"b"</span> };
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>      when(mockArray.getArray()).thenReturn(stringArray);
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>      assertEquals(stringArray, TYPE_HANDLER.getResult(rs, 1));
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>      verify(mockArray).free();
@@ -117,7 +117,7 @@
 <a class="jxr_linenumber" name="L109" href="#L109">109</a>   @Test
 <a class="jxr_linenumber" name="L110" href="#L110">110</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldGetResultFromCallableStatement() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L111" href="#L111">111</a>     when(cs.getArray(1)).thenReturn(mockArray);
-<a class="jxr_linenumber" name="L112" href="#L112">112</a>     String[] stringArray = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"a"</span>, <span class="jxr_string">"b"</span> };
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>     String[] stringArray = { <span class="jxr_string">"a"</span>, <span class="jxr_string">"b"</span> };
 <a class="jxr_linenumber" name="L113" href="#L113">113</a>     when(mockArray.getArray()).thenReturn(stringArray);
 <a class="jxr_linenumber" name="L114" href="#L114">114</a>     assertEquals(stringArray, TYPE_HANDLER.getResult(cs, 1));
 <a class="jxr_linenumber" name="L115" href="#L115">115</a>     verify(mockArray).free();
@@ -133,6 +133,6 @@
 <a class="jxr_linenumber" name="L125" href="#L125">125</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2022 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2023 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

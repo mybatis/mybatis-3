@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../../testapidocs/org/apache/ibatis/submitted/sql/Mapper.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2022 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -37,19 +37,21 @@
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>  
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>    <strong class="jxr_keyword">class</strong> SqlProvider <strong class="jxr_keyword">implements</strong> ProviderMethodResolver {
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>      <strong class="jxr_keyword">public</strong> String findAll() {
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>        <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> SQL()
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>          .SELECT(<span class="jxr_string">"user_id"</span>, <span class="jxr_string">"name"</span>)
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>          .FROM(<span class="jxr_string">"${schema}users"</span>)
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>          .ORDER_BY(<span class="jxr_string">"user_id"</span>)
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>          .OFFSET_ROWS(<span class="jxr_string">"#{offset}"</span>)
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>          .FETCH_FIRST_ROWS_ONLY(<span class="jxr_string">"#{limit}"</span>)
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>          .toString();
-<a class="jxr_linenumber" name="L39" href="#L39">39</a>      }
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>    }
-<a class="jxr_linenumber" name="L41" href="#L41">41</a>  
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>  }
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>        <em class="jxr_comment">// @formatter:off</em>
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>        <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> SQL()
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>            .SELECT(<span class="jxr_string">"user_id"</span>, <span class="jxr_string">"name"</span>)
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>            .FROM(<span class="jxr_string">"${schema}users"</span>)
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>            .ORDER_BY(<span class="jxr_string">"user_id"</span>)
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>            .OFFSET_ROWS(<span class="jxr_string">"#{offset}"</span>)
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>            .FETCH_FIRST_ROWS_ONLY(<span class="jxr_string">"#{limit}"</span>)
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>            .toString();
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>        <em class="jxr_comment">// @formatter:on</em>
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>      }
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>    }
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2022 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2023 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

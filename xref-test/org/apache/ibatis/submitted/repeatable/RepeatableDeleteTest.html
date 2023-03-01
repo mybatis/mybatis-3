@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/submitted/repeatable/RepeatableDeleteTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2022 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -54,8 +54,8 @@
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>        <strong class="jxr_keyword">int</strong> targetCount = mapper.countByCurrentDatabase(<span class="jxr_string">"HSQL"</span>);
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>        mapper.delete();
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>  
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>        Assertions.assertEquals(count - targetCount , mapper.count());
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>        Assertions.assertEquals(0 , mapper.countByCurrentDatabase(<span class="jxr_string">"HSQL"</span>));
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>        Assertions.assertEquals(count - targetCount, mapper.count());
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>        Assertions.assertEquals(0, mapper.countByCurrentDatabase(<span class="jxr_string">"HSQL"</span>));
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>      }
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>    }
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>  
@@ -76,8 +76,8 @@
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>        <strong class="jxr_keyword">int</strong> targetCount = mapper.countByCurrentDatabase(<span class="jxr_string">"HSQL"</span>);
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>        mapper.deleteUsingProvider();
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>  
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>        Assertions.assertEquals(count - targetCount , mapper.count());
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>        Assertions.assertEquals(0 , mapper.countByCurrentDatabase(<span class="jxr_string">"HSQL"</span>));
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>        Assertions.assertEquals(count - targetCount, mapper.count());
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>        Assertions.assertEquals(0, mapper.countByCurrentDatabase(<span class="jxr_string">"HSQL"</span>));
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>      }
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>    }
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>  
@@ -98,8 +98,8 @@
 <a class="jxr_linenumber" name="L90" href="#L90">90</a>        <strong class="jxr_keyword">int</strong> targetCount = mapper.countByCurrentDatabase(<span class="jxr_string">"DERBY"</span>);
 <a class="jxr_linenumber" name="L91" href="#L91">91</a>        mapper.delete();
 <a class="jxr_linenumber" name="L92" href="#L92">92</a>  
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>        Assertions.assertEquals(count - targetCount , mapper.count());
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>        Assertions.assertEquals(0 , mapper.countByCurrentDatabase(<span class="jxr_string">"DERBY"</span>));
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>        Assertions.assertEquals(count - targetCount, mapper.count());
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>        Assertions.assertEquals(0, mapper.countByCurrentDatabase(<span class="jxr_string">"DERBY"</span>));
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>      }
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>    }
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>  
@@ -120,8 +120,8 @@
 <a class="jxr_linenumber" name="L112" href="#L112">112</a>       <strong class="jxr_keyword">int</strong> targetCount = mapper.countByCurrentDatabase(<span class="jxr_string">"DERBY"</span>);
 <a class="jxr_linenumber" name="L113" href="#L113">113</a>       mapper.deleteUsingProvider();
 <a class="jxr_linenumber" name="L114" href="#L114">114</a> 
-<a class="jxr_linenumber" name="L115" href="#L115">115</a>       Assertions.assertEquals(count - targetCount , mapper.count());
-<a class="jxr_linenumber" name="L116" href="#L116">116</a>       Assertions.assertEquals(0 , mapper.countByCurrentDatabase(<span class="jxr_string">"DERBY"</span>));
+<a class="jxr_linenumber" name="L115" href="#L115">115</a>       Assertions.assertEquals(count - targetCount, mapper.count());
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>       Assertions.assertEquals(0, mapper.countByCurrentDatabase(<span class="jxr_string">"DERBY"</span>));
 <a class="jxr_linenumber" name="L117" href="#L117">117</a>     }
 <a class="jxr_linenumber" name="L118" href="#L118">118</a>   }
 <a class="jxr_linenumber" name="L119" href="#L119">119</a> 
@@ -142,8 +142,8 @@
 <a class="jxr_linenumber" name="L134" href="#L134">134</a>       <strong class="jxr_keyword">int</strong> targetCount = mapper.countByCurrentDatabase(<span class="jxr_string">"DEFAULT"</span>);
 <a class="jxr_linenumber" name="L135" href="#L135">135</a>       mapper.delete();
 <a class="jxr_linenumber" name="L136" href="#L136">136</a> 
-<a class="jxr_linenumber" name="L137" href="#L137">137</a>       Assertions.assertEquals(count - targetCount , mapper.count());
-<a class="jxr_linenumber" name="L138" href="#L138">138</a>       Assertions.assertEquals(0 , mapper.countByCurrentDatabase(<span class="jxr_string">"DEFAULT"</span>));
+<a class="jxr_linenumber" name="L137" href="#L137">137</a>       Assertions.assertEquals(count - targetCount, mapper.count());
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>       Assertions.assertEquals(0, mapper.countByCurrentDatabase(<span class="jxr_string">"DEFAULT"</span>));
 <a class="jxr_linenumber" name="L139" href="#L139">139</a>     }
 <a class="jxr_linenumber" name="L140" href="#L140">140</a>   }
 <a class="jxr_linenumber" name="L141" href="#L141">141</a> 
@@ -164,14 +164,14 @@
 <a class="jxr_linenumber" name="L156" href="#L156">156</a>       <strong class="jxr_keyword">int</strong> targetCount = mapper.countByCurrentDatabase(<span class="jxr_string">"DEFAULT"</span>);
 <a class="jxr_linenumber" name="L157" href="#L157">157</a>       mapper.deleteUsingProvider();
 <a class="jxr_linenumber" name="L158" href="#L158">158</a> 
-<a class="jxr_linenumber" name="L159" href="#L159">159</a>       Assertions.assertEquals(count - targetCount , mapper.count());
-<a class="jxr_linenumber" name="L160" href="#L160">160</a>       Assertions.assertEquals(0 , mapper.countByCurrentDatabase(<span class="jxr_string">"DEFAULT"</span>));
+<a class="jxr_linenumber" name="L159" href="#L159">159</a>       Assertions.assertEquals(count - targetCount, mapper.count());
+<a class="jxr_linenumber" name="L160" href="#L160">160</a>       Assertions.assertEquals(0, mapper.countByCurrentDatabase(<span class="jxr_string">"DEFAULT"</span>));
 <a class="jxr_linenumber" name="L161" href="#L161">161</a>     }
 <a class="jxr_linenumber" name="L162" href="#L162">162</a>   }
 <a class="jxr_linenumber" name="L163" href="#L163">163</a> 
 <a class="jxr_linenumber" name="L164" href="#L164">164</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2022 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2023 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

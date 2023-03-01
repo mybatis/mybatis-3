@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../apidocs/org/apache/ibatis/datasource/pooled/PooledConnection.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2022 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -37,7 +37,7 @@
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">class</strong> <a name="PooledConnection" href="../../../../../org/apache/ibatis/datasource/pooled/PooledConnection.html#PooledConnection">PooledConnection</a> <strong class="jxr_keyword">implements</strong> InvocationHandler {
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>  
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String CLOSE = <span class="jxr_string">"close"</span>;
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> Class&lt;?&gt;[] IFACES = <strong class="jxr_keyword">new</strong> Class&lt;?&gt;[] { Connection.<strong class="jxr_keyword">class</strong> };
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> Class&lt;?&gt;[] IFACES = { Connection.<strong class="jxr_keyword">class</strong> };
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>  
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> hashCode;
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a name="PooledDataSource" href="../../../../../org/apache/ibatis/datasource/pooled/PooledDataSource.html#PooledDataSource">PooledDataSource</a> dataSource;
@@ -223,59 +223,62 @@
 <a class="jxr_linenumber" name="L215" href="#L215">215</a> <em class="jxr_javadoccomment">   *</em>
 <a class="jxr_linenumber" name="L216" href="#L216">216</a> <em class="jxr_javadoccomment">   * @param obj</em>
 <a class="jxr_linenumber" name="L217" href="#L217">217</a> <em class="jxr_javadoccomment">   *          - the other connection to test for equality</em>
-<a class="jxr_linenumber" name="L218" href="#L218">218</a> <em class="jxr_javadoccomment">   * @see Object#equals(Object)</em>
-<a class="jxr_linenumber" name="L219" href="#L219">219</a> <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L220" href="#L220">220</a>   @Override
-<a class="jxr_linenumber" name="L221" href="#L221">221</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> equals(Object obj) {
-<a class="jxr_linenumber" name="L222" href="#L222">222</a>     <strong class="jxr_keyword">if</strong> (obj instanceof <a name="PooledConnection" href="../../../../../org/apache/ibatis/datasource/pooled/PooledConnection.html#PooledConnection">PooledConnection</a>) {
-<a class="jxr_linenumber" name="L223" href="#L223">223</a>       <strong class="jxr_keyword">return</strong> realConnection.hashCode() == ((<a name="PooledConnection" href="../../../../../org/apache/ibatis/datasource/pooled/PooledConnection.html#PooledConnection">PooledConnection</a>) obj).realConnection.hashCode();
-<a class="jxr_linenumber" name="L224" href="#L224">224</a>     } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (obj instanceof Connection) {
-<a class="jxr_linenumber" name="L225" href="#L225">225</a>       <strong class="jxr_keyword">return</strong> hashCode == obj.hashCode();
-<a class="jxr_linenumber" name="L226" href="#L226">226</a>     } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L227" href="#L227">227</a>       <strong class="jxr_keyword">return</strong> false;
-<a class="jxr_linenumber" name="L228" href="#L228">228</a>     }
-<a class="jxr_linenumber" name="L229" href="#L229">229</a>   }
-<a class="jxr_linenumber" name="L230" href="#L230">230</a> 
-<a class="jxr_linenumber" name="L231" href="#L231">231</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L232" href="#L232">232</a> <em class="jxr_javadoccomment">   * Required for InvocationHandler implementation.</em>
-<a class="jxr_linenumber" name="L233" href="#L233">233</a> <em class="jxr_javadoccomment">   *</em>
-<a class="jxr_linenumber" name="L234" href="#L234">234</a> <em class="jxr_javadoccomment">   * @param proxy</em>
-<a class="jxr_linenumber" name="L235" href="#L235">235</a> <em class="jxr_javadoccomment">   *          - not used</em>
-<a class="jxr_linenumber" name="L236" href="#L236">236</a> <em class="jxr_javadoccomment">   * @param method</em>
-<a class="jxr_linenumber" name="L237" href="#L237">237</a> <em class="jxr_javadoccomment">   *          - the method to be executed</em>
-<a class="jxr_linenumber" name="L238" href="#L238">238</a> <em class="jxr_javadoccomment">   * @param args</em>
-<a class="jxr_linenumber" name="L239" href="#L239">239</a> <em class="jxr_javadoccomment">   *          - the parameters to be passed to the method</em>
-<a class="jxr_linenumber" name="L240" href="#L240">240</a> <em class="jxr_javadoccomment">   * @see java.lang.reflect.InvocationHandler#invoke(Object, java.lang.reflect.Method, Object[])</em>
-<a class="jxr_linenumber" name="L241" href="#L241">241</a> <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L242" href="#L242">242</a>   @Override
-<a class="jxr_linenumber" name="L243" href="#L243">243</a>   <strong class="jxr_keyword">public</strong> Object invoke(Object proxy, Method method, Object[] args) <strong class="jxr_keyword">throws</strong> Throwable {
-<a class="jxr_linenumber" name="L244" href="#L244">244</a>     String methodName = method.getName();
-<a class="jxr_linenumber" name="L245" href="#L245">245</a>     <strong class="jxr_keyword">if</strong> (CLOSE.equals(methodName)) {
-<a class="jxr_linenumber" name="L246" href="#L246">246</a>       dataSource.pushConnection(<strong class="jxr_keyword">this</strong>);
-<a class="jxr_linenumber" name="L247" href="#L247">247</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L248" href="#L248">248</a>     }
-<a class="jxr_linenumber" name="L249" href="#L249">249</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L250" href="#L250">250</a>       <strong class="jxr_keyword">if</strong> (!Object.<strong class="jxr_keyword">class</strong>.equals(method.getDeclaringClass())) {
-<a class="jxr_linenumber" name="L251" href="#L251">251</a>         <em class="jxr_comment">// issue #579 toString() should never fail</em>
-<a class="jxr_linenumber" name="L252" href="#L252">252</a>         <em class="jxr_comment">// throw an SQLException instead of a Runtime</em>
-<a class="jxr_linenumber" name="L253" href="#L253">253</a>         checkConnection();
-<a class="jxr_linenumber" name="L254" href="#L254">254</a>       }
-<a class="jxr_linenumber" name="L255" href="#L255">255</a>       <strong class="jxr_keyword">return</strong> method.invoke(realConnection, args);
-<a class="jxr_linenumber" name="L256" href="#L256">256</a>     } <strong class="jxr_keyword">catch</strong> (Throwable t) {
-<a class="jxr_linenumber" name="L257" href="#L257">257</a>       <strong class="jxr_keyword">throw</strong> ExceptionUtil.unwrapThrowable(t);
-<a class="jxr_linenumber" name="L258" href="#L258">258</a>     }
-<a class="jxr_linenumber" name="L259" href="#L259">259</a> 
-<a class="jxr_linenumber" name="L260" href="#L260">260</a>   }
-<a class="jxr_linenumber" name="L261" href="#L261">261</a> 
-<a class="jxr_linenumber" name="L262" href="#L262">262</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> checkConnection() <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L263" href="#L263">263</a>     <strong class="jxr_keyword">if</strong> (!valid) {
-<a class="jxr_linenumber" name="L264" href="#L264">264</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> SQLException(<span class="jxr_string">"Error accessing PooledConnection. Connection is invalid."</span>);
-<a class="jxr_linenumber" name="L265" href="#L265">265</a>     }
-<a class="jxr_linenumber" name="L266" href="#L266">266</a>   }
-<a class="jxr_linenumber" name="L267" href="#L267">267</a> 
-<a class="jxr_linenumber" name="L268" href="#L268">268</a> }
+<a class="jxr_linenumber" name="L218" href="#L218">218</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L219" href="#L219">219</a> <em class="jxr_javadoccomment">   * @see Object#equals(Object)</em>
+<a class="jxr_linenumber" name="L220" href="#L220">220</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L221" href="#L221">221</a>   @Override
+<a class="jxr_linenumber" name="L222" href="#L222">222</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> equals(Object obj) {
+<a class="jxr_linenumber" name="L223" href="#L223">223</a>     <strong class="jxr_keyword">if</strong> (obj instanceof <a name="PooledConnection" href="../../../../../org/apache/ibatis/datasource/pooled/PooledConnection.html#PooledConnection">PooledConnection</a>) {
+<a class="jxr_linenumber" name="L224" href="#L224">224</a>       <strong class="jxr_keyword">return</strong> realConnection.hashCode() == ((<a name="PooledConnection" href="../../../../../org/apache/ibatis/datasource/pooled/PooledConnection.html#PooledConnection">PooledConnection</a>) obj).realConnection.hashCode();
+<a class="jxr_linenumber" name="L225" href="#L225">225</a>     }
+<a class="jxr_linenumber" name="L226" href="#L226">226</a>     <strong class="jxr_keyword">if</strong> (obj instanceof Connection) {
+<a class="jxr_linenumber" name="L227" href="#L227">227</a>       <strong class="jxr_keyword">return</strong> hashCode == obj.hashCode();
+<a class="jxr_linenumber" name="L228" href="#L228">228</a>     } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L229" href="#L229">229</a>       <strong class="jxr_keyword">return</strong> false;
+<a class="jxr_linenumber" name="L230" href="#L230">230</a>     }
+<a class="jxr_linenumber" name="L231" href="#L231">231</a>   }
+<a class="jxr_linenumber" name="L232" href="#L232">232</a> 
+<a class="jxr_linenumber" name="L233" href="#L233">233</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L234" href="#L234">234</a> <em class="jxr_javadoccomment">   * Required for InvocationHandler implementation.</em>
+<a class="jxr_linenumber" name="L235" href="#L235">235</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L236" href="#L236">236</a> <em class="jxr_javadoccomment">   * @param proxy</em>
+<a class="jxr_linenumber" name="L237" href="#L237">237</a> <em class="jxr_javadoccomment">   *          - not used</em>
+<a class="jxr_linenumber" name="L238" href="#L238">238</a> <em class="jxr_javadoccomment">   * @param method</em>
+<a class="jxr_linenumber" name="L239" href="#L239">239</a> <em class="jxr_javadoccomment">   *          - the method to be executed</em>
+<a class="jxr_linenumber" name="L240" href="#L240">240</a> <em class="jxr_javadoccomment">   * @param args</em>
+<a class="jxr_linenumber" name="L241" href="#L241">241</a> <em class="jxr_javadoccomment">   *          - the parameters to be passed to the method</em>
+<a class="jxr_linenumber" name="L242" href="#L242">242</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L243" href="#L243">243</a> <em class="jxr_javadoccomment">   * @see java.lang.reflect.InvocationHandler#invoke(Object, java.lang.reflect.Method, Object[])</em>
+<a class="jxr_linenumber" name="L244" href="#L244">244</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L245" href="#L245">245</a>   @Override
+<a class="jxr_linenumber" name="L246" href="#L246">246</a>   <strong class="jxr_keyword">public</strong> Object invoke(Object proxy, Method method, Object[] args) <strong class="jxr_keyword">throws</strong> Throwable {
+<a class="jxr_linenumber" name="L247" href="#L247">247</a>     String methodName = method.getName();
+<a class="jxr_linenumber" name="L248" href="#L248">248</a>     <strong class="jxr_keyword">if</strong> (CLOSE.equals(methodName)) {
+<a class="jxr_linenumber" name="L249" href="#L249">249</a>       dataSource.pushConnection(<strong class="jxr_keyword">this</strong>);
+<a class="jxr_linenumber" name="L250" href="#L250">250</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L251" href="#L251">251</a>     }
+<a class="jxr_linenumber" name="L252" href="#L252">252</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L253" href="#L253">253</a>       <strong class="jxr_keyword">if</strong> (!Object.<strong class="jxr_keyword">class</strong>.equals(method.getDeclaringClass())) {
+<a class="jxr_linenumber" name="L254" href="#L254">254</a>         <em class="jxr_comment">// issue #579 toString() should never fail</em>
+<a class="jxr_linenumber" name="L255" href="#L255">255</a>         <em class="jxr_comment">// throw an SQLException instead of a Runtime</em>
+<a class="jxr_linenumber" name="L256" href="#L256">256</a>         checkConnection();
+<a class="jxr_linenumber" name="L257" href="#L257">257</a>       }
+<a class="jxr_linenumber" name="L258" href="#L258">258</a>       <strong class="jxr_keyword">return</strong> method.invoke(realConnection, args);
+<a class="jxr_linenumber" name="L259" href="#L259">259</a>     } <strong class="jxr_keyword">catch</strong> (Throwable t) {
+<a class="jxr_linenumber" name="L260" href="#L260">260</a>       <strong class="jxr_keyword">throw</strong> ExceptionUtil.unwrapThrowable(t);
+<a class="jxr_linenumber" name="L261" href="#L261">261</a>     }
+<a class="jxr_linenumber" name="L262" href="#L262">262</a> 
+<a class="jxr_linenumber" name="L263" href="#L263">263</a>   }
+<a class="jxr_linenumber" name="L264" href="#L264">264</a> 
+<a class="jxr_linenumber" name="L265" href="#L265">265</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> checkConnection() <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L266" href="#L266">266</a>     <strong class="jxr_keyword">if</strong> (!valid) {
+<a class="jxr_linenumber" name="L267" href="#L267">267</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> SQLException(<span class="jxr_string">"Error accessing PooledConnection. Connection is invalid."</span>);
+<a class="jxr_linenumber" name="L268" href="#L268">268</a>     }
+<a class="jxr_linenumber" name="L269" href="#L269">269</a>   }
+<a class="jxr_linenumber" name="L270" href="#L270">270</a> 
+<a class="jxr_linenumber" name="L271" href="#L271">271</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2022 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2023 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

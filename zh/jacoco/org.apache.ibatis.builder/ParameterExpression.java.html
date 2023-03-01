@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ParameterExpression.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.builder</a> &gt; <span class="el_source">ParameterExpression.java</span></div><h1>ParameterExpression.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2019 the original author or authors.
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ParameterExpression.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.builder</a> &gt; <span class="el_source">ParameterExpression.java</span></div><h1>ParameterExpression.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
@@ -106,36 +106,35 @@ public class ParameterExpression extends HashMap&lt;String, String&gt; {
   private void jdbcType(String expression, int p) {
 <span class="fc" id="L107">    int left = skipWS(expression, p);</span>
 <span class="fc" id="L108">    int right = skipUntil(expression, left, &quot;,&quot;);</span>
-<span class="fc bfc" id="L109" title="All 2 branches covered.">    if (right &gt; left) {</span>
-<span class="fc" id="L110">      put(&quot;jdbcType&quot;, trimmedStr(expression, left, right));</span>
-    } else {
-<span class="fc" id="L112">      throw new BuilderException(&quot;Parsing error in {&quot; + expression + &quot;} in position &quot; + p);</span>
+<span class="fc bfc" id="L109" title="All 2 branches covered.">    if (right &lt;= left) {</span>
+<span class="fc" id="L110">      throw new BuilderException(&quot;Parsing error in {&quot; + expression + &quot;} in position &quot; + p);</span>
     }
-<span class="fc" id="L114">    option(expression, right + 1);</span>
-<span class="fc" id="L115">  }</span>
+<span class="fc" id="L112">    put(&quot;jdbcType&quot;, trimmedStr(expression, left, right));</span>
+<span class="fc" id="L113">    option(expression, right + 1);</span>
+<span class="fc" id="L114">  }</span>
 
   private void option(String expression, int p) {
-<span class="fc" id="L118">    int left = skipWS(expression, p);</span>
-<span class="fc bfc" id="L119" title="All 2 branches covered.">    if (left &lt; expression.length()) {</span>
-<span class="fc" id="L120">      int right = skipUntil(expression, left, &quot;=&quot;);</span>
-<span class="fc" id="L121">      String name = trimmedStr(expression, left, right);</span>
-<span class="fc" id="L122">      left = right + 1;</span>
-<span class="fc" id="L123">      right = skipUntil(expression, left, &quot;,&quot;);</span>
-<span class="fc" id="L124">      String value = trimmedStr(expression, left, right);</span>
-<span class="fc" id="L125">      put(name, value);</span>
-<span class="fc" id="L126">      option(expression, right + 1);</span>
+<span class="fc" id="L117">    int left = skipWS(expression, p);</span>
+<span class="fc bfc" id="L118" title="All 2 branches covered.">    if (left &lt; expression.length()) {</span>
+<span class="fc" id="L119">      int right = skipUntil(expression, left, &quot;=&quot;);</span>
+<span class="fc" id="L120">      String name = trimmedStr(expression, left, right);</span>
+<span class="fc" id="L121">      left = right + 1;</span>
+<span class="fc" id="L122">      right = skipUntil(expression, left, &quot;,&quot;);</span>
+<span class="fc" id="L123">      String value = trimmedStr(expression, left, right);</span>
+<span class="fc" id="L124">      put(name, value);</span>
+<span class="fc" id="L125">      option(expression, right + 1);</span>
     }
-<span class="fc" id="L128">  }</span>
+<span class="fc" id="L127">  }</span>
 
   private String trimmedStr(String str, int start, int end) {
-<span class="fc bfc" id="L131" title="All 2 branches covered.">    while (str.charAt(start) &lt;= 0x20) {</span>
-<span class="fc" id="L132">      start++;</span>
+<span class="fc bfc" id="L130" title="All 2 branches covered.">    while (str.charAt(start) &lt;= 0x20) {</span>
+<span class="fc" id="L131">      start++;</span>
     }
-<span class="fc bfc" id="L134" title="All 2 branches covered.">    while (str.charAt(end - 1) &lt;= 0x20) {</span>
-<span class="fc" id="L135">      end--;</span>
+<span class="fc bfc" id="L133" title="All 2 branches covered.">    while (str.charAt(end - 1) &lt;= 0x20) {</span>
+<span class="fc" id="L134">      end--;</span>
     }
-<span class="pc bpc" id="L137" title="1 of 2 branches missed.">    return start &gt;= end ? &quot;&quot; : str.substring(start, end);</span>
+<span class="pc bpc" id="L136" title="1 of 2 branches missed.">    return start &gt;= end ? &quot;&quot; : str.substring(start, end);</span>
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

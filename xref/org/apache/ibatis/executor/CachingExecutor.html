@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../apidocs/org/apache/ibatis/executor/CachingExecutor.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2022 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -91,99 +91,103 @@
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>    }
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>  
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>    @Override
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>    <strong class="jxr_keyword">public</strong> &lt;E&gt; List&lt;E&gt; query(<a name="MappedStatement" href="../../../../org/apache/ibatis/mapping/MappedStatement.html#MappedStatement">MappedStatement</a> ms, Object parameterObject, <a name="RowBounds" href="../../../../org/apache/ibatis/session/RowBounds.html#RowBounds">RowBounds</a> rowBounds, <a name="ResultHandler" href="../../../../org/apache/ibatis/session/ResultHandler.html#ResultHandler">ResultHandler</a> resultHandler) <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>      <a name="BoundSql" href="../../../../org/apache/ibatis/mapping/BoundSql.html#BoundSql">BoundSql</a> boundSql = ms.getBoundSql(parameterObject);
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>      <a name="CacheKey" href="../../../../org/apache/ibatis/cache/CacheKey.html#CacheKey">CacheKey</a> key = createCacheKey(ms, parameterObject, rowBounds, boundSql);
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>      <strong class="jxr_keyword">return</strong> query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>    }
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>  
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>    @Override
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>    <strong class="jxr_keyword">public</strong> &lt;E&gt; List&lt;E&gt; query(<a name="MappedStatement" href="../../../../org/apache/ibatis/mapping/MappedStatement.html#MappedStatement">MappedStatement</a> ms, Object parameterObject, <a name="RowBounds" href="../../../../org/apache/ibatis/session/RowBounds.html#RowBounds">RowBounds</a> rowBounds, <a name="ResultHandler" href="../../../../org/apache/ibatis/session/ResultHandler.html#ResultHandler">ResultHandler</a> resultHandler, <a name="CacheKey" href="../../../../org/apache/ibatis/cache/CacheKey.html#CacheKey">CacheKey</a> key, <a name="BoundSql" href="../../../../org/apache/ibatis/mapping/BoundSql.html#BoundSql">BoundSql</a> boundSql)
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>        <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>      <a name="Cache" href="../../../../org/apache/ibatis/cache/Cache.html#Cache">Cache</a> cache = ms.getCache();
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>      <strong class="jxr_keyword">if</strong> (cache != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L97" href="#L97">97</a>        flushCacheIfRequired(ms);
-<a class="jxr_linenumber" name="L98" href="#L98">98</a>        <strong class="jxr_keyword">if</strong> (ms.isUseCache() &amp;&amp; resultHandler == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L99" href="#L99">99</a>          ensureNoOutParams(ms, boundSql);
-<a class="jxr_linenumber" name="L100" href="#L100">100</a>         @SuppressWarnings(<span class="jxr_string">"unchecked"</span>)
-<a class="jxr_linenumber" name="L101" href="#L101">101</a>         List&lt;E&gt; list = (List&lt;E&gt;) tcm.getObject(cache, key);
-<a class="jxr_linenumber" name="L102" href="#L102">102</a>         <strong class="jxr_keyword">if</strong> (list == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L103" href="#L103">103</a>           list = delegate.query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
-<a class="jxr_linenumber" name="L104" href="#L104">104</a>           tcm.putObject(cache, key, list); <em class="jxr_comment">// issue #578 and #116</em>
-<a class="jxr_linenumber" name="L105" href="#L105">105</a>         }
-<a class="jxr_linenumber" name="L106" href="#L106">106</a>         <strong class="jxr_keyword">return</strong> list;
-<a class="jxr_linenumber" name="L107" href="#L107">107</a>       }
-<a class="jxr_linenumber" name="L108" href="#L108">108</a>     }
-<a class="jxr_linenumber" name="L109" href="#L109">109</a>     <strong class="jxr_keyword">return</strong> delegate.query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
-<a class="jxr_linenumber" name="L110" href="#L110">110</a>   }
-<a class="jxr_linenumber" name="L111" href="#L111">111</a> 
-<a class="jxr_linenumber" name="L112" href="#L112">112</a>   @Override
-<a class="jxr_linenumber" name="L113" href="#L113">113</a>   <strong class="jxr_keyword">public</strong> List&lt;BatchResult&gt; flushStatements() <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L114" href="#L114">114</a>     <strong class="jxr_keyword">return</strong> delegate.flushStatements();
-<a class="jxr_linenumber" name="L115" href="#L115">115</a>   }
-<a class="jxr_linenumber" name="L116" href="#L116">116</a> 
-<a class="jxr_linenumber" name="L117" href="#L117">117</a>   @Override
-<a class="jxr_linenumber" name="L118" href="#L118">118</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> commit(<strong class="jxr_keyword">boolean</strong> required) <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L119" href="#L119">119</a>     delegate.commit(required);
-<a class="jxr_linenumber" name="L120" href="#L120">120</a>     tcm.commit();
-<a class="jxr_linenumber" name="L121" href="#L121">121</a>   }
-<a class="jxr_linenumber" name="L122" href="#L122">122</a> 
-<a class="jxr_linenumber" name="L123" href="#L123">123</a>   @Override
-<a class="jxr_linenumber" name="L124" href="#L124">124</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> rollback(<strong class="jxr_keyword">boolean</strong> required) <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L125" href="#L125">125</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L126" href="#L126">126</a>       delegate.rollback(required);
-<a class="jxr_linenumber" name="L127" href="#L127">127</a>     } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="L128" href="#L128">128</a>       <strong class="jxr_keyword">if</strong> (required) {
-<a class="jxr_linenumber" name="L129" href="#L129">129</a>         tcm.rollback();
-<a class="jxr_linenumber" name="L130" href="#L130">130</a>       }
-<a class="jxr_linenumber" name="L131" href="#L131">131</a>     }
-<a class="jxr_linenumber" name="L132" href="#L132">132</a>   }
-<a class="jxr_linenumber" name="L133" href="#L133">133</a> 
-<a class="jxr_linenumber" name="L134" href="#L134">134</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> ensureNoOutParams(<a name="MappedStatement" href="../../../../org/apache/ibatis/mapping/MappedStatement.html#MappedStatement">MappedStatement</a> ms, <a name="BoundSql" href="../../../../org/apache/ibatis/mapping/BoundSql.html#BoundSql">BoundSql</a> boundSql) {
-<a class="jxr_linenumber" name="L135" href="#L135">135</a>     <strong class="jxr_keyword">if</strong> (ms.getStatementType() == StatementType.CALLABLE) {
-<a class="jxr_linenumber" name="L136" href="#L136">136</a>       <strong class="jxr_keyword">for</strong> (<a name="ParameterMapping" href="../../../../org/apache/ibatis/mapping/ParameterMapping.html#ParameterMapping">ParameterMapping</a> parameterMapping : boundSql.getParameterMappings()) {
-<a class="jxr_linenumber" name="L137" href="#L137">137</a>         <strong class="jxr_keyword">if</strong> (parameterMapping.getMode() != ParameterMode.IN) {
-<a class="jxr_linenumber" name="L138" href="#L138">138</a>           <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="ExecutorException" href="../../../../org/apache/ibatis/executor/ExecutorException.html#ExecutorException">ExecutorException</a>(<span class="jxr_string">"Caching stored procedures with OUT params is not supported.  Please configure useCache=false in "</span> + ms.getId() + <span class="jxr_string">" statement."</span>);
-<a class="jxr_linenumber" name="L139" href="#L139">139</a>         }
-<a class="jxr_linenumber" name="L140" href="#L140">140</a>       }
-<a class="jxr_linenumber" name="L141" href="#L141">141</a>     }
-<a class="jxr_linenumber" name="L142" href="#L142">142</a>   }
-<a class="jxr_linenumber" name="L143" href="#L143">143</a> 
-<a class="jxr_linenumber" name="L144" href="#L144">144</a>   @Override
-<a class="jxr_linenumber" name="L145" href="#L145">145</a>   <strong class="jxr_keyword">public</strong> <a name="CacheKey" href="../../../../org/apache/ibatis/cache/CacheKey.html#CacheKey">CacheKey</a> createCacheKey(<a name="MappedStatement" href="../../../../org/apache/ibatis/mapping/MappedStatement.html#MappedStatement">MappedStatement</a> ms, Object parameterObject, <a name="RowBounds" href="../../../../org/apache/ibatis/session/RowBounds.html#RowBounds">RowBounds</a> rowBounds, <a name="BoundSql" href="../../../../org/apache/ibatis/mapping/BoundSql.html#BoundSql">BoundSql</a> boundSql) {
-<a class="jxr_linenumber" name="L146" href="#L146">146</a>     <strong class="jxr_keyword">return</strong> delegate.createCacheKey(ms, parameterObject, rowBounds, boundSql);
-<a class="jxr_linenumber" name="L147" href="#L147">147</a>   }
-<a class="jxr_linenumber" name="L148" href="#L148">148</a> 
-<a class="jxr_linenumber" name="L149" href="#L149">149</a>   @Override
-<a class="jxr_linenumber" name="L150" href="#L150">150</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> isCached(<a name="MappedStatement" href="../../../../org/apache/ibatis/mapping/MappedStatement.html#MappedStatement">MappedStatement</a> ms, <a name="CacheKey" href="../../../../org/apache/ibatis/cache/CacheKey.html#CacheKey">CacheKey</a> key) {
-<a class="jxr_linenumber" name="L151" href="#L151">151</a>     <strong class="jxr_keyword">return</strong> delegate.isCached(ms, key);
-<a class="jxr_linenumber" name="L152" href="#L152">152</a>   }
-<a class="jxr_linenumber" name="L153" href="#L153">153</a> 
-<a class="jxr_linenumber" name="L154" href="#L154">154</a>   @Override
-<a class="jxr_linenumber" name="L155" href="#L155">155</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> deferLoad(<a name="MappedStatement" href="../../../../org/apache/ibatis/mapping/MappedStatement.html#MappedStatement">MappedStatement</a> ms, <a name="MetaObject" href="../../../../org/apache/ibatis/reflection/MetaObject.html#MetaObject">MetaObject</a> resultObject, String property, <a name="CacheKey" href="../../../../org/apache/ibatis/cache/CacheKey.html#CacheKey">CacheKey</a> key, Class&lt;?&gt; targetType) {
-<a class="jxr_linenumber" name="L156" href="#L156">156</a>     delegate.deferLoad(ms, resultObject, property, key, targetType);
-<a class="jxr_linenumber" name="L157" href="#L157">157</a>   }
-<a class="jxr_linenumber" name="L158" href="#L158">158</a> 
-<a class="jxr_linenumber" name="L159" href="#L159">159</a>   @Override
-<a class="jxr_linenumber" name="L160" href="#L160">160</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> clearLocalCache() {
-<a class="jxr_linenumber" name="L161" href="#L161">161</a>     delegate.clearLocalCache();
-<a class="jxr_linenumber" name="L162" href="#L162">162</a>   }
-<a class="jxr_linenumber" name="L163" href="#L163">163</a> 
-<a class="jxr_linenumber" name="L164" href="#L164">164</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> flushCacheIfRequired(<a name="MappedStatement" href="../../../../org/apache/ibatis/mapping/MappedStatement.html#MappedStatement">MappedStatement</a> ms) {
-<a class="jxr_linenumber" name="L165" href="#L165">165</a>     <a name="Cache" href="../../../../org/apache/ibatis/cache/Cache.html#Cache">Cache</a> cache = ms.getCache();
-<a class="jxr_linenumber" name="L166" href="#L166">166</a>     <strong class="jxr_keyword">if</strong> (cache != <strong class="jxr_keyword">null</strong> &amp;&amp; ms.isFlushCacheRequired()) {
-<a class="jxr_linenumber" name="L167" href="#L167">167</a>       tcm.clear(cache);
-<a class="jxr_linenumber" name="L168" href="#L168">168</a>     }
-<a class="jxr_linenumber" name="L169" href="#L169">169</a>   }
-<a class="jxr_linenumber" name="L170" href="#L170">170</a> 
-<a class="jxr_linenumber" name="L171" href="#L171">171</a>   @Override
-<a class="jxr_linenumber" name="L172" href="#L172">172</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setExecutorWrapper(<a name="Executor" href="../../../../org/apache/ibatis/executor/Executor.html#Executor">Executor</a> executor) {
-<a class="jxr_linenumber" name="L173" href="#L173">173</a>     <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> UnsupportedOperationException(<span class="jxr_string">"This method should not be called"</span>);
-<a class="jxr_linenumber" name="L174" href="#L174">174</a>   }
-<a class="jxr_linenumber" name="L175" href="#L175">175</a> 
-<a class="jxr_linenumber" name="L176" href="#L176">176</a> }
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>    <strong class="jxr_keyword">public</strong> &lt;E&gt; List&lt;E&gt; query(<a name="MappedStatement" href="../../../../org/apache/ibatis/mapping/MappedStatement.html#MappedStatement">MappedStatement</a> ms, Object parameterObject, <a name="RowBounds" href="../../../../org/apache/ibatis/session/RowBounds.html#RowBounds">RowBounds</a> rowBounds, <a name="ResultHandler" href="../../../../org/apache/ibatis/session/ResultHandler.html#ResultHandler">ResultHandler</a> resultHandler)
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>        <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>      <a name="BoundSql" href="../../../../org/apache/ibatis/mapping/BoundSql.html#BoundSql">BoundSql</a> boundSql = ms.getBoundSql(parameterObject);
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>      <a name="CacheKey" href="../../../../org/apache/ibatis/cache/CacheKey.html#CacheKey">CacheKey</a> key = createCacheKey(ms, parameterObject, rowBounds, boundSql);
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>      <strong class="jxr_keyword">return</strong> query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>    }
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>  
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>    @Override
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>    <strong class="jxr_keyword">public</strong> &lt;E&gt; List&lt;E&gt; query(<a name="MappedStatement" href="../../../../org/apache/ibatis/mapping/MappedStatement.html#MappedStatement">MappedStatement</a> ms, Object parameterObject, <a name="RowBounds" href="../../../../org/apache/ibatis/session/RowBounds.html#RowBounds">RowBounds</a> rowBounds, <a name="ResultHandler" href="../../../../org/apache/ibatis/session/ResultHandler.html#ResultHandler">ResultHandler</a> resultHandler,
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>        <a name="CacheKey" href="../../../../org/apache/ibatis/cache/CacheKey.html#CacheKey">CacheKey</a> key, <a name="BoundSql" href="../../../../org/apache/ibatis/mapping/BoundSql.html#BoundSql">BoundSql</a> boundSql) <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>      <a name="Cache" href="../../../../org/apache/ibatis/cache/Cache.html#Cache">Cache</a> cache = ms.getCache();
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>      <strong class="jxr_keyword">if</strong> (cache != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>        flushCacheIfRequired(ms);
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>        <strong class="jxr_keyword">if</strong> (ms.isUseCache() &amp;&amp; resultHandler == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>         ensureNoOutParams(ms, boundSql);
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>         @SuppressWarnings(<span class="jxr_string">"unchecked"</span>)
+<a class="jxr_linenumber" name="L102" href="#L102">102</a>         List&lt;E&gt; list = (List&lt;E&gt;) tcm.getObject(cache, key);
+<a class="jxr_linenumber" name="L103" href="#L103">103</a>         <strong class="jxr_keyword">if</strong> (list == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L104" href="#L104">104</a>           list = delegate.query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>           tcm.putObject(cache, key, list); <em class="jxr_comment">// issue #578 and #116</em>
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>         }
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>         <strong class="jxr_keyword">return</strong> list;
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>       }
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>     }
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>     <strong class="jxr_keyword">return</strong> delegate.query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>   }
+<a class="jxr_linenumber" name="L112" href="#L112">112</a> 
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>   @Override
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>   <strong class="jxr_keyword">public</strong> List&lt;BatchResult&gt; flushStatements() <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L115" href="#L115">115</a>     <strong class="jxr_keyword">return</strong> delegate.flushStatements();
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>   }
+<a class="jxr_linenumber" name="L117" href="#L117">117</a> 
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>   @Override
+<a class="jxr_linenumber" name="L119" href="#L119">119</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> commit(<strong class="jxr_keyword">boolean</strong> required) <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L120" href="#L120">120</a>     delegate.commit(required);
+<a class="jxr_linenumber" name="L121" href="#L121">121</a>     tcm.commit();
+<a class="jxr_linenumber" name="L122" href="#L122">122</a>   }
+<a class="jxr_linenumber" name="L123" href="#L123">123</a> 
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>   @Override
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> rollback(<strong class="jxr_keyword">boolean</strong> required) <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L126" href="#L126">126</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L127" href="#L127">127</a>       delegate.rollback(required);
+<a class="jxr_linenumber" name="L128" href="#L128">128</a>     } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>       <strong class="jxr_keyword">if</strong> (required) {
+<a class="jxr_linenumber" name="L130" href="#L130">130</a>         tcm.rollback();
+<a class="jxr_linenumber" name="L131" href="#L131">131</a>       }
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>     }
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>   }
+<a class="jxr_linenumber" name="L134" href="#L134">134</a> 
+<a class="jxr_linenumber" name="L135" href="#L135">135</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> ensureNoOutParams(<a name="MappedStatement" href="../../../../org/apache/ibatis/mapping/MappedStatement.html#MappedStatement">MappedStatement</a> ms, <a name="BoundSql" href="../../../../org/apache/ibatis/mapping/BoundSql.html#BoundSql">BoundSql</a> boundSql) {
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>     <strong class="jxr_keyword">if</strong> (ms.getStatementType() == StatementType.CALLABLE) {
+<a class="jxr_linenumber" name="L137" href="#L137">137</a>       <strong class="jxr_keyword">for</strong> (<a name="ParameterMapping" href="../../../../org/apache/ibatis/mapping/ParameterMapping.html#ParameterMapping">ParameterMapping</a> parameterMapping : boundSql.getParameterMappings()) {
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>         <strong class="jxr_keyword">if</strong> (parameterMapping.getMode() != ParameterMode.IN) {
+<a class="jxr_linenumber" name="L139" href="#L139">139</a>           <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="ExecutorException" href="../../../../org/apache/ibatis/executor/ExecutorException.html#ExecutorException">ExecutorException</a>(
+<a class="jxr_linenumber" name="L140" href="#L140">140</a>               <span class="jxr_string">"Caching stored procedures with OUT params is not supported.  Please configure useCache=false in "</span>
+<a class="jxr_linenumber" name="L141" href="#L141">141</a>                   + ms.getId() + <span class="jxr_string">" statement."</span>);
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>         }
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>       }
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>     }
+<a class="jxr_linenumber" name="L145" href="#L145">145</a>   }
+<a class="jxr_linenumber" name="L146" href="#L146">146</a> 
+<a class="jxr_linenumber" name="L147" href="#L147">147</a>   @Override
+<a class="jxr_linenumber" name="L148" href="#L148">148</a>   <strong class="jxr_keyword">public</strong> <a name="CacheKey" href="../../../../org/apache/ibatis/cache/CacheKey.html#CacheKey">CacheKey</a> createCacheKey(<a name="MappedStatement" href="../../../../org/apache/ibatis/mapping/MappedStatement.html#MappedStatement">MappedStatement</a> ms, Object parameterObject, <a name="RowBounds" href="../../../../org/apache/ibatis/session/RowBounds.html#RowBounds">RowBounds</a> rowBounds, <a name="BoundSql" href="../../../../org/apache/ibatis/mapping/BoundSql.html#BoundSql">BoundSql</a> boundSql) {
+<a class="jxr_linenumber" name="L149" href="#L149">149</a>     <strong class="jxr_keyword">return</strong> delegate.createCacheKey(ms, parameterObject, rowBounds, boundSql);
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>   }
+<a class="jxr_linenumber" name="L151" href="#L151">151</a> 
+<a class="jxr_linenumber" name="L152" href="#L152">152</a>   @Override
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> isCached(<a name="MappedStatement" href="../../../../org/apache/ibatis/mapping/MappedStatement.html#MappedStatement">MappedStatement</a> ms, <a name="CacheKey" href="../../../../org/apache/ibatis/cache/CacheKey.html#CacheKey">CacheKey</a> key) {
+<a class="jxr_linenumber" name="L154" href="#L154">154</a>     <strong class="jxr_keyword">return</strong> delegate.isCached(ms, key);
+<a class="jxr_linenumber" name="L155" href="#L155">155</a>   }
+<a class="jxr_linenumber" name="L156" href="#L156">156</a> 
+<a class="jxr_linenumber" name="L157" href="#L157">157</a>   @Override
+<a class="jxr_linenumber" name="L158" href="#L158">158</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> deferLoad(<a name="MappedStatement" href="../../../../org/apache/ibatis/mapping/MappedStatement.html#MappedStatement">MappedStatement</a> ms, <a name="MetaObject" href="../../../../org/apache/ibatis/reflection/MetaObject.html#MetaObject">MetaObject</a> resultObject, String property, <a name="CacheKey" href="../../../../org/apache/ibatis/cache/CacheKey.html#CacheKey">CacheKey</a> key,
+<a class="jxr_linenumber" name="L159" href="#L159">159</a>       Class&lt;?&gt; targetType) {
+<a class="jxr_linenumber" name="L160" href="#L160">160</a>     delegate.deferLoad(ms, resultObject, property, key, targetType);
+<a class="jxr_linenumber" name="L161" href="#L161">161</a>   }
+<a class="jxr_linenumber" name="L162" href="#L162">162</a> 
+<a class="jxr_linenumber" name="L163" href="#L163">163</a>   @Override
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> clearLocalCache() {
+<a class="jxr_linenumber" name="L165" href="#L165">165</a>     delegate.clearLocalCache();
+<a class="jxr_linenumber" name="L166" href="#L166">166</a>   }
+<a class="jxr_linenumber" name="L167" href="#L167">167</a> 
+<a class="jxr_linenumber" name="L168" href="#L168">168</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> flushCacheIfRequired(<a name="MappedStatement" href="../../../../org/apache/ibatis/mapping/MappedStatement.html#MappedStatement">MappedStatement</a> ms) {
+<a class="jxr_linenumber" name="L169" href="#L169">169</a>     <a name="Cache" href="../../../../org/apache/ibatis/cache/Cache.html#Cache">Cache</a> cache = ms.getCache();
+<a class="jxr_linenumber" name="L170" href="#L170">170</a>     <strong class="jxr_keyword">if</strong> (cache != <strong class="jxr_keyword">null</strong> &amp;&amp; ms.isFlushCacheRequired()) {
+<a class="jxr_linenumber" name="L171" href="#L171">171</a>       tcm.clear(cache);
+<a class="jxr_linenumber" name="L172" href="#L172">172</a>     }
+<a class="jxr_linenumber" name="L173" href="#L173">173</a>   }
+<a class="jxr_linenumber" name="L174" href="#L174">174</a> 
+<a class="jxr_linenumber" name="L175" href="#L175">175</a>   @Override
+<a class="jxr_linenumber" name="L176" href="#L176">176</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setExecutorWrapper(<a name="Executor" href="../../../../org/apache/ibatis/executor/Executor.html#Executor">Executor</a> executor) {
+<a class="jxr_linenumber" name="L177" href="#L177">177</a>     <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> UnsupportedOperationException(<span class="jxr_string">"This method should not be called"</span>);
+<a class="jxr_linenumber" name="L178" href="#L178">178</a>   }
+<a class="jxr_linenumber" name="L179" href="#L179">179</a> 
+<a class="jxr_linenumber" name="L180" href="#L180">180</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2022 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2023 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

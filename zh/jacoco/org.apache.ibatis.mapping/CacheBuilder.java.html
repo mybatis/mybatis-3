@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CacheBuilder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.mapping</a> &gt; <span class="el_source">CacheBuilder.java</span></div><h1>CacheBuilder.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2019 the original author or authors.
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CacheBuilder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.mapping</a> &gt; <span class="el_source">CacheBuilder.java</span></div><h1>CacheBuilder.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
@@ -149,77 +149,71 @@ public class CacheBuilder {
 <span class="fc" id="L149">          Class&lt;?&gt; type = metaCache.getSetterType(name);</span>
 <span class="fc bfc" id="L150" title="All 2 branches covered.">          if (String.class == type) {</span>
 <span class="fc" id="L151">            metaCache.setValue(name, value);</span>
-<span class="fc bfc" id="L152" title="All 4 branches covered.">          } else if (int.class == type</span>
-              || Integer.class == type) {
-<span class="fc" id="L154">            metaCache.setValue(name, Integer.valueOf(value));</span>
-<span class="fc bfc" id="L155" title="All 4 branches covered.">          } else if (long.class == type</span>
-              || Long.class == type) {
-<span class="fc" id="L157">            metaCache.setValue(name, Long.valueOf(value));</span>
-<span class="fc bfc" id="L158" title="All 4 branches covered.">          } else if (short.class == type</span>
-              || Short.class == type) {
-<span class="fc" id="L160">            metaCache.setValue(name, Short.valueOf(value));</span>
-<span class="fc bfc" id="L161" title="All 4 branches covered.">          } else if (byte.class == type</span>
-              || Byte.class == type) {
-<span class="fc" id="L163">            metaCache.setValue(name, Byte.valueOf(value));</span>
-<span class="fc bfc" id="L164" title="All 4 branches covered.">          } else if (float.class == type</span>
-              || Float.class == type) {
-<span class="fc" id="L166">            metaCache.setValue(name, Float.valueOf(value));</span>
-<span class="fc bfc" id="L167" title="All 4 branches covered.">          } else if (boolean.class == type</span>
-              || Boolean.class == type) {
-<span class="fc" id="L169">            metaCache.setValue(name, Boolean.valueOf(value));</span>
-<span class="fc bfc" id="L170" title="All 4 branches covered.">          } else if (double.class == type</span>
-              || Double.class == type) {
-<span class="fc" id="L172">            metaCache.setValue(name, Double.valueOf(value));</span>
+<span class="fc bfc" id="L152" title="All 4 branches covered.">          } else if (int.class == type || Integer.class == type) {</span>
+<span class="fc" id="L153">            metaCache.setValue(name, Integer.valueOf(value));</span>
+<span class="fc bfc" id="L154" title="All 4 branches covered.">          } else if (long.class == type || Long.class == type) {</span>
+<span class="fc" id="L155">            metaCache.setValue(name, Long.valueOf(value));</span>
+<span class="fc bfc" id="L156" title="All 4 branches covered.">          } else if (short.class == type || Short.class == type) {</span>
+<span class="fc" id="L157">            metaCache.setValue(name, Short.valueOf(value));</span>
+<span class="fc bfc" id="L158" title="All 4 branches covered.">          } else if (byte.class == type || Byte.class == type) {</span>
+<span class="fc" id="L159">            metaCache.setValue(name, Byte.valueOf(value));</span>
+<span class="fc bfc" id="L160" title="All 4 branches covered.">          } else if (float.class == type || Float.class == type) {</span>
+<span class="fc" id="L161">            metaCache.setValue(name, Float.valueOf(value));</span>
+<span class="fc bfc" id="L162" title="All 4 branches covered.">          } else if (boolean.class == type || Boolean.class == type) {</span>
+<span class="fc" id="L163">            metaCache.setValue(name, Boolean.valueOf(value));</span>
+<span class="fc bfc" id="L164" title="All 4 branches covered.">          } else if (double.class == type || Double.class == type) {</span>
+<span class="fc" id="L165">            metaCache.setValue(name, Double.valueOf(value));</span>
           } else {
-<span class="fc" id="L174">            throw new CacheException(&quot;Unsupported property type for cache: '&quot; + name + &quot;' of type &quot; + type);</span>
+<span class="fc" id="L167">            throw new CacheException(&quot;Unsupported property type for cache: '&quot; + name + &quot;' of type &quot; + type);</span>
           }
         }
-<span class="fc" id="L177">      }</span>
+<span class="fc" id="L170">      }</span>
     }
-<span class="fc bfc" id="L179" title="All 2 branches covered.">    if (InitializingObject.class.isAssignableFrom(cache.getClass())) {</span>
+<span class="fc bfc" id="L172" title="All 2 branches covered.">    if (InitializingObject.class.isAssignableFrom(cache.getClass())) {</span>
       try {
-<span class="fc" id="L181">        ((InitializingObject) cache).initialize();</span>
-<span class="fc" id="L182">      } catch (Exception e) {</span>
-<span class="fc" id="L183">        throw new CacheException(&quot;Failed cache initialization for '&quot;</span>
-<span class="fc" id="L184">          + cache.getId() + &quot;' on '&quot; + cache.getClass().getName() + &quot;'&quot;, e);</span>
-<span class="fc" id="L185">      }</span>
+<span class="fc" id="L174">        ((InitializingObject) cache).initialize();</span>
+<span class="fc" id="L175">      } catch (Exception e) {</span>
+<span class="fc" id="L176">        throw new CacheException(</span>
+<span class="fc" id="L177">            &quot;Failed cache initialization for '&quot; + cache.getId() + &quot;' on '&quot; + cache.getClass().getName() + &quot;'&quot;, e);</span>
+<span class="fc" id="L178">      }</span>
     }
-<span class="fc" id="L187">  }</span>
+<span class="fc" id="L180">  }</span>
 
   private Cache newBaseCacheInstance(Class&lt;? extends Cache&gt; cacheClass, String id) {
-<span class="fc" id="L190">    Constructor&lt;? extends Cache&gt; cacheConstructor = getBaseCacheConstructor(cacheClass);</span>
+<span class="fc" id="L183">    Constructor&lt;? extends Cache&gt; cacheConstructor = getBaseCacheConstructor(cacheClass);</span>
     try {
-<span class="fc" id="L192">      return cacheConstructor.newInstance(id);</span>
-<span class="nc" id="L193">    } catch (Exception e) {</span>
-<span class="nc" id="L194">      throw new CacheException(&quot;Could not instantiate cache implementation (&quot; + cacheClass + &quot;). Cause: &quot; + e, e);</span>
+<span class="fc" id="L185">      return cacheConstructor.newInstance(id);</span>
+<span class="nc" id="L186">    } catch (Exception e) {</span>
+<span class="nc" id="L187">      throw new CacheException(&quot;Could not instantiate cache implementation (&quot; + cacheClass + &quot;). Cause: &quot; + e, e);</span>
     }
   }
 
   private Constructor&lt;? extends Cache&gt; getBaseCacheConstructor(Class&lt;? extends Cache&gt; cacheClass) {
     try {
-<span class="fc" id="L200">      return cacheClass.getConstructor(String.class);</span>
-<span class="nc" id="L201">    } catch (Exception e) {</span>
-<span class="nc" id="L202">      throw new CacheException(&quot;Invalid base cache implementation (&quot; + cacheClass + &quot;).  &quot;</span>
-        + &quot;Base cache implementations must have a constructor that takes a String id as a parameter.  Cause: &quot; + e, e);
+<span class="fc" id="L193">      return cacheClass.getConstructor(String.class);</span>
+<span class="nc" id="L194">    } catch (Exception e) {</span>
+<span class="nc" id="L195">      throw new CacheException(&quot;Invalid base cache implementation (&quot; + cacheClass + &quot;).  &quot;</span>
+          + &quot;Base cache implementations must have a constructor that takes a String id as a parameter.  Cause: &quot; + e,
+          e);
     }
   }
 
   private Cache newCacheDecoratorInstance(Class&lt;? extends Cache&gt; cacheClass, Cache base) {
-<span class="fc" id="L208">    Constructor&lt;? extends Cache&gt; cacheConstructor = getCacheDecoratorConstructor(cacheClass);</span>
+<span class="fc" id="L202">    Constructor&lt;? extends Cache&gt; cacheConstructor = getCacheDecoratorConstructor(cacheClass);</span>
     try {
-<span class="fc" id="L210">      return cacheConstructor.newInstance(base);</span>
-<span class="nc" id="L211">    } catch (Exception e) {</span>
-<span class="nc" id="L212">      throw new CacheException(&quot;Could not instantiate cache decorator (&quot; + cacheClass + &quot;). Cause: &quot; + e, e);</span>
+<span class="fc" id="L204">      return cacheConstructor.newInstance(base);</span>
+<span class="nc" id="L205">    } catch (Exception e) {</span>
+<span class="nc" id="L206">      throw new CacheException(&quot;Could not instantiate cache decorator (&quot; + cacheClass + &quot;). Cause: &quot; + e, e);</span>
     }
   }
 
   private Constructor&lt;? extends Cache&gt; getCacheDecoratorConstructor(Class&lt;? extends Cache&gt; cacheClass) {
     try {
-<span class="fc" id="L218">      return cacheClass.getConstructor(Cache.class);</span>
-<span class="nc" id="L219">    } catch (Exception e) {</span>
-<span class="nc" id="L220">      throw new CacheException(&quot;Invalid cache decorator (&quot; + cacheClass + &quot;).  &quot;</span>
-        + &quot;Cache decorators must have a constructor that takes a Cache instance as a parameter.  Cause: &quot; + e, e);
+<span class="fc" id="L212">      return cacheClass.getConstructor(Cache.class);</span>
+<span class="nc" id="L213">    } catch (Exception e) {</span>
+<span class="nc" id="L214">      throw new CacheException(&quot;Invalid cache decorator (&quot; + cacheClass + &quot;).  &quot;</span>
+          + &quot;Cache decorators must have a constructor that takes a Cache instance as a parameter.  Cause: &quot; + e, e);
     }
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

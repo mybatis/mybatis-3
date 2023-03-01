@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SimpleStatementHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.executor.statement</a> &gt; <span class="el_source">SimpleStatementHandler.java</span></div><h1>SimpleStatementHandler.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2018 the original author or authors.
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SimpleStatementHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.executor.statement</a> &gt; <span class="el_source">SimpleStatementHandler.java</span></div><h1>SimpleStatementHandler.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
@@ -37,58 +37,58 @@ import org.apache.ibatis.session.RowBounds;
  */
 public class SimpleStatementHandler extends BaseStatementHandler {
 
-  public SimpleStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
-<span class="fc" id="L41">    super(executor, mappedStatement, parameter, rowBounds, resultHandler, boundSql);</span>
-<span class="fc" id="L42">  }</span>
+  public SimpleStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameter,
+      RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
+<span class="fc" id="L42">    super(executor, mappedStatement, parameter, rowBounds, resultHandler, boundSql);</span>
+<span class="fc" id="L43">  }</span>
 
   @Override
   public int update(Statement statement) throws SQLException {
-<span class="fc" id="L46">    String sql = boundSql.getSql();</span>
-<span class="fc" id="L47">    Object parameterObject = boundSql.getParameterObject();</span>
-<span class="fc" id="L48">    KeyGenerator keyGenerator = mappedStatement.getKeyGenerator();</span>
+<span class="fc" id="L47">    String sql = boundSql.getSql();</span>
+<span class="fc" id="L48">    Object parameterObject = boundSql.getParameterObject();</span>
+<span class="fc" id="L49">    KeyGenerator keyGenerator = mappedStatement.getKeyGenerator();</span>
     int rows;
-<span class="pc bpc" id="L50" title="1 of 2 branches missed.">    if (keyGenerator instanceof Jdbc3KeyGenerator) {</span>
-<span class="nc" id="L51">      statement.execute(sql, Statement.RETURN_GENERATED_KEYS);</span>
-<span class="nc" id="L52">      rows = statement.getUpdateCount();</span>
-<span class="nc" id="L53">      keyGenerator.processAfter(executor, mappedStatement, statement, parameterObject);</span>
-<span class="pc bpc" id="L54" title="1 of 2 branches missed.">    } else if (keyGenerator instanceof SelectKeyGenerator) {</span>
-<span class="nc" id="L55">      statement.execute(sql);</span>
-<span class="nc" id="L56">      rows = statement.getUpdateCount();</span>
-<span class="nc" id="L57">      keyGenerator.processAfter(executor, mappedStatement, statement, parameterObject);</span>
+<span class="pc bpc" id="L51" title="1 of 2 branches missed.">    if (keyGenerator instanceof Jdbc3KeyGenerator) {</span>
+<span class="nc" id="L52">      statement.execute(sql, Statement.RETURN_GENERATED_KEYS);</span>
+<span class="nc" id="L53">      rows = statement.getUpdateCount();</span>
+<span class="nc" id="L54">      keyGenerator.processAfter(executor, mappedStatement, statement, parameterObject);</span>
+<span class="pc bpc" id="L55" title="1 of 2 branches missed.">    } else if (keyGenerator instanceof SelectKeyGenerator) {</span>
+<span class="nc" id="L56">      statement.execute(sql);</span>
+<span class="nc" id="L57">      rows = statement.getUpdateCount();</span>
+<span class="nc" id="L58">      keyGenerator.processAfter(executor, mappedStatement, statement, parameterObject);</span>
     } else {
-<span class="fc" id="L59">      statement.execute(sql);</span>
-<span class="fc" id="L60">      rows = statement.getUpdateCount();</span>
+<span class="fc" id="L60">      statement.execute(sql);</span>
+<span class="fc" id="L61">      rows = statement.getUpdateCount();</span>
     }
-<span class="fc" id="L62">    return rows;</span>
+<span class="fc" id="L63">    return rows;</span>
   }
 
   @Override
   public void batch(Statement statement) throws SQLException {
-<span class="fc" id="L67">    String sql = boundSql.getSql();</span>
-<span class="fc" id="L68">    statement.addBatch(sql);</span>
-<span class="fc" id="L69">  }</span>
+<span class="fc" id="L68">    String sql = boundSql.getSql();</span>
+<span class="fc" id="L69">    statement.addBatch(sql);</span>
+<span class="fc" id="L70">  }</span>
 
   @Override
   public &lt;E&gt; List&lt;E&gt; query(Statement statement, ResultHandler resultHandler) throws SQLException {
-<span class="fc" id="L73">    String sql = boundSql.getSql();</span>
-<span class="fc" id="L74">    statement.execute(sql);</span>
-<span class="fc" id="L75">    return resultSetHandler.handleResultSets(statement);</span>
+<span class="fc" id="L74">    String sql = boundSql.getSql();</span>
+<span class="fc" id="L75">    statement.execute(sql);</span>
+<span class="fc" id="L76">    return resultSetHandler.handleResultSets(statement);</span>
   }
 
   @Override
   public &lt;E&gt; Cursor&lt;E&gt; queryCursor(Statement statement) throws SQLException {
-<span class="nc" id="L80">    String sql = boundSql.getSql();</span>
-<span class="nc" id="L81">    statement.execute(sql);</span>
-<span class="nc" id="L82">    return resultSetHandler.handleCursorResultSets(statement);</span>
+<span class="nc" id="L81">    String sql = boundSql.getSql();</span>
+<span class="nc" id="L82">    statement.execute(sql);</span>
+<span class="nc" id="L83">    return resultSetHandler.handleCursorResultSets(statement);</span>
   }
 
   @Override
   protected Statement instantiateStatement(Connection connection) throws SQLException {
-<span class="fc bfc" id="L87" title="All 2 branches covered.">    if (mappedStatement.getResultSetType() == ResultSetType.DEFAULT) {</span>
-<span class="fc" id="L88">      return connection.createStatement();</span>
-    } else {
-<span class="fc" id="L90">      return connection.createStatement(mappedStatement.getResultSetType().getValue(), ResultSet.CONCUR_READ_ONLY);</span>
+<span class="fc bfc" id="L88" title="All 2 branches covered.">    if (mappedStatement.getResultSetType() == ResultSetType.DEFAULT) {</span>
+<span class="fc" id="L89">      return connection.createStatement();</span>
     }
+<span class="fc" id="L91">    return connection.createStatement(mappedStatement.getResultSetType().getValue(), ResultSet.CONCUR_READ_ONLY);</span>
   }
 
   @Override
@@ -97,4 +97,4 @@ public class SimpleStatementHandler extends BaseStatementHandler {
 <span class="fc" id="L97">  }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

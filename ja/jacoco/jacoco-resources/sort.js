@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2009, 2022 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *    
+ *
  *******************************************************************************/
 
 (function () {
@@ -17,8 +18,8 @@
    *
    * @param linkelementids
    *          list of element ids to search for links to add sort inidcator
-   *          hash links   
-   */  
+   *          hash links
+   */
   function initialSort(linkelementids) {
     window.linkelementids = linkelementids;
     var hash = window.location.hash;
@@ -44,7 +45,7 @@
 
   /**
    * Sorts the columns with the given header dependening on the current sort state.
-   */  
+   */
   function toggleSort(header) {
     var sortup = header.className.indexOf('down ') == 0;
     sortColumn(header, sortup);
@@ -52,23 +53,23 @@
 
   /**
    * Sorts the columns with the given header in the given direction.
-   */  
+   */
   function sortColumn(header, sortup) {
     var table = header.parentNode.parentNode.parentNode;
     var body = table.tBodies[0];
     var colidx = getNodePosition(header);
-    
+
     resetSortedStyle(table);
-    
+
     var rows = body.rows;
     var sortedrows = [];
     for (var i = 0; i < rows.length; i++) {
       r = rows[i];
       sortedrows[parseInt(r.childNodes[colidx].id.slice(1))] = r;
     }
-    
+
     var hash;
-    
+
     if (sortup) {
       for (var i = sortedrows.length - 1; i >= 0; i--) {
         body.appendChild(sortedrows[i]);
@@ -82,7 +83,7 @@
       header.className = 'down ' + header.className;
       hash = 'dn-' + header.id;
     }
-    
+
     setHash(hash);
   }
 
@@ -108,14 +109,14 @@
         var hashpos = href.indexOf("#");
         if (hashpos != -1) {
             href = href.substring(0, hashpos);
-        } 
+        }
         a.href = href + "#" + hash;
     }
   }
 
   /**
    * Calculates the position of a element within its parent.
-   */  
+   */
   function getNodePosition(element) {
     var pos = -1;
     while (element) {
@@ -140,7 +141,7 @@
       }
     }
   }
-  
+
   window['initialSort'] = initialSort;
   window['toggleSort'] = toggleSort;
 

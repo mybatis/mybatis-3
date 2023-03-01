@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/parsing/XPathParserTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2022 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -40,7 +40,7 @@
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> org.xml.sax.InputSource;
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>  
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">class</strong> <a name="XPathParserTest" href="../../../../org/apache/ibatis/parsing/XPathParserTest.html#XPathParserTest">XPathParserTest</a> {
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>    <strong class="jxr_keyword">private</strong> String resource = <span class="jxr_string">"nodelet_test.xml"</span>;
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> String resource = <span class="jxr_string">"nodelet_test.xml"</span>;
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>  
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>    <em class="jxr_comment">// InputStream Source</em>
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>    @Test
@@ -221,52 +221,59 @@
 <a class="jxr_linenumber" name="L213" href="#L213">213</a> 
 <a class="jxr_linenumber" name="L214" href="#L214">214</a>   @Test
 <a class="jxr_linenumber" name="L215" href="#L215">215</a>   <strong class="jxr_keyword">void</strong> formatXNodeToString() {
-<a class="jxr_linenumber" name="L216" href="#L216">216</a>     XPathParser parser = <strong class="jxr_keyword">new</strong> XPathParser(<span class="jxr_string">"&lt;users&gt;&lt;user&gt;&lt;id&gt;100&lt;/id&gt;&lt;name&gt;Tom&lt;/name&gt;&lt;age&gt;30&lt;/age&gt;&lt;cars&gt;&lt;car index=\&quot;1\&quot;&gt;BMW&lt;/car&gt;&lt;car index=\&quot;2\&quot;&gt;Audi&lt;/car&gt;&lt;car index=\&quot;3\&quot;&gt;Benz&lt;/car&gt;&lt;/cars&gt;&lt;/user&gt;&lt;/users&gt;"</span>);
-<a class="jxr_linenumber" name="L217" href="#L217">217</a>     String usersNodeToString = parser.evalNode(<span class="jxr_string">"/users"</span>).toString();
-<a class="jxr_linenumber" name="L218" href="#L218">218</a>     String userNodeToString = parser.evalNode(<span class="jxr_string">"/users/user"</span>).toString();
-<a class="jxr_linenumber" name="L219" href="#L219">219</a>     String carsNodeToString = parser.evalNode(<span class="jxr_string">"/users/user/cars"</span>).toString();
-<a class="jxr_linenumber" name="L220" href="#L220">220</a> 
-<a class="jxr_linenumber" name="L221" href="#L221">221</a>     String usersNodeToStringExpect =
-<a class="jxr_linenumber" name="L222" href="#L222">222</a>       <span class="jxr_string">"&lt;users&gt;\n"</span> +
-<a class="jxr_linenumber" name="L223" href="#L223">223</a>       <span class="jxr_string">"    &lt;user&gt;\n"</span> +
-<a class="jxr_linenumber" name="L224" href="#L224">224</a>       <span class="jxr_string">"        &lt;id&gt;100&lt;/id&gt;\n"</span> +
-<a class="jxr_linenumber" name="L225" href="#L225">225</a>       <span class="jxr_string">"        &lt;name&gt;Tom&lt;/name&gt;\n"</span> +
-<a class="jxr_linenumber" name="L226" href="#L226">226</a>       <span class="jxr_string">"        &lt;age&gt;30&lt;/age&gt;\n"</span> +
-<a class="jxr_linenumber" name="L227" href="#L227">227</a>       <span class="jxr_string">"        &lt;cars&gt;\n"</span> +
-<a class="jxr_linenumber" name="L228" href="#L228">228</a>       <span class="jxr_string">"            &lt;car index=\&quot;1\&quot;&gt;BMW&lt;/car&gt;\n"</span> +
-<a class="jxr_linenumber" name="L229" href="#L229">229</a>       <span class="jxr_string">"            &lt;car index=\&quot;2\&quot;&gt;Audi&lt;/car&gt;\n"</span> +
-<a class="jxr_linenumber" name="L230" href="#L230">230</a>       <span class="jxr_string">"            &lt;car index=\&quot;3\&quot;&gt;Benz&lt;/car&gt;\n"</span> +
-<a class="jxr_linenumber" name="L231" href="#L231">231</a>       <span class="jxr_string">"        &lt;/cars&gt;\n"</span> +
-<a class="jxr_linenumber" name="L232" href="#L232">232</a>       <span class="jxr_string">"    &lt;/user&gt;\n"</span> +
-<a class="jxr_linenumber" name="L233" href="#L233">233</a>       <span class="jxr_string">"&lt;/users&gt;\n"</span>;
-<a class="jxr_linenumber" name="L234" href="#L234">234</a> 
-<a class="jxr_linenumber" name="L235" href="#L235">235</a>     String userNodeToStringExpect =
-<a class="jxr_linenumber" name="L236" href="#L236">236</a>       <span class="jxr_string">"&lt;user&gt;\n"</span> +
-<a class="jxr_linenumber" name="L237" href="#L237">237</a>       <span class="jxr_string">"    &lt;id&gt;100&lt;/id&gt;\n"</span> +
-<a class="jxr_linenumber" name="L238" href="#L238">238</a>       <span class="jxr_string">"    &lt;name&gt;Tom&lt;/name&gt;\n"</span> +
-<a class="jxr_linenumber" name="L239" href="#L239">239</a>       <span class="jxr_string">"    &lt;age&gt;30&lt;/age&gt;\n"</span> +
-<a class="jxr_linenumber" name="L240" href="#L240">240</a>       <span class="jxr_string">"    &lt;cars&gt;\n"</span> +
-<a class="jxr_linenumber" name="L241" href="#L241">241</a>       <span class="jxr_string">"        &lt;car index=\&quot;1\&quot;&gt;BMW&lt;/car&gt;\n"</span> +
-<a class="jxr_linenumber" name="L242" href="#L242">242</a>       <span class="jxr_string">"        &lt;car index=\&quot;2\&quot;&gt;Audi&lt;/car&gt;\n"</span> +
-<a class="jxr_linenumber" name="L243" href="#L243">243</a>       <span class="jxr_string">"        &lt;car index=\&quot;3\&quot;&gt;Benz&lt;/car&gt;\n"</span> +
-<a class="jxr_linenumber" name="L244" href="#L244">244</a>       <span class="jxr_string">"    &lt;/cars&gt;\n"</span> +
-<a class="jxr_linenumber" name="L245" href="#L245">245</a>       <span class="jxr_string">"&lt;/user&gt;\n"</span>;
-<a class="jxr_linenumber" name="L246" href="#L246">246</a> 
-<a class="jxr_linenumber" name="L247" href="#L247">247</a>   String carsNodeToStringExpect =
-<a class="jxr_linenumber" name="L248" href="#L248">248</a>       <span class="jxr_string">"&lt;cars&gt;\n"</span> +
-<a class="jxr_linenumber" name="L249" href="#L249">249</a>       <span class="jxr_string">"    &lt;car index=\&quot;1\&quot;&gt;BMW&lt;/car&gt;\n"</span> +
-<a class="jxr_linenumber" name="L250" href="#L250">250</a>       <span class="jxr_string">"    &lt;car index=\&quot;2\&quot;&gt;Audi&lt;/car&gt;\n"</span> +
-<a class="jxr_linenumber" name="L251" href="#L251">251</a>       <span class="jxr_string">"    &lt;car index=\&quot;3\&quot;&gt;Benz&lt;/car&gt;\n"</span> +
-<a class="jxr_linenumber" name="L252" href="#L252">252</a>       <span class="jxr_string">"&lt;/cars&gt;\n"</span>;
-<a class="jxr_linenumber" name="L253" href="#L253">253</a> 
-<a class="jxr_linenumber" name="L254" href="#L254">254</a>     assertEquals(usersNodeToStringExpect, usersNodeToString);
-<a class="jxr_linenumber" name="L255" href="#L255">255</a>     assertEquals(userNodeToStringExpect, userNodeToString);
-<a class="jxr_linenumber" name="L256" href="#L256">256</a>     assertEquals(carsNodeToStringExpect, carsNodeToString);
-<a class="jxr_linenumber" name="L257" href="#L257">257</a>   }
-<a class="jxr_linenumber" name="L258" href="#L258">258</a> 
-<a class="jxr_linenumber" name="L259" href="#L259">259</a> }
+<a class="jxr_linenumber" name="L216" href="#L216">216</a>     XPathParser parser = <strong class="jxr_keyword">new</strong> XPathParser(
+<a class="jxr_linenumber" name="L217" href="#L217">217</a>         <span class="jxr_string">"&lt;users&gt;&lt;user&gt;&lt;id&gt;100&lt;/id&gt;&lt;name&gt;Tom&lt;/name&gt;&lt;age&gt;30&lt;/age&gt;&lt;cars&gt;&lt;car index=\&quot;1\&quot;&gt;BMW&lt;/car&gt;&lt;car index=\&quot;2\&quot;&gt;Audi&lt;/car&gt;&lt;car index=\&quot;3\&quot;&gt;Benz&lt;/car&gt;&lt;/cars&gt;&lt;/user&gt;&lt;/users&gt;"</span>);
+<a class="jxr_linenumber" name="L218" href="#L218">218</a>     String usersNodeToString = parser.evalNode(<span class="jxr_string">"/users"</span>).toString();
+<a class="jxr_linenumber" name="L219" href="#L219">219</a>     String userNodeToString = parser.evalNode(<span class="jxr_string">"/users/user"</span>).toString();
+<a class="jxr_linenumber" name="L220" href="#L220">220</a>     String carsNodeToString = parser.evalNode(<span class="jxr_string">"/users/user/cars"</span>).toString();
+<a class="jxr_linenumber" name="L221" href="#L221">221</a> 
+<a class="jxr_linenumber" name="L222" href="#L222">222</a>     <em class="jxr_comment">// @formatter:off</em>
+<a class="jxr_linenumber" name="L223" href="#L223">223</a>     String usersNodeToStringExpect =
+<a class="jxr_linenumber" name="L224" href="#L224">224</a>       <span class="jxr_string">"&lt;users&gt;\n"</span>
+<a class="jxr_linenumber" name="L225" href="#L225">225</a>       + <span class="jxr_string">"    &lt;user&gt;\n"</span>
+<a class="jxr_linenumber" name="L226" href="#L226">226</a>       + <span class="jxr_string">"        &lt;id&gt;100&lt;/id&gt;\n"</span>
+<a class="jxr_linenumber" name="L227" href="#L227">227</a>       + <span class="jxr_string">"        &lt;name&gt;Tom&lt;/name&gt;\n"</span>
+<a class="jxr_linenumber" name="L228" href="#L228">228</a>       + <span class="jxr_string">"        &lt;age&gt;30&lt;/age&gt;\n"</span>
+<a class="jxr_linenumber" name="L229" href="#L229">229</a>       + <span class="jxr_string">"        &lt;cars&gt;\n"</span>
+<a class="jxr_linenumber" name="L230" href="#L230">230</a>       + <span class="jxr_string">"            &lt;car index=\&quot;1\&quot;&gt;BMW&lt;/car&gt;\n"</span>
+<a class="jxr_linenumber" name="L231" href="#L231">231</a>       + <span class="jxr_string">"            &lt;car index=\&quot;2\&quot;&gt;Audi&lt;/car&gt;\n"</span>
+<a class="jxr_linenumber" name="L232" href="#L232">232</a>       + <span class="jxr_string">"            &lt;car index=\&quot;3\&quot;&gt;Benz&lt;/car&gt;\n"</span>
+<a class="jxr_linenumber" name="L233" href="#L233">233</a>       + <span class="jxr_string">"        &lt;/cars&gt;\n"</span>
+<a class="jxr_linenumber" name="L234" href="#L234">234</a>       + <span class="jxr_string">"    &lt;/user&gt;\n"</span>
+<a class="jxr_linenumber" name="L235" href="#L235">235</a>       + <span class="jxr_string">"&lt;/users&gt;\n"</span>;
+<a class="jxr_linenumber" name="L236" href="#L236">236</a>     <em class="jxr_comment">// @formatter:on</em>
+<a class="jxr_linenumber" name="L237" href="#L237">237</a> 
+<a class="jxr_linenumber" name="L238" href="#L238">238</a>     <em class="jxr_comment">// @formatter:off</em>
+<a class="jxr_linenumber" name="L239" href="#L239">239</a>     String userNodeToStringExpect =
+<a class="jxr_linenumber" name="L240" href="#L240">240</a>       <span class="jxr_string">"&lt;user&gt;\n"</span>
+<a class="jxr_linenumber" name="L241" href="#L241">241</a>       + <span class="jxr_string">"    &lt;id&gt;100&lt;/id&gt;\n"</span>
+<a class="jxr_linenumber" name="L242" href="#L242">242</a>       + <span class="jxr_string">"    &lt;name&gt;Tom&lt;/name&gt;\n"</span>
+<a class="jxr_linenumber" name="L243" href="#L243">243</a>       + <span class="jxr_string">"    &lt;age&gt;30&lt;/age&gt;\n"</span>
+<a class="jxr_linenumber" name="L244" href="#L244">244</a>       + <span class="jxr_string">"    &lt;cars&gt;\n"</span>
+<a class="jxr_linenumber" name="L245" href="#L245">245</a>       + <span class="jxr_string">"        &lt;car index=\&quot;1\&quot;&gt;BMW&lt;/car&gt;\n"</span>
+<a class="jxr_linenumber" name="L246" href="#L246">246</a>       + <span class="jxr_string">"        &lt;car index=\&quot;2\&quot;&gt;Audi&lt;/car&gt;\n"</span>
+<a class="jxr_linenumber" name="L247" href="#L247">247</a>       + <span class="jxr_string">"        &lt;car index=\&quot;3\&quot;&gt;Benz&lt;/car&gt;\n"</span>
+<a class="jxr_linenumber" name="L248" href="#L248">248</a>       + <span class="jxr_string">"    &lt;/cars&gt;\n"</span>
+<a class="jxr_linenumber" name="L249" href="#L249">249</a>       + <span class="jxr_string">"&lt;/user&gt;\n"</span>;
+<a class="jxr_linenumber" name="L250" href="#L250">250</a>     <em class="jxr_comment">// @formatter:on</em>
+<a class="jxr_linenumber" name="L251" href="#L251">251</a> 
+<a class="jxr_linenumber" name="L252" href="#L252">252</a>     <em class="jxr_comment">// @formatter:off</em>
+<a class="jxr_linenumber" name="L253" href="#L253">253</a>     String carsNodeToStringExpect =
+<a class="jxr_linenumber" name="L254" href="#L254">254</a>       <span class="jxr_string">"&lt;cars&gt;\n"</span>
+<a class="jxr_linenumber" name="L255" href="#L255">255</a>       + <span class="jxr_string">"    &lt;car index=\&quot;1\&quot;&gt;BMW&lt;/car&gt;\n"</span>
+<a class="jxr_linenumber" name="L256" href="#L256">256</a>       + <span class="jxr_string">"    &lt;car index=\&quot;2\&quot;&gt;Audi&lt;/car&gt;\n"</span>
+<a class="jxr_linenumber" name="L257" href="#L257">257</a>       + <span class="jxr_string">"    &lt;car index=\&quot;3\&quot;&gt;Benz&lt;/car&gt;\n"</span>
+<a class="jxr_linenumber" name="L258" href="#L258">258</a>       + <span class="jxr_string">"&lt;/cars&gt;\n"</span>;
+<a class="jxr_linenumber" name="L259" href="#L259">259</a>     <em class="jxr_comment">// @formatter:on</em>
+<a class="jxr_linenumber" name="L260" href="#L260">260</a> 
+<a class="jxr_linenumber" name="L261" href="#L261">261</a>     assertEquals(usersNodeToStringExpect, usersNodeToString);
+<a class="jxr_linenumber" name="L262" href="#L262">262</a>     assertEquals(userNodeToStringExpect, userNodeToString);
+<a class="jxr_linenumber" name="L263" href="#L263">263</a>     assertEquals(carsNodeToStringExpect, carsNodeToString);
+<a class="jxr_linenumber" name="L264" href="#L264">264</a>   }
+<a class="jxr_linenumber" name="L265" href="#L265">265</a> 
+<a class="jxr_linenumber" name="L266" href="#L266">266</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2022 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2023 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BaseTypeHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.type</a> &gt; <span class="el_source">BaseTypeHandler.java</span></div><h1>BaseTypeHandler.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2019 the original author or authors.
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BaseTypeHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.type</a> &gt; <span class="el_source">BaseTypeHandler.java</span></div><h1>BaseTypeHandler.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
@@ -26,9 +26,9 @@ import org.apache.ibatis.session.Configuration;
 /**
  * The base {@link TypeHandler} for references a generic type.
  * &lt;p&gt;
- * Important: Since 3.5.0, This class never call the {@link ResultSet#wasNull()} and
- * {@link CallableStatement#wasNull()} method for handling the SQL {@code NULL} value.
- * In other words, {@code null} value handling should be performed on subclass.
+ * Important: Since 3.5.0, This class never call the {@link ResultSet#wasNull()} and {@link CallableStatement#wasNull()}
+ * method for handling the SQL {@code NULL} value. In other words, {@code null} value handling should be performed on
+ * subclass.
  * &lt;/p&gt;
  *
  * @author Clinton Begin
@@ -44,68 +44,87 @@ import org.apache.ibatis.session.Configuration;
   protected Configuration configuration;
 
   /**
+   * Sets the configuration.
+   *
+   * @param c
+   *          the new configuration
+   *
    * @deprecated Since 3.5.0 - See https://github.com/mybatis/mybatis-3/issues/1203. This property will remove future.
    */
   @Deprecated
   public void setConfiguration(Configuration c) {
-<span class="nc" id="L51">    this.configuration = c;</span>
-<span class="nc" id="L52">  }</span>
+<span class="nc" id="L56">    this.configuration = c;</span>
+<span class="nc" id="L57">  }</span>
 
   @Override
   public void setParameter(PreparedStatement ps, int i, T parameter, JdbcType jdbcType) throws SQLException {
-<span class="fc bfc" id="L56" title="All 2 branches covered.">    if (parameter == null) {</span>
-<span class="pc bpc" id="L57" title="1 of 2 branches missed.">      if (jdbcType == null) {</span>
-<span class="nc" id="L58">        throw new TypeException(&quot;JDBC requires that the JdbcType must be specified for all nullable parameters.&quot;);</span>
+<span class="fc bfc" id="L61" title="All 2 branches covered.">    if (parameter == null) {</span>
+<span class="pc bpc" id="L62" title="1 of 2 branches missed.">      if (jdbcType == null) {</span>
+<span class="nc" id="L63">        throw new TypeException(&quot;JDBC requires that the JdbcType must be specified for all nullable parameters.&quot;);</span>
       }
       try {
-<span class="fc" id="L61">        ps.setNull(i, jdbcType.TYPE_CODE);</span>
-<span class="fc" id="L62">      } catch (SQLException e) {</span>
-<span class="fc" id="L63">        throw new TypeException(&quot;Error setting null for parameter #&quot; + i + &quot; with JdbcType &quot; + jdbcType + &quot; . &quot;</span>
-              + &quot;Try setting a different JdbcType for this parameter or a different jdbcTypeForNull configuration property. &quot;
-              + &quot;Cause: &quot; + e, e);
-<span class="fc" id="L66">      }</span>
+<span class="fc" id="L66">        ps.setNull(i, jdbcType.TYPE_CODE);</span>
+<span class="fc" id="L67">      } catch (SQLException e) {</span>
+<span class="fc" id="L68">        throw new TypeException(&quot;Error setting null for parameter #&quot; + i + &quot; with JdbcType &quot; + jdbcType + &quot; . &quot;</span>
+            + &quot;Try setting a different JdbcType for this parameter or a different jdbcTypeForNull configuration property. &quot;
+            + &quot;Cause: &quot; + e, e);
+<span class="fc" id="L71">      }</span>
     } else {
       try {
-<span class="fc" id="L69">        setNonNullParameter(ps, i, parameter, jdbcType);</span>
-<span class="fc" id="L70">      } catch (Exception e) {</span>
-<span class="fc" id="L71">        throw new TypeException(&quot;Error setting non null for parameter #&quot; + i + &quot; with JdbcType &quot; + jdbcType + &quot; . &quot;</span>
-              + &quot;Try setting a different JdbcType for this parameter or a different configuration property. &quot;
-              + &quot;Cause: &quot; + e, e);
-<span class="fc" id="L74">      }</span>
+<span class="fc" id="L74">        setNonNullParameter(ps, i, parameter, jdbcType);</span>
+<span class="fc" id="L75">      } catch (Exception e) {</span>
+<span class="fc" id="L76">        throw new TypeException(&quot;Error setting non null for parameter #&quot; + i + &quot; with JdbcType &quot; + jdbcType + &quot; . &quot;</span>
+            + &quot;Try setting a different JdbcType for this parameter or a different configuration property. &quot; + &quot;Cause: &quot;
+            + e, e);
+<span class="fc" id="L79">      }</span>
     }
-<span class="fc" id="L76">  }</span>
+<span class="fc" id="L81">  }</span>
 
   @Override
   public T getResult(ResultSet rs, String columnName) throws SQLException {
     try {
-<span class="fc" id="L81">      return getNullableResult(rs, columnName);</span>
-<span class="fc" id="L82">    } catch (Exception e) {</span>
-<span class="fc" id="L83">      throw new ResultMapException(&quot;Error attempting to get column '&quot; + columnName + &quot;' from result set.  Cause: &quot; + e, e);</span>
+<span class="fc" id="L86">      return getNullableResult(rs, columnName);</span>
+<span class="fc" id="L87">    } catch (Exception e) {</span>
+<span class="fc" id="L88">      throw new ResultMapException(&quot;Error attempting to get column '&quot; + columnName + &quot;' from result set.  Cause: &quot; + e,</span>
+          e);
     }
   }
 
   @Override
   public T getResult(ResultSet rs, int columnIndex) throws SQLException {
     try {
-<span class="fc" id="L90">      return getNullableResult(rs, columnIndex);</span>
-<span class="fc" id="L91">    } catch (Exception e) {</span>
-<span class="fc" id="L92">      throw new ResultMapException(&quot;Error attempting to get column #&quot; + columnIndex + &quot; from result set.  Cause: &quot; + e, e);</span>
+<span class="fc" id="L96">      return getNullableResult(rs, columnIndex);</span>
+<span class="fc" id="L97">    } catch (Exception e) {</span>
+<span class="fc" id="L98">      throw new ResultMapException(&quot;Error attempting to get column #&quot; + columnIndex + &quot; from result set.  Cause: &quot; + e,</span>
+          e);
     }
   }
 
   @Override
   public T getResult(CallableStatement cs, int columnIndex) throws SQLException {
     try {
-<span class="fc" id="L99">      return getNullableResult(cs, columnIndex);</span>
-<span class="fc" id="L100">    } catch (Exception e) {</span>
-<span class="fc" id="L101">      throw new ResultMapException(&quot;Error attempting to get column #&quot; + columnIndex + &quot; from callable statement.  Cause: &quot; + e, e);</span>
+<span class="fc" id="L106">      return getNullableResult(cs, columnIndex);</span>
+<span class="fc" id="L107">    } catch (Exception e) {</span>
+<span class="fc" id="L108">      throw new ResultMapException(</span>
+          &quot;Error attempting to get column #&quot; + columnIndex + &quot; from callable statement.  Cause: &quot; + e, e);
     }
   }
 
-  public abstract void setNonNullParameter(PreparedStatement ps, int i, T parameter, JdbcType jdbcType) throws SQLException;
+  public abstract void setNonNullParameter(PreparedStatement ps, int i, T parameter, JdbcType jdbcType)
+      throws SQLException;
 
   /**
-   * @param columnName Colunm name, when configuration &lt;code&gt;useColumnLabel&lt;/code&gt; is &lt;code&gt;false&lt;/code&gt;
+   * Gets the nullable result.
+   *
+   * @param rs
+   *          the rs
+   * @param columnName
+   *          Column name, when configuration &lt;code&gt;useColumnLabel&lt;/code&gt; is &lt;code&gt;false&lt;/code&gt;
+   *
+   * @return the nullable result
+   *
+   * @throws SQLException
+   *           the SQL exception
    */
   public abstract T getNullableResult(ResultSet rs, String columnName) throws SQLException;
 
@@ -114,4 +133,4 @@ import org.apache.ibatis.session.Configuration;
   public abstract T getNullableResult(CallableStatement cs, int columnIndex) throws SQLException;
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

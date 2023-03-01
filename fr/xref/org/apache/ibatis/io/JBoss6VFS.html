@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../apidocs/org/apache/ibatis/io/JBoss6VFS.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2022 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -103,26 +103,26 @@
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>  
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>        <em class="jxr_comment">// Look up and verify required methods</em>
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>        VFS.getChild = checkNotNull(getMethod(VFS.VFS, <span class="jxr_string">"getChild"</span>, URL.<strong class="jxr_keyword">class</strong>));
-<a class="jxr_linenumber" name="L98" href="#L98">98</a>        VirtualFile.getChildrenRecursively = checkNotNull(getMethod(VirtualFile.VirtualFile,
-<a class="jxr_linenumber" name="L99" href="#L99">99</a>            <span class="jxr_string">"getChildrenRecursively"</span>));
-<a class="jxr_linenumber" name="L100" href="#L100">100</a>       VirtualFile.getPathNameRelativeTo = checkNotNull(getMethod(VirtualFile.VirtualFile,
-<a class="jxr_linenumber" name="L101" href="#L101">101</a>           <span class="jxr_string">"getPathNameRelativeTo"</span>, VirtualFile.VirtualFile));
-<a class="jxr_linenumber" name="L102" href="#L102">102</a> 
-<a class="jxr_linenumber" name="L103" href="#L103">103</a>       <em class="jxr_comment">// Verify that the API has not changed</em>
-<a class="jxr_linenumber" name="L104" href="#L104">104</a>       checkReturnType(VFS.getChild, VirtualFile.VirtualFile);
-<a class="jxr_linenumber" name="L105" href="#L105">105</a>       checkReturnType(VirtualFile.getChildrenRecursively, List.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L106" href="#L106">106</a>       checkReturnType(VirtualFile.getPathNameRelativeTo, String.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L107" href="#L107">107</a>     }
-<a class="jxr_linenumber" name="L108" href="#L108">108</a>   }
-<a class="jxr_linenumber" name="L109" href="#L109">109</a> 
-<a class="jxr_linenumber" name="L110" href="#L110">110</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L111" href="#L111">111</a> <em class="jxr_javadoccomment">   * Verifies that the provided object reference is null. If it is null, then this VFS is marked</em>
-<a class="jxr_linenumber" name="L112" href="#L112">112</a> <em class="jxr_javadoccomment">   * as invalid for the current environment.</em>
-<a class="jxr_linenumber" name="L113" href="#L113">113</a> <em class="jxr_javadoccomment">   *</em>
-<a class="jxr_linenumber" name="L114" href="#L114">114</a> <em class="jxr_javadoccomment">   * @param &lt;T&gt;</em>
-<a class="jxr_linenumber" name="L115" href="#L115">115</a> <em class="jxr_javadoccomment">   *          the generic type</em>
-<a class="jxr_linenumber" name="L116" href="#L116">116</a> <em class="jxr_javadoccomment">   * @param object</em>
-<a class="jxr_linenumber" name="L117" href="#L117">117</a> <em class="jxr_javadoccomment">   *          The object reference to check for null.</em>
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>        VirtualFile.getChildrenRecursively = checkNotNull(getMethod(VirtualFile.VirtualFile, <span class="jxr_string">"getChildrenRecursively"</span>));
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>        VirtualFile.getPathNameRelativeTo = checkNotNull(
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>           getMethod(VirtualFile.VirtualFile, <span class="jxr_string">"getPathNameRelativeTo"</span>, VirtualFile.VirtualFile));
+<a class="jxr_linenumber" name="L101" href="#L101">101</a> 
+<a class="jxr_linenumber" name="L102" href="#L102">102</a>       <em class="jxr_comment">// Verify that the API has not changed</em>
+<a class="jxr_linenumber" name="L103" href="#L103">103</a>       checkReturnType(VFS.getChild, VirtualFile.VirtualFile);
+<a class="jxr_linenumber" name="L104" href="#L104">104</a>       checkReturnType(VirtualFile.getChildrenRecursively, List.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>       checkReturnType(VirtualFile.getPathNameRelativeTo, String.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>     }
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>   }
+<a class="jxr_linenumber" name="L108" href="#L108">108</a> 
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L110" href="#L110">110</a> <em class="jxr_javadoccomment">   * Verifies that the provided object reference is null. If it is null, then this VFS is marked as invalid for the</em>
+<a class="jxr_linenumber" name="L111" href="#L111">111</a> <em class="jxr_javadoccomment">   * current environment.</em>
+<a class="jxr_linenumber" name="L112" href="#L112">112</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L113" href="#L113">113</a> <em class="jxr_javadoccomment">   * @param &lt;T&gt;</em>
+<a class="jxr_linenumber" name="L114" href="#L114">114</a> <em class="jxr_javadoccomment">   *          the generic type</em>
+<a class="jxr_linenumber" name="L115" href="#L115">115</a> <em class="jxr_javadoccomment">   * @param object</em>
+<a class="jxr_linenumber" name="L116" href="#L116">116</a> <em class="jxr_javadoccomment">   *          The object reference to check for null.</em>
+<a class="jxr_linenumber" name="L117" href="#L117">117</a> <em class="jxr_javadoccomment">   *</em>
 <a class="jxr_linenumber" name="L118" href="#L118">118</a> <em class="jxr_javadoccomment">   * @return the t</em>
 <a class="jxr_linenumber" name="L119" href="#L119">119</a> <em class="jxr_javadoccomment">   */</em>
 <a class="jxr_linenumber" name="L120" href="#L120">120</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">static</strong> &lt;T&gt; T checkNotNull(T object) {
@@ -133,64 +133,66 @@
 <a class="jxr_linenumber" name="L125" href="#L125">125</a>   }
 <a class="jxr_linenumber" name="L126" href="#L126">126</a> 
 <a class="jxr_linenumber" name="L127" href="#L127">127</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L128" href="#L128">128</a> <em class="jxr_javadoccomment">   * Verifies that the return type of method is what it is expected to be. If it is not, then</em>
-<a class="jxr_linenumber" name="L129" href="#L129">129</a> <em class="jxr_javadoccomment">   * this VFS is marked as invalid for the current environment.</em>
+<a class="jxr_linenumber" name="L128" href="#L128">128</a> <em class="jxr_javadoccomment">   * Verifies that the return type of method is what it is expected to be. If it is not, then this VFS is marked as</em>
+<a class="jxr_linenumber" name="L129" href="#L129">129</a> <em class="jxr_javadoccomment">   * invalid for the current environment.</em>
 <a class="jxr_linenumber" name="L130" href="#L130">130</a> <em class="jxr_javadoccomment">   *</em>
-<a class="jxr_linenumber" name="L131" href="#L131">131</a> <em class="jxr_javadoccomment">   * @param method The method whose return type is to be checked.</em>
-<a class="jxr_linenumber" name="L132" href="#L132">132</a> <em class="jxr_javadoccomment">   * @param expected A type to which the method's return type must be assignable.</em>
-<a class="jxr_linenumber" name="L133" href="#L133">133</a> <em class="jxr_javadoccomment">   * @see Class#isAssignableFrom(Class)</em>
-<a class="jxr_linenumber" name="L134" href="#L134">134</a> <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L135" href="#L135">135</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> checkReturnType(Method method, Class&lt;?&gt; expected) {
-<a class="jxr_linenumber" name="L136" href="#L136">136</a>     <strong class="jxr_keyword">if</strong> (method != <strong class="jxr_keyword">null</strong> &amp;&amp; !expected.isAssignableFrom(method.getReturnType())) {
-<a class="jxr_linenumber" name="L137" href="#L137">137</a>       log.error(<span class="jxr_string">"Method "</span> + method.getClass().getName() + <span class="jxr_string">"."</span> + method.getName()
-<a class="jxr_linenumber" name="L138" href="#L138">138</a>           + <span class="jxr_string">"(..) should return "</span> + expected.getName() + <span class="jxr_string">" but returns "</span>
-<a class="jxr_linenumber" name="L139" href="#L139">139</a>           + method.getReturnType().getName() + <span class="jxr_string">" instead."</span>);
-<a class="jxr_linenumber" name="L140" href="#L140">140</a>       setInvalid();
-<a class="jxr_linenumber" name="L141" href="#L141">141</a>     }
-<a class="jxr_linenumber" name="L142" href="#L142">142</a>   }
-<a class="jxr_linenumber" name="L143" href="#L143">143</a> 
-<a class="jxr_linenumber" name="L144" href="#L144">144</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L145" href="#L145">145</a> <em class="jxr_javadoccomment">   * Mark this {@link VFS} as invalid for the current environment.</em>
-<a class="jxr_linenumber" name="L146" href="#L146">146</a> <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L147" href="#L147">147</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> setInvalid() {
-<a class="jxr_linenumber" name="L148" href="#L148">148</a>     <strong class="jxr_keyword">if</strong> (JBoss6VFS.valid.booleanValue()) {
-<a class="jxr_linenumber" name="L149" href="#L149">149</a>       log.debug(<span class="jxr_string">"JBoss 6 VFS API is not available in this environment."</span>);
-<a class="jxr_linenumber" name="L150" href="#L150">150</a>       JBoss6VFS.valid = Boolean.FALSE;
-<a class="jxr_linenumber" name="L151" href="#L151">151</a>     }
-<a class="jxr_linenumber" name="L152" href="#L152">152</a>   }
-<a class="jxr_linenumber" name="L153" href="#L153">153</a> 
-<a class="jxr_linenumber" name="L154" href="#L154">154</a>   <strong class="jxr_keyword">static</strong> {
-<a class="jxr_linenumber" name="L155" href="#L155">155</a>     initialize();
-<a class="jxr_linenumber" name="L156" href="#L156">156</a>   }
-<a class="jxr_linenumber" name="L157" href="#L157">157</a> 
-<a class="jxr_linenumber" name="L158" href="#L158">158</a>   @Override
-<a class="jxr_linenumber" name="L159" href="#L159">159</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> isValid() {
-<a class="jxr_linenumber" name="L160" href="#L160">160</a>     <strong class="jxr_keyword">return</strong> valid;
-<a class="jxr_linenumber" name="L161" href="#L161">161</a>   }
-<a class="jxr_linenumber" name="L162" href="#L162">162</a> 
-<a class="jxr_linenumber" name="L163" href="#L163">163</a>   @Override
-<a class="jxr_linenumber" name="L164" href="#L164">164</a>   <strong class="jxr_keyword">public</strong> List&lt;String&gt; list(URL url, String path) <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="L165" href="#L165">165</a>     VirtualFile directory;
-<a class="jxr_linenumber" name="L166" href="#L166">166</a>     directory = VFS.getChild(url);
-<a class="jxr_linenumber" name="L167" href="#L167">167</a>     <strong class="jxr_keyword">if</strong> (directory == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L168" href="#L168">168</a>       <strong class="jxr_keyword">return</strong> Collections.emptyList();
-<a class="jxr_linenumber" name="L169" href="#L169">169</a>     }
-<a class="jxr_linenumber" name="L170" href="#L170">170</a> 
-<a class="jxr_linenumber" name="L171" href="#L171">171</a>     <strong class="jxr_keyword">if</strong> (!path.endsWith(<span class="jxr_string">"/"</span>)) {
-<a class="jxr_linenumber" name="L172" href="#L172">172</a>       path += <span class="jxr_string">"/"</span>;
-<a class="jxr_linenumber" name="L173" href="#L173">173</a>     }
-<a class="jxr_linenumber" name="L174" href="#L174">174</a> 
-<a class="jxr_linenumber" name="L175" href="#L175">175</a>     List&lt;VirtualFile&gt; children = directory.getChildren();
-<a class="jxr_linenumber" name="L176" href="#L176">176</a>     List&lt;String&gt; names = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;(children.size());
-<a class="jxr_linenumber" name="L177" href="#L177">177</a>     <strong class="jxr_keyword">for</strong> (VirtualFile vf : children) {
-<a class="jxr_linenumber" name="L178" href="#L178">178</a>       names.add(path + vf.getPathNameRelativeTo(directory));
-<a class="jxr_linenumber" name="L179" href="#L179">179</a>     }
-<a class="jxr_linenumber" name="L180" href="#L180">180</a> 
-<a class="jxr_linenumber" name="L181" href="#L181">181</a>     <strong class="jxr_keyword">return</strong> names;
-<a class="jxr_linenumber" name="L182" href="#L182">182</a>   }
-<a class="jxr_linenumber" name="L183" href="#L183">183</a> }
+<a class="jxr_linenumber" name="L131" href="#L131">131</a> <em class="jxr_javadoccomment">   * @param method</em>
+<a class="jxr_linenumber" name="L132" href="#L132">132</a> <em class="jxr_javadoccomment">   *          The method whose return type is to be checked.</em>
+<a class="jxr_linenumber" name="L133" href="#L133">133</a> <em class="jxr_javadoccomment">   * @param expected</em>
+<a class="jxr_linenumber" name="L134" href="#L134">134</a> <em class="jxr_javadoccomment">   *          A type to which the method's return type must be assignable.</em>
+<a class="jxr_linenumber" name="L135" href="#L135">135</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L136" href="#L136">136</a> <em class="jxr_javadoccomment">   * @see Class#isAssignableFrom(Class)</em>
+<a class="jxr_linenumber" name="L137" href="#L137">137</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> checkReturnType(Method method, Class&lt;?&gt; expected) {
+<a class="jxr_linenumber" name="L139" href="#L139">139</a>     <strong class="jxr_keyword">if</strong> (method != <strong class="jxr_keyword">null</strong> &amp;&amp; !expected.isAssignableFrom(method.getReturnType())) {
+<a class="jxr_linenumber" name="L140" href="#L140">140</a>       log.error(<span class="jxr_string">"Method "</span> + method.getClass().getName() + <span class="jxr_string">"."</span> + method.getName() + <span class="jxr_string">"(..) should return "</span>
+<a class="jxr_linenumber" name="L141" href="#L141">141</a>           + expected.getName() + <span class="jxr_string">" but returns "</span> + method.getReturnType().getName() + <span class="jxr_string">" instead."</span>);
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>       setInvalid();
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>     }
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>   }
+<a class="jxr_linenumber" name="L145" href="#L145">145</a> 
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L147" href="#L147">147</a> <em class="jxr_javadoccomment">   * Mark this {@link VFS} as invalid for the current environment.</em>
+<a class="jxr_linenumber" name="L148" href="#L148">148</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L149" href="#L149">149</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> setInvalid() {
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>     <strong class="jxr_keyword">if</strong> (JBoss6VFS.valid.booleanValue()) {
+<a class="jxr_linenumber" name="L151" href="#L151">151</a>       log.debug(<span class="jxr_string">"JBoss 6 VFS API is not available in this environment."</span>);
+<a class="jxr_linenumber" name="L152" href="#L152">152</a>       JBoss6VFS.valid = Boolean.FALSE;
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>     }
+<a class="jxr_linenumber" name="L154" href="#L154">154</a>   }
+<a class="jxr_linenumber" name="L155" href="#L155">155</a> 
+<a class="jxr_linenumber" name="L156" href="#L156">156</a>   <strong class="jxr_keyword">static</strong> {
+<a class="jxr_linenumber" name="L157" href="#L157">157</a>     initialize();
+<a class="jxr_linenumber" name="L158" href="#L158">158</a>   }
+<a class="jxr_linenumber" name="L159" href="#L159">159</a> 
+<a class="jxr_linenumber" name="L160" href="#L160">160</a>   @Override
+<a class="jxr_linenumber" name="L161" href="#L161">161</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> isValid() {
+<a class="jxr_linenumber" name="L162" href="#L162">162</a>     <strong class="jxr_keyword">return</strong> valid;
+<a class="jxr_linenumber" name="L163" href="#L163">163</a>   }
+<a class="jxr_linenumber" name="L164" href="#L164">164</a> 
+<a class="jxr_linenumber" name="L165" href="#L165">165</a>   @Override
+<a class="jxr_linenumber" name="L166" href="#L166">166</a>   <strong class="jxr_keyword">public</strong> List&lt;String&gt; list(URL url, String path) <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="L167" href="#L167">167</a>     VirtualFile directory;
+<a class="jxr_linenumber" name="L168" href="#L168">168</a>     directory = VFS.getChild(url);
+<a class="jxr_linenumber" name="L169" href="#L169">169</a>     <strong class="jxr_keyword">if</strong> (directory == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L170" href="#L170">170</a>       <strong class="jxr_keyword">return</strong> Collections.emptyList();
+<a class="jxr_linenumber" name="L171" href="#L171">171</a>     }
+<a class="jxr_linenumber" name="L172" href="#L172">172</a> 
+<a class="jxr_linenumber" name="L173" href="#L173">173</a>     <strong class="jxr_keyword">if</strong> (!path.endsWith(<span class="jxr_string">"/"</span>)) {
+<a class="jxr_linenumber" name="L174" href="#L174">174</a>       path += <span class="jxr_string">"/"</span>;
+<a class="jxr_linenumber" name="L175" href="#L175">175</a>     }
+<a class="jxr_linenumber" name="L176" href="#L176">176</a> 
+<a class="jxr_linenumber" name="L177" href="#L177">177</a>     List&lt;VirtualFile&gt; children = directory.getChildren();
+<a class="jxr_linenumber" name="L178" href="#L178">178</a>     List&lt;String&gt; names = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;(children.size());
+<a class="jxr_linenumber" name="L179" href="#L179">179</a>     <strong class="jxr_keyword">for</strong> (VirtualFile vf : children) {
+<a class="jxr_linenumber" name="L180" href="#L180">180</a>       names.add(path + vf.getPathNameRelativeTo(directory));
+<a class="jxr_linenumber" name="L181" href="#L181">181</a>     }
+<a class="jxr_linenumber" name="L182" href="#L182">182</a> 
+<a class="jxr_linenumber" name="L183" href="#L183">183</a>     <strong class="jxr_keyword">return</strong> names;
+<a class="jxr_linenumber" name="L184" href="#L184">184</a>   }
+<a class="jxr_linenumber" name="L185" href="#L185">185</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2022 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2023 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>
