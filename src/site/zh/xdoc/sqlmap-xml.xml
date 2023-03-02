@@ -144,7 +144,7 @@ ps.setInt(1,id);]]></source>
               <td><code>parameterType</code></td>
               <td>
                 将会传入这条语句的参数的类全限定名或别名。这个属性是可选的，因为
-                MyBatis 可以通过类型处理器（TypeHandler）推断出具体传入语句的参数，默认值为未设置（unset）。
+                MyBatis 可以根据语句中实际传入的参数计算出应该使用的类型处理器（TypeHandler），默认值为未设置（unset）。
               </td>
             </tr>
             <tr>
@@ -288,7 +288,7 @@ ps.setInt(1,id);]]></source>
               <td><code>parameterType</code></td>
               <td>
                 将会传入这条语句的参数的类全限定名或别名。这个属性是可选的，因为
-                MyBatis 可以通过类型处理器（TypeHandler）推断出具体传入语句的参数，默认值为未设置（unset）。
+                MyBatis 可以根据语句中实际传入的参数计算出应该使用的类型处理器（TypeHandler），默认值为未设置（unset）。
               </td>
             </tr>
             <tr>
