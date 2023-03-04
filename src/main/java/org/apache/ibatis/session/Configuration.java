@@ -990,14 +990,14 @@ public class Configuration {
   // Slow but a one time cost. A better solution is welcome.
   protected void checkGloballyForDiscriminatedNestedResultMaps(ResultMap rm) {
     if (rm.hasNestedResultMaps()) {
-      for (Map.Entry<String, ResultMap> entry : resultMaps.entrySet()) {
-        Object value = entry.getValue();
-        if (value instanceof ResultMap) {
-          ResultMap entryResultMap = (ResultMap) value;
+      final String resultMapId = rm.getId();
+      for (Object resultMapObject : resultMaps.values()) {
+        if (resultMapObject instanceof ResultMap) {
+          ResultMap entryResultMap = (ResultMap) resultMapObject;
           if (!entryResultMap.hasNestedResultMaps() && entryResultMap.getDiscriminator() != null) {
             Collection<String> discriminatedResultMapNames = entryResultMap.getDiscriminator().getDiscriminatorMap()
                 .values();
-            if (discriminatedResultMapNames.contains(rm.getId())) {
+            if (discriminatedResultMapNames.contains(resultMapId)) {
               entryResultMap.forceNestedResultMaps();
             }
           }
@@ -1009,8 +1009,7 @@ public class Configuration {
   // Slow but a one time cost. A better solution is welcome.
   protected void checkLocallyForDiscriminatedNestedResultMaps(ResultMap rm) {
     if (!rm.hasNestedResultMaps() && rm.getDiscriminator() != null) {
-      for (Map.Entry<String, String> entry : rm.getDiscriminator().getDiscriminatorMap().entrySet()) {
-        String discriminatedResultMapName = entry.getValue();
+      for (String discriminatedResultMapName : rm.getDiscriminator().getDiscriminatorMap().values()) {
         if (hasResultMap(discriminatedResultMapName)) {
           ResultMap discriminatedResultMap = resultMaps.get(discriminatedResultMapName);
           if (discriminatedResultMap.hasNestedResultMaps()) {
