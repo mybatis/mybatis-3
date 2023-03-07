@@ -986,7 +986,7 @@ public class User {
 </constructor>]]></source>
 
         <p>
-          <code>javaType</code> can be omitted if there is a property with the same name and type.
+          <code>javaType</code> can be omitted if there is a writable property with the same name and type.
         </p>
 
         <p>El resto de atributos son los mismos que los de los elementos id y result.</p>

@@ -1102,7 +1102,7 @@ public class User {
 </constructor>]]></source>
 
         <p>
-          引数と同じ名前、同じ型を持つプロパティが存在する場合 <code>javaType</code> は省略可能です。
+          引数と同じ名前、同じ型を持つ書き込み可能なプロパティが存在する場合 <code>javaType</code> は省略可能です。
         </p>
 
         <p>
