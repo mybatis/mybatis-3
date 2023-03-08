@@ -1135,7 +1135,7 @@ public class User {
 </constructor>]]></source>
 
         <p>
-          如果存在名称和类型相同的属性，那么可以省略 <code>javaType</code> 。
+          如果存在名称和类型相同的可写属性，那么可以省略 <code>javaType</code> 。
         </p>
 
         <p>

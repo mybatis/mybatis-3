@@ -53,16 +53,6 @@ class RecordTypeTest {
   }
 
   @Test
-  void shouldResolveConstructorArgType() {
-    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      RecordTypeMapper mapper = sqlSession.getMapper(RecordTypeMapper.class);
-      Property prop = mapper.selectPropertyNoJavaType(1);
-      assertEquals("Val1!", prop.value());
-      assertEquals("https://www.google.com", prop.URL());
-    }
-  }
-
-  @Test
   void testSelectRecordAutomapping() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       RecordTypeMapper mapper = sqlSession.getMapper(RecordTypeMapper.class);
