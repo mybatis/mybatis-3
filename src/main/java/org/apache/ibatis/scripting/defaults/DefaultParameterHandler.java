@@ -19,6 +19,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.apache.ibatis.binding.BindingException;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.mapping.BoundSql;
@@ -62,8 +63,9 @@ public class DefaultParameterHandler implements ParameterHandler {
   public void setParameters(PreparedStatement ps) {
     ErrorContext.instance().activity("setting parameters").object(mappedStatement.getParameterMap().getId());
     List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
+    int parameterSize = parameterMappings.size();
     if (parameterMappings != null) {
-      for (int i = 0; i < parameterMappings.size(); i++) {
+      for (int i = 0; i < parameterSize; i++) {
         ParameterMapping parameterMapping = parameterMappings.get(i);
         if (parameterMapping.getMode() != ParameterMode.OUT) {
           Object value;
@@ -73,6 +75,10 @@ public class DefaultParameterHandler implements ParameterHandler {
           } else if (parameterObject == null) {
             value = null;
           } else if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {
+            //avoid one parameter set into Several parameterMappings
+            if(parameterSize > 1){
+              throw new BindingException("Could not set parameters. There is "+parameterSize+" parameters, but only find one");
+            }
             value = parameterObject;
           } else {
             MetaObject metaObject = configuration.newMetaObject(parameterObject);
