@@ -32,7 +32,8 @@ class UnmatchedPropTypeTest {
 
   @BeforeAll
   static void setUp() throws Exception {
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/unmatched_prop_type/mybatis-config.xml")) {
+    try (Reader reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/unmatched_prop_type/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
