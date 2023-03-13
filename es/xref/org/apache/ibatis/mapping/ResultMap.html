@@ -137,7 +137,7 @@
 <a class="jxr_linenumber" name="L129" href="#L129">129</a>         <strong class="jxr_keyword">if</strong> (actualArgNames == <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L130" href="#L130">130</a>           <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="BuilderException" href="../../../../org/apache/ibatis/builder/BuilderException.html#BuilderException">BuilderException</a>(<span class="jxr_string">"Error in result map '"</span> + resultMap.id + <span class="jxr_string">"'. Failed to find a constructor in '"</span>
 <a class="jxr_linenumber" name="L131" href="#L131">131</a>               + resultMap.getType().getName() + <span class="jxr_string">"' with arg names "</span> + constructorArgNames
-<a class="jxr_linenumber" name="L132" href="#L132">132</a>               + <span class="jxr_string">". Note that 'javaType' is required when there is no readable property with the same name ('name' is optional, BTW). There might be more info in debug log."</span>);
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>               + <span class="jxr_string">". Note that 'javaType' is required when there is no writable property with the same name ('name' is optional, BTW). There might be more info in debug log."</span>);
 <a class="jxr_linenumber" name="L133" href="#L133">133</a>         }
 <a class="jxr_linenumber" name="L134" href="#L134">134</a>         resultMap.constructorResultMappings.sort((o1, o2) -&gt; {
 <a class="jxr_linenumber" name="L135" href="#L135">135</a>           <strong class="jxr_keyword">int</strong> paramIdx1 = actualArgNames.indexOf(o1.getProperty());

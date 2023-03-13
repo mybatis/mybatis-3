@@ -445,7 +445,7 @@
 <a class="jxr_linenumber" name="L437" href="#L437">437</a>     <strong class="jxr_keyword">if</strong> (javaType == <strong class="jxr_keyword">null</strong> &amp;&amp; property != <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L438" href="#L438">438</a>       <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L439" href="#L439">439</a>         <a name="MetaClass" href="../../../../org/apache/ibatis/reflection/MetaClass.html#MetaClass">MetaClass</a> metaResultType = MetaClass.forClass(resultType, configuration.getReflectorFactory());
-<a class="jxr_linenumber" name="L440" href="#L440">440</a>         javaType = metaResultType.getGetterType(property);
+<a class="jxr_linenumber" name="L440" href="#L440">440</a>         javaType = metaResultType.getSetterType(property);
 <a class="jxr_linenumber" name="L441" href="#L441">441</a>       } <strong class="jxr_keyword">catch</strong> (Exception e) {
 <a class="jxr_linenumber" name="L442" href="#L442">442</a>         <em class="jxr_comment">// ignore, following null check statement will deal with the situation</em>
 <a class="jxr_linenumber" name="L443" href="#L443">443</a>       }

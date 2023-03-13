@@ -998,14 +998,14 @@
 <a class="jxr_linenumber" name="L990" href="#L990">990</a>   <em class="jxr_comment">// Slow but a one time cost. A better solution is welcome.</em>
 <a class="jxr_linenumber" name="L991" href="#L991">991</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> checkGloballyForDiscriminatedNestedResultMaps(<a name="ResultMap" href="../../../../org/apache/ibatis/mapping/ResultMap.html#ResultMap">ResultMap</a> rm) {
 <a class="jxr_linenumber" name="L992" href="#L992">992</a>     <strong class="jxr_keyword">if</strong> (rm.hasNestedResultMaps()) {
-<a class="jxr_linenumber" name="L993" href="#L993">993</a>       <strong class="jxr_keyword">for</strong> (Map.Entry&lt;String, ResultMap&gt; entry : resultMaps.entrySet()) {
-<a class="jxr_linenumber" name="L994" href="#L994">994</a>         Object value = entry.getValue();
-<a class="jxr_linenumber" name="L995" href="#L995">995</a>         <strong class="jxr_keyword">if</strong> (value instanceof <a name="ResultMap" href="../../../../org/apache/ibatis/mapping/ResultMap.html#ResultMap">ResultMap</a>) {
-<a class="jxr_linenumber" name="L996" href="#L996">996</a>           <a name="ResultMap" href="../../../../org/apache/ibatis/mapping/ResultMap.html#ResultMap">ResultMap</a> entryResultMap = (<a name="ResultMap" href="../../../../org/apache/ibatis/mapping/ResultMap.html#ResultMap">ResultMap</a>) value;
+<a class="jxr_linenumber" name="L993" href="#L993">993</a>       <strong class="jxr_keyword">final</strong> String resultMapId = rm.getId();
+<a class="jxr_linenumber" name="L994" href="#L994">994</a>       <strong class="jxr_keyword">for</strong> (Object resultMapObject : resultMaps.values()) {
+<a class="jxr_linenumber" name="L995" href="#L995">995</a>         <strong class="jxr_keyword">if</strong> (resultMapObject instanceof <a name="ResultMap" href="../../../../org/apache/ibatis/mapping/ResultMap.html#ResultMap">ResultMap</a>) {
+<a class="jxr_linenumber" name="L996" href="#L996">996</a>           <a name="ResultMap" href="../../../../org/apache/ibatis/mapping/ResultMap.html#ResultMap">ResultMap</a> entryResultMap = (<a name="ResultMap" href="../../../../org/apache/ibatis/mapping/ResultMap.html#ResultMap">ResultMap</a>) resultMapObject;
 <a class="jxr_linenumber" name="L997" href="#L997">997</a>           <strong class="jxr_keyword">if</strong> (!entryResultMap.hasNestedResultMaps() &amp;&amp; entryResultMap.getDiscriminator() != <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L998" href="#L998">998</a>             Collection&lt;String&gt; discriminatedResultMapNames = entryResultMap.getDiscriminator().getDiscriminatorMap()
 <a class="jxr_linenumber" name="L999" href="#L999">999</a>                 .values();
-<a class="jxr_linenumber" name="L1000" href="#L1000">1000</a>             <strong class="jxr_keyword">if</strong> (discriminatedResultMapNames.contains(rm.getId())) {
+<a class="jxr_linenumber" name="L1000" href="#L1000">1000</a>             <strong class="jxr_keyword">if</strong> (discriminatedResultMapNames.contains(resultMapId)) {
 <a class="jxr_linenumber" name="L1001" href="#L1001">1001</a>               entryResultMap.forceNestedResultMaps();
 <a class="jxr_linenumber" name="L1002" href="#L1002">1002</a>             }
 <a class="jxr_linenumber" name="L1003" href="#L1003">1003</a>           }
@@ -1017,120 +1017,119 @@
 <a class="jxr_linenumber" name="L1009" href="#L1009">1009</a>   <em class="jxr_comment">// Slow but a one time cost. A better solution is welcome.</em>
 <a class="jxr_linenumber" name="L1010" href="#L1010">1010</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> checkLocallyForDiscriminatedNestedResultMaps(<a name="ResultMap" href="../../../../org/apache/ibatis/mapping/ResultMap.html#ResultMap">ResultMap</a> rm) {
 <a class="jxr_linenumber" name="L1011" href="#L1011">1011</a>     <strong class="jxr_keyword">if</strong> (!rm.hasNestedResultMaps() &amp;&amp; rm.getDiscriminator() != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L1012" href="#L1012">1012</a>       <strong class="jxr_keyword">for</strong> (Map.Entry&lt;String, String&gt; entry : rm.getDiscriminator().getDiscriminatorMap().entrySet()) {
-<a class="jxr_linenumber" name="L1013" href="#L1013">1013</a>         String discriminatedResultMapName = entry.getValue();
-<a class="jxr_linenumber" name="L1014" href="#L1014">1014</a>         <strong class="jxr_keyword">if</strong> (hasResultMap(discriminatedResultMapName)) {
-<a class="jxr_linenumber" name="L1015" href="#L1015">1015</a>           <a name="ResultMap" href="../../../../org/apache/ibatis/mapping/ResultMap.html#ResultMap">ResultMap</a> discriminatedResultMap = resultMaps.get(discriminatedResultMapName);
-<a class="jxr_linenumber" name="L1016" href="#L1016">1016</a>           <strong class="jxr_keyword">if</strong> (discriminatedResultMap.hasNestedResultMaps()) {
-<a class="jxr_linenumber" name="L1017" href="#L1017">1017</a>             rm.forceNestedResultMaps();
-<a class="jxr_linenumber" name="L1018" href="#L1018">1018</a>             <strong class="jxr_keyword">break</strong>;
-<a class="jxr_linenumber" name="L1019" href="#L1019">1019</a>           }
-<a class="jxr_linenumber" name="L1020" href="#L1020">1020</a>         }
-<a class="jxr_linenumber" name="L1021" href="#L1021">1021</a>       }
-<a class="jxr_linenumber" name="L1022" href="#L1022">1022</a>     }
-<a class="jxr_linenumber" name="L1023" href="#L1023">1023</a>   }
-<a class="jxr_linenumber" name="L1024" href="#L1024">1024</a> 
-<a class="jxr_linenumber" name="L1025" href="#L1025">1025</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> StrictMap&lt;V&gt; <strong class="jxr_keyword">extends</strong> ConcurrentHashMap&lt;String, V&gt; {
-<a class="jxr_linenumber" name="L1026" href="#L1026">1026</a> 
-<a class="jxr_linenumber" name="L1027" href="#L1027">1027</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = -4950446264854982944L;
-<a class="jxr_linenumber" name="L1028" href="#L1028">1028</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> String name;
-<a class="jxr_linenumber" name="L1029" href="#L1029">1029</a>     <strong class="jxr_keyword">private</strong> BiFunction&lt;V, V, String&gt; conflictMessageProducer;
-<a class="jxr_linenumber" name="L1030" href="#L1030">1030</a> 
-<a class="jxr_linenumber" name="L1031" href="#L1031">1031</a>     <strong class="jxr_keyword">public</strong> StrictMap(String name, <strong class="jxr_keyword">int</strong> initialCapacity, <strong class="jxr_keyword">float</strong> loadFactor) {
-<a class="jxr_linenumber" name="L1032" href="#L1032">1032</a>       <strong class="jxr_keyword">super</strong>(initialCapacity, loadFactor);
-<a class="jxr_linenumber" name="L1033" href="#L1033">1033</a>       <strong class="jxr_keyword">this</strong>.name = name;
-<a class="jxr_linenumber" name="L1034" href="#L1034">1034</a>     }
-<a class="jxr_linenumber" name="L1035" href="#L1035">1035</a> 
-<a class="jxr_linenumber" name="L1036" href="#L1036">1036</a>     <strong class="jxr_keyword">public</strong> StrictMap(String name, <strong class="jxr_keyword">int</strong> initialCapacity) {
-<a class="jxr_linenumber" name="L1037" href="#L1037">1037</a>       <strong class="jxr_keyword">super</strong>(initialCapacity);
-<a class="jxr_linenumber" name="L1038" href="#L1038">1038</a>       <strong class="jxr_keyword">this</strong>.name = name;
-<a class="jxr_linenumber" name="L1039" href="#L1039">1039</a>     }
-<a class="jxr_linenumber" name="L1040" href="#L1040">1040</a> 
-<a class="jxr_linenumber" name="L1041" href="#L1041">1041</a>     <strong class="jxr_keyword">public</strong> StrictMap(String name) {
-<a class="jxr_linenumber" name="L1042" href="#L1042">1042</a>       <strong class="jxr_keyword">this</strong>.name = name;
-<a class="jxr_linenumber" name="L1043" href="#L1043">1043</a>     }
-<a class="jxr_linenumber" name="L1044" href="#L1044">1044</a> 
-<a class="jxr_linenumber" name="L1045" href="#L1045">1045</a>     <strong class="jxr_keyword">public</strong> StrictMap(String name, Map&lt;String, ? <strong class="jxr_keyword">extends</strong> V&gt; m) {
-<a class="jxr_linenumber" name="L1046" href="#L1046">1046</a>       <strong class="jxr_keyword">super</strong>(m);
-<a class="jxr_linenumber" name="L1047" href="#L1047">1047</a>       <strong class="jxr_keyword">this</strong>.name = name;
-<a class="jxr_linenumber" name="L1048" href="#L1048">1048</a>     }
-<a class="jxr_linenumber" name="L1049" href="#L1049">1049</a> 
-<a class="jxr_linenumber" name="L1050" href="#L1050">1050</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L1051" href="#L1051">1051</a> <em class="jxr_javadoccomment">     * Assign a function for producing a conflict error message when contains value with the same key.</em>
-<a class="jxr_linenumber" name="L1052" href="#L1052">1052</a> <em class="jxr_javadoccomment">     * &lt;p&gt;</em>
-<a class="jxr_linenumber" name="L1053" href="#L1053">1053</a> <em class="jxr_javadoccomment">     * function arguments are 1st is saved value and 2nd is target value.</em>
-<a class="jxr_linenumber" name="L1054" href="#L1054">1054</a> <em class="jxr_javadoccomment">     *</em>
-<a class="jxr_linenumber" name="L1055" href="#L1055">1055</a> <em class="jxr_javadoccomment">     * @param conflictMessageProducer</em>
-<a class="jxr_linenumber" name="L1056" href="#L1056">1056</a> <em class="jxr_javadoccomment">     *          A function for producing a conflict error message</em>
-<a class="jxr_linenumber" name="L1057" href="#L1057">1057</a> <em class="jxr_javadoccomment">     *</em>
-<a class="jxr_linenumber" name="L1058" href="#L1058">1058</a> <em class="jxr_javadoccomment">     * @return a conflict error message</em>
-<a class="jxr_linenumber" name="L1059" href="#L1059">1059</a> <em class="jxr_javadoccomment">     *</em>
-<a class="jxr_linenumber" name="L1060" href="#L1060">1060</a> <em class="jxr_javadoccomment">     * @since 3.5.0</em>
-<a class="jxr_linenumber" name="L1061" href="#L1061">1061</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L1062" href="#L1062">1062</a>     <strong class="jxr_keyword">public</strong> StrictMap&lt;V&gt; conflictMessageProducer(BiFunction&lt;V, V, String&gt; conflictMessageProducer) {
-<a class="jxr_linenumber" name="L1063" href="#L1063">1063</a>       <strong class="jxr_keyword">this</strong>.conflictMessageProducer = conflictMessageProducer;
-<a class="jxr_linenumber" name="L1064" href="#L1064">1064</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
-<a class="jxr_linenumber" name="L1065" href="#L1065">1065</a>     }
-<a class="jxr_linenumber" name="L1066" href="#L1066">1066</a> 
-<a class="jxr_linenumber" name="L1067" href="#L1067">1067</a>     @Override
-<a class="jxr_linenumber" name="L1068" href="#L1068">1068</a>     @SuppressWarnings(<span class="jxr_string">"unchecked"</span>)
-<a class="jxr_linenumber" name="L1069" href="#L1069">1069</a>     <strong class="jxr_keyword">public</strong> V put(String key, V value) {
-<a class="jxr_linenumber" name="L1070" href="#L1070">1070</a>       <strong class="jxr_keyword">if</strong> (containsKey(key)) {
-<a class="jxr_linenumber" name="L1071" href="#L1071">1071</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(name + <span class="jxr_string">" already contains value for "</span> + key
-<a class="jxr_linenumber" name="L1072" href="#L1072">1072</a>             + (conflictMessageProducer == <strong class="jxr_keyword">null</strong> ? <span class="jxr_string">""</span> : conflictMessageProducer.apply(<strong class="jxr_keyword">super</strong>.get(key), value)));
-<a class="jxr_linenumber" name="L1073" href="#L1073">1073</a>       }
-<a class="jxr_linenumber" name="L1074" href="#L1074">1074</a>       <strong class="jxr_keyword">if</strong> (key.contains(<span class="jxr_string">"."</span>)) {
-<a class="jxr_linenumber" name="L1075" href="#L1075">1075</a>         <strong class="jxr_keyword">final</strong> String shortKey = getShortName(key);
-<a class="jxr_linenumber" name="L1076" href="#L1076">1076</a>         <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">super</strong>.get(shortKey) == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L1077" href="#L1077">1077</a>           <strong class="jxr_keyword">super</strong>.put(shortKey, value);
-<a class="jxr_linenumber" name="L1078" href="#L1078">1078</a>         } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L1079" href="#L1079">1079</a>           <strong class="jxr_keyword">super</strong>.put(shortKey, (V) <strong class="jxr_keyword">new</strong> Ambiguity(shortKey));
-<a class="jxr_linenumber" name="L1080" href="#L1080">1080</a>         }
-<a class="jxr_linenumber" name="L1081" href="#L1081">1081</a>       }
-<a class="jxr_linenumber" name="L1082" href="#L1082">1082</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">super</strong>.put(key, value);
-<a class="jxr_linenumber" name="L1083" href="#L1083">1083</a>     }
-<a class="jxr_linenumber" name="L1084" href="#L1084">1084</a> 
-<a class="jxr_linenumber" name="L1085" href="#L1085">1085</a>     @Override
-<a class="jxr_linenumber" name="L1086" href="#L1086">1086</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> containsKey(Object key) {
-<a class="jxr_linenumber" name="L1087" href="#L1087">1087</a>       <strong class="jxr_keyword">if</strong> (key == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L1088" href="#L1088">1088</a>         <strong class="jxr_keyword">return</strong> false;
-<a class="jxr_linenumber" name="L1089" href="#L1089">1089</a>       }
-<a class="jxr_linenumber" name="L1090" href="#L1090">1090</a> 
-<a class="jxr_linenumber" name="L1091" href="#L1091">1091</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">super</strong>.get(key) != <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L1092" href="#L1092">1092</a>     }
-<a class="jxr_linenumber" name="L1093" href="#L1093">1093</a> 
-<a class="jxr_linenumber" name="L1094" href="#L1094">1094</a>     @Override
-<a class="jxr_linenumber" name="L1095" href="#L1095">1095</a>     <strong class="jxr_keyword">public</strong> V get(Object key) {
-<a class="jxr_linenumber" name="L1096" href="#L1096">1096</a>       V value = <strong class="jxr_keyword">super</strong>.get(key);
-<a class="jxr_linenumber" name="L1097" href="#L1097">1097</a>       <strong class="jxr_keyword">if</strong> (value == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L1098" href="#L1098">1098</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(name + <span class="jxr_string">" does not contain value for "</span> + key);
-<a class="jxr_linenumber" name="L1099" href="#L1099">1099</a>       }
-<a class="jxr_linenumber" name="L1100" href="#L1100">1100</a>       <strong class="jxr_keyword">if</strong> (value instanceof Ambiguity) {
-<a class="jxr_linenumber" name="L1101" href="#L1101">1101</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(((Ambiguity) value).getSubject() + <span class="jxr_string">" is ambiguous in "</span> + name
-<a class="jxr_linenumber" name="L1102" href="#L1102">1102</a>             + <span class="jxr_string">" (try using the full name including the namespace, or rename one of the entries)"</span>);
-<a class="jxr_linenumber" name="L1103" href="#L1103">1103</a>       }
-<a class="jxr_linenumber" name="L1104" href="#L1104">1104</a>       <strong class="jxr_keyword">return</strong> value;
-<a class="jxr_linenumber" name="L1105" href="#L1105">1105</a>     }
-<a class="jxr_linenumber" name="L1106" href="#L1106">1106</a> 
-<a class="jxr_linenumber" name="L1107" href="#L1107">1107</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> Ambiguity {
-<a class="jxr_linenumber" name="L1108" href="#L1108">1108</a>       <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> String subject;
-<a class="jxr_linenumber" name="L1109" href="#L1109">1109</a> 
-<a class="jxr_linenumber" name="L1110" href="#L1110">1110</a>       <strong class="jxr_keyword">public</strong> Ambiguity(String subject) {
-<a class="jxr_linenumber" name="L1111" href="#L1111">1111</a>         <strong class="jxr_keyword">this</strong>.subject = subject;
-<a class="jxr_linenumber" name="L1112" href="#L1112">1112</a>       }
-<a class="jxr_linenumber" name="L1113" href="#L1113">1113</a> 
-<a class="jxr_linenumber" name="L1114" href="#L1114">1114</a>       <strong class="jxr_keyword">public</strong> String getSubject() {
-<a class="jxr_linenumber" name="L1115" href="#L1115">1115</a>         <strong class="jxr_keyword">return</strong> subject;
-<a class="jxr_linenumber" name="L1116" href="#L1116">1116</a>       }
-<a class="jxr_linenumber" name="L1117" href="#L1117">1117</a>     }
-<a class="jxr_linenumber" name="L1118" href="#L1118">1118</a> 
-<a class="jxr_linenumber" name="L1119" href="#L1119">1119</a>     <strong class="jxr_keyword">private</strong> String getShortName(String key) {
-<a class="jxr_linenumber" name="L1120" href="#L1120">1120</a>       <strong class="jxr_keyword">final</strong> String[] keyParts = key.split(<span class="jxr_string">"&#92;&#92;."</span>);
-<a class="jxr_linenumber" name="L1121" href="#L1121">1121</a>       <strong class="jxr_keyword">return</strong> keyParts[keyParts.length - 1];
-<a class="jxr_linenumber" name="L1122" href="#L1122">1122</a>     }
-<a class="jxr_linenumber" name="L1123" href="#L1123">1123</a>   }
-<a class="jxr_linenumber" name="L1124" href="#L1124">1124</a> 
-<a class="jxr_linenumber" name="L1125" href="#L1125">1125</a> }
+<a class="jxr_linenumber" name="L1012" href="#L1012">1012</a>       <strong class="jxr_keyword">for</strong> (String discriminatedResultMapName : rm.getDiscriminator().getDiscriminatorMap().values()) {
+<a class="jxr_linenumber" name="L1013" href="#L1013">1013</a>         <strong class="jxr_keyword">if</strong> (hasResultMap(discriminatedResultMapName)) {
+<a class="jxr_linenumber" name="L1014" href="#L1014">1014</a>           <a name="ResultMap" href="../../../../org/apache/ibatis/mapping/ResultMap.html#ResultMap">ResultMap</a> discriminatedResultMap = resultMaps.get(discriminatedResultMapName);
+<a class="jxr_linenumber" name="L1015" href="#L1015">1015</a>           <strong class="jxr_keyword">if</strong> (discriminatedResultMap.hasNestedResultMaps()) {
+<a class="jxr_linenumber" name="L1016" href="#L1016">1016</a>             rm.forceNestedResultMaps();
+<a class="jxr_linenumber" name="L1017" href="#L1017">1017</a>             <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L1018" href="#L1018">1018</a>           }
+<a class="jxr_linenumber" name="L1019" href="#L1019">1019</a>         }
+<a class="jxr_linenumber" name="L1020" href="#L1020">1020</a>       }
+<a class="jxr_linenumber" name="L1021" href="#L1021">1021</a>     }
+<a class="jxr_linenumber" name="L1022" href="#L1022">1022</a>   }
+<a class="jxr_linenumber" name="L1023" href="#L1023">1023</a> 
+<a class="jxr_linenumber" name="L1024" href="#L1024">1024</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> StrictMap&lt;V&gt; <strong class="jxr_keyword">extends</strong> ConcurrentHashMap&lt;String, V&gt; {
+<a class="jxr_linenumber" name="L1025" href="#L1025">1025</a> 
+<a class="jxr_linenumber" name="L1026" href="#L1026">1026</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = -4950446264854982944L;
+<a class="jxr_linenumber" name="L1027" href="#L1027">1027</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> String name;
+<a class="jxr_linenumber" name="L1028" href="#L1028">1028</a>     <strong class="jxr_keyword">private</strong> BiFunction&lt;V, V, String&gt; conflictMessageProducer;
+<a class="jxr_linenumber" name="L1029" href="#L1029">1029</a> 
+<a class="jxr_linenumber" name="L1030" href="#L1030">1030</a>     <strong class="jxr_keyword">public</strong> StrictMap(String name, <strong class="jxr_keyword">int</strong> initialCapacity, <strong class="jxr_keyword">float</strong> loadFactor) {
+<a class="jxr_linenumber" name="L1031" href="#L1031">1031</a>       <strong class="jxr_keyword">super</strong>(initialCapacity, loadFactor);
+<a class="jxr_linenumber" name="L1032" href="#L1032">1032</a>       <strong class="jxr_keyword">this</strong>.name = name;
+<a class="jxr_linenumber" name="L1033" href="#L1033">1033</a>     }
+<a class="jxr_linenumber" name="L1034" href="#L1034">1034</a> 
+<a class="jxr_linenumber" name="L1035" href="#L1035">1035</a>     <strong class="jxr_keyword">public</strong> StrictMap(String name, <strong class="jxr_keyword">int</strong> initialCapacity) {
+<a class="jxr_linenumber" name="L1036" href="#L1036">1036</a>       <strong class="jxr_keyword">super</strong>(initialCapacity);
+<a class="jxr_linenumber" name="L1037" href="#L1037">1037</a>       <strong class="jxr_keyword">this</strong>.name = name;
+<a class="jxr_linenumber" name="L1038" href="#L1038">1038</a>     }
+<a class="jxr_linenumber" name="L1039" href="#L1039">1039</a> 
+<a class="jxr_linenumber" name="L1040" href="#L1040">1040</a>     <strong class="jxr_keyword">public</strong> StrictMap(String name) {
+<a class="jxr_linenumber" name="L1041" href="#L1041">1041</a>       <strong class="jxr_keyword">this</strong>.name = name;
+<a class="jxr_linenumber" name="L1042" href="#L1042">1042</a>     }
+<a class="jxr_linenumber" name="L1043" href="#L1043">1043</a> 
+<a class="jxr_linenumber" name="L1044" href="#L1044">1044</a>     <strong class="jxr_keyword">public</strong> StrictMap(String name, Map&lt;String, ? <strong class="jxr_keyword">extends</strong> V&gt; m) {
+<a class="jxr_linenumber" name="L1045" href="#L1045">1045</a>       <strong class="jxr_keyword">super</strong>(m);
+<a class="jxr_linenumber" name="L1046" href="#L1046">1046</a>       <strong class="jxr_keyword">this</strong>.name = name;
+<a class="jxr_linenumber" name="L1047" href="#L1047">1047</a>     }
+<a class="jxr_linenumber" name="L1048" href="#L1048">1048</a> 
+<a class="jxr_linenumber" name="L1049" href="#L1049">1049</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1050" href="#L1050">1050</a> <em class="jxr_javadoccomment">     * Assign a function for producing a conflict error message when contains value with the same key.</em>
+<a class="jxr_linenumber" name="L1051" href="#L1051">1051</a> <em class="jxr_javadoccomment">     * &lt;p&gt;</em>
+<a class="jxr_linenumber" name="L1052" href="#L1052">1052</a> <em class="jxr_javadoccomment">     * function arguments are 1st is saved value and 2nd is target value.</em>
+<a class="jxr_linenumber" name="L1053" href="#L1053">1053</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1054" href="#L1054">1054</a> <em class="jxr_javadoccomment">     * @param conflictMessageProducer</em>
+<a class="jxr_linenumber" name="L1055" href="#L1055">1055</a> <em class="jxr_javadoccomment">     *          A function for producing a conflict error message</em>
+<a class="jxr_linenumber" name="L1056" href="#L1056">1056</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1057" href="#L1057">1057</a> <em class="jxr_javadoccomment">     * @return a conflict error message</em>
+<a class="jxr_linenumber" name="L1058" href="#L1058">1058</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1059" href="#L1059">1059</a> <em class="jxr_javadoccomment">     * @since 3.5.0</em>
+<a class="jxr_linenumber" name="L1060" href="#L1060">1060</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1061" href="#L1061">1061</a>     <strong class="jxr_keyword">public</strong> StrictMap&lt;V&gt; conflictMessageProducer(BiFunction&lt;V, V, String&gt; conflictMessageProducer) {
+<a class="jxr_linenumber" name="L1062" href="#L1062">1062</a>       <strong class="jxr_keyword">this</strong>.conflictMessageProducer = conflictMessageProducer;
+<a class="jxr_linenumber" name="L1063" href="#L1063">1063</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
+<a class="jxr_linenumber" name="L1064" href="#L1064">1064</a>     }
+<a class="jxr_linenumber" name="L1065" href="#L1065">1065</a> 
+<a class="jxr_linenumber" name="L1066" href="#L1066">1066</a>     @Override
+<a class="jxr_linenumber" name="L1067" href="#L1067">1067</a>     @SuppressWarnings(<span class="jxr_string">"unchecked"</span>)
+<a class="jxr_linenumber" name="L1068" href="#L1068">1068</a>     <strong class="jxr_keyword">public</strong> V put(String key, V value) {
+<a class="jxr_linenumber" name="L1069" href="#L1069">1069</a>       <strong class="jxr_keyword">if</strong> (containsKey(key)) {
+<a class="jxr_linenumber" name="L1070" href="#L1070">1070</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(name + <span class="jxr_string">" already contains value for "</span> + key
+<a class="jxr_linenumber" name="L1071" href="#L1071">1071</a>             + (conflictMessageProducer == <strong class="jxr_keyword">null</strong> ? <span class="jxr_string">""</span> : conflictMessageProducer.apply(<strong class="jxr_keyword">super</strong>.get(key), value)));
+<a class="jxr_linenumber" name="L1072" href="#L1072">1072</a>       }
+<a class="jxr_linenumber" name="L1073" href="#L1073">1073</a>       <strong class="jxr_keyword">if</strong> (key.contains(<span class="jxr_string">"."</span>)) {
+<a class="jxr_linenumber" name="L1074" href="#L1074">1074</a>         <strong class="jxr_keyword">final</strong> String shortKey = getShortName(key);
+<a class="jxr_linenumber" name="L1075" href="#L1075">1075</a>         <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">super</strong>.get(shortKey) == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L1076" href="#L1076">1076</a>           <strong class="jxr_keyword">super</strong>.put(shortKey, value);
+<a class="jxr_linenumber" name="L1077" href="#L1077">1077</a>         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L1078" href="#L1078">1078</a>           <strong class="jxr_keyword">super</strong>.put(shortKey, (V) <strong class="jxr_keyword">new</strong> Ambiguity(shortKey));
+<a class="jxr_linenumber" name="L1079" href="#L1079">1079</a>         }
+<a class="jxr_linenumber" name="L1080" href="#L1080">1080</a>       }
+<a class="jxr_linenumber" name="L1081" href="#L1081">1081</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">super</strong>.put(key, value);
+<a class="jxr_linenumber" name="L1082" href="#L1082">1082</a>     }
+<a class="jxr_linenumber" name="L1083" href="#L1083">1083</a> 
+<a class="jxr_linenumber" name="L1084" href="#L1084">1084</a>     @Override
+<a class="jxr_linenumber" name="L1085" href="#L1085">1085</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> containsKey(Object key) {
+<a class="jxr_linenumber" name="L1086" href="#L1086">1086</a>       <strong class="jxr_keyword">if</strong> (key == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L1087" href="#L1087">1087</a>         <strong class="jxr_keyword">return</strong> false;
+<a class="jxr_linenumber" name="L1088" href="#L1088">1088</a>       }
+<a class="jxr_linenumber" name="L1089" href="#L1089">1089</a> 
+<a class="jxr_linenumber" name="L1090" href="#L1090">1090</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">super</strong>.get(key) != <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L1091" href="#L1091">1091</a>     }
+<a class="jxr_linenumber" name="L1092" href="#L1092">1092</a> 
+<a class="jxr_linenumber" name="L1093" href="#L1093">1093</a>     @Override
+<a class="jxr_linenumber" name="L1094" href="#L1094">1094</a>     <strong class="jxr_keyword">public</strong> V get(Object key) {
+<a class="jxr_linenumber" name="L1095" href="#L1095">1095</a>       V value = <strong class="jxr_keyword">super</strong>.get(key);
+<a class="jxr_linenumber" name="L1096" href="#L1096">1096</a>       <strong class="jxr_keyword">if</strong> (value == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L1097" href="#L1097">1097</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(name + <span class="jxr_string">" does not contain value for "</span> + key);
+<a class="jxr_linenumber" name="L1098" href="#L1098">1098</a>       }
+<a class="jxr_linenumber" name="L1099" href="#L1099">1099</a>       <strong class="jxr_keyword">if</strong> (value instanceof Ambiguity) {
+<a class="jxr_linenumber" name="L1100" href="#L1100">1100</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(((Ambiguity) value).getSubject() + <span class="jxr_string">" is ambiguous in "</span> + name
+<a class="jxr_linenumber" name="L1101" href="#L1101">1101</a>             + <span class="jxr_string">" (try using the full name including the namespace, or rename one of the entries)"</span>);
+<a class="jxr_linenumber" name="L1102" href="#L1102">1102</a>       }
+<a class="jxr_linenumber" name="L1103" href="#L1103">1103</a>       <strong class="jxr_keyword">return</strong> value;
+<a class="jxr_linenumber" name="L1104" href="#L1104">1104</a>     }
+<a class="jxr_linenumber" name="L1105" href="#L1105">1105</a> 
+<a class="jxr_linenumber" name="L1106" href="#L1106">1106</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> Ambiguity {
+<a class="jxr_linenumber" name="L1107" href="#L1107">1107</a>       <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> String subject;
+<a class="jxr_linenumber" name="L1108" href="#L1108">1108</a> 
+<a class="jxr_linenumber" name="L1109" href="#L1109">1109</a>       <strong class="jxr_keyword">public</strong> Ambiguity(String subject) {
+<a class="jxr_linenumber" name="L1110" href="#L1110">1110</a>         <strong class="jxr_keyword">this</strong>.subject = subject;
+<a class="jxr_linenumber" name="L1111" href="#L1111">1111</a>       }
+<a class="jxr_linenumber" name="L1112" href="#L1112">1112</a> 
+<a class="jxr_linenumber" name="L1113" href="#L1113">1113</a>       <strong class="jxr_keyword">public</strong> String getSubject() {
+<a class="jxr_linenumber" name="L1114" href="#L1114">1114</a>         <strong class="jxr_keyword">return</strong> subject;
+<a class="jxr_linenumber" name="L1115" href="#L1115">1115</a>       }
+<a class="jxr_linenumber" name="L1116" href="#L1116">1116</a>     }
+<a class="jxr_linenumber" name="L1117" href="#L1117">1117</a> 
+<a class="jxr_linenumber" name="L1118" href="#L1118">1118</a>     <strong class="jxr_keyword">private</strong> String getShortName(String key) {
+<a class="jxr_linenumber" name="L1119" href="#L1119">1119</a>       <strong class="jxr_keyword">final</strong> String[] keyParts = key.split(<span class="jxr_string">"&#92;&#92;."</span>);
+<a class="jxr_linenumber" name="L1120" href="#L1120">1120</a>       <strong class="jxr_keyword">return</strong> keyParts[keyParts.length - 1];
+<a class="jxr_linenumber" name="L1121" href="#L1121">1121</a>     }
+<a class="jxr_linenumber" name="L1122" href="#L1122">1122</a>   }
+<a class="jxr_linenumber" name="L1123" href="#L1123">1123</a> 
+<a class="jxr_linenumber" name="L1124" href="#L1124">1124</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2023 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
