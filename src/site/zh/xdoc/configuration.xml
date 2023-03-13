@@ -263,6 +263,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                   的日志等级必须设置为 <code>WARN</code>）</li>
                   <li><code>FAILING</code>: 映射失败 (抛出 <code>SqlSessionException</code>)</li>
                 </ul>
+                Note that there could be false-positives when `autoMappingBehavior` is set to `FULL`.
               </td>
               <td>
                 NONE, WARNING, FAILING

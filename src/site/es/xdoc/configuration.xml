@@ -248,6 +248,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                   <li><code>WARNING</code>: Output warning log (The log level of <code>'org.apache.ibatis.session.AutoMappingUnknownColumnBehavior'</code> must be set to <code>WARN</code>)</li>
                   <li><code>FAILING</code>: Fail mapping (Throw <code>SqlSessionException</code>)</li>
                 </ul>
+                Note that there could be false-positives when `autoMappingBehavior` is set to `FULL`.
               </td>
               <td>
                 NONE, WARNING, FAILING

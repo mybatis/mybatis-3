@@ -242,6 +242,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                   <li><code>WARNING</code>: 경고 로그를 출력(<code>'org.apache.ibatis.session.AutoMappingUnknownColumnBehavior'</code>의 로그레벨은 <code>WARN</code>이어야 한다.) </li>
                   <li><code>FAILING</code>: 매핑이 실패한다. (<code>SqlSessionException</code>예외를 던진다.)</li>
                 </ul>
+                Note that there could be false-positives when `autoMappingBehavior` is set to `FULL`.
               </td>
               <td>
                 NONE, WARNING, FAILING
