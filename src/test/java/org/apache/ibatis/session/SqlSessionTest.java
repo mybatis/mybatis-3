@@ -441,7 +441,7 @@ class SqlSessionTest extends BaseDataTest {
       fail("Expected exception to be thrown due to statement that already exists.");
     } catch (Exception e) {
       assertTrue(e.getMessage().contains(
-          "already contains key for org.apache.ibatis.domain.blog.mappers.BlogMapper.selectBlogWithPostsUsingSubSelect. please check org/apache/ibatis/builder/BlogMapper.xml and org/mybatis/TestMapper.xml"));
+          "already contains key org.apache.ibatis.domain.blog.mappers.BlogMapper.selectBlogWithPostsUsingSubSelect. please check org/apache/ibatis/builder/BlogMapper.xml and org/mybatis/TestMapper.xml"));
     }
   }
 
@@ -456,7 +456,7 @@ class SqlSessionTest extends BaseDataTest {
       fail("Expected exception to be thrown due to statement that already exists.");
     } catch (Exception e) {
       assertTrue(e.getMessage().contains(
-          "already contains key for org.apache.ibatis.domain.blog.mappers.AuthorMapper.selectAuthor2. please check org/apache/ibatis/domain/blog/mappers/AuthorMapper.java (best guess) and org/mybatis/TestMapper.xml"));
+          "already contains key org.apache.ibatis.domain.blog.mappers.AuthorMapper.selectAuthor2. please check org/apache/ibatis/domain/blog/mappers/AuthorMapper.java (best guess) and org/mybatis/TestMapper.xml"));
     }
   }
 

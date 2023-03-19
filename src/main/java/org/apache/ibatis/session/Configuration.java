@@ -1067,7 +1067,7 @@ public class Configuration {
     @SuppressWarnings("unchecked")
     public V put(String key, V value) {
       if (containsKey(key)) {
-        throw new IllegalArgumentException(name + " already contains key for " + key
+        throw new IllegalArgumentException(name + " already contains key " + key
             + (conflictMessageProducer == null ? "" : conflictMessageProducer.apply(super.get(key), value)));
       }
       if (key.contains(".")) {
