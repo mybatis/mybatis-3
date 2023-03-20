@@ -29,7 +29,7 @@ class IdConflictTest {
     Configuration configuration = new Configuration();
     when(() -> configuration.addMapper(IdConflictMapper.class));
     then(caughtException()).isInstanceOf(RuntimeException.class).hasMessage(
-        "Result Maps collection already contains value for org.apache.ibatis.submitted.results_id.IdConflictMapper.userResult");
+        "Result Maps collection already contains key org.apache.ibatis.submitted.results_id.IdConflictMapper.userResult");
   }
 
 }
