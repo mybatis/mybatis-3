@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -26,7 +26,8 @@ import java.sql.SQLException;
 public class CharacterTypeHandler extends BaseTypeHandler<Character> {
 
   @Override
-  public void setNonNullParameter(PreparedStatement ps, int i, Character parameter, JdbcType jdbcType) throws SQLException {
+  public void setNonNullParameter(PreparedStatement ps, int i, Character parameter, JdbcType jdbcType)
+      throws SQLException {
     ps.setString(i, parameter.toString());
   }
 
@@ -35,9 +36,8 @@ public class CharacterTypeHandler extends BaseTypeHandler<Character> {
     String columnValue = rs.getString(columnName);
     if (columnValue != null && !columnValue.isEmpty()) {
       return columnValue.charAt(0);
-    } else {
-      return null;
     }
+    return null;
   }
 
   @Override
@@ -45,9 +45,8 @@ public class CharacterTypeHandler extends BaseTypeHandler<Character> {
     String columnValue = rs.getString(columnIndex);
     if (columnValue != null && !columnValue.isEmpty()) {
       return columnValue.charAt(0);
-    } else {
-      return null;
     }
+    return null;
   }
 
   @Override
@@ -55,8 +54,7 @@ public class CharacterTypeHandler extends BaseTypeHandler<Character> {
     String columnValue = cs.getString(columnIndex);
     if (columnValue != null && !columnValue.isEmpty()) {
       return columnValue.charAt(0);
-    } else {
-      return null;
     }
+    return null;
   }
 }

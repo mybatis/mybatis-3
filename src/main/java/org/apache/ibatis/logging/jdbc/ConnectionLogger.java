@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -30,7 +30,6 @@ import org.apache.ibatis.reflection.ExceptionUtil;
  *
  * @author Clinton Begin
  * @author Eduardo Macarron
- *
  */
 public final class ConnectionLogger extends BaseJdbcLogger implements InvocationHandler {
 
@@ -42,8 +41,7 @@ public final class ConnectionLogger extends BaseJdbcLogger implements Invocation
   }
 
   @Override
-  public Object invoke(Object proxy, Method method, Object[] params)
-      throws Throwable {
+  public Object invoke(Object proxy, Method method, Object[] params) throws Throwable {
     try {
       if (Object.class.equals(method.getDeclaringClass())) {
         return method.invoke(this, params);
@@ -53,12 +51,11 @@ public final class ConnectionLogger extends BaseJdbcLogger implements Invocation
           debug(" Preparing: " + removeExtraWhitespace((String) params[0]), true);
         }
         PreparedStatement stmt = (PreparedStatement) method.invoke(connection, params);
-        stmt = PreparedStatementLogger.newInstance(stmt, statementLog, queryStack);
-        return stmt;
-      } else if ("createStatement".equals(method.getName())) {
+        return PreparedStatementLogger.newInstance(stmt, statementLog, queryStack);
+      }
+      if ("createStatement".equals(method.getName())) {
         Statement stmt = (Statement) method.invoke(connection, params);
-        stmt = StatementLogger.newInstance(stmt, statementLog, queryStack);
-        return stmt;
+        return StatementLogger.newInstance(stmt, statementLog, queryStack);
       } else {
         return method.invoke(connection, params);
       }
@@ -76,12 +73,13 @@ public final class ConnectionLogger extends BaseJdbcLogger implements Invocation
    *          the statement log
    * @param queryStack
    *          the query stack
+   *
    * @return the connection with logging
    */
   public static Connection newInstance(Connection conn, Log statementLog, int queryStack) {
     InvocationHandler handler = new ConnectionLogger(conn, statementLog, queryStack);
     ClassLoader cl = Connection.class.getClassLoader();
-    return (Connection) Proxy.newProxyInstance(cl, new Class[]{Connection.class}, handler);
+    return (Connection) Proxy.newProxyInstance(cl, new Class[] { Connection.class }, handler);
   }
 
   /**

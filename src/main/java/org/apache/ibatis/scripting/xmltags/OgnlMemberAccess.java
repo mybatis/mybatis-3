@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import org.apache.ibatis.reflection.Reflector;
  * 'https://github.com/jkuhnert/ognl/blob/OGNL_3_2_1/src/java/ognl/DefaultMemberAccess.java'>DefaultMemberAccess</a>.
  *
  * @author Kazuki Shimizu
+ *
  * @since 3.5.0
  *
  * @see <a href=
@@ -56,8 +57,7 @@ class OgnlMemberAccess implements MemberAccess {
   }
 
   @Override
-  public void restore(Map context, Object target, Member member, String propertyName,
-      Object state) {
+  public void restore(Map context, Object target, Member member, String propertyName, Object state) {
     // Flipping accessible flag is not thread safe. See #1648
   }
 

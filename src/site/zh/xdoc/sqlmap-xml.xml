@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2022 the original author or authors.
+       Copyright 2009-2023 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -144,7 +144,7 @@ ps.setInt(1,id);]]></source>
               <td><code>parameterType</code></td>
               <td>
                 将会传入这条语句的参数的类全限定名或别名。这个属性是可选的，因为
-                MyBatis 可以通过类型处理器（TypeHandler）推断出具体传入语句的参数，默认值为未设置（unset）。
+                MyBatis 可以根据语句中实际传入的参数计算出应该使用的类型处理器（TypeHandler），默认值为未设置（unset）。
               </td>
             </tr>
             <tr>
@@ -288,7 +288,7 @@ ps.setInt(1,id);]]></source>
               <td><code>parameterType</code></td>
               <td>
                 将会传入这条语句的参数的类全限定名或别名。这个属性是可选的，因为
-                MyBatis 可以通过类型处理器（TypeHandler）推断出具体传入语句的参数，默认值为未设置（unset）。
+                MyBatis 可以根据语句中实际传入的参数计算出应该使用的类型处理器（TypeHandler），默认值为未设置（unset）。
               </td>
             </tr>
             <tr>
@@ -619,7 +619,7 @@ ps.setInt(1,id);]]></source>
           字符串替换
         </h4>
 
-	      <p>
+        <p>
           默认情况下，使用 <code>#{}</code>
           参数语法时，MyBatis 会创建 <code>PreparedStatement</code>
           参数占位符，并通过占位符安全地设置参数（就像使用 ? 一样）。
@@ -673,7 +673,7 @@ User userOfEmail = userMapper.findByColumn("email", "noone@nowhere.com");
 
       <subsection name="结果映射" id="Result_Maps">
         <p>
-		  <code>resultMap</code> 元素是 MyBatis 中最重要最强大的元素。它可以让你从 90%
+      <code>resultMap</code> 元素是 MyBatis 中最重要最强大的元素。它可以让你从 90%
           的 JDBC <code>ResultSets</code> 数据提取代码中解放出来，并在一些情形下允许你进行一些
           JDBC 不支持的操作。实际上，在为一些比如连接的复杂语句编写映射代码的时候，一份
           <code>resultMap</code> 能够代替实现同等功能的数千行代码。ResultMap
@@ -691,7 +691,7 @@ User userOfEmail = userMapper.findByColumn("email", "noone@nowhere.com");
 </select>]]></source>
 
         <p>
-		  上述语句只是简单地将所有的列映射到 <code>HashMap</code> 的键上，这由 <code>resultType</code> 属性指定。虽然在大部分情况下都够用，但是 HashMap 并不是一个很好的领域模型。你的程序更可能会使用 JavaBean 或 POJO（Plain Old Java Objects，普通老式 Java 对象）作为领域模型。MyBatis 对两者都提供了支持。看看下面这个 JavaBean：
+      上述语句只是简单地将所有的列映射到 <code>HashMap</code> 的键上，这由 <code>resultType</code> 属性指定。虽然在大部分情况下都够用，但是 HashMap 并不是一个很好的领域模型。你的程序更可能会使用 JavaBean 或 POJO（Plain Old Java Objects，普通老式 Java 对象）作为领域模型。MyBatis 对两者都提供了支持。看看下面这个 JavaBean：
         </p>
         <source><![CDATA[package com.someapp.model;
 public class User {
@@ -794,7 +794,7 @@ public class User {
           如果这个世界总是这么简单就好了。
         </p>
 
-	      <h4>高级结果映射</h4>
+        <h4>高级结果映射</h4>
 
         <p>
           MyBatis 创建时的一个思想是：数据库不可能永远是你所想或所需的那个样子。
@@ -912,7 +912,7 @@ public class User {
               <li>
                 <code>case</code> – 基于某些值的结果映射
                 <ul>
-		          <li>嵌套结果映射 – <code>case</code> 也是一个结果映射，因此具有相同的结构和元素；或者引用其它的结果映射</li>
+              <li>嵌套结果映射 – <code>case</code> 也是一个结果映射，因此具有相同的结构和元素；或者引用其它的结果映射</li>
                 </ul>
               </li>
             </ul>
@@ -1135,7 +1135,7 @@ public class User {
 </constructor>]]></source>
 
         <p>
-          如果存在名称和类型相同的属性，那么可以省略 <code>javaType</code> 。
+          如果存在名称和类型相同的可写属性，那么可以省略 <code>javaType</code> 。
         </p>
 
         <p>
@@ -1398,7 +1398,7 @@ public class User {
             <tr>
               <td><code>columnPrefix</code></td>
               <td>
-				        当连接多个表时，你可能会不得不使用列别名来避免在 <code>ResultSet</code>
+                当连接多个表时，你可能会不得不使用列别名来避免在 <code>ResultSet</code>
                 中产生重复的列名。指定 columnPrefix 列名前缀允许你将带有这些前缀的列映射到一个外部的结果映射中。
                 详细说明请参考后面的例子。
               </td>

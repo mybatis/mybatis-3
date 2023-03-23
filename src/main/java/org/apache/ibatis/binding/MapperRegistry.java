@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -83,6 +83,7 @@ public class MapperRegistry {
    * Gets the mappers.
    *
    * @return the mappers
+   *
    * @since 3.2.2
    */
   public Collection<Class<?>> getMappers() {
@@ -96,6 +97,7 @@ public class MapperRegistry {
    *          the package name
    * @param superType
    *          the super type
+   *
    * @since 3.2.2
    */
   public void addMappers(String packageName, Class<?> superType) {
@@ -112,6 +114,7 @@ public class MapperRegistry {
    *
    * @param packageName
    *          the package name
+   *
    * @since 3.2.2
    */
   public void addMappers(String packageName) {

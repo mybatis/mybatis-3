@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,15 +24,17 @@ public interface Mapper {
 
   Cursor<User> getAllUsers();
 
+  // @formatter:off
   @Select({
-    "select null id, null name from (values (0))",
-    "union all",
-    "select 99 id, 'Kate' name from (values (0))",
-    "union all",
-    "select null id, null name from (values (0))",
-    "union all",
-    "select null id, null name from (values (0))"
-  })
+      "select null id, null name from (values (0))",
+      "union all",
+      "select 99 id, 'Kate' name from (values (0))",
+      "union all",
+      "select null id, null name from (values (0))",
+      "union all",
+      "select null id, null name from (values (0))"
+    })
+  // @formatter:on
   Cursor<User> getNullUsers(RowBounds rowBounds);
 
   @Select("select * from users")

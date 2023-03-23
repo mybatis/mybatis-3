@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -32,20 +32,17 @@ public class NStringTypeHandler extends BaseTypeHandler<String> {
   }
 
   @Override
-  public String getNullableResult(ResultSet rs, String columnName)
-      throws SQLException {
+  public String getNullableResult(ResultSet rs, String columnName) throws SQLException {
     return rs.getNString(columnName);
   }
 
   @Override
-  public String getNullableResult(ResultSet rs, int columnIndex)
-      throws SQLException {
+  public String getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
     return rs.getNString(columnIndex);
   }
 
   @Override
-  public String getNullableResult(CallableStatement cs, int columnIndex)
-      throws SQLException {
+  public String getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
     return cs.getNString(columnIndex);
   }
 

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -52,9 +52,11 @@ public interface Mapper {
   Parent getCollection(Integer id);
 
   @ResultMap("twoCollectionsRM")
-  @Select({ "select p.id, c.name child_name, e.name pet_name from parent p",
+  // @formatter:off
+  @Select({"select p.id, c.name child_name, e.name pet_name from parent p",
       "left join child c on c.parent_id = p.id",
-      "left join pet e on e.parent_id = p.id", "where p.id = #{id}" })
+      "left join pet e on e.parent_id = p.id", "where p.id = #{id}"})
+  // @formatter:on
   Parent getTwoCollections(Integer id);
 
   @Select("select col1, col2 from parent where id = #{id}")

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,10 +24,12 @@ import org.apache.ibatis.annotations.Select;
 
 public interface Mapper {
 
+  // @formatter:off
   @Results(id = "userResult", value = {
-    @Result(id = true, column = "uid", property = "id"),
-    @Result(column = "name", property = "name")
-  })
+      @Result(id = true, column = "uid", property = "id"),
+      @Result(column = "name", property = "name")
+    })
+  // @formatter:on
   @Select("select * from users where uid = #{id}")
   User getUserById(Integer id);
 
@@ -36,10 +38,12 @@ public interface Mapper {
   User getUserByName(String name);
 
   @Results(id = "userResultConstructor")
+  // @formatter:off
   @ConstructorArgs({
-    @Arg(id = true, column = "uid", javaType = Integer.class),
-    @Arg(column = "name", javaType = String.class)
-  })
+      @Arg(id = true, column = "uid", javaType = Integer.class),
+      @Arg(column = "name", javaType = String.class)
+    })
+  // @formatter:on
   @Select("select * from users where uid = #{id}")
   User getUserByIdConstructor(Integer id);
 

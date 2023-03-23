@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -21,12 +21,14 @@ import org.apache.ibatis.annotations.Param;
 
 public interface PersonMapper {
 
-    interface TypeName {
-        Person.Type getType();
-        String getName();
-    }
+  interface TypeName {
+    Person.Type getType();
 
-    List<Person> getByType(@Param("type") Person.Type type, @Param("name") String name);
-    List<Person> getByTypeNoParam(TypeName typeName);
+    String getName();
+  }
+
+  List<Person> getByType(@Param("type") Person.Type type, @Param("name") String name);
+
+  List<Person> getByTypeNoParam(TypeName typeName);
 
 }

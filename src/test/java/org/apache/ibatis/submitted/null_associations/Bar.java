@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,16 +19,15 @@ import java.io.Serializable;
 
 public class Bar implements Serializable {
 
+  private static final long serialVersionUID = 1L;
   private long field1;
   private long field2;
   private long field3;
 
   public Bar() {
-    super();
   }
 
   public Bar(long field1, long field2, long field3) {
-    super();
     this.field1 = field1;
     this.field2 = field2;
     this.field3 = field3;

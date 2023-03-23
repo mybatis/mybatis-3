@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 package org.apache.ibatis.submitted.includes;
 
 import java.io.Reader;
-import java.util.Map;
 
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
@@ -54,8 +53,7 @@ class IncludeTest {
   @Test
   void testParametrizedIncludes() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      final Map<String, Object> result = sqlSession.selectOne("org.apache.ibatis.submitted.includes.mapper.select");
-      // Assertions.assertEquals(Integer.valueOf(1), result);
+      sqlSession.selectOne("org.apache.ibatis.submitted.includes.mapper.select");
     }
   }
 

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -36,7 +36,8 @@ class DaoTest {
 
   @BeforeEach
   void setUp() throws Exception {
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/emptycollection/mybatis-config.xml")) {
+    try (Reader reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/emptycollection/mybatis-config.xml")) {
       SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
       sqlSession = sqlSessionFactory.openSession();
     }
@@ -74,7 +75,8 @@ class DaoTest {
   }
 
   private void checkNonEmptyList(final List<TodoLists> actual) {
-//  Assertions.assertEquals("[List(1)=[a description(1), a 2nd description(2)], List(2)=[a description(1)]]", actual.toString());
+    // Assertions.assertEquals("[List(1)=[a description(1), a 2nd description(2)], List(2)=[a description(1)]]",
+    // actual.toString());
     Assertions.assertEquals(2, actual.size());
 
     Assertions.assertEquals(2, actual.get(0).getTodoItems().size());

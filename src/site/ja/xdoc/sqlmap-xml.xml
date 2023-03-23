@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2022 the original author or authors.
+       Copyright 2009-2023 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -1102,7 +1102,7 @@ public class User {
 </constructor>]]></source>
 
         <p>
-          引数と同じ名前、同じ型を持つプロパティが存在する場合 <code>javaType</code> は省略可能です。
+          引数と同じ名前、同じ型を持つ書き込み可能なプロパティが存在する場合 <code>javaType</code> は省略可能です。
         </p>
 
         <p>

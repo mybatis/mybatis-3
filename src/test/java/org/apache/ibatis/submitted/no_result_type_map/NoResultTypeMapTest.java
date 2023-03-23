@@ -15,7 +15,8 @@
  */
 package org.apache.ibatis.submitted.no_result_type_map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.Reader;
 import java.util.List;
@@ -39,14 +40,14 @@ class NoResultTypeMapTest {
   static void setUp() throws Exception {
     // create a SqlSessionFactory
     try (Reader reader = Resources
-      .getResourceAsReader("org/apache/ibatis/submitted/no_result_type_map/mybatis-config.xml")) {
+        .getResourceAsReader("org/apache/ibatis/submitted/no_result_type_map/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
       sqlSessionFactory.getConfiguration().addMapper(Mapper.class);
     }
 
     // populate in-memory database
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-      "org/apache/ibatis/submitted/no_result_type_map/CreateDB.sql");
+        "org/apache/ibatis/submitted/no_result_type_map/CreateDB.sql");
   }
 
   @Test
@@ -82,9 +83,10 @@ class NoResultTypeMapTest {
       PersistenceException ex = assertThrows(PersistenceException.class,
           () -> sqlSession.selectList("org.apache.ibatis.submitted.no_result_type_map.Mapper.noMatchingMethod"));
       ExecutorException cause = (ExecutorException) ex.getCause();
-      assertEquals("A query was run and no Result Maps were found for the Mapped Statement "
-          + "'org.apache.ibatis.submitted.no_result_type_map.Mapper.noMatchingMethod'. "
-          + "'resultType' or 'resultMap' must be specified when there is no corresponding method.",
+      assertEquals(
+          "A query was run and no Result Maps were found for the Mapped Statement "
+              + "'org.apache.ibatis.submitted.no_result_type_map.Mapper.noMatchingMethod'. "
+              + "'resultType' or 'resultMap' must be specified when there is no corresponding method.",
           cause.getMessage());
     }
   }

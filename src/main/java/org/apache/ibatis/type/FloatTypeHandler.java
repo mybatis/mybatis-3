@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -26,28 +26,24 @@ import java.sql.SQLException;
 public class FloatTypeHandler extends BaseTypeHandler<Float> {
 
   @Override
-  public void setNonNullParameter(PreparedStatement ps, int i, Float parameter, JdbcType jdbcType)
-      throws SQLException {
+  public void setNonNullParameter(PreparedStatement ps, int i, Float parameter, JdbcType jdbcType) throws SQLException {
     ps.setFloat(i, parameter);
   }
 
   @Override
-  public Float getNullableResult(ResultSet rs, String columnName)
-      throws SQLException {
+  public Float getNullableResult(ResultSet rs, String columnName) throws SQLException {
     float result = rs.getFloat(columnName);
     return result == 0 && rs.wasNull() ? null : result;
   }
 
   @Override
-  public Float getNullableResult(ResultSet rs, int columnIndex)
-      throws SQLException {
+  public Float getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
     float result = rs.getFloat(columnIndex);
     return result == 0 && rs.wasNull() ? null : result;
   }
 
   @Override
-  public Float getNullableResult(CallableStatement cs, int columnIndex)
-      throws SQLException {
+  public Float getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
     float result = cs.getFloat(columnIndex);
     return result == 0 && cs.wasNull() ? null : result;
   }
