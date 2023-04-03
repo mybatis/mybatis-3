@@ -228,7 +228,7 @@ As an irregular case, some databases allow INSERT, UPDATE or DELETE statement to
 This element can be used to define a reusable fragment of SQL code that can be included in other statements. It can be statically (during load phase) parametrized. Different property values can vary in include instances. For example:
 
 ```xml
-<sql id="userColumns"> \${alias}.id,\${alias}.username,\${alias}.password </sql>
+<sql id="userColumns"> ${alias}.id,${alias}.username,${alias}.password </sql>
 ```
 
 The SQL fragment can then be included in another statement, for example:
@@ -247,12 +247,12 @@ Property value can be also used in include refid attribute or property values in
 
 ```xml
 <sql id="sometable">
-  \${prefix}Table
+  ${prefix}Table
 </sql>
 
 <sql id="someinclude">
   from
-    <include refid="\${include_target}"/>
+    <include refid="${include_target}"/>
 </sql>
 
 <select id="select" resultType="map">
@@ -339,7 +339,7 @@ Despite all of these powerful options, most of the time you'll simply specify th
 By default, using the `#{}` syntax will cause MyBatis to generate `PreparedStatement` properties and set the values safely against the `PreparedStatement` parameters (e.g. ?). While this is safer, faster and almost always preferred, sometimes you just want to directly inject an unmodified string into the SQL Statement. For example, for ORDER BY, you might use something like this:
 
 ```sql
-ORDER BY \${columnName}
+ORDER BY ${columnName}
 ```
 
 Here MyBatis won't modify or escape the string.
@@ -362,11 +362,11 @@ User findByEmail(@Param("email") String email);
 you can just write:
 
 ```java
-@Select("select * from user where \${column} = #{value}")
+@Select("select * from user where ${column} = #{value}")
 User findByColumn(@Param("column") String column, @Param("value") String value);
 ```
 
-in which the `\${column}` will be substituted directly and the `#{value}` will be "prepared". Thus you can just do the same work by:
+in which the `${column}` will be substituted directly and the `#{value}` will be "prepared". Thus you can just do the same work by:
 
 ```java
 User userOfId1 = userMapper.findByColumn("id", 1L);
@@ -1265,7 +1265,7 @@ To configure your cache, simply add public JavaBeans properties to your Cache im
 </cache>
 ```
 
-You can use JavaBeans properties of all simple types, MyBatis will do the conversion. And you can specify a placeholder(e.g. `\${cache.file}`) to replace value defined at [configuration properties](configuration.html#properties).
+You can use JavaBeans properties of all simple types, MyBatis will do the conversion. And you can specify a placeholder(e.g. `${cache.file}`) to replace value defined at [configuration properties](configuration.html#properties).
 
 Since 3.4.2, the MyBatis has been supported to call an initialization method after it's set all properties. If you want to use this feature, please implements the `org.apache.ibatis.builder.InitializingObject` interface on your custom cache class.
 

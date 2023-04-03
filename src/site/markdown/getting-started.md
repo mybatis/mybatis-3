@@ -13,7 +13,7 @@ If you are using Maven just add the following dependency to your pom.xml:
 <dependency>
   <groupId>org.mybatis</groupId>
   <artifactId>mybatis</artifactId>
-  <version>${project.version}</version>
+  <version>x.x.x</version>
 </dependency>
 ```
 
@@ -42,10 +42,10 @@ The configuration XML file contains settings for the core of the MyBatis system,
     <environment id="development">
       <transactionManager type="JDBC"/>
       <dataSource type="POOLED">
-        <property name="driver" value="\${driver}"/>
-        <property name="url" value="\${url}"/>
-        <property name="username" value="\${username}"/>
-        <property name="password" value="\${password}"/>
+        <property name="driver" value="${driver}"/>
+        <property name="url" value="${url}"/>
+        <property name="username" value="${username}"/>
+        <property name="password" value="${password}"/>
       </dataSource>
     </environment>
   </environments>

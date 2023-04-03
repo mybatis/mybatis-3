@@ -402,36 +402,9 @@
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-resources-plugin</artifactId>
-        <executions>
-          <!-- prepare site content by filtering ${project.*} values-->
-          <execution>
-            <id>filter-site</id>
-            <phase>pre-site</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${project.build.directory}/site-src</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>src/site</directory>
-                  <filtering>true</filtering>
-                </resource>
-              </resources>
-            </configuration>
-          </execution>
-        </executions>
-        <configuration>
-          <escapeString>\</escapeString>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
         <configuration>
           <locales>en,es,ja,fr,zh_CN,ko</locales>
-          <siteDirectory>${project.build.directory}/site-src</siteDirectory>
         </configuration>
       </plugin>
       <plugin>

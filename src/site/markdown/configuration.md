@@ -34,10 +34,10 @@ The properties can then be used throughout the configuration files to substitute
 
 ```xml
 <dataSource type="POOLED">
-  <property name="driver" value="\${driver}"/>
-  <property name="url" value="\${url}"/>
-  <property name="username" value="\${username}"/>
-  <property name="password" value="\${password}"/>
+  <property name="driver" value="${driver}"/>
+  <property name="url" value="${url}"/>
+  <property name="username" value="${username}"/>
+  <property name="password" value="${password}"/>
 </dataSource>
 ```
 
@@ -68,7 +68,7 @@ Since the MyBatis 3.4.2, your can specify a default value into placeholder as fo
 ```xml
 <dataSource type="POOLED">
   <!-- ... -->
-  <property name="username" value="\${username:ut_user}"/> <!-- If 'username' property not present, username become 'ut_user' -->
+  <property name="username" value="${username:ut_user}"/> <!-- If 'username' property not present, username become 'ut_user' -->
 </dataSource>
 ```
 
@@ -81,7 +81,7 @@ This feature is disabled by default. If you specify a default value into placeho
 </properties>
 ```
 
-<span class="label important">NOTE</span> This will conflict with the `":"` character in property keys (e.g. `db:username`) or the ternary operator of OGNL expressions (e.g. `\${tableName != null ? tableName : 'global_constants'}`) on a SQL definition. If you use either and want default property values, you must change the default value separator by adding this special property:
+<span class="label important">NOTE</span> This will conflict with the `":"` character in property keys (e.g. `db:username`) or the ternary operator of OGNL expressions (e.g. `${tableName != null ? tableName : 'global_constants'}`) on a SQL definition. If you use either and want default property values, you must change the default value separator by adding this special property:
 
 ```xml
 <properties resource="org/mybatis/example/config.properties">
@@ -93,7 +93,7 @@ This feature is disabled by default. If you specify a default value into placeho
 ```xml
 <dataSource type="POOLED">
   <!-- ... -->
-  <property name="username" value="\${db:username?:ut_user}"/>
+  <property name="username" value="${db:username?:ut_user}"/>
 </dataSource>
 ```
 
@@ -562,10 +562,10 @@ The environments element defines how the environment is configured.
       <property name="..." value="..."/>
     </transactionManager>
     <dataSource type="POOLED">
-      <property name="driver" value="\${driver}"/>
-      <property name="url" value="\${url}"/>
-      <property name="username" value="\${username}"/>
-      <property name="password" value="\${password}"/>
+      <property name="driver" value="${driver}"/>
+      <property name="url" value="${url}"/>
+      <property name="username" value="${username}"/>
+      <property name="password" value="${password}"/>
     </dataSource>
   </environment>
 </environments>
