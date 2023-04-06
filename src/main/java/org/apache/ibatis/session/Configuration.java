@@ -43,11 +43,9 @@ import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.apache.ibatis.datasource.jndi.JndiDataSourceFactory;
 import org.apache.ibatis.datasource.pooled.PooledDataSourceFactory;
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory;
-import org.apache.ibatis.executor.BatchExecutor;
-import org.apache.ibatis.executor.CachingExecutor;
-import org.apache.ibatis.executor.Executor;
-import org.apache.ibatis.executor.ReuseExecutor;
-import org.apache.ibatis.executor.SimpleExecutor;
+import org.apache.ibatis.executor.*;
+import org.apache.ibatis.executor.flush.DefaultFlushResultHandler;
+import org.apache.ibatis.executor.flush.FlushResultHandler;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.executor.loader.ProxyFactory;
 import org.apache.ibatis.executor.loader.cglib.CglibProxyFactory;
@@ -714,6 +712,12 @@ public class Configuration {
     StatementHandler statementHandler = new RoutingStatementHandler(executor, mappedStatement, parameterObject,
         rowBounds, resultHandler, boundSql);
     return (StatementHandler) interceptorChain.pluginAll(statementHandler);
+  }
+
+  public FlushResultHandler newFlushHandler(Executor executor, List<BatchResult> flushResults) {
+    FlushResultHandler flushResultHandler = new DefaultFlushResultHandler(executor, flushResults);
+    flushResultHandler = (FlushResultHandler) interceptorChain.pluginAll(flushResultHandler);
+    return flushResultHandler;
   }
 
   public Executor newExecutor(Transaction transaction) {

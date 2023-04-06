@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.ibatis.cursor.Cursor;
+import org.apache.ibatis.executor.flush.FlushResultHandler;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.executor.keygen.NoKeyGenerator;
@@ -149,6 +150,10 @@ public class BatchExecutor extends BaseExecutor {
         }
         results.add(batchResult);
       }
+
+      final FlushResultHandler resultSetHandler = configuration.newFlushHandler(this, results);
+      resultSetHandler.handleResults();
+
       return results;
     } finally {
       for (Statement stmt : statementList) {

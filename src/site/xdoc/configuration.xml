@@ -1821,6 +1821,10 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
             StatementHandler
             (prepare, parameterize, batch, update, query)
           </li>
+          <li>
+            FlushHandler
+            (handleResults)
+          </li>
         </ul>
         <p>
           The details of these classes methods can be discovered by looking
