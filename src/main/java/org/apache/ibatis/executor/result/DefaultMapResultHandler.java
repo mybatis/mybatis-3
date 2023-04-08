@@ -31,18 +31,20 @@ public class DefaultMapResultHandler<K, V> implements ResultHandler<V> {
 
   private final Map<K, V> mappedResults;
   private final String mapKey;
+  private final String mapValue;
   private final ObjectFactory objectFactory;
   private final ObjectWrapperFactory objectWrapperFactory;
   private final ReflectorFactory reflectorFactory;
 
   @SuppressWarnings("unchecked")
-  public DefaultMapResultHandler(String mapKey, ObjectFactory objectFactory, ObjectWrapperFactory objectWrapperFactory,
+  public DefaultMapResultHandler(String mapKey, String mapValue, ObjectFactory objectFactory, ObjectWrapperFactory objectWrapperFactory,
       ReflectorFactory reflectorFactory) {
     this.objectFactory = objectFactory;
     this.objectWrapperFactory = objectWrapperFactory;
     this.reflectorFactory = reflectorFactory;
     this.mappedResults = objectFactory.create(Map.class);
     this.mapKey = mapKey;
+    this.mapValue = mapValue;
   }
 
   @Override
@@ -51,7 +53,7 @@ public class DefaultMapResultHandler<K, V> implements ResultHandler<V> {
     final MetaObject mo = MetaObject.forObject(value, objectFactory, objectWrapperFactory, reflectorFactory);
     // TODO is that assignment always true?
     final K key = (K) mo.getValue(mapKey);
-    mappedResults.put(key, value);
+    mappedResults.put(key, ((V) (mapValue == null ? value : mo.getValue(mapValue))));
   }
 
   public Map<K, V> getMappedResults() {
