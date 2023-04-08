@@ -374,7 +374,6 @@ public class MapperMethod {
       return mapKey;
     }
 
-
     public String getMapValue() {
       return mapValue;
     }
@@ -402,6 +401,5 @@ public class MapperMethod {
     }
 
   }
-
 
 }
