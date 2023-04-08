@@ -1,4 +1,4 @@
-title: MyBatis 3 | Getting Started
+title: MyBatis 3 | Getting started
 author: Clinton Begin
 
 ## Getting started
@@ -21,7 +21,7 @@ If you are using Maven just add the following dependency to your pom.xml:
 
 Every MyBatis application centers around an instance of SqlSessionFactory. A SqlSessionFactory instance can be acquired by using the SqlSessionFactoryBuilder. SqlSessionFactoryBuilder can build a SqlSessionFactory instance from an XML configuration file, or from a custom prepared instance of the Configuration class.
 
-Building a SqlSessionFactory instance from an XML file is very simple. It is recommended that you use a classpath resource for this configuration, but you could use any InputStream instance, including one created from a literal file path or a file:// URL. MyBatis includes a utility class, called Resources, that contains a number of methods that make it simpler to load resources from the classpath and other locations.
+Building a SqlSessionFactory instance from an XML file is very simple. It is recommended that you use a classpath resource for this configuration, but you could use any InputStream instance, including one created from a literal file path or a `file://` URL. MyBatis includes a utility class, called Resources, that contains a number of methods that make it simpler to load resources from the classpath and other locations.
 
 ```java
 String resource = "org/mybatis/example/mybatis-config.xml";

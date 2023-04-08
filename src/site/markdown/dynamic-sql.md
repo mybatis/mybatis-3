@@ -138,7 +138,7 @@ If the *where* element does not behave exactly as you like, you can customize it
 </trim>
 ```
 
-The *prefixOverrides* attribute takes a pipe delimited list of text to override, where whitespace is relevant. The result is the removal of anything specified in the *prefixOverrides* attribute, and the insertion of anything in the *prefix* attribute.
+The *prefixOverrides* attribute takes a pipe delimited list of text to override, where whitespace <u>is</u> relevant. The result is the removal of anything specified in the *prefixOverrides* attribute, and the insertion of anything in the *prefix* attribute.
 
 There is a similar solution for dynamic update statements called *set*. The *set* element can be used to dynamically include columns to update, and leave out others. For example:
 

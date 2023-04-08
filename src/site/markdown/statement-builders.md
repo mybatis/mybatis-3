@@ -231,6 +231,9 @@ The SelectBuilder and SqlBuilder classes are not magical, but it's important to 
 
 ```java
 import static org.apache.ibatis.jdbc.SelectBuilder.*;
+```
+
+```java
 import static org.apache.ibatis.jdbc.SqlBuilder.*;
 ```
 
@@ -244,7 +247,9 @@ public String selectBlogsSql() {
   FROM("BLOG");
   return SQL();
 }
-        
+```
+
+```java
 /* DEPRECATED */
 private String selectPersonSql() {
   BEGIN(); // Clears ThreadLocal variable
@@ -265,5 +270,5 @@ private String selectPersonSql() {
   ORDER_BY("P.ID");
   ORDER_BY("P.FULL_NAME");
   return SQL();
-}       
+}
 ```

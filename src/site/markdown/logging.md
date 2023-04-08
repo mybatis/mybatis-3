@@ -176,6 +176,7 @@ The remaining configuration in the `logback.xml` file is used to configure the a
   <version>2.x.x</version>
 </dependency>
 ```
+
 ```xml
 <!-- log4j2.xml -->
 <?xml version="1.0" encoding="UTF-8"?>
@@ -207,6 +208,7 @@ The remaining configuration in the `logback.xml` file is used to configure the a
   <version>1.2.17</version>
 </dependency>
 ```
+
 ```properties
 # log4j.properties
 log4j.rootLogger=ERROR, stdout
