@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import javassist.util.proxy.Proxy;
 
@@ -53,6 +54,7 @@ import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
+import org.apache.ibatis.submitted.mapkey_value.NoticeMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -177,6 +179,20 @@ class SqlSessionTest extends BaseDataTest {
       for (Map.Entry<Integer, Author> authorEntry : authors.entrySet()) {
         assertEquals(authorEntry.getKey(), (Integer) authorEntry.getValue().getId());
       }
+    }
+  }
+
+  @Test
+  public void shouldGroupStatusAsMap() {
+    try (
+      SqlSession sqlSession = sqlMapper.openSession()
+    ) {
+      NoticeMapper mapper = sqlSession.getMapper(NoticeMapper.class);
+      Map<Integer, Integer> statusCount = mapper.groupStatus();
+      assertEquals(2, statusCount.size());
+      assertEquals(statusCount.get(1), 3);
+      assertEquals(statusCount.get(2), 4);
+
     }
   }
 
