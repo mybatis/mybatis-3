@@ -37,8 +37,8 @@ public class DefaultMapResultHandler<K, V> implements ResultHandler<V> {
   private final ReflectorFactory reflectorFactory;
 
   @SuppressWarnings("unchecked")
-  public DefaultMapResultHandler(String mapKey, String mapValue, ObjectFactory objectFactory, ObjectWrapperFactory objectWrapperFactory,
-      ReflectorFactory reflectorFactory) {
+  public DefaultMapResultHandler(String mapKey, String mapValue, ObjectFactory objectFactory,
+      ObjectWrapperFactory objectWrapperFactory, ReflectorFactory reflectorFactory) {
     this.objectFactory = objectFactory;
     this.objectWrapperFactory = objectWrapperFactory;
     this.reflectorFactory = reflectorFactory;

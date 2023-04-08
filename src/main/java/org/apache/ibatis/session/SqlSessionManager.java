@@ -182,8 +182,10 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
   public <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey, String mapValue) {
     return sqlSessionProxy.selectMap(statement, parameter, mapKey, mapValue);
   }
+
   @Override
-  public <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey, String mapValue, RowBounds rowBounds) {
+  public <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey, String mapValue,
+      RowBounds rowBounds) {
     return sqlSessionProxy.selectMap(statement, parameter, mapKey, rowBounds);
   }
 

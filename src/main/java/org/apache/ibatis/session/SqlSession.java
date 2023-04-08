@@ -172,6 +172,7 @@ public interface SqlSession extends Closeable {
    *          The property to use as key for each value in the list.
    * @param mapValue
    *          The property to use as value for each value in the list.
+   *
    * @return Map containing key pair data.
    */
   <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey, String mapValue);
@@ -194,6 +195,7 @@ public interface SqlSession extends Closeable {
    *          The property to use as value for each value in the list.
    * @param rowBounds
    *          Bounds to limit object retrieval
+   *
    * @return Map containing key pair data.
    */
   <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey, String mapValue, RowBounds rowBounds);

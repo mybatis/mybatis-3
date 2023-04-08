@@ -28,7 +28,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 import javassist.util.proxy.Proxy;
 
@@ -184,9 +183,7 @@ class SqlSessionTest extends BaseDataTest {
 
   @Test
   public void shouldGroupStatusAsMap() {
-    try (
-      SqlSession sqlSession = sqlMapper.openSession()
-    ) {
+    try (SqlSession sqlSession = sqlMapper.openSession()) {
       NoticeMapper mapper = sqlSession.getMapper(NoticeMapper.class);
       Map<Integer, Integer> statusCount = mapper.groupStatus();
       assertEquals(2, statusCount.size());
