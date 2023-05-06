@@ -494,7 +494,9 @@ public class PooledDataSource implements DataSource {
                 log.debug("Waiting as long as " + poolTimeToWait + " milliseconds for connection.");
               }
               long wt = System.currentTimeMillis();
-              condition.await(poolTimeToWait, TimeUnit.MILLISECONDS);
+              if (!condition.await(poolTimeToWait, TimeUnit.MILLISECONDS)) {
+                log.debug("Wait failed...");
+              }
               state.accumulatedWaitTime += System.currentTimeMillis() - wt;
             } catch (InterruptedException e) {
               // set interrupt flag
