@@ -248,7 +248,9 @@ public class ScriptRunner {
       }
       try {
         boolean hasResults = statement.execute(sql);
-        while ((hasResults || (statement.getUpdateCount() != -1))) {
+        // DO NOT try to 'imporove' the condition even if IDE tells you to!
+        // It's important that getUpdateCount() is called here.
+        while (!(!hasResults && statement.getUpdateCount() == -1)) {
           checkWarnings(statement);
           printResults(statement, hasResults);
           hasResults = statement.getMoreResults();

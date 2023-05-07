@@ -259,14 +259,18 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   private ResultSetWrapper getNextResultSet(Statement stmt) {
     // Making this method tolerant of bad JDBC drivers
     try {
-      // Crazy Standard JDBC way of determining if there are more results
-      if (stmt.getConnection().getMetaData().supportsMultipleResultSets()
-          && (stmt.getMoreResults() || (stmt.getUpdateCount() != -1))) {
-        ResultSet rs = stmt.getResultSet();
-        if (rs == null) {
-          return getNextResultSet(stmt);
+      if (stmt.getConnection().getMetaData().supportsMultipleResultSets()) {
+        // Crazy Standard JDBC way of determining if there are more results
+        // DO NOT try to 'imporove' the condition even if IDE tells you to!
+        // It's important that getUpdateCount() is called here.
+        if (!(!stmt.getMoreResults() && stmt.getUpdateCount() == -1)) {
+          ResultSet rs = stmt.getResultSet();
+          if (rs == null) {
+            return getNextResultSet(stmt);
+          } else {
+            return new ResultSetWrapper(rs, configuration);
+          }
         }
-        return new ResultSetWrapper(rs, configuration);
       }
     } catch (Exception e) {
       // Intentionally ignored.
