@@ -22,6 +22,7 @@ import java.util.Map;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.util.MyBatisThreadInfo;
 
 /**
  * An actual SQL String got from an {@link SqlSource} after having processed any dynamic content.
@@ -35,6 +36,7 @@ import org.apache.ibatis.session.Configuration;
  */
 public class BoundSql {
 
+	private static final String TXID_FORMAT = " /* TXID= %s */ ";
   private final String sql;
   private final List<ParameterMapping> parameterMappings;
   private final Object parameterObject;
@@ -42,7 +44,7 @@ public class BoundSql {
   private final MetaObject metaParameters;
 
   public BoundSql(Configuration configuration, String sql, List<ParameterMapping> parameterMappings, Object parameterObject) {
-    this.sql = sql;
+    this.sql =  sql;
     this.parameterMappings = parameterMappings;
     this.parameterObject = parameterObject;
     this.additionalParameters = new HashMap<>();
@@ -50,7 +52,7 @@ public class BoundSql {
   }
 
   public String getSql() {
-    return sql;
+    return appendTXID();
   }
 
   public List<ParameterMapping> getParameterMappings() {
@@ -76,5 +78,12 @@ public class BoundSql {
 
   public Map<String, Object> getAdditionalParameters() {
     return additionalParameters;
+  }
+
+  private String appendTXID() {
+	  if( MyBatisThreadInfo.getTXID() == null) {
+		  return sql;
+	  }
+	  return sql.contains(" TXID= ")? sql :  String.format(TXID_FORMAT, MyBatisThreadInfo.getTXID()) + sql;
   }
 }
