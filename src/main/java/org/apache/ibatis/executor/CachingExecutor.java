@@ -97,18 +97,27 @@ public class CachingExecutor implements Executor {
     if (cache != null) {
       flushCacheIfRequired(ms);
       if (ms.isUseCache() && (resultHandler == null || resultHandler instanceof UpperCaseMapResultHandler)) {
-        ensureNoOutParams(ms, boundSql);
-        @SuppressWarnings("unchecked")
-        List<E> list = (List<E>) tcm.getObject(cache, key);
-        if (list == null) {
-          list = delegate.query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
-          tcm.putObject(cache, key, list); // issue #578 and #116
-        }
-        return list;
-      }
+			ensureNoOutParams(ms, boundSql);
+			@SuppressWarnings("unchecked")
+			List<E> list = (List<E>) tcm.getObject(cache, key);
+			if (list == null) {
+				list = delegate.query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
+				if (resultHandler instanceof UpperCaseMapResultHandler) {
+					list = (List<E>)((UpperCaseMapResultHandler)resultHandler).getResultList();
+				}
+				tcm.putObject(cache, key, list); // issue #578 and #116
+			}else {
+				UpperCaseMapResultHandler handler = (UpperCaseMapResultHandler)resultHandler;
+				handler.setResultList((List<Object>)list);
+				handler.setFromCache(true);
+			}
+			return list;
+		}
     }
     return delegate.query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
   }
+
+
 
   @Override
   public List<BatchResult> flushStatements() throws SQLException {
