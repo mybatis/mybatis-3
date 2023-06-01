@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -34,7 +34,8 @@ class NestedResultHandlerTest {
   @BeforeAll
   static void setUp() throws Exception {
     // create a SqlSessionFactory
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/nestedresulthandler/mybatis-config.xml")) {
+    try (Reader reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/nestedresulthandler/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
@@ -85,19 +86,19 @@ class NestedResultHandlerTest {
   @Test
   void testUnorderedGetPersonWithHandler() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      Assertions.assertThrows(PersistenceException.class, () -> sqlSession.select("getPersonsWithItemsOrdered", context -> {
-        Person person = (Person) context.getResultObject();
-        if ("grandma".equals(person.getName())) {
-          person.getItems().size();
-        }
-      }));
+      Assertions.assertThrows(PersistenceException.class,
+          () -> sqlSession.select("getPersonsWithItemsOrdered", context -> {
+            Person person = (Person) context.getResultObject();
+            if ("grandma".equals(person.getName())) {
+              person.getItems().size();
+            }
+          }));
     }
   }
 
   /**
-   * Fix bug caused by issue #542, see new issue #22 on github If we order by a
-   * nested result map attribute we can miss some records and end up with
-   * duplicates instead.
+   * Fix bug caused by issue #542, see new issue #22 on github If we order by a nested result map attribute we can miss
+   * some records and end up with duplicates instead.
    */
   @Test
   void testGetPersonOrderedByItem() {

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2020 the original author or authors.
+       Copyright 2009-2022 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
        You may obtain a copy of the License at
 
-          http://www.apache.org/licenses/LICENSE-2.0
+          https://www.apache.org/licenses/LICENSE-2.0
 
        Unless required by applicable law or agreed to in writing, software
        distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,7 +17,7 @@
 
 -->
 <document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
 
   <properties>
     <title>MyBatis 3 | Java API</title>
@@ -245,13 +245,13 @@ public interface ResultHandler<T> {
   <p>There is method for flushing(executing) batch update statements that stored in a JDBC driver class at any timing. This method can be used when you use the <code>ExecutorType.BATCH</code> as <code>ExecutorType</code>.</p>
   <source><![CDATA[List<BatchResult> flushStatements()]]></source>
 
-  <h5>Métodos de control de transacción</h5>
+  <h5 id="transaction-control-methods">Métodos de control de transacción</h5>
   <p>El parámetro ResultContext te da acceso al objeto resultado en sí mismo, un contador del número de objetos creados y un método booleano stop() que te permite indicar a MyBatis que pare la carga de datos.</p>
   <source>void commit()
 void commit(boolean force)
 void rollback()
 void rollback(boolean force)</source>
-  <p>Por defecto MyBatis no hace un commit a no ser que haya detectado que la base de datos ha sido modificada por una insert, update o delete. Si has realizado cambios sin llamar a estos métodos, entonces puedes pasar true en al método de commit() y rollback() para asegurar que se realiza el commit (ten en cuenta que aun así no puedes forzar el commit() en modo auto-commit o cuando se usa un gestor de transacciones externo). La mayoría de las veces no tendrás que llamar a rollback() dado que MyBatis lo hará por ti en caso de que no hayas llamado a commit(). Sin embargo, si necesitas un control más fino sobre la sesión, donde puede que haya varios commits, tienes esta opción para hacerlo posible.</p>
+  <p>Por defecto MyBatis no hace un commit a no ser que haya detectado que la base de datos ha sido modificada por una insert, update, delete o select con <code>affectData</code> habilitado. Si has realizado cambios sin llamar a estos métodos, entonces puedes pasar true en al método de commit() y rollback() para asegurar que se realiza el commit (ten en cuenta que aun así no puedes forzar el commit() en modo auto-commit o cuando se usa un gestor de transacciones externo). La mayoría de las veces no tendrás que llamar a rollback() dado que MyBatis lo hará por ti en caso de que no hayas llamado a commit(). Sin embargo, si necesitas un control más fino sobre la sesión, donde puede que haya varios commits, tienes esta opción para hacerlo posible.</p>
   <p><span class="label important">NOTA</span> MyBatis-Spring y MyBatis-Guice proporcionan gestión de transacción declarativa. Por tanto si estás usando MyBatis con Spring o Guice consulta sus manuales específicos.</p>
 
   <h5>Local Cache</h5>

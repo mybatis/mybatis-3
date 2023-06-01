@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,15 +15,15 @@
  */
 package org.apache.ibatis.cache;
 
-import org.apache.ibatis.cache.decorators.SerializedCache;
-import org.apache.ibatis.cache.impl.PerpetualCache;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.apache.ibatis.cache.decorators.SerializedCache;
+import org.apache.ibatis.cache.impl.PerpetualCache;
+import org.junit.jupiter.api.Test;
 
 class SerializedCacheTest {
 
@@ -52,11 +52,11 @@ class SerializedCacheTest {
   @Test
   void throwExceptionWhenTryingToCacheNonSerializableObject() {
     SerializedCache cache = new SerializedCache(new PerpetualCache("default"));
-    assertThrows(CacheException.class,
-      () -> cache.putObject(0, new CachingObjectWithoutSerializable(0)));
+    assertThrows(CacheException.class, () -> cache.putObject(0, new CachingObjectWithoutSerializable(0)));
   }
 
   static class CachingObject implements Serializable {
+    private static final long serialVersionUID = 1L;
     int x;
 
     public CachingObject(int x) {
@@ -65,8 +65,12 @@ class SerializedCacheTest {
 
     @Override
     public boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
+      if (this == o) {
+        return true;
+      }
+      if (o == null || getClass() != o.getClass()) {
+        return false;
+      }
       CachingObject obj = (CachingObject) o;
       return x == obj.x;
     }
@@ -86,8 +90,12 @@ class SerializedCacheTest {
 
     @Override
     public boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
+      if (this == o) {
+        return true;
+      }
+      if (o == null || getClass() != o.getClass()) {
+        return false;
+      }
       CachingObjectWithoutSerializable obj = (CachingObjectWithoutSerializable) o;
       return x == obj.x;
     }

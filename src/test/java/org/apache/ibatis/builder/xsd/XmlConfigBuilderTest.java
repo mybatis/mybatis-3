@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,7 +15,11 @@
  */
 package org.apache.ibatis.builder.xsd;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.InputStream;
 import java.util.Arrays;
@@ -44,7 +48,11 @@ import org.apache.ibatis.logging.slf4j.Slf4jImpl;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.scripting.defaults.RawLanguageDriver;
 import org.apache.ibatis.scripting.xmltags.XMLLanguageDriver;
-import org.apache.ibatis.session.*;
+import org.apache.ibatis.session.AutoMappingBehavior;
+import org.apache.ibatis.session.AutoMappingUnknownColumnBehavior;
+import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.ExecutorType;
+import org.apache.ibatis.session.LocalCacheScope;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.apache.ibatis.type.JdbcType;
 import org.junit.jupiter.api.Disabled;
@@ -77,7 +85,8 @@ class XmlConfigBuilderTest {
       assertFalse(config.isSafeRowBoundsEnabled());
       assertEquals(LocalCacheScope.SESSION, config.getLocalCacheScope());
       assertEquals(JdbcType.OTHER, config.getJdbcTypeForNull());
-      assertEquals(new HashSet<>(Arrays.asList("equals", "clone", "hashCode", "toString")), config.getLazyLoadTriggerMethods());
+      assertEquals(new HashSet<>(Arrays.asList("equals", "clone", "hashCode", "toString")),
+          config.getLazyLoadTriggerMethods());
       assertTrue(config.isSafeResultHandlerEnabled());
       assertTrue(config.getDefaultScriptingLanguageInstance() instanceof XMLLanguageDriver);
       assertFalse(config.isCallSettersOnNulls());
@@ -85,6 +94,7 @@ class XmlConfigBuilderTest {
       assertNull(config.getLogImpl());
       assertNull(config.getConfigurationFactory());
       assertFalse(config.isShrinkWhitespacesInSql());
+      assertFalse(config.isArgNameBasedConstructorAutoMapping());
     } finally {
       // System.clearProperty(XPathParser.KEY_USE_XSD);
     }
@@ -114,7 +124,8 @@ class XmlConfigBuilderTest {
       assertTrue(config.isSafeRowBoundsEnabled());
       assertEquals(LocalCacheScope.STATEMENT, config.getLocalCacheScope());
       assertEquals(JdbcType.NULL, config.getJdbcTypeForNull());
-      assertEquals(new HashSet<>(Arrays.asList("equals", "clone", "hashCode", "toString", "xxx")), config.getLazyLoadTriggerMethods());
+      assertEquals(new HashSet<>(Arrays.asList("equals", "clone", "hashCode", "toString", "xxx")),
+          config.getLazyLoadTriggerMethods());
       assertFalse(config.isSafeResultHandlerEnabled());
       assertTrue(config.getDefaultScriptingLanguageInstance() instanceof RawLanguageDriver);
       assertTrue(config.isCallSettersOnNulls());
@@ -123,6 +134,7 @@ class XmlConfigBuilderTest {
       assertEquals(JBoss6VFS.class.getName(), config.getVfsImpl().getName());
       assertEquals(String.class.getName(), config.getConfigurationFactory().getName());
       assertTrue(config.isShrinkWhitespacesInSql());
+      assertTrue(config.isArgNameBasedConstructorAutoMapping());
 
       assertEquals(Author.class, config.getTypeAliasRegistry().getTypeAliases().get("blogauthor"));
       assertEquals(Blog.class, config.getTypeAliasRegistry().getTypeAliases().get("blog"));
@@ -131,9 +143,10 @@ class XmlConfigBuilderTest {
       assertTrue(config.getTypeHandlerRegistry().getTypeHandler(Integer.class) instanceof CustomIntegerTypeHandler);
       assertTrue(config.getTypeHandlerRegistry().getTypeHandler(Long.class) instanceof CustomLongTypeHandler);
       assertTrue(config.getTypeHandlerRegistry().getTypeHandler(String.class) instanceof CustomStringTypeHandler);
-      assertTrue(config.getTypeHandlerRegistry().getTypeHandler(String.class, JdbcType.VARCHAR) instanceof CustomStringTypeHandler);
+      assertTrue(config.getTypeHandlerRegistry().getTypeHandler(String.class,
+          JdbcType.VARCHAR) instanceof CustomStringTypeHandler);
 
-      ExampleObjectFactory objectFactory = (ExampleObjectFactory)config.getObjectFactory();
+      ExampleObjectFactory objectFactory = (ExampleObjectFactory) config.getObjectFactory();
       assertEquals(1, objectFactory.getProperties().size());
       assertEquals("100", objectFactory.getProperties().getProperty("objectFactoryProperty"));
 
@@ -141,7 +154,7 @@ class XmlConfigBuilderTest {
 
       assertTrue(config.getReflectorFactory() instanceof CustomReflectorFactory);
 
-      ExamplePlugin plugin = (ExamplePlugin)config.getInterceptors().get(0);
+      ExamplePlugin plugin = (ExamplePlugin) config.getInterceptors().get(0);
       assertEquals(1, plugin.getProperties().size());
       assertEquals("100", plugin.getProperties().getProperty("pluginProperty"));
 

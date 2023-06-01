@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2020 the original author or authors.
+       Copyright 2009-2023 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
        You may obtain a copy of the License at
 
-          http://www.apache.org/licenses/LICENSE-2.0
+          https://www.apache.org/licenses/LICENSE-2.0
 
        Unless required by applicable law or agreed to in writing, software
        distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,7 +17,7 @@
 
 -->
 <document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
 
   <properties>
     <title>마이바티스 3 | 자바 API</title>
@@ -211,7 +211,7 @@ Configuration getConfiguration();</source>
     <li>Connection 객체는 활성화된 환경에 의해 설정된 DataSource인스턴스를 획득할 것이다.</li>
     <li>트랜잭션 격리 레벨은 드라이버나 데이터소스가 디폴트로 제공하는 옵션을 사용할 것이다.</li>
     <li>PreparedStatements는 재사용되지 않을 것이다.
-	그리고 update또한 배치처리되지 않을 것이다.</li>
+  그리고 update또한 배치처리되지 않을 것이다.</li>
   </ul>
   <p>메소드 대부분은 그 이름과 파라미터가 그 역할을 충분히 설명한다.
   자동커밋을 활성화하기 위해서 autoCommit파라미터에 “true” 값을 설정하라.
@@ -224,10 +224,10 @@ Configuration getConfiguration();</source>
   enum으로는 3개의 값을 정의한다.</p>
   <ul>
     <li><code>ExecutorType.SIMPLE</code>: 이 타입의 실행자는 아무것도 하지 않는다.
-	구문 실행마다 새로운 PreparedStatement를 생성한다.</li>
+  구문 실행마다 새로운 PreparedStatement를 생성한다.</li>
     <li><code>ExecutorType.REUSE</code>: 이 타입의 실행자는 PreparedStatements를 재사용할 것이다.</li>
     <li><code>ExecutorType.BATCH</code>: 이 실행자는 모든 update구문을 배치처리하고 중간에 select 가 실행될 경우 필요하다면 경계를 표시한다.
-	이러한 과정은 행위를 좀더 이해하기 쉽게 하기 위함이다.</li>
+  이러한 과정은 행위를 좀더 이해하기 쉽게 하기 위함이다.</li>
   </ul>
   <p><span class="label important">참고</span> SqlSessionFactory에서 언급하지 않는 한개 이상의 메소드가 있다.
   getConfiguration() 메소드인데 이 메소드는 런타임시 마이바티스 설정을 조사하는 Configuration인스턴스를 리턴할 것이다.</p>
@@ -316,7 +316,7 @@ public interface ResultHandler<T> {
   이 방법은 <code>ExecutorType</code>을 <code>ExecutorType.BATCH</code>로 설정한 경우 사용가능하다. </p>
   <source><![CDATA[List<BatchResult> flushStatements()]]></source>
 
-  <h5>트랙잭션 제어 메소드</h5>
+  <h5 id="transaction-control-methods">트랙잭션 제어 메소드</h5>
   <p>트랜잭션을 제어하기 위해 4개의 메소드가 있다.
   물론 자동커밋을 선택하였거나 외부 트랜잭션 관리자를 사용하면 영향이 없다.
   어쨌든 Connection인스턴스에 의해 관리되고 JDBC 트랜잭션 관리자를 사용하면 이 4개의 메소드를 사용할 수 있다.</p>
@@ -324,7 +324,7 @@ public interface ResultHandler<T> {
 void commit(boolean force)
 void rollback()
 void rollback(boolean force)</source>
-  <p>기본적으로 마이바티스는 insert, update 또는 delete 를 호출하여 데이터베이스가 변경된 것으로 감지하지 않는 한 실제로 커밋하지 않는다.
+  <p>기본적으로 마이바티스는 insert, update, delete 또는 <code>affectData</code>가 활성화된select 를 호출하여 데이터베이스가 변경된 것으로 감지하지 않는 한 실제로 커밋하지 않는다.
   이러한 메소드 호출없이 변경되면 커밋된 것으로 보장하기 위해 commit 와 rollback 메소드에 true 값을 전달한다.</p>
   <p><span class="label important">참고</span> MyBatis-Spring 과 MyBatis-Guice는 선언적인 트랜잭션 관리기법을 제공한다.
   그래서 스프링이나 쥬스와 함께 마이바티스를 사용한다면 해당되는 메뉴얼을 꼭 참고하길 바란다. </p>
@@ -415,7 +415,7 @@ void rollback(boolean force)</source>
         <td><code>Class</code></td>
         <td><code>&lt;cache&gt;</code></td>
         <td>명명공간을 위한 캐시 설정
-		사용가능한 속성들 : implementation, eviction, flushInterval, size, readWrite, blocking 그리고 properties.
+    사용가능한 속성들 : implementation, eviction, flushInterval, size, readWrite, blocking 그리고 properties.
         </td>
       </tr>
       <tr>
@@ -440,7 +440,7 @@ void rollback(boolean force)</source>
         <td><code>Method</code></td>
         <td><code>&lt;constructor&gt;</code></td>
         <td>결과 객체 생성자에 전달되는 결과들
-		사용가능한 속성들 : value(인자의 배열)</td>
+    사용가능한 속성들 : value(인자의 배열)</td>
       </tr>
       <tr>
         <td><code>@Arg</code></td>
@@ -452,9 +452,9 @@ void rollback(boolean force)</source>
           </ul>
         </td>
         <td>ConstructorArgs 의 일부로 한개의 생성자 인자
-		사용가능한 속성들 : id, column, javaType, jdbcType, typeHandler, select 그리고 resultMap.
-		id 속성은 비교하기 위해 사용되는 값이다.
-		XML에서는 <code>&lt;idArg&gt;</code> 엘리먼트와 유사하다.
+    사용가능한 속성들 : id, column, javaType, jdbcType, typeHandler, select 그리고 resultMap.
+    id 속성은 비교하기 위해 사용되는 값이다.
+    XML에서는 <code>&lt;idArg&gt;</code> 엘리먼트와 유사하다.
     Since 3.5.4, it can be used as repeatable annotation.</td>
       </tr>
       <tr>
@@ -462,24 +462,24 @@ void rollback(boolean force)</source>
         <td><code>Method</code></td>
         <td><code>&lt;discriminator&gt;</code></td>
         <td>결과매핑을 할때 사용될 수 있는 경우에 대한 값들
-		사용가능한 속성들 : column, javaType, jdbcType, typeHandler, cases.
-		cases 속성은 경우(case)의 배열이다.</td>
+    사용가능한 속성들 : column, javaType, jdbcType, typeHandler, cases.
+    cases 속성은 경우(case)의 배열이다.</td>
       </tr>
       <tr>
         <td><code>@Case</code></td>
         <td>N/A</td>
         <td><code>&lt;case&gt;</code></td>
         <td>case 의 값과 매핑
-		사용가능한 속성들 : value, type, results.
-		results 속성은 Result 의 배열이다.
-		게다가 이 Case 애노테이션은 Results애노테이션에서 명시된 ResultMap과 유사하다.</td>
+    사용가능한 속성들 : value, type, results.
+    results 속성은 Result 의 배열이다.
+    게다가 이 Case 애노테이션은 Results애노테이션에서 명시된 ResultMap과 유사하다.</td>
       </tr>
       <tr>
         <td><code>@Results</code></td>
         <td><code>Method</code></td>
         <td><code>&lt;resultMap&gt;</code></td>
         <td>결과 칼럼이 프로퍼티나 필드에 매핑되는 방법에 대한 상세 설정을 포함하는 결과 매핑의 목록
-		사용가능한 속성들 : value(Result 애노테이션의 배열), id (결과매핑의 이름)</td>
+    사용가능한 속성들 : value(Result 애노테이션의 배열), id (결과매핑의 이름)</td>
       </tr>
       <tr>
         <td><code>@Result</code></td>
@@ -491,11 +491,11 @@ void rollback(boolean force)</source>
           </ul>
         </td>
         <td>칼럼이 프로퍼티나 필드에 매핑되는 한개의 결과 매핑
-		사용가능한 속성들 : id, column, property, javaType, jdbcType, typeHandler, one, many.
-		id 속성은 프로퍼티를 비교할 때 사용할지를 표시하는 boolean 값이다. (XML 에서 &lt;id&gt; 와 유사하다.)
-		one 속성은 한개의 관계(associations)이고 &lt;association&gt; 과 유사하다.
-		many 속성은 collection이고  &lt;collection&gt; 과 유사하다.
-		클래스의 명명규칙 충돌을 피하기 위해 명명되었다.
+    사용가능한 속성들 : id, column, property, javaType, jdbcType, typeHandler, one, many.
+    id 속성은 프로퍼티를 비교할 때 사용할지를 표시하는 boolean 값이다. (XML 에서 &lt;id&gt; 와 유사하다.)
+    one 속성은 한개의 관계(associations)이고 &lt;association&gt; 과 유사하다.
+    many 속성은 collection이고  &lt;collection&gt; 과 유사하다.
+    클래스의 명명규칙 충돌을 피하기 위해 명명되었다.
     Since 3.5.4, it can be used as repeatable annotation.</td>
       </tr>
       <tr>
@@ -503,57 +503,57 @@ void rollback(boolean force)</source>
         <td>N/A</td>
         <td><code>&lt;association&gt;</code></td>
         <td>복잡한 타입의 한개의 프로퍼티를 위한 매핑이다.
-		사용가능한 속성들 : select(매핑 구문의 이름, 예를들어 매퍼 메소드).
-		<code>fetchType</code>, which supersedes the global configuration parameter <code>lazyLoadingEnabled</code> for this mapping.
-		<code>resultMap</code>(available since 3.5.5), which is the fully qualified name of a result map that map to a single container object from select result.
+    사용가능한 속성들 : select(매핑 구문의 이름, 예를들어 매퍼 메소드).
+    <code>fetchType</code>, which supersedes the global configuration parameter <code>lazyLoadingEnabled</code> for this mapping.
+    <code>resultMap</code>(available since 3.5.5), which is the fully qualified name of a result map that map to a single container object from select result.
     <code>columnPrefix</code>(available since 3.5.5), which is column prefix for grouping select columns at nested result map.
-		Note: 조인 매핑은 애노테이션 API 를 통해서는 지원되지 않는다는 것을 알아야 한다.
-		순환(circular) 참조를 허용하지 않는 자바 애노테이션의 제약사항때문이다.</td>
+    Note: 조인 매핑은 애노테이션 API 를 통해서는 지원되지 않는다는 것을 알아야 한다.
+    순환(circular) 참조를 허용하지 않는 자바 애노테이션의 제약사항때문이다.</td>
       </tr>
       <tr>
         <td><code>@Many</code></td>
         <td>N/A</td>
         <td><code>&lt;collection&gt;</code></td>
         <td>복잡한 타입의 collection 프로퍼티를 위한 매핑이다.
-		사용가능한 속성들 : select(매핑 구문의 이름, 예를들어 매퍼 메소드)
-		<code>fetchType</code>, which supersedes the global configuration parameter <code>lazyLoadingEnabled</code> for this mapping.
-		<code>resultMap</code>(available since 3.5.5), which is the fully qualified name of a result map that map to collection object from select result.
+    사용가능한 속성들 : select(매핑 구문의 이름, 예를들어 매퍼 메소드)
+    <code>fetchType</code>, which supersedes the global configuration parameter <code>lazyLoadingEnabled</code> for this mapping.
+    <code>resultMap</code>(available since 3.5.5), which is the fully qualified name of a result map that map to collection object from select result.
     <code>columnPrefix</code>(available since 3.5.5), which is column prefix for grouping select columns at nested result map.
-		Note: 조인 매핑은 애노테이션 API 를 통해서는 지원되지 않는다는 것을 알아야 한다.
-		순환(circular) 참조를 허용하지 않는 자바 애노테이션의 제약사항때문이다.</td>
+    Note: 조인 매핑은 애노테이션 API 를 통해서는 지원되지 않는다는 것을 알아야 한다.
+    순환(circular) 참조를 허용하지 않는 자바 애노테이션의 제약사항때문이다.</td>
       </tr>
       <tr>
         <td><code>@MapKey</code></td>
         <td><code>Method</code></td>
         <td> </td>
         <td>리턴 타입이 Map 인 메소드에서 사용된다.
-		결과객체의 List 를 객체의 프로퍼티에 기초한 Map으로 변환하기 위해 사용된다.</td>
+    결과객체의 List 를 객체의 프로퍼티에 기초한 Map으로 변환하기 위해 사용된다.</td>
       </tr>
       <tr>
         <td><code>@Options</code></td>
         <td><code>Method</code></td>
         <td>매핑 구문의  속성들 </td>
         <td>이 애노테이션은 매핑된 구문에 속성으로 존재하는 많은 분기(switch)와 설정 옵션에 접근할 수 있다.
-		각 구문을 복잡하게 만들기 보다 Options 애노테이션으로 일관되고 깔끔한 방법으로 설정 할수 있게 한다.
-		사용가능한 속성들 : useCache=true,
-		flushCache=FlushCachePolicy.DEFAULT,
-		resultSetType=DEFAULT,
-		statementType=PREPARED,
-		fetchSize=-1,
-		timeout=-1,
-		useGeneratedKeys=false,
-		keyProperty=“”,
-		keyColumn=“”,
-		resultSets=“”,
+    각 구문을 복잡하게 만들기 보다 Options 애노테이션으로 일관되고 깔끔한 방법으로 설정 할수 있게 한다.
+    사용가능한 속성들 : useCache=true,
+    flushCache=FlushCachePolicy.DEFAULT,
+    resultSetType=DEFAULT,
+    statementType=PREPARED,
+    fetchSize=-1,
+    timeout=-1,
+    useGeneratedKeys=false,
+    keyProperty=“”,
+    keyColumn=“”,
+    resultSets=“”,
     databaseId="".
-		자바 애노테이션을 이해하는 것이 중요하다.
-		자바 애노테이션은 “null”을 설정 할 수 없다.
-		그래서 일단 Options 애노테이션을 사용하면 각각의 속성은 디폴트 값을 사용하게 된다.
-		디폴트 값이 기대하지 않은 결과를 만들지 않도록 주의해야 한다.
+    자바 애노테이션을 이해하는 것이 중요하다.
+    자바 애노테이션은 “null”을 설정 할 수 없다.
+    그래서 일단 Options 애노테이션을 사용하면 각각의 속성은 디폴트 값을 사용하게 된다.
+    디폴트 값이 기대하지 않은 결과를 만들지 않도록 주의해야 한다.
     The <code>databaseId</code>(Available since 3.5.5), in case there is a configured <code>DatabaseIdProvider</code>,
     the MyBatis use the <code>Options</code> with no <code>databaseId</code> attribute or with a <code>databaseId</code>
     that matches the current one. If found with and without the <code>databaseId</code> the latter will be discarded.<br/><br/>
-		keyColumn은 키 칼럼이 테이블의 첫번째 칼럼이 아닌 특정 데이터베이스에서만(PostgreSQL 같은) 필요하다.</td>
+    keyColumn은 키 칼럼이 테이블의 첫번째 칼럼이 아닌 특정 데이터베이스에서만(PostgreSQL 같은) 필요하다.</td>
       </tr>
       <tr>
         <td>
@@ -574,10 +574,10 @@ void rollback(boolean force)</source>
           </ul>
         </td>
         <td>각각의 애노테이션은 실행하고자 하는 SQL을 표현한다.
-		각각 문자열의 배열(또는 한개의 문자열)을 가진다.
-		문자열의 배열이 전달되면, 각각 공백을 두고 하나로 합친다.
-		자바 코드에서 SQL 을 만들때 발행할 수 있는 “공백 누락” 문제를 해결하도록 도와준다.
-		사용가능한 속성들 : value(한개의 SQL 구문을 만들기 위한 문자열의 배열).
+    각각 문자열의 배열(또는 한개의 문자열)을 가진다.
+    문자열의 배열이 전달되면, 각각 공백을 두고 하나로 합친다.
+    자바 코드에서 SQL 을 만들때 발행할 수 있는 “공백 누락” 문제를 해결하도록 도와준다.
+    사용가능한 속성들 : value(한개의 SQL 구문을 만들기 위한 문자열의 배열).
     The <code>databaseId</code>(Available since 3.5.5), in case there is a configured <code>DatabaseIdProvider</code>,
     the MyBatis use a statement with no <code>databaseId</code> attribute or with a <code>databaseId</code>
     that matches the current one. If found with and without the <code>databaseId</code> the latter will be discarded.
@@ -602,41 +602,41 @@ void rollback(boolean force)</source>
           </ul>
         </td>
         <td>실행시 SQL 을 리턴할 클래스 과 메소드명을 명시하도록 해주는 대체수단의 애노테이션이다 (Since 3.4.6, you can specify the <code>CharSequence</code> instead of <code>String</code> as a method return type).
-		매핑된 구문을 실행할 때 마이바티스는 클래스의 인스턴스를 만들고 메소드를 실행한다.
+    매핑된 구문을 실행할 때 마이바티스는 클래스의 인스턴스를 만들고 메소드를 실행한다.
     Mapper 메서드의 인수인 "Mapper interface type" and "Database ID" 과 <code>ProviderContext</code>(Mybatis 3.4.5 부터) 를 이용한 "Mapper method" 로 전달 된 객체를 메서드 매개변수로 전달할 수 있다.(마이바티스 3.4이상에서는 복수 파라미터를 허용한다.)
-		사용가능한 속성들 : value, type, method.
-		value and type 속성은 클래스 (The <code>type</code> attribute is alias for <code>value</code>, you must be specify either one.
+    사용가능한 속성들 : value, type, method.
+    value and type 속성은 클래스 (The <code>type</code> attribute is alias for <code>value</code>, you must be specify either one.
     But both attributes can be omit when specify the <code>defaultSqlProviderType</code> as global configuration).
-		method 속성은 메소드명이다
+    method 속성은 메소드명이다
     (Since 3.5.1, you can omit <code>method</code> attribute, the MyBatis will resolve a target method via the
     <code>ProviderMethodResolver</code> interface.
     If not resolve by it, the MyBatis use the reserved fallback method that named <code>provideSql</code>).
     The <code>databaseId</code>(Available since 3.5.5), in case there is a configured <code>DatabaseIdProvider</code>,
     the MyBatis will use a provider method with no <code>databaseId</code> attribute or with a <code>databaseId</code>
     that matches the current one. If found with and without the <code>databaseId</code> the latter will be discarded.
-		Note: 이 섹션은 클래스에 대한 설명으로 동적 SQL 을 좀더 깔끔하고 읽기 쉽게 만드는데 도움이 될 수 있다.</td>
+    Note: 이 섹션은 클래스에 대한 설명으로 동적 SQL 을 좀더 깔끔하고 읽기 쉽게 만드는데 도움이 될 수 있다.</td>
       </tr>
       <tr>
         <td><code>@Param</code></td>
         <td><code>Parameter</code></td>
         <td>N/A</td>
         <td>매퍼 메소드가 여러개의 파라미터를 가진다면 이 애노테이션은 이름에 일치하는 매퍼 메소드 파라미터에 적용된다.
-		반면에 여러개의 파라미터는 순서대로 명명된다.
-		예를들어 #{param1}, #{param2} 등이 디폴트다.
-		@Param(“person”)을 사용하면 파라미터는 #{person}로 명명된다.</td>
+    반면에 여러개의 파라미터는 순서대로 명명된다.
+    예를들어 #{param1}, #{param2} 등이 디폴트다.
+    @Param(“person”)을 사용하면 파라미터는 #{person}로 명명된다.</td>
       </tr>
       <tr>
         <td><code>@SelectKey</code></td>
         <td><code>Method</code></td>
         <td><code>&lt;selectKey&gt;</code></td>
         <td>이 애노테이션은 @Insert, @InsertProvider, @Update 또는 @UpdateProvider 애노테이션을 사용하는 메소드에서 &lt;selectKey&gt;와 똑같다.
-		다른 메소드에서는 무시된다.
-		@SelectKey애노테이션을 명시하면 마이바티스는 @Options애노테이션이나 설정 프로퍼티를 통해 설정된 key프로퍼티를 무시할 것이다.
-		사용가능한 속성들 : statement는 실행할 SQL 구문을 만드는 문자열의 배열이다.
-		keyProperty는 새로운 값으로 수정될 파라미터 객체의 프로퍼티이다.
-		SQL이 insert 전후에 실행되는 것을 나타내기 위해 true나 false가 되어야 한다.
-		resultType은 keyProperty의 자바 타입이다.
-		statementType=PREPARED.
+    다른 메소드에서는 무시된다.
+    @SelectKey애노테이션을 명시하면 마이바티스는 @Options애노테이션이나 설정 프로퍼티를 통해 설정된 key프로퍼티를 무시할 것이다.
+    사용가능한 속성들 : statement는 실행할 SQL 구문을 만드는 문자열의 배열이다.
+    keyProperty는 새로운 값으로 수정될 파라미터 객체의 프로퍼티이다.
+    SQL이 insert 전후에 실행되는 것을 나타내기 위해 true나 false가 되어야 한다.
+    resultType은 keyProperty의 자바 타입이다.
+    statementType=PREPARED.
     The <code>databaseId</code>(Available since 3.5.5), in case there is a configured <code>DatabaseIdProvider</code>,
     the MyBatis will use a statement with no <code>databaseId</code> attribute or with a <code>databaseId</code>
     that matches the current one. If found with and without the <code>databaseId</code> the latter will be discarded.
@@ -647,16 +647,16 @@ void rollback(boolean force)</source>
         <td><code>Method</code></td>
         <td>N/A</td>
         <td>이 애노테이션은 @Select또는 @SelectProvider애노테이션을 위해 XML 매퍼의 &lt;resultMap&gt; 엘리먼트의 id를 제공하기 위해 사용된다.
-		XML 에 정의된 결과매핑을 재사용하도록 해준다.
-		이 애노테이션은 @Results나 @ConstructorArgs를 오버라이드 할 것이다.</td>
+    XML 에 정의된 결과매핑을 재사용하도록 해준다.
+    이 애노테이션은 @Results나 @ConstructorArgs를 오버라이드 할 것이다.</td>
       </tr>
       <tr>
         <td><code>@ResultType</code></td>
         <td><code>Method</code></td>
         <td>N/A</td>
         <td>이 애노테이션은 결과 핸들러를 사용할때 사용한다.
-		이 경우 리턴타입은 void이고 마이바티스는 각각의 레코드 정보를 가지는 객체의 타입을 결정하는 방법을 가져야만 한다.
-		XML 결과매핑이 있다면  @ResultMap 애노테이션을 사용하자.
+    이 경우 리턴타입은 void이고 마이바티스는 각각의 레코드 정보를 가지는 객체의 타입을 결정하는 방법을 가져야만 한다.
+    XML 결과매핑이 있다면  @ResultMap 애노테이션을 사용하자.
         결과타입이 XML에서 <code>&lt;select&gt;</code> 엘리먼트에 명시되어 있다면 다른 애노테이션이 필요하지 않다.
         결과타입이 XML에서 <code>&lt;select&gt;</code> 엘리먼트에 명시되어 있지 않은 경우에 이 애노테이션을 사용하자.
         예를들어 @Select 애노테이션이 선언되어 있다면 메소드는 결과 핸들러를 사용할 것이다.

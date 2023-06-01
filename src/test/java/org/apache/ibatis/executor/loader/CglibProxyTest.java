@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,7 +15,9 @@
  */
 package org.apache.ibatis.executor.loader;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -45,7 +47,8 @@ class CglibProxyTest extends SerializableProxyTest {
   void shouldCreateAProxyForAPartiallyLoadedBean() throws Exception {
     ResultLoaderMap loader = new ResultLoaderMap();
     loader.addLoader("id", null, null);
-    Object proxy = proxyFactory.createProxy(author, loader, new Configuration(), new DefaultObjectFactory(), new ArrayList<>(), new ArrayList<>());
+    Object proxy = proxyFactory.createProxy(author, loader, new Configuration(), new DefaultObjectFactory(),
+        new ArrayList<>(), new ArrayList<>());
     Author author2 = (Author) deserialize(serialize((Serializable) proxy));
     assertTrue(author2 instanceof Factory);
   }
@@ -55,19 +58,22 @@ class CglibProxyTest extends SerializableProxyTest {
     // yes, it must go in uppercase
     HashMap<String, ResultLoaderMap.LoadPair> unloadedProperties = new HashMap<>();
     unloadedProperties.put("ID", null);
-    Author author2 = (Author) ((CglibProxyFactory)proxyFactory).createDeserializationProxy(author, unloadedProperties, new DefaultObjectFactory(), new ArrayList<>(), new ArrayList<>());
+    Author author2 = (Author) ((CglibProxyFactory) proxyFactory).createDeserializationProxy(author, unloadedProperties,
+        new DefaultObjectFactory(), new ArrayList<>(), new ArrayList<>());
     Assertions.assertThrows(ExecutorException.class, author2::getId);
   }
 
   @Test
   void shouldLetCallALoadedProperty() {
-    Author author2 = (Author) ((CglibProxyFactory)proxyFactory).createDeserializationProxy(author, new HashMap<>(), new DefaultObjectFactory(), new ArrayList<>(), new ArrayList<>());
+    Author author2 = (Author) ((CglibProxyFactory) proxyFactory).createDeserializationProxy(author, new HashMap<>(),
+        new DefaultObjectFactory(), new ArrayList<>(), new ArrayList<>());
     assertEquals(999, author2.getId());
   }
 
   @Test
   void shouldSerizalizeADeserlizaliedProxy() throws Exception {
-    Object proxy = ((CglibProxyFactory)proxyFactory).createDeserializationProxy(author, new HashMap<>(), new DefaultObjectFactory(), new ArrayList<>(), new ArrayList<>());
+    Object proxy = ((CglibProxyFactory) proxyFactory).createDeserializationProxy(author, new HashMap<>(),
+        new DefaultObjectFactory(), new ArrayList<>(), new ArrayList<>());
     Author author2 = (Author) deserialize(serialize((Serializable) proxy));
     assertEquals(author, author2);
     assertNotEquals(author.getClass(), author2.getClass());

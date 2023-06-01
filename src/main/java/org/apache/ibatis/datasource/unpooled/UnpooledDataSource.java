@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -40,7 +40,7 @@ public class UnpooledDataSource implements DataSource {
 
   private ClassLoader driverClassLoader;
   private Properties driverProperties;
-  private static Map<String, Driver> registeredDrivers = new ConcurrentHashMap<>();
+  private static final Map<String, Driver> registeredDrivers = new ConcurrentHashMap<>();
 
   private String driver;
   private String url;
@@ -75,7 +75,8 @@ public class UnpooledDataSource implements DataSource {
     this.driverProperties = driverProperties;
   }
 
-  public UnpooledDataSource(ClassLoader driverClassLoader, String driver, String url, String username, String password) {
+  public UnpooledDataSource(ClassLoader driverClassLoader, String driver, String url, String username,
+      String password) {
     this.driverClassLoader = driverClassLoader;
     this.driver = driver;
     this.url = url;
@@ -188,6 +189,7 @@ public class UnpooledDataSource implements DataSource {
    * Gets the default network timeout.
    *
    * @return the default network timeout
+   *
    * @since 3.5.2
    */
   public Integer getDefaultNetworkTimeout() {
@@ -195,10 +197,12 @@ public class UnpooledDataSource implements DataSource {
   }
 
   /**
-   * Sets the default network timeout value to wait for the database operation to complete. See {@link Connection#setNetworkTimeout(java.util.concurrent.Executor, int)}
+   * Sets the default network timeout value to wait for the database operation to complete. See
+   * {@link Connection#setNetworkTimeout(java.util.concurrent.Executor, int)}
    *
    * @param defaultNetworkTimeout
    *          The time in milliseconds to wait for the database operation to complete.
+   *
    * @since 3.5.2
    */
   public void setDefaultNetworkTimeout(Integer defaultNetworkTimeout) {
@@ -236,7 +240,7 @@ public class UnpooledDataSource implements DataSource {
           driverType = Resources.classForName(driver);
         }
         // DriverManager requires the driver to be loaded via the system ClassLoader.
-        // http://www.kfu.com/~nsayer/Java/dyn-jdbc.html
+        // https://www.kfu.com/~nsayer/Java/dyn-jdbc.html
         Driver driverInstance = (Driver) driverType.getDeclaredConstructor().newInstance();
         DriverManager.registerDriver(new DriverProxy(driverInstance));
         registeredDrivers.put(driver, driverInstance);
@@ -259,7 +263,7 @@ public class UnpooledDataSource implements DataSource {
   }
 
   private static class DriverProxy implements Driver {
-    private Driver driver;
+    private final Driver driver;
 
     DriverProxy(Driver d) {
       this.driver = d;

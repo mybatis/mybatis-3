@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,7 +24,6 @@ import java.lang.annotation.Target;
 
 /**
  * The annotation that specify a method that provide an SQL for deleting record(s).
- *
  * <p>
  * <b>How to use:</b>
  *
@@ -55,7 +54,9 @@ public @interface DeleteProvider {
    * Specify a type that implements an SQL provider method.
    *
    * @return a type that implements an SQL provider method
+   *
    * @since 3.5.2
+   *
    * @see #type()
    */
   Class<?> value() default void.class;
@@ -67,15 +68,17 @@ public @interface DeleteProvider {
    * </p>
    *
    * @return a type that implements an SQL provider method
+   *
    * @see #value()
    */
   Class<?> type() default void.class;
 
+  // @formatter:off
   /**
    * Specify a method for providing an SQL.
-   *
    * <p>
    * Since 3.5.1, this attribute can omit.
+   * <p>
    * If this attribute omit, the MyBatis will call a method that decide by following rules.
    * <ul>
    *   <li>
@@ -91,17 +94,21 @@ public @interface DeleteProvider {
    *
    * @return a method name of method for providing an SQL
    */
+  // @formatter:on
   String method() default "";
 
   /**
    * @return A database id that correspond this provider
+   *
    * @since 3.5.5
    */
   String databaseId() default "";
 
   /**
    * The container annotation for {@link DeleteProvider}.
+   *
    * @author Kazuki Shimizu
+   *
    * @since 3.5.5
    */
   @Documented

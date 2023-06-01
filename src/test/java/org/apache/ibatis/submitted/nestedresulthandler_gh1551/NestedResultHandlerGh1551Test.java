@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -33,7 +33,8 @@ class NestedResultHandlerGh1551Test {
   @BeforeAll
   static void setUp() throws Exception {
     // create a SqlSessionFactory
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/nestedresulthandler_gh1551/mybatis-config.xml")) {
+    try (Reader reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/nestedresulthandler_gh1551/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
@@ -74,8 +75,10 @@ class NestedResultHandlerGh1551Test {
     sqlSessionFactory.getConfiguration().setUseColumnLabel(false);
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       ProductMapper mapper = sqlSession.getMapper(ProductMapper.class);
-      PersistenceException exception = Assertions.assertThrows(PersistenceException.class, () -> mapper.selectAllInfo("P001"));
-      Assertions.assertTrue(exception.getMessage().contains("Error attempting to get column 'ID' from result set.  Cause: java.sql.SQLSyntaxErrorException: incompatible data type in conversion: from SQL type VARCHAR to java.lang.Integer, value: 10000000000000000000000000000001"));
+      PersistenceException exception = Assertions.assertThrows(PersistenceException.class,
+          () -> mapper.selectAllInfo("P001"));
+      Assertions.assertTrue(exception.getMessage().contains(
+          "Error attempting to get column 'ID' from result set.  Cause: java.sql.SQLSyntaxErrorException: incompatible data type in conversion: from SQL type VARCHAR to java.lang.Integer, value: 10000000000000000000000000000001"));
     }
   }
 

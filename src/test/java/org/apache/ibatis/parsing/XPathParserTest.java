@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -32,7 +32,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
 class XPathParserTest {
-  private String resource = "resources/nodelet_test.xml";
+  private final String resource = "nodelet_test.xml";
 
   // InputStream Source
   @Test
@@ -213,43 +213,50 @@ class XPathParserTest {
 
   @Test
   void formatXNodeToString() {
-    XPathParser parser = new XPathParser("<users><user><id>100</id><name>Tom</name><age>30</age><cars><car index=\"1\">BMW</car><car index=\"2\">Audi</car><car index=\"3\">Benz</car></cars></user></users>");
+    XPathParser parser = new XPathParser(
+        "<users><user><id>100</id><name>Tom</name><age>30</age><cars><car index=\"1\">BMW</car><car index=\"2\">Audi</car><car index=\"3\">Benz</car></cars></user></users>");
     String usersNodeToString = parser.evalNode("/users").toString();
     String userNodeToString = parser.evalNode("/users/user").toString();
     String carsNodeToString = parser.evalNode("/users/user/cars").toString();
 
+    // @formatter:off
     String usersNodeToStringExpect =
-      "<users>\n" +
-      "    <user>\n" +
-      "        <id>100</id>\n" +
-      "        <name>Tom</name>\n" +
-      "        <age>30</age>\n" +
-      "        <cars>\n" +
-      "            <car index=\"1\">BMW</car>\n" +
-      "            <car index=\"2\">Audi</car>\n" +
-      "            <car index=\"3\">Benz</car>\n" +
-      "        </cars>\n" +
-      "    </user>\n" +
-      "</users>\n";
+      "<users>\n"
+      + "    <user>\n"
+      + "        <id>100</id>\n"
+      + "        <name>Tom</name>\n"
+      + "        <age>30</age>\n"
+      + "        <cars>\n"
+      + "            <car index=\"1\">BMW</car>\n"
+      + "            <car index=\"2\">Audi</car>\n"
+      + "            <car index=\"3\">Benz</car>\n"
+      + "        </cars>\n"
+      + "    </user>\n"
+      + "</users>\n";
+    // @formatter:on
 
+    // @formatter:off
     String userNodeToStringExpect =
-      "<user>\n" +
-      "    <id>100</id>\n" +
-      "    <name>Tom</name>\n" +
-      "    <age>30</age>\n" +
-      "    <cars>\n" +
-      "        <car index=\"1\">BMW</car>\n" +
-      "        <car index=\"2\">Audi</car>\n" +
-      "        <car index=\"3\">Benz</car>\n" +
-      "    </cars>\n" +
-      "</user>\n";
+      "<user>\n"
+      + "    <id>100</id>\n"
+      + "    <name>Tom</name>\n"
+      + "    <age>30</age>\n"
+      + "    <cars>\n"
+      + "        <car index=\"1\">BMW</car>\n"
+      + "        <car index=\"2\">Audi</car>\n"
+      + "        <car index=\"3\">Benz</car>\n"
+      + "    </cars>\n"
+      + "</user>\n";
+    // @formatter:on
 
-  String carsNodeToStringExpect =
-      "<cars>\n" +
-      "    <car index=\"1\">BMW</car>\n" +
-      "    <car index=\"2\">Audi</car>\n" +
-      "    <car index=\"3\">Benz</car>\n" +
-      "</cars>\n";
+    // @formatter:off
+    String carsNodeToStringExpect =
+      "<cars>\n"
+      + "    <car index=\"1\">BMW</car>\n"
+      + "    <car index=\"2\">Audi</car>\n"
+      + "    <car index=\"3\">Benz</car>\n"
+      + "</cars>\n";
+    // @formatter:on
 
     assertEquals(usersNodeToStringExpect, usersNodeToString);
     assertEquals(userNodeToStringExpect, userNodeToString);

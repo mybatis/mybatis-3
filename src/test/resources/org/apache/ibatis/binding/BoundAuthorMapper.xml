@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+
+       Copyright 2009-2022 the original author or authors.
+
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+
+          https://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
+-->
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.apache.ibatis.binding.BoundAuthorMapper">
+
+  <resultMap id="authorResultMap" type="org.apache.ibatis.domain.blog.Author">
+      <constructor>
+          <idArg column="author_id" javaType="java.lang.Integer"/>
+          <arg column="author_username" javaType="java.lang.String"/>
+          <arg column="author_password" javaType="java.lang.String"/>
+          <arg column="author_email" javaType="java.lang.String"/>
+          <arg column="author_bio" javaType="java.lang.String"/>
+          <arg column="favourite_section" javaType="org.apache.ibatis.domain.blog.Section"/>
+      </constructor>
+  </resultMap>
+
+  <resultMap id="authorResultMapWithProperties" type="org.apache.ibatis.domain.blog.Author">
+      <id column="author_id" property="id"/>
+      <result column="author_username" property="username" />
+      <result column="author_password" property="password"/>
+      <result column="author_email" property="email"/>
+      <result column="author_bio" property="bio"/>
+      <result column="favourite_section" property="favouriteSection" javaType="org.apache.ibatis.domain.blog.Section"/>
+  </resultMap>
+
+  <insert id="insertAuthor" parameterType="org.apache.ibatis.domain.blog.Author">
+    <selectKey keyProperty="id" resultType="int" order="BEFORE">
+      select CAST(RANDOM()*1000000 as INTEGER) a from SYSIBM.SYSDUMMY1
+    </selectKey>
+    insert into Author (id,username,password,email,bio,favourite_section)
+    values(
+    #{id}, #{username}, #{password}, #{email}, #{bio}, #{favouriteSection:VARCHAR}
+    )
+  </insert>
+
+  <insert id="insertAuthorInvalidSelectKey">
+    <selectKey keyProperty="id" resultType="int" order="BEFORE">
+      select CCAST(RANDOM()*1000000 as INTEGER) a from SYSIBM.SYSDUMMY1
+    </selectKey>
+    insert into Author (id,username,password,email,bio,favourite_section)
+    values(
+    #{id}, #{username}, #{password}, #{email}, #{bio}, #{favouriteSection:VARCHAR}
+    )
+  </insert>
+
+  <insert id="insertAuthorInvalidInsert">
+    <selectKey keyProperty="id" resultType="int" order="BEFORE">
+      select CAST(RANDOM()*1000000 as INTEGER) a from SYSIBM.SYSDUMMY1
+    </selectKey>
+    insert into Author (id,username,password,email,bio,favourite_section_xyz)
+    values(
+    #{id}, #{username}, #{password}, #{email}, #{bio}, #{favouriteSection:VARCHAR}
+    )
+  </insert>
+
+  <insert id="insertAuthorDynamic" parameterType="org.apache.ibatis.domain.blog.Author">
+    <selectKey keyProperty="id" resultType="int" order="BEFORE">
+      select CAST(RANDOM()*1000000 as INTEGER) a from SYSIBM.SYSDUMMY1
+    </selectKey>
+    insert into Author (id,username,password,email,bio,favourite_section)
+    values(
+    ${id}, #{username}, #{password}, #{email}, #{bio}, #{favouriteSection:VARCHAR}
+    )
+  </insert>
+
+  <select id="findPostsInList" parameterType="list" resultType="org.apache.ibatis.domain.blog.Post">
+    select * from post
+    where id in (#{list[0]},#{list[1]},#{list[2]})
+  </select>
+
+  <select id="findPostsInArray" parameterType="list" resultType="org.apache.ibatis.domain.blog.Post">
+    select * from post
+    where id in (#{array[0]},#{array[1]},#{array[2]})
+  </select>
+
+  <select id="findThreeSpecificPosts" parameterType="map" resultType="org.apache.ibatis.domain.blog.Post">
+    select * from post
+    where id in (#{one},#{two},#{2})
+  </select>
+
+
+</mapper>

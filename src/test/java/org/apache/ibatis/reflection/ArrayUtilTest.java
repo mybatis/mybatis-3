@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,13 +15,15 @@
  */
 package org.apache.ibatis.reflection;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
 
-class ArrayUtilTest extends ArrayUtil {
+class ArrayUtilTest {
 
   @Test
   void testHashCode() {
@@ -102,7 +104,7 @@ class ArrayUtilTest extends ArrayUtil {
     arr = new Object[] { "str" };
     assertEquals(Arrays.toString((Object[]) arr), ArrayUtil.toString(arr));
 
-    assertEquals(Integer.valueOf(1).toString(), ArrayUtil.toString(1));
+    assertEquals(Integer.toString(1), ArrayUtil.toString(1));
     assertEquals("null", ArrayUtil.toString(null));
   }
 

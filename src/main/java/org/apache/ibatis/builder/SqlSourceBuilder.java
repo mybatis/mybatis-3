@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -41,7 +41,8 @@ public class SqlSourceBuilder extends BaseBuilder {
   }
 
   public SqlSource parse(String originalSql, Class<?> parameterType, Map<String, Object> additionalParameters) {
-    ParameterMappingTokenHandler handler = new ParameterMappingTokenHandler(configuration, parameterType, additionalParameters);
+    ParameterMappingTokenHandler handler = new ParameterMappingTokenHandler(configuration, parameterType,
+        additionalParameters);
     GenericTokenParser parser = new GenericTokenParser("#{", "}", handler);
     String sql;
     if (configuration.isShrinkWhitespacesInSql()) {
@@ -72,7 +73,8 @@ public class SqlSourceBuilder extends BaseBuilder {
     private final Class<?> parameterType;
     private final MetaObject metaParameters;
 
-    public ParameterMappingTokenHandler(Configuration configuration, Class<?> parameterType, Map<String, Object> additionalParameters) {
+    public ParameterMappingTokenHandler(Configuration configuration, Class<?> parameterType,
+        Map<String, Object> additionalParameters) {
       super(configuration);
       this.parameterType = parameterType;
       this.metaParameters = configuration.newMetaObject(additionalParameters);
@@ -134,7 +136,8 @@ public class SqlSourceBuilder extends BaseBuilder {
         } else if ("expression".equals(name)) {
           throw new BuilderException("Expression based parameters are not supported yet");
         } else {
-          throw new BuilderException("An invalid property '" + name + "' was found in mapping #{" + content + "}.  Valid properties are " + PARAMETER_PROPERTIES);
+          throw new BuilderException("An invalid property '" + name + "' was found in mapping #{" + content
+              + "}.  Valid properties are " + PARAMETER_PROPERTIES);
         }
       }
       if (typeHandlerAlias != null) {
@@ -149,7 +152,8 @@ public class SqlSourceBuilder extends BaseBuilder {
       } catch (BuilderException ex) {
         throw ex;
       } catch (Exception ex) {
-        throw new BuilderException("Parsing error was found in mapping #{" + content + "}.  Check syntax #{property|(expression), var1=value1, var2=value2, ...} ", ex);
+        throw new BuilderException("Parsing error was found in mapping #{" + content
+            + "}.  Check syntax #{property|(expression), var1=value1, var2=value2, ...} ", ex);
       }
     }
   }

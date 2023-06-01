@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -52,7 +52,9 @@ public abstract class AbstractSQL<T> {
    *
    * @param sets
    *          the sets
+   *
    * @return the t
+   *
    * @since 3.4.2
    */
   public T SET(String... sets) {
@@ -77,7 +79,9 @@ public abstract class AbstractSQL<T> {
    *
    * @param columns
    *          the columns
+   *
    * @return the t
+   *
    * @since 3.4.2
    */
   public T INTO_COLUMNS(String... columns) {
@@ -90,7 +94,9 @@ public abstract class AbstractSQL<T> {
    *
    * @param values
    *          the values
+   *
    * @return the t
+   *
    * @since 3.4.2
    */
   public T INTO_VALUES(String... values) {
@@ -110,7 +116,9 @@ public abstract class AbstractSQL<T> {
    *
    * @param columns
    *          the columns
+   *
    * @return the t
+   *
    * @since 3.4.2
    */
   public T SELECT(String... columns) {
@@ -130,7 +138,9 @@ public abstract class AbstractSQL<T> {
    *
    * @param columns
    *          the columns
+   *
    * @return the t
+   *
    * @since 3.4.2
    */
   public T SELECT_DISTINCT(String... columns) {
@@ -155,7 +165,9 @@ public abstract class AbstractSQL<T> {
    *
    * @param tables
    *          the tables
+   *
    * @return the t
+   *
    * @since 3.4.2
    */
   public T FROM(String... tables) {
@@ -173,7 +185,9 @@ public abstract class AbstractSQL<T> {
    *
    * @param joins
    *          the joins
+   *
    * @return the t
+   *
    * @since 3.4.2
    */
   public T JOIN(String... joins) {
@@ -191,7 +205,9 @@ public abstract class AbstractSQL<T> {
    *
    * @param joins
    *          the joins
+   *
    * @return the t
+   *
    * @since 3.4.2
    */
   public T INNER_JOIN(String... joins) {
@@ -209,7 +225,9 @@ public abstract class AbstractSQL<T> {
    *
    * @param joins
    *          the joins
+   *
    * @return the t
+   *
    * @since 3.4.2
    */
   public T LEFT_OUTER_JOIN(String... joins) {
@@ -227,7 +245,9 @@ public abstract class AbstractSQL<T> {
    *
    * @param joins
    *          the joins
+   *
    * @return the t
+   *
    * @since 3.4.2
    */
   public T RIGHT_OUTER_JOIN(String... joins) {
@@ -245,7 +265,9 @@ public abstract class AbstractSQL<T> {
    *
    * @param joins
    *          the joins
+   *
    * @return the t
+   *
    * @since 3.4.2
    */
   public T OUTER_JOIN(String... joins) {
@@ -264,7 +286,9 @@ public abstract class AbstractSQL<T> {
    *
    * @param conditions
    *          the conditions
+   *
    * @return the t
+   *
    * @since 3.4.2
    */
   public T WHERE(String... conditions) {
@@ -293,7 +317,9 @@ public abstract class AbstractSQL<T> {
    *
    * @param columns
    *          the columns
+   *
    * @return the t
+   *
    * @since 3.4.2
    */
   public T GROUP_BY(String... columns) {
@@ -312,7 +338,9 @@ public abstract class AbstractSQL<T> {
    *
    * @param conditions
    *          the conditions
+   *
    * @return the t
+   *
    * @since 3.4.2
    */
   public T HAVING(String... conditions) {
@@ -331,7 +359,9 @@ public abstract class AbstractSQL<T> {
    *
    * @param columns
    *          the columns
+   *
    * @return the t
+   *
    * @since 3.4.2
    */
   public T ORDER_BY(String... columns) {
@@ -342,9 +372,13 @@ public abstract class AbstractSQL<T> {
   /**
    * Set the limit variable string(e.g. {@code "#{limit}"}).
    *
-   * @param variable a limit variable string
+   * @param variable
+   *          a limit variable string
+   *
    * @return a self instance
+   *
    * @see #OFFSET(String)
+   *
    * @since 3.5.2
    */
   public T LIMIT(String variable) {
@@ -356,9 +390,13 @@ public abstract class AbstractSQL<T> {
   /**
    * Set the limit value.
    *
-   * @param value an offset value
+   * @param value
+   *          an offset value
+   *
    * @return a self instance
+   *
    * @see #OFFSET(long)
+   *
    * @since 3.5.2
    */
   public T LIMIT(int value) {
@@ -368,9 +406,13 @@ public abstract class AbstractSQL<T> {
   /**
    * Set the offset variable string(e.g. {@code "#{offset}"}).
    *
-   * @param variable a offset variable string
+   * @param variable
+   *          a offset variable string
+   *
    * @return a self instance
+   *
    * @see #LIMIT(String)
+   *
    * @since 3.5.2
    */
   public T OFFSET(String variable) {
@@ -382,9 +424,13 @@ public abstract class AbstractSQL<T> {
   /**
    * Set the offset value.
    *
-   * @param value an offset value
+   * @param value
+   *          an offset value
+   *
    * @return a self instance
+   *
    * @see #LIMIT(int)
+   *
    * @since 3.5.2
    */
   public T OFFSET(long value) {
@@ -394,9 +440,13 @@ public abstract class AbstractSQL<T> {
   /**
    * Set the fetch first rows variable string(e.g. {@code "#{fetchFirstRows}"}).
    *
-   * @param variable a fetch first rows variable string
+   * @param variable
+   *          a fetch first rows variable string
+   *
    * @return a self instance
+   *
    * @see #OFFSET_ROWS(String)
+   *
    * @since 3.5.2
    */
   public T FETCH_FIRST_ROWS_ONLY(String variable) {
@@ -408,9 +458,13 @@ public abstract class AbstractSQL<T> {
   /**
    * Set the fetch first rows value.
    *
-   * @param value a fetch first rows value
+   * @param value
+   *          a fetch first rows value
+   *
    * @return a self instance
+   *
    * @see #OFFSET_ROWS(long)
+   *
    * @since 3.5.2
    */
   public T FETCH_FIRST_ROWS_ONLY(int value) {
@@ -420,9 +474,13 @@ public abstract class AbstractSQL<T> {
   /**
    * Set the offset rows variable string(e.g. {@code "#{offset}"}).
    *
-   * @param variable a offset rows variable string
+   * @param variable
+   *          a offset rows variable string
+   *
    * @return a self instance
+   *
    * @see #FETCH_FIRST_ROWS_ONLY(String)
+   *
    * @since 3.5.2
    */
   public T OFFSET_ROWS(String variable) {
@@ -434,9 +492,13 @@ public abstract class AbstractSQL<T> {
   /**
    * Set the offset rows value.
    *
-   * @param value an offset rows value
+   * @param value
+   *          an offset rows value
+   *
    * @return a self instance
+   *
    * @see #FETCH_FIRST_ROWS_ONLY(int)
+   *
    * @since 3.5.2
    */
   public T OFFSET_ROWS(long value) {
@@ -447,6 +509,7 @@ public abstract class AbstractSQL<T> {
    * used to add a new inserted row while do multi-row insert.
    *
    * @return the t
+   *
    * @since 3.5.2
    */
   public T ADD_ROW() {
@@ -475,7 +538,6 @@ public abstract class AbstractSQL<T> {
     private boolean empty = true;
 
     public SafeAppendable(Appendable a) {
-      super();
       this.appendable = a;
     }
 
@@ -500,7 +562,15 @@ public abstract class AbstractSQL<T> {
   private static class SQLStatement {
 
     public enum StatementType {
-      DELETE, INSERT, SELECT, UPDATE
+
+      DELETE,
+
+      INSERT,
+
+      SELECT,
+
+      UPDATE
+
     }
 
     private enum LimitingRowsStrategy {
@@ -564,7 +634,7 @@ public abstract class AbstractSQL<T> {
     }
 
     private void sqlClause(SafeAppendable builder, String keyword, List<String> parts, String open, String close,
-                           String conjunction) {
+        String conjunction) {
       if (!parts.isEmpty()) {
         if (!builder.isEmpty()) {
           builder.append("\n");

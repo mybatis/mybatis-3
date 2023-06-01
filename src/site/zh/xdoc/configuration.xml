@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2020 the original author or authors.
+       Copyright 2009-2023 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
        You may obtain a copy of the License at
 
-          http://www.apache.org/licenses/LICENSE-2.0
+          https://www.apache.org/licenses/LICENSE-2.0
 
        Unless required by applicable law or agreed to in writing, software
        distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,7 +17,7 @@
 
 -->
 <document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+          xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
 
   <properties>
     <title>MyBatis 3 | 配置</title>
@@ -94,7 +94,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
         属性中指定的配置文件次之，最低优先级的则是 properties 元素中指定的属性。</p>
 
         <p>
-		    从 MyBatis 3.4.2 开始，你可以为占位符指定一个默认值。例如：
+        从 MyBatis 3.4.2 开始，你可以为占位符指定一个默认值。例如：
         </p>
         <source><![CDATA[
 <dataSource type="POOLED">
@@ -103,7 +103,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
 </dataSource>]]></source>
 
         <p>
-		  这个特性默认是关闭的。要启用这个特性，需要添加一个特定的属性来开启这个特性。例如：
+      这个特性默认是关闭的。要启用这个特性，需要添加一个特定的属性来开启这个特性。例如：
         </p>
 
         <source><![CDATA[
@@ -255,7 +255,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 autoMappingUnknownColumnBehavior
               </td>
               <td>
-			  指定发现自动映射目标未知列（或未知属性类型）的行为。
+        指定发现自动映射目标未知列（或未知属性类型）的行为。
                 <ul>
                   <li><code>NONE</code>: 不做任何反应</li>
                   <li><code>WARNING</code>:
@@ -263,6 +263,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                   的日志等级必须设置为 <code>WARN</code>）</li>
                   <li><code>FAILING</code>: 映射失败 (抛出 <code>SqlSessionException</code>)</li>
                 </ul>
+                Note that there could be false-positives when `autoMappingBehavior` is set to `FULL`.
               </td>
               <td>
                 NONE, WARNING, FAILING
@@ -467,9 +468,9 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 returnInstanceForEmptyRow
               </td>
               <td>
-				当返回行的所有列都是空时，MyBatis默认返回 <code>null</code>。
-				当开启这个设置时，MyBatis会返回一个空实例。
-				请注意，它也适用于嵌套的结果集（如集合或关联）。（新增于 3.4.2）
+        当返回行的所有列都是空时，MyBatis默认返回 <code>null</code>。
+        当开启这个设置时，MyBatis会返回一个空实例。
+        请注意，它也适用于嵌套的结果集（如集合或关联）。（新增于 3.4.2）
               </td>
               <td>
                 true | false
@@ -500,7 +501,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 指定 MyBatis 所用日志的具体实现，未指定时将自动查找。
               </td>
               <td>
-                SLF4J | LOG4J | LOG4J2 | JDK_LOGGING | COMMONS_LOGGING | STDOUT_LOGGING | NO_LOGGING
+                SLF4J | LOG4J（3.5.9 起废弃） | LOG4J2 | JDK_LOGGING | COMMONS_LOGGING | STDOUT_LOGGING | NO_LOGGING
               </td>
               <td>
                 未设置
@@ -514,7 +515,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 指定 Mybatis 创建可延迟加载对象所用到的代理工具。
               </td>
               <td>
-                CGLIB | JAVASSIST
+                CGLIB （3.5.10 起废弃） | JAVASSIST
               </td>
               <td>
                 JAVASSIST （MyBatis 3.3 以上）
@@ -540,7 +541,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               </td>
               <td>
                 允许使用方法签名中的名称作为语句参数名称。
-		        为了使用该特性，你的项目必须采用 Java 8 编译，并且加上 <code>-parameters</code> 选项。（新增于 3.4.1）
+            为了使用该特性，你的项目必须采用 Java 8 编译，并且加上 <code>-parameters</code> 选项。（新增于 3.4.1）
               </td>
               <td>
                 true | false
@@ -555,8 +556,8 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               </td>
               <td>
                 指定一个提供 <code>Configuration</code> 实例的类。
-		            这个被返回的 Configuration 实例用来加载被反序列化对象的延迟加载属性值。
-		            这个类必须包含一个签名为<code>static Configuration getConfiguration()</code> 的方法。（新增于 3.2.3）
+                这个被返回的 Configuration 实例用来加载被反序列化对象的延迟加载属性值。
+                这个类必须包含一个签名为<code>static Configuration getConfiguration()</code> 的方法。（新增于 3.2.3）
               </td>
               <td>
                 一个类型别名或完全限定类名。
@@ -584,15 +585,42 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 defaultSqlProviderType
               </td>
               <td>
-                Specifies an sql provider class that holds provider method (Since 3.5.6).
-                This class apply to the <code>type</code>(or <code>value</code>) attribute on sql provider annotation(e.g. <code>@SelectProvider</code>),
-                when these attribute was omitted.
+                指定一个拥有 provider 方法的 sql provider 类 （新增于 3.5.6）.
+                这个类适用于指定 sql provider 注解上的<code>type</code>（或 <code>value</code>） 属性（当这些属性在注解中被忽略时）。 (e.g. <code>@SelectProvider</code>)
               </td>
               <td>
-                A type alias or fully qualified class name
+                类型别名或者全限定名
               </td>
               <td>
-                Not set
+                未设置
+              </td>
+            </tr>
+            <tr>
+              <td>
+                nullableOnForEach
+              </td>
+              <td>
+                为 'foreach' 标签的 'nullable' 属性指定默认值。（新增于 3.5.9）
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
+              </td>
+            </tr>
+            <tr>
+              <td>
+                argNameBasedConstructorAutoMapping
+              </td>
+              <td>
+               当应用构造器自动映射时，参数名称被用来搜索要映射的列，而不再依赖列的顺序。（新增于 3.5.10）
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
               </td>
             </tr>
           </tbody>
@@ -603,6 +631,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
         <source><![CDATA[<settings>
   <setting name="cacheEnabled" value="true"/>
   <setting name="lazyLoadingEnabled" value="true"/>
+  <setting name="aggressiveLazyLoading" value="true"/>
   <setting name="multipleResultSetsEnabled" value="true"/>
   <setting name="useColumnLabel" value="true"/>
   <setting name="useGeneratedKeys" value="false"/>
@@ -612,10 +641,21 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
   <setting name="defaultStatementTimeout" value="25"/>
   <setting name="defaultFetchSize" value="100"/>
   <setting name="safeRowBoundsEnabled" value="false"/>
+  <setting name="safeResultHandlerEnabled" value="true"/>
   <setting name="mapUnderscoreToCamelCase" value="false"/>
   <setting name="localCacheScope" value="SESSION"/>
   <setting name="jdbcTypeForNull" value="OTHER"/>
   <setting name="lazyLoadTriggerMethods" value="equals,clone,hashCode,toString"/>
+  <setting name="defaultScriptingLanguage" value="org.apache.ibatis.scripting.xmltags.XMLLanguageDriver"/>
+  <setting name="defaultEnumTypeHandler" value="org.apache.ibatis.type.EnumTypeHandler"/>
+  <setting name="callSettersOnNulls" value="false"/>
+  <setting name="returnInstanceForEmptyRow" value="false"/>
+  <setting name="logPrefix" value="exampleLogPreFix_"/>
+  <setting name="logImpl" value="SLF4J | LOG4J | LOG4J2 | JDK_LOGGING | COMMONS_LOGGING | STDOUT_LOGGING | NO_LOGGING"/>
+  <setting name="proxyFactory" value="CGLIB | JAVASSIST"/>
+  <setting name="vfsImpl" value="org.mybatis.example.YourselfVfsImpl"/>
+  <setting name="useActualParamName" value="true"/>
+  <setting name="configurationFactory" value="org.mybatis.example.ConfigurationFactory"/>
 </settings>]]></source>
 
       </subsection>
@@ -666,6 +706,22 @@ public class Author {
               </td>
               <td>
                 byte
+              </td>
+            </tr>
+            <tr>
+              <td>
+                _char (since 3.5.10)
+              </td>
+              <td>
+                char
+              </td>
+            </tr>
+            <tr>
+              <td>
+                _character (since 3.5.10)
+              </td>
+              <td>
+                char
               </td>
             </tr>
             <tr>
@@ -738,6 +794,22 @@ public class Author {
               </td>
               <td>
                 Byte
+              </td>
+            </tr>
+            <tr>
+              <td>
+                char (since 3.5.10)
+              </td>
+              <td>
+                Character
+              </td>
+            </tr>
+            <tr>
+              <td>
+                character (since 3.5.10)
+              </td>
+              <td>
+                Character
               </td>
             </tr>
             <tr>
@@ -822,10 +894,58 @@ public class Author {
             </tr>
             <tr>
               <td>
+                biginteger
+              </td>
+              <td>
+                BigInteger
+              </td>
+            </tr>
+            <tr>
+              <td>
                 object
               </td>
               <td>
                 Object
+              </td>
+            </tr>
+            <tr>
+              <td>
+                date[]
+              </td>
+              <td>
+                Date[]
+              </td>
+            </tr>
+            <tr>
+              <td>
+                decimal[]
+              </td>
+              <td>
+                BigDecimal[]
+              </td>
+            </tr>
+            <tr>
+              <td>
+                bigdecimal[]
+              </td>
+              <td>
+                BigDecimal[]
+              </td>
+            </tr>
+            <tr>
+              <td>
+                biginteger[]
+              </td>
+              <td>
+                BigInteger[]
+              </td>
+            </tr>
+            <tr>
+              <td>
+                object[]
+              </td>
+              <td>
+                Object[]
               </td>
             </tr>
             <tr>
@@ -1386,14 +1506,14 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
         <p>
           当在 <code>ResultMap</code> 中决定使用哪种类型处理器时，此时 Java
           类型是已知的（从结果类型中获得），但是 JDBC 类型是未知的。
-	      因此 Mybatis 使用 <code>javaType=[Java 类型], jdbcType=null</code>
+        因此 Mybatis 使用 <code>javaType=[Java 类型], jdbcType=null</code>
           的组合来选择一个类型处理器。
-	      这意味着使用 <code>@MappedJdbcTypes</code>
+        这意味着使用 <code>@MappedJdbcTypes</code>
           注解可以<i>限制</i>类型处理器的作用范围，并且可以确保，除非显式地设置，否则类型处理器在
           <code>ResultMap</code> 中将不会生效。
-	      如果希望能在 <code>ResultMap</code> 中隐式地使用类型处理器，那么设置
+        如果希望能在 <code>ResultMap</code> 中隐式地使用类型处理器，那么设置
           <code>@MappedJdbcTypes</code> 注解的 <code>includeNullJdbcType=true</code> 即可。
-	      然而从 Mybatis 3.4.0 开始，如果某个 Java 类型<b>只有一个</b>注册的类型处理器，即使没有设置 <code>includeNullJdbcType=true</code>，那么这个类型处理器也会是 <code>ResultMap</code> 使用 Java
+        然而从 Mybatis 3.4.0 开始，如果某个 Java 类型<b>只有一个</b>注册的类型处理器，即使没有设置 <code>includeNullJdbcType=true</code>，那么这个类型处理器也会是 <code>ResultMap</code> 使用 Java
           类型时的默认处理器。
         </p>
 
@@ -1454,39 +1574,39 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
         <p>（下一节才开始介绍映射器文件，如果你是首次阅读该文档，你可能需要先跳过这里，过会再来看。）</p>
         <source><![CDATA[<!DOCTYPE mapper
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.apache.ibatis.submitted.rounding.Mapper">
-	<resultMap type="org.apache.ibatis.submitted.rounding.User" id="usermap">
-		<id column="id" property="id"/>
-		<result column="name" property="name"/>
-		<result column="funkyNumber" property="funkyNumber"/>
-		<result column="roundingMode" property="roundingMode"/>
-	</resultMap>
+  <resultMap type="org.apache.ibatis.submitted.rounding.User" id="usermap">
+    <id column="id" property="id"/>
+    <result column="name" property="name"/>
+    <result column="funkyNumber" property="funkyNumber"/>
+    <result column="roundingMode" property="roundingMode"/>
+  </resultMap>
 
-	<select id="getUser" resultMap="usermap">
-		select * from users
-	</select>
-	<insert id="insert">
-	    insert into users (id, name, funkyNumber, roundingMode) values (
-	    	#{id}, #{name}, #{funkyNumber}, #{roundingMode}
-	    )
-	</insert>
+  <select id="getUser" resultMap="usermap">
+    select * from users
+  </select>
+  <insert id="insert">
+      insert into users (id, name, funkyNumber, roundingMode) values (
+        #{id}, #{name}, #{funkyNumber}, #{roundingMode}
+      )
+  </insert>
 
-	<resultMap type="org.apache.ibatis.submitted.rounding.User" id="usermap2">
-		<id column="id" property="id"/>
-		<result column="name" property="name"/>
-		<result column="funkyNumber" property="funkyNumber"/>
-		<result column="roundingMode" property="roundingMode" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
-	</resultMap>
-	<select id="getUser2" resultMap="usermap2">
-		select * from users2
-	</select>
-	<insert id="insert2">
-	    insert into users2 (id, name, funkyNumber, roundingMode) values (
-	    	#{id}, #{name}, #{funkyNumber}, #{roundingMode, typeHandler=org.apache.ibatis.type.EnumTypeHandler}
-	    )
-	</insert>
+  <resultMap type="org.apache.ibatis.submitted.rounding.User" id="usermap2">
+    <id column="id" property="id"/>
+    <result column="name" property="name"/>
+    <result column="funkyNumber" property="funkyNumber"/>
+    <result column="roundingMode" property="roundingMode" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
+  </resultMap>
+  <select id="getUser2" resultMap="usermap2">
+    select * from users2
+  </select>
+  <insert id="insert2">
+      insert into users2 (id, name, funkyNumber, roundingMode) values (
+        #{id}, #{name}, #{funkyNumber}, #{roundingMode, typeHandler=org.apache.ibatis.type.EnumTypeHandler}
+      )
+  </insert>
 
 </mapper>
 ]]></source>
@@ -1499,15 +1619,22 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
           如果想覆盖对象工厂的默认行为，可以通过创建自己的对象工厂来实现。比如：</p>
         <source><![CDATA[// ExampleObjectFactory.java
 public class ExampleObjectFactory extends DefaultObjectFactory {
-  public Object create(Class type) {
+  @Override
+  public <T> T create(Class<T> type) {
     return super.create(type);
   }
-  public Object create(Class type, List<Class> constructorArgTypes, List<Object> constructorArgs) {
+
+  @Override
+  public <T> T create(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
     return super.create(type, constructorArgTypes, constructorArgs);
   }
+
+  @Override
   public void setProperties(Properties properties) {
     super.setProperties(properties);
   }
+
+  @Override
   public <T> boolean isCollection(Class<T> type) {
     return Collection.class.isAssignableFrom(type);
   }}
@@ -1559,12 +1686,16 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
   args = {MappedStatement.class,Object.class})})
 public class ExamplePlugin implements Interceptor {
   private Properties properties = new Properties();
+
+  @Override
   public Object intercept(Invocation invocation) throws Throwable {
     // implement pre processing if need
     Object returnObject = invocation.proceed();
     // implement post processing if need
     return returnObject;
   }
+
+  @Override
   public void setProperties(Properties properties) {
     this.properties = properties;
   }
@@ -1658,7 +1789,10 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, propert
         <p>在 MyBatis 中有两种类型的事务管理器（也就是 type="[JDBC|MANAGED]"）：</p>
         <ul>
           <li>
-            JDBC – 这个配置直接使用了 JDBC 的提交和回滚设施，它依赖从数据源获得的连接来管理事务作用域。
+            JDBC – 这个配置直接使用了 JDBC 的提交和回滚功能，它依赖从数据源获得的连接来管理事务作用域。默认情况下，为了与某些驱动程序兼容，它在关闭连接时启用自动提交。然而，对于某些驱动程序来说，启用自动提交不仅是不必要的，而且是一个代价高昂的操作。因此，从 3.5.10 版本开始，你可以通过将 "skipSetAutoCommitOnClose" 属性设置为 "true" 来跳过这个步骤。例如：
+            <source><![CDATA[<transactionManager type="JDBC">
+  <property name="skipSetAutoCommitOnClose" value="true"/>
+</transactionManager>]]></source>
           </li>
           <li>
             MANAGED – 这个配置几乎没做什么。它从不提交或回滚一个连接，而是让容器来管理事务的整个生命周期（比如 JEE 应用服务器的上下文）。
@@ -1880,7 +2014,7 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
   <mapper class="org.mybatis.builder.PostMapper"/>
 </mappers>]]></source>
 
-        <source><![CDATA[<!-- 将包内的映射器接口实现全部注册为映射器 -->
+        <source><![CDATA[<!-- 将包内的映射器接口全部注册为映射器 -->
 <mappers>
   <package name="org.mybatis.builder"/>
 </mappers>]]></source>

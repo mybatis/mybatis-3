@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2021 the original author or authors.
+       Copyright 2009-2023 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
        You may obtain a copy of the License at
 
-          http://www.apache.org/licenses/LICENSE-2.0
+          https://www.apache.org/licenses/LICENSE-2.0
 
        Unless required by applicable law or agreed to in writing, software
        distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,7 +17,7 @@
 
 -->
 <document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+      xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
 
   <properties>
     <title>MyBatis 3 | Mapper XML ファイル</title>
@@ -231,6 +231,11 @@ ps.setInt(1,id);]]></source>
             <tr>
               <td><code>resultSets</code></td>
               <td>複数の ResultSet を利用する場合にのみ有効です。ステートメントが返す ResultSet にそれぞれ任意の名前を付けてリストアップします。名前はカンマで区切ります。
+              </td>
+            </tr>
+            <tr>
+              <td><code>affectData</code></td>
+              <td>ResultSet を返す INSERT, UPDATE, DELETE 文を記述する場合に true をセットします。これによりトランザクション制御が正しく実行されるようになります。<a href="./java-api.html#transaction-control-methods">トランザクションを制御するメソッド</a> も参照してください。 デフォルト： <code>false</code> （3.5.12 以降）
               </td>
             </tr>
           </tbody>
@@ -453,6 +458,18 @@ ps.setInt(1,id);]]></source>
             </tr>
           </tbody>
         </table>
+
+        <p>
+          例外として、INSERT, UPDATE, DELETE 文から ResultSet を返す SQL 文（PostgreSQL, MariaDB の <code>RETURNING</code> , MS SQL Server の <code>OUTPUT</code> など）で結果をマップするためには <code><![CDATA[<select />]]></code> を使用する必要があります。
+        </p>
+
+        <source><![CDATA[<select id="insertAndGetAuthor" resultType="domain.blog.Author"
+      affectData="true" flushCache="true">
+  insert into Author (username, password, email, bio)
+  values (#{username}, #{password}, #{email}, #{bio})
+  returning id, username, password, email, bio
+</select>]]></source>
+
       </subsection>
 
       <subsection name="sql">
@@ -739,8 +756,8 @@ public class User {
 
         <source><![CDATA[<resultMap id="userResultMap" type="User">
   <id property="id" column="user_id" />
-  <result property="username" column="username"/>
-  <result property="password" column="password"/>
+  <result property="username" column="user_name"/>
+  <result property="password" column="hashed_password"/>
 </resultMap>]]></source>
 
         <p>
@@ -1085,7 +1102,7 @@ public class User {
 </constructor>]]></source>
 
         <p>
-          引数と同じ名前、同じ型を持つプロパティが存在する場合 <code>javaType</code> は省略可能です。
+          引数と同じ名前、同じ型を持つ書き込み可能なプロパティが存在する場合 <code>javaType</code> は省略可能です。
         </p>
 
         <p>

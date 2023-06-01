@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -106,11 +106,10 @@ public class ParameterExpression extends HashMap<String, String> {
   private void jdbcType(String expression, int p) {
     int left = skipWS(expression, p);
     int right = skipUntil(expression, left, ",");
-    if (right > left) {
-      put("jdbcType", trimmedStr(expression, left, right));
-    } else {
+    if (right <= left) {
       throw new BuilderException("Parsing error in {" + expression + "} in position " + p);
     }
+    put("jdbcType", trimmedStr(expression, left, right));
     option(expression, right + 1);
   }
 

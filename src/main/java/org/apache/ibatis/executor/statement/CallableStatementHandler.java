@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -40,7 +40,8 @@ import org.apache.ibatis.type.JdbcType;
  */
 public class CallableStatementHandler extends BaseStatementHandler {
 
-  public CallableStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
+  public CallableStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameter,
+      RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
     super(executor, mappedStatement, parameter, rowBounds, resultHandler, boundSql);
   }
 
@@ -85,9 +86,8 @@ public class CallableStatementHandler extends BaseStatementHandler {
     String sql = boundSql.getSql();
     if (mappedStatement.getResultSetType() == ResultSetType.DEFAULT) {
       return connection.prepareCall(sql);
-    } else {
-      return connection.prepareCall(sql, mappedStatement.getResultSetType().getValue(), ResultSet.CONCUR_READ_ONLY);
     }
+    return connection.prepareCall(sql, mappedStatement.getResultSetType().getValue(), ResultSet.CONCUR_READ_ONLY);
   }
 
   @Override
@@ -102,16 +102,18 @@ public class CallableStatementHandler extends BaseStatementHandler {
       ParameterMapping parameterMapping = parameterMappings.get(i);
       if (parameterMapping.getMode() == ParameterMode.OUT || parameterMapping.getMode() == ParameterMode.INOUT) {
         if (null == parameterMapping.getJdbcType()) {
-          throw new ExecutorException("The JDBC Type must be specified for output parameter.  Parameter: " + parameterMapping.getProperty());
+          throw new ExecutorException(
+              "The JDBC Type must be specified for output parameter.  Parameter: " + parameterMapping.getProperty());
+        }
+        if (parameterMapping.getNumericScale() != null && (parameterMapping.getJdbcType() == JdbcType.NUMERIC
+            || parameterMapping.getJdbcType() == JdbcType.DECIMAL)) {
+          cs.registerOutParameter(i + 1, parameterMapping.getJdbcType().TYPE_CODE, parameterMapping.getNumericScale());
         } else {
-          if (parameterMapping.getNumericScale() != null && (parameterMapping.getJdbcType() == JdbcType.NUMERIC || parameterMapping.getJdbcType() == JdbcType.DECIMAL)) {
-            cs.registerOutParameter(i + 1, parameterMapping.getJdbcType().TYPE_CODE, parameterMapping.getNumericScale());
+          if (parameterMapping.getJdbcTypeName() == null) {
+            cs.registerOutParameter(i + 1, parameterMapping.getJdbcType().TYPE_CODE);
           } else {
-            if (parameterMapping.getJdbcTypeName() == null) {
-              cs.registerOutParameter(i + 1, parameterMapping.getJdbcType().TYPE_CODE);
-            } else {
-              cs.registerOutParameter(i + 1, parameterMapping.getJdbcType().TYPE_CODE, parameterMapping.getJdbcTypeName());
-            }
+            cs.registerOutParameter(i + 1, parameterMapping.getJdbcType().TYPE_CODE,
+                parameterMapping.getJdbcTypeName());
           }
         }
       }

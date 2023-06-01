@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -29,7 +29,7 @@ import org.apache.ibatis.reflection.ExceptionUtil;
 class PooledConnection implements InvocationHandler {
 
   private static final String CLOSE = "close";
-  private static final Class<?>[] IFACES = new Class<?>[] { Connection.class };
+  private static final Class<?>[] IFACES = { Connection.class };
 
   private final int hashCode;
   private final PooledDataSource dataSource;
@@ -215,13 +215,15 @@ class PooledConnection implements InvocationHandler {
    *
    * @param obj
    *          - the other connection to test for equality
+   *
    * @see Object#equals(Object)
    */
   @Override
   public boolean equals(Object obj) {
     if (obj instanceof PooledConnection) {
       return realConnection.hashCode() == ((PooledConnection) obj).realConnection.hashCode();
-    } else if (obj instanceof Connection) {
+    }
+    if (obj instanceof Connection) {
       return hashCode == obj.hashCode();
     } else {
       return false;
@@ -237,6 +239,7 @@ class PooledConnection implements InvocationHandler {
    *          - the method to be executed
    * @param args
    *          - the parameters to be passed to the method
+   *
    * @see java.lang.reflect.InvocationHandler#invoke(Object, java.lang.reflect.Method, Object[])
    */
   @Override

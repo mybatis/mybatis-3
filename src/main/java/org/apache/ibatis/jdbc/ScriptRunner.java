@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -41,7 +41,8 @@ public class ScriptRunner {
 
   private static final String DEFAULT_DELIMITER = ";";
 
-  private static final Pattern DELIMITER_PATTERN = Pattern.compile("^\\s*((--)|(//))?\\s*(//)?\\s*@DELIMITER\\s+([^\\s]+)", Pattern.CASE_INSENSITIVE);
+  private static final Pattern DELIMITER_PATTERN = Pattern
+      .compile("^\\s*((--)|(//))?\\s*(//)?\\s*@DELIMITER\\s+([^\\s]+)", Pattern.CASE_INSENSITIVE);
 
   private final Connection connection;
 
@@ -87,6 +88,7 @@ public class ScriptRunner {
    *
    * @param escapeProcessing
    *          the new escape processing
+   *
    * @since 3.1.1
    */
   public void setEscapeProcessing(boolean escapeProcessing) {
@@ -246,6 +248,8 @@ public class ScriptRunner {
       }
       try {
         boolean hasResults = statement.execute(sql);
+        // DO NOT try to 'imporove' the condition even if IDE tells you to!
+        // It's important that getUpdateCount() is called here.
         while (!(!hasResults && statement.getUpdateCount() == -1)) {
           checkWarnings(statement);
           printResults(statement, hasResults);
@@ -256,10 +260,9 @@ public class ScriptRunner {
       } catch (SQLException e) {
         if (stopOnError) {
           throw e;
-        } else {
-          String message = "Error executing: " + command + ".  Cause: " + e;
-          printlnError(message);
         }
+        String message = "Error executing: " + command + ".  Cause: " + e;
+        printlnError(message);
       }
     }
   }

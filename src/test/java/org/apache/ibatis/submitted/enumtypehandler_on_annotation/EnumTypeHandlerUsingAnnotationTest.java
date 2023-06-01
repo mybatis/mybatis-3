@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -42,87 +42,88 @@ import org.junit.jupiter.api.Test;
  */
 class EnumTypeHandlerUsingAnnotationTest {
 
-    private static SqlSessionFactory sqlSessionFactory;
-    private SqlSession sqlSession;
+  private static SqlSessionFactory sqlSessionFactory;
+  private SqlSession sqlSession;
 
-    @BeforeAll
-    static void initDatabase() throws Exception {
-        try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/enumtypehandler_on_annotation/mybatis-config.xml")) {
-            sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-            sqlSessionFactory.getConfiguration().getMapperRegistry().addMapper(PersonMapper.class);
-        }
-
-        BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-                "org/apache/ibatis/submitted/enumtypehandler_on_annotation/CreateDB.sql");
+  @BeforeAll
+  static void initDatabase() throws Exception {
+    try (Reader reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/enumtypehandler_on_annotation/mybatis-config.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+      sqlSessionFactory.getConfiguration().getMapperRegistry().addMapper(PersonMapper.class);
     }
 
-    @BeforeEach
-    void openSqlSession() {
-        this.sqlSession = sqlSessionFactory.openSession();
-    }
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/enumtypehandler_on_annotation/CreateDB.sql");
+  }
 
-    @AfterEach
-    void closeSqlSession() {
-        sqlSession.close();
-    }
+  @BeforeEach
+  void openSqlSession() {
+    this.sqlSession = sqlSessionFactory.openSession();
+  }
 
-    @Test
-    void testForArg() {
-        PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
-        {
-            Person person = personMapper.findOneUsingConstructor(1);
-            assertThat(person.getId()).isEqualTo(1);
-            assertThat(person.getFirstName()).isEqualTo("John");
-            assertThat(person.getLastName()).isEqualTo("Smith");
-            assertThat(person.getPersonType()).isEqualTo(Person.PersonType.PERSON); // important
-        }
-        {
-            Person employee = personMapper.findOneUsingConstructor(2);
-            assertThat(employee.getId()).isEqualTo(2);
-            assertThat(employee.getFirstName()).isEqualTo("Mike");
-            assertThat(employee.getLastName()).isEqualTo("Jordan");
-            assertThat(employee.getPersonType()).isEqualTo(Person.PersonType.EMPLOYEE); // important
-        }
-    }
+  @AfterEach
+  void closeSqlSession() {
+    sqlSession.close();
+  }
 
-    @Test
-    void testForResult() {
-        PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
-        {
-            Person person = personMapper.findOneUsingSetter(1);
-            assertThat(person.getId()).isEqualTo(1);
-            assertThat(person.getFirstName()).isEqualTo("John");
-            assertThat(person.getLastName()).isEqualTo("Smith");
-            assertThat(person.getPersonType()).isEqualTo(Person.PersonType.PERSON); // important
-        }
-        {
-            Person employee = personMapper.findOneUsingSetter(2);
-            assertThat(employee.getId()).isEqualTo(2);
-            assertThat(employee.getFirstName()).isEqualTo("Mike");
-            assertThat(employee.getLastName()).isEqualTo("Jordan");
-            assertThat(employee.getPersonType()).isEqualTo(Person.PersonType.EMPLOYEE); // important
-        }
+  @Test
+  void testForArg() {
+    PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
+    {
+      Person person = personMapper.findOneUsingConstructor(1);
+      assertThat(person.getId()).isEqualTo(1);
+      assertThat(person.getFirstName()).isEqualTo("John");
+      assertThat(person.getLastName()).isEqualTo("Smith");
+      assertThat(person.getPersonType()).isEqualTo(Person.PersonType.PERSON); // important
     }
+    {
+      Person employee = personMapper.findOneUsingConstructor(2);
+      assertThat(employee.getId()).isEqualTo(2);
+      assertThat(employee.getFirstName()).isEqualTo("Mike");
+      assertThat(employee.getLastName()).isEqualTo("Jordan");
+      assertThat(employee.getPersonType()).isEqualTo(Person.PersonType.EMPLOYEE); // important
+    }
+  }
 
-    @Test
-    void testForTypeDiscriminator() {
-        PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
-        {
-            Person person = personMapper.findOneUsingTypeDiscriminator(1);
-            assertThat(person.getClass()).isEqualTo(Person.class); // important
-            assertThat(person.getId()).isEqualTo(1);
-            assertThat(person.getFirstName()).isEqualTo("John");
-            assertThat(person.getLastName()).isEqualTo("Smith");
-            assertThat(person.getPersonType()).isEqualTo(Person.PersonType.PERSON);
-        }
-        {
-            Person employee = personMapper.findOneUsingTypeDiscriminator(2);
-            assertThat(employee.getClass()).isEqualTo(Employee.class); // important
-            assertThat(employee.getId()).isEqualTo(2);
-            assertThat(employee.getFirstName()).isEqualTo("Mike");
-            assertThat(employee.getLastName()).isEqualTo("Jordan");
-            assertThat(employee.getPersonType()).isEqualTo(Person.PersonType.EMPLOYEE);
-        }
+  @Test
+  void testForResult() {
+    PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
+    {
+      Person person = personMapper.findOneUsingSetter(1);
+      assertThat(person.getId()).isEqualTo(1);
+      assertThat(person.getFirstName()).isEqualTo("John");
+      assertThat(person.getLastName()).isEqualTo("Smith");
+      assertThat(person.getPersonType()).isEqualTo(Person.PersonType.PERSON); // important
     }
+    {
+      Person employee = personMapper.findOneUsingSetter(2);
+      assertThat(employee.getId()).isEqualTo(2);
+      assertThat(employee.getFirstName()).isEqualTo("Mike");
+      assertThat(employee.getLastName()).isEqualTo("Jordan");
+      assertThat(employee.getPersonType()).isEqualTo(Person.PersonType.EMPLOYEE); // important
+    }
+  }
+
+  @Test
+  void testForTypeDiscriminator() {
+    PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
+    {
+      Person person = personMapper.findOneUsingTypeDiscriminator(1);
+      assertThat(person.getClass()).isEqualTo(Person.class); // important
+      assertThat(person.getId()).isEqualTo(1);
+      assertThat(person.getFirstName()).isEqualTo("John");
+      assertThat(person.getLastName()).isEqualTo("Smith");
+      assertThat(person.getPersonType()).isEqualTo(Person.PersonType.PERSON);
+    }
+    {
+      Person employee = personMapper.findOneUsingTypeDiscriminator(2);
+      assertThat(employee.getClass()).isEqualTo(Employee.class); // important
+      assertThat(employee.getId()).isEqualTo(2);
+      assertThat(employee.getFirstName()).isEqualTo("Mike");
+      assertThat(employee.getLastName()).isEqualTo("Jordan");
+      assertThat(employee.getPersonType()).isEqualTo(Person.PersonType.EMPLOYEE);
+    }
+  }
 
 }

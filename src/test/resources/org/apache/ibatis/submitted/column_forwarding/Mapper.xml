@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+       Copyright 2009-2022 the original author or authors.
+
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+
+          https://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
+-->
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.apache.ibatis.submitted.column_forwarding.Mapper">
+
+    <select id="getUser" parameterType="map" resultMap="userResult">
+        select * from users where id=#{id}
+    </select>
+
+    <select id="getGroup" parameterType="map" resultMap="groupResult">
+        select * from groups where id=#{id} and state=#{state}
+    </select>
+
+    <resultMap id="userResult"
+        type="org.apache.ibatis.submitted.column_forwarding.User">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="state" property="state" />
+        <association property="group" column="{id=group_id,state=state}" select="getGroup" javaType="org.apache.ibatis.submitted.column_forwarding.Group" />
+    </resultMap>
+
+    <resultMap id="groupResult"
+        type="org.apache.ibatis.submitted.column_forwarding.Group">
+        <id column="id" property="id" />
+        <result column="state" property="state" />
+    </resultMap>
+</mapper>

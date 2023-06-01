@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -40,8 +40,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 
 /**
- * The default implementation for {@link SqlSession}.
- * Note that this class is not Thread-Safe.
+ * The default implementation for {@link SqlSession}. Note that this class is not Thread-Safe.
  *
  * @author Clinton Begin
  */
@@ -76,8 +75,10 @@ public class DefaultSqlSession implements SqlSession {
     List<T> list = this.selectList(statement, parameter);
     if (list.size() == 1) {
       return list.get(0);
-    } else if (list.size() > 1) {
-      throw new TooManyResultsException("Expected one result (or null) to be returned by selectOne(), but found: " + list.size());
+    }
+    if (list.size() > 1) {
+      throw new TooManyResultsException(
+          "Expected one result (or null) to be returned by selectOne(), but found: " + list.size());
     } else {
       return null;
     }
@@ -97,7 +98,7 @@ public class DefaultSqlSession implements SqlSession {
   public <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowBounds) {
     final List<? extends V> list = selectList(statement, parameter, rowBounds);
     final DefaultMapResultHandler<K, V> mapResultHandler = new DefaultMapResultHandler<>(mapKey,
-            configuration.getObjectFactory(), configuration.getObjectWrapperFactory(), configuration.getReflectorFactory());
+        configuration.getObjectFactory(), configuration.getObjectWrapperFactory(), configuration.getReflectorFactory());
     final DefaultResultContext<V> context = new DefaultResultContext<>();
     for (V o : list) {
       context.nextResultObject(o);
@@ -120,6 +121,7 @@ public class DefaultSqlSession implements SqlSession {
   public <T> Cursor<T> selectCursor(String statement, Object parameter, RowBounds rowBounds) {
     try {
       MappedStatement ms = configuration.getMappedStatement(statement);
+      dirty |= ms.isDirtySelect();
       Cursor<T> cursor = executor.queryCursor(ms, wrapCollection(parameter), rowBounds);
       registerCursor(cursor);
       return cursor;
@@ -148,6 +150,7 @@ public class DefaultSqlSession implements SqlSession {
   private <E> List<E> selectList(String statement, Object parameter, RowBounds rowBounds, ResultHandler handler) {
     try {
       MappedStatement ms = configuration.getMappedStatement(statement);
+      dirty |= ms.isDirtySelect();
       return executor.query(ms, wrapCollection(parameter), rowBounds, handler);
     } catch (Exception e) {
       throw ExceptionFactory.wrapException("Error querying database.  Cause: " + e, e);
@@ -310,7 +313,7 @@ public class DefaultSqlSession implements SqlSession {
   }
 
   private boolean isCommitOrRollbackRequired(boolean force) {
-    return (!autoCommit && dirty) || force;
+    return !autoCommit && dirty || force;
   }
 
   private Object wrapCollection(final Object object) {

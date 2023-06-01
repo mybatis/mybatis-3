@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,10 +24,9 @@ import org.apache.ibatis.reflection.property.PropertyTokenizer;
 import org.apache.ibatis.session.Configuration;
 
 /**
- * An actual SQL String got from an {@link SqlSource} after having processed any dynamic content.
- * The SQL may have SQL placeholders "?" and an list (ordered) of an parameter mappings
- * with the additional information for each parameter (at least the property name of the input object to read
- * the value from).
+ * An actual SQL String got from an {@link SqlSource} after having processed any dynamic content. The SQL may have SQL
+ * placeholders "?" and a list (ordered) of a parameter mappings with the additional information for each parameter (at
+ * least the property name of the input object to read the value from).
  * <p>
  * Can also have additional parameters that are created by the dynamic language (for loops, bind...).
  *
@@ -41,7 +40,8 @@ public class BoundSql {
   private final Map<String, Object> additionalParameters;
   private final MetaObject metaParameters;
 
-  public BoundSql(Configuration configuration, String sql, List<ParameterMapping> parameterMappings, Object parameterObject) {
+  public BoundSql(Configuration configuration, String sql, List<ParameterMapping> parameterMappings,
+      Object parameterObject) {
     this.sql = sql;
     this.parameterMappings = parameterMappings;
     this.parameterObject = parameterObject;
@@ -72,5 +72,9 @@ public class BoundSql {
 
   public Object getAdditionalParameter(String name) {
     return metaParameters.getValue(name);
+  }
+
+  public Map<String, Object> getAdditionalParameters() {
+    return additionalParameters;
   }
 }

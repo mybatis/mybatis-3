@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -30,86 +30,84 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class BlobTest {
-    private static SqlSessionFactory sqlSessionFactory;
+  private static SqlSessionFactory sqlSessionFactory;
 
-    @BeforeAll
-    static void initDatabase() throws Exception {
-        try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/blobtest/MapperConfig.xml")) {
-            sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-        }
-
-        BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-                "org/apache/ibatis/submitted/blobtest/CreateDB.sql");
+  @BeforeAll
+  static void initDatabase() throws Exception {
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/blobtest/MapperConfig.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
-    @Test
-    /*
-     * This test demonstrates the use of type aliases for primitive types
-     * in constructor based result maps
-     */
-    void testInsertBlobThenSelectAll() {
-        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-            BlobMapper blobMapper = sqlSession.getMapper(BlobMapper.class);
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/blobtest/CreateDB.sql");
+  }
 
-            byte[] myblob = new byte[] {1, 2, 3, 4, 5};
-            BlobRecord blobRecord = new BlobRecord(1, myblob);
-            int rows = blobMapper.insert(blobRecord);
-            assertEquals(1, rows);
+  @Test
+  /*
+   * This test demonstrates the use of type aliases for primitive types in constructor based result maps
+   */
+  void testInsertBlobThenSelectAll() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      BlobMapper blobMapper = sqlSession.getMapper(BlobMapper.class);
 
-            // NPE here due to unresolved type handler
-            List<BlobRecord> results = blobMapper.selectAll();
+      byte[] myblob = { 1, 2, 3, 4, 5 };
+      BlobRecord blobRecord = new BlobRecord(1, myblob);
+      int rows = blobMapper.insert(blobRecord);
+      assertEquals(1, rows);
 
-            assertEquals(1, results.size());
-            BlobRecord result = results.get(0);
-            assertEquals (blobRecord.getId(), result.getId());
-            assertTrue (blobsAreEqual(blobRecord.getBlob(), result.getBlob()));
-        }
+      // NPE here due to unresolved type handler
+      List<BlobRecord> results = blobMapper.selectAll();
+
+      assertEquals(1, results.size());
+      BlobRecord result = results.get(0);
+      assertEquals(blobRecord.getId(), result.getId());
+      assertTrue(blobsAreEqual(blobRecord.getBlob(), result.getBlob()));
+    }
+  }
+
+  @Test
+  /*
+   * This test demonstrates the use of type aliases for primitive types in constructor based result maps
+   */
+  void testInsertBlobObjectsThenSelectAll() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      BlobMapper blobMapper = sqlSession.getMapper(BlobMapper.class);
+
+      Byte[] myblob = { 1, 2, 3, 4, 5 };
+      BlobRecord blobRecord = new BlobRecord(1, myblob);
+      int rows = blobMapper.insert(blobRecord);
+      assertEquals(1, rows);
+
+      // NPE here due to unresolved type handler
+      List<BlobRecord> results = blobMapper.selectAllWithBlobObjects();
+
+      assertEquals(1, results.size());
+      BlobRecord result = results.get(0);
+      assertEquals(blobRecord.getId(), result.getId());
+      assertTrue(blobsAreEqual(blobRecord.getBlob(), result.getBlob()));
+    }
+  }
+
+  static boolean blobsAreEqual(byte[] blob1, byte[] blob2) {
+    if (blob1 == null) {
+      return blob2 == null;
     }
 
-    @Test
-    /*
-     * This test demonstrates the use of type aliases for primitive types
-     * in constructor based result maps
-     */
-    void testInsertBlobObjectsThenSelectAll() {
-        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-            BlobMapper blobMapper = sqlSession.getMapper(BlobMapper.class);
-
-            Byte[] myblob = new Byte[] {1, 2, 3, 4, 5};
-            BlobRecord blobRecord = new BlobRecord(1, myblob);
-            int rows = blobMapper.insert(blobRecord);
-            assertEquals(1, rows);
-
-            // NPE here due to unresolved type handler
-            List<BlobRecord> results = blobMapper.selectAllWithBlobObjects();
-
-            assertEquals(1, results.size());
-            BlobRecord result = results.get(0);
-            assertEquals (blobRecord.getId(), result.getId());
-            assertTrue (blobsAreEqual(blobRecord.getBlob(), result.getBlob()));
-        }
+    if (blob2 == null) {
+      return blob1 == null;
     }
 
-    static boolean blobsAreEqual(byte[] blob1, byte[] blob2) {
-        if (blob1 == null) {
-            return blob2 == null;
+    boolean rc = blob1.length == blob2.length;
+
+    if (rc) {
+      for (int i = 0; i < blob1.length; i++) {
+        if (blob1[i] != blob2[i]) {
+          rc = false;
+          break;
         }
-
-        if (blob2 == null) {
-            return blob1 == null;
-        }
-
-        boolean rc = blob1.length == blob2.length;
-
-        if (rc) {
-            for (int i = 0; i < blob1.length; i++) {
-                if (blob1[i] != blob2[i]) {
-                    rc = false;
-                    break;
-                }
-            }
-        }
-
-        return rc;
+      }
     }
+
+    return rc;
+  }
 }

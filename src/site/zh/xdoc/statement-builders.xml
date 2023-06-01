@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2020 the original author or authors.
+       Copyright 2009-2023 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
        You may obtain a copy of the License at
 
-          http://www.apache.org/licenses/LICENSE-2.0
+          https://www.apache.org/licenses/LICENSE-2.0
 
        Unless required by applicable law or agreed to in writing, software
        distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,7 +17,7 @@
 
 -->
 <document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
 
   <properties>
     <title>MyBatis 3 | SQL 语句构建器</title>
@@ -226,7 +226,7 @@ public String updatePersonSql() {
                 </ul>
               </td>
               <td>基于调用的方法，添加新的合适类型的 <code>JOIN</code> 子句。
-				参数可以包含一个由列和连接条件构成的标准连接。
+        参数可以包含一个由列和连接条件构成的标准连接。
               </td>
             </tr>
             <tr>
@@ -248,7 +248,7 @@ public String updatePersonSql() {
                 <code>OR()</code>
               </td>
               <td>使用 <code>OR</code> 来分隔当前的 <code>WHERE</code> 子句条件。
-				可以被多次调用，但在一行中多次调用会生成错误的 <code>SQL</code>。
+        可以被多次调用，但在一行中多次调用会生成错误的 <code>SQL</code>。
               </td>
             </tr>
             <tr>
@@ -256,7 +256,7 @@ public String updatePersonSql() {
                 <code>AND()</code>
               </td>
               <td>使用 <code>AND</code> 来分隔当前的 <code>WHERE</code>子句条件。
-				可以被多次调用，但在一行中多次调用会生成错误的 <code>SQL</code>。由于 <code>WHERE</code> 和 <code>HAVING</code>都会自动使用 <code>AND</code> 拼接, 因此这个方法并不常用，只是为了完整性才被定义出来。
+        可以被多次调用，但在一行中多次调用会生成错误的 <code>SQL</code>。由于 <code>WHERE</code> 和 <code>HAVING</code>都会自动使用 <code>AND</code> 拼接, 因此这个方法并不常用，只是为了完整性才被定义出来。
               </td>
             </tr>
             <tr>
@@ -314,8 +314,8 @@ public String updatePersonSql() {
               </td>
               <td>
                 追加新的 <code>LIMIT</code> 子句。
-				仅在 SELECT()、UPDATE()、DELETE() 时有效。
-				当在 SELECT() 中使用时，应该配合 OFFSET() 使用。（于 3.5.2 引入）
+        仅在 SELECT()、UPDATE()、DELETE() 时有效。
+        当在 SELECT() 中使用时，应该配合 OFFSET() 使用。（于 3.5.2 引入）
               </td>
             </tr>
             <tr>
@@ -347,9 +347,9 @@ public String updatePersonSql() {
                 </ul>
               </td>
               <td>
-			    追加新的 <code>OFFSET n ROWS</code> 子句。
-				仅在 SELECT() 时有效。
-				该方法应该配合 FETCH_FIRST_ROWS_ONLY() 使用。（于 3.5.2 加入）
+          追加新的 <code>OFFSET n ROWS</code> 子句。
+        仅在 SELECT() 时有效。
+        该方法应该配合 FETCH_FIRST_ROWS_ONLY() 使用。（于 3.5.2 加入）
               </td>
             </tr>
             <tr>
@@ -364,9 +364,9 @@ public String updatePersonSql() {
                 </ul>
               </td>
               <td>
-			  	追加新的 <code>FETCH FIRST n ROWS ONLY</code> 子句。
-				仅在 SELECT() 时有效。
-				该方法应该配合 OFFSET_ROWS() 使用。（于 3.5.2 加入）
+          追加新的 <code>FETCH FIRST n ROWS ONLY</code> 子句。
+        仅在 SELECT() 时有效。
+        该方法应该配合 OFFSET_ROWS() 使用。（于 3.5.2 加入）
               </td>
             </tr>
             <tr>
@@ -440,7 +440,7 @@ public String updatePersonSql() {
         <p>
           <span class="label important">提示</span>
           注意，SQL 类将原样插入 <code>LIMIT</code>、<code>OFFSET</code>、<code>OFFSET n ROWS</code> 以及 <code>FETCH FIRST n ROWS ONLY</code> 子句。换句话说，类库不会为不支持这些子句的数据库执行任何转换。
-		  因此，用户应该要了解目标数据库是否支持这些子句。如果目标数据库不支持这些子句，产生的 SQL 可能会引起运行错误。
+      因此，用户应该要了解目标数据库是否支持这些子句。如果目标数据库不支持这些子句，产生的 SQL 可能会引起运行错误。
         </p>
 
         <p>从版本 3.4.2 开始，你可以像下面这样使用可变长度参数：</p>

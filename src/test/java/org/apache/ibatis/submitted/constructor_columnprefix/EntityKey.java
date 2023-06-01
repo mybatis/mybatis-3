@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,6 +14,8 @@
  *    limitations under the License.
  */
 package org.apache.ibatis.submitted.constructor_columnprefix;
+
+import java.util.Objects;
 
 public class EntityKey {
   private Integer id;
@@ -28,26 +30,21 @@ public class EntityKey {
 
   @Override
   public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + ((id == null) ? 0 : id.hashCode());
-    return result;
+    return Objects.hash(id);
   }
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
+    if (this == obj) {
       return true;
-    if (obj == null)
+    }
+    if ((obj == null) || (getClass() != obj.getClass())) {
       return false;
-    if (getClass() != obj.getClass())
-      return false;
+    }
     EntityKey other = (EntityKey) obj;
-    if (id == null) {
-      if (other.id != null)
-        return false;
-    } else if (!id.equals(other.id))
+    if (!Objects.equals(id, other.id)) {
       return false;
+    }
     return true;
   }
 }

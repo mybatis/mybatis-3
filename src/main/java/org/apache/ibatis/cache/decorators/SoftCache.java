@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -23,7 +23,8 @@ import java.util.LinkedList;
 import org.apache.ibatis.cache.Cache;
 
 /**
- * Soft Reference cache decorator
+ * Soft Reference cache decorator.
+ * <p>
  * Thanks to Dr. Heinz Kabutz for his guidance here.
  *
  * @author Clinton Begin
@@ -87,7 +88,9 @@ public class SoftCache implements Cache {
   @Override
   public Object removeObject(Object key) {
     removeGarbageCollectedItems();
-    return delegate.removeObject(key);
+    @SuppressWarnings("unchecked")
+    SoftReference<Object> softReference = (SoftReference<Object>) delegate.removeObject(key);
+    return softReference == null ? null : softReference.get();
   }
 
   @Override

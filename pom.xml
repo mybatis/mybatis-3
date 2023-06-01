@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2021 the original author or authors.
+       Copyright 2009-2023 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
        You may obtain a copy of the License at
 
-          http://www.apache.org/licenses/LICENSE-2.0
+          https://www.apache.org/licenses/LICENSE-2.0
 
        Unless required by applicable law or agreed to in writing, software
        distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,18 +16,18 @@
        limitations under the License.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>org.mybatis</groupId>
     <artifactId>mybatis-parent</artifactId>
-    <version>33</version>
+    <version>38</version>
     <relativePath />
   </parent>
 
   <artifactId>mybatis</artifactId>
-  <version>3.5.8-SNAPSHOT</version>
+  <version>3.5.14-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>mybatis</name>
@@ -37,7 +37,7 @@
     annotations. Simplicity is the biggest advantage of the MyBatis data mapper over object relational mapping
     tools.
   </description>
-  <url>http://www.mybatis.org/mybatis-3</url>
+  <url>https://www.mybatis.org/mybatis-3</url>
 
   <inceptionYear>2009</inceptionYear>
 
@@ -109,18 +109,18 @@
   </contributors>
 
   <scm>
-    <url>http://github.com/mybatis/mybatis-3</url>
+    <url>https://github.com/mybatis/mybatis-3</url>
     <connection>scm:git:ssh://github.com/mybatis/mybatis-3.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/mybatis/mybatis-3.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>mybatis-3.5.12</tag>
   </scm>
   <issueManagement>
     <system>GitHub Issue Management</system>
     <url>https://github.com/mybatis/mybatis-3/issues</url>
   </issueManagement>
   <ciManagement>
-    <system>Travis CI</system>
-    <url>https://travis-ci.org/mybatis/mybatis-3/</url>
+    <system>Github</system>
+    <url>https://github.com/mybatis/mybatis-3/actions</url>
   </ciManagement>
   <distributionManagement>
     <site>
@@ -132,52 +132,60 @@
 
   <properties>
     <clirr.comparisonVersion>3.4.6</clirr.comparisonVersion>
+
+    <!-- Add slow test groups here and annotate classes similar to @Tag('groupName'). -->
+    <!-- Excluded groups are ran on github ci, to force here, pass -d"excludedGroups=" -->
     <excludedGroups>TestcontainersTests</excludedGroups>
-    <maven.compiler.testCompilerArgument>-parameters</maven.compiler.testCompilerArgument>
+
+    <!-- Automatic Module Name -->
     <module.name>org.mybatis</module.name>
+
+    <!-- OSGI Data -->
     <osgi.export>org.apache.ibatis.*;version=${project.version};-noimport:=true</osgi.export>
     <osgi.import>*;resolution:=optional</osgi.import>
     <osgi.dynamicImport>*</osgi.dynamicImport>
+
+    <!-- Spotbugs Setup -->
     <spotbugs.onlyAnalyze>org.apache.ibatis.*</spotbugs.onlyAnalyze>
+
+    <!-- Surefire Setup -->
+    <argLine>-Djdk.attach.allowAttachSelf -Xmx2048m</argLine>
+
+    <!-- Reproducible Builds -->
+    <project.build.outputTimestamp>1678513628</project.build.outputTimestamp>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>ognl</groupId>
       <artifactId>ognl</artifactId>
-      <version>3.3.0</version>
+      <version>3.3.4</version>
       <scope>compile</scope>
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>org.javassist</groupId>
       <artifactId>javassist</artifactId>
-      <version>3.28.0-GA</version>
+      <version>3.29.2-GA</version>
       <scope>compile</scope>
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>1.7.32</version>
+      <version>2.0.7</version>
       <optional>true</optional>
     </dependency>
     <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
-      <version>1.7.32</version>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>1.2.17</version>
+      <groupId>ch.qos.reload4j</groupId>
+      <artifactId>reload4j</artifactId>
+      <version>1.2.25</version>
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-core</artifactId>
-      <version>2.14.1</version>
+      <artifactId>log4j-api</artifactId>
+      <version>2.20.0</version>
       <optional>true</optional>
     </dependency>
     <dependency>
@@ -197,37 +205,61 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
-      <version>5.8.2</version>
+      <version>5.9.3</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-params</artifactId>
+      <version>5.9.3</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
-      <version>2.5.1</version>
+      <version>2.6.1</version>
       <scope>test</scope>
     </dependency>
-    <dependency> <!-- 10.15+ need Java 9+ -->
+    <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derby</artifactId>
-      <version>10.14.2.0</version>
+      <version>10.15.2.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.derby</groupId>
+      <artifactId>derbyshared</artifactId>
+      <version>10.15.2.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.derby</groupId>
+      <artifactId>derbyoptionaltools</artifactId>
+      <version>10.15.2.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
-      <version>2.0.202</version>
+      <version>2.1.214</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>4.1.0</version>
+      <version>5.3.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-subclass</artifactId>
+      <version>5.3.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-junit-jupiter</artifactId>
-      <version>4.1.0</version>
+      <version>5.3.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -240,19 +272,19 @@
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
-      <version>42.3.1</version>
+      <version>42.6.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
-      <version>8.0.27</version>
+      <groupId>com.mysql</groupId>
+      <artifactId>mysql-connector-j</artifactId>
+      <version>8.0.33</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-      <version>3.21.0</version>
+      <version>3.24.2</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -264,27 +296,39 @@
     <dependency>
       <groupId>org.testcontainers</groupId>
       <artifactId>junit-jupiter</artifactId>
-      <version>1.16.2</version>
+      <version>1.18.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.testcontainers</groupId>
       <artifactId>postgresql</artifactId>
-      <version>1.16.2</version>
+      <version>1.18.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.testcontainers</groupId>
       <artifactId>mysql</artifactId>
-      <version>1.16.2</version>
+      <version>1.18.1</version>
       <scope>test</scope>
     </dependency>
     <!-- For javadoc link -->
     <dependency>
       <groupId>com.microsoft.sqlserver</groupId>
       <artifactId>mssql-jdbc</artifactId>
-      <version>9.4.0.jre8</version>
+      <version>11.2.0.jre8</version>
       <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>1.4.7</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+      <version>2.20.0</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
@@ -292,17 +336,9 @@
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <testCompilerArgument>${maven.compiler.testCompilerArgument}</testCompilerArgument>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
-          <argLine>${argLine} -Xmx2048m</argLine>
-          <systemProperties>
+          <systemPropertyVariables>
             <property>
               <name>derby.stream.error.file</name>
               <value>${project.build.directory}/derby.log</value>
@@ -311,7 +347,7 @@
               <name>derby.system.home</name>
               <value>${project.build.directory}</value>
             </property>
-          </systemProperties>
+          </systemPropertyVariables>
         </configuration>
       </plugin>
       <plugin>
@@ -336,6 +372,20 @@
                   <include>org.javassist:javassist</include>
                 </includes>
               </artifactSet>
+              <filters>
+                <filter>
+                  <artifact>ognl:ognl</artifact>
+                  <excludes>
+                    <exclude>META-INF/MANIFEST.MF</exclude>
+                  </excludes>
+                </filter>
+                <filter>
+                  <artifact>org.javassist:javassist</artifact>
+                  <excludes>
+                    <exclude>META-INF/MANIFEST.MF</exclude>
+                  </excludes>
+                </filter>
+              </filters>
               <relocations>
                 <relocation>
                   <pattern>ognl</pattern>
@@ -368,55 +418,50 @@
         </configuration>
       </plugin>
     </plugins>
-
-    <resources>
-      <resource>
-        <directory>${project.basedir}</directory>
-        <targetPath>META-INF</targetPath>
-        <includes>
-          <include>LICENSE</include>
-          <include>NOTICE</include>
-        </includes>
-      </resource>
-      <resource>
-        <directory>${project.build.sourceDirectory}</directory>
-        <excludes>
-          <exclude>**/*.java</exclude>
-        </excludes>
-      </resource>
-    </resources>
-    <testResources>
-      <testResource>
-        <directory>${project.build.testSourceDirectory}</directory>
-        <excludes>
-          <exclude>**/*.java</exclude>
-        </excludes>
-      </testResource>
-    </testResources>
   </build>
 
   <profiles>
     <profile>
-      <!-- Run slow tests only on travis ci, to force run otherwise use -D"env.TRAVIS" -->
-      <id>travis-ci</id>
+      <id>pre16</id>
       <activation>
-        <property>
-          <name>env.TRAVIS</name>
-        </property>
+        <jdk>(,16)</jdk>
+      </activation>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-compiler-plugin</artifactId>
+              <configuration>
+                <testExcludes>
+                  <testExclude>**/record_type/*.java</testExclude>
+                </testExcludes>
+              </configuration>
+            </plugin>
+            <plugin>
+              <groupId>net.revelc.code</groupId>
+              <artifactId>impsort-maven-plugin</artifactId>
+              <configuration>
+                <skip>true</skip>
+              </configuration>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
+    </profile>
+    <profile>
+      <id>16</id>
+      <activation>
+        <jdk>[16,)</jdk>
       </activation>
       <properties>
-        <excludedGroups />
+        <java.version>16</java.version>
+        <java.release.version>16</java.release.version>
+        <java.test.version>16</java.test.version>
+        <java.test.release.version>16</java.test.release.version>
+        <excludedGroups>TestcontainersTests,RequireIllegalAccess</excludedGroups>
       </properties>
     </profile>
   </profiles>
-
-  <!-- Will remove after released mybatis-parent 32+ (See https://github.com/mybatis/mybatis-3/issues/1926) -->
-  <repositories>
-    <repository>
-      <id>sonatype-oss-snapshots</id>
-      <name>Sonatype OSS Snapshots Repository</name>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-    </repository>
-  </repositories>
 
 </project>

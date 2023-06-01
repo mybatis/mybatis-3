@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -40,9 +40,9 @@ public class ParamNameResolver {
   /**
    * <p>
    * The key is the index and the value is the name of the parameter.<br />
-   * The name is obtained from {@link Param} if specified. When {@link Param} is not specified,
-   * the parameter index is used. Note that this index could be different from the actual index
-   * when the method has special parameters (i.e. {@link RowBounds} or {@link ResultHandler}).
+   * The name is obtained from {@link Param} if specified. When {@link Param} is not specified, the parameter index is
+   * used. Note that this index could be different from the actual index when the method has special parameters (i.e.
+   * {@link RowBounds} or {@link ResultHandler}).
    * </p>
    * <ul>
    * <li>aMethod(@Param("M") int a, @Param("N") int b) -&gt; {{0, "M"}, {1, "N"}}</li>
@@ -109,23 +109,23 @@ public class ParamNameResolver {
 
   /**
    * <p>
-   * A single non-special parameter is returned without a name.
-   * Multiple parameters are named using the naming rule.
-   * In addition to the default names, this method also adds the generic names (param1, param2,
-   * ...).
+   * A single non-special parameter is returned without a name. Multiple parameters are named using the naming rule. In
+   * addition to the default names, this method also adds the generic names (param1, param2, ...).
    * </p>
    *
    * @param args
    *          the args
+   *
    * @return the named params
    */
   public Object getNamedParams(Object[] args) {
     final int paramCount = names.size();
     if (args == null || paramCount == 0) {
       return null;
-    } else if (!hasParamAnnotation && paramCount == 1) {
+    }
+    if (!hasParamAnnotation && paramCount == 1) {
       Object value = args[names.firstKey()];
-      return wrapToMapIfCollection(value, useActualParamName ? names.get(0) : null);
+      return wrapToMapIfCollection(value, useActualParamName ? names.get(names.firstKey()) : null);
     } else {
       final Map<String, Object> param = new ParamMap<>();
       int i = 0;
@@ -146,10 +146,13 @@ public class ParamNameResolver {
   /**
    * Wrap to a {@link ParamMap} if object is {@link Collection} or array.
    *
-   * @param object a parameter object
-   * @param actualParamName an actual parameter name
-   *                        (If specify a name, set an object to {@link ParamMap} with specified name)
+   * @param object
+   *          a parameter object
+   * @param actualParamName
+   *          an actual parameter name (If specify a name, set an object to {@link ParamMap} with specified name)
+   *
    * @return a {@link ParamMap}
+   *
    * @since 3.5.5
    */
   public static Object wrapToMapIfCollection(Object object, String actualParamName) {
@@ -161,7 +164,8 @@ public class ParamNameResolver {
       }
       Optional.ofNullable(actualParamName).ifPresent(name -> map.put(name, object));
       return map;
-    } else if (object != null && object.getClass().isArray()) {
+    }
+    if (object != null && object.getClass().isArray()) {
       ParamMap<Object> map = new ParamMap<>();
       map.put("array", object);
       Optional.ofNullable(actualParamName).ifPresent(name -> map.put(name, object));

@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,7 +21,10 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Eduardo Macarron
+ *
+ * @deprecated Since 3.5.9 - See https://github.com/mybatis/mybatis-3/issues/1223. This class will remove future.
  */
+@Deprecated
 public class Log4jImpl implements Log {
 
   private static final String FQCN = Log4jImpl.class.getName();

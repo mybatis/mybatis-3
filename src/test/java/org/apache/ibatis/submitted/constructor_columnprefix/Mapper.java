@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,12 +25,13 @@ public interface Mapper {
 
   List<Article> getArticles();
 
+  // @formatter:off
   @ConstructorArgs({
       @Arg(id = true, resultMap = "keyRM", columnPrefix = "key_", javaType = EntityKey.class),
       @Arg(column = "name", javaType = String.class),
       @Arg(resultMap = "authorRM", columnPrefix = "author_", javaType = Author.class),
       @Arg(resultMap = "authorRM", columnPrefix = "coauthor_", javaType = Author.class),
-  })
+    })
   @Select({
       "select id key_id, name, author.id author_id, author.name author_name,",
       "  coauthor.id coauthor_id, coauthor.name coauthor_name",
@@ -38,7 +39,8 @@ public interface Mapper {
       "left join authors author on author.id = articles.author_id",
       "left join authors coauthor on coauthor.id = articles.coauthor_id",
       "order by articles.id"
-  })
+    })
+  // @formatter:on
   List<Article> getArticlesAnno();
 
 }

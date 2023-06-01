@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -73,7 +73,9 @@ public final class TypeHandlerRegistry {
   /**
    * The constructor that pass the MyBatis configuration.
    *
-   * @param configuration a MyBatis configuration
+   * @param configuration
+   *          a MyBatis configuration
+   *
    * @since 3.5.4
    */
   public TypeHandlerRegistry(Configuration configuration) {
@@ -180,9 +182,12 @@ public final class TypeHandlerRegistry {
   }
 
   /**
-   * Set a default {@link TypeHandler} class for {@link Enum}.
-   * A default {@link TypeHandler} is {@link org.apache.ibatis.type.EnumTypeHandler}.
-   * @param typeHandler a type handler class for {@link Enum}
+   * Set a default {@link TypeHandler} class for {@link Enum}. A default {@link TypeHandler} is
+   * {@link org.apache.ibatis.type.EnumTypeHandler}.
+   *
+   * @param typeHandler
+   *          a type handler class for {@link Enum}
+   *
    * @since 3.4.5
    */
   public void setDefaultEnumTypeHandler(Class<? extends TypeHandler> typeHandler) {
@@ -299,9 +304,8 @@ public final class TypeHandlerRegistry {
     Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = typeHandlerMap.get(superclass);
     if (jdbcHandlerMap != null) {
       return jdbcHandlerMap;
-    } else {
-      return getJdbcHandlerMapForSuperclass(superclass);
     }
+    return getJdbcHandlerMapForSuperclass(superclass);
   }
 
   private TypeHandler<?> pickSoleHandler(Map<JdbcType, TypeHandler<?>> jdbcHandlerMap) {
@@ -465,7 +469,7 @@ public final class TypeHandlerRegistry {
     resolverUtil.find(new ResolverUtil.IsA(TypeHandler.class), packageName);
     Set<Class<? extends Class<?>>> handlerSet = resolverUtil.getClasses();
     for (Class<?> type : handlerSet) {
-      //Ignore inner classes and interfaces (including package-info.java) and abstract classes
+      // Ignore inner classes and interfaces (including package-info.java) and abstract classes
       if (!type.isAnonymousClass() && !type.isInterface() && !Modifier.isAbstract(type.getModifiers())) {
         register(type);
       }
@@ -478,6 +482,7 @@ public final class TypeHandlerRegistry {
    * Gets the type handlers.
    *
    * @return the type handlers
+   *
    * @since 3.2.2
    */
   public Collection<TypeHandler<?>> getTypeHandlers() {

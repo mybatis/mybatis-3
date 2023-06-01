@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -95,10 +95,9 @@ public class JBoss6VFS extends VFS {
 
       // Look up and verify required methods
       VFS.getChild = checkNotNull(getMethod(VFS.VFS, "getChild", URL.class));
-      VirtualFile.getChildrenRecursively = checkNotNull(getMethod(VirtualFile.VirtualFile,
-          "getChildrenRecursively"));
-      VirtualFile.getPathNameRelativeTo = checkNotNull(getMethod(VirtualFile.VirtualFile,
-          "getPathNameRelativeTo", VirtualFile.VirtualFile));
+      VirtualFile.getChildrenRecursively = checkNotNull(getMethod(VirtualFile.VirtualFile, "getChildrenRecursively"));
+      VirtualFile.getPathNameRelativeTo = checkNotNull(
+          getMethod(VirtualFile.VirtualFile, "getPathNameRelativeTo", VirtualFile.VirtualFile));
 
       // Verify that the API has not changed
       checkReturnType(VFS.getChild, VirtualFile.VirtualFile);
@@ -108,13 +107,14 @@ public class JBoss6VFS extends VFS {
   }
 
   /**
-   * Verifies that the provided object reference is null. If it is null, then this VFS is marked
-   * as invalid for the current environment.
+   * Verifies that the provided object reference is null. If it is null, then this VFS is marked as invalid for the
+   * current environment.
    *
    * @param <T>
    *          the generic type
    * @param object
    *          The object reference to check for null.
+   *
    * @return the t
    */
   protected static <T> T checkNotNull(T object) {
@@ -125,18 +125,20 @@ public class JBoss6VFS extends VFS {
   }
 
   /**
-   * Verifies that the return type of a method is what it is expected to be. If it is not, then
-   * this VFS is marked as invalid for the current environment.
+   * Verifies that the return type of method is what it is expected to be. If it is not, then this VFS is marked as
+   * invalid for the current environment.
    *
-   * @param method The method whose return type is to be checked.
-   * @param expected A type to which the method's return type must be assignable.
+   * @param method
+   *          The method whose return type is to be checked.
+   * @param expected
+   *          A type to which the method's return type must be assignable.
+   *
    * @see Class#isAssignableFrom(Class)
    */
   protected static void checkReturnType(Method method, Class<?> expected) {
     if (method != null && !expected.isAssignableFrom(method.getReturnType())) {
-      log.error("Method " + method.getClass().getName() + "." + method.getName()
-          + "(..) should return " + expected.getName() + " but returns "
-          + method.getReturnType().getName() + " instead.");
+      log.error("Method " + method.getClass().getName() + "." + method.getName() + "(..) should return "
+          + expected.getName() + " but returns " + method.getReturnType().getName() + " instead.");
       setInvalid();
     }
   }

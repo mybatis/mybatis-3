@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -55,10 +55,15 @@ public class SqlRunner {
   /**
    * Executes a SELECT statement that returns one row.
    *
-   * @param sql  The SQL
-   * @param args The arguments to be set on the statement.
+   * @param sql
+   *          The SQL
+   * @param args
+   *          The arguments to be set on the statement.
+   *
    * @return The row expected.
-   * @throws SQLException If less or more than one row is returned
+   *
+   * @throws SQLException
+   *           If less or more than one row is returned
    */
   public Map<String, Object> selectOne(String sql, Object... args) throws SQLException {
     List<Map<String, Object>> results = selectAll(sql, args);
@@ -71,10 +76,15 @@ public class SqlRunner {
   /**
    * Executes a SELECT statement that returns multiple rows.
    *
-   * @param sql  The SQL
-   * @param args The arguments to be set on the statement.
+   * @param sql
+   *          The SQL
+   * @param args
+   *          The arguments to be set on the statement.
+   *
    * @return The list of rows expected.
-   * @throws SQLException If statement preparation or execution fails
+   *
+   * @throws SQLException
+   *           If statement preparation or execution fails
    */
   public List<Map<String, Object>> selectAll(String sql, Object... args) throws SQLException {
     try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -88,10 +98,15 @@ public class SqlRunner {
   /**
    * Executes an INSERT statement.
    *
-   * @param sql  The SQL
-   * @param args The arguments to be set on the statement.
+   * @param sql
+   *          The SQL
+   * @param args
+   *          The arguments to be set on the statement.
+   *
    * @return The number of rows impacted or BATCHED_RESULTS if the statements are being batched.
-   * @throws SQLException If statement preparation or execution fails
+   *
+   * @throws SQLException
+   *           If statement preparation or execution fails
    */
   public int insert(String sql, Object... args) throws SQLException {
     PreparedStatement ps;
@@ -116,7 +131,7 @@ public class SqlRunner {
                 try {
                   return Integer.parseInt(genkey.toString());
                 } catch (NumberFormatException e) {
-                  //ignore, no numeric key support
+                  // ignore, no numeric key support
                 }
               }
             }
@@ -128,7 +143,7 @@ public class SqlRunner {
       try {
         ps.close();
       } catch (SQLException e) {
-        //ignore
+        // ignore
       }
     }
   }
@@ -136,10 +151,15 @@ public class SqlRunner {
   /**
    * Executes an UPDATE statement.
    *
-   * @param sql  The SQL
-   * @param args The arguments to be set on the statement.
+   * @param sql
+   *          The SQL
+   * @param args
+   *          The arguments to be set on the statement.
+   *
    * @return The number of rows impacted or BATCHED_RESULTS if the statements are being batched.
-   * @throws SQLException If statement preparation or execution fails
+   *
+   * @throws SQLException
+   *           If statement preparation or execution fails
    */
   public int update(String sql, Object... args) throws SQLException {
     try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -151,21 +171,28 @@ public class SqlRunner {
   /**
    * Executes a DELETE statement.
    *
-   * @param sql  The SQL
-   * @param args The arguments to be set on the statement.
+   * @param sql
+   *          The SQL
+   * @param args
+   *          The arguments to be set on the statement.
+   *
    * @return The number of rows impacted or BATCHED_RESULTS if the statements are being batched.
-   * @throws SQLException If statement preparation or execution fails
+   *
+   * @throws SQLException
+   *           If statement preparation or execution fails
    */
   public int delete(String sql, Object... args) throws SQLException {
     return update(sql, args);
   }
 
   /**
-   * Executes any string as a JDBC Statement.
-   * Good for DDL
+   * Executes any string as a JDBC Statement. Good for DDL
    *
-   * @param sql The SQL
-   * @throws SQLException If statement preparation or execution fails
+   * @param sql
+   *          The SQL
+   *
+   * @throws SQLException
+   *           If statement preparation or execution fails
    */
   public void run(String sql) throws SQLException {
     try (Statement stmt = connection.createStatement()) {
@@ -181,15 +208,17 @@ public class SqlRunner {
     try {
       connection.close();
     } catch (SQLException e) {
-      //ignore
+      // ignore
     }
   }
 
   private void setParameters(PreparedStatement ps, Object... args) throws SQLException {
     for (int i = 0, n = args.length; i < n; i++) {
       if (args[i] == null) {
-        throw new SQLException("SqlRunner requires an instance of Null to represent typed null values for JDBC compatibility");
-      } else if (args[i] instanceof Null) {
+        throw new SQLException(
+            "SqlRunner requires an instance of Null to represent typed null values for JDBC compatibility");
+      }
+      if (args[i] instanceof Null) {
         ((Null) args[i]).getTypeHandler().setParameter(ps, i + 1, null, ((Null) args[i]).getJdbcType());
       } else {
         TypeHandler typeHandler = typeHandlerRegistry.getTypeHandler(args[i].getClass());

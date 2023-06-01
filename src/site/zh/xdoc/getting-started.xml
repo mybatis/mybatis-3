@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2019 the original author or authors.
+       Copyright 2009-2022 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
        You may obtain a copy of the License at
 
-          http://www.apache.org/licenses/LICENSE-2.0
+          https://www.apache.org/licenses/LICENSE-2.0
 
        Unless required by applicable law or agreed to in writing, software
        distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,7 +17,7 @@
 
 -->
 <document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
 
   <properties>
     <title>MyBatis 3 | 入门</title>
@@ -71,7 +71,7 @@ SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(input
       <source><![CDATA[<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE configuration
   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
-  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+  "https://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
   <environments default="development">
     <environment id="development">
@@ -99,7 +99,7 @@ SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(input
 
     <subsection name="不使用 XML 构建 SqlSessionFactory">
       <p>
-        如果你更愿意直接从 Java 代码而不是 XML 文件中创建配置，或者想要创建你自己的配置建造器，MyBatis
+        如果你更愿意直接从 Java 代码而不是 XML 文件中创建配置，或者想要创建你自己的配置构建器，MyBatis
         也提供了完整的配置类，提供了所有与 XML 文件等价的配置项。
       </p>
 
@@ -112,10 +112,10 @@ SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(confi
 
       <p>
         注意该例中，configuration 添加了一个映射器类（mapper class）。映射器类是
-        Java 类，它们包含 SQL 映射注解从而避免依赖 XML 文件。不过，由于
+        Java 类，它们包含 SQL 映射注解从而避免依赖 XML 映射文件。不过，由于
         Java 注解的一些限制以及某些 MyBatis 映射的复杂性，要使用大多数高级映射（比如：嵌套联合映射），仍然需要使用 XML
-        配置。有鉴于此，如果存在一个同名
-        XML 配置文件，MyBatis 会自动查找并加载它（在这个例子中，基于类路径和 BlogMapper.class 的类名，会加载
+        映射文件进行映射。有鉴于此，如果存在一个同名
+        XML 映射文件，MyBatis 会自动查找并加载它（在这个例子中，基于类路径和 BlogMapper.class 的类名，会加载
         BlogMapper.xml）。具体细节稍后讨论。
       </p>
     </subsection>
@@ -148,7 +148,7 @@ SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(confi
       <p>
         现在你可能很想知道 SqlSession 和 Mapper 到底具体执行了些什么操作，但 SQL
         语句映射是个相当广泛的话题，可能会占去文档的大部分篇幅。
-        但为了让你能够了解个大概，这里会给出几个例子。
+        但为了让你能够了解个大概，这里先给出几个例子。
       </p>
       <p>
         在上面提到的例子中，一个语句既可以通过 XML 定义，也可以通过注解定义。我们先看看
@@ -161,7 +161,7 @@ SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(confi
       <source><![CDATA[<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.mybatis.example.BlogMapper">
   <select id="selectBlog" resultType="Blog">
     select * from Blog where id = #{id}
@@ -234,12 +234,12 @@ public interface BlogMapper {
 }]]></source>
       <p>
         使用注解来映射简单语句会使代码显得更加简洁，但对于稍微复杂一点的语句，Java
-        注解不仅力不从心，还会让你本就复杂的 SQL 语句更加混乱不堪。
+        注解不仅力不从心，还会让本就复杂的 SQL 语句更加混乱不堪。
         因此，如果你需要做一些很复杂的操作，最好用 XML 来映射语句。
       </p>
       <p>
-        选择何种方式来配置映射，以及认为是否应该要统一映射语句定义的形式，完全取决于你和你的团队。
-        换句话说，永远不要拘泥于一种方式，你可以很轻松的在基于注解和 XML
+        选择何种方式来配置映射，以及是否应该要统一映射语句定义的形式，完全取决于你和你的团队。
+        换句话说，永远不要拘泥于一种方式，你可以很轻松地在基于注解和 XML
         的语句映射方式间自由移植和切换。
       </p>
     </subsection>

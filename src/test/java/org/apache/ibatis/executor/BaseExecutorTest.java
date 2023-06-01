@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -75,7 +75,8 @@ class BaseExecutorTest extends BaseDataTest {
       }
       assertEquals(123456, author.getId());
       if (author.getId() != BatchExecutor.BATCH_UPDATE_RETURN_VALUE) {
-        List<Author> authors = executor.query(selectStatement, author.getId(), RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
+        List<Author> authors = executor.query(selectStatement, author.getId(), RowBounds.DEFAULT,
+            Executor.NO_RESULT_HANDLER);
         executor.rollback(true);
         assertEquals(1, authors.size());
         assertEquals(author.toString(), authors.get(0).toString());
@@ -145,7 +146,8 @@ class BaseExecutorTest extends BaseDataTest {
       }
       assertTrue(-1 != author.getId());
       if (author.getId() != BatchExecutor.BATCH_UPDATE_RETURN_VALUE) {
-        List<Author> authors = executor.query(selectStatement, author.getId(), RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
+        List<Author> authors = executor.query(selectStatement, author.getId(), RowBounds.DEFAULT,
+            Executor.NO_RESULT_HANDLER);
         executor.rollback(true);
         assertEquals(1, authors.size());
         assertEquals(author.toString(), authors.get(0).toString());
@@ -165,7 +167,7 @@ class BaseExecutorTest extends BaseDataTest {
       Author author = new Author(97, "someone", "******", "someone@apache.org", null, null);
       MappedStatement insertStatement = ExecutorTestHelper.prepareInsertAuthorProc(config);
       MappedStatement selectStatement = ExecutorTestHelper.prepareSelectOneAuthorMappedStatement(config);
-      int rows = executor.update(insertStatement, author);
+      executor.update(insertStatement, author);
       List<Author> authors = executor.query(selectStatement, 97, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
       executor.flushStatements();
       executor.rollback(true);
@@ -245,13 +247,16 @@ class BaseExecutorTest extends BaseDataTest {
     Executor executor = createExecutor(new JdbcTransaction(ds, null, false));
     try {
       MappedStatement selectStatement = ExecutorTestHelper.prepareSelectDiscriminatedPost(config);
-      List<Map<String,String>> products = executor.query(selectStatement, null, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
+      List<Map<String, String>> products = executor.query(selectStatement, null, RowBounds.DEFAULT,
+          Executor.NO_RESULT_HANDLER);
       assertEquals(5, products.size());
-      for (Map<String,String> m : products) {
+      for (Map<String, String> m : products) {
         if ("IMAGES".equals(m.get("SECTION"))) {
           assertNull(m.get("subject"));
+          assertNotNull(m.get("id"));
         } else {
           assertNotNull(m.get("subject"));
+          assertNull(m.get("id"));
         }
       }
     } finally {
@@ -265,13 +270,16 @@ class BaseExecutorTest extends BaseDataTest {
     Executor executor = createExecutor(new JdbcTransaction(ds, null, false));
     try {
       MappedStatement selectStatement = ExecutorTestHelper.prepareSelectDiscriminatedPost(config);
-      List<Map<String,String>> products = executor.query(selectStatement, null, new RowBounds(2, 2), Executor.NO_RESULT_HANDLER);
+      List<Map<String, String>> products = executor.query(selectStatement, null, new RowBounds(2, 2),
+          Executor.NO_RESULT_HANDLER);
       assertEquals(2, products.size());
-      for (Map<String,String> m : products) {
+      for (Map<String, String> m : products) {
         if ("IMAGES".equals(m.get("SECTION"))) {
           assertNull(m.get("subject"));
+          assertNotNull(m.get("id"));
         } else {
           assertNotNull(m.get("subject"));
+          assertNull(m.get("id"));
         }
       }
     } finally {
@@ -286,6 +294,7 @@ class BaseExecutorTest extends BaseDataTest {
     try {
       MappedStatement selectStatement = ExecutorTestHelper.prepareSelectTwoSetsOfAuthorsProc(config);
       List<List<Author>> authorSets = executor.query(selectStatement, new HashMap<String, Object>() {
+        private static final long serialVersionUID = 1L;
         {
           put("id1", 101);
           put("id2", 102);
@@ -317,12 +326,11 @@ class BaseExecutorTest extends BaseDataTest {
       assertEquals("sally@ibatis.apache.org", author.getEmail());
       assertNull(author.getBio());
     } catch (ExecutorException e) {
-      if (executor instanceof CachingExecutor) {
-        // TODO see issue #464. Fail is OK.
-        assertTrue(e.getMessage().contains("OUT params is not supported"));
-      } else {
+      if (!(executor instanceof CachingExecutor)) {
         throw e;
       }
+      // TODO see issue #464. Fail is OK.
+      assertTrue(e.getMessage().contains("OUT params is not supported"));
     } finally {
       executor.rollback(true);
       executor.close(false);
@@ -421,7 +429,8 @@ class BaseExecutorTest extends BaseDataTest {
 
     Executor executor = createExecutor(new JdbcTransaction(ds, null, false));
     try {
-      MappedStatement selectStatement = ExecutorTestHelper.prepareSelectOneAuthorMappedStatementWithConstructorResults(config);
+      MappedStatement selectStatement = ExecutorTestHelper
+          .prepareSelectOneAuthorMappedStatementWithConstructorResults(config);
       List<Author> authors = executor.query(selectStatement, 102, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
       executor.flushStatements();
       executor.rollback(true);

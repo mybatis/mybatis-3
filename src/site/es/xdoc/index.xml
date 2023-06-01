@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2023 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
        You may obtain a copy of the License at
 
-          http://www.apache.org/licenses/LICENSE-2.0
+          https://www.apache.org/licenses/LICENSE-2.0
 
        Unless required by applicable law or agreed to in writing, software
        distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,40 +17,40 @@
 
 -->
 <document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
 
-	<properties>
-		<title>MyBatis 3 | Introducción</title>
-		<author email="clinton.begin@gmail.com">Clinton Begin</author>
-		<author email="eduardo.macarron@gmail.com">Eduardo Macarron</author>
-	</properties>
+  <properties>
+    <title>MyBatis 3 | Introducción</title>
+    <author email="clinton.begin@gmail.com">Clinton Begin</author>
+    <author email="eduardo.macarron@gmail.com">Eduardo Macarron</author>
+  </properties>
 
-	<body>
-		<section name="Introducción">
-			<subsection name="¿Qué es MyBatis?">
-				<p>
-					MyBatis es un framework de persistencia que soporta SQL, procedimientos
-					almacenados y mapeos avanzados. MyBatis elimina casi todo el código JDBC, el establecimiento
-					manual de los parámetros y la obtención de resultados. MyBatis puede configurarse con XML o anotaciones y
-					permite mapear mapas y POJOs (Plain Old Java Objects) con registros de base de datos.
-				</p>
-			</subsection>
+  <body>
+    <section name="Introducción">
+      <subsection name="¿Qué es MyBatis?">
+        <p>
+          MyBatis es un framework de persistencia que soporta SQL, procedimientos
+          almacenados y mapeos avanzados. MyBatis elimina casi todo el código JDBC, el establecimiento
+          manual de parámetros y la obtención de resultados. MyBatis puede configurarse con XML o anotaciones y
+          permite mapear typos de datos primitivos, objetos de tipo Map y POJOs (Plain Old Java Objects) a registros de base de datos.
+        </p>
+      </subsection>
 
-			<subsection name="Colabora para mejorar esta documentación...">
-				<p>
-					Si ves que hay alguna carencia en esta documentación o que falta
-					alguna característica por documentar, te animamos a que lo investigues y la documentes tu mismo!
-				</p>
-				<p>
-					Las fuentes de este manual están disponibles en formato xdoc en el
+      <subsection name="Colabora para mejorar esta documentación...">
+        <p>
+          Si ves que hay alguna carencia en esta documentación o que falta
+          alguna característica por documentar, te animamos a que lo investigues y la documentes tu mismo!
+        </p>
+        <p>
+          Las fuentes de este manual están disponibles en formato xdoc en el
                     <a href="https://github.com/mybatis/mybatis-3/tree/master/src/site">Git del proyecto</a>.
-                    Haz un fork, cambialas y envía un pull request.
+                    Haz un fork, cámbialas y envía un pull request.
                 </p>
-				<p>
-					Eres el mejor candidato para documentar porque los lectores de esta documentación son gente como tú!
-				</p>
-			</subsection>
-		</section>
-	</body>
+        <p>
+          Eres el mejor candidato para documentar porque los lectores de esta documentación son gente como tú!
+        </p>
+      </subsection>
+    </section>
+  </body>
 
 </document>

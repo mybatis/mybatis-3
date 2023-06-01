@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -273,8 +273,7 @@ public class OurSqlBuilder {
       if (type instanceof ParameterizedType) {
         ParameterizedType t = (ParameterizedType) type;
         if (t.getRawType() == declaringClass || mapperClass.isAssignableFrom((Class<?>) t.getRawType())) {
-          Class<?> returnType = (Class<?>) t.getActualTypeArguments()[0];
-          return returnType;
+          return (Class<?>) t.getActualTypeArguments()[0];
         }
       }
     }
@@ -284,7 +283,7 @@ public class OurSqlBuilder {
   private Map<String, String> getColumnMap(ProviderContext context) {
     Class<?> entityClass = getEntityClass(context);
     Field[] fields = entityClass.getDeclaredFields();
-    Map<String, String> columnMap = new LinkedHashMap<String, String>();
+    Map<String, String> columnMap = new LinkedHashMap<>();
     for (Field field : fields) {
       BaseMapper.Column column = field.getAnnotation(BaseMapper.Column.class);
       if (column != null) {

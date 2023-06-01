@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,6 +25,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystemException;
 import java.nio.file.InvalidPathException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -77,7 +79,7 @@ public class DefaultVFS extends VFS {
               if (log.isDebugEnabled()) {
                 log.debug("Listing " + url);
               }
-              for (JarEntry entry; (entry = jarInput.getNextJarEntry()) != null; ) {
+              for (JarEntry entry; (entry = jarInput.getNextJarEntry()) != null;) {
                 if (log.isDebugEnabled()) {
                   log.debug("Jar entry: " + entry.getName());
                 }
@@ -86,12 +88,11 @@ public class DefaultVFS extends VFS {
             }
           } else {
             /*
-             * Some servlet containers allow reading from directory resources like a
-             * text file, listing the child resources one per line. However, there is no
-             * way to differentiate between directory and file resources just by reading
-             * them. To work around that, as each line is read, try to look it up via
-             * the class loader as a child of the current resource. If any line fails
-             * then we assume the current resource is not a directory.
+             * Some servlet containers allow reading from directory resources like a text file, listing the child
+             * resources one per line. However, there is no way to differentiate between directory and file resources
+             * just by reading them. To work around that, as each line is read, try to look it up via the class loader
+             * as a child of the current resource. If any line fails then we assume the current resource is not a
+             * directory.
              */
             is = url.openStream();
             List<String> lines = new ArrayList<>();
@@ -106,8 +107,8 @@ public class DefaultVFS extends VFS {
                   break;
                 }
               }
-            } catch (InvalidPathException e) {
-              // #1974
+            } catch (InvalidPathException | FileSystemException e) {
+              // #1974 #2598
               lines.clear();
             }
             if (!lines.isEmpty()) {
@@ -119,24 +120,22 @@ public class DefaultVFS extends VFS {
           }
         } catch (FileNotFoundException e) {
           /*
-           * For file URLs the openStream() call might fail, depending on the servlet
-           * container, because directories can't be opened for reading. If that happens,
-           * then list the directory directly instead.
+           * For file URLs the openStream() call might fail, depending on the servlet container, because directories
+           * can't be opened for reading. If that happens, then list the directory directly instead.
            */
-          if ("file".equals(url.getProtocol())) {
-            File file = new File(url.getFile());
-            if (log.isDebugEnabled()) {
-              log.debug("Listing directory " + file.getAbsolutePath());
-            }
-            if (file.isDirectory()) {
-              if (log.isDebugEnabled()) {
-                log.debug("Listing " + url);
-              }
-              children = Arrays.asList(file.list());
-            }
-          } else {
+          if (!"file".equals(url.getProtocol())) {
             // No idea where the exception came from so rethrow it
             throw e;
+          }
+          File file = new File(url.getFile());
+          if (log.isDebugEnabled()) {
+            log.debug("Listing directory " + file.getAbsolutePath());
+          }
+          if (file.isDirectory()) {
+            if (log.isDebugEnabled()) {
+              log.debug("Listing " + url);
+            }
+            children = Arrays.asList(file.list());
           }
         }
 
@@ -168,13 +167,18 @@ public class DefaultVFS extends VFS {
   }
 
   /**
-   * List the names of the entries in the given {@link JarInputStream} that begin with the
-   * specified {@code path}. Entries will match with or without a leading slash.
+   * List the names of the entries in the given {@link JarInputStream} that begin with the specified {@code path}.
+   * Entries will match with or without a leading slash.
    *
-   * @param jar The JAR input stream
-   * @param path The leading path to match
+   * @param jar
+   *          The JAR input stream
+   * @param path
+   *          The leading path to match
+   *
    * @return The names of all the matching entries
-   * @throws IOException If I/O errors occur
+   *
+   * @throws IOException
+   *           If I/O errors occur
    */
   protected List<String> listResources(JarInputStream jar, String path) throws IOException {
     // Include the leading and trailing slash when matching names
@@ -209,13 +213,15 @@ public class DefaultVFS extends VFS {
   }
 
   /**
-   * Attempts to deconstruct the given URL to find a JAR file containing the resource referenced
-   * by the URL. That is, assuming the URL references a JAR entry, this method will return a URL
-   * that references the JAR file containing the entry. If the JAR cannot be located, then this
-   * method returns null.
+   * Attempts to deconstruct the given URL to find a JAR file containing the resource referenced by the URL. That is,
+   * assuming the URL references a JAR entry, this method will return a URL that references the JAR file containing the
+   * entry. If the JAR cannot be located, then this method returns null.
    *
-   * @param url The URL of the JAR entry.
+   * @param url
+   *          The URL of the JAR entry.
+   *
    * @return The URL of the JAR file, if one is found. Null if not.
+   *
    * @throws MalformedURLException
    *           the malformed URL exception
    */
@@ -241,16 +247,15 @@ public class DefaultVFS extends VFS {
     // Look for the .jar extension and chop off everything after that
     StringBuilder jarUrl = new StringBuilder(url.toExternalForm());
     int index = jarUrl.lastIndexOf(".jar");
-    if (index >= 0) {
-      jarUrl.setLength(index + 4);
-      if (log.isDebugEnabled()) {
-        log.debug("Extracted JAR URL: " + jarUrl);
-      }
-    } else {
+    if (index < 0) {
       if (log.isDebugEnabled()) {
         log.debug("Not a JAR: " + jarUrl);
       }
       return null;
+    }
+    jarUrl.setLength(index + 4);
+    if (log.isDebugEnabled()) {
+      log.debug("Extracted JAR URL: " + jarUrl);
     }
 
     // Try to open and test it
@@ -258,31 +263,30 @@ public class DefaultVFS extends VFS {
       URL testUrl = new URL(jarUrl.toString());
       if (isJar(testUrl)) {
         return testUrl;
-      } else {
-        // WebLogic fix: check if the URL's file exists in the filesystem.
+      }
+      // WebLogic fix: check if the URL's file exists in the filesystem.
+      if (log.isDebugEnabled()) {
+        log.debug("Not a JAR: " + jarUrl);
+      }
+      jarUrl.replace(0, jarUrl.length(), testUrl.getFile());
+      File file = new File(jarUrl.toString());
+
+      // File name might be URL-encoded
+      if (!file.exists()) {
+        try {
+          file = new File(URLEncoder.encode(jarUrl.toString(), StandardCharsets.UTF_8.name()));
+        } catch (UnsupportedEncodingException e) {
+          throw new RuntimeException("Unsupported encoding?  UTF-8?  That's impossible.");
+        }
+      }
+
+      if (file.exists()) {
         if (log.isDebugEnabled()) {
-          log.debug("Not a JAR: " + jarUrl);
+          log.debug("Trying real file: " + file.getAbsolutePath());
         }
-        jarUrl.replace(0, jarUrl.length(), testUrl.getFile());
-        File file = new File(jarUrl.toString());
-
-        // File name might be URL-encoded
-        if (!file.exists()) {
-          try {
-            file = new File(URLEncoder.encode(jarUrl.toString(), "UTF-8"));
-          } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("Unsupported encoding?  UTF-8?  That's impossible.");
-          }
-        }
-
-        if (file.exists()) {
-          if (log.isDebugEnabled()) {
-            log.debug("Trying real file: " + file.getAbsolutePath());
-          }
-          testUrl = file.toURI().toURL();
-          if (isJar(testUrl)) {
-            return testUrl;
-          }
+        testUrl = file.toURI().toURL();
+        if (isJar(testUrl)) {
+          return testUrl;
         }
       }
     } catch (MalformedURLException e) {
@@ -301,6 +305,7 @@ public class DefaultVFS extends VFS {
    *
    * @param packageName
    *          The Java package name to convert to a path
+   *
    * @return the package path
    */
   protected String getPackagePath(String packageName) {
@@ -312,6 +317,7 @@ public class DefaultVFS extends VFS {
    *
    * @param url
    *          The URL of the resource to test.
+   *
    * @return true, if is jar
    */
   protected boolean isJar(URL url) {
@@ -326,6 +332,7 @@ public class DefaultVFS extends VFS {
    * @param buffer
    *          A buffer into which the first few bytes of the resource are read. The buffer must be at least the size of
    *          {@link #JAR_MAGIC}. (The same buffer may be reused for multiple calls as an optimization.)
+   *
    * @return true, if is jar
    */
   protected boolean isJar(URL url, byte[] buffer) {

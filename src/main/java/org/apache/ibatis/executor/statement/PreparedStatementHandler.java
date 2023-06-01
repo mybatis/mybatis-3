@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -37,7 +37,8 @@ import org.apache.ibatis.session.RowBounds;
  */
 public class PreparedStatementHandler extends BaseStatementHandler {
 
-  public PreparedStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
+  public PreparedStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameter,
+      RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
     super(executor, mappedStatement, parameter, rowBounds, resultHandler, boundSql);
   }
 
@@ -78,14 +79,16 @@ public class PreparedStatementHandler extends BaseStatementHandler {
     if (mappedStatement.getKeyGenerator() instanceof Jdbc3KeyGenerator) {
       String[] keyColumnNames = mappedStatement.getKeyColumns();
       if (keyColumnNames == null) {
-        return connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+        return connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
       } else {
         return connection.prepareStatement(sql, keyColumnNames);
       }
-    } else if (mappedStatement.getResultSetType() == ResultSetType.DEFAULT) {
+    }
+    if (mappedStatement.getResultSetType() == ResultSetType.DEFAULT) {
       return connection.prepareStatement(sql);
     } else {
-      return connection.prepareStatement(sql, mappedStatement.getResultSetType().getValue(), ResultSet.CONCUR_READ_ONLY);
+      return connection.prepareStatement(sql, mappedStatement.getResultSetType().getValue(),
+          ResultSet.CONCUR_READ_ONLY);
     }
   }
 

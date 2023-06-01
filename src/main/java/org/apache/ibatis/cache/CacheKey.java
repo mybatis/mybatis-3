@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -30,6 +30,8 @@ public class CacheKey implements Cloneable, Serializable {
   private static final long serialVersionUID = 1146682552656046210L;
 
   public static final CacheKey NULL_CACHE_KEY = new CacheKey() {
+
+    private static final long serialVersionUID = 1L;
 
     @Override
     public void update(Object object) {
@@ -98,13 +100,7 @@ public class CacheKey implements Cloneable, Serializable {
 
     final CacheKey cacheKey = (CacheKey) object;
 
-    if (hashcode != cacheKey.hashcode) {
-      return false;
-    }
-    if (checksum != cacheKey.checksum) {
-      return false;
-    }
-    if (count != cacheKey.count) {
+    if ((hashcode != cacheKey.hashcode) || (checksum != cacheKey.checksum) || (count != cacheKey.count)) {
       return false;
     }
 

@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -38,7 +38,8 @@ public class MetaObject {
   private final ObjectWrapperFactory objectWrapperFactory;
   private final ReflectorFactory reflectorFactory;
 
-  private MetaObject(Object object, ObjectFactory objectFactory, ObjectWrapperFactory objectWrapperFactory, ReflectorFactory reflectorFactory) {
+  private MetaObject(Object object, ObjectFactory objectFactory, ObjectWrapperFactory objectWrapperFactory,
+      ReflectorFactory reflectorFactory) {
     this.originalObject = object;
     this.objectFactory = objectFactory;
     this.objectWrapperFactory = objectWrapperFactory;
@@ -57,12 +58,12 @@ public class MetaObject {
     }
   }
 
-  public static MetaObject forObject(Object object, ObjectFactory objectFactory, ObjectWrapperFactory objectWrapperFactory, ReflectorFactory reflectorFactory) {
+  public static MetaObject forObject(Object object, ObjectFactory objectFactory,
+      ObjectWrapperFactory objectWrapperFactory, ReflectorFactory reflectorFactory) {
     if (object == null) {
       return SystemMetaObject.NULL_META_OBJECT;
-    } else {
-      return new MetaObject(object, objectFactory, objectWrapperFactory, reflectorFactory);
     }
+    return new MetaObject(object, objectFactory, objectWrapperFactory, reflectorFactory);
   }
 
   public ObjectFactory getObjectFactory() {
@@ -111,15 +112,14 @@ public class MetaObject {
 
   public Object getValue(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
-    if (prop.hasNext()) {
-      MetaObject metaValue = metaObjectForProperty(prop.getIndexedName());
-      if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
-        return null;
-      } else {
-        return metaValue.getValue(prop.getChildren());
-      }
-    } else {
+    if (!prop.hasNext()) {
       return objectWrapper.get(prop);
+    }
+    MetaObject metaValue = metaObjectForProperty(prop.getIndexedName());
+    if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
+      return null;
+    } else {
+      return metaValue.getValue(prop.getChildren());
     }
   }
 
@@ -131,9 +131,8 @@ public class MetaObject {
         if (value == null) {
           // don't instantiate child path if value is null
           return;
-        } else {
-          metaValue = objectWrapper.instantiatePropertyValue(name, prop, objectFactory);
         }
+        metaValue = objectWrapper.instantiatePropertyValue(name, prop, objectFactory);
       }
       metaValue.setValue(prop.getChildren(), value);
     } else {

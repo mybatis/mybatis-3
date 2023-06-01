@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2021 the original author or authors.
+       Copyright 2009-2023 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
        You may obtain a copy of the License at
 
-          http://www.apache.org/licenses/LICENSE-2.0
+          https://www.apache.org/licenses/LICENSE-2.0
 
        Unless required by applicable law or agreed to in writing, software
        distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,7 +17,7 @@
 
 -->
 <document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+      xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
 
   <properties>
     <title>MyBatis 3 | Ficheros XML de mapeo</title>
@@ -199,6 +199,17 @@ ps.setInt(1,id);]]></source>
                 a resultados principales anteriores. De esta forma los resultados anidados se rellenarán de
                 una manera mucho ás eficiente en términos de memoria. Defecto:
                 <code>false</code>.
+              </td>
+            </tr>
+            <tr>
+              <td><code>resultSets</code></td>
+              <td>This is only applicable for multiple result sets. It lists the result sets that will
+                be returned by the statement and gives a name to each one. Names are separated by commas.
+              </td>
+            </tr>
+            <tr>
+              <td><code>affectData</code></td>
+              <td>Set this to true when writing a INSERT, UPDATE or DELETE statement that returns data so that the transaction is controlled properly. Also see <a href="./java-api.html#transaction-control-methods">Transaction Control Method</a>. Default: <code>false</code> (since 3.5.12)
               </td>
             </tr>
           </tbody>
@@ -405,6 +416,18 @@ Por ejemplo, si la columna id de la tabla Author del ejemplo siguiente fuera aut
             </tr>
           </tbody>
         </table>
+
+        <p>
+          As an irregular case, some databases allow INSERT, UPDATE or DELETE statement to return result set (e.g. <code>RETURNING</code> clause of PostgreSQL and MariaDB or <code>OUTPUT</code> clause of MS SQL Server). This type of statement must be written as <code><![CDATA[<select>]]></code> to map the returned data.
+        </p>
+
+        <source><![CDATA[<select id="insertAndGetAuthor" resultType="domain.blog.Author"
+      affectData="true" flushCache="true">
+  insert into Author (username, password, email, bio)
+  values (#{username}, #{password}, #{email}, #{bio})
+  returning id, username, password, email, bio
+</select>]]></source>
+
       </subsection>
 
       <subsection name="sql">
@@ -654,8 +677,8 @@ public class User {
 
         <source><![CDATA[<resultMap id="userResultMap" type="User">
   <id property="id" column="user_id" />
-  <result property="username" column="username"/>
-  <result property="password" column="password"/>
+  <result property="username" column="user_name"/>
+  <result property="password" column="hashed_password"/>
 </resultMap>]]></source>
 
         <p>
@@ -963,7 +986,7 @@ public class User {
 </constructor>]]></source>
 
         <p>
-          <code>javaType</code> can be omitted if there is a property with the same name and type.
+          <code>javaType</code> can be omitted if there is a writable property with the same name and type.
         </p>
 
         <p>El resto de atributos son los mismos que los de los elementos id y result.</p>

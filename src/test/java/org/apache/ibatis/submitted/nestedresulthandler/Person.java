@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,18 +22,12 @@ import java.util.List;
 public class Person {
   private Integer id;
   private String name;
-  private List<Item> items = new ArrayList<>();
+  private final List<Item> items = new ArrayList<>();
 
-  public String toString(){
-    return new StringBuilder()
-            .append("Person(")
-            .append(id)
-            .append(", ")
-            .append(name)
-            .append(", ")
-            .append(items)
-            .append(" )")
-            .toString();
+  @Override
+  public String toString() {
+    return new StringBuilder().append("Person(").append(id).append(", ").append(name).append(", ").append(items)
+        .append(" )").toString();
   }
 
   public Integer getId() {
@@ -58,8 +52,9 @@ public class Person {
 
   public boolean owns(String name) {
     for (Item item : getItems()) {
-      if (item.getName().equals(name))
+      if (item.getName().equals(name)) {
         return true;
+      }
     }
     return false;
   }

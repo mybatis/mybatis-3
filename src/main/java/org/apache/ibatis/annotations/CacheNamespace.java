@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,9 +25,9 @@ import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.decorators.LruCache;
 import org.apache.ibatis.cache.impl.PerpetualCache;
 
+// @formatter:off
 /**
  * The annotation that specify to use cache on namespace(e.g. mapper interface).
- *
  * <p>
  * <b>How to use:</b>
  *
@@ -45,6 +45,7 @@ import org.apache.ibatis.cache.impl.PerpetualCache;
  * @author Clinton Begin
  * @author Kazuki Shimizu
  */
+// @formatter:on
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
@@ -96,6 +97,7 @@ public @interface CacheNamespace {
    * Returns property values for a implementation object.
    *
    * @return property values
+   *
    * @since 3.4.2
    */
   Property[] properties() default {};

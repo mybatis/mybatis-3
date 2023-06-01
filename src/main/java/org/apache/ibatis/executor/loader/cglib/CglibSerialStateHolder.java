@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,7 +24,10 @@ import org.apache.ibatis.reflection.factory.ObjectFactory;
 
 /**
  * @author Eduardo Macarron
+ *
+ * @deprecated Since 3.5.10, use Javassist instead.
  */
+@Deprecated
 class CglibSerialStateHolder extends AbstractSerialStateHolder {
 
   private static final long serialVersionUID = 8940388717901644661L;
@@ -32,18 +35,15 @@ class CglibSerialStateHolder extends AbstractSerialStateHolder {
   public CglibSerialStateHolder() {
   }
 
-  public CglibSerialStateHolder(
-          final Object userBean,
-          final Map<String, ResultLoaderMap.LoadPair> unloadedProperties,
-          final ObjectFactory objectFactory,
-          List<Class<?>> constructorArgTypes,
-          List<Object> constructorArgs) {
+  public CglibSerialStateHolder(final Object userBean, final Map<String, ResultLoaderMap.LoadPair> unloadedProperties,
+      final ObjectFactory objectFactory, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
     super(userBean, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
   }
 
   @Override
-  protected Object createDeserializationProxy(Object target, Map<String, ResultLoaderMap.LoadPair> unloadedProperties, ObjectFactory objectFactory,
-          List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
-    return new CglibProxyFactory().createDeserializationProxy(target, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
+  protected Object createDeserializationProxy(Object target, Map<String, ResultLoaderMap.LoadPair> unloadedProperties,
+      ObjectFactory objectFactory, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
+    return new CglibProxyFactory().createDeserializationProxy(target, unloadedProperties, objectFactory,
+        constructorArgTypes, constructorArgs);
   }
 }

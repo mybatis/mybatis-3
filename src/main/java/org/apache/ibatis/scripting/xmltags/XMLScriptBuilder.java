@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -49,7 +49,6 @@ public class XMLScriptBuilder extends BaseBuilder {
     this.parameterType = parameterType;
     initNodeHandlerMap();
   }
-
 
   private void initNodeHandlerMap() {
     nodeHandlerMap.put("trim", new TrimHandler());
@@ -105,7 +104,7 @@ public class XMLScriptBuilder extends BaseBuilder {
     void handleNode(XNode nodeToHandle, List<SqlNode> targetContents);
   }
 
-  private class BindHandler implements NodeHandler {
+  private static class BindHandler implements NodeHandler {
     public BindHandler() {
       // Prevent Synthetic Access
     }
@@ -171,12 +170,14 @@ public class XMLScriptBuilder extends BaseBuilder {
     public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
       MixedSqlNode mixedSqlNode = parseDynamicTags(nodeToHandle);
       String collection = nodeToHandle.getStringAttribute("collection");
+      Boolean nullable = nodeToHandle.getBooleanAttribute("nullable");
       String item = nodeToHandle.getStringAttribute("item");
       String index = nodeToHandle.getStringAttribute("index");
       String open = nodeToHandle.getStringAttribute("open");
       String close = nodeToHandle.getStringAttribute("close");
       String separator = nodeToHandle.getStringAttribute("separator");
-      ForEachSqlNode forEachSqlNode = new ForEachSqlNode(configuration, mixedSqlNode, collection, index, item, open, close, separator);
+      ForEachSqlNode forEachSqlNode = new ForEachSqlNode(configuration, mixedSqlNode, collection, nullable, index, item,
+          open, close, separator);
       targetContents.add(forEachSqlNode);
     }
   }
@@ -222,7 +223,8 @@ public class XMLScriptBuilder extends BaseBuilder {
       targetContents.add(chooseSqlNode);
     }
 
-    private void handleWhenOtherwiseNodes(XNode chooseSqlNode, List<SqlNode> ifSqlNodes, List<SqlNode> defaultSqlNodes) {
+    private void handleWhenOtherwiseNodes(XNode chooseSqlNode, List<SqlNode> ifSqlNodes,
+        List<SqlNode> defaultSqlNodes) {
       List<XNode> children = chooseSqlNode.getChildren();
       for (XNode child : children) {
         String nodeName = child.getNode().getNodeName();

@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -56,13 +56,14 @@ public class ResultMap {
   public static class Builder {
     private static final Log log = LogFactory.getLog(Builder.class);
 
-    private ResultMap resultMap = new ResultMap();
+    private final ResultMap resultMap = new ResultMap();
 
     public Builder(Configuration configuration, String id, Class<?> type, List<ResultMapping> resultMappings) {
       this(configuration, id, type, resultMappings, null);
     }
 
-    public Builder(Configuration configuration, String id, Class<?> type, List<ResultMapping> resultMappings, Boolean autoMapping) {
+    public Builder(Configuration configuration, String id, Class<?> type, List<ResultMapping> resultMappings,
+        Boolean autoMapping) {
       resultMap.configuration = configuration;
       resultMap.id = id;
       resultMap.type = type;
@@ -91,7 +92,8 @@ public class ResultMap {
       final List<String> constructorArgNames = new ArrayList<>();
       for (ResultMapping resultMapping : resultMap.resultMappings) {
         resultMap.hasNestedQueries = resultMap.hasNestedQueries || resultMapping.getNestedQueryId() != null;
-        resultMap.hasNestedResultMaps = resultMap.hasNestedResultMaps || (resultMapping.getNestedResultMapId() != null && resultMapping.getResultSet() == null);
+        resultMap.hasNestedResultMaps = resultMap.hasNestedResultMaps
+            || resultMapping.getNestedResultMapId() != null && resultMapping.getResultSet() == null;
         final String column = resultMapping.getColumn();
         if (column != null) {
           resultMap.mappedColumns.add(column.toUpperCase(Locale.ENGLISH));
@@ -125,10 +127,9 @@ public class ResultMap {
       if (!constructorArgNames.isEmpty()) {
         final List<String> actualArgNames = argNamesOfMatchingConstructor(constructorArgNames);
         if (actualArgNames == null) {
-          throw new BuilderException("Error in result map '" + resultMap.id
-              + "'. Failed to find a constructor in '"
-              + resultMap.getType().getName() + "' by arg names " + constructorArgNames
-              + ". There might be more info in debug log.");
+          throw new BuilderException("Error in result map '" + resultMap.id + "'. Failed to find a constructor in '"
+              + resultMap.getType().getName() + "' with arg names " + constructorArgNames
+              + ". Note that 'javaType' is required when there is no writable property with the same name ('name' is optional, BTW). There might be more info in debug log.");
         }
         resultMap.constructorResultMappings.sort((o1, o2) -> {
           int paramIdx1 = actualArgNames.indexOf(o1.getProperty());
@@ -160,18 +161,17 @@ public class ResultMap {
       return null;
     }
 
-    private boolean argTypesMatch(final List<String> constructorArgNames,
-        Class<?>[] paramTypes, List<String> paramNames) {
+    private boolean argTypesMatch(final List<String> constructorArgNames, Class<?>[] paramTypes,
+        List<String> paramNames) {
       for (int i = 0; i < constructorArgNames.size(); i++) {
         Class<?> actualType = paramTypes[paramNames.indexOf(constructorArgNames.get(i))];
         Class<?> specifiedType = resultMap.constructorResultMappings.get(i).getJavaType();
         if (!actualType.equals(specifiedType)) {
           if (log.isDebugEnabled()) {
-            log.debug("While building result map '" + resultMap.id
-                + "', found a constructor with arg names " + constructorArgNames
-                + ", but the type of '" + constructorArgNames.get(i)
-                + "' did not match. Specified: [" + specifiedType.getName() + "] Declared: ["
-                + actualType.getName() + "]");
+            log.debug("While building result map '" + resultMap.id + "', found a constructor with arg names "
+                + constructorArgNames + ", but the type of '" + constructorArgNames.get(i)
+                + "' did not match. Specified: [" + specifiedType.getName() + "] Declared: [" + actualType.getName()
+                + "]");
           }
           return false;
         }

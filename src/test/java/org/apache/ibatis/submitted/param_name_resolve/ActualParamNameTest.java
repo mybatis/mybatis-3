@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,6 +25,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
+import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -72,6 +73,11 @@ class ActualParamNameTest {
         long count = mapper.getUserCountUsingListWithAliasIsList(Arrays.asList(1, 2));
         assertEquals(2, count);
       }
+      // use actual name #2693
+      {
+        long count = mapper.getUserCountUsingList_RowBounds(new RowBounds(0, 5), Arrays.asList(1, 2));
+        assertEquals(2, count);
+      }
     }
   }
 
@@ -93,55 +99,77 @@ class ActualParamNameTest {
   }
 
   interface Mapper {
+    // @formatter:off
     @Select({
-      "<script>",
-      "  select count(*) from users u where u.id in",
-      "  <foreach item='item' index='index' collection='ids' open='(' separator=',' close=')'>",
-      "    #{item}",
-      "  </foreach>",
-      "</script>"
-    })
+        "<script>",
+        "  select count(*) from users u where u.id in",
+        "  <foreach item='item' index='index' collection='ids' open='(' separator=',' close=')'>",
+        "    #{item}",
+        "  </foreach>",
+        "</script>"
+      })
+    // @formatter:on
     Long getUserCountUsingList(List<Integer> ids);
 
+    // @formatter:off
     @Select({
-      "<script>",
-      "  select count(*) from users u where u.id in",
-      "  <foreach item='item' index='index' collection='collection' open='(' separator=',' close=')'>",
-      "    #{item}",
-      "  </foreach>",
-      "</script>"
-    })
+        "<script>",
+        "  select count(*) from users u where u.id in",
+        "  <foreach item='item' index='index' collection='collection' open='(' separator=',' close=')'>",
+        "    #{item}",
+        "  </foreach>",
+        "</script>"
+      })
+    // @formatter:on
     Long getUserCountUsingListWithAliasIsCollection(List<Integer> ids);
 
+    // @formatter:off
     @Select({
-      "<script>",
-      "  select count(*) from users u where u.id in",
-      "  <foreach item='item' index='index' collection='list' open='(' separator=',' close=')'>",
-      "    #{item}",
-      "  </foreach>",
-      "</script>"
-    })
+        "<script>",
+        "  select count(*) from users u where u.id in",
+        "  <foreach item='item' index='index' collection='list' open='(' separator=',' close=')'>",
+        "    #{item}",
+        "  </foreach>",
+        "</script>"
+      })
+    // @formatter:on
     Long getUserCountUsingListWithAliasIsList(List<Integer> ids);
 
+    // @formatter:off
     @Select({
-      "<script>",
-      "  select count(*) from users u where u.id in",
-      "  <foreach item='item' index='index' collection='ids' open='(' separator=',' close=')'>",
-      "    #{item}",
-      "  </foreach>",
-      "</script>"
-    })
+        "<script>",
+        "  select count(*) from users u where u.id in",
+        "  <foreach item='item' index='index' collection='ids' open='(' separator=',' close=')'>",
+        "    #{item}",
+        "  </foreach>",
+        "</script>"
+      })
+    // @formatter:on
     Long getUserCountUsingArray(Integer... ids);
 
+    // @formatter:off
     @Select({
-      "<script>",
-      "  select count(*) from users u where u.id in",
-      "  <foreach item='item' index='index' collection='array' open='(' separator=',' close=')'>",
-      "    #{item}",
-      "  </foreach>",
-      "</script>"
-    })
+        "<script>",
+        "  select count(*) from users u where u.id in",
+        "  <foreach item='item' index='index' collection='array' open='(' separator=',' close=')'>",
+        "    #{item}",
+        "  </foreach>",
+        "</script>"
+      })
+    // @formatter:on
     Long getUserCountUsingArrayWithAliasArray(Integer... ids);
+
+    // @formatter:off
+    @Select({
+        "<script>",
+        "  select count(*) from users u where u.id in",
+        "  <foreach item='item' index='index' collection='ids' open='(' separator=',' close=')'>",
+        "    #{item}",
+        "  </foreach>",
+        "</script>"
+      })
+    // @formatter:on
+    Long getUserCountUsingList_RowBounds(RowBounds rowBounds, List<Integer> ids);
   }
 
 }

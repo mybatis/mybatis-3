@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,10 +27,10 @@ import org.apache.ibatis.logging.LogFactory;
 /**
  * The 2nd level cache transactional buffer.
  * <p>
- * This class holds all cache entries that are to be added to the 2nd level cache during a Session.
- * Entries are sent to the cache when commit is called or discarded if the Session is rolled back.
- * Blocking cache support has been added. Therefore any get() that returns a cache miss
- * will be followed by a put() so any lock associated with the key can be released.
+ * This class holds all cache entries that are to be added to the 2nd level cache during a Session. Entries are sent to
+ * the cache when commit is called or discarded if the Session is rolled back. Blocking cache support has been added.
+ * Therefore any get() that returns a cache miss will be followed by a put() so any lock associated with the key can be
+ * released.
  *
  * @author Clinton Begin
  * @author Eduardo Macarron
@@ -71,9 +71,8 @@ public class TransactionalCache implements Cache {
     // issue #146
     if (clearOnCommit) {
       return null;
-    } else {
-      return object;
     }
+    return object;
   }
 
   @Override

@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -28,12 +28,10 @@ import org.apache.ibatis.logging.LogFactory;
 
 /**
  * Vendor DatabaseId provider.
- *
- * It returns database product name as a databaseId.
- * If the user provides a properties it uses it to translate database product name
- * key="Microsoft SQL Server", value="ms" will return "ms".
- * It can return null, if no database product name or
- * a properties was specified and no translation was found.
+ * <p>
+ * It returns database product name as a databaseId. If the user provides a properties it uses it to translate database
+ * product name key="Microsoft SQL Server", value="ms" will return "ms". It can return null, if no database product name
+ * or a properties was specified and no translation was found.
  *
  * @author Eduardo Macarron
  */

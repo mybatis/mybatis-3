@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,7 +15,8 @@
  */
 package org.apache.ibatis.reflection;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
@@ -420,12 +421,21 @@ class TypeParameterResolverTest {
     @SuppressWarnings("unused")
     abstract class A<S> {
       protected S id;
-      public S getId() { return this.id;}
-      public void setId(S id) {this.id = id;}
+
+      public S getId() {
+        return this.id;
+      }
+
+      public void setId(S id) {
+        this.id = id;
+      }
     }
-    abstract class B<T> extends A<T> {}
-    abstract class C<U> extends B<U> {}
-    class D extends C<Integer> {}
+    abstract class B<T> extends A<T> {
+    }
+    abstract class C<U> extends B<U> {
+    }
+    class D extends C<Integer> {
+    }
     Class<?> clazz = D.class;
     Method method = clazz.getMethod("getId");
     assertEquals(Integer.class, TypeParameterResolver.resolveReturnType(method, clazz));

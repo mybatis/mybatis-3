@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2020 the original author or authors.
+       Copyright 2009-2022 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
        You may obtain a copy of the License at
 
-          http://www.apache.org/licenses/LICENSE-2.0
+          https://www.apache.org/licenses/LICENSE-2.0
 
        Unless required by applicable law or agreed to in writing, software
        distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,7 +17,7 @@
 
 -->
 <document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
 
   <properties>
     <title>MyBatis 3 | Java API</title>
@@ -249,13 +249,13 @@ public interface ResultHandler<T> {
   <p>バッチ更新用に JDBC ドライバ内に蓄積されたステートメントを任意のタイミングでデータベースへフラッシュ(実行)するメソッドがあります。このメソッドは、 <code>ExecutorType</code> として <code>ExecutorType.BATCH</code> を使用している場合に使用することができます。</p>
   <source><![CDATA[List<BatchResult> flushStatements()]]></source>
 
-  <h5>トランザクションを制御するメソッド</h5>
+  <h5 id="transaction-control-methods">トランザクションを制御するメソッド</h5>
   <p>トランザクションのスコープを制御するメソッドは４つあります。当然ですが、auto-commit を使用する場合や、外部のトランザクションマネージャーを使っている場合、これらのメソッドは効果がありません。しかし、Connection のインスタンスによって管理されている JDBC トランザクションマネージャーを利用している場合は便利なメソッドです。</p>
   <source>void commit()
 void commit(boolean force)
 void rollback()
 void rollback(boolean force)</source>
-  <p>デフォルトでは、データベースが insert, update, delete メソッドの実行によって変更されない限り MyBatis は commit を実行しません。何らかの理由でこれらのメソッドを使わずにデータを変更した場合は確実にコミットされるように commit メソッドに引数 true を渡してください（ただし、auto-commit モードのセッションや外部のトランザクションマネージャーを使っている場合は true を渡してもコミットされません）。commit が実行されない場合、MyBatis がロールバックを実行するので、通常明示的に rollback() メソッドを呼び出す必要はありません。しかし、一つのセッションの中で複数のコミットやロールバックが必要とされるようなケースでは、rollback() メソッドを使ってより細かい制御を行うことが可能です。</p>
+  <p>デフォルトでは、データベースの変更を伴うメソッド insert, update, delete, <code>affectData</code> を有効化した select が実行されない限り MyBatis は commit を実行しません。何らかの理由でこれらのメソッドを使わずにデータを変更した場合は確実にコミットされるように commit メソッドに引数 true を渡してください（ただし、auto-commit モードのセッションや外部のトランザクションマネージャーを使っている場合は true を渡してもコミットされません）。commit が実行されない場合、MyBatis がロールバックを実行するので、通常明示的に rollback() メソッドを呼び出す必要はありません。しかし、一つのセッションの中で複数のコミットやロールバックが必要とされるようなケースでは、rollback() メソッドを使ってより細かい制御を行うことが可能です。</p>
   <p><span class="label important">NOTE</span> Mybatis-Spring と MyBatis-Guice では宣言的トランザクションがサポートされています。詳細は各サブプロジェクトのドキュメントを参照してください。</p>
 
   <h5>ローカルキャッシュ</h5>

@@ -1,11 +1,11 @@
 /*
- *    Copyright 2009-2021 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -71,8 +71,7 @@ class DefaultCursorTest {
     final RowBounds rowBounds = RowBounds.DEFAULT;
 
     final DefaultResultSetHandler resultSetHandler = new DefaultResultSetHandler(executor, ms, parameterHandler,
-      resultHandler, boundSql, rowBounds);
-
+        resultHandler, boundSql, rowBounds);
 
     when(rsmd.getColumnCount()).thenReturn(2);
     doReturn("id").when(rsmd).getColumnLabel(1);
@@ -100,35 +99,31 @@ class DefaultCursorTest {
     }
   }
 
-  @SuppressWarnings("serial")
   private MappedStatement getNestedAndOrderedMappedStatement() {
     final Configuration config = new Configuration();
     final TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
 
-    ResultMap nestedResultMap = new ResultMap.Builder(config, "roleMap", HashMap.class,
-      new ArrayList<ResultMapping>() {
-        {
-          add(new ResultMapping.Builder(config, "role", "role", registry.getTypeHandler(String.class))
-            .build());
-        }
-      }).build();
+    ResultMap nestedResultMap = new ResultMap.Builder(config, "roleMap", HashMap.class, new ArrayList<ResultMapping>() {
+      private static final long serialVersionUID = 1L;
+      {
+        add(new ResultMapping.Builder(config, "role", "role", registry.getTypeHandler(String.class)).build());
+      }
+    }).build();
     config.addResultMap(nestedResultMap);
 
     return new MappedStatement.Builder(config, "selectPerson", new StaticSqlSource(config, "select person..."),
-      SqlCommandType.SELECT).resultMaps(
-        new ArrayList<ResultMap>() {
+        SqlCommandType.SELECT).resultMaps(new ArrayList<ResultMap>() {
+          private static final long serialVersionUID = 1L;
           {
             add(new ResultMap.Builder(config, "personMap", HashMap.class, new ArrayList<ResultMapping>() {
+              private static final long serialVersionUID = 1L;
               {
-                add(new ResultMapping.Builder(config, "id", "id", registry.getTypeHandler(Integer.class))
-                  .build());
+                add(new ResultMapping.Builder(config, "id", "id", registry.getTypeHandler(Integer.class)).build());
                 add(new ResultMapping.Builder(config, "roles").nestedResultMapId("roleMap").build());
               }
             }).build());
           }
-        })
-        .resultOrdered(true)
-        .build();
+        }).resultOrdered(true).build();
   }
 
   /*
