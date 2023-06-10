@@ -96,8 +96,25 @@ public @interface Options {
    * Returns the statement timeout.
    *
    * @return the statement timeout
+   *
+   * @see #timeoutString()
    */
   int timeout() default -1;
+
+  /**
+   * Returns the statement timeout string.
+   * <p>
+   * Can specify configuration's variables such as {@code ${timeout.select}}. If not resolve variable value, fallback
+   * the {@link #timeout()} value.
+   * </p>
+   *
+   * @return the statement timeout string
+   *
+   * @see #timeout()
+   *
+   * @since 3.5.14
+   */
+  String timeoutString() default "";
 
   /**
    * Returns whether use the generated keys feature supported by JDBC 3.0

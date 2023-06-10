@@ -88,8 +88,9 @@ public class PropertyParser {
             return variables.getProperty(key, defaultValue);
           }
         }
-        if (variables.containsKey(key)) {
-          return variables.getProperty(key);
+        String value = variables.getProperty(key);
+        if (value != null) {
+          return value;
         }
       }
       return "${" + content + "}";
