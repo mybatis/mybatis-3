@@ -381,10 +381,9 @@ public class MapperAnnotationBuilder {
     if (valueString.isEmpty()) {
       return fallbackValue;
     } else {
-      Properties defaults = new Properties();
+      Properties variables = new Properties();
       Optional.ofNullable(fallbackValue).map(String::valueOf)
-          .ifPresent(x -> defaults.setProperty(TOKEN_PARSER.parse(valueString), x));
-      Properties variables = new Properties(defaults);
+          .ifPresent(x -> variables.setProperty(TOKEN_PARSER.parse(valueString), x));
       variables.putAll(configuration.getVariables());
       return Optional.ofNullable(PropertyParser.parse(valueString, variables)).map(valueTypeConverter)
           .orElse(fallbackValue);
