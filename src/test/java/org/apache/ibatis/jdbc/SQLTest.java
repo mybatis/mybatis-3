@@ -18,6 +18,9 @@ package org.apache.ibatis.jdbc;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 
 class SQLTest {
@@ -498,5 +501,53 @@ class SQLTest {
 
     assertThat(sql).isEqualToIgnoringWhitespace(
         "INSERT INTO PERSON (ID, FIRST_NAME, LAST_NAME) VALUES (#{id}, #{firstName}, #{lastName})");
+  }
+
+  @Test
+  void testApplyIf() {
+    Bean bean = new Bean();
+    // @formatter:off
+    String sqlString = new SQL()
+      .UPDATE("test")
+      .applyIf(bean.a != null, sql -> sql.SET("a=#{a}"))
+      .applyIf(bean.b != null, sql -> sql.SET("b=#{b}"))
+      .applyIf(bean::hasC, sql -> sql.SET("c=#{c}"))
+      .WHERE("id=#{id}").toString();
+    // @formatter:on
+
+    assertThat(sqlString).isEqualToIgnoringWhitespace("UPDATE test SET a=#{a} WHERE (id=#{id})");
+  }
+
+  @Test
+  void testApplyForEach() {
+    List<Bean> beans = new ArrayList<>();
+    beans.add(new Bean());
+    beans.add(new Bean());
+
+    // @formatter:off
+    String sqlString = new SQL()
+      .INSERT_INTO("test")
+      .INTO_COLUMNS("a", "b", "c")
+      .applyForEach(beans, (sql, element, index) ->
+        sql.INTO_VALUES(
+          String.format("#{list[%s].a}", index),
+          String.format("#{list[%s].b}", index),
+          String.format("#{list[%s].c}", index)
+        ).ADD_ROW())
+      .toString();
+    // @formatter:on
+
+    assertThat(sqlString).isEqualToIgnoringWhitespace(
+        "INSERT INTO test (a, b, c) VALUES (#{list[0].a}, #{list[0].b}, #{list[0].c}), (#{list[1].a}, #{list[1].b}, #{list[1].c})");
+  }
+
+  static class Bean {
+    private String a = "foo";
+    private String b;
+    private String c;
+
+    boolean hasC() {
+      return c != null;
+    }
   }
 }
