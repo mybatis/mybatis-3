@@ -418,7 +418,7 @@ void rollback(boolean force)</source>
         <td>
           Esta anotación proporciona acceso a un gran conjunto de opciones de configuración que normalmente aparecen como atributos en los mapped statements.
           En lugar de complicar cada anotación existente la anotación Options proporciona una forma sencilla y concisa de acceder a estas opciones.
-          Atributos: useCache=true, flushCache=FlushCachePolicy.DEFAULT, resultSetType=DEFAULT, statementType=PREPARED, fetchSize=-1, timeout=-1, useGeneratedKeys=false, keyProperty=“”, keyColumn=“”, resultSets=“”, databaseId="".
+          Atributos: useCache=true, flushCache=FlushCachePolicy.DEFAULT, resultSetType=DEFAULT, statementType=PREPARED, fetchSize=-1, timeout=-1, timeoutString="", useGeneratedKeys=false, keyProperty=“”, keyColumn=“”, resultSets=“”, databaseId="".
           Es importante comprender que las anotaciones en Java no permiten indicar un valor nulo.
           Por lo tanto, cuando usas la anotación Options el statement usará todos los valores por defecto.
           Presta atención a estos valores pro defecto para evitar comportamientos inesperados.
