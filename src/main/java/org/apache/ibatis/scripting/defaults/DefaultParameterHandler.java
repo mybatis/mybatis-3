@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -82,6 +82,9 @@ public class DefaultParameterHandler implements ParameterHandler {
           JdbcType jdbcType = parameterMapping.getJdbcType();
           if (value == null && jdbcType == null) {
             jdbcType = configuration.getJdbcTypeForNull();
+          }
+          if (parameterMapping.getLike() != null && value instanceof String) {
+            value = parameterMapping.getLike().format((String) value);
           }
           try {
             typeHandler.setParameter(ps, i + 1, value, jdbcType);
