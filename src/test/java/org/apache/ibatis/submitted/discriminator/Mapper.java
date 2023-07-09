@@ -23,4 +23,8 @@ public interface Mapper {
 
   List<Owner> selectOwnersWithAVehicle();
 
+  List<Owner> selectOwnersWithAVehicleConstructor();
+
+  List<Contract> selectContracts();
+
 }

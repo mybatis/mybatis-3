@@ -68,4 +68,25 @@ class DiscriminatorTest {
     }
   }
 
+  @Test
+  void shouldBeAppliedToResultMapInConstructorArg() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      List<Owner> owners = mapper.selectOwnersWithAVehicleConstructor();
+      assertEquals(Truck.class, owners.get(0).getVehicle().getClass());
+      assertEquals(Car.class, owners.get(1).getVehicle().getClass());
+    }
+  }
+
+  @Test
+  void shouldBeAppliedToResultMapInConstructorArgNested() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      List<Contract> contracts = mapper.selectContracts();
+      assertEquals(2, contracts.size());
+      assertEquals(Truck.class, contracts.get(0).getOwner().getVehicle().getClass());
+      assertEquals(Car.class, contracts.get(1).getOwner().getVehicle().getClass());
+    }
+  }
+
 }
