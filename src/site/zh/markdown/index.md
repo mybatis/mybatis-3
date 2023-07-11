@@ -1,7 +1,5 @@
 title: MyBatis 3 | 简介
-<meta name="author" content="Clinton Begin" />
-<meta name="author" content="Nan Lei" />
-<meta name="author" content="Dongxu Wang" />
+author: Clinton Begin, Nan Lei, Dongxu Wang
 
 ## 简介
 

@@ -1,6 +1,5 @@
 title: 마이바티스 3 | 소개
-<meta name="author" content="Clinton Begin" />
-<meta name="author" content="이동국(한국어 번역)" />
+author: Clinton Begin, 이동국(한국어 번역)
 
 ## 소개
 

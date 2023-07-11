@@ -1,6 +1,5 @@
 title: MyBatis 3 | Introducción
-<meta name="author" content="Clinton Begin" />
-<meta name="author" content="Eduardo Macarron" />
+author: Clinton Begin, Eduardo Macarron
 
 ## Introducción
 

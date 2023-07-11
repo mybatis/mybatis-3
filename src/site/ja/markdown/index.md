@@ -1,6 +1,5 @@
 title: MyBatis 3 | イントロダクション
-<meta name="author" content="Clinton Begin" />
-<meta name="author" content="Iwao AVE!" />
+author: Clinton Begin, Iwao AVE!
 
 ## イントロダクション
 
