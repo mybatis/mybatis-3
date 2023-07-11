@@ -1,13 +1,12 @@
 title: MyBatis 3 | イントロダクション
-author: Clinton Begin,Iwao AVE!
+<meta name="author" content="Clinton Begin" />
+<meta name="author" content="Iwao AVE!" />
 
 ## イントロダクション
 
 ### MyBatis とは？
 
 MyBatis はカスタム SQL、ストアドプロシージャ、高度なマッピング処理に対応した優れた永続化フレームワークです。 MyBatisを使うことで、直接 JDBC を扱うコードを書いたり、クエリ引数やクエリ結果を手動で設定する必要がほとんどなくなります。 MyBatis の設定やデータベースレコードと Java オブジェクトの関連付けは、XML またはアノテーションを使って行うことができます。
-
-If you are completely new to database access in Java, https://www.marcobehler.com/guides/a-guide-to-accessing-databases-in-java contains a good overview of the various parts, pieces and options and shows you where exactly MyBatis fits in.
 
 ### このドキュメントの改善にご協力ください...
 

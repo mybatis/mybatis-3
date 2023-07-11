@@ -1,5 +1,7 @@
 title: MyBatis 3 | 简介
-author: Clinton Begin,Nan Lei,Dongxu Wang
+<meta name="author" content="Clinton Begin" />
+<meta name="author" content="Nan Lei" />
+<meta name="author" content="Dongxu Wang" />
 
 ## 简介
 
@@ -7,13 +9,11 @@ author: Clinton Begin,Nan Lei,Dongxu Wang
 
 MyBatis 是一款优秀的持久层框架，它支持自定义 SQL、存储过程以及高级映射。MyBatis 免除了几乎所有的 JDBC 代码以及设置参数和获取结果集的工作。MyBatis 可以通过简单的 XML 或注解来配置和映射原始类型、接口和 Java POJO（Plain Old Java Objects，普通老式 Java 对象）为数据库中的记录。
 
-If you are completely new to database access in Java, https://www.marcobehler.com/guides/a-guide-to-accessing-databases-in-java contains a good overview of the various parts, pieces and options and shows you where exactly MyBatis fits in.
-
 ### 帮助改进文档...
 
 如果你发现文档有任何的遗漏，或缺少某一个功能点的说明，最好的解决办法是先自己学习，然后为遗漏的部份补上相应的文档。
 
-该文档 Markdown 格式的源码文件可通过项目的 [Git 代码库](https://github.com/mybatis/mybatis-3/tree/master/src/site)来获取。fork该源码库，作出更新，并提交 Pull Request 吧。
+该文档 Markdown 格式的源码文件可通过[项目的 Git 代码库](https://github.com/mybatis/mybatis-3/tree/master/src/site)来获取。fork该源码库，作出更新，并提交 Pull Request 吧。
 
 还有其他像你一样的人都需要阅读这份文档，而你，就是这份文档最好的作者。
 

@@ -1,13 +1,12 @@
 title: 마이바티스 3 | 소개
-author: Clinton Begin,이동국(한국어 번역)
+<meta name="author" content="Clinton Begin" />
+<meta name="author" content="이동국(한국어 번역)" />
 
 ## 소개
 
 ### 마이바티스는 무엇인가?
 
 마이바티스는 개발자가 지정한 SQL, 저장프로시저 그리고 몇가지 고급 매핑을 지원하는 퍼시스턴스 프레임워크이다. 마이바티스는 JDBC로 처리하는 상당부분의 코드와 파라미터 설정및 결과 매핑을 대신해준다. 마이바티스는 데이터베이스 레코드에 원시타입과 Map 인터페이스 그리고 자바 POJO 를 설정해서 매핑하기 위해 XML과 애노테이션을 사용할 수 있다.
-
-If you are completely new to database access in Java, https://www.marcobehler.com/guides/a-guide-to-accessing-databases-in-java contains a good overview of the various parts, pieces and options and shows you where exactly MyBatis fits in.
 
 ### 이 문서가 더 좋아지도록 도와주세요…
 
