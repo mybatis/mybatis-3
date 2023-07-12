@@ -235,7 +235,7 @@ public class XMLMapperBuilder extends BaseBuilder {
         String resultMap = parameterNode.getStringAttribute("resultMap");
         String mode = parameterNode.getStringAttribute("mode");
         String typeHandler = parameterNode.getStringAttribute("typeHandler");
-        Integer numericScale = parameterNode.getIntAttribute("numericScale");
+        Integer numericScale = parameterNode.getIntAttribute("scale");
         ParameterMode modeEnum = resolveParameterMode(mode);
         Class<?> javaTypeClass = resolveClass(javaType);
         JdbcType jdbcTypeEnum = resolveJdbcType(jdbcType);
