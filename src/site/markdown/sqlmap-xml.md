@@ -220,7 +220,7 @@ As an irregular case, some databases allow INSERT, UPDATE or DELETE statement to
   insert into Author (username, password, email, bio)
   values (#{username}, #{password}, #{email}, #{bio})
   returning id, username, password, email, bio
-</select>        
+</select>
 ```
 
 ### sql
@@ -334,7 +334,7 @@ Despite all of these powerful options, most of the time you'll simply specify th
 #{lastName}
 ```
 
-#### String Substitution 
+#### String Substitution
 
 By default, using the `#{}` syntax will cause MyBatis to generate `PreparedStatement` properties and set the values safely against the `PreparedStatement` parameters (e.g. ?). While this is safer, faster and almost always preferred, sometimes you just want to directly inject an unmodified string into the SQL Statement. For example, for ORDER BY, you might use something like this:
 
@@ -648,7 +648,7 @@ In order to inject the results into the constructor, MyBatis needs to identify t
 </constructor>
 ```
 
-When you are dealing with a constructor with many parameters, maintaining the order of arg elements is error-prone.  
+When you are dealing with a constructor with many parameters, maintaining the order of arg elements is error-prone.
 Since 3.4.3, by specifying the name of each parameter, you can write arg elements in any order. To reference constructor parameters by their names, you can either add `@Param` annotation to them or compile the project with '-parameters' compiler option and enable `useActualParamName` (this option is enabled by default). The following example is valid for the same constructor even though the order of the second and the third parameters does not match with the declared order.
 
 ```xml
