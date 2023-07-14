@@ -235,7 +235,7 @@
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derbyoptionaltools</artifactId>
-      <version>10.15.2.0</version>
+      <version>10.16.1.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
