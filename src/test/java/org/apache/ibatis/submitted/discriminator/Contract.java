@@ -13,44 +13,24 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
+
 package org.apache.ibatis.submitted.discriminator;
 
-public class Owner {
+public class Contract {
   private Integer id;
-  private String name;
-  private Vehicle vehicle;
+  private Owner owner;
 
-  public Owner() {
-    super();
-  }
-
-  public Owner(Integer id, Vehicle vehicle) {
+  public Contract(Integer id, Owner owner) {
     super();
     this.id = id;
-    this.vehicle = vehicle;
+    this.owner = owner;
   }
 
   public Integer getId() {
     return id;
   }
 
-  public void setId(Integer id) {
-    this.id = id;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public Vehicle getVehicle() {
-    return vehicle;
-  }
-
-  public void setVehicle(Vehicle vehicle) {
-    this.vehicle = vehicle;
+  public Owner getOwner() {
+    return owner;
   }
 }

@@ -704,8 +704,10 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         if (constructorMapping.getNestedQueryId() != null) {
           value = getNestedQueryConstructorValue(rsw.getResultSet(), constructorMapping, columnPrefix);
         } else if (constructorMapping.getNestedResultMapId() != null) {
-          final ResultMap resultMap = configuration.getResultMap(constructorMapping.getNestedResultMapId());
-          value = getRowValue(rsw, resultMap, getColumnPrefix(columnPrefix, constructorMapping));
+          String constructorColumnPrefix = getColumnPrefix(columnPrefix, constructorMapping);
+          final ResultMap resultMap = resolveDiscriminatedResultMap(rsw.getResultSet(),
+              configuration.getResultMap(constructorMapping.getNestedResultMapId()), constructorColumnPrefix);
+          value = getRowValue(rsw, resultMap, constructorColumnPrefix);
         } else {
           final TypeHandler<?> typeHandler = constructorMapping.getTypeHandler();
           value = typeHandler.getResult(rsw.getResultSet(), prependPrefix(column, columnPrefix));
