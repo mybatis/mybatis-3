@@ -21,6 +21,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheException;
+import org.apache.ibatis.cache.impl.DelegateCache;
 
 /**
  * <p>
@@ -34,31 +35,20 @@ import org.apache.ibatis.cache.CacheException;
  *
  * @author Eduardo Macarron
  */
-public class BlockingCache implements Cache {
+public class BlockingCache extends DelegateCache {
 
   private long timeout;
-  private final Cache delegate;
   private final ConcurrentHashMap<Object, CountDownLatch> locks;
 
   public BlockingCache(Cache delegate) {
-    this.delegate = delegate;
+    super(delegate);
     this.locks = new ConcurrentHashMap<>();
-  }
-
-  @Override
-  public String getId() {
-    return delegate.getId();
-  }
-
-  @Override
-  public int getSize() {
-    return delegate.getSize();
   }
 
   @Override
   public void putObject(Object key, Object value) {
     try {
-      delegate.putObject(key, value);
+      super.putObject(key, value);
     } finally {
       releaseLock(key);
     }
@@ -67,7 +57,7 @@ public class BlockingCache implements Cache {
   @Override
   public Object getObject(Object key) {
     acquireLock(key);
-    Object value = delegate.getObject(key);
+    Object value = super.getObject(key);
     if (value != null) {
       releaseLock(key);
     }
@@ -79,11 +69,6 @@ public class BlockingCache implements Cache {
     // despite its name, this method is called only to release locks
     releaseLock(key);
     return null;
-  }
-
-  @Override
-  public void clear() {
-    delegate.clear();
   }
 
   private void acquireLock(Object key) {
@@ -98,7 +83,7 @@ public class BlockingCache implements Cache {
           boolean acquired = latch.await(timeout, TimeUnit.MILLISECONDS);
           if (!acquired) {
             throw new CacheException(
-                "Couldn't get a lock in " + timeout + " for the key " + key + " at the cache " + delegate.getId());
+                "Couldn't get a lock in " + timeout + " for the key " + key + " at the cache " + super.getId());
           }
         } else {
           latch.await();
