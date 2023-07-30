@@ -81,7 +81,7 @@ public interface BlogMapper {
 }
 ```
 
-Crea un fichero con nombre logback.xml como el que se muestra a continuación y colocalo en tu classpath:
+Crea un fichero con nombre `logback.xml` como el que se muestra a continuación y colocalo en tu classpath:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
