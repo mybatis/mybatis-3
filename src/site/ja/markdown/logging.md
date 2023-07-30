@@ -1,4 +1,4 @@
-title: MyBatis 3 | Logging
+title: MyBatis 3 | ロギング
 author: Clinton Begin, Iwao AVE!
 
 ## ロギング
