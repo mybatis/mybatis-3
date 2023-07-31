@@ -87,8 +87,8 @@ public class JavassistProxyFactory implements org.apache.ibatis.executor.loader.
     }
 
     Object enhanced;
-    Class<?>[] typesArray = constructorArgTypes.toArray(new Class[constructorArgTypes.size()]);
-    Object[] valuesArray = constructorArgs.toArray(new Object[constructorArgs.size()]);
+    Class<?>[] typesArray = constructorArgTypes.toArray(new Class[0]);
+    Object[] valuesArray = constructorArgs.toArray(new Object[0]);
     try {
       enhanced = enhancer.create(typesArray, valuesArray);
     } catch (Exception e) {

@@ -90,7 +90,7 @@ public class ResultLoaderMap {
 
   public void loadAll() throws SQLException {
     final Set<String> methodNameSet = loaderMap.keySet();
-    String[] methodNames = methodNameSet.toArray(new String[methodNameSet.size()]);
+    String[] methodNames = methodNameSet.toArray(new String[0]);
     for (String methodName : methodNames) {
       load(methodName);
     }

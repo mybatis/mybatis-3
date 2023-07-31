@@ -53,11 +53,11 @@ public class CustomObjectFactory implements ObjectFactory {
         }
         return constructor.newInstance();
       }
-      constructor = type.getDeclaredConstructor(constructorArgTypes.toArray(new Class[constructorArgTypes.size()]));
+      constructor = type.getDeclaredConstructor(constructorArgTypes.toArray(new Class[0]));
       if (!constructor.isAccessible()) {
         constructor.setAccessible(true);
       }
-      return constructor.newInstance(constructorArgs.toArray(new Object[constructorArgs.size()]));
+      return constructor.newInstance(constructorArgs.toArray(new Object[0]));
     } catch (Exception e) {
       StringBuilder argTypes = new StringBuilder();
       if (constructorArgTypes != null) {
