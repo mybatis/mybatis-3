@@ -104,7 +104,7 @@ public class ParamNameResolver {
    * @return the names
    */
   public String[] getNames() {
-    return names.values().toArray(new String[0]);
+    return names.values().toArray(new String[names.size()]);
   }
 
   /**

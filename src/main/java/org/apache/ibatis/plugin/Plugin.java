@@ -96,7 +96,7 @@ public class Plugin implements InvocationHandler {
       }
       type = type.getSuperclass();
     }
-    return interfaces.toArray(new Class<?>[0]);
+    return interfaces.toArray(new Class<?>[interfaces.size()]);
   }
 
 }

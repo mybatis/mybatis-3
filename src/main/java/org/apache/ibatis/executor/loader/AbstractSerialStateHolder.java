@@ -58,8 +58,8 @@ public abstract class AbstractSerialStateHolder implements Externalizable {
     this.userBean = userBean;
     this.unloadedProperties = new HashMap<>(unloadedProperties);
     this.objectFactory = objectFactory;
-    this.constructorArgTypes = constructorArgTypes.toArray(new Class<?>[0]);
-    this.constructorArgs = constructorArgs.toArray(new Object[0]);
+    this.constructorArgTypes = constructorArgTypes.toArray(new Class<?>[constructorArgTypes.size()]);
+    this.constructorArgs = constructorArgs.toArray(new Object[constructorArgs.size()]);
   }
 
   @Override
