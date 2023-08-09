@@ -103,10 +103,12 @@ public class XMLConfigBuilder extends BaseBuilder {
   }
 
   public Configuration parse() {
+    // 判断构建次数  每个XML只能构建一次
     if (parsed) {
       throw new BuilderException("Each XMLConfigBuilder can only be used once.");
     }
     parsed = true;
+    // 解析节点configuration
     parseConfiguration(parser.evalNode("/configuration"));
     return configuration;
   }
@@ -114,6 +116,7 @@ public class XMLConfigBuilder extends BaseBuilder {
   private void parseConfiguration(XNode root) {
     try {
       // issue #117 read properties first
+      // 加载外部的文件  直接引用进来使用
       propertiesElement(root.evalNode("properties"));
       Properties settings = settingsAsProperties(root.evalNode("settings"));
       loadCustomVfs(settings);
@@ -125,10 +128,13 @@ public class XMLConfigBuilder extends BaseBuilder {
       reflectorFactoryElement(root.evalNode("reflectorFactory"));
       settingsElement(settings);
       // read it after objectFactory and objectWrapperFactory issue #631
+      // 解析数据库连接的配置属性
       environmentsElement(root.evalNode("environments"));
       databaseIdProviderElement(root.evalNode("databaseIdProvider"));
       typeHandlerElement(root.evalNode("typeHandlers"));
+      // 解析 mappers 标签
       mapperElement(root.evalNode("mappers"));
+      // 解析完所有的配置后放在了configuration类中保存
     } catch (Exception e) {
       throw new BuilderException("Error parsing SQL Mapper Configuration. Cause: " + e, e);
     }
@@ -297,10 +303,14 @@ public class XMLConfigBuilder extends BaseBuilder {
       if (environment == null) {
         environment = context.getStringAttribute("default");
       }
+      // 遍历其子节点
       for (XNode child : context.getChildren()) {
         String id = child.getStringAttribute("id");
+        // 判断是否指定环境 包括环境ID不许为空,  环境ID为 development 才可以设置数据库连接属性
         if (isSpecifiedEnvironment(id)) {
+          // 解析事务管理器
           TransactionFactory txFactory = transactionManagerElement(child.evalNode("transactionManager"));
+          // 解析数据库链接
           DataSourceFactory dsFactory = dataSourceElement(child.evalNode("dataSource"));
           DataSource dataSource = dsFactory.getDataSource();
           Environment.Builder environmentBuilder = new Environment.Builder(id).transactionFactory(txFactory)
@@ -382,14 +392,18 @@ public class XMLConfigBuilder extends BaseBuilder {
 
   private void mapperElement(XNode parent) throws Exception {
     if (parent != null) {
+      // 遍历所有的 mapper
       for (XNode child : parent.getChildren()) {
+        // 如果 mapper 后引用的是 package, 获取 package 的名字 调用 addMappers 方法批量加入 mapper
         if ("package".equals(child.getName())) {
           String mapperPackage = child.getStringAttribute("name");
           configuration.addMappers(mapperPackage);
         } else {
+          // 非包导入则是 resource url class 其中的一个
           String resource = child.getStringAttribute("resource");
           String url = child.getStringAttribute("url");
           String mapperClass = child.getStringAttribute("class");
+          // resoure 方式导入 mapper
           if (resource != null && url == null && mapperClass == null) {
             ErrorContext.instance().resource(resource);
             try (InputStream inputStream = Resources.getResourceAsStream(resource)) {

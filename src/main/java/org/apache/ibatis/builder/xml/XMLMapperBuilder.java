@@ -113,6 +113,7 @@ public class XMLMapperBuilder extends BaseBuilder {
 
   private void configurationElement(XNode context) {
     try {
+      // 获取 mapper.xml 的命令空间
       String namespace = context.getStringAttribute("namespace");
       if (namespace == null || namespace.isEmpty()) {
         throw new BuilderException("Mapper's namespace cannot be empty");
@@ -123,6 +124,7 @@ public class XMLMapperBuilder extends BaseBuilder {
       parameterMapElement(context.evalNodes("/mapper/parameterMap"));
       resultMapElements(context.evalNodes("/mapper/resultMap"));
       sqlElement(context.evalNodes("/mapper/sql"));
+      // 构建SQL语句
       buildStatementFromContext(context.evalNodes("select|insert|update|delete"));
     } catch (Exception e) {
       throw new BuilderException("Error parsing Mapper XML. The XML location is '" + resource + "'. Cause: " + e, e);
@@ -346,10 +348,7 @@ public class XMLMapperBuilder extends BaseBuilder {
   }
 
   private void sqlElement(List<XNode> list) {
-    if (configuration.getDatabaseId() != null) {
-      sqlElement(list, configuration.getDatabaseId());
-    }
-    sqlElement(list, null);
+    sqlElement(list, configuration.getDatabaseId() != null ? configuration.getDatabaseId() : null);
   }
 
   private void sqlElement(List<XNode> list, String requiredDatabaseId) {
