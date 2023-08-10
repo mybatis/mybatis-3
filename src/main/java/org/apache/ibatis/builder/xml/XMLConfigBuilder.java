@@ -403,7 +403,7 @@ public class XMLConfigBuilder extends BaseBuilder {
           String resource = child.getStringAttribute("resource");
           String url = child.getStringAttribute("url");
           String mapperClass = child.getStringAttribute("class");
-          // resoure 方式导入 mapper
+          // resource 方式导入 mapper
           if (resource != null && url == null && mapperClass == null) {
             ErrorContext.instance().resource(resource);
             try (InputStream inputStream = Resources.getResourceAsStream(resource)) {

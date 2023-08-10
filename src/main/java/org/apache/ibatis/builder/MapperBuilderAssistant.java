@@ -205,8 +205,10 @@ public class MapperBuilderAssistant extends BaseBuilder {
       throw new IncompleteElementException("Cache-ref not yet resolved");
     }
 
+    // 对namespace的补全，此处ID如果为方法名字，则加上namespace的前缀
     id = applyCurrentNamespace(id, false);
 
+    // 构建MappedStatement对于每一个SQL标签进行封装
     MappedStatement.Builder statementBuilder = new MappedStatement.Builder(configuration, id, sqlSource, sqlCommandType)
         .resource(resource).fetchSize(fetchSize).timeout(timeout).statementType(statementType)
         .keyGenerator(keyGenerator).keyProperty(keyProperty).keyColumn(keyColumn).databaseId(databaseId).lang(lang)
@@ -214,11 +216,13 @@ public class MapperBuilderAssistant extends BaseBuilder {
         .resultMaps(getStatementResultMaps(resultMap, resultType, id)).resultSetType(resultSetType)
         .flushCacheRequired(flushCache).useCache(useCache).cache(currentCache).dirtySelect(dirtySelect);
 
+    // 入参的解析  并添加到statement中
     ParameterMap statementParameterMap = getStatementParameterMap(parameterMap, parameterType, id);
     if (statementParameterMap != null) {
       statementBuilder.parameterMap(statementParameterMap);
     }
 
+    // 把statement放在configuration中去
     MappedStatement statement = statementBuilder.build();
     configuration.addMappedStatement(statement);
     return statement;

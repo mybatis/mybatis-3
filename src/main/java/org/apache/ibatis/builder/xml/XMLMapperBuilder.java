@@ -99,9 +99,11 @@ public class XMLMapperBuilder extends BaseBuilder {
     if (!configuration.isResourceLoaded(resource)) {
       configurationElement(parser.evalNode("/mapper"));
       configuration.addLoadedResource(resource);
+      // 记录已经加载的mapper资源 ####**** 可以把namespace当作一个mapper的唯一标识或者最重要的标识 其作用远大于mapper.xml对应的文件名
       bindMapperForNamespace();
     }
 
+    // 处理一些不完整的内容 其原来保存在configuration对应的某一个map中
     parsePendingResultMaps();
     parsePendingCacheRefs();
     parsePendingStatements();
@@ -140,7 +142,7 @@ public class XMLMapperBuilder extends BaseBuilder {
   }
 
   private void buildStatementFromContext(List<XNode> list, String requiredDatabaseId) {
-    // 遍历每一条SQL语句并进行构建
+    // 遍历每一条SQL语句并进行构建，对于某一个mapper文件来说
     for (XNode context : list) {
       final XMLStatementBuilder statementParser = new XMLStatementBuilder(configuration, builderAssistant, context,
           requiredDatabaseId);
@@ -435,12 +437,14 @@ public class XMLMapperBuilder extends BaseBuilder {
     if (namespace != null) {
       Class<?> boundType = null;
       try {
+        // 根据namespace寻找与之对应的接口
         boundType = Resources.classForName(namespace);
       } catch (ClassNotFoundException e) {
         // ignore, bound type is not required
       }
       if (boundType != null && !configuration.hasMapper(boundType)) {
         // Spring may not know the real resource name so we set a flag
+        // 对于已经注册的mapper放在mapperRegistry中的集合里，如果没有在加载在放进去
         // to prevent loading again this resource from the mapper interface
         // look at MapperAnnotationBuilder#loadXmlResource
         configuration.addLoadedResource("namespace:" + namespace);
