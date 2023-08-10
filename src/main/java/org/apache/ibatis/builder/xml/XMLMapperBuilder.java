@@ -124,7 +124,7 @@ public class XMLMapperBuilder extends BaseBuilder {
       parameterMapElement(context.evalNodes("/mapper/parameterMap"));
       resultMapElements(context.evalNodes("/mapper/resultMap"));
       sqlElement(context.evalNodes("/mapper/sql"));
-      // 构建SQL语句
+      // 构建SQL语句  context.evalNodes("select|insert|update|delete") 会解析出xml文件中有几个对应得语句
       buildStatementFromContext(context.evalNodes("select|insert|update|delete"));
     } catch (Exception e) {
       throw new BuilderException("Error parsing Mapper XML. The XML location is '" + resource + "'. Cause: " + e, e);
@@ -132,6 +132,7 @@ public class XMLMapperBuilder extends BaseBuilder {
   }
 
   private void buildStatementFromContext(List<XNode> list) {
+    // 根据文本内容构建对应得SQL语句
     if (configuration.getDatabaseId() != null) {
       buildStatementFromContext(list, configuration.getDatabaseId());
     }
@@ -139,10 +140,12 @@ public class XMLMapperBuilder extends BaseBuilder {
   }
 
   private void buildStatementFromContext(List<XNode> list, String requiredDatabaseId) {
+    // 遍历每一条SQL语句并进行构建
     for (XNode context : list) {
       final XMLStatementBuilder statementParser = new XMLStatementBuilder(configuration, builderAssistant, context,
           requiredDatabaseId);
       try {
+        // parseStatementNode() 构建具体的SQL语句
         statementParser.parseStatementNode();
       } catch (IncompleteElementException e) {
         configuration.addIncompleteStatement(statementParser);

@@ -56,24 +56,34 @@ public class XMLStatementBuilder extends BaseBuilder {
   }
 
   public void parseStatementNode() {
+    // 获取当前标签SQL的id值
     String id = context.getStringAttribute("id");
+    // 获取databaseId,此值在多数据源时可以选择当前SQL走那个数据源
     String databaseId = context.getStringAttribute("databaseId");
 
+    // TODO: 2023/8/10 没看懂里面的意思   下次再看
     if (!databaseIdMatchesCurrent(id, databaseId, this.requiredDatabaseId)) {
       return;
     }
 
+    // 拿到当前的SQL标签类型
     String nodeName = context.getNode().getNodeName();
+    // sqlCommandType为 当前的SQL标签类型(大写)
     SqlCommandType sqlCommandType = SqlCommandType.valueOf(nodeName.toUpperCase(Locale.ENGLISH));
+    // 判断是否为查询SQL
     boolean isSelect = sqlCommandType == SqlCommandType.SELECT;
+    // 判断是否需要刷新缓存
     boolean flushCache = context.getBooleanAttribute("flushCache", !isSelect);
+    // 判断是否使用缓存
     boolean useCache = context.getBooleanAttribute("useCache", isSelect);
+    // 是否需要排序
     boolean resultOrdered = context.getBooleanAttribute("resultOrdered", false);
 
     // Include Fragments before parsing
     XMLIncludeTransformer includeParser = new XMLIncludeTransformer(configuration, builderAssistant);
     includeParser.applyIncludes(context.getNode());
 
+    // 获取标签的入参并转化为对应实际的类
     String parameterType = context.getStringAttribute("parameterType");
     Class<?> parameterTypeClass = resolveClass(parameterType);
 
@@ -104,6 +114,7 @@ public class XMLStatementBuilder extends BaseBuilder {
     String resultType = context.getStringAttribute("resultType");
     Class<?> resultTypeClass = resolveClass(resultType);
     String resultMap = context.getStringAttribute("resultMap");
+    // 这里的resultType 和 resultMap是可以缺省的,如果缺省则根据namespace在mapper接口层寻找ID值相同的方法判断其返回值类型
     if (resultTypeClass == null && resultMap == null) {
       resultTypeClass = MapperAnnotationBuilder.getMethodReturnType(builderAssistant.getCurrentNamespace(), id);
     }
@@ -117,6 +128,7 @@ public class XMLStatementBuilder extends BaseBuilder {
     String resultSets = context.getStringAttribute("resultSets");
     boolean dirtySelect = context.getBooleanAttribute("affectData", Boolean.FALSE);
 
+    // 构建封装语句并添加到configuration中
     builderAssistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType, fetchSize, timeout, parameterMap,
         parameterTypeClass, resultMap, resultTypeClass, resultSetTypeEnum, flushCache, useCache, resultOrdered,
         keyGenerator, keyProperty, keyColumn, databaseId, langDriver, resultSets, dirtySelect);
@@ -176,7 +188,7 @@ public class XMLStatementBuilder extends BaseBuilder {
     configuration.addKeyGenerator(id, new SelectKeyGenerator(keyStatement, executeBefore));
   }
 
-  private void removeSelectKeyNodes(List<XNode> selectKeyNodes) {
+  private void removeSelectKeyNodes(List<XNode> selectKeyNodes){
     for (XNode nodeToHandle : selectKeyNodes) {
       nodeToHandle.getParent().getNode().removeChild(nodeToHandle.getNode());
     }
