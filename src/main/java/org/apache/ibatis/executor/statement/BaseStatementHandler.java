@@ -84,6 +84,7 @@ public abstract class BaseStatementHandler implements StatementHandler {
 
   @Override
   public Statement prepare(Connection connection, Integer transactionTimeout) throws SQLException {
+    // 添加sql语句
     ErrorContext.instance().sql(boundSql.getSql());
     Statement statement = null;
     try {
