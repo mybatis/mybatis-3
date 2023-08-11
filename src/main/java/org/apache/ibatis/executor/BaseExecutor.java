@@ -152,6 +152,7 @@ public abstract class BaseExecutor implements Executor {
     List<E> list;
     try {
       queryStack++;
+      // (List<E>) localCache.getObject(key) 是直接获取缓存,
       list = resultHandler == null ? (List<E>) localCache.getObject(key) : null;
       if (list != null) {
         // 应该是获取缓存数据 ,暂时未进去看

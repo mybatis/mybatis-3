@@ -6,7 +6,7 @@
 <!--  <select id="selectById" resultType="org.apache.ibatis.entity.User" parameterType="java.lang.Integer">-->
 <!--    select * from test where id = #{id}-->
 <!--  </select>-->
-  <select id="selectById" parameterType="java.lang.Integer">
+  <select id="selectById">
     select * from test where id = #{id}
   </select>
 </mapper>
