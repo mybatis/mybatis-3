@@ -106,7 +106,7 @@ public class CachingExecutor implements Executor {
 					list = (List<E>)((UpperCaseMapResultHandler)resultHandler).getResultList();
 				}
 				tcm.putObject(cache, key, list); // issue #578 and #116
-			}else {
+			}else if(resultHandler != null && resultHandler instanceof UpperCaseMapResultHandler){
 				UpperCaseMapResultHandler handler = (UpperCaseMapResultHandler)resultHandler;
 				handler.setResultList((List<Object>)list);
 				handler.setFromCache(true);
