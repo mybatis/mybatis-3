@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,8 +15,9 @@
  */
 package org.apache.ibatis.transaction.jdbc;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import javax.sql.DataSource;
 
@@ -42,7 +43,8 @@ class JdbcTransactionTest {
     DataSource ds = mock(DataSource.class);
     when(ds.getConnection()).thenReturn(con);
 
-    JdbcTransaction transaction = new JdbcTransaction(ds, TransactionIsolationLevel.NONE, desiredAutoCommit, skipSetAutoCommitOnClose);
+    JdbcTransaction transaction = new JdbcTransaction(ds, TransactionIsolationLevel.NONE, desiredAutoCommit,
+        skipSetAutoCommitOnClose);
     transaction.getConnection();
     transaction.commit();
     transaction.close();

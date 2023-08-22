@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -22,13 +22,18 @@ import java.sql.Connection;
  */
 public enum TransactionIsolationLevel {
   NONE(Connection.TRANSACTION_NONE),
+
   READ_COMMITTED(Connection.TRANSACTION_READ_COMMITTED),
+
   READ_UNCOMMITTED(Connection.TRANSACTION_READ_UNCOMMITTED),
+
   REPEATABLE_READ(Connection.TRANSACTION_REPEATABLE_READ),
+
   SERIALIZABLE(Connection.TRANSACTION_SERIALIZABLE),
+
   /**
-   * A non-standard isolation level for Microsoft SQL Server.
-   * Defined in the SQL Server JDBC driver {@link com.microsoft.sqlserver.jdbc.ISQLServerConnection}
+   * A non-standard isolation level for Microsoft SQL Server. Defined in the SQL Server JDBC driver
+   * {@link com.microsoft.sqlserver.jdbc.ISQLServerConnection}
    *
    * @since 3.5.6
    */

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -53,7 +53,8 @@ public class ResultLoader {
   protected boolean loaded;
   protected Object resultObject;
 
-  public ResultLoader(Configuration config, Executor executor, MappedStatement mappedStatement, Object parameterObject, Class<?> targetType, CacheKey cacheKey, BoundSql boundSql) {
+  public ResultLoader(Configuration config, Executor executor, MappedStatement mappedStatement, Object parameterObject,
+      Class<?> targetType, CacheKey cacheKey, BoundSql boundSql) {
     this.configuration = config;
     this.executor = executor;
     this.mappedStatement = mappedStatement;
@@ -78,7 +79,8 @@ public class ResultLoader {
       localExecutor = newExecutor();
     }
     try {
-      return localExecutor.query(mappedStatement, parameterObject, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER, cacheKey, boundSql);
+      return localExecutor.query(mappedStatement, parameterObject, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER,
+          cacheKey, boundSql);
     } finally {
       if (localExecutor != executor) {
         localExecutor.close(false);

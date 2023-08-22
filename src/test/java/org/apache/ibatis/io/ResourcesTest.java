@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -79,7 +79,7 @@ class ResourcesTest extends BaseDataTest {
 
   @Test
   void shouldGetResourceAsReader() throws Exception {
-    try(Reader in = Resources.getResourceAsReader(CLASS_LOADER, JPETSTORE_PROPERTIES)) {
+    try (Reader in = Resources.getResourceAsReader(CLASS_LOADER, JPETSTORE_PROPERTIES)) {
       assertNotNull(in);
     }
   }
@@ -170,8 +170,4 @@ class ResourcesTest extends BaseDataTest {
 
   }
 
-  @Test
-  void stupidJustForCoverage() {
-    assertNotNull(new Resources());
-  }
 }

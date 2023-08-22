@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2022 the original author or authors.
+       Copyright 2009-2023 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -22,12 +22,12 @@
   <parent>
     <groupId>org.mybatis</groupId>
     <artifactId>mybatis-parent</artifactId>
-    <version>37</version>
+    <version>38</version>
     <relativePath />
   </parent>
 
   <artifactId>mybatis</artifactId>
-  <version>3.5.12-SNAPSHOT</version>
+  <version>3.5.14-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>mybatis</name>
@@ -112,7 +112,7 @@
     <url>https://github.com/mybatis/mybatis-3</url>
     <connection>scm:git:ssh://github.com/mybatis/mybatis-3.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/mybatis/mybatis-3.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>mybatis-3.5.12</tag>
   </scm>
   <issueManagement>
     <system>GitHub Issue Management</system>
@@ -132,17 +132,27 @@
 
   <properties>
     <clirr.comparisonVersion>3.4.6</clirr.comparisonVersion>
+
+    <!-- Add slow test groups here and annotate classes similar to @Tag('groupName'). -->
+    <!-- Excluded groups are ran on github ci, to force here, pass -d"excludedGroups=" -->
     <excludedGroups>TestcontainersTests</excludedGroups>
-    <maven.compiler.testCompilerArgument>-parameters</maven.compiler.testCompilerArgument>
+
+    <!-- Automatic Module Name -->
     <module.name>org.mybatis</module.name>
+
+    <!-- OSGI Data -->
     <osgi.export>org.apache.ibatis.*;version=${project.version};-noimport:=true</osgi.export>
     <osgi.import>*;resolution:=optional</osgi.import>
     <osgi.dynamicImport>*</osgi.dynamicImport>
+
+    <!-- Spotbugs Setup -->
     <spotbugs.onlyAnalyze>org.apache.ibatis.*</spotbugs.onlyAnalyze>
+
+    <!-- Surefire Setup -->
     <argLine>-Djdk.attach.allowAttachSelf -Xmx2048m</argLine>
 
     <!-- Reproducible Builds -->
-    <project.build.outputTimestamp>1663532792</project.build.outputTimestamp>
+    <project.build.outputTimestamp>1678513628</project.build.outputTimestamp>
   </properties>
 
   <dependencies>
@@ -163,19 +173,19 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>2.0.6</version>
+      <version>2.0.7</version>
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>ch.qos.reload4j</groupId>
       <artifactId>reload4j</artifactId>
-      <version>1.2.24</version>
+      <version>1.2.25</version>
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-api</artifactId>
-      <version>2.19.0</version>
+      <version>2.20.0</version>
       <optional>true</optional>
     </dependency>
     <dependency>
@@ -195,13 +205,13 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
-      <version>5.9.2</version>
+      <version>5.10.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-params</artifactId>
-      <version>5.9.2</version>
+      <version>5.10.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -231,19 +241,25 @@
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
-      <version>2.1.214</version>
+      <version>2.2.220</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>5.0.0</version>
+      <version>5.4.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-subclass</artifactId>
+      <version>5.4.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-junit-jupiter</artifactId>
-      <version>5.0.0</version>
+      <version>5.4.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -256,13 +272,13 @@
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
-      <version>42.5.1</version>
+      <version>42.6.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.mysql</groupId>
       <artifactId>mysql-connector-j</artifactId>
-      <version>8.0.32</version>
+      <version>8.1.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -280,19 +296,19 @@
     <dependency>
       <groupId>org.testcontainers</groupId>
       <artifactId>junit-jupiter</artifactId>
-      <version>1.17.6</version>
+      <version>1.18.3</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.testcontainers</groupId>
       <artifactId>postgresql</artifactId>
-      <version>1.17.6</version>
+      <version>1.18.3</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.testcontainers</groupId>
       <artifactId>mysql</artifactId>
-      <version>1.17.6</version>
+      <version>1.18.3</version>
       <scope>test</scope>
     </dependency>
     <!-- For javadoc link -->
@@ -305,13 +321,13 @@
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>1.4.5</version>
+      <version>1.4.11</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-core</artifactId>
-      <version>2.19.0</version>
+      <version>2.20.0</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -320,16 +336,9 @@
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <testCompilerArgument>${maven.compiler.testCompilerArgument}</testCompilerArgument>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
-          <systemProperties>
+          <systemPropertyVariables>
             <property>
               <name>derby.stream.error.file</name>
               <value>${project.build.directory}/derby.log</value>
@@ -338,7 +347,7 @@
               <name>derby.system.home</name>
               <value>${project.build.directory}</value>
             </property>
-          </systemProperties>
+          </systemPropertyVariables>
         </configuration>
       </plugin>
       <plugin>
@@ -413,18 +422,6 @@
 
   <profiles>
     <profile>
-      <!-- Run slow tests only on github ci, to force run otherwise use -D"env.GITHUB" -->
-      <id>github-ci</id>
-      <activation>
-        <property>
-          <name>env.GITHUB</name>
-        </property>
-      </activation>
-      <properties>
-        <excludedGroups />
-      </properties>
-    </profile>
-    <profile>
       <id>pre16</id>
       <activation>
         <jdk>(,16)</jdk>
@@ -439,6 +436,13 @@
                 <testExcludes>
                   <testExclude>**/record_type/*.java</testExclude>
                 </testExcludes>
+              </configuration>
+            </plugin>
+            <plugin>
+              <groupId>net.revelc.code</groupId>
+              <artifactId>impsort-maven-plugin</artifactId>
+              <configuration>
+                <skip>true</skip>
               </configuration>
             </plugin>
           </plugins>

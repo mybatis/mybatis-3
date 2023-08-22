@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -35,8 +35,7 @@ public class BlobTypeHandler extends BaseTypeHandler<byte[]> {
   }
 
   @Override
-  public byte[] getNullableResult(ResultSet rs, String columnName)
-      throws SQLException {
+  public byte[] getNullableResult(ResultSet rs, String columnName) throws SQLException {
     Blob blob = rs.getBlob(columnName);
     byte[] returnValue = null;
     if (null != blob) {
@@ -46,8 +45,7 @@ public class BlobTypeHandler extends BaseTypeHandler<byte[]> {
   }
 
   @Override
-  public byte[] getNullableResult(ResultSet rs, int columnIndex)
-      throws SQLException {
+  public byte[] getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
     Blob blob = rs.getBlob(columnIndex);
     byte[] returnValue = null;
     if (null != blob) {
@@ -57,8 +55,7 @@ public class BlobTypeHandler extends BaseTypeHandler<byte[]> {
   }
 
   @Override
-  public byte[] getNullableResult(CallableStatement cs, int columnIndex)
-      throws SQLException {
+  public byte[] getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
     Blob blob = cs.getBlob(columnIndex);
     byte[] returnValue = null;
     if (null != blob) {

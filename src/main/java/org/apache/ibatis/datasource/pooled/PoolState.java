@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -27,14 +27,14 @@ public class PoolState {
 
   protected final List<PooledConnection> idleConnections = new ArrayList<>();
   protected final List<PooledConnection> activeConnections = new ArrayList<>();
-  protected long requestCount = 0;
-  protected long accumulatedRequestTime = 0;
-  protected long accumulatedCheckoutTime = 0;
-  protected long claimedOverdueConnectionCount = 0;
-  protected long accumulatedCheckoutTimeOfOverdueConnections = 0;
-  protected long accumulatedWaitTime = 0;
-  protected long hadToWaitCount = 0;
-  protected long badConnectionCount = 0;
+  protected long requestCount;
+  protected long accumulatedRequestTime;
+  protected long accumulatedCheckoutTime;
+  protected long claimedOverdueConnectionCount;
+  protected long accumulatedCheckoutTimeOfOverdueConnections;
+  protected long accumulatedWaitTime;
+  protected long hadToWaitCount;
+  protected long badConnectionCount;
 
   public PoolState(PooledDataSource dataSource) {
     this.dataSource = dataSource;
@@ -66,7 +66,8 @@ public class PoolState {
   }
 
   public synchronized long getAverageOverdueCheckoutTime() {
-    return claimedOverdueConnectionCount == 0 ? 0 : accumulatedCheckoutTimeOfOverdueConnections / claimedOverdueConnectionCount;
+    return claimedOverdueConnectionCount == 0 ? 0
+        : accumulatedCheckoutTimeOfOverdueConnections / claimedOverdueConnectionCount;
   }
 
   public synchronized long getAverageCheckoutTime() {
@@ -88,7 +89,8 @@ public class PoolState {
     builder.append("\n jdbcDriver                     ").append(dataSource.getDriver());
     builder.append("\n jdbcUrl                        ").append(dataSource.getUrl());
     builder.append("\n jdbcUsername                   ").append(dataSource.getUsername());
-    builder.append("\n jdbcPassword                   ").append(dataSource.getPassword() == null ? "NULL" : "************");
+    builder.append("\n jdbcPassword                   ")
+        .append(dataSource.getPassword() == null ? "NULL" : "************");
     builder.append("\n poolMaxActiveConnections       ").append(dataSource.poolMaximumActiveConnections);
     builder.append("\n poolMaxIdleConnections         ").append(dataSource.poolMaximumIdleConnections);
     builder.append("\n poolMaxCheckoutTime            ").append(dataSource.poolMaximumCheckoutTime);

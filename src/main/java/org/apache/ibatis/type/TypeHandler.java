@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -34,7 +34,9 @@ public interface TypeHandler<T> {
    *          the rs
    * @param columnName
    *          Column name, when configuration <code>useColumnLabel</code> is <code>false</code>
+   *
    * @return the result
+   *
    * @throws SQLException
    *           the SQL exception
    */

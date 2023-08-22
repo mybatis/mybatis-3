@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -46,8 +46,8 @@ class RepeatableDeleteTest {
       int targetCount = mapper.countByCurrentDatabase("HSQL");
       mapper.delete();
 
-      Assertions.assertEquals(count - targetCount , mapper.count());
-      Assertions.assertEquals(0 , mapper.countByCurrentDatabase("HSQL"));
+      Assertions.assertEquals(count - targetCount, mapper.count());
+      Assertions.assertEquals(0, mapper.countByCurrentDatabase("HSQL"));
     }
   }
 
@@ -68,8 +68,8 @@ class RepeatableDeleteTest {
       int targetCount = mapper.countByCurrentDatabase("HSQL");
       mapper.deleteUsingProvider();
 
-      Assertions.assertEquals(count - targetCount , mapper.count());
-      Assertions.assertEquals(0 , mapper.countByCurrentDatabase("HSQL"));
+      Assertions.assertEquals(count - targetCount, mapper.count());
+      Assertions.assertEquals(0, mapper.countByCurrentDatabase("HSQL"));
     }
   }
 
@@ -90,8 +90,8 @@ class RepeatableDeleteTest {
       int targetCount = mapper.countByCurrentDatabase("DERBY");
       mapper.delete();
 
-      Assertions.assertEquals(count - targetCount , mapper.count());
-      Assertions.assertEquals(0 , mapper.countByCurrentDatabase("DERBY"));
+      Assertions.assertEquals(count - targetCount, mapper.count());
+      Assertions.assertEquals(0, mapper.countByCurrentDatabase("DERBY"));
     }
   }
 
@@ -112,8 +112,8 @@ class RepeatableDeleteTest {
       int targetCount = mapper.countByCurrentDatabase("DERBY");
       mapper.deleteUsingProvider();
 
-      Assertions.assertEquals(count - targetCount , mapper.count());
-      Assertions.assertEquals(0 , mapper.countByCurrentDatabase("DERBY"));
+      Assertions.assertEquals(count - targetCount, mapper.count());
+      Assertions.assertEquals(0, mapper.countByCurrentDatabase("DERBY"));
     }
   }
 
@@ -134,8 +134,8 @@ class RepeatableDeleteTest {
       int targetCount = mapper.countByCurrentDatabase("DEFAULT");
       mapper.delete();
 
-      Assertions.assertEquals(count - targetCount , mapper.count());
-      Assertions.assertEquals(0 , mapper.countByCurrentDatabase("DEFAULT"));
+      Assertions.assertEquals(count - targetCount, mapper.count());
+      Assertions.assertEquals(0, mapper.countByCurrentDatabase("DEFAULT"));
     }
   }
 
@@ -156,8 +156,8 @@ class RepeatableDeleteTest {
       int targetCount = mapper.countByCurrentDatabase("DEFAULT");
       mapper.deleteUsingProvider();
 
-      Assertions.assertEquals(count - targetCount , mapper.count());
-      Assertions.assertEquals(0 , mapper.countByCurrentDatabase("DEFAULT"));
+      Assertions.assertEquals(count - targetCount, mapper.count());
+      Assertions.assertEquals(0, mapper.countByCurrentDatabase("DEFAULT"));
     }
   }
 

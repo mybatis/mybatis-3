@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -44,7 +44,9 @@ class MetaClassTest {
       meta.getGetterType("aString");
       org.junit.jupiter.api.Assertions.fail("should have thrown ReflectionException");
     } catch (ReflectionException expected) {
-      assertEquals("There is no getter for property named \'aString\' in \'class org.apache.ibatis.domain.misc.RichType\'", expected.getMessage());
+      assertEquals(
+          "There is no getter for property named \'aString\' in \'class org.apache.ibatis.domain.misc.RichType\'",
+          expected.getMessage());
     }
   }
 

@@ -1,5 +1,5 @@
 --
---    Copyright 2009-2022 the original author or authors.
+--    Copyright 2009-2023 the original author or authors.
 --
 --    Licensed under the Apache License, Version 2.0 (the "License");
 --    you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 drop table vehicle if exists;
 drop table owner if exists;
+drop table contract if exists;
 
 create table vehicle (
   id int,
@@ -39,3 +40,12 @@ create table owner (
 insert into owner (id, name, vehicle_type, vehicle_id) values
 (1, 'Owner1', 'truck', 2),
 (2, 'Owner2', 'car', 1);
+
+create table contract (
+    id int,
+    owner_id int
+);
+
+insert into contract (id, owner_id) values
+(11, 1),
+(12, 2);

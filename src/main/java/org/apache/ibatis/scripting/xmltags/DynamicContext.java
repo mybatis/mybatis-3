@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ public class DynamicContext {
 
   private final ContextMap bindings;
   private final StringJoiner sqlBuilder = new StringJoiner(" ");
-  private int uniqueNumber = 0;
+  private int uniqueNumber;
 
   public DynamicContext(Configuration configuration, Object parameterObject) {
     if (parameterObject != null && !(parameterObject instanceof Map)) {
@@ -97,10 +97,9 @@ public class DynamicContext {
 
       if (fallbackParameterObject && !parameterMetaObject.hasGetter(strKey)) {
         return parameterMetaObject.getOriginalObject();
-      } else {
-        // issue #61 do not modify the context when reading
-        return parameterMetaObject.getValue(strKey);
       }
+      // issue #61 do not modify the context when reading
+      return parameterMetaObject.getValue(strKey);
     }
   }
 
@@ -117,7 +116,7 @@ public class DynamicContext {
 
       Object parameterObject = map.get(PARAMETER_OBJECT_KEY);
       if (parameterObject instanceof Map) {
-        return ((Map)parameterObject).get(name);
+        return ((Map) parameterObject).get(name);
       }
 
       return null;

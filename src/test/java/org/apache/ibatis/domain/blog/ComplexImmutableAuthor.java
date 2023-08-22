@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package org.apache.ibatis.domain.blog;
 import java.io.Serializable;
 
 public class ComplexImmutableAuthor implements Serializable {
+  private static final long serialVersionUID = 1L;
   private final ComplexImmutableAuthorId theComplexImmutableAuthorId;
   protected final String bio;
   protected final Section favouriteSection;
@@ -51,13 +52,9 @@ public class ComplexImmutableAuthor implements Serializable {
 
     final ComplexImmutableAuthor that = (ComplexImmutableAuthor) o;
 
-    if (bio != null ? !bio.equals(that.bio) : that.bio != null) {
-      return false;
-    }
-    if (favouriteSection != that.favouriteSection) {
-      return false;
-    }
-    if (theComplexImmutableAuthorId != null ? !theComplexImmutableAuthorId.equals(that.theComplexImmutableAuthorId) : that.theComplexImmutableAuthorId != null) {
+    if ((bio != null ? !bio.equals(that.bio) : that.bio != null) || (favouriteSection != that.favouriteSection)
+        || (theComplexImmutableAuthorId != null ? !theComplexImmutableAuthorId.equals(that.theComplexImmutableAuthorId)
+            : that.theComplexImmutableAuthorId != null)) {
       return false;
     }
 
@@ -68,7 +65,6 @@ public class ComplexImmutableAuthor implements Serializable {
   public int hashCode() {
     int myresult = theComplexImmutableAuthorId != null ? theComplexImmutableAuthorId.hashCode() : 0;
     myresult = 31 * myresult + (bio != null ? bio.hashCode() : 0);
-    myresult = 31 * myresult + (favouriteSection != null ? favouriteSection.hashCode() : 0);
-    return myresult;
+    return 31 * myresult + (favouriteSection != null ? favouriteSection.hashCode() : 0);
   }
 }

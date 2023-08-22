@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  */
 package org.apache.ibatis.submitted.extendresultmap;
 
+import java.util.Objects;
+
 public class TestModel {
 
   private String a;
@@ -24,7 +26,6 @@ public class TestModel {
   }
 
   public TestModel(String a, String b) {
-    super();
     this.a = a;
     this.b = b;
   }
@@ -47,32 +48,24 @@ public class TestModel {
 
   @Override
   public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + ((a == null) ? 0 : a.hashCode());
-    result = prime * result + ((b == null) ? 0 : b.hashCode());
-    return result;
+    return Objects.hash(a, b);
   }
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
+    if (this == obj) {
       return true;
-    if (obj == null)
+    }
+    if ((obj == null) || (getClass() != obj.getClass())) {
       return false;
-    if (getClass() != obj.getClass())
-      return false;
+    }
     TestModel other = (TestModel) obj;
-    if (a == null) {
-      if (other.a != null)
-        return false;
-    } else if (!a.equals(other.a))
+    if (!Objects.equals(a, other.a)) {
       return false;
-    if (b == null) {
-      if (other.b != null)
-        return false;
-    } else if (!b.equals(other.b))
+    }
+    if (!Objects.equals(b, other.b)) {
       return false;
+    }
     return true;
   }
 

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -26,7 +26,8 @@ public class PrimitiveSubject {
   private final boolean active;
   private final Date dt;
 
-  public PrimitiveSubject(final int id, final String name, final int age, final int height, final int weight, final boolean active, final Date dt) {
+  public PrimitiveSubject(final int id, final String name, final int age, final int height, final int weight,
+      final boolean active, final Date dt) {
     this.id = id;
     this.name = name;
     this.age = age;

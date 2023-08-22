@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ public class ExpressionEvaluator {
   /**
    * @deprecated Since 3.5.9, use the {@link #evaluateIterable(String, Object, boolean)}.
    */
-   @Deprecated
+  @Deprecated
   public Iterable<?> evaluateIterable(String expression, Object parameterObject) {
     return evaluateIterable(expression, parameterObject, false);
   }
@@ -55,16 +55,15 @@ public class ExpressionEvaluator {
     if (value == null) {
       if (nullable) {
         return null;
-      } else {
-        throw new BuilderException("The expression '" + expression + "' evaluated to a null value.");
       }
+      throw new BuilderException("The expression '" + expression + "' evaluated to a null value.");
     }
     if (value instanceof Iterable) {
       return (Iterable<?>) value;
     }
     if (value.getClass().isArray()) {
       // the array may be primitive, so Arrays.asList() may throw
-      // a ClassCastException (issue 209).  Do the work manually
+      // a ClassCastException (issue 209). Do the work manually
       // Curse primitives! :) (JGB)
       int size = Array.getLength(value);
       List<Object> answer = new ArrayList<>();
@@ -77,7 +76,8 @@ public class ExpressionEvaluator {
     if (value instanceof Map) {
       return ((Map) value).entrySet();
     }
-    throw new BuilderException("Error evaluating expression '" + expression + "'.  Return value (" + value + ") was not iterable.");
+    throw new BuilderException(
+        "Error evaluating expression '" + expression + "'.  Return value (" + value + ") was not iterable.");
   }
 
 }
