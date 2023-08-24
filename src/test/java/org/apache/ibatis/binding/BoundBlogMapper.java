@@ -253,7 +253,7 @@ public interface BoundBlogMapper {
       @Result(property = "posts", column = "id", many = @Many(select = "selectPostsById"))
   })
   // @formatter:on
-  List<Blog> selectBlogsWithAutorAndPosts();
+  List<Blog> selectBlogsWithAuthorAndPosts();
 
   // @formatter:off
   @Select({
@@ -265,6 +265,6 @@ public interface BoundBlogMapper {
       @Result(property = "posts", column = "id", many = @Many(select = "selectPostsById", fetchType = FetchType.EAGER))
   })
   // @formatter:on
-  List<Blog> selectBlogsWithAutorAndPostsEagerly();
+  List<Blog> selectBlogsWithAuthorAndPostsEagerly();
 
 }

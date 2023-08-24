@@ -155,16 +155,16 @@ class LazyPropertiesTest {
 
   @Test
   void shouldInvokingSetterInvalidateLazyLoading_Javassist() {
-    shoulInvokingSetterInvalidateLazyLoading(new JavassistProxyFactory());
+    shouldInvokingSetterInvalidateLazyLoading(new JavassistProxyFactory());
   }
 
   @Tag("RequireIllegalAccess")
   @Test
   void shouldInvokingSetterInvalidateLazyLoading_Cglib() {
-    shoulInvokingSetterInvalidateLazyLoading(new CglibProxyFactory());
+    shouldInvokingSetterInvalidateLazyLoading(new CglibProxyFactory());
   }
 
-  private void shoulInvokingSetterInvalidateLazyLoading(ProxyFactory proxyFactory) {
+  private void shouldInvokingSetterInvalidateLazyLoading(ProxyFactory proxyFactory) {
     Configuration config = sqlSessionFactory.getConfiguration();
     config.setProxyFactory(proxyFactory);
     config.setAggressiveLazyLoading(false);

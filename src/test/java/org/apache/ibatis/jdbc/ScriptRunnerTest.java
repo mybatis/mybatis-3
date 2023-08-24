@@ -115,7 +115,7 @@ class ScriptRunnerTest extends BaseDataTest {
   }
 
   @Test
-  void commentAferStatementDelimiterShouldNotCauseRunnerFail() throws Exception {
+  void commentAfterStatementDelimiterShouldNotCauseRunnerFail() throws Exception {
     DataSource ds = createUnpooledDataSource(JPETSTORE_PROPERTIES);
     String resource = "org/apache/ibatis/jdbc/ScriptCommentAfterEOLTerminator.sql";
     try (Connection conn = ds.getConnection(); Reader reader = Resources.getResourceAsReader(resource)) {
@@ -185,7 +185,7 @@ class ScriptRunnerTest extends BaseDataTest {
   }
 
   @Test
-  void testLoggingFullScipt() throws Exception {
+  void testLoggingFullScript() throws Exception {
     DataSource ds = createUnpooledDataSource(JPETSTORE_PROPERTIES);
     try (Connection conn = ds.getConnection()) {
       ScriptRunner runner = new ScriptRunner(conn);

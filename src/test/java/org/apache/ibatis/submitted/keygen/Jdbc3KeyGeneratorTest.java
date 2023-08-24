@@ -197,7 +197,7 @@ class Jdbc3KeyGeneratorTest {
   }
 
   @Test
-  void shouldAssingKeysToCollection() {
+  void shouldAssignKeysToCollection() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       try {
         CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
@@ -215,7 +215,7 @@ class Jdbc3KeyGeneratorTest {
   }
 
   @Test
-  void shouldAssingKeysToNamedCollection() {
+  void shouldAssignKeysToNamedCollection() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       try {
         CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
@@ -233,7 +233,7 @@ class Jdbc3KeyGeneratorTest {
   }
 
   @Test
-  void shouldAssingKeysToArray() {
+  void shouldAssignKeysToArray() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       try {
         CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
@@ -251,7 +251,7 @@ class Jdbc3KeyGeneratorTest {
   }
 
   @Test
-  void shouldAssingKeysToNamedArray() {
+  void shouldAssignKeysToNamedArray() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       try {
         CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
@@ -595,7 +595,7 @@ class Jdbc3KeyGeneratorTest {
   }
 
   @Test
-  void shouldAssingKeysToAMap() {
+  void shouldAssignKeysToAMap() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       try {
         CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);

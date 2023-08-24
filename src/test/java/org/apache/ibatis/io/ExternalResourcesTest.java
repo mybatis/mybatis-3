@@ -91,7 +91,7 @@ class ExternalResourcesTest {
       templateName = ExternalResources.getConfiguredTemplate(tempFile.getAbsolutePath(), "new_command.template");
       assertEquals("templates/col_new_template_migration.sql", templateName);
     } catch (Exception e) {
-      fail("Test failed with execption: " + e.getMessage());
+      fail("Test failed with exception: " + e.getMessage());
     }
   }
 
