@@ -296,19 +296,19 @@
     <dependency>
       <groupId>org.testcontainers</groupId>
       <artifactId>junit-jupiter</artifactId>
-      <version>1.18.3</version>
+      <version>1.19.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.testcontainers</groupId>
       <artifactId>postgresql</artifactId>
-      <version>1.18.3</version>
+      <version>1.19.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.testcontainers</groupId>
       <artifactId>mysql</artifactId>
-      <version>1.18.3</version>
+      <version>1.19.0</version>
       <scope>test</scope>
     </dependency>
     <!-- For javadoc link -->
