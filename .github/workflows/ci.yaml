@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macOS-latest, windows-latest]
-        java: [11, 17, 20, 21]
+        java: [11, 17, 20, 21, 22]
         distribution: ['zulu']
       fail-fast: false
       max-parallel: 4
