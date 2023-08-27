@@ -149,7 +149,7 @@
     <spotbugs.onlyAnalyze>org.apache.ibatis.*</spotbugs.onlyAnalyze>
 
     <!-- Surefire Setup -->
-    <argLine>-Djdk.attach.allowAttachSelf -Xmx2048m</argLine>
+    <argLine>-Xmx2048m</argLine>
 
     <!-- Reproducible Builds -->
     <project.build.outputTimestamp>1678513628</project.build.outputTimestamp>
