@@ -53,10 +53,10 @@ jobs:
         run: ./mvnw help:active-profiles
       - name: Test with Maven
         if: ${{ matrix.os != 'windows-latest' }}
-        run: ./mvnw test -B -D"license.skip=true" -D"jacoco.skip=true" $ARG_LINE
+        run: ./mvnw test -B -V  --no-transfer-progress -D"license.skip=true" -D"jacoco.skip=true" $ARG_LINE
       - name: Test with Maven
         if: ${{ matrix.os == 'windows-latest' && matrix.java == '11' }}
-        run: ./mvnw test -B -D"license.skip=true" -D"jacoco.skip=true" -D"argLine=--illegal-access=permit"
+        run: ./mvnw test -B -V  --no-transfer-progress -D"license.skip=true" -D"jacoco.skip=true" -D"argLine=--illegal-access=permit"
       - name: Test with Maven
         if: ${{ matrix.os == 'windows-latest' && matrix.java != '11' }}
-        run: ./mvnw test -B -D"license.skip=true" -D"jacoco.skip=true" -D"excludedGroups=TestcontainersTests,RequireIllegalAccess"
+        run: ./mvnw test -B -V  --no-transfer-progress -D"license.skip=true" -D"jacoco.skip=true" -D"excludedGroups=TestcontainersTests,RequireIllegalAccess"
