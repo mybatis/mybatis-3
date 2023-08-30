@@ -457,9 +457,9 @@ public class MapperAnnotationBuilder {
 
   private void applyResults(Result[] results, Class<?> resultType, List<ResultMapping> resultMappings) {
     for (Result result : results) {
-      List<ResultFlag> flags = new ArrayList<>();
+      byte flags = ResultFlag.NO_FLAG;
       if (result.id()) {
-        flags.add(ResultFlag.ID);
+        flags |= ResultFlag.ID;
       }
       @SuppressWarnings("unchecked")
       Class<? extends TypeHandler<?>> typeHandler = (Class<? extends TypeHandler<?>>) (result
@@ -531,10 +531,10 @@ public class MapperAnnotationBuilder {
 
   private void applyConstructorArgs(Arg[] args, Class<?> resultType, List<ResultMapping> resultMappings) {
     for (Arg arg : args) {
-      List<ResultFlag> flags = new ArrayList<>();
-      flags.add(ResultFlag.CONSTRUCTOR);
+      byte flags = ResultFlag.NO_FLAG;
+      flags |= ResultFlag.CONSTRUCTOR;
       if (arg.id()) {
-        flags.add(ResultFlag.ID);
+        flags |= ResultFlag.ID;
       }
       @SuppressWarnings("unchecked")
       Class<? extends TypeHandler<?>> typeHandler = (Class<? extends TypeHandler<?>>) (arg
