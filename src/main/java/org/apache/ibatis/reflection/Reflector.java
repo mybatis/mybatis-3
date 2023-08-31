@@ -323,9 +323,7 @@ public class Reflector {
   private String getSignature(Method method) {
     StringBuilder sb = new StringBuilder();
     Class<?> returnType = method.getReturnType();
-    if (returnType != null) {
-      sb.append(returnType.getName()).append('#');
-    }
+    sb.append(returnType.getName()).append('#');
     sb.append(method.getName());
     Class<?>[] parameters = method.getParameterTypes();
     for (int i = 0; i < parameters.length; i++) {
