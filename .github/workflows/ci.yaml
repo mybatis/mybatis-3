@@ -15,7 +15,7 @@ jobs:
     name: Test JDK ${{ matrix.java }}, ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set JDK from jdk.java.net
         uses: oracle-actions/setup-java@v1
         with:
