@@ -19,8 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import com.sun.org.apache.xerces.internal.dom.DeferredTextImpl;
 import org.w3c.dom.CharacterData;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -253,18 +255,24 @@ public class XNode {
   }
 
   public List<XNode> getChildren() {
+    return getChildren(node1 -> node1.getNodeType() == Node.ELEMENT_NODE);
+  }
+
+  public List<XNode> getChildren(Predicate<Node>predicate) {
     List<XNode> children = new ArrayList<>();
     NodeList nodeList = node.getChildNodes();
     if (nodeList != null) {
       for (int i = 0, n = nodeList.getLength(); i < n; i++) {
         Node node = nodeList.item(i);
-        if (node.getNodeType() == Node.ELEMENT_NODE) {
+        if(predicate.test(node)){
           children.add(new XNode(xpathParser, node, variables));
         }
       }
     }
     return children;
   }
+
+
 
   public Properties getChildrenAsProperties() {
     Properties properties = new Properties();
@@ -281,47 +289,39 @@ public class XNode {
   @Override
   public String toString() {
     StringBuilder builder = new StringBuilder();
-    toString(builder, 0);
+    toString(builder);
     return builder.toString();
   }
 
-  private void toString(StringBuilder builder, int level) {
-    builder.append("<");
-    builder.append(name);
-    for (Map.Entry<Object, Object> entry : attributes.entrySet()) {
-      builder.append(" ");
-      builder.append(entry.getKey());
-      builder.append("=\"");
-      builder.append(entry.getValue());
-      builder.append("\"");
-    }
-    List<XNode> children = getChildren();
-    if (!children.isEmpty()) {
-      builder.append(">\n");
-      for (XNode child : children) {
-        indent(builder, level + 1);
-        child.toString(builder, level + 1);
+  private void toString(StringBuilder builder) {
+    if(node.getNodeType() == Node.ELEMENT_NODE){
+      builder.append("<");
+      builder.append(name);
+      for (Map.Entry<Object, Object> entry : attributes.entrySet()) {
+        builder.append(" ");
+        builder.append(entry.getKey());
+        builder.append("=\"");
+        builder.append(entry.getValue());
+        builder.append("\"");
       }
-      indent(builder, level);
+    }
+    // getAllChildrenNode
+    List<XNode> children = getChildren(node1 -> node1.getNodeType() > 0);
+    if (!children.isEmpty()) {
+      builder.append(">");
+      for (XNode child : children) {
+        child.toString(builder);
+      }
       builder.append("</");
       builder.append(name);
       builder.append(">");
     } else if (body != null) {
-      builder.append(">");
       builder.append(body);
+    } else {
+      builder.append(">");
       builder.append("</");
       builder.append(name);
       builder.append(">");
-    } else {
-      builder.append("/>");
-      indent(builder, level);
-    }
-    builder.append("\n");
-  }
-
-  private void indent(StringBuilder builder, int level) {
-    for (int i = 0; i < level; i++) {
-      builder.append("    ");
     }
   }
 
