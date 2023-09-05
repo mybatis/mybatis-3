@@ -21,6 +21,7 @@ import java.util.Deque;
 import java.util.LinkedList;
 
 import org.apache.ibatis.cache.Cache;
+import org.apache.ibatis.cache.impl.DelegateCache;
 
 /**
  * Soft Reference cache decorator.
@@ -29,28 +30,22 @@ import org.apache.ibatis.cache.Cache;
  *
  * @author Clinton Begin
  */
-public class SoftCache implements Cache {
+public class SoftCache extends DelegateCache {
   private final Deque<Object> hardLinksToAvoidGarbageCollection;
   private final ReferenceQueue<Object> queueOfGarbageCollectedEntries;
-  private final Cache delegate;
   private int numberOfHardLinks;
 
   public SoftCache(Cache delegate) {
-    this.delegate = delegate;
+    super(delegate);
     this.numberOfHardLinks = 256;
     this.hardLinksToAvoidGarbageCollection = new LinkedList<>();
     this.queueOfGarbageCollectedEntries = new ReferenceQueue<>();
   }
 
   @Override
-  public String getId() {
-    return delegate.getId();
-  }
-
-  @Override
   public int getSize() {
     removeGarbageCollectedItems();
-    return delegate.getSize();
+    return super.getSize();
   }
 
   public void setSize(int size) {
@@ -60,18 +55,18 @@ public class SoftCache implements Cache {
   @Override
   public void putObject(Object key, Object value) {
     removeGarbageCollectedItems();
-    delegate.putObject(key, new SoftEntry(key, value, queueOfGarbageCollectedEntries));
+    super.putObject(key, new SoftEntry(key, value, queueOfGarbageCollectedEntries));
   }
 
   @Override
   public Object getObject(Object key) {
     Object result = null;
     @SuppressWarnings("unchecked") // assumed delegate cache is totally managed by this cache
-    SoftReference<Object> softReference = (SoftReference<Object>) delegate.getObject(key);
+    SoftReference<Object> softReference = (SoftReference<Object>) super.getObject(key);
     if (softReference != null) {
       result = softReference.get();
       if (result == null) {
-        delegate.removeObject(key);
+        super.removeObject(key);
       } else {
         // See #586 (and #335) modifications need more than a read lock
         synchronized (hardLinksToAvoidGarbageCollection) {
@@ -89,7 +84,7 @@ public class SoftCache implements Cache {
   public Object removeObject(Object key) {
     removeGarbageCollectedItems();
     @SuppressWarnings("unchecked")
-    SoftReference<Object> softReference = (SoftReference<Object>) delegate.removeObject(key);
+    SoftReference<Object> softReference = (SoftReference<Object>) super.removeObject(key);
     return softReference == null ? null : softReference.get();
   }
 
@@ -99,13 +94,13 @@ public class SoftCache implements Cache {
       hardLinksToAvoidGarbageCollection.clear();
     }
     removeGarbageCollectedItems();
-    delegate.clear();
+    super.clear();
   }
 
   private void removeGarbageCollectedItems() {
     SoftEntry sv;
     while ((sv = (SoftEntry) queueOfGarbageCollectedEntries.poll()) != null) {
-      delegate.removeObject(sv.key);
+      super.removeObject(sv.key);
     }
   }
 

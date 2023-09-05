@@ -21,6 +21,7 @@ import java.util.Deque;
 import java.util.LinkedList;
 
 import org.apache.ibatis.cache.Cache;
+import org.apache.ibatis.cache.impl.DelegateCache;
 
 /**
  * Weak Reference cache decorator.
@@ -29,28 +30,22 @@ import org.apache.ibatis.cache.Cache;
  *
  * @author Clinton Begin
  */
-public class WeakCache implements Cache {
+public class WeakCache extends DelegateCache {
   private final Deque<Object> hardLinksToAvoidGarbageCollection;
   private final ReferenceQueue<Object> queueOfGarbageCollectedEntries;
-  private final Cache delegate;
   private int numberOfHardLinks;
 
   public WeakCache(Cache delegate) {
-    this.delegate = delegate;
+    super(delegate);
     this.numberOfHardLinks = 256;
     this.hardLinksToAvoidGarbageCollection = new LinkedList<>();
     this.queueOfGarbageCollectedEntries = new ReferenceQueue<>();
   }
 
   @Override
-  public String getId() {
-    return delegate.getId();
-  }
-
-  @Override
   public int getSize() {
     removeGarbageCollectedItems();
-    return delegate.getSize();
+    return super.getSize();
   }
 
   public void setSize(int size) {
@@ -60,18 +55,18 @@ public class WeakCache implements Cache {
   @Override
   public void putObject(Object key, Object value) {
     removeGarbageCollectedItems();
-    delegate.putObject(key, new WeakEntry(key, value, queueOfGarbageCollectedEntries));
+    super.putObject(key, new WeakEntry(key, value, queueOfGarbageCollectedEntries));
   }
 
   @Override
   public Object getObject(Object key) {
     Object result = null;
     @SuppressWarnings("unchecked") // assumed delegate cache is totally managed by this cache
-    WeakReference<Object> weakReference = (WeakReference<Object>) delegate.getObject(key);
+    WeakReference<Object> weakReference = (WeakReference<Object>) super.getObject(key);
     if (weakReference != null) {
       result = weakReference.get();
       if (result == null) {
-        delegate.removeObject(key);
+        super.removeObject(key);
       } else {
         synchronized (hardLinksToAvoidGarbageCollection) {
           hardLinksToAvoidGarbageCollection.addFirst(result);
@@ -88,7 +83,7 @@ public class WeakCache implements Cache {
   public Object removeObject(Object key) {
     removeGarbageCollectedItems();
     @SuppressWarnings("unchecked")
-    WeakReference<Object> weakReference = (WeakReference<Object>) delegate.removeObject(key);
+    WeakReference<Object> weakReference = (WeakReference<Object>) super.removeObject(key);
     return weakReference == null ? null : weakReference.get();
   }
 
@@ -98,13 +93,13 @@ public class WeakCache implements Cache {
       hardLinksToAvoidGarbageCollection.clear();
     }
     removeGarbageCollectedItems();
-    delegate.clear();
+    super.clear();
   }
 
   private void removeGarbageCollectedItems() {
     WeakEntry sv;
     while ((sv = (WeakEntry) queueOfGarbageCollectedEntries.poll()) != null) {
-      delegate.removeObject(sv.key);
+      super.removeObject(sv.key);
     }
   }
 
