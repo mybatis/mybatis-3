@@ -9,16 +9,16 @@
       "License" shall mean the terms and conditions for use, reproduction,
       and distribution as defined by Sections 1 through 9 of this document.
 
-      "Licensor" shall mean the copyright owner or entity authorized by
+      "Licensor" shall mean the copyright owner or com.wangjh.entity authorized by
       the copyright owner that is granting the License.
 
-      "Legal Entity" shall mean the union of the acting entity and all
+      "Legal Entity" shall mean the union of the acting com.wangjh.entity and all
       other entities that control, are controlled by, or are under common
-      control with that entity. For the purposes of this definition,
+      control with that com.wangjh.entity. For the purposes of this definition,
       "control" means (i) the power, direct or indirect, to cause the
-      direction or management of such entity, whether by contract or
+      direction or management of such com.wangjh.entity, whether by contract or
       otherwise, or (ii) ownership of fifty percent (50%) or more of the
-      outstanding shares, or (iii) beneficial ownership of such entity.
+      outstanding shares, or (iii) beneficial ownership of such com.wangjh.entity.
 
       "You" (or "Your") shall mean an individual or Legal Entity
       exercising permissions granted by this License.
@@ -79,7 +79,7 @@
       by such Contributor that are necessarily infringed by their
       Contribution(s) alone or by combination of their Contribution(s)
       with the Work to which such Contribution(s) was submitted. If You
-      institute patent litigation against any entity (including a
+      institute patent litigation against any com.wangjh.entity (including a
       cross-claim or counterclaim in a lawsuit) alleging that the Work
       or a Contribution incorporated within the Work constitutes direct
       or contributory patent infringement, then any patent licenses
@@ -136,7 +136,7 @@
       with Licensor regarding such Contributions.
 
    6. Trademarks. This License does not grant permission to use the trade
-      names, trademarks, service marks, or product names of the Licensor,
+      names, trademarks, com.wangjh.service marks, or product names of the Licensor,
       except as required for reasonable and customary use in describing the
       origin of the Work and reproducing the content of the NOTICE file.
 

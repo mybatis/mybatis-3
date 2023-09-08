@@ -1,477 +1,96 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-       Copyright 2009-2023 the original author or authors.
+    <groupId>com.wangjh</groupId>
+    <artifactId>mybatis-3_learn</artifactId>
+    <version>1.0-SNAPSHOT</version>
 
-       Licensed under the Apache License, Version 2.0 (the "License");
-       you may not use this file except in compliance with the License.
-       You may obtain a copy of the License at
+    <properties>
+        <!--JDK版本，如果是jdk8则这里是 1.8-->
+        <java.version>11</java.version>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <spring.boot.version>2.5.5</spring.boot.version>
+        <mybatisplus.boot.starter.version>3.4.0</mybatisplus.boot.starter.version>
+        <lombok.version>1.18.16</lombok.version>
+        <sharding-jdbc.version>4.1.1</sharding-jdbc.version>
+        <junit.version>4.12</junit.version>
+        <druid.version>1.1.16</druid.version>
+        <!--跳过单元测试-->
+        <skipTests>true</skipTests>
+    </properties>
 
-          https://www.apache.org/licenses/LICENSE-2.0
+    <dependencies>
 
-       Unless required by applicable law or agreed to in writing, software
-       distributed under the License is distributed on an "AS IS" BASIS,
-       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-       See the License for the specific language governing permissions and
-       limitations under the License.
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <version>${spring.boot.version}</version>
+        </dependency>
 
--->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+        <!--<dependency>-->
+        <!--<groupId>org.springframework.boot</groupId>-->
+        <!--<artifactId>spring-boot-test</artifactId>-->
+        <!--</dependency>-->
 
-  <parent>
-    <groupId>org.mybatis</groupId>
-    <artifactId>mybatis-parent</artifactId>
-    <version>38</version>
-    <relativePath />
-  </parent>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <version>${spring.boot.version}</version>
+            <scope>test</scope>
+        </dependency>
 
-  <artifactId>mybatis</artifactId>
-  <version>3.5.14-SNAPSHOT</version>
-  <packaging>jar</packaging>
 
-  <name>mybatis</name>
-  <description>
-    The MyBatis SQL mapper framework makes it easier to use a relational database with object-oriented
-    applications. MyBatis couples objects with stored procedures or SQL statements using a XML descriptor or
-    annotations. Simplicity is the biggest advantage of the MyBatis data mapper over object relational mapping
-    tools.
-  </description>
-  <url>https://www.mybatis.org/mybatis-3</url>
+        <!--mybatis plus和springboot整合-->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>${mybatisplus.boot.starter.version}</version>
+        </dependency>
 
-  <inceptionYear>2009</inceptionYear>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.27</version>
+        </dependency>
 
-  <contributors>
-    <contributor>
-      <name>Adam Gent</name>
-      <email>adam.gent@evocatus.com</email>
-    </contributor>
-    <contributor>
-      <name>Andrea Selva</name>
-      <email>selva.andre@gmail.com</email>
-    </contributor>
-    <contributor>
-      <name>Antonio Sánchez</name>
-      <email>juntandolineas@gmail.com</email>
-    </contributor>
-    <contributor>
-      <name>Arkadi Shishlov</name>
-      <email>arkadi.shishlov@gmail.com</email>
-    </contributor>
-    <contributor>
-      <name>Axel Doerfler</name>
-      <email>axel.doerfler@gmail.com</email>
-    </contributor>
-    <contributor>
-      <name>Chris Dadej</name>
-      <email>chris.dadej@gmail.com</email>
-    </contributor>
-    <contributor>
-      <name>Denis Vygovskiy</name>
-      <email>qizant@gmail.com</email>
-    </contributor>
-    <contributor>
-      <name>Franta Mejta</name>
-      <email>mejta@rewor.cz</email>
-    </contributor>
-    <contributor>
-      <name>Jurriaan Pruys</name>
-      <email>jurriaan@pruys.com</email>
-    </contributor>
-    <contributor>
-      <name>Keith Wong</name>
-      <email>wongkwl@gmail.com</email>
-    </contributor>
-    <contributor>
-      <name>Lasse Voss</name>
-      <email>lasse.voss@motor-talk-gmbh.de</email>
-    </contributor>
-    <contributor>
-      <name>Luke Stevens</name>
-      <email>nosuchluke@gmail.com</email>
-    </contributor>
-    <contributor>
-      <name>Paul Krause</name>
-      <email>paulkrause88@alum.mit.edu</email>
-    </contributor>
-    <contributor>
-      <name>Peter Leibiger</name>
-      <email>kuhnroyal@gmail.com</email>
-    </contributor>
-    <contributor>
-      <name>Riccardo Cossu</name>
-      <email>riccardo.cossu@gmail.com</email>
-    </contributor>
-    <contributor>
-      <name>Tomáš Neuberg</name>
-      <email>neuberg@m-atelier.cz</email>
-    </contributor>
-  </contributors>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <!--<scope>provided</scope>-->
+        </dependency>
 
-  <scm>
-    <url>https://github.com/mybatis/mybatis-3</url>
-    <connection>scm:git:ssh://github.com/mybatis/mybatis-3.git</connection>
-    <developerConnection>scm:git:ssh://git@github.com/mybatis/mybatis-3.git</developerConnection>
-    <tag>mybatis-3.5.12</tag>
-  </scm>
-  <issueManagement>
-    <system>GitHub Issue Management</system>
-    <url>https://github.com/mybatis/mybatis-3/issues</url>
-  </issueManagement>
-  <ciManagement>
-    <system>Github</system>
-    <url>https://github.com/mybatis/mybatis-3/actions</url>
-  </ciManagement>
-  <distributionManagement>
-    <site>
-      <id>gh-pages</id>
-      <name>Mybatis GitHub Pages</name>
-      <url>git:ssh://git@github.com/mybatis/mybatis-3.git?gh-pages#</url>
-    </site>
-  </distributionManagement>
 
-  <properties>
-    <clirr.comparisonVersion>3.4.6</clirr.comparisonVersion>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>RELEASE</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
 
-    <!-- Add slow test groups here and annotate classes similar to @Tag('groupName'). -->
-    <!-- Excluded groups are ran on github ci, to force here, pass -d"excludedGroups=" -->
-    <excludedGroups>TestcontainersTests</excludedGroups>
-
-    <!-- Automatic Module Name -->
-    <module.name>org.mybatis</module.name>
-
-    <!-- OSGI Data -->
-    <osgi.export>org.apache.ibatis.*;version=${project.version};-noimport:=true</osgi.export>
-    <osgi.import>*;resolution:=optional</osgi.import>
-    <osgi.dynamicImport>*</osgi.dynamicImport>
-
-    <!-- Spotbugs Setup -->
-    <spotbugs.onlyAnalyze>org.apache.ibatis.*</spotbugs.onlyAnalyze>
-
-    <!-- Surefire Setup -->
-    <argLine>-Djdk.attach.allowAttachSelf -Xmx2048m</argLine>
-
-    <!-- Reproducible Builds -->
-    <project.build.outputTimestamp>1678513628</project.build.outputTimestamp>
-  </properties>
-
-  <dependencies>
-      <dependency>
-          <groupId>org.projectlombok</groupId>
-          <artifactId>lombok</artifactId>
-          <version>1.18.26</version>
-      </dependency>
-      <dependency>
-          <groupId>mysql</groupId>
-          <artifactId>mysql-connector-java</artifactId>
-          <version>8.0.27</version>
-      </dependency>
-    <dependency>
-      <groupId>ognl</groupId>
-      <artifactId>ognl</artifactId>
-      <version>3.3.4</version>
-      <scope>compile</scope>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>org.javassist</groupId>
-      <artifactId>javassist</artifactId>
-      <version>3.29.2-GA</version>
-      <scope>compile</scope>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>2.0.7</version>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>ch.qos.reload4j</groupId>
-      <artifactId>reload4j</artifactId>
-      <version>1.2.25</version>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-api</artifactId>
-      <version>2.20.0</version>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>commons-logging</groupId>
-      <artifactId>commons-logging</artifactId>
-      <version>1.2</version>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>cglib</groupId>
-      <artifactId>cglib</artifactId>
-      <version>3.3.0</version>
-      <optional>true</optional>
-    </dependency>
-
-    <!-- Test dependencies -->
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
-      <version>5.10.0</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-params</artifactId>
-      <version>5.10.0</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.hsqldb</groupId>
-      <artifactId>hsqldb</artifactId>
-      <version>2.6.1</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.derby</groupId>
-      <artifactId>derby</artifactId>
-      <version>10.15.2.0</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.derby</groupId>
-      <artifactId>derbyshared</artifactId>
-      <version>10.15.2.0</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.derby</groupId>
-      <artifactId>derbyoptionaltools</artifactId>
-      <version>10.15.2.0</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.h2database</groupId>
-      <artifactId>h2</artifactId>
-      <version>2.2.220</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-core</artifactId>
-      <version>5.4.0</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-subclass</artifactId>
-      <version>5.4.0</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-junit-jupiter</artifactId>
-      <version>5.4.0</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.velocity</groupId>
-      <artifactId>velocity-engine-core</artifactId>
-      <version>2.3</version>
-      <scope>test</scope>
-    </dependency>
-    <!-- postgresql driver is required to run the refcursor tests -->
-    <dependency>
-      <groupId>org.postgresql</groupId>
-      <artifactId>postgresql</artifactId>
-      <version>42.6.0</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.mysql</groupId>
-      <artifactId>mysql-connector-j</artifactId>
-      <version>8.1.0</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.assertj</groupId>
-      <artifactId>assertj-core</artifactId>
-      <version>3.24.2</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>eu.codearte.catch-exception</groupId>
-      <artifactId>catch-exception</artifactId>
-      <version>2.0</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.testcontainers</groupId>
-      <artifactId>junit-jupiter</artifactId>
-      <version>1.18.3</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.testcontainers</groupId>
-      <artifactId>postgresql</artifactId>
-      <version>1.18.3</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.testcontainers</groupId>
-      <artifactId>mysql</artifactId>
-      <version>1.18.3</version>
-      <scope>test</scope>
-    </dependency>
-    <!-- For javadoc link -->
-    <dependency>
-      <groupId>com.microsoft.sqlserver</groupId>
-      <artifactId>mssql-jdbc</artifactId>
-      <version>11.2.0.jre8</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-classic</artifactId>
-      <version>1.4.8</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-core</artifactId>
-      <version>2.20.0</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <systemPropertyVariables>
-            <property>
-              <name>derby.stream.error.file</name>
-              <value>${project.build.directory}/derby.log</value>
-            </property>
-            <property>
-              <name>derby.system.home</name>
-              <value>${project.build.directory}</value>
-            </property>
-          </systemPropertyVariables>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-pdf-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-shade-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>shade</goal>
-            </goals>
-            <configuration>
-              <createDependencyReducedPom>false</createDependencyReducedPom>
-              <artifactSet>
-                <includes>
-                  <include>org.mybatis:mybatis</include>
-                  <include>ognl:ognl</include>
-                  <include>org.javassist:javassist</include>
-                </includes>
-              </artifactSet>
-              <filters>
-                <filter>
-                  <artifact>ognl:ognl</artifact>
-                  <excludes>
-                    <exclude>META-INF/MANIFEST.MF</exclude>
-                  </excludes>
-                </filter>
-                <filter>
-                  <artifact>org.javassist:javassist</artifact>
-                  <excludes>
-                    <exclude>META-INF/MANIFEST.MF</exclude>
-                  </excludes>
-                </filter>
-              </filters>
-              <relocations>
-                <relocation>
-                  <pattern>ognl</pattern>
-                  <shadedPattern>org.apache.ibatis.ognl</shadedPattern>
-                </relocation>
-                <relocation>
-                  <pattern>javassist</pattern>
-                  <shadedPattern>org.apache.ibatis.javassist</shadedPattern>
-                </relocation>
-              </relocations>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-site-plugin</artifactId>
-        <configuration>
-          <locales>en,es,ja,fr,zh_CN,ko</locales>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.jacoco</groupId>
-        <artifactId>jacoco-maven-plugin</artifactId>
-        <configuration>
-          <excludes>
-            <exclude>org.apache.ibatis.ognl.*</exclude>
-            <exclude>org.apache.ibatis.javassist.*</exclude>
-          </excludes>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
-
-  <profiles>
-    <profile>
-      <id>pre16</id>
-      <activation>
-        <jdk>(,16)</jdk>
-      </activation>
-      <build>
-        <pluginManagement>
-          <plugins>
+    <build>
+        <plugins>
             <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-compiler-plugin</artifactId>
-              <configuration>
-                <testExcludes>
-                  <testExclude>**/record_type/*.java</testExclude>
-                </testExcludes>
-              </configuration>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring.boot.version}</version>
+                <configuration>
+                    <fork>true</fork>
+                    <addResources>true</addResources>
+                </configuration>
             </plugin>
-            <plugin>
-              <groupId>net.revelc.code</groupId>
-              <artifactId>impsort-maven-plugin</artifactId>
-              <configuration>
-                <skip>true</skip>
-              </configuration>
-            </plugin>
-          </plugins>
-        </pluginManagement>
-      </build>
-    </profile>
-    <profile>
-      <id>16</id>
-      <activation>
-        <jdk>[16,)</jdk>
-      </activation>
-      <properties>
-        <java.version>16</java.version>
-        <java.release.version>16</java.release.version>
-        <java.test.version>16</java.test.version>
-        <java.test.release.version>16</java.test.release.version>
-        <excludedGroups>TestcontainersTests,RequireIllegalAccess</excludedGroups>
-      </properties>
-    </profile>
-  </profiles>
+
+        </plugins>
+    </build>
 
 </project>

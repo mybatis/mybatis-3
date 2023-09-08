@@ -1,0 +1,40 @@
+server:
+  port: 8080
+
+
+spring:
+#数据库配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://1.12.253.204:3306/mybatis_test?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: Qaz123...
+
+
+
+#配置plus打印sql日志
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+#设置日志级别,ERROR/WARN/INFO/DEBUG,默认是INFO以上才显示
+logging:
+  level:
+    root: INFO
+
+#阿里云oss配置
+#aliyun:
+#  oss:
+#    endpoint: oss-cn-shenzhen.aliyuncs.com
+#    access-key-id: LTAI5tLkL6KQ7VNWfvDWNfqr
+#    access-key-secret: zRvGjxNBpLCibavXE5z06mVoJ3I13e
+#    bucketname: wangjianhuan-1024shop
+
+##seata配置
+#seata:
+#  tx-com.wangjh.service-group: ${spring.application.name}-group
+#  com.wangjh.service:
+#    grouplist:
+#      xdclass: 127.0.0.1:8091
+#    vgroup-mapping:
+#      xdclass-user-com.wangjh.service-group: xdclass
