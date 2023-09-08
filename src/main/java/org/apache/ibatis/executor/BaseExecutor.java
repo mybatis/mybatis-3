@@ -207,6 +207,7 @@ public abstract class BaseExecutor implements Executor {
     List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
     TypeHandlerRegistry typeHandlerRegistry = ms.getConfiguration().getTypeHandlerRegistry();
     // mimic DefaultParameterHandler logic
+    MetaObject metaObject = null;
     for (ParameterMapping parameterMapping : parameterMappings) {
       if (parameterMapping.getMode() != ParameterMode.OUT) {
         Object value;
@@ -218,7 +219,9 @@ public abstract class BaseExecutor implements Executor {
         } else if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {
           value = parameterObject;
         } else {
-          MetaObject metaObject = configuration.newMetaObject(parameterObject);
+          if (metaObject == null) {
+            metaObject = configuration.newMetaObject(parameterObject);
+          }
           value = metaObject.getValue(propertyName);
         }
         cacheKey.update(value);
