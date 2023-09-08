@@ -60,4 +60,16 @@ class FifoCacheTest {
     assertNull(cache.getObject(4));
   }
 
+  @Test
+  void shouldRiseConflictInBeyondFiveEntries() {
+    FifoCache cache = new FifoCache(new PerpetualCache("default"));
+    cache.setSize(5);
+    for (int i = 0; i < 5; i++) {
+      cache.putObject(i, i);
+    }
+    cache.removeObject(1);
+    cache.putObject(1, 1);
+    assertNotNull(cache.getObject(0));
+  }
+
 }
