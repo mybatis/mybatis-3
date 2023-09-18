@@ -263,11 +263,13 @@ public final class TypeHandlerRegistry {
     if (type instanceof Class) {
       Class<?> clazz = (Class<?>) type;
       if (Enum.class.isAssignableFrom(clazz)) {
-        Class<?> enumClass = clazz.isAnonymousClass() ? clazz.getSuperclass() : clazz;
-        jdbcHandlerMap = getJdbcHandlerMapForEnumInterfaces(enumClass, enumClass);
+        if (clazz.isAnonymousClass()) {
+          return getJdbcHandlerMap(clazz.getSuperclass());
+        }
+        jdbcHandlerMap = getJdbcHandlerMapForEnumInterfaces(clazz, clazz);
         if (jdbcHandlerMap == null) {
-          register(enumClass, getInstance(enumClass, defaultEnumTypeHandler));
-          return typeHandlerMap.get(enumClass);
+          register(clazz, getInstance(clazz, defaultEnumTypeHandler));
+          return typeHandlerMap.get(clazz);
         }
       } else {
         jdbcHandlerMap = getJdbcHandlerMapForSuperclass(clazz);
