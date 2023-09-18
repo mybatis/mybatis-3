@@ -22,6 +22,11 @@
 
 <configuration>
 
+  <typeHandlers>
+    <typeHandler
+      handler="org.apache.ibatis.submitted.enum_with_method.MoodTypeTypeHandler" />
+  </typeHandlers>
+
   <environments default="development">
     <environment id="development">
       <transactionManager type="JDBC">
