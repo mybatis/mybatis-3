@@ -1,5 +1,5 @@
 --
---    Copyright 2009-2022 the original author or authors.
+--    Copyright 2009-2023 the original author or authors.
 --
 --    Licensed under the Apache License, Version 2.0 (the "License");
 --    you may not use this file except in compliance with the License.
@@ -19,7 +19,8 @@ drop table users if exists;
 create table users (
   id int,
   name varchar(20),
-  cur varchar(20)
+  cur varchar(20),
+  mood int
 );
 
-insert into users (id, name, cur) values(1, 'User1', 'RMB');
+insert into users (id, name, cur, mood) values(1, 'User1', 'RMB', 1);

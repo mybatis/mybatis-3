@@ -13,44 +13,41 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
+
 package org.apache.ibatis.submitted.enum_with_method;
 
-public class User {
+public enum Mood {
+  GOOD(1) {
+    @Override
+    public String getMessage() {
+      return "Yeehaw";
+    }
+  },
+  BAD(2) {
+    @Override
+    public String getMessage() {
+      return "whatevs";
+    }
+  };
 
-  private Integer id;
-  private String name;
-  private Currency cur;
-  private Mood mood;
+  private int value;
 
-  public Integer getId() {
-    return id;
+  private Mood(int value) {
+    this.value = value;
   }
 
-  public void setId(Integer id) {
-    this.id = id;
+  public int getValue() {
+    return value;
   }
 
-  public String getName() {
-    return name;
+  public static Mood fromValue(int i) {
+    for (Mood t : values()) {
+      if (t.value == i) {
+        return t;
+      }
+    }
+    throw new IllegalArgumentException("Unknown value for Mood: " + i);
   }
 
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public Currency getCur() {
-    return cur;
-  }
-
-  public void setCur(Currency cur) {
-    this.cur = cur;
-  }
-
-  public Mood getMood() {
-    return mood;
-  }
-
-  public void setMood(Mood mood) {
-    this.mood = mood;
-  }
+  public abstract String getMessage();
 }
