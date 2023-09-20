@@ -75,6 +75,7 @@ public class LruCache implements Cache {
 
   @Override
   public Object removeObject(Object key) {
+    keyMap.remove(key);
     return delegate.removeObject(key);
   }
 
