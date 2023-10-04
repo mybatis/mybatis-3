@@ -122,13 +122,13 @@ public class TrimSqlNode implements SqlNode {
     }
 
     private void applyPrefix(StringBuilder sql, String trimmedUppercaseSql) {
-      if(prefixApplied) {
+      if (prefixApplied) {
         return;
       }
       prefixApplied = true;
       if (prefixesToOverride != null) {
-        prefixesToOverride.stream().filter(trimmedUppercaseSql::startsWith)
-          .findFirst().ifPresent(toRemove-> sql.delete(0, toRemove.trim().length()));
+        prefixesToOverride.stream().filter(trimmedUppercaseSql::startsWith).findFirst()
+            .ifPresent(toRemove -> sql.delete(0, toRemove.trim().length()));
       }
       if (prefix != null) {
         sql.insert(0, " ").insert(0, prefix);
@@ -142,12 +142,12 @@ public class TrimSqlNode implements SqlNode {
       suffixApplied = true;
       if (suffixesToOverride != null) {
         suffixesToOverride.stream()
-          .filter(toRemove -> trimmedUppercaseSql.endsWith(toRemove) || trimmedUppercaseSql.endsWith(toRemove.trim()))
-          .findFirst().ifPresent(toRemove -> {
-            int start = sql.length() - toRemove.trim().length();
-            int end = sql.length();
-            sql.delete(start, end);
-          });
+            .filter(toRemove -> trimmedUppercaseSql.endsWith(toRemove) || trimmedUppercaseSql.endsWith(toRemove.trim()))
+            .findFirst().ifPresent(toRemove -> {
+              int start = sql.length() - toRemove.trim().length();
+              int end = sql.length();
+              sql.delete(start, end);
+            });
       }
       if (suffix != null) {
         sql.append(" ").append(suffix);
