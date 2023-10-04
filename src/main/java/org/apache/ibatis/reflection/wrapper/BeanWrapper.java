@@ -83,9 +83,8 @@ public class BeanWrapper extends BaseWrapper {
     MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
     if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
       return metaClass.getSetterType(name);
-    } else {
-      return metaValue.getSetterType(prop.getChildren());
     }
+    return metaValue.getSetterType(prop.getChildren());
   }
 
   @Override
@@ -97,9 +96,8 @@ public class BeanWrapper extends BaseWrapper {
     MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
     if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
       return metaClass.getGetterType(name);
-    } else {
-      return metaValue.getGetterType(prop.getChildren());
     }
+    return metaValue.getGetterType(prop.getChildren());
   }
 
   @Override
@@ -112,12 +110,10 @@ public class BeanWrapper extends BaseWrapper {
       MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
       if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
         return metaClass.hasSetter(name);
-      } else {
-        return metaValue.hasSetter(prop.getChildren());
       }
-    } else {
-      return false;
+      return metaValue.hasSetter(prop.getChildren());
     }
+    return false;
   }
 
   @Override
@@ -130,12 +126,10 @@ public class BeanWrapper extends BaseWrapper {
       MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
       if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
         return metaClass.hasGetter(name);
-      } else {
-        return metaValue.hasGetter(prop.getChildren());
       }
-    } else {
-      return false;
+      return metaValue.hasGetter(prop.getChildren());
     }
+    return false;
   }
 
   @Override

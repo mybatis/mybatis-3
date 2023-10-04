@@ -118,9 +118,8 @@ public class MetaObject {
     MetaObject metaValue = metaObjectForProperty(prop.getIndexedName());
     if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
       return null;
-    } else {
-      return metaValue.getValue(prop.getChildren());
     }
+    return metaValue.getValue(prop.getChildren());
   }
 
   public void setValue(String name, Object value) {
