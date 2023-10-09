@@ -122,40 +122,35 @@ public class TrimSqlNode implements SqlNode {
     }
 
     private void applyPrefix(StringBuilder sql, String trimmedUppercaseSql) {
-      if (!prefixApplied) {
-        prefixApplied = true;
-        if (prefixesToOverride != null) {
-          for (String toRemove : prefixesToOverride) {
-            if (trimmedUppercaseSql.startsWith(toRemove)) {
-              sql.delete(0, toRemove.trim().length());
-              break;
-            }
-          }
-        }
-        if (prefix != null) {
-          sql.insert(0, " ");
-          sql.insert(0, prefix);
-        }
+      if (prefixApplied) {
+        return;
+      }
+      prefixApplied = true;
+      if (prefixesToOverride != null) {
+        prefixesToOverride.stream().filter(trimmedUppercaseSql::startsWith).findFirst()
+            .ifPresent(toRemove -> sql.delete(0, toRemove.trim().length()));
+      }
+      if (prefix != null) {
+        sql.insert(0, " ").insert(0, prefix);
       }
     }
 
     private void applySuffix(StringBuilder sql, String trimmedUppercaseSql) {
-      if (!suffixApplied) {
-        suffixApplied = true;
-        if (suffixesToOverride != null) {
-          for (String toRemove : suffixesToOverride) {
-            if (trimmedUppercaseSql.endsWith(toRemove) || trimmedUppercaseSql.endsWith(toRemove.trim())) {
+      if (suffixApplied) {
+        return;
+      }
+      suffixApplied = true;
+      if (suffixesToOverride != null) {
+        suffixesToOverride.stream()
+            .filter(toRemove -> trimmedUppercaseSql.endsWith(toRemove) || trimmedUppercaseSql.endsWith(toRemove.trim()))
+            .findFirst().ifPresent(toRemove -> {
               int start = sql.length() - toRemove.trim().length();
               int end = sql.length();
               sql.delete(start, end);
-              break;
-            }
-          }
-        }
-        if (suffix != null) {
-          sql.append(" ");
-          sql.append(suffix);
-        }
+            });
+      }
+      if (suffix != null) {
+        sql.append(" ").append(suffix);
       }
     }
 
