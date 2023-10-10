@@ -26,15 +26,34 @@ import java.lang.annotation.Target;
  * The annotation that specify an SQL for retrieving record(s).
  * <p>
  * <b>How to use:</b>
- *
- * <pre>
- * public interface UserMapper {
- *   &#064;Select("SELECT id, name FROM users WHERE id = #{id}")
- *   User selectById(int id);
- * }
- * </pre>
+ * <br/>
+ * <ul>
+ *   <li>
+ *   Simple:
+ *   <pre>
+ *   public interface UserMapper {
+ *       &#064;Select("SELECT id, name FROM users WHERE id = #{id}")
+ *       User selectById(int id);
+ *   }
+ *   </pre>
+ *   </li>
+ *   <li>
+ *   Dynamic SQL:
+ *   <pre>
+ *   public interface UserMapper {
+ *       &#064;Select({"&lt;script>",
+ *           "select * from users",
+ *           "where name = #{name}",
+ *           "&lt;if test="age != null"> age = #{age} &lt;/if>",
+ *           "&lt;/script>"})
+ *       User select(@NotNull String name, @Nullable Intger age);
+ *   }
+ *   </pre>
+ *   </li>
+ * </ul>
  *
  * @author Clinton Begin
+ * @see <a href="https://mybatis.org/mybatis-3/dynamic-sql.html">How to use Dynamic SQL</a>
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
