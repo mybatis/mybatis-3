@@ -44,7 +44,7 @@ import java.lang.annotation.Target;
  *       &#064;Select({"&lt;script>",
  *           "select * from users",
  *           "where name = #{name}",
- *           "&lt;if test="age != null"> age = #{age} &lt;/if>",
+ *           "&lt;if test=\"age != null\"> age = #{age} &lt;/if>",
  *           "&lt;/script>"})
  *       User select(@NotNull String name, @Nullable Intger age);
  *   }
@@ -69,7 +69,6 @@ public @interface Select {
 
   /**
    * @return A database id that correspond this statement
-   *
    * @since 3.5.5
    */
   String databaseId() default "";
@@ -79,7 +78,6 @@ public @interface Select {
    * e.g. RETURNING of PostgreSQL or OUTPUT of MS SQL Server.
    *
    * @return {@code true} if this select affects DB data; {@code false} if otherwise
-   *
    * @since 3.5.12
    */
   boolean affectData() default false;
@@ -88,7 +86,6 @@ public @interface Select {
    * The container annotation for {@link Select}.
    *
    * @author Kazuki Shimizu
-   *
    * @since 3.5.5
    */
   @Documented
