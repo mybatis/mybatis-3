@@ -190,7 +190,7 @@ class XmlConfigBuilderTest {
       assertThat(config.getAutoMappingBehavior()).isEqualTo(AutoMappingBehavior.NONE);
       assertThat(config.getAutoMappingUnknownColumnBehavior()).isEqualTo(AutoMappingUnknownColumnBehavior.WARNING);
       assertThat(config.isCacheEnabled()).isFalse();
-      assertThat(config.getProxyFactory()).isInstanceOf(CglibProxyFactory.class);
+      assertThat(config.getProxyFactory()).isInstanceOf(JavassistProxyFactory.class);
       assertThat(config.isLazyLoadingEnabled()).isTrue();
       assertThat(config.isAggressiveLazyLoading()).isTrue();
       assertThat(config.isMultipleResultSetsEnabled()).isFalse();

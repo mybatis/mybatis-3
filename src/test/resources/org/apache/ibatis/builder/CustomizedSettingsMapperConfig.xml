@@ -31,7 +31,7 @@
     <setting name="autoMappingBehavior" value="NONE"/>
     <setting name="autoMappingUnknownColumnBehavior" value="WARNING"/>
     <setting name="cacheEnabled" value="false"/>
-    <setting name="proxyFactory" value="CGLIB"/>
+    <setting name="proxyFactory" value="JAVASSIST"/>
     <setting name="lazyLoadingEnabled" value="true"/>
     <setting name="aggressiveLazyLoading" value="true"/>
     <setting name="multipleResultSetsEnabled" value="false"/>
