@@ -152,7 +152,7 @@ public class XMLConfigBuilder extends BaseBuilder {
 
   private void loadCustomVfs(Properties props) throws ClassNotFoundException {
     String value = props.getProperty("vfsImpl");
-    if(value == null) {
+    if (value == null) {
       return;
     }
     String[] clazzes = value.split(",");
@@ -171,7 +171,7 @@ public class XMLConfigBuilder extends BaseBuilder {
   }
 
   private void typeAliasesElement(XNode context) {
-    if(context == null) {
+    if (context == null) {
       return;
     }
     for (XNode child : context.getChildren()) {
@@ -200,7 +200,8 @@ public class XMLConfigBuilder extends BaseBuilder {
       for (XNode child : context.getChildren()) {
         String interceptor = child.getStringAttribute("interceptor");
         Properties properties = child.getChildrenAsProperties();
-        Interceptor interceptorInstance = (Interceptor) resolveClass(interceptor).getDeclaredConstructor().newInstance();
+        Interceptor interceptorInstance = (Interceptor) resolveClass(interceptor).getDeclaredConstructor()
+            .newInstance();
         interceptorInstance.setProperties(properties);
         configuration.addInterceptor(interceptorInstance);
       }
@@ -234,7 +235,7 @@ public class XMLConfigBuilder extends BaseBuilder {
   }
 
   private void propertiesElement(XNode context) throws Exception {
-    if(context == null) {
+    if (context == null) {
       return;
     }
     Properties defaults = context.getChildrenAsProperties();
