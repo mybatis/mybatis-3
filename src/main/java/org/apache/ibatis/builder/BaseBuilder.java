@@ -64,33 +64,24 @@ public abstract class BaseBuilder {
   }
 
   protected JdbcType resolveJdbcType(String alias) {
-    if (alias == null) {
-      return null;
-    }
     try {
-      return JdbcType.valueOf(alias);
+      return alias == null ? null : JdbcType.valueOf(alias);
     } catch (IllegalArgumentException e) {
       throw new BuilderException("Error resolving JdbcType. Cause: " + e, e);
     }
   }
 
   protected ResultSetType resolveResultSetType(String alias) {
-    if (alias == null) {
-      return null;
-    }
     try {
-      return ResultSetType.valueOf(alias);
+      return alias == null ? null : ResultSetType.valueOf(alias);
     } catch (IllegalArgumentException e) {
       throw new BuilderException("Error resolving ResultSetType. Cause: " + e, e);
     }
   }
 
   protected ParameterMode resolveParameterMode(String alias) {
-    if (alias == null) {
-      return null;
-    }
     try {
-      return ParameterMode.valueOf(alias);
+      return alias == null ? null : ParameterMode.valueOf(alias);
     } catch (IllegalArgumentException e) {
       throw new BuilderException("Error resolving ParameterMode. Cause: " + e, e);
     }
@@ -98,22 +89,16 @@ public abstract class BaseBuilder {
 
   protected Object createInstance(String alias) {
     Class<?> clazz = resolveClass(alias);
-    if (clazz == null) {
-      return null;
-    }
     try {
-      return clazz.getDeclaredConstructor().newInstance();
+      return clazz == null ? null : clazz.getDeclaredConstructor().newInstance();
     } catch (Exception e) {
       throw new BuilderException("Error creating instance. Cause: " + e, e);
     }
   }
 
   protected <T> Class<? extends T> resolveClass(String alias) {
-    if (alias == null) {
-      return null;
-    }
     try {
-      return resolveAlias(alias);
+      return alias == null ? null : resolveAlias(alias);
     } catch (Exception e) {
       throw new BuilderException("Error resolving class. Cause: " + e, e);
     }
@@ -139,11 +124,8 @@ public abstract class BaseBuilder {
     }
     // javaType ignored for injected handlers see issue #746 for full detail
     TypeHandler<?> handler = typeHandlerRegistry.getMappingTypeHandler(typeHandlerType);
-    if (handler == null) {
-      // not in registry, create a new one
-      handler = typeHandlerRegistry.getInstance(javaType, typeHandlerType);
-    }
-    return handler;
+    // if handler not in registry, create a new one, otherwise return directly
+    return handler == null ? typeHandlerRegistry.getInstance(javaType, typeHandlerType) : handler;
   }
 
   protected <T> Class<? extends T> resolveAlias(String alias) {
