@@ -101,7 +101,6 @@ public class XMLMapperBuilder extends BaseBuilder {
       configuration.addLoadedResource(resource);
       bindMapperForNamespace();
     }
-
     parsePendingResultMaps();
     parsePendingCacheRefs();
     parsePendingStatements();
