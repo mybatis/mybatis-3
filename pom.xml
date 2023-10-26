@@ -132,7 +132,7 @@
 
   <properties>
     <clirr.comparisonVersion>3.4.6</clirr.comparisonVersion>
-    <log4j.version>2.21.0</log4j.version>
+    <log4j.version>2.21.1</log4j.version>
 
     <!-- Add slow test groups here and annotate classes similar to @Tag('groupName'). -->
     <!-- Excluded groups are ran on github ci, to force here, pass -d"excludedGroups=" -->
