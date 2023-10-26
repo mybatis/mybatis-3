@@ -131,8 +131,8 @@
   </distributionManagement>
 
   <properties>
-    <maven.compiler.testTarget>1.8</maven.compiler.testTarget>
-    <maven.compiler.testSource>1.8</maven.compiler.testSource>
+    <maven.compiler.testTarget>8</maven.compiler.testTarget>
+    <maven.compiler.testSource>8</maven.compiler.testSource>
     <maven.compiler.testCompilerArgument>-parameters</maven.compiler.testCompilerArgument>
     <clirr.comparisonVersion>3.3.1</clirr.comparisonVersion>
     <findbugs.onlyAnalyze>org.apache.ibatis.*</findbugs.onlyAnalyze>
@@ -382,13 +382,13 @@
 
   <profiles>
     <profile>
-      <id>java16</id>
+      <id>java8</id>
       <activation>
-        <jdk>1.6</jdk>
+        <jdk>8</jdk>
       </activation>
       <properties>
-        <maven.compiler.testTarget>1.6</maven.compiler.testTarget>
-        <maven.compiler.testSource>1.6</maven.compiler.testSource>
+        <maven.compiler.testTarget>8</maven.compiler.testTarget>
+        <maven.compiler.testSource>8</maven.compiler.testSource>
         <maven.compiler.testCompilerArgument />
       </properties>
       <build>
@@ -445,13 +445,13 @@
       </pluginRepositories>
     </profile>
     <profile>
-      <id>java17</id>
+      <id>java8</id>
       <activation>
-        <jdk>1.7</jdk>
+        <jdk>8</jdk>
       </activation>
       <properties>
-        <maven.compiler.testTarget>1.7</maven.compiler.testTarget>
-        <maven.compiler.testSource>1.7</maven.compiler.testSource>
+        <maven.compiler.testTarget>8</maven.compiler.testTarget>
+        <maven.compiler.testSource>8</maven.compiler.testSource>
         <maven.compiler.testCompilerArgument />
       </properties>
       <build>
