@@ -16,9 +16,7 @@
 package org.apache.ibatis.mapping;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.sql.DataSource;
@@ -60,23 +58,16 @@ public class VendorDatabaseIdProvider implements DatabaseIdProvider {
   private String getDatabaseName(DataSource dataSource) throws SQLException {
     String productName = getDatabaseProductName(dataSource);
     if (this.properties != null) {
-      for (Map.Entry<Object, Object> property : properties.entrySet()) {
-        if (productName.contains((String) property.getKey())) {
-          return (String) property.getValue();
-        }
-      }
-      // no match, return null
-      return null;
+      return properties.entrySet().stream().filter(entry -> productName.contains((String) entry.getKey()))
+          .map(entry -> (String) entry.getValue()).findFirst().orElse(null);
     }
     return productName;
   }
 
   private String getDatabaseProductName(DataSource dataSource) throws SQLException {
     try (Connection con = dataSource.getConnection()) {
-      DatabaseMetaData metaData = con.getMetaData();
-      return metaData.getDatabaseProductName();
+      return con.getMetaData().getDatabaseProductName();
     }
-
   }
 
   private static class LogHolder {
