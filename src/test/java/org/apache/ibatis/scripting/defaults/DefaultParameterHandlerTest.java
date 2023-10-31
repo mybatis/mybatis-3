@@ -115,7 +115,8 @@ class DefaultParameterHandlerTest {
     Configuration config = new Configuration();
     TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
 
-    MappedStatement mappedStatement = new MappedStatement.Builder(config, "testSelect", new StaticSqlSource(config, "some select statement"), SqlCommandType.SELECT).build();
+    MappedStatement mappedStatement = new MappedStatement.Builder(config, "testSelect",
+        new StaticSqlSource(config, "some select statement"), SqlCommandType.SELECT).build();
 
     Object parameterObject = 1;
 
@@ -129,7 +130,8 @@ class DefaultParameterHandlerTest {
       }
     };
 
-    DefaultParameterHandler defaultParameterHandler = new DefaultParameterHandler(mappedStatement, parameterObject, boundSql);
+    DefaultParameterHandler defaultParameterHandler = new DefaultParameterHandler(mappedStatement, parameterObject,
+        boundSql);
 
     PreparedStatement ps = mock(PreparedStatement.class);
 
@@ -143,7 +145,8 @@ class DefaultParameterHandlerTest {
     Configuration config = new Configuration();
     TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
 
-    MappedStatement mappedStatement = new MappedStatement.Builder(config, "testSelect", new StaticSqlSource(config, "some select statement"), SqlCommandType.SELECT).build();
+    MappedStatement mappedStatement = new MappedStatement.Builder(config, "testSelect",
+        new StaticSqlSource(config, "some select statement"), SqlCommandType.SELECT).build();
 
     Object parameterObject = null;
 
@@ -153,7 +156,8 @@ class DefaultParameterHandlerTest {
       }
     }, parameterObject);
 
-    DefaultParameterHandler defaultParameterHandler = new DefaultParameterHandler(mappedStatement, parameterObject, boundSql);
+    DefaultParameterHandler defaultParameterHandler = new DefaultParameterHandler(mappedStatement, parameterObject,
+        boundSql);
 
     PreparedStatement ps = mock(PreparedStatement.class);
 
@@ -167,7 +171,8 @@ class DefaultParameterHandlerTest {
     Configuration config = new Configuration();
     TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
 
-    MappedStatement mappedStatement = new MappedStatement.Builder(config, "testSelect", new StaticSqlSource(config, "some select statement"), SqlCommandType.SELECT).build();
+    MappedStatement mappedStatement = new MappedStatement.Builder(config, "testSelect",
+        new StaticSqlSource(config, "some select statement"), SqlCommandType.SELECT).build();
 
     Object parameterObject = 1;
 
@@ -177,7 +182,8 @@ class DefaultParameterHandlerTest {
       }
     }, parameterObject);
 
-    DefaultParameterHandler defaultParameterHandler = new DefaultParameterHandler(mappedStatement, parameterObject, boundSql);
+    DefaultParameterHandler defaultParameterHandler = new DefaultParameterHandler(mappedStatement, parameterObject,
+        boundSql);
 
     PreparedStatement ps = mock(PreparedStatement.class);
 
@@ -191,7 +197,8 @@ class DefaultParameterHandlerTest {
     Configuration config = new Configuration();
     TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
 
-    MappedStatement mappedStatement = new MappedStatement.Builder(config, "testSelect", new StaticSqlSource(config, "some select statement"), SqlCommandType.SELECT).build();
+    MappedStatement mappedStatement = new MappedStatement.Builder(config, "testSelect",
+        new StaticSqlSource(config, "some select statement"), SqlCommandType.SELECT).build();
 
     Author parameterObject = new Author(-1, "cbegin", "******", "cbegin@nowhere.com", "N/A", Section.NEWS);
 
@@ -201,12 +208,15 @@ class DefaultParameterHandlerTest {
         add(new ParameterMapping.Builder(config, "username", registry.getTypeHandler(String.class)).build());
         add(new ParameterMapping.Builder(config, "password", registry.getTypeHandler(String.class)).build());
         add(new ParameterMapping.Builder(config, "email", registry.getTypeHandler(String.class)).build());
-        add(new ParameterMapping.Builder(config, "bio", registry.getTypeHandler(String.class)).jdbcType(JdbcType.VARCHAR).build());
-        add(new ParameterMapping.Builder(config, "favouriteSection", registry.getTypeHandler(Section.class)).jdbcType(JdbcType.VARCHAR).build());
+        add(new ParameterMapping.Builder(config, "bio", registry.getTypeHandler(String.class))
+            .jdbcType(JdbcType.VARCHAR).build());
+        add(new ParameterMapping.Builder(config, "favouriteSection", registry.getTypeHandler(Section.class))
+            .jdbcType(JdbcType.VARCHAR).build());
       }
     }, parameterObject);
 
-    DefaultParameterHandler defaultParameterHandler = new DefaultParameterHandler(mappedStatement, parameterObject, boundSql);
+    DefaultParameterHandler defaultParameterHandler = new DefaultParameterHandler(mappedStatement, parameterObject,
+        boundSql);
 
     PreparedStatement ps = mock(PreparedStatement.class);
 
@@ -232,24 +242,33 @@ class DefaultParameterHandlerTest {
 
     when(mockConfig.getTypeHandlerRegistry()).thenReturn(new TypeHandlerRegistry(mockConfig));
     when(mockConfig.getDefaultScriptingLanguageInstance()).thenReturn(new XMLLanguageDriver());
-    when(mockConfig.newMetaObject(parameterObject)).thenReturn(MetaObject.forObject(parameterObject, objectFactory, objectWrapperFactory, reflectorFactory));
+    when(mockConfig.newMetaObject(parameterObject))
+        .thenReturn(MetaObject.forObject(parameterObject, objectFactory, objectWrapperFactory, reflectorFactory));
 
     TypeHandlerRegistry registry = mockConfig.getTypeHandlerRegistry();
 
-    MappedStatement mappedStatement = new MappedStatement.Builder(mockConfig, "testSelect", new StaticSqlSource(mockConfig, "some select statement"), SqlCommandType.SELECT).build();
+    MappedStatement mappedStatement = new MappedStatement.Builder(mockConfig, "testSelect",
+        new StaticSqlSource(mockConfig, "some select statement"), SqlCommandType.SELECT).build();
 
     BoundSql boundSql = new BoundSql(mockConfig, "some select statement", new ArrayList<ParameterMapping>() {
       {
-        add(new ParameterMapping.Builder(mockConfig, "id", registry.getTypeHandler(int.class)).jdbcType(JdbcType.INTEGER).build());
-        add(new ParameterMapping.Builder(mockConfig, "username", registry.getTypeHandler(String.class)).jdbcType(JdbcType.VARCHAR).build());
-        add(new ParameterMapping.Builder(mockConfig, "password", registry.getTypeHandler(String.class)).jdbcType(JdbcType.VARCHAR).build());
-        add(new ParameterMapping.Builder(mockConfig, "email", registry.getTypeHandler(String.class)).jdbcType(JdbcType.VARCHAR).build());
-        add(new ParameterMapping.Builder(mockConfig, "bio", registry.getTypeHandler(String.class)).jdbcType(JdbcType.VARCHAR).build());
-        add(new ParameterMapping.Builder(mockConfig, "favouriteSection", registry.getTypeHandler(Section.class)).jdbcType(JdbcType.VARCHAR).build());
+        add(new ParameterMapping.Builder(mockConfig, "id", registry.getTypeHandler(int.class))
+            .jdbcType(JdbcType.INTEGER).build());
+        add(new ParameterMapping.Builder(mockConfig, "username", registry.getTypeHandler(String.class))
+            .jdbcType(JdbcType.VARCHAR).build());
+        add(new ParameterMapping.Builder(mockConfig, "password", registry.getTypeHandler(String.class))
+            .jdbcType(JdbcType.VARCHAR).build());
+        add(new ParameterMapping.Builder(mockConfig, "email", registry.getTypeHandler(String.class))
+            .jdbcType(JdbcType.VARCHAR).build());
+        add(new ParameterMapping.Builder(mockConfig, "bio", registry.getTypeHandler(String.class))
+            .jdbcType(JdbcType.VARCHAR).build());
+        add(new ParameterMapping.Builder(mockConfig, "favouriteSection", registry.getTypeHandler(Section.class))
+            .jdbcType(JdbcType.VARCHAR).build());
       }
     }, parameterObject);
 
-    DefaultParameterHandler defaultParameterHandler = new DefaultParameterHandler(mappedStatement, parameterObject, boundSql);
+    DefaultParameterHandler defaultParameterHandler = new DefaultParameterHandler(mappedStatement, parameterObject,
+        boundSql);
 
     PreparedStatement ps = mock(PreparedStatement.class);
 
