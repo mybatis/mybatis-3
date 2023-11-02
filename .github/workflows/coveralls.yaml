@@ -11,7 +11,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          java-version: 17
+          java-version: 21
           distribution: zulu
       - name: Report Coverage to Coveralls for Pull Requests
         if: github.event_name == 'pull_request'
