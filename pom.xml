@@ -124,9 +124,9 @@
   </ciManagement>
   <distributionManagement>
     <site>
-      <id>gh-pages</id>
+      <id>gh-pages-scm</id>
       <name>Mybatis GitHub Pages</name>
-      <url>git:ssh://git@github.com/mybatis/mybatis-3.git?gh-pages#</url>
+      <url>scm:git:ssh://git@github.com/mybatis/mybatis-3.git</url>
     </site>
   </distributionManagement>
 
