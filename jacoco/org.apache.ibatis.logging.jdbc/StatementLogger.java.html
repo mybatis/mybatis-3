@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StatementLogger.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.logging.jdbc</a> &gt; <span class="el_source">StatementLogger.java</span></div><h1>StatementLogger.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2023 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.logging.jdbc;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.reflection.ExceptionUtil;
+
+/**
+ * Statement proxy to add logging.
+ *
+ * @author Clinton Begin
+ * @author Eduardo Macarron
+ */
+public final class StatementLogger extends BaseJdbcLogger implements InvocationHandler {
+
+  private final Statement statement;
+
+  private StatementLogger(Statement stmt, Log statementLog, int queryStack) {
+<span class="fc" id="L38">    super(statementLog, queryStack);</span>
+<span class="fc" id="L39">    this.statement = stmt;</span>
+<span class="fc" id="L40">  }</span>
+
+  @Override
+  public Object invoke(Object proxy, Method method, Object[] params) throws Throwable {
+    try {
+<span class="pc bpc" id="L45" title="1 of 2 branches missed.">      if (Object.class.equals(method.getDeclaringClass())) {</span>
+<span class="nc" id="L46">        return method.invoke(this, params);</span>
+      }
+<span class="fc bfc" id="L48" title="All 2 branches covered.">      if (EXECUTE_METHODS.contains(method.getName())) {</span>
+<span class="pc bpc" id="L49" title="1 of 2 branches missed.">        if (isDebugEnabled()) {</span>
+<span class="fc" id="L50">          debug(&quot; Executing: &quot; + removeExtraWhitespace((String) params[0]), true);</span>
+        }
+<span class="fc bfc" id="L52" title="All 2 branches covered.">        if (&quot;executeQuery&quot;.equals(method.getName())) {</span>
+<span class="fc" id="L53">          ResultSet rs = (ResultSet) method.invoke(statement, params);</span>
+<span class="pc bpc" id="L54" title="1 of 2 branches missed.">          return rs == null ? null : ResultSetLogger.newInstance(rs, statementLog, queryStack);</span>
+        } else {
+<span class="fc" id="L56">          return method.invoke(statement, params);</span>
+        }
+      }
+<span class="fc bfc" id="L59" title="All 2 branches covered.">      if (&quot;getResultSet&quot;.equals(method.getName())) {</span>
+<span class="fc" id="L60">        ResultSet rs = (ResultSet) method.invoke(statement, params);</span>
+<span class="pc bpc" id="L61" title="1 of 2 branches missed.">        return rs == null ? null : ResultSetLogger.newInstance(rs, statementLog, queryStack);</span>
+      } else {
+<span class="fc" id="L63">        return method.invoke(statement, params);</span>
+      }
+<span class="nc" id="L65">    } catch (Throwable t) {</span>
+<span class="nc" id="L66">      throw ExceptionUtil.unwrapThrowable(t);</span>
+    }
+  }
+
+  /**
+   * Creates a logging version of a Statement.
+   *
+   * @param stmt
+   *          the statement
+   * @param statementLog
+   *          the statement log
+   * @param queryStack
+   *          the query stack
+   *
+   * @return the proxy
+   */
+  public static Statement newInstance(Statement stmt, Log statementLog, int queryStack) {
+<span class="fc" id="L83">    InvocationHandler handler = new StatementLogger(stmt, statementLog, queryStack);</span>
+<span class="fc" id="L84">    ClassLoader cl = Statement.class.getClassLoader();</span>
+<span class="fc" id="L85">    return (Statement) Proxy.newProxyInstance(cl, new Class[] { Statement.class }, handler);</span>
+  }
+
+  /**
+   * return the wrapped statement.
+   *
+   * @return the statement
+   */
+  public Statement getStatement() {
+<span class="nc" id="L94">    return statement;</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

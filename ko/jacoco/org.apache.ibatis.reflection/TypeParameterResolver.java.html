@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TypeParameterResolver.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.reflection</a> &gt; <span class="el_source">TypeParameterResolver.java</span></div><h1>TypeParameterResolver.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2023 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.reflection;
+
+import java.lang.reflect.Array;
+import java.lang.reflect.Field;
+import java.lang.reflect.GenericArrayType;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.lang.reflect.WildcardType;
+import java.util.Arrays;
+
+/**
+ * @author Iwao AVE!
+ */
+public class TypeParameterResolver {
+
+  /**
+   * Resolve field type.
+   *
+   * @param field
+   *          the field
+   * @param srcType
+   *          the src type
+   *
+   * @return The field type as {@link Type}. If it has type parameters in the declaration,&lt;br&gt;
+   *         they will be resolved to the actual runtime {@link Type}s.
+   */
+  public static Type resolveFieldType(Field field, Type srcType) {
+<span class="fc" id="L45">    Type fieldType = field.getGenericType();</span>
+<span class="fc" id="L46">    Class&lt;?&gt; declaringClass = field.getDeclaringClass();</span>
+<span class="fc" id="L47">    return resolveType(fieldType, srcType, declaringClass);</span>
+  }
+
+  /**
+   * Resolve return type.
+   *
+   * @param method
+   *          the method
+   * @param srcType
+   *          the src type
+   *
+   * @return The return type of the method as {@link Type}. If it has type parameters in the declaration,&lt;br&gt;
+   *         they will be resolved to the actual runtime {@link Type}s.
+   */
+  public static Type resolveReturnType(Method method, Type srcType) {
+<span class="fc" id="L62">    Type returnType = method.getGenericReturnType();</span>
+<span class="fc" id="L63">    Class&lt;?&gt; declaringClass = method.getDeclaringClass();</span>
+<span class="fc" id="L64">    return resolveType(returnType, srcType, declaringClass);</span>
+  }
+
+  /**
+   * Resolve param types.
+   *
+   * @param method
+   *          the method
+   * @param srcType
+   *          the src type
+   *
+   * @return The parameter types of the method as an array of {@link Type}s. If they have type parameters in the
+   *         declaration,&lt;br&gt;
+   *         they will be resolved to the actual runtime {@link Type}s.
+   */
+  public static Type[] resolveParamTypes(Method method, Type srcType) {
+<span class="fc" id="L80">    Type[] paramTypes = method.getGenericParameterTypes();</span>
+<span class="fc" id="L81">    Class&lt;?&gt; declaringClass = method.getDeclaringClass();</span>
+<span class="fc" id="L82">    Type[] result = new Type[paramTypes.length];</span>
+<span class="fc bfc" id="L83" title="All 2 branches covered.">    for (int i = 0; i &lt; paramTypes.length; i++) {</span>
+<span class="fc" id="L84">      result[i] = resolveType(paramTypes[i], srcType, declaringClass);</span>
+    }
+<span class="fc" id="L86">    return result;</span>
+  }
+
+  private static Type resolveType(Type type, Type srcType, Class&lt;?&gt; declaringClass) {
+<span class="fc bfc" id="L90" title="All 2 branches covered.">    if (type instanceof TypeVariable) {</span>
+<span class="fc" id="L91">      return resolveTypeVar((TypeVariable&lt;?&gt;) type, srcType, declaringClass);</span>
+    }
+<span class="fc bfc" id="L93" title="All 2 branches covered.">    if (type instanceof ParameterizedType) {</span>
+<span class="fc" id="L94">      return resolveParameterizedType((ParameterizedType) type, srcType, declaringClass);</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">    } else if (type instanceof GenericArrayType) {</span>
+<span class="fc" id="L96">      return resolveGenericArrayType((GenericArrayType) type, srcType, declaringClass);</span>
+    } else {
+<span class="fc" id="L98">      return type;</span>
+    }
+  }
+
+  private static Type resolveGenericArrayType(GenericArrayType genericArrayType, Type srcType,
+      Class&lt;?&gt; declaringClass) {
+<span class="fc" id="L104">    Type componentType = genericArrayType.getGenericComponentType();</span>
+<span class="fc" id="L105">    Type resolvedComponentType = null;</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">    if (componentType instanceof TypeVariable) {</span>
+<span class="fc" id="L107">      resolvedComponentType = resolveTypeVar((TypeVariable&lt;?&gt;) componentType, srcType, declaringClass);</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">    } else if (componentType instanceof GenericArrayType) {</span>
+<span class="fc" id="L109">      resolvedComponentType = resolveGenericArrayType((GenericArrayType) componentType, srcType, declaringClass);</span>
+<span class="pc bpc" id="L110" title="1 of 2 branches missed.">    } else if (componentType instanceof ParameterizedType) {</span>
+<span class="fc" id="L111">      resolvedComponentType = resolveParameterizedType((ParameterizedType) componentType, srcType, declaringClass);</span>
+    }
+<span class="fc bfc" id="L113" title="All 2 branches covered.">    if (resolvedComponentType instanceof Class) {</span>
+<span class="fc" id="L114">      return Array.newInstance((Class&lt;?&gt;) resolvedComponentType, 0).getClass();</span>
+    }
+<span class="fc" id="L116">    return new GenericArrayTypeImpl(resolvedComponentType);</span>
+  }
+
+  private static ParameterizedType resolveParameterizedType(ParameterizedType parameterizedType, Type srcType,
+      Class&lt;?&gt; declaringClass) {
+<span class="fc" id="L121">    Class&lt;?&gt; rawType = (Class&lt;?&gt;) parameterizedType.getRawType();</span>
+<span class="fc" id="L122">    Type[] typeArgs = parameterizedType.getActualTypeArguments();</span>
+<span class="fc" id="L123">    Type[] args = new Type[typeArgs.length];</span>
+<span class="fc bfc" id="L124" title="All 2 branches covered.">    for (int i = 0; i &lt; typeArgs.length; i++) {</span>
+<span class="fc bfc" id="L125" title="All 2 branches covered.">      if (typeArgs[i] instanceof TypeVariable) {</span>
+<span class="fc" id="L126">        args[i] = resolveTypeVar((TypeVariable&lt;?&gt;) typeArgs[i], srcType, declaringClass);</span>
+<span class="fc bfc" id="L127" title="All 2 branches covered.">      } else if (typeArgs[i] instanceof ParameterizedType) {</span>
+<span class="fc" id="L128">        args[i] = resolveParameterizedType((ParameterizedType) typeArgs[i], srcType, declaringClass);</span>
+<span class="fc bfc" id="L129" title="All 2 branches covered.">      } else if (typeArgs[i] instanceof WildcardType) {</span>
+<span class="fc" id="L130">        args[i] = resolveWildcardType((WildcardType) typeArgs[i], srcType, declaringClass);</span>
+      } else {
+<span class="fc" id="L132">        args[i] = typeArgs[i];</span>
+      }
+    }
+<span class="fc" id="L135">    return new ParameterizedTypeImpl(rawType, null, args);</span>
+  }
+
+  private static Type resolveWildcardType(WildcardType wildcardType, Type srcType, Class&lt;?&gt; declaringClass) {
+<span class="fc" id="L139">    Type[] lowerBounds = resolveWildcardTypeBounds(wildcardType.getLowerBounds(), srcType, declaringClass);</span>
+<span class="fc" id="L140">    Type[] upperBounds = resolveWildcardTypeBounds(wildcardType.getUpperBounds(), srcType, declaringClass);</span>
+<span class="fc" id="L141">    return new WildcardTypeImpl(lowerBounds, upperBounds);</span>
+  }
+
+  private static Type[] resolveWildcardTypeBounds(Type[] bounds, Type srcType, Class&lt;?&gt; declaringClass) {
+<span class="fc" id="L145">    Type[] result = new Type[bounds.length];</span>
+<span class="fc bfc" id="L146" title="All 2 branches covered.">    for (int i = 0; i &lt; bounds.length; i++) {</span>
+<span class="fc bfc" id="L147" title="All 2 branches covered.">      if (bounds[i] instanceof TypeVariable) {</span>
+<span class="fc" id="L148">        result[i] = resolveTypeVar((TypeVariable&lt;?&gt;) bounds[i], srcType, declaringClass);</span>
+<span class="pc bpc" id="L149" title="1 of 2 branches missed.">      } else if (bounds[i] instanceof ParameterizedType) {</span>
+<span class="nc" id="L150">        result[i] = resolveParameterizedType((ParameterizedType) bounds[i], srcType, declaringClass);</span>
+<span class="pc bpc" id="L151" title="1 of 2 branches missed.">      } else if (bounds[i] instanceof WildcardType) {</span>
+<span class="nc" id="L152">        result[i] = resolveWildcardType((WildcardType) bounds[i], srcType, declaringClass);</span>
+      } else {
+<span class="fc" id="L154">        result[i] = bounds[i];</span>
+      }
+    }
+<span class="fc" id="L157">    return result;</span>
+  }
+
+  private static Type resolveTypeVar(TypeVariable&lt;?&gt; typeVar, Type srcType, Class&lt;?&gt; declaringClass) {
+    Type result;
+    Class&lt;?&gt; clazz;
+<span class="fc bfc" id="L163" title="All 2 branches covered.">    if (srcType instanceof Class) {</span>
+<span class="fc" id="L164">      clazz = (Class&lt;?&gt;) srcType;</span>
+<span class="pc bpc" id="L165" title="1 of 2 branches missed.">    } else if (srcType instanceof ParameterizedType) {</span>
+<span class="fc" id="L166">      ParameterizedType parameterizedType = (ParameterizedType) srcType;</span>
+<span class="fc" id="L167">      clazz = (Class&lt;?&gt;) parameterizedType.getRawType();</span>
+<span class="fc" id="L168">    } else {</span>
+<span class="nc" id="L169">      throw new IllegalArgumentException(</span>
+<span class="nc" id="L170">          &quot;The 2nd arg must be Class or ParameterizedType, but was: &quot; + srcType.getClass());</span>
+    }
+
+<span class="fc bfc" id="L173" title="All 2 branches covered.">    if (clazz == declaringClass) {</span>
+<span class="fc" id="L174">      Type[] bounds = typeVar.getBounds();</span>
+<span class="pc bpc" id="L175" title="1 of 2 branches missed.">      if (bounds.length &gt; 0) {</span>
+<span class="fc" id="L176">        return bounds[0];</span>
+      }
+<span class="nc" id="L178">      return Object.class;</span>
+    }
+
+<span class="fc" id="L181">    Type superclass = clazz.getGenericSuperclass();</span>
+<span class="fc" id="L182">    result = scanSuperTypes(typeVar, srcType, declaringClass, clazz, superclass);</span>
+<span class="fc bfc" id="L183" title="All 2 branches covered.">    if (result != null) {</span>
+<span class="fc" id="L184">      return result;</span>
+    }
+
+<span class="fc" id="L187">    Type[] superInterfaces = clazz.getGenericInterfaces();</span>
+<span class="pc bpc" id="L188" title="1 of 2 branches missed.">    for (Type superInterface : superInterfaces) {</span>
+<span class="fc" id="L189">      result = scanSuperTypes(typeVar, srcType, declaringClass, clazz, superInterface);</span>
+<span class="pc bpc" id="L190" title="1 of 2 branches missed.">      if (result != null) {</span>
+<span class="fc" id="L191">        return result;</span>
+      }
+    }
+<span class="nc" id="L194">    return Object.class;</span>
+  }
+
+  private static Type scanSuperTypes(TypeVariable&lt;?&gt; typeVar, Type srcType, Class&lt;?&gt; declaringClass, Class&lt;?&gt; clazz,
+      Type superclass) {
+<span class="fc bfc" id="L199" title="All 2 branches covered.">    if (superclass instanceof ParameterizedType) {</span>
+<span class="fc" id="L200">      ParameterizedType parentAsType = (ParameterizedType) superclass;</span>
+<span class="fc" id="L201">      Class&lt;?&gt; parentAsClass = (Class&lt;?&gt;) parentAsType.getRawType();</span>
+<span class="fc" id="L202">      TypeVariable&lt;?&gt;[] parentTypeVars = parentAsClass.getTypeParameters();</span>
+<span class="fc bfc" id="L203" title="All 2 branches covered.">      if (srcType instanceof ParameterizedType) {</span>
+<span class="fc" id="L204">        parentAsType = translateParentTypeVars((ParameterizedType) srcType, clazz, parentAsType);</span>
+      }
+<span class="fc bfc" id="L206" title="All 2 branches covered.">      if (declaringClass == parentAsClass) {</span>
+<span class="fc bfc" id="L207" title="All 2 branches covered.">        for (int i = 0; i &lt; parentTypeVars.length; i++) {</span>
+<span class="fc bfc" id="L208" title="All 2 branches covered.">          if (typeVar.equals(parentTypeVars[i])) {</span>
+<span class="fc" id="L209">            return parentAsType.getActualTypeArguments()[i];</span>
+          }
+        }
+      }
+<span class="pc bpc" id="L213" title="1 of 2 branches missed.">      if (declaringClass.isAssignableFrom(parentAsClass)) {</span>
+<span class="fc" id="L214">        return resolveTypeVar(typeVar, parentAsType, declaringClass);</span>
+      }
+<span class="pc bpc" id="L216" title="3 of 4 branches missed.">    } else if (superclass instanceof Class &amp;&amp; declaringClass.isAssignableFrom((Class&lt;?&gt;) superclass)) {</span>
+<span class="nc" id="L217">      return resolveTypeVar(typeVar, superclass, declaringClass);</span>
+    }
+<span class="fc" id="L219">    return null;</span>
+  }
+
+  private static ParameterizedType translateParentTypeVars(ParameterizedType srcType, Class&lt;?&gt; srcClass,
+      ParameterizedType parentType) {
+<span class="fc" id="L224">    Type[] parentTypeArgs = parentType.getActualTypeArguments();</span>
+<span class="fc" id="L225">    Type[] srcTypeArgs = srcType.getActualTypeArguments();</span>
+<span class="fc" id="L226">    TypeVariable&lt;?&gt;[] srcTypeVars = srcClass.getTypeParameters();</span>
+<span class="fc" id="L227">    Type[] newParentArgs = new Type[parentTypeArgs.length];</span>
+<span class="fc" id="L228">    boolean noChange = true;</span>
+<span class="fc bfc" id="L229" title="All 2 branches covered.">    for (int i = 0; i &lt; parentTypeArgs.length; i++) {</span>
+<span class="fc bfc" id="L230" title="All 2 branches covered.">      if (parentTypeArgs[i] instanceof TypeVariable) {</span>
+<span class="fc bfc" id="L231" title="All 2 branches covered.">        for (int j = 0; j &lt; srcTypeVars.length; j++) {</span>
+<span class="fc bfc" id="L232" title="All 2 branches covered.">          if (srcTypeVars[j].equals(parentTypeArgs[i])) {</span>
+<span class="fc" id="L233">            noChange = false;</span>
+<span class="fc" id="L234">            newParentArgs[i] = srcTypeArgs[j];</span>
+          }
+        }
+      } else {
+<span class="fc" id="L238">        newParentArgs[i] = parentTypeArgs[i];</span>
+      }
+    }
+<span class="pc bpc" id="L241" title="1 of 2 branches missed.">    return noChange ? parentType : new ParameterizedTypeImpl((Class&lt;?&gt;) parentType.getRawType(), null, newParentArgs);</span>
+  }
+
+  private TypeParameterResolver() {
+  }
+
+  static class ParameterizedTypeImpl implements ParameterizedType {
+    private final Class&lt;?&gt; rawType;
+
+    private final Type ownerType;
+
+    private final Type[] actualTypeArguments;
+
+<span class="fc" id="L254">    public ParameterizedTypeImpl(Class&lt;?&gt; rawType, Type ownerType, Type[] actualTypeArguments) {</span>
+<span class="fc" id="L255">      this.rawType = rawType;</span>
+<span class="fc" id="L256">      this.ownerType = ownerType;</span>
+<span class="fc" id="L257">      this.actualTypeArguments = actualTypeArguments;</span>
+<span class="fc" id="L258">    }</span>
+
+    @Override
+    public Type[] getActualTypeArguments() {
+<span class="fc" id="L262">      return actualTypeArguments;</span>
+    }
+
+    @Override
+    public Type getOwnerType() {
+<span class="nc" id="L267">      return ownerType;</span>
+    }
+
+    @Override
+    public Type getRawType() {
+<span class="fc" id="L272">      return rawType;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L277">      return &quot;ParameterizedTypeImpl [rawType=&quot; + rawType + &quot;, ownerType=&quot; + ownerType + &quot;, actualTypeArguments=&quot;</span>
+<span class="nc" id="L278">          + Arrays.toString(actualTypeArguments) + &quot;]&quot;;</span>
+    }
+  }
+
+  static class WildcardTypeImpl implements WildcardType {
+    private final Type[] lowerBounds;
+
+    private final Type[] upperBounds;
+
+<span class="fc" id="L287">    WildcardTypeImpl(Type[] lowerBounds, Type[] upperBounds) {</span>
+<span class="fc" id="L288">      this.lowerBounds = lowerBounds;</span>
+<span class="fc" id="L289">      this.upperBounds = upperBounds;</span>
+<span class="fc" id="L290">    }</span>
+
+    @Override
+    public Type[] getLowerBounds() {
+<span class="fc" id="L294">      return lowerBounds;</span>
+    }
+
+    @Override
+    public Type[] getUpperBounds() {
+<span class="fc" id="L299">      return upperBounds;</span>
+    }
+  }
+
+  static class GenericArrayTypeImpl implements GenericArrayType {
+    private final Type genericComponentType;
+
+<span class="fc" id="L306">    GenericArrayTypeImpl(Type genericComponentType) {</span>
+<span class="fc" id="L307">      this.genericComponentType = genericComponentType;</span>
+<span class="fc" id="L308">    }</span>
+
+    @Override
+    public Type getGenericComponentType() {
+<span class="fc" id="L312">      return genericComponentType;</span>
+    }
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

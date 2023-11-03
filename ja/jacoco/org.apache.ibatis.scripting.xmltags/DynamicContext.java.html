@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ja"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DynamicContext.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.scripting.xmltags</a> &gt; <span class="el_source">DynamicContext.java</span></div><h1>DynamicContext.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2023 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.scripting.xmltags;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.StringJoiner;
+
+import ognl.OgnlContext;
+import ognl.OgnlRuntime;
+import ognl.PropertyAccessor;
+
+import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.session.Configuration;
+
+/**
+ * @author Clinton Begin
+ */
+public class DynamicContext {
+
+  public static final String PARAMETER_OBJECT_KEY = &quot;_parameter&quot;;
+  public static final String DATABASE_ID_KEY = &quot;_databaseId&quot;;
+
+  static {
+<span class="fc" id="L38">    OgnlRuntime.setPropertyAccessor(ContextMap.class, new ContextAccessor());</span>
+<span class="fc" id="L39">  }</span>
+
+  private final ContextMap bindings;
+<span class="fc" id="L42">  private final StringJoiner sqlBuilder = new StringJoiner(&quot; &quot;);</span>
+  private int uniqueNumber;
+
+<span class="fc" id="L45">  public DynamicContext(Configuration configuration, Object parameterObject) {</span>
+<span class="fc bfc" id="L46" title="All 4 branches covered.">    if (parameterObject != null &amp;&amp; !(parameterObject instanceof Map)) {</span>
+<span class="fc" id="L47">      MetaObject metaObject = configuration.newMetaObject(parameterObject);</span>
+<span class="fc" id="L48">      boolean existsTypeHandler = configuration.getTypeHandlerRegistry().hasTypeHandler(parameterObject.getClass());</span>
+<span class="fc" id="L49">      bindings = new ContextMap(metaObject, existsTypeHandler);</span>
+<span class="fc" id="L50">    } else {</span>
+<span class="fc" id="L51">      bindings = new ContextMap(null, false);</span>
+    }
+<span class="fc" id="L53">    bindings.put(PARAMETER_OBJECT_KEY, parameterObject);</span>
+<span class="fc" id="L54">    bindings.put(DATABASE_ID_KEY, configuration.getDatabaseId());</span>
+<span class="fc" id="L55">  }</span>
+
+  public Map&lt;String, Object&gt; getBindings() {
+<span class="fc" id="L58">    return bindings;</span>
+  }
+
+  public void bind(String name, Object value) {
+<span class="fc" id="L62">    bindings.put(name, value);</span>
+<span class="fc" id="L63">  }</span>
+
+  public void appendSql(String sql) {
+<span class="fc" id="L66">    sqlBuilder.add(sql);</span>
+<span class="fc" id="L67">  }</span>
+
+  public String getSql() {
+<span class="fc" id="L70">    return sqlBuilder.toString().trim();</span>
+  }
+
+  public int getUniqueNumber() {
+<span class="fc" id="L74">    return uniqueNumber++;</span>
+  }
+
+  static class ContextMap extends HashMap&lt;String, Object&gt; {
+    private static final long serialVersionUID = 2977601501966151582L;
+    private final MetaObject parameterMetaObject;
+    private final boolean fallbackParameterObject;
+
+<span class="fc" id="L82">    public ContextMap(MetaObject parameterMetaObject, boolean fallbackParameterObject) {</span>
+<span class="fc" id="L83">      this.parameterMetaObject = parameterMetaObject;</span>
+<span class="fc" id="L84">      this.fallbackParameterObject = fallbackParameterObject;</span>
+<span class="fc" id="L85">    }</span>
+
+    @Override
+    public Object get(Object key) {
+<span class="fc" id="L89">      String strKey = (String) key;</span>
+<span class="fc bfc" id="L90" title="All 2 branches covered.">      if (super.containsKey(strKey)) {</span>
+<span class="fc" id="L91">        return super.get(strKey);</span>
+      }
+
+<span class="fc bfc" id="L94" title="All 2 branches covered.">      if (parameterMetaObject == null) {</span>
+<span class="fc" id="L95">        return null;</span>
+      }
+
+<span class="fc bfc" id="L98" title="All 4 branches covered.">      if (fallbackParameterObject &amp;&amp; !parameterMetaObject.hasGetter(strKey)) {</span>
+<span class="fc" id="L99">        return parameterMetaObject.getOriginalObject();</span>
+      }
+      // issue #61 do not modify the context when reading
+<span class="fc" id="L102">      return parameterMetaObject.getValue(strKey);</span>
+    }
+  }
+
+<span class="fc" id="L106">  static class ContextAccessor implements PropertyAccessor {</span>
+
+    @Override
+    public Object getProperty(Map context, Object target, Object name) {
+<span class="fc" id="L110">      Map map = (Map) target;</span>
+
+<span class="fc" id="L112">      Object result = map.get(name);</span>
+<span class="fc bfc" id="L113" title="All 4 branches covered.">      if (map.containsKey(name) || result != null) {</span>
+<span class="fc" id="L114">        return result;</span>
+      }
+
+<span class="fc" id="L117">      Object parameterObject = map.get(PARAMETER_OBJECT_KEY);</span>
+<span class="fc bfc" id="L118" title="All 2 branches covered.">      if (parameterObject instanceof Map) {</span>
+<span class="fc" id="L119">        return ((Map) parameterObject).get(name);</span>
+      }
+
+<span class="fc" id="L122">      return null;</span>
+    }
+
+    @Override
+    public void setProperty(Map context, Object target, Object name, Object value) {
+<span class="nc" id="L127">      Map&lt;Object, Object&gt; map = (Map&lt;Object, Object&gt;) target;</span>
+<span class="nc" id="L128">      map.put(name, value);</span>
+<span class="nc" id="L129">    }</span>
+
+    @Override
+    public String getSourceAccessor(OgnlContext arg0, Object arg1, Object arg2) {
+<span class="nc" id="L133">      return null;</span>
+    }
+
+    @Override
+    public String getSourceSetter(OgnlContext arg0, Object arg1, Object arg2) {
+<span class="nc" id="L138">      return null;</span>
+    }
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

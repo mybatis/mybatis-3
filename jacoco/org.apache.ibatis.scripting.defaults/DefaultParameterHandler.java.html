@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultParameterHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.scripting.defaults</a> &gt; <span class="el_source">DefaultParameterHandler.java</span></div><h1>DefaultParameterHandler.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2023 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.scripting.defaults;
+
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.List;
+
+import org.apache.ibatis.executor.ErrorContext;
+import org.apache.ibatis.executor.parameter.ParameterHandler;
+import org.apache.ibatis.mapping.BoundSql;
+import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.ParameterMapping;
+import org.apache.ibatis.mapping.ParameterMode;
+import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.TypeException;
+import org.apache.ibatis.type.TypeHandler;
+import org.apache.ibatis.type.TypeHandlerRegistry;
+
+/**
+ * @author Clinton Begin
+ * @author Eduardo Macarron
+ */
+public class DefaultParameterHandler implements ParameterHandler {
+
+  private final TypeHandlerRegistry typeHandlerRegistry;
+
+  private final MappedStatement mappedStatement;
+  private final Object parameterObject;
+  private final BoundSql boundSql;
+  private final Configuration configuration;
+
+<span class="fc" id="L48">  public DefaultParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql) {</span>
+<span class="fc" id="L49">    this.mappedStatement = mappedStatement;</span>
+<span class="fc" id="L50">    this.configuration = mappedStatement.getConfiguration();</span>
+<span class="fc" id="L51">    this.typeHandlerRegistry = mappedStatement.getConfiguration().getTypeHandlerRegistry();</span>
+<span class="fc" id="L52">    this.parameterObject = parameterObject;</span>
+<span class="fc" id="L53">    this.boundSql = boundSql;</span>
+<span class="fc" id="L54">  }</span>
+
+  @Override
+  public Object getParameterObject() {
+<span class="fc" id="L58">    return parameterObject;</span>
+  }
+
+  @Override
+  public void setParameters(PreparedStatement ps) {
+<span class="fc" id="L63">    ErrorContext.instance().activity(&quot;setting parameters&quot;).object(mappedStatement.getParameterMap().getId());</span>
+<span class="fc" id="L64">    List&lt;ParameterMapping&gt; parameterMappings = boundSql.getParameterMappings();</span>
+<span class="pc bpc" id="L65" title="1 of 2 branches missed.">    if (parameterMappings != null) {</span>
+<span class="fc" id="L66">      MetaObject metaObject = null;</span>
+<span class="fc bfc" id="L67" title="All 2 branches covered.">      for (int i = 0; i &lt; parameterMappings.size(); i++) {</span>
+<span class="fc" id="L68">        ParameterMapping parameterMapping = parameterMappings.get(i);</span>
+<span class="fc bfc" id="L69" title="All 2 branches covered.">        if (parameterMapping.getMode() != ParameterMode.OUT) {</span>
+          Object value;
+<span class="fc" id="L71">          String propertyName = parameterMapping.getProperty();</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">          if (boundSql.hasAdditionalParameter(propertyName)) { // issue #448 ask first for additional params</span>
+<span class="fc" id="L73">            value = boundSql.getAdditionalParameter(propertyName);</span>
+<span class="fc bfc" id="L74" title="All 2 branches covered.">          } else if (parameterObject == null) {</span>
+<span class="fc" id="L75">            value = null;</span>
+<span class="fc bfc" id="L76" title="All 2 branches covered.">          } else if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {</span>
+<span class="fc" id="L77">            value = parameterObject;</span>
+          } else {
+<span class="fc bfc" id="L79" title="All 2 branches covered.">            if (metaObject == null) {</span>
+<span class="fc" id="L80">              metaObject = configuration.newMetaObject(parameterObject);</span>
+            }
+<span class="fc" id="L82">            value = metaObject.getValue(propertyName);</span>
+          }
+<span class="fc" id="L84">          TypeHandler typeHandler = parameterMapping.getTypeHandler();</span>
+<span class="fc" id="L85">          JdbcType jdbcType = parameterMapping.getJdbcType();</span>
+<span class="fc bfc" id="L86" title="All 4 branches covered.">          if (value == null &amp;&amp; jdbcType == null) {</span>
+<span class="fc" id="L87">            jdbcType = configuration.getJdbcTypeForNull();</span>
+          }
+          try {
+<span class="fc" id="L90">            typeHandler.setParameter(ps, i + 1, value, jdbcType);</span>
+<span class="fc" id="L91">          } catch (TypeException | SQLException e) {</span>
+<span class="fc" id="L92">            throw new TypeException(&quot;Could not set parameters for mapping: &quot; + parameterMapping + &quot;. Cause: &quot; + e, e);</span>
+<span class="fc" id="L93">          }</span>
+        }
+      }
+    }
+<span class="fc" id="L97">  }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

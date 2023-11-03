@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ja"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultCursor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.cursor.defaults</a> &gt; <span class="el_source">DefaultCursor.java</span></div><h1>DefaultCursor.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2023 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.cursor.defaults;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+import org.apache.ibatis.cursor.Cursor;
+import org.apache.ibatis.executor.resultset.DefaultResultSetHandler;
+import org.apache.ibatis.executor.resultset.ResultSetWrapper;
+import org.apache.ibatis.mapping.ResultMap;
+import org.apache.ibatis.session.ResultContext;
+import org.apache.ibatis.session.ResultHandler;
+import org.apache.ibatis.session.RowBounds;
+
+/**
+ * This is the default implementation of a MyBatis Cursor. This implementation is not thread safe.
+ *
+ * @author Guillaume Darmont / guillaume@dropinocean.com
+ */
+public class DefaultCursor&lt;T&gt; implements Cursor&lt;T&gt; {
+
+  // ResultSetHandler stuff
+  private final DefaultResultSetHandler resultSetHandler;
+  private final ResultMap resultMap;
+  private final ResultSetWrapper rsw;
+  private final RowBounds rowBounds;
+<span class="fc" id="L43">  protected final ObjectWrapperResultHandler&lt;T&gt; objectWrapperResultHandler = new ObjectWrapperResultHandler&lt;&gt;();</span>
+
+<span class="fc" id="L45">  private final CursorIterator cursorIterator = new CursorIterator();</span>
+  private boolean iteratorRetrieved;
+
+<span class="fc" id="L48">  private CursorStatus status = CursorStatus.CREATED;</span>
+<span class="fc" id="L49">  private int indexWithRowBound = -1;</span>
+
+<span class="fc" id="L51">  private enum CursorStatus {</span>
+
+    /**
+     * A freshly created cursor, database ResultSet consuming has not started.
+     */
+<span class="fc" id="L56">    CREATED,</span>
+    /**
+     * A cursor currently in use, database ResultSet consuming has started.
+     */
+<span class="fc" id="L60">    OPEN,</span>
+    /**
+     * A closed cursor, not fully consumed.
+     */
+<span class="fc" id="L64">    CLOSED,</span>
+    /**
+     * A fully consumed cursor, a consumed cursor is always closed.
+     */
+<span class="fc" id="L68">    CONSUMED</span>
+  }
+
+  public DefaultCursor(DefaultResultSetHandler resultSetHandler, ResultMap resultMap, ResultSetWrapper rsw,
+<span class="fc" id="L72">      RowBounds rowBounds) {</span>
+<span class="fc" id="L73">    this.resultSetHandler = resultSetHandler;</span>
+<span class="fc" id="L74">    this.resultMap = resultMap;</span>
+<span class="fc" id="L75">    this.rsw = rsw;</span>
+<span class="fc" id="L76">    this.rowBounds = rowBounds;</span>
+<span class="fc" id="L77">  }</span>
+
+  @Override
+  public boolean isOpen() {
+<span class="fc bfc" id="L81" title="All 2 branches covered.">    return status == CursorStatus.OPEN;</span>
+  }
+
+  @Override
+  public boolean isConsumed() {
+<span class="fc bfc" id="L86" title="All 2 branches covered.">    return status == CursorStatus.CONSUMED;</span>
+  }
+
+  @Override
+  public int getCurrentIndex() {
+<span class="fc" id="L91">    return rowBounds.getOffset() + cursorIterator.iteratorIndex;</span>
+  }
+
+  @Override
+  public Iterator&lt;T&gt; iterator() {
+<span class="fc bfc" id="L96" title="All 2 branches covered.">    if (iteratorRetrieved) {</span>
+<span class="fc" id="L97">      throw new IllegalStateException(&quot;Cannot open more than one iterator on a Cursor&quot;);</span>
+    }
+<span class="fc bfc" id="L99" title="All 2 branches covered.">    if (isClosed()) {</span>
+<span class="fc" id="L100">      throw new IllegalStateException(&quot;A Cursor is already closed.&quot;);</span>
+    }
+<span class="fc" id="L102">    iteratorRetrieved = true;</span>
+<span class="fc" id="L103">    return cursorIterator;</span>
+  }
+
+  @Override
+  public void close() {
+<span class="fc bfc" id="L108" title="All 2 branches covered.">    if (isClosed()) {</span>
+<span class="fc" id="L109">      return;</span>
+    }
+
+<span class="fc" id="L112">    ResultSet rs = rsw.getResultSet();</span>
+    try {
+<span class="pc bpc" id="L114" title="1 of 2 branches missed.">      if (rs != null) {</span>
+<span class="fc" id="L115">        rs.close();</span>
+      }
+<span class="nc" id="L117">    } catch (SQLException e) {</span>
+      // ignore
+    } finally {
+<span class="fc" id="L120">      status = CursorStatus.CLOSED;</span>
+    }
+<span class="fc" id="L122">  }</span>
+
+  protected T fetchNextUsingRowBound() {
+<span class="fc" id="L125">    T result = fetchNextObjectFromDatabase();</span>
+<span class="fc bfc" id="L126" title="All 4 branches covered.">    while (objectWrapperResultHandler.fetched &amp;&amp; indexWithRowBound &lt; rowBounds.getOffset()) {</span>
+<span class="fc" id="L127">      result = fetchNextObjectFromDatabase();</span>
+    }
+<span class="fc" id="L129">    return result;</span>
+  }
+
+  protected T fetchNextObjectFromDatabase() {
+<span class="fc bfc" id="L133" title="All 2 branches covered.">    if (isClosed()) {</span>
+<span class="fc" id="L134">      return null;</span>
+    }
+
+    try {
+<span class="fc" id="L138">      objectWrapperResultHandler.fetched = false;</span>
+<span class="fc" id="L139">      status = CursorStatus.OPEN;</span>
+<span class="fc bfc" id="L140" title="All 2 branches covered.">      if (!rsw.getResultSet().isClosed()) {</span>
+<span class="fc" id="L141">        resultSetHandler.handleRowValues(rsw, resultMap, objectWrapperResultHandler, RowBounds.DEFAULT, null);</span>
+      }
+<span class="nc" id="L143">    } catch (SQLException e) {</span>
+<span class="nc" id="L144">      throw new RuntimeException(e);</span>
+<span class="fc" id="L145">    }</span>
+
+<span class="fc" id="L147">    T next = objectWrapperResultHandler.result;</span>
+<span class="fc bfc" id="L148" title="All 2 branches covered.">    if (objectWrapperResultHandler.fetched) {</span>
+<span class="fc" id="L149">      indexWithRowBound++;</span>
+    }
+    // No more object or limit reached
+<span class="fc bfc" id="L152" title="All 4 branches covered.">    if (!objectWrapperResultHandler.fetched || getReadItemsCount() == rowBounds.getOffset() + rowBounds.getLimit()) {</span>
+<span class="fc" id="L153">      close();</span>
+<span class="fc" id="L154">      status = CursorStatus.CONSUMED;</span>
+    }
+<span class="fc" id="L156">    objectWrapperResultHandler.result = null;</span>
+
+<span class="fc" id="L158">    return next;</span>
+  }
+
+  private boolean isClosed() {
+<span class="fc bfc" id="L162" title="All 4 branches covered.">    return status == CursorStatus.CLOSED || status == CursorStatus.CONSUMED;</span>
+  }
+
+  private int getReadItemsCount() {
+<span class="fc" id="L166">    return indexWithRowBound + 1;</span>
+  }
+
+<span class="fc" id="L169">  protected static class ObjectWrapperResultHandler&lt;T&gt; implements ResultHandler&lt;T&gt; {</span>
+
+    protected T result;
+    protected boolean fetched;
+
+    @Override
+    public void handleResult(ResultContext&lt;? extends T&gt; context) {
+<span class="fc" id="L176">      this.result = context.getResultObject();</span>
+<span class="fc" id="L177">      context.stop();</span>
+<span class="fc" id="L178">      fetched = true;</span>
+<span class="fc" id="L179">    }</span>
+  }
+
+<span class="fc" id="L182">  protected class CursorIterator implements Iterator&lt;T&gt; {</span>
+
+    /**
+     * Holder for the next object to be returned.
+     */
+    T object;
+
+    /**
+     * Index of objects returned using next(), and as such, visible to users.
+     */
+<span class="fc" id="L192">    int iteratorIndex = -1;</span>
+
+    @Override
+    public boolean hasNext() {
+<span class="fc bfc" id="L196" title="All 2 branches covered.">      if (!objectWrapperResultHandler.fetched) {</span>
+<span class="fc" id="L197">        object = fetchNextUsingRowBound();</span>
+      }
+<span class="fc" id="L199">      return objectWrapperResultHandler.fetched;</span>
+    }
+
+    @Override
+    public T next() {
+      // Fill next with object fetched from hasNext()
+<span class="fc" id="L205">      T next = object;</span>
+
+<span class="fc bfc" id="L207" title="All 2 branches covered.">      if (!objectWrapperResultHandler.fetched) {</span>
+<span class="fc" id="L208">        next = fetchNextUsingRowBound();</span>
+      }
+
+<span class="fc bfc" id="L211" title="All 2 branches covered.">      if (objectWrapperResultHandler.fetched) {</span>
+<span class="fc" id="L212">        objectWrapperResultHandler.fetched = false;</span>
+<span class="fc" id="L213">        object = null;</span>
+<span class="fc" id="L214">        iteratorIndex++;</span>
+<span class="fc" id="L215">        return next;</span>
+      }
+<span class="fc" id="L217">      throw new NoSuchElementException();</span>
+    }
+
+    @Override
+    public void remove() {
+<span class="nc" id="L222">      throw new UnsupportedOperationException(&quot;Cannot remove element from Cursor&quot;);</span>
+    }
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

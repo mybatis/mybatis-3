@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MapperProxy.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.binding</a> &gt; <span class="el_source">MapperProxy.java</span></div><h1>MapperProxy.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2023 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.binding;
+
+import java.io.Serializable;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodHandles.Lookup;
+import java.lang.invoke.MethodType;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Map;
+
+import org.apache.ibatis.reflection.ExceptionUtil;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.util.MapUtil;
+
+/**
+ * @author Clinton Begin
+ * @author Eduardo Macarron
+ */
+public class MapperProxy&lt;T&gt; implements InvocationHandler, Serializable {
+
+  private static final long serialVersionUID = -4724728412955527868L;
+  private static final int ALLOWED_MODES = MethodHandles.Lookup.PRIVATE | MethodHandles.Lookup.PROTECTED
+      | MethodHandles.Lookup.PACKAGE | MethodHandles.Lookup.PUBLIC;
+  private static final Constructor&lt;Lookup&gt; lookupConstructor;
+  private static final Method privateLookupInMethod;
+  private final SqlSession sqlSession;
+  private final Class&lt;T&gt; mapperInterface;
+  private final Map&lt;Method, MapperMethodInvoker&gt; methodCache;
+
+<span class="fc" id="L48">  public MapperProxy(SqlSession sqlSession, Class&lt;T&gt; mapperInterface, Map&lt;Method, MapperMethodInvoker&gt; methodCache) {</span>
+<span class="fc" id="L49">    this.sqlSession = sqlSession;</span>
+<span class="fc" id="L50">    this.mapperInterface = mapperInterface;</span>
+<span class="fc" id="L51">    this.methodCache = methodCache;</span>
+<span class="fc" id="L52">  }</span>
+
+  static {
+    Method privateLookupIn;
+    try {
+<span class="fc" id="L57">      privateLookupIn = MethodHandles.class.getMethod(&quot;privateLookupIn&quot;, Class.class, MethodHandles.Lookup.class);</span>
+<span class="nc" id="L58">    } catch (NoSuchMethodException e) {</span>
+<span class="nc" id="L59">      privateLookupIn = null;</span>
+<span class="fc" id="L60">    }</span>
+<span class="fc" id="L61">    privateLookupInMethod = privateLookupIn;</span>
+
+<span class="fc" id="L63">    Constructor&lt;Lookup&gt; lookup = null;</span>
+<span class="pc bpc" id="L64" title="1 of 2 branches missed.">    if (privateLookupInMethod == null) {</span>
+      // JDK 1.8
+      try {
+<span class="nc" id="L67">        lookup = MethodHandles.Lookup.class.getDeclaredConstructor(Class.class, int.class);</span>
+<span class="nc" id="L68">        lookup.setAccessible(true);</span>
+<span class="nc" id="L69">      } catch (NoSuchMethodException e) {</span>
+<span class="nc" id="L70">        throw new IllegalStateException(</span>
+            &quot;There is neither 'privateLookupIn(Class, Lookup)' nor 'Lookup(Class, int)' method in java.lang.invoke.MethodHandles.&quot;,
+            e);
+<span class="nc" id="L73">      } catch (Exception e) {</span>
+<span class="nc" id="L74">        lookup = null;</span>
+<span class="nc" id="L75">      }</span>
+    }
+<span class="fc" id="L77">    lookupConstructor = lookup;</span>
+<span class="fc" id="L78">  }</span>
+
+  @Override
+  public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+    try {
+<span class="fc bfc" id="L83" title="All 2 branches covered.">      if (Object.class.equals(method.getDeclaringClass())) {</span>
+<span class="fc" id="L84">        return method.invoke(this, args);</span>
+      }
+<span class="fc" id="L86">      return cachedInvoker(method).invoke(proxy, method, args, sqlSession);</span>
+<span class="fc" id="L87">    } catch (Throwable t) {</span>
+<span class="fc" id="L88">      throw ExceptionUtil.unwrapThrowable(t);</span>
+    }
+  }
+
+  private MapperMethodInvoker cachedInvoker(Method method) throws Throwable {
+    try {
+<span class="fc" id="L94">      return MapUtil.computeIfAbsent(methodCache, method, m -&gt; {</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">        if (!m.isDefault()) {</span>
+<span class="fc" id="L96">          return new PlainMethodInvoker(new MapperMethod(mapperInterface, method, sqlSession.getConfiguration()));</span>
+        }
+        try {
+<span class="pc bpc" id="L99" title="1 of 2 branches missed.">          if (privateLookupInMethod == null) {</span>
+<span class="nc" id="L100">            return new DefaultMethodInvoker(getMethodHandleJava8(method));</span>
+          }
+<span class="fc" id="L102">          return new DefaultMethodInvoker(getMethodHandleJava9(method));</span>
+<span class="nc" id="L103">        } catch (IllegalAccessException | InstantiationException | InvocationTargetException</span>
+            | NoSuchMethodException e) {
+<span class="nc" id="L105">          throw new RuntimeException(e);</span>
+        }
+      });
+<span class="fc" id="L108">    } catch (RuntimeException re) {</span>
+<span class="fc" id="L109">      Throwable cause = re.getCause();</span>
+<span class="pc bpc" id="L110" title="1 of 2 branches missed.">      throw cause == null ? re : cause;</span>
+    }
+  }
+
+  private MethodHandle getMethodHandleJava9(Method method)
+      throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+<span class="fc" id="L116">    final Class&lt;?&gt; declaringClass = method.getDeclaringClass();</span>
+<span class="fc" id="L117">    return ((Lookup) privateLookupInMethod.invoke(null, declaringClass, MethodHandles.lookup())).findSpecial(</span>
+<span class="fc" id="L118">        declaringClass, method.getName(), MethodType.methodType(method.getReturnType(), method.getParameterTypes()),</span>
+        declaringClass);
+  }
+
+  private MethodHandle getMethodHandleJava8(Method method)
+      throws IllegalAccessException, InstantiationException, InvocationTargetException {
+<span class="nc" id="L124">    final Class&lt;?&gt; declaringClass = method.getDeclaringClass();</span>
+<span class="nc" id="L125">    return lookupConstructor.newInstance(declaringClass, ALLOWED_MODES).unreflectSpecial(method, declaringClass);</span>
+  }
+
+  interface MapperMethodInvoker {
+    Object invoke(Object proxy, Method method, Object[] args, SqlSession sqlSession) throws Throwable;
+  }
+
+  private static class PlainMethodInvoker implements MapperMethodInvoker {
+    private final MapperMethod mapperMethod;
+
+<span class="fc" id="L135">    public PlainMethodInvoker(MapperMethod mapperMethod) {</span>
+<span class="fc" id="L136">      this.mapperMethod = mapperMethod;</span>
+<span class="fc" id="L137">    }</span>
+
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args, SqlSession sqlSession) throws Throwable {
+<span class="fc" id="L141">      return mapperMethod.execute(sqlSession, args);</span>
+    }
+  }
+
+  private static class DefaultMethodInvoker implements MapperMethodInvoker {
+    private final MethodHandle methodHandle;
+
+<span class="fc" id="L148">    public DefaultMethodInvoker(MethodHandle methodHandle) {</span>
+<span class="fc" id="L149">      this.methodHandle = methodHandle;</span>
+<span class="fc" id="L150">    }</span>
+
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args, SqlSession sqlSession) throws Throwable {
+<span class="fc" id="L154">      return methodHandle.bindTo(proxy).invokeWithArguments(args);</span>
+    }
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

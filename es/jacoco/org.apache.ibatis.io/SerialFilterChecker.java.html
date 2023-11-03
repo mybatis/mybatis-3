@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SerialFilterChecker.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.io</a> &gt; <span class="el_source">SerialFilterChecker.java</span></div><h1>SerialFilterChecker.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2022 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.io;
+
+import java.security.Security;
+
+import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.logging.LogFactory;
+
+public final class SerialFilterChecker {
+<span class="fc" id="L24">  private static final Log log = LogFactory.getLog(SerialFilterChecker.class);</span>
+  /* Property key for the JEP-290 serialization filters */
+  private static final String JDK_SERIAL_FILTER = &quot;jdk.serialFilter&quot;;
+  private static final boolean SERIAL_FILTER_MISSING;
+<span class="fc" id="L28">  private static boolean firstInvocation = true;</span>
+
+  static {
+    Object serialFilter;
+    try {
+<span class="fc" id="L33">      Class&lt;?&gt; objectFilterConfig = Class.forName(&quot;java.io.ObjectInputFilter$Config&quot;);</span>
+<span class="fc" id="L34">      serialFilter = objectFilterConfig.getMethod(&quot;getSerialFilter&quot;).invoke(null);</span>
+<span class="nc" id="L35">    } catch (ReflectiveOperationException e) {</span>
+      // Java 1.8
+<span class="nc" id="L37">      serialFilter = System.getProperty(JDK_SERIAL_FILTER, Security.getProperty(JDK_SERIAL_FILTER));</span>
+<span class="fc" id="L38">    }</span>
+<span class="pc bpc" id="L39" title="1 of 2 branches missed.">    SERIAL_FILTER_MISSING = serialFilter == null;</span>
+<span class="fc" id="L40">  }</span>
+
+  public static void check() {
+<span class="pc bpc" id="L43" title="1 of 4 branches missed.">    if (firstInvocation &amp;&amp; SERIAL_FILTER_MISSING) {</span>
+<span class="fc" id="L44">      firstInvocation = false;</span>
+<span class="fc" id="L45">      log.warn(</span>
+          &quot;As you are using functionality that deserializes object streams, it is recommended to define the JEP-290 serial filter. &quot;
+              + &quot;Please refer to https://docs.oracle.com/pls/topic/lookup?ctx=javase15&amp;id=GUID-8296D8E8-2B93-4B9A-856E-0A65AF9B8C66&quot;);
+    }
+<span class="fc" id="L49">  }</span>
+
+  private SerialFilterChecker() {
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

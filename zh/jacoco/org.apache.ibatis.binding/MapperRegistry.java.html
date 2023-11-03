@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MapperRegistry.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.binding</a> &gt; <span class="el_source">MapperRegistry.java</span></div><h1>MapperRegistry.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2023 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.binding;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.apache.ibatis.builder.annotation.MapperAnnotationBuilder;
+import org.apache.ibatis.io.ResolverUtil;
+import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.SqlSession;
+
+/**
+ * @author Clinton Begin
+ * @author Eduardo Macarron
+ * @author Lasse Voss
+ */
+public class MapperRegistry {
+
+  private final Configuration config;
+<span class="fc" id="L37">  private final Map&lt;Class&lt;?&gt;, MapperProxyFactory&lt;?&gt;&gt; knownMappers = new ConcurrentHashMap&lt;&gt;();</span>
+
+<span class="fc" id="L39">  public MapperRegistry(Configuration config) {</span>
+<span class="fc" id="L40">    this.config = config;</span>
+<span class="fc" id="L41">  }</span>
+
+  @SuppressWarnings(&quot;unchecked&quot;)
+  public &lt;T&gt; T getMapper(Class&lt;T&gt; type, SqlSession sqlSession) {
+<span class="fc" id="L45">    final MapperProxyFactory&lt;T&gt; mapperProxyFactory = (MapperProxyFactory&lt;T&gt;) knownMappers.get(type);</span>
+<span class="pc bpc" id="L46" title="1 of 2 branches missed.">    if (mapperProxyFactory == null) {</span>
+<span class="nc" id="L47">      throw new BindingException(&quot;Type &quot; + type + &quot; is not known to the MapperRegistry.&quot;);</span>
+    }
+    try {
+<span class="fc" id="L50">      return mapperProxyFactory.newInstance(sqlSession);</span>
+<span class="nc" id="L51">    } catch (Exception e) {</span>
+<span class="nc" id="L52">      throw new BindingException(&quot;Error getting mapper instance. Cause: &quot; + e, e);</span>
+    }
+  }
+
+  public &lt;T&gt; boolean hasMapper(Class&lt;T&gt; type) {
+<span class="fc" id="L57">    return knownMappers.containsKey(type);</span>
+  }
+
+  public &lt;T&gt; void addMapper(Class&lt;T&gt; type) {
+<span class="pc bpc" id="L61" title="1 of 2 branches missed.">    if (type.isInterface()) {</span>
+<span class="pc bpc" id="L62" title="1 of 2 branches missed.">      if (hasMapper(type)) {</span>
+<span class="nc" id="L63">        throw new BindingException(&quot;Type &quot; + type + &quot; is already known to the MapperRegistry.&quot;);</span>
+      }
+<span class="fc" id="L65">      boolean loadCompleted = false;</span>
+      try {
+<span class="fc" id="L67">        knownMappers.put(type, new MapperProxyFactory&lt;&gt;(type));</span>
+        // It's important that the type is added before the parser is run
+        // otherwise the binding may automatically be attempted by the
+        // mapper parser. If the type is already known, it won't try.
+<span class="fc" id="L71">        MapperAnnotationBuilder parser = new MapperAnnotationBuilder(config, type);</span>
+<span class="fc" id="L72">        parser.parse();</span>
+<span class="fc" id="L73">        loadCompleted = true;</span>
+      } finally {
+<span class="fc bfc" id="L75" title="All 2 branches covered.">        if (!loadCompleted) {</span>
+<span class="fc" id="L76">          knownMappers.remove(type);</span>
+        }
+      }
+    }
+<span class="fc" id="L80">  }</span>
+
+  /**
+   * Gets the mappers.
+   *
+   * @return the mappers
+   *
+   * @since 3.2.2
+   */
+  public Collection&lt;Class&lt;?&gt;&gt; getMappers() {
+<span class="fc" id="L90">    return Collections.unmodifiableCollection(knownMappers.keySet());</span>
+  }
+
+  /**
+   * Adds the mappers.
+   *
+   * @param packageName
+   *          the package name
+   * @param superType
+   *          the super type
+   *
+   * @since 3.2.2
+   */
+  public void addMappers(String packageName, Class&lt;?&gt; superType) {
+<span class="fc" id="L104">    ResolverUtil&lt;Class&lt;?&gt;&gt; resolverUtil = new ResolverUtil&lt;&gt;();</span>
+<span class="fc" id="L105">    resolverUtil.find(new ResolverUtil.IsA(superType), packageName);</span>
+<span class="fc" id="L106">    Set&lt;Class&lt;? extends Class&lt;?&gt;&gt;&gt; mapperSet = resolverUtil.getClasses();</span>
+<span class="fc bfc" id="L107" title="All 2 branches covered.">    for (Class&lt;?&gt; mapperClass : mapperSet) {</span>
+<span class="fc" id="L108">      addMapper(mapperClass);</span>
+<span class="fc" id="L109">    }</span>
+<span class="fc" id="L110">  }</span>
+
+  /**
+   * Adds the mappers.
+   *
+   * @param packageName
+   *          the package name
+   *
+   * @since 3.2.2
+   */
+  public void addMappers(String packageName) {
+<span class="fc" id="L121">    addMappers(packageName, Object.class);</span>
+<span class="fc" id="L122">  }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

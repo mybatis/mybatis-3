@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MapperMethod.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.binding</a> &gt; <span class="el_source">MapperMethod.java</span></div><h1>MapperMethod.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2023 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.binding;
+
+import java.lang.reflect.Array;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import org.apache.ibatis.annotations.Flush;
+import org.apache.ibatis.annotations.MapKey;
+import org.apache.ibatis.cursor.Cursor;
+import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.SqlCommandType;
+import org.apache.ibatis.mapping.StatementType;
+import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.reflection.ParamNameResolver;
+import org.apache.ibatis.reflection.TypeParameterResolver;
+import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.ResultHandler;
+import org.apache.ibatis.session.RowBounds;
+import org.apache.ibatis.session.SqlSession;
+
+/**
+ * @author Clinton Begin
+ * @author Eduardo Macarron
+ * @author Lasse Voss
+ * @author Kazuki Shimizu
+ */
+public class MapperMethod {
+
+  private final SqlCommand command;
+  private final MethodSignature method;
+
+<span class="fc" id="L52">  public MapperMethod(Class&lt;?&gt; mapperInterface, Method method, Configuration config) {</span>
+<span class="fc" id="L53">    this.command = new SqlCommand(config, mapperInterface, method);</span>
+<span class="fc" id="L54">    this.method = new MethodSignature(config, mapperInterface, method);</span>
+<span class="fc" id="L55">  }</span>
+
+  public Object execute(SqlSession sqlSession, Object[] args) {
+    Object result;
+<span class="pc bpc" id="L59" title="1 of 6 branches missed.">    switch (command.getType()) {</span>
+      case INSERT: {
+<span class="fc" id="L61">        Object param = method.convertArgsToSqlCommandParam(args);</span>
+<span class="fc" id="L62">        result = rowCountResult(sqlSession.insert(command.getName(), param));</span>
+<span class="fc" id="L63">        break;</span>
+      }
+      case UPDATE: {
+<span class="fc" id="L66">        Object param = method.convertArgsToSqlCommandParam(args);</span>
+<span class="fc" id="L67">        result = rowCountResult(sqlSession.update(command.getName(), param));</span>
+<span class="fc" id="L68">        break;</span>
+      }
+      case DELETE: {
+<span class="fc" id="L71">        Object param = method.convertArgsToSqlCommandParam(args);</span>
+<span class="fc" id="L72">        result = rowCountResult(sqlSession.delete(command.getName(), param));</span>
+<span class="fc" id="L73">        break;</span>
+      }
+      case SELECT:
+<span class="pc bpc" id="L76" title="1 of 4 branches missed.">        if (method.returnsVoid() &amp;&amp; method.hasResultHandler()) {</span>
+<span class="fc" id="L77">          executeWithResultHandler(sqlSession, args);</span>
+<span class="fc" id="L78">          result = null;</span>
+<span class="fc bfc" id="L79" title="All 2 branches covered.">        } else if (method.returnsMany()) {</span>
+<span class="fc" id="L80">          result = executeForMany(sqlSession, args);</span>
+<span class="fc bfc" id="L81" title="All 2 branches covered.">        } else if (method.returnsMap()) {</span>
+<span class="fc" id="L82">          result = executeForMap(sqlSession, args);</span>
+<span class="fc bfc" id="L83" title="All 2 branches covered.">        } else if (method.returnsCursor()) {</span>
+<span class="fc" id="L84">          result = executeForCursor(sqlSession, args);</span>
+        } else {
+<span class="fc" id="L86">          Object param = method.convertArgsToSqlCommandParam(args);</span>
+<span class="fc" id="L87">          result = sqlSession.selectOne(command.getName(), param);</span>
+<span class="fc bfc" id="L88" title="All 6 branches covered.">          if (method.returnsOptional() &amp;&amp; (result == null || !method.getReturnType().equals(result.getClass()))) {</span>
+<span class="fc" id="L89">            result = Optional.ofNullable(result);</span>
+          }
+        }
+<span class="fc" id="L92">        break;</span>
+      case FLUSH:
+<span class="fc" id="L94">        result = sqlSession.flushStatements();</span>
+<span class="fc" id="L95">        break;</span>
+      default:
+<span class="nc" id="L97">        throw new BindingException(&quot;Unknown execution method for: &quot; + command.getName());</span>
+    }
+<span class="pc bpc" id="L99" title="1 of 6 branches missed.">    if (result == null &amp;&amp; method.getReturnType().isPrimitive() &amp;&amp; !method.returnsVoid()) {</span>
+<span class="nc" id="L100">      throw new BindingException(&quot;Mapper method '&quot; + command.getName()</span>
+<span class="nc" id="L101">          + &quot;' attempted to return null from a method with a primitive return type (&quot; + method.getReturnType() + &quot;).&quot;);</span>
+    }
+<span class="fc" id="L103">    return result;</span>
+  }
+
+  private Object rowCountResult(int rowCount) {
+    final Object result;
+<span class="fc bfc" id="L108" title="All 2 branches covered.">    if (method.returnsVoid()) {</span>
+<span class="fc" id="L109">      result = null;</span>
+<span class="fc bfc" id="L110" title="All 4 branches covered.">    } else if (Integer.class.equals(method.getReturnType()) || Integer.TYPE.equals(method.getReturnType())) {</span>
+<span class="fc" id="L111">      result = rowCount;</span>
+<span class="fc bfc" id="L112" title="All 4 branches covered.">    } else if (Long.class.equals(method.getReturnType()) || Long.TYPE.equals(method.getReturnType())) {</span>
+<span class="fc" id="L113">      result = (long) rowCount;</span>
+<span class="pc bpc" id="L114" title="1 of 4 branches missed.">    } else if (Boolean.class.equals(method.getReturnType()) || Boolean.TYPE.equals(method.getReturnType())) {</span>
+<span class="pc bpc" id="L115" title="1 of 2 branches missed.">      result = rowCount &gt; 0;</span>
+    } else {
+<span class="nc" id="L117">      throw new BindingException(</span>
+<span class="nc" id="L118">          &quot;Mapper method '&quot; + command.getName() + &quot;' has an unsupported return type: &quot; + method.getReturnType());</span>
+    }
+<span class="fc" id="L120">    return result;</span>
+  }
+
+  private void executeWithResultHandler(SqlSession sqlSession, Object[] args) {
+<span class="fc" id="L124">    MappedStatement ms = sqlSession.getConfiguration().getMappedStatement(command.getName());</span>
+<span class="pc bpc" id="L125" title="1 of 2 branches missed.">    if (!StatementType.CALLABLE.equals(ms.getStatementType())</span>
+<span class="fc bfc" id="L126" title="All 2 branches covered.">        &amp;&amp; void.class.equals(ms.getResultMaps().get(0).getType())) {</span>
+<span class="fc" id="L127">      throw new BindingException(</span>
+<span class="fc" id="L128">          &quot;method &quot; + command.getName() + &quot; needs either a @ResultMap annotation, a @ResultType annotation,&quot;</span>
+              + &quot; or a resultType attribute in XML so a ResultHandler can be used as a parameter.&quot;);
+    }
+<span class="fc" id="L131">    Object param = method.convertArgsToSqlCommandParam(args);</span>
+<span class="fc bfc" id="L132" title="All 2 branches covered.">    if (method.hasRowBounds()) {</span>
+<span class="fc" id="L133">      RowBounds rowBounds = method.extractRowBounds(args);</span>
+<span class="fc" id="L134">      sqlSession.select(command.getName(), param, rowBounds, method.extractResultHandler(args));</span>
+<span class="fc" id="L135">    } else {</span>
+<span class="fc" id="L136">      sqlSession.select(command.getName(), param, method.extractResultHandler(args));</span>
+    }
+<span class="fc" id="L138">  }</span>
+
+  private &lt;E&gt; Object executeForMany(SqlSession sqlSession, Object[] args) {
+    List&lt;E&gt; result;
+<span class="fc" id="L142">    Object param = method.convertArgsToSqlCommandParam(args);</span>
+<span class="fc bfc" id="L143" title="All 2 branches covered.">    if (method.hasRowBounds()) {</span>
+<span class="fc" id="L144">      RowBounds rowBounds = method.extractRowBounds(args);</span>
+<span class="fc" id="L145">      result = sqlSession.selectList(command.getName(), param, rowBounds);</span>
+<span class="fc" id="L146">    } else {</span>
+<span class="fc" id="L147">      result = sqlSession.selectList(command.getName(), param);</span>
+    }
+    // issue #510 Collections &amp; arrays support
+<span class="fc bfc" id="L150" title="All 2 branches covered.">    if (!method.getReturnType().isAssignableFrom(result.getClass())) {</span>
+<span class="fc bfc" id="L151" title="All 2 branches covered.">      if (method.getReturnType().isArray()) {</span>
+<span class="fc" id="L152">        return convertToArray(result);</span>
+      }
+<span class="fc" id="L154">      return convertToDeclaredCollection(sqlSession.getConfiguration(), result);</span>
+    }
+<span class="fc" id="L156">    return result;</span>
+  }
+
+  private &lt;T&gt; Cursor&lt;T&gt; executeForCursor(SqlSession sqlSession, Object[] args) {
+    Cursor&lt;T&gt; result;
+<span class="fc" id="L161">    Object param = method.convertArgsToSqlCommandParam(args);</span>
+<span class="fc bfc" id="L162" title="All 2 branches covered.">    if (method.hasRowBounds()) {</span>
+<span class="fc" id="L163">      RowBounds rowBounds = method.extractRowBounds(args);</span>
+<span class="fc" id="L164">      result = sqlSession.selectCursor(command.getName(), param, rowBounds);</span>
+<span class="fc" id="L165">    } else {</span>
+<span class="fc" id="L166">      result = sqlSession.selectCursor(command.getName(), param);</span>
+    }
+<span class="fc" id="L168">    return result;</span>
+  }
+
+  private &lt;E&gt; Object convertToDeclaredCollection(Configuration config, List&lt;E&gt; list) {
+<span class="fc" id="L172">    Object collection = config.getObjectFactory().create(method.getReturnType());</span>
+<span class="fc" id="L173">    MetaObject metaObject = config.newMetaObject(collection);</span>
+<span class="fc" id="L174">    metaObject.addAll(list);</span>
+<span class="fc" id="L175">    return collection;</span>
+  }
+
+  @SuppressWarnings(&quot;unchecked&quot;)
+  private &lt;E&gt; Object convertToArray(List&lt;E&gt; list) {
+<span class="fc" id="L180">    Class&lt;?&gt; arrayComponentType = method.getReturnType().getComponentType();</span>
+<span class="fc" id="L181">    Object array = Array.newInstance(arrayComponentType, list.size());</span>
+<span class="fc bfc" id="L182" title="All 2 branches covered.">    if (!arrayComponentType.isPrimitive()) {</span>
+<span class="fc" id="L183">      return list.toArray((E[]) array);</span>
+    }
+<span class="fc bfc" id="L185" title="All 2 branches covered.">    for (int i = 0; i &lt; list.size(); i++) {</span>
+<span class="fc" id="L186">      Array.set(array, i, list.get(i));</span>
+    }
+<span class="fc" id="L188">    return array;</span>
+  }
+
+  private &lt;K, V&gt; Map&lt;K, V&gt; executeForMap(SqlSession sqlSession, Object[] args) {
+    Map&lt;K, V&gt; result;
+<span class="fc" id="L193">    Object param = method.convertArgsToSqlCommandParam(args);</span>
+<span class="fc bfc" id="L194" title="All 2 branches covered.">    if (method.hasRowBounds()) {</span>
+<span class="fc" id="L195">      RowBounds rowBounds = method.extractRowBounds(args);</span>
+<span class="fc" id="L196">      result = sqlSession.selectMap(command.getName(), param, method.getMapKey(), rowBounds);</span>
+<span class="fc" id="L197">    } else {</span>
+<span class="fc" id="L198">      result = sqlSession.selectMap(command.getName(), param, method.getMapKey());</span>
+    }
+<span class="fc" id="L200">    return result;</span>
+  }
+
+<span class="fc" id="L203">  public static class ParamMap&lt;V&gt; extends HashMap&lt;String, V&gt; {</span>
+
+    private static final long serialVersionUID = -2212268410512043556L;
+
+    @Override
+    public V get(Object key) {
+<span class="fc bfc" id="L209" title="All 2 branches covered.">      if (!super.containsKey(key)) {</span>
+<span class="fc" id="L210">        throw new BindingException(&quot;Parameter '&quot; + key + &quot;' not found. Available parameters are &quot; + keySet());</span>
+      }
+<span class="fc" id="L212">      return super.get(key);</span>
+    }
+
+  }
+
+  public static class SqlCommand {
+
+    private final String name;
+    private final SqlCommandType type;
+
+<span class="fc" id="L222">    public SqlCommand(Configuration configuration, Class&lt;?&gt; mapperInterface, Method method) {</span>
+<span class="fc" id="L223">      final String methodName = method.getName();</span>
+<span class="fc" id="L224">      final Class&lt;?&gt; declaringClass = method.getDeclaringClass();</span>
+<span class="fc" id="L225">      MappedStatement ms = resolveMappedStatement(mapperInterface, methodName, declaringClass, configuration);</span>
+<span class="fc bfc" id="L226" title="All 2 branches covered.">      if (ms == null) {</span>
+<span class="fc bfc" id="L227" title="All 2 branches covered.">        if (method.getAnnotation(Flush.class) == null) {</span>
+<span class="fc" id="L228">          throw new BindingException(</span>
+<span class="fc" id="L229">              &quot;Invalid bound statement (not found): &quot; + mapperInterface.getName() + &quot;.&quot; + methodName);</span>
+        }
+<span class="fc" id="L231">        name = null;</span>
+<span class="fc" id="L232">        type = SqlCommandType.FLUSH;</span>
+      } else {
+<span class="fc" id="L234">        name = ms.getId();</span>
+<span class="fc" id="L235">        type = ms.getSqlCommandType();</span>
+<span class="pc bpc" id="L236" title="1 of 2 branches missed.">        if (type == SqlCommandType.UNKNOWN) {</span>
+<span class="nc" id="L237">          throw new BindingException(&quot;Unknown execution method for: &quot; + name);</span>
+        }
+      }
+<span class="fc" id="L240">    }</span>
+
+    public String getName() {
+<span class="fc" id="L243">      return name;</span>
+    }
+
+    public SqlCommandType getType() {
+<span class="fc" id="L247">      return type;</span>
+    }
+
+    private MappedStatement resolveMappedStatement(Class&lt;?&gt; mapperInterface, String methodName, Class&lt;?&gt; declaringClass,
+        Configuration configuration) {
+<span class="fc" id="L252">      String statementId = mapperInterface.getName() + &quot;.&quot; + methodName;</span>
+<span class="fc bfc" id="L253" title="All 2 branches covered.">      if (configuration.hasStatement(statementId)) {</span>
+<span class="fc" id="L254">        return configuration.getMappedStatement(statementId);</span>
+      }
+<span class="fc bfc" id="L256" title="All 2 branches covered.">      if (mapperInterface.equals(declaringClass)) {</span>
+<span class="fc" id="L257">        return null;</span>
+      }
+<span class="fc bfc" id="L259" title="All 2 branches covered.">      for (Class&lt;?&gt; superInterface : mapperInterface.getInterfaces()) {</span>
+<span class="pc bpc" id="L260" title="1 of 2 branches missed.">        if (declaringClass.isAssignableFrom(superInterface)) {</span>
+<span class="fc" id="L261">          MappedStatement ms = resolveMappedStatement(superInterface, methodName, declaringClass, configuration);</span>
+<span class="fc bfc" id="L262" title="All 2 branches covered.">          if (ms != null) {</span>
+<span class="fc" id="L263">            return ms;</span>
+          }
+        }
+      }
+<span class="fc" id="L267">      return null;</span>
+    }
+  }
+
+  public static class MethodSignature {
+
+    private final boolean returnsMany;
+    private final boolean returnsMap;
+    private final boolean returnsVoid;
+    private final boolean returnsCursor;
+    private final boolean returnsOptional;
+    private final Class&lt;?&gt; returnType;
+    private final String mapKey;
+    private final Integer resultHandlerIndex;
+    private final Integer rowBoundsIndex;
+    private final ParamNameResolver paramNameResolver;
+
+<span class="fc" id="L284">    public MethodSignature(Configuration configuration, Class&lt;?&gt; mapperInterface, Method method) {</span>
+<span class="fc" id="L285">      Type resolvedReturnType = TypeParameterResolver.resolveReturnType(method, mapperInterface);</span>
+<span class="fc bfc" id="L286" title="All 2 branches covered.">      if (resolvedReturnType instanceof Class&lt;?&gt;) {</span>
+<span class="fc" id="L287">        this.returnType = (Class&lt;?&gt;) resolvedReturnType;</span>
+<span class="pc bpc" id="L288" title="1 of 2 branches missed.">      } else if (resolvedReturnType instanceof ParameterizedType) {</span>
+<span class="fc" id="L289">        this.returnType = (Class&lt;?&gt;) ((ParameterizedType) resolvedReturnType).getRawType();</span>
+      } else {
+<span class="nc" id="L291">        this.returnType = method.getReturnType();</span>
+      }
+<span class="fc" id="L293">      this.returnsVoid = void.class.equals(this.returnType);</span>
+<span class="fc bfc" id="L294" title="All 4 branches covered.">      this.returnsMany = configuration.getObjectFactory().isCollection(this.returnType) || this.returnType.isArray();</span>
+<span class="fc" id="L295">      this.returnsCursor = Cursor.class.equals(this.returnType);</span>
+<span class="fc" id="L296">      this.returnsOptional = Optional.class.equals(this.returnType);</span>
+<span class="fc" id="L297">      this.mapKey = getMapKey(method);</span>
+<span class="fc bfc" id="L298" title="All 2 branches covered.">      this.returnsMap = this.mapKey != null;</span>
+<span class="fc" id="L299">      this.rowBoundsIndex = getUniqueParamIndex(method, RowBounds.class);</span>
+<span class="fc" id="L300">      this.resultHandlerIndex = getUniqueParamIndex(method, ResultHandler.class);</span>
+<span class="fc" id="L301">      this.paramNameResolver = new ParamNameResolver(configuration, method);</span>
+<span class="fc" id="L302">    }</span>
+
+    public Object convertArgsToSqlCommandParam(Object[] args) {
+<span class="fc" id="L305">      return paramNameResolver.getNamedParams(args);</span>
+    }
+
+    public boolean hasRowBounds() {
+<span class="fc bfc" id="L309" title="All 2 branches covered.">      return rowBoundsIndex != null;</span>
+    }
+
+    public RowBounds extractRowBounds(Object[] args) {
+<span class="pc bpc" id="L313" title="1 of 2 branches missed.">      return hasRowBounds() ? (RowBounds) args[rowBoundsIndex] : null;</span>
+    }
+
+    public boolean hasResultHandler() {
+<span class="pc bpc" id="L317" title="1 of 2 branches missed.">      return resultHandlerIndex != null;</span>
+    }
+
+    public ResultHandler extractResultHandler(Object[] args) {
+<span class="pc bpc" id="L321" title="1 of 2 branches missed.">      return hasResultHandler() ? (ResultHandler) args[resultHandlerIndex] : null;</span>
+    }
+
+    public Class&lt;?&gt; getReturnType() {
+<span class="fc" id="L325">      return returnType;</span>
+    }
+
+    public boolean returnsMany() {
+<span class="fc" id="L329">      return returnsMany;</span>
+    }
+
+    public boolean returnsMap() {
+<span class="fc" id="L333">      return returnsMap;</span>
+    }
+
+    public boolean returnsVoid() {
+<span class="fc" id="L337">      return returnsVoid;</span>
+    }
+
+    public boolean returnsCursor() {
+<span class="fc" id="L341">      return returnsCursor;</span>
+    }
+
+    /**
+     * return whether return type is {@code java.util.Optional}.
+     *
+     * @return return {@code true}, if return type is {@code java.util.Optional}
+     *
+     * @since 3.5.0
+     */
+    public boolean returnsOptional() {
+<span class="fc" id="L352">      return returnsOptional;</span>
+    }
+
+    private Integer getUniqueParamIndex(Method method, Class&lt;?&gt; paramType) {
+<span class="fc" id="L356">      Integer index = null;</span>
+<span class="fc" id="L357">      final Class&lt;?&gt;[] argTypes = method.getParameterTypes();</span>
+<span class="fc bfc" id="L358" title="All 2 branches covered.">      for (int i = 0; i &lt; argTypes.length; i++) {</span>
+<span class="fc bfc" id="L359" title="All 2 branches covered.">        if (paramType.isAssignableFrom(argTypes[i])) {</span>
+<span class="fc bfc" id="L360" title="All 2 branches covered.">          if (index != null) {</span>
+<span class="fc" id="L361">            throw new BindingException(</span>
+<span class="fc" id="L362">                method.getName() + &quot; cannot have multiple &quot; + paramType.getSimpleName() + &quot; parameters&quot;);</span>
+          }
+<span class="fc" id="L364">          index = i;</span>
+        }
+      }
+<span class="fc" id="L367">      return index;</span>
+    }
+
+    public String getMapKey() {
+<span class="fc" id="L371">      return mapKey;</span>
+    }
+
+    private String getMapKey(Method method) {
+<span class="fc" id="L375">      String mapKey = null;</span>
+<span class="fc bfc" id="L376" title="All 2 branches covered.">      if (Map.class.isAssignableFrom(method.getReturnType())) {</span>
+<span class="fc" id="L377">        final MapKey mapKeyAnnotation = method.getAnnotation(MapKey.class);</span>
+<span class="fc bfc" id="L378" title="All 2 branches covered.">        if (mapKeyAnnotation != null) {</span>
+<span class="fc" id="L379">          mapKey = mapKeyAnnotation.value();</span>
+        }
+      }
+<span class="fc" id="L382">      return mapKey;</span>
+    }
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

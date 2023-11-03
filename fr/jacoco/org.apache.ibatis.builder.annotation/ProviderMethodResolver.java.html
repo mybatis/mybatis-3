@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProviderMethodResolver.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.builder.annotation</a> &gt; <span class="el_source">ProviderMethodResolver.java</span></div><h1>ProviderMethodResolver.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2023 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.builder.annotation;
+
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.apache.ibatis.builder.BuilderException;
+
+/**
+ * The interface that resolve an SQL provider method via an SQL provider class.
+ * &lt;p&gt;
+ * This interface need to implements at an SQL provider class and it need to define the default constructor for creating
+ * a new instance.
+ *
+ * @since 3.5.1
+ *
+ * @author Kazuki Shimizu
+ */
+public interface ProviderMethodResolver {
+
+  /**
+   * Resolve an SQL provider method.
+   * &lt;p&gt;
+   * The default implementation return a method that matches following conditions.
+   * &lt;ul&gt;
+   * &lt;li&gt;Method name matches with mapper method&lt;/li&gt;
+   * &lt;li&gt;Return type matches the {@link CharSequence}({@link String}, {@link StringBuilder}, etc...)&lt;/li&gt;
+   * &lt;/ul&gt;
+   * If matched method is zero or multiple, it throws a {@link BuilderException}.
+   *
+   * @param context
+   *          a context for SQL provider
+   *
+   * @return an SQL provider method
+   *
+   * @throws BuilderException
+   *           Throws when cannot resolve a target method
+   */
+  default Method resolveMethod(ProviderContext context) {
+<span class="fc" id="L56">    List&lt;Method&gt; sameNameMethods = Arrays.stream(getClass().getMethods())</span>
+<span class="fc" id="L57">        .filter(m -&gt; m.getName().equals(context.getMapperMethod().getName())).collect(Collectors.toList());</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">    if (sameNameMethods.isEmpty()) {</span>
+<span class="fc" id="L59">      throw new BuilderException(&quot;Cannot resolve the provider method because '&quot; + context.getMapperMethod().getName()</span>
+<span class="fc" id="L60">          + &quot;' not found in SqlProvider '&quot; + getClass().getName() + &quot;'.&quot;);</span>
+    }
+<span class="fc" id="L62">    List&lt;Method&gt; targetMethods = sameNameMethods.stream()</span>
+<span class="fc" id="L63">        .filter(m -&gt; CharSequence.class.isAssignableFrom(m.getReturnType())).collect(Collectors.toList());</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">    if (targetMethods.size() == 1) {</span>
+<span class="fc" id="L65">      return targetMethods.get(0);</span>
+    }
+<span class="fc bfc" id="L67" title="All 2 branches covered.">    if (targetMethods.isEmpty()) {</span>
+<span class="fc" id="L68">      throw new BuilderException(&quot;Cannot resolve the provider method because '&quot; + context.getMapperMethod().getName()</span>
+<span class="fc" id="L69">          + &quot;' does not return the CharSequence or its subclass in SqlProvider '&quot; + getClass().getName() + &quot;'.&quot;);</span>
+    }
+<span class="fc" id="L71">    throw new BuilderException(&quot;Cannot resolve the provider method because '&quot; + context.getMapperMethod().getName()</span>
+<span class="fc" id="L72">        + &quot;' is found multiple in SqlProvider '&quot; + getClass().getName() + &quot;'.&quot;);</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
