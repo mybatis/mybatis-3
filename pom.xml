@@ -154,8 +154,6 @@
 
     <!-- Reproducible Builds -->
     <project.build.outputTimestamp>1698763635</project.build.outputTimestamp>
-
-    <allowed.build.jdks>[11,12),[17,18),[21,22),[22,23)</allowed.build.jdks>
   </properties>
 
   <dependencies>
