@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<licensePluginReport goal="FORMAT" timestamp="1698969327541">
+<licensePluginReport goal="FORMAT" timestamp="1698971032208">
     <module artifactId="mybatis" groupId="org.mybatis" version="3.5.14"/>
     <files>
         <file path=".editorconfig" result="NOOP"/>
