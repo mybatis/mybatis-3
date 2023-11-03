@@ -60,6 +60,7 @@ public class XMLScriptBuilder extends BaseBuilder {
     nodeHandlerMap.put("when", new IfHandler());
     nodeHandlerMap.put("otherwise", new OtherwiseHandler());
     nodeHandlerMap.put("bind", new BindHandler());
+    nodeHandlerMap.put("include", new IncludeHandler());
   }
 
   public SqlSource parseScriptNode() {
@@ -69,6 +70,10 @@ public class XMLScriptBuilder extends BaseBuilder {
       sqlSource = new DynamicSqlSource(configuration, rootSqlNode);
     } else {
       sqlSource = new RawSqlSource(configuration, rootSqlNode, parameterType);
+    }
+
+    if (configuration.getVariables().containsKey("#MapperClassToInclude")) {
+      return new IncludeSqlSource(this.isDynamic, rootSqlNode, sqlSource);
     }
     return sqlSource;
   }
@@ -246,6 +251,34 @@ public class XMLScriptBuilder extends BaseBuilder {
       }
       return defaultSqlNode;
     }
+  }
+
+  private class IncludeHandler implements NodeHandler {
+
+    public IncludeHandler() {
+
+    }
+
+    @Override
+    public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
+
+      String refid = nodeToHandle.getStringAttribute("refid");
+      // if <include refid="namespace.sqlId"/>
+      if (!refid.contains(".")) {
+        String className = configuration.getVariables().getProperty("#MapperClassToInclude");
+        refid = className + "." + refid;
+      }
+
+      IncludeSqlSource includeSqlSource = configuration.getIncludeSource().get(refid);
+      if (includeSqlSource == null) {
+        throw new RuntimeException("A wrong refid is used in include element.");
+      }
+      IncludeSqlNode includeSqlNode = new IncludeSqlNode();
+      includeSqlNode.setSqlNode(includeSqlSource.getRootSqlNode());
+      includeSqlNode.setSqlString(includeSqlSource.getSqlString());
+      targetContents.add(includeSqlNode);
+    }
+
   }
 
 }

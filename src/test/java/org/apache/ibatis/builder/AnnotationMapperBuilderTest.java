@@ -17,11 +17,12 @@ package org.apache.ibatis.builder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
+import java.util.HashMap;
+
+import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.builder.annotation.MapperAnnotationBuilder;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
+import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.mapping.StatementType;
@@ -93,7 +94,59 @@ class AnnotationMapperBuilderTest {
     assertThat(mappedStatement.getResultSetType()).isEqualTo(ResultSetType.DEFAULT);
   }
 
+  @Test
+  void withSelectInclude() {
+    Configuration configuration = new Configuration();
+    MapperAnnotationBuilder builder = new MapperAnnotationBuilder(configuration, Mapper.class);
+    builder.parse();
+
+    MappedStatement mappedStatement = configuration.getMappedStatement("selectWithInclude");
+    BoundSql boundsql = mappedStatement.getSqlSource().getBoundSql(null);
+    String sql = boundsql.getSql();
+    assertThat(sql).isEqualTo("select * from test  where id = ?");
+  }
+
+  @Test
+  void withUpdateInclude() {
+    Configuration configuration = new Configuration();
+    MapperAnnotationBuilder builder = new MapperAnnotationBuilder(configuration, Mapper.class);
+    builder.parse();
+
+    MappedStatement mappedStatement = configuration.getMappedStatement("updateWithInclude");
+    BoundSql boundsql = mappedStatement.getSqlSource().getBoundSql(null);
+    String sql = boundsql.getSql();
+    assertThat(sql).isEqualTo("update test set  name = ? where id = ?");
+  }
+
+  @Test
+  void withSelectIncludeAndIf() {
+    Configuration configuration = new Configuration();
+    MapperAnnotationBuilder builder = new MapperAnnotationBuilder(configuration, Mapper.class);
+    builder.parse();
+
+    MappedStatement mappedStatement = configuration.getMappedStatement("selectWithIncludeAndIf");
+    HashMap<String, Object> params = new HashMap<>();
+    params.put("name", "name");
+    BoundSql boundsql = mappedStatement.getSqlSource().getBoundSql(params);
+    String sql = boundsql.getSql();
+    assertThat(sql).isEqualTo("select name  from test");
+  }
+
   interface Mapper {
+
+    @Sql(id = "selectId", value = "select * from test")
+    @Sql(id = "updateId", value = "update test set")
+    @Sql(id = "selectWithIfId", value = "<script><if test='id != null'>id</if><if test='name != null'>name</if></script>")
+    void provideSql();
+
+    @Select("<script><include refid='selectId'/> where id = #{id}</script>")
+    String selectWithInclude(Integer id);
+
+    @Update("<script><include refid='updateId'/> name = #{name} where id = #{id}</script>")
+    String updateWithInclude(Integer id, String name);
+
+    @Select("<script>select<include refid='selectWithIfId'/> from test</script>")
+    String selectWithIncludeAndIf(Integer id, String name);
 
     @Insert("insert into test (name) values(#{name})")
     @Options(useGeneratedKeys = true, keyColumn = "key_column", keyProperty = "keyProperty")
