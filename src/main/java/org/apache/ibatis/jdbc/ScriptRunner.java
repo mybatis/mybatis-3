@@ -248,7 +248,7 @@ public class ScriptRunner {
       }
       try {
         boolean hasResults = statement.execute(sql);
-        // DO NOT try to 'imporove' the condition even if IDE tells you to!
+        // DO NOT try to 'improve' the condition even if IDE tells you to!
         // It's important that getUpdateCount() is called here.
         while (!(!hasResults && statement.getUpdateCount() == -1)) {
           checkWarnings(statement);
