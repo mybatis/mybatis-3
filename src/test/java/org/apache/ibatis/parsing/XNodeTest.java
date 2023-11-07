@@ -25,6 +25,88 @@ import org.junit.jupiter.api.Test;
 class XNodeTest {
 
   @Test
+  void formatXNodeToString() {
+    XPathParser parser = new XPathParser(
+        "<users><user><id>100</id><name>Tom</name><age>30</age><cars><car index=\"1\">BMW</car><car index=\"2\">Audi</car><car index=\"3\">Benz</car></cars></user></users>");
+    String usersNodeToString = parser.evalNode("/users").toString();
+    String userNodeToString = parser.evalNode("/users/user").toString();
+    String carsNodeToString = parser.evalNode("/users/user/cars").toString();
+
+    // @formatter:off
+    String usersNodeToStringExpect =
+      "<users>\n"
+      + "  <user>\n"
+      + "    <id>\n"
+      + "      100\n"
+      + "    </id>\n"
+      + "    <name>\n"
+      + "      Tom\n"
+      + "    </name>\n"
+      + "    <age>\n"
+      + "      30\n"
+      + "    </age>\n"
+      + "    <cars>\n"
+      + "      <car index=\"1\">\n"
+      + "        BMW\n"
+      + "      </car>\n"
+      + "      <car index=\"2\">\n"
+      + "        Audi\n"
+      + "      </car>\n"
+      + "      <car index=\"3\">\n"
+      + "        Benz\n"
+      + "      </car>\n"
+      + "    </cars>\n"
+      + "  </user>\n"
+      + "</users>\n";
+    // @formatter:on
+
+    // @formatter:off
+    String userNodeToStringExpect =
+      "<user>\n"
+      + "  <id>\n"
+      + "    100\n"
+      + "  </id>\n"
+      + "  <name>\n"
+      + "    Tom\n"
+      + "  </name>\n"
+      + "  <age>\n"
+      + "    30\n"
+      + "  </age>\n"
+      + "  <cars>\n"
+      + "    <car index=\"1\">\n"
+      + "      BMW\n"
+      + "    </car>\n"
+      + "    <car index=\"2\">\n"
+      + "      Audi\n"
+      + "    </car>\n"
+      + "    <car index=\"3\">\n"
+      + "      Benz\n"
+      + "    </car>\n"
+      + "  </cars>\n"
+      + "</user>\n";
+    // @formatter:on
+
+    // @formatter:off
+    String carsNodeToStringExpect =
+      "<cars>\n"
+      + "  <car index=\"1\">\n"
+      + "    BMW\n"
+      + "  </car>\n"
+      + "  <car index=\"2\">\n"
+      + "    Audi\n"
+      + "  </car>\n"
+      + "  <car index=\"3\">\n"
+      + "    Benz\n"
+      + "  </car>\n"
+      + "</cars>\n";
+    // @formatter:on
+
+    assertEquals(usersNodeToStringExpect, usersNodeToString);
+    assertEquals(userNodeToStringExpect, userNodeToString);
+    assertEquals(carsNodeToStringExpect, carsNodeToString);
+  }
+
+  @Test
   void xNodeToString() {
     // @formatter:off
     String xml = "<mapper>\n" +
