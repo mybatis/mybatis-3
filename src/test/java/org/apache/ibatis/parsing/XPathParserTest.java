@@ -263,4 +263,56 @@ class XPathParserTest {
     assertEquals(carsNodeToStringExpect, carsNodeToString);
   }
 
+  @Test
+  void xNodeToString() {
+    String xml = "<mapper namespace=\"demo.StudentMapper\">\n" +
+      "  <select id=\"selectFullStudent\" resultMap=\"fullResult\" databaseId=\"mysql\">\n" +
+      "    select\n" +
+      "      STUDENT.ID ID,\n" +
+      "      STUDENT.SNO SNO,\n" +
+      "      STUDENT.SNAME SNAME,\n" +
+      "      STUDENT.SSEX SSEX,\n" +
+      "      STUDENT.SBIRTHDAY SBIRTHDAY,\n" +
+      "      STUDENT.CLASS CLASS,\n" +
+      "      SCORE.CNO CNO,\n" +
+      "      SCORE.DEGREE DEGREE,\n" +
+      "      HOUSE.HOUSE_ID HOUSE_ID,\n" +
+      "      HOUSE.HOUSE_HOLDER HOUSE_HOLDER,\n" +
+      "      HOUSE.HOUSE_MEMBER HOUSE_MEMBER\n" +
+      "    from STUDENT, SCORE, HOUSE\n" +
+      "    <where>\n" +
+      "      <if test=\"sex != null\">\n" +
+      "        STUDENT.SSEX = #{sex};\n" +
+      "      </if>\n" +
+      "      and STUDENT.SNO = SCORE.SNO and HOUSE.HOUSE_MEMBER = STUDENT.SNO\n" +
+      "    </where>\n" +
+      "  </select>\n" +
+      "</mapper>";
+
+    String selectStr = "<select resultMap=\"fullResult\" id=\"selectFullStudent\" databaseId=\"mysql\">\n" +
+      "    select\n" +
+      "      STUDENT.ID ID,\n" +
+      "      STUDENT.SNO SNO,\n" +
+      "      STUDENT.SNAME SNAME,\n" +
+      "      STUDENT.SSEX SSEX,\n" +
+      "      STUDENT.SBIRTHDAY SBIRTHDAY,\n" +
+      "      STUDENT.CLASS CLASS,\n" +
+      "      SCORE.CNO CNO,\n" +
+      "      SCORE.DEGREE DEGREE,\n" +
+      "      HOUSE.HOUSE_ID HOUSE_ID,\n" +
+      "      HOUSE.HOUSE_HOLDER HOUSE_HOLDER,\n" +
+      "      HOUSE.HOUSE_MEMBER HOUSE_MEMBER\n" +
+      "    from STUDENT, SCORE, HOUSE\n" +
+      "    <where>\n" +
+      "      <if test=\"sex != null\">\n" +
+      "        STUDENT.SSEX = #{sex};\n" +
+      "      </if>\n" +
+      "      and STUDENT.SNO = SCORE.SNO and HOUSE.HOUSE_MEMBER = STUDENT.SNO\n" +
+      "    </where>\n" +
+      "  </select>\n";
+
+    XPathParser parser = new XPathParser(xml);
+    XNode selectNode = parser.evalNode("/mapper/select");
+    assertEquals(selectStr, selectNode.toString());
+  }
 }

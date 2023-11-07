@@ -295,31 +295,43 @@ public class XNode {
       builder.append(entry.getValue());
       builder.append("\"");
     }
-    List<XNode> children = getChildren();
-    if (!children.isEmpty()) {
-      builder.append(">\n");
-      for (XNode child : children) {
-        indent(builder, level + 1);
-        child.toString(builder, level + 1);
-      }
-      indent(builder, level);
-      builder.append("</");
-      builder.append(name);
-      builder.append(">");
-    } else if (body != null) {
-      builder.append(">");
-      builder.append(body);
-      builder.append("</");
-      builder.append(name);
-      builder.append(">");
-    } else {
+    if (!node.hasChildNodes()) {
       builder.append("/>");
-      indent(builder, level);
+      builder.append("\n");
+      return;
     }
+    builder.append(">");
+    NodeList childNodes = node.getChildNodes();
+    for (int i = 0; i < childNodes.getLength(); i++) {
+      Node childNode = childNodes.item(i);
+      if (childNode.getNodeType() == Node.ELEMENT_NODE) {
+        if (i == 0) {
+          builder.append("\n");
+        }
+        indent(builder, level + 1);
+        XNode child = new XNode(xpathParser, childNode, variables);
+        child.toString(builder, level + 1);
+      } else {
+        if ("\n".equals(builder.substring(builder.length() - 1))) {
+          builder.deleteCharAt(builder.length() - 1);
+        }
+        String text = getBodyData(childNode);
+        if (text != null) {
+          builder.append(text);
+        }
+      }
+    }
+    indent(builder, level);
+    builder.append("</");
+    builder.append(name);
+    builder.append(">");
     builder.append("\n");
   }
 
   private void indent(StringBuilder builder, int level) {
+    if (!"\n".equals(builder.substring(builder.length() - 1))) {
+      return;
+    }
     for (int i = 0; i < level; i++) {
       builder.append("    ");
     }
