@@ -204,7 +204,7 @@ class XPathParserTest {
     assertEquals((Float) 3.2f, parser.evalNode("/employee/active").getFloatAttribute("score"));
     assertEquals((Double) 3.2d, parser.evalNode("/employee/active").getDoubleAttribute("score"));
 
-    assertEquals("<id>${id_var}</id>", parser.evalNode("/employee/@id").toString().trim());
+    assertEquals("<id>\n  ${id_var}\n</id>", parser.evalNode("/employee/@id").toString().trim());
     assertEquals(7, parser.evalNodes("/employee/*").size());
     XNode node = parser.evalNode("/employee/height");
     assertEquals("employee/height", node.getPath());
@@ -222,39 +222,69 @@ class XPathParserTest {
     // @formatter:off
     String usersNodeToStringExpect =
       "<users>\n"
-      + "    <user>\n"
-      + "        <id>100</id>\n"
-      + "        <name>Tom</name>\n"
-      + "        <age>30</age>\n"
-      + "        <cars>\n"
-      + "            <car index=\"1\">BMW</car>\n"
-      + "            <car index=\"2\">Audi</car>\n"
-      + "            <car index=\"3\">Benz</car>\n"
-      + "        </cars>\n"
-      + "    </user>\n"
+      + "  <user>\n"
+      + "    <id>\n"
+      + "      100\n"
+      + "    </id>\n"
+      + "    <name>\n"
+      + "      Tom\n"
+      + "    </name>\n"
+      + "    <age>\n"
+      + "      30\n"
+      + "    </age>\n"
+      + "    <cars>\n"
+      + "      <car index=\"1\">\n"
+      + "        BMW\n"
+      + "      </car>\n"
+      + "      <car index=\"2\">\n"
+      + "        Audi\n"
+      + "      </car>\n"
+      + "      <car index=\"3\">\n"
+      + "        Benz\n"
+      + "      </car>\n"
+      + "    </cars>\n"
+      + "  </user>\n"
       + "</users>\n";
     // @formatter:on
 
     // @formatter:off
     String userNodeToStringExpect =
       "<user>\n"
-      + "    <id>100</id>\n"
-      + "    <name>Tom</name>\n"
-      + "    <age>30</age>\n"
-      + "    <cars>\n"
-      + "        <car index=\"1\">BMW</car>\n"
-      + "        <car index=\"2\">Audi</car>\n"
-      + "        <car index=\"3\">Benz</car>\n"
-      + "    </cars>\n"
+      + "  <id>\n"
+      + "    100\n"
+      + "  </id>\n"
+      + "  <name>\n"
+      + "    Tom\n"
+      + "  </name>\n"
+      + "  <age>\n"
+      + "    30\n"
+      + "  </age>\n"
+      + "  <cars>\n"
+      + "    <car index=\"1\">\n"
+      + "      BMW\n"
+      + "    </car>\n"
+      + "    <car index=\"2\">\n"
+      + "      Audi\n"
+      + "    </car>\n"
+      + "    <car index=\"3\">\n"
+      + "      Benz\n"
+      + "    </car>\n"
+      + "  </cars>\n"
       + "</user>\n";
     // @formatter:on
 
     // @formatter:off
     String carsNodeToStringExpect =
       "<cars>\n"
-      + "    <car index=\"1\">BMW</car>\n"
-      + "    <car index=\"2\">Audi</car>\n"
-      + "    <car index=\"3\">Benz</car>\n"
+      + "  <car index=\"1\">\n"
+      + "    BMW\n"
+      + "  </car>\n"
+      + "  <car index=\"2\">\n"
+      + "    Audi\n"
+      + "  </car>\n"
+      + "  <car index=\"3\">\n"
+      + "    Benz\n"
+      + "  </car>\n"
       + "</cars>\n";
     // @formatter:on
 
