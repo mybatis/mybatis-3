@@ -26,9 +26,9 @@
     <relativePath />
   </parent>
 
+  <groupId>org.mybatis</groupId>
   <artifactId>mybatis</artifactId>
   <version>3.5.15-SNAPSHOT</version>
-  <packaging>jar</packaging>
 
   <name>mybatis</name>
   <description>
@@ -110,7 +110,7 @@
 
   <scm>
     <url>https://github.com/mybatis/mybatis-3</url>
-    <connection>scm:git:ssh://github.com/mybatis/mybatis-3.git</connection>
+    <connection>scm:git:ssh://git@github.com/mybatis/mybatis-3.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/mybatis/mybatis-3.git</developerConnection>
     <tag>mybatis-3.5.12</tag>
   </scm>
