@@ -283,8 +283,8 @@ public class XNode {
     return buildToString(new StringBuilder(), 0).toString();
   }
 
-  private StringBuilder buildToString(StringBuilder builder, int indent) {
-    indent(builder, indent).append("<").append(name);
+  private StringBuilder buildToString(StringBuilder builder, int indentLevel) {
+    indent(builder, indentLevel).append("<").append(name);
     for (Map.Entry<Object, Object> entry : attributes.entrySet()) {
       builder.append(" ");
       builder.append(entry.getKey());
@@ -302,15 +302,15 @@ public class XNode {
         Node node = nodeList.item(i);
         short nodeType = node.getNodeType();
         if (nodeType == Node.ELEMENT_NODE) {
-          new XNode(xpathParser, node, variables).buildToString(builder, indent + 1);
+          new XNode(xpathParser, node, variables).buildToString(builder, indentLevel + 1);
         } else {
           String text = getBodyData(node).trim();
           if (text.length() > 0) {
-            indent(builder, indent + 1).append(text).append("\n");
+            indent(builder, indentLevel + 1).append(text).append("\n");
           }
         }
       }
-      indent(builder, indent).append("</").append(name).append(">\n");
+      indent(builder, indentLevel).append("</").append(name).append(">\n");
     }
 
     return builder;
