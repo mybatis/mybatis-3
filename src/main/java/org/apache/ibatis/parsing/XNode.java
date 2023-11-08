@@ -294,12 +294,11 @@ public class XNode {
     }
 
     NodeList nodeList = node.getChildNodes();
-    int nodeLen = nodeList.getLength();
-    if (nodeList == null || nodeLen == 0) {
+    if (nodeList == null || nodeList.getLength() == 0) {
       builder.append(" />\n");
     } else {
       builder.append(">\n");
-      for (int i = 0, n = nodeLen; i < n; i++) {
+      for (int i = 0, n = nodeList.getLength(); i < n; i++) {
         Node node = nodeList.item(i);
         short nodeType = node.getNodeType();
         if (nodeType == Node.ELEMENT_NODE) {
