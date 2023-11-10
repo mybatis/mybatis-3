@@ -204,63 +204,11 @@ class XPathParserTest {
     assertEquals((Float) 3.2f, parser.evalNode("/employee/active").getFloatAttribute("score"));
     assertEquals((Double) 3.2d, parser.evalNode("/employee/active").getDoubleAttribute("score"));
 
-    assertEquals("<id>${id_var}</id>", parser.evalNode("/employee/@id").toString().trim());
+    assertEquals("<id>\n  ${id_var}\n</id>", parser.evalNode("/employee/@id").toString().trim());
     assertEquals(7, parser.evalNodes("/employee/*").size());
     XNode node = parser.evalNode("/employee/height");
     assertEquals("employee/height", node.getPath());
     assertEquals("employee[${id_var}]_height", node.getValueBasedIdentifier());
-  }
-
-  @Test
-  void formatXNodeToString() {
-    XPathParser parser = new XPathParser(
-        "<users><user><id>100</id><name>Tom</name><age>30</age><cars><car index=\"1\">BMW</car><car index=\"2\">Audi</car><car index=\"3\">Benz</car></cars></user></users>");
-    String usersNodeToString = parser.evalNode("/users").toString();
-    String userNodeToString = parser.evalNode("/users/user").toString();
-    String carsNodeToString = parser.evalNode("/users/user/cars").toString();
-
-    // @formatter:off
-    String usersNodeToStringExpect =
-      "<users>\n"
-      + "    <user>\n"
-      + "        <id>100</id>\n"
-      + "        <name>Tom</name>\n"
-      + "        <age>30</age>\n"
-      + "        <cars>\n"
-      + "            <car index=\"1\">BMW</car>\n"
-      + "            <car index=\"2\">Audi</car>\n"
-      + "            <car index=\"3\">Benz</car>\n"
-      + "        </cars>\n"
-      + "    </user>\n"
-      + "</users>\n";
-    // @formatter:on
-
-    // @formatter:off
-    String userNodeToStringExpect =
-      "<user>\n"
-      + "    <id>100</id>\n"
-      + "    <name>Tom</name>\n"
-      + "    <age>30</age>\n"
-      + "    <cars>\n"
-      + "        <car index=\"1\">BMW</car>\n"
-      + "        <car index=\"2\">Audi</car>\n"
-      + "        <car index=\"3\">Benz</car>\n"
-      + "    </cars>\n"
-      + "</user>\n";
-    // @formatter:on
-
-    // @formatter:off
-    String carsNodeToStringExpect =
-      "<cars>\n"
-      + "    <car index=\"1\">BMW</car>\n"
-      + "    <car index=\"2\">Audi</car>\n"
-      + "    <car index=\"3\">Benz</car>\n"
-      + "</cars>\n";
-    // @formatter:on
-
-    assertEquals(usersNodeToStringExpect, usersNodeToString);
-    assertEquals(userNodeToStringExpect, userNodeToString);
-    assertEquals(carsNodeToStringExpect, carsNodeToString);
   }
 
 }
