@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.Reader;
 import java.time.LocalTime;
+import java.util.TimeZone;
 
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
@@ -52,6 +53,7 @@ class LocalTimeTest {
 
   @Test
   void shouldInsertLocalTimeWithNanoseconds() {
+    TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
     LocalTime t = LocalTime.of(11, 22, 33, 123456789);
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
