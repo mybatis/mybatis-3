@@ -132,6 +132,7 @@
 
   <properties>
     <clirr.comparisonVersion>3.4.6</clirr.comparisonVersion>
+    <derby.version>10.16.1.1</derby.version>
     <log4j.version>2.21.1</log4j.version>
 
     <!-- Add slow test groups here and annotate classes similar to @Tag('groupName'). -->
@@ -224,19 +225,19 @@
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derby</artifactId>
-      <version>10.16.1.1</version>
+      <version>${derby.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derbyshared</artifactId>
-      <version>10.16.1.1</version>
+      <version>${derby.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derbyoptionaltools</artifactId>
-      <version>10.16.1.1</version>
+      <version>${derby.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -427,6 +428,9 @@
       <activation>
         <jdk>(,16)</jdk>
       </activation>
+      <properties>
+          <derby.version>10.15.2.0</derby.version>
+      </properties>
       <build>
         <pluginManagement>
           <plugins>
@@ -461,6 +465,15 @@
         <java.test.version>16</java.test.version>
         <java.test.release.version>16</java.test.release.version>
         <excludedGroups>TestcontainersTests,RequireIllegalAccess</excludedGroups>
+      </properties>
+    </profile>
+    <profile>
+      <id>19</id>
+      <activation>
+        <jdk>[19,)</jdk>
+      </activation>
+      <properties>
+          <derby.version>10.17.1.0</derby.version>
       </properties>
     </profile>
   </profiles>
