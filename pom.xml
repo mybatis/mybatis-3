@@ -132,7 +132,7 @@
 
   <properties>
     <clirr.comparisonVersion>3.4.6</clirr.comparisonVersion>
-    <derby.version>10.16.1.1</derby.version>
+    <derby.version>10.17.1.0</derby.version>
     <log4j.version>2.21.1</log4j.version>
 
     <!-- Add slow test groups here and annotate classes similar to @Tag('groupName'). -->
@@ -460,11 +460,21 @@
         <jdk>[16,)</jdk>
       </activation>
       <properties>
+        <derby.version>10.15.2.0</derby.version>
         <java.version>16</java.version>
         <java.release.version>16</java.release.version>
         <java.test.version>16</java.test.version>
         <java.test.release.version>16</java.test.release.version>
         <excludedGroups>TestcontainersTests,RequireIllegalAccess</excludedGroups>
+      </properties>
+    </profile>
+    <profile>
+      <id>17</id>
+      <activation>
+        <jdk>[17,)</jdk>
+      </activation>
+      <properties>
+          <derby.version>10.16.1.1</derby.version>
       </properties>
     </profile>
     <profile>
