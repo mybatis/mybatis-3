@@ -134,6 +134,7 @@
     <clirr.comparisonVersion>3.4.6</clirr.comparisonVersion>
     <derby.version>10.17.1.0</derby.version>
     <log4j.version>2.21.1</log4j.version>
+    <mssql-jdbc.version>12.4.2.jre11</mssql-jdbc.version>
 
     <!-- Add slow test groups here and annotate classes similar to @Tag('groupName'). -->
     <!-- Excluded groups are ran on github ci, to force here, pass -d"excludedGroups=" -->
@@ -317,7 +318,7 @@
     <dependency>
       <groupId>com.microsoft.sqlserver</groupId>
       <artifactId>mssql-jdbc</artifactId>
-      <version>12.4.2.jre11</version>
+      <version>${mssql-jdbc.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -430,6 +431,7 @@
       </activation>
       <properties>
           <derby.version>10.15.2.0</derby.version>
+          <mssql-jdbc.version>12.4.2.jre8</mssql-jdbc.version>
       </properties>
       <build>
         <pluginManagement>
