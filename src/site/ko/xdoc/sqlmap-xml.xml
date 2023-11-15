@@ -52,7 +52,7 @@
           <code>update</code> - 매핑된 UPDATE 구문.
         </li>
         <li>
-          <code>delete</code> - 매핑된 DELEETE 구문.
+          <code>delete</code> - 매핑된 DELETE 구문.
         </li>
         <li>
           <code>select</code> - 매핑된 SELECT 구문.
