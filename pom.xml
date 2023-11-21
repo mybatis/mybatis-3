@@ -133,7 +133,7 @@
   <properties>
     <clirr.comparisonVersion>3.4.6</clirr.comparisonVersion>
     <derby.version>10.17.1.0</derby.version>
-    <log4j.version>2.21.1</log4j.version>
+    <log4j.version>2.22.0</log4j.version>
     <mssql-jdbc.version>12.4.2.jre11</mssql-jdbc.version>
 
     <!-- Add slow test groups here and annotate classes similar to @Tag('groupName'). -->
