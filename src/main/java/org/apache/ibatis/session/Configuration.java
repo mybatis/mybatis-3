@@ -95,6 +95,7 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeAliasRegistry;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
+import org.apache.ibatis.util.LockKit;
 
 /**
  * @author Clinton Begin
@@ -166,7 +167,6 @@ public class Configuration {
 
   protected final Set<String> loadedResources = new HashSet<>();
   protected final Map<String, XNode> sqlFragments = new StrictMap<>("XML fragments parsed from previous mappers");
-
   protected final Collection<XMLStatementBuilder> incompleteStatements = new LinkedList<>();
   protected final Collection<CacheRefResolver> incompleteCacheRefs = new LinkedList<>();
   protected final Collection<ResultMapResolver> incompleteResultMaps = new LinkedList<>();
@@ -925,24 +925,36 @@ public class Configuration {
   protected void buildAllStatements() {
     parsePendingResultMaps();
     if (!incompleteCacheRefs.isEmpty()) {
-      synchronized (incompleteCacheRefs) {
+      LockKit.ReentrantLock lock = LockKit.obtainLock(incompleteCacheRefs);
+      lock.lock();
+      try {
         incompleteCacheRefs.removeIf(x -> x.resolveCacheRef() != null);
+      } finally {
+        lock.unlock();
       }
     }
     if (!incompleteStatements.isEmpty()) {
-      synchronized (incompleteStatements) {
+      LockKit.ReentrantLock lock = LockKit.obtainLock(incompleteStatements);
+      lock.lock();
+      try {
         incompleteStatements.removeIf(x -> {
           x.parseStatementNode();
           return true;
         });
+      } finally {
+        lock.unlock();
       }
     }
     if (!incompleteMethods.isEmpty()) {
-      synchronized (incompleteMethods) {
+      LockKit.ReentrantLock lock = LockKit.obtainLock(incompleteMethods);
+      lock.lock();
+      try {
         incompleteMethods.removeIf(x -> {
           x.resolve();
           return true;
         });
+      } finally {
+        lock.unlock();
       }
     }
   }
@@ -951,7 +963,9 @@ public class Configuration {
     if (incompleteResultMaps.isEmpty()) {
       return;
     }
-    synchronized (incompleteResultMaps) {
+    LockKit.ReentrantLock lock = LockKit.obtainLock(incompleteResultMaps);
+    lock.lock();
+    try {
       boolean resolved;
       IncompleteElementException ex = null;
       do {
@@ -971,6 +985,8 @@ public class Configuration {
         // At least one result map is unresolvable.
         throw ex;
       }
+    } finally {
+      lock.unlock();
     }
   }
 

@@ -25,6 +25,7 @@ import org.apache.ibatis.reflection.ExceptionUtil;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.property.PropertyCopier;
 import org.apache.ibatis.reflection.property.PropertyNamer;
+import org.apache.ibatis.util.LockKit;
 
 /**
  * @author Clinton Begin
@@ -38,7 +39,7 @@ public abstract class AbstractEnhancedDeserializationProxy {
   private final ObjectFactory objectFactory;
   private final List<Class<?>> constructorArgTypes;
   private final List<Object> constructorArgs;
-  private final Object reloadingPropertyLock;
+  private final LockKit.ReentrantLock reentrantLock;
   private boolean reloadingProperty;
 
   protected AbstractEnhancedDeserializationProxy(Class<?> type,
@@ -49,7 +50,7 @@ public abstract class AbstractEnhancedDeserializationProxy {
     this.objectFactory = objectFactory;
     this.constructorArgTypes = constructorArgTypes;
     this.constructorArgs = constructorArgs;
-    this.reloadingPropertyLock = new Object();
+    this.reentrantLock = new LockKit.ReentrantLock();
     this.reloadingProperty = false;
   }
 
@@ -68,7 +69,8 @@ public abstract class AbstractEnhancedDeserializationProxy {
         return this.newSerialStateHolder(original, unloadedProperties, objectFactory, constructorArgTypes,
             constructorArgs);
       }
-      synchronized (this.reloadingPropertyLock) {
+      reentrantLock.lock();
+      try {
         if (!FINALIZE_METHOD.equals(methodName) && PropertyNamer.isProperty(methodName) && !reloadingProperty) {
           final String property = PropertyNamer.methodToProperty(methodName);
           final String propertyKey = property.toUpperCase(Locale.ENGLISH);
@@ -93,6 +95,8 @@ public abstract class AbstractEnhancedDeserializationProxy {
         }
 
         return enhanced;
+      } finally {
+        reentrantLock.unlock();
       }
     } catch (Throwable t) {
       throw ExceptionUtil.unwrapThrowable(t);

@@ -38,6 +38,7 @@ import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.property.PropertyCopier;
 import org.apache.ibatis.reflection.property.PropertyNamer;
 import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.util.LockKit;
 
 /**
  * @author Clinton Begin
@@ -134,40 +135,42 @@ public class CglibProxyFactory implements ProxyFactory {
     @Override
     public Object intercept(Object enhanced, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
       final String methodName = method.getName();
+      LockKit.ReentrantLock lock = LockKit.obtainLock(lazyLoader);
+      lock.lock();
       try {
-        synchronized (lazyLoader) {
-          if (WRITE_REPLACE_METHOD.equals(methodName)) {
-            Object original;
-            if (constructorArgTypes.isEmpty()) {
-              original = objectFactory.create(type);
-            } else {
-              original = objectFactory.create(type, constructorArgTypes, constructorArgs);
-            }
-            PropertyCopier.copyBeanProperties(type, enhanced, original);
-            if (lazyLoader.size() > 0) {
-              return new CglibSerialStateHolder(original, lazyLoader.getProperties(), objectFactory,
-                  constructorArgTypes, constructorArgs);
-            } else {
-              return original;
-            }
+        if (WRITE_REPLACE_METHOD.equals(methodName)) {
+          Object original;
+          if (constructorArgTypes.isEmpty()) {
+            original = objectFactory.create(type);
+          } else {
+            original = objectFactory.create(type, constructorArgTypes, constructorArgs);
           }
-          if (lazyLoader.size() > 0 && !FINALIZE_METHOD.equals(methodName)) {
-            if (aggressive || lazyLoadTriggerMethods.contains(methodName)) {
-              lazyLoader.loadAll();
-            } else if (PropertyNamer.isSetter(methodName)) {
-              final String property = PropertyNamer.methodToProperty(methodName);
-              lazyLoader.remove(property);
-            } else if (PropertyNamer.isGetter(methodName)) {
-              final String property = PropertyNamer.methodToProperty(methodName);
-              if (lazyLoader.hasLoader(property)) {
-                lazyLoader.load(property);
-              }
+          PropertyCopier.copyBeanProperties(type, enhanced, original);
+          if (lazyLoader.size() > 0) {
+            return new CglibSerialStateHolder(original, lazyLoader.getProperties(), objectFactory, constructorArgTypes,
+                constructorArgs);
+          } else {
+            return original;
+          }
+        }
+        if (lazyLoader.size() > 0 && !FINALIZE_METHOD.equals(methodName)) {
+          if (aggressive || lazyLoadTriggerMethods.contains(methodName)) {
+            lazyLoader.loadAll();
+          } else if (PropertyNamer.isSetter(methodName)) {
+            final String property = PropertyNamer.methodToProperty(methodName);
+            lazyLoader.remove(property);
+          } else if (PropertyNamer.isGetter(methodName)) {
+            final String property = PropertyNamer.methodToProperty(methodName);
+            if (lazyLoader.hasLoader(property)) {
+              lazyLoader.load(property);
             }
           }
         }
         return methodProxy.invokeSuper(enhanced, args);
       } catch (Throwable t) {
         throw ExceptionUtil.unwrapThrowable(t);
+      } finally {
+        lock.unlock();
       }
     }
   }

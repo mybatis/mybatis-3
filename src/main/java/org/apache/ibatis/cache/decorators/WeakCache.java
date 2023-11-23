@@ -21,6 +21,7 @@ import java.util.Deque;
 import java.util.LinkedList;
 
 import org.apache.ibatis.cache.Cache;
+import org.apache.ibatis.util.LockKit;
 
 /**
  * Weak Reference cache decorator.
@@ -73,11 +74,15 @@ public class WeakCache implements Cache {
       if (result == null) {
         delegate.removeObject(key);
       } else {
-        synchronized (hardLinksToAvoidGarbageCollection) {
+        LockKit.ReentrantLock lock = LockKit.obtainLock(hardLinksToAvoidGarbageCollection);
+        lock.lock();
+        try {
           hardLinksToAvoidGarbageCollection.addFirst(result);
           if (hardLinksToAvoidGarbageCollection.size() > numberOfHardLinks) {
             hardLinksToAvoidGarbageCollection.removeLast();
           }
+        } finally {
+          lock.unlock();
         }
       }
     }
@@ -94,8 +99,12 @@ public class WeakCache implements Cache {
 
   @Override
   public void clear() {
-    synchronized (hardLinksToAvoidGarbageCollection) {
+    LockKit.ReentrantLock lock = LockKit.obtainLock(hardLinksToAvoidGarbageCollection);
+    lock.lock();
+    try {
       hardLinksToAvoidGarbageCollection.clear();
+    } finally {
+      lock.unlock();
     }
     removeGarbageCollectedItems();
     delegate.clear();

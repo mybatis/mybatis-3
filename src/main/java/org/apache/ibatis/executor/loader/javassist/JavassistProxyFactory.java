@@ -19,6 +19,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.Proxy;
@@ -99,7 +100,7 @@ public class JavassistProxyFactory implements org.apache.ibatis.executor.loader.
   }
 
   private static class EnhancedResultObjectProxyImpl implements MethodHandler {
-
+    private final ReentrantLock reentrantLock = new ReentrantLock();
     private final Class<?> type;
     private final ResultLoaderMap lazyLoader;
     private final boolean aggressive;
@@ -132,40 +133,41 @@ public class JavassistProxyFactory implements org.apache.ibatis.executor.loader.
     @Override
     public Object invoke(Object enhanced, Method method, Method methodProxy, Object[] args) throws Throwable {
       final String methodName = method.getName();
+      reentrantLock.lock();
       try {
-        synchronized (lazyLoader) {
-          if (WRITE_REPLACE_METHOD.equals(methodName)) {
-            Object original;
-            if (constructorArgTypes.isEmpty()) {
-              original = objectFactory.create(type);
-            } else {
-              original = objectFactory.create(type, constructorArgTypes, constructorArgs);
-            }
-            PropertyCopier.copyBeanProperties(type, enhanced, original);
-            if (lazyLoader.size() > 0) {
-              return new JavassistSerialStateHolder(original, lazyLoader.getProperties(), objectFactory,
-                  constructorArgTypes, constructorArgs);
-            } else {
-              return original;
-            }
+        if (WRITE_REPLACE_METHOD.equals(methodName)) {
+          Object original;
+          if (constructorArgTypes.isEmpty()) {
+            original = objectFactory.create(type);
+          } else {
+            original = objectFactory.create(type, constructorArgTypes, constructorArgs);
           }
-          if (lazyLoader.size() > 0 && !FINALIZE_METHOD.equals(methodName)) {
-            if (aggressive || lazyLoadTriggerMethods.contains(methodName)) {
-              lazyLoader.loadAll();
-            } else if (PropertyNamer.isSetter(methodName)) {
-              final String property = PropertyNamer.methodToProperty(methodName);
-              lazyLoader.remove(property);
-            } else if (PropertyNamer.isGetter(methodName)) {
-              final String property = PropertyNamer.methodToProperty(methodName);
-              if (lazyLoader.hasLoader(property)) {
-                lazyLoader.load(property);
-              }
+          PropertyCopier.copyBeanProperties(type, enhanced, original);
+          if (lazyLoader.size() > 0) {
+            return new JavassistSerialStateHolder(original, lazyLoader.getProperties(), objectFactory,
+                constructorArgTypes, constructorArgs);
+          } else {
+            return original;
+          }
+        }
+        if (lazyLoader.size() > 0 && !FINALIZE_METHOD.equals(methodName)) {
+          if (aggressive || lazyLoadTriggerMethods.contains(methodName)) {
+            lazyLoader.loadAll();
+          } else if (PropertyNamer.isSetter(methodName)) {
+            final String property = PropertyNamer.methodToProperty(methodName);
+            lazyLoader.remove(property);
+          } else if (PropertyNamer.isGetter(methodName)) {
+            final String property = PropertyNamer.methodToProperty(methodName);
+            if (lazyLoader.hasLoader(property)) {
+              lazyLoader.load(property);
             }
           }
         }
         return methodProxy.invoke(enhanced, args);
       } catch (Throwable t) {
         throw ExceptionUtil.unwrapThrowable(t);
+      } finally {
+        reentrantLock.unlock();
       }
     }
   }

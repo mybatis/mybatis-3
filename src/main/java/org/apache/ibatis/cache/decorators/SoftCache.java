@@ -21,6 +21,7 @@ import java.util.Deque;
 import java.util.LinkedList;
 
 import org.apache.ibatis.cache.Cache;
+import org.apache.ibatis.util.LockKit;
 
 /**
  * Soft Reference cache decorator.
@@ -74,11 +75,15 @@ public class SoftCache implements Cache {
         delegate.removeObject(key);
       } else {
         // See #586 (and #335) modifications need more than a read lock
-        synchronized (hardLinksToAvoidGarbageCollection) {
+        LockKit.ReentrantLock lock = LockKit.obtainLock(hardLinksToAvoidGarbageCollection);
+        lock.lock();
+        try {
           hardLinksToAvoidGarbageCollection.addFirst(result);
           if (hardLinksToAvoidGarbageCollection.size() > numberOfHardLinks) {
             hardLinksToAvoidGarbageCollection.removeLast();
           }
+        } finally {
+          lock.unlock();
         }
       }
     }
@@ -95,8 +100,12 @@ public class SoftCache implements Cache {
 
   @Override
   public void clear() {
-    synchronized (hardLinksToAvoidGarbageCollection) {
+    LockKit.ReentrantLock lock = LockKit.obtainLock(hardLinksToAvoidGarbageCollection);
+    lock.lock();
+    try {
       hardLinksToAvoidGarbageCollection.clear();
+    } finally {
+      lock.unlock();
     }
     removeGarbageCollectedItems();
     delegate.clear();
