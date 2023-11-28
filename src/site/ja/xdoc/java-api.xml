@@ -430,7 +430,7 @@ void rollback(boolean force)</source>
         <td>マップドステートメントの属性</td>
         <td>このアノテーションを使うと、通常マップドステートメントの属性として指定される多様なスイッチや設定オプションにアクセスすることができます。<code>Options</code> アノテーションによって、各ステートメントのアノテーションを複雑化することなく、一貫したクリーンな方法で設定にアクセスできるよう工夫されています。キー: Attributes:
         <code>useCache=true</code>, <code>flushCache=FlushCachePolicy.DEFAULT</code>, <code>resultSetType=DEFAULT</code>,
-        <code>statementType=PREPARED</code>, <code>fetchSize=-1</code>, <code>timeout=-1</code>,
+        <code>statementType=PREPARED</code>, <code>fetchSize=-1</code>, <code>timeout=-1</code>, <code>timeoutString=""</code>,
         <code>useGeneratedKeys=false</code>, <code>keyProperty=""</code>, <code>keyColumn=""</code>, <code>resultSets=""</code>,
         <code>databaseId=""</code>.
         Java アノテーションを使う場合、値として <code>null</code> を指定することはできないという制限があります。これはどういうことかというと、<code>Options</code> アノテーションを付加したステートメントにはデフォルトのオプションが適用されるということです。予期しない動作を防ぐため、各オプションのデフォルト値を把握しておくようにしてください。

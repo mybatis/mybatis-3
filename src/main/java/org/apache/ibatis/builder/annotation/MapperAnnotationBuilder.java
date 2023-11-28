@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -80,6 +81,7 @@ import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.mapping.StatementType;
+import org.apache.ibatis.parsing.GenericTokenParser;
 import org.apache.ibatis.parsing.PropertyParser;
 import org.apache.ibatis.reflection.TypeParameterResolver;
 import org.apache.ibatis.scripting.LanguageDriver;
@@ -100,6 +102,8 @@ public class MapperAnnotationBuilder {
       .of(Select.class, Update.class, Insert.class, Delete.class, SelectProvider.class, UpdateProvider.class,
           InsertProvider.class, DeleteProvider.class)
       .collect(Collectors.toSet());
+
+  private static final GenericTokenParser TOKEN_PARSER = new GenericTokenParser("${", "}", t -> t);
 
   private final Configuration configuration;
   private final MapperBuilderAssistant assistant;
@@ -345,7 +349,8 @@ public class MapperAnnotationBuilder {
         useCache = options.useCache();
         // issue #348
         fetchSize = options.fetchSize() > -1 || options.fetchSize() == Integer.MIN_VALUE ? options.fetchSize() : null;
-        timeout = options.timeout() > -1 ? options.timeout() : null;
+        Integer fallbackTimeout = options.timeout() > -1 ? options.timeout() : null;
+        timeout = parseStringValue(options.timeoutString(), fallbackTimeout, Integer::parseInt);
         statementType = options.statementType();
         if (options.resultSetType() != ResultSetType.DEFAULT) {
           resultSetType = options.resultSetType();
@@ -370,6 +375,19 @@ public class MapperAnnotationBuilder {
           // ResultSets
           options != null ? nullOrEmpty(options.resultSets()) : null, statementAnnotation.isDirtySelect());
     });
+  }
+
+  private <T> T parseStringValue(String valueString, T fallbackValue, Function<String, T> valueTypeConverter) {
+    if (valueString.isEmpty()) {
+      return fallbackValue;
+    } else {
+      Properties variables = new Properties();
+      Optional.ofNullable(fallbackValue).map(String::valueOf)
+          .ifPresent(x -> variables.setProperty(TOKEN_PARSER.parse(valueString), x));
+      variables.putAll(configuration.getVariables());
+      return Optional.ofNullable(PropertyParser.parse(valueString, variables)).map(valueTypeConverter)
+          .orElse(fallbackValue);
+    }
   }
 
   private LanguageDriver getLanguageDriver(Method method) {

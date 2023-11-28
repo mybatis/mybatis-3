@@ -17,6 +17,8 @@ package org.apache.ibatis.builder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Properties;
+
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
@@ -25,6 +27,7 @@ import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.mapping.StatementType;
+import org.apache.ibatis.parsing.PropertyParser;
 import org.apache.ibatis.session.Configuration;
 import org.junit.jupiter.api.Test;
 
@@ -93,6 +96,26 @@ class AnnotationMapperBuilderTest {
     assertThat(mappedStatement.getResultSetType()).isEqualTo(ResultSetType.DEFAULT);
   }
 
+  @Test
+  void timeout() {
+    Configuration configuration = new Configuration();
+    Properties variables = new Properties();
+    variables.setProperty(PropertyParser.KEY_ENABLE_DEFAULT_VALUE, "true");
+    variables.setProperty("timeout.select1", "200");
+    configuration.setVariables(variables);
+    MapperAnnotationBuilder builder = new MapperAnnotationBuilder(configuration, TimeoutMapper.class);
+    builder.parse();
+
+    assertThat(configuration.getMappedStatement("selectWithTimeoutStringByNumber").getTimeout()).isEqualTo(10);
+    assertThat(configuration.getMappedStatement("selectWithTimeoutStringByVariable").getTimeout()).isEqualTo(200);
+    assertThat(configuration.getMappedStatement("selectWithTimeoutStringByVariableDefaultValue").getTimeout())
+        .isEqualTo(30);
+    assertThat(configuration.getMappedStatement("selectWithTimeoutAndTimeoutStringVariableFound").getTimeout())
+        .isEqualTo(200);
+    assertThat(configuration.getMappedStatement("selectWithTimeoutAndTimeoutStringVariableNotFound").getTimeout())
+        .isEqualTo(40);
+  }
+
   interface Mapper {
 
     @Insert("insert into test (name) values(#{name})")
@@ -110,6 +133,28 @@ class AnnotationMapperBuilderTest {
     @Select("select * from test")
     String selectWithoutOptions(Integer id);
 
+  }
+
+  interface TimeoutMapper {
+    @Select("select * from test")
+    @Options(timeoutString = "10")
+    String selectWithTimeoutStringByNumber(Integer id);
+
+    @Select("select * from test")
+    @Options(timeoutString = "${timeout.select1}")
+    String selectWithTimeoutStringByVariable(Integer id);
+
+    @Select("select * from test")
+    @Options(timeoutString = "${timeout.select2:30}")
+    String selectWithTimeoutStringByVariableDefaultValue(Integer id);
+
+    @Select("select * from test")
+    @Options(timeout = 20, timeoutString = "${timeout.select1}")
+    String selectWithTimeoutAndTimeoutStringVariableFound(Integer id);
+
+    @Select("select * from test")
+    @Options(timeout = 40, timeoutString = "${timeout.select3}")
+    String selectWithTimeoutAndTimeoutStringVariableNotFound(Integer id);
   }
 
 }

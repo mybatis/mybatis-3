@@ -541,6 +541,7 @@ void rollback(boolean force)</source>
     statementType=PREPARED,
     fetchSize=-1,
     timeout=-1,
+    timeoutString="",
     useGeneratedKeys=false,
     keyProperty=“”,
     keyColumn=“”,
