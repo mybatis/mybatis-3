@@ -468,7 +468,7 @@ ps.setInt(1,id);]]></source>
         </table>
 
         <p>
-          在一些特殊情况下，一些数据库允许INSERT、UPDATE或DELETE语句返回结果集（例如：PostgreSQL和MariaDB数据库的<code>RETURNING</code>子句，或者是MS SQL Server的<code>OUTPUT</code>子句）。这种类型的语句必须使用<code><![CDATA[<select>]]></code>，用于映射返回的数据。
+          在一些特殊情况下，一些数据库允许 INSERT、UPDATE 或 DELETE 语句返回结果集（例如：PostgreSQL 和 MariaDB 数据库的 <code>RETURNING</code> 子句，或者是 MS SQL Server 的 <code>OUTPUT</code> 子句）。这种类型的语句必须使用 <code><![CDATA[<select>]]></code>，用于映射返回的数据。
         </p>
 
         <source><![CDATA[<select id="insertAndGetAuthor" resultType="domain.blog.Author"
