@@ -468,7 +468,7 @@ ps.setInt(1,id);]]></source>
         </table>
 
         <p>
-          As an irregular case, some databases allow INSERT, UPDATE or DELETE statement to return result set (e.g. <code>RETURNING</code> clause of PostgreSQL and MariaDB or <code>OUTPUT</code> clause of MS SQL Server). This type of statement must be written as <code><![CDATA[<select>]]></code> to map the returned data.
+          在一些特殊情况下，一些数据库允许INSERT、UPDATE或DELETE语句返回结果集（例如：PostgreSQL和MariaDB数据库的<code>RETURNING</code>子句，或者是MS SQL Server的<code>OUTPUT</code>子句）。这种类型的语句必须使用<code><![CDATA[<select>]]></code>，用于映射返回的数据。
         </p>
 
         <source><![CDATA[<select id="insertAndGetAuthor" resultType="domain.blog.Author"
