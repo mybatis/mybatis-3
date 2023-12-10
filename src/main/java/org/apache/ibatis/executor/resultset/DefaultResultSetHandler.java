@@ -245,7 +245,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     ResultSet rs = stmt.getResultSet();
     while (rs == null) {
       // move forward to get the first resultset in case the driver
-      // doesn't return the resultset as the first result (HSQLDB 2.1)
+      // doesn't return the resultset as the first result (HSQLDB)
       if (stmt.getMoreResults()) {
         rs = stmt.getResultSet();
       } else if (stmt.getUpdateCount() == -1) {

@@ -76,7 +76,7 @@ class TimestampWithTimezoneTypeHandlerTest {
     }
   }
 
-  @Disabled("HSQLDB 2.4.1 does not support this.")
+  @Disabled("HSQLDB does not support this.")
   @Test
   void shouldInsertOffsetTime() {
     OffsetTime ot = OffsetTime.of(11, 22, 33, 123456000, ZoneOffset.ofHoursMinutes(1, 23));
