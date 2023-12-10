@@ -261,7 +261,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     try {
       if (stmt.getConnection().getMetaData().supportsMultipleResultSets()) {
         // Crazy Standard JDBC way of determining if there are more results
-        // DO NOT try to 'imporove' the condition even if IDE tells you to!
+        // DO NOT try to 'improve' the condition even if IDE tells you to!
         // It's important that getUpdateCount() is called here.
         if (!(!stmt.getMoreResults() && stmt.getUpdateCount() == -1)) {
           ResultSet rs = stmt.getResultSet();
