@@ -132,6 +132,8 @@
 
   <properties>
     <clirr.comparisonVersion>3.4.6</clirr.comparisonVersion>
+
+    <byte-buddy.version>1.14.10</byte-buddy.version>
     <derby.version>10.17.1.0</derby.version>
     <log4j.version>2.22.0</log4j.version>
     <mssql-jdbc.version>12.4.2.jre11</mssql-jdbc.version>
@@ -264,6 +266,18 @@
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
       <version>3.24.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>net.bytebuddy</groupId>
+      <artifactId>byte-buddy</artifactId>
+      <version>${byte-buddy.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>net.bytebuddy</groupId>
+      <artifactId>byte-buddy-agent</artifactId>
+      <version>${byte-buddy.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
