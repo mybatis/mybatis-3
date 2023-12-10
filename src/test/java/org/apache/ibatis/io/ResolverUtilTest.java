@@ -69,7 +69,7 @@ class ResolverUtilTest {
   @Test
   void findImplementationsWithNullPackageName() {
     ResolverUtil<VFS> resolverUtil = new ResolverUtil<>();
-    resolverUtil.findImplementations(VFS.class, null);
+    resolverUtil.findImplementations(VFS.class, (String[]) null);
     assertEquals(resolverUtil.getClasses().size(), 0);
   }
 
@@ -88,7 +88,7 @@ class ResolverUtilTest {
   @Test
   void findAnnotatedWithNullPackageName() {
     ResolverUtil<Object> resolverUtil = new ResolverUtil<>();
-    resolverUtil.findAnnotated(CacheNamespace.class, null);
+    resolverUtil.findAnnotated(CacheNamespace.class, (String[]) null);
     assertEquals(resolverUtil.getClasses().size(), 0);
   }
 
