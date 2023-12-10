@@ -245,7 +245,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     ResultSet rs = stmt.getResultSet();
     while (rs == null) {
       // move forward to get the first resultset in case the driver
-      // doesn't return the resultset as the first result (HSQLDB 2.1)
+      // doesn't return the resultset as the first result (HSQLDB)
       if (stmt.getMoreResults()) {
         rs = stmt.getResultSet();
       } else if (stmt.getUpdateCount() == -1) {
@@ -261,7 +261,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     try {
       if (stmt.getConnection().getMetaData().supportsMultipleResultSets()) {
         // Crazy Standard JDBC way of determining if there are more results
-        // DO NOT try to 'imporove' the condition even if IDE tells you to!
+        // DO NOT try to 'improve' the condition even if IDE tells you to!
         // It's important that getUpdateCount() is called here.
         if (!(!stmt.getMoreResults() && stmt.getUpdateCount() == -1)) {
           ResultSet rs = stmt.getResultSet();
