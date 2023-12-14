@@ -31,12 +31,10 @@
   <version>3.5.15-SNAPSHOT</version>
 
   <name>mybatis</name>
-  <description>
-    The MyBatis SQL mapper framework makes it easier to use a relational database with object-oriented
+  <description>The MyBatis SQL mapper framework makes it easier to use a relational database with object-oriented
     applications. MyBatis couples objects with stored procedures or SQL statements using a XML descriptor or
     annotations. Simplicity is the biggest advantage of the MyBatis data mapper over object relational mapping
-    tools.
-  </description>
+    tools.</description>
   <url>https://www.mybatis.org/mybatis-3</url>
 
   <inceptionYear>2009</inceptionYear>
@@ -109,10 +107,10 @@
   </contributors>
 
   <scm>
-    <url>https://github.com/mybatis/mybatis-3</url>
     <connection>scm:git:ssh://git@github.com/mybatis/mybatis-3.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/mybatis/mybatis-3.git</developerConnection>
     <tag>HEAD</tag>
+    <url>https://github.com/mybatis/mybatis-3</url>
   </scm>
   <issueManagement>
     <system>GitHub Issue Management</system>
@@ -380,10 +378,10 @@
         <artifactId>maven-shade-plugin</artifactId>
         <executions>
           <execution>
-            <phase>package</phase>
             <goals>
               <goal>shade</goal>
             </goals>
+            <phase>package</phase>
             <configuration>
               <createDependencyReducedPom>false</createDependencyReducedPom>
               <artifactSet>
@@ -448,8 +446,8 @@
         <jdk>(,16)</jdk>
       </activation>
       <properties>
-          <derby.version>10.15.2.0</derby.version>
-          <mssql-jdbc.version>12.4.2.jre8</mssql-jdbc.version>
+        <derby.version>10.15.2.0</derby.version>
+        <mssql-jdbc.version>12.4.2.jre8</mssql-jdbc.version>
       </properties>
       <build>
         <pluginManagement>
@@ -494,7 +492,7 @@
         <jdk>[17,)</jdk>
       </activation>
       <properties>
-          <derby.version>10.16.1.1</derby.version>
+        <derby.version>10.16.1.1</derby.version>
       </properties>
     </profile>
     <profile>
@@ -503,7 +501,7 @@
         <jdk>[19,)</jdk>
       </activation>
       <properties>
-          <derby.version>10.17.1.0</derby.version>
+        <derby.version>10.17.1.0</derby.version>
       </properties>
     </profile>
   </profiles>
