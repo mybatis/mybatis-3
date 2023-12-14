@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ExpressionEvaluator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.scripting.xmltags</a> &gt; <span class="el_source">ExpressionEvaluator.java</span></div><h1>ExpressionEvaluator.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2023 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.scripting.xmltags;
+
+import java.lang.reflect.Array;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.builder.BuilderException;
+
+/**
+ * @author Clinton Begin
+ */
+<span class="fc" id="L29">public class ExpressionEvaluator {</span>
+
+  public boolean evaluateBoolean(String expression, Object parameterObject) {
+<span class="fc" id="L32">    Object value = OgnlCache.getValue(expression, parameterObject);</span>
+<span class="fc bfc" id="L33" title="All 2 branches covered.">    if (value instanceof Boolean) {</span>
+<span class="fc" id="L34">      return (Boolean) value;</span>
+    }
+<span class="fc bfc" id="L36" title="All 2 branches covered.">    if (value instanceof Number) {</span>
+<span class="fc bfc" id="L37" title="All 2 branches covered.">      return new BigDecimal(String.valueOf(value)).compareTo(BigDecimal.ZERO) != 0;</span>
+    }
+<span class="fc bfc" id="L39" title="All 2 branches covered.">    return value != null;</span>
+  }
+
+  /**
+   * @deprecated Since 3.5.9, use the {@link #evaluateIterable(String, Object, boolean)}.
+   */
+  @Deprecated
+  public Iterable&lt;?&gt; evaluateIterable(String expression, Object parameterObject) {
+<span class="fc" id="L47">    return evaluateIterable(expression, parameterObject, false);</span>
+  }
+
+  /**
+   * @since 3.5.9
+   */
+  public Iterable&lt;?&gt; evaluateIterable(String expression, Object parameterObject, boolean nullable) {
+<span class="fc" id="L54">    Object value = OgnlCache.getValue(expression, parameterObject);</span>
+<span class="fc bfc" id="L55" title="All 2 branches covered.">    if (value == null) {</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">      if (nullable) {</span>
+<span class="fc" id="L57">        return null;</span>
+      }
+<span class="fc" id="L59">      throw new BuilderException(&quot;The expression '&quot; + expression + &quot;' evaluated to a null value.&quot;);</span>
+    }
+<span class="fc bfc" id="L61" title="All 2 branches covered.">    if (value instanceof Iterable) {</span>
+<span class="fc" id="L62">      return (Iterable&lt;?&gt;) value;</span>
+    }
+<span class="fc bfc" id="L64" title="All 2 branches covered.">    if (value.getClass().isArray()) {</span>
+      // the array may be primitive, so Arrays.asList() may throw
+      // a ClassCastException (issue 209). Do the work manually
+      // Curse primitives! :) (JGB)
+<span class="fc" id="L68">      int size = Array.getLength(value);</span>
+<span class="fc" id="L69">      List&lt;Object&gt; answer = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L70" title="All 2 branches covered.">      for (int i = 0; i &lt; size; i++) {</span>
+<span class="fc" id="L71">        Object o = Array.get(value, i);</span>
+<span class="fc" id="L72">        answer.add(o);</span>
+      }
+<span class="fc" id="L74">      return answer;</span>
+    }
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">    if (value instanceof Map) {</span>
+<span class="fc" id="L77">      return ((Map) value).entrySet();</span>
+    }
+<span class="nc" id="L79">    throw new BuilderException(</span>
+        &quot;Error evaluating expression '&quot; + expression + &quot;'.  Return value (&quot; + value + &quot;) was not iterable.&quot;);
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

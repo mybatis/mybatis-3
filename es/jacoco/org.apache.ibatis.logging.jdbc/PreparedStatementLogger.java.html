@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PreparedStatementLogger.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.logging.jdbc</a> &gt; <span class="el_source">PreparedStatementLogger.java</span></div><h1>PreparedStatementLogger.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2023 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.logging.jdbc;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.sql.CallableStatement;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.reflection.ExceptionUtil;
+
+/**
+ * PreparedStatement proxy to add logging.
+ *
+ * @author Clinton Begin
+ * @author Eduardo Macarron
+ */
+public final class PreparedStatementLogger extends BaseJdbcLogger implements InvocationHandler {
+
+  private final PreparedStatement statement;
+
+  private PreparedStatementLogger(PreparedStatement stmt, Log statementLog, int queryStack) {
+<span class="fc" id="L39">    super(statementLog, queryStack);</span>
+<span class="fc" id="L40">    this.statement = stmt;</span>
+<span class="fc" id="L41">  }</span>
+
+  @Override
+  public Object invoke(Object proxy, Method method, Object[] params) throws Throwable {
+    try {
+<span class="pc bpc" id="L46" title="1 of 2 branches missed.">      if (Object.class.equals(method.getDeclaringClass())) {</span>
+<span class="nc" id="L47">        return method.invoke(this, params);</span>
+      }
+<span class="fc bfc" id="L49" title="All 2 branches covered.">      if (EXECUTE_METHODS.contains(method.getName())) {</span>
+<span class="pc bpc" id="L50" title="1 of 2 branches missed.">        if (isDebugEnabled()) {</span>
+<span class="fc" id="L51">          debug(&quot;Parameters: &quot; + getParameterValueString(), true);</span>
+        }
+<span class="fc" id="L53">        clearColumnInfo();</span>
+<span class="fc bfc" id="L54" title="All 2 branches covered.">        if (&quot;executeQuery&quot;.equals(method.getName())) {</span>
+<span class="fc" id="L55">          ResultSet rs = (ResultSet) method.invoke(statement, params);</span>
+<span class="pc bpc" id="L56" title="1 of 2 branches missed.">          return rs == null ? null : ResultSetLogger.newInstance(rs, statementLog, queryStack);</span>
+        } else {
+<span class="fc" id="L58">          return method.invoke(statement, params);</span>
+        }
+      }
+<span class="fc bfc" id="L61" title="All 2 branches covered.">      if (SET_METHODS.contains(method.getName())) {</span>
+<span class="fc bfc" id="L62" title="All 2 branches covered.">        if (&quot;setNull&quot;.equals(method.getName())) {</span>
+<span class="fc" id="L63">          setColumn(params[0], null);</span>
+        } else {
+<span class="fc" id="L65">          setColumn(params[0], params[1]);</span>
+        }
+<span class="fc" id="L67">        return method.invoke(statement, params);</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">      } else if (&quot;getResultSet&quot;.equals(method.getName())) {</span>
+<span class="fc" id="L69">        ResultSet rs = (ResultSet) method.invoke(statement, params);</span>
+<span class="pc bpc" id="L70" title="1 of 2 branches missed.">        return rs == null ? null : ResultSetLogger.newInstance(rs, statementLog, queryStack);</span>
+<span class="fc bfc" id="L71" title="All 2 branches covered.">      } else if (&quot;getUpdateCount&quot;.equals(method.getName())) {</span>
+<span class="fc" id="L72">        int updateCount = (Integer) method.invoke(statement, params);</span>
+<span class="pc bpc" id="L73" title="1 of 2 branches missed.">        if (updateCount != -1) {</span>
+<span class="fc" id="L74">          debug(&quot;   Updates: &quot; + updateCount, false);</span>
+        }
+<span class="fc" id="L76">        return updateCount;</span>
+      } else {
+<span class="fc" id="L78">        return method.invoke(statement, params);</span>
+      }
+<span class="nc" id="L80">    } catch (Throwable t) {</span>
+<span class="nc" id="L81">      throw ExceptionUtil.unwrapThrowable(t);</span>
+    }
+  }
+
+  /**
+   * Creates a logging version of a PreparedStatement.
+   *
+   * @param stmt
+   *          - the statement
+   * @param statementLog
+   *          - the statement log
+   * @param queryStack
+   *          - the query stack
+   *
+   * @return - the proxy
+   */
+  public static PreparedStatement newInstance(PreparedStatement stmt, Log statementLog, int queryStack) {
+<span class="fc" id="L98">    InvocationHandler handler = new PreparedStatementLogger(stmt, statementLog, queryStack);</span>
+<span class="fc" id="L99">    ClassLoader cl = PreparedStatement.class.getClassLoader();</span>
+<span class="fc" id="L100">    return (PreparedStatement) Proxy.newProxyInstance(cl,</span>
+        new Class[] { PreparedStatement.class, CallableStatement.class }, handler);
+  }
+
+  /**
+   * Return the wrapped prepared statement.
+   *
+   * @return the PreparedStatement
+   */
+  public PreparedStatement getPreparedStatement() {
+<span class="nc" id="L110">    return statement;</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

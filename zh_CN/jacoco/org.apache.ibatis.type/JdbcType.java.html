@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JdbcType.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.type</a> &gt; <span class="el_source">JdbcType.java</span></div><h1>JdbcType.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2023 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.type;
+
+import java.sql.Types;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * @author Clinton Begin
+ */
+<span class="fc" id="L25">public enum JdbcType {</span>
+  /*
+   * This is added to enable basic support for the ARRAY data type - but a custom type handler is still required
+   */
+<span class="fc" id="L29">  ARRAY(Types.ARRAY),</span>
+
+<span class="fc" id="L31">  BIT(Types.BIT),</span>
+
+<span class="fc" id="L33">  TINYINT(Types.TINYINT),</span>
+
+<span class="fc" id="L35">  SMALLINT(Types.SMALLINT),</span>
+
+<span class="fc" id="L37">  INTEGER(Types.INTEGER),</span>
+
+<span class="fc" id="L39">  BIGINT(Types.BIGINT),</span>
+
+<span class="fc" id="L41">  FLOAT(Types.FLOAT),</span>
+
+<span class="fc" id="L43">  REAL(Types.REAL),</span>
+
+<span class="fc" id="L45">  DOUBLE(Types.DOUBLE),</span>
+
+<span class="fc" id="L47">  NUMERIC(Types.NUMERIC),</span>
+
+<span class="fc" id="L49">  DECIMAL(Types.DECIMAL),</span>
+
+<span class="fc" id="L51">  CHAR(Types.CHAR),</span>
+
+<span class="fc" id="L53">  VARCHAR(Types.VARCHAR),</span>
+
+<span class="fc" id="L55">  LONGVARCHAR(Types.LONGVARCHAR),</span>
+
+<span class="fc" id="L57">  DATE(Types.DATE),</span>
+
+<span class="fc" id="L59">  TIME(Types.TIME),</span>
+
+<span class="fc" id="L61">  TIMESTAMP(Types.TIMESTAMP),</span>
+
+<span class="fc" id="L63">  BINARY(Types.BINARY),</span>
+
+<span class="fc" id="L65">  VARBINARY(Types.VARBINARY),</span>
+
+<span class="fc" id="L67">  LONGVARBINARY(Types.LONGVARBINARY),</span>
+
+<span class="fc" id="L69">  NULL(Types.NULL),</span>
+
+<span class="fc" id="L71">  OTHER(Types.OTHER),</span>
+
+<span class="fc" id="L73">  BLOB(Types.BLOB),</span>
+
+<span class="fc" id="L75">  CLOB(Types.CLOB),</span>
+
+<span class="fc" id="L77">  BOOLEAN(Types.BOOLEAN),</span>
+
+<span class="fc" id="L79">  CURSOR(-10), // Oracle</span>
+
+<span class="fc" id="L81">  UNDEFINED(Integer.MIN_VALUE + 1000),</span>
+
+<span class="fc" id="L83">  NVARCHAR(Types.NVARCHAR), // JDK6</span>
+
+<span class="fc" id="L85">  NCHAR(Types.NCHAR), // JDK6</span>
+
+<span class="fc" id="L87">  NCLOB(Types.NCLOB), // JDK6</span>
+
+<span class="fc" id="L89">  STRUCT(Types.STRUCT),</span>
+
+<span class="fc" id="L91">  JAVA_OBJECT(Types.JAVA_OBJECT),</span>
+
+<span class="fc" id="L93">  DISTINCT(Types.DISTINCT),</span>
+
+<span class="fc" id="L95">  REF(Types.REF),</span>
+
+<span class="fc" id="L97">  DATALINK(Types.DATALINK),</span>
+
+<span class="fc" id="L99">  ROWID(Types.ROWID), // JDK6</span>
+
+<span class="fc" id="L101">  LONGNVARCHAR(Types.LONGNVARCHAR), // JDK6</span>
+
+<span class="fc" id="L103">  SQLXML(Types.SQLXML), // JDK6</span>
+
+<span class="fc" id="L105">  DATETIMEOFFSET(-155), // SQL Server 2008</span>
+
+<span class="fc" id="L107">  TIME_WITH_TIMEZONE(Types.TIME_WITH_TIMEZONE), // JDBC 4.2 JDK8</span>
+
+<span class="fc" id="L109">  TIMESTAMP_WITH_TIMEZONE(Types.TIMESTAMP_WITH_TIMEZONE); // JDBC 4.2 JDK8</span>
+
+  public final int TYPE_CODE;
+<span class="fc" id="L112">  private static final Map&lt;Integer, JdbcType&gt; codeLookup = new HashMap&lt;&gt;();</span>
+
+  static {
+<span class="fc bfc" id="L115" title="All 2 branches covered.">    for (JdbcType type : JdbcType.values()) {</span>
+<span class="fc" id="L116">      codeLookup.put(type.TYPE_CODE, type);</span>
+    }
+<span class="fc" id="L118">  }</span>
+
+<span class="fc" id="L120">  JdbcType(int code) {</span>
+<span class="fc" id="L121">    this.TYPE_CODE = code;</span>
+<span class="fc" id="L122">  }</span>
+
+  public static JdbcType forCode(int code) {
+<span class="fc" id="L125">    return codeLookup.get(code);</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

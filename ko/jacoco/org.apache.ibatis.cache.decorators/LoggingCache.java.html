@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LoggingCache.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.cache.decorators</a> &gt; <span class="el_source">LoggingCache.java</span></div><h1>LoggingCache.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2023 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.cache.decorators;
+
+import org.apache.ibatis.cache.Cache;
+import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.logging.LogFactory;
+
+/**
+ * @author Clinton Begin
+ */
+public class LoggingCache implements Cache {
+
+  private final Log log;
+  private final Cache delegate;
+  protected int requests;
+  protected int hits;
+
+<span class="fc" id="L32">  public LoggingCache(Cache delegate) {</span>
+<span class="fc" id="L33">    this.delegate = delegate;</span>
+<span class="fc" id="L34">    this.log = LogFactory.getLog(getId());</span>
+<span class="fc" id="L35">  }</span>
+
+  @Override
+  public String getId() {
+<span class="fc" id="L39">    return delegate.getId();</span>
+  }
+
+  @Override
+  public int getSize() {
+<span class="fc" id="L44">    return delegate.getSize();</span>
+  }
+
+  @Override
+  public void putObject(Object key, Object object) {
+<span class="fc" id="L49">    delegate.putObject(key, object);</span>
+<span class="fc" id="L50">  }</span>
+
+  @Override
+  public Object getObject(Object key) {
+<span class="fc" id="L54">    requests++;</span>
+<span class="fc" id="L55">    final Object value = delegate.getObject(key);</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">    if (value != null) {</span>
+<span class="fc" id="L57">      hits++;</span>
+    }
+<span class="pc bpc" id="L59" title="1 of 2 branches missed.">    if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L60">      log.debug(&quot;Cache Hit Ratio [&quot; + getId() + &quot;]: &quot; + getHitRatio());</span>
+    }
+<span class="fc" id="L62">    return value;</span>
+  }
+
+  @Override
+  public Object removeObject(Object key) {
+<span class="fc" id="L67">    return delegate.removeObject(key);</span>
+  }
+
+  @Override
+  public void clear() {
+<span class="fc" id="L72">    delegate.clear();</span>
+<span class="fc" id="L73">  }</span>
+
+  @Override
+  public int hashCode() {
+<span class="fc" id="L77">    return delegate.hashCode();</span>
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+<span class="fc" id="L82">    return delegate.equals(obj);</span>
+  }
+
+  private double getHitRatio() {
+<span class="nc" id="L86">    return (double) hits / (double) requests;</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
