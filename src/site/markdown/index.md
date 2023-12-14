@@ -27,7 +27,7 @@ Users can read about MyBatis in following translations:
 <!--      <li class="fr"><a href="./fr/index.html">Français</a></li> -->
           <li class="ja"><a href="./ja/index.html">日本語</a></li>
           <li class="ko"><a href="./ko/index.html">한국어</a></li>
-          <li class="zh"><a href="./zh/index.html">简体中文</a></li>
+          <li class="zh"><a href="./zh_CN/index.html">简体中文</a></li>
 </ul>
 
 Do you want to read about MyBatis in your own native language? File an issue providing patches with your mother tongue documentation!
