@@ -540,7 +540,7 @@ public abstract class AbstractSQL<T> {
    *
    * @see #applyIf(BooleanSupplier, Consumer)
    *
-   * @since 3.5.14
+   * @since 3.5.15
    */
   public T applyIf(boolean applyCondition, Consumer<T> sqlConsumer) {
     T self = getSelf();
@@ -562,7 +562,7 @@ public abstract class AbstractSQL<T> {
    *
    * @see #applyIf(boolean, Consumer)
    *
-   * @since 3.5.14
+   * @since 3.5.15
    */
   public T applyIf(BooleanSupplier applyConditionSupplier, Consumer<T> sqlConsumer) {
     return applyIf(applyConditionSupplier.getAsBoolean(), sqlConsumer);
@@ -581,7 +581,7 @@ public abstract class AbstractSQL<T> {
    * @param <E>
    *          element type of iterable
    *
-   * @since 3.5.14
+   * @since 3.5.15
    */
   public <E> T applyForEach(Iterable<E> iterable, ForEachConsumer<T, E> forEachSqlConsumer) {
     T self = getSelf();
@@ -813,7 +813,7 @@ public abstract class AbstractSQL<T> {
    * @param <E>
    *          Element type of iterable
    *
-   * @since 3.5.14
+   * @since 3.5.15
    */
   public interface ForEachConsumer<T, E> {
 
