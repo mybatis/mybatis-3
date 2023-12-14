@@ -17,7 +17,8 @@
 package org.apache.ibatis.mapping;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -26,6 +27,7 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
+import org.apache.ibatis.builder.BuilderException;
 import org.junit.jupiter.api.Test;
 
 class VendorDatabaseIdProviderTest {
@@ -77,7 +79,12 @@ class VendorDatabaseIdProviderTest {
     VendorDatabaseIdProvider provider = new VendorDatabaseIdProvider();
     Properties properties = new Properties();
     properties.put("Ewok DB", "ewok");
-    assertNull(provider.getDatabaseId(dataSource));
+    try {
+      provider.getDatabaseId(dataSource);
+      fail("Should BuilderException be thrown.");
+    } catch (BuilderException e) {
+      // pass
+    }
   }
 
   private DataSource mockDataSource() throws SQLException {
