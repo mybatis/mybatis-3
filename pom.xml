@@ -28,7 +28,7 @@
 
   <groupId>org.mybatis</groupId>
   <artifactId>mybatis</artifactId>
-  <version>3.5.15-SNAPSHOT</version>
+  <version>3.5.15</version>
 
   <name>mybatis</name>
   <description>The MyBatis SQL mapper framework makes it easier to use a relational database with object-oriented
@@ -109,7 +109,7 @@
   <scm>
     <connection>scm:git:ssh://git@github.com/mybatis/mybatis-3.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/mybatis/mybatis-3.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>mybatis-3.5.15</tag>
     <url>https://github.com/mybatis/mybatis-3</url>
   </scm>
   <issueManagement>
@@ -157,7 +157,7 @@
     <argLine>-Xmx2048m</argLine>
 
     <!-- Reproducible Builds -->
-    <project.build.outputTimestamp>1698763635</project.build.outputTimestamp>
+    <project.build.outputTimestamp>1702532766</project.build.outputTimestamp>
   </properties>
 
   <dependencies>
@@ -371,10 +371,12 @@
           </systemPropertyVariables>
         </configuration>
       </plugin>
+      <!-- Do not run pdf plugin as not compliant with site 2.0
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-pdf-plugin</artifactId>
       </plugin>
+      -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
