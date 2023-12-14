@@ -25,7 +25,7 @@ MyBatis 是一款优秀的持久层框架，它支持自定义 SQL、存储过�
           <!--      <li class="fr"><a href="./fr/index.html">Français</a></li> -->
           <li class="ja"><a href="../ja/index.html">日本語</a></li>
           <li class="ko"><a href="../ko/index.html">한국어</a></li>
-          <li class="zh"><a href="./getting-started.html">简体中文</a></li>
+          <li class="zh"><a href="../zh_CN/getting-started.html">简体中文</a></li>
 </ul>
 
 想用你的母语来了解 MyBatis 吗？那就将文档翻译成你的母语并提供给我们吧！
