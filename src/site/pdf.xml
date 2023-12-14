@@ -16,8 +16,7 @@
        limitations under the License.
 
 -->
-<document xmlns="http://maven.apache.org/DOCUMENT/1.0.1"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<document xmlns="http://maven.apache.org/DOCUMENT/1.0.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/DOCUMENT/1.0.1 https://maven.apache.org/xsd/document-1.0.1.xsd"
   outputName="${project.artifactId}-${project.version}">
 
