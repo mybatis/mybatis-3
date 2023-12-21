@@ -131,7 +131,7 @@
   <properties>
     <clirr.comparisonVersion>3.4.6</clirr.comparisonVersion>
 
-    <byte-buddy.version>1.14.10</byte-buddy.version>
+    <byte-buddy.version>1.14.11</byte-buddy.version>
     <derby.version>10.17.1.0</derby.version>
     <log4j.version>2.22.0</log4j.version>
     <mockito.version>5.8.0</mockito.version>
