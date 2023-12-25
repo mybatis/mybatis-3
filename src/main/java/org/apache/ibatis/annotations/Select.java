@@ -26,15 +26,34 @@ import java.lang.annotation.Target;
  * The annotation that specify an SQL for retrieving record(s).
  * <p>
  * <b>How to use:</b>
- *
- * <pre>
- * public interface UserMapper {
- *   &#064;Select("SELECT id, name FROM users WHERE id = #{id}")
- *   User selectById(int id);
- * }
- * </pre>
+ * <br/>
+ * <ul>
+ *   <li>
+ *   Simple:
+ *   <pre>
+ *   public interface UserMapper {
+ *       &#064;Select("SELECT id, name FROM users WHERE id = #{id}")
+ *       User selectById(int id);
+ *   }
+ *   </pre>
+ *   </li>
+ *   <li>
+ *   Dynamic SQL:
+ *   <pre>
+ *   public interface UserMapper {
+ *       &#064;Select({"&lt;script>",
+ *           "select * from users",
+ *           "where name = #{name}",
+ *           "&lt;if test=\"age != null\"> age = #{age} &lt;/if>",
+ *           "&lt;/script>"})
+ *       User select(@NotNull String name, @Nullable Intger age);
+ *   }
+ *   </pre>
+ *   </li>
+ * </ul>
  *
  * @author Clinton Begin
+ * @see <a href="https://mybatis.org/mybatis-3/dynamic-sql.html">How to use Dynamic SQL</a>
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
@@ -50,7 +69,6 @@ public @interface Select {
 
   /**
    * @return A database id that correspond this statement
-   *
    * @since 3.5.5
    */
   String databaseId() default "";
@@ -60,7 +78,6 @@ public @interface Select {
    * e.g. RETURNING of PostgreSQL or OUTPUT of MS SQL Server.
    *
    * @return {@code true} if this select affects DB data; {@code false} if otherwise
-   *
    * @since 3.5.12
    */
   boolean affectData() default false;
@@ -69,7 +86,6 @@ public @interface Select {
    * The container annotation for {@link Select}.
    *
    * @author Kazuki Shimizu
-   *
    * @since 3.5.5
    */
   @Documented
