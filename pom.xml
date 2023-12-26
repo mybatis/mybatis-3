@@ -388,6 +388,7 @@
             <phase>package</phase>
             <configuration>
               <createDependencyReducedPom>false</createDependencyReducedPom>
+              <createSourcesJar>true</createSourcesJar>
               <artifactSet>
                 <includes>
                   <include>org.mybatis:mybatis</include>
@@ -419,6 +420,7 @@
                   <shadedPattern>org.apache.ibatis.javassist</shadedPattern>
                 </relocation>
               </relocations>
+              <shadeSourcesContent>true</shadeSourcesContent>
             </configuration>
           </execution>
         </executions>
@@ -508,6 +510,33 @@
       <properties>
         <derby.version>10.17.1.0</derby.version>
       </properties>
+    </profile>
+
+    <!-- We are manipulating the phase to run before package so shading will be used for building source jar
+         and further turning off attach here as shading will do that.  This is required for ognl and javassist
+         for IDE's usage -->
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar-no-fork</goal>
+                </goals>
+                <phase>prepare-package</phase>
+                <configuration>
+                  <attach>false</attach>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
   </profiles>
 
