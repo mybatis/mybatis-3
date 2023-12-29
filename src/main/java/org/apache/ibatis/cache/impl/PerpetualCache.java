@@ -23,8 +23,12 @@ import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheException;
 
 /**
- * @author Clinton Begin
- */
+ * @Author marvin
+ * @Description 永不过期的cache
+ * @Date 17:33 2023/11/8
+ * @param null
+ * @return null
+ **/
 public class PerpetualCache implements Cache {
 
   private final String id;

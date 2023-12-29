@@ -138,17 +138,21 @@ public class ClassLoaderWrapper {
   URL getResourceAsURL(String resource, ClassLoader[] classLoader) {
 
     URL url;
-
+    /**
+     * 遍历classLoader数组
+     */
     for (ClassLoader cl : classLoader) {
 
       if (null != cl) {
 
         // look for the resource as passed in...
+        // 不带/的访问
         url = cl.getResource(resource);
 
         // ...but some class loaders want this leading "/", so we'll add it
         // and try again if we didn't find the resource
         if (null == url) {
+          // 带/的访问
           url = cl.getResource("/" + resource);
         }
 

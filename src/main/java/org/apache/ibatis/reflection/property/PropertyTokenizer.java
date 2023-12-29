@@ -18,6 +18,11 @@ package org.apache.ibatis.reflection.property;
 import java.util.Iterator;
 
 /**
+ * @Author marvin
+ * @Description 实现了迭代器方法
+ * @Date 14:03 2023/9/15
+ * 举个例子，在访问 "order[0].item[0].name" 时，我们希望拆分成 "order[0]"、"item[0]"、"name" 三段
+ * @return null
  * @author Clinton Begin
  */
 public class PropertyTokenizer implements Iterator<PropertyTokenizer> {
@@ -27,15 +32,19 @@ public class PropertyTokenizer implements Iterator<PropertyTokenizer> {
   private final String children;
 
   public PropertyTokenizer(String fullname) {
+    // 初始化 name,children字符串，使用.作为分隔
     int delim = fullname.indexOf('.');
     if (delim > -1) {
+      //前端的是name ,后面的是children
       name = fullname.substring(0, delim);
       children = fullname.substring(delim + 1);
     } else {
       name = fullname;
       children = null;
     }
+    // 记录当前name
     indexedName = name;
+    // 若存在[，则获得index,并修改name。
     delim = name.indexOf('[');
     if (delim > -1) {
       index = name.substring(delim + 1, name.length() - 1);

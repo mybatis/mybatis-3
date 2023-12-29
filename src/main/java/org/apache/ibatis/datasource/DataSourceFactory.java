@@ -22,9 +22,19 @@ import javax.sql.DataSource;
  * @author Clinton Begin
  */
 public interface DataSourceFactory {
-
+  /**
+   * @Author marvin
+   * @Description 设置数据源属性
+   * @Date 15:48 2023/9/15
+   * @param props
+   **/
   void setProperties(Properties props);
-
+  /**
+   * @Author marvin
+   * @Description 获取数据源
+   * @Date 15:48 2023/9/15
+   * @return javax.sql.DataSource
+   **/
   DataSource getDataSource();
 
 }

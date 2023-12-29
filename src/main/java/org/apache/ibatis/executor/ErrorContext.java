@@ -19,7 +19,7 @@ package org.apache.ibatis.executor;
  * @author Clinton Begin
  */
 public class ErrorContext {
-
+  // 行分隔符
   private static final String LINE_SEPARATOR = System.getProperty("line.separator","\n");
   private static final ThreadLocal<ErrorContext> LOCAL = new ThreadLocal<>();
 

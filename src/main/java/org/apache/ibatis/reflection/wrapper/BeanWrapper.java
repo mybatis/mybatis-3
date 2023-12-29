@@ -30,7 +30,7 @@ import org.apache.ibatis.reflection.property.PropertyTokenizer;
  * @author Clinton Begin
  */
 public class BeanWrapper extends BaseWrapper {
-
+  // 普通对象
   private final Object object;
   private final MetaClass metaClass;
 
@@ -42,7 +42,9 @@ public class BeanWrapper extends BaseWrapper {
 
   @Override
   public Object get(PropertyTokenizer prop) {
+    // 存在索引信息，则表示属性表达式中的name 部分为集合类型
     if (prop.getIndex() != null) {
+      // 通过MetaObject.getValue方法获取object对象中的指定集合属性
       Object collection = resolveCollection(prop, object);
       return getCollectionValue(prop, collection);
     } else {
@@ -60,6 +62,15 @@ public class BeanWrapper extends BaseWrapper {
     }
   }
 
+  /**
+   * @Author marvin
+   * @Description
+   * @link MetaClass#findProperty(String, boolean)
+   * @Date 16:46 2023/9/15
+   * @param name
+   * @param useCamelCaseMapping
+   * @return java.lang.String
+   **/
   @Override
   public String findProperty(String name, boolean useCamelCaseMapping) {
     return metaClass.findProperty(name, useCamelCaseMapping);

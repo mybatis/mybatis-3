@@ -25,9 +25,23 @@ import org.apache.ibatis.reflection.property.PropertyTokenizer;
  * @author Clinton Begin
  */
 public interface ObjectWrapper {
-
+  /**
+   * @Author marvin
+   * @Description 如果ObjectWrapper中封装的是普通的bean对象，则调用相应的属性的getter方法
+   * 如果封装的是集合类，则获取指定key或者下标对应的value值
+   * @Date 16:41 2023/9/15
+   * @param prop PropertyTokenizer 相当于键
+   * @return java.lang.Object
+   **/
   Object get(PropertyTokenizer prop);
-
+  /**
+   * @Author marvin
+   * @Description 如果ObjectWrapper中封装的是普通的bean对象，则调用相应属性的setter方法
+   * 如果封装是集合类，则设置指定key或者下标对应的value值
+   * @Date 16:42 2023/9/15
+   * @param prop PropertyTokenizer 对象 相当于键
+   * @param value
+   **/
   void set(PropertyTokenizer prop, Object value);
 
   String findProperty(String name, boolean useCamelCaseMapping);

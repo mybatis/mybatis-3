@@ -14,12 +14,33 @@
  *    limitations under the License.
  */
 package org.apache.ibatis.reflection;
+/**
+ * @Author marvin
+ * @Description Reflector工厂接口，用于创建和缓存Reflector对象
+ * @Date 17:43 2023/9/12
 
+ **/
 public interface ReflectorFactory {
-
+  /**
+   * @Author marvin
+   * @Description 是否缓存 Reflector对象
+   * @Date 17:44 2023/9/12
+   * @return boolean
+   **/
   boolean isClassCacheEnabled();
-
+  /**
+   * @Author marvin
+   * @Description 设置是否缓存 Reflector 对象
+   * @Date 17:45 2023/9/12
+   * @param classCacheEnabled
+   **/
   void setClassCacheEnabled(boolean classCacheEnabled);
-
+  /**
+   * @Author marvin
+   * @Description 获取 Reflector 对象
+   * @Date 17:45 2023/9/12
+   * @param type
+   * @return org.apache.ibatis.reflection.Reflector
+   **/
   Reflector findForClass(Class<?> type);
 }

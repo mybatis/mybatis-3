@@ -27,8 +27,13 @@ import org.apache.ibatis.cache.Cache;
  * @author Clinton Begin
  */
 public class FifoCache implements Cache {
-
+  /**
+   * 代理对象
+   */
   private final Cache delegate;
+  /**
+   * 双端队列存储缓存key
+   */
   private final Deque<Object> keyList;
   private int size;
 
@@ -80,7 +85,9 @@ public class FifoCache implements Cache {
   }
 
   private void cycleKeyList(Object key) {
+    // 将key添加到keyList的末尾
     keyList.addLast(key);
+    // 如果keyList的大小大于size，则移除keyList的第一个元素
     if (keyList.size() > size) {
       Object oldestKey = keyList.removeFirst();
       delegate.removeObject(oldestKey);

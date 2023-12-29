@@ -28,6 +28,7 @@ public interface Transaction {
 
   /**
    * Retrieve inner database connection
+   * 获取事务
    * @return DataBase connection
    * @throws SQLException
    */
@@ -35,24 +36,28 @@ public interface Transaction {
 
   /**
    * Commit inner database connection.
+   * 提交事务
    * @throws SQLException
    */
   void commit() throws SQLException;
 
   /**
    * Rollback inner database connection.
+   * 回滚事务
    * @throws SQLException
    */
   void rollback() throws SQLException;
 
   /**
    * Close inner database connection.
+   * 关闭数据库连接
    * @throws SQLException
    */
   void close() throws SQLException;
 
   /**
    * Get transaction timeout if set
+   * 获取事务超时时间
    * @throws SQLException
    */
   Integer getTimeout() throws SQLException;

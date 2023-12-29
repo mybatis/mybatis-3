@@ -91,7 +91,9 @@ public class LruCache implements Cache {
   }
 
   private void cycleKeyList(Object key) {
+    // 将key放入keyMap中
     keyMap.put(key, key);
+    // 如果eldestKey不为空，则从delegate中移除eldestKey
     if (eldestKey != null) {
       delegate.removeObject(eldestKey);
       eldestKey = null;

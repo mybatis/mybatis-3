@@ -28,18 +28,27 @@ import org.apache.ibatis.reflection.SystemMetaObject;
  * @author Clinton Begin
  */
 public class UnpooledDataSourceFactory implements DataSourceFactory {
-
+  //驱动属性前缀
   private static final String DRIVER_PROPERTY_PREFIX = "driver.";
+
+  // 驱动属性前缀的长度
   private static final int DRIVER_PROPERTY_PREFIX_LENGTH = DRIVER_PROPERTY_PREFIX.length();
-
+  // 数据源
   protected DataSource dataSource;
-
+  // 构造防范
   public UnpooledDataSourceFactory() {
     this.dataSource = new UnpooledDataSource();
   }
 
+  /**
+   * @Author marvin
+   * @Description 设置属性
+   * @Date 15:50 2023/9/15
+   * @param properties
+   **/
   @Override
   public void setProperties(Properties properties) {
+    // 创建驱动属性 Properties 对象
     Properties driverProperties = new Properties();
     MetaObject metaDataSource = SystemMetaObject.forObject(dataSource);
     for (Object key : properties.keySet()) {

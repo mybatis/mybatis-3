@@ -54,6 +54,7 @@ public class MetaClass {
   }
 
   public String findProperty(String name, boolean useCamelCaseMapping) {
+    //是否使用驼峰
     if (useCamelCaseMapping) {
       name = name.replace("_", "");
     }
@@ -79,12 +80,17 @@ public class MetaClass {
   }
 
   public Class<?> getGetterType(String name) {
+    // 创建PropertyTokenizer 对象，对name 分词
     PropertyTokenizer prop = new PropertyTokenizer(name);
+    // 有子表达式
     if (prop.hasNext()) {
+      // 创建MetaClass 对象
       MetaClass metaProp = metaClassForProperty(prop);
+      // 递归
       return metaProp.getGetterType(prop.getChildren());
     }
     // issue #506. Resolve the type inside a Collection Object
+    // 直接获得返回值类型
     return getGetterType(prop);
   }
 
@@ -92,9 +98,17 @@ public class MetaClass {
     Class<?> propType = getGetterType(prop);
     return MetaClass.forClass(propType, reflectorFactory);
   }
-
+  /**
+   * @Author marvin
+   * @Description 获取get 返回的类型
+   * @Date 15:30 2023/9/15
+   * @param prop
+   * @return java.lang.Class<?>
+   **/
   private Class<?> getGetterType(PropertyTokenizer prop) {
+    // 获取属性返回的类型
     Class<?> type = reflector.getGetterType(prop.getName());
+    // 判断是否为集合类型
     if (prop.getIndex() != null && Collection.class.isAssignableFrom(type)) {
       Type returnType = getGenericGetterType(prop.getName());
       if (returnType instanceof ParameterizedType) {
@@ -146,15 +160,22 @@ public class MetaClass {
   }
 
   public boolean hasGetter(String name) {
+    // 创建PropertyTokenizer对象，对name进行分词
     PropertyTokenizer prop = new PropertyTokenizer(name);
+    // 有子表达式
     if (prop.hasNext()) {
+      // 判断是否有该属性的get方法
       if (reflector.hasGetter(prop.getName())) {
+        // 创建MetaClass对象
         MetaClass metaProp = metaClassForProperty(prop);
+        // 递归判断子表达式children 是否有get方法
         return metaProp.hasGetter(prop.getChildren());
       } else {
         return false;
       }
+      // 无子表达式
     } else {
+      // 判断是否有该属性的get方法
       return reflector.hasGetter(prop.getName());
     }
   }
@@ -168,16 +189,24 @@ public class MetaClass {
   }
 
   private StringBuilder buildProperty(String name, StringBuilder builder) {
+    // 创建PropertyTokenizer 对象，对name 进行分词
     PropertyTokenizer prop = new PropertyTokenizer(name);
+    // 有子表达式
     if (prop.hasNext()) {
+      // 获得属性名，并添加到builder中
       String propertyName = reflector.findPropertyName(prop.getName());
       if (propertyName != null) {
+        // 拼接属性到builder
         builder.append(propertyName);
         builder.append(".");
+        // 创建metaclass 对象
         MetaClass metaProp = metaClassForProperty(propertyName);
+        // 递归解析子表达式 children ，并将结果添加到 builder 中
         metaProp.buildProperty(prop.getChildren(), builder);
       }
+      // 无子表达式
     } else {
+      // 获得属性名，并添加到builder中
       String propertyName = reflector.findPropertyName(name);
       if (propertyName != null) {
         builder.append(propertyName);

@@ -28,12 +28,20 @@ import org.apache.ibatis.reflection.property.PropertyTokenizer;
 public abstract class BaseWrapper implements ObjectWrapper {
 
   protected static final Object[] NO_ARGUMENTS = new Object[0];
+  // MetaObject 对象
   protected final MetaObject metaObject;
 
   protected BaseWrapper(MetaObject metaObject) {
     this.metaObject = metaObject;
   }
-
+  /**
+   * @Author marvin
+   * @Description 获得指定属性的值
+   * @Date 16:50 2023/9/15
+   * @param prop
+   * @param object
+   * @return java.lang.Object
+   **/
   protected Object resolveCollection(PropertyTokenizer prop, Object object) {
     if ("".equals(prop.getName())) {
       return object;
@@ -41,11 +49,20 @@ public abstract class BaseWrapper implements ObjectWrapper {
       return metaObject.getValue(prop.getName());
     }
   }
-
+  /**
+   * @Author marvin
+   * @Description 获得集合中指定位置的值
+   * @Date 16:50 2023/9/15
+   * @param prop
+   * @param collection
+   * @return java.lang.Object
+   **/
   protected Object getCollectionValue(PropertyTokenizer prop, Object collection) {
+    // 如果是map类型，则index 是key
     if (collection instanceof Map) {
       return ((Map) collection).get(prop.getIndex());
     } else {
+      // 如果是其他集合类型，则index 为下标
       int i = Integer.parseInt(prop.getIndex());
       if (collection instanceof List) {
         return ((List) collection).get(i);
@@ -72,7 +89,14 @@ public abstract class BaseWrapper implements ObjectWrapper {
       }
     }
   }
-
+  /**
+   * @Author marvin
+   * @Description 设置集合中指定位置的值
+   * @Date 16:50 2023/9/15
+   * @param prop
+   * @param collection
+   * @param value
+   **/
   protected void setCollectionValue(PropertyTokenizer prop, Object collection, Object value) {
     if (collection instanceof Map) {
       ((Map) collection).put(prop.getIndex(), value);

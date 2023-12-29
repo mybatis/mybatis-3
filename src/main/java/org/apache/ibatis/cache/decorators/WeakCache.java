@@ -30,9 +30,21 @@ import org.apache.ibatis.cache.Cache;
  * @author Clinton Begin
  */
 public class WeakCache implements Cache {
+  /**
+   * 强引用的健的队列
+   */
   private final Deque<Object> hardLinksToAvoidGarbageCollection;
+  /**
+   * 被 GC 回收的 WeakEntry 集合，避免被 GC。
+   */
   private final ReferenceQueue<Object> queueOfGarbageCollectedEntries;
+  /**
+   * 装饰的cache对象
+   */
   private final Cache delegate;
+  /**
+   * {@link #hardLinksToAvoidGarbageCollection} 的最大容量
+   */
   private int numberOfHardLinks;
 
   public WeakCache(Cache delegate) {

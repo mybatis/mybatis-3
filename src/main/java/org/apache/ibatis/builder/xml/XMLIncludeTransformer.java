@@ -30,6 +30,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
+ *  xml include 标签转换器
  * @author Frank D. Martinez [mnesarco]
  */
 public class XMLIncludeTransformer {
@@ -43,11 +44,13 @@ public class XMLIncludeTransformer {
   }
 
   public void applyIncludes(Node source) {
+    // 创建variablesContext，并将configurationVariables 添加到其中
     Properties variablesContext = new Properties();
     Properties configurationVariables = configuration.getVariables();
     if (configurationVariables != null) {
       variablesContext.putAll(configurationVariables);
     }
+    //处理include
     applyIncludes(source, variablesContext, false);
   }
 
@@ -57,6 +60,7 @@ public class XMLIncludeTransformer {
    * @param variablesContext Current context for static variables with values
    */
   private void applyIncludes(Node source, final Properties variablesContext, boolean included) {
+    // 如果是include 标签
     if (source.getNodeName().equals("include")) {
       Node toInclude = findSqlFragment(getStringAttribute(source, "refid"), variablesContext);
       Properties toIncludeContext = getVariablesContext(source, variablesContext);
@@ -69,6 +73,7 @@ public class XMLIncludeTransformer {
         toInclude.getParentNode().insertBefore(toInclude.getFirstChild(), toInclude);
       }
       toInclude.getParentNode().removeChild(toInclude);
+      // 如果节点类型为Node.ELEMENT_NODE
     } else if (source.getNodeType() == Node.ELEMENT_NODE) {
       if (included && !variablesContext.isEmpty()) {
         // replace variables in attribute values
@@ -82,6 +87,7 @@ public class XMLIncludeTransformer {
       for (int i = 0; i < children.getLength(); i++) {
         applyIncludes(children.item(i), variablesContext, included);
       }
+      // 如果在处理include 标签中，并且节点类型为Node.TEXT_NODE并且变量不为空
     } else if (included && source.getNodeType() == Node.TEXT_NODE
         && !variablesContext.isEmpty()) {
       // replace variables in text node
@@ -90,10 +96,14 @@ public class XMLIncludeTransformer {
   }
 
   private Node findSqlFragment(String refid, Properties variables) {
+    // 因为 refid 可能是动态变量，所以进行替换
     refid = PropertyParser.parse(refid, variables);
+    // 获得完整的 refid ，格式为 "${namespace}.${refid}"
     refid = builderAssistant.applyCurrentNamespace(refid, true);
     try {
+      // 获得对应的 <sql /> 节点
       XNode nodeToInclude = configuration.getSqlFragments().get(refid);
+      // 获得 Node 节点，进行克隆
       return nodeToInclude.getNode().cloneNode(true);
     } catch (IllegalArgumentException e) {
       throw new IncompleteElementException("Could not find SQL statement to include with refid '" + refid + "'", e);

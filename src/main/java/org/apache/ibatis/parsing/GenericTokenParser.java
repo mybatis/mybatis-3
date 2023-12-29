@@ -19,9 +19,11 @@ package org.apache.ibatis.parsing;
  * @author Clinton Begin
  */
 public class GenericTokenParser {
-
+  // 开始token
   private final String openToken;
+  // 结束token
   private final String closeToken;
+  // token 处理器
   private final TokenHandler handler;
 
   public GenericTokenParser(String openToken, String closeToken, TokenHandler handler) {
@@ -30,12 +32,21 @@ public class GenericTokenParser {
     this.handler = handler;
   }
 
+  /**
+   * @Author marvin
+   * @Description 通用token解析器解析方法
+   * @Date 10:32 2023/9/8
+   * @param text
+   * @return java.lang.String
+   **/
   public String parse(String text) {
     if (text == null || text.isEmpty()) {
       return "";
     }
     // search open token
+    // 搜索开始的token
     int start = text.indexOf(openToken);
+    // 如果没找到直接返回
     if (start == -1) {
       return text;
     }
@@ -46,6 +57,7 @@ public class GenericTokenParser {
     while (start > -1) {
       if (start > 0 && src[start - 1] == '\\') {
         // this open token is escaped. remove the backslash and continue.
+        // 如果开始的token被转义了，移除反斜杠之后继续
         builder.append(src, offset, start - offset - 1).append(openToken);
         offset = start + openToken.length();
       } else {

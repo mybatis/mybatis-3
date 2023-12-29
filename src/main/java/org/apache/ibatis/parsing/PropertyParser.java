@@ -42,8 +42,9 @@ public class PropertyParser {
    * @since 3.4.2
    */
   public static final String KEY_DEFAULT_VALUE_SEPARATOR = KEY_PREFIX + "default-value-separator";
-
+  // 是否允许默认值
   private static final String ENABLE_DEFAULT_VALUE = "false";
+  // 默认分隔符
   private static final String DEFAULT_VALUE_SEPARATOR = ":";
 
   private PropertyParser() {
@@ -55,7 +56,11 @@ public class PropertyParser {
     GenericTokenParser parser = new GenericTokenParser("${", "}", handler);
     return parser.parse(string);
   }
-
+  /**
+   * @Author marvin
+   * @Description 变量token 处理器
+   * @Date 14:18 2023/9/8
+   **/
   private static class VariableTokenHandler implements TokenHandler {
     private final Properties variables;
     private final boolean enableDefaultValue;

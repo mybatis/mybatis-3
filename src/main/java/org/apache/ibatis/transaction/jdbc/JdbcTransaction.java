@@ -38,10 +38,21 @@ import org.apache.ibatis.transaction.TransactionException;
 public class JdbcTransaction implements Transaction {
 
   private static final Log log = LogFactory.getLog(JdbcTransaction.class);
-
+  /**
+   * Connection 对象
+   */
   protected Connection connection;
+  /**
+   * DataSource 对象
+   */
   protected DataSource dataSource;
+  /**
+   * 事务隔离级别
+   */
   protected TransactionIsolationLevel level;
+  /**
+   * 是否自动提交
+   */
   protected boolean autoCommit;
 
   public JdbcTransaction(DataSource ds, TransactionIsolationLevel desiredLevel, boolean desiredAutoCommit) {
@@ -53,7 +64,12 @@ public class JdbcTransaction implements Transaction {
   public JdbcTransaction(Connection connection) {
     this.connection = connection;
   }
-
+  /**
+   * @Author marvin
+   * @Description 获取数据库连接
+   * @Date 16:57 2023/11/8
+   * @return java.sql.Connection
+   **/
   @Override
   public Connection getConnection() throws SQLException {
     if (connection == null) {
@@ -61,13 +77,19 @@ public class JdbcTransaction implements Transaction {
     }
     return connection;
   }
-
+  /**
+   * @Author marvin
+   * @Description 提交事务
+   * @Date 17:00 2023/11/8
+   **/
   @Override
   public void commit() throws SQLException {
+    // 判断连接不为空，并且不是不是自动提交
     if (connection != null && !connection.getAutoCommit()) {
       if (log.isDebugEnabled()) {
         log.debug("Committing JDBC Connection [" + connection + "]");
       }
+      // 调用提交
       connection.commit();
     }
   }
@@ -93,17 +115,21 @@ public class JdbcTransaction implements Transaction {
     }
   }
 
-  protected void setDesiredAutoCommit(boolean desiredAutoCommit) {
+ protected void setDesiredAutoCommit(boolean desiredAutoCommit) {
     try {
+      // 检查当前连接的自动提交状态是否与期望的自动提交状态不一致
       if (connection.getAutoCommit() != desiredAutoCommit) {
+        // 如果日志级别为debug，则输出调试信息
         if (log.isDebugEnabled()) {
           log.debug("Setting autocommit to " + desiredAutoCommit + " on JDBC Connection [" + connection + "]");
         }
+        // 设置自动提交状态
         connection.setAutoCommit(desiredAutoCommit);
       }
     } catch (SQLException e) {
       // Only a very poorly implemented driver would fail here,
       // and there's not much we can do about that.
+      // 仅在实现不正确的情况下抛出此错误，我们无法处理它
       throw new TransactionException("Error configuring AutoCommit.  "
           + "Your driver may not support getAutoCommit() or setAutoCommit(). "
           + "Requested setting: " + desiredAutoCommit + ".  Cause: " + e, e);
@@ -135,6 +161,7 @@ public class JdbcTransaction implements Transaction {
     if (log.isDebugEnabled()) {
       log.debug("Opening JDBC Connection");
     }
+    // 从连接池中获取链接
     connection = dataSource.getConnection();
     if (level != null) {
       connection.setTransactionIsolation(level.getLevel());

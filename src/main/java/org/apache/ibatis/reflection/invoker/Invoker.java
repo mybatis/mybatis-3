@@ -21,7 +21,20 @@ import java.lang.reflect.InvocationTargetException;
  * @author Clinton Begin
  */
 public interface Invoker {
+  /**
+   * @Author marvin
+   * @Description 执行调用
+   * @Date 17:50 2023/9/12
+   * @param target
+   * @param args
+   * @return java.lang.Object
+   **/
   Object invoke(Object target, Object[] args) throws IllegalAccessException, InvocationTargetException;
-
+  /**
+   * @Author marvin
+   * @Description 获取类
+   * @Date 17:51 2023/9/12
+   * @return java.lang.Class<?>
+   **/
   Class<?> getType();
 }

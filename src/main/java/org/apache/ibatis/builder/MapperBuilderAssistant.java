@@ -53,7 +53,9 @@ import org.apache.ibatis.type.TypeHandler;
  * @author Clinton Begin
  */
 public class MapperBuilderAssistant extends BaseBuilder {
-
+  /**
+   * 当前的命名空间
+   */
   private String currentNamespace;
   private final String resource;
   private Cache currentCache;
@@ -267,14 +269,15 @@ public class MapperBuilderAssistant extends BaseBuilder {
       String databaseId,
       LanguageDriver lang,
       String resultSets) {
-
+    // 如果cache 未解析，就抛出异常Cache-ref not yet resolved
     if (unresolvedCacheRef) {
       throw new IncompleteElementException("Cache-ref not yet resolved");
     }
-
+    // 获得id 编号
     id = applyCurrentNamespace(id, false);
     boolean isSelect = sqlCommandType == SqlCommandType.SELECT;
 
+    // 创建MappedStatement.Builder 对象
     MappedStatement.Builder statementBuilder = new MappedStatement.Builder(configuration, id, sqlSource, sqlCommandType)
         .resource(resource)
         .fetchSize(fetchSize)
@@ -293,12 +296,14 @@ public class MapperBuilderAssistant extends BaseBuilder {
         .useCache(valueOrDefault(useCache, isSelect))
         .cache(currentCache);
 
+    //获得 ParameterMap ，并设置到 MappedStatement.Builder 中
     ParameterMap statementParameterMap = getStatementParameterMap(parameterMap, parameterType, id);
     if (statementParameterMap != null) {
       statementBuilder.parameterMap(statementParameterMap);
     }
-
+    // 创建 MappedStatement 对象
     MappedStatement statement = statementBuilder.build();
+    // 添加到configuration 中
     configuration.addMappedStatement(statement);
     return statement;
   }
@@ -473,11 +478,14 @@ public class MapperBuilderAssistant extends BaseBuilder {
   }
 
   public LanguageDriver getLanguageDriver(Class<? extends LanguageDriver> langClass) {
+    // 获得 langClass 类
     if (langClass != null) {
       configuration.getLanguageRegistry().register(langClass);
     } else {
+      // 如果为空，使用默认类
       langClass = configuration.getLanguageRegistry().getDefaultDriverClass();
     }
+    // 获得 LanguageDriver 对象
     return configuration.getLanguageRegistry().getDriver(langClass);
   }
 

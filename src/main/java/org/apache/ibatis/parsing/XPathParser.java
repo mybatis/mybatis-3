@@ -73,6 +73,7 @@ public class XPathParser {
 
   public XPathParser(String xml, boolean validation) {
     commonConstructor(validation, null, null);
+    // 将xml文件转成docuemnt 对象
     this.document = createDocument(new InputSource(new StringReader(xml)));
   }
 
@@ -91,8 +92,19 @@ public class XPathParser {
     this.document = document;
   }
 
+  /**
+   * @Author marvin
+   * @Description 构造XPathParser对象
+   * @Date 10:11 2023/9/8
+   * @param xml
+   * @param validation
+   * @param variables
+   * @return null
+   **/
   public XPathParser(String xml, boolean validation, Properties variables) {
+    // 通用的构造器
     commonConstructor(validation, variables, null);
+    // 根据xml对象创建document 对象
     this.document = createDocument(new InputSource(new StringReader(xml)));
   }
 
@@ -138,9 +150,18 @@ public class XPathParser {
   public String evalString(String expression) {
     return evalString(document, expression);
   }
-
+  /**
+   * @Author marvin
+   * @Description 获取string元素值
+   * @Date 10:24 2023/9/8
+   * @param root
+   * @param expression
+   * @return java.lang.String
+   **/
   public String evalString(Object root, String expression) {
+    // 1 获得元素的值
     String result = (String) evaluate(expression, root, XPathConstants.STRING);
+    // 2 基于 variables 替换动态值，如果result 为动态值
     result = PropertyParser.parse(result, variables);
     return result;
   }
@@ -192,14 +213,22 @@ public class XPathParser {
   public Double evalDouble(Object root, String expression) {
     return (Double) evaluate(expression, root, XPathConstants.NUMBER);
   }
-
+  /**
+   * @Author marvin
+   * @Description 用于获得node类型的节点
+   * @Date 15:51 2023/9/7
+   * @param expression
+   * @return java.util.List<org.apache.ibatis.parsing.XNode>
+   **/
   public List<XNode> evalNodes(String expression) {
     return evalNodes(document, expression);
   }
 
   public List<XNode> evalNodes(Object root, String expression) {
     List<XNode> xnodes = new ArrayList<>();
+    // 1.获得node 数组
     NodeList nodes = (NodeList) evaluate(expression, root, XPathConstants.NODESET);
+    // 2.封装成node 数组
     for (int i = 0; i < nodes.getLength(); i++) {
       xnodes.add(new XNode(this, nodes.item(i), variables));
     }
@@ -211,13 +240,23 @@ public class XPathParser {
   }
 
   public XNode evalNode(Object root, String expression) {
+    // 1.获得Node对象
     Node node = (Node) evaluate(expression, root, XPathConstants.NODE);
     if (node == null) {
       return null;
     }
+    // 2.封装成XNode对象
     return new XNode(this, node, variables);
   }
-
+  /**
+   * @Author marvin
+   * @Description 获得指定元素或节点的值
+   * @Date 15:45 2023/9/7
+   * @param expression
+   * @param root
+   * @param returnType 返回元素的类型
+   * @return java.lang.Object
+   **/
   private Object evaluate(String expression, Object root, QName returnType) {
     try {
       return xpath.evaluate(expression, root, returnType);
@@ -225,10 +264,17 @@ public class XPathParser {
       throw new BuilderException("Error evaluating XPath.  Cause: " + e, e);
     }
   }
-
+  /**
+   * @Author marvin
+   * @Description 创建document 对象
+   * @Date 15:39 2023/9/7
+   * @param inputSource
+   * @return org.w3c.dom.Document
+   **/
   private Document createDocument(InputSource inputSource) {
     // important: this must only be called AFTER common constructor
     try {
+      //1. 创建  DocumentBuilderFactory  对象
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
       factory.setValidating(validation);
 
@@ -238,6 +284,7 @@ public class XPathParser {
       factory.setCoalescing(false);
       factory.setExpandEntityReferences(true);
 
+      //2. 创建 DocumentBuilder 对象
       DocumentBuilder builder = factory.newDocumentBuilder();
       builder.setEntityResolver(entityResolver);
       builder.setErrorHandler(new ErrorHandler() {
@@ -255,16 +302,25 @@ public class XPathParser {
         public void warning(SAXParseException exception) throws SAXException {
         }
       });
+      // 3. 解析xml文件
       return builder.parse(inputSource);
     } catch (Exception e) {
       throw new BuilderException("Error creating document instance.  Cause: " + e, e);
     }
   }
-
+  /**
+   * @Author marvin
+   * @Description 通用的初始化方法
+   * @Date 15:57 2023/9/7
+   * @param validation
+   * @param variables
+   * @param entityResolver
+   **/
   private void commonConstructor(boolean validation, Properties variables, EntityResolver entityResolver) {
     this.validation = validation;
     this.entityResolver = entityResolver;
     this.variables = variables;
+    // 创建XPathFactory 对象
     XPathFactory factory = XPathFactory.newInstance();
     this.xpath = factory.newXPath();
   }

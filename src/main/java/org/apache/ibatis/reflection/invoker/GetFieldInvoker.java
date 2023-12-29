@@ -23,12 +23,20 @@ import org.apache.ibatis.reflection.Reflector;
  * @author Clinton Begin
  */
 public class GetFieldInvoker implements Invoker {
+  // 属性
   private final Field field;
 
   public GetFieldInvoker(Field field) {
     this.field = field;
   }
-
+  /**
+   * @Author marvin
+   * @Description 获取属性值
+   * @Date 17:54 2023/9/12
+   * @param target
+   * @param args
+   * @return java.lang.Object
+   **/
   @Override
   public Object invoke(Object target, Object[] args) throws IllegalAccessException {
     try {
@@ -42,7 +50,12 @@ public class GetFieldInvoker implements Invoker {
       }
     }
   }
-
+  /**
+   * @Author marvin
+   * @Description 获取属性类型
+   * @Date 17:54 2023/9/12
+   * @return java.lang.Class<?>
+   **/
   @Override
   public Class<?> getType() {
     return field.getType();

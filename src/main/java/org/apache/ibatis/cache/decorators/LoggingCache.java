@@ -27,6 +27,9 @@ import org.apache.ibatis.logging.LogFactory;
 public class LoggingCache implements Cache {
 
   private final Log log;
+  /**
+   * 代理对象
+   */
   private final Cache delegate;
   protected int requests = 0;
   protected int hits = 0;

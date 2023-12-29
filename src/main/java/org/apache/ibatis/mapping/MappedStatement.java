@@ -181,7 +181,12 @@ public final class MappedStatement {
       return this;
     }
 
+    /**
+     * build 方法
+     * @return
+     */
     public MappedStatement build() {
+      // 判断各个属性不为空
       assert mappedStatement.configuration != null;
       assert mappedStatement.id != null;
       assert mappedStatement.sqlSource != null;
@@ -289,7 +294,13 @@ public final class MappedStatement {
     return resultSets;
   }
 
+  /**
+   * 获得BoundSql 对象
+   * @param parameterObject
+   * @return
+   */
   public BoundSql getBoundSql(Object parameterObject) {
+    // 获得BoundSql 对象
     BoundSql boundSql = sqlSource.getBoundSql(parameterObject);
     List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
     if (parameterMappings == null || parameterMappings.isEmpty()) {

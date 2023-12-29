@@ -342,17 +342,27 @@ public class PooledDataSource implements DataSource {
   private int assembleConnectionTypeCode(String url, String username, String password) {
     return ("" + url + username + password).hashCode();
   }
-
+  /**
+   * @Author marvin
+   * @Description 将使用完的链接添加回链接池中
+   * @Date 11:47 2023/11/8
+   * @param conn
+   **/
   protected void pushConnection(PooledConnection conn) throws SQLException {
 
     synchronized (state) {
+      // 将连接从activeConnections中移除
       state.activeConnections.remove(conn);
+      // 判断连接是否有效
       if (conn.isValid()) {
-        if (state.idleConnections.size() < poolMaximumIdleConnections && conn.getConnectionTypeCode() == expectedConnectionTypeCode) {
+        // 判断空闲连接池的大小是否大于最大连接数 并且 连接的类型是期望的连接类型
+        if (state.idleConnections.size() < poolMaximumIdleConnections
+                && conn.getConnectionTypeCode() == expectedConnectionTypeCode) {
           state.accumulatedCheckoutTime += conn.getCheckoutTime();
           if (!conn.getRealConnection().getAutoCommit()) {
             conn.getRealConnection().rollback();
           }
+          // 将当前连接返回到活跃链接池中
           PooledConnection newConn = new PooledConnection(conn.getRealConnection(), this);
           state.idleConnections.add(newConn);
           newConn.setCreatedTimestamp(conn.getCreatedTimestamp());
@@ -363,17 +373,23 @@ public class PooledDataSource implements DataSource {
           }
           state.notifyAll();
         } else {
+          // 计算检出时间
           state.accumulatedCheckoutTime += conn.getCheckoutTime();
+          // 判断连接是否设置了自动提交
           if (!conn.getRealConnection().getAutoCommit()) {
+            // 如果没有设置自动提交，就将当前的连接回滚
             conn.getRealConnection().rollback();
           }
+          // 关闭当前连接
           conn.getRealConnection().close();
           if (log.isDebugEnabled()) {
             log.debug("Closed connection " + conn.getRealHashCode() + ".");
           }
+          // 将当前连接设置为非法
           conn.invalidate();
         }
       } else {
+        // 无效 bacConnectionCount++
         if (log.isDebugEnabled()) {
           log.debug("A bad connection (" + conn.getRealHashCode() + ") attempted to return to the pool, discarding connection.");
         }
@@ -390,31 +406,41 @@ public class PooledDataSource implements DataSource {
 
     while (conn == null) {
       synchronized (state) {
+        // 判断是否存在空闲链接
         if (!state.idleConnections.isEmpty()) {
           // Pool has available connection
+          // 存在空闲链接，直接返回
           conn = state.idleConnections.remove(0);
           if (log.isDebugEnabled()) {
             log.debug("Checked out connection " + conn.getRealHashCode() + " from pool.");
           }
         } else {
+          // 是否超过最大链接数
           // Pool does not have available connection
           if (state.activeConnections.size() < poolMaximumActiveConnections) {
             // Can create new connection
+            // 没有超过最大链接数，创建新的链接
             conn = new PooledConnection(dataSource.getConnection(), this);
             if (log.isDebugEnabled()) {
               log.debug("Created connection " + conn.getRealHashCode() + ".");
             }
           } else {
             // Cannot create new connection
+            // 无法创建一个新连接
             PooledConnection oldestActiveConnection = state.activeConnections.get(0);
             long longestCheckoutTime = oldestActiveConnection.getCheckoutTime();
+            // 判断是否存在超时连接
             if (longestCheckoutTime > poolMaximumCheckoutTime) {
               // Can claim overdue connection
+              // 超时连接统计数++
               state.claimedOverdueConnectionCount++;
               state.accumulatedCheckoutTimeOfOverdueConnections += longestCheckoutTime;
               state.accumulatedCheckoutTime += longestCheckoutTime;
+              // 将超时连接移除活跃链接池中
               state.activeConnections.remove(oldestActiveConnection);
+              // 判断是否设置了自动回滚
               if (!oldestActiveConnection.getRealConnection().getAutoCommit()) {
+                // 尝试自动回滚
                 try {
                   oldestActiveConnection.getRealConnection().rollback();
                 } catch (SQLException e) {
@@ -426,17 +452,22 @@ public class PooledDataSource implements DataSource {
                      chance to join the next competition for another valid/good database
                      connection. At the end of this loop, bad {@link @conn} will be set as null.
                    */
+                  // 自动回滚失败，记录一下标记就可以
                   log.debug("Bad connection. Could not roll back");
                 }
               }
+              // 创建一个新的链接
               conn = new PooledConnection(oldestActiveConnection.getRealConnection(), this);
+              // 设置创建时间
               conn.setCreatedTimestamp(oldestActiveConnection.getCreatedTimestamp());
               conn.setLastUsedTimestamp(oldestActiveConnection.getLastUsedTimestamp());
+              // 设置超时连接无效
               oldestActiveConnection.invalidate();
               if (log.isDebugEnabled()) {
                 log.debug("Claimed overdue connection " + conn.getRealHashCode() + ".");
               }
             } else {
+              // 没有超时连接的情况下，阻塞等待
               // Must wait
               try {
                 if (!countedWait) {
@@ -457,6 +488,7 @@ public class PooledDataSource implements DataSource {
         }
         if (conn != null) {
           // ping to server and check the connection is valid or not
+          // 判断连接是否有效
           if (conn.isValid()) {
             if (!conn.getRealConnection().getAutoCommit()) {
               conn.getRealConnection().rollback();
@@ -498,6 +530,7 @@ public class PooledDataSource implements DataSource {
 
   /**
    * Method to check to see if a connection is still usable
+   * 用来检查一个链接是否还
    *
    * @param conn - the connection to check
    * @return True if the connection is still usable
@@ -506,6 +539,7 @@ public class PooledDataSource implements DataSource {
     boolean result = true;
 
     try {
+      // 判断连接是否被关闭了
       result = !conn.getRealConnection().isClosed();
     } catch (SQLException e) {
       if (log.isDebugEnabled()) {
