@@ -23,15 +23,11 @@ import org.apache.ibatis.reflection.property.PropertyTokenizer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 /**
  * @author Clinton Begin
  */
 public class MapWrapper extends BaseWrapper {
-
-  private static final String regex = "^\\d+$";
-  private Pattern pattern = Pattern.compile(regex);
   private final Map<String, Object> map;
 
   public MapWrapper(MetaObject metaObject, Map<String, Object> map) {
@@ -51,11 +47,6 @@ public class MapWrapper extends BaseWrapper {
   @Override
   public void set(PropertyTokenizer prop, Object value) {
     if (prop.getIndex() != null) {
-      // issue#3062  column alias name contain "[]"
-      if (!pattern.matcher(prop.getIndex()).matches()) {
-        map.put(prop.getIndexedName(), value);
-        return;
-      }
       Object collection = resolveCollection(prop, map);
       setCollectionValue(prop, collection, value);
     } else {
