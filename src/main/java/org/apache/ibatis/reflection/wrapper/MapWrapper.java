@@ -55,7 +55,7 @@ public class MapWrapper extends BaseWrapper {
       Object collection = resolveCollection(prop, map);
       setCollectionValue(prop, collection, value);
     } else if (!prop.getIndexedName().equals(prop.getName())) {
-      map.put(prop.getName(), value);
+      map.put(prop.getIndexedName(), value);
     } else {
       map.put(prop.getName(), value);
     }
