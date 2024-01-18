@@ -50,12 +50,14 @@ public class MapWrapper extends BaseWrapper {
 
   @Override
   public void set(PropertyTokenizer prop, Object value) {
-    // issue#3062  column alias name contain "[]"
-    if (prop.getIndex() != null && pattern.matcher(prop.getIndex()).matches()) {
+    if (prop.getIndex() != null) {
+      // issue#3062  column alias name contain "[]"
+      if (!pattern.matcher(prop.getIndex()).matches()) {
+        map.put(prop.getIndexedName(), value);
+        return;
+      }
       Object collection = resolveCollection(prop, map);
       setCollectionValue(prop, collection, value);
-    } else if (!prop.getIndexedName().equals(prop.getName())) {
-      map.put(prop.getIndexedName(), value);
     } else {
       map.put(prop.getName(), value);
     }
