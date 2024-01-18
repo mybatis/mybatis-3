@@ -24,7 +24,7 @@ jobs:
       - name: Print JDK Version
         run: java -version
       - name: Cache local Maven m2
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
