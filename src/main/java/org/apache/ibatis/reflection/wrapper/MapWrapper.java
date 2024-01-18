@@ -15,20 +15,23 @@
  */
 package org.apache.ibatis.reflection.wrapper;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.SystemMetaObject;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * @author Clinton Begin
  */
 public class MapWrapper extends BaseWrapper {
 
+  private static final String regex = "^\\d+$";
+  private Pattern pattern = Pattern.compile(regex);
   private final Map<String, Object> map;
 
   public MapWrapper(MetaObject metaObject, Map<String, Object> map) {
@@ -47,9 +50,12 @@ public class MapWrapper extends BaseWrapper {
 
   @Override
   public void set(PropertyTokenizer prop, Object value) {
-    if (prop.getIndex() != null) {
+    // issue#3062  column alias name contain "[]"
+    if (prop.getIndex() != null && pattern.matcher(prop.getIndex()).matches()) {
       Object collection = resolveCollection(prop, map);
       setCollectionValue(prop, collection, value);
+    } else if (!prop.getIndexedName().equals(prop.getName())) {
+      map.put(prop.getName(), value);
     } else {
       map.put(prop.getName(), value);
     }
@@ -134,7 +140,7 @@ public class MapWrapper extends BaseWrapper {
     HashMap<String, Object> map = new HashMap<>();
     set(prop, map);
     return MetaObject.forObject(map, metaObject.getObjectFactory(), metaObject.getObjectWrapperFactory(),
-        metaObject.getReflectorFactory());
+      metaObject.getReflectorFactory());
   }
 
   @Override
