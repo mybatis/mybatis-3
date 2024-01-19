@@ -133,7 +133,7 @@ public class MapWrapper extends BaseWrapper {
     HashMap<String, Object> map = new HashMap<>();
     set(prop, map);
     return MetaObject.forObject(map, metaObject.getObjectFactory(), metaObject.getObjectWrapperFactory(),
-      metaObject.getReflectorFactory());
+        metaObject.getReflectorFactory());
   }
 
   @Override
