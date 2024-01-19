@@ -28,7 +28,7 @@ import java.util.Map;
  * @author Clinton Begin
  */
 public class MapWrapper extends BaseWrapper {
-  private final Map<String, Object> map;
+  protected final Map<String, Object> map;
 
   public MapWrapper(MetaObject metaObject, Map<String, Object> map) {
     super(metaObject);
