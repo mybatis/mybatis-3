@@ -20,7 +20,7 @@ import org.apache.ibatis.reflection.MetaObject;
 /**
  * @author sunchaofei
  */
-public class LinkedHashMapWrapperFactory implements ObjectWrapperFactory {
+public class MybatisMapWrapperFactory implements ObjectWrapperFactory {
 
   @Override
   public boolean hasWrapperFor(Object object) {
