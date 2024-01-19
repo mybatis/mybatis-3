@@ -16,6 +16,7 @@
 package org.apache.ibatis.reflection.wrapper;
 
 import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.reflection.SystemMetaObject;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 
 /**
@@ -34,5 +35,23 @@ public class MybatisMapWrapper extends MapWrapper {
   @Override
   public void set(PropertyTokenizer prop, Object value) {
     map.put(prop.getIndexedName(), value);
+  }
+
+  @Override
+  public boolean hasGetter(String name) {
+    PropertyTokenizer prop = new PropertyTokenizer(name);
+    if (!prop.hasNext()) {
+      return map.containsKey(prop.getIndexedName());
+    }
+    if (map.containsKey(prop.getIndexedName())) {
+      MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
+      if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
+        return true;
+      } else {
+        return metaValue.hasGetter(prop.getChildren());
+      }
+    } else {
+      return false;
+    }
   }
 }

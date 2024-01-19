@@ -15,25 +15,17 @@
  */
 package org.apache.ibatis.reflection;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.ibatis.domain.blog.Author;
 import org.apache.ibatis.domain.blog.Section;
 import org.apache.ibatis.domain.misc.CustomBeanWrapper;
 import org.apache.ibatis.domain.misc.CustomBeanWrapperFactory;
 import org.apache.ibatis.domain.misc.RichType;
+import org.apache.ibatis.reflection.wrapper.MybatisHashMap;
 import org.junit.jupiter.api.Test;
+
+import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class MetaObjectTest {
 
@@ -240,6 +232,51 @@ class MetaObjectTest {
   void shouldDemonstrateNullValueInMap() {
     HashMap<String, String> map = new HashMap<>();
     MetaObject metaMap = SystemMetaObject.forObject(map);
+    assertFalse(metaMap.hasGetter("phone.home"));
+
+    metaMap.setValue("phone", null);
+    assertTrue(metaMap.hasGetter("phone"));
+    // hasGetter returns true if the parent exists and is null.
+    assertTrue(metaMap.hasGetter("phone.home"));
+    assertTrue(metaMap.hasGetter("phone.home.ext"));
+    assertNull(metaMap.getValue("phone"));
+    assertNull(metaMap.getValue("phone.home"));
+    assertNull(metaMap.getValue("phone.home.ext"));
+
+    metaMap.setValue("phone.office", "789");
+    assertFalse(metaMap.hasGetter("phone.home"));
+    assertFalse(metaMap.hasGetter("phone.home.ext"));
+    assertEquals("789", metaMap.getValue("phone.office"));
+    assertNotNull(metaMap.getValue("phone"));
+    assertNull(metaMap.getValue("phone.home"));
+  }
+
+
+  @Test
+  void shouldDemonstrateNullValueInMybatisMap() {
+    Map<String, String> map = new MybatisHashMap<>();
+    MetaObject metaMap = SystemMetaObject.forMybatisObject(map);
+
+
+    assertFalse(metaMap.hasGetter("phone[111].home"));
+
+    metaMap.setValue("phone[111]", null);
+    assertTrue(metaMap.hasGetter("phone[111]"));
+    // hasGetter returns true if the parent exists and is null.
+    assertTrue(metaMap.hasGetter("phone[111].home"));
+    assertTrue(metaMap.hasGetter("phone[111].home.ext"));
+    assertNull(metaMap.getValue("phone[111]"));
+    assertNull(metaMap.getValue("phone[111].home"));
+    assertNull(metaMap.getValue("phone[111].home.ext"));
+
+    metaMap.setValue("phone[111].office", "789");
+    assertFalse(metaMap.hasGetter("phone[111].home"));
+    assertFalse(metaMap.hasGetter("phone[111].home.ext"));
+    assertEquals("789", metaMap.getValue("phone[111].office"));
+    assertNotNull(metaMap.getValue("phone[111]"));
+    assertNull(metaMap.getValue("phone[111].home"));
+
+
     assertFalse(metaMap.hasGetter("phone.home"));
 
     metaMap.setValue("phone", null);
