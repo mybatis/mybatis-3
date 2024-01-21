@@ -114,7 +114,7 @@ If you want to tune the logging at a finer level you can turn logging on for spe
 </logger>
 ```
 
-By the contrary you may want want to enable logging for a group of mappers. In that case you should add as a logger the root package where your mappers reside:
+By the contrary you may want to enable logging for a group of mappers. In that case you should add as a logger the root package where your mappers reside:
 
 ```xml
 <logger name="org.mybatis.example">
