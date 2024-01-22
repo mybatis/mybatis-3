@@ -27,7 +27,11 @@ import java.util.Map;
 import org.apache.ibatis.reflection.DefaultReflectorFactory;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
+import org.apache.ibatis.reflection.factory.ObjectFactory;
+import org.apache.ibatis.reflection.property.PropertyTokenizer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 class MapWrapperTest {
 
@@ -190,6 +194,58 @@ class MapWrapperTest {
     assertTrue(metaObj.hasGetter("submap[anykey]"));
     assertTrue(metaObj.hasSetter("submap[d]"));
     assertTrue(metaObj.hasSetter("submap[anykey]"));
+  }
+
+  @ParameterizedTest
+  @CsvSource({ "abc[def]", "abc.def", "abc.def.ghi", "abc[d.ef].ghi" })
+  void testCustomMapWrapper(String key) {
+    Map<String, Object> map = new HashMap<>();
+    MetaObject metaObj = MetaObject.forObject(map, new DefaultObjectFactory(), new FlatMapWrapperFactory(),
+        new DefaultReflectorFactory());
+    metaObj.setValue(key, "1");
+    assertEquals("1", map.get(key));
+    assertEquals("1", metaObj.getValue(key));
+  }
+
+  static class FlatMapWrapperFactory implements ObjectWrapperFactory {
+    @Override
+    public boolean hasWrapperFor(Object object) {
+      return object instanceof Map;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public ObjectWrapper getWrapperFor(MetaObject metaObject, Object object) {
+      return new FlatMapWrapper(metaObject, (Map<String, Object>) object, metaObject.getObjectFactory());
+    }
+  }
+
+  static class FlatMapWrapper extends MapWrapper {
+    public FlatMapWrapper(MetaObject metaObject, Map<String, Object> map, ObjectFactory objectFactory) {
+      super(metaObject, map);
+    }
+
+    @Override
+    public Object get(PropertyTokenizer prop) {
+      String key;
+      if (prop.getChildren() == null) {
+        key = prop.getIndexedName();
+      } else {
+        key = prop.getIndexedName() + "." + prop.getChildren();
+      }
+      return map.get(key);
+    }
+
+    @Override
+    public void set(PropertyTokenizer prop, Object value) {
+      String key;
+      if (prop.getChildren() == null) {
+        key = prop.getIndexedName();
+      } else {
+        key = prop.getIndexedName() + "." + prop.getChildren();
+      }
+      map.put(key, value);
+    }
   }
 
 }
