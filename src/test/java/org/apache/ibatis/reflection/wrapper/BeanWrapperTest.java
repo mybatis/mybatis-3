@@ -59,8 +59,13 @@ class BeanWrapperTest {
       metaObj.getValue("bean2List[0]");
       fail();
     } catch (ReflectionException e) {
-      // TODO: more accurate message
-      assertEquals("The 'bean2List' property of null is not a List or Array.", e.getMessage());
+      assertEquals("Cannot get the value 'bean2List[0]' because the property 'bean2List' is null.", e.getMessage());
+    }
+    try {
+      metaObj.setValue("bean2List[0]", new Bean2());
+      fail();
+    } catch (ReflectionException e) {
+      assertEquals("Cannot set the value 'bean2List[0]' because the property 'bean2List' is null.", e.getMessage());
     }
     assertTrue(metaObj.hasSetter("bean2List[0]"));
 
@@ -77,6 +82,20 @@ class BeanWrapperTest {
 
     metaObj.setValue("attrVal", "value");
     assertEquals("value", bean.getAttrVal());
+    try {
+      metaObj.getValue("attrVal[0]");
+      fail();
+    } catch (ReflectionException e) {
+      assertEquals("Cannot get the value 'attrVal[0]' because the property 'attrVal' is not Map, List or Array.",
+          e.getMessage());
+    }
+    try {
+      metaObj.setValue("attrVal[0]", "blur");
+      fail();
+    } catch (ReflectionException e) {
+      assertEquals("Cannot set the value 'attrVal[0]' because the property 'attrVal' is not Map, List or Array.",
+          e.getMessage());
+    }
 
     metaObj.setValue("bean2List[1].name", "new name 1");
     assertEquals("new name 1", bean.getBean2List().get(1).getName());
@@ -144,7 +163,6 @@ class BeanWrapperTest {
     } catch (UnsupportedOperationException e) {
       // pass
     }
-
   }
 
   static class Bean1 {

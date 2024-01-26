@@ -43,6 +43,10 @@ public abstract class BaseWrapper implements ObjectWrapper {
   }
 
   protected Object getCollectionValue(PropertyTokenizer prop, Object collection) {
+    if (collection == null) {
+      throw new ReflectionException("Cannot get the value '" + prop.getIndexedName() + "' because the property '"
+          + prop.getName() + "' is null.");
+    }
     if (collection instanceof Map) {
       return ((Map) collection).get(prop.getIndex());
     }
@@ -68,12 +72,16 @@ public abstract class BaseWrapper implements ObjectWrapper {
     } else if (collection instanceof short[]) {
       return ((short[]) collection)[i];
     } else {
-      throw new ReflectionException(
-          "The '" + prop.getName() + "' property of " + collection + " is not a List or Array.");
+      throw new ReflectionException("Cannot get the value '" + prop.getIndexedName() + "' because the property '"
+          + prop.getName() + "' is not Map, List or Array.");
     }
   }
 
   protected void setCollectionValue(PropertyTokenizer prop, Object collection, Object value) {
+    if (collection == null) {
+      throw new ReflectionException("Cannot set the value '" + prop.getIndexedName() + "' because the property '"
+          + prop.getName() + "' is null.");
+    }
     if (collection instanceof Map) {
       ((Map) collection).put(prop.getIndex(), value);
     } else {
@@ -99,8 +107,8 @@ public abstract class BaseWrapper implements ObjectWrapper {
       } else if (collection instanceof short[]) {
         ((short[]) collection)[i] = (Short) value;
       } else {
-        throw new ReflectionException(
-            "The '" + prop.getName() + "' property of " + collection + " is not a List or Array.");
+        throw new ReflectionException("Cannot set the value '" + prop.getIndexedName() + "' because the property '"
+            + prop.getName() + "' is not Map, List or Array.");
       }
     }
   }
