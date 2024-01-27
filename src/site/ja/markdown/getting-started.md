@@ -197,7 +197,7 @@ Dependency Injection フレームワークを使うと、スレッドセーフ�
 
 各スレッドは、独立した SqlSession のインスタンスを使うべきです。 SqlSession のインスタンスは共有されることを前提としていないため、スレッドセーフではありません。 当然、最適なスコープはメソッドスコープになります。 SqlSession のインスタンスへの参照を static なフィールドや、インスタンスフィールドにも格納してはいけません。 Servlet フレームワークの HttpSession のようなマネージドスコープに SqlSession への参照を保持するのもダメです。 もし何らかの Web フレームワークを使っているのであれば、SqlSession のスコープが HTTP リクエストと同調するようにしておくべきです。 つまり、HTTP リクエストを受け取ったら SqlSession をオープンし、レスポンスを返すときにクローズすれば良いのです。 セッションをクローズすることはとても重要です。 間違いがないよう、常に finally ブロックの中でセッションをクローズするようにした方が良いでしょう。 SqlSession を確実にクローズするための一般的なパターンは下記のようなものです。
 
-```
+```java
 try (SqlSession session = sqlSessionFactory.openSession()) {
   // do work
 }
