@@ -22,8 +22,8 @@ Maven を利用している場合は pom.xml に下記の依存性を追加す�
 MyBatis アプリケーションは、SqlSessionFactory のインスタンスを中心に構成されています。  
 SqlSessionFactory のインスタンスは、SqlSessionFactoryBuilder を使って取得することができます。 SqlSessionFactoryBuilder が SqlSessionFactory を生成する際の設定は、XML 形式の設定ファイルを読み込むか、独自に用意した Configuration クラスのインスタンスを渡すことで行います。
 
-XML 形式の設定ファイルを使って SqlSessionFactory を生成するのはとても簡単です。  
-この設定ファイルはクラスパスに置くことが推奨されますが、ファイルパスや file:// 形式の URL 文字列から生成した InputStream を使ってクラスパス以外の場所に配置されたファイルを読み込むこともできます。 MyBatis 付属の Resources というユーティリティクラスには、クラスパスや、それ以外の場所からリソースを読み込むためのメソッドが多数用意されています。
+XML 形式の設定ファイルを使って SqlSessionFactory を生成するのはとても簡単です。<br />
+この設定ファイルはクラスパスに置くことが推奨されますが、ファイルパスや `file://` 形式の URL 文字列から生成した InputStream を使ってクラスパス以外の場所に配置されたファイルを読み込むこともできます。 MyBatis 付属の Resources というユーティリティクラスには、クラスパスや、それ以外の場所からリソースを読み込むためのメソッドが多数用意されています。
 
 ```java
 String resource = "org/mybatis/example/mybatis-config.xml";

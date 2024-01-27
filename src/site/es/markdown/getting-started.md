@@ -21,7 +21,7 @@ Si usas Maven añade esta dependencia en tu pom.xml:
 
 Una aplicación que usa MyBatis debe utilizar una instancia de SqlSessionFactory. Se puede obtener una instancia de SqlSessionFactory mediante un SqlSessionFactoryBuilder. Un SqlSessionFactoryBuilder puede construir una instancia de SqlSessionFactory a partir de un fichero de configuración XML o de una instancia personalizada de la clase Configuration.
 
-Crear una instancia SqlSessionFactory desde un fichero xml es muy sencillo. Se recomienda usar un classpath resource, pero es posible usar cualquier InputStream, incluso creado con un path de fichero o una URL de tipo file://. MyBatis proporciona una clase de utilidad, llamada Resources, que contiene métodos que simplifican la carga de recursos desde el classpath u otras ubicaciones.
+Crear una instancia SqlSessionFactory desde un fichero xml es muy sencillo. Se recomienda usar un classpath resource, pero es posible usar cualquier InputStream, incluso creado con un path de fichero o una URL de tipo `file://`. MyBatis proporciona una clase de utilidad, llamada Resources, que contiene métodos que simplifican la carga de recursos desde el classpath u otras ubicaciones.
 
 ```java
 String resource = "org/mybatis/example/mybatis-config.xml";

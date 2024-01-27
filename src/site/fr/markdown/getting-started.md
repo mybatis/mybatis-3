@@ -6,7 +6,7 @@ Chaque application MyBatis tourne autour d'une instance de SqlSessionFactory. Un
 
 ## Créer une SqlSessionFactory à partir d'un fichier XML
 
-Créer une instance de SqlSessionFactory à partir d'un fichier XML est très simple. Il est recommandé d'utiliser un fichier présent dans le classpath, mais on peut utiliser n'importe quelle instance d'InputStream, y compris à partir d'un chemin vers un fichier ou d'une URL de type file://. MyBatis contient une classe utilitaire, Resources, qui contient plusieurs méthodes facilitant le chargement de ressources du classpath ou d'ailleurs.
+Créer une instance de SqlSessionFactory à partir d'un fichier XML est très simple. Il est recommandé d'utiliser un fichier présent dans le classpath, mais on peut utiliser n'importe quelle instance d'InputStream, y compris à partir d'un chemin vers un fichier ou d'une URL de type `file://`. MyBatis contient une classe utilitaire, Resources, qui contient plusieurs méthodes facilitant le chargement de ressources du classpath ou d'ailleurs.
 
 ```java
 String resource = "org/mybatis/example/mybatis-config.xml";
