@@ -443,7 +443,6 @@
         <artifactId>maven-site-plugin</artifactId>
         <configuration>
           <locales>default,es,ja,fr,zh_CN,ko</locales>
-          <topSiteURL>${project.distributionManagement.site.url}</topSiteURL>
         </configuration>
       </plugin>
       <plugin>
