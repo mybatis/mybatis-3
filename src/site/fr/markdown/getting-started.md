@@ -1,4 +1,5 @@
 title: MyBatis 3 | Premiers pas
+author: Clinton Begin, Dridi Boukelmoune
 
 # Premiers pas
 
