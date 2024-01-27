@@ -19,7 +19,7 @@ Maven を利用している場合は pom.xml に下記の依存性を追加す�
 
 ## XML 形式の設定ファイルを使って SqlSessionFactory を生成する
 
-MyBatis アプリケーションは、SqlSessionFactory のインスタンスを中心に構成されています。  
+MyBatis アプリケーションは、SqlSessionFactory のインスタンスを中心に構成されています。<br />
 SqlSessionFactory のインスタンスは、SqlSessionFactoryBuilder を使って取得することができます。 SqlSessionFactoryBuilder が SqlSessionFactory を生成する際の設定は、XML 形式の設定ファイルを読み込むか、独自に用意した Configuration クラスのインスタンスを渡すことで行います。
 
 XML 形式の設定ファイルを使って SqlSessionFactory を生成するのはとても簡単です。<br />
@@ -31,7 +31,7 @@ InputStream inputStream = Resources.getResourceAsStream(resource);
 SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
 ```
 
-XML 形式の設定ファイルには、MyBatis システムの基本設定が含まれます。 例えば、データベースから Connection のインスタンスを取得する DataSource や、トランザクションの制御方法を決定する TransactionManager などです。  
+XML 形式の設定ファイルには、MyBatis システムの基本設定が含まれます。 例えば、データベースから Connection のインスタンスを取得する DataSource や、トランザクションの制御方法を決定する TransactionManager などです。<br />
 XML 形式の設定ファイルの詳細については後ほど改めて説明しますが、ここでは簡単なサンプルを挙げておきます。
 
 ```xml
@@ -57,14 +57,14 @@ XML 形式の設定ファイルの詳細については後ほど改めて説明�
 </configuration>
 ```
 
-XML 形式の設定ファイルについて説明すべきことは他にもたくさんありますが、最も重要な設定は上記のサンプルに含まれています。  
-まず、XML ドキュメントのバリデーションを行うために必要となる XML ヘッダがあります。  
-environment 要素には、トランザクション管理やコネクションプーリングといった環境依存の設定が含まれています。  
+XML 形式の設定ファイルについて説明すべきことは他にもたくさんありますが、最も重要な設定は上記のサンプルに含まれています。<br />
+まず、XML ドキュメントのバリデーションを行うために必要となる XML ヘッダがあります。<br />
+environment 要素には、トランザクション管理やコネクションプーリングといった環境依存の設定が含まれています。<br />
 mappers 要素には Mapper のリストが含まれています。Mapper とは、SQL 文とマッピングの定義を含む XML ファイルです。
 
 ## XML を使わずに SqlSessionFactory を生成する
 
-XML を使わず Java のコードで設定を行いたい方のために、Configuraiton クラスが提供されています。  
+XML を使わず Java のコードで設定を行いたい方のために、Configuraiton クラスが提供されています。<br />
 XML 形式の設定ファイルで指定できるオプションは、このクラスでも全て設定可能です。
 
 ```java
@@ -76,14 +76,14 @@ configuration.addMapper(BlogMapper.class);
 SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
 ```
 
-今回は、Configuration のインスタンスに Mapper クラスを追加していることに気づいたでしょうか。  
-Mapper クラスには、XML を使わずに SQL マッピングを定義するためのアノテーションが含まれています。 ただし、Java アノテーションの制約と MyBatis のマッピング機能の複雑さのため、高度なマッピングを定義する際に XML 形式の Mapper が必要となる場合があります（ネストされた結合クエリの結果をマッピングする場合など）。  
+今回は、Configuration のインスタンスに Mapper クラスを追加していることに気づいたでしょうか。<br />
+Mapper クラスには、XML を使わずに SQL マッピングを定義するためのアノテーションが含まれています。 ただし、Java アノテーションの制約と MyBatis のマッピング機能の複雑さのため、高度なマッピングを定義する際に XML 形式の Mapper が必要となる場合があります（ネストされた結合クエリの結果をマッピングする場合など）。<br />
 このため、MyBatis は対になる XML ファイルを探して自動的に読み込むようになっています（この例では、BlogMapper.class のクラスパスと名前を元に BlogMapper.xml という XML ファイルが読み込まれます）。 この動作については、後ほど詳しく説明します。
 
 ## SqlSessionFactory から SqlSession を取得する
 
-名前を見れば分かると思いますが、生成した SqlSessionFactory から SqlSession のインスタンスを取得することができます。  
-SqlSession には、一連の SQL コマンドを実行するためのメソッドが全て用意されています。 SqlSession のインスタンスに対して、マップされた SQL 文を直接指定して実行することができます。  
+名前を見れば分かると思いますが、生成した SqlSessionFactory から SqlSession のインスタンスを取得することができます。<br />
+SqlSession には、一連の SQL コマンドを実行するためのメソッドが全て用意されています。 SqlSession のインスタンスに対して、マップされた SQL 文を直接指定して実行することができます。<br />
 例えば下記のようなコードになります。
 
 ```java
@@ -109,7 +109,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
 
 SqlSession や Mapper クラスによって何が行われているのか、そろそろ気になり出した頃ではないでしょうか。 Mapped SQL Statements は非常に大きな話題で、このドキュメントの大部分を占めることになると思いますが、 ここではいくつか例を挙げて、実際にどのような処理が行われているのかを簡単に説明してみたいと思います。
 
-上で挙げた２つのサンプルに対応する SQL Statement は、XML、アノテーションのどちらを使っても定義することができます。  
+上で挙げた２つのサンプルに対応する SQL Statement は、XML、アノテーションのどちらを使っても定義することができます。<br />
 はじめに XML について見て行きましょう。 何年にも渡って MyBatis の人気を築いてきた XML ベースのマッピング言語を使えば、MyBatis の全機能を把握することができます。 このドキュメントの後の方で出てきますが、旧バージョンの MyBatis を使ったことがある方なら、コンセプトは同じですが、多くの改良が加えられていることが分かると思います。 以下は、先ほどの例で SqlSession のメソッドを呼び出したときに実行されることを想定した XML ベースの Mapped Statement です。
 
 ```xml
@@ -124,9 +124,9 @@ SqlSession や Mapper クラスによって何が行われているのか、そ�
 </mapper>
 ```
 
-例が簡単なので無駄に記述量が多いように見えるかも知れませんが、本質的にはそれほどではありません。  
-ひとつの Mapper XML ファイルに複数の Mapped Statement を定義することができるので、XML ヘッダや doctype 宣言は一度書くだけです。  
-残りの部分はほぼ自明ですが、「org.mybatis.example.BlogMapper」というネームスペースの中に「selectBlog」という名前の Mapped Statement を定義しています。  
+例が簡単なので無駄に記述量が多いように見えるかも知れませんが、本質的にはそれほどではありません。<br />
+ひとつの Mapper XML ファイルに複数の Mapped Statement を定義することができるので、XML ヘッダや doctype 宣言は一度書くだけです。<br />
+残りの部分はほぼ自明ですが、「org.mybatis.example.BlogMapper」というネームスペースの中に「selectBlog」という名前の Mapped Statement を定義しています。<br />
 上のサンプルと同じですが、この Mapped Statement を実行するには、以下のように完全修飾名「org.mybatis.example.BlogMapper.selectBlog」を指定して SqlSession のメソッドを呼び出します。
 
 ```java
@@ -140,14 +140,14 @@ BlogMapper mapper = session.getMapper(BlogMapper.class);
 Blog blog = mapper.selectBlog(101);
 ```
 
-２番目の方法には多くの利点があります。  
+２番目の方法には多くの利点があります。<br />
 まず、文字列リテラルに頼らずに済むので、ずっと安全です。また、Mapped SQL Statement を選ぶときに IDE のコード補完機能を使うことができます。
 
 ---
 
 <span class="label important">NOTE</span> **ネームスペースについて**
 
-**ネームスペース：** 過去のバージョンの MyBatis では、ネームスペースはオプションでしたが、これは混乱や誤用の原因となっていました。  
+**ネームスペース：** 過去のバージョンの MyBatis では、ネームスペースはオプションでしたが、これは混乱や誤用の原因となっていました。<br />
 現在のバージョンではネームスペースは必須であり、単に長い完全修飾名を使って Statement を整理する以上に重要な役割を果たしています。
 
 上で見たように、ネームスペースはインターフェイスバインディングを行うために使われています。 たとえ今は必要ないと思っても、将来気が変わったときのために推奨される手順通りに設定しておくべきです。 長い目で見れば、ネームスペースを指定して正しい Java パッケージに配置しておくことでクリーンなコードを書くことができ、MyBatis の使い勝手も向上するはずです。
