@@ -154,7 +154,7 @@
     <spotbugs.onlyAnalyze>org.apache.ibatis.*</spotbugs.onlyAnalyze>
 
     <!-- Surefire Setup -->
-    <argLine>-Xmx2048m</argLine>
+    <argLine>-Xmx2048m -javaagent:${settings.localRepository}/net/bytebuddy/byte-buddy-agent/${byte-buddy.version}/byte-buddy-agent-${byte-buddy.version}.jar</argLine>
 
     <!-- Reproducible Builds -->
     <project.build.outputTimestamp>1702533513</project.build.outputTimestamp>
@@ -355,6 +355,19 @@
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>net.bytebuddy</groupId>
+              <artifactId>byte-buddy-agent</artifactId>
+              <version>${byte-buddy.version}</version>
+            </path>
+          </annotationProcessorPaths>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
