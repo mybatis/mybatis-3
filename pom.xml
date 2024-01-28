@@ -22,7 +22,7 @@
   <parent>
     <groupId>org.mybatis</groupId>
     <artifactId>mybatis-parent</artifactId>
-    <version>41</version>
+    <version>42</version>
     <relativePath />
   </parent>
 
