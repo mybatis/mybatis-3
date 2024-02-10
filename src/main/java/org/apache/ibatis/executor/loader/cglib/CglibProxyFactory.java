@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.locks.ReentrantLock;
 
 import net.sf.cglib.proxy.Callback;
 import net.sf.cglib.proxy.Enhancer;
@@ -38,7 +39,6 @@ import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.property.PropertyCopier;
 import org.apache.ibatis.reflection.property.PropertyNamer;
 import org.apache.ibatis.session.Configuration;
-import org.apache.ibatis.util.LockKit;
 
 /**
  * @author Clinton Begin
@@ -110,6 +110,7 @@ public class CglibProxyFactory implements ProxyFactory {
     private final ObjectFactory objectFactory;
     private final List<Class<?>> constructorArgTypes;
     private final List<Object> constructorArgs;
+    private final ReentrantLock lock = new ReentrantLock();
 
     private EnhancedResultObjectProxyImpl(Class<?> type, ResultLoaderMap lazyLoader, Configuration configuration,
         ObjectFactory objectFactory, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
@@ -135,7 +136,6 @@ public class CglibProxyFactory implements ProxyFactory {
     @Override
     public Object intercept(Object enhanced, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
       final String methodName = method.getName();
-      LockKit.ReentrantLock lock = LockKit.obtainLock(lazyLoader);
       lock.lock();
       try {
         if (WRITE_REPLACE_METHOD.equals(methodName)) {

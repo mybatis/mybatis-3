@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,9 +19,9 @@ import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.util.Deque;
 import java.util.LinkedList;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.ibatis.cache.Cache;
-import org.apache.ibatis.util.LockKit;
 
 /**
  * Weak Reference cache decorator.
@@ -35,6 +35,7 @@ public class WeakCache implements Cache {
   private final ReferenceQueue<Object> queueOfGarbageCollectedEntries;
   private final Cache delegate;
   private int numberOfHardLinks;
+  private final ReentrantLock lock = new ReentrantLock();
 
   public WeakCache(Cache delegate) {
     this.delegate = delegate;
@@ -74,7 +75,6 @@ public class WeakCache implements Cache {
       if (result == null) {
         delegate.removeObject(key);
       } else {
-        LockKit.ReentrantLock lock = LockKit.obtainLock(hardLinksToAvoidGarbageCollection);
         lock.lock();
         try {
           hardLinksToAvoidGarbageCollection.addFirst(result);
@@ -99,7 +99,6 @@ public class WeakCache implements Cache {
 
   @Override
   public void clear() {
-    LockKit.ReentrantLock lock = LockKit.obtainLock(hardLinksToAvoidGarbageCollection);
     lock.lock();
     try {
       hardLinksToAvoidGarbageCollection.clear();

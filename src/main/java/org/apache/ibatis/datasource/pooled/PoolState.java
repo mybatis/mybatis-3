@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,15 +17,19 @@ package org.apache.ibatis.datasource.pooled;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.ibatis.util.LockKit;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author Clinton Begin
  */
 public class PoolState {
 
-  private final LockKit.ReentrantLock reentrantLock;
+  // This lock does not guarantee consistency.
+  // Field values can be modified in PooledDataSource
+  // after the instance is returned from
+  // PooledDataSource#getPoolState().
+  // A possible fix is to create and return a 'snapshot'.
+  private final ReentrantLock lock = new ReentrantLock();
 
   protected PooledDataSource dataSource;
 
@@ -42,103 +46,102 @@ public class PoolState {
 
   public PoolState(PooledDataSource dataSource) {
     this.dataSource = dataSource;
-    this.reentrantLock = LockKit.obtainLock(dataSource);
   }
 
   public long getRequestCount() {
-    reentrantLock.lock();
+    lock.lock();
     try {
       return requestCount;
     } finally {
-      reentrantLock.unlock();
+      lock.unlock();
     }
   }
 
   public long getAverageRequestTime() {
-    reentrantLock.lock();
+    lock.lock();
     try {
       return requestCount == 0 ? 0 : accumulatedRequestTime / requestCount;
     } finally {
-      reentrantLock.unlock();
+      lock.unlock();
     }
   }
 
   public long getAverageWaitTime() {
-    reentrantLock.lock();
+    lock.lock();
     try {
       return hadToWaitCount == 0 ? 0 : accumulatedWaitTime / hadToWaitCount;
     } finally {
-      reentrantLock.unlock();
+      lock.unlock();
     }
   }
 
   public long getHadToWaitCount() {
-    reentrantLock.lock();
+    lock.lock();
     try {
       return hadToWaitCount;
     } finally {
-      reentrantLock.unlock();
+      lock.unlock();
     }
   }
 
   public long getBadConnectionCount() {
-    reentrantLock.lock();
+    lock.lock();
     try {
       return badConnectionCount;
     } finally {
-      reentrantLock.unlock();
+      lock.unlock();
     }
   }
 
   public long getClaimedOverdueConnectionCount() {
-    reentrantLock.lock();
+    lock.lock();
     try {
       return claimedOverdueConnectionCount;
     } finally {
-      reentrantLock.unlock();
+      lock.unlock();
     }
   }
 
   public long getAverageOverdueCheckoutTime() {
-    reentrantLock.lock();
+    lock.lock();
     try {
       return claimedOverdueConnectionCount == 0 ? 0
           : accumulatedCheckoutTimeOfOverdueConnections / claimedOverdueConnectionCount;
     } finally {
-      reentrantLock.unlock();
+      lock.unlock();
     }
   }
 
   public long getAverageCheckoutTime() {
-    reentrantLock.lock();
+    lock.lock();
     try {
       return requestCount == 0 ? 0 : accumulatedCheckoutTime / requestCount;
     } finally {
-      reentrantLock.unlock();
+      lock.unlock();
     }
   }
 
   public int getIdleConnectionCount() {
-    reentrantLock.lock();
+    lock.lock();
     try {
       return idleConnections.size();
     } finally {
-      reentrantLock.unlock();
+      lock.unlock();
     }
   }
 
   public int getActiveConnectionCount() {
-    reentrantLock.lock();
+    lock.lock();
     try {
       return activeConnections.size();
     } finally {
-      reentrantLock.unlock();
+      lock.unlock();
     }
   }
 
   @Override
   public String toString() {
-    reentrantLock.lock();
+    lock.lock();
     try {
       StringBuilder builder = new StringBuilder();
       builder.append("\n===CONFIGURATION==============================================");
@@ -168,7 +171,7 @@ public class PoolState {
       builder.append("\n===============================================================");
       return builder.toString();
     } finally {
-      reentrantLock.unlock();
+      lock.unlock();
     }
   }
 
