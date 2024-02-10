@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -135,27 +134,12 @@ public class MapperAnnotationBuilder {
         }
       }
     }
-    parsePendingMethods();
+    configuration.parsePendingMethods(false);
   }
 
   private static boolean canHaveStatement(Method method) {
     // issue #237
     return !method.isBridge() && !method.isDefault();
-  }
-
-  private void parsePendingMethods() {
-    Collection<MethodResolver> incompleteMethods = configuration.getIncompleteMethods();
-    synchronized (incompleteMethods) {
-      Iterator<MethodResolver> iter = incompleteMethods.iterator();
-      while (iter.hasNext()) {
-        try {
-          iter.next().resolve();
-          iter.remove();
-        } catch (IncompleteElementException e) {
-          // This method is still missing a resource
-        }
-      }
-    }
   }
 
   private void loadXmlResource() {

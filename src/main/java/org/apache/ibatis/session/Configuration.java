@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.BiFunction;
 
 import org.apache.ibatis.binding.MapperRegistry;
@@ -95,7 +96,6 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeAliasRegistry;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
-import org.apache.ibatis.util.LockKit;
 
 /**
  * @author Clinton Begin
@@ -171,6 +171,11 @@ public class Configuration {
   protected final Collection<CacheRefResolver> incompleteCacheRefs = new LinkedList<>();
   protected final Collection<ResultMapResolver> incompleteResultMaps = new LinkedList<>();
   protected final Collection<MethodResolver> incompleteMethods = new LinkedList<>();
+
+  private final ReentrantLock incompleteResultMapsLock = new ReentrantLock();
+  private final ReentrantLock incompleteCacheRefsLock = new ReentrantLock();
+  private final ReentrantLock incompleteStatementsLock = new ReentrantLock();
+  private final ReentrantLock incompleteMethodsLock = new ReentrantLock();
 
   /*
    * A map holds cache-ref relationship. The key is the namespace that references a cache bound to another namespace and
@@ -832,34 +837,70 @@ public class Configuration {
     return mappedStatements.values();
   }
 
+  /**
+   * @deprecated call {@link #parsePendingStatements(boolean)}
+   */
+  @Deprecated
   public Collection<XMLStatementBuilder> getIncompleteStatements() {
     return incompleteStatements;
   }
 
   public void addIncompleteStatement(XMLStatementBuilder incompleteStatement) {
-    incompleteStatements.add(incompleteStatement);
+    incompleteStatementsLock.lock();
+    try {
+      incompleteStatements.add(incompleteStatement);
+    } finally {
+      incompleteStatementsLock.unlock();
+    }
   }
 
+  /**
+   * @deprecated call {@link #parsePendingCacheRefs(boolean)}
+   */
+  @Deprecated
   public Collection<CacheRefResolver> getIncompleteCacheRefs() {
     return incompleteCacheRefs;
   }
 
   public void addIncompleteCacheRef(CacheRefResolver incompleteCacheRef) {
-    incompleteCacheRefs.add(incompleteCacheRef);
+    incompleteCacheRefsLock.lock();
+    try {
+      incompleteCacheRefs.add(incompleteCacheRef);
+    } finally {
+      incompleteCacheRefsLock.unlock();
+    }
   }
 
+  /**
+   * @deprecated call {@link #parsePendingResultMaps(boolean)}
+   */
+  @Deprecated
   public Collection<ResultMapResolver> getIncompleteResultMaps() {
     return incompleteResultMaps;
   }
 
   public void addIncompleteResultMap(ResultMapResolver resultMapResolver) {
-    incompleteResultMaps.add(resultMapResolver);
+    incompleteResultMapsLock.lock();
+    try {
+      incompleteResultMaps.add(resultMapResolver);
+    } finally {
+      incompleteResultMapsLock.unlock();
+    }
   }
 
   public void addIncompleteMethod(MethodResolver builder) {
-    incompleteMethods.add(builder);
+    incompleteMethodsLock.lock();
+    try {
+      incompleteMethods.add(builder);
+    } finally {
+      incompleteMethodsLock.unlock();
+    }
   }
 
+  /**
+   * @deprecated call {@link #parsePendingMethods(boolean)}
+   */
+  @Deprecated
   public Collection<MethodResolver> getIncompleteMethods() {
     return incompleteMethods;
   }
@@ -923,48 +964,71 @@ public class Configuration {
    * are added as it provides fail-fast statement validation.
    */
   protected void buildAllStatements() {
-    parsePendingResultMaps();
-    if (!incompleteCacheRefs.isEmpty()) {
-      LockKit.ReentrantLock lock = LockKit.obtainLock(incompleteCacheRefs);
-      lock.lock();
-      try {
-        incompleteCacheRefs.removeIf(x -> x.resolveCacheRef() != null);
-      } finally {
-        lock.unlock();
-      }
+    parsePendingResultMaps(true);
+    parsePendingCacheRefs(true);
+    parsePendingStatements(true);
+    parsePendingMethods(true);
+  }
+
+  public void parsePendingMethods(boolean reportUnresolved) {
+    if (incompleteMethods.isEmpty()) {
+      return;
     }
-    if (!incompleteStatements.isEmpty()) {
-      LockKit.ReentrantLock lock = LockKit.obtainLock(incompleteStatements);
-      lock.lock();
-      try {
-        incompleteStatements.removeIf(x -> {
-          x.parseStatementNode();
-          return true;
-        });
-      } finally {
-        lock.unlock();
+    incompleteMethodsLock.lock();
+    try {
+      incompleteMethods.removeIf(x -> {
+        x.resolve();
+        return true;
+      });
+    } catch (IncompleteElementException e) {
+      if (reportUnresolved) {
+        throw e;
       }
-    }
-    if (!incompleteMethods.isEmpty()) {
-      LockKit.ReentrantLock lock = LockKit.obtainLock(incompleteMethods);
-      lock.lock();
-      try {
-        incompleteMethods.removeIf(x -> {
-          x.resolve();
-          return true;
-        });
-      } finally {
-        lock.unlock();
-      }
+    } finally {
+      incompleteMethodsLock.unlock();
     }
   }
 
-  private void parsePendingResultMaps() {
+  public void parsePendingStatements(boolean reportUnresolved) {
+    if (incompleteStatements.isEmpty()) {
+      return;
+    }
+    incompleteStatementsLock.lock();
+    try {
+      incompleteStatements.removeIf(x -> {
+        x.parseStatementNode();
+        return true;
+      });
+    } catch (IncompleteElementException e) {
+      if (reportUnresolved) {
+        throw e;
+      }
+    } finally {
+      incompleteStatementsLock.unlock();
+    }
+  }
+
+  public void parsePendingCacheRefs(boolean reportUnresolved) {
+    if (incompleteCacheRefs.isEmpty()) {
+      return;
+    }
+    incompleteCacheRefsLock.lock();
+    try {
+      incompleteCacheRefs.removeIf(x -> x.resolveCacheRef() != null);
+    } catch (IncompleteElementException e) {
+      if (reportUnresolved) {
+        throw e;
+      }
+    } finally {
+      incompleteCacheRefsLock.unlock();
+    }
+  }
+
+  public void parsePendingResultMaps(boolean reportUnresolved) {
     if (incompleteResultMaps.isEmpty()) {
       return;
     }
-    LockKit.ReentrantLock lock = LockKit.obtainLock(incompleteResultMaps);
-    lock.lock();
+    incompleteResultMapsLock.lock();
     try {
       boolean resolved;
       IncompleteElementException ex = null;
@@ -981,12 +1045,12 @@ public class Configuration {
           }
         }
       } while (resolved);
-      if (!incompleteResultMaps.isEmpty() && ex != null) {
+      if (reportUnresolved && !incompleteResultMaps.isEmpty() && ex != null) {
         // At least one result map is unresolvable.
         throw ex;
       }
     } finally {
-      lock.unlock();
+      incompleteResultMapsLock.unlock();
     }
   }
 
