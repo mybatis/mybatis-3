@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.cache.decorators;
 
-import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.ibatis.cache.Cache;
 
@@ -24,7 +24,7 @@ import org.apache.ibatis.cache.Cache;
  */
 public class SynchronizedCache implements Cache {
 
-  private final ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock();
+  private final ReentrantLock lock = new ReentrantLock();
   private final Cache delegate;
 
   public SynchronizedCache(Cache delegate) {
@@ -38,51 +38,51 @@ public class SynchronizedCache implements Cache {
 
   @Override
   public int getSize() {
-    readWriteLock.readLock().lock();
+    lock.lock();
     try {
       return delegate.getSize();
     } finally {
-      readWriteLock.readLock().unlock();
+      lock.unlock();
     }
   }
 
   @Override
   public void putObject(Object key, Object object) {
-    readWriteLock.writeLock().lock();
+    lock.lock();
     try {
       delegate.putObject(key, object);
     } finally {
-      readWriteLock.writeLock().unlock();
+      lock.unlock();
     }
   }
 
   @Override
   public Object getObject(Object key) {
-    readWriteLock.readLock().lock();
+    lock.lock();
     try {
       return delegate.getObject(key);
     } finally {
-      readWriteLock.readLock().unlock();
+      lock.unlock();
     }
   }
 
   @Override
   public Object removeObject(Object key) {
-    readWriteLock.writeLock().lock();
+    lock.lock();
     try {
       return delegate.removeObject(key);
     } finally {
-      readWriteLock.writeLock().unlock();
+      lock.unlock();
     }
   }
 
   @Override
   public void clear() {
-    readWriteLock.writeLock().lock();
+    lock.lock();
     try {
       delegate.clear();
     } finally {
-      readWriteLock.writeLock().unlock();
+      lock.unlock();
     }
   }
 
