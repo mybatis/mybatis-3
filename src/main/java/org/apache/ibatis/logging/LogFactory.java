@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ public final class LogFactory {
    */
   public static final String MARKER = "MYBATIS";
 
-  private static final ReentrantLock reentrantLock = new ReentrantLock();
+  private static final ReentrantLock lock = new ReentrantLock();
   private static Constructor<? extends Log> logConstructor;
 
   static {
@@ -104,7 +104,7 @@ public final class LogFactory {
   }
 
   private static void setImplementation(Class<? extends Log> implClass) {
-    reentrantLock.lock();
+    lock.lock();
     try {
       Constructor<? extends Log> candidate = implClass.getConstructor(String.class);
       Log log = candidate.newInstance(LogFactory.class.getName());
@@ -115,7 +115,7 @@ public final class LogFactory {
     } catch (Throwable t) {
       throw new LogException("Error setting Log implementation.  Cause: " + t, t);
     } finally {
-      reentrantLock.unlock();
+      lock.unlock();
     }
   }
 

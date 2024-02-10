@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ import org.apache.ibatis.logging.LogFactory;
  */
 public class JBoss6VFS extends VFS {
   private static final Log log = LogFactory.getLog(JBoss6VFS.class);
-  private static final ReentrantLock reentrantLock = new ReentrantLock();
+  private static final ReentrantLock lock = new ReentrantLock();
 
   /** A class that mimics a tiny subset of the JBoss VirtualFile class. */
   static class VirtualFile {
@@ -87,7 +87,7 @@ public class JBoss6VFS extends VFS {
 
   /** Find all the classes and methods that are required to access the JBoss 6 VFS. */
   protected static void initialize() {
-    reentrantLock.lock();
+    lock.lock();
     try {
       if (valid == null) {
         // Assume valid. It will get flipped later if something goes wrong.
@@ -109,7 +109,7 @@ public class JBoss6VFS extends VFS {
         checkReturnType(VirtualFile.getPathNameRelativeTo, String.class);
       }
     } finally {
-      reentrantLock.unlock();
+      lock.unlock();
     }
   }
 

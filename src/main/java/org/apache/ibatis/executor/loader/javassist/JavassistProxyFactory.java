@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -100,7 +100,6 @@ public class JavassistProxyFactory implements org.apache.ibatis.executor.loader.
   }
 
   private static class EnhancedResultObjectProxyImpl implements MethodHandler {
-    private final ReentrantLock reentrantLock = new ReentrantLock();
     private final Class<?> type;
     private final ResultLoaderMap lazyLoader;
     private final boolean aggressive;
@@ -108,6 +107,7 @@ public class JavassistProxyFactory implements org.apache.ibatis.executor.loader.
     private final ObjectFactory objectFactory;
     private final List<Class<?>> constructorArgTypes;
     private final List<Object> constructorArgs;
+    private final ReentrantLock lock = new ReentrantLock();
 
     private EnhancedResultObjectProxyImpl(Class<?> type, ResultLoaderMap lazyLoader, Configuration configuration,
         ObjectFactory objectFactory, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
@@ -133,7 +133,7 @@ public class JavassistProxyFactory implements org.apache.ibatis.executor.loader.
     @Override
     public Object invoke(Object enhanced, Method method, Method methodProxy, Object[] args) throws Throwable {
       final String methodName = method.getName();
-      reentrantLock.lock();
+      lock.lock();
       try {
         if (WRITE_REPLACE_METHOD.equals(methodName)) {
           Object original;
@@ -167,7 +167,7 @@ public class JavassistProxyFactory implements org.apache.ibatis.executor.loader.
       } catch (Throwable t) {
         throw ExceptionUtil.unwrapThrowable(t);
       } finally {
-        reentrantLock.unlock();
+        lock.unlock();
       }
     }
   }
