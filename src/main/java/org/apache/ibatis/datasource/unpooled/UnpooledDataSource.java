@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -26,12 +26,12 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
 import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.util.MapUtil;
 
 /**
  * @author Clinton Begin
@@ -42,7 +42,6 @@ public class UnpooledDataSource implements DataSource {
   private ClassLoader driverClassLoader;
   private Properties driverProperties;
   private static final Map<String, Driver> registeredDrivers = new ConcurrentHashMap<>();
-  private final ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
   private String driver;
   private String url;
@@ -140,23 +139,11 @@ public class UnpooledDataSource implements DataSource {
   }
 
   public String getDriver() {
-    readWriteLock.readLock().lock();
-    try {
-      return driver;
-    } finally {
-      readWriteLock.readLock().unlock();
-    }
-
+    return driver;
   }
 
   public void setDriver(String driver) {
-    readWriteLock.writeLock().lock();
-    try {
-      this.driver = driver;
-    } finally {
-      readWriteLock.writeLock().unlock();
-    }
-
+    this.driver = driver;
   }
 
   public String getUrl() {
@@ -245,25 +232,24 @@ public class UnpooledDataSource implements DataSource {
   }
 
   private void initializeDriver() throws SQLException {
-    if (!registeredDrivers.containsKey(driver)) {
-      Class<?> driverType;
-      readWriteLock.readLock().lock();
-      try {
-        if (driverClassLoader != null) {
-          driverType = Class.forName(driver, true, driverClassLoader);
-        } else {
-          driverType = Resources.classForName(driver);
+    try {
+      MapUtil.computeIfAbsent(registeredDrivers, driver, x -> {
+        Class<?> driverType;
+        try {
+          if (driverClassLoader != null) {
+            driverType = Class.forName(x, true, driverClassLoader);
+          } else {
+            driverType = Resources.classForName(x);
+          }
+          Driver driverInstance = (Driver) driverType.getDeclaredConstructor().newInstance();
+          DriverManager.registerDriver(new DriverProxy(driverInstance));
+          return driverInstance;
+        } catch (Exception e) {
+          throw new RuntimeException("Error setting driver on UnpooledDataSource.", e);
         }
-        // DriverManager requires the driver to be loaded via the system ClassLoader.
-        // https://www.kfu.com/~nsayer/Java/dyn-jdbc.html
-        Driver driverInstance = (Driver) driverType.getDeclaredConstructor().newInstance();
-        DriverManager.registerDriver(new DriverProxy(driverInstance));
-        registeredDrivers.put(driver, driverInstance);
-      } catch (Exception e) {
-        throw new SQLException("Error setting driver on UnpooledDataSource. Cause: " + e);
-      } finally {
-        readWriteLock.readLock().lock();
-      }
+      });
+    } catch (RuntimeException re) {
+      throw new SQLException("Error setting driver on UnpooledDataSource.", re.getCause());
     }
   }
 
