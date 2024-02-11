@@ -35,7 +35,7 @@
     applications. MyBatis couples objects with stored procedures or SQL statements using a XML descriptor or
     annotations. Simplicity is the biggest advantage of the MyBatis data mapper over object relational mapping
     tools.</description>
-  <url>https://github.com/mybatis/mybatis-3</url>
+  <url>https://www.mybatis.org/mybatis-3/</url>
 
   <inceptionYear>2009</inceptionYear>
 
@@ -443,7 +443,6 @@
         <artifactId>maven-site-plugin</artifactId>
         <configuration>
           <locales>default,es,ja,fr,zh_CN,ko</locales>
-          <topSiteURL>${project.distributionManagement.site.url}</topSiteURL>
         </configuration>
       </plugin>
       <plugin>
