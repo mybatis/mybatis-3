@@ -9,6 +9,7 @@
 /nb*
 /release.properties
 /target
+.github/keys/
 
 # These are needed if running in IDE without properties set
 /ibderby
