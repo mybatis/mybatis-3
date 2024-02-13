@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.locks.ReentrantLock;
 
 import net.sf.cglib.proxy.Callback;
 import net.sf.cglib.proxy.Enhancer;
@@ -109,6 +110,7 @@ public class CglibProxyFactory implements ProxyFactory {
     private final ObjectFactory objectFactory;
     private final List<Class<?>> constructorArgTypes;
     private final List<Object> constructorArgs;
+    private final ReentrantLock lock = new ReentrantLock();
 
     private EnhancedResultObjectProxyImpl(Class<?> type, ResultLoaderMap lazyLoader, Configuration configuration,
         ObjectFactory objectFactory, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
@@ -134,40 +136,41 @@ public class CglibProxyFactory implements ProxyFactory {
     @Override
     public Object intercept(Object enhanced, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
       final String methodName = method.getName();
+      lock.lock();
       try {
-        synchronized (lazyLoader) {
-          if (WRITE_REPLACE_METHOD.equals(methodName)) {
-            Object original;
-            if (constructorArgTypes.isEmpty()) {
-              original = objectFactory.create(type);
-            } else {
-              original = objectFactory.create(type, constructorArgTypes, constructorArgs);
-            }
-            PropertyCopier.copyBeanProperties(type, enhanced, original);
-            if (lazyLoader.size() > 0) {
-              return new CglibSerialStateHolder(original, lazyLoader.getProperties(), objectFactory,
-                  constructorArgTypes, constructorArgs);
-            } else {
-              return original;
-            }
+        if (WRITE_REPLACE_METHOD.equals(methodName)) {
+          Object original;
+          if (constructorArgTypes.isEmpty()) {
+            original = objectFactory.create(type);
+          } else {
+            original = objectFactory.create(type, constructorArgTypes, constructorArgs);
           }
-          if (lazyLoader.size() > 0 && !FINALIZE_METHOD.equals(methodName)) {
-            if (aggressive || lazyLoadTriggerMethods.contains(methodName)) {
-              lazyLoader.loadAll();
-            } else if (PropertyNamer.isSetter(methodName)) {
-              final String property = PropertyNamer.methodToProperty(methodName);
-              lazyLoader.remove(property);
-            } else if (PropertyNamer.isGetter(methodName)) {
-              final String property = PropertyNamer.methodToProperty(methodName);
-              if (lazyLoader.hasLoader(property)) {
-                lazyLoader.load(property);
-              }
+          PropertyCopier.copyBeanProperties(type, enhanced, original);
+          if (lazyLoader.size() > 0) {
+            return new CglibSerialStateHolder(original, lazyLoader.getProperties(), objectFactory, constructorArgTypes,
+                constructorArgs);
+          } else {
+            return original;
+          }
+        }
+        if (lazyLoader.size() > 0 && !FINALIZE_METHOD.equals(methodName)) {
+          if (aggressive || lazyLoadTriggerMethods.contains(methodName)) {
+            lazyLoader.loadAll();
+          } else if (PropertyNamer.isSetter(methodName)) {
+            final String property = PropertyNamer.methodToProperty(methodName);
+            lazyLoader.remove(property);
+          } else if (PropertyNamer.isGetter(methodName)) {
+            final String property = PropertyNamer.methodToProperty(methodName);
+            if (lazyLoader.hasLoader(property)) {
+              lazyLoader.load(property);
             }
           }
         }
         return methodProxy.invokeSuper(enhanced, args);
       } catch (Throwable t) {
         throw ExceptionUtil.unwrapThrowable(t);
+      } finally {
+        lock.unlock();
       }
     }
   }

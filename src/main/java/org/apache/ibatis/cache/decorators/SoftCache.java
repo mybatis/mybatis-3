@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
 import java.util.Deque;
 import java.util.LinkedList;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.ibatis.cache.Cache;
 
@@ -34,6 +35,7 @@ public class SoftCache implements Cache {
   private final ReferenceQueue<Object> queueOfGarbageCollectedEntries;
   private final Cache delegate;
   private int numberOfHardLinks;
+  private final ReentrantLock lock = new ReentrantLock();
 
   public SoftCache(Cache delegate) {
     this.delegate = delegate;
@@ -74,11 +76,14 @@ public class SoftCache implements Cache {
         delegate.removeObject(key);
       } else {
         // See #586 (and #335) modifications need more than a read lock
-        synchronized (hardLinksToAvoidGarbageCollection) {
+        lock.lock();
+        try {
           hardLinksToAvoidGarbageCollection.addFirst(result);
           if (hardLinksToAvoidGarbageCollection.size() > numberOfHardLinks) {
             hardLinksToAvoidGarbageCollection.removeLast();
           }
+        } finally {
+          lock.unlock();
         }
       }
     }
@@ -95,8 +100,11 @@ public class SoftCache implements Cache {
 
   @Override
   public void clear() {
-    synchronized (hardLinksToAvoidGarbageCollection) {
+    lock.lock();
+    try {
       hardLinksToAvoidGarbageCollection.clear();
+    } finally {
+      lock.unlock();
     }
     removeGarbageCollectedItems();
     delegate.clear();

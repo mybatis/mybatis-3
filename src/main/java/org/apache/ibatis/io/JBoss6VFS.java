@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
@@ -32,6 +33,7 @@ import org.apache.ibatis.logging.LogFactory;
  */
 public class JBoss6VFS extends VFS {
   private static final Log log = LogFactory.getLog(JBoss6VFS.class);
+  private static final ReentrantLock lock = new ReentrantLock();
 
   /** A class that mimics a tiny subset of the JBoss VirtualFile class. */
   static class VirtualFile {
@@ -84,25 +86,30 @@ public class JBoss6VFS extends VFS {
   private static Boolean valid;
 
   /** Find all the classes and methods that are required to access the JBoss 6 VFS. */
-  protected static synchronized void initialize() {
-    if (valid == null) {
-      // Assume valid. It will get flipped later if something goes wrong.
-      valid = Boolean.TRUE;
+  protected static void initialize() {
+    lock.lock();
+    try {
+      if (valid == null) {
+        // Assume valid. It will get flipped later if something goes wrong.
+        valid = Boolean.TRUE;
 
-      // Look up and verify required classes
-      VFS.VFS = checkNotNull(getClass("org.jboss.vfs.VFS"));
-      VirtualFile.VirtualFile = checkNotNull(getClass("org.jboss.vfs.VirtualFile"));
+        // Look up and verify required classes
+        VFS.VFS = checkNotNull(getClass("org.jboss.vfs.VFS"));
+        VirtualFile.VirtualFile = checkNotNull(getClass("org.jboss.vfs.VirtualFile"));
 
-      // Look up and verify required methods
-      VFS.getChild = checkNotNull(getMethod(VFS.VFS, "getChild", URL.class));
-      VirtualFile.getChildrenRecursively = checkNotNull(getMethod(VirtualFile.VirtualFile, "getChildrenRecursively"));
-      VirtualFile.getPathNameRelativeTo = checkNotNull(
-          getMethod(VirtualFile.VirtualFile, "getPathNameRelativeTo", VirtualFile.VirtualFile));
+        // Look up and verify required methods
+        VFS.getChild = checkNotNull(getMethod(VFS.VFS, "getChild", URL.class));
+        VirtualFile.getChildrenRecursively = checkNotNull(getMethod(VirtualFile.VirtualFile, "getChildrenRecursively"));
+        VirtualFile.getPathNameRelativeTo = checkNotNull(
+            getMethod(VirtualFile.VirtualFile, "getPathNameRelativeTo", VirtualFile.VirtualFile));
 
-      // Verify that the API has not changed
-      checkReturnType(VFS.getChild, VirtualFile.VirtualFile);
-      checkReturnType(VirtualFile.getChildrenRecursively, List.class);
-      checkReturnType(VirtualFile.getPathNameRelativeTo, String.class);
+        // Verify that the API has not changed
+        checkReturnType(VFS.getChild, VirtualFile.VirtualFile);
+        checkReturnType(VirtualFile.getChildrenRecursively, List.class);
+        checkReturnType(VirtualFile.getPathNameRelativeTo, String.class);
+      }
+    } finally {
+      lock.unlock();
     }
   }
 
