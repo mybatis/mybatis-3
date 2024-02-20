@@ -135,7 +135,7 @@
     <derby.version>10.17.1.0</derby.version>
     <log4j.version>2.22.1</log4j.version>
     <mockito.version>5.10.0</mockito.version>
-    <mssql-jdbc.version>12.6.0.jre11</mssql-jdbc.version>
+    <mssql-jdbc.version>12.6.1.jre11</mssql-jdbc.version>
     <testcontainers.version>1.19.5</testcontainers.version>
 
     <!-- Add slow test groups here and annotate classes similar to @Tag('groupName'). -->
