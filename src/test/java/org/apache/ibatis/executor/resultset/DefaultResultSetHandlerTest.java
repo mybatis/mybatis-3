@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -122,7 +122,8 @@ class DefaultResultSetHandlerTest {
 
     try {
       defaultResultSetHandler.createParameterizedResultObject(rsw, null/* resultType */, constructorMappings,
-          null/* constructorArgTypes */, null/* constructorArgs */, null/* columnPrefix */);
+          null/* constructorArgTypes */, null/* constructorArgs */, null/* columnPrefix */, false,
+          /* useCollectionConstructorInjection */ null/* parentRowKey */);
       Assertions.fail("Should have thrown ExecutorException");
     } catch (Exception e) {
       Assertions.assertTrue(e instanceof ExecutorException, "Expected ExecutorException");
