@@ -21,7 +21,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -43,10 +43,7 @@ public abstract class BaseJdbcLogger {
   protected static final Set<String> SET_METHODS;
   protected static final Set<String> EXECUTE_METHODS = new HashSet<>();
 
-  private final Map<Object, Object> columnMap = new HashMap<>();
-
-  private final List<Object> columnNames = new ArrayList<>();
-  private final List<Object> columnValues = new ArrayList<>();
+  private final Map<Object, Object> columnMap = new LinkedHashMap<>();
 
   protected final Log statementLog;
   protected final int queryStack;
@@ -76,8 +73,6 @@ public abstract class BaseJdbcLogger {
 
   protected void setColumn(Object key, Object value) {
     columnMap.put(key, value);
-    columnNames.add(key);
-    columnValues.add(value);
   }
 
   protected Object getColumn(Object key) {
@@ -85,8 +80,8 @@ public abstract class BaseJdbcLogger {
   }
 
   protected String getParameterValueString() {
-    List<Object> typeList = new ArrayList<>(columnValues.size());
-    for (Object value : columnValues) {
+    List<Object> typeList = new ArrayList<>(columnMap.size());
+    for (Object value : columnMap.values()) {
       if (value == null) {
         typeList.add("null");
       } else {
@@ -109,13 +104,11 @@ public abstract class BaseJdbcLogger {
   }
 
   protected String getColumnString() {
-    return columnNames.toString();
+    return columnMap.keySet().toString();
   }
 
   protected void clearColumnInfo() {
     columnMap.clear();
-    columnNames.clear();
-    columnValues.clear();
   }
 
   protected String removeExtraWhitespace(String original) {
