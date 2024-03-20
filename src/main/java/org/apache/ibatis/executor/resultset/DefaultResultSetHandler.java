@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -782,8 +782,9 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private boolean applyColumnOrderBasedConstructorAutomapping(ResultSetWrapper rsw, List<Class<?>> constructorArgTypes,
       List<Object> constructorArgs, Constructor<?> constructor, boolean foundValues) throws SQLException {
-    for (int i = 0; i < constructor.getParameterTypes().length; i++) {
-      Class<?> parameterType = constructor.getParameterTypes()[i];
+    Class<?>[] parameterTypes = constructor.getParameterTypes();
+    for (int i = 0; i < parameterTypes.length; i++) {
+      Class<?> parameterType = parameterTypes[i];
       String columnName = rsw.getColumnNames().get(i);
       TypeHandler<?> typeHandler = rsw.getTypeHandler(parameterType, columnName);
       Object value = typeHandler.getResult(rsw.getResultSet(), columnName);
