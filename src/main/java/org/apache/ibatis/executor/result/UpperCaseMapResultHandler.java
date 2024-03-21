@@ -11,42 +11,42 @@ import org.apache.ibatis.session.ResultContext;
  */
 public class UpperCaseMapResultHandler extends DefaultResultHandler {
 
-	private boolean fromCache = false;
+  private boolean fromCache = false;
 
-	public UpperCaseMapResultHandler() {
-		super();
-	}
+  public UpperCaseMapResultHandler() {
+    super();
+  }
 
-	public UpperCaseMapResultHandler(ObjectFactory objectFactory) {
-		super(objectFactory);
-	}
+  public UpperCaseMapResultHandler(ObjectFactory objectFactory) {
+    super(objectFactory);
+  }
 
-	@Override
-	public void handleResult(ResultContext<? extends Object> context) {
+  @Override
+  public void handleResult(ResultContext<? extends Object> context) {
 
-		Object result = context.getResultObject();
-		if (result != null) {
-			super.getResultList().add(buildUpperCasekeyMap(result));
-			return;
-		}
+    Object result = context.getResultObject();
+    if (result != null) {
+      super.getResultList().add(buildUpperCasekeyMap(result));
+      return;
+    }
 
-		super.handleResult(context);
-	}
+    super.handleResult(context);
+  }
 
-	public static Object buildUpperCasekeyMap(Object result) {
-		if (result != null && Map.class.isAssignableFrom(result.getClass())) {
-			Map<?, ?> map = (Map<?, ?>) result;
-			return map.keySet().stream().collect(Collectors.toMap(key -> ((String) key).toUpperCase(), key -> map.get(key)));
-		}
-		return result;
-	}
+  public static Object buildUpperCasekeyMap(Object result) {
+    if (result != null && Map.class.isAssignableFrom(result.getClass())) {
+      Map<?, ?> map = (Map<?, ?>) result;
+      return map.keySet().stream().collect(Collectors.toMap(key -> ((String) key).toUpperCase(), key -> map.get(key)));
+    }
+    return result;
+  }
 
-	public boolean isFromCache() {
-		return fromCache;
-	}
+  public boolean isFromCache() {
+    return fromCache;
+  }
 
-	public void setFromCache(boolean fromCache) {
-		this.fromCache = fromCache;
-	}
+  public void setFromCache(boolean fromCache) {
+    this.fromCache = fromCache;
+  }
 
 }

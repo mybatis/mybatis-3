@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.submitted.nestedresulthandler_association;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.Reader;
 import java.text.SimpleDateFormat;
@@ -39,7 +39,8 @@ class NestedResultHandlerAssociationTest {
   @BeforeAll
   static void setUp() throws Exception {
     // create an SqlSessionFactory
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/nestedresulthandler_association/mybatis-config.xml")) {
+    try (Reader reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/nestedresulthandler_association/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
@@ -73,8 +74,9 @@ class NestedResultHandlerAssociationTest {
       sqlSession.select("collectPageByBirthMonth", targetMonth, context -> {
         Account account = (Account) context.getResultObject();
         accounts.add(account);
-        if (accounts.size() > 1)
+        if (accounts.size() > 1) {
           context.stop();
+        }
       });
     }
     assertEquals(2, accounts.size());

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -671,25 +671,25 @@ class SqlProviderTest {
     {
       Method mapperMethod = mapperType.getMethod("select", int.class);
       String sql = new ProviderSqlSource(configuration, mapperMethod.getAnnotation(SelectProvider.class), mapperType,
-        mapperMethod).getBoundSql(1).getSql();
+          mapperMethod).getBoundSql(1).getSql();
       assertEquals("select name from foo where id = ?", sql);
     }
     {
       Method mapperMethod = mapperType.getMethod("insert", String.class);
       String sql = new ProviderSqlSource(configuration, mapperMethod.getAnnotation(InsertProvider.class), mapperType,
-        mapperMethod).getBoundSql("Taro").getSql();
+          mapperMethod).getBoundSql("Taro").getSql();
       assertEquals("insert into foo (name) values(?)", sql);
     }
     {
       Method mapperMethod = mapperType.getMethod("update", int.class, String.class);
       String sql = new ProviderSqlSource(configuration, mapperMethod.getAnnotation(UpdateProvider.class), mapperType,
-        mapperMethod).getBoundSql(Collections.emptyMap() ).getSql();
+          mapperMethod).getBoundSql(Collections.emptyMap()).getSql();
       assertEquals("update foo set name = ? where id = ?", sql);
     }
     {
       Method mapperMethod = mapperType.getMethod("delete", int.class);
       String sql = new ProviderSqlSource(configuration, mapperMethod.getAnnotation(DeleteProvider.class), mapperType,
-        mapperMethod).getBoundSql(Collections.emptyMap() ).getSql();
+          mapperMethod).getBoundSql(Collections.emptyMap()).getSql();
       assertEquals("delete from foo where id = ?", sql);
     }
   }
@@ -712,15 +712,18 @@ class SqlProviderTest {
 
       public static String provideSql(ProviderContext c) {
         switch (c.getMapperMethod().getName()) {
-          case "select" :
+          case "select":
             return "select name from foo where id = #{id}";
-          case "insert" :
+          case "insert":
             return "insert into foo (name) values(#{name})";
-          case "update" :
+          case "update":
             return "update foo set name = #{name} where id = #{id}";
           default:
             return "delete from foo where id = #{id}";
         }
+      }
+
+      private SqlProvider() {
       }
 
     }
@@ -920,6 +923,9 @@ class SqlProviderTest {
         return "SELECT '" + map1.get("value") + map2.get("value") + "' FROM INFORMATION_SCHEMA.SYSTEM_USERS";
       }
 
+      private SqlProvider() {
+      }
+
     }
 
   }
@@ -992,9 +998,11 @@ class SqlProviderTest {
       public static String provideSql(ProviderContext context) {
         if ("hsql".equals(context.getDatabaseId())) {
           return "SELECT '" + context.getDatabaseId() + "' FROM INFORMATION_SCHEMA.SYSTEM_USERS";
-        } else {
-          return "SELECT '" + context.getDatabaseId() + "' FROM SYSIBM.SYSDUMMY1";
         }
+        return "SELECT '" + context.getDatabaseId() + "' FROM SYSIBM.SYSDUMMY1";
+      }
+
+      private SqlProvider() {
       }
     }
   }

@@ -184,6 +184,7 @@ databaseId CDATA #IMPLIED
 lang CDATA #IMPLIED
 resultOrdered (true|false) #IMPLIED
 resultSets CDATA #IMPLIED 
+affectData (true|false) #IMPLIED
 >
 
 <!ELEMENT insert (#PCDATA | selectKey | include | trim | where | set | foreach | choose | if | bind)*>

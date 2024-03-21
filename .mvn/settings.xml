@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2022 the original author or authors.
+       Copyright 2009-2023 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -24,8 +24,13 @@
       <username>${env.CI_DEPLOY_USERNAME}</username>
       <password>${env.CI_DEPLOY_PASSWORD}</password>
     </server>
+    <!-- Used for gh-pages-scm publish via maven-scm-publish-plugin -->
     <server>
-      <id>gh-pages</id>
+      <id>gh-pages-scm</id>
+      <configuration>
+        <scmVersionType>branch</scmVersionType>
+        <scmVersion>gh-pages</scmVersion>
+      </configuration>
     </server>
     <server>
       <id>github</id>

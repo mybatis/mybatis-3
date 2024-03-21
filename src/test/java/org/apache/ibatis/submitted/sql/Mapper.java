@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -29,13 +29,15 @@ public interface Mapper {
 
   class SqlProvider implements ProviderMethodResolver {
     public String findAll() {
+      // @formatter:off
       return new SQL()
-        .SELECT("user_id", "name")
-        .FROM("${schema}users")
-        .ORDER_BY("user_id")
-        .OFFSET_ROWS("#{offset}")
-        .FETCH_FIRST_ROWS_ONLY("#{limit}")
-        .toString();
+          .SELECT("user_id", "name")
+          .FROM("${schema}users")
+          .ORDER_BY("user_id")
+          .OFFSET_ROWS("#{offset}")
+          .FETCH_FIRST_ROWS_ONLY("#{limit}")
+          .toString();
+      // @formatter:on
     }
   }
 

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,10 +15,11 @@
  */
 package org.apache.ibatis.submitted.localtime;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.Reader;
 import java.time.LocalTime;
+import java.util.TimeZone;
 
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
@@ -52,6 +53,7 @@ class LocalTimeTest {
 
   @Test
   void shouldInsertLocalTimeWithNanoseconds() {
+    TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
     LocalTime t = LocalTime.of(11, 22, 33, 123456789);
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);

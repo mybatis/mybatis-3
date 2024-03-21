@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -71,6 +71,7 @@ public class PropertyTokenizer implements Iterator<PropertyTokenizer> {
 
   @Override
   public void remove() {
-    throw new UnsupportedOperationException("Remove is not supported, as it has no meaning in the context of properties.");
+    throw new UnsupportedOperationException(
+        "Remove is not supported, as it has no meaning in the context of properties.");
   }
 }

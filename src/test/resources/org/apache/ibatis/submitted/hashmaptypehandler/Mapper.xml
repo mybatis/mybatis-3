@@ -27,7 +27,7 @@
     </select>
 
     <select id="getUserWithTypeHandlerXml" resultType="org.apache.ibatis.submitted.hashmaptypehandler.User">
-        select * from users where name = #{name}
+        select * from users where name = #{dummy}
     </select>
 
 </mapper>

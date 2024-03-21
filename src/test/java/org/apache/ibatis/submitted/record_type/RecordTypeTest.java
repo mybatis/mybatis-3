@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.submitted.record_type;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.Reader;
 
@@ -71,7 +71,7 @@ class RecordTypeTest {
     }
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       RecordTypeMapper mapper = sqlSession.getMapper(RecordTypeMapper.class);
-      Property prop  = mapper.selectProperty(2);
+      Property prop = mapper.selectProperty(2);
       assertEquals("Val2!!", prop.value());
       assertEquals("https://mybatis.org", prop.URL());
     }

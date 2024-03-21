@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ public abstract class AbstractSerialStateHolder implements Externalizable {
 
   private static final long serialVersionUID = 8940388717901644661L;
   private static final ThreadLocal<ObjectOutputStream> stream = new ThreadLocal<>();
-  private byte[] userBeanBytes = new byte[0];
+  private byte[] userBeanBytes = {};
   private Object userBean;
   private Map<String, ResultLoaderMap.LoadPair> unloadedProperties;
   private ObjectFactory objectFactory;
@@ -52,12 +52,9 @@ public abstract class AbstractSerialStateHolder implements Externalizable {
   public AbstractSerialStateHolder() {
   }
 
-  public AbstractSerialStateHolder(
-          final Object userBean,
-          final Map<String, ResultLoaderMap.LoadPair> unloadedProperties,
-          final ObjectFactory objectFactory,
-          List<Class<?>> constructorArgTypes,
-          List<Object> constructorArgs) {
+  public AbstractSerialStateHolder(final Object userBean,
+      final Map<String, ResultLoaderMap.LoadPair> unloadedProperties, final ObjectFactory objectFactory,
+      List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
     this.userBean = userBean;
     this.unloadedProperties = new HashMap<>(unloadedProperties);
     this.objectFactory = objectFactory;
@@ -129,6 +126,7 @@ public abstract class AbstractSerialStateHolder implements Externalizable {
     return this.createDeserializationProxy(userBean, arrayProps, objectFactory, arrayTypes, arrayValues);
   }
 
-  protected abstract Object createDeserializationProxy(Object target, Map<String, ResultLoaderMap.LoadPair> unloadedProperties, ObjectFactory objectFactory,
-          List<Class<?>> constructorArgTypes, List<Object> constructorArgs);
+  protected abstract Object createDeserializationProxy(Object target,
+      Map<String, ResultLoaderMap.LoadPair> unloadedProperties, ObjectFactory objectFactory,
+      List<Class<?>> constructorArgTypes, List<Object> constructorArgs);
 }

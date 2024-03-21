@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.submitted.timezone_edge_case;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.Reader;
 import java.sql.Connection;
@@ -63,7 +63,8 @@ class TimezoneEdgeCaseTest {
 
   @Test
   void shouldSelectNonExistentLocalTimestampAsIs() {
-    TimeZone.setDefault(TimeZone.getTimeZone("America/Los_Angeles"));
+    // Newer hsqldb requires we use a bogus timezone as timezone now works
+    TimeZone.setDefault(TimeZone.getTimeZone("Bad/Zone"));
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Record record = mapper.selectById(1);
@@ -73,7 +74,8 @@ class TimezoneEdgeCaseTest {
 
   @Test
   void shouldInsertNonExistentLocalTimestampAsIs() throws Exception {
-    TimeZone.setDefault(TimeZone.getTimeZone("America/Los_Angeles"));
+    // Newer hsqldb requires we use a bogus timezone as timezone now works
+    TimeZone.setDefault(TimeZone.getTimeZone("Bad/Zone"));
     LocalDateTime localDateTime = LocalDateTime.of(LocalDate.of(2019, 3, 10), LocalTime.of(2, 30));
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
@@ -83,8 +85,7 @@ class TimezoneEdgeCaseTest {
       mapper.insert(record);
       sqlSession.commit();
     }
-    try (SqlSession sqlSession = sqlSessionFactory.openSession();
-        Connection con = sqlSession.getConnection();
+    try (SqlSession sqlSession = sqlSessionFactory.openSession(); Connection con = sqlSession.getConnection();
         Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery("select count(*) from records where id = 2 and ts = '2019-03-10 02:30:00'")) {
       rs.next();
@@ -94,7 +95,8 @@ class TimezoneEdgeCaseTest {
 
   @Test
   void shouldSelectNonExistentLocalDateAsIs() {
-    TimeZone.setDefault(TimeZone.getTimeZone("Pacific/Apia"));
+    // Newer hsqldb requires we use a bogus timezone as timezone now works
+    TimeZone.setDefault(TimeZone.getTimeZone("Bad/Zone"));
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Record record = mapper.selectById(1);
@@ -104,7 +106,8 @@ class TimezoneEdgeCaseTest {
 
   @Test
   void shouldInsertNonExistentLocalDateAsIs() throws Exception {
-    TimeZone.setDefault(TimeZone.getTimeZone("Pacific/Apia"));
+    // Newer hsqldb requires we use a bogus timezone as timezone now works
+    TimeZone.setDefault(TimeZone.getTimeZone("Bad/Zone"));
     LocalDate localDate = LocalDate.of(2011, 12, 30);
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
@@ -114,8 +117,7 @@ class TimezoneEdgeCaseTest {
       mapper.insert(record);
       sqlSession.commit();
     }
-    try (SqlSession sqlSession = sqlSessionFactory.openSession();
-        Connection con = sqlSession.getConnection();
+    try (SqlSession sqlSession = sqlSessionFactory.openSession(); Connection con = sqlSession.getConnection();
         Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery("select count(*) from records where id = 3 and d = '2011-12-30'")) {
       rs.next();

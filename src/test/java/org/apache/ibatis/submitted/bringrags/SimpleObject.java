@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@ import java.util.List;
 
 public class SimpleObject {
 
-  private String id;
-  private List<SimpleChildObject> simpleChildObjects;
+  private final String id;
+  private final List<SimpleChildObject> simpleChildObjects;
 
   public SimpleObject(String id) {
     this.id = id;

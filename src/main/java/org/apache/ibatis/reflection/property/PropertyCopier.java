@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -37,12 +37,11 @@ public final class PropertyCopier {
           try {
             field.set(destinationBean, field.get(sourceBean));
           } catch (IllegalAccessException e) {
-            if (Reflector.canControlMemberAccessible()) {
-              field.setAccessible(true);
-              field.set(destinationBean, field.get(sourceBean));
-            } else {
+            if (!Reflector.canControlMemberAccessible()) {
               throw e;
             }
+            field.setAccessible(true);
+            field.set(destinationBean, field.get(sourceBean));
           }
         } catch (Exception e) {
           // Nothing useful to do, will only fail on final fields, which will be ignored.

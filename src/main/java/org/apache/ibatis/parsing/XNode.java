@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -56,9 +56,8 @@ public class XNode {
     Node parent = node.getParentNode();
     if (!(parent instanceof Element)) {
       return null;
-    } else {
-      return new XNode(xpathParser, parent, variables);
     }
+    return new XNode(xpathParser, parent, variables);
   }
 
   public String getPath() {
@@ -82,13 +81,11 @@ public class XNode {
         builder.insert(0, "_");
       }
       String value = current.getStringAttribute("id",
-          current.getStringAttribute("value",
-              current.getStringAttribute("property", (String) null)));
+          current.getStringAttribute("value", current.getStringAttribute("property", (String) null)));
       if (value != null) {
         value = value.replace('.', '_');
         builder.insert(0, "]");
-        builder.insert(0,
-            value);
+        builder.insert(0, value);
         builder.insert(0, "[");
       }
       builder.insert(0, current.getName());
@@ -179,12 +176,11 @@ public class XNode {
 
   public <T extends Enum<T>> T getEnumAttribute(Class<T> enumType, String name, T def) {
     String value = getStringAttribute(name);
-    return value == null ? def : Enum.valueOf(enumType,value);
+    return value == null ? def : Enum.valueOf(enumType, value);
   }
 
   /**
    * Return a attribute value as String.
-   *
    * <p>
    * If attribute value is absent, return value that provided from supplier of default value.
    *
@@ -192,7 +188,9 @@ public class XNode {
    *          attribute name
    * @param defSupplier
    *          a supplier of default value
+   *
    * @return the string attribute
+   *
    * @since 3.5.4
    */
   public String getStringAttribute(String name, Supplier<String> defSupplier) {
@@ -282,14 +280,11 @@ public class XNode {
 
   @Override
   public String toString() {
-    StringBuilder builder = new StringBuilder();
-    toString(builder, 0);
-    return builder.toString();
+    return buildToString(new StringBuilder(), 0).toString();
   }
 
-  private void toString(StringBuilder builder, int level) {
-    builder.append("<");
-    builder.append(name);
+  private StringBuilder buildToString(StringBuilder builder, int indentLevel) {
+    indent(builder, indentLevel).append("<").append(name);
     for (Map.Entry<Object, Object> entry : attributes.entrySet()) {
       builder.append(" ");
       builder.append(entry.getKey());
@@ -297,34 +292,35 @@ public class XNode {
       builder.append(entry.getValue());
       builder.append("\"");
     }
-    List<XNode> children = getChildren();
-    if (!children.isEmpty()) {
-      builder.append(">\n");
-      for (XNode child : children) {
-        indent(builder, level + 1);
-        child.toString(builder, level + 1);
-      }
-      indent(builder, level);
-      builder.append("</");
-      builder.append(name);
-      builder.append(">");
-    } else if (body != null) {
-      builder.append(">");
-      builder.append(body);
-      builder.append("</");
-      builder.append(name);
-      builder.append(">");
+
+    NodeList nodeList = node.getChildNodes();
+    if (nodeList == null || nodeList.getLength() == 0) {
+      builder.append(" />\n");
     } else {
-      builder.append("/>");
-      indent(builder, level);
+      builder.append(">\n");
+      for (int i = 0, n = nodeList.getLength(); i < n; i++) {
+        Node node = nodeList.item(i);
+        short nodeType = node.getNodeType();
+        if (nodeType == Node.ELEMENT_NODE) {
+          new XNode(xpathParser, node, variables).buildToString(builder, indentLevel + 1);
+        } else {
+          String text = getBodyData(node).trim();
+          if (text.length() > 0) {
+            indent(builder, indentLevel + 1).append(text).append("\n");
+          }
+        }
+      }
+      indent(builder, indentLevel).append("</").append(name).append(">\n");
     }
-    builder.append("\n");
+
+    return builder;
   }
 
-  private void indent(StringBuilder builder, int level) {
+  private StringBuilder indent(StringBuilder builder, int level) {
     for (int i = 0; i < level; i++) {
-      builder.append("    ");
+      builder.append("  ");
     }
+    return builder;
   }
 
   private Properties parseAttributes(Node n) {
@@ -356,29 +352,27 @@ public class XNode {
   }
 
   private String getBodyData(Node child) {
-    if (child.getNodeType() == Node.CDATA_SECTION_NODE
-        || child.getNodeType() == Node.TEXT_NODE) {
+    if (child.getNodeType() == Node.CDATA_SECTION_NODE || child.getNodeType() == Node.TEXT_NODE) {
       String data = ((CharacterData) child).getData();
-      data = PropertyParser.parse(data, variables);
-      return data;
+      return PropertyParser.parse(data, variables);
     }
     return null;
   }
 
   public String toStringWithContent() {
-		StringBuilder builder = new StringBuilder();
-		toStringWithContent(builder);
-		return builder.toString();
-	}
+    StringBuilder builder = new StringBuilder();
+    toStringWithContent(builder);
+    return builder.toString();
+  }
 
-	private void toStringWithContent(StringBuilder builder) {
-		builder.append(toString());
-		Node clonedNode = getNode().cloneNode(true);
-		builder.append("<textContent>");
-		builder.append(clonedNode.getTextContent());
-		builder.append("<textContent>");
-		builder.append("<body>");
-		builder.append(body);
-		builder.append("<body>");
-	}
+  private void toStringWithContent(StringBuilder builder) {
+    builder.append(toString());
+    Node clonedNode = getNode().cloneNode(true);
+    builder.append("<textContent>");
+    builder.append(clonedNode.getTextContent());
+    builder.append("<textContent>");
+    builder.append("<body>");
+    builder.append(body);
+    builder.append("<body>");
+  }
 }

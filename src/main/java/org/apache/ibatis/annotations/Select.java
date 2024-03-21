@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,9 +24,10 @@ import java.lang.annotation.Target;
 
 /**
  * The annotation that specify an SQL for retrieving record(s).
- *
  * <p>
- * <b>How to use:</b>
+ * <b>How to use:</b> <br/>
+ * <ul>
+ * <li>Simple:
  *
  * <pre>
  * public interface UserMapper {
@@ -35,7 +36,23 @@ import java.lang.annotation.Target;
  * }
  * </pre>
  *
+ * </li>
+ * <li>Dynamic SQL:
+ *
+ * <pre>
+ * public interface UserMapper {
+ *   &#064;Select({ "&lt;script>", "select * from users", "where name = #{name}",
+ *       "&lt;if test=\"age != null\"> age = #{age} &lt;/if>", "&lt;/script>" })
+ *   User select(@NotNull String name, @Nullable Intger age);
+ * }
+ * </pre>
+ *
+ * </li>
+ * </ul>
+ *
  * @author Clinton Begin
+ *
+ * @see <a href="https://mybatis.org/mybatis-3/dynamic-sql.html">How to use Dynamic SQL</a>
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
@@ -51,13 +68,26 @@ public @interface Select {
 
   /**
    * @return A database id that correspond this statement
+   *
    * @since 3.5.5
    */
   String databaseId() default "";
 
   /**
+   * Returns whether this select affects DB data.<br>
+   * e.g. RETURNING of PostgreSQL or OUTPUT of MS SQL Server.
+   *
+   * @return {@code true} if this select affects DB data; {@code false} if otherwise
+   *
+   * @since 3.5.12
+   */
+  boolean affectData() default false;
+
+  /**
    * The container annotation for {@link Select}.
+   *
    * @author Kazuki Shimizu
+   *
    * @since 3.5.5
    */
   @Documented

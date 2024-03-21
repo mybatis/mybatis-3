@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -26,9 +26,7 @@ public enum ResultSetType {
    *
    * @since 3.5.0
    */
-  DEFAULT(-1),
-  FORWARD_ONLY(ResultSet.TYPE_FORWARD_ONLY),
-  SCROLL_INSENSITIVE(ResultSet.TYPE_SCROLL_INSENSITIVE),
+  DEFAULT(-1), FORWARD_ONLY(ResultSet.TYPE_FORWARD_ONLY), SCROLL_INSENSITIVE(ResultSet.TYPE_SCROLL_INSENSITIVE),
   SCROLL_SENSITIVE(ResultSet.TYPE_SCROLL_SENSITIVE);
 
   private final int value;

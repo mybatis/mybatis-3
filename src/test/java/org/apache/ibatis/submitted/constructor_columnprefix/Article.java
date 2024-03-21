@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,16 +17,15 @@ package org.apache.ibatis.submitted.constructor_columnprefix;
 
 public class Article {
 
-  private EntityKey id;
+  private final EntityKey id;
 
-  private String name;
+  private final String name;
 
-  private Author author;
+  private final Author author;
 
-  private Author coauthor;
+  private final Author coauthor;
 
   public Article(EntityKey id, String name, Author author, Author coauthor) {
-    super();
     this.id = id;
     this.name = name;
     this.author = author;

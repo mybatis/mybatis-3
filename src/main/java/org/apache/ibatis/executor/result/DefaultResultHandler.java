@@ -48,7 +48,7 @@ public class DefaultResultHandler implements ResultHandler<Object> {
   }
 
   public void setResultList(List<Object> list) {
-		this.list = list;
-	}
+    this.list = list;
+  }
 
 }

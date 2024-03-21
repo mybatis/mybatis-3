@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -21,21 +21,17 @@ public class Person {
   private String name;
 
   public Person() {
-    super();
   }
 
   public Person(Integer id) {
-    super();
     this.id = id;
   }
 
   public Person(String name) {
-    super();
     this.name = name;
   }
 
   public Person(Integer id, String name) {
-    super();
     this.id = id;
     this.name = name;
   }
