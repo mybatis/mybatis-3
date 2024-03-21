@@ -27,7 +27,7 @@ import org.apache.ibatis.session.ResultHandler;
  */
 public class DefaultResultHandler implements ResultHandler<Object> {
 
-  protected List<Object> list;
+  private final List<Object> list;
 
   public DefaultResultHandler() {
     list = new ArrayList<>();
@@ -45,10 +45,6 @@ public class DefaultResultHandler implements ResultHandler<Object> {
 
   public List<Object> getResultList() {
     return list;
-  }
-
-  public void setResultList(List<Object> list) {
-    this.list = list;
   }
 
 }

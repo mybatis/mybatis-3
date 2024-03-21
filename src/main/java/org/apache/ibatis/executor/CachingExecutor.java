@@ -22,7 +22,6 @@ import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.cache.TransactionalCacheManager;
 import org.apache.ibatis.cursor.Cursor;
-import org.apache.ibatis.executor.result.UpperCaseMapResultHandler;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ParameterMapping;
@@ -97,20 +96,13 @@ public class CachingExecutor implements Executor {
     Cache cache = ms.getCache();
     if (cache != null) {
       flushCacheIfRequired(ms);
-      if (ms.isUseCache() && (resultHandler == null || resultHandler instanceof UpperCaseMapResultHandler)) {
+      if (ms.isUseCache() && resultHandler == null) {
         ensureNoOutParams(ms, boundSql);
         @SuppressWarnings("unchecked")
         List<E> list = (List<E>) tcm.getObject(cache, key);
         if (list == null) {
           list = delegate.query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
-          if (resultHandler instanceof UpperCaseMapResultHandler) {
-            list = (List<E>) ((UpperCaseMapResultHandler) resultHandler).getResultList();
-          }
           tcm.putObject(cache, key, list); // issue #578 and #116
-        } else if (resultHandler != null && resultHandler instanceof UpperCaseMapResultHandler) {
-          UpperCaseMapResultHandler handler = (UpperCaseMapResultHandler) resultHandler;
-          handler.setResultList((List<Object>) list);
-          handler.setFromCache(true);
         }
         return list;
       }
