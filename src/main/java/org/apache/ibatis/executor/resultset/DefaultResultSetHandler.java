@@ -1107,8 +1107,9 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       return false;
     }
     if (columnPrefix != null) {
+      final String upperCasePrefix = columnPrefix.toUpperCase(Locale.ENGLISH);
       for (String columnName : rsw.getColumnNames()) {
-        if (columnName.toUpperCase(Locale.ENGLISH).startsWith(columnPrefix.toUpperCase(Locale.ENGLISH))) {
+        if (columnName.toUpperCase(Locale.ENGLISH).startsWith(upperCasePrefix)) {
           return true;
         }
       }
@@ -1170,11 +1171,11 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private void createRowKeyForMappedProperties(ResultMap resultMap, ResultSetWrapper rsw, CacheKey cacheKey,
       List<ResultMapping> resultMappings, String columnPrefix) throws SQLException {
+    Set<String> mappedColumnNames = rsw.getMappedColumnNames(resultMap, columnPrefix);
     for (ResultMapping resultMapping : resultMappings) {
       if (resultMapping.isSimple()) {
         final String column = prependPrefix(resultMapping.getColumn(), columnPrefix);
         final TypeHandler<?> th = resultMapping.getTypeHandler();
-        Set<String> mappedColumnNames = rsw.getMappedColumnNames(resultMap, columnPrefix);
         // Issue #114
         if (column != null && mappedColumnNames.contains(column.toUpperCase(Locale.ENGLISH))) {
           final Object value = th.getResult(rsw.getResultSet(), column);
