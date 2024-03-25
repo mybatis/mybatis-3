@@ -51,16 +51,15 @@ jobs:
           cat target/benchmark-results.txt >> ${{ env.COMMENT_FILE }}
           echo '```' >> ${{ env.COMMENT_FILE }}
 
-# todo: skip until this is in master (demo on pull request)
-#      - name: Run benchmarks (master)
-#        working-directory: benchmark-master
-#        run: |
-#          ./mvnw -B -V --no-transfer-progress jmh:benchmark -Dlicense.skip=true
-#
-#          echo '### Benchmark results (${{ github.base_ref }}, ${{ steps.get-sha.outputs.sha }})' >> ${{ env.COMMENT_FILE }}
-#          echo '```text' >> ${{ env.COMMENT_FILE }}
-#          cat target/benchmark-results.txt >> ${{ env.COMMENT_FILE }}
-#          echo '```' >> ${{ env.COMMENT_FILE }}
+      - name: Run benchmarks (master)
+        working-directory: benchmark-master
+        run: |
+          ./mvnw -B -V --no-transfer-progress jmh:benchmark -Dlicense.skip=true
+
+          echo '### Benchmark results (${{ github.base_ref }}, ${{ steps.get-sha.outputs.sha }})' >> ${{ env.COMMENT_FILE }}
+          echo '```text' >> ${{ env.COMMENT_FILE }}
+          cat target/benchmark-results.txt >> ${{ env.COMMENT_FILE }}
+          echo '```' >> ${{ env.COMMENT_FILE }}
 
       - name: Find benchmark results comment
         uses: peter-evans/find-comment@v3
