@@ -1,0 +1,79 @@
+name: Benchmarks
+on:
+  pull_request:
+    branches:
+      - master
+
+concurrency:
+  group: ${{ format('{0}-{1}', github.workflow_ref, github.head_ref) }}
+  cancel-in-progress: true
+
+jobs:
+  benchmarks:
+    if: github.repository_owner == 'mybatis'
+    permissions:
+      contents: read
+      pull-requests: write # for benchmark comment
+    runs-on: ubuntu-latest
+    env:
+      COMMENT_FILE: ${{ github.workspace }}/benchmark-comment.md
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - id: get-sha
+        run: |
+          # getting exact master sha at the moment to reference it in the comment
+          echo "sha=$( curl -u "u:${{ github.token }}" https://api.github.com/repos/${{ github.repository }}/git/ref/heads/${{ github.base_ref }} | jq .object.sha | tr -d '"' )" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.get-sha.outputs.sha }}
+          path: benchmark-master
+
+      - uses: actions/checkout@v4
+        with:
+          path: benchmark-pull-request
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: 21
+          distribution: zulu
+
+      - name: Run benchmarks (pull-request)
+        working-directory: benchmark-pull-request
+        run: |
+          ./mvnw jmh:benchmark -Dlicense.skip=true
+
+          echo '> [!NOTE]' >> ${{ env.COMMENT_FILE }}
+          echo '> These results are affected by shared workloads on GitHub runners. Use the results only to detect possible regressions, but always rerun on more stable machine before making any conclusions!' >> ${{ env.COMMENT_FILE }}
+          echo '### Benchmark results (pull-request, ${{ github.event.pull_request.head.sha }})' >> ${{ env.COMMENT_FILE }}
+          echo '```text' >> ${{ env.COMMENT_FILE }}
+          cat target/benchmark-results.txt >> ${{ env.COMMENT_FILE }}
+          echo '```' >> ${{ env.COMMENT_FILE }}
+
+# todo: to be uncomented after this is on master
+#      - name: Run benchmarks (master)
+#        working-directory: benchmark-master
+#        run: |
+#          ./mvnw jmh:benchmark -Dlicense.skip=true
+#
+#          echo '### Benchmark results (${{ github.base_ref }}, ${{ steps.get-sha.outputs.sha }})' >> ${{ env.COMMENT_FILE }}
+#          echo '```text' >> ${{ env.COMMENT_FILE }}
+#          cat target/benchmark-results.txt >> ${{ env.COMMENT_FILE }}
+#          echo '```' >> ${{ env.COMMENT_FILE }}
+
+      - name: Find benchmark results comment
+        uses: peter-evans/find-comment@v3
+        id: benchmark-comment
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: Benchmark results
+
+      - name: Create or update comment
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          comment-id: ${{ steps.benchmark-comment.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body-path: ${{ env.COMMENT_FILE }}
+          edit-mode: replace
