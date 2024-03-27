@@ -19,7 +19,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.ibatis.domain.blog.Author;
 import org.apache.ibatis.domain.blog.Section;
@@ -97,4 +99,45 @@ class ExpressionEvaluatorTest {
     }
   }
 
+  @Test
+  public void shouldReturnFalseIfEmptyCollection() {
+    Map<String, Object> ctx = new HashMap<>();
+    ctx.put("c1", Collections.emptyList());
+    ctx.put("c2", Collections.emptySet());
+    assertFalse(evaluator.evaluateBoolean("c1", ctx));
+    assertFalse(evaluator.evaluateBoolean("c2", ctx));
+  }
+
+  @Test
+  public void shouldReturnFalseIfEmptyArray() {
+    Map<String, Object> ctx = new HashMap<>();
+    ctx.put("array1", new int[] {});
+    ctx.put("array2", new short[] {});
+    ctx.put("array3", new byte[] {});
+    ctx.put("array4", new float[] {});
+    ctx.put("array5", new double[] {});
+    ctx.put("array6", new byte[] {});
+    ctx.put("array7", new char[] {});
+    ctx.put("array8", new Object[] {});
+
+    assertFalse(evaluator.evaluateBoolean("array1", ctx));
+    assertFalse(evaluator.evaluateBoolean("array2", ctx));
+    assertFalse(evaluator.evaluateBoolean("array3", ctx));
+    assertFalse(evaluator.evaluateBoolean("array4", ctx));
+    assertFalse(evaluator.evaluateBoolean("array5", ctx));
+    assertFalse(evaluator.evaluateBoolean("array6", ctx));
+    assertFalse(evaluator.evaluateBoolean("array7", ctx));
+    assertFalse(evaluator.evaluateBoolean("array8", ctx));
+  }
+
+  @Test
+  public void shouldReturnFalseIfBlankStr() {
+    Map<String, Object> ctx = new HashMap<>();
+    ctx.put("c1", "");
+    ctx.put("c2", " ");
+    ctx.put("c3", "\t");
+    assertFalse(evaluator.evaluateBoolean("c1", ctx));
+    assertFalse(evaluator.evaluateBoolean("c2", ctx));
+    assertFalse(evaluator.evaluateBoolean("c3", ctx));
+  }
 }

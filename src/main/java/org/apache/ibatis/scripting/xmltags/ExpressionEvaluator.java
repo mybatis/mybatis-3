@@ -17,9 +17,7 @@ package org.apache.ibatis.scripting.xmltags;
 
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.ibatis.builder.BuilderException;
 
@@ -36,7 +34,40 @@ public class ExpressionEvaluator {
     if (value instanceof Number) {
       return new BigDecimal(String.valueOf(value)).compareTo(BigDecimal.ZERO) != 0;
     }
+    if (value instanceof String) {
+      return !((String) value).trim().isEmpty();
+    }
+    if (value instanceof Collection) {
+      return !((Collection<?>) value).isEmpty();
+    }
+    if (value != null && value.getClass().isArray()) {
+      return getArrayLength(value) != 0;
+    }
+
     return value != null;
+  }
+
+  public static int getArrayLength(Object array) {
+    if (array instanceof Object[]) {
+      return ((Object[]) array).length;
+    } else if (array instanceof int[]) {
+      return ((int[]) array).length;
+    } else if (array instanceof boolean[]) {
+      return ((boolean[]) array).length;
+    } else if (array instanceof byte[]) {
+      return ((byte[]) array).length;
+    } else if (array instanceof char[]) {
+      return ((char[]) array).length;
+    } else if (array instanceof short[]) {
+      return ((short[]) array).length;
+    } else if (array instanceof long[]) {
+      return ((long[]) array).length;
+    } else if (array instanceof float[]) {
+      return ((float[]) array).length;
+    } else if (array instanceof double[]) {
+      return ((double[]) array).length;
+    }
+    return 0;
   }
 
   /**
