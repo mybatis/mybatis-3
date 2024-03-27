@@ -479,6 +479,7 @@
           <resultsFile>${project.build.directory}/benchmark-results.txt</resultsFile>
           <resultFormat>text</resultFormat>
           <warmupIterations>1</warmupIterations>
+          <profiler>gc</profiler>
         </configuration>
       </plugin>
     </plugins>
