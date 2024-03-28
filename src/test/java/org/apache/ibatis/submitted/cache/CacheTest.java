@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import org.apache.ibatis.annotations.CacheNamespaceRef;
 import org.apache.ibatis.annotations.Property;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.cache.Cache;
+import org.apache.ibatis.cache.CacheDecorator;
 import org.apache.ibatis.cache.CacheException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -325,7 +326,7 @@ class CacheTest {
   private CustomCache unwrap(Cache cache) {
     Field field;
     try {
-      field = cache.getClass().getDeclaredField("delegate");
+      field = CacheDecorator.class.getDeclaredField("delegate");
     } catch (NoSuchFieldException e) {
       throw new IllegalStateException(e);
     }
