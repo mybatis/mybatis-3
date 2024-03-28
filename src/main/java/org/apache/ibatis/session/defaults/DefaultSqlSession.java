@@ -96,8 +96,19 @@ public class DefaultSqlSession implements SqlSession {
 
   @Override
   public <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowBounds) {
+    return this.selectMap(statement, parameter, mapKey, null, rowBounds);
+  }
+
+  @Override
+  public <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey, String mapValue) {
+    return this.selectMap(statement, parameter, mapKey, mapValue, RowBounds.DEFAULT);
+  }
+
+  @Override
+  public <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey, String mapValue,
+      RowBounds rowBounds) {
     final List<? extends V> list = selectList(statement, parameter, rowBounds);
-    final DefaultMapResultHandler<K, V> mapResultHandler = new DefaultMapResultHandler<>(mapKey,
+    final DefaultMapResultHandler<K, V> mapResultHandler = new DefaultMapResultHandler<>(mapKey, mapValue,
         configuration.getObjectFactory(), configuration.getObjectWrapperFactory(), configuration.getReflectorFactory());
     final DefaultResultContext<V> context = new DefaultResultContext<>();
     for (V o : list) {
