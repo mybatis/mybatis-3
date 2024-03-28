@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -51,6 +51,22 @@ public class DefaultObjectFactory implements ObjectFactory, Serializable {
     Class<?> classToCreate = resolveInterface(type);
     // we know types are assignable
     return (T) instantiateClass(classToCreate, constructorArgTypes, constructorArgs);
+  }
+
+  @Override
+  public <T> Constructor<T> resolveConstructor(Class<T> type, List<Class<?>> constructorArgTypes) {
+    try {
+      if (constructorArgTypes == null) {
+        return type.getDeclaredConstructor();
+      }
+
+      return type.getDeclaredConstructor(constructorArgTypes.toArray(new Class[0]));
+    } catch (Exception e) {
+      String argTypes = Optional.ofNullable(constructorArgTypes).orElseGet(Collections::emptyList).stream()
+          .map(Class::getSimpleName).collect(Collectors.joining(","));
+      throw new ReflectionException(
+          "Error resolving constructor for " + type + " with invalid types (" + argTypes + ") . Cause: " + e, e);
+    }
   }
 
   private <T> T instantiateClass(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {

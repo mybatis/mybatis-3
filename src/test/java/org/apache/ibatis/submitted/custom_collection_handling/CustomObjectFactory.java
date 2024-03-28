@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,14 +18,17 @@ package org.apache.ibatis.submitted.custom_collection_handling;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import org.apache.ibatis.reflection.ReflectionException;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
@@ -41,6 +44,22 @@ public class CustomObjectFactory implements ObjectFactory {
   public <T> T create(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
     Class<?> classToCreate = resolveInterface(type);
     return (T) instantiateClass(classToCreate, constructorArgTypes, constructorArgs);
+  }
+
+  @Override
+  public <T> Constructor<T> resolveConstructor(Class<T> type, List<Class<?>> constructorArgTypes) {
+    try {
+      if (constructorArgTypes == null) {
+        return type.getDeclaredConstructor();
+      }
+
+      return type.getDeclaredConstructor(constructorArgTypes.toArray(new Class[0]));
+    } catch (Exception e) {
+      String argTypes = Optional.ofNullable(constructorArgTypes).orElseGet(Collections::emptyList).stream()
+          .map(Class::getSimpleName).collect(Collectors.joining(","));
+      throw new ReflectionException(
+          "Error resolving constructor for " + type + " with invalid types (" + argTypes + ") . Cause: " + e, e);
+    }
   }
 
   private <T> T instantiateClass(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {

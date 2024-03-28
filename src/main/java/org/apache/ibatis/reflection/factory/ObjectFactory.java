@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.reflection.factory;
 
+import java.lang.reflect.Constructor;
 import java.util.List;
 import java.util.Properties;
 
@@ -62,6 +63,20 @@ public interface ObjectFactory {
    * @return the t
    */
   <T> T create(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs);
+
+  /**
+   * Resolves the constructor for the type and argument types.
+   *
+   * @param <T>
+   *          the generic type
+   * @param type
+   *          Object type
+   * @param constructorArgTypes
+   *          Constructor argument types
+   *
+   * @return the t
+   */
+  <T> Constructor<T> resolveConstructor(Class<T> type, List<Class<?>> constructorArgTypes);
 
   /**
    * Returns true if this object can have a set of other objects. It's main purpose is to support
