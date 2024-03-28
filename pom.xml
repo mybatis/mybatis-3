@@ -137,6 +137,8 @@
     <mockito.version>5.11.0</mockito.version>
     <mssql-jdbc.version>12.6.1.jre11</mssql-jdbc.version>
     <testcontainers.version>1.19.7</testcontainers.version>
+    <jmh.version>1.37</jmh.version>
+    <jmh.plugin.version>0.2.2</jmh.plugin.version>
 
     <!-- Add slow test groups here and annotate classes similar to @Tag('groupName'). -->
     <!-- Excluded groups are ran on github ci, to force here, pass -d"excludedGroups=" -->
@@ -351,6 +353,20 @@
       <version>${log4j.version}</version>
       <scope>test</scope>
     </dependency>
+
+    <!-- Benchmarking support -->
+    <dependency>
+      <groupId>org.openjdk.jmh</groupId>
+      <artifactId>jmh-core</artifactId>
+      <version>${jmh.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.openjdk.jmh</groupId>
+      <artifactId>jmh-generator-annprocess</artifactId>
+      <version>${jmh.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -453,6 +469,17 @@
             <exclude>org.apache.ibatis.ognl.*</exclude>
             <exclude>org.apache.ibatis.javassist.*</exclude>
           </excludes>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>pw.krejci</groupId>
+        <artifactId>jmh-maven-plugin</artifactId>
+        <version>${jmh.plugin.version}</version>
+        <configuration>
+          <resultsFile>${project.build.directory}/benchmark-results.txt</resultsFile>
+          <resultFormat>text</resultFormat>
+          <warmupIterations>1</warmupIterations>
+          <profiler>gc</profiler>
         </configuration>
       </plugin>
     </plugins>
