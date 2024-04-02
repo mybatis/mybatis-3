@@ -28,7 +28,7 @@
 
   <groupId>org.mybatis</groupId>
   <artifactId>mybatis</artifactId>
-  <version>3.5.16-SNAPSHOT</version>
+  <version>3.5.16</version>
 
   <name>mybatis</name>
   <description>The MyBatis SQL mapper framework makes it easier to use a relational database with object-oriented
@@ -109,7 +109,7 @@
   <scm>
     <connection>scm:git:ssh://git@github.com/mybatis/mybatis-3.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/mybatis/mybatis-3.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>mybatis-3.5.16</tag>
     <url>https://github.com/mybatis/mybatis-3</url>
   </scm>
   <issueManagement>
@@ -157,7 +157,7 @@
     <argLine>-Xmx2048m -javaagent:${settings.localRepository}/net/bytebuddy/byte-buddy-agent/${byte-buddy.version}/byte-buddy-agent-${byte-buddy.version}.jar</argLine>
 
     <!-- Reproducible Builds -->
-    <project.build.outputTimestamp>1702533513</project.build.outputTimestamp>
+    <project.build.outputTimestamp>1712079222</project.build.outputTimestamp>
   </properties>
 
   <dependencies>
