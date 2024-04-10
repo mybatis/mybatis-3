@@ -31,6 +31,7 @@
         <item href="configuration.html#objectfactory" name="objectFactory" />
         <item href="configuration.html#plugins" name="plugins" />
         <item href="configuration.html#environments" name="environments" />
+        <item href="configuration.html#databaseidprovider" name="databaseIdProvider" />
         <item href="configuration.html#mappers" name="mappers" />
       </item>
       <item name="Mapper XML ファイル" href="sqlmap-xml.html" collapse="true">
