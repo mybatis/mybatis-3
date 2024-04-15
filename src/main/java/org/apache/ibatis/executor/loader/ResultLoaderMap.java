@@ -70,6 +70,10 @@ public class ResultLoaderMap {
   public int size() {
     return loaderMap.size();
   }
+  
+  public boolean isEmpty() {
+    return loaderMap.isEmpty();
+  }
 
   public boolean hasLoader(String property) {
     return loaderMap.containsKey(property.toUpperCase(Locale.ENGLISH));
