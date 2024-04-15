@@ -19,18 +19,20 @@ jobs:
       COMMENT_FILE: ${{ github.workspace }}/benchmark-comment.md
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - id: get-sha
+      - id: get-master-sha
         run: |
           # getting exact master sha at the moment to reference it in the comment
           echo "sha=$( curl -u "u:${{ github.token }}" https://api.github.com/repos/${{ github.repository }}/git/ref/heads/${{ github.base_ref }} | jq .object.sha | tr -d '"' )" >> "$GITHUB_OUTPUT"
 
       - uses: actions/checkout@v4
         with:
-          ref: ${{ steps.get-sha.outputs.sha }}
+          ref: ${{ steps.get-master-sha.outputs.sha }}
           path: benchmark-master
 
       - uses: actions/checkout@v4
         with:
+          # https://github.com/actions/checkout/issues/518#issuecomment-890401887
+          ref: "${{ github.event.pull_request.merge_commit_sha }}"
           path: benchmark-pull-request
 
       - name: Set up JDK
@@ -41,25 +43,28 @@ jobs:
 
       - name: Run benchmarks (pull-request)
         working-directory: benchmark-pull-request
-        run: |
-          ./mvnw -B -V --no-transfer-progress jmh:benchmark -Dlicense.skip=true
-
-          echo '> [!NOTE]' >> ${{ env.COMMENT_FILE }}
-          echo '> These results are affected by shared workloads on GitHub runners. Use the results only to detect possible regressions, but always rerun on more stable machine before making any conclusions!' >> ${{ env.COMMENT_FILE }}
-          echo '### Benchmark results (pull-request, ${{ github.event.pull_request.head.sha }})' >> ${{ env.COMMENT_FILE }}
-          echo '```text' >> ${{ env.COMMENT_FILE }}
-          cat target/benchmark-results.txt >> ${{ env.COMMENT_FILE }}
-          echo '```' >> ${{ env.COMMENT_FILE }}
+        run: ./mvnw -B -V --no-transfer-progress jmh:benchmark -Dlicense.skip=true
 
       - name: Run benchmarks (master)
         working-directory: benchmark-master
-        run: |
-          ./mvnw -B -V --no-transfer-progress jmh:benchmark -Dlicense.skip=true
+        run: ./mvnw -B -V --no-transfer-progress jmh:benchmark -Dlicense.skip=true
 
-          echo '### Benchmark results (${{ github.base_ref }}, ${{ steps.get-sha.outputs.sha }})' >> ${{ env.COMMENT_FILE }}
-          echo '```text' >> ${{ env.COMMENT_FILE }}
-          cat target/benchmark-results.txt >> ${{ env.COMMENT_FILE }}
-          echo '```' >> ${{ env.COMMENT_FILE }}
+      - name: Compose comment content
+        run: |
+          cat <<EOF >> ${{ env.COMMENT_FILE }}
+          > [!NOTE]
+          > These results are affected by shared workloads on GitHub runners. Use the results only to detect possible regressions, but always rerun on more stable machine before making any conclusions!
+          
+          ### Benchmark results (pull-request, ${{ github.event.pull_request.head.sha }})
+          \`\`\`text
+          $(cat benchmark-pull-request/target/benchmark-results.txt)
+          \`\`\`
+          
+          ### Benchmark results (${{ github.base_ref }}, ${{ steps.get-master-sha.outputs.sha }})
+          \`\`\`text
+          $(cat benchmark-master/target/benchmark-results.txt)
+          \`\`\`
+          EOF
 
       - name: Find benchmark results comment
         uses: peter-evans/find-comment@v3
