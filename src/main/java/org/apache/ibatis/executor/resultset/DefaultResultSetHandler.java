@@ -602,7 +602,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     CacheKey parentKey = createKeyForMultipleResults(rs, parentMapping, parentMapping.getColumn(),
         parentMapping.getForeignColumn());
     List<PendingRelation> parents = pendingRelations.get(parentKey);
-    if (parents != null) {
+    if (!parents.isEmpty()) {
       for (PendingRelation parent : parents) {
         if (parent != null && rowValue != null) {
           linkObjects(parent.metaObject, parent.propertyMapping, rowValue);
