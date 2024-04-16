@@ -540,7 +540,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       final List<String> unmappedColumnNames = rsw.getUnmappedColumnNames(resultMap, columnPrefix);
       // Remove the entry to release the memory
       List<String> mappedInConstructorAutoMapping = constructorAutoMappingColumns.remove(mapKey);
-      if (mappedInConstructorAutoMapping != null) {
+      if (!mappedInConstructorAutoMapping.isEmpty()) {
         unmappedColumnNames.removeAll(mappedInConstructorAutoMapping);
       }
       for (String columnName : unmappedColumnNames) {
