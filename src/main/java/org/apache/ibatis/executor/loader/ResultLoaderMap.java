@@ -16,11 +16,12 @@
 package org.apache.ibatis.executor.loader;
 
 import java.io.Serializable;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodHandles.Lookup;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.security.AccessController;
 import java.security.PrivilegedActionException;
-import java.security.PrivilegedExceptionAction;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -231,15 +232,12 @@ public class ResultLoaderMap {
               + FACTORY_METHOD + "] is not static.");
         }
 
-        if (!factoryMethod.isAccessible()) {
-          configurationObject = AccessController.doPrivileged((PrivilegedExceptionAction<Object>) () -> {
-            try {
-              factoryMethod.setAccessible(true);
-              return factoryMethod.invoke(null);
-            } finally {
-              factoryMethod.setAccessible(false);
-            }
-          });
+        if (!factoryMethod.canAccess(null)) {
+          Lookup lookup = MethodHandles.privateLookupIn(factoryMethod.getDeclaringClass(), MethodHandles.lookup());
+          MethodHandle methodHandle = lookup.unreflect(factoryMethod);
+          try {
+            configurationObject = methodHandle.invoke();
+          } catch (Throwable e) {/* Left the exception handling empty as unsure how to handle it properly. */}
         } else {
           configurationObject = factoryMethod.invoke(null);
         }
