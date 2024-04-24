@@ -262,6 +262,19 @@ class TypeParameterResolverTest {
   }
 
   @Test
+  void testReturn_LV1Map() throws Exception {
+    Class<?> clazz = Level1Mapper.class;
+    Method method = clazz.getMethod("selectMap");
+    Type result = TypeParameterResolver.resolveReturnType(method, clazz);
+    assertTrue(result instanceof ParameterizedType);
+    ParameterizedType paramType = (ParameterizedType) result;
+    assertEquals(Map.class, paramType.getRawType());
+    assertEquals(2, paramType.getActualTypeArguments().length);
+    assertEquals(String.class, paramType.getActualTypeArguments()[0]);
+    assertEquals(Object.class, paramType.getActualTypeArguments()[1]);
+  }
+
+  @Test
   void testReturn_LV2Map() throws Exception {
     Class<?> clazz = Level2Mapper.class;
     Method method = clazz.getMethod("selectMap");

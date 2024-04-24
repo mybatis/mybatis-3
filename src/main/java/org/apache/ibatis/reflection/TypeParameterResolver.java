@@ -206,6 +206,9 @@ public class TypeParameterResolver {
       if (declaringClass == parentAsClass) {
         for (int i = 0; i < parentTypeVars.length; i++) {
           if (typeVar.equals(parentTypeVars[i])) {
+            if (parentAsType.getActualTypeArguments()[i] instanceof TypeVariable<?>) {
+              return Object.class;
+            }
             return parentAsType.getActualTypeArguments()[i];
           }
         }
