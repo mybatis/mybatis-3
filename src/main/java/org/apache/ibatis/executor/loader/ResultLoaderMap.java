@@ -70,7 +70,7 @@ public class ResultLoaderMap {
   public int size() {
     return loaderMap.size();
   }
-  
+
   public boolean isEmpty() {
     return loaderMap.isEmpty();
   }
