@@ -1,0 +1,83 @@
+name: Benchmarks
+on:
+  pull_request_target:
+    branches:
+      - master
+
+concurrency:
+  group: ${{ format('{0}-{1}', github.workflow_ref, github.head_ref) }}
+  cancel-in-progress: true
+
+jobs:
+  benchmarks:
+    if: github.repository_owner == 'mybatis'
+    permissions:
+      contents: read
+      pull-requests: write # for benchmark comment
+    runs-on: ubuntu-latest
+    env:
+      COMMENT_FILE: ${{ github.workspace }}/benchmark-comment.md
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - id: get-master-sha
+        run: |
+          # getting exact master sha at the moment to reference it in the comment
+          echo "sha=$( curl -u "u:${{ github.token }}" https://api.github.com/repos/${{ github.repository }}/git/ref/heads/${{ github.base_ref }} | jq .object.sha | tr -d '"' )" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.get-master-sha.outputs.sha }}
+          path: benchmark-master
+
+      - uses: actions/checkout@v4
+        with:
+          # https://github.com/actions/checkout/issues/518#issuecomment-890401887
+          ref: "${{ github.event.pull_request.merge_commit_sha }}"
+          path: benchmark-pull-request
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: 21
+          distribution: zulu
+
+      - name: Run benchmarks (pull-request)
+        working-directory: benchmark-pull-request
+        run: ./mvnw -B -V --no-transfer-progress jmh:benchmark -Dlicense.skip=true
+
+      - name: Run benchmarks (master)
+        working-directory: benchmark-master
+        run: ./mvnw -B -V --no-transfer-progress jmh:benchmark -Dlicense.skip=true
+
+      - name: Compose comment content
+        run: |
+          cat <<EOF >> ${{ env.COMMENT_FILE }}
+          > [!NOTE]
+          > These results are affected by shared workloads on GitHub runners. Use the results only to detect possible regressions, but always rerun on more stable machine before making any conclusions!
+          
+          ### Benchmark results (pull-request, ${{ github.event.pull_request.head.sha }})
+          \`\`\`text
+          $(cat benchmark-pull-request/target/benchmark-results.txt)
+          \`\`\`
+          
+          ### Benchmark results (${{ github.base_ref }}, ${{ steps.get-master-sha.outputs.sha }})
+          \`\`\`text
+          $(cat benchmark-master/target/benchmark-results.txt)
+          \`\`\`
+          EOF
+
+      - name: Find benchmark results comment
+        uses: peter-evans/find-comment@v3
+        id: benchmark-comment
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: Benchmark results
+
+      - name: Create or update comment
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          comment-id: ${{ steps.benchmark-comment.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body-path: ${{ env.COMMENT_FILE }}
+          edit-mode: replace
