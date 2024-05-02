@@ -30,7 +30,7 @@ public final class LogFactory {
   public static final String MARKER = "MYBATIS";
 
   private static final ReentrantLock lock = new ReentrantLock();
-  private static Constructor<? extends Log> logConstructor;
+  private static volatile Constructor<? extends Log> logConstructor;
 
   static {
     tryImplementation(LogFactory::useSlf4jLogging);
@@ -95,10 +95,14 @@ public final class LogFactory {
 
   private static void tryImplementation(Runnable runnable) {
     if (logConstructor == null) {
-      try {
-        runnable.run();
-      } catch (Throwable t) {
-        // ignore
+      synchronized (LogFactory.class) {
+        if (logConstructor == null) {
+          try {
+            runnable.run();
+          } catch (Throwable t) {
+            // ignore
+          }
+        }
       }
     }
   }
