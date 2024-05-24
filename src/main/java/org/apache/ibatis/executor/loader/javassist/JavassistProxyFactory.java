@@ -143,14 +143,14 @@ public class JavassistProxyFactory implements org.apache.ibatis.executor.loader.
             original = objectFactory.create(type, constructorArgTypes, constructorArgs);
           }
           PropertyCopier.copyBeanProperties(type, enhanced, original);
-          if (lazyLoader.size() > 0) {
+          if (!lazyLoader.isEmpty()) {
             return new JavassistSerialStateHolder(original, lazyLoader.getProperties(), objectFactory,
                 constructorArgTypes, constructorArgs);
           } else {
             return original;
           }
         }
-        if (lazyLoader.size() > 0 && !FINALIZE_METHOD.equals(methodName)) {
+        if (!lazyLoader.isEmpty() && !FINALIZE_METHOD.equals(methodName)) {
           if (aggressive || lazyLoadTriggerMethods.contains(methodName)) {
             lazyLoader.loadAll();
           } else if (PropertyNamer.isSetter(methodName)) {

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -259,6 +259,19 @@ class TypeParameterResolverTest {
     assertEquals(0, wildcard.getLowerBounds().length);
     assertEquals(1, wildcard.getUpperBounds().length);
     assertEquals(String.class, wildcard.getUpperBounds()[0]);
+  }
+
+  @Test
+  void testReturn_LV1Map() throws Exception {
+    Class<?> clazz = Level1Mapper.class;
+    Method method = clazz.getMethod("selectMap");
+    Type result = TypeParameterResolver.resolveReturnType(method, clazz);
+    assertTrue(result instanceof ParameterizedType);
+    ParameterizedType paramType = (ParameterizedType) result;
+    assertEquals(Map.class, paramType.getRawType());
+    assertEquals(2, paramType.getActualTypeArguments().length);
+    assertEquals(String.class, paramType.getActualTypeArguments()[0]);
+    assertEquals(Object.class, paramType.getActualTypeArguments()[1]);
   }
 
   @Test

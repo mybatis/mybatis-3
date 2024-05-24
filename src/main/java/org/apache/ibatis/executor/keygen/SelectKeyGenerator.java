@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -65,7 +65,7 @@ public class SelectKeyGenerator implements KeyGenerator {
         // The transaction will be closed by parent executor.
         Executor keyExecutor = configuration.newExecutor(executor.getTransaction(), ExecutorType.SIMPLE);
         List<Object> values = keyExecutor.query(keyStatement, parameter, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
-        if (values.size() == 0) {
+        if (values.isEmpty()) {
           throw new ExecutorException("SelectKey returned no data.");
         }
         if (values.size() > 1) {
