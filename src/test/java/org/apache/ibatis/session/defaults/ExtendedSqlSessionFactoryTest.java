@@ -38,6 +38,6 @@ public class ExtendedSqlSessionFactoryTest extends BaseDataTest {
 
     try (SqlSession sqlSession = sessionFactory.openSession()) {
       Assertions.assertThat(sqlSession).isNotNull().isInstanceOf(ExtendedSqlSession.class);
-    };
+    }
   }
 }
