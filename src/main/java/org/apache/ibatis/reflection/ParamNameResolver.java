@@ -35,6 +35,14 @@ public class ParamNameResolver {
 
   public static final String GENERIC_NAME_PREFIX = "param";
 
+  public static final String[] GENERIC_NAME_CACHE = new String[10];
+
+  static {
+    for (int i = 0; i < 10; i++) {
+      GENERIC_NAME_CACHE[i] = GENERIC_NAME_PREFIX + (i + 1);
+    }
+  }
+
   private final boolean useActualParamName;
 
   /**
@@ -129,15 +137,19 @@ public class ParamNameResolver {
     } else {
       final Map<String, Object> param = new ParamMap<>();
       int i = 0;
-      for (Map.Entry<Integer, String> entry : names.entrySet()) {
-        param.put(entry.getValue(), args[entry.getKey()]);
-        // add generic param names (param1, param2, ...)
-        final String genericParamName = GENERIC_NAME_PREFIX + (i + 1);
-        // ensure not to overwrite parameter named with @Param
-        if (!names.containsValue(genericParamName)) {
-          param.put(genericParamName, args[entry.getKey()]);
+      try {
+        for (Map.Entry<Integer, String> entry : names.entrySet()) {
+          param.put(entry.getValue(), args[entry.getKey()]);
+          // add generic param names (param1, param2, ...)
+          final String genericParamName = GENERIC_NAME_CACHE[i];
+          // ensure not to overwrite parameter named with @Param
+          if (!names.containsValue(genericParamName)) {
+            param.put(genericParamName, args[entry.getKey()]);
+          }
+          i++;
         }
-        i++;
+      } catch (ArrayIndexOutOfBoundsException e) {
+        throw new ArrayIndexOutOfBoundsException("The parameter list is too long, the maximum supported length is 10");
       }
       return param;
     }
