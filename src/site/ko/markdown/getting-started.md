@@ -112,7 +112,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
 </mapper>
 ```
 
-간단한 예제치고는 조금 복잡해 보이지만 실제로는 굉장히 간단하다. 한 개의 매퍼 XML 파일에는 많은 수의 매핑 구문을 정의할 수 있다. XML 도입무의 헤더와 doctype 을 제외하면 나머지는 쉽게 이해되는 구문의 형태이다. 여기선 org.mybatis.example.BlogMapper 네임스페이스에서 selectBlog라는 매핑 구문을 정의했고 이는 결과적으로 org.mybatis.example.BlogMapper.selectBlog형태로 실제 명시되게 된다. 그래서 다음처럼 사용하게 되는 셈이다.
+간단한 예제치고는 조금 복잡해 보이지만 실제로는 굉장히 간단하다. 한 개의 매퍼 XML 파일에는 많은 수의 매핑 구문을 정의할 수 있다. XML 도입부의 헤더와 doctype 을 제외하면 나머지는 쉽게 이해되는 구문의 형태이다. 여기선 org.mybatis.example.BlogMapper 네임스페이스에서 selectBlog라는 매핑 구문을 정의했고 이는 결과적으로 org.mybatis.example.BlogMapper.selectBlog형태로 실제 명시되게 된다. 그래서 다음처럼 사용하게 되는 셈이다.
 
 ```java
 Blog blog = (Blog) session.selectOne("org.mybatis.example.BlogMapper.selectBlog", 101);
