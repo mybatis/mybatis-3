@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -137,19 +137,15 @@ public class ParamNameResolver {
     } else {
       final Map<String, Object> param = new ParamMap<>();
       int i = 0;
-      try {
-        for (Map.Entry<Integer, String> entry : names.entrySet()) {
-          param.put(entry.getValue(), args[entry.getKey()]);
-          // add generic param names (param1, param2, ...)
-          final String genericParamName = GENERIC_NAME_CACHE[i];
-          // ensure not to overwrite parameter named with @Param
-          if (!names.containsValue(genericParamName)) {
-            param.put(genericParamName, args[entry.getKey()]);
-          }
-          i++;
+      for (Map.Entry<Integer, String> entry : names.entrySet()) {
+        param.put(entry.getValue(), args[entry.getKey()]);
+        // add generic param names (param1, param2, ...)
+        final String genericParamName = i < 10 ? GENERIC_NAME_CACHE[i] : GENERIC_NAME_PREFIX + (i + 1);
+        // ensure not to overwrite parameter named with @Param
+        if (!names.containsValue(genericParamName)) {
+          param.put(genericParamName, args[entry.getKey()]);
         }
-      } catch (ArrayIndexOutOfBoundsException e) {
-        throw new ArrayIndexOutOfBoundsException("The parameter list is too long, the maximum supported length is 10");
+        i++;
       }
       return param;
     }
