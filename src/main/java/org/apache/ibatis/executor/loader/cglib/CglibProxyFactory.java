@@ -94,8 +94,8 @@ public class CglibProxyFactory implements ProxyFactory {
     if (constructorArgTypes.isEmpty()) {
       enhanced = enhancer.create();
     } else {
-      Class<?>[] typesArray = constructorArgTypes.toArray(new Class[constructorArgTypes.size()]);
-      Object[] valuesArray = constructorArgs.toArray(new Object[constructorArgs.size()]);
+      Class<?>[] typesArray = constructorArgTypes.toArray(new Class[0]);
+      Object[] valuesArray = constructorArgs.toArray(new Object[0]);
       enhanced = enhancer.create(typesArray, valuesArray);
     }
     return enhanced;
