@@ -24,9 +24,12 @@ import org.apache.ibatis.parsing.PropertyParser;
 import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.parsing.XPathParser;
 import org.apache.ibatis.scripting.LanguageDriver;
+import org.apache.ibatis.scripting.decorator.DecoratorRegistry;
 import org.apache.ibatis.scripting.defaults.DefaultParameterHandler;
 import org.apache.ibatis.scripting.defaults.RawSqlSource;
 import org.apache.ibatis.session.Configuration;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 /**
  * @author Eduardo Macarron
@@ -41,6 +44,11 @@ public class XMLLanguageDriver implements LanguageDriver {
 
   @Override
   public SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType) {
+    Node node = script.getNode();
+    //循环处理所有装饰元素（包括装饰过程中新产生的装饰元素）
+    while (nodeDecorate(configuration, node)) {
+    }
+
     XMLScriptBuilder builder = new XMLScriptBuilder(configuration, script, parameterType);
     return builder.parseScriptNode();
   }
@@ -62,4 +70,19 @@ public class XMLLanguageDriver implements LanguageDriver {
     }
   }
 
+  private boolean nodeDecorate(Configuration configuration, Node node) {
+    if (shouldDecorate(node)) {
+      DecoratorRegistry.evalBindFunction(configuration, node);
+      return true;
+    }
+    return false;
+  }
+
+  private boolean shouldDecorate(Node node) {
+    if (node instanceof Element && "bind".equals(node.getNodeName())) {
+      Element element = (Element) node;
+      return element.getAttribute("name").startsWith("#");
+    }
+    return false;
+  }
 }
