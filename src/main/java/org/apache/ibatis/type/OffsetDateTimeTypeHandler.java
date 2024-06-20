@@ -22,6 +22,15 @@ import java.sql.SQLException;
 import java.time.OffsetDateTime;
 
 /**
+ * Note: If you intend to select from a database column that contains date
+ * time with time zone information with this type handler, be aware of the fact
+ * that it <em>ignores</em> the offset information! Instead, the
+ * {@link OffsetDateTime} object that it creates uses the system-default time
+ * zone for the offset!
+ * <p>
+ * If you want to retain the offset information of the time zone consider using this type handler instead: {@link StringBasedOffsetDateTimeTypeHandler}.
+ *
+ *
  * @since 3.4.5
  *
  * @author Tomas Rohovsky
