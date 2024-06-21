@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,32 +19,22 @@ import java.util.Deque;
 import java.util.LinkedList;
 
 import org.apache.ibatis.cache.Cache;
+import org.apache.ibatis.cache.CacheDecorator;
 
 /**
  * FIFO (first in, first out) cache decorator.
  *
  * @author Clinton Begin
  */
-public class FifoCache implements Cache {
+public class FifoCache extends CacheDecorator {
 
-  private final Cache delegate;
   private final Deque<Object> keyList;
   private int size;
 
   public FifoCache(Cache delegate) {
-    this.delegate = delegate;
+    super(delegate);
     this.keyList = new LinkedList<>();
     this.size = 1024;
-  }
-
-  @Override
-  public String getId() {
-    return delegate.getId();
-  }
-
-  @Override
-  public int getSize() {
-    return delegate.getSize();
   }
 
   public void setSize(int size) {
@@ -54,23 +44,23 @@ public class FifoCache implements Cache {
   @Override
   public void putObject(Object key, Object value) {
     cycleKeyList(key);
-    delegate.putObject(key, value);
+    super.putObject(key, value);
   }
 
   @Override
   public Object getObject(Object key) {
-    return delegate.getObject(key);
+    return super.getObject(key);
   }
 
   @Override
   public Object removeObject(Object key) {
     keyList.remove(key);
-    return delegate.removeObject(key);
+    return super.removeObject(key);
   }
 
   @Override
   public void clear() {
-    delegate.clear();
+    super.clear();
     keyList.clear();
   }
 
@@ -78,7 +68,7 @@ public class FifoCache implements Cache {
     keyList.addLast(key);
     if (keyList.size() > size) {
       Object oldestKey = keyList.removeFirst();
-      delegate.removeObject(oldestKey);
+      super.removeObject(oldestKey);
     }
   }
 
