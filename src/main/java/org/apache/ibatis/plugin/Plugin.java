@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.apache.ibatis.reflection.ExceptionUtil;
 import org.apache.ibatis.util.MapUtil;
@@ -34,6 +36,7 @@ public class Plugin implements InvocationHandler {
   private final Object target;
   private final Interceptor interceptor;
   private final Map<Class<?>, Set<Method>> signatureMap;
+  private final ConcurrentMap<Method, Boolean> methodMap = new ConcurrentHashMap<>();
 
   private Plugin(Object target, Interceptor interceptor, Map<Class<?>, Set<Method>> signatureMap) {
     this.target = target;
@@ -53,9 +56,12 @@ public class Plugin implements InvocationHandler {
 
   @Override
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-    try {
+    boolean intercepted = MapUtil.computeIfAbsent(methodMap, method, key -> {
       Set<Method> methods = signatureMap.get(method.getDeclaringClass());
-      if (methods != null && methods.contains(method)) {
+      return methods != null && methods.contains(method);
+    });
+    try {
+      if (intercepted) {
         return interceptor.intercept(new Invocation(target, method, args));
       }
       return method.invoke(target, args);
