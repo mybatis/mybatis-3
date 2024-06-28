@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../apidocs/org/apache/ibatis/executor/keygen/SelectKeyGenerator.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2024 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -73,7 +73,7 @@
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>          <em class="jxr_comment">// The transaction will be closed by parent executor.</em>
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>          <a name="Executor" href="../../../../../org/apache/ibatis/executor/Executor.html#Executor">Executor</a> keyExecutor = configuration.newExecutor(executor.getTransaction(), ExecutorType.SIMPLE);
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>          List&lt;Object&gt; values = keyExecutor.query(keyStatement, parameter, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>          <strong class="jxr_keyword">if</strong> (values.size() == 0) {
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>          <strong class="jxr_keyword">if</strong> (values.isEmpty()) {
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>            <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="ExecutorException" href="../../../../../org/apache/ibatis/executor/ExecutorException.html#ExecutorException">ExecutorException</a>(<span class="jxr_string">"SelectKey returned no data."</span>);
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>          }
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>          <strong class="jxr_keyword">if</strong> (values.size() &gt; 1) {
