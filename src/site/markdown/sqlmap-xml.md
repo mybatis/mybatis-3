@@ -65,23 +65,23 @@ The select element has more attributes that allow you to configure the details o
   resultSetType="FORWARD_ONLY">
 ```
 
-| Attribute       | Description                                                                                                                                                                                                                                                                                                                                         |
-|-----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `id`            | A unique identifier in this namespace that can be used to reference this statement.                                                                                                                                                                                                                                                                 |
-| `parameterType` | The fully qualified class name or alias for the parameter that will be passed into this statement. This attribute is optional because MyBatis can calculate the TypeHandler to use out of the actual parameter passed to the statement. Default is `unset`.                                                                                         |
-| <strike>`parameterMap`</strike> | <strike>This is a deprecated approach to referencing an external `parameterMap`. Use inline parameter mappings and the `parameterType` attribute.</strike>                                                                                                                                                                                                           |
-| `resultType`    | The fully qualified class name or alias for the expected type that will be returned from this statement. Note that in the case of collections, this should be the type that the collection contains, not the type of the collection itself. Use `resultType` OR `resultMap`, not both.                                                              |
-| `resultMap`     | A named reference to an external `resultMap`. Result maps are the most powerful feature of MyBatis, and with a good understanding of them, many difficult mapping cases can be solved. Use `resultMap` OR `resultType`, not both.                                                                                                                   |
-| `flushCache`    | Setting this to true will cause the local and 2nd level caches to be flushed whenever this statement is called. Default: `false` for select statements.                                                                                                                                                                                             |
-| `useCache`      | Setting this to true will cause the results of this statement to be cached in 2nd level cache. Default: `true` for select statements.                                                                                                                                                                                                               |
-| `timeout`       | This sets the number of seconds the driver will wait for the database to return from a request, before throwing an exception. Default is `unset` (driver dependent).                                                                                                                                                                                |
-| `fetchSize`     | This is a driver hint that will attempt to cause the driver to return results in batches of rows numbering in size equal to this setting. Default is `unset` (driver dependent).                                                                                                                                                                    |
-| `statementType` | Any one of `STATEMENT`, `PREPARED` or `CALLABLE`. This causes MyBatis to use `Statement`, `PreparedStatement` or `CallableStatement` respectively. Default: `PREPARED`.                                                                                                                                                                             |
-| `resultSetType` | Any one of `FORWARD_ONLY`&#124;`SCROLL_SENSITIVE`&#124;`SCROLL_INSENSITIVE`&#124;`DEFAULT`(same as unset). Default is `unset` (driver dependent).                                                                                                                                                                                                   |
-| `databaseId`    | In case there is a configured databaseIdProvider, MyBatis will load all statements with no `databaseId` attribute or with a `databaseId` that matches the current one. If case the same statement if found with and without the `databaseId` the latter will be discarded.                                                                          |
-| `resultOrdered` | This is only applicable for nested result select statements: If this is true, it is assumed that nested results are contained or grouped together such that when a new main result row is returned, no references to a previous result row will occur anymore. This allows nested results to be filled much more memory friendly. Default: `false`. |
-| `resultSets`    | This is only applicable for multiple result sets. It lists the result sets that will be returned by the statement and gives a name to each one. Names are separated by commas.                                                                                                                                                                      |
-| `affectData`    | Set this to true when writing a INSERT, UPDATE or DELETE statement that returns data so that the transaction is controlled properly. Also see [Transaction Control Method](./java-api.html#transaction-control-methods). Default: `false` (since 3.5.12)                                                                                            |
+| Attribute                       | Description                                                                                                                                                                                                                                                                                                                                                                                                 |
+|---------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `id`                            | A unique identifier in this namespace that can be used to reference this statement.                                                                                                                                                                                                                                                                                                                         |
+| `parameterType`                 | The fully qualified class name or alias for the parameter that will be passed into this statement. This attribute is optional because MyBatis can calculate the TypeHandler to use out of the actual parameter passed to the statement. Default is `unset`.                                                                                                                                                 |
+| <strike>`parameterMap`</strike> | <strike>This is a deprecated approach to referencing an external `parameterMap`. Use inline parameter mappings and the `parameterType` attribute.</strike>                                                                                                                                                                                                                                                  |
+| `resultType`                    | The fully qualified class name or alias for the expected type that will be returned from this statement. Note that in the case of collections, this should be the type that the collection contains, not the type of the collection itself. Use `resultType` OR `resultMap`, not both.                                                                                                                      |
+| `resultMap`                     | A named reference to an external `resultMap`. Result maps are the most powerful feature of MyBatis, and with a good understanding of them, many difficult mapping cases can be solved. Use `resultMap` OR `resultType`, not both.                                                                                                                                                                           |
+| `flushCache`                    | Setting this to true will cause the local and 2nd level caches to be flushed whenever this statement is called. Default: `false` for select statements.                                                                                                                                                                                                                                                     |
+| `useCache`                      | Setting this to true will cause the results of this statement to be cached in 2nd level cache. Default: `true` for select statements.                                                                                                                                                                                                                                                                       |
+| `timeout`                       | This sets the number of seconds the driver will wait for the database to return from a request, before throwing an exception. Default is `unset` (driver dependent).                                                                                                                                                                                                                                        |
+| `fetchSize`                     | This is a driver hint that will attempt to cause the driver to return results in batches of rows numbering in size equal to this setting. Default is `unset` (driver dependent).                                                                                                                                                                                                                            |
+| `statementType`                 | Any one of `STATEMENT`, `PREPARED` or `CALLABLE`. This causes MyBatis to use `Statement`, `PreparedStatement` or `CallableStatement` respectively. Default: `PREPARED`.                                                                                                                                                                                                                                     |
+| `resultSetType`                 | Any one of `FORWARD_ONLY`&#124;`SCROLL_SENSITIVE`&#124;`SCROLL_INSENSITIVE`&#124;`DEFAULT`(same as unset). Default is `unset` (driver dependent).                                                                                                                                                                                                                                                           |
+| `databaseId`                    | In case there is a configured databaseIdProvider, MyBatis will load all statements with no `databaseId` attribute or with a `databaseId` that matches the current one. If case the same statement if found with and without the `databaseId` the latter will be discarded.                                                                                                                                  |
+| `resultOrdered`                 | This is only applicable for nested result select statements: If this is true, it is assumed that nested results are contained or grouped together such that when a new main result row is returned, no references to a previous result row will occur anymore. This allows nested results to be filled much more memory friendly. Required for `experimentalConstructorCollectionMapping` Default: `false`. |
+| `resultSets`                    | This is only applicable for multiple result sets. It lists the result sets that will be returned by the statement and gives a name to each one. Names are separated by commas.                                                                                                                                                                                                                              |
+| `affectData`                    | Set this to true when writing a INSERT, UPDATE or DELETE statement that returns data so that the transaction is controlled properly. Also see [Transaction Control Method](./java-api.html#transaction-control-methods). Default: `false` (since 3.5.12)                                                                                                                                                    |
 [Select Attributes]
 
 ### insert, update and delete
@@ -638,7 +638,7 @@ public class User {
 }
 ```
 
-In order to inject the results into the constructor, MyBatis needs to identify the constructor for somehow. In the following example, MyBatis searches a constructor declared with three parameters: `java.lang.Integer`, `java.lang.String` and `int` in this order.
+In order to inject the results into the constructor, MyBatis needs to identify the constructor somehow. In the following example, MyBatis searches a constructor declared with three parameters: `java.lang.Integer`, `java.lang.String` and `int` in this order.
 
 ```xml
 <constructor>
@@ -673,6 +673,89 @@ The rest of the attributes and rules are the same as for the regular id and resu
 | `resultMap`   | This is the ID of a ResultMap that can map the nested results of this argument into an appropriate object graph. This is an alternative to using a call to another select statement. It allows you to join multiple tables together into a single `ResultSet`. Such a `ResultSet` will contain duplicated, repeating groups of data that needs to be decomposed and mapped properly to a nested object graph. To facilitate this, MyBatis lets you "chain" result maps together, to deal with the nested results. See the Association element below for more. |
 | `name`        | The name of the constructor parameter. Specifying name allows you to write arg elements in any order. See the above explanation. Since 3.4.3.                                                                                                                                                                                                                                                                                                                                                                                                                 |
 
+##### Nested Results for association or collection
+
+While the following sections describe how to use `association` and `collection` for both Nested selects and Nested results, Since 3.6.0 we can now inject both using `constructor` mapping.
+This behaviour can be enabled by setting `experimentalConstructorCollectionMapping` to `true` in your configuration.
+
+Considering the following:
+
+```java
+public class User {
+   //...
+   public User(Integer id, String username, List<UserRole> userRoles) {
+     //...
+   }
+}
+
+public class UserRole {
+    // ...
+    public UserRole(Integer id, String role) {
+      // ...
+    }
+}
+```
+
+We can map `UserRole` as a nested result, MyBatis will wait until the row has been fully 'completed' before creating the object, this means that by the time the `User` gets created, `userRoles` will be complete and cannot be modified anymore.
+
+```xml
+<resultMap id="userResultMap" type="User">
+  <constructor>
+    <idArg column="id" javaType="int" />
+    <arg column="username" javaType="String" />
+    <arg javaType="List" resultMap="userRoleResultMap" columnPrefix="role_"/>
+  </constructor>
+</resultMap>
+```
+
+To achieve fully immutable objects in this example, we can also use constructor injection for `UserRole`
+
+```xml
+<resultMap id="userRoleResultMap" type="UserRole">
+  <constructor>
+    <idArg column="id" javaType="int" />
+    <arg column="role" javaType="String" />
+  </constructor>
+</resultMap>
+```
+
+MyBatis needs to be explicitly told that the results have been ordered in such a way, that when a new main row is retrieved from the result set, no previous row results will be retrieved again. This can be set on the statement with the `resultOrdered` attribute:
+
+```xml
+<select id="getAllUsers" resultMap="userResultMap" resultOrdered="true">
+    select
+      u.id,
+      u.username,
+      r.id as role_id,
+      r.role as role_role,
+    from user u
+      left join user_role ur on u.id = ur.user_id
+      inner join role r on r.id = ur.role_id
+</select>
+```
+
+In this case, the results are by ordered correctly by default. We can imagine the output to look somthing like:
+
+| row_nr | u.id | u.username | r.id | r.role      |
+|--------|------|------------|------|-------------|
+| 1      | 1    | John       | 1    | Admins      |
+| 2      | 1    | John       | 2    | Users       |
+| 3      | 2    | Jack       | null | null        |
+| 4      | 3    | Peter      | 2    | Users       |
+| 5      | 3    | Peter      | 3    | Maintainers |
+| 6      | 3    | Peter      | 4    | Approvers   |
+
+If the 5th row here would have somehow appeared below the first row (via some `ORDER BY`), MyBatis would not be able to fully construct the `John` user correctly using constructor collection mapping.
+
+After this query is run, we would have the following results:
+
+```
+User{username=John, roles=[Admins, Users]}
+User{username=Jack, roles=[]}
+User{username=Peter, roles=[Users, Maintainers, Approvers]}
+```
+
+This functionality is still experimental, please report any issues you may find on the issue tracker.
 
 #### association
 
@@ -698,7 +781,6 @@ First, let's examine the properties of the element. As you'll see, it differs fr
 | `javaType`    | A fully qualified Java class name, or a type alias (see the table above for the list of built- in type aliases). MyBatis can usually figure out the type if you're mapping to a JavaBean. However, if you are mapping to a `HashMap`, then you should specify the javaType explicitly to ensure the desired behaviour.                                                                                                |
 | `jdbcType`    | The JDBC Type from the list of supported types that follows this table. The JDBC type is only required for nullable columns upon insert, update or delete. This is a JDBC requirement, not an MyBatis one. So even if you were coding JDBC directly, you'd need to specify this type – but only for nullable values.                                                                                                  |
 | `typeHandler` | We discussed default type handlers previously in this documentation. Using this property you can override the default type handler on a mapping-by-mapping basis. The value is either a fully qualified class name of a TypeHandler implementation, or a type alias.                                                                                                                                                  |
-
 
 #### Nested Select for Association
 
