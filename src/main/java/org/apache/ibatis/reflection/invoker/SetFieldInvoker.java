@@ -15,26 +15,40 @@
  */
 package org.apache.ibatis.reflection.invoker;
 
-import java.lang.reflect.Field;
-
 import org.apache.ibatis.reflection.Reflector;
 
+import java.lang.reflect.Field;
+
 /**
+ * 实现 Invoker 接口，设置 Field 调用者。
  * @author Clinton Begin
  */
 public class SetFieldInvoker implements Invoker {
+  /**
+   * Field 对象
+   */
   private final Field field;
 
   public SetFieldInvoker(Field field) {
     this.field = field;
   }
 
+  /**
+   * 设置 Field 属性
+   * @param target 目标
+   * @param args   参数
+   * @return
+   * @throws IllegalAccessException
+   */
   @Override
   public Object invoke(Object target, Object[] args) throws IllegalAccessException {
     try {
+      // 设置 Field 属性
       field.set(target, args[0]);
     } catch (IllegalAccessException e) {
+      // 判断是否可以修改可访问性
       if (Reflector.canControlMemberAccessible()) {
+        // 取消Java语言访问检查并设置 Field 属性
         field.setAccessible(true);
         field.set(target, args[0]);
       } else {
@@ -44,6 +58,9 @@ public class SetFieldInvoker implements Invoker {
     return null;
   }
 
+  /**
+   * @return 属性类型
+   */
   @Override
   public Class<?> getType() {
     return field.getType();

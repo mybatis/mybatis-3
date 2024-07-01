@@ -15,23 +15,54 @@
  */
 package org.apache.ibatis.reflection;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
 import java.util.List;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import static com.googlecode.catchexception.apis.BDDCatchException.*;
+import static com.googlecode.catchexception.apis.BDDCatchException.caughtException;
+import static com.googlecode.catchexception.apis.BDDCatchException.when;
 import static org.assertj.core.api.BDDAssertions.then;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ReflectorTest {
+
+  static class Student {
+    private String name;
+    private Integer age;
+
+    public Student() {
+    }
+
+    public Student(String name, Integer age) {
+      this.name = name;
+      this.age = age;
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public void setName(String name) {
+      this.name = name;
+    }
+
+    public Integer getAge() {
+      return age;
+    }
+
+    public void setAge(Integer age) {
+      this.age = age;
+    }
+  }
 
   @Test
   public void testGetSetterType() throws Exception {
     ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
-    Reflector reflector = reflectorFactory.findForClass(Section.class);
-    Assertions.assertEquals(Long.class, reflector.getSetterType("id"));
+    Reflector reflector = reflectorFactory.findForClass(Student.class);
+    Assertions.assertEquals(String.class, reflector.getSetterType("name"));
   }
 
   @Test
