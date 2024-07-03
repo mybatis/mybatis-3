@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../apidocs/org/apache/ibatis/reflection/TypeParameterResolver.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2024 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -214,114 +214,113 @@
 <a class="jxr_linenumber" name="L206" href="#L206">206</a>       <strong class="jxr_keyword">if</strong> (declaringClass == parentAsClass) {
 <a class="jxr_linenumber" name="L207" href="#L207">207</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; parentTypeVars.length; i++) {
 <a class="jxr_linenumber" name="L208" href="#L208">208</a>           <strong class="jxr_keyword">if</strong> (typeVar.equals(parentTypeVars[i])) {
-<a class="jxr_linenumber" name="L209" href="#L209">209</a>             Type actualType = parentAsType.getActualTypeArguments()[i];
-<a class="jxr_linenumber" name="L210" href="#L210">210</a>             <strong class="jxr_keyword">return</strong> actualType instanceof TypeVariable&lt;?&gt; ? Object.<strong class="jxr_keyword">class</strong> : actualType;
-<a class="jxr_linenumber" name="L211" href="#L211">211</a>           }
-<a class="jxr_linenumber" name="L212" href="#L212">212</a>         }
-<a class="jxr_linenumber" name="L213" href="#L213">213</a>       }
-<a class="jxr_linenumber" name="L214" href="#L214">214</a>       <strong class="jxr_keyword">if</strong> (declaringClass.isAssignableFrom(parentAsClass)) {
-<a class="jxr_linenumber" name="L215" href="#L215">215</a>         <strong class="jxr_keyword">return</strong> resolveTypeVar(typeVar, parentAsType, declaringClass);
-<a class="jxr_linenumber" name="L216" href="#L216">216</a>       }
-<a class="jxr_linenumber" name="L217" href="#L217">217</a>     } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (superclass instanceof Class &amp;&amp; declaringClass.isAssignableFrom((Class&lt;?&gt;) superclass)) {
-<a class="jxr_linenumber" name="L218" href="#L218">218</a>       <strong class="jxr_keyword">return</strong> resolveTypeVar(typeVar, superclass, declaringClass);
-<a class="jxr_linenumber" name="L219" href="#L219">219</a>     }
-<a class="jxr_linenumber" name="L220" href="#L220">220</a>     <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L221" href="#L221">221</a>   }
-<a class="jxr_linenumber" name="L222" href="#L222">222</a> 
-<a class="jxr_linenumber" name="L223" href="#L223">223</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> ParameterizedType translateParentTypeVars(ParameterizedType srcType, Class&lt;?&gt; srcClass,
-<a class="jxr_linenumber" name="L224" href="#L224">224</a>       ParameterizedType parentType) {
-<a class="jxr_linenumber" name="L225" href="#L225">225</a>     Type[] parentTypeArgs = parentType.getActualTypeArguments();
-<a class="jxr_linenumber" name="L226" href="#L226">226</a>     Type[] srcTypeArgs = srcType.getActualTypeArguments();
-<a class="jxr_linenumber" name="L227" href="#L227">227</a>     TypeVariable&lt;?&gt;[] srcTypeVars = srcClass.getTypeParameters();
-<a class="jxr_linenumber" name="L228" href="#L228">228</a>     Type[] newParentArgs = <strong class="jxr_keyword">new</strong> Type[parentTypeArgs.length];
-<a class="jxr_linenumber" name="L229" href="#L229">229</a>     <strong class="jxr_keyword">boolean</strong> noChange = <strong class="jxr_keyword">true</strong>;
-<a class="jxr_linenumber" name="L230" href="#L230">230</a>     <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; parentTypeArgs.length; i++) {
-<a class="jxr_linenumber" name="L231" href="#L231">231</a>       <strong class="jxr_keyword">if</strong> (parentTypeArgs[i] instanceof TypeVariable) {
-<a class="jxr_linenumber" name="L232" href="#L232">232</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> j = 0; j &lt; srcTypeVars.length; j++) {
-<a class="jxr_linenumber" name="L233" href="#L233">233</a>           <strong class="jxr_keyword">if</strong> (srcTypeVars[j].equals(parentTypeArgs[i])) {
-<a class="jxr_linenumber" name="L234" href="#L234">234</a>             noChange = false;
-<a class="jxr_linenumber" name="L235" href="#L235">235</a>             newParentArgs[i] = srcTypeArgs[j];
-<a class="jxr_linenumber" name="L236" href="#L236">236</a>           }
-<a class="jxr_linenumber" name="L237" href="#L237">237</a>         }
-<a class="jxr_linenumber" name="L238" href="#L238">238</a>       } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L239" href="#L239">239</a>         newParentArgs[i] = parentTypeArgs[i];
-<a class="jxr_linenumber" name="L240" href="#L240">240</a>       }
-<a class="jxr_linenumber" name="L241" href="#L241">241</a>     }
-<a class="jxr_linenumber" name="L242" href="#L242">242</a>     <strong class="jxr_keyword">return</strong> noChange ? parentType : <strong class="jxr_keyword">new</strong> ParameterizedTypeImpl((Class&lt;?&gt;) parentType.getRawType(), <strong class="jxr_keyword">null</strong>, newParentArgs);
-<a class="jxr_linenumber" name="L243" href="#L243">243</a>   }
-<a class="jxr_linenumber" name="L244" href="#L244">244</a> 
-<a class="jxr_linenumber" name="L245" href="#L245">245</a>   <strong class="jxr_keyword">private</strong> <a name="TypeParameterResolver" href="../../../../org/apache/ibatis/reflection/TypeParameterResolver.html#TypeParameterResolver">TypeParameterResolver</a>() {
-<a class="jxr_linenumber" name="L246" href="#L246">246</a>   }
-<a class="jxr_linenumber" name="L247" href="#L247">247</a> 
-<a class="jxr_linenumber" name="L248" href="#L248">248</a>   <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> ParameterizedTypeImpl <strong class="jxr_keyword">implements</strong> ParameterizedType {
-<a class="jxr_linenumber" name="L249" href="#L249">249</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Class&lt;?&gt; rawType;
-<a class="jxr_linenumber" name="L250" href="#L250">250</a> 
-<a class="jxr_linenumber" name="L251" href="#L251">251</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Type ownerType;
-<a class="jxr_linenumber" name="L252" href="#L252">252</a> 
-<a class="jxr_linenumber" name="L253" href="#L253">253</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Type[] actualTypeArguments;
-<a class="jxr_linenumber" name="L254" href="#L254">254</a> 
-<a class="jxr_linenumber" name="L255" href="#L255">255</a>     <strong class="jxr_keyword">public</strong> ParameterizedTypeImpl(Class&lt;?&gt; rawType, Type ownerType, Type[] actualTypeArguments) {
-<a class="jxr_linenumber" name="L256" href="#L256">256</a>       <strong class="jxr_keyword">this</strong>.rawType = rawType;
-<a class="jxr_linenumber" name="L257" href="#L257">257</a>       <strong class="jxr_keyword">this</strong>.ownerType = ownerType;
-<a class="jxr_linenumber" name="L258" href="#L258">258</a>       <strong class="jxr_keyword">this</strong>.actualTypeArguments = actualTypeArguments;
-<a class="jxr_linenumber" name="L259" href="#L259">259</a>     }
-<a class="jxr_linenumber" name="L260" href="#L260">260</a> 
-<a class="jxr_linenumber" name="L261" href="#L261">261</a>     @Override
-<a class="jxr_linenumber" name="L262" href="#L262">262</a>     <strong class="jxr_keyword">public</strong> Type[] getActualTypeArguments() {
-<a class="jxr_linenumber" name="L263" href="#L263">263</a>       <strong class="jxr_keyword">return</strong> actualTypeArguments;
-<a class="jxr_linenumber" name="L264" href="#L264">264</a>     }
-<a class="jxr_linenumber" name="L265" href="#L265">265</a> 
-<a class="jxr_linenumber" name="L266" href="#L266">266</a>     @Override
-<a class="jxr_linenumber" name="L267" href="#L267">267</a>     <strong class="jxr_keyword">public</strong> Type getOwnerType() {
-<a class="jxr_linenumber" name="L268" href="#L268">268</a>       <strong class="jxr_keyword">return</strong> ownerType;
-<a class="jxr_linenumber" name="L269" href="#L269">269</a>     }
-<a class="jxr_linenumber" name="L270" href="#L270">270</a> 
-<a class="jxr_linenumber" name="L271" href="#L271">271</a>     @Override
-<a class="jxr_linenumber" name="L272" href="#L272">272</a>     <strong class="jxr_keyword">public</strong> Type getRawType() {
-<a class="jxr_linenumber" name="L273" href="#L273">273</a>       <strong class="jxr_keyword">return</strong> rawType;
-<a class="jxr_linenumber" name="L274" href="#L274">274</a>     }
-<a class="jxr_linenumber" name="L275" href="#L275">275</a> 
-<a class="jxr_linenumber" name="L276" href="#L276">276</a>     @Override
-<a class="jxr_linenumber" name="L277" href="#L277">277</a>     <strong class="jxr_keyword">public</strong> String toString() {
-<a class="jxr_linenumber" name="L278" href="#L278">278</a>       <strong class="jxr_keyword">return</strong> <span class="jxr_string">"ParameterizedTypeImpl [rawType="</span> + rawType + <span class="jxr_string">", ownerType="</span> + ownerType + <span class="jxr_string">", actualTypeArguments="</span>
-<a class="jxr_linenumber" name="L279" href="#L279">279</a>           + Arrays.toString(actualTypeArguments) + <span class="jxr_string">"]"</span>;
-<a class="jxr_linenumber" name="L280" href="#L280">280</a>     }
-<a class="jxr_linenumber" name="L281" href="#L281">281</a>   }
-<a class="jxr_linenumber" name="L282" href="#L282">282</a> 
-<a class="jxr_linenumber" name="L283" href="#L283">283</a>   <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> WildcardTypeImpl <strong class="jxr_keyword">implements</strong> WildcardType {
-<a class="jxr_linenumber" name="L284" href="#L284">284</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Type[] lowerBounds;
-<a class="jxr_linenumber" name="L285" href="#L285">285</a> 
-<a class="jxr_linenumber" name="L286" href="#L286">286</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Type[] upperBounds;
-<a class="jxr_linenumber" name="L287" href="#L287">287</a> 
-<a class="jxr_linenumber" name="L288" href="#L288">288</a>     WildcardTypeImpl(Type[] lowerBounds, Type[] upperBounds) {
-<a class="jxr_linenumber" name="L289" href="#L289">289</a>       <strong class="jxr_keyword">this</strong>.lowerBounds = lowerBounds;
-<a class="jxr_linenumber" name="L290" href="#L290">290</a>       <strong class="jxr_keyword">this</strong>.upperBounds = upperBounds;
-<a class="jxr_linenumber" name="L291" href="#L291">291</a>     }
-<a class="jxr_linenumber" name="L292" href="#L292">292</a> 
-<a class="jxr_linenumber" name="L293" href="#L293">293</a>     @Override
-<a class="jxr_linenumber" name="L294" href="#L294">294</a>     <strong class="jxr_keyword">public</strong> Type[] getLowerBounds() {
-<a class="jxr_linenumber" name="L295" href="#L295">295</a>       <strong class="jxr_keyword">return</strong> lowerBounds;
-<a class="jxr_linenumber" name="L296" href="#L296">296</a>     }
-<a class="jxr_linenumber" name="L297" href="#L297">297</a> 
-<a class="jxr_linenumber" name="L298" href="#L298">298</a>     @Override
-<a class="jxr_linenumber" name="L299" href="#L299">299</a>     <strong class="jxr_keyword">public</strong> Type[] getUpperBounds() {
-<a class="jxr_linenumber" name="L300" href="#L300">300</a>       <strong class="jxr_keyword">return</strong> upperBounds;
-<a class="jxr_linenumber" name="L301" href="#L301">301</a>     }
-<a class="jxr_linenumber" name="L302" href="#L302">302</a>   }
-<a class="jxr_linenumber" name="L303" href="#L303">303</a> 
-<a class="jxr_linenumber" name="L304" href="#L304">304</a>   <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> GenericArrayTypeImpl <strong class="jxr_keyword">implements</strong> GenericArrayType {
-<a class="jxr_linenumber" name="L305" href="#L305">305</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Type genericComponentType;
-<a class="jxr_linenumber" name="L306" href="#L306">306</a> 
-<a class="jxr_linenumber" name="L307" href="#L307">307</a>     GenericArrayTypeImpl(Type genericComponentType) {
-<a class="jxr_linenumber" name="L308" href="#L308">308</a>       <strong class="jxr_keyword">this</strong>.genericComponentType = genericComponentType;
-<a class="jxr_linenumber" name="L309" href="#L309">309</a>     }
-<a class="jxr_linenumber" name="L310" href="#L310">310</a> 
-<a class="jxr_linenumber" name="L311" href="#L311">311</a>     @Override
-<a class="jxr_linenumber" name="L312" href="#L312">312</a>     <strong class="jxr_keyword">public</strong> Type getGenericComponentType() {
-<a class="jxr_linenumber" name="L313" href="#L313">313</a>       <strong class="jxr_keyword">return</strong> genericComponentType;
-<a class="jxr_linenumber" name="L314" href="#L314">314</a>     }
-<a class="jxr_linenumber" name="L315" href="#L315">315</a>   }
-<a class="jxr_linenumber" name="L316" href="#L316">316</a> }
+<a class="jxr_linenumber" name="L209" href="#L209">209</a>             <strong class="jxr_keyword">return</strong> parentAsType.getActualTypeArguments()[i];
+<a class="jxr_linenumber" name="L210" href="#L210">210</a>           }
+<a class="jxr_linenumber" name="L211" href="#L211">211</a>         }
+<a class="jxr_linenumber" name="L212" href="#L212">212</a>       }
+<a class="jxr_linenumber" name="L213" href="#L213">213</a>       <strong class="jxr_keyword">if</strong> (declaringClass.isAssignableFrom(parentAsClass)) {
+<a class="jxr_linenumber" name="L214" href="#L214">214</a>         <strong class="jxr_keyword">return</strong> resolveTypeVar(typeVar, parentAsType, declaringClass);
+<a class="jxr_linenumber" name="L215" href="#L215">215</a>       }
+<a class="jxr_linenumber" name="L216" href="#L216">216</a>     } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (superclass instanceof Class &amp;&amp; declaringClass.isAssignableFrom((Class&lt;?&gt;) superclass)) {
+<a class="jxr_linenumber" name="L217" href="#L217">217</a>       <strong class="jxr_keyword">return</strong> resolveTypeVar(typeVar, superclass, declaringClass);
+<a class="jxr_linenumber" name="L218" href="#L218">218</a>     }
+<a class="jxr_linenumber" name="L219" href="#L219">219</a>     <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L220" href="#L220">220</a>   }
+<a class="jxr_linenumber" name="L221" href="#L221">221</a> 
+<a class="jxr_linenumber" name="L222" href="#L222">222</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> ParameterizedType translateParentTypeVars(ParameterizedType srcType, Class&lt;?&gt; srcClass,
+<a class="jxr_linenumber" name="L223" href="#L223">223</a>       ParameterizedType parentType) {
+<a class="jxr_linenumber" name="L224" href="#L224">224</a>     Type[] parentTypeArgs = parentType.getActualTypeArguments();
+<a class="jxr_linenumber" name="L225" href="#L225">225</a>     Type[] srcTypeArgs = srcType.getActualTypeArguments();
+<a class="jxr_linenumber" name="L226" href="#L226">226</a>     TypeVariable&lt;?&gt;[] srcTypeVars = srcClass.getTypeParameters();
+<a class="jxr_linenumber" name="L227" href="#L227">227</a>     Type[] newParentArgs = <strong class="jxr_keyword">new</strong> Type[parentTypeArgs.length];
+<a class="jxr_linenumber" name="L228" href="#L228">228</a>     <strong class="jxr_keyword">boolean</strong> noChange = <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L229" href="#L229">229</a>     <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; parentTypeArgs.length; i++) {
+<a class="jxr_linenumber" name="L230" href="#L230">230</a>       <strong class="jxr_keyword">if</strong> (parentTypeArgs[i] instanceof TypeVariable) {
+<a class="jxr_linenumber" name="L231" href="#L231">231</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> j = 0; j &lt; srcTypeVars.length; j++) {
+<a class="jxr_linenumber" name="L232" href="#L232">232</a>           <strong class="jxr_keyword">if</strong> (srcTypeVars[j].equals(parentTypeArgs[i])) {
+<a class="jxr_linenumber" name="L233" href="#L233">233</a>             noChange = false;
+<a class="jxr_linenumber" name="L234" href="#L234">234</a>             newParentArgs[i] = srcTypeArgs[j];
+<a class="jxr_linenumber" name="L235" href="#L235">235</a>           }
+<a class="jxr_linenumber" name="L236" href="#L236">236</a>         }
+<a class="jxr_linenumber" name="L237" href="#L237">237</a>       } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L238" href="#L238">238</a>         newParentArgs[i] = parentTypeArgs[i];
+<a class="jxr_linenumber" name="L239" href="#L239">239</a>       }
+<a class="jxr_linenumber" name="L240" href="#L240">240</a>     }
+<a class="jxr_linenumber" name="L241" href="#L241">241</a>     <strong class="jxr_keyword">return</strong> noChange ? parentType : <strong class="jxr_keyword">new</strong> ParameterizedTypeImpl((Class&lt;?&gt;) parentType.getRawType(), <strong class="jxr_keyword">null</strong>, newParentArgs);
+<a class="jxr_linenumber" name="L242" href="#L242">242</a>   }
+<a class="jxr_linenumber" name="L243" href="#L243">243</a> 
+<a class="jxr_linenumber" name="L244" href="#L244">244</a>   <strong class="jxr_keyword">private</strong> <a name="TypeParameterResolver" href="../../../../org/apache/ibatis/reflection/TypeParameterResolver.html#TypeParameterResolver">TypeParameterResolver</a>() {
+<a class="jxr_linenumber" name="L245" href="#L245">245</a>   }
+<a class="jxr_linenumber" name="L246" href="#L246">246</a> 
+<a class="jxr_linenumber" name="L247" href="#L247">247</a>   <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> ParameterizedTypeImpl <strong class="jxr_keyword">implements</strong> ParameterizedType {
+<a class="jxr_linenumber" name="L248" href="#L248">248</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Class&lt;?&gt; rawType;
+<a class="jxr_linenumber" name="L249" href="#L249">249</a> 
+<a class="jxr_linenumber" name="L250" href="#L250">250</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Type ownerType;
+<a class="jxr_linenumber" name="L251" href="#L251">251</a> 
+<a class="jxr_linenumber" name="L252" href="#L252">252</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Type[] actualTypeArguments;
+<a class="jxr_linenumber" name="L253" href="#L253">253</a> 
+<a class="jxr_linenumber" name="L254" href="#L254">254</a>     <strong class="jxr_keyword">public</strong> ParameterizedTypeImpl(Class&lt;?&gt; rawType, Type ownerType, Type[] actualTypeArguments) {
+<a class="jxr_linenumber" name="L255" href="#L255">255</a>       <strong class="jxr_keyword">this</strong>.rawType = rawType;
+<a class="jxr_linenumber" name="L256" href="#L256">256</a>       <strong class="jxr_keyword">this</strong>.ownerType = ownerType;
+<a class="jxr_linenumber" name="L257" href="#L257">257</a>       <strong class="jxr_keyword">this</strong>.actualTypeArguments = actualTypeArguments;
+<a class="jxr_linenumber" name="L258" href="#L258">258</a>     }
+<a class="jxr_linenumber" name="L259" href="#L259">259</a> 
+<a class="jxr_linenumber" name="L260" href="#L260">260</a>     @Override
+<a class="jxr_linenumber" name="L261" href="#L261">261</a>     <strong class="jxr_keyword">public</strong> Type[] getActualTypeArguments() {
+<a class="jxr_linenumber" name="L262" href="#L262">262</a>       <strong class="jxr_keyword">return</strong> actualTypeArguments;
+<a class="jxr_linenumber" name="L263" href="#L263">263</a>     }
+<a class="jxr_linenumber" name="L264" href="#L264">264</a> 
+<a class="jxr_linenumber" name="L265" href="#L265">265</a>     @Override
+<a class="jxr_linenumber" name="L266" href="#L266">266</a>     <strong class="jxr_keyword">public</strong> Type getOwnerType() {
+<a class="jxr_linenumber" name="L267" href="#L267">267</a>       <strong class="jxr_keyword">return</strong> ownerType;
+<a class="jxr_linenumber" name="L268" href="#L268">268</a>     }
+<a class="jxr_linenumber" name="L269" href="#L269">269</a> 
+<a class="jxr_linenumber" name="L270" href="#L270">270</a>     @Override
+<a class="jxr_linenumber" name="L271" href="#L271">271</a>     <strong class="jxr_keyword">public</strong> Type getRawType() {
+<a class="jxr_linenumber" name="L272" href="#L272">272</a>       <strong class="jxr_keyword">return</strong> rawType;
+<a class="jxr_linenumber" name="L273" href="#L273">273</a>     }
+<a class="jxr_linenumber" name="L274" href="#L274">274</a> 
+<a class="jxr_linenumber" name="L275" href="#L275">275</a>     @Override
+<a class="jxr_linenumber" name="L276" href="#L276">276</a>     <strong class="jxr_keyword">public</strong> String toString() {
+<a class="jxr_linenumber" name="L277" href="#L277">277</a>       <strong class="jxr_keyword">return</strong> <span class="jxr_string">"ParameterizedTypeImpl [rawType="</span> + rawType + <span class="jxr_string">", ownerType="</span> + ownerType + <span class="jxr_string">", actualTypeArguments="</span>
+<a class="jxr_linenumber" name="L278" href="#L278">278</a>           + Arrays.toString(actualTypeArguments) + <span class="jxr_string">"]"</span>;
+<a class="jxr_linenumber" name="L279" href="#L279">279</a>     }
+<a class="jxr_linenumber" name="L280" href="#L280">280</a>   }
+<a class="jxr_linenumber" name="L281" href="#L281">281</a> 
+<a class="jxr_linenumber" name="L282" href="#L282">282</a>   <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> WildcardTypeImpl <strong class="jxr_keyword">implements</strong> WildcardType {
+<a class="jxr_linenumber" name="L283" href="#L283">283</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Type[] lowerBounds;
+<a class="jxr_linenumber" name="L284" href="#L284">284</a> 
+<a class="jxr_linenumber" name="L285" href="#L285">285</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Type[] upperBounds;
+<a class="jxr_linenumber" name="L286" href="#L286">286</a> 
+<a class="jxr_linenumber" name="L287" href="#L287">287</a>     WildcardTypeImpl(Type[] lowerBounds, Type[] upperBounds) {
+<a class="jxr_linenumber" name="L288" href="#L288">288</a>       <strong class="jxr_keyword">this</strong>.lowerBounds = lowerBounds;
+<a class="jxr_linenumber" name="L289" href="#L289">289</a>       <strong class="jxr_keyword">this</strong>.upperBounds = upperBounds;
+<a class="jxr_linenumber" name="L290" href="#L290">290</a>     }
+<a class="jxr_linenumber" name="L291" href="#L291">291</a> 
+<a class="jxr_linenumber" name="L292" href="#L292">292</a>     @Override
+<a class="jxr_linenumber" name="L293" href="#L293">293</a>     <strong class="jxr_keyword">public</strong> Type[] getLowerBounds() {
+<a class="jxr_linenumber" name="L294" href="#L294">294</a>       <strong class="jxr_keyword">return</strong> lowerBounds;
+<a class="jxr_linenumber" name="L295" href="#L295">295</a>     }
+<a class="jxr_linenumber" name="L296" href="#L296">296</a> 
+<a class="jxr_linenumber" name="L297" href="#L297">297</a>     @Override
+<a class="jxr_linenumber" name="L298" href="#L298">298</a>     <strong class="jxr_keyword">public</strong> Type[] getUpperBounds() {
+<a class="jxr_linenumber" name="L299" href="#L299">299</a>       <strong class="jxr_keyword">return</strong> upperBounds;
+<a class="jxr_linenumber" name="L300" href="#L300">300</a>     }
+<a class="jxr_linenumber" name="L301" href="#L301">301</a>   }
+<a class="jxr_linenumber" name="L302" href="#L302">302</a> 
+<a class="jxr_linenumber" name="L303" href="#L303">303</a>   <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> GenericArrayTypeImpl <strong class="jxr_keyword">implements</strong> GenericArrayType {
+<a class="jxr_linenumber" name="L304" href="#L304">304</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Type genericComponentType;
+<a class="jxr_linenumber" name="L305" href="#L305">305</a> 
+<a class="jxr_linenumber" name="L306" href="#L306">306</a>     GenericArrayTypeImpl(Type genericComponentType) {
+<a class="jxr_linenumber" name="L307" href="#L307">307</a>       <strong class="jxr_keyword">this</strong>.genericComponentType = genericComponentType;
+<a class="jxr_linenumber" name="L308" href="#L308">308</a>     }
+<a class="jxr_linenumber" name="L309" href="#L309">309</a> 
+<a class="jxr_linenumber" name="L310" href="#L310">310</a>     @Override
+<a class="jxr_linenumber" name="L311" href="#L311">311</a>     <strong class="jxr_keyword">public</strong> Type getGenericComponentType() {
+<a class="jxr_linenumber" name="L312" href="#L312">312</a>       <strong class="jxr_keyword">return</strong> genericComponentType;
+<a class="jxr_linenumber" name="L313" href="#L313">313</a>     }
+<a class="jxr_linenumber" name="L314" href="#L314">314</a>   }
+<a class="jxr_linenumber" name="L315" href="#L315">315</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2024 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>

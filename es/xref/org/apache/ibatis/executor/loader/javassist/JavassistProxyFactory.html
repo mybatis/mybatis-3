@@ -151,14 +151,14 @@
 <a class="jxr_linenumber" name="L143" href="#L143">143</a>             original = objectFactory.create(type, constructorArgTypes, constructorArgs);
 <a class="jxr_linenumber" name="L144" href="#L144">144</a>           }
 <a class="jxr_linenumber" name="L145" href="#L145">145</a>           PropertyCopier.copyBeanProperties(type, enhanced, original);
-<a class="jxr_linenumber" name="L146" href="#L146">146</a>           <strong class="jxr_keyword">if</strong> (!lazyLoader.isEmpty()) {
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>           <strong class="jxr_keyword">if</strong> (lazyLoader.size() &gt; 0) {
 <a class="jxr_linenumber" name="L147" href="#L147">147</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a name="JavassistSerialStateHolder" href="../../../../../../org/apache/ibatis/executor/loader/javassist/JavassistSerialStateHolder.html#JavassistSerialStateHolder">JavassistSerialStateHolder</a>(original, lazyLoader.getProperties(), objectFactory,
 <a class="jxr_linenumber" name="L148" href="#L148">148</a>                 constructorArgTypes, constructorArgs);
 <a class="jxr_linenumber" name="L149" href="#L149">149</a>           } <strong class="jxr_keyword">else</strong> {
 <a class="jxr_linenumber" name="L150" href="#L150">150</a>             <strong class="jxr_keyword">return</strong> original;
 <a class="jxr_linenumber" name="L151" href="#L151">151</a>           }
 <a class="jxr_linenumber" name="L152" href="#L152">152</a>         }
-<a class="jxr_linenumber" name="L153" href="#L153">153</a>         <strong class="jxr_keyword">if</strong> (!lazyLoader.isEmpty() &amp;&amp; !FINALIZE_METHOD.equals(methodName)) {
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>         <strong class="jxr_keyword">if</strong> (lazyLoader.size() &gt; 0 &amp;&amp; !FINALIZE_METHOD.equals(methodName)) {
 <a class="jxr_linenumber" name="L154" href="#L154">154</a>           <strong class="jxr_keyword">if</strong> (aggressive || lazyLoadTriggerMethods.contains(methodName)) {
 <a class="jxr_linenumber" name="L155" href="#L155">155</a>             lazyLoader.loadAll();
 <a class="jxr_linenumber" name="L156" href="#L156">156</a>           } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (PropertyNamer.isSetter(methodName)) {
