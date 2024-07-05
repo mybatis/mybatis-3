@@ -1,6 +1,8 @@
 title: MyBatis 3 | The SQL Builder Class
 author: Clinton Begin
 
+<h1 class="d-none">Avoid blank site</h1>
+
 ## The SQL Builder Class
 
 ### The Problem

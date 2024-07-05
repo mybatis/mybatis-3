@@ -1,6 +1,8 @@
 title: MyBatis 3 | Mapper XML Files
 author: Clinton Begin
 
+<h1 class="d-none">Avoid blank site</h1>
+
 ## Mapper XML Files
 
 The true power of MyBatis is in the Mapped Statements. This is where the magic happens. For all of their power, the Mapper XML files are relatively simple. Certainly if you were to compare them to the equivalent JDBC code, you would immediately see a savings of 95% of the code. MyBatis was built to focus on the SQL, and does its best to stay out of your way.

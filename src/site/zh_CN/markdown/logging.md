@@ -1,6 +1,8 @@
 title: MyBatis 3 | 日志
 author: Clinton Begin, Nan Lei
 
+<h1 class="d-none">Avoid blank site</h1>
+
 ## 日志
 
 Mybatis 通过使用内置的日志工厂提供日志功能。内置日志工厂将会把日志工作委托给下面的实现之一：

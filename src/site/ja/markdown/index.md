@@ -1,6 +1,8 @@
 title: MyBatis 3 | イントロダクション
 author: Clinton Begin, Iwao AVE!
 
+<h1 class="d-none">Avoid blank site</h1>
+
 ## イントロダクション
 
 ### MyBatis とは？

@@ -1,6 +1,8 @@
 title: 마이바티스 3 | 로깅
 author: Clinton Begin, 이동국(한국어 번역)
 
+<h1 class="d-none">Avoid blank site</h1>
+
 ## Logging
 
 마이바티스는 내부 로그 팩토리를 사용하여 로깅 정보를 제공한다. 내부 로그 팩토리는 로깅 정보를 다른 로그 구현체 중 하나에 전달한다.

@@ -1,6 +1,8 @@
 title: MyBatis 3 | 简介
 author: Clinton Begin, Nan Lei, Dongxu Wang
 
+<h1 class="d-none">Avoid blank site</h1>
+
 ## 简介
 
 ### 什么是 MyBatis？
