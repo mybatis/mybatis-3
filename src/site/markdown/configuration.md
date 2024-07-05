@@ -1,6 +1,8 @@
 title: MyBatis 3 | Configuration
 author: Clinton Begin
 
+<h1 class="d-none">Avoid blank site</h1>
+
 ## Configuration
 
 The MyBatis configuration contains settings and properties that have a dramatic effect on how MyBatis behaves. The high level structure of the document is as follows:

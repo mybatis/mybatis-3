@@ -1,6 +1,8 @@
 title: MyBatis 3 | Introducción
 author: Clinton Begin, Eduardo Macarron
 
+<h1 class="d-none">Avoid blank site</h1>
+
 ## Introducción
 
 ### ¿Qué es MyBatis?

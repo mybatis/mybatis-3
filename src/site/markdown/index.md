@@ -1,6 +1,8 @@
 title: MyBatis 3 | Introduction
 author: Clinton Begin
 
+<h1 class="d-none">Avoid blank site</h1>
+
 ## Introduction
 
 ### What is MyBatis?

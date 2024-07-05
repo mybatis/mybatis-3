@@ -1,6 +1,8 @@
 title: MyBatis 3 | 入门
 author: Clinton Begin, Nan Lei, Dongxu Wang
 
+<h1 class="d-none">Avoid blank site</h1>
+
 # 入门
 
 ## 安装

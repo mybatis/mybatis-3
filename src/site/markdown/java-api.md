@@ -1,6 +1,8 @@
 title: MyBatis 3 | Java API
 author: Clinton Begin
 
+<h1 class="d-none">Avoid blank site</h1>
+
 ## Java API
 
 Now that you know how to configure MyBatis and create mappings, you're ready for the good stuff. The MyBatis Java API is where you get to reap the rewards of your efforts. As you'll see, compared to JDBC, MyBatis greatly simplifies your code and keeps it clean, easy to understand and maintain. MyBatis 3 has introduced a number of significant improvements to make working with SQL Maps even better.

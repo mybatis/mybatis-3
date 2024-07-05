@@ -1,6 +1,8 @@
 title: MyBatis 3 | Dynamic SQL
 author: Clinton Begin
 
+<h1 class="d-none">Avoid blank site</h1>
+
 ## Dynamic SQL
 
 One of the most powerful features of MyBatis has always been its Dynamic SQL capabilities. If you have any experience with JDBC or any similar framework, you understand how painful it is to conditionally concatenate strings of SQL together, making sure not to forget spaces or to omit a comma at the end of a list of columns. Dynamic SQL can be downright painful to deal with.

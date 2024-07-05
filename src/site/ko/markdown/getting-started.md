@@ -1,6 +1,8 @@
 title: 마이바티스 3 | 시작하기
 author: Clinton Begin, 이동국(한국어 번역)
 
+<h1 class="d-none">Avoid blank site</h1>
+
 # 시작하기
 
 ## 설치
