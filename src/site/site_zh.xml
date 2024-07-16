@@ -26,12 +26,12 @@
       <item name="XML 配置" href="configuration.html" collapse="true">
         <item href="configuration.html#properties" name="属性" />
         <item href="configuration.html#settings" name="设置" />
-        <item href="configuration.html#typeAliases" name="类型别名" />
-        <item href="configuration.html#typeHandlers" name="类型处理器" />
-        <item href="configuration.html#objectFactory" name="对象工厂" />
+        <item href="configuration.html#typealiases" name="类型别名" />
+        <item href="configuration.html#typehandlers" name="类型处理器" />
+        <item href="configuration.html#objectfactory" name="对象工厂" />
         <item href="configuration.html#plugins" name="插件" />
         <item href="configuration.html#environments" name="环境配置" />
-        <item href="configuration.html#databaseIdProvider" name="数据库厂商标识" />
+        <item href="configuration.html#databaseidprovider" name="数据库厂商标识" />
         <item href="configuration.html#mappers" name="映射器" />
       </item>
       <item name="XML 映射文件" href="sqlmap-xml.html" collapse="true">
