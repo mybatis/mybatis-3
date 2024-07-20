@@ -18,10 +18,18 @@ package org.apache.ibatis.mapping;
 /**
  * @author Clinton Begin
  */
-public enum ResultFlag {
+public class ResultFlag {
 
-  ID,
+  public static final byte NO_FLAG = 0;
+  public static final byte ID = 1;
+  public static final byte CONSTRUCTOR = 2;
 
-  CONSTRUCTOR
+  public static boolean containsId(byte flags) {
+    return (flags & ID) == ID;
+  }
+
+  public static boolean containsConstructor(byte flags) {
+    return (flags & CONSTRUCTOR) == CONSTRUCTOR;
+  }
 
 }
