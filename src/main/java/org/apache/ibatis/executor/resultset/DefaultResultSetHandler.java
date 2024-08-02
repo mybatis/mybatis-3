@@ -724,9 +724,10 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private Object createByConstructorSignature(ResultSetWrapper rsw, ResultMap resultMap, String columnPrefix,
       Class<?> resultType, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) throws SQLException {
-    return applyConstructorAutomapping(rsw, resultMap, columnPrefix, resultType, constructorArgTypes, constructorArgs,
-        findConstructorForAutomapping(resultType, rsw).orElseThrow(() -> new ExecutorException(
-            "No constructor found in " + resultType.getName() + " matching " + rsw.getClassNames())));
+    return applyConstructorAutomapping(resultType,
+        new ResultObjectFactoryContext(rsw, resultMap, columnPrefix, constructorArgTypes, constructorArgs,
+            findConstructorForAutomapping(resultType, rsw).orElseThrow(() -> new ExecutorException(
+                "No constructor found in " + resultType.getName() + " matching " + rsw.getClassNames()))));
   }
 
   private Optional<Constructor<?>> findConstructorForAutomapping(final Class<?> resultType, ResultSetWrapper rsw) {
@@ -765,19 +766,18 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     return true;
   }
 
-  private Object applyConstructorAutomapping(ResultSetWrapper rsw, ResultMap resultMap, String columnPrefix,
-      Class<?> resultType, List<Class<?>> constructorArgTypes, List<Object> constructorArgs, Constructor<?> constructor)
+  private Object applyConstructorAutomapping(Class<?> resultType, ResultObjectFactoryContext resultObjectFactoryContext)
       throws SQLException {
     boolean foundValues = false;
     if (configuration.isArgNameBasedConstructorAutoMapping()) {
-      foundValues = applyArgNameBasedConstructorAutoMapping(rsw, resultMap, columnPrefix, constructorArgTypes,
-          constructorArgs, constructor, foundValues);
+      foundValues = applyArgNameBasedConstructorAutoMapping(foundValues, resultObjectFactoryContext);
     } else {
-      foundValues = applyColumnOrderBasedConstructorAutomapping(rsw, constructorArgTypes, constructorArgs, constructor,
-          foundValues);
+      foundValues = applyColumnOrderBasedConstructorAutomapping(resultObjectFactoryContext.getRsw(),
+          resultObjectFactoryContext.getConstructorArgTypes(), resultObjectFactoryContext.getConstructorArgs(),
+          resultObjectFactoryContext.getConstructor(), foundValues);
     }
-    return foundValues || configuration.isReturnInstanceForEmptyRow()
-        ? objectFactory.create(resultType, constructorArgTypes, constructorArgs) : null;
+    return foundValues || configuration.isReturnInstanceForEmptyRow() ? objectFactory.create(resultType,
+        resultObjectFactoryContext.getConstructorArgTypes(), resultObjectFactoryContext.getConstructorArgs()) : null;
   }
 
   private boolean applyColumnOrderBasedConstructorAutomapping(ResultSetWrapper rsw, List<Class<?>> constructorArgTypes,
@@ -795,23 +795,23 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     return foundValues;
   }
 
-  private boolean applyArgNameBasedConstructorAutoMapping(ResultSetWrapper rsw, ResultMap resultMap,
-      String columnPrefix, List<Class<?>> constructorArgTypes, List<Object> constructorArgs, Constructor<?> constructor,
-      boolean foundValues) throws SQLException {
+  private boolean applyArgNameBasedConstructorAutoMapping(boolean foundValues,
+      ResultObjectFactoryContext resultObjectFactoryContext) throws SQLException {
     List<String> missingArgs = null;
-    Parameter[] params = constructor.getParameters();
+    Parameter[] params = resultObjectFactoryContext.getConstructor().getParameters();
     for (Parameter param : params) {
       boolean columnNotFound = true;
       Param paramAnno = param.getAnnotation(Param.class);
       String paramName = paramAnno == null ? param.getName() : paramAnno.value();
-      for (String columnName : rsw.getColumnNames()) {
-        if (columnMatchesParam(columnName, paramName, columnPrefix)) {
+      for (String columnName : resultObjectFactoryContext.getRsw().getColumnNames()) {
+        if (columnMatchesParam(columnName, paramName, resultObjectFactoryContext.getColumnPrefix())) {
           Class<?> paramType = param.getType();
-          TypeHandler<?> typeHandler = rsw.getTypeHandler(paramType, columnName);
-          Object value = typeHandler.getResult(rsw.getResultSet(), columnName);
-          constructorArgTypes.add(paramType);
-          constructorArgs.add(value);
-          final String mapKey = resultMap.getId() + ":" + columnPrefix;
+          TypeHandler<?> typeHandler = resultObjectFactoryContext.getRsw().getTypeHandler(paramType, columnName);
+          Object value = typeHandler.getResult(resultObjectFactoryContext.getRsw().getResultSet(), columnName);
+          resultObjectFactoryContext.getConstructorArgTypes().add(paramType);
+          resultObjectFactoryContext.getConstructorArgs().add(value);
+          final String mapKey = resultObjectFactoryContext.getResultMap().getId() + ":"
+              + resultObjectFactoryContext.getColumnPrefix();
           if (!autoMappingsCache.containsKey(mapKey)) {
             MapUtil.computeIfAbsent(constructorAutoMappingColumns, mapKey, k -> new ArrayList<>()).add(columnName);
           }
@@ -826,11 +826,12 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         missingArgs.add(paramName);
       }
     }
-    if (foundValues && constructorArgs.size() < params.length) {
+    if (foundValues && resultObjectFactoryContext.getConstructorArgs().size() < params.length) {
       throw new ExecutorException(MessageFormat.format(
           "Constructor auto-mapping of ''{1}'' failed " + "because ''{0}'' were not found in the result set; "
               + "Available columns are ''{2}'' and mapUnderscoreToCamelCase is ''{3}''.",
-          missingArgs, constructor, rsw.getColumnNames(), configuration.isMapUnderscoreToCamelCase()));
+          missingArgs, resultObjectFactoryContext.getConstructor(),
+          resultObjectFactoryContext.getRsw().getColumnNames(), configuration.isMapUnderscoreToCamelCase()));
     }
     return foundValues;
   }
