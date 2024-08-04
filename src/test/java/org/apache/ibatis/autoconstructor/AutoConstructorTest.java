@@ -101,6 +101,6 @@ class AutoConstructorTest {
 
   private void verifySubjects(final List<?> subjects) {
     assertNotNull(subjects);
-    Assertions.assertThat(subjects.size()).isEqualTo(3);
+    Assertions.assertThat(subjects).hasSize(3);
   }
 }
