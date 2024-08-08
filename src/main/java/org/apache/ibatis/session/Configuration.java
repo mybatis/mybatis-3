@@ -1106,6 +1106,7 @@ public class Configuration {
     private static final long serialVersionUID = -4950446264854982944L;
     private final String name;
     private BiFunction<V, V, String> conflictMessageProducer;
+    private static final Object AMBIGUITY_INSTANCE = new Object();
 
     public StrictMap(String name, int initialCapacity, float loadFactor) {
       super(initialCapacity, loadFactor);
@@ -1155,7 +1156,7 @@ public class Configuration {
         if (super.get(shortKey) == null) {
           super.put(shortKey, value);
         } else {
-          super.put(shortKey, (V) new Ambiguity(shortKey));
+          super.put(shortKey, (V) AMBIGUITY_INSTANCE);
         }
       }
       return super.put(key, value);
@@ -1176,23 +1177,11 @@ public class Configuration {
       if (value == null) {
         throw new IllegalArgumentException(name + " does not contain value for " + key);
       }
-      if (value instanceof Ambiguity) {
-        throw new IllegalArgumentException(((Ambiguity) value).getSubject() + " is ambiguous in " + name
+      if (AMBIGUITY_INSTANCE == value) {
+        throw new IllegalArgumentException(key + " is ambiguous in " + name
             + " (try using the full name including the namespace, or rename one of the entries)");
       }
       return value;
-    }
-
-    protected static class Ambiguity {
-      private final String subject;
-
-      public Ambiguity(String subject) {
-        this.subject = subject;
-      }
-
-      public String getSubject() {
-        return subject;
-      }
     }
 
     private String getShortName(String key) {
