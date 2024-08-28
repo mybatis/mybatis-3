@@ -43,6 +43,13 @@ public final class SystemMetaObject {
       DEFAULT_REFLECTOR_FACTORY);
   }
 
+  /**
+   * get MetaObject use manual reflectorFactory
+   *
+   * @param object           obj
+   * @param reflectorFactory manual reflectorFactory {@link org.apache.ibatis.session.Configuration#getReflectorFactory} is recommended especially in Interceptor
+   * @return MetaObject
+   */
   public static MetaObject forObject(Object object, ReflectorFactory reflectorFactory) {
     return MetaObject.forObject(object, DEFAULT_OBJECT_FACTORY, DEFAULT_OBJECT_WRAPPER_FACTORY,
       reflectorFactory);
