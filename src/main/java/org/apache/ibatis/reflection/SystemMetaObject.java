@@ -38,6 +38,12 @@ public final class SystemMetaObject {
   private static class NullObject {
   }
 
+  /**
+   * get MetaObject use default factories
+   *
+   * @param object obj
+   * @return MetaObject
+   */
   public static MetaObject forObject(Object object) {
     return MetaObject.forObject(object, DEFAULT_OBJECT_FACTORY, DEFAULT_OBJECT_WRAPPER_FACTORY,
       DEFAULT_REFLECTOR_FACTORY);
