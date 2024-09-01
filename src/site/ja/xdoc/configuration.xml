@@ -200,10 +200,10 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
             </tr>
             <tr>
               <td>
-                multipleResultSetsEnabled
+                <strike>multipleResultSetsEnabled</strike>
               </td>
               <td>
-                １つのステートメントから複数の ResultSet を返すことを許可するかどうかを指定します（複数 ResultSet に対応したドライバが必要です）。
+                非推奨。この設定は何の効果もありません。
               </td>
               <td>
                 true | false
@@ -639,7 +639,6 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
   <setting name="cacheEnabled" value="true"/>
   <setting name="lazyLoadingEnabled" value="true"/>
   <setting name="aggressiveLazyLoading" value="true"/>
-  <setting name="multipleResultSetsEnabled" value="true"/>
   <setting name="useColumnLabel" value="true"/>
   <setting name="useGeneratedKeys" value="false"/>
   <setting name="autoMappingBehavior" value="PARTIAL"/>

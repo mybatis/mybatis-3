@@ -187,10 +187,9 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
             </tr>
             <tr>
               <td>
-                multipleResultSetsEnabled
+                <strike>multipleResultSetsEnabled</strike>
               </td>
-              <td>Habilita o inhabilita la obtención de múltiples ResultSets con una sola sentencia (se requiere un driver compatible)
-              </td>
+              <td>Deprecated. This option has no effect.</td>
               <td>
                 true | false
               </td>
@@ -615,7 +614,6 @@ A continuación se muestra un ejemplo del elemento settings al completo:
   <setting name="cacheEnabled" value="true"/>
   <setting name="lazyLoadingEnabled" value="true"/>
   <setting name="aggressiveLazyLoading" value="true"/>
-  <setting name="multipleResultSetsEnabled" value="true"/>
   <setting name="useColumnLabel" value="true"/>
   <setting name="useGeneratedKeys" value="false"/>
   <setting name="autoMappingBehavior" value="PARTIAL"/>

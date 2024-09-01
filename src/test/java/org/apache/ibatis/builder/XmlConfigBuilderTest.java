@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -86,7 +86,6 @@ class XmlConfigBuilderTest {
       assertThat(config.getProxyFactory()).isInstanceOf(JavassistProxyFactory.class);
       assertThat(config.isLazyLoadingEnabled()).isFalse();
       assertThat(config.isAggressiveLazyLoading()).isFalse();
-      assertThat(config.isMultipleResultSetsEnabled()).isTrue();
       assertThat(config.isUseColumnLabel()).isTrue();
       assertThat(config.isUseGeneratedKeys()).isFalse();
       assertThat(config.getDefaultExecutorType()).isEqualTo(ExecutorType.SIMPLE);
@@ -193,7 +192,6 @@ class XmlConfigBuilderTest {
       assertThat(config.getProxyFactory()).isInstanceOf(CglibProxyFactory.class);
       assertThat(config.isLazyLoadingEnabled()).isTrue();
       assertThat(config.isAggressiveLazyLoading()).isTrue();
-      assertThat(config.isMultipleResultSetsEnabled()).isFalse();
       assertThat(config.isUseColumnLabel()).isFalse();
       assertThat(config.isUseGeneratedKeys()).isTrue();
       assertThat(config.getDefaultExecutorType()).isEqualTo(ExecutorType.BATCH);
