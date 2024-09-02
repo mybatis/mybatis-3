@@ -31,26 +31,36 @@ public class DefaultMapResultHandler<K, V> implements ResultHandler<V> {
 
   private final Map<K, V> mappedResults;
   private final String mapKey;
+  private final String mapValue;
   private final ObjectFactory objectFactory;
   private final ObjectWrapperFactory objectWrapperFactory;
   private final ReflectorFactory reflectorFactory;
 
   @SuppressWarnings("unchecked")
   public DefaultMapResultHandler(String mapKey, ObjectFactory objectFactory, ObjectWrapperFactory objectWrapperFactory,
+                                 ReflectorFactory reflectorFactory) {
+    this(mapKey, null, objectFactory, objectWrapperFactory, reflectorFactory);
+  }
+
+  @SuppressWarnings("unchecked")
+  public DefaultMapResultHandler(String mapKey, String mapValue, ObjectFactory objectFactory, ObjectWrapperFactory objectWrapperFactory,
       ReflectorFactory reflectorFactory) {
     this.objectFactory = objectFactory;
     this.objectWrapperFactory = objectWrapperFactory;
     this.reflectorFactory = reflectorFactory;
     this.mappedResults = objectFactory.create(Map.class);
     this.mapKey = mapKey;
+    this.mapValue = mapValue;
   }
 
   @Override
-  public void handleResult(ResultContext<? extends V> context) {
-    final V value = context.getResultObject();
-    final MetaObject mo = MetaObject.forObject(value, objectFactory, objectWrapperFactory, reflectorFactory);
+  public void handleResult(ResultContext context) {
+    final Object resultObject = context.getResultObject();
+    final MetaObject mo = MetaObject.forObject(resultObject, objectFactory, objectWrapperFactory, reflectorFactory);
     // TODO is that assignment always true?
     final K key = (K) mo.getValue(mapKey);
+    // TODO is that assignment always true?
+    final V value = mapValue == null || mapValue.isEmpty() ? (V) resultObject : (V) mo.getValue(mapValue);
     mappedResults.put(key, value);
   }
 

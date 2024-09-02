@@ -157,6 +157,69 @@ public interface SqlSession extends Closeable {
   <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowBounds);
 
   /**
+   * The selectMap is a special case in that it is designed to convert a list of results into a Map based on one of the
+   * properties as key and one of the properties as value in the resulting objects. Eg. Return a Map[Integer,String]
+   * for selectMap("selectAuthors","id","username")
+   *
+   * @param <K>
+   *          the returned Map keys type
+   * @param <V>
+   *          the returned Map values type
+   * @param statement
+   *          Unique identifier matching the statement to use.
+   * @param mapKey
+   *          The property to use as key for each value in the list.
+   * @param mapValue
+   *          The property to use as value for each key in the list.
+   *
+   * @return Map containing key pair data.
+   */
+  <K, V> Map<K, V> selectMap(String statement, String mapKey, String mapValue);
+
+  /**
+   * The selectMap is a special case in that it is designed to convert a list of results into a Map based on one of the
+   * properties as key and one of the properties as value in the resulting objects.
+   *
+   * @param <K>
+   *          the returned Map keys type
+   * @param <V>
+   *          the returned Map values type
+   * @param statement
+   *          Unique identifier matching the statement to use.
+   * @param parameter
+   *          A parameter object to pass to the statement.
+   * @param mapKey
+   *          The property to use as key for each value in the list.
+   * @param mapValue
+   *          The property to use as value for each key in the list.
+   * @return Map containing key pair data.
+   */
+  <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey, String mapValue);
+
+  /**
+   * The selectMap is a special case in that it is designed to convert a list of results into a Map based on one of the
+   * properties as key and one of the properties as value in the resulting objects.
+   *
+   * @param <K>
+   *          the returned Map keys type
+   * @param <V>
+   *          the returned Map values type
+   * @param statement
+   *          Unique identifier matching the statement to use.
+   * @param parameter
+   *          A parameter object to pass to the statement.
+   * @param mapKey
+   *          The property to use as key for each value in the list.
+   * @param mapValue
+   *          The property to use as value for each key in the list.
+   * @param rowBounds
+   *          Bounds to limit object retrieval
+   *
+   * @return Map containing key pair data.
+   */
+  <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey, String mapValue, RowBounds rowBounds);
+
+  /**
    * A Cursor offers the same results as a List, except it fetches data lazily using an Iterator.
    *
    * @param <T>

@@ -181,6 +181,21 @@ class SqlSessionTest extends BaseDataTest {
   }
 
   @Test
+  void shouldSelectAllAuthorsAsSpecifiedKeyValueMap() {
+    try (SqlSession session = sqlMapper.openSession(TransactionIsolationLevel.SERIALIZABLE)) {
+      final Map<Integer, Author> authors = session
+        .selectMap("org.apache.ibatis.domain.blog.mappers.AuthorMapper.selectAllAuthors", "id");
+      final Map<Integer, String> authorsMap = session
+        .selectMap("org.apache.ibatis.domain.blog.mappers.AuthorMapper.selectAllAuthors", "id", "username");
+      assertEquals(2, authorsMap.size());
+      for (Map.Entry<Integer, String> authorEntry : authorsMap.entrySet()) {
+        assertEquals(authorEntry.getKey(), authors.get(authorEntry.getKey()).getId());
+        assertEquals(authorEntry.getValue(), authors.get(authorEntry.getKey()).getUsername());
+      }
+    }
+  }
+
+  @Test
   void shouldSelectCountOfPosts() {
     try (SqlSession session = sqlMapper.openSession()) {
       Integer count = session.selectOne("org.apache.ibatis.domain.blog.mappers.BlogMapper.selectCountOfPosts");

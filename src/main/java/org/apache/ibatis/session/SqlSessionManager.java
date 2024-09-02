@@ -180,6 +180,21 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
   }
 
   @Override
+  public <K, V> Map<K, V> selectMap(String statement, String mapKey, String mapValue) {
+    return sqlSessionProxy.selectMap(statement, mapKey, mapValue);
+  }
+
+  @Override
+  public <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey, String mapValue) {
+    return sqlSessionProxy.selectMap(statement, parameter, mapKey, mapValue);
+  }
+
+  @Override
+  public <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey, String mapValue, RowBounds rowBounds) {
+    return sqlSessionProxy.selectMap(statement, parameter, mapKey, mapValue, rowBounds);
+  }
+
+  @Override
   public <T> Cursor<T> selectCursor(String statement) {
     return sqlSessionProxy.selectCursor(statement);
   }
