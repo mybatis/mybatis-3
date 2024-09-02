@@ -179,6 +179,16 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
     return sqlSessionProxy.selectMap(statement, parameter, mapKey, rowBounds);
   }
 
+  public <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey, String mapValue) {
+    return sqlSessionProxy.selectMap(statement, parameter, mapKey, mapValue);
+  }
+
+  @Override
+  public <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey, String mapValue,
+      RowBounds rowBounds) {
+    return sqlSessionProxy.selectMap(statement, parameter, mapKey, rowBounds);
+  }
+
   @Override
   public <T> Cursor<T> selectCursor(String statement) {
     return sqlSessionProxy.selectCursor(statement);

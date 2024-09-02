@@ -26,6 +26,7 @@ import java.util.Optional;
 
 import org.apache.ibatis.annotations.Flush;
 import org.apache.ibatis.annotations.MapKey;
+import org.apache.ibatis.annotations.MapValue;
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
@@ -193,9 +194,9 @@ public class MapperMethod {
     Object param = method.convertArgsToSqlCommandParam(args);
     if (method.hasRowBounds()) {
       RowBounds rowBounds = method.extractRowBounds(args);
-      result = sqlSession.selectMap(command.getName(), param, method.getMapKey(), rowBounds);
+      result = sqlSession.selectMap(command.getName(), param, method.getMapKey(), method.getMapValue(), rowBounds);
     } else {
-      result = sqlSession.selectMap(command.getName(), param, method.getMapKey());
+      result = sqlSession.selectMap(command.getName(), param, method.getMapKey(), method.getMapValue());
     }
     return result;
   }
@@ -277,6 +278,7 @@ public class MapperMethod {
     private final boolean returnsOptional;
     private final Class<?> returnType;
     private final String mapKey;
+    private final String mapValue;
     private final Integer resultHandlerIndex;
     private final Integer rowBoundsIndex;
     private final ParamNameResolver paramNameResolver;
@@ -295,6 +297,7 @@ public class MapperMethod {
       this.returnsCursor = Cursor.class.equals(this.returnType);
       this.returnsOptional = Optional.class.equals(this.returnType);
       this.mapKey = getMapKey(method);
+      this.mapValue = getMapValue(method);
       this.returnsMap = this.mapKey != null;
       this.rowBoundsIndex = getUniqueParamIndex(method, RowBounds.class);
       this.resultHandlerIndex = getUniqueParamIndex(method, ResultHandler.class);
@@ -371,6 +374,10 @@ public class MapperMethod {
       return mapKey;
     }
 
+    public String getMapValue() {
+      return mapValue;
+    }
+
     private String getMapKey(Method method) {
       String mapKey = null;
       if (Map.class.isAssignableFrom(method.getReturnType())) {
@@ -381,6 +388,18 @@ public class MapperMethod {
       }
       return mapKey;
     }
+
+    private String getMapValue(Method method) {
+      String mapValue = null;
+      if (Map.class.isAssignableFrom(method.getReturnType())) {
+        final MapValue annotation = method.getAnnotation(MapValue.class);
+        if (annotation != null) {
+          mapValue = annotation.value();
+        }
+      }
+      return mapValue;
+    }
+
   }
 
 }
