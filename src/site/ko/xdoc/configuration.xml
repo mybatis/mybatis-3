@@ -179,9 +179,9 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
             </tr>
             <tr>
               <td>
-                multipleResultSetsEnabled
+                <strike>multipleResultSetsEnabled</strike>
               </td>
-              <td>한 개의 구문에서 여러 개의 ResultSet을 허용할지의 여부(드라이버가 해당 기능을 지원해야 함) </td>
+              <td>Deprecated. This option has no effect.</td>
               <td>
                 true | false
               </td>
@@ -620,7 +620,6 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
   <setting name="cacheEnabled" value="true"/>
   <setting name="lazyLoadingEnabled" value="true"/>
   <setting name="aggressiveLazyLoading" value="true"/>
-  <setting name="multipleResultSetsEnabled" value="true"/>
   <setting name="useColumnLabel" value="true"/>
   <setting name="useGeneratedKeys" value="false"/>
   <setting name="autoMappingBehavior" value="PARTIAL"/>

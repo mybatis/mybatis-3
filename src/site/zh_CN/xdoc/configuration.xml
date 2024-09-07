@@ -193,10 +193,10 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
             </tr>
             <tr>
               <td>
-                multipleResultSetsEnabled
+                <strike>multipleResultSetsEnabled</strike>
               </td>
               <td>
-                是否允许单个语句返回多结果集（需要数据库驱动支持）。
+                Deprecated. This option has no effect.
               </td>
               <td>
                 true | false
@@ -632,7 +632,6 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
   <setting name="cacheEnabled" value="true"/>
   <setting name="lazyLoadingEnabled" value="true"/>
   <setting name="aggressiveLazyLoading" value="true"/>
-  <setting name="multipleResultSetsEnabled" value="true"/>
   <setting name="useColumnLabel" value="true"/>
   <setting name="useGeneratedKeys" value="false"/>
   <setting name="autoMappingBehavior" value="PARTIAL"/>
