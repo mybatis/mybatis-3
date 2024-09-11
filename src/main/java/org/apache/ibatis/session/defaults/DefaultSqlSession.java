@@ -96,15 +96,34 @@ public class DefaultSqlSession implements SqlSession {
 
   @Override
   public <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowBounds) {
+    return (Map<K, V>) executeSelectMap(statement, parameter, mapKey, rowBounds, false);
+  }
+
+  @Override
+  public <K, V> Map<K, List<V>> selectMapWithList(String statement, String mapKey) {
+    return this.selectMapWithList(statement, null, mapKey, RowBounds.DEFAULT);
+  }
+
+  @Override
+  public <K, V> Map<K, List<V>> selectMapWithList(String statement, Object parameter, String mapKey) {
+    return this.selectMapWithList(statement, parameter, mapKey, RowBounds.DEFAULT);
+  }
+
+  @Override
+  public <K, V> Map<K, List<V>> selectMapWithList(String statement, Object parameter, String mapKey, RowBounds rowBounds) {
+    return (Map<K, List<V>>) executeSelectMap(statement, parameter, mapKey, rowBounds, true);
+  }
+
+  private <K, V> Map<K, ?> executeSelectMap(String statement, Object parameter, String mapKey, RowBounds rowBounds, boolean useList) {
     final List<? extends V> list = selectList(statement, parameter, rowBounds);
     final DefaultMapResultHandler<K, V> mapResultHandler = new DefaultMapResultHandler<>(mapKey,
-        configuration.getObjectFactory(), configuration.getObjectWrapperFactory(), configuration.getReflectorFactory());
+      configuration.getObjectFactory(), configuration.getObjectWrapperFactory(), configuration.getReflectorFactory());
     final DefaultResultContext<V> context = new DefaultResultContext<>();
     for (V o : list) {
       context.nextResultObject(o);
       mapResultHandler.handleResult(context);
     }
-    return mapResultHandler.getMappedResults();
+    return useList ? mapResultHandler.getMappedResultsWithList() : mapResultHandler.getMappedResults();
   }
 
   @Override

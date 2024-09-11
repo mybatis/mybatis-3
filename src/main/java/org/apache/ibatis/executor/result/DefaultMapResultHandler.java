@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.executor.result;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.reflection.MetaObject;
@@ -30,6 +31,7 @@ import org.apache.ibatis.session.ResultHandler;
 public class DefaultMapResultHandler<K, V> implements ResultHandler<V> {
 
   private final Map<K, V> mappedResults;
+  private final Map<K, List<V>> mappedResultsWithList;
   private final String mapKey;
   private final ObjectFactory objectFactory;
   private final ObjectWrapperFactory objectWrapperFactory;
@@ -42,6 +44,7 @@ public class DefaultMapResultHandler<K, V> implements ResultHandler<V> {
     this.objectWrapperFactory = objectWrapperFactory;
     this.reflectorFactory = reflectorFactory;
     this.mappedResults = objectFactory.create(Map.class);
+    this.mappedResultsWithList = objectFactory.create(Map.class);
     this.mapKey = mapKey;
   }
 
@@ -52,9 +55,14 @@ public class DefaultMapResultHandler<K, V> implements ResultHandler<V> {
     // TODO is that assignment always true?
     final K key = (K) mo.getValue(mapKey);
     mappedResults.put(key, value);
+    mappedResultsWithList.computeIfAbsent(key, k -> objectFactory.create(List.class)).add(value);
   }
 
   public Map<K, V> getMappedResults() {
     return mappedResults;
+  }
+
+  public Map<K, List<V>> getMappedResultsWithList() {
+    return mappedResultsWithList;
   }
 }
