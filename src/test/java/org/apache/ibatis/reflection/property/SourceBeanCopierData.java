@@ -17,7 +17,7 @@ package org.apache.ibatis.reflection.property;
 
 import java.util.List;
 
-public class SourceBeanTestClass {
+public class SourceBeanCopierData {
   private String myString;
 
   Integer myInteger;
@@ -48,7 +48,7 @@ public class SourceBeanTestClass {
     this.myList = myList;
   }
 
-  public SourceBeanTestClass() {
+  public SourceBeanCopierData() {
   }
 
 }

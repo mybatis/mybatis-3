@@ -24,15 +24,15 @@ public class PropertyCopierTest {
 
   @Test
   void copyBeanProperties() {
-    SourceBeanTestClass sourceBeanTestClass = new SourceBeanTestClass();
-    sourceBeanTestClass.setMyString("foo");
-    sourceBeanTestClass.setMyInteger(0);
-    sourceBeanTestClass.setMyList(Arrays.asList(1, 2, 3));
-    SourceBeanTestClass destinationBeanTestClass = new SourceBeanTestClass();
-    PropertyCopier.copyBeanProperties(sourceBeanTestClass.getClass(), sourceBeanTestClass, destinationBeanTestClass);
-    Assertions.assertEquals(sourceBeanTestClass.getMyString(), destinationBeanTestClass.getMyString());
-    Assertions.assertEquals(sourceBeanTestClass.getMyInteger(), destinationBeanTestClass.getMyInteger());
-    Assertions.assertEquals(sourceBeanTestClass.getMyList(), destinationBeanTestClass.getMyList());
+    SourceBeanCopierData sourceBeanCopierData = new SourceBeanCopierData();
+    sourceBeanCopierData.setMyString("foo");
+    sourceBeanCopierData.setMyInteger(0);
+    sourceBeanCopierData.setMyList(Arrays.asList(1, 2, 3));
+    SourceBeanCopierData destinationBeanTestClass = new SourceBeanCopierData();
+    PropertyCopier.copyBeanProperties(sourceBeanCopierData.getClass(), sourceBeanCopierData, destinationBeanTestClass);
+    Assertions.assertEquals(sourceBeanCopierData.getMyString(), destinationBeanTestClass.getMyString());
+    Assertions.assertEquals(sourceBeanCopierData.getMyInteger(), destinationBeanTestClass.getMyInteger());
+    Assertions.assertEquals(sourceBeanCopierData.getMyList(), destinationBeanTestClass.getMyList());
   }
 
 }
