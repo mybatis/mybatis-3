@@ -145,7 +145,7 @@ public abstract class VFS {
       log.error("Security exception looking for method " + clazz.getName() + "." + methodName + ".  Cause: " + e);
       return null;
     } catch (NoSuchMethodException e) {
-      log.error("Method not found " + clazz.getName() + "." + methodName + "." + methodName + ".  Cause: " + e);
+      log.error("Method not found " + clazz.getName() + "." + methodName + ".  Cause: " + e);
       return null;
     }
   }
