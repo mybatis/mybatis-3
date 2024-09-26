@@ -237,7 +237,7 @@ public class XPathParser {
       factory.setIgnoringComments(true);
       factory.setIgnoringElementContentWhitespace(false);
       factory.setCoalescing(false);
-      factory.setExpandEntityReferences(true);
+      factory.setExpandEntityReferences(false);
 
       DocumentBuilder builder = factory.newDocumentBuilder();
       builder.setEntityResolver(entityResolver);
