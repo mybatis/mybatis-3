@@ -36,31 +36,20 @@ public class BlobTypeHandler extends BaseTypeHandler<byte[]> {
 
   @Override
   public byte[] getNullableResult(ResultSet rs, String columnName) throws SQLException {
-    Blob blob = rs.getBlob(columnName);
-    byte[] returnValue = null;
-    if (null != blob) {
-      returnValue = blob.getBytes(1, (int) blob.length());
-    }
-    return returnValue;
+    return toPrimitiveBytes(rs.getBlob(columnName));
   }
 
   @Override
   public byte[] getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
-    Blob blob = rs.getBlob(columnIndex);
-    byte[] returnValue = null;
-    if (null != blob) {
-      returnValue = blob.getBytes(1, (int) blob.length());
-    }
-    return returnValue;
+    return toPrimitiveBytes(rs.getBlob(columnIndex));
   }
 
   @Override
   public byte[] getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
-    Blob blob = cs.getBlob(columnIndex);
-    byte[] returnValue = null;
-    if (null != blob) {
-      returnValue = blob.getBytes(1, (int) blob.length());
-    }
-    return returnValue;
+    return toPrimitiveBytes(cs.getBlob(columnIndex));
+  }
+
+  private byte[] toPrimitiveBytes(Blob blob) throws SQLException {
+    return blob == null ? null : blob.getBytes(1, (int) blob.length());
   }
 }

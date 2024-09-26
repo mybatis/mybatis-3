@@ -33,29 +33,21 @@ public class DateOnlyTypeHandler extends BaseTypeHandler<Date> {
 
   @Override
   public Date getNullableResult(ResultSet rs, String columnName) throws SQLException {
-    java.sql.Date sqlDate = rs.getDate(columnName);
-    if (sqlDate != null) {
-      return new Date(sqlDate.getTime());
-    }
-    return null;
+    return toSqlDate(rs.getDate(columnName));
   }
 
   @Override
   public Date getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
-    java.sql.Date sqlDate = rs.getDate(columnIndex);
-    if (sqlDate != null) {
-      return new Date(sqlDate.getTime());
-    }
-    return null;
+    return toSqlDate(rs.getDate(columnIndex));
   }
 
   @Override
   public Date getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
-    java.sql.Date sqlDate = cs.getDate(columnIndex);
-    if (sqlDate != null) {
-      return new Date(sqlDate.getTime());
-    }
-    return null;
+    return toSqlDate(cs.getDate(columnIndex));
+  }
+
+  private java.sql.Date toSqlDate(Date date) {
+    return date == null ? null : new java.sql.Date(date.getTime());
   }
 
 }
