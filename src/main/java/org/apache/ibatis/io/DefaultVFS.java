@@ -79,9 +79,14 @@ public class DefaultVFS extends VFS {
               if (log.isDebugEnabled()) {
                 log.debug("Listing " + url);
               }
+              File destinationDir = new File(path);
               for (JarEntry entry; (entry = jarInput.getNextJarEntry()) != null;) {
                 if (log.isDebugEnabled()) {
                   log.debug("Jar entry: " + entry.getName());
+                }
+                File entryFile = new File(destinationDir, entry.getName()).getCanonicalFile();
+                if (!entryFile.getPath().startsWith(destinationDir.getCanonicalPath())) {
+                  throw new IOException("Bad zip entry: " + entry.getName());
                 }
                 children.add(entry.getName());
               }
