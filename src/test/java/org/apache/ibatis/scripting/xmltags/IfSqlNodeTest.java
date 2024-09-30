@@ -68,6 +68,6 @@ class IfSqlNodeTest extends SqlNodeTest {
     boolean result = sqlNode.apply(context);
 
     assertFalse(result);
-    verify(context).appendSql("");
+    verify(context, never()).appendSql(TEXT);
   }
 }

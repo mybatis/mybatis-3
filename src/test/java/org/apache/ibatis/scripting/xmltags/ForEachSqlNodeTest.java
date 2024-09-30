@@ -69,9 +69,9 @@ class ForEachSqlNodeTest extends SqlNodeTest{
 
     List<String> allKeyValues = bindKeyCaptor.getAllValues();
     List<Object> allValValues = bindValueCaptor.getAllValues();
-    assertEquals(Arrays.asList("index", "__frch__index_0", "item", "__frch__item_0",
-      "index", "__frch__index_0", "item", "__frch__item_0",
-      "index", "__frch__index_0", "item", "__frch__item_0"), allKeyValues);
+    assertEquals(Arrays.asList("index", "__frch_index_0", "item", "__frch_item_0",
+      "index", "__frch_index_0", "item", "__frch_item_0",
+      "index", "__frch_index_0", "item", "__frch_item_0"), allKeyValues);
     assertEquals(Arrays.asList(0, 0, "a", "a",
       1, 1, "b", "b",
       2, 2, "c", "c"), allValValues);
