@@ -136,7 +136,7 @@
     <log4j.version>2.24.1</log4j.version>
     <mockito.version>5.14.1</mockito.version>
     <mssql-jdbc.version>12.8.1.jre11</mssql-jdbc.version>
-    <testcontainers.version>1.20.1</testcontainers.version>
+    <testcontainers.version>1.20.2</testcontainers.version>
 
     <!-- Add slow test groups here and annotate classes similar to @Tag('groupName'). -->
     <!-- Excluded groups are ran on github ci, to force here, pass -d"excludedGroups=" -->
