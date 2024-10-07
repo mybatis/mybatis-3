@@ -492,7 +492,7 @@ public class Configuration {
   }
 
   public void setDefaultExecutorType(ExecutorType defaultExecutorType) {
-    this.defaultExecutorType = defaultExecutorType;
+    this.defaultExecutorType = defaultExecutorType == null ? ExecutorType.SIMPLE : defaultExecutorType;
   }
 
   public boolean isCacheEnabled() {
