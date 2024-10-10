@@ -18,29 +18,24 @@ package org.apache.ibatis.cache.decorators;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.ibatis.cache.Cache;
+import org.apache.ibatis.cache.CacheDecorator;
 
 /**
  * @author Clinton Begin
  */
-public class SynchronizedCache implements Cache {
+public class SynchronizedCache extends CacheDecorator {
 
   private final ReentrantLock lock = new ReentrantLock();
-  private final Cache delegate;
 
   public SynchronizedCache(Cache delegate) {
-    this.delegate = delegate;
-  }
-
-  @Override
-  public String getId() {
-    return delegate.getId();
+    super(delegate);
   }
 
   @Override
   public int getSize() {
     lock.lock();
     try {
-      return delegate.getSize();
+      return super.getSize();
     } finally {
       lock.unlock();
     }
@@ -50,7 +45,7 @@ public class SynchronizedCache implements Cache {
   public void putObject(Object key, Object object) {
     lock.lock();
     try {
-      delegate.putObject(key, object);
+      super.putObject(key, object);
     } finally {
       lock.unlock();
     }
@@ -60,7 +55,7 @@ public class SynchronizedCache implements Cache {
   public Object getObject(Object key) {
     lock.lock();
     try {
-      return delegate.getObject(key);
+      return super.getObject(key);
     } finally {
       lock.unlock();
     }
@@ -70,7 +65,7 @@ public class SynchronizedCache implements Cache {
   public Object removeObject(Object key) {
     lock.lock();
     try {
-      return delegate.removeObject(key);
+      return super.removeObject(key);
     } finally {
       lock.unlock();
     }
@@ -80,7 +75,7 @@ public class SynchronizedCache implements Cache {
   public void clear() {
     lock.lock();
     try {
-      delegate.clear();
+      super.clear();
     } finally {
       lock.unlock();
     }
@@ -88,12 +83,12 @@ public class SynchronizedCache implements Cache {
 
   @Override
   public int hashCode() {
-    return delegate.hashCode();
+    return getDelegate().hashCode();
   }
 
   @Override
   public boolean equals(Object obj) {
-    return delegate.equals(obj);
+    return getDelegate().equals(obj);
   }
 
 }
