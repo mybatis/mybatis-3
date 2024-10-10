@@ -117,6 +117,7 @@ public class Configuration {
   protected boolean shrinkWhitespacesInSql;
   protected boolean nullableOnForEach;
   protected boolean argNameBasedConstructorAutoMapping;
+  protected boolean experimentalConstructorCollectionMapping;
 
   protected String logPrefix;
   protected Class<? extends Log> logImpl;
@@ -367,6 +368,14 @@ public class Configuration {
 
   public boolean isSafeRowBoundsEnabled() {
     return safeRowBoundsEnabled;
+  }
+
+  public void setExperimentalConstructorCollectionMapping(boolean experimentalConstructorCollectionMapping) {
+    this.experimentalConstructorCollectionMapping = experimentalConstructorCollectionMapping;
+  }
+
+  public boolean isExperimentalConstructorCollectionMappingEnabled() {
+    return experimentalConstructorCollectionMapping;
   }
 
   public void setSafeRowBoundsEnabled(boolean safeRowBoundsEnabled) {
