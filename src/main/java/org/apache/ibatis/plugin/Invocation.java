@@ -35,14 +35,16 @@ public class Invocation {
   private final Object target;
   private final Method method;
   private final Object[] args;
+  private final List<Interceptor> interceptors;
 
-  public Invocation(Object target, Method method, Object[] args) {
+  public Invocation(Object target, Method method, Object[] args, List<Interceptor> interceptors) {
     if (!targetClasses.contains(method.getDeclaringClass())) {
       throw new IllegalArgumentException("Method '" + method + "' is not supported as a plugin target.");
     }
     this.target = target;
     this.method = method;
     this.args = args;
+    this.interceptors = interceptors;
   }
 
   public Object getTarget() {
@@ -57,8 +59,14 @@ public class Invocation {
     return args;
   }
 
-  public Object proceed() throws InvocationTargetException, IllegalAccessException {
-    return method.invoke(target, args);
+  public Object proceed() throws Throwable {
+    int intSize = interceptors.size();
+    if ((intSize --)== 0) {
+      return method.invoke(target, args);
+    }
+    Interceptor interceptor = interceptors.get(intSize);
+    return interceptor.intercept(this);
+
   }
 
 }
