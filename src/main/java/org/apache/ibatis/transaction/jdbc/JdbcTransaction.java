@@ -50,15 +50,20 @@ public class JdbcTransaction implements Transaction {
   }
 
   public JdbcTransaction(DataSource ds, TransactionIsolationLevel desiredLevel, boolean desiredAutoCommit,
-      boolean skipSetAutoCommitOnClose) {
+                         boolean skipSetAutoCommitOnClose) {
     dataSource = ds;
     level = desiredLevel;
     autoCommit = desiredAutoCommit;
     this.skipSetAutoCommitOnClose = skipSetAutoCommitOnClose;
   }
 
-  public JdbcTransaction(Connection connection) {
+  public JdbcTransaction(Connection connection, boolean skipSetAutoCommitOnClose) {
     this.connection = connection;
+    this.skipSetAutoCommitOnClose = skipSetAutoCommitOnClose;
+  }
+
+  public JdbcTransaction(Connection connection) {
+    this(connection, false);
   }
 
   @Override
@@ -109,23 +114,15 @@ public class JdbcTransaction implements Transaction {
         connection.setAutoCommit(desiredAutoCommit);
       }
     } catch (SQLException e) {
-      // Only a very poorly implemented driver would fail here,
-      // and there's not much we can do about that.
       throw new TransactionException(
-          "Error configuring AutoCommit.  " + "Your driver may not support getAutoCommit() or setAutoCommit(). "
-              + "Requested setting: " + desiredAutoCommit + ".  Cause: " + e,
-          e);
+        "Error configuring AutoCommit. Your driver may not support getAutoCommit() or setAutoCommit(). "
+          + "Requested setting: " + desiredAutoCommit + ". Cause: " + e, e);
     }
   }
 
   protected void resetAutoCommit() {
     try {
       if (!skipSetAutoCommitOnClose && !connection.getAutoCommit()) {
-        // MyBatis does not call commit/rollback on a connection if just selects were performed.
-        // Some databases start transactions with select statements
-        // and they mandate a commit/rollback before closing the connection.
-        // A workaround is setting the autocommit to true before closing the connection.
-        // Sybase throws an exception here.
         if (log.isDebugEnabled()) {
           log.debug("Resetting autocommit to true on JDBC Connection [" + connection + "]");
         }
@@ -133,7 +130,7 @@ public class JdbcTransaction implements Transaction {
       }
     } catch (SQLException e) {
       if (log.isDebugEnabled()) {
-        log.debug("Error resetting autocommit to true " + "before closing the connection.  Cause: " + e);
+        log.debug("Error resetting autocommit to true before closing the connection. Cause: " + e);
       }
     }
   }
