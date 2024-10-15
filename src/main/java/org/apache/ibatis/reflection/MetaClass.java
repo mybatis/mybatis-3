@@ -166,19 +166,14 @@ public class MetaClass {
 
   private StringBuilder buildProperty(String name, StringBuilder builder) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
-    if (prop.hasNext()) {
-      String propertyName = reflector.findPropertyName(prop.getName());
-      if (propertyName != null) {
-        builder.append(propertyName);
-        builder.append(".");
-        MetaClass metaProp = metaClassForProperty(propertyName);
-        metaProp.buildProperty(prop.getChildren(), builder);
-      }
-    } else {
-      String propertyName = reflector.findPropertyName(name);
-      if (propertyName != null) {
-        builder.append(propertyName);
-      }
+    String propertyName = reflector.findPropertyName(prop.getName());
+    if (propertyName != null) {
+      builder.append(propertyName);
+        if (prop.hasNext()) {
+          builder.append(".");
+          MetaClass metaProp = metaClassForProperty(propertyName);
+          metaProp.buildProperty(prop.getChildren(), builder);
+        }
     }
     return builder;
   }
