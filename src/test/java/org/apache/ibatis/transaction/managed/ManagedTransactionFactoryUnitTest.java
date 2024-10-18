@@ -18,7 +18,7 @@ package org.apache.ibatis.transaction.managed;
 import org.apache.ibatis.session.TransactionIsolationLevel;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.TransactionFactory;
-import org.apache.ibatis.transaction.BaseTransactionFactoryTest;
+import org.apache.ibatis.transaction.TransactionFactoryBase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -36,7 +36,7 @@ import static org.mockito.Mockito.when;
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
  * @see ManagedTransactionFactory
  */
-class ManagedTransactionFactoryUnitTest extends BaseTransactionFactoryTest {
+class ManagedTransactionFactoryUnitTest extends TransactionFactoryBase {
 
 	@Mock
 	private Properties properties;

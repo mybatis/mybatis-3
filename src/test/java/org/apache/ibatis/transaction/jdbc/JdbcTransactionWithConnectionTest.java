@@ -16,7 +16,7 @@
 package org.apache.ibatis.transaction.jdbc;
 
 import org.apache.ibatis.transaction.Transaction;
-import org.apache.ibatis.transaction.BaseTransactionTest;
+import org.apache.ibatis.transaction.TransactionBase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -32,7 +32,7 @@ import static org.mockito.Mockito.*;
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
  * @see JdbcTransaction
  */
-class JdbcTransactionWithConnectionTest extends BaseTransactionTest {
+class JdbcTransactionWithConnectionTest extends TransactionBase {
 
 	@Mock
 	private Connection connection;
