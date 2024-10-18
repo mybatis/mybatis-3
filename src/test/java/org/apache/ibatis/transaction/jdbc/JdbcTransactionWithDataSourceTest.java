@@ -17,7 +17,7 @@ package org.apache.ibatis.transaction.jdbc;
 
 import org.apache.ibatis.session.TransactionIsolationLevel;
 import org.apache.ibatis.transaction.Transaction;
-import org.apache.ibatis.transaction.TransactionTest;
+import org.apache.ibatis.transaction.BaseTransactionTest;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
@@ -34,7 +34,7 @@ import static org.mockito.Mockito.*;
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
  * @see JdbcTransaction
  */
-class JdbcTransactionWithDataSourceTest extends TransactionTest {
+class JdbcTransactionWithDataSourceTest extends BaseTransactionTest {
 
 	@Mock
 	private DataSource dataSource;

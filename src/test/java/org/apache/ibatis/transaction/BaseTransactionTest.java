@@ -25,7 +25,7 @@ import java.sql.SQLException;
  * @see Transaction
  */
 @ExtendWith(MockitoExtension.class)
-public abstract class TransactionTest {
+public abstract class BaseTransactionTest {
 
 	public abstract void shouldGetConnection() throws SQLException;
 

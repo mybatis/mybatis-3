@@ -26,7 +26,7 @@ import java.sql.SQLException;
  * @see TransactionFactory
  */
 @ExtendWith(MockitoExtension.class)
-public abstract class TransactionFactoryTest {
+public abstract class BaseTransactionFactoryTest {
 
 	public abstract void shouldSetProperties() throws Exception;
 
