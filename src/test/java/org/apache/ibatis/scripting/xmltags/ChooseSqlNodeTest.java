@@ -47,7 +47,7 @@ import static org.mockito.Mockito.*;
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
  * @see <a href="https://mybatis.org/mybatis-3/dynamic-sql.html#choose-when-otherwise">choose</a>
  */
-class ChooseSqlNodeTest extends SqlNodeTest{
+class ChooseSqlNodeTest extends SqlNodeBase {
 
   private static final String FIRST_TEXT = " AND title like #{title}";
   private static final String SECOND_TEXT = " AND author_name like #{author.username}";

@@ -23,7 +23,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
  * @see ObjectWrapper
  */
 @ExtendWith(MockitoExtension.class)
-abstract class ObjectWrapperBaseTest {
+abstract class ObjectWrapperBase {
 
   abstract void shouldGet();
 

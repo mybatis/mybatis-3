@@ -33,7 +33,7 @@ import static org.mockito.Mockito.*;
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
  * @see <a href="https://mybatis.org/mybatis-3/dynamic-sql.html#if">if</a>
  */
-class IfSqlNodeTest extends SqlNodeTest {
+class IfSqlNodeTest extends SqlNodeBase {
 
   private static final String CONDITION = "title != null";
   private static final String TEXT = "AND title like #{title}";

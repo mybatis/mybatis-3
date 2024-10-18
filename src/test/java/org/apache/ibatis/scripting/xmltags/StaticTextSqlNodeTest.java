@@ -23,7 +23,7 @@ import static org.mockito.Mockito.*;
 /**
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
  */
-class StaticTextSqlNodeTest extends SqlNodeTest {
+class StaticTextSqlNodeTest extends SqlNodeBase {
 
   private static final String TEXT = "select 1 from dual";
 
