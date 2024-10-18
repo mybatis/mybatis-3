@@ -13,41 +13,27 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.reflection.wrapper;
+package org.apache.ibatis.transaction;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.sql.SQLException;
+
 /**
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
- * @see ObjectWrapper
+ * @see Transaction
  */
 @ExtendWith(MockitoExtension.class)
-abstract class ObjectWrapperBaseTest {
+public abstract class TransactionBase {
 
-  abstract void shouldGet();
+	public abstract void shouldGetConnection() throws SQLException;
 
-  abstract void shouldSet();
+	public abstract void shouldCommit() throws SQLException;
 
-  abstract void shouldFindProperty();
+	public abstract void shouldRollback() throws SQLException;
 
-  abstract void shouldGetGetterNames();
+	public abstract void shouldClose() throws SQLException;
 
-  abstract void shouldGetSetterNames();
-
-  abstract void shouldGetGetterType();
-
-  abstract void shouldGetSetterType();
-
-  abstract void shouldHasGetter();
-
-  abstract void shouldHasSetter();
-
-  abstract void shouldIsCollection();
-
-  abstract void shouldInstantiatePropertyValue();
-
-  abstract void shouldAddElement();
-
-  abstract void shouldAddAll();
+	public abstract void shouldGetTimeout() throws SQLException;
 }

@@ -13,24 +13,41 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.scripting.xmltags;
+package org.apache.ibatis.reflection.wrapper;
 
-import org.apache.ibatis.session.Configuration;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
+ * @see ObjectWrapper
  */
 @ExtendWith(MockitoExtension.class)
-abstract class SqlNodeTest {
+abstract class ObjectWrapperBase {
 
-  @Mock
-  protected Configuration configuration;
+  abstract void shouldGet();
 
-  @Mock
-  protected DynamicContext context;
+  abstract void shouldSet();
 
-  public abstract void shouldApply() throws Exception;
+  abstract void shouldFindProperty();
+
+  abstract void shouldGetGetterNames();
+
+  abstract void shouldGetSetterNames();
+
+  abstract void shouldGetGetterType();
+
+  abstract void shouldGetSetterType();
+
+  abstract void shouldHasGetter();
+
+  abstract void shouldHasSetter();
+
+  abstract void shouldIsCollection();
+
+  abstract void shouldInstantiatePropertyValue();
+
+  abstract void shouldAddElement();
+
+  abstract void shouldAddAll();
 }

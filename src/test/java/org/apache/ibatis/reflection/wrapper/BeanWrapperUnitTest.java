@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.domain.blog.Author;
 import org.apache.ibatis.domain.misc.RichType;
 import org.apache.ibatis.reflection.SystemMetaObject;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
@@ -35,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
  * @see BeanWrapper
  */
-class BeanWrapperUnitTest extends ObjectWrapperBaseTest {
+class BeanWrapperUnitTest extends ObjectWrapperBase {
 
   private RichType richType;
 
