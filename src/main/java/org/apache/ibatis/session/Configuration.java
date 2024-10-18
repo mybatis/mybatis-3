@@ -88,6 +88,7 @@ import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.scripting.LanguageDriverRegistry;
 import org.apache.ibatis.scripting.defaults.RawLanguageDriver;
+import org.apache.ibatis.scripting.xmltags.SqlNode;
 import org.apache.ibatis.scripting.xmltags.XMLLanguageDriver;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
@@ -160,6 +161,7 @@ public class Configuration {
           .conflictMessageProducer((savedValue, targetValue) -> ". please check " + savedValue.getResource() + " and "
               + targetValue.getResource());
   protected final Map<String, Cache> caches = new StrictMap<>("Caches collection");
+  protected final Map<String, SqlNode> sqlNodes = new HashMap<>();
   protected final Map<String, ResultMap> resultMaps = new StrictMap<>("Result Maps collection");
   protected final Map<String, ParameterMap> parameterMaps = new StrictMap<>("Parameter Maps collection");
   protected final Map<String, KeyGenerator> keyGenerators = new StrictMap<>("Key Generators collection");
@@ -837,6 +839,18 @@ public class Configuration {
   public Collection<String> getMappedStatementNames() {
     buildAllStatements();
     return mappedStatements.keySet();
+  }
+
+  public void addSqlNode(String key, SqlNode sqlNode) {
+    sqlNodes.put(key, sqlNode);
+  }
+
+  public boolean containsSqlNode(String key) {
+    return sqlNodes.containsKey(key);
+  }
+
+  public SqlNode getSqlNode(String key) {
+    return sqlNodes.get(key);
   }
 
   public Collection<MappedStatement> getMappedStatements() {
