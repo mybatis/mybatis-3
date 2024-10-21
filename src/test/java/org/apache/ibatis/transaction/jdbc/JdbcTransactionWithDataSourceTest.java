@@ -17,7 +17,6 @@ package org.apache.ibatis.transaction.jdbc;
 
 import org.apache.ibatis.session.TransactionIsolationLevel;
 import org.apache.ibatis.transaction.Transaction;
-import org.apache.ibatis.transaction.TransactionBase;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
@@ -34,7 +33,7 @@ import static org.mockito.Mockito.*;
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
  * @see JdbcTransaction
  */
-class JdbcTransactionWithDataSourceTest extends TransactionBase {
+class JdbcTransactionWithDataSourceTest extends JdbcTransactionBase {
 
 	@Mock
 	private DataSource dataSource;
@@ -52,7 +51,7 @@ class JdbcTransactionWithDataSourceTest extends TransactionBase {
 
 	@Test
 	@Override
-	public void shouldGetConnection() throws SQLException {
+	void shouldGetConnection() throws SQLException {
 		when(dataSource.getConnection()).thenReturn(connection);
 		when(desiredAutoCommit.getAsBoolean()).thenReturn(true);
 		when(connection.getAutoCommit()).thenReturn(false);
@@ -83,7 +82,7 @@ class JdbcTransactionWithDataSourceTest extends TransactionBase {
 
 	@Test
 	@Override
-	public void shouldCommit() throws SQLException {
+	void shouldCommitWhenConnectionIsNotAutoCommit() throws SQLException {
 		when(dataSource.getConnection()).thenReturn(connection);
 		when(connection.getAutoCommit()).thenReturn(false);
 
@@ -95,7 +94,8 @@ class JdbcTransactionWithDataSourceTest extends TransactionBase {
 	}
 
 	@Test
-	void shouldAutoCommit() throws SQLException {
+	@Override
+	void shouldAutoCommitWhenConnectionIsAutoCommit() throws SQLException {
 		when(dataSource.getConnection()).thenReturn(connection);
 		when(connection.getAutoCommit()).thenReturn(true);
 
@@ -108,7 +108,7 @@ class JdbcTransactionWithDataSourceTest extends TransactionBase {
 
 	@Test
 	@Override
-	public void shouldRollback() throws SQLException {
+	void shouldRollbackWhenConnectionIsNotAutoCommit() throws SQLException {
 		when(dataSource.getConnection()).thenReturn(connection);
 		when(connection.getAutoCommit()).thenReturn(false);
 
@@ -120,7 +120,8 @@ class JdbcTransactionWithDataSourceTest extends TransactionBase {
 	}
 
 	@Test
-	void shouldAutoRollback() throws SQLException {
+	@Override
+	void shouldAutoRollbackWhenConnectionIsAutoCommit() throws SQLException {
 		when(dataSource.getConnection()).thenReturn(connection);
 		when(connection.getAutoCommit()).thenReturn(true);
 
@@ -133,7 +134,7 @@ class JdbcTransactionWithDataSourceTest extends TransactionBase {
 
 	@Test
 	@Override
-	public void shouldClose() throws SQLException {
+	void shouldCloseAndSetAutoCommitWhenConnectionIsNotAutoCommit() throws SQLException {
 		when(dataSource.getConnection()).thenReturn(connection);
 		when(desiredAutoCommit.getAsBoolean()).thenReturn(false);
 		when(skipSetAutoCommitClose.getAsBoolean()).thenReturn(false);
@@ -147,22 +148,8 @@ class JdbcTransactionWithDataSourceTest extends TransactionBase {
 	}
 
 	@Test
-	void shouldNotSetAutoCommitWhenConnectionIsAutoCommit() throws SQLException {
-		when(dataSource.getConnection()).thenReturn(connection);
-		when(desiredAutoCommit.getAsBoolean()).thenReturn(false);
-		when(skipSetAutoCommitClose.getAsBoolean()).thenReturn(false);
-		when(connection.getAutoCommit()).thenReturn(false);
-
-		buildTransaction();
-		transaction.getConnection();
-		transaction.close();
-
-		verify(connection).close();
-		verify(connection).setAutoCommit(true);
-	}
-
-	@Test
-	void shouldNotSetAutoCommitWhenSkipSetAutoCommit() throws SQLException {
+	@Override
+	void shouldCloseAndNotSetAutoCommitWhenConnectionIsAutoCommit() throws SQLException {
 		when(dataSource.getConnection()).thenReturn(connection);
 		when(desiredAutoCommit.getAsBoolean()).thenReturn(false);
 		when(skipSetAutoCommitClose.getAsBoolean()).thenReturn(false);
@@ -178,7 +165,7 @@ class JdbcTransactionWithDataSourceTest extends TransactionBase {
 
 	@Test
 	@Override
-	public void shouldGetTimeout() throws SQLException {
+	void shouldReturnNullWhenGetTimeout() throws SQLException {
 		buildTransaction();
 
 		assertNull(transaction.getTimeout());
@@ -187,5 +174,4 @@ class JdbcTransactionWithDataSourceTest extends TransactionBase {
 	private void buildTransaction() {
 		this.transaction = new JdbcTransaction(dataSource, TransactionIsolationLevel.REPEATABLE_READ, desiredAutoCommit.getAsBoolean(), skipSetAutoCommitClose.getAsBoolean());
 	}
-
 }

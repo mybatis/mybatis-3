@@ -13,7 +13,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.transaction;
+package org.apache.ibatis.transaction.jdbc;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -22,18 +22,24 @@ import java.sql.SQLException;
 
 /**
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
- * @see Transaction
+ * @see JdbcTransaction
  */
 @ExtendWith(MockitoExtension.class)
-public abstract class TransactionBase {
+abstract class JdbcTransactionBase {
 
-	public abstract void shouldGetConnection() throws SQLException;
+	abstract void shouldGetConnection() throws SQLException;
 
-	public abstract void shouldCommit() throws SQLException;
+	abstract void shouldCommitWhenConnectionIsNotAutoCommit() throws SQLException;
 
-	public abstract void shouldRollback() throws SQLException;
+	abstract void shouldAutoCommitWhenConnectionIsAutoCommit() throws SQLException;
 
-	public abstract void shouldClose() throws SQLException;
+	abstract void shouldRollbackWhenConnectionIsNotAutoCommit() throws SQLException;
 
-	public abstract void shouldGetTimeout() throws SQLException;
+	abstract void shouldAutoRollbackWhenConnectionIsAutoCommit() throws SQLException;
+
+	abstract void shouldCloseAndSetAutoCommitWhenConnectionIsNotAutoCommit() throws SQLException;
+
+	abstract void shouldCloseAndNotSetAutoCommitWhenConnectionIsAutoCommit() throws SQLException;
+
+	abstract void shouldReturnNullWhenGetTimeout() throws SQLException;
 }

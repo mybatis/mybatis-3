@@ -17,7 +17,6 @@ package org.apache.ibatis.transaction.managed;
 
 import org.apache.ibatis.session.TransactionIsolationLevel;
 import org.apache.ibatis.transaction.Transaction;
-import org.apache.ibatis.transaction.TransactionBase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -34,7 +33,7 @@ import static org.mockito.Mockito.*;
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
  * @see ManagedTransaction
  */
-class ManagedTransactionWithDataSourceTest extends TransactionBase {
+class ManagedTransactionWithDataSourceTest extends ManagedTransactionBase {
 
 	@Mock
 	private DataSource dataSource;
@@ -50,8 +49,7 @@ class ManagedTransactionWithDataSourceTest extends TransactionBase {
 	}
 
 	@Test
-	@Override
-	public void shouldGetConnection() throws SQLException {
+	void shouldGetConnection() throws SQLException {
 		when(dataSource.getConnection()).thenReturn(connection);
 
 		Connection result = transaction.getConnection();
@@ -62,29 +60,31 @@ class ManagedTransactionWithDataSourceTest extends TransactionBase {
 
 	@Test
 	@Override
-	public void shouldCommit() throws SQLException {
+	void shouldNotCommitWhetherConnectionIsAutoCommit() throws SQLException {
 		when(dataSource.getConnection()).thenReturn(connection);
 
 		transaction.getConnection();
 		transaction.commit();
 
 		verify(connection, never()).commit();
+		verify(connection, never()).getAutoCommit();
 	}
 
 	@Test
 	@Override
-	public void shouldRollback() throws SQLException {
+	void shouldNotRollbackWhetherConnectionIsAutoCommit() throws SQLException {
 		when(dataSource.getConnection()).thenReturn(connection);
 
 		transaction.getConnection();
 		transaction.rollback();
 
 		verify(connection, never()).rollback();
+		verify(connection, never()).getAutoCommit();
 	}
 
 	@Test
 	@Override
-	public void shouldClose() throws SQLException {
+	void shouldCloseWhenSetCloseConnectionIsTrue() throws SQLException {
 		when(dataSource.getConnection()).thenReturn(connection);
 
 		transaction.getConnection();
@@ -94,8 +94,9 @@ class ManagedTransactionWithDataSourceTest extends TransactionBase {
 	}
 
 	@Test
-	void shouldNotCloseWhenSetNonCloseConnection() throws SQLException {
-		this.transaction = new ManagedTransaction(dataSource, TransactionIsolationLevel.READ_COMMITTED, false);
+	@Override
+	void shouldNotCloseWhenSetCloseConnectionIsFalse() throws SQLException {
+		transaction = new ManagedTransaction(dataSource, TransactionIsolationLevel.READ_COMMITTED, false);
 		when(dataSource.getConnection()).thenReturn(connection);
 
 		transaction.getConnection();
@@ -106,7 +107,7 @@ class ManagedTransactionWithDataSourceTest extends TransactionBase {
 
 	@Test
 	@Override
-	public void shouldGetTimeout() throws SQLException {
+	void shouldReturnNullWhenGetTimeout() throws SQLException {
 		assertNull(transaction.getTimeout());
 	}
 }

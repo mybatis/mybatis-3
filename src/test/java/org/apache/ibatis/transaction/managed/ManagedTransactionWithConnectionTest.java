@@ -16,7 +16,6 @@
 package org.apache.ibatis.transaction.managed;
 
 import org.apache.ibatis.transaction.Transaction;
-import org.apache.ibatis.transaction.TransactionBase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -26,14 +25,13 @@ import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 /**
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
  * @see ManagedTransaction
  */
-class ManagedTransactionWithConnectionTest extends TransactionBase {
+class ManagedTransactionWithConnectionTest extends ManagedTransactionBase {
 
 	@Mock
 	private Connection connection;
@@ -46,8 +44,7 @@ class ManagedTransactionWithConnectionTest extends TransactionBase {
 	}
 
 	@Test
-	@Override
-	public void shouldGetConnection() throws SQLException {
+	void shouldGetConnection() throws SQLException {
 		Connection result = transaction.getConnection();
 
 		assertEquals(connection, result);
@@ -55,30 +52,33 @@ class ManagedTransactionWithConnectionTest extends TransactionBase {
 
 	@Test
 	@Override
-	public void shouldCommit() throws SQLException {
+	void shouldNotCommitWhetherConnectionIsAutoCommit() throws SQLException {
 		transaction.commit();
 
 		verify(connection, never()).commit();
+		verify(connection, never()).getAutoCommit();
 	}
 
 	@Test
 	@Override
-	public void shouldRollback() throws SQLException {
+	void shouldNotRollbackWhetherConnectionIsAutoCommit() throws SQLException {
 		transaction.commit();
 
 		verify(connection, never()).rollback();
+		verify(connection, never()).getAutoCommit();
 	}
 
 	@Test
 	@Override
-	public void shouldClose() throws SQLException {
+	void shouldCloseWhenSetCloseConnectionIsTrue() throws SQLException {
 		transaction.close();
 
 		verify(connection).close();
 	}
 
 	@Test
-	void shouldNotCloseWhenSetNonCloseConnection() throws SQLException {
+	@Override
+	void shouldNotCloseWhenSetCloseConnectionIsFalse() throws SQLException {
 		this.transaction = new ManagedTransaction(connection, false);
 
 		transaction.close();
@@ -88,7 +88,7 @@ class ManagedTransactionWithConnectionTest extends TransactionBase {
 
 	@Test
 	@Override
-	public void shouldGetTimeout() throws SQLException {
+	void shouldReturnNullWhenGetTimeout() throws SQLException {
 		assertNull(transaction.getTimeout());
 	}
 
