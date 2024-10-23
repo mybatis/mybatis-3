@@ -55,7 +55,7 @@ class AutomappingTest {
   }
 
   @Test
-  void shouldGetAUserWhithPhoneNumber() {
+  void shouldGetAUserWithPhoneNumber() {
     sqlSessionFactory.getConfiguration().setAutoMappingBehavior(AutoMappingBehavior.NONE);
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
