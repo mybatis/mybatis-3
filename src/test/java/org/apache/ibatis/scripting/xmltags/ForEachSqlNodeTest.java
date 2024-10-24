@@ -40,7 +40,7 @@ import static org.mockito.Mockito.*;
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
  * @see <a href="https://mybatis.org/mybatis-3/dynamic-sql.html#foreach">foreach</a>
  */
-class ForEachSqlNodeTest extends SqlNodeTest{
+class ForEachSqlNodeTest extends SqlNodeBase {
 
   private SqlNode sqlNode;
 

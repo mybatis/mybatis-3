@@ -25,7 +25,7 @@ import static org.mockito.Mockito.*;
 /**
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
  */
-class TextSqlNodeTest extends SqlNodeTest {
+class TextSqlNodeTest extends SqlNodeBase {
 
   private static final String TEXT = "select 1 from dual";
   private static final String DYNAMIC_TEXT = "select * from user where id = ${id}";
