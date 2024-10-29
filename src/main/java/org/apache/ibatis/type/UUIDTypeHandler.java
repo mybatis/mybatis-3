@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2024  the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -23,6 +23,8 @@ import java.util.UUID;
 
 /**
  * UUIDTypeHandler is a type handler for \`java.util.UUID\`.
+ *
+ * @author Girdhar Singh Rathore
  */
 public class UUIDTypeHandler extends BaseTypeHandler<UUID> {
 

@@ -22,6 +22,9 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+/**
+ * @author Girdhar Singh Rathore
+ */
 public class UUIDTypeHandlerTest extends BaseTypeHandlerTest {
 
   private static final TypeHandler<UUID> TYPE_HANDLER = new UUIDTypeHandler();
