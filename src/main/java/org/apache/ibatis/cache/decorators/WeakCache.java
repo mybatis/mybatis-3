@@ -57,6 +57,7 @@ public class WeakCache implements Cache {
 
   public void setSize(int size) {
     this.numberOfHardLinks = size;
+    resizeHardLinks();
   }
 
   @Override
@@ -77,6 +78,7 @@ public class WeakCache implements Cache {
       } else {
         lock.lock();
         try {
+          hardLinksToAvoidGarbageCollection.remove(result);
           hardLinksToAvoidGarbageCollection.addFirst(result);
           if (hardLinksToAvoidGarbageCollection.size() > numberOfHardLinks) {
             hardLinksToAvoidGarbageCollection.removeLast();
@@ -113,6 +115,17 @@ public class WeakCache implements Cache {
     WeakEntry sv;
     while ((sv = (WeakEntry) queueOfGarbageCollectedEntries.poll()) != null) {
       delegate.removeObject(sv.key);
+    }
+  }
+
+  private void resizeHardLinks() {
+    lock.lock();
+    try {
+      while (hardLinksToAvoidGarbageCollection.size() > numberOfHardLinks) {
+        hardLinksToAvoidGarbageCollection.removeLast();
+      }
+    } finally {
+      lock.unlock();
     }
   }
 

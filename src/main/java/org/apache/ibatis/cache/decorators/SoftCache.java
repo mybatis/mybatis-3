@@ -57,6 +57,7 @@ public class SoftCache implements Cache {
 
   public void setSize(int size) {
     this.numberOfHardLinks = size;
+    resizeHardLinks();
   }
 
   @Override
@@ -78,6 +79,7 @@ public class SoftCache implements Cache {
         // See #586 (and #335) modifications need more than a read lock
         lock.lock();
         try {
+          hardLinksToAvoidGarbageCollection.remove(result);
           hardLinksToAvoidGarbageCollection.addFirst(result);
           if (hardLinksToAvoidGarbageCollection.size() > numberOfHardLinks) {
             hardLinksToAvoidGarbageCollection.removeLast();
@@ -114,6 +116,17 @@ public class SoftCache implements Cache {
     SoftEntry sv;
     while ((sv = (SoftEntry) queueOfGarbageCollectedEntries.poll()) != null) {
       delegate.removeObject(sv.key);
+    }
+  }
+
+  private void resizeHardLinks() {
+    lock.lock();
+    try {
+      while (hardLinksToAvoidGarbageCollection.size() > numberOfHardLinks) {
+        hardLinksToAvoidGarbageCollection.removeLast();
+      }
+    } finally {
+      lock.unlock();
     }
   }
 
