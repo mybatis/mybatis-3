@@ -13,24 +13,29 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.scripting.xmltags;
+package org.apache.ibatis.transaction.managed;
 
-import org.apache.ibatis.session.Configuration;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.sql.SQLException;
 
 /**
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
+ * @see ManagedTransaction
  */
 @ExtendWith(MockitoExtension.class)
-abstract class SqlNodeTest {
+abstract class ManagedTransactionBase {
 
-  @Mock
-  protected Configuration configuration;
+	abstract void shouldGetConnection() throws SQLException;
 
-  @Mock
-  protected DynamicContext context;
+	abstract void shouldNotCommitWhetherConnectionIsAutoCommit() throws SQLException;
 
-  public abstract void shouldApply() throws Exception;
+	abstract void shouldNotRollbackWhetherConnectionIsAutoCommit() throws SQLException;
+
+	abstract void shouldCloseWhenSetCloseConnectionIsTrue() throws SQLException;
+
+	abstract void shouldNotCloseWhenSetCloseConnectionIsFalse() throws SQLException;
+
+	abstract void shouldReturnNullWhenGetTimeout() throws SQLException;
 }

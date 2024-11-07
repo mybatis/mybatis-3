@@ -38,7 +38,7 @@ import static org.mockito.Mockito.*;
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
  * @see MapWrapper
  */
-class MapWrapperUnitTest extends ObjectWrapperBaseTest {
+class MapWrapperUnitTest extends ObjectWrapperBase {
 
   @Mock
   private Map<String, Object> map;

@@ -41,7 +41,7 @@ import static org.mockito.Mockito.*;
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
  * @see <a href="https://mybatis.org/mybatis-3/dynamic-sql.html#trim-where-set">trim-where-set</a>
  */
-class SetSqlNodeTest extends SqlNodeTest {
+class SetSqlNodeTest extends SqlNodeBase {
 
   private static final String FIRST_TEXT = " username = #{username},";
   private static final String SECOND_TEXT = " password = #{password}";

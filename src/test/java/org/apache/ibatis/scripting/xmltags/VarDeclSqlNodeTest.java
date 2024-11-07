@@ -33,7 +33,7 @@ import static org.mockito.Mockito.*;
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
  * @see <a href="https://mybatis.org/mybatis-3/dynamic-sql.html#bind">bind</a>
  */
-class VarDeclSqlNodeTest extends SqlNodeTest {
+class VarDeclSqlNodeTest extends SqlNodeBase {
 
   private SqlNode sqlNode;
 

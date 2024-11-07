@@ -15,35 +15,23 @@
  */
 package org.apache.ibatis.scripting.xmltags;
 
-import java.util.Arrays;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import static org.mockito.Mockito.*;
+import org.apache.ibatis.session.Configuration;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
+ * @see SqlNode
  */
-class MixedSqlNodeTest extends SqlNodeBase {
+@ExtendWith(MockitoExtension.class)
+abstract class SqlNodeBase {
 
-  private static final String FIRST_TEXT = "abc";
-  private static final String SECOND_TEXT = "bcd";
-  private SqlNode sqlNode;
+  @Mock
+  protected Configuration configuration;
 
-  @BeforeEach
-  void setup() {
-    SqlNode first = new StaticTextSqlNode(FIRST_TEXT);
-    SqlNode second = new StaticTextSqlNode(SECOND_TEXT);
-    this.sqlNode = new MixedSqlNode(Arrays.asList(first, second));
-  }
+  @Mock
+  protected DynamicContext context;
 
-  @Test
-  @Override
-  public void shouldApply() throws Exception {
-    sqlNode.apply(context);
-
-    verify(context).appendSql("abc");
-    verify(context).appendSql("bcd");
-  }
+  public abstract void shouldApply() throws Exception;
 }
