@@ -57,7 +57,7 @@ public class VendorDatabaseIdProvider implements DatabaseIdProvider {
     String productName = getDatabaseProductName(dataSource);
     if (this.properties != null) {
       return properties.entrySet().stream().filter(entry -> productName.contains((String) entry.getKey()))
-          .map(entry -> (String) entry.getValue()).findFirst().orElse(null);
+          .map(entry -> (String) entry.getValue()).findFirst().orElse(productName);
     }
     return productName;
   }
