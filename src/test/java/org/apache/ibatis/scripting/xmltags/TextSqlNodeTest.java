@@ -15,12 +15,14 @@
  */
 package org.apache.ibatis.scripting.xmltags;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import java.util.HashMap;
 
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 /**
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
@@ -49,9 +51,11 @@ class TextSqlNodeTest extends SqlNodeTest {
   public void shouldApplyDynamic() {
     // given
     TextSqlNode sqlNode = new TextSqlNode(DYNAMIC_TEXT);
-    when(context.getBindings()).thenReturn(new HashMap<>() {{
-      put("id", 1);
-    }});
+    when(context.getBindings()).thenReturn(new HashMap<>() {
+      {
+        put("id", 1);
+      }
+    });
 
     // when
     boolean result = sqlNode.apply(context);

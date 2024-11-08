@@ -15,13 +15,14 @@
  */
 package org.apache.ibatis.scripting.xmltags;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import java.util.HashMap;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 /**
  * <pre>{@code
@@ -31,6 +32,7 @@ import static org.mockito.Mockito.*;
  * }</pre>
  *
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
+ *
  * @see <a href="https://mybatis.org/mybatis-3/dynamic-sql.html#bind">bind</a>
  */
 class VarDeclSqlNodeTest extends SqlNodeTest {
@@ -45,9 +47,11 @@ class VarDeclSqlNodeTest extends SqlNodeTest {
   @Test
   @Override
   public void shouldApply() throws Exception {
-    when(context.getBindings()).thenReturn(new HashMap<>() {{
-      put("_parameter", new Bean("abc"));
-    }});
+    when(context.getBindings()).thenReturn(new HashMap<>() {
+      {
+        put("_parameter", new Bean("abc"));
+      }
+    });
 
     boolean result = sqlNode.apply(context);
 

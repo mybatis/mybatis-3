@@ -15,6 +15,10 @@
  */
 package org.apache.ibatis.reflection.wrapper;
 
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.verify;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -28,12 +32,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 /**
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
+ *
  * @see CollectionWrapper
  */
 @ExtendWith(MockitoExtension.class)
@@ -56,64 +57,55 @@ class CollectionWrapperUnitTest extends ObjectWrapperBaseTest {
   @Test
   @Override
   void shouldGet() {
-    assertThatExceptionOfType(UnsupportedOperationException.class)
-      .isThrownBy(() -> wrapper.get(tokenizer));
+    assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(() -> wrapper.get(tokenizer));
   }
 
   @Test
   @Override
   void shouldSet() {
-    assertThatExceptionOfType(UnsupportedOperationException.class)
-      .isThrownBy(() -> wrapper.set(tokenizer, null));
+    assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(() -> wrapper.set(tokenizer, null));
   }
 
   @Test
   @Override
   void shouldFindProperty() {
-    assertThatExceptionOfType(UnsupportedOperationException.class)
-      .isThrownBy(() -> wrapper.findProperty("abc", true));
+    assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(() -> wrapper.findProperty("abc", true));
   }
 
   @Test
   @Override
   void shouldGetGetterNames() {
-    assertThatExceptionOfType(UnsupportedOperationException.class)
-      .isThrownBy(() -> wrapper.getGetterNames());
+    assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(() -> wrapper.getGetterNames());
   }
 
   @Test
   @Override
   void shouldGetSetterNames() {
-    assertThatExceptionOfType(UnsupportedOperationException.class)
-      .isThrownBy(() -> wrapper.getSetterNames());
+    assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(() -> wrapper.getSetterNames());
   }
 
   @Test
   @Override
   void shouldGetGetterType() {
-    assertThatExceptionOfType(UnsupportedOperationException.class)
-      .isThrownBy(() -> wrapper.getGetterType("abc"));
+    assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(() -> wrapper.getGetterType("abc"));
   }
 
   @Test
   @Override
   void shouldGetSetterType() {
-    assertThatExceptionOfType(UnsupportedOperationException.class)
-      .isThrownBy(() -> wrapper.getSetterType("abc"));
+    assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(() -> wrapper.getSetterType("abc"));
   }
 
   @Test
   @Override
   void shouldHasGetter() {
-    assertThatExceptionOfType(UnsupportedOperationException.class)
-      .isThrownBy(() -> wrapper.hasGetter("abc"));
+    assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(() -> wrapper.hasGetter("abc"));
   }
 
   @Test
   @Override
   void shouldHasSetter() {
-    assertThatExceptionOfType(UnsupportedOperationException.class)
-      .isThrownBy(() -> wrapper.hasSetter("abc"));
+    assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(() -> wrapper.hasSetter("abc"));
   }
 
   @Test
@@ -126,7 +118,7 @@ class CollectionWrapperUnitTest extends ObjectWrapperBaseTest {
   @Override
   void shouldInstantiatePropertyValue() {
     assertThatExceptionOfType(UnsupportedOperationException.class)
-      .isThrownBy(() -> wrapper.instantiatePropertyValue("abc", tokenizer, null));
+        .isThrownBy(() -> wrapper.instantiatePropertyValue("abc", tokenizer, null));
   }
 
   @Test
@@ -140,11 +132,13 @@ class CollectionWrapperUnitTest extends ObjectWrapperBaseTest {
   @Test
   @Override
   void shouldAddAll() {
-    List<Object> list = new ArrayList<>() {{
-      add("1");
-      add("2");
-      add("3");
-    }};
+    List<Object> list = new ArrayList<>() {
+      {
+        add("1");
+        add("2");
+        add("3");
+      }
+    };
     wrapper.addAll(list);
 
     verify(collection).addAll(list);

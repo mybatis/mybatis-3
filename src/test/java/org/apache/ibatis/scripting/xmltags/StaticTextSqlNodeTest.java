@@ -15,10 +15,10 @@
  */
 package org.apache.ibatis.scripting.xmltags;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.verify;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
@@ -33,7 +33,7 @@ class StaticTextSqlNodeTest extends SqlNodeTest {
     // given
     SqlNode sqlNode = new StaticTextSqlNode(TEXT);
 
-    //when
+    // when
     boolean result = sqlNode.apply(context);
 
     // then
