@@ -51,6 +51,13 @@ class VendorDatabaseIdProviderTest {
   }
 
   @Test
+  void shouldProductNameBeReturnedIfPropertiesIsEmpty() throws Exception {
+    VendorDatabaseIdProvider provider = new VendorDatabaseIdProvider();
+    provider.setProperties(new Properties());
+    assertEquals(PRODUCT_NAME, provider.getDatabaseId(mockDataSource()));
+  }
+
+  @Test
   void shouldProductNameBeTranslated() throws Exception {
     VendorDatabaseIdProvider provider = new VendorDatabaseIdProvider();
     Properties properties = new Properties();
