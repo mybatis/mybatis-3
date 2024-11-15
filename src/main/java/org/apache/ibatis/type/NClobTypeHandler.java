@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@ package org.apache.ibatis.type;
 
 import java.io.StringReader;
 import java.sql.CallableStatement;
-import java.sql.Clob;
+import java.sql.NClob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -31,29 +31,29 @@ public class NClobTypeHandler extends BaseTypeHandler<String> {
   public void setNonNullParameter(PreparedStatement ps, int i, String parameter, JdbcType jdbcType)
       throws SQLException {
     StringReader reader = new StringReader(parameter);
-    ps.setCharacterStream(i, reader, parameter.length());
+    ps.setNCharacterStream(i, reader, parameter.length());
   }
 
   @Override
   public String getNullableResult(ResultSet rs, String columnName) throws SQLException {
-    Clob clob = rs.getClob(columnName);
-    return toString(clob);
+    NClob nclob = rs.getNClob(columnName);
+    return toString(nclob);
   }
 
   @Override
   public String getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
-    Clob clob = rs.getClob(columnIndex);
-    return toString(clob);
+    NClob nclob = rs.getNClob(columnIndex);
+    return toString(nclob);
   }
 
   @Override
   public String getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
-    Clob clob = cs.getClob(columnIndex);
-    return toString(clob);
+    NClob nclob = cs.getNClob(columnIndex);
+    return toString(nclob);
   }
 
-  private String toString(Clob clob) throws SQLException {
-    return clob == null ? null : clob.getSubString(1, (int) clob.length());
+  private String toString(NClob nclob) throws SQLException {
+    return nclob == null ? null : nclob.getSubString(1, (int) nclob.length());
   }
 
 }
