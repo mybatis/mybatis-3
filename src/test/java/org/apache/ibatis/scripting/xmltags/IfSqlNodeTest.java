@@ -15,13 +15,14 @@
  */
 package org.apache.ibatis.scripting.xmltags;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
+
 import java.util.HashMap;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 /**
  * <pre>{@code
@@ -31,6 +32,7 @@ import static org.mockito.Mockito.*;
  * }</pre>
  *
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
+ *
  * @see <a href="https://mybatis.org/mybatis-3/dynamic-sql.html#if">if</a>
  */
 class IfSqlNodeTest extends SqlNodeTest {
@@ -49,9 +51,11 @@ class IfSqlNodeTest extends SqlNodeTest {
   @Test
   @Override
   public void shouldApply() throws Exception {
-    when(context.getBindings()).thenReturn(new HashMap<>() {{
-      put("title", "ENGLISH");
-    }});
+    when(context.getBindings()).thenReturn(new HashMap<>() {
+      {
+        put("title", "ENGLISH");
+      }
+    });
 
     boolean result = sqlNode.apply(context);
 
@@ -61,9 +65,11 @@ class IfSqlNodeTest extends SqlNodeTest {
 
   @Test
   public void shouldAppendNone() {
-    when(context.getBindings()).thenReturn(new HashMap<>() {{
-      put("title", null);
-    }});
+    when(context.getBindings()).thenReturn(new HashMap<>() {
+      {
+        put("title", null);
+      }
+    });
 
     boolean result = sqlNode.apply(context);
 

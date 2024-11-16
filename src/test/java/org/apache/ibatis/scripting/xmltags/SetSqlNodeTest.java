@@ -15,14 +15,15 @@
  */
 package org.apache.ibatis.scripting.xmltags;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import java.util.Arrays;
 import java.util.HashMap;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 /**
  * <pre>{@code
@@ -39,6 +40,7 @@ import static org.mockito.Mockito.*;
  * }</pre>
  *
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
+ *
  * @see <a href="https://mybatis.org/mybatis-3/dynamic-sql.html#trim-where-set">trim-where-set</a>
  */
 class SetSqlNodeTest extends SqlNodeTest {
@@ -60,10 +62,12 @@ class SetSqlNodeTest extends SqlNodeTest {
   @Test
   @Override
   public void shouldApply() throws Exception {
-    when(context.getBindings()).thenReturn(new HashMap<>(){{
-      put("username", "Jack");
-      put("password", "***");
-    }});
+    when(context.getBindings()).thenReturn(new HashMap<>() {
+      {
+        put("username", "Jack");
+        put("password", "***");
+      }
+    });
 
     boolean result = sqlNode.apply(context);
 
@@ -73,9 +77,11 @@ class SetSqlNodeTest extends SqlNodeTest {
 
   @Test
   public void shouldAppendOnlyUsername() throws Exception {
-    when(context.getBindings()).thenReturn(new HashMap<>(){{
-      put("username", "Jack");
-    }});
+    when(context.getBindings()).thenReturn(new HashMap<>() {
+      {
+        put("username", "Jack");
+      }
+    });
 
     boolean result = sqlNode.apply(context);
 
@@ -85,9 +91,11 @@ class SetSqlNodeTest extends SqlNodeTest {
 
   @Test
   public void shouldAppendOnlyPassword() throws Exception {
-    when(context.getBindings()).thenReturn(new HashMap<>(){{
-      put("password", "***");
-    }});
+    when(context.getBindings()).thenReturn(new HashMap<>() {
+      {
+        put("password", "***");
+      }
+    });
 
     boolean result = sqlNode.apply(context);
 

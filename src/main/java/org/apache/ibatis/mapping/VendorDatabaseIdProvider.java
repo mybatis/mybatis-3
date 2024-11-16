@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -55,11 +55,11 @@ public class VendorDatabaseIdProvider implements DatabaseIdProvider {
 
   private String getDatabaseName(DataSource dataSource) throws SQLException {
     String productName = getDatabaseProductName(dataSource);
-    if (this.properties != null) {
-      return properties.entrySet().stream().filter(entry -> productName.contains((String) entry.getKey()))
-          .map(entry -> (String) entry.getValue()).findFirst().orElse(null);
+    if (properties == null || properties.isEmpty()) {
+      return productName;
     }
-    return productName;
+    return properties.entrySet().stream().filter(entry -> productName.contains((String) entry.getKey()))
+        .map(entry -> (String) entry.getValue()).findFirst().orElse(null);
   }
 
   private String getDatabaseProductName(DataSource dataSource) throws SQLException {

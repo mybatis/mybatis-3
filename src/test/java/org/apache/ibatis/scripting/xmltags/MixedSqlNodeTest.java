@@ -15,17 +15,17 @@
  */
 package org.apache.ibatis.scripting.xmltags;
 
+import static org.mockito.Mockito.verify;
+
 import java.util.Arrays;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.mockito.Mockito.*;
-
 /**
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
  */
-class MixedSqlNodeTest extends SqlNodeTest{
+class MixedSqlNodeTest extends SqlNodeTest {
 
   private static final String FIRST_TEXT = "abc";
   private static final String SECOND_TEXT = "bcd";

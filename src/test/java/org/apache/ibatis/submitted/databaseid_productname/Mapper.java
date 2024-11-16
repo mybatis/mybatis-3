@@ -13,31 +13,14 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.scripting.xmltags;
+package org.apache.ibatis.submitted.databaseid_productname;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.verify;
+import org.apache.ibatis.annotations.Select;
 
-import org.junit.jupiter.api.Test;
+public interface Mapper {
 
-/**
- * @author <a href="1181963012mw@gmail.com">mawen12</a>
- */
-class StaticTextSqlNodeTest extends SqlNodeTest {
+  @Select(value = "select 'mysql'", databaseId = "MySQL")
+  @Select(value = "select 'hsql' from (values(0))", databaseId = "HSQL Database Engine")
+  String select();
 
-  private static final String TEXT = "select 1 from dual";
-
-  @Test
-  @Override
-  public void shouldApply() throws Exception {
-    // given
-    SqlNode sqlNode = new StaticTextSqlNode(TEXT);
-
-    // when
-    boolean result = sqlNode.apply(context);
-
-    // then
-    assertTrue(result);
-    verify(context).appendSql(TEXT);
-  }
 }
