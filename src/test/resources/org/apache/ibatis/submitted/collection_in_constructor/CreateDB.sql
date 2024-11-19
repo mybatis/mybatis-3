@@ -46,8 +46,8 @@ insert into isle (id, name, store_id) values(103, 'Isle 103', 1);
 insert into isle (id, name, store_id) values(104, 'Isle 104', 3);
 insert into isle (id, name, store_id) values(105, 'Isle 105', 3);
 
-insert into clerk (id, name, is_manager, store_id) values (1001, 'Cleark 1001', 0, 1);
-insert into clerk (id, name, is_manager, store_id) values (1002, 'Cleark 1002', 1, 1);
-insert into clerk (id, name, is_manager, store_id) values (1003, 'Cleark 1003', 0, 1);
-insert into clerk (id, name, is_manager, store_id) values (1004, 'Cleark 1004', 0, 1);
-insert into clerk (id, name, is_manager, store_id) values (1005, 'Cleark 1005', 1, 1);
+insert into clerk (id, name, is_manager, store_id) values (1001, 'Clerk 1001', 0, 1);
+insert into clerk (id, name, is_manager, store_id) values (1002, 'Clerk 1002', 1, 1);
+insert into clerk (id, name, is_manager, store_id) values (1003, 'Clerk 1003', 0, 1);
+insert into clerk (id, name, is_manager, store_id) values (1004, 'Clerk 1004', 0, 1);
+insert into clerk (id, name, is_manager, store_id) values (1005, 'Clerk 1005', 1, 1);

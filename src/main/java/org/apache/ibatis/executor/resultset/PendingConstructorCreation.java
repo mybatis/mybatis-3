@@ -31,6 +31,7 @@ import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.mapping.ResultMapping;
 import org.apache.ibatis.reflection.ReflectionException;
+import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 
 /**
@@ -43,16 +44,19 @@ final class PendingConstructorCreation {
   private final Class<?> resultType;
   private final List<Class<?>> constructorArgTypes;
   private final List<Object> constructorArgs;
+
   private final Map<Integer, PendingCreationMetaInfo> linkedCollectionMetaInfo;
-  private final Map<String, Collection<Object>> linkedCollectionsByResultMapId;
-  private final Map<String, List<PendingConstructorCreation>> linkedCreationsByResultMapId;
+  private final Map<PendingCreationKey, Collection<Object>> linkedCollectionsByKey;
+  private final Map<PendingCreationKey, List<PendingConstructorCreation>> linkedCreationsByKey;
 
   PendingConstructorCreation(Class<?> resultType, List<Class<?>> types, List<Object> args) {
     // since all our keys are based on result map id, we know we will never go over args size
     final int maxSize = types.size();
+
     this.linkedCollectionMetaInfo = new HashMap<>(maxSize);
-    this.linkedCollectionsByResultMapId = new HashMap<>(maxSize);
-    this.linkedCreationsByResultMapId = new HashMap<>(maxSize);
+    this.linkedCollectionsByKey = new HashMap<>(maxSize);
+    this.linkedCreationsByKey = new HashMap<>(maxSize);
+
     this.resultType = resultType;
     this.constructorArgTypes = types;
     this.constructorArgs = args;
@@ -63,55 +67,63 @@ final class PendingConstructorCreation {
       ResultMapping constructorMapping, Integer index) {
     final Class<?> parameterType = constructorMapping.getJavaType();
     if (!objectFactory.isCollection(parameterType)) {
-      throw new ExecutorException(
+      throw new ReflectionException(
           "Cannot add a collection result to non-collection based resultMapping: " + constructorMapping);
     }
 
-    final String resultMapId = constructorMapping.getNestedResultMapId();
-    return linkedCollectionsByResultMapId.computeIfAbsent(resultMapId, (k) -> {
+    final PendingCreationKey creationKey = new PendingCreationKey(constructorMapping);
+    return linkedCollectionsByKey.computeIfAbsent(creationKey, (k) -> {
       // this will allow us to verify the types of the collection before creating the final object
-      linkedCollectionMetaInfo.put(index, new PendingCreationMetaInfo(resultMap.getType(), resultMapId));
+      linkedCollectionMetaInfo.put(index, new PendingCreationMetaInfo(resultMap.getType(), creationKey));
 
       // will be checked before we finally create the object) as we cannot reliably do that here
       return (Collection<Object>) objectFactory.create(parameterType);
     });
   }
 
-  void linkCreation(ResultMap nestedResultMap, PendingConstructorCreation pcc) {
-    final String resultMapId = nestedResultMap.getId();
-    final List<PendingConstructorCreation> pendingConstructorCreations = linkedCreationsByResultMapId
-        .computeIfAbsent(resultMapId, (k) -> new ArrayList<>());
+  void linkCreation(ResultMapping constructorMapping, PendingConstructorCreation pcc) {
+    final PendingCreationKey creationKey = new PendingCreationKey(constructorMapping);
+    final List<PendingConstructorCreation> pendingConstructorCreations = linkedCreationsByKey
+        .computeIfAbsent(creationKey, (k) -> new ArrayList<>());
 
     if (pendingConstructorCreations.contains(pcc)) {
-      throw new ExecutorException("Cannot link inner pcc with same value, MyBatis programming error!");
+      throw new ExecutorException("Cannot link inner constructor creation with same value, MyBatis internal error!");
     }
 
     pendingConstructorCreations.add(pcc);
   }
 
   void linkCollectionValue(ResultMapping constructorMapping, Object value) {
-    // not necessary to add null results to the collection (is this a config flag?)
+    // not necessary to add null results to the collection
     if (value == null) {
       return;
     }
 
-    final String resultMapId = constructorMapping.getNestedResultMapId();
-    if (!linkedCollectionsByResultMapId.containsKey(resultMapId)) {
-      throw new ExecutorException("Cannot link collection value for resultMapping: " + constructorMapping
-          + ", resultMap has not been seen/initialized yet! Internal error");
+    final PendingCreationKey creationKey = new PendingCreationKey(constructorMapping);
+    if (!linkedCollectionsByKey.containsKey(creationKey)) {
+      throw new ExecutorException("Cannot link collection value for key: " + constructorMapping
+          + ", resultMap has not been seen/initialized yet! Mybatis internal error!");
     }
 
-    linkedCollectionsByResultMapId.get(resultMapId).add(value);
+    linkedCollectionsByKey.get(creationKey).add(value);
   }
 
   /**
    * Verifies preconditions before we can actually create the result object, this is more of a sanity check to ensure
    * all the mappings are as we expect them to be.
+   * <p>
+   * And if anything went wrong, provide the user with more information as to what went wrong
    *
    * @param objectFactory
    *          the object factory
    */
   private void verifyCanCreate(ObjectFactory objectFactory) {
+    // if a custom object factory was supplied, we cannot reasionably verify that creation will work
+    // thus, we disable verification and leave it up to the end user.
+    if (!DefaultObjectFactory.class.equals(objectFactory.getClass())) {
+      return;
+    }
+
     // before we create, we need to get the constructor to be used and verify our types match
     // since we added to the collection completely unchecked
     final Constructor<?> resolvedConstructor = resolveConstructor(resultType, constructorArgTypes);
@@ -125,24 +137,24 @@ final class PendingConstructorCreation {
       final Class<?> resolvedItemType = checkResolvedItemType(creationMetaInfo, genericParameterTypes[i]);
 
       // ensure we have an empty collection if there are linked creations for this arg
-      final String resultMapId = creationMetaInfo.getResultMapId();
-      if (linkedCreationsByResultMapId.containsKey(resultMapId)) {
+      final PendingCreationKey pendingCreationKey = creationMetaInfo.getPendingCreationKey();
+      if (linkedCreationsByKey.containsKey(pendingCreationKey)) {
         final Object emptyCollection = constructorArgs.get(i);
         if (emptyCollection == null || !objectFactory.isCollection(emptyCollection.getClass())) {
           throw new ExecutorException(
-              "Expected empty collection for '" + resolvedItemType + "', this is a MyBatis internal error!");
+              "Expected empty collection for '" + resolvedItemType + "', MyBatis internal error!");
         }
       } else {
         final Object linkedCollection = constructorArgs.get(i);
-        if (!linkedCollectionsByResultMapId.containsKey(resultMapId)) {
-          throw new ExecutorException("Expected linked collection for resultMap '" + resultMapId
-              + "', not found! this is a MyBatis internal error!");
+        if (!linkedCollectionsByKey.containsKey(pendingCreationKey)) {
+          throw new ExecutorException(
+              "Expected linked collection for key '" + pendingCreationKey + "', not found! MyBatis internal error!");
         }
 
         // comparing memory locations here (we rely on that fact)
-        if (linkedCollection != linkedCollectionsByResultMapId.get(resultMapId)) {
+        if (linkedCollection != linkedCollectionsByKey.get(pendingCreationKey)) {
           throw new ExecutorException("Expected linked collection in creation to be the same as arg for resultMap '"
-              + resultMapId + "', not equal! this is a MyBatis internal error!");
+              + pendingCreationKey + "', not equal! MyBatis internal error!");
         }
       }
     }
@@ -209,11 +221,11 @@ final class PendingConstructorCreation {
       }
 
       // time to finally build this collection
-      final String resultMapId = creationMetaInfo.getResultMapId();
-      if (linkedCreationsByResultMapId.containsKey(resultMapId)) {
+      final PendingCreationKey pendingCreationKey = creationMetaInfo.getPendingCreationKey();
+      if (linkedCreationsByKey.containsKey(pendingCreationKey)) {
         @SuppressWarnings("unchecked")
         final Collection<Object> emptyCollection = (Collection<Object>) existingArg;
-        final List<PendingConstructorCreation> linkedCreations = linkedCreationsByResultMapId.get(resultMapId);
+        final List<PendingConstructorCreation> linkedCreations = linkedCreationsByKey.get(pendingCreationKey);
 
         for (PendingConstructorCreation linkedCreation : linkedCreations) {
           emptyCollection.add(linkedCreation.create(objectFactory, verifyCreate));

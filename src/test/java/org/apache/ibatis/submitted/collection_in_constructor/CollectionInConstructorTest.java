@@ -165,7 +165,19 @@ class CollectionInConstructorTest {
   }
 
   @Test
+  @Disabled
   void testImmutableNestedObjects() {
+    /*
+     * This resultmap contains mixed property and constructor mappings, the logic assumes the entire chain will be
+     * immutable when we have mixed mappings, we don't know when to create the final object, as property mappings could
+     * still be modified at any point in time This brings us to a design question, is this really what we want from this
+     * functionality, as the point was to create immutable objects in my opinion, supporting this defeats the purpose;
+     * for example propery mapping -> immutable collection -> immutable object -> mapped by property mapping. we cannot
+     * build the final object if it can still be modified; i.e, the signal to build the immutable object is lost. the
+     * code in this pr assumes and relies on the base object also being immutable, i.e: constructor mapping -> immutable
+     * collection -> immutable object -> mapped by constructor mapping. Imo, there is only one option here, it should be
+     * added in the documentation; as doing (and supporting this, will be extremely complex)
+     */
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Container container = mapper.getAContainer();

@@ -24,7 +24,7 @@ public class Store4 {
   private final List<Isle> isles;
 
   // Using different arg order than the <constructor> definition
-  // to ensure the builder is used
+  // to ensure the builder is used, see CollectionInConstructorObjectFactory.create
   Store4(List<Isle> isles, Integer id) {
     super();
     this.isles = isles;

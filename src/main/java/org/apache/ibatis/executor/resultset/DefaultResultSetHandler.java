@@ -360,13 +360,26 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private void handleRowValuesForSimpleResultMap(ResultSetWrapper rsw, ResultMap resultMap,
       ResultHandler<?> resultHandler, RowBounds rowBounds, ResultMapping parentMapping) throws SQLException {
+    final boolean useCollectionConstructorInjection = resultMap.hasResultMapsUsingConstructorCollection();
+    PendingConstructorCreation lastHandledCreation = null;
+
     DefaultResultContext<Object> resultContext = new DefaultResultContext<>();
     ResultSet resultSet = rsw.getResultSet();
     skipRows(resultSet, rowBounds);
     while (shouldProcessMoreRows(resultContext, rowBounds) && !resultSet.isClosed() && resultSet.next()) {
       ResultMap discriminatedResultMap = resolveDiscriminatedResultMap(resultSet, resultMap, null);
       Object rowValue = getRowValue(rsw, discriminatedResultMap, null, null);
-      storeObject(resultHandler, resultContext, rowValue, parentMapping, resultSet);
+      if (!useCollectionConstructorInjection) {
+        storeObject(resultHandler, resultContext, rowValue, parentMapping, resultSet);
+      } else {
+        if (!(rowValue instanceof PendingConstructorCreation)) {
+          throw new ExecutorException("Expected result object to be a pending constructor creation!");
+        }
+
+        createAndStorePendingCreation(resultHandler, resultSet, resultContext, (PendingConstructorCreation) rowValue,
+            lastHandledCreation == null);
+        lastHandledCreation = (PendingConstructorCreation) rowValue;
+      }
     }
   }
 
@@ -422,6 +435,17 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       foundValues = lazyLoader.size() > 0 || foundValues;
       rowValue = foundValues || configuration.isReturnInstanceForEmptyRow() ? rowValue : null;
     }
+
+    if (parentRowKey != null) {
+      // found a simple object/primitive in pending constructor creation that will need linking later
+      final CacheKey rowKey = createRowKey(resultMap, rsw, columnPrefix);
+      final CacheKey combinedKey = combineKeys(rowKey, parentRowKey);
+
+      if (combinedKey != CacheKey.NULL_CACHE_KEY) {
+        nestedResultObjects.put(combinedKey, rowValue);
+      }
+    }
+
     return rowValue;
   }
 
@@ -1101,6 +1125,11 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   private void linkNestedPendingCreations(ResultSetWrapper rsw, ResultMap resultMap, String columnPrefix,
       CacheKey parentRowKey, PendingConstructorCreation pendingCreation, List<Object> constructorArgs)
       throws SQLException {
+    if (parentRowKey == null) {
+      // nothing to link, possibly due to simple (non-nested) result map
+      return;
+    }
+
     final CacheKey rowKey = createRowKey(resultMap, rsw, columnPrefix);
     final CacheKey combinedKey = combineKeys(rowKey, parentRowKey);
 
@@ -1157,7 +1186,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         // we will fill this collection when building the final object
         constructorArgs.set(index, value);
         // link the creation for building later
-        pendingCreation.linkCreation(nestedResultMap, innerCreation);
+        pendingCreation.linkCreation(constructorMapping, innerCreation);
       }
     }
   }
@@ -1190,6 +1219,9 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         PendingConstructorCreation pendingConstructorCreation = null;
         if (rowValue instanceof PendingConstructorCreation) {
           pendingConstructorCreation = (PendingConstructorCreation) rowValue;
+        } else if (rowValue != null) {
+          // found a simple object that was already linked/handled
+          continue;
         }
 
         final boolean newValueForNestedResultMap = pendingConstructorCreation == null;
@@ -1213,7 +1245,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         if (rowValue instanceof PendingConstructorCreation) {
           if (newValueForNestedResultMap) {
             // we created a brand new pcc. this is a new collection value
-            pendingConstructorCreation.linkCreation(nestedResultMap, (PendingConstructorCreation) rowValue);
+            pendingConstructorCreation.linkCreation(constructorMapping, (PendingConstructorCreation) rowValue);
             foundValues = true;
           }
         } else {
@@ -1225,10 +1257,11 @@ public class DefaultResultSetHandler implements ResultSetHandler {
           }
         }
       } catch (SQLException e) {
-        throw new ExecutorException("Error getting experimental nested result map values for '"
+        throw new ExecutorException("Error getting constructor collection nested result map values for '"
             + constructorMapping.getProperty() + "'.  Cause: " + e, e);
       }
     }
+
     return foundValues;
   }
 

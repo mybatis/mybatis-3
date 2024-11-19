@@ -16,27 +16,31 @@
 package org.apache.ibatis.executor.resultset;
 
 /**
+ * Used to keep track of specific argument types for pending creations
+ *
  * @author Willie Scholtz
  */
 final class PendingCreationMetaInfo {
-  private final Class<?> argumentType;
-  private final String resultMapId;
 
-  PendingCreationMetaInfo(Class<?> argumentType, String resultMapId) {
+  private final Class<?> argumentType;
+  private final PendingCreationKey pendingCreationKey;
+
+  PendingCreationMetaInfo(Class<?> argumentType, PendingCreationKey pendingCreationKey) {
     this.argumentType = argumentType;
-    this.resultMapId = resultMapId;
+    this.pendingCreationKey = pendingCreationKey;
   }
 
   Class<?> getArgumentType() {
     return argumentType;
   }
 
-  String getResultMapId() {
-    return resultMapId;
+  PendingCreationKey getPendingCreationKey() {
+    return pendingCreationKey;
   }
 
   @Override
   public String toString() {
-    return "PendingCreationMetaInfo{" + "argumentType=" + argumentType + ", resultMapId='" + resultMapId + '\'' + '}';
+    return "PendingCreationMetaInfo{" + "argumentType=" + argumentType + ", pendingCreationKey='" + pendingCreationKey
+        + '\'' + '}';
   }
 }
