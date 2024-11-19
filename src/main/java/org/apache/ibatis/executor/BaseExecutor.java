@@ -337,7 +337,9 @@ public abstract class BaseExecutor implements Executor {
     } finally {
       localCache.removeObject(key);
     }
-    localCache.putObject(key, list);
+    if (configuration.getLocalCacheScope() == LocalCacheScope.SESSION) {
+      localCache.putObject(key, list);
+    }
     if (ms.getStatementType() == StatementType.CALLABLE) {
       localOutputParameterCache.putObject(key, parameter);
     }
