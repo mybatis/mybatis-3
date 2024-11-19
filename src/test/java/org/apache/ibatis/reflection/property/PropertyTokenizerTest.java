@@ -15,13 +15,14 @@
  */
 package org.apache.ibatis.reflection.property;
 
-import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
 
 /**
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
+ *
  * @see PropertyTokenizer
  */
 class PropertyTokenizerTest {
@@ -39,9 +40,8 @@ class PropertyTokenizerTest {
     assertFalse(tokenizer.hasNext());
     assertNull(tokenizer.getIndex());
 
-    assertThatExceptionOfType(UnsupportedOperationException.class)
-      .isThrownBy(tokenizer::remove)
-      .withMessage("Remove is not supported, as it has no meaning in the context of properties.");
+    assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(tokenizer::remove)
+        .withMessage("Remove is not supported, as it has no meaning in the context of properties.");
   }
 
   @Test
@@ -56,9 +56,8 @@ class PropertyTokenizerTest {
 
     assertNull(tokenizer.getIndex());
 
-    assertThatExceptionOfType(UnsupportedOperationException.class)
-      .isThrownBy(tokenizer::remove)
-      .withMessage("Remove is not supported, as it has no meaning in the context of properties.");
+    assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(tokenizer::remove)
+        .withMessage("Remove is not supported, as it has no meaning in the context of properties.");
   }
 
   @Test
@@ -73,8 +72,7 @@ class PropertyTokenizerTest {
     assertFalse(tokenizer.hasNext());
     assertNull(tokenizer.getChildren());
 
-    assertThatExceptionOfType(UnsupportedOperationException.class)
-      .isThrownBy(tokenizer::remove)
-      .withMessage("Remove is not supported, as it has no meaning in the context of properties.");
+    assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(tokenizer::remove)
+        .withMessage("Remove is not supported, as it has no meaning in the context of properties.");
   }
 }

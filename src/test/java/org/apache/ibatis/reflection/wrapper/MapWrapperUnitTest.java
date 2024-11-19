@@ -15,6 +15,12 @@
  */
 package org.apache.ibatis.reflection.wrapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -30,12 +36,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 /**
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
+ *
  * @see MapWrapper
  */
 class MapWrapperUnitTest extends ObjectWrapperBaseTest {
@@ -99,9 +102,11 @@ class MapWrapperUnitTest extends ObjectWrapperBaseTest {
   void shouldSetWhichContainsDelim() {
     wrapper.set(new PropertyTokenizer("author.id"), 1);
 
-    verify(map).put("author", new HashMap<>() {{
-      put("id", 1);
-    }});
+    verify(map).put("author", new HashMap<>() {
+      {
+        put("id", 1);
+      }
+    });
   }
 
   @Test
@@ -123,10 +128,12 @@ class MapWrapperUnitTest extends ObjectWrapperBaseTest {
   @Test
   @Override
   void shouldGetGetterNames() {
-    Set<String> sets = new HashSet<>() {{
-      add("key1");
-      add("key2");
-    }};
+    Set<String> sets = new HashSet<>() {
+      {
+        add("key1");
+        add("key2");
+      }
+    };
     when(map.keySet()).thenReturn(sets);
 
     String[] getterNames = wrapper.getGetterNames();
@@ -138,10 +145,12 @@ class MapWrapperUnitTest extends ObjectWrapperBaseTest {
   @Test
   @Override
   void shouldGetSetterNames() {
-    Set<String> sets = new HashSet<>() {{
-      add("key1");
-      add("key2");
-    }};
+    Set<String> sets = new HashSet<>() {
+      {
+        add("key1");
+        add("key2");
+      }
+    };
     when(map.keySet()).thenReturn(sets);
 
     String[] setterNames = wrapper.getSetterNames();
@@ -219,7 +228,8 @@ class MapWrapperUnitTest extends ObjectWrapperBaseTest {
   @Test
   @Override
   void shouldInstantiatePropertyValue() {
-    MetaObject result = wrapper.instantiatePropertyValue("abc", new PropertyTokenizer("key"), SystemMetaObject.DEFAULT_OBJECT_FACTORY);
+    MetaObject result = wrapper.instantiatePropertyValue("abc", new PropertyTokenizer("key"),
+        SystemMetaObject.DEFAULT_OBJECT_FACTORY);
 
     assertFalse(result.hasGetter("key"));
   }
@@ -227,14 +237,12 @@ class MapWrapperUnitTest extends ObjectWrapperBaseTest {
   @Test
   @Override
   void shouldAddElement() {
-    assertThatExceptionOfType(UnsupportedOperationException.class)
-      .isThrownBy(() -> wrapper.add("1"));
+    assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(() -> wrapper.add("1"));
   }
 
   @Test
   @Override
   void shouldAddAll() {
-    assertThatExceptionOfType(UnsupportedOperationException.class)
-      .isThrownBy(() -> wrapper.addAll(new ArrayList<>()));
+    assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(() -> wrapper.addAll(new ArrayList<>()));
   }
 }

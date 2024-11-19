@@ -15,6 +15,10 @@
  */
 package org.apache.ibatis.scripting.xmltags;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -22,9 +26,6 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 /**
  * <pre>{@code
@@ -38,9 +39,10 @@ import static org.mockito.Mockito.*;
  * }</pre>
  *
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
+ *
  * @see <a href="https://mybatis.org/mybatis-3/dynamic-sql.html#foreach">foreach</a>
  */
-class ForEachSqlNodeTest extends SqlNodeTest{
+class ForEachSqlNodeTest extends SqlNodeTest {
 
   private SqlNode sqlNode;
 
@@ -57,9 +59,11 @@ class ForEachSqlNodeTest extends SqlNodeTest{
     ArgumentCaptor<Object> bindValueCaptor = ArgumentCaptor.forClass(Object.class);
     doNothing().when(context).bind(bindKeyCaptor.capture(), bindValueCaptor.capture());
 
-    when(context.getBindings()).thenReturn(new HashMap<>() {{
-      put("list", Arrays.asList("a", "b", "c"));
-    }});
+    when(context.getBindings()).thenReturn(new HashMap<>() {
+      {
+        put("list", Arrays.asList("a", "b", "c"));
+      }
+    });
 
     boolean result = sqlNode.apply(context);
 
@@ -69,11 +73,8 @@ class ForEachSqlNodeTest extends SqlNodeTest{
 
     List<String> allKeyValues = bindKeyCaptor.getAllValues();
     List<Object> allValValues = bindValueCaptor.getAllValues();
-    assertEquals(Arrays.asList("index", "__frch_index_0", "item", "__frch_item_0",
-      "index", "__frch_index_0", "item", "__frch_item_0",
-      "index", "__frch_index_0", "item", "__frch_item_0"), allKeyValues);
-    assertEquals(Arrays.asList(0, 0, "a", "a",
-      1, 1, "b", "b",
-      2, 2, "c", "c"), allValValues);
+    assertEquals(Arrays.asList("index", "__frch_index_0", "item", "__frch_item_0", "index", "__frch_index_0", "item",
+        "__frch_item_0", "index", "__frch_index_0", "item", "__frch_item_0"), allKeyValues);
+    assertEquals(Arrays.asList(0, 0, "a", "a", 1, 1, "b", "b", 2, 2, "c", "c"), allValValues);
   }
 }

@@ -15,24 +15,25 @@
  */
 package org.apache.ibatis.reflection.wrapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.domain.blog.Author;
 import org.apache.ibatis.domain.misc.RichType;
 import org.apache.ibatis.reflection.SystemMetaObject;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
-
 /**
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
+ *
  * @see BeanWrapper
  */
 class BeanWrapperUnitTest extends ObjectWrapperBaseTest {
@@ -71,10 +72,12 @@ class BeanWrapperUnitTest extends ObjectWrapperBaseTest {
   @Test
   void shouldGetWhichContainsIndex() {
     richType.setRichList(Arrays.asList(1L, "abc"));
-    richType.setRichMap(new HashMap<String, Object>(){{
-      put("key1", "value1");
-      put("key2", "value2");
-    }});
+    richType.setRichMap(new HashMap<String, Object>() {
+      {
+        put("key1", "value1");
+        put("key2", "value2");
+      }
+    });
 
     assertEquals("abc", wrapper.get(new PropertyTokenizer("richList[1]")));
     assertEquals("value2", wrapper.get(new PropertyTokenizer("richMap[key2]")));
@@ -199,15 +202,13 @@ class BeanWrapperUnitTest extends ObjectWrapperBaseTest {
   @Test
   @Override
   void shouldAddElement() {
-    assertThatExceptionOfType(UnsupportedOperationException.class)
-      .isThrownBy(() -> wrapper.add("1"));
+    assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(() -> wrapper.add("1"));
   }
 
   @Test
   @Override
   void shouldAddAll() {
-    assertThatExceptionOfType(UnsupportedOperationException.class)
-      .isThrownBy(() -> wrapper.addAll(new ArrayList<>()));
+    assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(() -> wrapper.addAll(new ArrayList<>()));
   }
 
 }
