@@ -57,7 +57,6 @@ class ImmutableConstructorTest {
     final Environment environment = new Environment("Production", transactionFactory, dataSource);
     final Configuration configuration = new Configuration(environment);
 
-    configuration.setExperimentalConstructorCollectionMapping(true); // # issue 101
     configuration.addMapper(ImmutableBlogMapper.class);
 
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);

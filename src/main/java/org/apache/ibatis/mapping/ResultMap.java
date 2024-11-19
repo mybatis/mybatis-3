@@ -114,12 +114,10 @@ public class ResultMap {
           resultMap.constructorResultMappings.add(resultMapping);
 
           // #101
-          if (resultMap.configuration.isExperimentalConstructorCollectionMappingEnabled()) {
-            Class<?> javaType = resultMapping.getJavaType();
-            resultMap.hasResultMapsUsingConstructorCollection = resultMap.hasResultMapsUsingConstructorCollection
-                || (resultMapping.getNestedQueryId() == null && javaType != null
-                    && resultMap.configuration.getObjectFactory().isCollection(javaType));
-          }
+          Class<?> javaType = resultMapping.getJavaType();
+          resultMap.hasResultMapsUsingConstructorCollection = resultMap.hasResultMapsUsingConstructorCollection
+              || (resultMapping.getNestedQueryId() == null && javaType != null
+                  && resultMap.configuration.getObjectFactory().isCollection(javaType));
 
           if (resultMapping.getProperty() != null) {
             constructorArgNames.add(resultMapping.getProperty());

@@ -17,7 +17,7 @@ package org.apache.ibatis.binding;
 
 import static com.googlecode.catchexception.apis.BDDCatchException.caughtException;
 import static com.googlecode.catchexception.apis.BDDCatchException.when;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -80,10 +80,6 @@ class BindingTest {
     Configuration configuration = new Configuration(environment);
     configuration.setLazyLoadingEnabled(true);
     configuration.setUseActualParamName(false); // to test legacy style reference (#{0} #{1})
-
-    // # issue 101 (explicitly show the set to false to test backward compatibility for this issue)
-    configuration.setExperimentalConstructorCollectionMapping(false); // (false is the default)
-
     configuration.getTypeAliasRegistry().registerAlias(Blog.class);
     configuration.getTypeAliasRegistry().registerAlias(Post.class);
     configuration.getTypeAliasRegistry().registerAlias(Author.class);
@@ -403,13 +399,16 @@ class BindingTest {
     }
   }
 
-  @Test // issue #480 and #101 (negative case with flag disabled)
-  void shouldNotExecuteBoundSelectBlogUsingConstructorWithResultMapCollectionWhenFlagDisabled() {
+  @Test // issue #480 and #101
+  void shouldExecuteBoundSelectBlogUsingConstructorWithResultMapCollection() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
-      assertThatThrownBy(() -> mapper.selectBlogUsingConstructorWithResultMapCollection(1))
-          .isInstanceOf(PersistenceException.class)
-          .hasMessageContaining("Error instantiating class org.apache.ibatis.domain.blog.Blog with invalid types");
+      Blog blog = mapper.selectBlogUsingConstructorWithResultMapCollection(1);
+      assertEquals(1, blog.getId());
+      assertEquals("Jim Business", blog.getTitle());
+      assertNotNull(blog.getAuthor(), "author should not be null");
+      List<Post> posts = blog.getPosts();
+      assertThat(posts).isNotNull().hasSize(2);
     }
   }
 

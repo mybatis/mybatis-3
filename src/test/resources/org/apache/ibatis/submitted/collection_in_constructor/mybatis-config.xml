@@ -22,11 +22,6 @@
 
 <configuration>
 
-  <settings>
-    <setting name="experimentalConstructorCollectionMapping"
-      value="true" />
-  </settings>
-
   <objectFactory
     type="org.apache.ibatis.submitted.collection_in_constructor.CollectionInConstructorObjectFactory" />
 
