@@ -759,7 +759,7 @@ User{username=Peter, roles=[Users, Maintainers, Approvers]}
 This functionality is still experimental, please report any issues you may find on the issue tracker.
 
 It is important to note that mixed mappings have limited support, i.e. property mappings combined with nested constructor mappings are likely to fail.
-When using this functionality, it is preferable for the entire mapping hieracrhy to use immutable constructor mappings.
+When using this functionality, it is preferable for the entire mapping hierarchy to use immutable constructor mappings.
 
 #### association
 

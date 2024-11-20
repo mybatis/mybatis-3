@@ -63,7 +63,11 @@
     </resultMap>
 
     <sql id="housesSelect">
-        select h.*
+        select
+
+          1 as portfolioId
+
+          , h.*
 
           , r.id as room_id
           , r.name as room_name
@@ -92,4 +96,12 @@
         where h.id = #{id}
     </select>
 
+    <resultMap id="housePortfolioMap" type="HousePortfolio">
+      <id property="portfolioId" javaType="_int" column="portfolioId"/>
+      <collection property="houses" resultMap="houseMap"/>
+    </resultMap>
+
+    <select id="getHousePortfolio" resultMap="housePortfolioMap" resultOrdered="true">
+      <include refid="housesSelect"/>
+    </select>
 </mapper>

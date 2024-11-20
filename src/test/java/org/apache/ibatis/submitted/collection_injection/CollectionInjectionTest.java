@@ -24,6 +24,7 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.apache.ibatis.submitted.collection_injection.immutable.HousePortfolio;
 import org.apache.ibatis.submitted.collection_injection.immutable.ImmutableDefect;
 import org.apache.ibatis.submitted.collection_injection.immutable.ImmutableFurniture;
 import org.apache.ibatis.submitted.collection_injection.immutable.ImmutableHouse;
@@ -116,5 +117,14 @@ class CollectionInjectionTest {
         + "\n\t\t\tCannot run intellij";
 
     assertThat(builder.toString()).isNotEmpty().isEqualTo(expected);
+  }
+
+  @Test
+  void getHousePortfolio() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      final ImmutableHouseMapper mapper = sqlSession.getMapper(ImmutableHouseMapper.class);
+      final HousePortfolio portfolio = mapper.getHousePortfolio(1);
+      Assertions.assertNotNull(portfolio);
+    }
   }
 }

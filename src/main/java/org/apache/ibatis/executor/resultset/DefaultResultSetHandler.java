@@ -91,6 +91,9 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   private final ObjectFactory objectFactory;
   private final ReflectorFactory reflectorFactory;
 
+  // pending creations property tracker
+  private final Map<Object, PendingRelation> pendingPccRelations = new HashMap<>();
+
   // nested resultmaps
   private final Map<CacheKey, Object> nestedResultObjects = new HashMap<>();
   private final Map<String, Object> ancestorObjects = new HashMap<>();
@@ -387,9 +390,14 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       ResultMapping parentMapping, ResultSet rs) throws SQLException {
     if (parentMapping != null) {
       linkToParents(rs, parentMapping, rowValue);
-    } else {
-      callResultHandler(resultHandler, resultContext, rowValue);
+      return;
     }
+
+    if (pendingPccRelations.containsKey(rowValue)) {
+      createPendingConstructorCreations(rowValue);
+    }
+
+    callResultHandler(resultHandler, resultContext, rowValue);
   }
 
   @SuppressWarnings("unchecked" /* because ResultHandler<?> is always ResultHandler<Object> */)
@@ -1265,6 +1273,36 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     return foundValues;
   }
 
+  private void createPendingConstructorCreations(Object rowValue) {
+    // handle possible pending creations within this object
+    // by now, the property mapping has been completely built, we can reconstruct it
+    final PendingRelation pendingRelation = pendingPccRelations.remove(rowValue);
+    final MetaObject metaObject = pendingRelation.metaObject;
+    final ResultMapping resultMapping = pendingRelation.propertyMapping;
+
+    // get the list to be built
+    Object collectionProperty = instantiateCollectionPropertyIfAppropriate(resultMapping, metaObject);
+    if (collectionProperty != null) {
+      // we expect pending creations now
+      final Collection<Object> pendingCreations = (Collection<Object>) collectionProperty;
+
+      // remove the link to the old collection
+      metaObject.setValue(resultMapping.getProperty(), null);
+
+      // create new collection property
+      collectionProperty = instantiateCollectionPropertyIfAppropriate(resultMapping, metaObject);
+      final MetaObject targetMetaObject = configuration.newMetaObject(collectionProperty);
+
+      // create the pending objects
+      for (Object pendingCreation : pendingCreations) {
+        if (pendingCreation instanceof PendingConstructorCreation) {
+          final PendingConstructorCreation pendingConstructorCreation = (PendingConstructorCreation) pendingCreation;
+          targetMetaObject.add(pendingConstructorCreation.create(objectFactory, false));
+        }
+      }
+    }
+  }
+
   private void verifyPendingCreationPreconditions(ResultMapping parentMapping) {
     if (parentMapping != null) {
       throw new ExecutorException(
@@ -1481,6 +1519,17 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     if (collectionProperty != null) {
       final MetaObject targetMetaObject = configuration.newMetaObject(collectionProperty);
       targetMetaObject.add(rowValue);
+
+      // it is possible for pending creations to get set via property mappings,
+      // keep track of these, so we can rebuild them.
+      final Object originalObject = metaObject.getOriginalObject();
+      if (rowValue instanceof PendingConstructorCreation && !pendingPccRelations.containsKey(originalObject)) {
+        PendingRelation pendingRelation = new PendingRelation();
+        pendingRelation.propertyMapping = resultMapping;
+        pendingRelation.metaObject = metaObject;
+
+        pendingPccRelations.put(originalObject, pendingRelation);
+      }
     } else {
       metaObject.setValue(resultMapping.getProperty(), rowValue);
     }

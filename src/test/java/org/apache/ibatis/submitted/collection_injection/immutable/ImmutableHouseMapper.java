@@ -23,4 +23,5 @@ public interface ImmutableHouseMapper {
 
   ImmutableHouse getHouse(int it);
 
+  HousePortfolio getHousePortfolio(int id);
 }

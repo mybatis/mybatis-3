@@ -34,6 +34,7 @@
         <typeAlias type="org.apache.ibatis.submitted.collection_injection.immutable.ImmutableRoomDetail" alias="ImmutableRoomDetail"/>
         <typeAlias type="org.apache.ibatis.submitted.collection_injection.immutable.ImmutableFurniture" alias="ImmutableFurniture"/>
         <typeAlias type="org.apache.ibatis.submitted.collection_injection.immutable.ImmutableDefect" alias="ImmutableDefect"/>
+        <typeAlias type="org.apache.ibatis.submitted.collection_injection.immutable.HousePortfolio" alias="HousePortfolio"/>
     </typeAliases>
 
     <environments default="development">
