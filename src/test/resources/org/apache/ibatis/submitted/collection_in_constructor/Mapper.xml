@@ -236,4 +236,45 @@
     order by s.id, i.id
   ]]></select>
 
+  <resultMap
+      type="org.apache.ibatis.submitted.collection_in_constructor.Clerk"
+      id="immutableClerkRM">
+    <constructor>
+      <idArg column="id" javaType="int" />
+      <arg column="name" javaType="string" />
+    </constructor>
+  </resultMap>
+
+  <resultMap
+      type="org.apache.ibatis.submitted.collection_in_constructor.Store9"
+      id="store9RM">
+    <constructor>
+      <idArg column="id" javaType="int" />
+      <arg column="name" javaType="string" />
+      <arg javaType="list" resultMap="immutableClerkRM" columnPrefix="clerk_" />
+    </constructor>
+  </resultMap>
+
+  <resultMap
+      type="org.apache.ibatis.submitted.collection_in_constructor.Container1"
+      id="container1RM">
+    <id column="type" property="type"/>
+    <result column="num" property="num" />
+    <collection property="stores" resultMap="store9RM"/>
+  </resultMap>
+
+  <select id="getContainers" resultMap="container1RM"
+      resultOrdered="true"><![CDATA[
+    select
+      1 num
+      , casewhen(c.is_manager, rtrim('storesWithManagers'), rtrim('storesWithClerks')) as type
+      , s.id
+      , s.name
+      , c.id clerk_id
+      , c.name clerk_name
+    from store s
+      left join clerk c on c.store_id = s.id
+    order by type, s.id, c.id
+  ]]></select>
+
 </mapper>

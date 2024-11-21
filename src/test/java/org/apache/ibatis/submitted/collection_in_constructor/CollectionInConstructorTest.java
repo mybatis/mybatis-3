@@ -181,4 +181,40 @@ class CollectionInConstructorTest {
               container.getStores());
     }
   }
+
+  @Test
+  void testImmutableNestedObjectsWithBadEquals() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      List<Container1> containers = mapper.getContainers();
+
+      Container1 expectedContainer1 = new Container1();
+      expectedContainer1.setNum(1);
+      expectedContainer1.setType("storesWithClerks");
+      expectedContainer1.setStores(Arrays.asList(
+          new Store9(1, "Store 1",
+              Arrays.asList(new Clerk(1001, "Clerk 1001"), new Clerk(1003, "Clerk 1003"),
+                  new Clerk(1004, "Clerk 1004"))),
+          new Store9(2, "Store 2", Arrays.asList()), new Store9(3, "Store 3", Arrays.asList())));
+
+      Container1 expectedContainer2 = new Container1();
+      expectedContainer2.setNum(1);
+      expectedContainer2.setType("storesWithManagers");
+      expectedContainer2.setStores(Arrays.asList(
+          new Store9(1, "Store 1", Arrays.asList(new Clerk(1002, "Clerk 1002"), new Clerk(1005, "Clerk 1005")))));
+
+      // cannot use direct equals as we overwrote it with a bad impl on purpose
+      org.assertj.core.api.Assertions.assertThat(containers).isNotNull().hasSize(2);
+      assertContainer1(containers.get(0), expectedContainer1);
+      assertContainer1(containers.get(1), expectedContainer2);
+    }
+  }
+
+  private static void assertContainer1(Container1 container1, Container1 expectedContainer1) {
+    org.assertj.core.api.Assertions.assertThat(container1).isNotNull().satisfies(c -> {
+      org.assertj.core.api.Assertions.assertThat(c.getNum()).isEqualTo(expectedContainer1.getNum());
+      org.assertj.core.api.Assertions.assertThat(c.getType()).isEqualTo(expectedContainer1.getType());
+      org.assertj.core.api.Assertions.assertThat(c.getStores()).isEqualTo(expectedContainer1.getStores());
+    });
+  }
 }

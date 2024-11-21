@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -92,7 +93,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   private final ReflectorFactory reflectorFactory;
 
   // pending creations property tracker
-  private final Map<Object, PendingRelation> pendingPccRelations = new HashMap<>();
+  private final Map<Object, PendingRelation> pendingPccRelations = new IdentityHashMap<>();
 
   // nested resultmaps
   private final Map<CacheKey, Object> nestedResultObjects = new HashMap<>();

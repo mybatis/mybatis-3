@@ -39,4 +39,6 @@ public interface Mapper {
 
   Container getAContainer();
 
+  List<Container1> getContainers();
+
 }
