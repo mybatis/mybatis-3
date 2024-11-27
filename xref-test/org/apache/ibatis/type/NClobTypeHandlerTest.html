@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../testapidocs/org/apache/ibatis/type/NClobTypeHandlerTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2024 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -29,7 +29,7 @@
 <a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.mockito.Mockito.when;
 <a class="jxr_linenumber" name="L22" href="#L22">22</a>  
 <a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> java.io.Reader;
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> java.sql.Clob;
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> java.sql.NClob;
 <a class="jxr_linenumber" name="L25" href="#L25">25</a>  
 <a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.api.Test;
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> org.mockito.ArgumentMatchers;
@@ -40,60 +40,60 @@
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> TypeHandler&lt;String&gt; TYPE_HANDLER = <strong class="jxr_keyword">new</strong> NClobTypeHandler();
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>  
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>    @Mock
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>    <strong class="jxr_keyword">protected</strong> Clob clob;
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>    <strong class="jxr_keyword">protected</strong> NClob nclob;
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>  
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>    @Override
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>    @Test
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldSetParameter() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>      TYPE_HANDLER.setParameter(ps, 1, <span class="jxr_string">"Hello"</span>, <strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="L41" href="#L41">41</a>      verify(ps).setCharacterStream(ArgumentMatchers.eq(1), ArgumentMatchers.any(Reader.<strong class="jxr_keyword">class</strong>), ArgumentMatchers.eq(5));
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>      verify(ps).setNCharacterStream(ArgumentMatchers.eq(1), ArgumentMatchers.any(Reader.<strong class="jxr_keyword">class</strong>), ArgumentMatchers.eq(5L));
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>    }
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>  
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>    @Override
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>    @Test
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldGetResultFromResultSetByName() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>      when(rs.getClob(<span class="jxr_string">"column"</span>)).thenReturn(clob);
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>      when(clob.length()).thenReturn(3L);
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>      when(clob.getSubString(1, 3)).thenReturn(<span class="jxr_string">"Hello"</span>);
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>      when(rs.getNClob(<span class="jxr_string">"column"</span>)).thenReturn(nclob);
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>      when(nclob.length()).thenReturn(3L);
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>      when(nclob.getSubString(1, 3)).thenReturn(<span class="jxr_string">"Hello"</span>);
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>      assertEquals(<span class="jxr_string">"Hello"</span>, TYPE_HANDLER.getResult(rs, <span class="jxr_string">"column"</span>));
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>    }
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>  
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>    @Override
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>    @Test
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldGetResultNullFromResultSetByName() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L56" href="#L56">56</a>      when(rs.getClob(<span class="jxr_string">"column"</span>)).thenReturn(<strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>      when(rs.getNClob(<span class="jxr_string">"column"</span>)).thenReturn(<strong class="jxr_keyword">null</strong>);
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>      assertNull(TYPE_HANDLER.getResult(rs, <span class="jxr_string">"column"</span>));
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>    }
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>  
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>    @Override
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>    @Test
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldGetResultFromResultSetByPosition() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>      when(rs.getClob(1)).thenReturn(clob);
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>      when(clob.length()).thenReturn(3L);
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>      when(clob.getSubString(1, 3)).thenReturn(<span class="jxr_string">"Hello"</span>);
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>      when(rs.getNClob(1)).thenReturn(nclob);
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>      when(nclob.length()).thenReturn(3L);
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>      when(nclob.getSubString(1, 3)).thenReturn(<span class="jxr_string">"Hello"</span>);
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>      assertEquals(<span class="jxr_string">"Hello"</span>, TYPE_HANDLER.getResult(rs, 1));
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>    }
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>  
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>    @Override
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>    @Test
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldGetResultNullFromResultSetByPosition() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>      when(rs.getClob(1)).thenReturn(<strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>      when(rs.getNClob(1)).thenReturn(<strong class="jxr_keyword">null</strong>);
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>      assertNull(TYPE_HANDLER.getResult(rs, 1));
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>    }
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>  
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>    @Override
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>    @Test
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldGetResultFromCallableStatement() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>      when(cs.getClob(1)).thenReturn(clob);
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>      when(clob.length()).thenReturn(3L);
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>      when(clob.getSubString(1, 3)).thenReturn(<span class="jxr_string">"Hello"</span>);
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>      when(cs.getNClob(1)).thenReturn(nclob);
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>      when(nclob.length()).thenReturn(3L);
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>      when(nclob.getSubString(1, 3)).thenReturn(<span class="jxr_string">"Hello"</span>);
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>      assertEquals(<span class="jxr_string">"Hello"</span>, TYPE_HANDLER.getResult(cs, 1));
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>    }
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>  
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>    @Override
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>    @Test
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldGetResultNullFromCallableStatement() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>      when(cs.getClob(1)).thenReturn(<strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>      when(cs.getNClob(1)).thenReturn(<strong class="jxr_keyword">null</strong>);
 <a class="jxr_linenumber" name="L89" href="#L89">89</a>      assertNull(TYPE_HANDLER.getResult(cs, 1));
 <a class="jxr_linenumber" name="L90" href="#L90">90</a>    }
 <a class="jxr_linenumber" name="L91" href="#L91">91</a>  
