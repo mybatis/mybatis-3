@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -31,9 +31,9 @@ import org.apache.ibatis.datasource.DataSourceFactory;
  */
 public class JndiDataSourceFactory implements DataSourceFactory {
 
-  public static final String INITIAL_CONTEXT = "initial_context";
-  public static final String DATA_SOURCE = "data_source";
-  public static final String ENV_PREFIX = "env.";
+  private static final String INITIAL_CONTEXT = "initial_context";
+  private static final String DATA_SOURCE = "data_source";
+  private static final String ENV_PREFIX = "env.";
 
   private DataSource dataSource;
 
@@ -79,6 +79,18 @@ public class JndiDataSourceFactory implements DataSourceFactory {
       }
     }
     return contextProperties;
+  }
+
+  public static String getInitialContext() {
+    return INITIAL_CONTEXT;
+  }
+
+  public static String getDataSourceString() {
+    return DATA_SOURCE;
+  }
+
+  public static String getEnvPrefix() {
+    return ENV_PREFIX;
   }
 
 }

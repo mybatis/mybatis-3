@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -31,8 +31,8 @@ import org.apache.ibatis.session.Configuration;
  */
 public class DynamicContext {
 
-  public static final String PARAMETER_OBJECT_KEY = "_parameter";
-  public static final String DATABASE_ID_KEY = "_databaseId";
+  private static final String PARAMETER_OBJECT_KEY = "_parameter";
+  private static final String DATABASE_ID_KEY = "_databaseId";
 
   static {
     OgnlRuntime.setPropertyAccessor(ContextMap.class, new ContextAccessor());
