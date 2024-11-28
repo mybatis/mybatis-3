@@ -15,6 +15,8 @@
  */
 package org.apache.ibatis.mapping;
 
+import static org.apache.ibatis.mapping.ResultMap.validateNestedQueryAndResultMap;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -142,17 +144,10 @@ public class ResultMapping {
     }
 
     private void validate() {
-      validateNestedQueryAndResultMap();
+      validateNestedQueryAndResultMap(resultMapping);
       validateTypeHandler();
       validateColumn();
       validateResultSet();
-    }
-
-    private void validateNestedQueryAndResultMap() {
-      if (resultMapping.nestedQueryId != null && resultMapping.nestedResultMapId != null) {
-        throw new IllegalStateException(
-            "Cannot define both nestedQueryId and nestedResultMapId in property " + resultMapping.property);
-      }
     }
 
     private void validateTypeHandler() {
