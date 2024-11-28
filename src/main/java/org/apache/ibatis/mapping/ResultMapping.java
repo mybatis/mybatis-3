@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -142,21 +142,34 @@ public class ResultMapping {
     }
 
     private void validate() {
-      // Issue #697: cannot define both nestedQueryId and nestedResultMapId
+      validateNestedQueryAndResultMap();
+      validateTypeHandler();
+      validateColumn();
+      validateResultSet();
+    }
+
+    private void validateNestedQueryAndResultMap() {
       if (resultMapping.nestedQueryId != null && resultMapping.nestedResultMapId != null) {
         throw new IllegalStateException(
             "Cannot define both nestedQueryId and nestedResultMapId in property " + resultMapping.property);
       }
-      // Issue #5: there should be no mappings without typehandler
+    }
+
+    private void validateTypeHandler() {
       if (resultMapping.nestedQueryId == null && resultMapping.nestedResultMapId == null
           && resultMapping.typeHandler == null) {
         throw new IllegalStateException("No typehandler found for property " + resultMapping.property);
       }
-      // Issue #4 and GH #39: column is optional only in nested resultmaps but not in the rest
+    }
+
+    private void validateColumn() {
       if (resultMapping.nestedResultMapId == null && resultMapping.column == null
           && resultMapping.composites.isEmpty()) {
         throw new IllegalStateException("Mapping is missing column attribute for property " + resultMapping.property);
       }
+    }
+
+    private void validateResultSet() {
       if (resultMapping.getResultSet() != null) {
         int numColumns = 0;
         if (resultMapping.column != null) {

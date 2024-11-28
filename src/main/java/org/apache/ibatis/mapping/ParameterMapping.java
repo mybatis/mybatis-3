@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -27,35 +27,32 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
  */
 public class ParameterMapping {
 
-  private Configuration configuration;
-
+  private ParameterMappingConfig config;
   private String property;
   private ParameterMode mode;
-  private Class<?> javaType = Object.class;
-  private JdbcType jdbcType;
   private Integer numericScale;
-  private TypeHandler<?> typeHandler;
   private String resultMapId;
   private String jdbcTypeName;
   private String expression;
 
   private ParameterMapping() {
+    this.config = new ParameterMappingConfig();
   }
 
   public static class Builder {
     private final ParameterMapping parameterMapping = new ParameterMapping();
 
     public Builder(Configuration configuration, String property, TypeHandler<?> typeHandler) {
-      parameterMapping.configuration = configuration;
+      parameterMapping.config.setConfiguration(configuration);
       parameterMapping.property = property;
-      parameterMapping.typeHandler = typeHandler;
+      parameterMapping.config.setTypeHandler(typeHandler);
       parameterMapping.mode = ParameterMode.IN;
     }
 
     public Builder(Configuration configuration, String property, Class<?> javaType) {
-      parameterMapping.configuration = configuration;
+      parameterMapping.config.setConfiguration(configuration);
       parameterMapping.property = property;
-      parameterMapping.javaType = javaType;
+      parameterMapping.config.setJavaType(javaType);
       parameterMapping.mode = ParameterMode.IN;
     }
 
@@ -65,12 +62,12 @@ public class ParameterMapping {
     }
 
     public Builder javaType(Class<?> javaType) {
-      parameterMapping.javaType = javaType;
+      parameterMapping.config.setJavaType(javaType);
       return this;
     }
 
     public Builder jdbcType(JdbcType jdbcType) {
-      parameterMapping.jdbcType = jdbcType;
+      parameterMapping.config.setJdbcType(jdbcType);
       return this;
     }
 
@@ -85,7 +82,7 @@ public class ParameterMapping {
     }
 
     public Builder typeHandler(TypeHandler<?> typeHandler) {
-      parameterMapping.typeHandler = typeHandler;
+      parameterMapping.config.setTypeHandler(typeHandler);
       return this;
     }
 
@@ -106,101 +103,61 @@ public class ParameterMapping {
     }
 
     private void validate() {
-      if (ResultSet.class.equals(parameterMapping.javaType)) {
+      if (ResultSet.class.equals(parameterMapping.config.getJavaType())) {
         if (parameterMapping.resultMapId == null) {
           throw new IllegalStateException("Missing resultmap in property '" + parameterMapping.property + "'.  "
               + "Parameters of type java.sql.ResultSet require a resultmap.");
         }
-      } else if (parameterMapping.typeHandler == null) {
+      } else if (parameterMapping.config.getTypeHandler() == null) {
         throw new IllegalStateException("Type handler was null on parameter mapping for property '"
             + parameterMapping.property + "'. It was either not specified and/or could not be found for the javaType ("
-            + parameterMapping.javaType.getName() + ") : jdbcType (" + parameterMapping.jdbcType + ") combination.");
+            + parameterMapping.config.getJavaType().getName() + ") : jdbcType (" + parameterMapping.config.getJdbcType()
+            + ") combination.");
       }
     }
 
     private void resolveTypeHandler() {
-      if (parameterMapping.typeHandler == null && parameterMapping.javaType != null) {
-        Configuration configuration = parameterMapping.configuration;
+      if (parameterMapping.config.getTypeHandler() == null && parameterMapping.config.getJavaType() != null) {
+        Configuration configuration = parameterMapping.config.getConfiguration();
         TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();
-        parameterMapping.typeHandler = typeHandlerRegistry.getTypeHandler(parameterMapping.javaType,
-            parameterMapping.jdbcType);
+        parameterMapping.config.setTypeHandler(typeHandlerRegistry.getTypeHandler(parameterMapping.config.getJavaType(),
+            parameterMapping.config.getJdbcType()));
       }
     }
-
   }
 
   public String getProperty() {
     return property;
   }
 
-  /**
-   * Used for handling output of callable statements.
-   *
-   * @return the mode
-   */
   public ParameterMode getMode() {
     return mode;
   }
 
-  /**
-   * Used for handling output of callable statements.
-   *
-   * @return the java type
-   */
   public Class<?> getJavaType() {
-    return javaType;
+    return config.getJavaType();
   }
 
-  /**
-   * Used in the UnknownTypeHandler in case there is no handler for the property type.
-   *
-   * @return the jdbc type
-   */
   public JdbcType getJdbcType() {
-    return jdbcType;
+    return config.getJdbcType();
   }
 
-  /**
-   * Used for handling output of callable statements.
-   *
-   * @return the numeric scale
-   */
   public Integer getNumericScale() {
     return numericScale;
   }
 
-  /**
-   * Used when setting parameters to the PreparedStatement.
-   *
-   * @return the type handler
-   */
   public TypeHandler<?> getTypeHandler() {
-    return typeHandler;
+    return config.getTypeHandler();
   }
 
-  /**
-   * Used for handling output of callable statements.
-   *
-   * @return the result map id
-   */
   public String getResultMapId() {
     return resultMapId;
   }
 
-  /**
-   * Used for handling output of callable statements.
-   *
-   * @return the jdbc type name
-   */
   public String getJdbcTypeName() {
     return jdbcTypeName;
   }
 
-  /**
-   * Expression 'Not used'.
-   *
-   * @return the expression
-   */
   public String getExpression() {
     return expression;
   }
@@ -208,13 +165,11 @@ public class ParameterMapping {
   @Override
   public String toString() {
     final StringBuilder sb = new StringBuilder("ParameterMapping{");
-    // sb.append("configuration=").append(configuration); // configuration doesn't have a useful .toString()
     sb.append("property='").append(property).append('\'');
     sb.append(", mode=").append(mode);
-    sb.append(", javaType=").append(javaType);
-    sb.append(", jdbcType=").append(jdbcType);
+    sb.append(", javaType=").append(config.getJavaType());
+    sb.append(", jdbcType=").append(config.getJdbcType());
     sb.append(", numericScale=").append(numericScale);
-    // sb.append(", typeHandler=").append(typeHandler); // typeHandler also doesn't have a useful .toString()
     sb.append(", resultMapId='").append(resultMapId).append('\'');
     sb.append(", jdbcTypeName='").append(jdbcTypeName).append('\'');
     sb.append(", expression='").append(expression).append('\'');

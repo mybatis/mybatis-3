@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ public class PooledDataSource implements DataSource {
   protected int poolMaximumIdleConnections = 5;
   protected int poolMaximumCheckoutTime = 20000;
   protected int poolTimeToWait = 20000;
-  protected int poolMaximumLocalBadConnectionTolerance = 3;
+  protected int maxBadConnTolerance = 3;
   protected String poolPingQuery = "NO PING QUERY SET";
   protected boolean poolPingEnabled;
   protected int poolPingConnectionsNotUsedFor;
@@ -206,7 +206,7 @@ public class PooledDataSource implements DataSource {
    * @since 3.4.5
    */
   public void setPoolMaximumLocalBadConnectionTolerance(int poolMaximumLocalBadConnectionTolerance) {
-    this.poolMaximumLocalBadConnectionTolerance = poolMaximumLocalBadConnectionTolerance;
+    this.maxBadConnTolerance = poolMaximumLocalBadConnectionTolerance;
   }
 
   /**
@@ -313,7 +313,7 @@ public class PooledDataSource implements DataSource {
   }
 
   public int getPoolMaximumLocalBadConnectionTolerance() {
-    return poolMaximumLocalBadConnectionTolerance;
+    return maxBadConnTolerance;
   }
 
   public int getPoolMaximumCheckoutTime() {
@@ -525,7 +525,7 @@ public class PooledDataSource implements DataSource {
             state.badConnectionCount++;
             localBadConnectionCount++;
             conn = null;
-            if (localBadConnectionCount > poolMaximumIdleConnections + poolMaximumLocalBadConnectionTolerance) {
+            if (localBadConnectionCount > poolMaximumIdleConnections + maxBadConnTolerance) {
               if (log.isDebugEnabled()) {
                 log.debug("PooledDataSource: Could not get a good connection to the database.");
               }
