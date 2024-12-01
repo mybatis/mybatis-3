@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2022 the original author or authors.
+       Copyright 2009-2024 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -54,4 +54,15 @@
     Field3 = #{field3,jdbcType=VARCHAR},
     where field1 = #{field1,jdbcType=INTEGER}
   </update>
+
+  <select id="selectAll" resultType="map">
+    <include refid="someinclude">
+      <property name="include_target" value="${ns}.selectAllFields"/>
+    </include>
+    from
+    <include refid="someinclude">
+      <property name="prefix" value="Some"/>
+      <property name="include_target" value="sometable"/>
+    </include>
+  </select>
 </mapper>

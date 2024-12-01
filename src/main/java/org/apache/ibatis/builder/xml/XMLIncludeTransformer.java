@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ public class XMLIncludeTransformer {
     Properties variablesContext = new Properties();
     Properties configurationVariables = configuration.getVariables();
     Optional.ofNullable(configurationVariables).ifPresent(variablesContext::putAll);
-    applyIncludes(source, variablesContext, false);
+    applyIncludes(source, variablesContext, false, null);
   }
 
   /**
@@ -57,12 +57,25 @@ public class XMLIncludeTransformer {
    *          Include node in DOM tree
    * @param variablesContext
    *          Current context for static variables with values
+   * @param included
+   *          Whether the node is within an include SQL fragment
+   * @param currentNamespace
+   *          The current namespace for resolving refid
    */
-  private void applyIncludes(Node source, final Properties variablesContext, boolean included) {
+  private void applyIncludes(Node source, final Properties variablesContext, boolean included, String currentNamespace) {
     if ("include".equals(source.getNodeName())) {
-      Node toInclude = findSqlFragment(getStringAttribute(source, "refid"), variablesContext);
+      String refid = PropertyParser.parse(getStringAttribute(source, "refid"), variablesContext);
+      if (refid.contains(".")) {
+        currentNamespace = refid.substring(0, refid.lastIndexOf("."));
+      } else {
+        if (currentNamespace == null) {
+          currentNamespace = builderAssistant.getCurrentNamespace();
+        }
+        refid = currentNamespace + "." + refid;
+      }
+      Node toInclude = findSqlFragment(refid);
       Properties toIncludeContext = getVariablesContext(source, variablesContext);
-      applyIncludes(toInclude, toIncludeContext, true);
+      applyIncludes(toInclude, toIncludeContext, true, currentNamespace);
       if (toInclude.getOwnerDocument() != source.getOwnerDocument()) {
         toInclude = source.getOwnerDocument().importNode(toInclude, true);
       }
@@ -82,7 +95,7 @@ public class XMLIncludeTransformer {
       }
       NodeList children = source.getChildNodes();
       for (int i = 0; i < children.getLength(); i++) {
-        applyIncludes(children.item(i), variablesContext, included);
+        applyIncludes(children.item(i), variablesContext, included, currentNamespace);
       }
     } else if (included && (source.getNodeType() == Node.TEXT_NODE || source.getNodeType() == Node.CDATA_SECTION_NODE)
         && !variablesContext.isEmpty()) {
@@ -91,9 +104,7 @@ public class XMLIncludeTransformer {
     }
   }
 
-  private Node findSqlFragment(String refid, Properties variables) {
-    refid = PropertyParser.parse(refid, variables);
-    refid = builderAssistant.applyCurrentNamespace(refid, true);
+  private Node findSqlFragment(String refid) {
     try {
       XNode nodeToInclude = configuration.getSqlFragments().get(refid);
       return nodeToInclude.getNode().cloneNode(true);
