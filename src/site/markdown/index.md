@@ -11,6 +11,8 @@ MyBatis is a first class persistence framework with support for custom SQL, stor
 
 If you are completely new to database access in Java, https://www.marcobehler.com/guides/a-guide-to-accessing-databases-in-java contains a good overview of the various parts, pieces and options and shows you where exactly MyBatis fits in.
 
+For tips, news, etc., follow these accounts [🦋Bluesky](https://bsky.app/profile/mybatis.bsky.social) , [X](https://x.com/MyBatisJava) run by [Alejandro Duarte](https://bsky.app/profile/alejandro-du.bsky.social).
+
 ### Help make this documentation better…
 
 If you find this documentation lacking in any way, or missing documentation for a feature, then the best thing to do is learn about it and then write the documentation yourself!
