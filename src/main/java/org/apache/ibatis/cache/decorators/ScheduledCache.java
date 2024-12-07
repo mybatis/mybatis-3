@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,18 +18,18 @@ package org.apache.ibatis.cache.decorators;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.ibatis.cache.Cache;
+import org.apache.ibatis.cache.CacheDecorator;
 
 /**
  * @author Clinton Begin
  */
-public class ScheduledCache implements Cache {
+public class ScheduledCache extends CacheDecorator {
 
-  private final Cache delegate;
   protected long clearInterval;
   protected long lastClear;
 
   public ScheduledCache(Cache delegate) {
-    this.delegate = delegate;
+    super(delegate);
     this.clearInterval = TimeUnit.HOURS.toMillis(1);
     this.lastClear = System.currentTimeMillis();
   }
@@ -39,47 +39,42 @@ public class ScheduledCache implements Cache {
   }
 
   @Override
-  public String getId() {
-    return delegate.getId();
-  }
-
-  @Override
   public int getSize() {
     clearWhenStale();
-    return delegate.getSize();
+    return super.getSize();
   }
 
   @Override
   public void putObject(Object key, Object object) {
     clearWhenStale();
-    delegate.putObject(key, object);
+    super.putObject(key, object);
   }
 
   @Override
   public Object getObject(Object key) {
-    return clearWhenStale() ? null : delegate.getObject(key);
+    return clearWhenStale() ? null : super.getObject(key);
   }
 
   @Override
   public Object removeObject(Object key) {
     clearWhenStale();
-    return delegate.removeObject(key);
+    return super.removeObject(key);
   }
 
   @Override
   public void clear() {
     lastClear = System.currentTimeMillis();
-    delegate.clear();
+    super.clear();
   }
 
   @Override
   public int hashCode() {
-    return delegate.hashCode();
+    return getDelegate().hashCode();
   }
 
   @Override
   public boolean equals(Object obj) {
-    return delegate.equals(obj);
+    return getDelegate().equals(obj);
   }
 
   private boolean clearWhenStale() {
