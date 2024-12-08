@@ -451,7 +451,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               <td>
                 MyBatis, by default, returns <code>null</code> when all the columns of a returned row are NULL.
                 When this setting is enabled, MyBatis returns an empty instance instead.
-                Note that it is also applied to nested results (i.e. collectioin and association). Since: 3.4.2
+                Note that it is also applied to nested results (i.e. collection and association). Since: 3.4.2
               </td>
               <td>
                 true | false

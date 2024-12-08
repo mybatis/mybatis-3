@@ -321,7 +321,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>@CacheNamespace</code></td>
         <td><code>类</code></td>
         <td><code>&lt;cache&gt;</code></td>
-        <td>为给定的命名空间（比如类）配置缓存。属性：<code>implemetation</code>、<code>eviction</code>、<code>flushInterval</code>、<code>size</code>、<code>readWrite</code>、<code>blocking</code>、<code>properties</code>。</td>
+        <td>为给定的命名空间（比如类）配置缓存。属性：<code>implementation</code>、<code>eviction</code>、<code>flushInterval</code>、<code>size</code>、<code>readWrite</code>、<code>blocking</code>、<code>properties</code>。</td>
       </tr>
       <tr>
         <td><code>@Property</code></td>
