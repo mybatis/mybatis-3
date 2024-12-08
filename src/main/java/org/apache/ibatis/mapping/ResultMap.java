@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -203,6 +203,13 @@ public class ResultMap {
         paramNames.add(name != null ? name : "arg" + paramIndex);
       }
       return paramNames;
+    }
+  }
+
+  public static void validateNestedQueryAndResultMap(ResultMapping resultMapping) {
+    if (resultMapping.getNestedQueryId() != null && resultMapping.getNestedResultMapId() != null) {
+      throw new IllegalStateException(
+          "Cannot define both nestedQueryId and nestedResultMapId in property " + resultMapping.getProperty());
     }
   }
 
