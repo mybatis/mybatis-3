@@ -15,13 +15,12 @@
  */
 package org.apache.ibatis.type;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import java.math.BigDecimal;
 
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 class TypeAliasRegistryTest {
 
@@ -75,4 +74,21 @@ class TypeAliasRegistryTest {
     assertEquals(char[].class, typeAliasRegistry.resolveAlias("_char[]"));
   }
 
+  @Test
+  void shouldNotBeAbleToRegisterAliasWithEmptyString() {
+    TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
+
+    assertThatThrownBy(() -> typeAliasRegistry.registerAlias("foo", ""))
+      .isInstanceOf(TypeException.class)
+      .hasMessageContaining("Error registering type alias foo for");
+  }
+
+  @Test
+  void shouldNotBeAbleToResolveNotExistsAlias() {
+    TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
+
+    assertThatThrownBy(() -> typeAliasRegistry.resolveAlias("abc"))
+      .isInstanceOf(TypeException.class)
+      .hasMessageContaining("Could not resolve type alias 'abc'.  Cause: java.lang.ClassNotFoundException: Cannot find class: abc");
+  }
 }
