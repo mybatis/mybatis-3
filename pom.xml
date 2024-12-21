@@ -342,7 +342,7 @@
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>1.5.14</version>
+      <version>1.5.15</version>
       <scope>test</scope>
     </dependency>
     <dependency>
