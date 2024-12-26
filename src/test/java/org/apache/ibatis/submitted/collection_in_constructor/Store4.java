@@ -21,13 +21,13 @@ import java.util.Objects;
 public class Store4 {
 
   private final Integer id;
-  private final List<Isle> isles;
+  private final List<Aisle> aisles;
 
   // Using different arg order than the <constructor> definition
   // to ensure the builder is used, see CollectionInConstructorObjectFactory.create
-  Store4(List<Isle> isles, Integer id) {
+  Store4(List<Aisle> aisles, Integer id) {
     super();
-    this.isles = isles;
+    this.aisles = aisles;
     this.id = id;
   }
 
@@ -35,13 +35,13 @@ public class Store4 {
     return id;
   }
 
-  public List<Isle> getIsles() {
-    return isles;
+  public List<Aisle> getAisles() {
+    return aisles;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, isles);
+    return Objects.hash(id, aisles);
   }
 
   @Override
@@ -53,12 +53,12 @@ public class Store4 {
       return false;
     }
     Store4 other = (Store4) obj;
-    return Objects.equals(id, other.id) && Objects.equals(isles, other.isles);
+    return Objects.equals(id, other.id) && Objects.equals(aisles, other.aisles);
   }
 
   @Override
   public String toString() {
-    return "Store4 [id=" + id + ", isles=" + isles + "]";
+    return "Store4 [id=" + id + ", aisles=" + aisles + "]";
   }
 
   public static Store4Builder builder() {
@@ -67,14 +67,14 @@ public class Store4 {
 
   public static class Store4Builder {
     private Integer id;
-    private List<Isle> isles;
+    private List<Aisle> isles;
 
     public Store4Builder id(Integer id) {
       this.id = id;
       return this;
     }
 
-    public Store4Builder isles(List<Isle> isles) {
+    public Store4Builder isles(List<Aisle> isles) {
       this.isles = isles;
       return this;
     }

@@ -22,12 +22,12 @@ public class Store6 {
 
   private final Integer id;
   private String name;
-  private final List<Isle> isles;
+  private final List<Aisle> aisles;
 
-  public Store6(Integer id, List<Isle> isles) {
+  public Store6(Integer id, List<Aisle> aisles) {
     super();
     this.id = id;
-    this.isles = isles;
+    this.aisles = aisles;
   }
 
   public Integer getId() {
@@ -42,13 +42,13 @@ public class Store6 {
     return name;
   }
 
-  public List<Isle> getIsles() {
-    return isles;
+  public List<Aisle> getAisles() {
+    return aisles;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, isles, name);
+    return Objects.hash(id, aisles, name);
   }
 
   @Override
@@ -60,11 +60,11 @@ public class Store6 {
       return false;
     }
     Store6 other = (Store6) obj;
-    return Objects.equals(id, other.id) && Objects.equals(isles, other.isles) && Objects.equals(name, other.name);
+    return Objects.equals(id, other.id) && Objects.equals(aisles, other.aisles) && Objects.equals(name, other.name);
   }
 
   @Override
   public String toString() {
-    return "Store [id=" + id + ", name=" + name + ", isles=" + isles + "]";
+    return "Store [id=" + id + ", name=" + name + ", aisles=" + aisles + "]";
   }
 }

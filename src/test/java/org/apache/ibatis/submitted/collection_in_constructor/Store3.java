@@ -21,25 +21,25 @@ import java.util.Objects;
 public class Store3 {
 
   private final Integer id;
-  private final List<String> isleNames;
+  private final List<String> aisleNames;
 
-  public Store3(Integer id, List<String> isleNames) {
+  public Store3(Integer id, List<String> aisleNames) {
     super();
     this.id = id;
-    this.isleNames = isleNames;
+    this.aisleNames = aisleNames;
   }
 
   public Integer getId() {
     return id;
   }
 
-  public List<String> getIsleNames() {
-    return isleNames;
+  public List<String> getAisleNames() {
+    return aisleNames;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, isleNames);
+    return Objects.hash(id, aisleNames);
   }
 
   @Override
@@ -51,11 +51,11 @@ public class Store3 {
       return false;
     }
     Store3 other = (Store3) obj;
-    return Objects.equals(id, other.id) && Objects.equals(isleNames, other.isleNames);
+    return Objects.equals(id, other.id) && Objects.equals(aisleNames, other.aisleNames);
   }
 
   @Override
   public String toString() {
-    return "Store3 [id=" + id + ", isleNames=" + isleNames + "]";
+    return "Store3 [id=" + id + ", aisleNames=" + aisleNames + "]";
   }
 }

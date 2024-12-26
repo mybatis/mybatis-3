@@ -28,7 +28,7 @@ public class CollectionInConstructorObjectFactory extends DefaultObjectFactory {
   @Override
   public <T> T create(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
     if (type == Store4.class) {
-      return (T) Store4.builder().id((Integer) constructorArgs.get(0)).isles((List<Isle>) constructorArgs.get(1))
+      return (T) Store4.builder().id((Integer) constructorArgs.get(0)).isles((List<Aisle>) constructorArgs.get(1))
           .build();
     }
     return super.create(type, constructorArgTypes, constructorArgs);

@@ -15,7 +15,7 @@
 --
 
 drop table store if exists;
-drop table isle if exists;
+drop table aisle if exists;
 drop table clerk if exists;
 
 create table store (
@@ -23,7 +23,7 @@ create table store (
   name varchar(20)
 );
 
-create table isle (
+create table aisle (
   id int,
   name varchar(20),
   store_id int
@@ -40,11 +40,11 @@ insert into store (id, name) values(1, 'Store 1');
 insert into store (id, name) values(2, 'Store 2');
 insert into store (id, name) values(3, 'Store 3');
 
-insert into isle (id, name, store_id) values(101, 'Isle 101', 1);
-insert into isle (id, name, store_id) values(102, 'Isle 102', 1);
-insert into isle (id, name, store_id) values(103, 'Isle 103', 1);
-insert into isle (id, name, store_id) values(104, 'Isle 104', 3);
-insert into isle (id, name, store_id) values(105, 'Isle 105', 3);
+insert into aisle (id, name, store_id) values(101, 'Aisle 101', 1);
+insert into aisle (id, name, store_id) values(102, 'Aisle 102', 1);
+insert into aisle (id, name, store_id) values(103, 'Aisle 103', 1);
+insert into aisle (id, name, store_id) values(104, 'Aisle 104', 3);
+insert into aisle (id, name, store_id) values(105, 'Aisle 105', 3);
 
 insert into clerk (id, name, is_manager, store_id) values (1001, 'Clerk 1001', 0, 1);
 insert into clerk (id, name, is_manager, store_id) values (1002, 'Clerk 1002', 1, 1);

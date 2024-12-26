@@ -52,9 +52,9 @@ class CollectionInConstructorTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Store store = mapper.getAStore(1);
-      List<Isle> isles = store.getIsles();
+      List<Aisle> aisles = store.getAisles();
       Assertions.assertIterableEquals(
-          Arrays.asList(new Isle(101, "Isle 101"), new Isle(102, "Isle 102"), new Isle(103, "Isle 103")), isles);
+          Arrays.asList(new Aisle(101, "Aisle 101"), new Aisle(102, "Aisle 102"), new Aisle(103, "Aisle 103")), aisles);
     }
   }
 
@@ -64,11 +64,11 @@ class CollectionInConstructorTest {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<Store> stores = mapper.getStores();
       Assertions.assertIterableEquals(
-          Arrays.asList(new Isle(101, "Isle 101"), new Isle(102, "Isle 102"), new Isle(103, "Isle 103")),
-          stores.get(0).getIsles());
-      Assertions.assertTrue(stores.get(1).getIsles().isEmpty());
-      Assertions.assertIterableEquals(Arrays.asList(new Isle(104, "Isle 104"), new Isle(105, "Isle 105")),
-          stores.get(2).getIsles());
+          Arrays.asList(new Aisle(101, "Aisle 101"), new Aisle(102, "Aisle 102"), new Aisle(103, "Aisle 103")),
+          stores.get(0).getAisles());
+      Assertions.assertTrue(stores.get(1).getAisles().isEmpty());
+      Assertions.assertIterableEquals(Arrays.asList(new Aisle(104, "Aisle 104"), new Aisle(105, "Aisle 105")),
+          stores.get(2).getAisles());
     }
   }
 
@@ -76,7 +76,7 @@ class CollectionInConstructorTest {
   void shouldEmptyListBeReturned() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
-      Assertions.assertTrue(mapper.getAStore(2).getIsles().isEmpty());
+      Assertions.assertTrue(mapper.getAStore(2).getAisles().isEmpty());
     }
   }
 
@@ -86,11 +86,11 @@ class CollectionInConstructorTest {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Store2 store = mapper.getAStore2(1);
       List<Clerk> clerks = store.getClerks();
-      List<Isle> isles = store.getIsles();
+      List<Aisle> aisles = store.getAisles();
       Assertions.assertIterableEquals(Arrays.asList(new Clerk(1001, "Clerk 1001"), new Clerk(1002, "Clerk 1002"),
           new Clerk(1003, "Clerk 1003"), new Clerk(1004, "Clerk 1004"), new Clerk(1005, "Clerk 1005")), clerks);
       Assertions.assertIterableEquals(
-          Arrays.asList(new Isle(101, "Isle 101"), new Isle(102, "Isle 102"), new Isle(103, "Isle 103")), isles);
+          Arrays.asList(new Aisle(101, "Aisle 101"), new Aisle(102, "Aisle 102"), new Aisle(103, "Aisle 103")), aisles);
     }
   }
 
@@ -99,9 +99,9 @@ class CollectionInConstructorTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Store3 store = mapper.getAStore3(1);
-      List<String> isleNames = store.getIsleNames();
-      Assertions.assertEquals(3, isleNames.size());
-      Assertions.assertIterableEquals(Arrays.asList("Isle 101", "Isle 102", "Isle 103"), isleNames);
+      List<String> aisleNames = store.getAisleNames();
+      Assertions.assertEquals(3, aisleNames.size());
+      Assertions.assertIterableEquals(Arrays.asList("Aisle 101", "Aisle 102", "Aisle 103"), aisleNames);
     }
   }
 
@@ -110,9 +110,9 @@ class CollectionInConstructorTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Store4 store = mapper.getAStore4(1);
-      List<Isle> isles = store.getIsles();
+      List<Aisle> aisles = store.getAisles();
       Assertions.assertIterableEquals(
-          Arrays.asList(new Isle(101, "Isle 101"), new Isle(102, "Isle 102"), new Isle(103, "Isle 103")), isles);
+          Arrays.asList(new Aisle(101, "Aisle 101"), new Aisle(102, "Aisle 102"), new Aisle(103, "Aisle 103")), aisles);
     }
   }
 
@@ -136,9 +136,9 @@ class CollectionInConstructorTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Store6 store = mapper.getAStore6(1);
-      List<Isle> isles = store.getIsles();
+      List<Aisle> aisles = store.getAisles();
       Assertions.assertEquals("Store 1", store.getName());
-      Assertions.assertEquals(3, isles.size());
+      Assertions.assertEquals(3, aisles.size());
     }
   }
 
@@ -147,9 +147,9 @@ class CollectionInConstructorTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Store7 store = mapper.getAStore7(1);
-      List<String> isleNames = store.getIsleNames();
+      List<String> aisleNames = store.getAisleNames();
       List<String> clerkNames = store.getClerkNames();
-      Assertions.assertIterableEquals(Arrays.asList("Isle 101", "Isle 102", "Isle 103"), isleNames);
+      Assertions.assertIterableEquals(Arrays.asList("Aisle 101", "Aisle 102", "Aisle 103"), aisleNames);
       Assertions.assertIterableEquals(
           Arrays.asList("Clerk 1001", "Clerk 1002", "Clerk 1003", "Clerk 1004", "Clerk 1005"), clerkNames);
     }
@@ -174,10 +174,10 @@ class CollectionInConstructorTest {
               Arrays
                   .asList(
                       new Store(1, "Store 1",
-                          Arrays.asList(new Isle(101, "Isle 101"), new Isle(102, "Isle 102"),
-                              new Isle(103, "Isle 103"))),
+                          Arrays.asList(new Aisle(101, "Aisle 101"), new Aisle(102, "Aisle 102"),
+                              new Aisle(103, "Aisle 103"))),
                       new Store(2, "Store 2", Collections.emptyList()),
-                      new Store(3, "Store 3", Arrays.asList(new Isle(104, "Isle 104"), new Isle(105, "Isle 105")))),
+                      new Store(3, "Store 3", Arrays.asList(new Aisle(104, "Aisle 104"), new Aisle(105, "Aisle 105")))),
               container.getStores());
     }
   }

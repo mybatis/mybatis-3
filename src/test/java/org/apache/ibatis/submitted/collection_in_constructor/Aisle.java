@@ -17,16 +17,16 @@ package org.apache.ibatis.submitted.collection_in_constructor;
 
 import java.util.Objects;
 
-public class Isle {
+public class Aisle {
 
   private Integer id;
   private String name;
 
-  public Isle() {
+  public Aisle() {
     super();
   }
 
-  public Isle(Integer id, String name) {
+  public Aisle(Integer id, String name) {
     super();
     this.id = id;
     this.name = name;
@@ -58,15 +58,15 @@ public class Isle {
     if (this == obj) {
       return true;
     }
-    if (!(obj instanceof Isle)) {
+    if (!(obj instanceof Aisle)) {
       return false;
     }
-    Isle other = (Isle) obj;
+    Aisle other = (Aisle) obj;
     return Objects.equals(id, other.id) && Objects.equals(name, other.name);
   }
 
   @Override
   public String toString() {
-    return "Isle [id=" + id + ", name=" + name + "]";
+    return "Aisle [id=" + id + ", name=" + name + "]";
   }
 }

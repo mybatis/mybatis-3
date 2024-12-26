@@ -21,13 +21,13 @@ import java.util.Objects;
 public class Store7 {
 
   private final Integer id;
-  private final List<String> isleNames;
+  private final List<String> aisleNames;
   private final List<String> clerkNames;
 
-  public Store7(Integer id, List<String> isleNames, List<String> clerkNames) {
+  public Store7(Integer id, List<String> aisleNames, List<String> clerkNames) {
     super();
     this.id = id;
-    this.isleNames = isleNames;
+    this.aisleNames = aisleNames;
     this.clerkNames = clerkNames;
   }
 
@@ -35,8 +35,8 @@ public class Store7 {
     return id;
   }
 
-  public List<String> getIsleNames() {
-    return isleNames;
+  public List<String> getAisleNames() {
+    return aisleNames;
   }
 
   public List<String> getClerkNames() {
@@ -45,7 +45,7 @@ public class Store7 {
 
   @Override
   public int hashCode() {
-    return Objects.hash(clerkNames, id, isleNames);
+    return Objects.hash(clerkNames, id, aisleNames);
   }
 
   @Override
@@ -58,11 +58,11 @@ public class Store7 {
     }
     Store7 other = (Store7) obj;
     return Objects.equals(clerkNames, other.clerkNames) && Objects.equals(id, other.id)
-        && Objects.equals(isleNames, other.isleNames);
+        && Objects.equals(aisleNames, other.aisleNames);
   }
 
   @Override
   public String toString() {
-    return "Store7 [id=" + id + ", isleNames=" + isleNames + ", clerkNames=" + clerkNames + "]";
+    return "Store7 [id=" + id + ", aisleNames=" + aisleNames + ", clerkNames=" + clerkNames + "]";
   }
 }

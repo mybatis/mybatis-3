@@ -26,13 +26,13 @@
     <constructor>
       <idArg column="id" javaType="int" />
       <arg column="name" javaType="string" />
-      <arg javaType="list" resultMap="isleRM" columnPrefix="isle_" />
+      <arg javaType="list" resultMap="aisleRM" columnPrefix="aisle_" />
     </constructor>
   </resultMap>
 
   <resultMap
-    type="org.apache.ibatis.submitted.collection_in_constructor.Isle"
-    id="isleRM">
+    type="org.apache.ibatis.submitted.collection_in_constructor.Aisle"
+    id="aisleRM">
     <id property="id" column="id" />
     <result property="name" column="name" />
   </resultMap>
@@ -47,9 +47,9 @@
   <select id="getAStore" resultMap="storeRM" resultOrdered="true"><![CDATA[
     select
       s.id, s.name,
-      i.id isle_id, i.name isle_name
+      i.id aisle_id, i.name aisle_name
     from store s
-    left join isle i on i.store_id = s.id
+    left join aisle i on i.store_id = s.id
     where s.id = #{id}
     order by s.id, i.id
   ]]></select>
@@ -57,9 +57,9 @@
   <select id="getStores" resultMap="storeRM" resultOrdered="true"><![CDATA[
     select
       s.id, s.name,
-      i.id isle_id, i.name isle_name
+      i.id aisle_id, i.name aisle_name
     from store s
-    left join isle i on i.store_id = s.id
+    left join aisle i on i.store_id = s.id
     order by s.id, i.id
   ]]></select>
 
@@ -69,7 +69,7 @@
     <constructor>
       <idArg column="id" javaType="int" />
       <arg javaType="list" resultMap="clerkRM" columnPrefix="clerk_" />
-      <arg javaType="list" resultMap="isleRM" columnPrefix="isle_" />
+      <arg javaType="list" resultMap="aisleRM" columnPrefix="aisle_" />
     </constructor>
   </resultMap>
 
@@ -78,10 +78,10 @@
     select
       s.id,
       c.id clerk_id, c.name clerk_name,
-      i.id isle_id, i.name isle_name
+      i.id aisle_id, i.name aisle_name
     from store s
     left join clerk c on c.store_id = s.id
-    left join isle i on i.store_id = s.id
+    left join aisle i on i.store_id = s.id
     where s.id = #{id}
     order by s.id, c.id, i.id
   ]]></select>
@@ -91,7 +91,7 @@
     id="store3RM">
     <constructor>
       <idArg column="id" javaType="int" />
-      <arg javaType="list" resultMap="nameRM" columnPrefix="isle_" />
+      <arg javaType="list" resultMap="nameRM" columnPrefix="aisle_" />
     </constructor>
   </resultMap>
 
@@ -103,9 +103,9 @@
     resultOrdered="true"><![CDATA[
     select
       s.id,
-      i.id isle_id, i.name isle_name
+      i.id aisle_id, i.name aisle_name
     from store s
-    left join isle i on i.store_id = s.id
+    left join aisle i on i.store_id = s.id
     where s.id = #{id}
     order by s.id, i.id
   ]]></select>
@@ -115,7 +115,7 @@
     id="store4RM">
     <constructor>
       <idArg column="id" javaType="int" />
-      <arg javaType="list" resultMap="isleRM" columnPrefix="isle_" />
+      <arg javaType="list" resultMap="aisleRM" columnPrefix="aisle_" />
     </constructor>
   </resultMap>
 
@@ -123,9 +123,9 @@
     resultOrdered="true"><![CDATA[
     select
       s.id,
-      i.id isle_id, i.name isle_name
+      i.id aisle_id, i.name aisle_name
     from store s
-    left join isle i on i.store_id = s.id
+    left join aisle i on i.store_id = s.id
     where s.id = #{id}
     order by s.id, i.id
   ]]></select>
@@ -159,7 +159,7 @@
     id="store6RM">
     <constructor>
       <idArg column="id" javaType="int" />
-      <arg javaType="list" resultMap="isleRM" columnPrefix="isle_" />
+      <arg javaType="list" resultMap="aisleRM" columnPrefix="aisle_" />
     </constructor>
     <result column="name" property="name" />
   </resultMap>
@@ -168,9 +168,9 @@
     resultOrdered="true"><![CDATA[
     select
       s.id, s.name,
-      i.id isle_id, i.name isle_name
+      i.id aisle_id, i.name aisle_name
     from store s
-    left join isle i on i.store_id = s.id
+    left join aisle i on i.store_id = s.id
     where s.id = #{id}
     order by s.id, i.id
   ]]></select>
@@ -180,7 +180,7 @@
     id="store7RM">
     <constructor>
       <idArg column="id" javaType="int" />
-      <arg javaType="list" resultMap="nameRM" columnPrefix="isle_" />
+      <arg javaType="list" resultMap="nameRM" columnPrefix="aisle_" />
       <arg javaType="list" resultMap="nameRM" columnPrefix="clerk_" />
     </constructor>
   </resultMap>
@@ -190,10 +190,10 @@
     select
       s.id,
       c.id clerk_id, c.name clerk_name,
-      i.id isle_id, i.name isle_name
+      i.id aisle_id, i.name aisle_name
     from store s
     left join clerk c on c.store_id = s.id
-    left join isle i on i.store_id = s.id
+    left join aisle i on i.store_id = s.id
     where s.id = #{id}
     order by s.id, c.id, i.id
   ]]></select>
@@ -230,9 +230,9 @@
     select
       1 num,
       s.id, s.name,
-      i.id isle_id, i.name isle_name
+      i.id aisle_id, i.name aisle_name
     from store s
-    left join isle i on i.store_id = s.id
+    left join aisle i on i.store_id = s.id
     order by s.id, i.id
   ]]></select>
 
