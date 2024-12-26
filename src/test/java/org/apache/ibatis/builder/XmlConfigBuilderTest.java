@@ -99,7 +99,7 @@ class XmlConfigBuilderTest {
       assertThat(config.getLazyLoadTriggerMethods())
           .isEqualTo(new HashSet<>(Arrays.asList("equals", "clone", "hashCode", "toString")));
       assertThat(config.isSafeResultHandlerEnabled()).isTrue();
-      assertThat(config.getDefaultScriptingLanuageInstance()).isInstanceOf(XMLLanguageDriver.class);
+      assertThat(config.getDefaultScriptingLanguageInstance()).isInstanceOf(XMLLanguageDriver.class);
       assertThat(config.isCallSettersOnNulls()).isFalse();
       assertNull(config.getLogPrefix());
       assertNull(config.getLogImpl());
