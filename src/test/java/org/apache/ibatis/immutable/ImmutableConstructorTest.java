@@ -143,9 +143,9 @@ class ImmutableConstructorTest {
   void shouldFailToSelectBlogWithMissingConstructorForPostComments() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       ImmutableBlogMapper mapper = session.getMapper(ImmutableBlogMapper.class);
-      assertThatThrownBy(() -> mapper.retrieveAllBlogsWithMissingConstructor()).isInstanceOf(PersistenceException.class)
+      assertThatThrownBy(mapper::retrieveAllBlogsWithMissingConstructor).isInstanceOf(PersistenceException.class)
           .hasCauseInstanceOf(ReflectionException.class).hasMessageContaining(
-              "Error resolving constructor for class org.apache.ibatis.domain.blog.immutable.ImmutablePost with invalid types");
+              "Error instantiating class org.apache.ibatis.domain.blog.immutable.ImmutablePost with invalid types");
     }
   }
 }

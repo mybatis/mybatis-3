@@ -380,8 +380,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
           throw new ExecutorException("Expected result object to be a pending constructor creation!");
         }
 
-        createAndStorePendingCreation(resultHandler, resultSet, resultContext, (PendingConstructorCreation) rowValue,
-            lastHandledCreation == null);
+        createAndStorePendingCreation(resultHandler, resultSet, resultContext, (PendingConstructorCreation) rowValue);
         lastHandledCreation = (PendingConstructorCreation) rowValue;
       }
     }
@@ -1069,7 +1068,6 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   private void handleRowValuesForNestedResultMap(ResultSetWrapper rsw, ResultMap resultMap,
       ResultHandler<?> resultHandler, RowBounds rowBounds, ResultMapping parentMapping) throws SQLException {
     final boolean useCollectionConstructorInjection = resultMap.hasResultMapsUsingConstructorCollection();
-    boolean verifyPendingCreationResult = true;
     PendingConstructorCreation lastHandledCreation = null;
     if (useCollectionConstructorInjection) {
       verifyPendingCreationPreconditions(parentMapping);
@@ -1090,12 +1088,8 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       // issue #577, #542 && #101
       if (useCollectionConstructorInjection) {
         if (foundNewUniqueRow && lastHandledCreation != null) {
-          createAndStorePendingCreation(resultHandler, resultSet, resultContext, lastHandledCreation,
-              verifyPendingCreationResult);
+          createAndStorePendingCreation(resultHandler, resultSet, resultContext, lastHandledCreation);
           lastHandledCreation = null;
-          // we only need to verify the first the result for a given result set
-          // as we can assume the next result will look exactly the same w.r.t its mapping
-          verifyPendingCreationResult = false;
         }
 
         rowValue = getRowValue(rsw, discriminatedResultMap, rowKey, null, partialObject);
@@ -1117,8 +1111,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     }
 
     if (useCollectionConstructorInjection && lastHandledCreation != null) {
-      createAndStorePendingCreation(resultHandler, resultSet, resultContext, lastHandledCreation,
-          verifyPendingCreationResult);
+      createAndStorePendingCreation(resultHandler, resultSet, resultContext, lastHandledCreation);
     } else if (rowValue != null && mappedStatement.isResultOrdered()
         && shouldProcessMoreRows(resultContext, rowBounds)) {
       storeObject(resultHandler, resultContext, rowValue, parentMapping, resultSet);
@@ -1298,7 +1291,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       for (Object pendingCreation : pendingCreations) {
         if (pendingCreation instanceof PendingConstructorCreation) {
           final PendingConstructorCreation pendingConstructorCreation = (PendingConstructorCreation) pendingCreation;
-          targetMetaObject.add(pendingConstructorCreation.create(objectFactory, false));
+          targetMetaObject.add(pendingConstructorCreation.create(objectFactory));
         }
       }
     }
@@ -1317,9 +1310,8 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   }
 
   private void createAndStorePendingCreation(ResultHandler<?> resultHandler, ResultSet resultSet,
-      DefaultResultContext<Object> resultContext, PendingConstructorCreation pendingCreation, boolean shouldVerify)
-      throws SQLException {
-    final Object result = pendingCreation.create(objectFactory, shouldVerify);
+      DefaultResultContext<Object> resultContext, PendingConstructorCreation pendingCreation) throws SQLException {
+    final Object result = pendingCreation.create(objectFactory);
     storeObject(resultHandler, resultContext, result, null, resultSet);
     nestedResultObjects.clear();
   }
