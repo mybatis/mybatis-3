@@ -20,8 +20,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.Reader;
+import java.text.MessageFormat;
 import java.util.List;
+
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.io.Resources;
@@ -39,14 +42,14 @@ class ColumnOrderBasedConstructorAutomappingTest {
   static void setUp() throws Exception {
     // create an SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader(
-            "org/apache/ibatis/submitted/column_order_based_constructor_automapping/mybatis-config.xml")) {
+        "org/apache/ibatis/submitted/column_order_based_constructor_automapping/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
       sqlSessionFactory.getConfiguration().setArgNameBasedConstructorAutoMapping(false);
     }
 
     // populate in-memory database
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/column_order_based_constructor_automapping/CreateDB.sql");
+        "org/apache/ibatis/submitted/column_order_based_constructor_automapping/CreateDB.sql");
   }
 
   @Test
@@ -120,10 +123,14 @@ class ColumnOrderBasedConstructorAutomappingTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
 
-      PersistenceException persistenceException = assertThrows(PersistenceException.class, mapper::finaAllByConstructorGreaterThanResultSet);
+      PersistenceException persistenceException = assertThrows(PersistenceException.class,
+          mapper::finaAllByConstructorGreaterThanResultSet);
       assertNotNull(persistenceException);
-      assertNotNull(persistenceException.getMessage());
-      assertTrue(persistenceException.getMessage().contains("Column order based constructor auto-mapping of"));
+      String message = persistenceException.getMessage();
+      assertNotNull(message);
+      assertTrue(message.contains(MessageFormat.format(
+          "Constructor auto-mapping of ''{0}'' failed. The constructor takes ''{1}'' arguments, but there are only ''{2}'' columns in the result set.",
+          UserConstructorGreaterThanResultSet.class.getConstructors()[0], 4, 3)));
     }
   }
 }

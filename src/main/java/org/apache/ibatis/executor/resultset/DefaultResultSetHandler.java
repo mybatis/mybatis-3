@@ -784,11 +784,10 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       List<Object> constructorArgs, Constructor<?> constructor, boolean foundValues) throws SQLException {
     Class<?>[] parameterTypes = constructor.getParameterTypes();
 
-    // constructor parameter is allowed to be less than or equal to the number of result set columns, but not greater than
     if (parameterTypes.length > rsw.getClassNames().size()) {
       throw new ExecutorException(MessageFormat.format(
-          "Column order based constructor auto-mapping of ''{0}'' failed. Because result set type is ''{1}''.",
-          constructor, rsw.getClassNames()));
+          "Constructor auto-mapping of ''{0}'' failed. The constructor takes ''{1}'' arguments, but there are only ''{2}'' columns in the result set.",
+          constructor, parameterTypes.length, rsw.getClassNames().size()));
     }
 
     for (int i = 0; i < parameterTypes.length; i++) {
