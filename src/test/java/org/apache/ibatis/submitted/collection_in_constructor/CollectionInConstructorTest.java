@@ -171,13 +171,12 @@ class CollectionInConstructorTest {
       Container container = mapper.getAContainer();
       Assertions
           .assertEquals(
-              Arrays
-                  .asList(
-                      new Store(1, "Store 1",
-                          Arrays.asList(new Aisle(101, "Aisle 101"), new Aisle(102, "Aisle 102"),
-                              new Aisle(103, "Aisle 103"))),
-                      new Store(2, "Store 2", Collections.emptyList()),
-                      new Store(3, "Store 3", Arrays.asList(new Aisle(104, "Aisle 104"), new Aisle(105, "Aisle 105")))),
+              Arrays.asList(
+                  new Store(1, "Store 1",
+                      Arrays.asList(new Aisle(101, "Aisle 101"), new Aisle(102, "Aisle 102"),
+                          new Aisle(103, "Aisle 103"))),
+                  new Store(2, "Store 2", Collections.emptyList()),
+                  new Store(3, "Store 3", Arrays.asList(new Aisle(104, "Aisle 104"), new Aisle(105, "Aisle 105")))),
               container.getStores());
     }
   }
