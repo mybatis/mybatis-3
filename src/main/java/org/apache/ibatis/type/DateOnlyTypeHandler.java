@@ -46,7 +46,7 @@ public class DateOnlyTypeHandler extends BaseTypeHandler<Date> {
     return toDate(cs.getDate(columnIndex));
   }
 
-  private Date toDate(Date date) {
+  private Date toDate(java.sql.Date date) {
     return date == null ? null : new Date(date.getTime());
   }
 
