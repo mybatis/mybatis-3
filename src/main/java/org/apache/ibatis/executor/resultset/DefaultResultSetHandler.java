@@ -783,6 +783,14 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   private boolean applyColumnOrderBasedConstructorAutomapping(ResultSetWrapper rsw, List<Class<?>> constructorArgTypes,
       List<Object> constructorArgs, Constructor<?> constructor, boolean foundValues) throws SQLException {
     Class<?>[] parameterTypes = constructor.getParameterTypes();
+
+    // constructor parameter is allowed to be less than or equal to the number of result set columns, but not greater than
+    if (parameterTypes.length > rsw.getClassNames().size()) {
+      throw new ExecutorException(MessageFormat.format(
+          "Column order based constructor auto-mapping of ''{0}'' failed. Because result set type is ''{1}''.",
+          constructor, rsw.getClassNames()));
+    }
+
     for (int i = 0; i < parameterTypes.length; i++) {
       Class<?> parameterType = parameterTypes[i];
       String columnName = rsw.getColumnNames().get(i);
