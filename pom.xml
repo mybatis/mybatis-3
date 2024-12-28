@@ -17,6 +17,7 @@
 
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -38,73 +39,6 @@
   <url>https://www.mybatis.org/mybatis-3/</url>
 
   <inceptionYear>2009</inceptionYear>
-
-  <contributors>
-    <contributor>
-      <name>Adam Gent</name>
-      <email>adam.gent@evocatus.com</email>
-    </contributor>
-    <contributor>
-      <name>Andrea Selva</name>
-      <email>selva.andre@gmail.com</email>
-    </contributor>
-    <contributor>
-      <name>Antonio Sánchez</name>
-      <email>juntandolineas@gmail.com</email>
-    </contributor>
-    <contributor>
-      <name>Arkadi Shishlov</name>
-      <email>arkadi.shishlov@gmail.com</email>
-    </contributor>
-    <contributor>
-      <name>Axel Doerfler</name>
-      <email>axel.doerfler@gmail.com</email>
-    </contributor>
-    <contributor>
-      <name>Chris Dadej</name>
-      <email>chris.dadej@gmail.com</email>
-    </contributor>
-    <contributor>
-      <name>Denis Vygovskiy</name>
-      <email>qizant@gmail.com</email>
-    </contributor>
-    <contributor>
-      <name>Franta Mejta</name>
-      <email>mejta@rewor.cz</email>
-    </contributor>
-    <contributor>
-      <name>Jurriaan Pruys</name>
-      <email>jurriaan@pruys.com</email>
-    </contributor>
-    <contributor>
-      <name>Keith Wong</name>
-      <email>wongkwl@gmail.com</email>
-    </contributor>
-    <contributor>
-      <name>Lasse Voss</name>
-      <email>lasse.voss@motor-talk-gmbh.de</email>
-    </contributor>
-    <contributor>
-      <name>Luke Stevens</name>
-      <email>nosuchluke@gmail.com</email>
-    </contributor>
-    <contributor>
-      <name>Paul Krause</name>
-      <email>paulkrause88@alum.mit.edu</email>
-    </contributor>
-    <contributor>
-      <name>Peter Leibiger</name>
-      <email>kuhnroyal@gmail.com</email>
-    </contributor>
-    <contributor>
-      <name>Riccardo Cossu</name>
-      <email>riccardo.cossu@gmail.com</email>
-    </contributor>
-    <contributor>
-      <name>Tomáš Neuberg</name>
-      <email>neuberg@m-atelier.cz</email>
-    </contributor>
-  </contributors>
 
   <scm>
     <connection>scm:git:ssh://git@github.com/mybatis/mybatis-3.git</connection>
@@ -132,6 +66,9 @@
     <!-- Java Usage -->
     <java.version>8</java.version>
     <java.release.version>8</java.release.version>
+
+    <!-- Override impsort comliance to 17 (remove after parent 49 release) -->
+    <impsort.compliance>17</impsort.compliance>
 
     <clirr.comparisonVersion>3.4.6</clirr.comparisonVersion>
 
@@ -459,51 +396,30 @@
           </excludes>
         </configuration>
       </plugin>
+
+      <!-- Remove enforcer entirely after parent 49 release -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <configuration>
+          <rules>
+            <enforceBytecodeVersion>
+              <maxJdkVersion>${java.version}</maxJdkVersion>
+              <ignoredScopes>provided,test</ignoredScopes>
+            </enforceBytecodeVersion>
+          </rules>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
   <profiles>
-    <profile>
-      <id>pre16</id>
-      <activation>
-        <jdk>(,16)</jdk>
-      </activation>
-      <properties>
-        <derby.version>10.15.2.0</derby.version>
-        <mssql-jdbc.version>12.4.2.jre8</mssql-jdbc.version>
-      </properties>
-      <build>
-        <pluginManagement>
-          <plugins>
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-compiler-plugin</artifactId>
-              <configuration>
-                <testExcludes>
-                  <testExclude>**/record_type/*.java</testExclude>
-                </testExcludes>
-              </configuration>
-            </plugin>
-            <plugin>
-              <groupId>net.revelc.code</groupId>
-              <artifactId>impsort-maven-plugin</artifactId>
-              <configuration>
-                <skip>true</skip>
-              </configuration>
-            </plugin>
-          </plugins>
-        </pluginManagement>
-      </build>
-    </profile>
     <profile>
       <id>16</id>
       <activation>
         <jdk>[16,)</jdk>
       </activation>
       <properties>
-        <derby.version>10.15.2.0</derby.version>
-        <java.version>16</java.version>
-        <java.release.version>16</java.release.version>
         <excludedGroups>TestcontainersTests,RequireIllegalAccess</excludedGroups>
       </properties>
     </profile>
