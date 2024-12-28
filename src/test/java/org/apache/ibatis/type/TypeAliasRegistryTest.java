@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -80,17 +80,16 @@ class TypeAliasRegistryTest {
   void shouldNotBeAbleToRegisterAliasWithEmptyString() {
     TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
 
-    assertThatThrownBy(() -> typeAliasRegistry.registerAlias("foo", ""))
-      .isInstanceOf(TypeException.class)
-      .hasMessageContaining("Error registering type alias foo for");
+    assertThatThrownBy(() -> typeAliasRegistry.registerAlias("foo", "")).isInstanceOf(TypeException.class)
+        .hasMessageContaining("Error registering type alias foo for");
   }
 
   @Test
   void shouldNotBeAbleToResolveNotExistsAlias() {
     TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
 
-    assertThatThrownBy(() -> typeAliasRegistry.resolveAlias("abc"))
-      .isInstanceOf(TypeException.class)
-      .hasMessageContaining("Could not resolve type alias 'abc'.  Cause: java.lang.ClassNotFoundException: Cannot find class: abc");
+    assertThatThrownBy(() -> typeAliasRegistry.resolveAlias("abc")).isInstanceOf(TypeException.class)
+        .hasMessageContaining(
+            "Could not resolve type alias 'abc'.  Cause: java.lang.ClassNotFoundException: Cannot find class: abc");
   }
 }
