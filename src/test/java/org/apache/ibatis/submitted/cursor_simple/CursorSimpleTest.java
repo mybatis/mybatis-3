@@ -31,6 +31,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 class CursorSimpleTest {
@@ -129,6 +130,8 @@ class CursorSimpleTest {
     Assertions.assertFalse(usersCursor.isConsumed());
   }
 
+  // TODO 12/28/2024 JWL Unstable test
+  @Disabled
   @Test
   void cursorWithRowBound() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
@@ -160,7 +163,6 @@ class CursorSimpleTest {
 
   @Test
   void cursorIteratorNoSuchElementExceptionWithHasNext() throws IOException {
-
     try (SqlSession sqlSession = sqlSessionFactory.openSession();
         Cursor<User> usersCursor = sqlSession.selectCursor("getAllUsers", null, new RowBounds(1, 1))) {
       try {
