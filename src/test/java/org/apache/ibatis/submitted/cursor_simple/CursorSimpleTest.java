@@ -31,9 +31,11 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
+@TestMethodOrder(MethodOrderer.MethodName.class)
 class CursorSimpleTest {
 
   private static SqlSessionFactory sqlSessionFactory;
@@ -130,8 +132,6 @@ class CursorSimpleTest {
     Assertions.assertFalse(usersCursor.isConsumed());
   }
 
-  // TODO 12/28/2024 JWL Unstable test
-  @Disabled
   @Test
   void cursorWithRowBound() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
