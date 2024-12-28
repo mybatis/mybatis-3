@@ -29,67 +29,68 @@ import static org.mockito.Mockito.*;
 
 /**
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
+ *
  * @see ManagedTransaction
  */
 class ManagedTransactionWithConnectionTest extends ManagedTransactionBase {
 
-	@Mock
-	private Connection connection;
+  @Mock
+  private Connection connection;
 
-	private Transaction transaction;
+  private Transaction transaction;
 
-	@BeforeEach
-	void setup() {
-		this.transaction = new ManagedTransaction(connection, true);
-	}
+  @BeforeEach
+  void setup() {
+    this.transaction = new ManagedTransaction(connection, true);
+  }
 
-	@Test
-	void shouldGetConnection() throws SQLException {
-		Connection result = transaction.getConnection();
+  @Test
+  void shouldGetConnection() throws SQLException {
+    Connection result = transaction.getConnection();
 
-		assertEquals(connection, result);
-	}
+    assertEquals(connection, result);
+  }
 
-	@Test
-	@Override
-	void shouldNotCommitWhetherConnectionIsAutoCommit() throws SQLException {
-		transaction.commit();
+  @Test
+  @Override
+  void shouldNotCommitWhetherConnectionIsAutoCommit() throws SQLException {
+    transaction.commit();
 
-		verify(connection, never()).commit();
-		verify(connection, never()).getAutoCommit();
-	}
+    verify(connection, never()).commit();
+    verify(connection, never()).getAutoCommit();
+  }
 
-	@Test
-	@Override
-	void shouldNotRollbackWhetherConnectionIsAutoCommit() throws SQLException {
-		transaction.commit();
+  @Test
+  @Override
+  void shouldNotRollbackWhetherConnectionIsAutoCommit() throws SQLException {
+    transaction.commit();
 
-		verify(connection, never()).rollback();
-		verify(connection, never()).getAutoCommit();
-	}
+    verify(connection, never()).rollback();
+    verify(connection, never()).getAutoCommit();
+  }
 
-	@Test
-	@Override
-	void shouldCloseWhenSetCloseConnectionIsTrue() throws SQLException {
-		transaction.close();
+  @Test
+  @Override
+  void shouldCloseWhenSetCloseConnectionIsTrue() throws SQLException {
+    transaction.close();
 
-		verify(connection).close();
-	}
+    verify(connection).close();
+  }
 
-	@Test
-	@Override
-	void shouldNotCloseWhenSetCloseConnectionIsFalse() throws SQLException {
-		this.transaction = new ManagedTransaction(connection, false);
+  @Test
+  @Override
+  void shouldNotCloseWhenSetCloseConnectionIsFalse() throws SQLException {
+    this.transaction = new ManagedTransaction(connection, false);
 
-		transaction.close();
+    transaction.close();
 
-		verify(connection, never()).close();
-	}
+    verify(connection, never()).close();
+  }
 
-	@Test
-	@Override
-	void shouldReturnNullWhenGetTimeout() throws SQLException {
-		assertNull(transaction.getTimeout());
-	}
+  @Test
+  @Override
+  void shouldReturnNullWhenGetTimeout() throws SQLException {
+    assertNull(transaction.getTimeout());
+  }
 
 }

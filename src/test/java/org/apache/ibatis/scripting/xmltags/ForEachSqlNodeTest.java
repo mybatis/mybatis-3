@@ -29,7 +29,6 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
-
 /**
  * <pre>{@code
  * 	SELECT *
@@ -42,6 +41,7 @@ import static org.mockito.Mockito.verify;
  * }</pre>
  *
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
+ *
  * @see <a href="https://mybatis.org/mybatis-3/dynamic-sql.html#foreach">foreach</a>
  */
 class ForEachSqlNodeTest extends SqlNodeBase {

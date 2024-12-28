@@ -22,24 +22,25 @@ import java.sql.SQLException;
 
 /**
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
+ *
  * @see JdbcTransaction
  */
 @ExtendWith(MockitoExtension.class)
 abstract class JdbcTransactionBase {
 
-	abstract void shouldGetConnection() throws SQLException;
+  abstract void shouldGetConnection() throws SQLException;
 
-	abstract void shouldCommitWhenConnectionIsNotAutoCommit() throws SQLException;
+  abstract void shouldCommitWhenConnectionIsNotAutoCommit() throws SQLException;
 
-	abstract void shouldAutoCommitWhenConnectionIsAutoCommit() throws SQLException;
+  abstract void shouldAutoCommitWhenConnectionIsAutoCommit() throws SQLException;
 
-	abstract void shouldRollbackWhenConnectionIsNotAutoCommit() throws SQLException;
+  abstract void shouldRollbackWhenConnectionIsNotAutoCommit() throws SQLException;
 
-	abstract void shouldAutoRollbackWhenConnectionIsAutoCommit() throws SQLException;
+  abstract void shouldAutoRollbackWhenConnectionIsAutoCommit() throws SQLException;
 
-	abstract void shouldCloseAndSetAutoCommitWhenConnectionIsNotAutoCommit() throws SQLException;
+  abstract void shouldCloseAndSetAutoCommitWhenConnectionIsNotAutoCommit() throws SQLException;
 
-	abstract void shouldCloseAndNotSetAutoCommitWhenConnectionIsAutoCommit() throws SQLException;
+  abstract void shouldCloseAndNotSetAutoCommitWhenConnectionIsAutoCommit() throws SQLException;
 
-	abstract void shouldReturnNullWhenGetTimeout() throws SQLException;
+  abstract void shouldReturnNullWhenGetTimeout() throws SQLException;
 }
