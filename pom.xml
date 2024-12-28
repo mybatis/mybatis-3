@@ -67,6 +67,9 @@
     <java.version>8</java.version>
     <java.release.version>8</java.release.version>
 
+    <!-- Override impsort comliance to 17 (remove after parent 49 release) -->
+    <impsort.compliance>17</impsort.compliance>
+
     <clirr.comparisonVersion>3.4.6</clirr.comparisonVersion>
 
     <byte-buddy.version>1.15.11</byte-buddy.version>
@@ -393,6 +396,20 @@
           </excludes>
         </configuration>
       </plugin>
+
+      <!-- Remove enforcer entirely after parent 49 release -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <configuration>
+          <rules>
+            <enforceBytecodeVersion>
+              <maxJdkVersion>${java.version}</maxJdkVersion>
+              <ignoredScopes>provided,test</ignoredScopes>
+            </enforceBytecodeVersion>
+          </rules>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
@@ -403,8 +420,6 @@
         <jdk>[16,)</jdk>
       </activation>
       <properties>
-        <java.version>16</java.version>
-        <java.release.version>16</java.release.version>
         <excludedGroups>TestcontainersTests,RequireIllegalAccess</excludedGroups>
       </properties>
     </profile>
