@@ -15,10 +15,6 @@
  */
 package org.apache.ibatis.scripting.xmltags;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +22,13 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+
 
 /**
  * <pre>{@code
@@ -39,10 +42,9 @@ import org.mockito.ArgumentCaptor;
  * }</pre>
  *
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
- *
  * @see <a href="https://mybatis.org/mybatis-3/dynamic-sql.html#foreach">foreach</a>
  */
-class ForEachSqlNodeTest extends SqlNodeTest {
+class ForEachSqlNodeTest extends SqlNodeBase {
 
   private SqlNode sqlNode;
 

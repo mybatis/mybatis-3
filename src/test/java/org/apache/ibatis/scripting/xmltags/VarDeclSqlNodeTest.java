@@ -35,7 +35,7 @@ import org.junit.jupiter.api.Test;
  *
  * @see <a href="https://mybatis.org/mybatis-3/dynamic-sql.html#bind">bind</a>
  */
-class VarDeclSqlNodeTest extends SqlNodeTest {
+class VarDeclSqlNodeTest extends SqlNodeBase {
 
   private SqlNode sqlNode;
 

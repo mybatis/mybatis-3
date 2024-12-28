@@ -36,7 +36,7 @@ import org.junit.jupiter.api.Test;
  *
  * @see BeanWrapper
  */
-class BeanWrapperUnitTest extends ObjectWrapperBaseTest {
+class BeanWrapperUnitTest extends ObjectWrapperBase {
 
   private RichType richType;
 

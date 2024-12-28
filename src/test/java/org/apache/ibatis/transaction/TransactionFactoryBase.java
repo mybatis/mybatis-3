@@ -13,31 +13,30 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.scripting.xmltags;
+package org.apache.ibatis.transaction;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.verify;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import org.junit.jupiter.api.Test;
+import java.lang.reflect.Field;
+import java.sql.SQLException;
 
 /**
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
+ * @see TransactionFactory
  */
-class StaticTextSqlNodeTest extends SqlNodeBase {
+@ExtendWith(MockitoExtension.class)
+public abstract class TransactionFactoryBase {
 
-  private static final String TEXT = "select 1 from dual";
+	public abstract void shouldSetProperties() throws Exception;
 
-  @Test
-  @Override
-  public void shouldApply() throws Exception {
-    // given
-    SqlNode sqlNode = new StaticTextSqlNode(TEXT);
+	public abstract void shouldNewTransactionWithConnection() throws SQLException;
 
-    // when
-    boolean result = sqlNode.apply(context);
+	public abstract void shouldNewTransactionWithDataSource() throws Exception;
 
-    // then
-    assertTrue(result);
-    verify(context).appendSql(TEXT);
-  }
+	public static Object getValue(Field field, Object object) throws Exception {
+		field.setAccessible(true);
+		return field.get(object);
+	}
+
 }

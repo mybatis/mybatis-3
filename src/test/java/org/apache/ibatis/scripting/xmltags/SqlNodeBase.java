@@ -15,29 +15,23 @@
  */
 package org.apache.ibatis.scripting.xmltags;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.verify;
-
-import org.junit.jupiter.api.Test;
+import org.apache.ibatis.session.Configuration;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
+ * @see SqlNode
  */
-class StaticTextSqlNodeTest extends SqlNodeBase {
+@ExtendWith(MockitoExtension.class)
+abstract class SqlNodeBase {
 
-  private static final String TEXT = "select 1 from dual";
+  @Mock
+  protected Configuration configuration;
 
-  @Test
-  @Override
-  public void shouldApply() throws Exception {
-    // given
-    SqlNode sqlNode = new StaticTextSqlNode(TEXT);
+  @Mock
+  protected DynamicContext context;
 
-    // when
-    boolean result = sqlNode.apply(context);
-
-    // then
-    assertTrue(result);
-    verify(context).appendSql(TEXT);
-  }
+  public abstract void shouldApply() throws Exception;
 }

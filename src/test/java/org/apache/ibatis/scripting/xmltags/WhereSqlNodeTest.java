@@ -43,7 +43,7 @@ import org.junit.jupiter.api.Test;
  *
  * @see <a href="https://mybatis.org/mybatis-3/dynamic-sql.html#trim-where-set">trim-where-set</a>
  */
-class WhereSqlNodeTest extends SqlNodeTest {
+class WhereSqlNodeTest extends SqlNodeBase {
 
   private static final String FIRST_TEXT = " AND id = #{id}";
   private static final String SECOND_TEXT = " AND name = #{name}";

@@ -38,7 +38,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
  * @see CollectionWrapper
  */
 @ExtendWith(MockitoExtension.class)
-class CollectionWrapperUnitTest extends ObjectWrapperBaseTest {
+class CollectionWrapperUnitTest extends ObjectWrapperBase {
 
   @Mock
   private Collection<Object> collection;

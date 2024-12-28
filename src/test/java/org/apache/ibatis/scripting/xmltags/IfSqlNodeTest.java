@@ -17,7 +17,9 @@ package org.apache.ibatis.scripting.xmltags;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.never;
 
 import java.util.HashMap;
 
@@ -35,7 +37,7 @@ import org.junit.jupiter.api.Test;
  *
  * @see <a href="https://mybatis.org/mybatis-3/dynamic-sql.html#if">if</a>
  */
-class IfSqlNodeTest extends SqlNodeTest {
+class IfSqlNodeTest extends SqlNodeBase {
 
   private static final String CONDITION = "title != null";
   private static final String TEXT = "AND title like #{title}";

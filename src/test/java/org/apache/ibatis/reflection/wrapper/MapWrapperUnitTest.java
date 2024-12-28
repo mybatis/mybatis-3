@@ -41,7 +41,7 @@ import org.mockito.Mock;
  *
  * @see MapWrapper
  */
-class MapWrapperUnitTest extends ObjectWrapperBaseTest {
+class MapWrapperUnitTest extends ObjectWrapperBase {
 
   @Mock
   private Map<String, Object> map;
