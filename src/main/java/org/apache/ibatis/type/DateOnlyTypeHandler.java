@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -33,21 +33,21 @@ public class DateOnlyTypeHandler extends BaseTypeHandler<Date> {
 
   @Override
   public Date getNullableResult(ResultSet rs, String columnName) throws SQLException {
-    return toSqlDate(rs.getDate(columnName));
+    return toDate(rs.getDate(columnName));
   }
 
   @Override
   public Date getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
-    return toSqlDate(rs.getDate(columnIndex));
+    return toDate(rs.getDate(columnIndex));
   }
 
   @Override
   public Date getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
-    return toSqlDate(cs.getDate(columnIndex));
+    return toDate(cs.getDate(columnIndex));
   }
 
-  private java.sql.Date toSqlDate(Date date) {
-    return date == null ? null : new java.sql.Date(date.getTime());
+  private Date toDate(java.sql.Date date) {
+    return date == null ? null : new Date(date.getTime());
   }
 
 }

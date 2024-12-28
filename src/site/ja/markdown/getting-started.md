@@ -64,7 +64,7 @@ mappers 要素には Mapper のリストが含まれています。Mapper とは
 
 ## XML を使わずに SqlSessionFactory を生成する
 
-XML を使わず Java のコードで設定を行いたい方のために、Configuraiton クラスが提供されています。<br />
+XML を使わず Java のコードで設定を行いたい方のために、Configuration クラスが提供されています。<br />
 XML 形式の設定ファイルで指定できるオプションは、このクラスでも全て設定可能です。
 
 ```java
