@@ -398,38 +398,6 @@
 
   <profiles>
     <profile>
-      <id>pre16</id>
-      <activation>
-        <jdk>(,16)</jdk>
-      </activation>
-      <properties>
-        <derby.version>10.15.2.0</derby.version>
-        <mssql-jdbc.version>12.4.2.jre8</mssql-jdbc.version>
-      </properties>
-      <build>
-        <pluginManagement>
-          <plugins>
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-compiler-plugin</artifactId>
-              <configuration>
-                <testExcludes>
-                  <testExclude>**/record_type/*.java</testExclude>
-                </testExcludes>
-              </configuration>
-            </plugin>
-            <plugin>
-              <groupId>net.revelc.code</groupId>
-              <artifactId>impsort-maven-plugin</artifactId>
-              <configuration>
-                <skip>true</skip>
-              </configuration>
-            </plugin>
-          </plugins>
-        </pluginManagement>
-      </build>
-    </profile>
-    <profile>
       <id>16</id>
       <activation>
         <jdk>[16,)</jdk>
