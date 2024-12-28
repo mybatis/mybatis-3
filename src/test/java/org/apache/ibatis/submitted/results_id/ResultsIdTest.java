@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ class ResultsIdTest {
   }
 
   @Test
-  void testNamingResults() {
+  void namingResults() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUserByName("User2");
@@ -55,7 +55,7 @@ class ResultsIdTest {
   }
 
   @Test
-  void testResultsOnlyForNaming() {
+  void resultsOnlyForNaming() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUserByNameConstructor("User2");
@@ -65,7 +65,7 @@ class ResultsIdTest {
   }
 
   @Test
-  void testReuseNamedResultsFromAnotherMapper() {
+  void reuseNamedResultsFromAnotherMapper() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       AnotherMapper mapper = sqlSession.getMapper(AnotherMapper.class);
       List<User> users = mapper.getUsers();
@@ -78,7 +78,7 @@ class ResultsIdTest {
   }
 
   @Test
-  void testReuseNamedResultsFromXmlMapper() {
+  void reuseNamedResultsFromXmlMapper() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       AnotherMapper mapper = sqlSession.getMapper(AnotherMapper.class);
       User user = mapper.getUser(1);

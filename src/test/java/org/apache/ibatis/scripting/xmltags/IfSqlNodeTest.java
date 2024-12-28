@@ -66,7 +66,7 @@ class IfSqlNodeTest extends SqlNodeBase {
   }
 
   @Test
-  public void shouldAppendNone() {
+  void shouldAppendNone() {
     when(context.getBindings()).thenReturn(new HashMap<>() {
       {
         put("title", null);

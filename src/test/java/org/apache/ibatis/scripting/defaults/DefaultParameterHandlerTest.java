@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ import static org.mockito.Mockito.when;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -73,7 +72,7 @@ class DefaultParameterHandlerTest {
         any(JdbcType.class));
     ParameterMapping parameterMapping = new ParameterMapping.Builder(mappedStatement.getConfiguration(), "prop",
         typeHandler).build();
-    List<ParameterMapping> parameterMappings = Collections.singletonList(parameterMapping);
+    List<ParameterMapping> parameterMappings = List.of(parameterMapping);
     when(boundSql.getParameterMappings()).thenReturn(parameterMappings);
 
     DefaultParameterHandler defaultParameterHandler = new DefaultParameterHandler(mappedStatement, parameterObject,
@@ -111,7 +110,7 @@ class DefaultParameterHandlerTest {
   }
 
   @Test
-  void testParameterObjectGetPropertyValueWithAdditionalParameter() throws SQLException {
+  void parameterObjectGetPropertyValueWithAdditionalParameter() throws SQLException {
     Configuration config = new Configuration();
     TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
 
@@ -141,7 +140,7 @@ class DefaultParameterHandlerTest {
   }
 
   @Test
-  void testParameterObjectGetPropertyValueWithNull() throws SQLException {
+  void parameterObjectGetPropertyValueWithNull() throws SQLException {
     Configuration config = new Configuration();
     TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
 
@@ -167,7 +166,7 @@ class DefaultParameterHandlerTest {
   }
 
   @Test
-  void testParameterObjectGetPropertyValueWithTypeHandler() throws SQLException {
+  void parameterObjectGetPropertyValueWithTypeHandler() throws SQLException {
     Configuration config = new Configuration();
     TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
 
@@ -193,7 +192,7 @@ class DefaultParameterHandlerTest {
   }
 
   @Test
-  void testParameterObjectGetPropertyValueWithMetaObject() throws SQLException {
+  void parameterObjectGetPropertyValueWithMetaObject() throws SQLException {
     Configuration config = new Configuration();
     TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
 
@@ -231,7 +230,7 @@ class DefaultParameterHandlerTest {
   }
 
   @Test
-  void testParameterObjectGetPropertyValueWithMetaObjectAndCreateOnce() {
+  void parameterObjectGetPropertyValueWithMetaObjectAndCreateOnce() {
     Author parameterObject = mock(Author.class);
 
     Configuration mockConfig = mock(Configuration.class);

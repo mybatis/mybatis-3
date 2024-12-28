@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class SqlSourceBuilderTest {
+class SqlSourceBuilderTest {
 
   private static Configuration configuration;
   private static SqlSourceBuilder sqlSourceBuilder;
@@ -36,7 +36,7 @@ public class SqlSourceBuilderTest {
   }
 
   @Test
-  void testShrinkWhitespacesInSqlIsFalse() {
+  void shrinkWhitespacesInSqlIsFalse() {
     SqlSource sqlSource = sqlSourceBuilder.parse(sqlFromXml, null, null);
     BoundSql boundSql = sqlSource.getBoundSql(null);
     String actual = boundSql.getSql();
@@ -44,7 +44,7 @@ public class SqlSourceBuilderTest {
   }
 
   @Test
-  void testShrinkWhitespacesInSqlIsTrue() {
+  void shrinkWhitespacesInSqlIsTrue() {
     configuration.setShrinkWhitespacesInSql(true);
     SqlSource sqlSource = sqlSourceBuilder.parse(sqlFromXml, null, null);
     BoundSql boundSql = sqlSource.getBoundSql(null);

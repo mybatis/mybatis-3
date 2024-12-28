@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -162,9 +162,8 @@ class SqlSessionTest extends BaseDataTest {
   @Test
   void shouldFailWithTooManyResultsException() {
     try (SqlSession session = sqlMapper.openSession(TransactionIsolationLevel.SERIALIZABLE)) {
-      Assertions.assertThrows(TooManyResultsException.class, () -> {
-        session.selectOne("org.apache.ibatis.domain.blog.mappers.AuthorMapper.selectAllAuthors");
-      });
+      Assertions.assertThrows(TooManyResultsException.class,
+          () -> session.selectOne("org.apache.ibatis.domain.blog.mappers.AuthorMapper.selectAllAuthors"));
     }
   }
 
@@ -570,9 +569,7 @@ class SqlSessionTest extends BaseDataTest {
     try (SqlSession session = sqlMapper.openSession()) {
       DefaultResultHandler handler = new DefaultResultHandler();
       AuthorMapper mapper = session.getMapper(AuthorMapper.class);
-      Assertions.assertThrows(BindingException.class, () -> {
-        mapper.selectAuthor2(101, handler);
-      });
+      Assertions.assertThrows(BindingException.class, () -> mapper.selectAuthor2(101, handler));
     }
   }
 

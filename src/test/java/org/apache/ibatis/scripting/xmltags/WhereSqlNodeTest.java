@@ -76,7 +76,7 @@ class WhereSqlNodeTest extends SqlNodeBase {
   }
 
   @Test
-  public void shouldAppendOnlyId() throws Exception {
+  void shouldAppendOnlyId() throws Exception {
     when(context.getBindings()).thenReturn(new HashMap<>() {
       {
         put("id", 1);
@@ -90,7 +90,7 @@ class WhereSqlNodeTest extends SqlNodeBase {
   }
 
   @Test
-  public void shouldAppendOnlyName() throws Exception {
+  void shouldAppendOnlyName() throws Exception {
     when(context.getBindings()).thenReturn(new HashMap<>() {
       {
         put("name", "mybatis");
@@ -104,7 +104,7 @@ class WhereSqlNodeTest extends SqlNodeBase {
   }
 
   @Test
-  public void shouldAppendNone() throws Exception {
+  void shouldAppendNone() throws Exception {
     when(context.getBindings()).thenReturn(new HashMap<>());
 
     boolean result = sqlNode.apply(context);

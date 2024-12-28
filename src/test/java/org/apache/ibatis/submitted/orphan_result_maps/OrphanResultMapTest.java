@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ class OrphanResultMapTest {
   private static final String RESULT_MAP_INNER = "mapper_resultMap[BlogResultMap]_collection[posts]";
 
   @Test
-  void testSeparateResultMaps() {
+  void separateResultMaps() {
     // given
     Configuration configuration = new Configuration();
     configuration.getTypeAliasRegistry().registerAlias(Blog.class);
@@ -52,7 +52,7 @@ class OrphanResultMapTest {
   }
 
   @Test
-  void testNestedResultMap() {
+  void nestedResultMap() {
     // given
     Configuration configuration = new Configuration();
     configuration.getTypeAliasRegistry().registerAlias(Blog.class);
