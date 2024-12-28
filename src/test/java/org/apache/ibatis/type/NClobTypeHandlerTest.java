@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.Reader;
-import java.sql.Clob;
+import java.sql.NClob;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -32,60 +32,60 @@ class NClobTypeHandlerTest extends BaseTypeHandlerTest {
   private static final TypeHandler<String> TYPE_HANDLER = new NClobTypeHandler();
 
   @Mock
-  protected Clob clob;
+  protected NClob nclob;
 
   @Override
   @Test
   public void shouldSetParameter() throws Exception {
     TYPE_HANDLER.setParameter(ps, 1, "Hello", null);
-    verify(ps).setCharacterStream(ArgumentMatchers.eq(1), ArgumentMatchers.any(Reader.class), ArgumentMatchers.eq(5));
+    verify(ps).setNCharacterStream(ArgumentMatchers.eq(1), ArgumentMatchers.any(Reader.class), ArgumentMatchers.eq(5L));
   }
 
   @Override
   @Test
   public void shouldGetResultFromResultSetByName() throws Exception {
-    when(rs.getClob("column")).thenReturn(clob);
-    when(clob.length()).thenReturn(3L);
-    when(clob.getSubString(1, 3)).thenReturn("Hello");
+    when(rs.getNClob("column")).thenReturn(nclob);
+    when(nclob.length()).thenReturn(3L);
+    when(nclob.getSubString(1, 3)).thenReturn("Hello");
     assertEquals("Hello", TYPE_HANDLER.getResult(rs, "column"));
   }
 
   @Override
   @Test
   public void shouldGetResultNullFromResultSetByName() throws Exception {
-    when(rs.getClob("column")).thenReturn(null);
+    when(rs.getNClob("column")).thenReturn(null);
     assertNull(TYPE_HANDLER.getResult(rs, "column"));
   }
 
   @Override
   @Test
   public void shouldGetResultFromResultSetByPosition() throws Exception {
-    when(rs.getClob(1)).thenReturn(clob);
-    when(clob.length()).thenReturn(3L);
-    when(clob.getSubString(1, 3)).thenReturn("Hello");
+    when(rs.getNClob(1)).thenReturn(nclob);
+    when(nclob.length()).thenReturn(3L);
+    when(nclob.getSubString(1, 3)).thenReturn("Hello");
     assertEquals("Hello", TYPE_HANDLER.getResult(rs, 1));
   }
 
   @Override
   @Test
   public void shouldGetResultNullFromResultSetByPosition() throws Exception {
-    when(rs.getClob(1)).thenReturn(null);
+    when(rs.getNClob(1)).thenReturn(null);
     assertNull(TYPE_HANDLER.getResult(rs, 1));
   }
 
   @Override
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
-    when(cs.getClob(1)).thenReturn(clob);
-    when(clob.length()).thenReturn(3L);
-    when(clob.getSubString(1, 3)).thenReturn("Hello");
+    when(cs.getNClob(1)).thenReturn(nclob);
+    when(nclob.length()).thenReturn(3L);
+    when(nclob.getSubString(1, 3)).thenReturn("Hello");
     assertEquals("Hello", TYPE_HANDLER.getResult(cs, 1));
   }
 
   @Override
   @Test
   public void shouldGetResultNullFromCallableStatement() throws Exception {
-    when(cs.getClob(1)).thenReturn(null);
+    when(cs.getNClob(1)).thenReturn(null);
     assertNull(TYPE_HANDLER.getResult(cs, 1));
   }
 

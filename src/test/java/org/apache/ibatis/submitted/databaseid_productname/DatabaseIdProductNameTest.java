@@ -13,11 +13,10 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.submitted.includes;
+package org.apache.ibatis.submitted.databaseid_productname;
 
 import java.io.Reader;
 
-import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -26,41 +25,25 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-class IncludeTest {
+class DatabaseIdProductNameTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
   @BeforeAll
   static void setUp() throws Exception {
-    // create a SqlSessionFactory
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/includes/MapperConfig.xml")) {
+    try (Reader reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/databaseid_productname/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
-
-    // populate in-memory database
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-        "org/apache/ibatis/submitted/includes/CreateDB.sql");
   }
 
   @Test
-  void testIncludes() {
+  void shouldProductNameBeDatabaseIdIfDbVendorHasNoProperties() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      final Integer result = sqlSession.selectOne("org.apache.ibatis.submitted.includes.mapper.selectWithProperty");
-      Assertions.assertEquals(Integer.valueOf(1), result);
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      String result = mapper.select();
+      Assertions.assertEquals("hsql", result);
     }
   }
 
-  @Test
-  void testParametrizedIncludes() {
-    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      sqlSession.selectOne("org.apache.ibatis.submitted.includes.mapper.select");
-    }
-  }
-
-  @Test
-  void shouldNamespaceBeResolvedAfterIncluded() {
-    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      Assertions.assertNotNull(sqlSession.selectList("org.apache.ibatis.submitted.includes.mapper.selectIds"));
-    }
-  }
 }

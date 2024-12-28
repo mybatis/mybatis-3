@@ -13,31 +13,17 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.scripting.xmltags;
+package org.apache.ibatis.submitted.column_order_based_constructor_automapping;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.verify;
+import java.util.List;
 
-import org.junit.jupiter.api.Test;
+public interface Mapper {
 
-/**
- * @author <a href="1181963012mw@gmail.com">mawen12</a>
- */
-class StaticTextSqlNodeTest extends SqlNodeBase {
+  List<UserNoArgsConstructor> finaAllByNoArgsConstructor();
 
-  private static final String TEXT = "select 1 from dual";
+  List<UserConstructorEqualsResultSet> finaAllByConstructorEqualsResultSet();
 
-  @Test
-  @Override
-  public void shouldApply() throws Exception {
-    // given
-    SqlNode sqlNode = new StaticTextSqlNode(TEXT);
+  List<UserConstructorLessThanResultSet> finaAllByConstructorLessThanResultSet();
 
-    // when
-    boolean result = sqlNode.apply(context);
-
-    // then
-    assertTrue(result);
-    verify(context).appendSql(TEXT);
-  }
+  List<UserConstructorGreaterThanResultSet> finaAllByConstructorGreaterThanResultSet();
 }

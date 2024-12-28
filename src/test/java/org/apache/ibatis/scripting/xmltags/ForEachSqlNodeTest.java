@@ -57,9 +57,11 @@ class ForEachSqlNodeTest extends SqlNodeBase {
     ArgumentCaptor<Object> bindValueCaptor = ArgumentCaptor.forClass(Object.class);
     doNothing().when(context).bind(bindKeyCaptor.capture(), bindValueCaptor.capture());
 
-    when(context.getBindings()).thenReturn(new HashMap<>() {{
-      put("list", Arrays.asList("a", "b", "c"));
-    }});
+    when(context.getBindings()).thenReturn(new HashMap<>() {
+      {
+        put("list", Arrays.asList("a", "b", "c"));
+      }
+    });
 
     boolean result = sqlNode.apply(context);
 
@@ -69,11 +71,8 @@ class ForEachSqlNodeTest extends SqlNodeBase {
 
     List<String> allKeyValues = bindKeyCaptor.getAllValues();
     List<Object> allValValues = bindValueCaptor.getAllValues();
-    assertEquals(Arrays.asList("index", "__frch_index_0", "item", "__frch_item_0",
-      "index", "__frch_index_0", "item", "__frch_item_0",
-      "index", "__frch_index_0", "item", "__frch_item_0"), allKeyValues);
-    assertEquals(Arrays.asList(0, 0, "a", "a",
-      1, 1, "b", "b",
-      2, 2, "c", "c"), allValValues);
+    assertEquals(Arrays.asList("index", "__frch_index_0", "item", "__frch_item_0", "index", "__frch_index_0", "item",
+        "__frch_item_0", "index", "__frch_index_0", "item", "__frch_item_0"), allKeyValues);
+    assertEquals(Arrays.asList(0, 0, "a", "a", 1, 1, "b", "b", 2, 2, "c", "c"), allValValues);
   }
 }
