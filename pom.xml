@@ -129,6 +129,10 @@
   </distributionManagement>
 
   <properties>
+    <!-- Java Usage -->
+    <java.version>8</java.version>
+    <java.release.version>8</java.release.version>
+
     <clirr.comparisonVersion>3.4.6</clirr.comparisonVersion>
 
     <byte-buddy.version>1.15.11</byte-buddy.version>
@@ -500,10 +504,7 @@
         <derby.version>10.15.2.0</derby.version>
         <java.version>16</java.version>
         <java.release.version>16</java.release.version>
-        <java.test.version>16</java.test.version>
-        <java.test.release.version>16</java.test.release.version>
         <excludedGroups>TestcontainersTests,RequireIllegalAccess</excludedGroups>
-        <allowed.build.jdks>[11,12),[17,18),[21,22),[22,23),[23,24),[24,25)</allowed.build.jdks>
       </properties>
     </profile>
     <profile>
