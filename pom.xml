@@ -22,13 +22,13 @@
   <parent>
     <groupId>org.mybatis</groupId>
     <artifactId>mybatis-parent</artifactId>
-    <version>45</version>
+    <version>46</version>
     <relativePath />
   </parent>
 
   <groupId>org.mybatis</groupId>
   <artifactId>mybatis</artifactId>
-  <version>3.5.17-SNAPSHOT</version>
+  <version>3.5.18-SNAPSHOT</version>
 
   <name>mybatis</name>
   <description>The MyBatis SQL mapper framework makes it easier to use a relational database with object-oriented
@@ -135,12 +135,12 @@
   <properties>
     <clirr.comparisonVersion>3.4.6</clirr.comparisonVersion>
 
-    <byte-buddy.version>1.15.10</byte-buddy.version>
+    <byte-buddy.version>1.15.11</byte-buddy.version>
     <derby.version>10.17.1.0</derby.version>
-    <log4j.version>2.24.1</log4j.version>
+    <log4j.version>2.24.3</log4j.version>
     <mockito.version>5.14.2</mockito.version>
     <mssql-jdbc.version>12.8.1.jre11</mssql-jdbc.version>
-    <testcontainers.version>1.20.3</testcontainers.version>
+    <testcontainers.version>1.20.4</testcontainers.version>
 
     <!-- Add slow test groups here and annotate classes similar to @Tag('groupName'). -->
     <!-- Excluded groups are ran on github ci, to force here, pass -d"excludedGroups=" -->
@@ -161,7 +161,7 @@
     <argLine>-Xmx2048m -javaagent:${settings.localRepository}/net/bytebuddy/byte-buddy-agent/${byte-buddy.version}/byte-buddy-agent-${byte-buddy.version}.jar</argLine>
 
     <!-- Reproducible Builds -->
-    <project.build.outputTimestamp>1712079482</project.build.outputTimestamp>
+    <project.build.outputTimestamp>1732629483</project.build.outputTimestamp>
   </properties>
 
   <dependencies>
@@ -190,13 +190,13 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
-      <version>5.11.3</version>
+      <version>5.11.4</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-params</artifactId>
-      <version>5.11.3</version>
+      <version>5.11.4</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -269,7 +269,7 @@
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-      <version>3.26.3</version>
+      <version>3.27.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -320,7 +320,7 @@
     <dependency>
       <groupId>ch.qos.reload4j</groupId>
       <artifactId>reload4j</artifactId>
-      <version>1.2.25</version>
+      <version>1.2.26</version>
       <optional>true</optional>
     </dependency>
     <dependency>
@@ -346,7 +346,7 @@
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>1.5.12</version>
+      <version>1.5.15</version>
       <scope>test</scope>
     </dependency>
     <dependency>
