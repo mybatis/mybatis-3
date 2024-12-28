@@ -17,6 +17,7 @@
 
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -38,73 +39,6 @@
   <url>https://www.mybatis.org/mybatis-3/</url>
 
   <inceptionYear>2009</inceptionYear>
-
-  <contributors>
-    <contributor>
-      <name>Adam Gent</name>
-      <email>adam.gent@evocatus.com</email>
-    </contributor>
-    <contributor>
-      <name>Andrea Selva</name>
-      <email>selva.andre@gmail.com</email>
-    </contributor>
-    <contributor>
-      <name>Antonio Sánchez</name>
-      <email>juntandolineas@gmail.com</email>
-    </contributor>
-    <contributor>
-      <name>Arkadi Shishlov</name>
-      <email>arkadi.shishlov@gmail.com</email>
-    </contributor>
-    <contributor>
-      <name>Axel Doerfler</name>
-      <email>axel.doerfler@gmail.com</email>
-    </contributor>
-    <contributor>
-      <name>Chris Dadej</name>
-      <email>chris.dadej@gmail.com</email>
-    </contributor>
-    <contributor>
-      <name>Denis Vygovskiy</name>
-      <email>qizant@gmail.com</email>
-    </contributor>
-    <contributor>
-      <name>Franta Mejta</name>
-      <email>mejta@rewor.cz</email>
-    </contributor>
-    <contributor>
-      <name>Jurriaan Pruys</name>
-      <email>jurriaan@pruys.com</email>
-    </contributor>
-    <contributor>
-      <name>Keith Wong</name>
-      <email>wongkwl@gmail.com</email>
-    </contributor>
-    <contributor>
-      <name>Lasse Voss</name>
-      <email>lasse.voss@motor-talk-gmbh.de</email>
-    </contributor>
-    <contributor>
-      <name>Luke Stevens</name>
-      <email>nosuchluke@gmail.com</email>
-    </contributor>
-    <contributor>
-      <name>Paul Krause</name>
-      <email>paulkrause88@alum.mit.edu</email>
-    </contributor>
-    <contributor>
-      <name>Peter Leibiger</name>
-      <email>kuhnroyal@gmail.com</email>
-    </contributor>
-    <contributor>
-      <name>Riccardo Cossu</name>
-      <email>riccardo.cossu@gmail.com</email>
-    </contributor>
-    <contributor>
-      <name>Tomáš Neuberg</name>
-      <email>neuberg@m-atelier.cz</email>
-    </contributor>
-  </contributors>
 
   <scm>
     <connection>scm:git:ssh://git@github.com/mybatis/mybatis-3.git</connection>
