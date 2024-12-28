@@ -15,13 +15,12 @@
  */
 package org.apache.ibatis.scripting.xmltags;
 
+import static org.mockito.Mockito.verify;
+
 import java.util.Arrays;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.mockito.Mockito.verify;
-
 
 /**
  * @author <a href="1181963012mw@gmail.com">mawen12</a>

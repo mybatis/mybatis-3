@@ -15,114 +15,115 @@
  */
 package org.apache.ibatis.transaction.jdbc;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.*;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+
 import org.apache.ibatis.transaction.Transaction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.*;
-
 /**
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
+ *
  * @see JdbcTransaction
  */
 class JdbcTransactionWithConnectionTest extends JdbcTransactionBase {
 
-	@Mock
-	private Connection connection;
+  @Mock
+  private Connection connection;
 
-	private Transaction transaction;
+  private Transaction transaction;
 
-	@BeforeEach
-	void setup() {
-		this.transaction = new JdbcTransaction(connection);
-	}
+  @BeforeEach
+  void setup() {
+    this.transaction = new JdbcTransaction(connection);
+  }
 
-	@Test
-	@Override
-	void shouldGetConnection() throws SQLException {
-		Connection result = transaction.getConnection();
+  @Test
+  @Override
+  void shouldGetConnection() throws SQLException {
+    Connection result = transaction.getConnection();
 
-		assertEquals(connection, result);
-	}
+    assertEquals(connection, result);
+  }
 
-	@Test
-	@Override
-	void shouldCommitWhenConnectionIsNotAutoCommit() throws SQLException {
-		when(connection.getAutoCommit()).thenReturn(false);
+  @Test
+  @Override
+  void shouldCommitWhenConnectionIsNotAutoCommit() throws SQLException {
+    when(connection.getAutoCommit()).thenReturn(false);
 
-		transaction.commit();
+    transaction.commit();
 
-		verify(connection).commit();
-		verify(connection).getAutoCommit();
-	}
+    verify(connection).commit();
+    verify(connection).getAutoCommit();
+  }
 
-	@Test
-	@Override
-	void shouldAutoCommitWhenConnectionIsAutoCommit() throws SQLException {
-		when(connection.getAutoCommit()).thenReturn(true);
+  @Test
+  @Override
+  void shouldAutoCommitWhenConnectionIsAutoCommit() throws SQLException {
+    when(connection.getAutoCommit()).thenReturn(true);
 
-		transaction.commit();
+    transaction.commit();
 
-		verify(connection, never()).commit();
-		verify(connection).getAutoCommit();
-	}
+    verify(connection, never()).commit();
+    verify(connection).getAutoCommit();
+  }
 
-	@Test
-	@Override
-	void shouldRollbackWhenConnectionIsNotAutoCommit() throws SQLException {
-		when(connection.getAutoCommit()).thenReturn(false);
+  @Test
+  @Override
+  void shouldRollbackWhenConnectionIsNotAutoCommit() throws SQLException {
+    when(connection.getAutoCommit()).thenReturn(false);
 
-		transaction.rollback();
+    transaction.rollback();
 
-		verify(connection).rollback();
-		verify(connection).getAutoCommit();
-	}
+    verify(connection).rollback();
+    verify(connection).getAutoCommit();
+  }
 
-	@Test
-	@Override
-	void shouldAutoRollbackWhenConnectionIsAutoCommit() throws SQLException {
-		when(connection.getAutoCommit()).thenReturn(true);
+  @Test
+  @Override
+  void shouldAutoRollbackWhenConnectionIsAutoCommit() throws SQLException {
+    when(connection.getAutoCommit()).thenReturn(true);
 
-		transaction.rollback();
+    transaction.rollback();
 
-		verify(connection, never()).rollback();
-		verify(connection).getAutoCommit();
-	}
+    verify(connection, never()).rollback();
+    verify(connection).getAutoCommit();
+  }
 
-	@Test
-	@Override
-	void shouldCloseAndSetAutoCommitWhenConnectionIsNotAutoCommit() throws SQLException {
-		when(connection.getAutoCommit()).thenReturn(false);
+  @Test
+  @Override
+  void shouldCloseAndSetAutoCommitWhenConnectionIsNotAutoCommit() throws SQLException {
+    when(connection.getAutoCommit()).thenReturn(false);
 
-		transaction.close();
+    transaction.close();
 
-		verify(connection).close();
-		verify(connection).setAutoCommit(true);
-		verify(connection).getAutoCommit();
-	}
+    verify(connection).close();
+    verify(connection).setAutoCommit(true);
+    verify(connection).getAutoCommit();
+  }
 
-	@Test
-	@Override
-	void shouldCloseAndNotSetAutoCommitWhenConnectionIsAutoCommit() throws SQLException {
-		when(connection.getAutoCommit()).thenReturn(true);
+  @Test
+  @Override
+  void shouldCloseAndNotSetAutoCommitWhenConnectionIsAutoCommit() throws SQLException {
+    when(connection.getAutoCommit()).thenReturn(true);
 
-		transaction.close();
+    transaction.close();
 
-		verify(connection).close();
-		verify(connection, never()).setAutoCommit(true);
-		verify(connection).getAutoCommit();
-	}
+    verify(connection).close();
+    verify(connection, never()).setAutoCommit(true);
+    verify(connection).getAutoCommit();
+  }
 
-	@Test
-	@Override
-	void shouldReturnNullWhenGetTimeout() throws SQLException {
-		assertNull(transaction.getTimeout());
-	}
+  @Test
+  @Override
+  void shouldReturnNullWhenGetTimeout() throws SQLException {
+    assertNull(transaction.getTimeout());
+  }
 
 }

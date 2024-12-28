@@ -15,28 +15,29 @@
  */
 package org.apache.ibatis.transaction;
 
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.lang.reflect.Field;
 import java.sql.SQLException;
 
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 /**
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
+ *
  * @see TransactionFactory
  */
 @ExtendWith(MockitoExtension.class)
 public abstract class TransactionFactoryBase {
 
-	public abstract void shouldSetProperties() throws Exception;
+  public abstract void shouldSetProperties() throws Exception;
 
-	public abstract void shouldNewTransactionWithConnection() throws SQLException;
+  public abstract void shouldNewTransactionWithConnection() throws SQLException;
 
-	public abstract void shouldNewTransactionWithDataSource() throws Exception;
+  public abstract void shouldNewTransactionWithDataSource() throws Exception;
 
-	public static Object getValue(Field field, Object object) throws Exception {
-		field.setAccessible(true);
-		return field.get(object);
-	}
+  public static Object getValue(Field field, Object object) throws Exception {
+    field.setAccessible(true);
+    return field.get(object);
+  }
 
 }

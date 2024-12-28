@@ -15,99 +15,101 @@
  */
 package org.apache.ibatis.transaction.managed;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.*;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import javax.sql.DataSource;
+
 import org.apache.ibatis.session.TransactionIsolationLevel;
 import org.apache.ibatis.transaction.Transaction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.SQLException;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.*;
-
 /**
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
+ *
  * @see ManagedTransaction
  */
 class ManagedTransactionWithDataSourceTest extends ManagedTransactionBase {
 
-	@Mock
-	private DataSource dataSource;
+  @Mock
+  private DataSource dataSource;
 
-	@Mock
-	private Connection connection;
+  @Mock
+  private Connection connection;
 
-	private Transaction transaction;
+  private Transaction transaction;
 
-	@BeforeEach
-	void setup() {
-		this.transaction = new ManagedTransaction(dataSource, TransactionIsolationLevel.READ_COMMITTED, true);
-	}
+  @BeforeEach
+  void setup() {
+    this.transaction = new ManagedTransaction(dataSource, TransactionIsolationLevel.READ_COMMITTED, true);
+  }
 
-	@Test
-	void shouldGetConnection() throws SQLException {
-		when(dataSource.getConnection()).thenReturn(connection);
+  @Test
+  void shouldGetConnection() throws SQLException {
+    when(dataSource.getConnection()).thenReturn(connection);
 
-		Connection result = transaction.getConnection();
+    Connection result = transaction.getConnection();
 
-		assertEquals(connection, result);
-		verify(connection).setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
-	}
+    assertEquals(connection, result);
+    verify(connection).setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+  }
 
-	@Test
-	@Override
-	void shouldNotCommitWhetherConnectionIsAutoCommit() throws SQLException {
-		when(dataSource.getConnection()).thenReturn(connection);
+  @Test
+  @Override
+  void shouldNotCommitWhetherConnectionIsAutoCommit() throws SQLException {
+    when(dataSource.getConnection()).thenReturn(connection);
 
-		transaction.getConnection();
-		transaction.commit();
+    transaction.getConnection();
+    transaction.commit();
 
-		verify(connection, never()).commit();
-		verify(connection, never()).getAutoCommit();
-	}
+    verify(connection, never()).commit();
+    verify(connection, never()).getAutoCommit();
+  }
 
-	@Test
-	@Override
-	void shouldNotRollbackWhetherConnectionIsAutoCommit() throws SQLException {
-		when(dataSource.getConnection()).thenReturn(connection);
+  @Test
+  @Override
+  void shouldNotRollbackWhetherConnectionIsAutoCommit() throws SQLException {
+    when(dataSource.getConnection()).thenReturn(connection);
 
-		transaction.getConnection();
-		transaction.rollback();
+    transaction.getConnection();
+    transaction.rollback();
 
-		verify(connection, never()).rollback();
-		verify(connection, never()).getAutoCommit();
-	}
+    verify(connection, never()).rollback();
+    verify(connection, never()).getAutoCommit();
+  }
 
-	@Test
-	@Override
-	void shouldCloseWhenSetCloseConnectionIsTrue() throws SQLException {
-		when(dataSource.getConnection()).thenReturn(connection);
+  @Test
+  @Override
+  void shouldCloseWhenSetCloseConnectionIsTrue() throws SQLException {
+    when(dataSource.getConnection()).thenReturn(connection);
 
-		transaction.getConnection();
-		transaction.close();
+    transaction.getConnection();
+    transaction.close();
 
-		verify(connection).close();
-	}
+    verify(connection).close();
+  }
 
-	@Test
-	@Override
-	void shouldNotCloseWhenSetCloseConnectionIsFalse() throws SQLException {
-		transaction = new ManagedTransaction(dataSource, TransactionIsolationLevel.READ_COMMITTED, false);
-		when(dataSource.getConnection()).thenReturn(connection);
+  @Test
+  @Override
+  void shouldNotCloseWhenSetCloseConnectionIsFalse() throws SQLException {
+    transaction = new ManagedTransaction(dataSource, TransactionIsolationLevel.READ_COMMITTED, false);
+    when(dataSource.getConnection()).thenReturn(connection);
 
-		transaction.getConnection();
-		transaction.close();
+    transaction.getConnection();
+    transaction.close();
 
-		verify(connection, never()).close();
-	}
+    verify(connection, never()).close();
+  }
 
-	@Test
-	@Override
-	void shouldReturnNullWhenGetTimeout() throws SQLException {
-		assertNull(transaction.getTimeout());
-	}
+  @Test
+  @Override
+  void shouldReturnNullWhenGetTimeout() throws SQLException {
+    assertNull(transaction.getTimeout());
+  }
 }

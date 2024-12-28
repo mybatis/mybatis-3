@@ -15,27 +15,28 @@
  */
 package org.apache.ibatis.transaction.managed;
 
+import java.sql.SQLException;
+
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.sql.SQLException;
-
 /**
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
+ *
  * @see ManagedTransaction
  */
 @ExtendWith(MockitoExtension.class)
 abstract class ManagedTransactionBase {
 
-	abstract void shouldGetConnection() throws SQLException;
+  abstract void shouldGetConnection() throws SQLException;
 
-	abstract void shouldNotCommitWhetherConnectionIsAutoCommit() throws SQLException;
+  abstract void shouldNotCommitWhetherConnectionIsAutoCommit() throws SQLException;
 
-	abstract void shouldNotRollbackWhetherConnectionIsAutoCommit() throws SQLException;
+  abstract void shouldNotRollbackWhetherConnectionIsAutoCommit() throws SQLException;
 
-	abstract void shouldCloseWhenSetCloseConnectionIsTrue() throws SQLException;
+  abstract void shouldCloseWhenSetCloseConnectionIsTrue() throws SQLException;
 
-	abstract void shouldNotCloseWhenSetCloseConnectionIsFalse() throws SQLException;
+  abstract void shouldNotCloseWhenSetCloseConnectionIsFalse() throws SQLException;
 
-	abstract void shouldReturnNullWhenGetTimeout() throws SQLException;
+  abstract void shouldReturnNullWhenGetTimeout() throws SQLException;
 }
