@@ -842,6 +842,13 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   private boolean applyColumnOrderBasedConstructorAutomapping(ResultSetWrapper rsw, List<Class<?>> constructorArgTypes,
       List<Object> constructorArgs, Constructor<?> constructor, boolean foundValues) throws SQLException {
     Class<?>[] parameterTypes = constructor.getParameterTypes();
+
+    if (parameterTypes.length > rsw.getClassNames().size()) {
+      throw new ExecutorException(MessageFormat.format(
+          "Constructor auto-mapping of ''{0}'' failed. The constructor takes ''{1}'' arguments, but there are only ''{2}'' columns in the result set.",
+          constructor, parameterTypes.length, rsw.getClassNames().size()));
+    }
+
     for (int i = 0; i < parameterTypes.length; i++) {
       Class<?> parameterType = parameterTypes[i];
       String columnName = rsw.getColumnNames().get(i);
