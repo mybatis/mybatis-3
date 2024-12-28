@@ -403,7 +403,6 @@
         <jdk>[16,)</jdk>
       </activation>
       <properties>
-        <derby.version>10.15.2.0</derby.version>
         <java.version>16</java.version>
         <java.release.version>16</java.release.version>
         <excludedGroups>TestcontainersTests,RequireIllegalAccess</excludedGroups>
