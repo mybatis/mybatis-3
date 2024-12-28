@@ -239,7 +239,7 @@ public class XMLMapperBuilder extends BaseBuilder {
         resultMappings.add(buildResultMappingFromContext(resultChild, typeClass, flags));
       }
     }
-    String id = resultMapNode.getStringAttribute("id", resultMapNode.getValueBasedIdentifier());
+    String id = resultMapNode.getStringAttribute("id", resultMapNode::getValueBasedIdentifier);
     String extend = resultMapNode.getStringAttribute("extends");
     Boolean autoMapping = resultMapNode.getBooleanAttribute("autoMapping");
     ResultMapResolver resultMapResolver = new ResultMapResolver(builderAssistant, id, typeClass, extend, discriminator,
@@ -289,8 +289,7 @@ public class XMLMapperBuilder extends BaseBuilder {
     Map<String, String> discriminatorMap = new HashMap<>();
     for (XNode caseChild : context.getChildren()) {
       String value = caseChild.getStringAttribute("value");
-      String resultMap = caseChild.getStringAttribute("resultMap",
-          processNestedResultMappings(caseChild, resultMappings, resultType));
+      String resultMap = caseChild.getStringAttribute("resultMap", () -> processNestedResultMappings(caseChild, resultMappings, resultType));
       discriminatorMap.put(value, resultMap);
     }
     return builderAssistant.buildDiscriminator(resultType, column, javaTypeClass, jdbcTypeEnum, typeHandlerClass,
