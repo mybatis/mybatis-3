@@ -24,6 +24,7 @@ jobs:
           distribution: ${{ matrix.distribution }}
           java-version: ${{ matrix.java }}
       - name: Setup testContainers profile for ubuntu
+        if: ${{ matrix.os == 'ubuntu-latest' }}
         run: echo 'TEST_CONTAINERS_PROFILE=-PtestContainers' >> $GITHUB_ENV
       - name: Test with Maven
         run: ./mvnw test -B -V  --no-transfer-progress -D"license.skip=true" $TEST_CONTAINERS_PROFILE
