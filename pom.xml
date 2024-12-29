@@ -81,6 +81,7 @@
 
     <!-- Add slow test groups here and annotate classes similar to @Tag('groupName'). -->
     <!-- Excluded groups are ran on github ci, to force here, pass -d"excludedGroups=" -->
+    <!-- Note: RequireIllegalAccess tests are now no longer valid as they only worked prior to java 16 -->
     <excludedGroups>TestcontainersTests,RequireIllegalAccess</excludedGroups>
 
     <!-- Automatic Module Name -->
@@ -422,6 +423,12 @@
   </build>
 
   <profiles>
+    <profile>
+      <id>testContainers</id>
+      <properties>
+        <excludedGroups>RequireIllegalAccess</excludedGroups>
+      </properties>
+    </profile>
     <profile>
       <id>17</id>
       <activation>

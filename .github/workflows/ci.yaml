@@ -24,4 +24,4 @@ jobs:
           distribution: ${{ matrix.distribution }}
           java-version: ${{ matrix.java }}
       - name: Test with Maven
-        run: ./mvnw test -B -V  --no-transfer-progress -D"license.skip=true"
+        run: ./mvnw test -B -V  --no-transfer-progress -D"license.skip=true" -PtestContainers
