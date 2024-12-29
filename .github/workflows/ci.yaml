@@ -20,28 +20,14 @@ jobs:
       - name: Set up JDK ${{ matrix.java }} ${{ matrix.distribution }}
         uses: actions/setup-java@v4
         with:
-          java-version: ${{ matrix.java }}
+          cache: ${{ matrix.cache }}
           distribution: ${{ matrix.distribution }}
-      - name: Print JDK Version
-        run: java -version
-      - name: Cache local Maven m2
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-m2
-      - name: Skip tests that require illegal reflective access
+          java-version: ${{ matrix.java }}
+      - name: Setup skip tests that require illegal reflective access ubuntu
         if: ${{ matrix.os == 'ubuntu-latest' }}
-        run: echo 'ARG_LINE=-D"excludedGroups=RequireIllegalAccess"' >> $GITHUB_ENV
-      - name: Skip tests that require illegal reflective access
+        run: echo 'ARG_LINE=-D"excludedGroups=RequireIllegalAccess" -Xmx2048m -javaagent:${settings.localRepository}/net/bytebuddy/byte-buddy-agent/${byte-buddy.version}/byte-buddy-agent-${byte-buddy.version}.jar' >> $GITHUB_ENV
+      - name: Setup skip tests that require illegal reflective access not ubuntu
         if: ${{ matrix.os != 'ubuntu-latest' }}
-        run: echo 'ARG_LINE=-D"excludedGroups=TestcontainersTests,RequireIllegalAccess"' >> $GITHUB_ENV
-      - name: Active Profiles
-        run: ./mvnw help:active-profiles
+        run: echo 'ARG_LINE=-D"excludedGroups=TestcontainersTests,RequireIllegalAccess" -Xmx2048m -javaagent:${settings.localRepository}/net/bytebuddy/byte-buddy-agent/${byte-buddy.version}/byte-buddy-agent-${byte-buddy.version}.jar' >> $GITHUB_ENV
       - name: Test with Maven
-        if: ${{ matrix.os != 'windows-latest' }}
         run: ./mvnw test -B -V  --no-transfer-progress -D"license.skip=true" -D"jacoco.skip=true" $ARG_LINE
-      - name: Test with Maven
-        if: ${{ matrix.os == 'windows-latest' }}
-        run: ./mvnw test -B -V  --no-transfer-progress -D"license.skip=true" -D"jacoco.skip=true" -D"excludedGroups=TestcontainersTests,RequireIllegalAccess"
