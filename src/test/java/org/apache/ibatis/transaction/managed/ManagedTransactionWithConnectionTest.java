@@ -45,6 +45,7 @@ class ManagedTransactionWithConnectionTest extends ManagedTransactionBase {
     this.transaction = new ManagedTransaction(connection, true);
   }
 
+  @Override
   @Test
   void shouldGetConnection() throws SQLException {
     Connection result = transaction.getConnection();

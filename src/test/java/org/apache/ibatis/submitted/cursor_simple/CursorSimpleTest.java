@@ -412,8 +412,7 @@ class CursorSimpleTest {
       // next() has not been called, index is still -1
       Assertions.assertEquals(-1, cursor.getCurrentIndex());
 
-      User user;
-      user = iterator.next();
+      User user = iterator.next();
       Assertions.assertNull(user);
       Assertions.assertEquals(0, cursor.getCurrentIndex());
 
@@ -455,8 +454,7 @@ class CursorSimpleTest {
       Assertions.assertTrue(cursor.isOpen());
       Assertions.assertFalse(cursor.isConsumed());
 
-      User user;
-      user = iterator.next();
+      User user = iterator.next();
       Assertions.assertEquals("Kate", user.getName());
       Assertions.assertEquals(1, cursor.getCurrentIndex());
 
