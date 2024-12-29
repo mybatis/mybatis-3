@@ -221,7 +221,7 @@ class XmlMapperBuilderTest {
       builder.parse();
       String resultMapName = "java.lang.String";
       // namespace + "." + id
-      String statementId = "org.mybatis.spring.ErrorProblemMapper" + "." + "findProblemResultMapTest";
+      String statementId = "org.mybatis.spring.ErrorProblemMapper.findProblemResultMapTest";
       // same as MapperBuilderAssistant.getStatementResultMaps Exception message
       String message = "Could not find result map '" + resultMapName + "' referenced from '" + statementId + "'";
       IncompleteElementException exception = Assertions.assertThrows(IncompleteElementException.class,

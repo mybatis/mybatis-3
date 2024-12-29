@@ -97,22 +97,17 @@ public class Author implements Serializable {
     if (this == o) {
       return true;
     }
-    if (!(o instanceof Author)) {
+    if (!(o instanceof Author author)) {
       return false;
     }
 
-    Author author = (Author) o;
-
-    if ((id != author.id) || (bio != null ? !bio.equals(author.bio) : author.bio != null)
+    if (id != author.id || (bio != null ? !bio.equals(author.bio) : author.bio != null)
         || (email != null ? !email.equals(author.email) : author.email != null)
         || (password != null ? !password.equals(author.password) : author.password != null)) {
       return false;
     }
-    if (username != null ? !username.equals(author.username) : author.username != null) {
-      return false;
-    }
-    if (favouriteSection != null ? !favouriteSection.equals(author.favouriteSection)
-        : author.favouriteSection != null) {
+    if ((username != null ? !username.equals(author.username) : author.username != null) || (favouriteSection != null
+        ? !favouriteSection.equals(author.favouriteSection) : author.favouriteSection != null)) {
       return false;
     }
 

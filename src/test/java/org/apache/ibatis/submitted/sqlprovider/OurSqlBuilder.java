@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -270,8 +270,7 @@ public class OurSqlBuilder {
 
     Type[] types = mapperClass.getGenericInterfaces();
     for (Type type : types) {
-      if (type instanceof ParameterizedType) {
-        ParameterizedType t = (ParameterizedType) type;
+      if (type instanceof ParameterizedType t) {
         if (t.getRawType() == declaringClass || mapperClass.isAssignableFrom((Class<?>) t.getRawType())) {
           return (Class<?>) t.getActualTypeArguments()[0];
         }
