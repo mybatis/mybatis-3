@@ -129,12 +129,12 @@ class XNodeTest {
         </mapper>
         """;
 
+    // a little bit ugly with id/name break, but not a blocker
     String expected = """
         <select id="select" resultType="map">
           select
           <var set="foo" value="bar" />
           ID,
-          // a little bit ugly here, but not a blocker
               NAME
             from STUDENT
           <where>
