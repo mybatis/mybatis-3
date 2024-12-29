@@ -62,6 +62,8 @@ class ForEachSqlNodeTest extends SqlNodeBase {
     doNothing().when(context).bind(bindKeyCaptor.capture(), bindValueCaptor.capture());
 
     when(context.getBindings()).thenReturn(new HashMap<>() {
+      private static final long serialVersionUID = 1L;
+
       {
         put("list", Arrays.asList("a", "b", "c"));
       }

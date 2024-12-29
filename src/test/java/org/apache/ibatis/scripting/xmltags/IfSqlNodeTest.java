@@ -54,6 +54,8 @@ class IfSqlNodeTest extends SqlNodeBase {
   @Override
   public void shouldApply() throws Exception {
     when(context.getBindings()).thenReturn(new HashMap<>() {
+      private static final long serialVersionUID = 1L;
+
       {
         put("title", "ENGLISH");
       }
@@ -68,6 +70,8 @@ class IfSqlNodeTest extends SqlNodeBase {
   @Test
   void shouldAppendNone() {
     when(context.getBindings()).thenReturn(new HashMap<>() {
+      private static final long serialVersionUID = 1L;
+
       {
         put("title", null);
       }

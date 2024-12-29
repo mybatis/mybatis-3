@@ -76,6 +76,8 @@ class BeanWrapperUnitTest extends ObjectWrapperBase {
   void shouldGetWhichContainsIndex() {
     richType.setRichList(Arrays.asList(1L, "abc"));
     richType.setRichMap(new HashMap<String, Object>() {
+      private static final long serialVersionUID = 1L;
+
       {
         put("key1", "value1");
         put("key2", "value2");

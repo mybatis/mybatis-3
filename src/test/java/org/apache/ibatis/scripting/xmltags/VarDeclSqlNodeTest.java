@@ -48,6 +48,8 @@ class VarDeclSqlNodeTest extends SqlNodeBase {
   @Override
   public void shouldApply() throws Exception {
     when(context.getBindings()).thenReturn(new HashMap<>() {
+      private static final long serialVersionUID = 1L;
+
       {
         put("_parameter", new Bean("abc"));
       }

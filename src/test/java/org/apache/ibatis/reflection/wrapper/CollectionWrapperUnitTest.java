@@ -133,6 +133,8 @@ class CollectionWrapperUnitTest extends ObjectWrapperBase {
   @Override
   void shouldAddAll() {
     List<Object> list = new ArrayList<>() {
+      private static final long serialVersionUID = 1L;
+
       {
         add("1");
         add("2");
