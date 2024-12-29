@@ -23,7 +23,5 @@ jobs:
           cache: ${{ matrix.cache }}
           distribution: ${{ matrix.distribution }}
           java-version: ${{ matrix.java }}
-      - name: Allow tests for TestcontainersTests
-        run: echo 'ARG_LINE=-D"excludedGroups=RequireIllegalAccess"' >> $GITHUB_ENV
       - name: Test with Maven
-        run: ./mvnw test -B -V  --no-transfer-progress -D"license.skip=true" -D"jacoco.skip=true" $ARG_LINE
+        run: ./mvnw test -B -V  --no-transfer-progress -D"license.skip=true"
