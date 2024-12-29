@@ -69,8 +69,7 @@ class CursorOomTest {
     DefaultSqlSession session = (DefaultSqlSession) sqlSession;
     Field cursorListField = DefaultSqlSession.class.getDeclaredField("cursorList");
     cursorListField.setAccessible(true);
-    List<Cursor<?>> cursorList = (List<Cursor<?>>) cursorListField.get(session);
-    return cursorList;
+    return (List<Cursor<?>>) cursorListField.get(session);
   }
 
   @Test

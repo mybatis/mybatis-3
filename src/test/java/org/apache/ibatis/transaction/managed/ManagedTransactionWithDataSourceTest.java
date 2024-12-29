@@ -17,7 +17,9 @@ package org.apache.ibatis.transaction.managed;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -50,6 +52,7 @@ class ManagedTransactionWithDataSourceTest extends ManagedTransactionBase {
     this.transaction = new ManagedTransaction(dataSource, TransactionIsolationLevel.READ_COMMITTED, true);
   }
 
+  @Override
   @Test
   void shouldGetConnection() throws SQLException {
     when(dataSource.getConnection()).thenReturn(connection);

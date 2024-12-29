@@ -42,7 +42,7 @@ class PrimitiveResultTypeTest {
     }
     List<Long> lcodes = ProductDAO.selectProductCodesL();
     for (Object lcode : lcodes) {
-      assertFalse((lcode instanceof Integer));
+      assertFalse(lcode instanceof Integer);
     }
     List<BigDecimal> bcodes = ProductDAO.selectProductCodesB();
     for (Object bcode : bcodes) {

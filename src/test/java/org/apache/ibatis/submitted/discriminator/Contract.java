@@ -20,7 +20,6 @@ public class Contract {
   private Owner owner;
 
   public Contract(Integer id, Owner owner) {
-    super();
     this.id = id;
     this.owner = owner;
   }
