@@ -43,7 +43,7 @@ class IncludeTest {
   }
 
   @Test
-  void testIncludes() {
+  void includes() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       final Integer result = sqlSession.selectOne("org.apache.ibatis.submitted.includes.mapper.selectWithProperty");
       Assertions.assertEquals(Integer.valueOf(1), result);
@@ -51,7 +51,7 @@ class IncludeTest {
   }
 
   @Test
-  void testParametrizedIncludes() {
+  void parametrizedIncludes() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       sqlSession.selectOne("org.apache.ibatis.submitted.includes.mapper.select");
     }

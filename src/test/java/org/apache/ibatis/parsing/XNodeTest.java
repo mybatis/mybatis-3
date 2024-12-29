@@ -162,7 +162,7 @@ class XNodeTest {
   }
 
   @Test
-  void testXnodeToStringVariables() throws Exception {
+  void xnodeToStringVariables() throws Exception {
     String src = "<root attr='${x}'>y = ${y}<sub attr='${y}'>x = ${x}</sub></root>";
     String expected = "<root attr=\"foo\">\n  y = bar\n  <sub attr=\"bar\">\n    x = foo\n  </sub>\n</root>\n";
     Properties vars = new Properties();

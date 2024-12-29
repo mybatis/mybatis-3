@@ -197,7 +197,7 @@ class MapWrapperTest {
 
   @ParameterizedTest
   @CsvSource({ "abc[def]", "abc.def", "abc.def.ghi", "abc[d.ef].ghi" })
-  void testCustomMapWrapper(String key) {
+  void customMapWrapper(String key) {
     Map<String, Object> map = new HashMap<>();
     MetaObject metaObj = MetaObject.forObject(map, new DefaultObjectFactory(), new FlatMapWrapperFactory(),
         new DefaultReflectorFactory());

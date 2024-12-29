@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ class NestedForEachTest {
   }
 
   @Test
-  void testSimpleSelect() {
+  void simpleSelect() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Name name = new Name();
       name.setLastName("Flintstone");
@@ -60,7 +60,7 @@ class NestedForEachTest {
   }
 
   @Test
-  void testSimpleSelectWithPrimitives() {
+  void simpleSelectWithPrimitives() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Map<String, Object> parameter = new HashMap<>();
       int[] array = { 1, 3, 5 };
@@ -74,7 +74,7 @@ class NestedForEachTest {
   }
 
   @Test
-  void testSimpleSelectWithMapperAndPrimitives() {
+  void simpleSelectWithMapperAndPrimitives() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<Map<String, Object>> answer = mapper.simpleSelectWithMapperAndPrimitives(1, 3, 5);
@@ -83,7 +83,7 @@ class NestedForEachTest {
   }
 
   @Test
-  void testNestedSelect() {
+  void nestedSelect() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Name name = new Name();
       name.setLastName("Flintstone");
@@ -101,7 +101,7 @@ class NestedForEachTest {
   }
 
   @Test
-  void testNestedSelect2() {
+  void nestedSelect2() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Name name = new Name();
       name.setLastName("Flintstone");

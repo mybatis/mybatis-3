@@ -76,7 +76,7 @@ class SetSqlNodeTest extends SqlNodeBase {
   }
 
   @Test
-  public void shouldAppendOnlyUsername() throws Exception {
+  void shouldAppendOnlyUsername() throws Exception {
     when(context.getBindings()).thenReturn(new HashMap<>() {
       {
         put("username", "Jack");
@@ -90,7 +90,7 @@ class SetSqlNodeTest extends SqlNodeBase {
   }
 
   @Test
-  public void shouldAppendOnlyPassword() throws Exception {
+  void shouldAppendOnlyPassword() throws Exception {
     when(context.getBindings()).thenReturn(new HashMap<>() {
       {
         put("password", "***");
@@ -104,7 +104,7 @@ class SetSqlNodeTest extends SqlNodeBase {
   }
 
   @Test
-  public void shouldAppendNone() throws Exception {
+  void shouldAppendNone() throws Exception {
     when(context.getBindings()).thenReturn(new HashMap<>());
 
     boolean result = sqlNode.apply(context);

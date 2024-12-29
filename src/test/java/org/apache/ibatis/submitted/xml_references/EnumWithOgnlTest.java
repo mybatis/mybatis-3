@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test;
 class EnumWithOgnlTest {
 
   @Test
-  void testConfiguration() {
+  void configuration() {
     UnpooledDataSourceFactory dataSourceFactory = new UnpooledDataSourceFactory();
     Properties dataSourceProperties = new Properties();
     dataSourceProperties.put("driver", "org.hsqldb.jdbcDriver");
@@ -48,7 +48,7 @@ class EnumWithOgnlTest {
   }
 
   @Test
-  void testMixedConfiguration() throws Exception {
+  void mixedConfiguration() throws Exception {
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/xml_references/ibatisConfig.xml")) {
       SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
       sqlSessionFactory.getConfiguration().addMapper(PersonMapper2.class);

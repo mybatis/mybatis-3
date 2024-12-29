@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@ package org.apache.ibatis.logging.jdbc;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.contains;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -83,7 +83,7 @@ class PreparedStatementLoggerTest {
     ps.getResultSet();
     ps.getParameterMetaData();
 
-    verify(log, times(0)).debug(anyString());
+    verify(log, never()).debug(anyString());
   }
 
   @Test

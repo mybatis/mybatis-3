@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ class EncodingTest {
   }
 
   @Test
-  void testEncoding1() {
+  void encoding1() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       EncodingMapper mapper = sqlSession.getMapper(EncodingMapper.class);
       String answer = mapper.select1();
@@ -59,7 +59,7 @@ class EncodingTest {
   }
 
   @Test
-  void testEncoding2() {
+  void encoding2() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       EncodingMapper mapper = sqlSession.getMapper(EncodingMapper.class);
       String answer = mapper.select2();

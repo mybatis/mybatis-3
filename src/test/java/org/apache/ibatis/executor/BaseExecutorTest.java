@@ -478,7 +478,7 @@ class BaseExecutorTest extends BaseDataTest {
   }
 
   @Test
-  void testCreateCacheKeyWithAdditionalParameter() {
+  void createCacheKeyWithAdditionalParameter() {
     TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
 
     MappedStatement mappedStatement = new MappedStatement.Builder(config, "testSelect",
@@ -510,7 +510,7 @@ class BaseExecutorTest extends BaseDataTest {
   }
 
   @Test
-  void testCreateCacheKeyWithNull() {
+  void createCacheKeyWithNull() {
     TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
 
     MappedStatement mappedStatement = new MappedStatement.Builder(config, "testSelect",
@@ -538,7 +538,7 @@ class BaseExecutorTest extends BaseDataTest {
   }
 
   @Test
-  void testCreateCacheKeyWithTypeHandler() {
+  void createCacheKeyWithTypeHandler() {
     TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
 
     MappedStatement mappedStatement = new MappedStatement.Builder(config, "testSelect",
@@ -566,7 +566,7 @@ class BaseExecutorTest extends BaseDataTest {
   }
 
   @Test
-  void testCreateCacheKeyWithMetaObject() {
+  void createCacheKeyWithMetaObject() {
     TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
 
     MappedStatement mappedStatement = new MappedStatement.Builder(config, "testSelect",

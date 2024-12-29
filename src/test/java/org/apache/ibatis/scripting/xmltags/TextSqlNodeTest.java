@@ -48,7 +48,7 @@ class TextSqlNodeTest extends SqlNodeBase {
   }
 
   @Test
-  public void shouldApplyDynamic() {
+  void shouldApplyDynamic() {
     // given
     TextSqlNode sqlNode = new TextSqlNode(DYNAMIC_TEXT);
     when(context.getBindings()).thenReturn(new HashMap<>() {
