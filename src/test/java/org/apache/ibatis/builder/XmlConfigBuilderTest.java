@@ -155,16 +155,16 @@ class XmlConfigBuilderTest {
 
   @Test
   void registerJavaTypeInitializingTypeHandler() {
-    // @formatter:off
-    final String MAPPER_CONFIG = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
-        + "<!DOCTYPE configuration PUBLIC \"-//mybatis.org//DTD Config 3.0//EN\" \"https://mybatis.org/dtd/mybatis-3-config.dtd\">\n"
-        + "<configuration>\n"
-        + "  <typeHandlers>\n"
-        + "    <typeHandler javaType=\"org.apache.ibatis.builder.XmlConfigBuilderTest$MyEnum\"\n"
-        + "      handler=\"org.apache.ibatis.builder.XmlConfigBuilderTest$EnumOrderTypeHandler\"/>\n"
-        + "  </typeHandlers>\n"
-        + "</configuration>\n";
-    // @formatter:on
+    final String MAPPER_CONFIG = """
+        <?xml version="1.0" encoding="UTF-8" ?>
+        <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "https://mybatis.org/dtd/mybatis-3-config.dtd">
+        <configuration>
+          <typeHandlers>
+            <typeHandler javaType="org.apache.ibatis.builder.XmlConfigBuilderTest$MyEnum"
+                          handler="org.apache.ibatis.builder.XmlConfigBuilderTest$EnumOrderTypeHandler"/>
+          </typeHandlers>
+        </configuration>
+        """;
 
     XMLConfigBuilder builder = new XMLConfigBuilder(new StringReader(MAPPER_CONFIG));
     builder.parse();
@@ -283,15 +283,15 @@ class XmlConfigBuilderTest {
 
   @Test
   void unknownSettings() {
-    // @formatter:off
-    final String MAPPER_CONFIG = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
-            + "<!DOCTYPE configuration PUBLIC \"-//mybatis.org//DTD Config 3.0//EN\" \"https://mybatis.org/dtd/mybatis-3-config.dtd\">\n"
-            + "<configuration>\n"
-            + "  <settings>\n"
-            + "    <setting name=\"foo\" value=\"bar\"/>\n"
-            + "  </settings>\n"
-            + "</configuration>\n";
-    // @formatter:on
+    final String MAPPER_CONFIG = """
+        <?xml version="1.0" encoding="UTF-8" ?>
+        <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "https://mybatis.org/dtd/mybatis-3-config.dtd">
+        <configuration>
+          <settings>
+            <setting name="foo" value="bar"/>
+          </settings>
+        </configuration>
+        """;
 
     XMLConfigBuilder builder = new XMLConfigBuilder(new StringReader(MAPPER_CONFIG));
     when(builder::parse);
@@ -301,15 +301,15 @@ class XmlConfigBuilderTest {
 
   @Test
   void unknownJavaTypeOnTypeHandler() {
-    // @formatter:off
-    final String MAPPER_CONFIG = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
-            + "<!DOCTYPE configuration PUBLIC \"-//mybatis.org//DTD Config 3.0//EN\" \"https://mybatis.org/dtd/mybatis-3-config.dtd\">\n"
-            + "<configuration>\n"
-            + "  <typeAliases>\n"
-            + "    <typeAlias type=\"a.b.c.Foo\"/>\n"
-            + "  </typeAliases>\n"
-            + "</configuration>\n";
-    // @formatter:on
+    final String MAPPER_CONFIG = """
+        <?xml version="1.0" encoding="UTF-8" ?>
+        <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "https://mybatis.org/dtd/mybatis-3-config.dtd">
+        <configuration>
+          <typeAliases>
+            <typeAlias type="a.b.c.Foo"/>
+          </typeAliases>
+        </configuration>
+        """;
 
     XMLConfigBuilder builder = new XMLConfigBuilder(new StringReader(MAPPER_CONFIG));
     when(builder::parse);
@@ -319,13 +319,13 @@ class XmlConfigBuilderTest {
 
   @Test
   void propertiesSpecifyResourceAndUrlAtSameTime() {
-    // @formatter:off
-    final String MAPPER_CONFIG = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
-        + "<!DOCTYPE configuration PUBLIC \"-//mybatis.org//DTD Config 3.0//EN\" \"https://mybatis.org/dtd/mybatis-3-config.dtd\">\n"
-        + "<configuration>\n"
-        + "  <properties resource=\"a/b/c/foo.properties\" url=\"file:./a/b/c/jdbc.properties\"/>\n"
-        + "</configuration>\n";
-    // @formatter:on
+    final String MAPPER_CONFIG = """
+        <?xml version="1.0" encoding="UTF-8" ?>
+        <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "https://mybatis.org/dtd/mybatis-3-config.dtd">
+        <configuration>
+          <properties resource="a/b/c/foo.properties" url="file:./a/b/c/jdbc.properties"/>
+        </configuration>
+        """;
 
     XMLConfigBuilder builder = new XMLConfigBuilder(new StringReader(MAPPER_CONFIG));
     when(builder::parse);

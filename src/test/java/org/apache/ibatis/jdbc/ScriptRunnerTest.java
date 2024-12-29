@@ -229,8 +229,18 @@ class ScriptRunnerTest extends BaseDataTest {
     when(stmt.getUpdateCount()).thenReturn(-1);
     ScriptRunner runner = new ScriptRunner(conn);
 
-    String sql = "-- @DELIMITER | \n" + "line 1;\n" + "line 2;\n" + "|\n" + "//  @DELIMITER  ;\n" + "line 3; \n"
-        + "-- //@deLimiTer $  blah\n" + "line 4$\n" + "// //@DELIMITER %\n" + "line 5%\n";
+    String sql = """
+        -- @DELIMITER |\s
+        line 1;
+        line 2;
+        |
+        //  @DELIMITER  ;
+        line 3;\s
+        -- //@deLimiTer $  blah
+        line 4$
+        // //@DELIMITER %
+        line 5%
+        """;
     Reader reader = new StringReader(sql);
     runner.runScript(reader);
 
@@ -261,7 +271,14 @@ class ScriptRunnerTest extends BaseDataTest {
     when(stmt.getUpdateCount()).thenReturn(-1);
     ScriptRunner runner = new ScriptRunner(conn);
 
-    String sql = "-- @DELIMITER || \n" + "line 1;\n" + "line 2;\n" + "||\n" + "//  @DELIMITER  ;\n" + "line 3; \n";
+    String sql = """
+        -- @DELIMITER ||\s
+        line 1;
+        line 2;
+        ||
+        //  @DELIMITER  ;
+        line 3;\s
+        """;
     Reader reader = new StringReader(sql);
     runner.runScript(reader);
 
