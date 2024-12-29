@@ -23,11 +23,7 @@ jobs:
           cache: ${{ matrix.cache }}
           distribution: ${{ matrix.distribution }}
           java-version: ${{ matrix.java }}
-      - name: Setup skip tests that require illegal reflective access ubuntu
-        if: ${{ matrix.os == 'ubuntu-latest' }}
-        run: echo 'ARG_LINE=-D"excludedGroups=RequireIllegalAccess" -Xmx2048m -javaagent:${settings.localRepository}/net/bytebuddy/byte-buddy-agent/${byte-buddy.version}/byte-buddy-agent-${byte-buddy.version}.jar' >> $GITHUB_ENV
-      - name: Setup skip tests that require illegal reflective access not ubuntu
-        if: ${{ matrix.os != 'ubuntu-latest' }}
-        run: echo 'ARG_LINE=-D"excludedGroups=TestcontainersTests,RequireIllegalAccess" -Xmx2048m -javaagent:${settings.localRepository}/net/bytebuddy/byte-buddy-agent/${byte-buddy.version}/byte-buddy-agent-${byte-buddy.version}.jar' >> $GITHUB_ENV
+      - name: Allow tests for TestcontainersTests
+        run: echo 'ARG_LINE=-D"excludedGroups=RequireIllegalAccess"' >> $GITHUB_ENV
       - name: Test with Maven
         run: ./mvnw test -B -V  --no-transfer-progress -D"license.skip=true" -D"jacoco.skip=true" $ARG_LINE
