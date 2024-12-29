@@ -83,11 +83,10 @@ class NoResultTypeMapTest {
       PersistenceException ex = assertThrows(PersistenceException.class,
           () -> sqlSession.selectList("org.apache.ibatis.submitted.no_result_type_map.Mapper.noMatchingMethod"));
       ExecutorException cause = (ExecutorException) ex.getCause();
-      assertEquals(
-          "A query was run and no Result Maps were found for the Mapped Statement "
-              + "'org.apache.ibatis.submitted.no_result_type_map.Mapper.noMatchingMethod'. "
-              + "'resultType' or 'resultMap' must be specified when there is no corresponding method.",
-          cause.getMessage());
+      assertEquals("""
+          A query was run and no Result Maps were found for the Mapped Statement \
+          'org.apache.ibatis.submitted.no_result_type_map.Mapper.noMatchingMethod'. \
+          'resultType' or 'resultMap' must be specified when there is no corresponding method.""", cause.getMessage());
     }
   }
 

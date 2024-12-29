@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -63,13 +63,18 @@ public interface PersonMapper {
   // @formatter:on
   Person getComplexWithParamAttributes(Long id);
 
-  // @formatter:off
-  @Select("SELECT id, firstName, lastName, parent_id, parent_firstName, parent_lastName"
-      + " FROM Person"
-      + " WHERE firstName = #{firstName,jdbcType=VARCHAR}"
-      + " AND lastName = #{lastName,jdbcType=VARCHAR}"
-      + " LIMIT 1")
-  // @formatter:on
+  @Select("""
+      SELECT id\
+           , firstName\
+           , lastName\
+           , parent_id\
+           , parent_firstName\
+           , parent_lastName\
+        FROM Person\
+       WHERE firstName = #{firstName, jdbcType=VARCHAR}\
+         AND lastName = #{lastName, jdbcType=VARCHAR}\
+       LIMIT 1\
+      """)
   Person getParentWithParamAttributes(@Param("firstName") String firstName, @Param("lastName") String lastname);
 
 }
