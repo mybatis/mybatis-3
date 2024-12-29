@@ -232,12 +232,12 @@
       <artifactId>junit-jupiter</artifactId>
       <version>${testcontainers.version}</version>
       <scope>test</scope>
-      <!--Only Mysqlcontainer is allowed to use junit 4: Uncomment to test
+      <!--Only Mysqlcontainer is allowed to use junit 4 due to testContainers coupling: Uncomment to test no other leakage
       <exclusions>
-          <exclusion>
-              <groupId>junit</groupId>
-              <artifactId>junit</artifactId>
-          </exclusion>
+        <exclusion>
+          <groupId>junit</groupId>
+          <artifactId>junit</artifactId>
+        </exclusion>
       </exclusions>
       -->
     </dependency>
