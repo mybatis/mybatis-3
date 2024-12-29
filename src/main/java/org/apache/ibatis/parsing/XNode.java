@@ -359,4 +359,25 @@ public class XNode {
     return null;
   }
 
+  /**
+   * Builds text representation of this node, which can be persisted as key and maps the SQLNode.
+   * So that, subsequent references of this Xnode will avoid building SQLNodes
+   * @return string
+   */
+  public String toStringWithContent() {
+    StringBuilder builder = new StringBuilder();
+    toStringWithContent(builder);
+    return builder.toString();
+  }
+
+  private void toStringWithContent(StringBuilder builder) {
+    builder.append(toString());
+    Node clonedNode = getNode().cloneNode(true);
+    builder.append("<textContent>");
+    builder.append(clonedNode.getTextContent());
+    builder.append("<textContent>");
+    builder.append("<body>");
+    builder.append(body);
+    builder.append("<body>");
+  }
 }
