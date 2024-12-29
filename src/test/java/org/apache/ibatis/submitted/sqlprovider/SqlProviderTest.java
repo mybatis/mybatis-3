@@ -710,16 +710,12 @@ class SqlProviderTest {
     class SqlProvider {
 
       public static String provideSql(ProviderContext c) {
-        switch (c.getMapperMethod().getName()) {
-          case "select":
-            return "select name from foo where id = #{id}";
-          case "insert":
-            return "insert into foo (name) values(#{name})";
-          case "update":
-            return "update foo set name = #{name} where id = #{id}";
-          default:
-            return "delete from foo where id = #{id}";
-        }
+        return switch (c.getMapperMethod().getName()) {
+          case "select" -> "select name from foo where id = #{id}";
+          case "insert" -> "insert into foo (name) values(#{name})";
+          case "update" -> "update foo set name = #{name} where id = #{id}";
+          default -> "delete from foo where id = #{id}";
+        };
       }
 
       private SqlProvider() {
