@@ -105,6 +105,8 @@ class MapWrapperUnitTest extends ObjectWrapperBase {
     wrapper.set(new PropertyTokenizer("author.id"), 1);
 
     verify(map).put("author", new HashMap<>() {
+      private static final long serialVersionUID = 1L;
+
       {
         put("id", 1);
       }
@@ -131,6 +133,8 @@ class MapWrapperUnitTest extends ObjectWrapperBase {
   @Override
   void shouldGetGetterNames() {
     Set<String> sets = new HashSet<>() {
+      private static final long serialVersionUID = 1L;
+
       {
         add("key1");
         add("key2");
@@ -148,6 +152,8 @@ class MapWrapperUnitTest extends ObjectWrapperBase {
   @Override
   void shouldGetSetterNames() {
     Set<String> sets = new HashSet<>() {
+      private static final long serialVersionUID = 1L;
+
       {
         add("key1");
         add("key2");

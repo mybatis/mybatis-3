@@ -63,6 +63,8 @@ class WhereSqlNodeTest extends SqlNodeBase {
   @Override
   public void shouldApply() throws Exception {
     when(context.getBindings()).thenReturn(new HashMap<>() {
+      private static final long serialVersionUID = 1L;
+
       {
         put("id", 1);
         put("name", "mybatis");
@@ -78,6 +80,8 @@ class WhereSqlNodeTest extends SqlNodeBase {
   @Test
   void shouldAppendOnlyId() throws Exception {
     when(context.getBindings()).thenReturn(new HashMap<>() {
+      private static final long serialVersionUID = 1L;
+
       {
         put("id", 1);
       }
@@ -92,6 +96,8 @@ class WhereSqlNodeTest extends SqlNodeBase {
   @Test
   void shouldAppendOnlyName() throws Exception {
     when(context.getBindings()).thenReturn(new HashMap<>() {
+      private static final long serialVersionUID = 1L;
+
       {
         put("name", "mybatis");
       }

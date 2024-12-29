@@ -63,6 +63,8 @@ class SetSqlNodeTest extends SqlNodeBase {
   @Override
   public void shouldApply() throws Exception {
     when(context.getBindings()).thenReturn(new HashMap<>() {
+      private static final long serialVersionUID = 1L;
+
       {
         put("username", "Jack");
         put("password", "***");
@@ -78,6 +80,8 @@ class SetSqlNodeTest extends SqlNodeBase {
   @Test
   void shouldAppendOnlyUsername() throws Exception {
     when(context.getBindings()).thenReturn(new HashMap<>() {
+      private static final long serialVersionUID = 1L;
+
       {
         put("username", "Jack");
       }
@@ -92,6 +96,8 @@ class SetSqlNodeTest extends SqlNodeBase {
   @Test
   void shouldAppendOnlyPassword() throws Exception {
     when(context.getBindings()).thenReturn(new HashMap<>() {
+      private static final long serialVersionUID = 1L;
+
       {
         put("password", "***");
       }

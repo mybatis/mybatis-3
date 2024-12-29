@@ -52,6 +52,8 @@ class TextSqlNodeTest extends SqlNodeBase {
     // given
     TextSqlNode sqlNode = new TextSqlNode(DYNAMIC_TEXT);
     when(context.getBindings()).thenReturn(new HashMap<>() {
+      private static final long serialVersionUID = 1L;
+
       {
         put("id", 1);
       }

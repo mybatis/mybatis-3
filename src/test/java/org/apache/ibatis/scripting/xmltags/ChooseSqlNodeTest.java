@@ -72,6 +72,8 @@ class ChooseSqlNodeTest extends SqlNodeBase {
   @Override
   public void shouldApply() throws Exception {
     when(context.getBindings()).thenReturn(new HashMap<>() {
+      private static final long serialVersionUID = 1L;
+
       {
         put("title", "abc");
         put("author", new Author(1, "mybatis", "***", null, null, null));
@@ -87,6 +89,8 @@ class ChooseSqlNodeTest extends SqlNodeBase {
   @Test
   void shouldAppendSecond() throws Exception {
     when(context.getBindings()).thenReturn(new HashMap<>() {
+      private static final long serialVersionUID = 1L;
+
       {
         put("author", new Author(1, "mybatis", "***", null, null, null));
       }
