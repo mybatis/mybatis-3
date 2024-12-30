@@ -24,8 +24,6 @@ public class RichType {
 
   private RichType richType;
 
-  private String richField;
-
   private String richProperty;
 
   private Map richMap = new HashMap<>();

@@ -18,8 +18,6 @@ package org.apache.ibatis.reflection.typeparam;
 public class Calculator<T> {
   protected T id;
 
-  private T fld;
-
   protected T attribute;
 
   public T getId() {
