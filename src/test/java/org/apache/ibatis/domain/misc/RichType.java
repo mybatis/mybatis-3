@@ -24,6 +24,9 @@ public class RichType {
 
   private RichType richType;
 
+  // Required for test
+  private String richField;
+
   private String richProperty;
 
   private Map richMap = new HashMap<>();
