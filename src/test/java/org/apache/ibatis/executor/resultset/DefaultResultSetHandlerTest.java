@@ -28,7 +28,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -118,7 +117,7 @@ class DefaultResultSetHandlerTest {
     when(resultMapping.getColumn()).thenReturn("column");
     when(resultMapping.getTypeHandler()).thenReturn(typeHandler);
     when(typeHandler.getResult(any(ResultSet.class), any(String.class))).thenThrow(new SQLException("exception"));
-    List<ResultMapping> constructorMappings = Collections.singletonList(resultMapping);
+    List<ResultMapping> constructorMappings = List.of(resultMapping);
 
     try {
       defaultResultSetHandler.createParameterizedResultObject(rsw, null/* resultType */, constructorMappings,

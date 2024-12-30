@@ -17,7 +17,9 @@ package org.apache.ibatis.scripting.xmltags;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -42,7 +44,7 @@ import org.mockito.ArgumentCaptor;
  *
  * @see <a href="https://mybatis.org/mybatis-3/dynamic-sql.html#foreach">foreach</a>
  */
-class ForEachSqlNodeTest extends SqlNodeTest {
+class ForEachSqlNodeTest extends SqlNodeBase {
 
   private SqlNode sqlNode;
 
@@ -60,6 +62,8 @@ class ForEachSqlNodeTest extends SqlNodeTest {
     doNothing().when(context).bind(bindKeyCaptor.capture(), bindValueCaptor.capture());
 
     when(context.getBindings()).thenReturn(new HashMap<>() {
+      private static final long serialVersionUID = 1L;
+
       {
         put("list", Arrays.asList("a", "b", "c"));
       }

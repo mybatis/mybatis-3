@@ -38,7 +38,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
  * @see CollectionWrapper
  */
 @ExtendWith(MockitoExtension.class)
-class CollectionWrapperUnitTest extends ObjectWrapperBaseTest {
+class CollectionWrapperUnitTest extends ObjectWrapperBase {
 
   @Mock
   private Collection<Object> collection;
@@ -133,6 +133,8 @@ class CollectionWrapperUnitTest extends ObjectWrapperBaseTest {
   @Override
   void shouldAddAll() {
     List<Object> list = new ArrayList<>() {
+      private static final long serialVersionUID = 1L;
+
       {
         add("1");
         add("2");

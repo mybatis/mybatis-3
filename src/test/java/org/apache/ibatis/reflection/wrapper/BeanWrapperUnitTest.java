@@ -17,7 +17,10 @@ package org.apache.ibatis.reflection.wrapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,7 +39,7 @@ import org.junit.jupiter.api.Test;
  *
  * @see BeanWrapper
  */
-class BeanWrapperUnitTest extends ObjectWrapperBaseTest {
+class BeanWrapperUnitTest extends ObjectWrapperBase {
 
   private RichType richType;
 
@@ -73,6 +76,8 @@ class BeanWrapperUnitTest extends ObjectWrapperBaseTest {
   void shouldGetWhichContainsIndex() {
     richType.setRichList(Arrays.asList(1L, "abc"));
     richType.setRichMap(new HashMap<String, Object>() {
+      private static final long serialVersionUID = 1L;
+
       {
         put("key1", "value1");
         put("key2", "value2");

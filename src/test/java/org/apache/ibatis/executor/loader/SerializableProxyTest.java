@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -134,11 +134,9 @@ public abstract class SerializableProxyTest {
   void shouldNotGenerateWriteReplaceItThereIsAlreadyOne() {
     AuthorWithWriteReplaceMethod beanWithWriteReplace = new AuthorWithWriteReplaceMethod(999, "someone", "!@#@!#!@#",
         "someone@somewhere.com", "blah", Section.NEWS);
-    try {
+    Assertions.assertDoesNotThrow(() -> {
       beanWithWriteReplace.getClass().getDeclaredMethod("writeReplace");
-    } catch (NoSuchMethodException e) {
-      fail("Bean should declare a writeReplace method");
-    }
+    }, "Bean should declare a writeReplace method");
     Object proxy = proxyFactory.createProxy(beanWithWriteReplace, new ResultLoaderMap(), new Configuration(),
         new DefaultObjectFactory(), new ArrayList<>(), new ArrayList<>());
     Class<?>[] interfaces = proxy.getClass().getInterfaces();

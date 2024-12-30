@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -164,7 +164,7 @@ class ScriptRunnerTest extends BaseDataTest {
   }
 
   @Test
-  void testLogging() throws Exception {
+  void logging() throws Exception {
     DataSource ds = createUnpooledDataSource(JPETSTORE_PROPERTIES);
     try (Connection conn = ds.getConnection()) {
       ScriptRunner runner = new ScriptRunner(conn);
@@ -185,7 +185,7 @@ class ScriptRunnerTest extends BaseDataTest {
   }
 
   @Test
-  void testLoggingFullScipt() throws Exception {
+  void loggingFullScipt() throws Exception {
     DataSource ds = createUnpooledDataSource(JPETSTORE_PROPERTIES);
     try (Connection conn = ds.getConnection()) {
       ScriptRunner runner = new ScriptRunner(conn);
@@ -229,8 +229,18 @@ class ScriptRunnerTest extends BaseDataTest {
     when(stmt.getUpdateCount()).thenReturn(-1);
     ScriptRunner runner = new ScriptRunner(conn);
 
-    String sql = "-- @DELIMITER | \n" + "line 1;\n" + "line 2;\n" + "|\n" + "//  @DELIMITER  ;\n" + "line 3; \n"
-        + "-- //@deLimiTer $  blah\n" + "line 4$\n" + "// //@DELIMITER %\n" + "line 5%\n";
+    String sql = """
+        -- @DELIMITER |\s
+        line 1;
+        line 2;
+        |
+        //  @DELIMITER  ;
+        line 3;\s
+        -- //@deLimiTer $  blah
+        line 4$
+        // //@DELIMITER %
+        line 5%
+        """;
     Reader reader = new StringReader(sql);
     runner.runScript(reader);
 
@@ -261,7 +271,14 @@ class ScriptRunnerTest extends BaseDataTest {
     when(stmt.getUpdateCount()).thenReturn(-1);
     ScriptRunner runner = new ScriptRunner(conn);
 
-    String sql = "-- @DELIMITER || \n" + "line 1;\n" + "line 2;\n" + "||\n" + "//  @DELIMITER  ;\n" + "line 3; \n";
+    String sql = """
+        -- @DELIMITER ||\s
+        line 1;
+        line 2;
+        ||
+        //  @DELIMITER  ;
+        line 3;\s
+        """;
     Reader reader = new StringReader(sql);
     runner.runScript(reader);
 

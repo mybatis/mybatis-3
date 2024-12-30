@@ -13,7 +13,9 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.reflection.wrapper;
+package org.apache.ibatis.transaction.jdbc;
+
+import java.sql.SQLException;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -21,34 +23,24 @@ import org.mockito.junit.jupiter.MockitoExtension;
 /**
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
  *
- * @see ObjectWrapper
+ * @see JdbcTransaction
  */
 @ExtendWith(MockitoExtension.class)
-abstract class ObjectWrapperBaseTest {
+abstract class JdbcTransactionBase {
 
-  abstract void shouldGet();
+  abstract void shouldGetConnection() throws SQLException;
 
-  abstract void shouldSet();
+  abstract void shouldCommitWhenConnectionIsNotAutoCommit() throws SQLException;
 
-  abstract void shouldFindProperty();
+  abstract void shouldAutoCommitWhenConnectionIsAutoCommit() throws SQLException;
 
-  abstract void shouldGetGetterNames();
+  abstract void shouldRollbackWhenConnectionIsNotAutoCommit() throws SQLException;
 
-  abstract void shouldGetSetterNames();
+  abstract void shouldAutoRollbackWhenConnectionIsAutoCommit() throws SQLException;
 
-  abstract void shouldGetGetterType();
+  abstract void shouldCloseAndSetAutoCommitWhenConnectionIsNotAutoCommit() throws SQLException;
 
-  abstract void shouldGetSetterType();
+  abstract void shouldCloseAndNotSetAutoCommitWhenConnectionIsAutoCommit() throws SQLException;
 
-  abstract void shouldHasGetter();
-
-  abstract void shouldHasSetter();
-
-  abstract void shouldIsCollection();
-
-  abstract void shouldInstantiatePropertyValue();
-
-  abstract void shouldAddElement();
-
-  abstract void shouldAddAll();
+  abstract void shouldReturnNullWhenGetTimeout() throws SQLException;
 }

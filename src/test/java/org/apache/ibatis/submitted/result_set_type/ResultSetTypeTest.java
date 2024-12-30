@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ class ResultSetTypeTest {
   }
 
   @Test
-  void testWithStatement() {
+  void withStatement() {
     test(mapper -> mapper.getUserWithStatementAndUnset(new RowBounds(5, 3)), 0);
     test(mapper -> mapper.getUserWithStatementAndDefault(new RowBounds(4, 3)), 1);
     test(mapper -> mapper.getUserWithStatementAndForwardOnly(new RowBounds(3, 3)), 2);
@@ -61,7 +61,7 @@ class ResultSetTypeTest {
   }
 
   @Test
-  void testWithPrepared() {
+  void withPrepared() {
     test(mapper -> mapper.getUserWithPreparedAndUnset(new RowBounds(5, 3)), 0);
     test(mapper -> mapper.getUserWithPreparedAndDefault(new RowBounds(4, 3)), 1);
     test(mapper -> mapper.getUserWithPreparedAndForwardOnly(new RowBounds(3, 3)), 2);
@@ -70,7 +70,7 @@ class ResultSetTypeTest {
   }
 
   @Test
-  void testWithCallable() {
+  void withCallable() {
     test(mapper -> mapper.getUserWithCallableAndUnset(new RowBounds(5, 3)), 0);
     test(mapper -> mapper.getUserWithCallableAndDefault(new RowBounds(4, 3)), 1);
     test(mapper -> mapper.getUserWithCallableAndForwardOnly(new RowBounds(3, 3)), 2);

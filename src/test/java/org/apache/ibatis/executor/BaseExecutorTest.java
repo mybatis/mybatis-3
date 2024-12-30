@@ -478,7 +478,7 @@ class BaseExecutorTest extends BaseDataTest {
   }
 
   @Test
-  void testCreateCacheKeyWithAdditionalParameter() {
+  void createCacheKeyWithAdditionalParameter() {
     TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
 
     MappedStatement mappedStatement = new MappedStatement.Builder(config, "testSelect",
@@ -487,6 +487,8 @@ class BaseExecutorTest extends BaseDataTest {
     Object parameterObject = 1;
 
     BoundSql boundSql = new BoundSql(config, "some select statement", new ArrayList<ParameterMapping>() {
+      private static final long serialVersionUID = 1L;
+
       {
         add(new ParameterMapping.Builder(config, "id", registry.getTypeHandler(int.class)).build());
       }
@@ -510,7 +512,7 @@ class BaseExecutorTest extends BaseDataTest {
   }
 
   @Test
-  void testCreateCacheKeyWithNull() {
+  void createCacheKeyWithNull() {
     TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
 
     MappedStatement mappedStatement = new MappedStatement.Builder(config, "testSelect",
@@ -519,6 +521,8 @@ class BaseExecutorTest extends BaseDataTest {
     Object parameterObject = null;
 
     BoundSql boundSql = new BoundSql(config, "some select statement", new ArrayList<ParameterMapping>() {
+      private static final long serialVersionUID = 1L;
+
       {
         add(new ParameterMapping.Builder(config, "id", registry.getTypeHandler(int.class)).build());
       }
@@ -538,7 +542,7 @@ class BaseExecutorTest extends BaseDataTest {
   }
 
   @Test
-  void testCreateCacheKeyWithTypeHandler() {
+  void createCacheKeyWithTypeHandler() {
     TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
 
     MappedStatement mappedStatement = new MappedStatement.Builder(config, "testSelect",
@@ -547,6 +551,8 @@ class BaseExecutorTest extends BaseDataTest {
     Object parameterObject = 1;
 
     BoundSql boundSql = new BoundSql(config, "some select statement", new ArrayList<ParameterMapping>() {
+      private static final long serialVersionUID = 1L;
+
       {
         add(new ParameterMapping.Builder(config, "id", registry.getTypeHandler(int.class)).build());
       }
@@ -566,7 +572,7 @@ class BaseExecutorTest extends BaseDataTest {
   }
 
   @Test
-  void testCreateCacheKeyWithMetaObject() {
+  void createCacheKeyWithMetaObject() {
     TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
 
     MappedStatement mappedStatement = new MappedStatement.Builder(config, "testSelect",
@@ -575,6 +581,8 @@ class BaseExecutorTest extends BaseDataTest {
     Author parameterObject = new Author(-1, "cbegin", "******", "cbegin@nowhere.com", "N/A", Section.NEWS);
 
     BoundSql boundSql = new BoundSql(config, "some select statement", new ArrayList<ParameterMapping>() {
+      private static final long serialVersionUID = 1L;
+
       {
         add(new ParameterMapping.Builder(config, "id", registry.getTypeHandler(int.class)).build());
         add(new ParameterMapping.Builder(config, "username", registry.getTypeHandler(String.class)).build());

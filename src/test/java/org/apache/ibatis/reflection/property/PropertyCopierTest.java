@@ -20,7 +20,7 @@ import java.util.Arrays;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class PropertyCopierTest {
+class PropertyCopierTest {
 
   @Test
   void copyBeanProperties() {

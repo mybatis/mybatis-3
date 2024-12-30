@@ -48,7 +48,7 @@ class BlockingCacheTest {
   }
 
   @Test
-  void testBlockingCache() throws InterruptedException {
+  void blockingCache() throws InterruptedException {
     ExecutorService defaultThreadPool = Executors.newFixedThreadPool(2);
 
     long init = System.currentTimeMillis();

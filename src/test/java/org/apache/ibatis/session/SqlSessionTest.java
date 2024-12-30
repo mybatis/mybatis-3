@@ -162,9 +162,8 @@ class SqlSessionTest extends BaseDataTest {
   @Test
   void shouldFailWithTooManyResultsException() {
     try (SqlSession session = sqlMapper.openSession(TransactionIsolationLevel.SERIALIZABLE)) {
-      Assertions.assertThrows(TooManyResultsException.class, () -> {
-        session.selectOne("org.apache.ibatis.domain.blog.mappers.AuthorMapper.selectAllAuthors");
-      });
+      Assertions.assertThrows(TooManyResultsException.class,
+          () -> session.selectOne("org.apache.ibatis.domain.blog.mappers.AuthorMapper.selectAllAuthors"));
     }
   }
 
@@ -570,9 +569,7 @@ class SqlSessionTest extends BaseDataTest {
     try (SqlSession session = sqlMapper.openSession()) {
       DefaultResultHandler handler = new DefaultResultHandler();
       AuthorMapper mapper = session.getMapper(AuthorMapper.class);
-      Assertions.assertThrows(BindingException.class, () -> {
-        mapper.selectAuthor2(101, handler);
-      });
+      Assertions.assertThrows(BindingException.class, () -> mapper.selectAuthor2(101, handler));
     }
   }
 

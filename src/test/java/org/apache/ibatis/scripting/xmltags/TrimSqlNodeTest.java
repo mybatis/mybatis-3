@@ -43,7 +43,7 @@ import org.junit.jupiter.api.Test;
  *
  * @see <a href="https://mybatis.org/mybatis-3/dynamic-sql.html#trim-where-set">trim-where-set</a>
  */
-class TrimSqlNodeTest extends SqlNodeTest {
+class TrimSqlNodeTest extends SqlNodeBase {
 
   private static final String FIRST_TEXT = " AND id = #{id}";
   private static final String SECOND_TEXT = " AND name = #{name}";
@@ -65,6 +65,8 @@ class TrimSqlNodeTest extends SqlNodeTest {
   @Override
   public void shouldApply() throws Exception {
     when(context.getBindings()).thenReturn(new HashMap<>() {
+      private static final long serialVersionUID = 1L;
+
       {
         put("id", 1);
         put("name", "mybatis");
@@ -78,8 +80,10 @@ class TrimSqlNodeTest extends SqlNodeTest {
   }
 
   @Test
-  public void shouldAppendOnlyId() throws Exception {
+  void shouldAppendOnlyId() throws Exception {
     when(context.getBindings()).thenReturn(new HashMap<>() {
+      private static final long serialVersionUID = 1L;
+
       {
         put("id", 1);
       }
@@ -92,8 +96,10 @@ class TrimSqlNodeTest extends SqlNodeTest {
   }
 
   @Test
-  public void shouldAppendOnlyName() throws Exception {
+  void shouldAppendOnlyName() throws Exception {
     when(context.getBindings()).thenReturn(new HashMap<>() {
+      private static final long serialVersionUID = 1L;
+
       {
         put("name", "mybatis");
       }
@@ -106,7 +112,7 @@ class TrimSqlNodeTest extends SqlNodeTest {
   }
 
   @Test
-  public void shouldAppendNone() throws Exception {
+  void shouldAppendNone() throws Exception {
     when(context.getBindings()).thenReturn(new HashMap<>());
 
     boolean result = sqlNode.apply(context);

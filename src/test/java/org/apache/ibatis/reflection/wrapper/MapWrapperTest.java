@@ -15,7 +15,12 @@
  */
 package org.apache.ibatis.reflection.wrapper;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -197,7 +202,7 @@ class MapWrapperTest {
 
   @ParameterizedTest
   @CsvSource({ "abc[def]", "abc.def", "abc.def.ghi", "abc[d.ef].ghi" })
-  void testCustomMapWrapper(String key) {
+  void customMapWrapper(String key) {
     Map<String, Object> map = new HashMap<>();
     MetaObject metaObj = MetaObject.forObject(map, new DefaultObjectFactory(), new FlatMapWrapperFactory(),
         new DefaultReflectorFactory());

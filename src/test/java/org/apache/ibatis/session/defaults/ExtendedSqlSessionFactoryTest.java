@@ -22,12 +22,12 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ExtendedSqlSessionFactoryTest extends BaseDataTest {
+class ExtendedSqlSessionFactoryTest extends BaseDataTest {
 
   @Test
-  public void testCanUseExtendedSqlSessionUsingDefaults() throws Exception {
+  void canUseExtendedSqlSessionUsingDefaults() throws Exception {
     createBlogDataSource();
 
     final String resource = "org/apache/ibatis/builder/MapperConfig.xml";

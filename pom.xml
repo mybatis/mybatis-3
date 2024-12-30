@@ -81,7 +81,8 @@
 
     <!-- Add slow test groups here and annotate classes similar to @Tag('groupName'). -->
     <!-- Excluded groups are ran on github ci, to force here, pass -d"excludedGroups=" -->
-    <excludedGroups>TestcontainersTests</excludedGroups>
+    <!-- Note: RequireIllegalAccess tests are now no longer valid as they only worked prior to java 16 -->
+    <excludedGroups>TestcontainersTests,RequireIllegalAccess</excludedGroups>
 
     <!-- Automatic Module Name -->
     <module.name>org.mybatis</module.name>
@@ -232,6 +233,14 @@
       <artifactId>junit-jupiter</artifactId>
       <version>${testcontainers.version}</version>
       <scope>test</scope>
+      <!--Only Mysqlcontainer is allowed to use junit 4 due to testContainers coupling: Uncomment to test no other leakage
+      <exclusions>
+        <exclusion>
+          <groupId>junit</groupId>
+          <artifactId>junit</artifactId>
+        </exclusion>
+      </exclusions>
+      -->
     </dependency>
     <dependency>
       <groupId>org.testcontainers</groupId>
@@ -415,12 +424,9 @@
 
   <profiles>
     <profile>
-      <id>16</id>
-      <activation>
-        <jdk>[16,)</jdk>
-      </activation>
+      <id>testContainers</id>
       <properties>
-        <excludedGroups>TestcontainersTests,RequireIllegalAccess</excludedGroups>
+        <excludedGroups>RequireIllegalAccess</excludedGroups>
       </properties>
     </profile>
     <profile>

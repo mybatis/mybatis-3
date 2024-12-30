@@ -17,7 +17,9 @@ package org.apache.ibatis.reflection.wrapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -41,7 +43,7 @@ import org.mockito.Mock;
  *
  * @see MapWrapper
  */
-class MapWrapperUnitTest extends ObjectWrapperBaseTest {
+class MapWrapperUnitTest extends ObjectWrapperBase {
 
   @Mock
   private Map<String, Object> map;
@@ -103,6 +105,8 @@ class MapWrapperUnitTest extends ObjectWrapperBaseTest {
     wrapper.set(new PropertyTokenizer("author.id"), 1);
 
     verify(map).put("author", new HashMap<>() {
+      private static final long serialVersionUID = 1L;
+
       {
         put("id", 1);
       }
@@ -129,6 +133,8 @@ class MapWrapperUnitTest extends ObjectWrapperBaseTest {
   @Override
   void shouldGetGetterNames() {
     Set<String> sets = new HashSet<>() {
+      private static final long serialVersionUID = 1L;
+
       {
         add("key1");
         add("key2");
@@ -146,6 +152,8 @@ class MapWrapperUnitTest extends ObjectWrapperBaseTest {
   @Override
   void shouldGetSetterNames() {
     Set<String> sets = new HashSet<>() {
+      private static final long serialVersionUID = 1L;
+
       {
         add("key1");
         add("key2");

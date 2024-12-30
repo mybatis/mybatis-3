@@ -49,7 +49,7 @@ import org.junit.jupiter.api.Test;
  *
  * @see <a href="https://mybatis.org/mybatis-3/dynamic-sql.html#choose-when-otherwise">choose</a>
  */
-class ChooseSqlNodeTest extends SqlNodeTest {
+class ChooseSqlNodeTest extends SqlNodeBase {
 
   private static final String FIRST_TEXT = " AND title like #{title}";
   private static final String SECOND_TEXT = " AND author_name like #{author.username}";
@@ -72,6 +72,8 @@ class ChooseSqlNodeTest extends SqlNodeTest {
   @Override
   public void shouldApply() throws Exception {
     when(context.getBindings()).thenReturn(new HashMap<>() {
+      private static final long serialVersionUID = 1L;
+
       {
         put("title", "abc");
         put("author", new Author(1, "mybatis", "***", null, null, null));
@@ -85,8 +87,10 @@ class ChooseSqlNodeTest extends SqlNodeTest {
   }
 
   @Test
-  public void shouldAppendSecond() throws Exception {
+  void shouldAppendSecond() throws Exception {
     when(context.getBindings()).thenReturn(new HashMap<>() {
+      private static final long serialVersionUID = 1L;
+
       {
         put("author", new Author(1, "mybatis", "***", null, null, null));
       }
@@ -99,7 +103,7 @@ class ChooseSqlNodeTest extends SqlNodeTest {
   }
 
   @Test
-  public void shouldAppendOtherwise() throws Exception {
+  void shouldAppendOtherwise() throws Exception {
     when(context.getBindings()).thenReturn(new HashMap<>());
 
     boolean result = sqlNode.apply(context);

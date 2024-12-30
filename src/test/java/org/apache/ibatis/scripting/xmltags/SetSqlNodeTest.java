@@ -43,7 +43,7 @@ import org.junit.jupiter.api.Test;
  *
  * @see <a href="https://mybatis.org/mybatis-3/dynamic-sql.html#trim-where-set">trim-where-set</a>
  */
-class SetSqlNodeTest extends SqlNodeTest {
+class SetSqlNodeTest extends SqlNodeBase {
 
   private static final String FIRST_TEXT = " username = #{username},";
   private static final String SECOND_TEXT = " password = #{password}";
@@ -63,6 +63,8 @@ class SetSqlNodeTest extends SqlNodeTest {
   @Override
   public void shouldApply() throws Exception {
     when(context.getBindings()).thenReturn(new HashMap<>() {
+      private static final long serialVersionUID = 1L;
+
       {
         put("username", "Jack");
         put("password", "***");
@@ -76,8 +78,10 @@ class SetSqlNodeTest extends SqlNodeTest {
   }
 
   @Test
-  public void shouldAppendOnlyUsername() throws Exception {
+  void shouldAppendOnlyUsername() throws Exception {
     when(context.getBindings()).thenReturn(new HashMap<>() {
+      private static final long serialVersionUID = 1L;
+
       {
         put("username", "Jack");
       }
@@ -90,8 +94,10 @@ class SetSqlNodeTest extends SqlNodeTest {
   }
 
   @Test
-  public void shouldAppendOnlyPassword() throws Exception {
+  void shouldAppendOnlyPassword() throws Exception {
     when(context.getBindings()).thenReturn(new HashMap<>() {
+      private static final long serialVersionUID = 1L;
+
       {
         put("password", "***");
       }
@@ -104,7 +110,7 @@ class SetSqlNodeTest extends SqlNodeTest {
   }
 
   @Test
-  public void shouldAppendNone() throws Exception {
+  void shouldAppendNone() throws Exception {
     when(context.getBindings()).thenReturn(new HashMap<>());
 
     boolean result = sqlNode.apply(context);

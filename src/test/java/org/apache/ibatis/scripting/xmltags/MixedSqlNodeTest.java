@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
  */
-class MixedSqlNodeTest extends SqlNodeTest {
+class MixedSqlNodeTest extends SqlNodeBase {
 
   private static final String FIRST_TEXT = "abc";
   private static final String SECOND_TEXT = "bcd";

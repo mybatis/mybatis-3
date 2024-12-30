@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -81,12 +81,12 @@ class ArgNameBasedConstructorAutoMappingTest {
       fail("Exception should be thrown");
     } catch (PersistenceException e) {
       ExecutorException ex = (ExecutorException) e.getCause();
-      assertEquals(
-          "Constructor auto-mapping of 'public org.apache.ibatis.submitted.arg_name_based_constructor_automapping."
-              + "User(java.lang.Integer,java.lang.String)' failed "
-              + "because '[id]' were not found in the result set; "
-              + "Available columns are '[NAME, BAR]' and mapUnderscoreToCamelCase is 'true'.",
-          ex.getMessage());
+      assertEquals("""
+          Constructor auto-mapping of 'public org.apache.ibatis.submitted.arg_name_based_constructor_automapping.\
+          User(java.lang.Integer,java.lang.String)' failed \
+          because '[id]' were not found in the result set; \
+          Available columns are '[NAME, BAR]' and mapUnderscoreToCamelCase is 'true'.\
+          """, ex.getMessage());
     }
   }
 

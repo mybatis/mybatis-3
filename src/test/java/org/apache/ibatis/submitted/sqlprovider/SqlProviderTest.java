@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -640,8 +640,7 @@ class SqlProviderTest {
   void multipleMap() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       StaticMethodSqlProviderMapper mapper = sqlSession.getMapper(StaticMethodSqlProviderMapper.class);
-      assertEquals("123456",
-          mapper.multipleMap(Collections.singletonMap("value", "123"), Collections.singletonMap("value", "456")));
+      assertEquals("123456", mapper.multipleMap(Map.of("value", "123"), Map.of("value", "456")));
     }
   }
 
@@ -711,16 +710,12 @@ class SqlProviderTest {
     class SqlProvider {
 
       public static String provideSql(ProviderContext c) {
-        switch (c.getMapperMethod().getName()) {
-          case "select":
-            return "select name from foo where id = #{id}";
-          case "insert":
-            return "insert into foo (name) values(#{name})";
-          case "update":
-            return "update foo set name = #{name} where id = #{id}";
-          default:
-            return "delete from foo where id = #{id}";
-        }
+        return switch (c.getMapperMethod().getName()) {
+          case "select" -> "select name from foo where id = #{id}";
+          case "insert" -> "insert into foo (name) values(#{name})";
+          case "update" -> "update foo set name = #{name} where id = #{id}";
+          default -> "delete from foo where id = #{id}";
+        };
       }
 
       private SqlProvider() {

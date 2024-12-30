@@ -35,7 +35,7 @@ import org.junit.jupiter.api.Test;
  *
  * @see <a href="https://mybatis.org/mybatis-3/dynamic-sql.html#bind">bind</a>
  */
-class VarDeclSqlNodeTest extends SqlNodeTest {
+class VarDeclSqlNodeTest extends SqlNodeBase {
 
   private SqlNode sqlNode;
 
@@ -48,6 +48,8 @@ class VarDeclSqlNodeTest extends SqlNodeTest {
   @Override
   public void shouldApply() throws Exception {
     when(context.getBindings()).thenReturn(new HashMap<>() {
+      private static final long serialVersionUID = 1L;
+
       {
         put("_parameter", new Bean("abc"));
       }

@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
  */
-class TextSqlNodeTest extends SqlNodeTest {
+class TextSqlNodeTest extends SqlNodeBase {
 
   private static final String TEXT = "select 1 from dual";
   private static final String DYNAMIC_TEXT = "select * from user where id = ${id}";
@@ -48,10 +48,12 @@ class TextSqlNodeTest extends SqlNodeTest {
   }
 
   @Test
-  public void shouldApplyDynamic() {
+  void shouldApplyDynamic() {
     // given
     TextSqlNode sqlNode = new TextSqlNode(DYNAMIC_TEXT);
     when(context.getBindings()).thenReturn(new HashMap<>() {
+      private static final long serialVersionUID = 1L;
+
       {
         put("id", 1);
       }
