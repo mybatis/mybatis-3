@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.submitted.language;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -77,7 +78,7 @@ public class VelocitySqlSourceBuilder extends BaseBuilder {
       if (typeHandlerRegistry.hasTypeHandler(parameterType)) {
         propertyType = parameterType;
       } else if (JdbcType.CURSOR.name().equals(jdbcType)) {
-        propertyType = java.sql.ResultSet.class;
+        propertyType = ResultSet.class;
       } else if (property != null) {
         MetaClass metaClass = MetaClass.forClass(parameterType, configuration.getReflectorFactory());
         if (metaClass.hasGetter(property)) {

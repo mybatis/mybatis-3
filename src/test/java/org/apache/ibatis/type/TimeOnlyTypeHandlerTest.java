@@ -21,6 +21,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.sql.Time;
 import java.util.Date;
 
 import org.junit.jupiter.api.Test;
@@ -29,7 +30,7 @@ class TimeOnlyTypeHandlerTest extends BaseTypeHandlerTest {
 
   private static final TypeHandler<Date> TYPE_HANDLER = new TimeOnlyTypeHandler();
   private static final Date DATE = new Date();
-  private static final java.sql.Time SQL_TIME = new java.sql.Time(DATE.getTime());
+  private static final Time SQL_TIME = new Time(DATE.getTime());
 
   @Override
   @Test

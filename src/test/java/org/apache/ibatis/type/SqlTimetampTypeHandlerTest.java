@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 class SqlTimetampTypeHandlerTest extends BaseTypeHandlerTest {
 
   private static final TypeHandler<Timestamp> TYPE_HANDLER = new SqlTimestampTypeHandler();
-  private static final java.sql.Timestamp SQL_TIME = new java.sql.Timestamp(new Date().getTime());
+  private static final Timestamp SQL_TIME = new Timestamp(new Date().getTime());
 
   @Override
   @Test

@@ -18,6 +18,7 @@ package org.apache.ibatis.scripting.xmltags;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,8 +54,8 @@ class OgnlCacheTest {
   @Test
   void issue2609() throws Exception {
     Map<String, Object> context = new HashMap<>();
-    context.put("d1", java.sql.Date.valueOf("2022-01-01"));
-    context.put("d2", java.sql.Date.valueOf("2022-01-02"));
+    context.put("d1", Date.valueOf("2022-01-01"));
+    context.put("d2", Date.valueOf("2022-01-02"));
     assertEquals(-1, OgnlCache.getValue("d1.compareTo(d2)", context));
   }
 }
