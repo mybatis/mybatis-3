@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.builder;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -452,7 +453,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       JdbcType jdbcType) {
     if (javaType == null) {
       if (JdbcType.CURSOR.equals(jdbcType)) {
-        javaType = java.sql.ResultSet.class;
+        javaType = ResultSet.class;
       } else if (Map.class.isAssignableFrom(resultType)) {
         javaType = Object.class;
       } else {

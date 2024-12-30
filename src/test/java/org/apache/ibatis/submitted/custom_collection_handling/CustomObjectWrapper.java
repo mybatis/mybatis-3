@@ -20,8 +20,9 @@ import java.util.List;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
+import org.apache.ibatis.reflection.wrapper.ObjectWrapper;
 
-public class CustomObjectWrapper implements org.apache.ibatis.reflection.wrapper.ObjectWrapper {
+public class CustomObjectWrapper implements ObjectWrapper {
 
   private final CustomCollection collection;
 

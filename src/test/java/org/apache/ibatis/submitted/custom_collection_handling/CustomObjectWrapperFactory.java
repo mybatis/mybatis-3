@@ -17,8 +17,9 @@ package org.apache.ibatis.submitted.custom_collection_handling;
 
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.wrapper.ObjectWrapper;
+import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
 
-public class CustomObjectWrapperFactory implements org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory {
+public class CustomObjectWrapperFactory implements ObjectWrapperFactory {
 
   @Override
   public boolean hasWrapperFor(Object object) {
@@ -27,7 +28,7 @@ public class CustomObjectWrapperFactory implements org.apache.ibatis.reflection.
 
   @Override
   public ObjectWrapper getWrapperFor(MetaObject metaObject, Object object) {
-    return new org.apache.ibatis.submitted.custom_collection_handling.CustomObjectWrapper((CustomCollection) object);
+    return new CustomObjectWrapper((CustomCollection) object);
   }
 
 }

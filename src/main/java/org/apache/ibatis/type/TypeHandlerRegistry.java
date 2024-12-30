@@ -22,6 +22,8 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -159,8 +161,8 @@ public final class TypeHandlerRegistry {
     register(JdbcType.TIME, new TimeOnlyTypeHandler());
 
     register(java.sql.Date.class, new SqlDateTypeHandler());
-    register(java.sql.Time.class, new SqlTimeTypeHandler());
-    register(java.sql.Timestamp.class, new SqlTimestampTypeHandler());
+    register(Time.class, new SqlTimeTypeHandler());
+    register(Timestamp.class, new SqlTimestampTypeHandler());
 
     register(String.class, JdbcType.SQLXML, new SqlxmlTypeHandler());
 

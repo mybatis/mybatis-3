@@ -36,7 +36,7 @@ class DateTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldSetParameter() throws Exception {
     TYPE_HANDLER.setParameter(ps, 1, DATE, null);
-    verify(ps).setTimestamp(1, new java.sql.Timestamp(DATE.getTime()));
+    verify(ps).setTimestamp(1, new Timestamp(DATE.getTime()));
   }
 
   @Override
