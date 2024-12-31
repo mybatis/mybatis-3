@@ -333,7 +333,7 @@ class XmlConfigBuilderTest {
         "The properties element cannot specify both a URL and a resource based property file reference.  Please specify one or the other.");
   }
 
-  static class MySqlProvider {
+  static final class MySqlProvider {
     @SuppressWarnings("unused")
     public static String provideSql() {
       return "SELECT 1";

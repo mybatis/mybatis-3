@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -94,7 +94,7 @@ public interface Mapper {
   @Select("SELECT COUNT(*) FROM users WHERE name LIKE '%' || #{dataabse} || '%'")
   int countByCurrentDatabase(String database);
 
-  class HsqlSqlProvider {
+  final class HsqlSqlProvider {
     public static String getUserUsingProvider() {
       return "SELECT id, name, 'HSQL' as databaseName FROM users WHERE id = #{id}";
     }
@@ -115,7 +115,7 @@ public interface Mapper {
     }
   }
 
-  class DerbySqlProvider {
+  final class DerbySqlProvider {
     public static String getUserUsingProvider() {
       return "SELECT id, name, 'DERBY' as databaseName FROM users WHERE id = #{id}";
     }
@@ -136,7 +136,7 @@ public interface Mapper {
     }
   }
 
-  class DefaultSqlProvider {
+  final class DefaultSqlProvider {
     public static String getUserUsingProvider() {
       return "SELECT id, name, 'DEFAULT' as databaseName FROM users WHERE id = #{id}";
     }

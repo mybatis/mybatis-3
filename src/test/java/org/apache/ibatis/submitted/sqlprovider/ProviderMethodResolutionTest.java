@@ -164,7 +164,7 @@ class ProviderMethodResolutionTest {
       }
     }
 
-    class ReservedMethodNameBasedSqlProvider {
+    final class ReservedMethodNameBasedSqlProvider {
       public static String provideSql() {
         return "DELETE FROM memos WHERE id = 1";
       }
@@ -246,7 +246,7 @@ class ProviderMethodResolutionTest {
     @UpdateProvider(type = SqlProvider.class)
     int update();
 
-    class SqlProvider {
+    final class SqlProvider {
       public static String select() {
         return "SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_USERS";
       }

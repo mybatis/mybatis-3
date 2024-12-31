@@ -16,8 +16,8 @@
 package org.apache.ibatis.submitted.discriminator;
 
 public class Contract {
-  private Integer id;
-  private Owner owner;
+  private final Integer id;
+  private final Owner owner;
 
   public Contract(Integer id, Owner owner) {
     this.id = id;
