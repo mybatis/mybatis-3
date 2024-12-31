@@ -473,11 +473,24 @@ class TypeParameterResolverTest {
     executor.shutdown();
   }
 
-  // @formatter:off
-  class AA {}
-  class BB {}
-  interface IfaceA extends ParentIface<AA> {}
-  interface IfaceB extends ParentIface<BB> {}
-  interface ParentIface<T> {List<T> m();}
-  // @formatter:on
+  class AA {
+    // Do nothing
+  }
+
+  class BB {
+    // Do nothing
+  }
+
+  interface IfaceA extends ParentIface<AA> {
+    // Do Nothing
+  }
+
+  interface IfaceB extends ParentIface<BB> {
+    // Do Nothing
+  }
+
+  interface ParentIface<T> {
+    List<T> m();
+  }
+
 }

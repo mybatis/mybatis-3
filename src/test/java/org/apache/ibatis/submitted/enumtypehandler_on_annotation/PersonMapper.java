@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -44,12 +44,9 @@ public interface PersonMapper {
   @Select("SELECT id, firstName, lastName, personType FROM person WHERE id = #{id}")
   Person findOneUsingConstructor(int id);
 
-  // @formatter:off
   @Results({
       // target for test (ordinal number -> Enum constant)
-      @Result(property = "personType", column = "personType", typeHandler = EnumOrdinalTypeHandler.class)
-    })
-  // @formatter:on
+      @Result(property = "personType", column = "personType", typeHandler = EnumOrdinalTypeHandler.class) })
   @Select("SELECT id, firstName, lastName, personType FROM person WHERE id = #{id}")
   Person findOneUsingSetter(int id);
 

@@ -51,11 +51,7 @@ class InvalidNamedConstructorArgsTest {
   }
 
   interface NoMatchingConstructorMapper {
-    // @formatter:off
-    @ConstructorArgs({
-        @Arg(column = "id", name = "noSuchConstructorArg"),
-      })
-    // @formatter:on
+    @ConstructorArgs({ @Arg(column = "id", name = "noSuchConstructorArg"), })
     @Select("select * from users ")
     User select();
   }
