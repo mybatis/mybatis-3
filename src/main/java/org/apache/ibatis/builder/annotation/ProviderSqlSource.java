@@ -180,7 +180,7 @@ public class ProviderSqlSource implements SqlSource {
           Map<String, Object> params = (Map<String, Object>) parameterObject;
           sql = invokeProviderMethod(extractProviderMethodArguments(params, providerMethodArgumentNames));
         }
-      } else
+      } else {
         switch (providerMethodParameterTypes.length) {
           case 0:
             sql = invokeProviderMethod();
@@ -200,6 +200,7 @@ public class ProviderSqlSource implements SqlSource {
                 + "' with specify parameter '" + (parameterObject == null ? null : parameterObject.getClass())
                 + "' because SqlProvider method arguments for '" + mapperMethod + "' is an invalid combination.");
         }
+      }
       Class<?> parameterType = parameterObject == null ? Object.class : parameterObject.getClass();
       return languageDriver.createSqlSource(configuration, sql, parameterType);
     } catch (BuilderException e) {
