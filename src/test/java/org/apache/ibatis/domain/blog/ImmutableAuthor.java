@@ -73,12 +73,8 @@ public class ImmutableAuthor implements Serializable {
         || (password != null ? !password.equals(author.password) : author.password != null)) {
       return false;
     }
-    if ((username != null ? !username.equals(author.username) : author.username != null) || (favouriteSection != null
-        ? !favouriteSection.equals(author.favouriteSection) : author.favouriteSection != null)) {
-      return false;
-    }
-
-    return true;
+    return username != null ? username.equals(author.username) : author.username == null && favouriteSection != null
+        ? favouriteSection.equals(author.favouriteSection) : author.favouriteSection == null;
   }
 
   @Override

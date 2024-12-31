@@ -60,10 +60,7 @@ public class TestModel {
       return false;
     }
     TestModel other = (TestModel) obj;
-    if (!Objects.equals(a, other.a) || !Objects.equals(b, other.b)) {
-      return false;
-    }
-    return true;
+    return Objects.equals(a, other.a) && Objects.equals(b, other.b);
   }
 
   @Override

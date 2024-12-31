@@ -52,13 +52,10 @@ public class ComplexImmutableAuthor implements Serializable {
 
     final ComplexImmutableAuthor that = (ComplexImmutableAuthor) o;
 
-    if ((bio != null ? !bio.equals(that.bio) : that.bio != null) || favouriteSection != that.favouriteSection
-        || (theComplexImmutableAuthorId != null ? !theComplexImmutableAuthorId.equals(that.theComplexImmutableAuthorId)
-            : that.theComplexImmutableAuthorId != null)) {
-      return false;
-    }
-
-    return true;
+    return bio != null ? bio.equals(that.bio)
+        : that.bio == null && favouriteSection == that.favouriteSection && theComplexImmutableAuthorId != null
+            ? theComplexImmutableAuthorId.equals(that.theComplexImmutableAuthorId)
+            : that.theComplexImmutableAuthorId == null;
   }
 
   @Override

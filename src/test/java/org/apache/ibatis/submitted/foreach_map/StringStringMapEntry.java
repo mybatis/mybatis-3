@@ -51,12 +51,8 @@ public class StringStringMapEntry {
 
     StringStringMapEntry mapEntry = (StringStringMapEntry) o;
 
-    if ((key != null ? !key.equals(mapEntry.key) : mapEntry.key != null)
-        || (value != null ? !value.equals(mapEntry.value) : mapEntry.value != null)) {
-      return false;
-    }
-
-    return true;
+    return key != null ? key.equals(mapEntry.key)
+        : mapEntry.key == null && value != null ? value.equals(mapEntry.value) : mapEntry.value == null;
   }
 
   @Override
@@ -67,7 +63,7 @@ public class StringStringMapEntry {
 
   @Override
   public String toString() {
-    return '{' + key.toString() + '=' + value + '}';
+    return '{' + key + '=' + value + '}';
   }
 
   private String key;

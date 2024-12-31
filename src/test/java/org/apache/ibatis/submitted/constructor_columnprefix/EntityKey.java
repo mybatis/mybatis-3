@@ -42,9 +42,6 @@ public class EntityKey {
       return false;
     }
     EntityKey other = (EntityKey) obj;
-    if (!Objects.equals(id, other.id)) {
-      return false;
-    }
-    return true;
+    return Objects.equals(id, other.id);
   }
 }
