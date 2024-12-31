@@ -16,10 +16,7 @@
 package org.apache.ibatis.mapping;
 
 import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 import org.apache.ibatis.builder.InitializingObject;
 import org.apache.ibatis.cache.Cache;
@@ -37,6 +34,7 @@ import org.apache.ibatis.reflection.SystemMetaObject;
 /**
  * @author Clinton Begin
  */
+
 public class CacheBuilder {
   private final String id;
   private Class<? extends Cache> implementation;
@@ -46,6 +44,26 @@ public class CacheBuilder {
   private boolean readWrite;
   private Properties properties;
   private boolean blocking;
+
+  private static final Map<Class<?>, PropertySetter> propertySetters = new HashMap<>();
+
+  static {
+    propertySetters.put(String.class, new StringPropertySetter());
+    propertySetters.put(Integer.class, new IntegerPropertySetter());
+    propertySetters.put(int.class, new IntegerPropertySetter());
+    propertySetters.put(Long.class, new LongPropertySetter());
+    propertySetters.put(long.class, new LongPropertySetter());
+    propertySetters.put(Short.class, new ShortPropertySetter());
+    propertySetters.put(short.class, new ShortPropertySetter());
+    propertySetters.put(Byte.class, new BytePropertySetter());
+    propertySetters.put(byte.class, new BytePropertySetter());
+    propertySetters.put(Float.class, new FloatPropertySetter());
+    propertySetters.put(float.class, new FloatPropertySetter());
+    propertySetters.put(Boolean.class, new BooleanPropertySetter());
+    propertySetters.put(boolean.class, new BooleanPropertySetter());
+    propertySetters.put(Double.class, new DoublePropertySetter());
+    propertySetters.put(double.class, new DoublePropertySetter());
+  }
 
   public CacheBuilder(String id) {
     this.id = id;
@@ -93,7 +111,6 @@ public class CacheBuilder {
     setDefaultImplementations();
     Cache cache = newBaseCacheInstance(implementation, id);
     setCacheProperties(cache);
-    // issue #352, do not apply decorators to custom caches
     if (PerpetualCache.class.equals(cache.getClass())) {
       for (Class<? extends Cache> decorator : decorators) {
         cache = newCacheDecoratorInstance(decorator, cache);
@@ -147,22 +164,9 @@ public class CacheBuilder {
         String value = (String) entry.getValue();
         if (metaCache.hasSetter(name)) {
           Class<?> type = metaCache.getSetterType(name);
-          if (String.class == type) {
-            metaCache.setValue(name, value);
-          } else if (int.class == type || Integer.class == type) {
-            metaCache.setValue(name, Integer.valueOf(value));
-          } else if (long.class == type || Long.class == type) {
-            metaCache.setValue(name, Long.valueOf(value));
-          } else if (short.class == type || Short.class == type) {
-            metaCache.setValue(name, Short.valueOf(value));
-          } else if (byte.class == type || Byte.class == type) {
-            metaCache.setValue(name, Byte.valueOf(value));
-          } else if (float.class == type || Float.class == type) {
-            metaCache.setValue(name, Float.valueOf(value));
-          } else if (boolean.class == type || Boolean.class == type) {
-            metaCache.setValue(name, Boolean.valueOf(value));
-          } else if (double.class == type || Double.class == type) {
-            metaCache.setValue(name, Double.valueOf(value));
+          PropertySetter setter = propertySetters.get(type);
+          if (setter != null) {
+            setter.setProperty(metaCache, name, value);
           } else {
             throw new CacheException("Unsupported property type for cache: '" + name + "' of type " + type);
           }

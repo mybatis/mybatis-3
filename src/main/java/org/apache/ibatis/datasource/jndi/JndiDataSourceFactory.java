@@ -31,9 +31,9 @@ import org.apache.ibatis.datasource.DataSourceFactory;
  */
 public class JndiDataSourceFactory implements DataSourceFactory {
 
-  public static final String INITIAL_CONTEXT = "initial_context";
-  public static final String DATA_SOURCE = "data_source";
-  public static final String ENV_PREFIX = "env.";
+  private static final String INITIAL_CONTEXT = "initial_context";
+  private static final String DATA_SOURCE = "data_source";
+  private static final String ENV_PREFIX = "env.";
 
   private DataSource dataSource;
 
@@ -78,6 +78,18 @@ public class JndiDataSourceFactory implements DataSourceFactory {
       }
     }
     return contextProperties;
+  }
+
+  public static String getInitialContext() {
+    return INITIAL_CONTEXT;
+  }
+
+  public static String getDataSourceString() {
+    return DATA_SOURCE;
+  }
+
+  public static String getEnvPrefix() {
+    return ENV_PREFIX;
   }
 
 }

@@ -61,7 +61,8 @@ class ClobReaderTypeHandlerTest extends BaseTypeHandlerTest {
 
   @BeforeAll
   static void setupSqlSessionFactory() throws Exception {
-    DataSource dataSource = BaseDataTest.createUnpooledDataSource("org/apache/ibatis/type/jdbc.properties");
+    DataSource dataSource = (DataSource) BaseDataTest
+        .createUnpooledDataSource("org/apache/ibatis/type/jdbc.properties");
     TransactionFactory transactionFactory = new JdbcTransactionFactory();
     Environment environment = new Environment("Production", transactionFactory, dataSource);
     Configuration configuration = new Configuration(environment);

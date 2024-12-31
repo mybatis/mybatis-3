@@ -33,303 +33,252 @@ import org.apache.ibatis.session.Configuration;
  */
 public final class MappedStatement {
 
-  private String resource;
-  private Configuration configuration;
-  private String id;
-  private Integer fetchSize;
-  private Integer timeout;
-  private StatementType statementType;
-  private ResultSetType resultSetType;
-  private SqlSource sqlSource;
-  private Cache cache;
-  private ParameterMap parameterMap;
-  private List<ResultMap> resultMaps;
-  private boolean flushCacheRequired;
-  private boolean useCache;
-  private boolean resultOrdered;
-  private SqlCommandType sqlCommandType;
-  private KeyGenerator keyGenerator;
-  private String[] keyProperties;
-  private String[] keyColumns;
-  private boolean hasNestedResultMaps;
-  private String databaseId;
-  private Log statementLog;
-  private LanguageDriver lang;
-  private String[] resultSets;
-  private boolean dirtySelect;
+  private final MappedStatementProperties properties;
 
-  MappedStatement() {
-    // constructor disabled
+  private MappedStatement(MappedStatementProperties properties) {
+    this.properties = properties;
   }
 
   public static class Builder {
-    private final MappedStatement mappedStatement = new MappedStatement();
+    private final MappedStatementProperties properties = new MappedStatementProperties();
 
     public Builder(Configuration configuration, String id, SqlSource sqlSource, SqlCommandType sqlCommandType) {
-      mappedStatement.configuration = configuration;
-      mappedStatement.id = id;
-      mappedStatement.sqlSource = sqlSource;
-      mappedStatement.statementType = StatementType.PREPARED;
-      mappedStatement.resultSetType = ResultSetType.DEFAULT;
-      mappedStatement.parameterMap = new ParameterMap.Builder(configuration, "defaultParameterMap", null,
-          new ArrayList<>()).build();
-      mappedStatement.resultMaps = new ArrayList<>();
-      mappedStatement.sqlCommandType = sqlCommandType;
-      mappedStatement.keyGenerator = configuration.isUseGeneratedKeys() && SqlCommandType.INSERT.equals(sqlCommandType)
-          ? Jdbc3KeyGenerator.INSTANCE : NoKeyGenerator.INSTANCE;
+      properties.setConfiguration(configuration);
+      properties.setId(id);
+      properties.setSqlSource(sqlSource);
+      properties.setSqlCommandType(sqlCommandType);
+      properties.setStatementType(StatementType.PREPARED);
+      properties.setResultSetType(ResultSetType.DEFAULT);
+      properties.setParameterMap(
+          new ParameterMap.Builder(configuration, "defaultParameterMap", null, new ArrayList<>()).build());
+      properties.setResultMaps(new ArrayList<>());
+      properties.setKeyGenerator(configuration.isUseGeneratedKeys() && SqlCommandType.INSERT.equals(sqlCommandType)
+          ? Jdbc3KeyGenerator.INSTANCE : NoKeyGenerator.INSTANCE);
       String logId = id;
       if (configuration.getLogPrefix() != null) {
         logId = configuration.getLogPrefix() + id;
       }
-      mappedStatement.statementLog = LogFactory.getLog(logId);
-      mappedStatement.lang = configuration.getDefaultScriptingLanguageInstance();
+      properties.setStatementLog(LogFactory.getLog(logId));
+      properties.setLang(configuration.getDefaultScriptingLanguageInstance());
     }
 
     public Builder resource(String resource) {
-      mappedStatement.resource = resource;
+      properties.setResource(resource);
       return this;
     }
 
     public String id() {
-      return mappedStatement.id;
+      return properties.getId();
     }
 
     public Builder parameterMap(ParameterMap parameterMap) {
-      mappedStatement.parameterMap = parameterMap;
+      properties.setParameterMap(parameterMap);
       return this;
     }
 
     public Builder resultMaps(List<ResultMap> resultMaps) {
-      mappedStatement.resultMaps = resultMaps;
+      properties.setResultMaps(resultMaps);
       for (ResultMap resultMap : resultMaps) {
-        mappedStatement.hasNestedResultMaps = mappedStatement.hasNestedResultMaps || resultMap.hasNestedResultMaps();
+        properties.setHasNestedResultMaps(properties.isHasNestedResultMaps() || resultMap.hasNestedResultMaps());
       }
       return this;
     }
 
     public Builder fetchSize(Integer fetchSize) {
-      mappedStatement.fetchSize = fetchSize;
+      properties.setFetchSize(fetchSize);
       return this;
     }
 
     public Builder timeout(Integer timeout) {
-      mappedStatement.timeout = timeout;
+      properties.setTimeout(timeout);
       return this;
     }
 
     public Builder statementType(StatementType statementType) {
-      mappedStatement.statementType = statementType;
+      properties.setStatementType(statementType);
       return this;
     }
 
     public Builder resultSetType(ResultSetType resultSetType) {
-      mappedStatement.resultSetType = resultSetType == null ? ResultSetType.DEFAULT : resultSetType;
+      properties.setResultSetType(resultSetType == null ? ResultSetType.DEFAULT : resultSetType);
       return this;
     }
 
     public Builder cache(Cache cache) {
-      mappedStatement.cache = cache;
+      properties.setCache(cache);
       return this;
     }
 
     public Builder flushCacheRequired(boolean flushCacheRequired) {
-      mappedStatement.flushCacheRequired = flushCacheRequired;
+      properties.setFlushCacheRequired(flushCacheRequired);
       return this;
     }
 
     public Builder useCache(boolean useCache) {
-      mappedStatement.useCache = useCache;
+      properties.setUseCache(useCache);
       return this;
     }
 
     public Builder resultOrdered(boolean resultOrdered) {
-      mappedStatement.resultOrdered = resultOrdered;
+      properties.setResultOrdered(resultOrdered);
       return this;
     }
 
     public Builder keyGenerator(KeyGenerator keyGenerator) {
-      mappedStatement.keyGenerator = keyGenerator;
+      properties.setKeyGenerator(keyGenerator);
       return this;
     }
 
     public Builder keyProperty(String keyProperty) {
-      mappedStatement.keyProperties = delimitedStringToArray(keyProperty);
+      properties.setKeyProperties(delimitedStringToArray(keyProperty));
       return this;
     }
 
     public Builder keyColumn(String keyColumn) {
-      mappedStatement.keyColumns = delimitedStringToArray(keyColumn);
+      properties.setKeyColumns(delimitedStringToArray(keyColumn));
       return this;
     }
 
     public Builder databaseId(String databaseId) {
-      mappedStatement.databaseId = databaseId;
+      properties.setDatabaseId(databaseId);
       return this;
     }
 
     public Builder lang(LanguageDriver driver) {
-      mappedStatement.lang = driver;
+      properties.setLang(driver);
       return this;
     }
 
     public Builder resultSets(String resultSet) {
-      mappedStatement.resultSets = delimitedStringToArray(resultSet);
+      properties.setResultSets(delimitedStringToArray(resultSet));
       return this;
     }
 
     public Builder dirtySelect(boolean dirtySelect) {
-      mappedStatement.dirtySelect = dirtySelect;
-      return this;
-    }
-
-    /**
-     * Resul sets.
-     *
-     * @param resultSet
-     *          the result set
-     *
-     * @return the builder
-     *
-     * @deprecated Use {@link #resultSets}
-     */
-    @Deprecated
-    public Builder resulSets(String resultSet) {
-      mappedStatement.resultSets = delimitedStringToArray(resultSet);
+      properties.setDirtySelect(dirtySelect);
       return this;
     }
 
     public MappedStatement build() {
-      assert mappedStatement.configuration != null;
-      assert mappedStatement.id != null;
-      assert mappedStatement.sqlSource != null;
-      assert mappedStatement.lang != null;
-      mappedStatement.resultMaps = Collections.unmodifiableList(mappedStatement.resultMaps);
-      return mappedStatement;
+      assert properties.getConfiguration() != null;
+      assert properties.getId() != null;
+      assert properties.getSqlSource() != null;
+      assert properties.getLang() != null;
+      properties.setResultMaps(Collections.unmodifiableList(properties.getResultMaps()));
+      return new MappedStatement(properties);
     }
   }
 
   public KeyGenerator getKeyGenerator() {
-    return keyGenerator;
+    return properties.getKeyGenerator();
   }
 
   public SqlCommandType getSqlCommandType() {
-    return sqlCommandType;
+    return properties.getSqlCommandType();
   }
 
   public String getResource() {
-    return resource;
+    return properties.getResource();
   }
 
   public Configuration getConfiguration() {
-    return configuration;
+    return properties.getConfiguration();
   }
 
   public String getId() {
-    return id;
+    return properties.getId();
   }
 
   public boolean hasNestedResultMaps() {
-    return hasNestedResultMaps;
+    return properties.isHasNestedResultMaps();
   }
 
   public Integer getFetchSize() {
-    return fetchSize;
+    return properties.getFetchSize();
   }
 
   public Integer getTimeout() {
-    return timeout;
+    return properties.getTimeout();
   }
 
   public StatementType getStatementType() {
-    return statementType;
+    return properties.getStatementType();
   }
 
   public ResultSetType getResultSetType() {
-    return resultSetType;
+    return properties.getResultSetType();
   }
 
   public SqlSource getSqlSource() {
-    return sqlSource;
+    return properties.getSqlSource();
   }
 
   public ParameterMap getParameterMap() {
-    return parameterMap;
+    return properties.getParameterMap();
   }
 
   public List<ResultMap> getResultMaps() {
-    return resultMaps;
+    return properties.getResultMaps();
   }
 
   public Cache getCache() {
-    return cache;
+    return properties.getCache();
   }
 
   public boolean isFlushCacheRequired() {
-    return flushCacheRequired;
+    return properties.isFlushCacheRequired();
   }
 
   public boolean isUseCache() {
-    return useCache;
+    return properties.isUseCache();
   }
 
   public boolean isResultOrdered() {
-    return resultOrdered;
+    return properties.isResultOrdered();
   }
 
   public String getDatabaseId() {
-    return databaseId;
+    return properties.getDatabaseId();
   }
 
   public String[] getKeyProperties() {
-    return keyProperties;
+    return properties.getKeyProperties();
   }
 
   public String[] getKeyColumns() {
-    return keyColumns;
+    return properties.getKeyColumns();
   }
 
   public Log getStatementLog() {
-    return statementLog;
+    return properties.getStatementLog();
   }
 
   public LanguageDriver getLang() {
-    return lang;
+    return properties.getLang();
   }
 
   public String[] getResultSets() {
-    return resultSets;
+    return properties.getResultSets();
   }
 
   public boolean isDirtySelect() {
-    return dirtySelect;
-  }
-
-  /**
-   * Gets the resul sets.
-   *
-   * @return the resul sets
-   *
-   * @deprecated Use {@link #getResultSets()}
-   */
-  @Deprecated
-  public String[] getResulSets() {
-    return resultSets;
+    return properties.isDirtySelect();
   }
 
   public BoundSql getBoundSql(Object parameterObject) {
-    BoundSql boundSql = sqlSource.getBoundSql(parameterObject);
+    BoundSql boundSql = properties.getSqlSource().getBoundSql(parameterObject);
     List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
     if (parameterMappings == null || parameterMappings.isEmpty()) {
-      boundSql = new BoundSql(configuration, boundSql.getSql(), parameterMap.getParameterMappings(), parameterObject);
+      boundSql = new BoundSql(properties.getConfiguration(), boundSql.getSql(),
+          properties.getParameterMap().getParameterMappings(), parameterObject);
     }
 
-    // check for nested result maps in parameter mappings (issue #30)
     for (ParameterMapping pm : boundSql.getParameterMappings()) {
       String rmId = pm.getResultMapId();
       if (rmId != null) {
-        ResultMap rm = configuration.getResultMap(rmId);
+        ResultMap rm = properties.getConfiguration().getResultMap(rmId);
         if (rm != null) {
-          hasNestedResultMaps |= rm.hasNestedResultMaps();
+          properties.setHasNestedResultMaps(properties.isHasNestedResultMaps() || rm.hasNestedResultMaps());
         }
       }
     }
@@ -343,5 +292,4 @@ public final class MappedStatement {
     }
     return in.split(",");
   }
-
 }

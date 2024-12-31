@@ -206,6 +206,13 @@ public class ResultMap {
     }
   }
 
+  public static void validateNestedQueryAndResultMap(ResultMapping resultMapping) {
+    if (resultMapping.getNestedQueryId() != null && resultMapping.getNestedResultMapId() != null) {
+      throw new IllegalStateException(
+          "Cannot define both nestedQueryId and nestedResultMapId in property " + resultMapping.getProperty());
+    }
+  }
+
   public String getId() {
     return id;
   }
