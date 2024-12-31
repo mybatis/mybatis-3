@@ -19,6 +19,7 @@ import static com.googlecode.catchexception.apis.BDDCatchException.caughtExcepti
 import static com.googlecode.catchexception.apis.BDDCatchException.when;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.BDDAssertions.then;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import java.io.InputStream;
 import java.util.regex.Pattern;
@@ -36,14 +37,16 @@ import org.junit.jupiter.api.Test;
 class XmlMapperBuilderTest {
 
   @Test
-  void shouldSuccessfullyLoadXMLMapperFile() throws Exception {
-    Configuration configuration = new Configuration();
-    String resource = "org/apache/ibatis/builder/AuthorMapper.xml";
-    try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
-      XMLMapperBuilder builder = new XMLMapperBuilder(inputStream, configuration, resource,
-          configuration.getSqlFragments());
-      builder.parse();
-    }
+  void shouldSuccessfullyLoadXMLMapperFile() {
+    assertDoesNotThrow(() -> {
+      Configuration configuration = new Configuration();
+      String resource = "org/apache/ibatis/builder/AuthorMapper.xml";
+      try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
+        XMLMapperBuilder builder = new XMLMapperBuilder(inputStream, configuration, resource,
+            configuration.getSqlFragments());
+        builder.parse();
+      }
+    });
   }
 
   @Test

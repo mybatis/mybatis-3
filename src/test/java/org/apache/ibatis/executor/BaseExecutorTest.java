@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.executor;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -452,29 +453,31 @@ class BaseExecutorTest extends BaseDataTest {
   }
 
   @Test
-  void shouldClearDeferredLoads() throws Exception {
+  void shouldClearDeferredLoads() {
+    assertDoesNotThrow(() -> {
 
-    Executor executor = createExecutor(new JdbcTransaction(ds, null, false));
-    try {
-      MappedStatement selectBlog = ExecutorTestHelper.prepareComplexSelectBlogMappedStatement(config);
-      MappedStatement selectPosts = ExecutorTestHelper.prepareSelectPostsForBlogMappedStatement(config);
-      config.addMappedStatement(selectBlog);
-      config.addMappedStatement(selectPosts);
-      MappedStatement selectAuthor = ExecutorTestHelper.prepareSelectOneAuthorMappedStatement(config);
-      MappedStatement insertAuthor = ExecutorTestHelper.prepareInsertAuthorMappedStatement(config);
+      Executor executor = createExecutor(new JdbcTransaction(ds, null, false));
+      try {
+        MappedStatement selectBlog = ExecutorTestHelper.prepareComplexSelectBlogMappedStatement(config);
+        MappedStatement selectPosts = ExecutorTestHelper.prepareSelectPostsForBlogMappedStatement(config);
+        config.addMappedStatement(selectBlog);
+        config.addMappedStatement(selectPosts);
+        MappedStatement selectAuthor = ExecutorTestHelper.prepareSelectOneAuthorMappedStatement(config);
+        MappedStatement insertAuthor = ExecutorTestHelper.prepareInsertAuthorMappedStatement(config);
 
-      // generate DeferredLoads
-      executor.query(selectPosts, 1, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
+        // generate DeferredLoads
+        executor.query(selectPosts, 1, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
 
-      Author author = new Author(-1, "someone", "******", "someone@apache.org", null, Section.NEWS);
-      executor.update(insertAuthor, author);
-      executor.query(selectAuthor, -1, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
-      executor.flushStatements();
-      executor.rollback(true);
-    } finally {
-      executor.rollback(true);
-      executor.close(false);
-    }
+        Author author = new Author(-1, "someone", "******", "someone@apache.org", null, Section.NEWS);
+        executor.update(insertAuthor, author);
+        executor.query(selectAuthor, -1, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
+        executor.flushStatements();
+        executor.rollback(true);
+      } finally {
+        executor.rollback(true);
+        executor.close(false);
+      }
+    });
   }
 
   @Test
