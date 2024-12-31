@@ -35,7 +35,6 @@ public class StatementUtil {
    * Apply a transaction timeout.
    * <p>
    * Update a query timeout to apply a transaction timeout.
-   * </p>
    *
    * @param statement
    *          a target statement

@@ -46,12 +46,10 @@ public class ParamNameResolver {
   private final boolean useActualParamName;
 
   /**
-   * <p>
    * The key is the index and the value is the name of the parameter.<br />
    * The name is obtained from {@link Param} if specified. When {@link Param} is not specified, the parameter index is
    * used. Note that this index could be different from the actual index when the method has special parameters (i.e.
    * {@link RowBounds} or {@link ResultHandler}).
-   * </p>
    * <ul>
    * <li>aMethod(@Param("M") int a, @Param("N") int b) -&gt; {{0, "M"}, {1, "N"}}</li>
    * <li>aMethod(int a, int b) -&gt; {{0, "0"}, {1, "1"}}</li>
@@ -116,10 +114,8 @@ public class ParamNameResolver {
   }
 
   /**
-   * <p>
    * A single non-special parameter is returned without a name. Multiple parameters are named using the naming rule. In
    * addition to the default names, this method also adds the generic names (param1, param2, ...).
-   * </p>
    *
    * @param args
    *          the args

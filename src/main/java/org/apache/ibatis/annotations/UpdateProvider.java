@@ -25,12 +25,12 @@ import java.lang.annotation.Target;
 /**
  * The annotation that specify a method that provide an SQL for updating record(s).
  * <p>
- * <b>How to use:</b> <code>
+ * <b>How to use:</b>
  *
- * <pre>
+ * <pre>{@code
  * public interface UserMapper {
  *
- *   &#064;UpdateProvider(type = SqlProvider.class, method = "update")
+ *   @UpdateProvider(type = SqlProvider.class, method = "update")
  *   boolean update(User user);
  *
  *   public static class SqlProvider {
@@ -40,9 +40,7 @@ import java.lang.annotation.Target;
  *   }
  *
  * }
- * </pre>
- *
- * <code>
+ * }</pre>
  *
  * @author Clinton Begin
  */
@@ -78,7 +76,9 @@ public @interface UpdateProvider {
    * Specify a method for providing an SQL.
    * <p>
    * Since 3.5.1, this attribute can omit. If this attribute omit, the MyBatis will call a method that decide by
-   * following rules. <code>
+   * following rules.
+   *
+   * <pre>
    *   <ul>
    *     <li>
    *       If class that specified the {@link #type()} attribute implements the
@@ -87,10 +87,10 @@ public @interface UpdateProvider {
    *     </li>
    *     <li>
    *       If cannot resolve a method by {@link org.apache.ibatis.builder.annotation.ProviderMethodResolver}
-   *       (= not implement it or it was returned {@code null}), the MyBatis will search and use a fallback method
-   *       that named {@code provideSql} from specified type</li>
+   *       (= not implement it or it was returned <code>null</code>), the MyBatis will search and use a fallback method
+   *       that named <code>provideSql</code> from specified type</li>
    *   </ul>
-   * </code>
+   * </pre>
    *
    * @return a method name of method for providing an SQL
    */

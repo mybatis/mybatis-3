@@ -28,23 +28,17 @@ import org.apache.ibatis.type.UnknownTypeHandler;
 /**
  * The annotation that be grouping conditional mapping definitions.
  * <p>
- * <b>How to use:</b> <code>
- * <pre>
+ * <b>How to use:</b>
+ *
+ * <pre>{@code
  * public interface UserMapper {
  *   &#064;Select("SELECT id, name, type FROM users ORDER BY id")
- *   &#064;TypeDiscriminator(
- *     column = "type",
- *     javaType = String.class,
- *     cases = {
- *       &#064;Case(value = "1", type = PremiumUser.class),
- *       &#064;Case(value = "2", type = GeneralUser.class),
- *       &#064;Case(value = "3", type = TemporaryUser.class)
- *     }
- *   )
+ *   &#064;TypeDiscriminator(column = "type", javaType = String.class, cases = {
+ *       &#064;Case(value = "1", type = PremiumUser.class), &#064;Case(value = "2", type = GeneralUser.class),
+ *       &#064;Case(value = "3", type = TemporaryUser.class) })
  *   List&lt;User&gt; selectAll();
  * }
- * </pre>
- * </code>
+ * }</pre>
  *
  * @author Clinton Begin
  */

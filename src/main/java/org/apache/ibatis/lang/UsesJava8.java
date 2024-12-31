@@ -22,9 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * <p>
  * Indicates that the element uses Java 8 API.
- * </p>
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

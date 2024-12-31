@@ -55,7 +55,6 @@ public @interface SelectKey {
    * Returns property names that holds a key value.
    * <p>
    * If you specify multiple property, please separate using comma(',').
-   * </p>
    *
    * @return property names that separate with comma(',')
    */
@@ -65,7 +64,6 @@ public @interface SelectKey {
    * Returns column names that retrieves a key value.
    * <p>
    * If you specify multiple column, please separate using comma(',').
-   * </p>
    *
    * @return column names that separate with comma(',')
    */
