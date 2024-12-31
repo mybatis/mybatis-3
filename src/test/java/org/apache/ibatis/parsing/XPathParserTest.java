@@ -22,8 +22,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.io.Resources;
@@ -156,11 +158,29 @@ class XPathParserTest {
     try {
       InputSource inputSource = new InputSource(Resources.getResourceAsReader(resource));
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+      String feature = null;
+      try {
+        feature = "http://xml.org/sax/features/external-parameter-entities";
+        factory.setFeature(feature, false);
+
+        feature = "http://apache.org/xml/features/nonvalidating/load-external-dtd";
+        factory.setFeature(feature, false);
+
+        feature = "http://xml.org/sax/features/external-general-entities";
+        factory.setFeature(feature, false);
+
+        factory.setXIncludeAware(false);
+        factory.setExpandEntityReferences(false);
+
+        factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+
+      } catch (ParserConfigurationException e) {
+        throw new IllegalStateException("The feature '" + feature + "' is not supported by your XML processor.", e);
+      }
       factory.setNamespaceAware(false);
       factory.setIgnoringComments(true);
       factory.setIgnoringElementContentWhitespace(false);
       factory.setCoalescing(false);
-      factory.setExpandEntityReferences(true);
       DocumentBuilder builder = factory.newDocumentBuilder();
       return builder.parse(inputSource);// already closed resource in builder.parse method
     } catch (Exception e) {
