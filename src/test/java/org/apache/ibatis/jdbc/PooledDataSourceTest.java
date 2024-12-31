@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.jdbc;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -72,19 +73,23 @@ class PooledDataSourceTest extends BaseDataTest {
   }
 
   @Test
-  void shouldNotFailCallingToStringOverAnInvalidConnection() throws Exception {
-    PooledDataSource ds = createPooledDataSource(JPETSTORE_PROPERTIES);
-    Connection c = ds.getConnection();
-    c.close();
-    c.toString();
+  void shouldNotFailCallingToStringOverAnInvalidConnection() {
+    assertDoesNotThrow(() -> {
+      PooledDataSource ds = createPooledDataSource(JPETSTORE_PROPERTIES);
+      Connection c = ds.getConnection();
+      c.close();
+      c.toString();
+    });
   }
 
   @Test
-  void ShouldReturnRealConnection() throws Exception {
-    PooledDataSource ds = createPooledDataSource(JPETSTORE_PROPERTIES);
-    Connection c = ds.getConnection();
-    PooledDataSource.unwrapConnection(c);
-    c.close();
+  void ShouldReturnRealConnection() {
+    assertDoesNotThrow(() -> {
+      PooledDataSource ds = createPooledDataSource(JPETSTORE_PROPERTIES);
+      Connection c = ds.getConnection();
+      PooledDataSource.unwrapConnection(c);
+      c.close();
+    });
   }
 
 }

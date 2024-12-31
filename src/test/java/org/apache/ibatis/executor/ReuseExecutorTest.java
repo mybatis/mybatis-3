@@ -15,6 +15,8 @@
  */
 package org.apache.ibatis.executor;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 import org.apache.ibatis.transaction.Transaction;
 import org.junit.jupiter.api.Test;
 
@@ -26,8 +28,8 @@ class ReuseExecutorTest extends BaseExecutorTest {
 
   @Override
   @Test
-  public void shouldFetchPostWithBlogWithCompositeKey() throws Exception {
-    super.shouldFetchPostWithBlogWithCompositeKey();
+  public void shouldFetchPostWithBlogWithCompositeKey() {
+    assertDoesNotThrow(super::shouldFetchPostWithBlogWithCompositeKey);
   }
 
   @Override
