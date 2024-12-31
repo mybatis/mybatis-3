@@ -707,7 +707,7 @@ class SqlProviderTest {
     @DeleteProvider
     void delete(int id);
 
-    class SqlProvider {
+    final class SqlProvider {
 
       public static String provideSql(ProviderContext c) {
         return switch (c.getMapperMethod().getName()) {
@@ -840,7 +840,7 @@ class SqlProviderTest {
     String multipleMap(@Param("map1") Map<String, Object> map1, @Param("map2") Map<String, Object> map2);
 
     @SuppressWarnings("unused")
-    class SqlProvider {
+    final class SqlProvider {
 
       public static String noArgument() {
         return "SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_USERS";
@@ -989,7 +989,7 @@ class SqlProviderTest {
     String selectDatabaseId();
 
     @SuppressWarnings("unused")
-    class SqlProvider {
+    final class SqlProvider {
       public static String provideSql(ProviderContext context) {
         if ("hsql".equals(context.getDatabaseId())) {
           return "SELECT '" + context.getDatabaseId() + "' FROM INFORMATION_SCHEMA.SYSTEM_USERS";

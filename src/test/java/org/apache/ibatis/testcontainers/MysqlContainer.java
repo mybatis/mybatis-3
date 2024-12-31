@@ -24,7 +24,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 @Testcontainers
-public class MysqlContainer {
+public final class MysqlContainer {
 
   private static final String DB_NAME = "mybatis_test";
   private static final String USERNAME = "u";
