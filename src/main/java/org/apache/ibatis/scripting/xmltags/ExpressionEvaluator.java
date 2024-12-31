@@ -28,6 +28,8 @@ import org.apache.ibatis.builder.BuilderException;
  */
 public class ExpressionEvaluator {
 
+  public static final ExpressionEvaluator INSTANCE = new ExpressionEvaluator();
+
   public boolean evaluateBoolean(String expression, Object parameterObject) {
     Object value = OgnlCache.getValue(expression, parameterObject);
     if (value instanceof Boolean) {
