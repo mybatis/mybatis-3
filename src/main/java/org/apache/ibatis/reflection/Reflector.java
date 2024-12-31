@@ -243,7 +243,7 @@ public class Reflector {
         // modification of final fields through reflection (JSR-133). (JGB)
         // pr #16 - final static can only be set by the classloader
         int modifiers = field.getModifiers();
-        if ((!Modifier.isFinal(modifiers) || !Modifier.isStatic(modifiers))) {
+        if (!Modifier.isFinal(modifiers) || !Modifier.isStatic(modifiers)) {
           addSetField(field);
         }
       }
@@ -273,7 +273,7 @@ public class Reflector {
   }
 
   private boolean isValidPropertyName(String name) {
-    return (!name.startsWith("$") && !"serialVersionUID".equals(name) && !"class".equals(name));
+    return !name.startsWith("$") && !"serialVersionUID".equals(name) && !"class".equals(name);
   }
 
   /**
