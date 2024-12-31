@@ -25,6 +25,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,10 +43,10 @@ class ExternalResourcesTest {
    */
   @BeforeEach
   void setUp() throws Exception {
-    tempFile = File.createTempFile("migration", "properties");
+    tempFile = Files.createTempFile("migration", "properties").toFile();
     tempFile.canWrite();
-    sourceFile = File.createTempFile("test1", "sql");
-    destFile = File.createTempFile("test2", "sql");
+    sourceFile = Files.createTempFile("test1", "sql").toFile();
+    destFile = Files.createTempFile("test2", "sql").toFile();
   }
 
   @Test
