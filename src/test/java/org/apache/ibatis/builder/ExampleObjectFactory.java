@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -26,12 +26,12 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
 
   @Override
   public <T> T create(Class<T> type) {
-    return super.<T>create(type);
+    return super.create(type);
   }
 
   @Override
   public <T> T create(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
-    return super.<T>create(type, constructorArgTypes, constructorArgs);
+    return super.create(type, constructorArgTypes, constructorArgs);
   }
 
   @Override
