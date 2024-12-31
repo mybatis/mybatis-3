@@ -59,7 +59,7 @@ class ReflectorTest {
     void setId(T id);
   }
 
-  static abstract class AbstractEntity implements Entity<Long> {
+  abstract static class AbstractEntity implements Entity<Long> {
 
     private Long id;
 
@@ -137,7 +137,7 @@ class ReflectorTest {
     assertEquals(String.class, clazz.getComponentType());
   }
 
-  static abstract class Parent<T extends Serializable> {
+  abstract static class Parent<T extends Serializable> {
     protected T id;
     protected List<T> list;
     protected T[] array;

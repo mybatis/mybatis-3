@@ -64,7 +64,7 @@ class CglibNPETest {
   }
 
   @Test
-  void testGrandParent() {
+  void grandParent() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
       Person expectedParent = personMapper.selectById(2);

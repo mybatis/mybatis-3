@@ -27,9 +27,9 @@ class ClassLoaderWrapperTest extends BaseDataTest {
 
   private ClassLoaderWrapper wrapper;
   private ClassLoader loader;
-  private final String RESOURCE_NOT_FOUND = "some_resource_that_does_not_exist.properties";
-  private final String CLASS_NOT_FOUND = "some.random.class.that.does.not.Exist";
-  private final String CLASS_FOUND = "java.lang.Object";
+  private static final String RESOURCE_NOT_FOUND = "some_resource_that_does_not_exist.properties";
+  private static final String CLASS_NOT_FOUND = "some.random.class.that.does.not.Exist";
+  private static final String CLASS_FOUND = "java.lang.Object";
 
   @BeforeEach
   void beforeClassLoaderWrapperTest() {

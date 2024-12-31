@@ -100,7 +100,7 @@ class LanguageDriverRegistryTest {
     assertThat(registry.getDefaultDriver()).isInstanceOf(RawLanguageDriver.class);
   }
 
-  static private class PrivateLanguageDriver implements LanguageDriver {
+  private static class PrivateLanguageDriver implements LanguageDriver {
 
     @Override
     public ParameterHandler createParameterHandler(MappedStatement mappedStatement, Object parameterObject,
