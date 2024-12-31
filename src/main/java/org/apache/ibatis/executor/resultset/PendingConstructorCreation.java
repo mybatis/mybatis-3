@@ -64,10 +64,9 @@ final class PendingConstructorCreation {
           "Cannot add a collection result to non-collection based resultMapping: " + constructorMapping);
     }
 
-    final PendingCreationKey creationKey = new PendingCreationKey(constructorMapping);
-    return linkedCollectionsByKey.computeIfAbsent(creationKey, (k) -> {
+    return linkedCollectionsByKey.computeIfAbsent(new PendingCreationKey(constructorMapping), k -> {
       // this will allow us to verify the types of the collection before creating the final object
-      linkedCollectionMetaInfo.put(index, new PendingCreationMetaInfo(resultMap.getType(), creationKey));
+      linkedCollectionMetaInfo.put(index, new PendingCreationMetaInfo(resultMap.getType(), k));
 
       // will be checked before we finally create the object) as we cannot reliably do that here
       return (Collection<Object>) objectFactory.create(parameterType);
@@ -77,7 +76,7 @@ final class PendingConstructorCreation {
   void linkCreation(ResultMapping constructorMapping, PendingConstructorCreation pcc) {
     final PendingCreationKey creationKey = new PendingCreationKey(constructorMapping);
     final List<PendingConstructorCreation> pendingConstructorCreations = linkedCreationsByKey
-        .computeIfAbsent(creationKey, (k) -> new ArrayList<>());
+        .computeIfAbsent(creationKey, k -> new ArrayList<>());
 
     if (pendingConstructorCreations.contains(pcc)) {
       throw new ExecutorException("Cannot link inner constructor creation with same value, MyBatis internal error!");
@@ -92,13 +91,10 @@ final class PendingConstructorCreation {
       return;
     }
 
-    final PendingCreationKey creationKey = new PendingCreationKey(constructorMapping);
-    if (!linkedCollectionsByKey.containsKey(creationKey)) {
+    linkedCollectionsByKey.computeIfAbsent(new PendingCreationKey(constructorMapping), k -> {
       throw new ExecutorException("Cannot link collection value for key: " + constructorMapping
           + ", resultMap has not been seen/initialized yet! Mybatis internal error!");
-    }
-
-    linkedCollectionsByKey.get(creationKey).add(value);
+    }).add(value);
   }
 
   @Override
@@ -128,10 +124,10 @@ final class PendingConstructorCreation {
 
       // time to finally build this collection
       final PendingCreationKey pendingCreationKey = creationMetaInfo.getPendingCreationKey();
-      if (linkedCreationsByKey.containsKey(pendingCreationKey)) {
+      final List<PendingConstructorCreation> linkedCreations = linkedCreationsByKey.get(pendingCreationKey);
+      if (linkedCreations != null) {
         @SuppressWarnings("unchecked")
         final Collection<Object> emptyCollection = (Collection<Object>) existingArg;
-        final List<PendingConstructorCreation> linkedCreations = linkedCreationsByKey.get(pendingCreationKey);
 
         for (PendingConstructorCreation linkedCreation : linkedCreations) {
           emptyCollection.add(linkedCreation.create(objectFactory));
