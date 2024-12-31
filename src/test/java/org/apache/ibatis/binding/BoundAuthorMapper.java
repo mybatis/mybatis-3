@@ -54,10 +54,8 @@ public interface BoundAuthorMapper {
 
   // ======================================================
 
+  @ConstructorArgs({ @Arg(column = "AUTHOR_ID", javaType = int.class) })
   // @formatter:off
-  @ConstructorArgs({
-      @Arg(column = "AUTHOR_ID", javaType = int.class)
-  })
   @Results({
       @Result(property = "username", column = "AUTHOR_USERNAME"),
       @Result(property = "password", column = "AUTHOR_PASSWORD"),
@@ -179,11 +177,9 @@ public interface BoundAuthorMapper {
 
   // ======================================================
 
-  // @formatter:off
-  @Results(
-    @Result(property = "id", column = "AUTHOR_ID")
-  )
+  @Results(@Result(property = "id", column = "AUTHOR_ID"))
   @Result(property = "username", column = "AUTHOR_USERNAME")
+  // @formatter:off
   @Select({
     "SELECT ",
     "  ID as AUTHOR_ID,",

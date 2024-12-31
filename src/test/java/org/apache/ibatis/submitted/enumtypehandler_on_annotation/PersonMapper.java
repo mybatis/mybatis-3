@@ -44,12 +44,9 @@ public interface PersonMapper {
   @Select("SELECT id, firstName, lastName, personType FROM person WHERE id = #{id}")
   Person findOneUsingConstructor(int id);
 
-  // @formatter:off
   @Results({
       // target for test (ordinal number -> Enum constant)
-      @Result(property = "personType", column = "personType", typeHandler = EnumOrdinalTypeHandler.class)
-    })
-  // @formatter:on
+      @Result(property = "personType", column = "personType", typeHandler = EnumOrdinalTypeHandler.class) })
   @Select("SELECT id, firstName, lastName, personType FROM person WHERE id = #{id}")
   Person findOneUsingSetter(int id);
 

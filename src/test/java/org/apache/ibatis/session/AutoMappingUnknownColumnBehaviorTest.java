@@ -43,8 +43,8 @@ import org.junit.jupiter.api.Test;
  */
 class AutoMappingUnknownColumnBehaviorTest {
 
-  // @formatter:off
   interface Mapper {
+    // @formatter:off
     @Select({
         "SELECT ",
         "  ID,",
@@ -54,17 +54,19 @@ class AutoMappingUnknownColumnBehaviorTest {
         "  BIO",
         "FROM AUTHOR WHERE ID = #{id}"
       })
+    // @formatter:on
     Author selectAuthor(int id);
 
+    // @formatter:off
     @Select({
         "SELECT ",
         "  ID,", // unknown property type
         "  USERNAME",
         "FROM AUTHOR WHERE ID = #{id}"
       })
+    // @formatter:on
     SimpleAuthor selectSimpleAuthor(int id);
   }
-  // @formatter:on
 
   static class SimpleAuthor {
     private AtomicInteger id; // unknown property type

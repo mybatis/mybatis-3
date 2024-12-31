@@ -69,8 +69,8 @@ public interface UserDao {
   // @formatter:on
   List<User> findAll3();
 
-  // @formatter:off
   @Select("select id teacher_id, username teacher_name from user")
+  // @formatter:off
   @Results(id = "userMap", value = {
       @Result(id = true, column = "teacher_id", property = "id"),
       @Result(column = "teacher_name", property = "username")

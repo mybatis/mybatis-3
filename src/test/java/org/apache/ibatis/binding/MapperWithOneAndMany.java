@@ -29,7 +29,7 @@ public interface MapperWithOneAndMany {
   // @formatter:off
   @Select({
     "SELECT *",
-    "FROM blog"
+      "FROM blog"
   })
   @Results({
     @Result(

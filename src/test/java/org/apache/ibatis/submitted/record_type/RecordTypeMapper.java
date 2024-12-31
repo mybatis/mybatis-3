@@ -40,8 +40,8 @@ public interface RecordTypeMapper {
   // @formatter:off
   @Select({
       "select i.id, p.id p_id, p.val p_val, p.url p_url",
-      "from item i left join prop p on p.id = i.prop_id",
-      "where i.id = #{id}"})
+        "from item i left join prop p on p.id = i.prop_id",
+       "where i.id = #{id}"})
   // @formatter:on
   Item selectItem(Integer id);
 

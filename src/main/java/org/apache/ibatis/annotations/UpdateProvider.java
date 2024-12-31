@@ -89,7 +89,7 @@ public @interface UpdateProvider {
    *       If cannot resolve a method by {@link org.apache.ibatis.builder.annotation.ProviderMethodResolver}
    *       (= not implement it or it was returned {@code null}), the MyBatis will search and use a fallback method
    *       that named {@code provideSql} from specified type</li>
-   * </ul>
+   *   </ul>
    * </code>
    *
    * @return a method name of method for providing an SQL
