@@ -26,7 +26,6 @@ import java.lang.annotation.Target;
  * The annotation that specify an SQL for retrieving record(s).
  * <p>
  * <b>How to use:</b>
- * <p>
  * <ul>
  * <li>Simple:
  *

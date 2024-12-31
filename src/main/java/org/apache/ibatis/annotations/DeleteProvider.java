@@ -25,11 +25,12 @@ import java.lang.annotation.Target;
 /**
  * The annotation that specify a method that provide an SQL for deleting record(s).
  * <p>
- * <b>How to use:</b> <code>
- * <pre>
+ * <b>How to use:</b>
+ *
+ * <pre>{@code
  * public interface UserMapper {
  *
- *   &#064;DeleteProvider(type = SqlProvider.class, method = "deleteById")
+ *   @DeleteProvider(type = SqlProvider.class, method = "deleteById")
  *   boolean deleteById(int id);
  *
  *   public static class SqlProvider {
@@ -39,8 +40,7 @@ import java.lang.annotation.Target;
  *   }
  *
  * }
- * </pre>
- * </code>
+ * }</pre>
  *
  * @author Clinton Begin
  */
@@ -77,20 +77,15 @@ public @interface DeleteProvider {
    * <p>
    * Since 3.5.1, this attribute can omit.
    * <p>
-   * If this attribute omit, the MyBatis will call a method that decide by following rules. <code>
-   *   <ul>
-   *     <li>
-   *       If class that specified the {@link #type()} attribute implements the
-   *       {@link org.apache.ibatis.builder.annotation.ProviderMethodResolver},
-   *       the MyBatis use a method that returned by it
-   *     </li>
-   *     <li>
-   *       If cannot resolve a method by {@link org.apache.ibatis.builder.annotation.ProviderMethodResolver}
-   *       (= not implement it or it was returned {@code null}), the MyBatis will search
-   *       and use a fallback method that named {@code provideSql} from specified type
-   *    </li>
-   *   </ul>
-   * </code>
+   * If this attribute omit, the MyBatis will call a method that decide by following rules.
+   * <ul>
+   * <li>If class that specified the {@link #type()} attribute implements the
+   * {@link org.apache.ibatis.builder.annotation.ProviderMethodResolver}, the MyBatis use a method that returned by it
+   * </li>
+   * <li>If cannot resolve a method by {@link org.apache.ibatis.builder.annotation.ProviderMethodResolver} (= not
+   * implement it or it was returned <code>null</code>), the MyBatis will search and use a fallback method that named
+   * <code>provideSql</code> from specified type</li>
+   * </ul>
    *
    * @return a method name of method for providing an SQL
    */

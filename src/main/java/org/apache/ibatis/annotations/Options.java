@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -110,7 +110,6 @@ public @interface Options {
    * Returns property names that holds a key value.
    * <p>
    * If you specify multiple property, please separate using comma(',').
-   * </p>
    *
    * @return property names that separate with comma(',')
    */
@@ -120,7 +119,6 @@ public @interface Options {
    * Returns column names that retrieves a key value.
    * <p>
    * If you specify multiple column, please separate using comma(',').
-   * </p>
    *
    * @return column names that separate with comma(',')
    */
@@ -130,7 +128,6 @@ public @interface Options {
    * Returns result set names.
    * <p>
    * If you specify multiple result set, please separate using comma(',').
-   * </p>
    *
    * @return result set names that separate with comma(',')
    */
