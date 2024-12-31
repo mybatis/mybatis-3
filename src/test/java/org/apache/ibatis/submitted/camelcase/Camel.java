@@ -43,8 +43,8 @@ public class Camel {
     return LAST_NAME;
   }
 
-  public void setLAST_NAME(String LAST_NAME) {
-    LAST_NAME = LAST_NAME;
+  public void setLAST_NAME(String lastName) {
+    LAST_NAME = lastName;
   }
 
 }
