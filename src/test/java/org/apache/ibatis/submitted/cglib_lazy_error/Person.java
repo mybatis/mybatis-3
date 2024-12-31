@@ -38,11 +38,7 @@ public class Person {
       return false;
     }
 
-    if (id != null ? !id.equals(person.id) : person.id != null) {
-      return false;
-    }
-
-    return true;
+    return id != null ? id.equals(person.id) : person.id == null;
   }
 
   @Override
