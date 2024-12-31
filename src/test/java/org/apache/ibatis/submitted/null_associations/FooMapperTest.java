@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test;
 
 class FooMapperTest {
 
-  private final static String SQL_MAP_CONFIG = "org/apache/ibatis/submitted/null_associations/sqlmap.xml";
+  private static final String SQL_MAP_CONFIG = "org/apache/ibatis/submitted/null_associations/sqlmap.xml";
   private static SqlSession session;
   private static Connection conn;
 
