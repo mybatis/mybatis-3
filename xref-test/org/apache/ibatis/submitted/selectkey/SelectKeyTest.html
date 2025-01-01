@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/submitted/selectkey/SelectKeyTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2024 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -57,7 +57,7 @@
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>    }
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>  
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>    @Test
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>    <strong class="jxr_keyword">void</strong> testSelectKey() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>    <strong class="jxr_keyword">void</strong> selectKey() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>      <em class="jxr_comment">// this test checks to make sure that we can have select keys with the same</em>
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>      <em class="jxr_comment">// insert id in different namespaces</em>
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>      String resource = <span class="jxr_string">"org/apache/ibatis/submitted/selectkey/MapperConfig.xml"</span>;
@@ -68,7 +68,7 @@
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>    }
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>  
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>    @Test
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>    <strong class="jxr_keyword">void</strong> testInsertTable1() {
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>    <strong class="jxr_keyword">void</strong> insertTable1() {
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>        Map&lt;String, Object&gt; parms = <strong class="jxr_keyword">new</strong> HashMap&lt;&gt;();
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>        parms.put(<span class="jxr_string">"name"</span>, <span class="jxr_string">"Fred"</span>);
@@ -79,7 +79,7 @@
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>    }
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>  
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>    @Test
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>    <strong class="jxr_keyword">void</strong> testInsertTable2() {
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>    <strong class="jxr_keyword">void</strong> insertTable2() {
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>        Map&lt;String, Object&gt; parms = <strong class="jxr_keyword">new</strong> HashMap&lt;&gt;();
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>        parms.put(<span class="jxr_string">"name"</span>, <span class="jxr_string">"Fred"</span>);
@@ -90,7 +90,7 @@
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>    }
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>  
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>    @Test
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>    <strong class="jxr_keyword">void</strong> testSeleckKeyReturnsNoData() {
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>    <strong class="jxr_keyword">void</strong> seleckKeyReturnsNoData() {
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>        Map&lt;String, String&gt; parms = <strong class="jxr_keyword">new</strong> HashMap&lt;&gt;();
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>        parms.put(<span class="jxr_string">"name"</span>, <span class="jxr_string">"Fred"</span>);
@@ -100,7 +100,7 @@
 <a class="jxr_linenumber" name="L92" href="#L92">92</a>    }
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>  
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>    @Test
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>    <strong class="jxr_keyword">void</strong> testSeleckKeyReturnsTooManyData() {
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>    <strong class="jxr_keyword">void</strong> seleckKeyReturnsTooManyData() {
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>        Map&lt;String, String&gt; parms = <strong class="jxr_keyword">new</strong> HashMap&lt;&gt;();
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>        parms.put(<span class="jxr_string">"name"</span>, <span class="jxr_string">"Fred"</span>);
@@ -111,7 +111,7 @@
 <a class="jxr_linenumber" name="L103" href="#L103">103</a>   }
 <a class="jxr_linenumber" name="L104" href="#L104">104</a> 
 <a class="jxr_linenumber" name="L105" href="#L105">105</a>   @Test
-<a class="jxr_linenumber" name="L106" href="#L106">106</a>   <strong class="jxr_keyword">void</strong> testAnnotatedInsertTable2() {
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>   <strong class="jxr_keyword">void</strong> annotatedInsertTable2() {
 <a class="jxr_linenumber" name="L107" href="#L107">107</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L108" href="#L108">108</a>       <a name="Name" href="../../../../../org/apache/ibatis/submitted/selectkey/Name.html#Name">Name</a> name = <strong class="jxr_keyword">new</strong> <a name="Name" href="../../../../../org/apache/ibatis/submitted/selectkey/Name.html#Name">Name</a>();
 <a class="jxr_linenumber" name="L109" href="#L109">109</a>       name.setName(<span class="jxr_string">"barney"</span>);
@@ -123,7 +123,7 @@
 <a class="jxr_linenumber" name="L115" href="#L115">115</a>   }
 <a class="jxr_linenumber" name="L116" href="#L116">116</a> 
 <a class="jxr_linenumber" name="L117" href="#L117">117</a>   @Test
-<a class="jxr_linenumber" name="L118" href="#L118">118</a>   <strong class="jxr_keyword">void</strong> testAnnotatedInsertTable2WithGeneratedKey() {
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>   <strong class="jxr_keyword">void</strong> annotatedInsertTable2WithGeneratedKey() {
 <a class="jxr_linenumber" name="L119" href="#L119">119</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L120" href="#L120">120</a>       <a name="Name" href="../../../../../org/apache/ibatis/submitted/selectkey/Name.html#Name">Name</a> name = <strong class="jxr_keyword">new</strong> <a name="Name" href="../../../../../org/apache/ibatis/submitted/selectkey/Name.html#Name">Name</a>();
 <a class="jxr_linenumber" name="L121" href="#L121">121</a>       name.setName(<span class="jxr_string">"barney"</span>);
@@ -137,7 +137,7 @@
 <a class="jxr_linenumber" name="L129" href="#L129">129</a> 
 <a class="jxr_linenumber" name="L130" href="#L130">130</a>   @Test
 <a class="jxr_linenumber" name="L131" href="#L131">131</a>   @Disabled(<span class="jxr_string">"HSQLDB is not returning the generated column after the update"</span>)
-<a class="jxr_linenumber" name="L132" href="#L132">132</a>   <strong class="jxr_keyword">void</strong> testAnnotatedUpdateTable2WithGeneratedKey() {
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>   <strong class="jxr_keyword">void</strong> annotatedUpdateTable2WithGeneratedKey() {
 <a class="jxr_linenumber" name="L133" href="#L133">133</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L134" href="#L134">134</a>       <a name="Name" href="../../../../../org/apache/ibatis/submitted/selectkey/Name.html#Name">Name</a> name = <strong class="jxr_keyword">new</strong> <a name="Name" href="../../../../../org/apache/ibatis/submitted/selectkey/Name.html#Name">Name</a>();
 <a class="jxr_linenumber" name="L135" href="#L135">135</a>       name.setName(<span class="jxr_string">"barney"</span>);
@@ -157,7 +157,7 @@
 <a class="jxr_linenumber" name="L149" href="#L149">149</a> 
 <a class="jxr_linenumber" name="L150" href="#L150">150</a>   @Test
 <a class="jxr_linenumber" name="L151" href="#L151">151</a>   @Disabled(<span class="jxr_string">"HSQLDB is not returning the generated column after the update"</span>)
-<a class="jxr_linenumber" name="L152" href="#L152">152</a>   <strong class="jxr_keyword">void</strong> testAnnotatedUpdateTable2WithGeneratedKeyXml() {
+<a class="jxr_linenumber" name="L152" href="#L152">152</a>   <strong class="jxr_keyword">void</strong> annotatedUpdateTable2WithGeneratedKeyXml() {
 <a class="jxr_linenumber" name="L153" href="#L153">153</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L154" href="#L154">154</a>       <a name="Name" href="../../../../../org/apache/ibatis/submitted/selectkey/Name.html#Name">Name</a> name = <strong class="jxr_keyword">new</strong> <a name="Name" href="../../../../../org/apache/ibatis/submitted/selectkey/Name.html#Name">Name</a>();
 <a class="jxr_linenumber" name="L155" href="#L155">155</a>       name.setName(<span class="jxr_string">"barney"</span>);
@@ -176,7 +176,7 @@
 <a class="jxr_linenumber" name="L168" href="#L168">168</a>   }
 <a class="jxr_linenumber" name="L169" href="#L169">169</a> 
 <a class="jxr_linenumber" name="L170" href="#L170">170</a>   @Test
-<a class="jxr_linenumber" name="L171" href="#L171">171</a>   <strong class="jxr_keyword">void</strong> testAnnotatedInsertTable2WithGeneratedKeyXml() {
+<a class="jxr_linenumber" name="L171" href="#L171">171</a>   <strong class="jxr_keyword">void</strong> annotatedInsertTable2WithGeneratedKeyXml() {
 <a class="jxr_linenumber" name="L172" href="#L172">172</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L173" href="#L173">173</a>       <a name="Name" href="../../../../../org/apache/ibatis/submitted/selectkey/Name.html#Name">Name</a> name = <strong class="jxr_keyword">new</strong> <a name="Name" href="../../../../../org/apache/ibatis/submitted/selectkey/Name.html#Name">Name</a>();
 <a class="jxr_linenumber" name="L174" href="#L174">174</a>       name.setName(<span class="jxr_string">"barney"</span>);
@@ -189,7 +189,7 @@
 <a class="jxr_linenumber" name="L181" href="#L181">181</a>   }
 <a class="jxr_linenumber" name="L182" href="#L182">182</a> 
 <a class="jxr_linenumber" name="L183" href="#L183">183</a>   @Test
-<a class="jxr_linenumber" name="L184" href="#L184">184</a>   <strong class="jxr_keyword">void</strong> testAnnotatedInsertTable2WithSelectKeyWithKeyMap() {
+<a class="jxr_linenumber" name="L184" href="#L184">184</a>   <strong class="jxr_keyword">void</strong> annotatedInsertTable2WithSelectKeyWithKeyMap() {
 <a class="jxr_linenumber" name="L185" href="#L185">185</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L186" href="#L186">186</a>       <a name="Name" href="../../../../../org/apache/ibatis/submitted/selectkey/Name.html#Name">Name</a> name = <strong class="jxr_keyword">new</strong> <a name="Name" href="../../../../../org/apache/ibatis/submitted/selectkey/Name.html#Name">Name</a>();
 <a class="jxr_linenumber" name="L187" href="#L187">187</a>       name.setName(<span class="jxr_string">"barney"</span>);
@@ -202,7 +202,7 @@
 <a class="jxr_linenumber" name="L194" href="#L194">194</a>   }
 <a class="jxr_linenumber" name="L195" href="#L195">195</a> 
 <a class="jxr_linenumber" name="L196" href="#L196">196</a>   @Test
-<a class="jxr_linenumber" name="L197" href="#L197">197</a>   <strong class="jxr_keyword">void</strong> testAnnotatedUpdateTable2WithSelectKeyWithKeyMap() {
+<a class="jxr_linenumber" name="L197" href="#L197">197</a>   <strong class="jxr_keyword">void</strong> annotatedUpdateTable2WithSelectKeyWithKeyMap() {
 <a class="jxr_linenumber" name="L198" href="#L198">198</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L199" href="#L199">199</a>       <a name="Name" href="../../../../../org/apache/ibatis/submitted/selectkey/Name.html#Name">Name</a> name = <strong class="jxr_keyword">new</strong> <a name="Name" href="../../../../../org/apache/ibatis/submitted/selectkey/Name.html#Name">Name</a>();
 <a class="jxr_linenumber" name="L200" href="#L200">200</a>       name.setName(<span class="jxr_string">"barney"</span>);
@@ -221,7 +221,7 @@
 <a class="jxr_linenumber" name="L213" href="#L213">213</a>   }
 <a class="jxr_linenumber" name="L214" href="#L214">214</a> 
 <a class="jxr_linenumber" name="L215" href="#L215">215</a>   @Test
-<a class="jxr_linenumber" name="L216" href="#L216">216</a>   <strong class="jxr_keyword">void</strong> testAnnotatedInsertTable2WithSelectKeyWithKeyMapXml() {
+<a class="jxr_linenumber" name="L216" href="#L216">216</a>   <strong class="jxr_keyword">void</strong> annotatedInsertTable2WithSelectKeyWithKeyMapXml() {
 <a class="jxr_linenumber" name="L217" href="#L217">217</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L218" href="#L218">218</a>       <a name="Name" href="../../../../../org/apache/ibatis/submitted/selectkey/Name.html#Name">Name</a> name = <strong class="jxr_keyword">new</strong> <a name="Name" href="../../../../../org/apache/ibatis/submitted/selectkey/Name.html#Name">Name</a>();
 <a class="jxr_linenumber" name="L219" href="#L219">219</a>       name.setName(<span class="jxr_string">"barney"</span>);
@@ -234,7 +234,7 @@
 <a class="jxr_linenumber" name="L226" href="#L226">226</a>   }
 <a class="jxr_linenumber" name="L227" href="#L227">227</a> 
 <a class="jxr_linenumber" name="L228" href="#L228">228</a>   @Test
-<a class="jxr_linenumber" name="L229" href="#L229">229</a>   <strong class="jxr_keyword">void</strong> testAnnotatedUpdateTable2WithSelectKeyWithKeyMapXml() {
+<a class="jxr_linenumber" name="L229" href="#L229">229</a>   <strong class="jxr_keyword">void</strong> annotatedUpdateTable2WithSelectKeyWithKeyMapXml() {
 <a class="jxr_linenumber" name="L230" href="#L230">230</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L231" href="#L231">231</a>       <a name="Name" href="../../../../../org/apache/ibatis/submitted/selectkey/Name.html#Name">Name</a> name = <strong class="jxr_keyword">new</strong> <a name="Name" href="../../../../../org/apache/ibatis/submitted/selectkey/Name.html#Name">Name</a>();
 <a class="jxr_linenumber" name="L232" href="#L232">232</a>       name.setName(<span class="jxr_string">"barney"</span>);
@@ -253,7 +253,7 @@
 <a class="jxr_linenumber" name="L245" href="#L245">245</a>   }
 <a class="jxr_linenumber" name="L246" href="#L246">246</a> 
 <a class="jxr_linenumber" name="L247" href="#L247">247</a>   @Test
-<a class="jxr_linenumber" name="L248" href="#L248">248</a>   <strong class="jxr_keyword">void</strong> testAnnotatedInsertTable2WithSelectKeyWithKeyObject() {
+<a class="jxr_linenumber" name="L248" href="#L248">248</a>   <strong class="jxr_keyword">void</strong> annotatedInsertTable2WithSelectKeyWithKeyObject() {
 <a class="jxr_linenumber" name="L249" href="#L249">249</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L250" href="#L250">250</a>       <a name="Name" href="../../../../../org/apache/ibatis/submitted/selectkey/Name.html#Name">Name</a> name = <strong class="jxr_keyword">new</strong> <a name="Name" href="../../../../../org/apache/ibatis/submitted/selectkey/Name.html#Name">Name</a>();
 <a class="jxr_linenumber" name="L251" href="#L251">251</a>       name.setName(<span class="jxr_string">"barney"</span>);
@@ -266,7 +266,7 @@
 <a class="jxr_linenumber" name="L258" href="#L258">258</a>   }
 <a class="jxr_linenumber" name="L259" href="#L259">259</a> 
 <a class="jxr_linenumber" name="L260" href="#L260">260</a>   @Test
-<a class="jxr_linenumber" name="L261" href="#L261">261</a>   <strong class="jxr_keyword">void</strong> testAnnotatedUpdateTable2WithSelectKeyWithKeyObject() {
+<a class="jxr_linenumber" name="L261" href="#L261">261</a>   <strong class="jxr_keyword">void</strong> annotatedUpdateTable2WithSelectKeyWithKeyObject() {
 <a class="jxr_linenumber" name="L262" href="#L262">262</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L263" href="#L263">263</a>       <a name="Name" href="../../../../../org/apache/ibatis/submitted/selectkey/Name.html#Name">Name</a> name = <strong class="jxr_keyword">new</strong> <a name="Name" href="../../../../../org/apache/ibatis/submitted/selectkey/Name.html#Name">Name</a>();
 <a class="jxr_linenumber" name="L264" href="#L264">264</a>       name.setName(<span class="jxr_string">"barney"</span>);
@@ -285,7 +285,7 @@
 <a class="jxr_linenumber" name="L277" href="#L277">277</a>   }
 <a class="jxr_linenumber" name="L278" href="#L278">278</a> 
 <a class="jxr_linenumber" name="L279" href="#L279">279</a>   @Test
-<a class="jxr_linenumber" name="L280" href="#L280">280</a>   <strong class="jxr_keyword">void</strong> testAnnotatedUpdateTable2WithSelectKeyWithKeyObjectXml() {
+<a class="jxr_linenumber" name="L280" href="#L280">280</a>   <strong class="jxr_keyword">void</strong> annotatedUpdateTable2WithSelectKeyWithKeyObjectXml() {
 <a class="jxr_linenumber" name="L281" href="#L281">281</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L282" href="#L282">282</a>       <a name="Name" href="../../../../../org/apache/ibatis/submitted/selectkey/Name.html#Name">Name</a> name = <strong class="jxr_keyword">new</strong> <a name="Name" href="../../../../../org/apache/ibatis/submitted/selectkey/Name.html#Name">Name</a>();
 <a class="jxr_linenumber" name="L283" href="#L283">283</a>       name.setName(<span class="jxr_string">"barney"</span>);
@@ -304,7 +304,7 @@
 <a class="jxr_linenumber" name="L296" href="#L296">296</a>   }
 <a class="jxr_linenumber" name="L297" href="#L297">297</a> 
 <a class="jxr_linenumber" name="L298" href="#L298">298</a>   @Test
-<a class="jxr_linenumber" name="L299" href="#L299">299</a>   <strong class="jxr_keyword">void</strong> testAnnotatedInsertTable2WithSelectKeyWithKeyObjectXml() {
+<a class="jxr_linenumber" name="L299" href="#L299">299</a>   <strong class="jxr_keyword">void</strong> annotatedInsertTable2WithSelectKeyWithKeyObjectXml() {
 <a class="jxr_linenumber" name="L300" href="#L300">300</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L301" href="#L301">301</a>       <a name="Name" href="../../../../../org/apache/ibatis/submitted/selectkey/Name.html#Name">Name</a> name = <strong class="jxr_keyword">new</strong> <a name="Name" href="../../../../../org/apache/ibatis/submitted/selectkey/Name.html#Name">Name</a>();
 <a class="jxr_linenumber" name="L302" href="#L302">302</a>       name.setName(<span class="jxr_string">"barney"</span>);
@@ -317,7 +317,7 @@
 <a class="jxr_linenumber" name="L309" href="#L309">309</a>   }
 <a class="jxr_linenumber" name="L310" href="#L310">310</a> 
 <a class="jxr_linenumber" name="L311" href="#L311">311</a>   @Test
-<a class="jxr_linenumber" name="L312" href="#L312">312</a>   <strong class="jxr_keyword">void</strong> testAnnotatedInsertTable3() {
+<a class="jxr_linenumber" name="L312" href="#L312">312</a>   <strong class="jxr_keyword">void</strong> annotatedInsertTable3() {
 <a class="jxr_linenumber" name="L313" href="#L313">313</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L314" href="#L314">314</a>       <a name="Name" href="../../../../../org/apache/ibatis/submitted/selectkey/Name.html#Name">Name</a> name = <strong class="jxr_keyword">new</strong> <a name="Name" href="../../../../../org/apache/ibatis/submitted/selectkey/Name.html#Name">Name</a>();
 <a class="jxr_linenumber" name="L315" href="#L315">315</a>       name.setName(<span class="jxr_string">"barney"</span>);
@@ -329,7 +329,7 @@
 <a class="jxr_linenumber" name="L321" href="#L321">321</a>   }
 <a class="jxr_linenumber" name="L322" href="#L322">322</a> 
 <a class="jxr_linenumber" name="L323" href="#L323">323</a>   @Test
-<a class="jxr_linenumber" name="L324" href="#L324">324</a>   <strong class="jxr_keyword">void</strong> testAnnotatedInsertTable3_2() {
+<a class="jxr_linenumber" name="L324" href="#L324">324</a>   <strong class="jxr_keyword">void</strong> annotatedInsertTable32() {
 <a class="jxr_linenumber" name="L325" href="#L325">325</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L326" href="#L326">326</a>       <a name="Name" href="../../../../../org/apache/ibatis/submitted/selectkey/Name.html#Name">Name</a> name = <strong class="jxr_keyword">new</strong> <a name="Name" href="../../../../../org/apache/ibatis/submitted/selectkey/Name.html#Name">Name</a>();
 <a class="jxr_linenumber" name="L327" href="#L327">327</a>       name.setName(<span class="jxr_string">"barney"</span>);
@@ -341,7 +341,7 @@
 <a class="jxr_linenumber" name="L333" href="#L333">333</a>   }
 <a class="jxr_linenumber" name="L334" href="#L334">334</a> 
 <a class="jxr_linenumber" name="L335" href="#L335">335</a>   @Test
-<a class="jxr_linenumber" name="L336" href="#L336">336</a>   <strong class="jxr_keyword">void</strong> testSeleckKeyWithWrongKeyProperty() {
+<a class="jxr_linenumber" name="L336" href="#L336">336</a>   <strong class="jxr_keyword">void</strong> seleckKeyWithWrongKeyProperty() {
 <a class="jxr_linenumber" name="L337" href="#L337">337</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L338" href="#L338">338</a>       <a name="Name" href="../../../../../org/apache/ibatis/submitted/selectkey/Name.html#Name">Name</a> name = <strong class="jxr_keyword">new</strong> <a name="Name" href="../../../../../org/apache/ibatis/submitted/selectkey/Name.html#Name">Name</a>();
 <a class="jxr_linenumber" name="L339" href="#L339">339</a>       name.setName(<span class="jxr_string">"Kyoto"</span>);
@@ -352,6 +352,6 @@
 <a class="jxr_linenumber" name="L344" href="#L344">344</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2024 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">© 2009–2024 <a href="https://www.mybatis.org/">MyBatis.org</a></div>
 </body>
 </html>

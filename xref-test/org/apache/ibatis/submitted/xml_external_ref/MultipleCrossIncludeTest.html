@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/submitted/xml_external_ref/MultipleCrossIncludeTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2024 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -46,17 +46,17 @@
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>  <strong class="jxr_keyword">class</strong> <a name="MultipleCrossIncludeTest" href="../../../../../org/apache/ibatis/submitted/xml_external_ref/MultipleCrossIncludeTest.html#MultipleCrossIncludeTest">MultipleCrossIncludeTest</a> {
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>  
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>    @Test
-<a class="jxr_linenumber" name="L41" href="#L41">41</a>    <strong class="jxr_keyword">void</strong> testMultipleCrossIncludeXmlConfig() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>    <strong class="jxr_keyword">void</strong> multipleCrossIncludeXmlConfig() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>      testCrossReference(getSqlSessionFactoryXmlConfig());
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>    }
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>  
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>    @Test
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>    <strong class="jxr_keyword">void</strong> testMultipleCrossIncludeJavaConfig() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>    <strong class="jxr_keyword">void</strong> multipleCrossIncludeJavaConfig() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>      testCrossReference(getSqlSessionFactoryJavaConfig());
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>    }
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>  
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>    @Test
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>    <strong class="jxr_keyword">void</strong> testMappedStatementCache() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>    <strong class="jxr_keyword">void</strong> mappedStatementCache() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>      <strong class="jxr_keyword">try</strong> (Reader configReader = Resources
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>          .getResourceAsReader(<span class="jxr_string">"org/apache/ibatis/submitted/xml_external_ref/MultipleCrossIncludeMapperConfig.xml"</span>)) {
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>        SqlSessionFactory sqlSessionFactory = <strong class="jxr_keyword">new</strong> SqlSessionFactoryBuilder().build(configReader);
@@ -125,6 +125,6 @@
 <a class="jxr_linenumber" name="L117" href="#L117">117</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2024 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">© 2009–2024 <a href="https://www.mybatis.org/">MyBatis.org</a></div>
 </body>
 </html>

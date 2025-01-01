@@ -5,9 +5,9 @@
 <link type="text/css" rel="stylesheet" href="../../../../../stylesheet.css" />
 </head>
 <body>
-<div id="overview"><a href="../../../../../../../testapidocs/org/apache/ibatis/submitted/not_null_column/NotNullColumnTest.html">View Javadoc</a></div><pre>
+<div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/submitted/not_null_column/NotNullColumnTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2024 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -53,7 +53,7 @@
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>    }
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>  
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>    @Test
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>    <strong class="jxr_keyword">void</strong> testNotNullColumnWithChildrenNoFid() {
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>    <strong class="jxr_keyword">void</strong> notNullColumnWithChildrenNoFid() {
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>        <a name="FatherMapper" href="../../../../../org/apache/ibatis/submitted/not_null_column/FatherMapper.html#FatherMapper">FatherMapper</a> fatherMapper = sqlSession.getMapper(FatherMapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>  
@@ -65,7 +65,7 @@
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>    }
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>  
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>    @Test
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>    <strong class="jxr_keyword">void</strong> testNotNullColumnWithoutChildrenNoFid() {
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>    <strong class="jxr_keyword">void</strong> notNullColumnWithoutChildrenNoFid() {
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>        <a name="FatherMapper" href="../../../../../org/apache/ibatis/submitted/not_null_column/FatherMapper.html#FatherMapper">FatherMapper</a> fatherMapper = sqlSession.getMapper(FatherMapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>  
@@ -77,7 +77,7 @@
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>    }
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>  
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>    @Test
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>    <strong class="jxr_keyword">void</strong> testNotNullColumnWithoutChildrenFid() {
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>    <strong class="jxr_keyword">void</strong> notNullColumnWithoutChildrenFid() {
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>        <a name="FatherMapper" href="../../../../../org/apache/ibatis/submitted/not_null_column/FatherMapper.html#FatherMapper">FatherMapper</a> fatherMapper = sqlSession.getMapper(FatherMapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>  
@@ -89,7 +89,7 @@
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>    }
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>  
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>    @Test
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>    <strong class="jxr_keyword">void</strong> testNotNullColumnWithoutChildrenWithInternalResultMap() {
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>    <strong class="jxr_keyword">void</strong> notNullColumnWithoutChildrenWithInternalResultMap() {
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>        <a name="FatherMapper" href="../../../../../org/apache/ibatis/submitted/not_null_column/FatherMapper.html#FatherMapper">FatherMapper</a> fatherMapper = sqlSession.getMapper(FatherMapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>  
@@ -101,7 +101,7 @@
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>    }
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>  
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>    @Test
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>    <strong class="jxr_keyword">void</strong> testNotNullColumnWithoutChildrenWithRefResultMap() {
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>    <strong class="jxr_keyword">void</strong> notNullColumnWithoutChildrenWithRefResultMap() {
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>        <a name="FatherMapper" href="../../../../../org/apache/ibatis/submitted/not_null_column/FatherMapper.html#FatherMapper">FatherMapper</a> fatherMapper = sqlSession.getMapper(FatherMapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>  
@@ -113,7 +113,7 @@
 <a class="jxr_linenumber" name="L105" href="#L105">105</a>   }
 <a class="jxr_linenumber" name="L106" href="#L106">106</a> 
 <a class="jxr_linenumber" name="L107" href="#L107">107</a>   @Test
-<a class="jxr_linenumber" name="L108" href="#L108">108</a>   <strong class="jxr_keyword">void</strong> testNotNullColumnWithoutChildrenFidMultipleNullColumns() {
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>   <strong class="jxr_keyword">void</strong> notNullColumnWithoutChildrenFidMultipleNullColumns() {
 <a class="jxr_linenumber" name="L109" href="#L109">109</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L110" href="#L110">110</a>       <a name="FatherMapper" href="../../../../../org/apache/ibatis/submitted/not_null_column/FatherMapper.html#FatherMapper">FatherMapper</a> fatherMapper = sqlSession.getMapper(FatherMapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L111" href="#L111">111</a> 
@@ -125,7 +125,7 @@
 <a class="jxr_linenumber" name="L117" href="#L117">117</a>   }
 <a class="jxr_linenumber" name="L118" href="#L118">118</a> 
 <a class="jxr_linenumber" name="L119" href="#L119">119</a>   @Test
-<a class="jxr_linenumber" name="L120" href="#L120">120</a>   <strong class="jxr_keyword">void</strong> testNotNullColumnWithoutChildrenFidMultipleNullColumnsAndBrackets() {
+<a class="jxr_linenumber" name="L120" href="#L120">120</a>   <strong class="jxr_keyword">void</strong> notNullColumnWithoutChildrenFidMultipleNullColumnsAndBrackets() {
 <a class="jxr_linenumber" name="L121" href="#L121">121</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L122" href="#L122">122</a>       <a name="FatherMapper" href="../../../../../org/apache/ibatis/submitted/not_null_column/FatherMapper.html#FatherMapper">FatherMapper</a> fatherMapper = sqlSession.getMapper(FatherMapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L123" href="#L123">123</a> 
@@ -137,7 +137,7 @@
 <a class="jxr_linenumber" name="L129" href="#L129">129</a>   }
 <a class="jxr_linenumber" name="L130" href="#L130">130</a> 
 <a class="jxr_linenumber" name="L131" href="#L131">131</a>   @Test
-<a class="jxr_linenumber" name="L132" href="#L132">132</a>   <strong class="jxr_keyword">void</strong> testNotNullColumnWithoutChildrenFidWorkaround() {
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>   <strong class="jxr_keyword">void</strong> notNullColumnWithoutChildrenFidWorkaround() {
 <a class="jxr_linenumber" name="L133" href="#L133">133</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L134" href="#L134">134</a>       <a name="FatherMapper" href="../../../../../org/apache/ibatis/submitted/not_null_column/FatherMapper.html#FatherMapper">FatherMapper</a> fatherMapper = sqlSession.getMapper(FatherMapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L135" href="#L135">135</a> 
@@ -150,6 +150,6 @@
 <a class="jxr_linenumber" name="L142" href="#L142">142</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2024 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">© 2009–2024 <a href="https://www.mybatis.org/">MyBatis.org</a></div>
 </body>
 </html>

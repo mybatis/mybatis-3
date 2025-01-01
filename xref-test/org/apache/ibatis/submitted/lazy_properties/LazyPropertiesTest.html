@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/submitted/lazy_properties/LazyPropertiesTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2024 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -27,8 +27,8 @@
 <a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.jupiter.api.Assertions.assertNotNull;
 <a class="jxr_linenumber" name="L20" href="#L20">20</a>  
 <a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> java.io.Reader;
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> java.util.Collections;
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> java.util.HashSet;
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> java.util.HashSet;
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> java.util.Set;
 <a class="jxr_linenumber" name="L24" href="#L24">24</a>  
 <a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.BaseDataTest;
 <a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.executor.loader.ProxyFactory;
@@ -147,7 +147,7 @@
 <a class="jxr_linenumber" name="L139" href="#L139">139</a>   <strong class="jxr_keyword">void</strong> verifyCustomLazyLoadTriggerMethods() {
 <a class="jxr_linenumber" name="L140" href="#L140">140</a>     Configuration configuration = sqlSessionFactory.getConfiguration();
 <a class="jxr_linenumber" name="L141" href="#L141">141</a>     configuration.setAggressiveLazyLoading(false);
-<a class="jxr_linenumber" name="L142" href="#L142">142</a>     configuration.setLazyLoadTriggerMethods(<strong class="jxr_keyword">new</strong> HashSet&lt;&gt;(Collections.singleton(<span class="jxr_string">"trigger"</span>)));
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>     configuration.setLazyLoadTriggerMethods(<strong class="jxr_keyword">new</strong> HashSet&lt;&gt;(Set.of(<span class="jxr_string">"trigger"</span>)));
 <a class="jxr_linenumber" name="L143" href="#L143">143</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L144" href="#L144">144</a>       <a name="Mapper" href="../../../../../org/apache/ibatis/submitted/lazy_properties/Mapper.html#Mapper">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L145" href="#L145">145</a>       <a name="User" href="../../../../../org/apache/ibatis/submitted/lazy_properties/User.html#User">User</a> user = mapper.getUser(1);
@@ -190,6 +190,6 @@
 <a class="jxr_linenumber" name="L182" href="#L182">182</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2024 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">© 2009–2024 <a href="https://www.mybatis.org/">MyBatis.org</a></div>
 </body>
 </html>

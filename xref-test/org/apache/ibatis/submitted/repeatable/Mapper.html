@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/submitted/repeatable/Mapper.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2024 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -102,7 +102,7 @@
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>    @Select(<span class="jxr_string">"SELECT COUNT(*) FROM users WHERE name LIKE '%' || #{dataabse} || '%'"</span>)
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>    <strong class="jxr_keyword">int</strong> countByCurrentDatabase(String database);
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>  
-<a class="jxr_linenumber" name="L97" href="#L97">97</a>    <strong class="jxr_keyword">class</strong> HsqlSqlProvider {
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>    <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> HsqlSqlProvider {
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> String getUserUsingProvider() {
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>        <strong class="jxr_keyword">return</strong> <span class="jxr_string">"SELECT id, name, 'HSQL' as databaseName FROM users WHERE id = #{id}"</span>;
 <a class="jxr_linenumber" name="L100" href="#L100">100</a>     }
@@ -123,7 +123,7 @@
 <a class="jxr_linenumber" name="L115" href="#L115">115</a>     }
 <a class="jxr_linenumber" name="L116" href="#L116">116</a>   }
 <a class="jxr_linenumber" name="L117" href="#L117">117</a> 
-<a class="jxr_linenumber" name="L118" href="#L118">118</a>   <strong class="jxr_keyword">class</strong> DerbySqlProvider {
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>   <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> DerbySqlProvider {
 <a class="jxr_linenumber" name="L119" href="#L119">119</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> String getUserUsingProvider() {
 <a class="jxr_linenumber" name="L120" href="#L120">120</a>       <strong class="jxr_keyword">return</strong> <span class="jxr_string">"SELECT id, name, 'DERBY' as databaseName FROM users WHERE id = #{id}"</span>;
 <a class="jxr_linenumber" name="L121" href="#L121">121</a>     }
@@ -144,7 +144,7 @@
 <a class="jxr_linenumber" name="L136" href="#L136">136</a>     }
 <a class="jxr_linenumber" name="L137" href="#L137">137</a>   }
 <a class="jxr_linenumber" name="L138" href="#L138">138</a> 
-<a class="jxr_linenumber" name="L139" href="#L139">139</a>   <strong class="jxr_keyword">class</strong> DefaultSqlProvider {
+<a class="jxr_linenumber" name="L139" href="#L139">139</a>   <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> DefaultSqlProvider {
 <a class="jxr_linenumber" name="L140" href="#L140">140</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> String getUserUsingProvider() {
 <a class="jxr_linenumber" name="L141" href="#L141">141</a>       <strong class="jxr_keyword">return</strong> <span class="jxr_string">"SELECT id, name, 'DEFAULT' as databaseName FROM users WHERE id = #{id}"</span>;
 <a class="jxr_linenumber" name="L142" href="#L142">142</a>     }
@@ -168,6 +168,6 @@
 <a class="jxr_linenumber" name="L160" href="#L160">160</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2024 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">© 2009–2024 <a href="https://www.mybatis.org/">MyBatis.org</a></div>
 </body>
 </html>

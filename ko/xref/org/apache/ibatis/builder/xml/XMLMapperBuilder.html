@@ -5,7 +5,7 @@
 <link type="text/css" rel="stylesheet" href="../../../../../stylesheet.css" />
 </head>
 <body>
-<div id="overview"><a href="../../../../../../../apidocs/org/apache/ibatis/builder/xml/XMLMapperBuilder.html">View Javadoc</a></div><pre>
+<div id="overview"><a href="../../../../../../apidocs/org/apache/ibatis/builder/xml/XMLMapperBuilder.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
 <a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2024 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
@@ -247,7 +247,7 @@
 <a class="jxr_linenumber" name="L239" href="#L239">239</a>         resultMappings.add(buildResultMappingFromContext(resultChild, typeClass, flags));
 <a class="jxr_linenumber" name="L240" href="#L240">240</a>       }
 <a class="jxr_linenumber" name="L241" href="#L241">241</a>     }
-<a class="jxr_linenumber" name="L242" href="#L242">242</a>     String id = resultMapNode.getStringAttribute(<span class="jxr_string">"id"</span>, resultMapNode.getValueBasedIdentifier());
+<a class="jxr_linenumber" name="L242" href="#L242">242</a>     String id = resultMapNode.getStringAttribute(<span class="jxr_string">"id"</span>, resultMapNode::getValueBasedIdentifier);
 <a class="jxr_linenumber" name="L243" href="#L243">243</a>     String extend = resultMapNode.getStringAttribute(<span class="jxr_string">"extends"</span>);
 <a class="jxr_linenumber" name="L244" href="#L244">244</a>     Boolean autoMapping = resultMapNode.getBooleanAttribute(<span class="jxr_string">"autoMapping"</span>);
 <a class="jxr_linenumber" name="L245" href="#L245">245</a>     <a name="ResultMapResolver" href="../../../../../org/apache/ibatis/builder/ResultMapResolver.html#ResultMapResolver">ResultMapResolver</a> resultMapResolver = <strong class="jxr_keyword">new</strong> <a name="ResultMapResolver" href="../../../../../org/apache/ibatis/builder/ResultMapResolver.html#ResultMapResolver">ResultMapResolver</a>(builderAssistant, id, typeClass, extend, discriminator,
@@ -298,7 +298,7 @@
 <a class="jxr_linenumber" name="L290" href="#L290">290</a>     <strong class="jxr_keyword">for</strong> (<a name="XNode" href="../../../../../org/apache/ibatis/parsing/XNode.html#XNode">XNode</a> caseChild : context.getChildren()) {
 <a class="jxr_linenumber" name="L291" href="#L291">291</a>       String value = caseChild.getStringAttribute(<span class="jxr_string">"value"</span>);
 <a class="jxr_linenumber" name="L292" href="#L292">292</a>       String resultMap = caseChild.getStringAttribute(<span class="jxr_string">"resultMap"</span>,
-<a class="jxr_linenumber" name="L293" href="#L293">293</a>           processNestedResultMappings(caseChild, resultMappings, resultType));
+<a class="jxr_linenumber" name="L293" href="#L293">293</a>           () -&gt; processNestedResultMappings(caseChild, resultMappings, resultType));
 <a class="jxr_linenumber" name="L294" href="#L294">294</a>       discriminatorMap.put(value, resultMap);
 <a class="jxr_linenumber" name="L295" href="#L295">295</a>     }
 <a class="jxr_linenumber" name="L296" href="#L296">296</a>     <strong class="jxr_keyword">return</strong> builderAssistant.buildDiscriminator(resultType, column, javaTypeClass, jdbcTypeEnum, typeHandlerClass,
@@ -410,6 +410,6 @@
 <a class="jxr_linenumber" name="L402" href="#L402">402</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2024 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">© 2009–2024 <a href="https://www.mybatis.org/">MyBatis.org</a></div>
 </body>
 </html>

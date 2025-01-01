@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/submitted/extends_with_constructor/NpeExtendsTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2024 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -57,7 +57,7 @@
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>    }
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>  
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>    @Test
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>    <strong class="jxr_keyword">void</strong> testNoConstructorConfiguration() {
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>    <strong class="jxr_keyword">void</strong> noConstructorConfiguration() {
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>      Configuration configuration = <strong class="jxr_keyword">new</strong> Configuration();
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>      configuration.addMapper(StudentMapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>      configuration.addMapper(TeacherMapper.<strong class="jxr_keyword">class</strong>);
@@ -65,7 +65,7 @@
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>    }
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>  
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>    @Test
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>    <strong class="jxr_keyword">void</strong> testWithConstructorConfiguration() {
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>    <strong class="jxr_keyword">void</strong> withConstructorConfiguration() {
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>      Configuration configuration = <strong class="jxr_keyword">new</strong> Configuration();
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>      configuration.addMapper(StudentConstructorMapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>      configuration.addMapper(TeacherMapper.<strong class="jxr_keyword">class</strong>);
@@ -93,7 +93,7 @@
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>    }
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>  
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>    @Test
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>    <strong class="jxr_keyword">void</strong> testSelectWithTeacher() {
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>    <strong class="jxr_keyword">void</strong> selectWithTeacher() {
 <a class="jxr_linenumber" name="L89" href="#L89">89</a>      SqlSessionFactory sqlSessionFactory = getSqlSessionFactoryWithConstructor();
 <a class="jxr_linenumber" name="L90" href="#L90">90</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L91" href="#L91">91</a>        <a name="StudentConstructorMapper" href="../../../../../org/apache/ibatis/submitted/extends_with_constructor/StudentConstructorMapper.html#StudentConstructorMapper">StudentConstructorMapper</a> studentConstructorMapper = sqlSession.getMapper(StudentConstructorMapper.<strong class="jxr_keyword">class</strong>);
@@ -104,7 +104,7 @@
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>    }
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>  
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>    @Test
-<a class="jxr_linenumber" name="L99" href="#L99">99</a>    <strong class="jxr_keyword">void</strong> testSelectNoName() {
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>    <strong class="jxr_keyword">void</strong> selectNoName() {
 <a class="jxr_linenumber" name="L100" href="#L100">100</a>     SqlSessionFactory sqlSessionFactory = getSqlSessionFactoryWithConstructor();
 <a class="jxr_linenumber" name="L101" href="#L101">101</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L102" href="#L102">102</a>       <a name="StudentConstructorMapper" href="../../../../../org/apache/ibatis/submitted/extends_with_constructor/StudentConstructorMapper.html#StudentConstructorMapper">StudentConstructorMapper</a> studentConstructorMapper = sqlSession.getMapper(StudentConstructorMapper.<strong class="jxr_keyword">class</strong>);
@@ -117,6 +117,6 @@
 <a class="jxr_linenumber" name="L109" href="#L109">109</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2024 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">© 2009–2024 <a href="https://www.mybatis.org/">MyBatis.org</a></div>
 </body>
 </html>

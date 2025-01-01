@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/submitted/nested/NestedForEachTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2024 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -53,7 +53,7 @@
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>    }
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>  
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>    @Test
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>    <strong class="jxr_keyword">void</strong> testSimpleSelect() {
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>    <strong class="jxr_keyword">void</strong> simpleSelect() {
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>        <a name="Name" href="../../../../../org/apache/ibatis/submitted/nested/Name.html#Name">Name</a> name = <strong class="jxr_keyword">new</strong> <a name="Name" href="../../../../../org/apache/ibatis/submitted/nested/Name.html#Name">Name</a>();
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>        name.setLastName(<span class="jxr_string">"Flintstone"</span>);
@@ -68,7 +68,7 @@
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>    }
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>  
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>    @Test
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>    <strong class="jxr_keyword">void</strong> testSimpleSelectWithPrimitives() {
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>    <strong class="jxr_keyword">void</strong> simpleSelectWithPrimitives() {
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>        Map&lt;String, Object&gt; parameter = <strong class="jxr_keyword">new</strong> HashMap&lt;&gt;();
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>        <strong class="jxr_keyword">int</strong>[] array = { 1, 3, 5 };
@@ -82,7 +82,7 @@
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>    }
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>  
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>    @Test
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>    <strong class="jxr_keyword">void</strong> testSimpleSelectWithMapperAndPrimitives() {
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>    <strong class="jxr_keyword">void</strong> simpleSelectWithMapperAndPrimitives() {
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>        <a name="Mapper" href="../../../../../org/apache/ibatis/submitted/nested/Mapper.html#Mapper">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>        List&lt;Map&lt;String, Object&gt;&gt; answer = mapper.simpleSelectWithMapperAndPrimitives(1, 3, 5);
@@ -91,7 +91,7 @@
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>    }
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>  
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>    @Test
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>    <strong class="jxr_keyword">void</strong> testNestedSelect() {
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>    <strong class="jxr_keyword">void</strong> nestedSelect() {
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>        <a name="Name" href="../../../../../org/apache/ibatis/submitted/nested/Name.html#Name">Name</a> name = <strong class="jxr_keyword">new</strong> <a name="Name" href="../../../../../org/apache/ibatis/submitted/nested/Name.html#Name">Name</a>();
 <a class="jxr_linenumber" name="L89" href="#L89">89</a>        name.setLastName(<span class="jxr_string">"Flintstone"</span>);
@@ -109,7 +109,7 @@
 <a class="jxr_linenumber" name="L101" href="#L101">101</a>   }
 <a class="jxr_linenumber" name="L102" href="#L102">102</a> 
 <a class="jxr_linenumber" name="L103" href="#L103">103</a>   @Test
-<a class="jxr_linenumber" name="L104" href="#L104">104</a>   <strong class="jxr_keyword">void</strong> testNestedSelect2() {
+<a class="jxr_linenumber" name="L104" href="#L104">104</a>   <strong class="jxr_keyword">void</strong> nestedSelect2() {
 <a class="jxr_linenumber" name="L105" href="#L105">105</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L106" href="#L106">106</a>       <a name="Name" href="../../../../../org/apache/ibatis/submitted/nested/Name.html#Name">Name</a> name = <strong class="jxr_keyword">new</strong> <a name="Name" href="../../../../../org/apache/ibatis/submitted/nested/Name.html#Name">Name</a>();
 <a class="jxr_linenumber" name="L107" href="#L107">107</a>       name.setLastName(<span class="jxr_string">"Flintstone"</span>);
@@ -133,6 +133,6 @@
 <a class="jxr_linenumber" name="L125" href="#L125">125</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2024 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">© 2009–2024 <a href="https://www.mybatis.org/">MyBatis.org</a></div>
 </body>
 </html>

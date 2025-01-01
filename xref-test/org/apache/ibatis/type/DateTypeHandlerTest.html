@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../testapidocs/org/apache/ibatis/type/DateTypeHandlerTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2022 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2024 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -44,7 +44,7 @@
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>    @Test
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldSetParameter() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>      TYPE_HANDLER.setParameter(ps, 1, DATE, <strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="L39" href="#L39">39</a>      verify(ps).setTimestamp(1, <strong class="jxr_keyword">new</strong> java.sql.Timestamp(DATE.getTime()));
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>      verify(ps).setTimestamp(1, <strong class="jxr_keyword">new</strong> Timestamp(DATE.getTime()));
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>    }
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>  
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>    @Override
@@ -98,6 +98,6 @@
 <a class="jxr_linenumber" name="L90" href="#L90">90</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2024 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">© 2009–2024 <a href="https://www.mybatis.org/">MyBatis.org</a></div>
 </body>
 </html>

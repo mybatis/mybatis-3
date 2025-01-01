@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/submitted/cglib_lazy_error/CglibNPELazyTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2024 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -52,7 +52,7 @@
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>    }
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>  
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>    @Test
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>    <strong class="jxr_keyword">void</strong> testNoParent() {
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>    <strong class="jxr_keyword">void</strong> noParent() {
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>        <a name="PersonMapper" href="../../../../../org/apache/ibatis/submitted/cglib_lazy_error/PersonMapper.html#PersonMapper">PersonMapper</a> personMapper = sqlSession.getMapper(PersonMapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>        <a name="Person" href="../../../../../org/apache/ibatis/submitted/cglib_lazy_error/Person.html#Person">Person</a> person = personMapper.selectById(1);
@@ -63,7 +63,7 @@
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>    }
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>  
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>    @Test
-<a class="jxr_linenumber" name="L58" href="#L58">58</a>    <strong class="jxr_keyword">void</strong> testAncestorSelf() {
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>    <strong class="jxr_keyword">void</strong> ancestorSelf() {
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>        <a name="PersonMapper" href="../../../../../org/apache/ibatis/submitted/cglib_lazy_error/PersonMapper.html#PersonMapper">PersonMapper</a> personMapper = sqlSession.getMapper(PersonMapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>        <a name="Person" href="../../../../../org/apache/ibatis/submitted/cglib_lazy_error/Person.html#Person">Person</a> person = personMapper.selectById(1);
@@ -74,7 +74,7 @@
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>    }
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>  
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>    @Test
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>    <strong class="jxr_keyword">void</strong> testAncestorAfterQueryingParents() {
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>    <strong class="jxr_keyword">void</strong> ancestorAfterQueryingParents() {
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>        <a name="PersonMapper" href="../../../../../org/apache/ibatis/submitted/cglib_lazy_error/PersonMapper.html#PersonMapper">PersonMapper</a> personMapper = sqlSession.getMapper(PersonMapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>        <a name="Person" href="../../../../../org/apache/ibatis/submitted/cglib_lazy_error/Person.html#Person">Person</a> expectedAncestor = personMapper.selectById(1);
@@ -88,7 +88,7 @@
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>    }
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>  
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>    @Test
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>    <strong class="jxr_keyword">void</strong> testGrandParent() {
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>    <strong class="jxr_keyword">void</strong> grandParent() {
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>        <a name="PersonMapper" href="../../../../../org/apache/ibatis/submitted/cglib_lazy_error/PersonMapper.html#PersonMapper">PersonMapper</a> personMapper = sqlSession.getMapper(PersonMapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>        <a name="Person" href="../../../../../org/apache/ibatis/submitted/cglib_lazy_error/Person.html#Person">Person</a> expectedParent = personMapper.selectById(2);
@@ -103,7 +103,7 @@
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>    }
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>  
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>    @Test
-<a class="jxr_linenumber" name="L98" href="#L98">98</a>    <strong class="jxr_keyword">void</strong> testAncestor() {
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>    <strong class="jxr_keyword">void</strong> ancestor() {
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L100" href="#L100">100</a>       <a name="PersonMapper" href="../../../../../org/apache/ibatis/submitted/cglib_lazy_error/PersonMapper.html#PersonMapper">PersonMapper</a> personMapper = sqlSession.getMapper(PersonMapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L101" href="#L101">101</a>       <a name="Person" href="../../../../../org/apache/ibatis/submitted/cglib_lazy_error/Person.html#Person">Person</a> expectedAncestor = personMapper.selectById(1);
@@ -117,6 +117,6 @@
 <a class="jxr_linenumber" name="L109" href="#L109">109</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2024 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">© 2009–2024 <a href="https://www.mybatis.org/">MyBatis.org</a></div>
 </body>
 </html>

@@ -5,9 +5,9 @@
 <link type="text/css" rel="stylesheet" href="../../../../../stylesheet.css" />
 </head>
 <body>
-<div id="overview"><a href="../../../../../../../testapidocs/org/apache/ibatis/domain/blog/Author.html">View Javadoc</a></div><pre>
+<div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/domain/blog/Author.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2024 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -105,46 +105,36 @@
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>      <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">this</strong> == o) {
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>        <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">true</strong>;
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>      }
-<a class="jxr_linenumber" name="L100" href="#L100">100</a>     <strong class="jxr_keyword">if</strong> (!(o instanceof <a name="Author" href="../../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>)) {
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>     <strong class="jxr_keyword">if</strong> (!(o instanceof <a name="Author" href="../../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a> author)) {
 <a class="jxr_linenumber" name="L101" href="#L101">101</a>       <strong class="jxr_keyword">return</strong> false;
 <a class="jxr_linenumber" name="L102" href="#L102">102</a>     }
 <a class="jxr_linenumber" name="L103" href="#L103">103</a> 
-<a class="jxr_linenumber" name="L104" href="#L104">104</a>     <a name="Author" href="../../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a> author = (<a name="Author" href="../../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>) o;
-<a class="jxr_linenumber" name="L105" href="#L105">105</a> 
-<a class="jxr_linenumber" name="L106" href="#L106">106</a>     <strong class="jxr_keyword">if</strong> ((id != author.id) || (bio != <strong class="jxr_keyword">null</strong> ? !bio.equals(author.bio) : author.bio != <strong class="jxr_keyword">null</strong>)
-<a class="jxr_linenumber" name="L107" href="#L107">107</a>         || (email != <strong class="jxr_keyword">null</strong> ? !email.equals(author.email) : author.email != <strong class="jxr_keyword">null</strong>)
-<a class="jxr_linenumber" name="L108" href="#L108">108</a>         || (password != <strong class="jxr_keyword">null</strong> ? !password.equals(author.password) : author.password != <strong class="jxr_keyword">null</strong>)) {
-<a class="jxr_linenumber" name="L109" href="#L109">109</a>       <strong class="jxr_keyword">return</strong> false;
-<a class="jxr_linenumber" name="L110" href="#L110">110</a>     }
-<a class="jxr_linenumber" name="L111" href="#L111">111</a>     <strong class="jxr_keyword">if</strong> (username != <strong class="jxr_keyword">null</strong> ? !username.equals(author.username) : author.username != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L112" href="#L112">112</a>       <strong class="jxr_keyword">return</strong> false;
-<a class="jxr_linenumber" name="L113" href="#L113">113</a>     }
-<a class="jxr_linenumber" name="L114" href="#L114">114</a>     <strong class="jxr_keyword">if</strong> (favouriteSection != <strong class="jxr_keyword">null</strong> ? !favouriteSection.equals(author.favouriteSection)
-<a class="jxr_linenumber" name="L115" href="#L115">115</a>         : author.favouriteSection != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L116" href="#L116">116</a>       <strong class="jxr_keyword">return</strong> false;
-<a class="jxr_linenumber" name="L117" href="#L117">117</a>     }
-<a class="jxr_linenumber" name="L118" href="#L118">118</a> 
-<a class="jxr_linenumber" name="L119" href="#L119">119</a>     <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">true</strong>;
-<a class="jxr_linenumber" name="L120" href="#L120">120</a>   }
-<a class="jxr_linenumber" name="L121" href="#L121">121</a> 
-<a class="jxr_linenumber" name="L122" href="#L122">122</a>   @Override
-<a class="jxr_linenumber" name="L123" href="#L123">123</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> hashCode() {
-<a class="jxr_linenumber" name="L124" href="#L124">124</a>     <strong class="jxr_keyword">int</strong> result;
-<a class="jxr_linenumber" name="L125" href="#L125">125</a>     result = id;
-<a class="jxr_linenumber" name="L126" href="#L126">126</a>     result = 31 * result + (username != <strong class="jxr_keyword">null</strong> ? username.hashCode() : 0);
-<a class="jxr_linenumber" name="L127" href="#L127">127</a>     result = 31 * result + (password != <strong class="jxr_keyword">null</strong> ? password.hashCode() : 0);
-<a class="jxr_linenumber" name="L128" href="#L128">128</a>     result = 31 * result + (email != <strong class="jxr_keyword">null</strong> ? email.hashCode() : 0);
-<a class="jxr_linenumber" name="L129" href="#L129">129</a>     result = 31 * result + (bio != <strong class="jxr_keyword">null</strong> ? bio.hashCode() : 0);
-<a class="jxr_linenumber" name="L130" href="#L130">130</a>     <strong class="jxr_keyword">return</strong> 31 * result + (favouriteSection != <strong class="jxr_keyword">null</strong> ? favouriteSection.hashCode() : 0);
-<a class="jxr_linenumber" name="L131" href="#L131">131</a>   }
-<a class="jxr_linenumber" name="L132" href="#L132">132</a> 
-<a class="jxr_linenumber" name="L133" href="#L133">133</a>   @Override
-<a class="jxr_linenumber" name="L134" href="#L134">134</a>   <strong class="jxr_keyword">public</strong> String toString() {
-<a class="jxr_linenumber" name="L135" href="#L135">135</a>     <strong class="jxr_keyword">return</strong> <span class="jxr_string">"Author : "</span> + id + <span class="jxr_string">" : "</span> + username + <span class="jxr_string">" : "</span> + email;
-<a class="jxr_linenumber" name="L136" href="#L136">136</a>   }
-<a class="jxr_linenumber" name="L137" href="#L137">137</a> }
+<a class="jxr_linenumber" name="L104" href="#L104">104</a>     <strong class="jxr_keyword">if</strong> (id != author.id || (bio != <strong class="jxr_keyword">null</strong> ? !bio.equals(author.bio) : author.bio != <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>         || (email != <strong class="jxr_keyword">null</strong> ? !email.equals(author.email) : author.email != <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>         || (password != <strong class="jxr_keyword">null</strong> ? !password.equals(author.password) : author.password != <strong class="jxr_keyword">null</strong>)) {
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>       <strong class="jxr_keyword">return</strong> false;
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>     }
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>     <strong class="jxr_keyword">return</strong> username != <strong class="jxr_keyword">null</strong> ? username.equals(author.username) : author.username == <strong class="jxr_keyword">null</strong> &amp;&amp; favouriteSection != <strong class="jxr_keyword">null</strong>
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>         ? favouriteSection.equals(author.favouriteSection) : author.favouriteSection == <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>   }
+<a class="jxr_linenumber" name="L112" href="#L112">112</a> 
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>   @Override
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> hashCode() {
+<a class="jxr_linenumber" name="L115" href="#L115">115</a>     <strong class="jxr_keyword">int</strong> result = id;
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>     result = 31 * result + (username != <strong class="jxr_keyword">null</strong> ? username.hashCode() : 0);
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>     result = 31 * result + (password != <strong class="jxr_keyword">null</strong> ? password.hashCode() : 0);
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>     result = 31 * result + (email != <strong class="jxr_keyword">null</strong> ? email.hashCode() : 0);
+<a class="jxr_linenumber" name="L119" href="#L119">119</a>     result = 31 * result + (bio != <strong class="jxr_keyword">null</strong> ? bio.hashCode() : 0);
+<a class="jxr_linenumber" name="L120" href="#L120">120</a>     <strong class="jxr_keyword">return</strong> 31 * result + (favouriteSection != <strong class="jxr_keyword">null</strong> ? favouriteSection.hashCode() : 0);
+<a class="jxr_linenumber" name="L121" href="#L121">121</a>   }
+<a class="jxr_linenumber" name="L122" href="#L122">122</a> 
+<a class="jxr_linenumber" name="L123" href="#L123">123</a>   @Override
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>   <strong class="jxr_keyword">public</strong> String toString() {
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>     <strong class="jxr_keyword">return</strong> <span class="jxr_string">"Author : "</span> + id + <span class="jxr_string">" : "</span> + username + <span class="jxr_string">" : "</span> + email;
+<a class="jxr_linenumber" name="L126" href="#L126">126</a>   }
+<a class="jxr_linenumber" name="L127" href="#L127">127</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2024 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">© 2009–2024 <a href="https://www.mybatis.org/">MyBatis.org</a></div>
 </body>
 </html>

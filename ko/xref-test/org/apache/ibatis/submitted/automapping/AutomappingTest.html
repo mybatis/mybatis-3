@@ -5,9 +5,9 @@
 <link type="text/css" rel="stylesheet" href="../../../../../stylesheet.css" />
 </head>
 <body>
-<div id="overview"><a href="../../../../../../../testapidocs/org/apache/ibatis/submitted/automapping/AutomappingTest.html">View Javadoc</a></div><pre>
+<div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/submitted/automapping/AutomappingTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2024 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -161,7 +161,7 @@
 <a class="jxr_linenumber" name="L153" href="#L153">153</a>       <a name="Mapper" href="../../../../../org/apache/ibatis/submitted/automapping/Mapper.html#Mapper">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L154" href="#L154">154</a>       <em class="jxr_comment">// no errors throw</em>
 <a class="jxr_linenumber" name="L155" href="#L155">155</a>       List&lt;Book&gt; books = mapper.getBooks();
-<a class="jxr_linenumber" name="L156" href="#L156">156</a>       Assertions.assertTrue(!books.isEmpty(), <span class="jxr_string">"should return results,no errors throw"</span>);
+<a class="jxr_linenumber" name="L156" href="#L156">156</a>       Assertions.assertFalse(books.isEmpty(), <span class="jxr_string">"should return results,no errors throw"</span>);
 <a class="jxr_linenumber" name="L157" href="#L157">157</a>     }
 <a class="jxr_linenumber" name="L158" href="#L158">158</a>   }
 <a class="jxr_linenumber" name="L159" href="#L159">159</a> 
@@ -181,6 +181,6 @@
 <a class="jxr_linenumber" name="L173" href="#L173">173</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2024 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">© 2009–2024 <a href="https://www.mybatis.org/">MyBatis.org</a></div>
 </body>
 </html>

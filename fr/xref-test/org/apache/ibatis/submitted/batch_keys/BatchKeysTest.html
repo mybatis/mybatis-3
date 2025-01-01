@@ -5,9 +5,9 @@
 <link type="text/css" rel="stylesheet" href="../../../../../stylesheet.css" />
 </head>
 <body>
-<div id="overview"><a href="../../../../../../../testapidocs/org/apache/ibatis/submitted/batch_keys/BatchKeysTest.html">View Javadoc</a></div><pre>
+<div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/submitted/batch_keys/BatchKeysTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2024 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -81,7 +81,7 @@
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>    }
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>  
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>    @Test
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>    <strong class="jxr_keyword">void</strong> testInsert() {
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>    <strong class="jxr_keyword">void</strong> insert() {
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH)) {
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>        <a name="User" href="../../../../../org/apache/ibatis/submitted/batch_keys/User.html#User">User</a> user1 = <strong class="jxr_keyword">new</strong> <a name="User" href="../../../../../org/apache/ibatis/submitted/batch_keys/User.html#User">User</a>(<strong class="jxr_keyword">null</strong>, <span class="jxr_string">"Pocoyo"</span>);
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>        sqlSession.insert(<span class="jxr_string">"insert"</span>, user1);
@@ -99,7 +99,7 @@
 <a class="jxr_linenumber" name="L91" href="#L91">91</a>    }
 <a class="jxr_linenumber" name="L92" href="#L92">92</a>  
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>    @Test
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>    <strong class="jxr_keyword">void</strong> testInsertJdbc3() {
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>    <strong class="jxr_keyword">void</strong> insertJdbc3() {
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH)) {
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>        <a name="User" href="../../../../../org/apache/ibatis/submitted/batch_keys/User.html#User">User</a> user1 = <strong class="jxr_keyword">new</strong> <a name="User" href="../../../../../org/apache/ibatis/submitted/batch_keys/User.html#User">User</a>(<strong class="jxr_keyword">null</strong>, <span class="jxr_string">"Pocoyo"</span>);
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>        sqlSession.insert(<span class="jxr_string">"insertIdentity"</span>, user1);
@@ -118,7 +118,7 @@
 <a class="jxr_linenumber" name="L110" href="#L110">110</a>   }
 <a class="jxr_linenumber" name="L111" href="#L111">111</a> 
 <a class="jxr_linenumber" name="L112" href="#L112">112</a>   @Test
-<a class="jxr_linenumber" name="L113" href="#L113">113</a>   <strong class="jxr_keyword">void</strong> testInsertWithMapper() {
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>   <strong class="jxr_keyword">void</strong> insertWithMapper() {
 <a class="jxr_linenumber" name="L114" href="#L114">114</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH)) {
 <a class="jxr_linenumber" name="L115" href="#L115">115</a>       <a name="Mapper" href="../../../../../org/apache/ibatis/submitted/batch_keys/Mapper.html#Mapper">Mapper</a> userMapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L116" href="#L116">116</a>       <a name="User" href="../../../../../org/apache/ibatis/submitted/batch_keys/User.html#User">User</a> user1 = <strong class="jxr_keyword">new</strong> <a name="User" href="../../../../../org/apache/ibatis/submitted/batch_keys/User.html#User">User</a>(<strong class="jxr_keyword">null</strong>, <span class="jxr_string">"Pocoyo"</span>);
@@ -138,7 +138,7 @@
 <a class="jxr_linenumber" name="L130" href="#L130">130</a>   }
 <a class="jxr_linenumber" name="L131" href="#L131">131</a> 
 <a class="jxr_linenumber" name="L132" href="#L132">132</a>   @Test
-<a class="jxr_linenumber" name="L133" href="#L133">133</a>   <strong class="jxr_keyword">void</strong> testInsertMapperJdbc3() {
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>   <strong class="jxr_keyword">void</strong> insertMapperJdbc3() {
 <a class="jxr_linenumber" name="L134" href="#L134">134</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH)) {
 <a class="jxr_linenumber" name="L135" href="#L135">135</a>       <a name="Mapper" href="../../../../../org/apache/ibatis/submitted/batch_keys/Mapper.html#Mapper">Mapper</a> userMapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L136" href="#L136">136</a>       <a name="User" href="../../../../../org/apache/ibatis/submitted/batch_keys/User.html#User">User</a> user1 = <strong class="jxr_keyword">new</strong> <a name="User" href="../../../../../org/apache/ibatis/submitted/batch_keys/User.html#User">User</a>(<strong class="jxr_keyword">null</strong>, <span class="jxr_string">"Pocoyo"</span>);
@@ -158,7 +158,7 @@
 <a class="jxr_linenumber" name="L150" href="#L150">150</a>   }
 <a class="jxr_linenumber" name="L151" href="#L151">151</a> 
 <a class="jxr_linenumber" name="L152" href="#L152">152</a>   @Test
-<a class="jxr_linenumber" name="L153" href="#L153">153</a>   <strong class="jxr_keyword">void</strong> testInsertMapperNoBatchJdbc3() {
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>   <strong class="jxr_keyword">void</strong> insertMapperNoBatchJdbc3() {
 <a class="jxr_linenumber" name="L154" href="#L154">154</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L155" href="#L155">155</a>       <a name="Mapper" href="../../../../../org/apache/ibatis/submitted/batch_keys/Mapper.html#Mapper">Mapper</a> userMapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L156" href="#L156">156</a>       <a name="User" href="../../../../../org/apache/ibatis/submitted/batch_keys/User.html#User">User</a> user1 = <strong class="jxr_keyword">new</strong> <a name="User" href="../../../../../org/apache/ibatis/submitted/batch_keys/User.html#User">User</a>(<strong class="jxr_keyword">null</strong>, <span class="jxr_string">"Pocoyo"</span>);
@@ -176,6 +176,6 @@
 <a class="jxr_linenumber" name="L168" href="#L168">168</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2024 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">© 2009–2024 <a href="https://www.mybatis.org/">MyBatis.org</a></div>
 </body>
 </html>

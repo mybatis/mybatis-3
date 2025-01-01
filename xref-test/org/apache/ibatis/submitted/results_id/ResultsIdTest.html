@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/submitted/results_id/ResultsIdTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2024 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -53,7 +53,7 @@
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>    }
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>  
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>    @Test
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>    <strong class="jxr_keyword">void</strong> testNamingResults() {
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>    <strong class="jxr_keyword">void</strong> namingResults() {
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>        <a name="Mapper" href="../../../../../org/apache/ibatis/submitted/results_id/Mapper.html#Mapper">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>        <a name="User" href="../../../../../org/apache/ibatis/submitted/results_id/User.html#User">User</a> user = mapper.getUserByName(<span class="jxr_string">"User2"</span>);
@@ -63,7 +63,7 @@
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>    }
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>  
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>    @Test
-<a class="jxr_linenumber" name="L58" href="#L58">58</a>    <strong class="jxr_keyword">void</strong> testResultsOnlyForNaming() {
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>    <strong class="jxr_keyword">void</strong> resultsOnlyForNaming() {
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>        <a name="Mapper" href="../../../../../org/apache/ibatis/submitted/results_id/Mapper.html#Mapper">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>        <a name="User" href="../../../../../org/apache/ibatis/submitted/results_id/User.html#User">User</a> user = mapper.getUserByNameConstructor(<span class="jxr_string">"User2"</span>);
@@ -73,7 +73,7 @@
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>    }
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>  
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>    @Test
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>    <strong class="jxr_keyword">void</strong> testReuseNamedResultsFromAnotherMapper() {
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>    <strong class="jxr_keyword">void</strong> reuseNamedResultsFromAnotherMapper() {
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>        <a name="AnotherMapper" href="../../../../../org/apache/ibatis/submitted/results_id/AnotherMapper.html#AnotherMapper">AnotherMapper</a> mapper = sqlSession.getMapper(AnotherMapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>        List&lt;User&gt; users = mapper.getUsers();
@@ -86,7 +86,7 @@
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>    }
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>  
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>    @Test
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>    <strong class="jxr_keyword">void</strong> testReuseNamedResultsFromXmlMapper() {
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>    <strong class="jxr_keyword">void</strong> reuseNamedResultsFromXmlMapper() {
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>        <a name="AnotherMapper" href="../../../../../org/apache/ibatis/submitted/results_id/AnotherMapper.html#AnotherMapper">AnotherMapper</a> mapper = sqlSession.getMapper(AnotherMapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>        <a name="User" href="../../../../../org/apache/ibatis/submitted/results_id/User.html#User">User</a> user = mapper.getUser(1);
@@ -97,6 +97,6 @@
 <a class="jxr_linenumber" name="L89" href="#L89">89</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2024 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">© 2009–2024 <a href="https://www.mybatis.org/">MyBatis.org</a></div>
 </body>
 </html>

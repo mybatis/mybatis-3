@@ -5,9 +5,9 @@
 <link type="text/css" rel="stylesheet" href="../../../../../stylesheet.css" />
 </head>
 <body>
-<div id="overview"><a href="../../../../../../../testapidocs/org/apache/ibatis/submitted/complex_column/PersonMapper.html">View Javadoc</a></div><pre>
+<div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/submitted/complex_column/PersonMapper.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2024 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -71,18 +71,23 @@
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>    <em class="jxr_comment">// @formatter:on</em>
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>    <a name="Person" href="../../../../../org/apache/ibatis/submitted/complex_column/Person.html#Person">Person</a> getComplexWithParamAttributes(Long id);
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>  
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>    <em class="jxr_comment">// @formatter:off</em>
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>    @Select(<span class="jxr_string">"SELECT id, firstName, lastName, parent_id, parent_firstName, parent_lastName"</span>
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>        + <span class="jxr_string">" FROM Person"</span>
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>        + <span class="jxr_string">" WHERE firstName = #{firstName,jdbcType=VARCHAR}"</span>
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>        + <span class="jxr_string">" AND lastName = #{lastName,jdbcType=VARCHAR}"</span>
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>        + <span class="jxr_string">" LIMIT 1"</span>)
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>    <em class="jxr_comment">// @formatter:on</em>
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>    <a name="Person" href="../../../../../org/apache/ibatis/submitted/complex_column/Person.html#Person">Person</a> getParentWithParamAttributes(@Param(<span class="jxr_string">"firstName"</span>) String firstName, @Param(<span class="jxr_string">"lastName"</span>) String lastname);
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>  
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>  }
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>    @Select(<span class="jxr_string">""</span><span class="jxr_string">"
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>        SELECT id\
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>             , firstName\
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>             , lastName\
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>             , parent_id\
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>             , parent_firstName\
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>             , parent_lastName\
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>          FROM Person\
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>         WHERE firstName = #{firstName, jdbcType=VARCHAR}\
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>           AND lastName = #{lastName, jdbcType=VARCHAR}\
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>         LIMIT 1\
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>        <span class="jxr_string">""</span><span class="jxr_string">")
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>    <a name="Person" href="../../../../../org/apache/ibatis/submitted/complex_column/Person.html#Person">Person</a> getParentWithParamAttributes(@Param(<span class="jxr_string">"firstName"</span>) String firstName, @Param(<span class="jxr_string">"lastName"</span>) String lastname);
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>  
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2024 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">© 2009–2024 <a href="https://www.mybatis.org/">MyBatis.org</a></div>
 </body>
 </html>

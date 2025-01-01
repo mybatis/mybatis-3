@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/submitted/parent_reference_3level/BlogTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2024 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -56,7 +56,7 @@
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>    }
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>  
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>    @Test
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>    <strong class="jxr_keyword">void</strong> testSelectBlogWithPosts() {
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>    <strong class="jxr_keyword">void</strong> selectBlogWithPosts() {
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>      <strong class="jxr_keyword">try</strong> (SqlSession session = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>        <a name="Mapper" href="../../../../../org/apache/ibatis/submitted/parent_reference_3level/Mapper.html#Mapper">Mapper</a> mapper = session.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>        <a name="Blog" href="../../../../../org/apache/ibatis/submitted/parent_reference_3level/Blog.html#Blog">Blog</a> result = mapper.selectBlogByPrimaryKey(1);
@@ -73,7 +73,7 @@
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>    }
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>  
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>    @Test
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>    <strong class="jxr_keyword">void</strong> testSelectBlogWithoutPosts() {
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>    <strong class="jxr_keyword">void</strong> selectBlogWithoutPosts() {
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>      <strong class="jxr_keyword">try</strong> (SqlSession session = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>        <a name="Mapper" href="../../../../../org/apache/ibatis/submitted/parent_reference_3level/Mapper.html#Mapper">Mapper</a> mapper = session.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>        <a name="Blog" href="../../../../../org/apache/ibatis/submitted/parent_reference_3level/Blog.html#Blog">Blog</a> result = mapper.selectBlogByPrimaryKey(2);
@@ -84,7 +84,7 @@
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>    }
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>  
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>    @Test
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>    <strong class="jxr_keyword">void</strong> testSelectBlogWithPostsColumnPrefix() {
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>    <strong class="jxr_keyword">void</strong> selectBlogWithPostsColumnPrefix() {
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>      <strong class="jxr_keyword">try</strong> (SqlSession session = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>        <a name="Mapper" href="../../../../../org/apache/ibatis/submitted/parent_reference_3level/Mapper.html#Mapper">Mapper</a> mapper = session.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>        <a name="Blog" href="../../../../../org/apache/ibatis/submitted/parent_reference_3level/Blog.html#Blog">Blog</a> result = mapper.selectBlogByPrimaryKeyColumnPrefix(1);
@@ -101,7 +101,7 @@
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>    }
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>  
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>    @Test
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>    <strong class="jxr_keyword">void</strong> testSelectBlogWithoutPostsColumnPrefix() {
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>    <strong class="jxr_keyword">void</strong> selectBlogWithoutPostsColumnPrefix() {
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>      <strong class="jxr_keyword">try</strong> (SqlSession session = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>        <a name="Mapper" href="../../../../../org/apache/ibatis/submitted/parent_reference_3level/Mapper.html#Mapper">Mapper</a> mapper = session.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>        <a name="Blog" href="../../../../../org/apache/ibatis/submitted/parent_reference_3level/Blog.html#Blog">Blog</a> result = mapper.selectBlogByPrimaryKeyColumnPrefix(2);
@@ -113,6 +113,6 @@
 <a class="jxr_linenumber" name="L105" href="#L105">105</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2024 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">© 2009–2024 <a href="https://www.mybatis.org/">MyBatis.org</a></div>
 </body>
 </html>

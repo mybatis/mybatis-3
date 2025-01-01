@@ -68,7 +68,7 @@
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>      }
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>    }
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>  
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>    <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> SchemaHolder {
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>    <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> SchemaHolder {
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> ThreadLocal&lt;String&gt; value = ThreadLocal.withInitial(() -&gt; <span class="jxr_string">"PUBLIC"</span>);
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>  
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> set(String tenantName) {
@@ -78,45 +78,48 @@
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> String get() {
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>        <strong class="jxr_keyword">return</strong> value.get();
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>      }
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>    }
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>  
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>    @Intercepts(@Signature(type = StatementHandler.<strong class="jxr_keyword">class</strong>, method = <span class="jxr_string">"prepare"</span>, args = { Connection.<strong class="jxr_keyword">class</strong>, Integer.<strong class="jxr_keyword">class</strong> }))
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> SwitchCatalogInterceptor <strong class="jxr_keyword">implements</strong> Interceptor {
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>      @Override
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>      <strong class="jxr_keyword">public</strong> Object intercept(Invocation invocation) <strong class="jxr_keyword">throws</strong> Throwable {
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>        Object[] args = invocation.getArgs();
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>        Connection con = (Connection) args[0];
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>        con.setSchema(SchemaHolder.get());
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>        <strong class="jxr_keyword">return</strong> invocation.proceed();
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>      }
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>    }
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>  
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>    @Test
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>    <strong class="jxr_keyword">void</strong> shouldPluginNotInvokeArbitraryMethod() {
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>      Map&lt;?, ?&gt; map = <strong class="jxr_keyword">new</strong> HashMap&lt;&gt;();
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>      map = (Map&lt;?, ?&gt;) <strong class="jxr_keyword">new</strong> AlwaysMapPlugin().plugin(map);
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>        map.get(<span class="jxr_string">"Anything"</span>);
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>        fail(<span class="jxr_string">"Exected IllegalArgumentException, but no exception was thrown."</span>);
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>      } <strong class="jxr_keyword">catch</strong> (IllegalArgumentException e) {
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>        assertEquals(
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>            <span class="jxr_string">"Method 'public abstract java.lang.Object java.util.Map.get(java.lang.Object)' is not supported as a plugin target."</span>,
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>            e.getMessage());
-<a class="jxr_linenumber" name="L97" href="#L97">97</a>      } <strong class="jxr_keyword">catch</strong> (Exception e) {
-<a class="jxr_linenumber" name="L98" href="#L98">98</a>        fail(<span class="jxr_string">"Exected IllegalArgumentException, but was "</span> + e.getClass(), e);
-<a class="jxr_linenumber" name="L99" href="#L99">99</a>      }
-<a class="jxr_linenumber" name="L100" href="#L100">100</a>   }
-<a class="jxr_linenumber" name="L101" href="#L101">101</a> 
-<a class="jxr_linenumber" name="L102" href="#L102">102</a>   @Intercepts({ @Signature(type = Map.<strong class="jxr_keyword">class</strong>, method = <span class="jxr_string">"get"</span>, args = { Object.<strong class="jxr_keyword">class</strong> }) })
-<a class="jxr_linenumber" name="L103" href="#L103">103</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> AlwaysMapPlugin <strong class="jxr_keyword">implements</strong> Interceptor {
-<a class="jxr_linenumber" name="L104" href="#L104">104</a>     @Override
-<a class="jxr_linenumber" name="L105" href="#L105">105</a>     <strong class="jxr_keyword">public</strong> Object intercept(Invocation invocation) {
-<a class="jxr_linenumber" name="L106" href="#L106">106</a>       <strong class="jxr_keyword">return</strong> <span class="jxr_string">"Always"</span>;
-<a class="jxr_linenumber" name="L107" href="#L107">107</a>     }
-<a class="jxr_linenumber" name="L108" href="#L108">108</a>   }
-<a class="jxr_linenumber" name="L109" href="#L109">109</a> }
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>  
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>      <strong class="jxr_keyword">private</strong> SchemaHolder() {
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>      }
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>    }
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>  
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>    @Intercepts(@Signature(type = StatementHandler.<strong class="jxr_keyword">class</strong>, method = <span class="jxr_string">"prepare"</span>, args = { Connection.<strong class="jxr_keyword">class</strong>, Integer.<strong class="jxr_keyword">class</strong> }))
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> SwitchCatalogInterceptor <strong class="jxr_keyword">implements</strong> Interceptor {
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>      @Override
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>      <strong class="jxr_keyword">public</strong> Object intercept(Invocation invocation) <strong class="jxr_keyword">throws</strong> Throwable {
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>        Object[] args = invocation.getArgs();
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>        Connection con = (Connection) args[0];
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>        con.setSchema(SchemaHolder.get());
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>        <strong class="jxr_keyword">return</strong> invocation.proceed();
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>      }
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>    }
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>  
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>    @Test
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>    <strong class="jxr_keyword">void</strong> shouldPluginNotInvokeArbitraryMethod() {
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>      Map&lt;?, ?&gt; map = <strong class="jxr_keyword">new</strong> HashMap&lt;&gt;();
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>      map = (Map&lt;?, ?&gt;) <strong class="jxr_keyword">new</strong> AlwaysMapPlugin().plugin(map);
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>      <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>        map.get(<span class="jxr_string">"Anything"</span>);
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>        fail(<span class="jxr_string">"Exected IllegalArgumentException, but no exception was thrown."</span>);
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>      } <strong class="jxr_keyword">catch</strong> (IllegalArgumentException e) {
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>        assertEquals(
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>            <span class="jxr_string">"Method 'public abstract java.lang.Object java.util.Map.get(java.lang.Object)' is not supported as a plugin target."</span>,
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>            e.getMessage());
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>     } <strong class="jxr_keyword">catch</strong> (Exception e) {
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>       fail(<span class="jxr_string">"Exected IllegalArgumentException, but was "</span> + e.getClass(), e);
+<a class="jxr_linenumber" name="L102" href="#L102">102</a>     }
+<a class="jxr_linenumber" name="L103" href="#L103">103</a>   }
+<a class="jxr_linenumber" name="L104" href="#L104">104</a> 
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>   @Intercepts({ @Signature(type = Map.<strong class="jxr_keyword">class</strong>, method = <span class="jxr_string">"get"</span>, args = { Object.<strong class="jxr_keyword">class</strong> }) })
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> AlwaysMapPlugin <strong class="jxr_keyword">implements</strong> Interceptor {
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>     @Override
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>     <strong class="jxr_keyword">public</strong> Object intercept(Invocation invocation) {
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>       <strong class="jxr_keyword">return</strong> <span class="jxr_string">"Always"</span>;
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>     }
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>   }
+<a class="jxr_linenumber" name="L112" href="#L112">112</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2024 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">© 2009–2024 <a href="https://www.mybatis.org/">MyBatis.org</a></div>
 </body>
 </html>

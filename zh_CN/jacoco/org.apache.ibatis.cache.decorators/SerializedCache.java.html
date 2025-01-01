@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SerializedCache.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.cache.decorators</a> &gt; <span class="el_source">SerializedCache.java</span></div><h1>SerializedCache.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2023 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.cache.decorators;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.ObjectStreamClass;
+import java.io.Serializable;
+
+import org.apache.ibatis.cache.Cache;
+import org.apache.ibatis.cache.CacheException;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.io.SerialFilterChecker;
+
+/**
+ * @author Clinton Begin
+ */
+public class SerializedCache implements Cache {
+
+  private final Cache delegate;
+
+<span class="fc" id="L39">  public SerializedCache(Cache delegate) {</span>
+<span class="fc" id="L40">    this.delegate = delegate;</span>
+<span class="fc" id="L41">  }</span>
+
+  @Override
+  public String getId() {
+<span class="fc" id="L45">    return delegate.getId();</span>
+  }
+
+  @Override
+  public int getSize() {
+<span class="fc" id="L50">    return delegate.getSize();</span>
+  }
+
+  @Override
+  public void putObject(Object key, Object object) {
+<span class="fc bfc" id="L55" title="All 4 branches covered.">    if ((object != null) &amp;&amp; !(object instanceof Serializable)) {</span>
+<span class="fc" id="L56">      throw new CacheException(&quot;SharedCache failed to make a copy of a non-serializable object: &quot; + object);</span>
+    }
+<span class="fc" id="L58">    delegate.putObject(key, serialize((Serializable) object));</span>
+<span class="fc" id="L59">  }</span>
+
+  @Override
+  public Object getObject(Object key) {
+<span class="fc" id="L63">    Object object = delegate.getObject(key);</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">    return object == null ? null : deserialize((byte[]) object);</span>
+  }
+
+  @Override
+  public Object removeObject(Object key) {
+<span class="nc" id="L69">    return delegate.removeObject(key);</span>
+  }
+
+  @Override
+  public void clear() {
+<span class="fc" id="L74">    delegate.clear();</span>
+<span class="fc" id="L75">  }</span>
+
+  @Override
+  public int hashCode() {
+<span class="fc" id="L79">    return delegate.hashCode();</span>
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+<span class="fc" id="L84">    return delegate.equals(obj);</span>
+  }
+
+  private byte[] serialize(Serializable value) {
+<span class="fc" id="L88">    try (ByteArrayOutputStream bos = new ByteArrayOutputStream();</span>
+<span class="fc" id="L89">        ObjectOutputStream oos = new ObjectOutputStream(bos)) {</span>
+<span class="fc" id="L90">      oos.writeObject(value);</span>
+<span class="fc" id="L91">      oos.flush();</span>
+<span class="fc" id="L92">      return bos.toByteArray();</span>
+<span class="nc" id="L93">    } catch (Exception e) {</span>
+<span class="nc" id="L94">      throw new CacheException(&quot;Error serializing object.  Cause: &quot; + e, e);</span>
+    }
+  }
+
+  private Serializable deserialize(byte[] value) {
+<span class="fc" id="L99">    SerialFilterChecker.check();</span>
+    Serializable result;
+<span class="fc" id="L101">    try (ByteArrayInputStream bis = new ByteArrayInputStream(value);</span>
+<span class="fc" id="L102">        ObjectInputStream ois = new CustomObjectInputStream(bis)) {</span>
+<span class="fc" id="L103">      result = (Serializable) ois.readObject();</span>
+<span class="nc" id="L104">    } catch (Exception e) {</span>
+<span class="nc" id="L105">      throw new CacheException(&quot;Error deserializing object.  Cause: &quot; + e, e);</span>
+<span class="fc" id="L106">    }</span>
+<span class="fc" id="L107">    return result;</span>
+  }
+
+  public static class CustomObjectInputStream extends ObjectInputStream {
+
+    public CustomObjectInputStream(InputStream in) throws IOException {
+<span class="fc" id="L113">      super(in);</span>
+<span class="fc" id="L114">    }</span>
+
+    @Override
+    protected Class&lt;?&gt; resolveClass(ObjectStreamClass desc) throws ClassNotFoundException {
+<span class="fc" id="L118">      return Resources.classForName(desc.getName());</span>
+    }
+
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

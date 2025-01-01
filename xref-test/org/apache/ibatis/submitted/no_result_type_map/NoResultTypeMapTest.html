@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/submitted/no_result_type_map/NoResultTypeMapTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2024 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -91,17 +91,16 @@
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>        PersistenceException ex = assertThrows(PersistenceException.<strong class="jxr_keyword">class</strong>,
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>            () -&gt; sqlSession.selectList(<span class="jxr_string">"org.apache.ibatis.submitted.no_result_type_map.Mapper.noMatchingMethod"</span>));
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>        ExecutorException cause = (ExecutorException) ex.getCause();
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>        assertEquals(
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>            <span class="jxr_string">"A query was run and no Result Maps were found for the Mapped Statement "</span>
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>                + <span class="jxr_string">"'org.apache.ibatis.submitted.no_result_type_map.Mapper.noMatchingMethod'. "</span>
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>                + <span class="jxr_string">"'resultType' or 'resultMap' must be specified when there is no corresponding method."</span>,
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>            cause.getMessage());
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>      }
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>    }
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>  
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>  }
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>        assertEquals(<span class="jxr_string">""</span><span class="jxr_string">"
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>            A query was run and no Result Maps were found <strong class="jxr_keyword">for</strong> the Mapped Statement \
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>            'org.apache.ibatis.submitted.no_result_type_map.Mapper.noMatchingMethod'. \
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>            'resultType' or 'resultMap' must be specified when there is no corresponding method.<span class="jxr_string">""</span><span class="jxr_string">", cause.getMessage());
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>      }
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>    }
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>  
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2024 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">© 2009–2024 <a href="https://www.mybatis.org/">MyBatis.org</a></div>
 </body>
 </html>

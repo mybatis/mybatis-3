@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ClassLoaderWrapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.io</a> &gt; <span class="el_source">ClassLoaderWrapper.java</span></div><h1>ClassLoaderWrapper.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2023 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.io;
+
+import java.io.InputStream;
+import java.net.URL;
+
+/**
+ * A class to wrap access to multiple class loaders making them work as one
+ *
+ * @author Clinton Begin
+ */
+public class ClassLoaderWrapper {
+
+  ClassLoader defaultClassLoader;
+  ClassLoader systemClassLoader;
+
+<span class="fc" id="L31">  ClassLoaderWrapper() {</span>
+    try {
+<span class="fc" id="L33">      systemClassLoader = ClassLoader.getSystemClassLoader();</span>
+<span class="nc" id="L34">    } catch (SecurityException ignored) {</span>
+      // AccessControlException on Google App Engine
+<span class="fc" id="L36">    }</span>
+<span class="fc" id="L37">  }</span>
+
+  /**
+   * Get a resource as a URL using the current class path
+   *
+   * @param resource
+   *          - the resource to locate
+   *
+   * @return the resource or null
+   */
+  public URL getResourceAsURL(String resource) {
+<span class="fc" id="L48">    return getResourceAsURL(resource, getClassLoaders(null));</span>
+  }
+
+  /**
+   * Get a resource from the classpath, starting with a specific class loader
+   *
+   * @param resource
+   *          - the resource to find
+   * @param classLoader
+   *          - the first classloader to try
+   *
+   * @return the stream or null
+   */
+  public URL getResourceAsURL(String resource, ClassLoader classLoader) {
+<span class="fc" id="L62">    return getResourceAsURL(resource, getClassLoaders(classLoader));</span>
+  }
+
+  /**
+   * Get a resource from the classpath
+   *
+   * @param resource
+   *          - the resource to find
+   *
+   * @return the stream or null
+   */
+  public InputStream getResourceAsStream(String resource) {
+<span class="fc" id="L74">    return getResourceAsStream(resource, getClassLoaders(null));</span>
+  }
+
+  /**
+   * Get a resource from the classpath, starting with a specific class loader
+   *
+   * @param resource
+   *          - the resource to find
+   * @param classLoader
+   *          - the first class loader to try
+   *
+   * @return the stream or null
+   */
+  public InputStream getResourceAsStream(String resource, ClassLoader classLoader) {
+<span class="fc" id="L88">    return getResourceAsStream(resource, getClassLoaders(classLoader));</span>
+  }
+
+  /**
+   * Find a class on the classpath (or die trying)
+   *
+   * @param name
+   *          - the class to look for
+   *
+   * @return - the class
+   *
+   * @throws ClassNotFoundException
+   *           Duh.
+   */
+  public Class&lt;?&gt; classForName(String name) throws ClassNotFoundException {
+<span class="fc" id="L103">    return classForName(name, getClassLoaders(null));</span>
+  }
+
+  /**
+   * Find a class on the classpath, starting with a specific classloader (or die trying)
+   *
+   * @param name
+   *          - the class to look for
+   * @param classLoader
+   *          - the first classloader to try
+   *
+   * @return - the class
+   *
+   * @throws ClassNotFoundException
+   *           Duh.
+   */
+  public Class&lt;?&gt; classForName(String name, ClassLoader classLoader) throws ClassNotFoundException {
+<span class="fc" id="L120">    return classForName(name, getClassLoaders(classLoader));</span>
+  }
+
+  /**
+   * Try to get a resource from a group of classloaders
+   *
+   * @param resource
+   *          - the resource to get
+   * @param classLoader
+   *          - the classloaders to examine
+   *
+   * @return the resource or null
+   */
+  InputStream getResourceAsStream(String resource, ClassLoader[] classLoader) {
+<span class="fc bfc" id="L134" title="All 2 branches covered.">    for (ClassLoader cl : classLoader) {</span>
+<span class="fc bfc" id="L135" title="All 2 branches covered.">      if (null != cl) {</span>
+
+        // try to find the resource as passed
+<span class="fc" id="L138">        InputStream returnValue = cl.getResourceAsStream(resource);</span>
+
+        // now, some class loaders want this leading &quot;/&quot;, so we'll add it and try again if we didn't find the resource
+<span class="fc bfc" id="L141" title="All 2 branches covered.">        if (null == returnValue) {</span>
+<span class="fc" id="L142">          returnValue = cl.getResourceAsStream(&quot;/&quot; + resource);</span>
+        }
+
+<span class="fc bfc" id="L145" title="All 2 branches covered.">        if (null != returnValue) {</span>
+<span class="fc" id="L146">          return returnValue;</span>
+        }
+      }
+    }
+<span class="fc" id="L150">    return null;</span>
+  }
+
+  /**
+   * Get a resource as a URL using the current class path
+   *
+   * @param resource
+   *          - the resource to locate
+   * @param classLoader
+   *          - the class loaders to examine
+   *
+   * @return the resource or null
+   */
+  URL getResourceAsURL(String resource, ClassLoader[] classLoader) {
+
+    URL url;
+
+<span class="fc bfc" id="L167" title="All 2 branches covered.">    for (ClassLoader cl : classLoader) {</span>
+
+<span class="fc bfc" id="L169" title="All 2 branches covered.">      if (null != cl) {</span>
+
+        // look for the resource as passed in...
+<span class="fc" id="L172">        url = cl.getResource(resource);</span>
+
+        // ...but some class loaders want this leading &quot;/&quot;, so we'll add it
+        // and try again if we didn't find the resource
+<span class="fc bfc" id="L176" title="All 2 branches covered.">        if (null == url) {</span>
+<span class="fc" id="L177">          url = cl.getResource(&quot;/&quot; + resource);</span>
+        }
+
+        // &quot;It's always in the last place I look for it!&quot;
+        // ... because only an idiot would keep looking for it after finding it, so stop looking already.
+<span class="fc bfc" id="L182" title="All 2 branches covered.">        if (null != url) {</span>
+<span class="fc" id="L183">          return url;</span>
+        }
+
+      }
+
+    }
+
+    // didn't find it anywhere.
+<span class="fc" id="L191">    return null;</span>
+
+  }
+
+  /**
+   * Attempt to load a class from a group of classloaders
+   *
+   * @param name
+   *          - the class to load
+   * @param classLoader
+   *          - the group of classloaders to examine
+   *
+   * @return the class
+   *
+   * @throws ClassNotFoundException
+   *           - Remember the wisdom of Judge Smails: Well, the world needs ditch diggers, too.
+   */
+  Class&lt;?&gt; classForName(String name, ClassLoader[] classLoader) throws ClassNotFoundException {
+
+<span class="fc bfc" id="L210" title="All 2 branches covered.">    for (ClassLoader cl : classLoader) {</span>
+
+<span class="fc bfc" id="L212" title="All 2 branches covered.">      if (null != cl) {</span>
+
+        try {
+
+<span class="fc" id="L216">          return Class.forName(name, true, cl);</span>
+
+<span class="fc" id="L218">        } catch (ClassNotFoundException e) {</span>
+          // we'll ignore this until all classloaders fail to locate the class
+        }
+
+      }
+
+    }
+
+<span class="fc" id="L226">    throw new ClassNotFoundException(&quot;Cannot find class: &quot; + name);</span>
+
+  }
+
+  ClassLoader[] getClassLoaders(ClassLoader classLoader) {
+<span class="fc" id="L231">    return new ClassLoader[] { classLoader, defaultClassLoader, Thread.currentThread().getContextClassLoader(),</span>
+<span class="fc" id="L232">        getClass().getClassLoader(), systemClassLoader };</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

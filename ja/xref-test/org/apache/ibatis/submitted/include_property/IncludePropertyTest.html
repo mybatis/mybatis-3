@@ -5,9 +5,9 @@
 <link type="text/css" rel="stylesheet" href="../../../../../stylesheet.css" />
 </head>
 <body>
-<div id="overview"><a href="../../../../../../../testapidocs/org/apache/ibatis/submitted/include_property/IncludePropertyTest.html">View Javadoc</a></div><pre>
+<div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/submitted/include_property/IncludePropertyTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2024 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -56,7 +56,7 @@
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>    }
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>  
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>    @Test
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>    <strong class="jxr_keyword">void</strong> testSimpleProperty() {
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>    <strong class="jxr_keyword">void</strong> simpleProperty() {
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>        List&lt;String&gt; results = sqlSession.selectList(<span class="jxr_string">"org.apache.ibatis.submitted.include_property.Mapper.selectSimpleA"</span>);
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>        assertEquals(<span class="jxr_string">"col_a value"</span>, results.get(0));
@@ -66,7 +66,7 @@
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>    }
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>  
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>    @Test
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>    <strong class="jxr_keyword">void</strong> testPropertyContext() {
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>    <strong class="jxr_keyword">void</strong> propertyContext() {
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>        List&lt;Map&lt;String, String&gt;&gt; results = sqlSession
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>            .selectList(<span class="jxr_string">"org.apache.ibatis.submitted.include_property.Mapper.selectPropertyContext"</span>);
@@ -78,7 +78,7 @@
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>    }
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>  
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>    @Test
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>    <strong class="jxr_keyword">void</strong> testNestedDynamicValue() {
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>    <strong class="jxr_keyword">void</strong> nestedDynamicValue() {
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>        List&lt;String&gt; results = sqlSession
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>            .selectList(<span class="jxr_string">"org.apache.ibatis.submitted.include_property.Mapper.selectNestedDynamicValue"</span>);
@@ -87,7 +87,7 @@
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>    }
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>  
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>    @Test
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>    <strong class="jxr_keyword">void</strong> testEmptyString() {
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>    <strong class="jxr_keyword">void</strong> emptyString() {
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>        List&lt;String&gt; results = sqlSession
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>            .selectList(<span class="jxr_string">"org.apache.ibatis.submitted.include_property.Mapper.selectEmptyProperty"</span>);
@@ -96,7 +96,7 @@
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>    }
 <a class="jxr_linenumber" name="L89" href="#L89">89</a>  
 <a class="jxr_linenumber" name="L90" href="#L90">90</a>    @Test
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>    <strong class="jxr_keyword">void</strong> testPropertyInRefid() {
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>    <strong class="jxr_keyword">void</strong> propertyInRefid() {
 <a class="jxr_linenumber" name="L92" href="#L92">92</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>        List&lt;String&gt; results = sqlSession
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>            .selectList(<span class="jxr_string">"org.apache.ibatis.submitted.include_property.Mapper.selectPropertyInRefid"</span>);
@@ -105,7 +105,7 @@
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>    }
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>  
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>    @Test
-<a class="jxr_linenumber" name="L100" href="#L100">100</a>   <strong class="jxr_keyword">void</strong> testConfigVar() {
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>   <strong class="jxr_keyword">void</strong> configVar() {
 <a class="jxr_linenumber" name="L101" href="#L101">101</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L102" href="#L102">102</a>       List&lt;String&gt; results = sqlSession
 <a class="jxr_linenumber" name="L103" href="#L103">103</a>           .selectList(<span class="jxr_string">"org.apache.ibatis.submitted.include_property.Mapper.selectConfigVar"</span>);
@@ -114,7 +114,7 @@
 <a class="jxr_linenumber" name="L106" href="#L106">106</a>   }
 <a class="jxr_linenumber" name="L107" href="#L107">107</a> 
 <a class="jxr_linenumber" name="L108" href="#L108">108</a>   @Test
-<a class="jxr_linenumber" name="L109" href="#L109">109</a>   <strong class="jxr_keyword">void</strong> testRuntimeVar() {
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>   <strong class="jxr_keyword">void</strong> runtimeVar() {
 <a class="jxr_linenumber" name="L110" href="#L110">110</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L111" href="#L111">111</a>       Map&lt;String, String&gt; params = <strong class="jxr_keyword">new</strong> HashMap&lt;&gt;();
 <a class="jxr_linenumber" name="L112" href="#L112">112</a>       params.put(<span class="jxr_string">"suffix"</span>, <span class="jxr_string">"b"</span>);
@@ -125,7 +125,7 @@
 <a class="jxr_linenumber" name="L117" href="#L117">117</a>   }
 <a class="jxr_linenumber" name="L118" href="#L118">118</a> 
 <a class="jxr_linenumber" name="L119" href="#L119">119</a>   @Test
-<a class="jxr_linenumber" name="L120" href="#L120">120</a>   <strong class="jxr_keyword">void</strong> testNestedInclude() {
+<a class="jxr_linenumber" name="L120" href="#L120">120</a>   <strong class="jxr_keyword">void</strong> nestedInclude() {
 <a class="jxr_linenumber" name="L121" href="#L121">121</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L122" href="#L122">122</a>       List&lt;String&gt; results = sqlSession
 <a class="jxr_linenumber" name="L123" href="#L123">123</a>           .selectList(<span class="jxr_string">"org.apache.ibatis.submitted.include_property.Mapper.selectNestedInclude"</span>);
@@ -134,7 +134,7 @@
 <a class="jxr_linenumber" name="L126" href="#L126">126</a>   }
 <a class="jxr_linenumber" name="L127" href="#L127">127</a> 
 <a class="jxr_linenumber" name="L128" href="#L128">128</a>   @Test
-<a class="jxr_linenumber" name="L129" href="#L129">129</a>   <strong class="jxr_keyword">void</strong> testParametersInAttribute() {
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>   <strong class="jxr_keyword">void</strong> parametersInAttribute() {
 <a class="jxr_linenumber" name="L130" href="#L130">130</a>     <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L131" href="#L131">131</a>       List&lt;Map&lt;String, String&gt;&gt; results = sqlSession
 <a class="jxr_linenumber" name="L132" href="#L132">132</a>           .selectList(<span class="jxr_string">"org.apache.ibatis.submitted.include_property.Mapper.selectPropertyInAttribute"</span>);
@@ -147,6 +147,6 @@
 <a class="jxr_linenumber" name="L139" href="#L139">139</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2024 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">© 2009–2024 <a href="https://www.mybatis.org/">MyBatis.org</a></div>
 </body>
 </html>

@@ -5,9 +5,9 @@
 <link type="text/css" rel="stylesheet" href="../../../../../stylesheet.css" />
 </head>
 <body>
-<div id="overview"><a href="../../../../../../../testapidocs/org/apache/ibatis/submitted/emptycollection/DaoTest.html">View Javadoc</a></div><pre>
+<div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/submitted/emptycollection/DaoTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2024 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -62,7 +62,7 @@
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>    }
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>  
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>    @Test
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>    <strong class="jxr_keyword">void</strong> testWithEmptyList() {
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>    <strong class="jxr_keyword">void</strong> withEmptyList() {
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>      <strong class="jxr_keyword">final</strong> List&lt;TodoLists&gt; actual = dao.selectWithEmptyList();
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>      Assertions.assertEquals(1, actual.size());
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>      <strong class="jxr_keyword">final</strong> List&lt;TodoItem&gt; todoItems = actual.get(0).getTodoItems();
@@ -70,13 +70,13 @@
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>    }
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>  
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>    @Test
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>    <strong class="jxr_keyword">void</strong> testWithNonEmptyList() {
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>    <strong class="jxr_keyword">void</strong> withNonEmptyList() {
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>      <strong class="jxr_keyword">final</strong> List&lt;TodoLists&gt; actual = dao.selectWithNonEmptyList();
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>      checkNonEmptyList(actual);
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>    }
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>  
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>    @Test
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>    <strong class="jxr_keyword">void</strong> testWithNonEmptyList_noCollectionId() {
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>    <strong class="jxr_keyword">void</strong> withNonEmptyListNoCollectionId() {
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>      <strong class="jxr_keyword">final</strong> List&lt;TodoLists&gt; actual = dao.selectWithNonEmptyList_noCollectionId();
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>  
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>      checkNonEmptyList(actual);
@@ -104,6 +104,6 @@
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2024 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">© 2009–2024 <a href="https://www.mybatis.org/">MyBatis.org</a></div>
 </body>
 </html>

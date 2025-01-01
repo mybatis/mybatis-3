@@ -5,9 +5,9 @@
 <link type="text/css" rel="stylesheet" href="../../../../../stylesheet.css" />
 </head>
 <body>
-<div id="overview"><a href="../../../../../../../testapidocs/org/apache/ibatis/submitted/foreach_map/IntBoolMapEntry.html">View Javadoc</a></div><pre>
+<div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/submitted/foreach_map/IntBoolMapEntry.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2024 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -59,30 +59,26 @@
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>  
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>      <a name="IntBoolMapEntry" href="../../../../../org/apache/ibatis/submitted/foreach_map/IntBoolMapEntry.html#IntBoolMapEntry">IntBoolMapEntry</a> mapEntry = (<a name="IntBoolMapEntry" href="../../../../../org/apache/ibatis/submitted/foreach_map/IntBoolMapEntry.html#IntBoolMapEntry">IntBoolMapEntry</a>) o;
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>  
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>      <strong class="jxr_keyword">if</strong> ((key != <strong class="jxr_keyword">null</strong> ? !key.equals(mapEntry.key) : mapEntry.key != <strong class="jxr_keyword">null</strong>)
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>          || (value != <strong class="jxr_keyword">null</strong> ? !value.equals(mapEntry.value) : mapEntry.value != <strong class="jxr_keyword">null</strong>)) {
-<a class="jxr_linenumber" name="L56" href="#L56">56</a>        <strong class="jxr_keyword">return</strong> false;
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>      }
-<a class="jxr_linenumber" name="L58" href="#L58">58</a>  
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>      <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">true</strong>;
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>    }
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>  
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>    @Override
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> hashCode() {
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>      <strong class="jxr_keyword">int</strong> result = key != <strong class="jxr_keyword">null</strong> ? key.hashCode() : 0;
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>      <strong class="jxr_keyword">return</strong> 31 * result + (value != <strong class="jxr_keyword">null</strong> ? value.hashCode() : 0);
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>    }
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>  
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>    @Override
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>    <strong class="jxr_keyword">public</strong> String toString() {
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>      <strong class="jxr_keyword">return</strong> '{' + key.toString() + '=' + value + '}';
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>    }
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>  
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>    <strong class="jxr_keyword">private</strong> Integer key;
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>    <strong class="jxr_keyword">private</strong> Boolean value;
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>  }
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>      <strong class="jxr_keyword">return</strong> key != <strong class="jxr_keyword">null</strong> ? key.equals(mapEntry.key)
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>          : mapEntry.key == <strong class="jxr_keyword">null</strong> &amp;&amp; value == <strong class="jxr_keyword">null</strong> ? value.equals(mapEntry.value) : mapEntry.value == <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>    }
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>  
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>    @Override
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> hashCode() {
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>      <strong class="jxr_keyword">int</strong> result = key != <strong class="jxr_keyword">null</strong> ? key.hashCode() : 0;
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>      <strong class="jxr_keyword">return</strong> 31 * result + (value != <strong class="jxr_keyword">null</strong> ? value.hashCode() : 0);
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>    }
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>  
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>    @Override
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>    <strong class="jxr_keyword">public</strong> String toString() {
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>      <strong class="jxr_keyword">return</strong> '{' + key.toString() + '=' + value + '}';
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>    }
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>  
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>    <strong class="jxr_keyword">private</strong> Integer key;
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>    <strong class="jxr_keyword">private</strong> Boolean value;
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2024 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">© 2009–2024 <a href="https://www.mybatis.org/">MyBatis.org</a></div>
 </body>
 </html>

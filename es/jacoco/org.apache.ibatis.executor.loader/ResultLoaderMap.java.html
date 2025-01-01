@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ResultLoaderMap.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.executor.loader</a> &gt; <span class="el_source">ResultLoaderMap.java</span></div><h1>ResultLoaderMap.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2024 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.executor.loader;
+
+import java.io.Serializable;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.security.AccessController;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.ibatis.cursor.Cursor;
+import org.apache.ibatis.executor.BaseExecutor;
+import org.apache.ibatis.executor.BatchResult;
+import org.apache.ibatis.executor.ExecutorException;
+import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.logging.LogFactory;
+import org.apache.ibatis.mapping.BoundSql;
+import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.ResultHandler;
+import org.apache.ibatis.session.RowBounds;
+
+/**
+ * @author Clinton Begin
+ * @author Franta Mejta
+ */
+<span class="fc" id="L48">public class ResultLoaderMap {</span>
+
+<span class="fc" id="L50">  private final Map&lt;String, LoadPair&gt; loaderMap = new HashMap&lt;&gt;();</span>
+
+  public void addLoader(String property, MetaObject metaResultObject, ResultLoader resultLoader) {
+<span class="fc" id="L53">    String upperFirst = getUppercaseFirstProperty(property);</span>
+<span class="pc bpc" id="L54" title="3 of 4 branches missed.">    if (!upperFirst.equalsIgnoreCase(property) &amp;&amp; loaderMap.containsKey(upperFirst)) {</span>
+<span class="nc" id="L55">      throw new ExecutorException(&quot;Nested lazy loaded result property '&quot; + property + &quot;' for query id '&quot;</span>
+<span class="nc" id="L56">          + resultLoader.mappedStatement.getId()</span>
+          + &quot; already exists in the result map. The leftmost property of all lazy loaded properties must be unique within a result map.&quot;);
+    }
+<span class="fc" id="L59">    loaderMap.put(upperFirst, new LoadPair(property, metaResultObject, resultLoader));</span>
+<span class="fc" id="L60">  }</span>
+
+  public final Map&lt;String, LoadPair&gt; getProperties() {
+<span class="fc" id="L63">    return new HashMap&lt;&gt;(this.loaderMap);</span>
+  }
+
+  public Set&lt;String&gt; getPropertyNames() {
+<span class="nc" id="L67">    return loaderMap.keySet();</span>
+  }
+
+  public int size() {
+<span class="fc" id="L71">    return loaderMap.size();</span>
+  }
+
+  public boolean isEmpty() {
+<span class="fc" id="L75">    return loaderMap.isEmpty();</span>
+  }
+
+  public boolean hasLoader(String property) {
+<span class="fc" id="L79">    return loaderMap.containsKey(property.toUpperCase(Locale.ENGLISH));</span>
+  }
+
+  public boolean load(String property) throws SQLException {
+<span class="fc" id="L83">    LoadPair pair = loaderMap.remove(property.toUpperCase(Locale.ENGLISH));</span>
+<span class="fc bfc" id="L84" title="All 2 branches covered.">    if (pair != null) {</span>
+<span class="fc" id="L85">      pair.load();</span>
+<span class="fc" id="L86">      return true;</span>
+    }
+<span class="fc" id="L88">    return false;</span>
+  }
+
+  public void remove(String property) {
+<span class="fc" id="L92">    loaderMap.remove(property.toUpperCase(Locale.ENGLISH));</span>
+<span class="fc" id="L93">  }</span>
+
+  public void loadAll() throws SQLException {
+<span class="fc" id="L96">    final Set&lt;String&gt; methodNameSet = loaderMap.keySet();</span>
+<span class="fc" id="L97">    String[] methodNames = methodNameSet.toArray(new String[methodNameSet.size()]);</span>
+<span class="fc bfc" id="L98" title="All 2 branches covered.">    for (String methodName : methodNames) {</span>
+<span class="fc" id="L99">      load(methodName);</span>
+    }
+<span class="fc" id="L101">  }</span>
+
+  private static String getUppercaseFirstProperty(String property) {
+<span class="fc" id="L104">    String[] parts = property.split(&quot;\\.&quot;);</span>
+<span class="fc" id="L105">    return parts[0].toUpperCase(Locale.ENGLISH);</span>
+  }
+
+  /**
+   * Property which was not loaded yet.
+   */
+  public static class LoadPair implements Serializable {
+
+    private static final long serialVersionUID = 20130412;
+    /**
+     * Name of factory method which returns database connection.
+     */
+    private static final String FACTORY_METHOD = &quot;getConfiguration&quot;;
+    /**
+     * Object to check whether we went through serialization..
+     */
+<span class="fc" id="L121">    private final transient Object serializationCheck = new Object();</span>
+    /**
+     * Meta object which sets loaded properties.
+     */
+    private transient MetaObject metaResultObject;
+    /**
+     * Result loader which loads unread properties.
+     */
+    private transient ResultLoader resultLoader;
+    /**
+     * Wow, logger.
+     */
+    private transient Log log;
+    /**
+     * Factory class through which we get database connection.
+     */
+    private Class&lt;?&gt; configurationFactory;
+    /**
+     * Name of the unread property.
+     */
+    private final String property;
+    /**
+     * ID of SQL statement which loads the property.
+     */
+    private String mappedStatement;
+    /**
+     * Parameter of the sql statement.
+     */
+    private Serializable mappedParameter;
+
+<span class="fc" id="L151">    private LoadPair(final String property, MetaObject metaResultObject, ResultLoader resultLoader) {</span>
+<span class="fc" id="L152">      this.property = property;</span>
+<span class="fc" id="L153">      this.metaResultObject = metaResultObject;</span>
+<span class="fc" id="L154">      this.resultLoader = resultLoader;</span>
+
+      /* Save required information only if original object can be serialized. */
+<span class="fc bfc" id="L157" title="All 4 branches covered.">      if (metaResultObject != null &amp;&amp; metaResultObject.getOriginalObject() instanceof Serializable) {</span>
+<span class="fc" id="L158">        final Object mappedStatementParameter = resultLoader.parameterObject;</span>
+
+        /* @todo May the parameter be null? */
+<span class="pc bpc" id="L161" title="1 of 2 branches missed.">        if (mappedStatementParameter instanceof Serializable) {</span>
+<span class="fc" id="L162">          this.mappedStatement = resultLoader.mappedStatement.getId();</span>
+<span class="fc" id="L163">          this.mappedParameter = (Serializable) mappedStatementParameter;</span>
+
+<span class="fc" id="L165">          this.configurationFactory = resultLoader.configuration.getConfigurationFactory();</span>
+        } else {
+<span class="nc" id="L167">          Log log = this.getLogger();</span>
+<span class="nc bnc" id="L168" title="All 2 branches missed.">          if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L169">            log.debug(&quot;Property [&quot; + this.property + &quot;] of [&quot; + metaResultObject.getOriginalObject().getClass()</span>
+                + &quot;] cannot be loaded &quot; + &quot;after deserialization. Make sure it's loaded before serializing &quot;
+                + &quot;forenamed object.&quot;);
+          }
+        }
+      }
+<span class="fc" id="L175">    }</span>
+
+    public void load() throws SQLException {
+      /*
+       * These field should not be null unless the loadpair was serialized. Yet in that case this method should not be
+       * called.
+       */
+<span class="pc bpc" id="L182" title="1 of 2 branches missed.">      if (this.metaResultObject == null) {</span>
+<span class="nc" id="L183">        throw new IllegalArgumentException(&quot;metaResultObject is null&quot;);</span>
+      }
+<span class="pc bpc" id="L185" title="1 of 2 branches missed.">      if (this.resultLoader == null) {</span>
+<span class="nc" id="L186">        throw new IllegalArgumentException(&quot;resultLoader is null&quot;);</span>
+      }
+
+<span class="fc" id="L189">      this.load(null);</span>
+<span class="fc" id="L190">    }</span>
+
+    public void load(final Object userObject) throws SQLException {
+<span class="pc bpc" id="L193" title="1 of 4 branches missed.">      if (this.metaResultObject == null || this.resultLoader == null) {</span>
+<span class="fc bfc" id="L194" title="All 2 branches covered.">        if (this.mappedParameter == null) {</span>
+<span class="fc" id="L195">          throw new ExecutorException(&quot;Property [&quot; + this.property + &quot;] cannot be loaded because &quot;</span>
+              + &quot;required parameter of mapped statement [&quot; + this.mappedStatement + &quot;] is not serializable.&quot;);
+        }
+
+<span class="fc" id="L199">        final Configuration config = this.getConfiguration();</span>
+<span class="fc" id="L200">        final MappedStatement ms = config.getMappedStatement(this.mappedStatement);</span>
+<span class="pc bpc" id="L201" title="1 of 2 branches missed.">        if (ms == null) {</span>
+<span class="nc" id="L202">          throw new ExecutorException(</span>
+<span class="nc" id="L203">              &quot;Cannot lazy load property [&quot; + this.property + &quot;] of deserialized object [&quot; + userObject.getClass()</span>
+                  + &quot;] because configuration does not contain statement [&quot; + this.mappedStatement + &quot;]&quot;);
+        }
+
+<span class="fc" id="L207">        this.metaResultObject = config.newMetaObject(userObject);</span>
+<span class="fc" id="L208">        this.resultLoader = new ResultLoader(config, new ClosedExecutor(), ms, this.mappedParameter,</span>
+<span class="fc" id="L209">            metaResultObject.getSetterType(this.property), null, null);</span>
+      }
+
+      /*
+       * We are using a new executor because we may be (and likely are) on a new thread and executors aren't thread
+       * safe. (Is this sufficient?) A better approach would be making executors thread safe.
+       */
+<span class="fc bfc" id="L216" title="All 2 branches covered.">      if (this.serializationCheck == null) {</span>
+<span class="fc" id="L217">        final ResultLoader old = this.resultLoader;</span>
+<span class="fc" id="L218">        this.resultLoader = new ResultLoader(old.configuration, new ClosedExecutor(), old.mappedStatement,</span>
+            old.parameterObject, old.targetType, old.cacheKey, old.boundSql);
+      }
+
+<span class="fc" id="L222">      this.metaResultObject.setValue(property, this.resultLoader.loadResult());</span>
+<span class="fc" id="L223">    }</span>
+
+    private Configuration getConfiguration() {
+<span class="fc bfc" id="L226" title="All 2 branches covered.">      if (this.configurationFactory == null) {</span>
+<span class="fc" id="L227">        throw new ExecutorException(&quot;Cannot get Configuration as configuration factory was not set.&quot;);</span>
+      }
+
+      Object configurationObject;
+      try {
+<span class="fc" id="L232">        final Method factoryMethod = this.configurationFactory.getDeclaredMethod(FACTORY_METHOD);</span>
+<span class="pc bpc" id="L233" title="1 of 2 branches missed.">        if (!Modifier.isStatic(factoryMethod.getModifiers())) {</span>
+<span class="nc" id="L234">          throw new ExecutorException(&quot;Cannot get Configuration as factory method [&quot; + this.configurationFactory + &quot;]#[&quot;</span>
+              + FACTORY_METHOD + &quot;] is not static.&quot;);
+        }
+
+<span class="pc bpc" id="L238" title="1 of 2 branches missed.">        if (!factoryMethod.isAccessible()) {</span>
+<span class="fc" id="L239">          configurationObject = AccessController.doPrivileged((PrivilegedExceptionAction&lt;Object&gt;) () -&gt; {</span>
+            try {
+<span class="fc" id="L241">              factoryMethod.setAccessible(true);</span>
+<span class="fc" id="L242">              return factoryMethod.invoke(null);</span>
+            } finally {
+<span class="fc" id="L244">              factoryMethod.setAccessible(false);</span>
+            }
+          });
+        } else {
+<span class="nc" id="L248">          configurationObject = factoryMethod.invoke(null);</span>
+        }
+<span class="nc" id="L250">      } catch (final ExecutorException ex) {</span>
+<span class="nc" id="L251">        throw ex;</span>
+<span class="nc" id="L252">      } catch (final NoSuchMethodException ex) {</span>
+<span class="nc" id="L253">        throw new ExecutorException(&quot;Cannot get Configuration as factory class [&quot; + this.configurationFactory</span>
+            + &quot;] is missing factory method of name [&quot; + FACTORY_METHOD + &quot;].&quot;, ex);
+<span class="nc" id="L255">      } catch (final PrivilegedActionException ex) {</span>
+<span class="nc" id="L256">        throw new ExecutorException(&quot;Cannot get Configuration as factory method [&quot; + this.configurationFactory + &quot;]#[&quot;</span>
+<span class="nc" id="L257">            + FACTORY_METHOD + &quot;] threw an exception.&quot;, ex.getCause());</span>
+<span class="nc" id="L258">      } catch (final Exception ex) {</span>
+<span class="nc" id="L259">        throw new ExecutorException(&quot;Cannot get Configuration as factory method [&quot; + this.configurationFactory + &quot;]#[&quot;</span>
+            + FACTORY_METHOD + &quot;] threw an exception.&quot;, ex);
+<span class="fc" id="L261">      }</span>
+
+<span class="pc bpc" id="L263" title="1 of 2 branches missed.">      if (!(configurationObject instanceof Configuration)) {</span>
+<span class="nc" id="L264">        throw new ExecutorException(&quot;Cannot get Configuration as factory method [&quot; + this.configurationFactory + &quot;]#[&quot;</span>
+            + FACTORY_METHOD + &quot;] didn't return [&quot; + Configuration.class + &quot;] but [&quot;
+<span class="nc bnc" id="L266" title="All 2 branches missed.">            + (configurationObject == null ? &quot;null&quot; : configurationObject.getClass()) + &quot;].&quot;);</span>
+      }
+
+<span class="fc" id="L269">      return Configuration.class.cast(configurationObject);</span>
+    }
+
+    private Log getLogger() {
+<span class="nc bnc" id="L273" title="All 2 branches missed.">      if (this.log == null) {</span>
+<span class="nc" id="L274">        this.log = LogFactory.getLog(this.getClass());</span>
+      }
+<span class="nc" id="L276">      return this.log;</span>
+    }
+  }
+
+  private static final class ClosedExecutor extends BaseExecutor {
+
+    public ClosedExecutor() {
+<span class="fc" id="L283">      super(null, null);</span>
+<span class="fc" id="L284">    }</span>
+
+    @Override
+    public boolean isClosed() {
+<span class="fc" id="L288">      return true;</span>
+    }
+
+    @Override
+    protected int doUpdate(MappedStatement ms, Object parameter) throws SQLException {
+<span class="nc" id="L293">      throw new UnsupportedOperationException(&quot;Not supported.&quot;);</span>
+    }
+
+    @Override
+    protected List&lt;BatchResult&gt; doFlushStatements(boolean isRollback) throws SQLException {
+<span class="nc" id="L298">      throw new UnsupportedOperationException(&quot;Not supported.&quot;);</span>
+    }
+
+    @Override
+    protected &lt;E&gt; List&lt;E&gt; doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds,
+        ResultHandler resultHandler, BoundSql boundSql) throws SQLException {
+<span class="nc" id="L304">      throw new UnsupportedOperationException(&quot;Not supported.&quot;);</span>
+    }
+
+    @Override
+    protected &lt;E&gt; Cursor&lt;E&gt; doQueryCursor(MappedStatement ms, Object parameter, RowBounds rowBounds, BoundSql boundSql)
+        throws SQLException {
+<span class="nc" id="L310">      throw new UnsupportedOperationException(&quot;Not supported.&quot;);</span>
+    }
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/submitted/refcursor/RefCursorTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2024 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -68,7 +68,7 @@
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>    }
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>  
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>    @Test
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>    <strong class="jxr_keyword">void</strong> testRefCursor1() {
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>    <strong class="jxr_keyword">void</strong> refCursor1() {
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>        <a name="OrdersMapper" href="../../../../../org/apache/ibatis/submitted/refcursor/OrdersMapper.html#OrdersMapper">OrdersMapper</a> mapper = sqlSession.getMapper(OrdersMapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>        Map&lt;String, Object&gt; parameter = <strong class="jxr_keyword">new</strong> HashMap&lt;&gt;();
@@ -85,7 +85,7 @@
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>    }
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>  
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>    @Test
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>    <strong class="jxr_keyword">void</strong> testRefCursor2() {
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>    <strong class="jxr_keyword">void</strong> refCursor2() {
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>        <a name="OrdersMapper" href="../../../../../org/apache/ibatis/submitted/refcursor/OrdersMapper.html#OrdersMapper">OrdersMapper</a> mapper = sqlSession.getMapper(OrdersMapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>        Map&lt;String, Object&gt; parameter = <strong class="jxr_keyword">new</strong> HashMap&lt;&gt;();
@@ -146,6 +146,6 @@
 <a class="jxr_linenumber" name="L138" href="#L138">138</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2024 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">© 2009–2024 <a href="https://www.mybatis.org/">MyBatis.org</a></div>
 </body>
 </html>

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PoolState.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.datasource.pooled</a> &gt; <span class="el_source">PoolState.java</span></div><h1>PoolState.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2024 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.datasource.pooled;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
+
+/**
+ * @author Clinton Begin
+ */
+public class PoolState {
+
+  // This lock does not guarantee consistency.
+  // Field values can be modified in PooledDataSource
+  // after the instance is returned from
+  // PooledDataSource#getPoolState().
+  // A possible fix is to create and return a 'snapshot'.
+<span class="fc" id="L32">  private final ReentrantLock lock = new ReentrantLock();</span>
+
+  protected PooledDataSource dataSource;
+
+<span class="fc" id="L36">  protected final List&lt;PooledConnection&gt; idleConnections = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L37">  protected final List&lt;PooledConnection&gt; activeConnections = new ArrayList&lt;&gt;();</span>
+  protected long requestCount;
+  protected long accumulatedRequestTime;
+  protected long accumulatedCheckoutTime;
+  protected long claimedOverdueConnectionCount;
+  protected long accumulatedCheckoutTimeOfOverdueConnections;
+  protected long accumulatedWaitTime;
+  protected long hadToWaitCount;
+  protected long badConnectionCount;
+
+<span class="fc" id="L47">  public PoolState(PooledDataSource dataSource) {</span>
+<span class="fc" id="L48">    this.dataSource = dataSource;</span>
+<span class="fc" id="L49">  }</span>
+
+  public long getRequestCount() {
+<span class="fc" id="L52">    lock.lock();</span>
+    try {
+<span class="fc" id="L54">      return requestCount;</span>
+    } finally {
+<span class="fc" id="L56">      lock.unlock();</span>
+    }
+  }
+
+  public long getAverageRequestTime() {
+<span class="fc" id="L61">    lock.lock();</span>
+    try {
+<span class="pc bpc" id="L63" title="1 of 2 branches missed.">      return requestCount == 0 ? 0 : accumulatedRequestTime / requestCount;</span>
+    } finally {
+<span class="fc" id="L65">      lock.unlock();</span>
+    }
+  }
+
+  public long getAverageWaitTime() {
+<span class="fc" id="L70">    lock.lock();</span>
+    try {
+<span class="pc bpc" id="L72" title="1 of 2 branches missed.">      return hadToWaitCount == 0 ? 0 : accumulatedWaitTime / hadToWaitCount;</span>
+    } finally {
+<span class="fc" id="L74">      lock.unlock();</span>
+    }
+  }
+
+  public long getHadToWaitCount() {
+<span class="fc" id="L79">    lock.lock();</span>
+    try {
+<span class="fc" id="L81">      return hadToWaitCount;</span>
+    } finally {
+<span class="fc" id="L83">      lock.unlock();</span>
+    }
+  }
+
+  public long getBadConnectionCount() {
+<span class="fc" id="L88">    lock.lock();</span>
+    try {
+<span class="fc" id="L90">      return badConnectionCount;</span>
+    } finally {
+<span class="fc" id="L92">      lock.unlock();</span>
+    }
+  }
+
+  public long getClaimedOverdueConnectionCount() {
+<span class="fc" id="L97">    lock.lock();</span>
+    try {
+<span class="fc" id="L99">      return claimedOverdueConnectionCount;</span>
+    } finally {
+<span class="fc" id="L101">      lock.unlock();</span>
+    }
+  }
+
+  public long getAverageOverdueCheckoutTime() {
+<span class="fc" id="L106">    lock.lock();</span>
+    try {
+<span class="pc bpc" id="L108" title="1 of 2 branches missed.">      return claimedOverdueConnectionCount == 0 ? 0</span>
+<span class="pc" id="L109">          : accumulatedCheckoutTimeOfOverdueConnections / claimedOverdueConnectionCount;</span>
+    } finally {
+<span class="fc" id="L111">      lock.unlock();</span>
+    }
+  }
+
+  public long getAverageCheckoutTime() {
+<span class="fc" id="L116">    lock.lock();</span>
+    try {
+<span class="pc bpc" id="L118" title="1 of 2 branches missed.">      return requestCount == 0 ? 0 : accumulatedCheckoutTime / requestCount;</span>
+    } finally {
+<span class="fc" id="L120">      lock.unlock();</span>
+    }
+  }
+
+  public int getIdleConnectionCount() {
+<span class="fc" id="L125">    lock.lock();</span>
+    try {
+<span class="fc" id="L127">      return idleConnections.size();</span>
+    } finally {
+<span class="fc" id="L129">      lock.unlock();</span>
+    }
+  }
+
+  public int getActiveConnectionCount() {
+<span class="fc" id="L134">    lock.lock();</span>
+    try {
+<span class="fc" id="L136">      return activeConnections.size();</span>
+    } finally {
+<span class="fc" id="L138">      lock.unlock();</span>
+    }
+  }
+
+  @Override
+  public String toString() {
+<span class="fc" id="L144">    lock.lock();</span>
+    try {
+<span class="fc" id="L146">      StringBuilder builder = new StringBuilder();</span>
+<span class="fc" id="L147">      builder.append(&quot;\n===CONFIGURATION==============================================&quot;);</span>
+<span class="fc" id="L148">      builder.append(&quot;\n jdbcDriver                     &quot;).append(dataSource.getDriver());</span>
+<span class="fc" id="L149">      builder.append(&quot;\n jdbcUrl                        &quot;).append(dataSource.getUrl());</span>
+<span class="fc" id="L150">      builder.append(&quot;\n jdbcUsername                   &quot;).append(dataSource.getUsername());</span>
+<span class="fc" id="L151">      builder.append(&quot;\n jdbcPassword                   &quot;)</span>
+<span class="pc bpc" id="L152" title="1 of 2 branches missed.">          .append(dataSource.getPassword() == null ? &quot;NULL&quot; : &quot;************&quot;);</span>
+<span class="fc" id="L153">      builder.append(&quot;\n poolMaxActiveConnections       &quot;).append(dataSource.poolMaximumActiveConnections);</span>
+<span class="fc" id="L154">      builder.append(&quot;\n poolMaxIdleConnections         &quot;).append(dataSource.poolMaximumIdleConnections);</span>
+<span class="fc" id="L155">      builder.append(&quot;\n poolMaxCheckoutTime            &quot;).append(dataSource.poolMaximumCheckoutTime);</span>
+<span class="fc" id="L156">      builder.append(&quot;\n poolTimeToWait                 &quot;).append(dataSource.poolTimeToWait);</span>
+<span class="fc" id="L157">      builder.append(&quot;\n poolPingEnabled                &quot;).append(dataSource.poolPingEnabled);</span>
+<span class="fc" id="L158">      builder.append(&quot;\n poolPingQuery                  &quot;).append(dataSource.poolPingQuery);</span>
+<span class="fc" id="L159">      builder.append(&quot;\n poolPingConnectionsNotUsedFor  &quot;).append(dataSource.poolPingConnectionsNotUsedFor);</span>
+<span class="fc" id="L160">      builder.append(&quot;\n ---STATUS-----------------------------------------------------&quot;);</span>
+<span class="fc" id="L161">      builder.append(&quot;\n activeConnections              &quot;).append(getActiveConnectionCount());</span>
+<span class="fc" id="L162">      builder.append(&quot;\n idleConnections                &quot;).append(getIdleConnectionCount());</span>
+<span class="fc" id="L163">      builder.append(&quot;\n requestCount                   &quot;).append(getRequestCount());</span>
+<span class="fc" id="L164">      builder.append(&quot;\n averageRequestTime             &quot;).append(getAverageRequestTime());</span>
+<span class="fc" id="L165">      builder.append(&quot;\n averageCheckoutTime            &quot;).append(getAverageCheckoutTime());</span>
+<span class="fc" id="L166">      builder.append(&quot;\n claimedOverdue                 &quot;).append(getClaimedOverdueConnectionCount());</span>
+<span class="fc" id="L167">      builder.append(&quot;\n averageOverdueCheckoutTime     &quot;).append(getAverageOverdueCheckoutTime());</span>
+<span class="fc" id="L168">      builder.append(&quot;\n hadToWait                      &quot;).append(getHadToWaitCount());</span>
+<span class="fc" id="L169">      builder.append(&quot;\n averageWaitTime                &quot;).append(getAverageWaitTime());</span>
+<span class="fc" id="L170">      builder.append(&quot;\n badConnectionCount             &quot;).append(getBadConnectionCount());</span>
+<span class="fc" id="L171">      builder.append(&quot;\n===============================================================&quot;);</span>
+<span class="fc" id="L172">      return builder.toString();</span>
+    } finally {
+<span class="fc" id="L174">      lock.unlock();</span>
+    }
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

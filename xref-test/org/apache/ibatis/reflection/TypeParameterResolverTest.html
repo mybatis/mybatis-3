@@ -49,7 +49,7 @@
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>  
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>  <strong class="jxr_keyword">class</strong> <a name="TypeParameterResolverTest" href="../../../../org/apache/ibatis/reflection/TypeParameterResolverTest.html#TypeParameterResolverTest">TypeParameterResolverTest</a> {
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>    @Test
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>    <strong class="jxr_keyword">void</strong> testReturn_Lv0SimpleClass() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>    <strong class="jxr_keyword">void</strong> returnLv0SimpleClass() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>      Class&lt;?&gt; clazz = Level0Mapper.<strong class="jxr_keyword">class</strong>;
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>      Method method = clazz.getMethod(<span class="jxr_string">"simpleSelect"</span>);
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>      Type result = TypeParameterResolver.resolveReturnType(method, clazz);
@@ -57,7 +57,7 @@
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>    }
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>  
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>    @Test
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>    <strong class="jxr_keyword">void</strong> testReturn_SimpleVoid() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>    <strong class="jxr_keyword">void</strong> returnSimpleVoid() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>      Class&lt;?&gt; clazz = Level1Mapper.<strong class="jxr_keyword">class</strong>;
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>      Method method = clazz.getMethod(<span class="jxr_string">"simpleSelectVoid"</span>, Integer.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>      Type result = TypeParameterResolver.resolveReturnType(method, clazz);
@@ -65,7 +65,7 @@
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>    }
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>  
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>    @Test
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>    <strong class="jxr_keyword">void</strong> testReturn_SimplePrimitive() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>    <strong class="jxr_keyword">void</strong> returnSimplePrimitive() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>      Class&lt;?&gt; clazz = Level1Mapper.<strong class="jxr_keyword">class</strong>;
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>      Method method = clazz.getMethod(<span class="jxr_string">"simpleSelectPrimitive"</span>, <strong class="jxr_keyword">int</strong>.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>      Type result = TypeParameterResolver.resolveReturnType(method, clazz);
@@ -73,7 +73,7 @@
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>    }
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>  
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>    @Test
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>    <strong class="jxr_keyword">void</strong> testReturn_SimpleClass() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>    <strong class="jxr_keyword">void</strong> returnSimpleClass() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>      Class&lt;?&gt; clazz = Level1Mapper.<strong class="jxr_keyword">class</strong>;
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>      Method method = clazz.getMethod(<span class="jxr_string">"simpleSelect"</span>);
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>      Type result = TypeParameterResolver.resolveReturnType(method, clazz);
@@ -81,7 +81,7 @@
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>    }
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>  
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>    @Test
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>    <strong class="jxr_keyword">void</strong> testReturn_SimpleList() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>    <strong class="jxr_keyword">void</strong> returnSimpleList() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>      Class&lt;?&gt; clazz = Level1Mapper.<strong class="jxr_keyword">class</strong>;
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>      Method method = clazz.getMethod(<span class="jxr_string">"simpleSelectList"</span>);
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>      Type result = TypeParameterResolver.resolveReturnType(method, clazz);
@@ -93,7 +93,7 @@
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>    }
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>  
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>    @Test
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>    <strong class="jxr_keyword">void</strong> testReturn_SimpleMap() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>    <strong class="jxr_keyword">void</strong> returnSimpleMap() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L89" href="#L89">89</a>      Class&lt;?&gt; clazz = Level1Mapper.<strong class="jxr_keyword">class</strong>;
 <a class="jxr_linenumber" name="L90" href="#L90">90</a>      Method method = clazz.getMethod(<span class="jxr_string">"simpleSelectMap"</span>);
 <a class="jxr_linenumber" name="L91" href="#L91">91</a>      Type result = TypeParameterResolver.resolveReturnType(method, clazz);
@@ -106,7 +106,7 @@
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>    }
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>  
 <a class="jxr_linenumber" name="L100" href="#L100">100</a>   @Test
-<a class="jxr_linenumber" name="L101" href="#L101">101</a>   <strong class="jxr_keyword">void</strong> testReturn_SimpleWildcard() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>   <strong class="jxr_keyword">void</strong> returnSimpleWildcard() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L102" href="#L102">102</a>     Class&lt;?&gt; clazz = Level1Mapper.<strong class="jxr_keyword">class</strong>;
 <a class="jxr_linenumber" name="L103" href="#L103">103</a>     Method method = clazz.getMethod(<span class="jxr_string">"simpleSelectWildcard"</span>);
 <a class="jxr_linenumber" name="L104" href="#L104">104</a>     Type result = TypeParameterResolver.resolveReturnType(method, clazz);
@@ -120,7 +120,7 @@
 <a class="jxr_linenumber" name="L112" href="#L112">112</a>   }
 <a class="jxr_linenumber" name="L113" href="#L113">113</a> 
 <a class="jxr_linenumber" name="L114" href="#L114">114</a>   @Test
-<a class="jxr_linenumber" name="L115" href="#L115">115</a>   <strong class="jxr_keyword">void</strong> testReturn_SimpleArray() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L115" href="#L115">115</a>   <strong class="jxr_keyword">void</strong> returnSimpleArray() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L116" href="#L116">116</a>     Class&lt;?&gt; clazz = Level1Mapper.<strong class="jxr_keyword">class</strong>;
 <a class="jxr_linenumber" name="L117" href="#L117">117</a>     Method method = clazz.getMethod(<span class="jxr_string">"simpleSelectArray"</span>);
 <a class="jxr_linenumber" name="L118" href="#L118">118</a>     Type result = TypeParameterResolver.resolveReturnType(method, clazz);
@@ -131,7 +131,7 @@
 <a class="jxr_linenumber" name="L123" href="#L123">123</a>   }
 <a class="jxr_linenumber" name="L124" href="#L124">124</a> 
 <a class="jxr_linenumber" name="L125" href="#L125">125</a>   @Test
-<a class="jxr_linenumber" name="L126" href="#L126">126</a>   <strong class="jxr_keyword">void</strong> testReturn_SimpleArrayOfArray() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L126" href="#L126">126</a>   <strong class="jxr_keyword">void</strong> returnSimpleArrayOfArray() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L127" href="#L127">127</a>     Class&lt;?&gt; clazz = Level1Mapper.<strong class="jxr_keyword">class</strong>;
 <a class="jxr_linenumber" name="L128" href="#L128">128</a>     Method method = clazz.getMethod(<span class="jxr_string">"simpleSelectArrayOfArray"</span>);
 <a class="jxr_linenumber" name="L129" href="#L129">129</a>     Type result = TypeParameterResolver.resolveReturnType(method, clazz);
@@ -143,7 +143,7 @@
 <a class="jxr_linenumber" name="L135" href="#L135">135</a>   }
 <a class="jxr_linenumber" name="L136" href="#L136">136</a> 
 <a class="jxr_linenumber" name="L137" href="#L137">137</a>   @Test
-<a class="jxr_linenumber" name="L138" href="#L138">138</a>   <strong class="jxr_keyword">void</strong> testReturn_SimpleTypeVar() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>   <strong class="jxr_keyword">void</strong> returnSimpleTypeVar() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L139" href="#L139">139</a>     Class&lt;?&gt; clazz = Level1Mapper.<strong class="jxr_keyword">class</strong>;
 <a class="jxr_linenumber" name="L140" href="#L140">140</a>     Method method = clazz.getMethod(<span class="jxr_string">"simpleSelectTypeVar"</span>);
 <a class="jxr_linenumber" name="L141" href="#L141">141</a>     Type result = TypeParameterResolver.resolveReturnType(method, clazz);
@@ -155,7 +155,7 @@
 <a class="jxr_linenumber" name="L147" href="#L147">147</a>   }
 <a class="jxr_linenumber" name="L148" href="#L148">148</a> 
 <a class="jxr_linenumber" name="L149" href="#L149">149</a>   @Test
-<a class="jxr_linenumber" name="L150" href="#L150">150</a>   <strong class="jxr_keyword">void</strong> testReturn_Lv1Class() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>   <strong class="jxr_keyword">void</strong> returnLv1Class() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L151" href="#L151">151</a>     Class&lt;?&gt; clazz = Level1Mapper.<strong class="jxr_keyword">class</strong>;
 <a class="jxr_linenumber" name="L152" href="#L152">152</a>     Method method = clazz.getMethod(<span class="jxr_string">"select"</span>, Object.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L153" href="#L153">153</a>     Type result = TypeParameterResolver.resolveReturnType(method, clazz);
@@ -163,7 +163,7 @@
 <a class="jxr_linenumber" name="L155" href="#L155">155</a>   }
 <a class="jxr_linenumber" name="L156" href="#L156">156</a> 
 <a class="jxr_linenumber" name="L157" href="#L157">157</a>   @Test
-<a class="jxr_linenumber" name="L158" href="#L158">158</a>   <strong class="jxr_keyword">void</strong> testReturn_Lv2CustomClass() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L158" href="#L158">158</a>   <strong class="jxr_keyword">void</strong> returnLv2CustomClass() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L159" href="#L159">159</a>     Class&lt;?&gt; clazz = Level2Mapper.<strong class="jxr_keyword">class</strong>;
 <a class="jxr_linenumber" name="L160" href="#L160">160</a>     Method method = clazz.getMethod(<span class="jxr_string">"selectCalculator"</span>, Calculator.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L161" href="#L161">161</a>     Type result = TypeParameterResolver.resolveReturnType(method, clazz);
@@ -175,7 +175,7 @@
 <a class="jxr_linenumber" name="L167" href="#L167">167</a>   }
 <a class="jxr_linenumber" name="L168" href="#L168">168</a> 
 <a class="jxr_linenumber" name="L169" href="#L169">169</a>   @Test
-<a class="jxr_linenumber" name="L170" href="#L170">170</a>   <strong class="jxr_keyword">void</strong> testReturn_Lv2CustomClassList() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L170" href="#L170">170</a>   <strong class="jxr_keyword">void</strong> returnLv2CustomClassList() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L171" href="#L171">171</a>     Class&lt;?&gt; clazz = Level2Mapper.<strong class="jxr_keyword">class</strong>;
 <a class="jxr_linenumber" name="L172" href="#L172">172</a>     Method method = clazz.getMethod(<span class="jxr_string">"selectCalculatorList"</span>);
 <a class="jxr_linenumber" name="L173" href="#L173">173</a>     Type result = TypeParameterResolver.resolveReturnType(method, clazz);
@@ -189,7 +189,7 @@
 <a class="jxr_linenumber" name="L181" href="#L181">181</a>   }
 <a class="jxr_linenumber" name="L182" href="#L182">182</a> 
 <a class="jxr_linenumber" name="L183" href="#L183">183</a>   @Test
-<a class="jxr_linenumber" name="L184" href="#L184">184</a>   <strong class="jxr_keyword">void</strong> testReturn_Lv0InnerClass() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L184" href="#L184">184</a>   <strong class="jxr_keyword">void</strong> returnLv0InnerClass() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L185" href="#L185">185</a>     Class&lt;?&gt; clazz = Level0InnerMapper.<strong class="jxr_keyword">class</strong>;
 <a class="jxr_linenumber" name="L186" href="#L186">186</a>     Method method = clazz.getMethod(<span class="jxr_string">"select"</span>, Object.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L187" href="#L187">187</a>     Type result = TypeParameterResolver.resolveReturnType(method, clazz);
@@ -197,7 +197,7 @@
 <a class="jxr_linenumber" name="L189" href="#L189">189</a>   }
 <a class="jxr_linenumber" name="L190" href="#L190">190</a> 
 <a class="jxr_linenumber" name="L191" href="#L191">191</a>   @Test
-<a class="jxr_linenumber" name="L192" href="#L192">192</a>   <strong class="jxr_keyword">void</strong> testReturn_Lv2Class() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L192" href="#L192">192</a>   <strong class="jxr_keyword">void</strong> returnLv2Class() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L193" href="#L193">193</a>     Class&lt;?&gt; clazz = Level2Mapper.<strong class="jxr_keyword">class</strong>;
 <a class="jxr_linenumber" name="L194" href="#L194">194</a>     Method method = clazz.getMethod(<span class="jxr_string">"select"</span>, Object.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L195" href="#L195">195</a>     Type result = TypeParameterResolver.resolveReturnType(method, clazz);
@@ -205,7 +205,7 @@
 <a class="jxr_linenumber" name="L197" href="#L197">197</a>   }
 <a class="jxr_linenumber" name="L198" href="#L198">198</a> 
 <a class="jxr_linenumber" name="L199" href="#L199">199</a>   @Test
-<a class="jxr_linenumber" name="L200" href="#L200">200</a>   <strong class="jxr_keyword">void</strong> testReturn_Lv1List() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L200" href="#L200">200</a>   <strong class="jxr_keyword">void</strong> returnLv1List() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L201" href="#L201">201</a>     Class&lt;?&gt; clazz = Level1Mapper.<strong class="jxr_keyword">class</strong>;
 <a class="jxr_linenumber" name="L202" href="#L202">202</a>     Method method = clazz.getMethod(<span class="jxr_string">"selectList"</span>, Object.<strong class="jxr_keyword">class</strong>, Object.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L203" href="#L203">203</a>     Type result = TypeParameterResolver.resolveReturnType(method, clazz);
@@ -217,7 +217,7 @@
 <a class="jxr_linenumber" name="L209" href="#L209">209</a>   }
 <a class="jxr_linenumber" name="L210" href="#L210">210</a> 
 <a class="jxr_linenumber" name="L211" href="#L211">211</a>   @Test
-<a class="jxr_linenumber" name="L212" href="#L212">212</a>   <strong class="jxr_keyword">void</strong> testReturn_Lv1Array() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L212" href="#L212">212</a>   <strong class="jxr_keyword">void</strong> returnLv1Array() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L213" href="#L213">213</a>     Class&lt;?&gt; clazz = Level1Mapper.<strong class="jxr_keyword">class</strong>;
 <a class="jxr_linenumber" name="L214" href="#L214">214</a>     Method method = clazz.getMethod(<span class="jxr_string">"selectArray"</span>, List[].<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L215" href="#L215">215</a>     Type result = TypeParameterResolver.resolveReturnType(method, clazz);
@@ -228,7 +228,7 @@
 <a class="jxr_linenumber" name="L220" href="#L220">220</a>   }
 <a class="jxr_linenumber" name="L221" href="#L221">221</a> 
 <a class="jxr_linenumber" name="L222" href="#L222">222</a>   @Test
-<a class="jxr_linenumber" name="L223" href="#L223">223</a>   <strong class="jxr_keyword">void</strong> testReturn_Lv2ArrayOfArray() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L223" href="#L223">223</a>   <strong class="jxr_keyword">void</strong> returnLv2ArrayOfArray() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L224" href="#L224">224</a>     Class&lt;?&gt; clazz = Level2Mapper.<strong class="jxr_keyword">class</strong>;
 <a class="jxr_linenumber" name="L225" href="#L225">225</a>     Method method = clazz.getMethod(<span class="jxr_string">"selectArrayOfArray"</span>);
 <a class="jxr_linenumber" name="L226" href="#L226">226</a>     Type result = TypeParameterResolver.resolveReturnType(method, clazz);
@@ -241,7 +241,7 @@
 <a class="jxr_linenumber" name="L233" href="#L233">233</a>   }
 <a class="jxr_linenumber" name="L234" href="#L234">234</a> 
 <a class="jxr_linenumber" name="L235" href="#L235">235</a>   @Test
-<a class="jxr_linenumber" name="L236" href="#L236">236</a>   <strong class="jxr_keyword">void</strong> testReturn_Lv2ArrayOfList() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L236" href="#L236">236</a>   <strong class="jxr_keyword">void</strong> returnLv2ArrayOfList() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L237" href="#L237">237</a>     Class&lt;?&gt; clazz = Level2Mapper.<strong class="jxr_keyword">class</strong>;
 <a class="jxr_linenumber" name="L238" href="#L238">238</a>     Method method = clazz.getMethod(<span class="jxr_string">"selectArrayOfList"</span>);
 <a class="jxr_linenumber" name="L239" href="#L239">239</a>     Type result = TypeParameterResolver.resolveReturnType(method, clazz);
@@ -254,7 +254,7 @@
 <a class="jxr_linenumber" name="L246" href="#L246">246</a>   }
 <a class="jxr_linenumber" name="L247" href="#L247">247</a> 
 <a class="jxr_linenumber" name="L248" href="#L248">248</a>   @Test
-<a class="jxr_linenumber" name="L249" href="#L249">249</a>   <strong class="jxr_keyword">void</strong> testReturn_Lv2WildcardList() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L249" href="#L249">249</a>   <strong class="jxr_keyword">void</strong> returnLv2WildcardList() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L250" href="#L250">250</a>     Class&lt;?&gt; clazz = Level2Mapper.<strong class="jxr_keyword">class</strong>;
 <a class="jxr_linenumber" name="L251" href="#L251">251</a>     Method method = clazz.getMethod(<span class="jxr_string">"selectWildcardList"</span>);
 <a class="jxr_linenumber" name="L252" href="#L252">252</a>     Type result = TypeParameterResolver.resolveReturnType(method, clazz);
@@ -270,7 +270,7 @@
 <a class="jxr_linenumber" name="L262" href="#L262">262</a>   }
 <a class="jxr_linenumber" name="L263" href="#L263">263</a> 
 <a class="jxr_linenumber" name="L264" href="#L264">264</a>   @Test
-<a class="jxr_linenumber" name="L265" href="#L265">265</a>   <strong class="jxr_keyword">void</strong> testReturn_LV1Map() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L265" href="#L265">265</a>   <strong class="jxr_keyword">void</strong> returnLV1Map() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L266" href="#L266">266</a>     Class&lt;?&gt; clazz = Level1Mapper.<strong class="jxr_keyword">class</strong>;
 <a class="jxr_linenumber" name="L267" href="#L267">267</a>     Method method = clazz.getMethod(<span class="jxr_string">"selectMap"</span>);
 <a class="jxr_linenumber" name="L268" href="#L268">268</a>     Type result = TypeParameterResolver.resolveReturnType(method, clazz);
@@ -283,7 +283,7 @@
 <a class="jxr_linenumber" name="L275" href="#L275">275</a>   }
 <a class="jxr_linenumber" name="L276" href="#L276">276</a> 
 <a class="jxr_linenumber" name="L277" href="#L277">277</a>   @Test
-<a class="jxr_linenumber" name="L278" href="#L278">278</a>   <strong class="jxr_keyword">void</strong> testReturn_LV2Map() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L278" href="#L278">278</a>   <strong class="jxr_keyword">void</strong> returnLV2Map() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L279" href="#L279">279</a>     Class&lt;?&gt; clazz = Level2Mapper.<strong class="jxr_keyword">class</strong>;
 <a class="jxr_linenumber" name="L280" href="#L280">280</a>     Method method = clazz.getMethod(<span class="jxr_string">"selectMap"</span>);
 <a class="jxr_linenumber" name="L281" href="#L281">281</a>     Type result = TypeParameterResolver.resolveReturnType(method, clazz);
@@ -296,7 +296,7 @@
 <a class="jxr_linenumber" name="L288" href="#L288">288</a>   }
 <a class="jxr_linenumber" name="L289" href="#L289">289</a> 
 <a class="jxr_linenumber" name="L290" href="#L290">290</a>   @Test
-<a class="jxr_linenumber" name="L291" href="#L291">291</a>   <strong class="jxr_keyword">void</strong> testReturn_Subclass() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L291" href="#L291">291</a>   <strong class="jxr_keyword">void</strong> returnSubclass() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L292" href="#L292">292</a>     Class&lt;?&gt; clazz = SubCalculator.<strong class="jxr_keyword">class</strong>;
 <a class="jxr_linenumber" name="L293" href="#L293">293</a>     Method method = clazz.getMethod(<span class="jxr_string">"getId"</span>);
 <a class="jxr_linenumber" name="L294" href="#L294">294</a>     Type result = TypeParameterResolver.resolveReturnType(method, clazz);
@@ -304,7 +304,7 @@
 <a class="jxr_linenumber" name="L296" href="#L296">296</a>   }
 <a class="jxr_linenumber" name="L297" href="#L297">297</a> 
 <a class="jxr_linenumber" name="L298" href="#L298">298</a>   @Test
-<a class="jxr_linenumber" name="L299" href="#L299">299</a>   <strong class="jxr_keyword">void</strong> testParam_Primitive() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L299" href="#L299">299</a>   <strong class="jxr_keyword">void</strong> paramPrimitive() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L300" href="#L300">300</a>     Class&lt;?&gt; clazz = Level2Mapper.<strong class="jxr_keyword">class</strong>;
 <a class="jxr_linenumber" name="L301" href="#L301">301</a>     Method method = clazz.getMethod(<span class="jxr_string">"simpleSelectPrimitive"</span>, <strong class="jxr_keyword">int</strong>.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L302" href="#L302">302</a>     Type[] result = TypeParameterResolver.resolveParamTypes(method, clazz);
@@ -313,7 +313,7 @@
 <a class="jxr_linenumber" name="L305" href="#L305">305</a>   }
 <a class="jxr_linenumber" name="L306" href="#L306">306</a> 
 <a class="jxr_linenumber" name="L307" href="#L307">307</a>   @Test
-<a class="jxr_linenumber" name="L308" href="#L308">308</a>   <strong class="jxr_keyword">void</strong> testParam_Simple() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L308" href="#L308">308</a>   <strong class="jxr_keyword">void</strong> paramSimple() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L309" href="#L309">309</a>     Class&lt;?&gt; clazz = Level1Mapper.<strong class="jxr_keyword">class</strong>;
 <a class="jxr_linenumber" name="L310" href="#L310">310</a>     Method method = clazz.getMethod(<span class="jxr_string">"simpleSelectVoid"</span>, Integer.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L311" href="#L311">311</a>     Type[] result = TypeParameterResolver.resolveParamTypes(method, clazz);
@@ -322,7 +322,7 @@
 <a class="jxr_linenumber" name="L314" href="#L314">314</a>   }
 <a class="jxr_linenumber" name="L315" href="#L315">315</a> 
 <a class="jxr_linenumber" name="L316" href="#L316">316</a>   @Test
-<a class="jxr_linenumber" name="L317" href="#L317">317</a>   <strong class="jxr_keyword">void</strong> testParam_Lv1Single() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L317" href="#L317">317</a>   <strong class="jxr_keyword">void</strong> paramLv1Single() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L318" href="#L318">318</a>     Class&lt;?&gt; clazz = Level1Mapper.<strong class="jxr_keyword">class</strong>;
 <a class="jxr_linenumber" name="L319" href="#L319">319</a>     Method method = clazz.getMethod(<span class="jxr_string">"select"</span>, Object.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L320" href="#L320">320</a>     Type[] result = TypeParameterResolver.resolveParamTypes(method, clazz);
@@ -331,7 +331,7 @@
 <a class="jxr_linenumber" name="L323" href="#L323">323</a>   }
 <a class="jxr_linenumber" name="L324" href="#L324">324</a> 
 <a class="jxr_linenumber" name="L325" href="#L325">325</a>   @Test
-<a class="jxr_linenumber" name="L326" href="#L326">326</a>   <strong class="jxr_keyword">void</strong> testParam_Lv2Single() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L326" href="#L326">326</a>   <strong class="jxr_keyword">void</strong> paramLv2Single() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L327" href="#L327">327</a>     Class&lt;?&gt; clazz = Level2Mapper.<strong class="jxr_keyword">class</strong>;
 <a class="jxr_linenumber" name="L328" href="#L328">328</a>     Method method = clazz.getMethod(<span class="jxr_string">"select"</span>, Object.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L329" href="#L329">329</a>     Type[] result = TypeParameterResolver.resolveParamTypes(method, clazz);
@@ -340,7 +340,7 @@
 <a class="jxr_linenumber" name="L332" href="#L332">332</a>   }
 <a class="jxr_linenumber" name="L333" href="#L333">333</a> 
 <a class="jxr_linenumber" name="L334" href="#L334">334</a>   @Test
-<a class="jxr_linenumber" name="L335" href="#L335">335</a>   <strong class="jxr_keyword">void</strong> testParam_Lv2Multiple() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L335" href="#L335">335</a>   <strong class="jxr_keyword">void</strong> paramLv2Multiple() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L336" href="#L336">336</a>     Class&lt;?&gt; clazz = Level2Mapper.<strong class="jxr_keyword">class</strong>;
 <a class="jxr_linenumber" name="L337" href="#L337">337</a>     Method method = clazz.getMethod(<span class="jxr_string">"selectList"</span>, Object.<strong class="jxr_keyword">class</strong>, Object.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L338" href="#L338">338</a>     Type[] result = TypeParameterResolver.resolveParamTypes(method, clazz);
@@ -350,7 +350,7 @@
 <a class="jxr_linenumber" name="L342" href="#L342">342</a>   }
 <a class="jxr_linenumber" name="L343" href="#L343">343</a> 
 <a class="jxr_linenumber" name="L344" href="#L344">344</a>   @Test
-<a class="jxr_linenumber" name="L345" href="#L345">345</a>   <strong class="jxr_keyword">void</strong> testParam_Lv2CustomClass() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L345" href="#L345">345</a>   <strong class="jxr_keyword">void</strong> paramLv2CustomClass() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L346" href="#L346">346</a>     Class&lt;?&gt; clazz = Level2Mapper.<strong class="jxr_keyword">class</strong>;
 <a class="jxr_linenumber" name="L347" href="#L347">347</a>     Method method = clazz.getMethod(<span class="jxr_string">"selectCalculator"</span>, Calculator.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L348" href="#L348">348</a>     Type[] result = TypeParameterResolver.resolveParamTypes(method, clazz);
@@ -363,7 +363,7 @@
 <a class="jxr_linenumber" name="L355" href="#L355">355</a>   }
 <a class="jxr_linenumber" name="L356" href="#L356">356</a> 
 <a class="jxr_linenumber" name="L357" href="#L357">357</a>   @Test
-<a class="jxr_linenumber" name="L358" href="#L358">358</a>   <strong class="jxr_keyword">void</strong> testParam_Lv1Array() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L358" href="#L358">358</a>   <strong class="jxr_keyword">void</strong> paramLv1Array() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L359" href="#L359">359</a>     Class&lt;?&gt; clazz = Level1Mapper.<strong class="jxr_keyword">class</strong>;
 <a class="jxr_linenumber" name="L360" href="#L360">360</a>     Method method = clazz.getMethod(<span class="jxr_string">"selectArray"</span>, List[].<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L361" href="#L361">361</a>     Type[] result = TypeParameterResolver.resolveParamTypes(method, clazz);
@@ -376,7 +376,7 @@
 <a class="jxr_linenumber" name="L368" href="#L368">368</a>   }
 <a class="jxr_linenumber" name="L369" href="#L369">369</a> 
 <a class="jxr_linenumber" name="L370" href="#L370">370</a>   @Test
-<a class="jxr_linenumber" name="L371" href="#L371">371</a>   <strong class="jxr_keyword">void</strong> testParam_Subclass() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L371" href="#L371">371</a>   <strong class="jxr_keyword">void</strong> paramSubclass() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L372" href="#L372">372</a>     Class&lt;?&gt; clazz = SubCalculator.<strong class="jxr_keyword">class</strong>;
 <a class="jxr_linenumber" name="L373" href="#L373">373</a>     Method method = clazz.getMethod(<span class="jxr_string">"setId"</span>, Object.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L374" href="#L374">374</a>     Type[] result = TypeParameterResolver.resolveParamTypes(method, clazz);
@@ -384,7 +384,7 @@
 <a class="jxr_linenumber" name="L376" href="#L376">376</a>   }
 <a class="jxr_linenumber" name="L377" href="#L377">377</a> 
 <a class="jxr_linenumber" name="L378" href="#L378">378</a>   @Test
-<a class="jxr_linenumber" name="L379" href="#L379">379</a>   <strong class="jxr_keyword">void</strong> testReturn_Anonymous() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L379" href="#L379">379</a>   <strong class="jxr_keyword">void</strong> returnAnonymous() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L380" href="#L380">380</a>     Calculator&lt;?&gt; instance = <strong class="jxr_keyword">new</strong> Calculator&lt;Integer&gt;();
 <a class="jxr_linenumber" name="L381" href="#L381">381</a>     Class&lt;?&gt; clazz = instance.getClass();
 <a class="jxr_linenumber" name="L382" href="#L382">382</a>     Method method = clazz.getMethod(<span class="jxr_string">"getId"</span>);
@@ -393,7 +393,7 @@
 <a class="jxr_linenumber" name="L385" href="#L385">385</a>   }
 <a class="jxr_linenumber" name="L386" href="#L386">386</a> 
 <a class="jxr_linenumber" name="L387" href="#L387">387</a>   @Test
-<a class="jxr_linenumber" name="L388" href="#L388">388</a>   <strong class="jxr_keyword">void</strong> testField_GenericField() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L388" href="#L388">388</a>   <strong class="jxr_keyword">void</strong> fieldGenericField() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L389" href="#L389">389</a>     Class&lt;?&gt; clazz = SubCalculator.<strong class="jxr_keyword">class</strong>;
 <a class="jxr_linenumber" name="L390" href="#L390">390</a>     Class&lt;?&gt; declaredClass = Calculator.<strong class="jxr_keyword">class</strong>;
 <a class="jxr_linenumber" name="L391" href="#L391">391</a>     Field field = declaredClass.getDeclaredField(<span class="jxr_string">"fld"</span>);
@@ -402,7 +402,7 @@
 <a class="jxr_linenumber" name="L394" href="#L394">394</a>   }
 <a class="jxr_linenumber" name="L395" href="#L395">395</a> 
 <a class="jxr_linenumber" name="L396" href="#L396">396</a>   @Test
-<a class="jxr_linenumber" name="L397" href="#L397">397</a>   <strong class="jxr_keyword">void</strong> testReturnParam_WildcardWithUpperBounds() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L397" href="#L397">397</a>   <strong class="jxr_keyword">void</strong> returnParamWildcardWithUpperBounds() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L398" href="#L398">398</a>     <strong class="jxr_keyword">class</strong> Key {
 <a class="jxr_linenumber" name="L399" href="#L399">399</a>     }
 <a class="jxr_linenumber" name="L400" href="#L400">400</a>     @SuppressWarnings(<span class="jxr_string">"unused"</span>)
@@ -438,7 +438,7 @@
 <a class="jxr_linenumber" name="L430" href="#L430">430</a>   }
 <a class="jxr_linenumber" name="L431" href="#L431">431</a> 
 <a class="jxr_linenumber" name="L432" href="#L432">432</a>   @Test
-<a class="jxr_linenumber" name="L433" href="#L433">433</a>   <strong class="jxr_keyword">void</strong> testDeepHierarchy() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L433" href="#L433">433</a>   <strong class="jxr_keyword">void</strong> deepHierarchy() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L434" href="#L434">434</a>     @SuppressWarnings(<span class="jxr_string">"unused"</span>)
 <a class="jxr_linenumber" name="L435" href="#L435">435</a>     <strong class="jxr_keyword">abstract</strong> <strong class="jxr_keyword">class</strong> A&lt;S&gt; {
 <a class="jxr_linenumber" name="L436" href="#L436">436</a>       <strong class="jxr_keyword">protected</strong> S id;
@@ -481,16 +481,29 @@
 <a class="jxr_linenumber" name="L473" href="#L473">473</a>     executor.shutdown();
 <a class="jxr_linenumber" name="L474" href="#L474">474</a>   }
 <a class="jxr_linenumber" name="L475" href="#L475">475</a> 
-<a class="jxr_linenumber" name="L476" href="#L476">476</a>   <em class="jxr_comment">// @formatter:off</em>
-<a class="jxr_linenumber" name="L477" href="#L477">477</a>   <strong class="jxr_keyword">class</strong> AA {}
-<a class="jxr_linenumber" name="L478" href="#L478">478</a>   <strong class="jxr_keyword">class</strong> BB {}
-<a class="jxr_linenumber" name="L479" href="#L479">479</a>   <strong class="jxr_keyword">interface</strong> IfaceA <strong class="jxr_keyword">extends</strong> ParentIface&lt;AA&gt; {}
-<a class="jxr_linenumber" name="L480" href="#L480">480</a>   <strong class="jxr_keyword">interface</strong> IfaceB <strong class="jxr_keyword">extends</strong> ParentIface&lt;BB&gt; {}
-<a class="jxr_linenumber" name="L481" href="#L481">481</a>   <strong class="jxr_keyword">interface</strong> ParentIface&lt;T&gt; {List&lt;T&gt; m();}
-<a class="jxr_linenumber" name="L482" href="#L482">482</a>   <em class="jxr_comment">// @formatter:on</em>
-<a class="jxr_linenumber" name="L483" href="#L483">483</a> }
+<a class="jxr_linenumber" name="L476" href="#L476">476</a>   <strong class="jxr_keyword">class</strong> AA {
+<a class="jxr_linenumber" name="L477" href="#L477">477</a>     <em class="jxr_comment">// Do nothing</em>
+<a class="jxr_linenumber" name="L478" href="#L478">478</a>   }
+<a class="jxr_linenumber" name="L479" href="#L479">479</a> 
+<a class="jxr_linenumber" name="L480" href="#L480">480</a>   <strong class="jxr_keyword">class</strong> BB {
+<a class="jxr_linenumber" name="L481" href="#L481">481</a>     <em class="jxr_comment">// Do nothing</em>
+<a class="jxr_linenumber" name="L482" href="#L482">482</a>   }
+<a class="jxr_linenumber" name="L483" href="#L483">483</a> 
+<a class="jxr_linenumber" name="L484" href="#L484">484</a>   <strong class="jxr_keyword">interface</strong> IfaceA <strong class="jxr_keyword">extends</strong> ParentIface&lt;AA&gt; {
+<a class="jxr_linenumber" name="L485" href="#L485">485</a>     <em class="jxr_comment">// Do Nothing</em>
+<a class="jxr_linenumber" name="L486" href="#L486">486</a>   }
+<a class="jxr_linenumber" name="L487" href="#L487">487</a> 
+<a class="jxr_linenumber" name="L488" href="#L488">488</a>   <strong class="jxr_keyword">interface</strong> IfaceB <strong class="jxr_keyword">extends</strong> ParentIface&lt;BB&gt; {
+<a class="jxr_linenumber" name="L489" href="#L489">489</a>     <em class="jxr_comment">// Do Nothing</em>
+<a class="jxr_linenumber" name="L490" href="#L490">490</a>   }
+<a class="jxr_linenumber" name="L491" href="#L491">491</a> 
+<a class="jxr_linenumber" name="L492" href="#L492">492</a>   <strong class="jxr_keyword">interface</strong> ParentIface&lt;T&gt; {
+<a class="jxr_linenumber" name="L493" href="#L493">493</a>     List&lt;T&gt; m();
+<a class="jxr_linenumber" name="L494" href="#L494">494</a>   }
+<a class="jxr_linenumber" name="L495" href="#L495">495</a> 
+<a class="jxr_linenumber" name="L496" href="#L496">496</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2024 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">© 2009–2024 <a href="https://www.mybatis.org/">MyBatis.org</a></div>
 </body>
 </html>

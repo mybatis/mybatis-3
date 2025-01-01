@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../apidocs/org/apache/ibatis/scripting/LanguageDriverRegistry.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2022 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2024 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -33,7 +33,7 @@
 <a class="jxr_linenumber" name="L25" href="#L25">25</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="LanguageDriverRegistry" href="../../../../org/apache/ibatis/scripting/LanguageDriverRegistry.html#LanguageDriverRegistry">LanguageDriverRegistry</a> {
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>  
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Map&lt;Class&lt;? <strong class="jxr_keyword">extends</strong> LanguageDriver&gt;, LanguageDriver&gt; LANGUAGE_DRIVER_MAP = <strong class="jxr_keyword">new</strong> HashMap&lt;&gt;();
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Map&lt;Class&lt;? <strong class="jxr_keyword">extends</strong> LanguageDriver&gt;, LanguageDriver&gt; languageDriverMap = <strong class="jxr_keyword">new</strong> HashMap&lt;&gt;();
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>  
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>    <strong class="jxr_keyword">private</strong> Class&lt;? <strong class="jxr_keyword">extends</strong> LanguageDriver&gt; defaultDriverClass;
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>  
@@ -41,7 +41,7 @@
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>      <strong class="jxr_keyword">if</strong> (cls == <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>        <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(<span class="jxr_string">"null is not a valid Language Driver"</span>);
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>      }
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>      MapUtil.computeIfAbsent(LANGUAGE_DRIVER_MAP, cls, k -&gt; {
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>      MapUtil.computeIfAbsent(languageDriverMap, cls, k -&gt; {
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>        <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>          <strong class="jxr_keyword">return</strong> k.getDeclaredConstructor().newInstance();
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>        } <strong class="jxr_keyword">catch</strong> (Exception ex) {
@@ -55,13 +55,13 @@
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>        <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(<span class="jxr_string">"null is not a valid Language Driver"</span>);
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>      }
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>      Class&lt;? <strong class="jxr_keyword">extends</strong> LanguageDriver&gt; cls = instance.getClass();
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>      <strong class="jxr_keyword">if</strong> (!LANGUAGE_DRIVER_MAP.containsKey(cls)) {
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>        LANGUAGE_DRIVER_MAP.put(cls, instance);
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>      <strong class="jxr_keyword">if</strong> (!languageDriverMap.containsKey(cls)) {
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>        languageDriverMap.put(cls, instance);
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>      }
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>    }
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>  
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>    <strong class="jxr_keyword">public</strong> <a name="LanguageDriver" href="../../../../org/apache/ibatis/scripting/LanguageDriver.html#LanguageDriver">LanguageDriver</a> getDriver(Class&lt;? <strong class="jxr_keyword">extends</strong> LanguageDriver&gt; cls) {
-<a class="jxr_linenumber" name="L56" href="#L56">56</a>      <strong class="jxr_keyword">return</strong> LANGUAGE_DRIVER_MAP.get(cls);
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>      <strong class="jxr_keyword">return</strong> languageDriverMap.get(cls);
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>    }
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>  
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>    <strong class="jxr_keyword">public</strong> <a name="LanguageDriver" href="../../../../org/apache/ibatis/scripting/LanguageDriver.html#LanguageDriver">LanguageDriver</a> getDefaultDriver() {
@@ -80,6 +80,6 @@
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2024 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">© 2009–2024 <a href="https://www.mybatis.org/">MyBatis.org</a></div>
 </body>
 </html>

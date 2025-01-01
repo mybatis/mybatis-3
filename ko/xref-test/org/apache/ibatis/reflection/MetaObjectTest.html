@@ -5,9 +5,9 @@
 <link type="text/css" rel="stylesheet" href="../../../../stylesheet.css" />
 </head>
 <body>
-<div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/reflection/MetaObjectTest.html">View Javadoc</a></div><pre>
+<div id="overview"><a href="../../../../../testapidocs/org/apache/ibatis/reflection/MetaObjectTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2024 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -270,7 +270,7 @@
 <a class="jxr_linenumber" name="L262" href="#L262">262</a>   @Test
 <a class="jxr_linenumber" name="L263" href="#L263">263</a>   <strong class="jxr_keyword">void</strong> shouldNotUseObjectWrapperFactoryByDefault() {
 <a class="jxr_linenumber" name="L264" href="#L264">264</a>     MetaObject meta = SystemMetaObject.forObject(<strong class="jxr_keyword">new</strong> <a name="Author" href="../../../../org/apache/ibatis/domain/blog/Author.html#Author">Author</a>());
-<a class="jxr_linenumber" name="L265" href="#L265">265</a>     assertTrue(!meta.getObjectWrapper().getClass().equals(CustomBeanWrapper.<strong class="jxr_keyword">class</strong>));
+<a class="jxr_linenumber" name="L265" href="#L265">265</a>     assertNotEquals(CustomBeanWrapper.<strong class="jxr_keyword">class</strong>, meta.getObjectWrapper().getClass());
 <a class="jxr_linenumber" name="L266" href="#L266">266</a>   }
 <a class="jxr_linenumber" name="L267" href="#L267">267</a> 
 <a class="jxr_linenumber" name="L268" href="#L268">268</a>   @Test
@@ -309,6 +309,6 @@
 <a class="jxr_linenumber" name="L301" href="#L301">301</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2024 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">© 2009–2024 <a href="https://www.mybatis.org/">MyBatis.org</a></div>
 </body>
 </html>

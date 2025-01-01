@@ -5,9 +5,9 @@
 <link type="text/css" rel="stylesheet" href="../../../../../stylesheet.css" />
 </head>
 <body>
-<div id="overview"><a href="../../../../../../../testapidocs/org/apache/ibatis/submitted/keycolumn/InsertTest.html">View Javadoc</a></div><pre>
+<div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/submitted/keycolumn/InsertTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2024 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -64,7 +64,7 @@
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>    }
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>  
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>    @Test
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>    <strong class="jxr_keyword">void</strong> testInsertAnnotated() {
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>    <strong class="jxr_keyword">void</strong> insertAnnotated() {
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>        <a name="InsertMapper" href="../../../../../org/apache/ibatis/submitted/keycolumn/InsertMapper.html#InsertMapper">InsertMapper</a> mapper = sqlSession.getMapper(InsertMapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>        <a name="Name" href="../../../../../org/apache/ibatis/submitted/keycolumn/Name.html#Name">Name</a> name = <strong class="jxr_keyword">new</strong> <a name="Name" href="../../../../../org/apache/ibatis/submitted/keycolumn/Name.html#Name">Name</a>();
@@ -79,7 +79,7 @@
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>    }
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>  
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>    @Test
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>    <strong class="jxr_keyword">void</strong> testInsertMapped() {
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>    <strong class="jxr_keyword">void</strong> insertMapped() {
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>        <a name="InsertMapper" href="../../../../../org/apache/ibatis/submitted/keycolumn/InsertMapper.html#InsertMapper">InsertMapper</a> mapper = sqlSession.getMapper(InsertMapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>        <a name="Name" href="../../../../../org/apache/ibatis/submitted/keycolumn/Name.html#Name">Name</a> name = <strong class="jxr_keyword">new</strong> <a name="Name" href="../../../../../org/apache/ibatis/submitted/keycolumn/Name.html#Name">Name</a>();
@@ -94,7 +94,7 @@
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>    }
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>  
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>    @Test
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>    <strong class="jxr_keyword">void</strong> testInsertMappedBatch() {
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>    <strong class="jxr_keyword">void</strong> insertMappedBatch() {
 <a class="jxr_linenumber" name="L90" href="#L90">90</a>      <strong class="jxr_keyword">try</strong> (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH)) {
 <a class="jxr_linenumber" name="L91" href="#L91">91</a>        <a name="InsertMapper" href="../../../../../org/apache/ibatis/submitted/keycolumn/InsertMapper.html#InsertMapper">InsertMapper</a> mapper = sqlSession.getMapper(InsertMapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L92" href="#L92">92</a>        <a name="Name" href="../../../../../org/apache/ibatis/submitted/keycolumn/Name.html#Name">Name</a> name = <strong class="jxr_keyword">new</strong> <a name="Name" href="../../../../../org/apache/ibatis/submitted/keycolumn/Name.html#Name">Name</a>();
@@ -115,6 +115,6 @@
 <a class="jxr_linenumber" name="L107" href="#L107">107</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2024 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">© 2009–2024 <a href="https://www.mybatis.org/">MyBatis.org</a></div>
 </body>
 </html>

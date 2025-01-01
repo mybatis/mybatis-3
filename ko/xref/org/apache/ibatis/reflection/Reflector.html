@@ -5,9 +5,9 @@
 <link type="text/css" rel="stylesheet" href="../../../../stylesheet.css" />
 </head>
 <body>
-<div id="overview"><a href="../../../../../../apidocs/org/apache/ibatis/reflection/Reflector.html">View Javadoc</a></div><pre>
+<div id="overview"><a href="../../../../../apidocs/org/apache/ibatis/reflection/Reflector.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2024 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -251,7 +251,7 @@
 <a class="jxr_linenumber" name="L243" href="#L243">243</a>         <em class="jxr_comment">// modification of final fields through reflection (JSR-133). (JGB)</em>
 <a class="jxr_linenumber" name="L244" href="#L244">244</a>         <em class="jxr_comment">// pr #16 - final static can only be set by the classloader</em>
 <a class="jxr_linenumber" name="L245" href="#L245">245</a>         <strong class="jxr_keyword">int</strong> modifiers = field.getModifiers();
-<a class="jxr_linenumber" name="L246" href="#L246">246</a>         <strong class="jxr_keyword">if</strong> ((!Modifier.isFinal(modifiers) || !Modifier.isStatic(modifiers))) {
+<a class="jxr_linenumber" name="L246" href="#L246">246</a>         <strong class="jxr_keyword">if</strong> (!Modifier.isFinal(modifiers) || !Modifier.isStatic(modifiers)) {
 <a class="jxr_linenumber" name="L247" href="#L247">247</a>           addSetField(field);
 <a class="jxr_linenumber" name="L248" href="#L248">248</a>         }
 <a class="jxr_linenumber" name="L249" href="#L249">249</a>       }
@@ -281,7 +281,7 @@
 <a class="jxr_linenumber" name="L273" href="#L273">273</a>   }
 <a class="jxr_linenumber" name="L274" href="#L274">274</a> 
 <a class="jxr_linenumber" name="L275" href="#L275">275</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> isValidPropertyName(String name) {
-<a class="jxr_linenumber" name="L276" href="#L276">276</a>     <strong class="jxr_keyword">return</strong> (!name.startsWith(<span class="jxr_string">"$"</span>) &amp;&amp; !<span class="jxr_string">"serialVersionUID"</span>.equals(name) &amp;&amp; !<span class="jxr_string">"class"</span>.equals(name));
+<a class="jxr_linenumber" name="L276" href="#L276">276</a>     <strong class="jxr_keyword">return</strong> !name.startsWith(<span class="jxr_string">"$"</span>) &amp;&amp; !<span class="jxr_string">"serialVersionUID"</span>.equals(name) &amp;&amp; !<span class="jxr_string">"class"</span>.equals(name);
 <a class="jxr_linenumber" name="L277" href="#L277">277</a>   }
 <a class="jxr_linenumber" name="L278" href="#L278">278</a> 
 <a class="jxr_linenumber" name="L279" href="#L279">279</a>   <em class="jxr_javadoccomment">/**</em>
@@ -496,6 +496,6 @@
 <a class="jxr_linenumber" name="L488" href="#L488">488</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2024 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">© 2009–2024 <a href="https://www.mybatis.org/">MyBatis.org</a></div>
 </body>
 </html>

@@ -5,9 +5,9 @@
 <link type="text/css" rel="stylesheet" href="../../../../../stylesheet.css" />
 </head>
 <body>
-<div id="overview"><a href="../../../../../../../testapidocs/org/apache/ibatis/submitted/sqlprovider/ProviderMethodResolutionTest.html">View Javadoc</a></div><pre>
+<div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/submitted/sqlprovider/ProviderMethodResolutionTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2024 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -172,7 +172,7 @@
 <a class="jxr_linenumber" name="L164" href="#L164">164</a>       }
 <a class="jxr_linenumber" name="L165" href="#L165">165</a>     }
 <a class="jxr_linenumber" name="L166" href="#L166">166</a> 
-<a class="jxr_linenumber" name="L167" href="#L167">167</a>     <strong class="jxr_keyword">class</strong> ReservedMethodNameBasedSqlProvider {
+<a class="jxr_linenumber" name="L167" href="#L167">167</a>     <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> ReservedMethodNameBasedSqlProvider {
 <a class="jxr_linenumber" name="L168" href="#L168">168</a>       <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> String provideSql() {
 <a class="jxr_linenumber" name="L169" href="#L169">169</a>         <strong class="jxr_keyword">return</strong> <span class="jxr_string">"DELETE FROM memos WHERE id = 1"</span>;
 <a class="jxr_linenumber" name="L170" href="#L170">170</a>       }
@@ -254,7 +254,7 @@
 <a class="jxr_linenumber" name="L246" href="#L246">246</a>     @UpdateProvider(type = SqlProvider.<strong class="jxr_keyword">class</strong>)
 <a class="jxr_linenumber" name="L247" href="#L247">247</a>     <strong class="jxr_keyword">int</strong> update();
 <a class="jxr_linenumber" name="L248" href="#L248">248</a> 
-<a class="jxr_linenumber" name="L249" href="#L249">249</a>     <strong class="jxr_keyword">class</strong> SqlProvider {
+<a class="jxr_linenumber" name="L249" href="#L249">249</a>     <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> SqlProvider {
 <a class="jxr_linenumber" name="L250" href="#L250">250</a>       <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> String select() {
 <a class="jxr_linenumber" name="L251" href="#L251">251</a>         <strong class="jxr_keyword">return</strong> <span class="jxr_string">"SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_USERS"</span>;
 <a class="jxr_linenumber" name="L252" href="#L252">252</a>       }
@@ -268,6 +268,6 @@
 <a class="jxr_linenumber" name="L260" href="#L260">260</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2024 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">© 2009–2024 <a href="https://www.mybatis.org/">MyBatis.org</a></div>
 </body>
 </html>

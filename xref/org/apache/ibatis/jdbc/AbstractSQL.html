@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../apidocs/org/apache/ibatis/jdbc/AbstractSQL.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2023 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2024 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -720,7 +720,7 @@
 <a class="jxr_linenumber" name="L712" href="#L712">712</a>         String last = <span class="jxr_string">"________"</span>;
 <a class="jxr_linenumber" name="L713" href="#L713">713</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0, n = parts.size(); i &lt; n; i++) {
 <a class="jxr_linenumber" name="L714" href="#L714">714</a>           String part = parts.get(i);
-<a class="jxr_linenumber" name="L715" href="#L715">715</a>           <strong class="jxr_keyword">if</strong> (i &gt; 0 &amp;&amp; !part.equals(AND) &amp;&amp; !part.equals(OR) &amp;&amp; !last.equals(AND) &amp;&amp; !last.equals(OR)) {
+<a class="jxr_linenumber" name="L715" href="#L715">715</a>           <strong class="jxr_keyword">if</strong> (i &gt; 0 &amp;&amp; !AND.equals(part) &amp;&amp; !OR.equals(part) &amp;&amp; !AND.equals(last) &amp;&amp; !OR.equals(last)) {
 <a class="jxr_linenumber" name="L716" href="#L716">716</a>             builder.append(conjunction);
 <a class="jxr_linenumber" name="L717" href="#L717">717</a>           }
 <a class="jxr_linenumber" name="L718" href="#L718">718</a>           builder.append(part);
@@ -842,6 +842,6 @@
 <a class="jxr_linenumber" name="L834" href="#L834">834</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2024 <a href="https://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">© 2009–2024 <a href="https://www.mybatis.org/">MyBatis.org</a></div>
 </body>
 </html>
