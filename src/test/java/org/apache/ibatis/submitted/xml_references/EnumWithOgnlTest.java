@@ -15,6 +15,8 @@
  */
 package org.apache.ibatis.submitted.xml_references;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 import java.io.Reader;
 import java.util.Properties;
 
@@ -48,10 +50,13 @@ class EnumWithOgnlTest {
   }
 
   @Test
-  void mixedConfiguration() throws Exception {
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/xml_references/ibatisConfig.xml")) {
-      SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-      sqlSessionFactory.getConfiguration().addMapper(PersonMapper2.class);
-    }
+  void mixedConfiguration() {
+    assertDoesNotThrow(() -> {
+      try (Reader reader = Resources
+          .getResourceAsReader("org/apache/ibatis/submitted/xml_references/ibatisConfig.xml")) {
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+        sqlSessionFactory.getConfiguration().addMapper(PersonMapper2.class);
+      }
+    });
   }
 }

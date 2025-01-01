@@ -155,7 +155,7 @@ class XmlConfigBuilderTest {
 
   @Test
   void registerJavaTypeInitializingTypeHandler() {
-    final String MAPPER_CONFIG = """
+    final String mapperConfig = """
         <?xml version="1.0" encoding="UTF-8" ?>
         <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "https://mybatis.org/dtd/mybatis-3-config.dtd">
         <configuration>
@@ -166,7 +166,7 @@ class XmlConfigBuilderTest {
         </configuration>
         """;
 
-    XMLConfigBuilder builder = new XMLConfigBuilder(new StringReader(MAPPER_CONFIG));
+    XMLConfigBuilder builder = new XMLConfigBuilder(new StringReader(mapperConfig));
     builder.parse();
 
     TypeHandlerRegistry typeHandlerRegistry = builder.getConfiguration().getTypeHandlerRegistry();
@@ -283,7 +283,7 @@ class XmlConfigBuilderTest {
 
   @Test
   void unknownSettings() {
-    final String MAPPER_CONFIG = """
+    final String mapperConfig = """
         <?xml version="1.0" encoding="UTF-8" ?>
         <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "https://mybatis.org/dtd/mybatis-3-config.dtd">
         <configuration>
@@ -293,7 +293,7 @@ class XmlConfigBuilderTest {
         </configuration>
         """;
 
-    XMLConfigBuilder builder = new XMLConfigBuilder(new StringReader(MAPPER_CONFIG));
+    XMLConfigBuilder builder = new XMLConfigBuilder(new StringReader(mapperConfig));
     when(builder::parse);
     then(caughtException()).isInstanceOf(BuilderException.class)
         .hasMessageContaining("The setting foo is not known.  Make sure you spelled it correctly (case sensitive).");
@@ -301,7 +301,7 @@ class XmlConfigBuilderTest {
 
   @Test
   void unknownJavaTypeOnTypeHandler() {
-    final String MAPPER_CONFIG = """
+    final String mapperConfig = """
         <?xml version="1.0" encoding="UTF-8" ?>
         <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "https://mybatis.org/dtd/mybatis-3-config.dtd">
         <configuration>
@@ -311,7 +311,7 @@ class XmlConfigBuilderTest {
         </configuration>
         """;
 
-    XMLConfigBuilder builder = new XMLConfigBuilder(new StringReader(MAPPER_CONFIG));
+    XMLConfigBuilder builder = new XMLConfigBuilder(new StringReader(mapperConfig));
     when(builder::parse);
     then(caughtException()).isInstanceOf(BuilderException.class)
         .hasMessageContaining("Error registering typeAlias for 'null'. Cause: ");
@@ -319,7 +319,7 @@ class XmlConfigBuilderTest {
 
   @Test
   void propertiesSpecifyResourceAndUrlAtSameTime() {
-    final String MAPPER_CONFIG = """
+    final String mapperConfig = """
         <?xml version="1.0" encoding="UTF-8" ?>
         <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "https://mybatis.org/dtd/mybatis-3-config.dtd">
         <configuration>
@@ -327,13 +327,13 @@ class XmlConfigBuilderTest {
         </configuration>
         """;
 
-    XMLConfigBuilder builder = new XMLConfigBuilder(new StringReader(MAPPER_CONFIG));
+    XMLConfigBuilder builder = new XMLConfigBuilder(new StringReader(mapperConfig));
     when(builder::parse);
     then(caughtException()).isInstanceOf(BuilderException.class).hasMessageContaining(
         "The properties element cannot specify both a URL and a resource based property file reference.  Please specify one or the other.");
   }
 
-  static class MySqlProvider {
+  static final class MySqlProvider {
     @SuppressWarnings("unused")
     public static String provideSql() {
       return "SELECT 1";

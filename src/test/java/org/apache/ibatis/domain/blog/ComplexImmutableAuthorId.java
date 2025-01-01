@@ -55,13 +55,9 @@ public class ComplexImmutableAuthorId {
 
     final ComplexImmutableAuthorId that = (ComplexImmutableAuthorId) o;
 
-    if (id != that.id || (email != null ? !email.equals(that.email) : that.email != null)
-        || (password != null ? !password.equals(that.password) : that.password != null)
-        || (username != null ? !username.equals(that.username) : that.username != null)) {
-      return false;
-    }
-
-    return true;
+    return id == that.id && email != null ? email.equals(that.email)
+        : that.email == null && password != null ? password.equals(that.password)
+            : that.password == null && username != null ? username.equals(that.username) : that.username == null;
   }
 
   @Override

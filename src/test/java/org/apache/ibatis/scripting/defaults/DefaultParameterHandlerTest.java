@@ -19,7 +19,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -138,7 +137,7 @@ class DefaultParameterHandlerTest {
 
     defaultParameterHandler.setParameters(ps);
 
-    verify(ps, times(1)).setInt(1, 2);
+    verify(ps).setInt(1, 2);
   }
 
   @Test
@@ -166,7 +165,7 @@ class DefaultParameterHandlerTest {
 
     defaultParameterHandler.setParameters(ps);
 
-    verify(ps, times(1)).setNull(1, config.getJdbcTypeForNull().TYPE_CODE);
+    verify(ps).setNull(1, config.getJdbcTypeForNull().TYPE_CODE);
   }
 
   @Test
@@ -194,7 +193,7 @@ class DefaultParameterHandlerTest {
 
     defaultParameterHandler.setParameters(ps);
 
-    verify(ps, times(1)).setInt(1, (Integer) parameterObject);
+    verify(ps).setInt(1, (Integer) parameterObject);
   }
 
   @Test
@@ -229,12 +228,12 @@ class DefaultParameterHandlerTest {
 
     defaultParameterHandler.setParameters(ps);
 
-    verify(ps, times(1)).setInt(1, parameterObject.getId());
-    verify(ps, times(1)).setString(2, parameterObject.getUsername());
-    verify(ps, times(1)).setString(3, parameterObject.getPassword());
-    verify(ps, times(1)).setString(4, parameterObject.getEmail());
-    verify(ps, times(1)).setString(5, parameterObject.getBio());
-    verify(ps, times(1)).setObject(6, parameterObject.getFavouriteSection().name(), JdbcType.VARCHAR.TYPE_CODE);
+    verify(ps).setInt(1, parameterObject.getId());
+    verify(ps).setString(2, parameterObject.getUsername());
+    verify(ps).setString(3, parameterObject.getPassword());
+    verify(ps).setString(4, parameterObject.getEmail());
+    verify(ps).setString(5, parameterObject.getBio());
+    verify(ps).setObject(6, parameterObject.getFavouriteSection().name(), JdbcType.VARCHAR.TYPE_CODE);
   }
 
   @Test
@@ -283,13 +282,13 @@ class DefaultParameterHandlerTest {
 
     defaultParameterHandler.setParameters(ps);
 
-    verify(parameterObject, times(1)).getId();
-    verify(parameterObject, times(1)).getUsername();
-    verify(parameterObject, times(1)).getPassword();
-    verify(parameterObject, times(1)).getEmail();
-    verify(parameterObject, times(1)).getBio();
-    verify(parameterObject, times(1)).getFavouriteSection();
+    verify(parameterObject).getId();
+    verify(parameterObject).getUsername();
+    verify(parameterObject).getPassword();
+    verify(parameterObject).getEmail();
+    verify(parameterObject).getBio();
+    verify(parameterObject).getFavouriteSection();
 
-    verify(mockConfig, times(1)).newMetaObject(parameterObject);
+    verify(mockConfig).newMetaObject(parameterObject);
   }
 }

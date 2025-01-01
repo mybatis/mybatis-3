@@ -19,7 +19,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -44,7 +43,6 @@ import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.apache.ibatis.io.Resources;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 class ScriptRunnerTest extends BaseDataTest {
 
@@ -244,11 +242,10 @@ class ScriptRunnerTest extends BaseDataTest {
     Reader reader = new StringReader(sql);
     runner.runScript(reader);
 
-    verify(stmt, Mockito.times(1))
-        .execute(eq("line 1;" + LINE_SEPARATOR + "line 2;" + LINE_SEPARATOR + LINE_SEPARATOR));
-    verify(stmt, Mockito.times(1)).execute(eq("line 3" + LINE_SEPARATOR));
-    verify(stmt, Mockito.times(1)).execute(eq("line 4" + LINE_SEPARATOR));
-    verify(stmt, Mockito.times(1)).execute(eq("line 5" + LINE_SEPARATOR));
+    verify(stmt).execute("line 1;" + LINE_SEPARATOR + "line 2;" + LINE_SEPARATOR + LINE_SEPARATOR);
+    verify(stmt).execute("line 3" + LINE_SEPARATOR);
+    verify(stmt).execute("line 4" + LINE_SEPARATOR);
+    verify(stmt).execute("line 5" + LINE_SEPARATOR);
   }
 
   @Test
@@ -282,8 +279,7 @@ class ScriptRunnerTest extends BaseDataTest {
     Reader reader = new StringReader(sql);
     runner.runScript(reader);
 
-    verify(stmt, Mockito.times(1))
-        .execute(eq("line 1;" + LINE_SEPARATOR + "line 2;" + LINE_SEPARATOR + LINE_SEPARATOR));
-    verify(stmt, Mockito.times(1)).execute(eq("line 3" + LINE_SEPARATOR));
+    verify(stmt).execute("line 1;" + LINE_SEPARATOR + "line 2;" + LINE_SEPARATOR + LINE_SEPARATOR);
+    verify(stmt).execute("line 3" + LINE_SEPARATOR);
   }
 }

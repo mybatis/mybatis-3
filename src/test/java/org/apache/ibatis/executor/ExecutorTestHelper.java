@@ -53,7 +53,7 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
-class ExecutorTestHelper {
+final class ExecutorTestHelper {
 
   static final Cache authorCache;
 

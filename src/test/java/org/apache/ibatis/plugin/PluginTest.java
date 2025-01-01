@@ -60,7 +60,7 @@ class PluginTest {
     }
   }
 
-  static class SchemaHolder {
+  static final class SchemaHolder {
     private static ThreadLocal<String> value = ThreadLocal.withInitial(() -> "PUBLIC");
 
     public static void set(String tenantName) {
@@ -69,6 +69,9 @@ class PluginTest {
 
     public static String get() {
       return value.get();
+    }
+
+    private SchemaHolder() {
     }
   }
 

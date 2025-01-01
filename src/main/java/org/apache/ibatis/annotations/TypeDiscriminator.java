@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -25,31 +25,23 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.UnknownTypeHandler;
 
-// @formatter:off
 /**
  * The annotation that be grouping conditional mapping definitions.
  * <p>
  * <b>How to use:</b>
  *
- * <pre>
+ * <pre>{@code
  * public interface UserMapper {
  *   &#064;Select("SELECT id, name, type FROM users ORDER BY id")
- *   &#064;TypeDiscriminator(
- *     column = "type",
- *     javaType = String.class,
- *     cases = {
- *       &#064;Case(value = "1", type = PremiumUser.class),
- *       &#064;Case(value = "2", type = GeneralUser.class),
- *       &#064;Case(value = "3", type = TemporaryUser.class)
- *     }
- *   )
+ *   &#064;TypeDiscriminator(column = "type", javaType = String.class, cases = {
+ *       &#064;Case(value = "1", type = PremiumUser.class), &#064;Case(value = "2", type = GeneralUser.class),
+ *       &#064;Case(value = "3", type = TemporaryUser.class) })
  *   List&lt;User&gt; selectAll();
  * }
- * </pre>
+ * }</pre>
  *
  * @author Clinton Begin
  */
-// @formatter:on
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

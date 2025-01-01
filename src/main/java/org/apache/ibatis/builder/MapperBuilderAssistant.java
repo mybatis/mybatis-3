@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.builder;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -452,7 +453,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       JdbcType jdbcType) {
     if (javaType == null) {
       if (JdbcType.CURSOR.equals(jdbcType)) {
-        javaType = java.sql.ResultSet.class;
+        javaType = ResultSet.class;
       } else if (Map.class.isAssignableFrom(resultType)) {
         javaType = Object.class;
       } else {
