@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2024 the original author or authors.
+       Copyright 2009-2025 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@
 
   <groupId>org.mybatis</groupId>
   <artifactId>mybatis</artifactId>
-  <version>3.5.18-SNAPSHOT</version>
+  <version>3.5.18</version>
 
   <name>mybatis</name>
   <description>The MyBatis SQL mapper framework makes it easier to use a relational database with object-oriented
@@ -43,7 +43,7 @@
   <scm>
     <connection>scm:git:ssh://git@github.com/mybatis/mybatis-3.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/mybatis/mybatis-3.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>mybatis-3.5.18</tag>
     <url>https://github.com/mybatis/mybatis-3</url>
   </scm>
   <issueManagement>
@@ -99,7 +99,7 @@
     <argLine>-Xmx2048m -javaagent:${settings.localRepository}/net/bytebuddy/byte-buddy-agent/${byte-buddy.version}/byte-buddy-agent-${byte-buddy.version}.jar</argLine>
 
     <!-- Reproducible Builds -->
-    <project.build.outputTimestamp>1732629483</project.build.outputTimestamp>
+    <project.build.outputTimestamp>1735701762</project.build.outputTimestamp>
   </properties>
 
   <dependencies>
