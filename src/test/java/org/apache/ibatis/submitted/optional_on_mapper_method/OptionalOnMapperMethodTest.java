@@ -64,7 +64,7 @@ class OptionalOnMapperMethodTest {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Optional<User> user = mapper.getUserUsingAnnotation(1);
       assertTrue(user.isPresent());
-      assertEquals("User1", user.get().getName());
+      assertEquals("User1", user.orElseThrow().getName());
     }
   }
 
@@ -83,7 +83,7 @@ class OptionalOnMapperMethodTest {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Optional<User> user = mapper.getUserUsingXml(2);
       assertTrue(user.isPresent());
-      assertEquals("User2", user.get().getName());
+      assertEquals("User2", user.orElseThrow().getName());
     }
   }
 
