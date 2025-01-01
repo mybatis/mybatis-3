@@ -732,10 +732,11 @@ MyBatis needs to be explicitly told that the results have been ordered in such a
     from user u
       left join user_role ur on u.id = ur.user_id
       inner join role r on r.id = ur.role_id
+    order by u.id, r.id
 </select>
 ```
 
-In this case, the results are by ordered correctly by default. We can imagine the output to look somthing like:
+Note that `order by` is specified to order the results correctly. We can imagine the output to look something like:
 
 | row_nr | u.id | u.username | r.id | r.role      |
 |--------|------|------------|------|-------------|
@@ -746,8 +747,6 @@ In this case, the results are by ordered correctly by default. We can imagine th
 | 5      | 3    | Peter      | 3    | Maintainers |
 | 6      | 3    | Peter      | 4    | Approvers   |
 
-If the 5th row here would have somehow appeared below the first row (via some `ORDER BY`), MyBatis would not be able to fully construct the `John` user correctly using constructor collection mapping.
-
 After this query is run, we would have the following results:
 
 ```
@@ -756,7 +755,7 @@ User{username=Jack, roles=[]}
 User{username=Peter, roles=[Users, Maintainers, Approvers]}
 ```
 
-This functionality is still experimental, please report any issues you may find on the issue tracker.
+If the 5th row here would have somehow appeared below the first row (via some `ORDER BY`), MyBatis would not be able to fully construct the `John` user correctly using constructor collection mapping.
 
 It is important to note that mixed mappings have limited support, i.e. property mappings combined with nested constructor mappings are likely to fail.
 When using this functionality, it is preferable for the entire mapping hierarchy to use immutable constructor mappings.
