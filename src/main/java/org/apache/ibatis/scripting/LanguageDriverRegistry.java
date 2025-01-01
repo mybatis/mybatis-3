@@ -18,8 +18,6 @@ package org.apache.ibatis.scripting;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.ibatis.util.MapUtil;
-
 /**
  * @author Frank D. Martinez [mnesarco]
  */
@@ -33,7 +31,7 @@ public class LanguageDriverRegistry {
     if (cls == null) {
       throw new IllegalArgumentException("null is not a valid Language Driver");
     }
-    MapUtil.computeIfAbsent(languageDriverMap, cls, k -> {
+    languageDriverMap.computeIfAbsent(cls, k -> {
       try {
         return k.getDeclaredConstructor().newInstance();
       } catch (Exception ex) {

@@ -28,7 +28,6 @@ import java.util.Map;
 
 import org.apache.ibatis.reflection.ExceptionUtil;
 import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.util.MapUtil;
 
 /**
  * @author Clinton Begin
@@ -91,7 +90,7 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
 
   private MapperMethodInvoker cachedInvoker(Method method) throws Throwable {
     try {
-      return MapUtil.computeIfAbsent(methodCache, method, m -> {
+      return methodCache.computeIfAbsent(method, m -> {
         if (!m.isDefault()) {
           return new PlainMethodInvoker(new MapperMethod(mapperInterface, method, sqlSession.getConfiguration()));
         }

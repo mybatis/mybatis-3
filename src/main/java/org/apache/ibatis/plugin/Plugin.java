@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.ibatis.reflection.ExceptionUtil;
-import org.apache.ibatis.util.MapUtil;
 
 /**
  * @author Clinton Begin
@@ -74,7 +73,7 @@ public class Plugin implements InvocationHandler {
     Signature[] sigs = interceptsAnnotation.value();
     Map<Class<?>, Set<Method>> signatureMap = new HashMap<>();
     for (Signature sig : sigs) {
-      Set<Method> methods = MapUtil.computeIfAbsent(signatureMap, sig.type(), k -> new HashSet<>());
+      Set<Method> methods = signatureMap.computeIfAbsent(sig.type(), k -> new HashSet<>());
       try {
         Method method = sig.type().getMethod(sig.method(), sig.args());
         methods.add(method);

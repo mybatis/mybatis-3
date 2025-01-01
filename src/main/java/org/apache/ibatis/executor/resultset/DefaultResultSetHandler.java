@@ -66,7 +66,6 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
-import org.apache.ibatis.util.MapUtil;
 
 /**
  * @author Clinton Begin
@@ -618,7 +617,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     PendingRelation deferLoad = new PendingRelation();
     deferLoad.metaObject = metaResultObject;
     deferLoad.propertyMapping = parentMapping;
-    List<PendingRelation> relations = MapUtil.computeIfAbsent(pendingRelations, cacheKey, k -> new ArrayList<>());
+    List<PendingRelation> relations = pendingRelations.computeIfAbsent(cacheKey, k -> new ArrayList<>());
     // issue #255
     relations.add(deferLoad);
     ResultMapping previous = nextResultMaps.get(parentMapping.getResultSet());
@@ -820,7 +819,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
           constructorArgs.add(value);
           final String mapKey = resultMap.getId() + ":" + columnPrefix;
           if (!autoMappingsCache.containsKey(mapKey)) {
-            MapUtil.computeIfAbsent(constructorAutoMappingColumns, mapKey, k -> new ArrayList<>()).add(columnName);
+            constructorAutoMappingColumns.computeIfAbsent(mapKey, k -> new ArrayList<>()).add(columnName);
           }
           columnNotFound = false;
           foundValues = value != null || foundValues;
