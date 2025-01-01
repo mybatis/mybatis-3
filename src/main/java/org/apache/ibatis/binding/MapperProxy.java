@@ -20,7 +20,6 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodHandles.Lookup;
 import java.lang.invoke.MethodType;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -36,9 +35,6 @@ import org.apache.ibatis.session.SqlSession;
 public class MapperProxy<T> implements InvocationHandler, Serializable {
 
   private static final long serialVersionUID = -4724728412955527868L;
-  private static final int ALLOWED_MODES = MethodHandles.Lookup.PRIVATE | MethodHandles.Lookup.PROTECTED
-      | MethodHandles.Lookup.PACKAGE | MethodHandles.Lookup.PUBLIC;
-  private static final Constructor<Lookup> lookupConstructor;
   private static final Method privateLookupInMethod;
   private final SqlSession sqlSession;
   private final Class<T> mapperInterface;
@@ -51,29 +47,13 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
   }
 
   static {
-    Method privateLookupIn;
     try {
-      privateLookupIn = MethodHandles.class.getMethod("privateLookupIn", Class.class, MethodHandles.Lookup.class);
+      privateLookupInMethod = MethodHandles.class.getMethod("privateLookupIn", Class.class, MethodHandles.Lookup.class);
     } catch (NoSuchMethodException e) {
-      privateLookupIn = null;
+      throw new IllegalStateException(
+          "There is no 'privateLookupIn(Class, Lookup)' method in java.lang.invoke.MethodHandles.",
+          e);
     }
-    privateLookupInMethod = privateLookupIn;
-
-    Constructor<Lookup> lookup = null;
-    if (privateLookupInMethod == null) {
-      // JDK 1.8
-      try {
-        lookup = MethodHandles.Lookup.class.getDeclaredConstructor(Class.class, int.class);
-        lookup.setAccessible(true);
-      } catch (NoSuchMethodException e) {
-        throw new IllegalStateException(
-            "There is neither 'privateLookupIn(Class, Lookup)' nor 'Lookup(Class, int)' method in java.lang.invoke.MethodHandles.",
-            e);
-      } catch (Exception e) {
-        lookup = null;
-      }
-    }
-    lookupConstructor = lookup;
   }
 
   @Override
@@ -95,12 +75,8 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
           return new PlainMethodInvoker(new MapperMethod(mapperInterface, method, sqlSession.getConfiguration()));
         }
         try {
-          if (privateLookupInMethod == null) {
-            return new DefaultMethodInvoker(getMethodHandleJava8(method));
-          }
           return new DefaultMethodInvoker(getMethodHandleJava9(method));
-        } catch (IllegalAccessException | InstantiationException | InvocationTargetException
-            | NoSuchMethodException e) {
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
           throw new RuntimeException(e);
         }
       });
@@ -116,12 +92,6 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
     return ((Lookup) privateLookupInMethod.invoke(null, declaringClass, MethodHandles.lookup())).findSpecial(
         declaringClass, method.getName(), MethodType.methodType(method.getReturnType(), method.getParameterTypes()),
         declaringClass);
-  }
-
-  private MethodHandle getMethodHandleJava8(Method method)
-      throws IllegalAccessException, InstantiationException, InvocationTargetException {
-    final Class<?> declaringClass = method.getDeclaringClass();
-    return lookupConstructor.newInstance(declaringClass, ALLOWED_MODES).unreflectSpecial(method, declaringClass);
   }
 
   interface MapperMethodInvoker {
