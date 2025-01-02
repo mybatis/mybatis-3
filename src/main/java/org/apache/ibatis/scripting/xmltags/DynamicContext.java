@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -21,15 +21,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
 
+import ognl.OgnlContext;
+import ognl.OgnlRuntime;
+import ognl.PropertyAccessor;
+
 import org.apache.ibatis.builder.ParameterMappingTokenHandler;
 import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.parsing.GenericTokenParser;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.session.Configuration;
-
-import ognl.OgnlContext;
-import ognl.OgnlRuntime;
-import ognl.PropertyAccessor;
 
 /**
  * @author Clinton Begin
@@ -58,7 +58,8 @@ public class DynamicContext {
     this(configuration, null, parameterType, false);
   }
 
-  public DynamicContext(Configuration configuration, Object parameterObject, Class<?> parameterType, boolean paramExists) {
+  public DynamicContext(Configuration configuration, Object parameterObject, Class<?> parameterType,
+      boolean paramExists) {
     if (parameterObject == null || parameterObject instanceof Map) {
       bindings = new ContextMap(null, false);
     } else {
@@ -96,7 +97,8 @@ public class DynamicContext {
 
   protected String parseParam(String sql) {
     if (tokenParser == null) {
-      tokenHandler = new ParameterMappingTokenHandler(getParameterMappings(), configuration, parameterObject, parameterType, bindings, paramExists);
+      tokenHandler = new ParameterMappingTokenHandler(getParameterMappings(), configuration, parameterObject,
+          parameterType, bindings, paramExists);
       tokenParser = new GenericTokenParser("#{", "}", tokenHandler);
     }
     return tokenParser.parse(sql);

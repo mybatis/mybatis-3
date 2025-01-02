@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-
 package org.apache.ibatis.builder;
 
 import java.util.List;
@@ -40,8 +39,7 @@ public class ParameterMappingTokenHandler extends BaseBuilder implements TokenHa
   public ParameterMappingTokenHandler(List<ParameterMapping> parameterMappings, Configuration configuration,
       Object parameterObject, Class<?> parameterType, Map<String, Object> additionalParameters, boolean paramExists) {
     super(configuration);
-    this.parameterType = parameterObject == null
-        ? (parameterType == null ? Object.class : parameterType)
+    this.parameterType = parameterObject == null ? (parameterType == null ? Object.class : parameterType)
         : parameterObject.getClass();
     this.metaParameters = configuration.newMetaObject(additionalParameters);
     this.parameterObject = parameterObject;
@@ -50,8 +48,7 @@ public class ParameterMappingTokenHandler extends BaseBuilder implements TokenHa
   }
 
   public ParameterMappingTokenHandler(List<ParameterMapping> parameterMappings, Configuration configuration,
-      Class<?> parameterType,
-      Map<String, Object> additionalParameters) {
+      Class<?> parameterType, Map<String, Object> additionalParameters) {
     super(configuration);
     this.parameterType = parameterType;
     this.metaParameters = configuration.newMetaObject(additionalParameters);
