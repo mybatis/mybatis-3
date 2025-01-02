@@ -13,13 +13,10 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
+
 package org.apache.ibatis.scripting.xmltags;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-
-import java.lang.reflect.Field;
-import java.util.List;
 
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.parsing.XPathParser;
@@ -29,34 +26,20 @@ import org.junit.jupiter.api.Test;
 class XMLScriptBuilderTest {
 
   @Test
-  void shouldEmptyTextNodesRemoved() throws Exception {
+  void shouldWhereInsertWhitespace() throws Exception {
     String xml = """
         <script>
-          select * from user
-          <if test="_parameter != null">
-            where id = 1
-          </if>
-          <if test="_parameter == null">
-            where id > 0
-          </if>
+        select * from user
+        <where>
+        <if test="1==1">and id = 1</if>
+        <if test="1==1">and id > 0</if>
+        </where>
         </script>
         """;
     SqlSource sqlSource = new XMLScriptBuilder(new Configuration(), new XPathParser(xml).evalNode("/script"))
         .parseScriptNode();
-
-    Field rootSqlNodeFld = DynamicSqlSource.class.getDeclaredField("rootSqlNode");
-    rootSqlNodeFld.setAccessible(true);
-    MixedSqlNode sqlNode = (MixedSqlNode) rootSqlNodeFld.get(sqlSource);
-
-    Field contentsFld = MixedSqlNode.class.getDeclaredField("contents");
-    contentsFld.setAccessible(true);
-    @SuppressWarnings("unchecked")
-    List<SqlNode> contents = (List<SqlNode>) contentsFld.get(sqlNode);
-
-    assertEquals(3, contents.size());
-    assertThat(contents.get(0)).isInstanceOf(StaticTextSqlNode.class);
-    assertThat(contents.get(1)).isInstanceOf(IfSqlNode.class);
-    assertThat(contents.get(2)).isInstanceOf(IfSqlNode.class);
+    assertThat(sqlSource.getBoundSql(1).getSql())
+        .containsPattern("(?m)^\\s*select \\* from user\\s+WHERE\\s+id = 1\\s+and id > 0\\s*$");
   }
 
 }

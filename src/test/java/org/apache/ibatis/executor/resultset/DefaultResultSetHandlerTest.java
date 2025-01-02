@@ -121,7 +121,8 @@ class DefaultResultSetHandlerTest {
 
     try {
       defaultResultSetHandler.createParameterizedResultObject(rsw, null/* resultType */, constructorMappings,
-          null/* constructorArgTypes */, null/* constructorArgs */, null/* columnPrefix */);
+          null/* constructorArgTypes */, null/* constructorArgs */, null/* columnPrefix */, false,
+          /* useCollectionConstructorInjection */ null/* parentRowKey */);
       Assertions.fail("Should have thrown ExecutorException");
     } catch (Exception e) {
       Assertions.assertTrue(e instanceof ExecutorException, "Expected ExecutorException");

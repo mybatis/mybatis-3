@@ -46,6 +46,7 @@ public class ResultMap {
   private Set<String> mappedColumns;
   private Set<String> mappedProperties;
   private Discriminator discriminator;
+  private boolean hasResultMapsUsingConstructorCollection;
   private boolean hasNestedResultMaps;
   private boolean hasNestedQueries;
   private Boolean autoMapping;
@@ -111,6 +112,13 @@ public class ResultMap {
         }
         if (resultMapping.getFlags().contains(ResultFlag.CONSTRUCTOR)) {
           resultMap.constructorResultMappings.add(resultMapping);
+
+          // #101
+          Class<?> javaType = resultMapping.getJavaType();
+          resultMap.hasResultMapsUsingConstructorCollection = resultMap.hasResultMapsUsingConstructorCollection
+              || (resultMapping.getNestedQueryId() == null && javaType != null
+                  && resultMap.configuration.getObjectFactory().isCollection(javaType));
+
           if (resultMapping.getProperty() != null) {
             constructorArgNames.add(resultMapping.getProperty());
           }
@@ -208,6 +216,10 @@ public class ResultMap {
 
   public String getId() {
     return id;
+  }
+
+  public boolean hasResultMapsUsingConstructorCollection() {
+    return hasResultMapsUsingConstructorCollection;
   }
 
   public boolean hasNestedResultMaps() {
