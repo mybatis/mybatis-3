@@ -91,16 +91,21 @@ public class DynamicContext {
     return sqlBuilder.toString().trim();
   }
 
+  private void initTokenParser(List<ParameterMapping> parameterMappings) {
+    if (tokenParser == null) {
+      tokenHandler = new ParameterMappingTokenHandler(parameterMappings, configuration, parameterObject, parameterType,
+          bindings, paramExists);
+      tokenParser = new GenericTokenParser("#{", "}", tokenHandler);
+    }
+  }
+
   public List<ParameterMapping> getParameterMappings() {
+    initTokenParser(new ArrayList<>());
     return tokenHandler == null ? new ArrayList<>() : tokenHandler.getParameterMappings();
   }
 
   protected String parseParam(String sql) {
-    if (tokenParser == null) {
-      tokenHandler = new ParameterMappingTokenHandler(getParameterMappings(), configuration, parameterObject,
-          parameterType, bindings, paramExists);
-      tokenParser = new GenericTokenParser("#{", "}", tokenHandler);
-    }
+    initTokenParser(getParameterMappings());
     return tokenParser.parse(sql);
   }
 

@@ -343,6 +343,21 @@ class DynamicSqlSourceTest extends BaseDataTest {
     assertEquals("u", boundSql.getParameterMappings().get(3).getProperty());
   }
 
+  @Test
+  void cornerCase_ForeachComesFirst() throws Exception {
+    final Map<String, Object> param = new HashMap<>();
+    List<Bean> beans = new ArrayList<>();
+    beans.add(new Bean("bean id 1"));
+    beans.add(new Bean("bean id 2"));
+    param.put("beans", beans);
+    DynamicSqlSource source = createDynamicSqlSource(new ForEachSqlNode(new Configuration(),
+        mixedContents(new TextSqlNode("#{b.id}")), "beans", false, null, "b", "(", ")", ","));
+    BoundSql boundSql = source.getBoundSql(param);
+    assertEquals(2, boundSql.getParameterMappings().size());
+    assertEquals("b.id", boundSql.getParameterMappings().get(0).getProperty());
+    assertEquals("b.id", boundSql.getParameterMappings().get(1).getProperty());
+  }
+
   private DynamicSqlSource createDynamicSqlSource(SqlNode... contents) throws IOException, SQLException {
     createBlogDataSource();
     final String resource = "org/apache/ibatis/builder/MapperConfig.xml";
