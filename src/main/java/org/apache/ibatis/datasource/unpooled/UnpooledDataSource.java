@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -31,7 +31,6 @@ import java.util.logging.Logger;
 import javax.sql.DataSource;
 
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.util.MapUtil;
 
 /**
  * @author Clinton Begin
@@ -233,7 +232,7 @@ public class UnpooledDataSource implements DataSource {
 
   private void initializeDriver() throws SQLException {
     try {
-      MapUtil.computeIfAbsent(registeredDrivers, driver, x -> {
+      registeredDrivers.computeIfAbsent(driver, x -> {
         Class<?> driverType;
         try {
           if (driverClassLoader != null) {
