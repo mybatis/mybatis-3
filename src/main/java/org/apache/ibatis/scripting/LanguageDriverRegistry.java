@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,8 +18,6 @@ package org.apache.ibatis.scripting;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.ibatis.util.MapUtil;
-
 /**
  * @author Frank D. Martinez [mnesarco]
  */
@@ -33,7 +31,7 @@ public class LanguageDriverRegistry {
     if (cls == null) {
       throw new IllegalArgumentException("null is not a valid Language Driver");
     }
-    MapUtil.computeIfAbsent(languageDriverMap, cls, k -> {
+    languageDriverMap.computeIfAbsent(cls, k -> {
       try {
         return k.getDeclaredConstructor().newInstance();
       } catch (Exception ex) {

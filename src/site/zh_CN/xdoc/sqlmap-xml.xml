@@ -235,7 +235,7 @@ ps.setInt(1,id);]]></source>
             </tr>
             <tr>
               <td><code>affectData</code></td>
-              <td>Set this to true when writing a INSERT, UPDATE or DELETE statement that returns data so that the transaction is controlled properly. Also see <a href="./java-api.html#transaction-control-methods">Transaction Control Method</a>. Default: <code>false</code> (since 3.5.12)
+              <td>编写返回数据的 INSERT、UPDATE 或 DELETE 语句时，请将此设置为 true，以便正确控制事务。另请参阅 <a href="./java-api.html#transaction-control-methods">事务控制方法</a>。默认值: <code>false</code>（3.5.12 起)
               </td>
             </tr>
           </tbody>
