@@ -1,11 +1,11 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
+/*
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -41,11 +41,11 @@ class DynSqlTest {
     }
 
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/dynsql2/CreateDB.sql");
+        "org/apache/ibatis/submitted/dynsql2/CreateDB.sql");
   }
 
   @Test
-  void testDynamicSelectWithTypeHandler() {
+  void dynamicSelectWithTypeHandler() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       List<Name> names = new ArrayList<>();
 
@@ -62,20 +62,21 @@ class DynSqlTest {
       Parameter parameter = new Parameter();
       parameter.setNames(names);
 
-      List<Map<String, Object>> answer = sqlSession.selectList("org.apache.ibatis.submitted.dynsql2.dynamicSelectWithTypeHandler", parameter);
+      List<Map<String, Object>> answer = sqlSession
+          .selectList("org.apache.ibatis.submitted.dynsql2.dynamicSelectWithTypeHandler", parameter);
 
       assertEquals(2, answer.size());
     }
   }
 
   @Test
-  void testSimpleSelect() {
+  void simpleSelect() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Map<String, Object> answer = sqlSession.selectOne("org.apache.ibatis.submitted.dynsql2.simpleSelect", 1);
 
-      assertEquals(answer.get("ID"), 1);
-      assertEquals(answer.get("FIRSTNAME"), "Fred");
-      assertEquals(answer.get("LASTNAME"), "Flintstone");
+      assertEquals(1, answer.get("ID"));
+      assertEquals("Fred", answer.get("FIRSTNAME"));
+      assertEquals("Flintstone", answer.get("LASTNAME"));
     }
   }
 }

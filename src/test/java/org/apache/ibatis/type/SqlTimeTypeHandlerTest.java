@@ -1,11 +1,11 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
+/*
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,14 +20,15 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.sql.Time;
 import java.util.Date;
 
 import org.junit.jupiter.api.Test;
 
 class SqlTimeTypeHandlerTest extends BaseTypeHandlerTest {
 
-  private static final TypeHandler<java.sql.Time> TYPE_HANDLER = new SqlTimeTypeHandler();
-  private static final java.sql.Time SQL_TIME = new java.sql.Time(new Date().getTime());
+  private static final TypeHandler<Time> TYPE_HANDLER = new SqlTimeTypeHandler();
+  private static final Time SQL_TIME = new Time(new Date().getTime());
 
   @Override
   @Test

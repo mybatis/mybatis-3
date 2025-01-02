@@ -1,11 +1,11 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
+/*
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,7 +21,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -72,7 +71,7 @@ class ResultExtractorTest {
     final Object result = resultExtractor.extractObjectFromList(list, Integer[].class);
     assertThat(result).isInstanceOf(Integer[].class);
     final Integer[] resultArray = (Integer[]) result;
-    assertThat(resultArray).isEqualTo(new Integer[]{1, 2, 3});
+    assertThat(resultArray).isEqualTo(new Integer[] { 1, 2, 3 });
   }
 
   @Test
@@ -93,7 +92,7 @@ class ResultExtractorTest {
 
   @Test
   void shouldExtractSingleObject() {
-    final List<Object> list = Collections.singletonList("single object");
+    final List<Object> list = List.of("single object");
     assertThat((String) resultExtractor.extractObjectFromList(list, String.class)).isEqualTo("single object");
     assertThat((String) resultExtractor.extractObjectFromList(list, null)).isEqualTo("single object");
     assertThat((String) resultExtractor.extractObjectFromList(list, Integer.class)).isEqualTo("single object");

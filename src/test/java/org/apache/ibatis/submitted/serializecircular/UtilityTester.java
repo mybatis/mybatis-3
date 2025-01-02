@@ -1,11 +1,11 @@
-/**
- *    Copyright 2009-2018 the original author or authors.
+/*
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-public class UtilityTester {
+public final class UtilityTester {
 
   public static void serializeAndDeserializeObject(Object myObject) {
 
@@ -41,9 +41,7 @@ public class UtilityTester {
         myObjectOutputStream.writeObject(myObject);
       }
 
-      // Get the bytes of the serialized object
-      byte[] myResult = myByteArrayOutputStream.toByteArray();
-      return myResult;
+      return myByteArrayOutputStream.toByteArray();
     } catch (Exception anException) {
       throw new RuntimeException("Problem serializing: " + anException.toString(), anException);
     }
@@ -53,10 +51,12 @@ public class UtilityTester {
     // Deserialize from a byte array
     try (ObjectInputStream myObjectInputStream = new ObjectInputStream(new ByteArrayInputStream(aSerializedObject))) {
       return myObjectInputStream.readObject();
-    }
-    catch (Exception anException) {
+    } catch (Exception anException) {
       throw new RuntimeException("Problem deserializing", anException);
     }
+  }
+
+  private UtilityTester() {
   }
 
 }

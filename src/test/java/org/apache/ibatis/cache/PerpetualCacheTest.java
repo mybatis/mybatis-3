@@ -1,11 +1,11 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
+/*
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,10 +15,14 @@
  */
 package org.apache.ibatis.cache;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.apache.ibatis.cache.decorators.SerializedCache;
 import org.apache.ibatis.cache.decorators.SynchronizedCache;
 import org.apache.ibatis.cache.impl.PerpetualCache;
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 class PerpetualCacheTest {
@@ -68,4 +72,10 @@ class PerpetualCacheTest {
     assertNull(cache.getObject(4));
   }
 
+  @Test
+  void shouldDemonstrateIdIsNull() {
+    Cache cache = new PerpetualCache(null);
+    assertThrows(CacheException.class, cache::hashCode);
+    assertThrows(CacheException.class, () -> cache.equals(new Object()));
+  }
 }

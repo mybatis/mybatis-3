@@ -1,0 +1,31 @@
+name: Site
+
+on:
+  push:
+    branches:
+      - site
+
+jobs:
+  build:
+    if: github.repository_owner == 'mybatis' && contains(toJSON(github.event.head_commit.message), '[maven-release-plugin] prepare release')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          cache: maven
+          distribution: temurin
+          java-version: 21
+      - name: Build site
+        run: ./mvnw site site:stage -DskipTests -Dlicense.skip=true -B -V --no-transfer-progress --settings ./.mvn/settings.xml
+        env:
+          CI_DEPLOY_USERNAME: ${{ secrets.CI_DEPLOY_USERNAME }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
+      - name: Deploy Site to gh-pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: target/staging
+          ssh-key: ${{ secrets.DEPLOY_KEY }}

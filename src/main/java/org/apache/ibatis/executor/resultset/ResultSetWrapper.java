@@ -1,11 +1,11 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
+/*
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.session.Configuration;
@@ -46,11 +47,10 @@ public class ResultSetWrapper {
   private final List<String> classNames = new ArrayList<>();
   private final List<JdbcType> jdbcTypes = new ArrayList<>();
   private final Map<String, Map<Class<?>, TypeHandler<?>>> typeHandlerMap = new HashMap<>();
-  private final Map<String, List<String>> mappedColumnNamesMap = new HashMap<>();
+  private final Map<String, Set<String>> mappedColumnNamesMap = new HashMap<>();
   private final Map<String, List<String>> unMappedColumnNamesMap = new HashMap<>();
 
   public ResultSetWrapper(ResultSet rs, Configuration configuration) throws SQLException {
-    super();
     this.typeHandlerRegistry = configuration.getTypeHandlerRegistry();
     this.resultSet = rs;
     final ResultSetMetaData metaData = rs.getMetaData();
@@ -79,7 +79,7 @@ public class ResultSetWrapper {
   }
 
   public JdbcType getJdbcType(String columnName) {
-    for (int i = 0 ; i < columnNames.size(); i++) {
+    for (int i = 0; i < columnNames.size(); i++) {
       if (columnNames.get(i).equalsIgnoreCase(columnName)) {
         return jdbcTypes.get(i);
       }
@@ -88,13 +88,15 @@ public class ResultSetWrapper {
   }
 
   /**
-   * Gets the type handler to use when reading the result set.
-   * Tries to get from the TypeHandlerRegistry by searching for the property type.
-   * If not found it gets the column JDBC type and tries to get a handler for it.
+   * Gets the type handler to use when reading the result set. Tries to get from the TypeHandlerRegistry by searching
+   * for the property type. If not found it gets the column JDBC type and tries to get a handler for it.
    *
    * @param propertyType
+   *          the property type
    * @param columnName
-   * @return
+   *          the column name
+   *
+   * @return the type handler
    */
   public TypeHandler<?> getTypeHandler(Class<?> propertyType, String columnName) {
     TypeHandler<?> handler = null;
@@ -142,7 +144,7 @@ public class ResultSetWrapper {
   }
 
   private void loadMappedAndUnmappedColumnNames(ResultMap resultMap, String columnPrefix) throws SQLException {
-    List<String> mappedColumnNames = new ArrayList<>();
+    Set<String> mappedColumnNames = new HashSet<>();
     List<String> unmappedColumnNames = new ArrayList<>();
     final String upperColumnPrefix = columnPrefix == null ? null : columnPrefix.toUpperCase(Locale.ENGLISH);
     final Set<String> mappedColumns = prependPrefixes(resultMap.getMappedColumns(), upperColumnPrefix);
@@ -158,8 +160,8 @@ public class ResultSetWrapper {
     unMappedColumnNamesMap.put(getMapKey(resultMap, columnPrefix), unmappedColumnNames);
   }
 
-  public List<String> getMappedColumnNames(ResultMap resultMap, String columnPrefix) throws SQLException {
-    List<String> mappedColumnNames = mappedColumnNamesMap.get(getMapKey(resultMap, columnPrefix));
+  public Set<String> getMappedColumnNames(ResultMap resultMap, String columnPrefix) throws SQLException {
+    Set<String> mappedColumnNames = mappedColumnNamesMap.get(getMapKey(resultMap, columnPrefix));
     if (mappedColumnNames == null) {
       loadMappedAndUnmappedColumnNames(resultMap, columnPrefix);
       mappedColumnNames = mappedColumnNamesMap.get(getMapKey(resultMap, columnPrefix));

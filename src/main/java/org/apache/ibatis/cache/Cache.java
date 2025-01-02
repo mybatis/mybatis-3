@@ -1,11 +1,11 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
+/*
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -28,11 +28,11 @@ import java.util.concurrent.locks.ReadWriteLock;
  *
  * <pre>
  * public MyCache(final String id) {
- *  if (id == null) {
- *    throw new IllegalArgumentException("Cache instances require an ID");
- *  }
- *  this.id = id;
- *  initialize();
+ *   if (id == null) {
+ *     throw new IllegalArgumentException("Cache instances require an ID");
+ *   }
+ *   this.id = id;
+ *   initialize();
  * }
  * </pre>
  *
@@ -47,29 +47,30 @@ public interface Cache {
   String getId();
 
   /**
-   * @param key Can be any object but usually it is a {@link CacheKey}
-   * @param value The result of a select.
+   * @param key
+   *          Can be any object but usually it is a {@link CacheKey}
+   * @param value
+   *          The result of a select.
    */
   void putObject(Object key, Object value);
 
   /**
-   * @param key The key
+   * @param key
+   *          The key
+   *
    * @return The object stored in the cache.
    */
   Object getObject(Object key);
 
   /**
-   * As of 3.3.0 this method is only called during a rollback
-   * for any previous value that was missing in the cache.
-   * This lets any blocking cache to release the lock that
-   * may have previously put on the key.
-   * A blocking cache puts a lock when a value is null
-   * and releases it when the value is back again.
-   * This way other threads will wait for the value to be
-   * available instead of hitting the database.
+   * As of 3.3.0 this method is only called during a rollback for any previous value that was missing in the cache. This
+   * lets any blocking cache to release the lock that may have previously put on the key. A blocking cache puts a lock
+   * when a value is null and releases it when the value is back again. This way other threads will wait for the value
+   * to be available instead of hitting the database.
    *
+   * @param key
+   *          The key
    *
-   * @param key The key
    * @return Not used
    */
   Object removeObject(Object key);
@@ -93,6 +94,8 @@ public interface Cache {
    *
    * @return A ReadWriteLock
    */
-  ReadWriteLock getReadWriteLock();
+  default ReadWriteLock getReadWriteLock() {
+    return null;
+  }
 
 }

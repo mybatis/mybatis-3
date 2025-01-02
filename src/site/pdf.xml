@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2023 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
        You may obtain a copy of the License at
 
-          http://www.apache.org/licenses/LICENSE-2.0
+          https://www.apache.org/licenses/LICENSE-2.0
 
        Unless required by applicable law or agreed to in writing, software
        distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,9 +16,8 @@
        limitations under the License.
 
 -->
-<document xmlns="http://maven.apache.org/DOCUMENT/1.0.1"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/DOCUMENT/1.0.1 http://maven.apache.org/xsd/document-1.0.1.xsd"
+<document xmlns="http://maven.apache.org/DOCUMENT/1.0.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/DOCUMENT/1.0.1 https://maven.apache.org/xsd/document-1.0.1.xsd"
   outputName="${project.artifactId}-${project.version}">
 
   <meta>
@@ -42,7 +41,7 @@
     <coverSubTitle>v. ${project.version}</coverSubTitle>
     <coverType>User Guide</coverType>
     <projectName>${project.name}</projectName>
-    <projectLogo>http://mybatis.github.io/images/mybatis-logo.png</projectLogo>
+    <projectLogo>https://mybatis.org/images/mybatis-logo.png</projectLogo>
     <companyName>${project.organization.name}</companyName>
   </cover>
 </document>

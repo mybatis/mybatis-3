@@ -1,11 +1,11 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
+/*
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,16 +15,20 @@
  */
 package org.apache.ibatis.submitted.cache;
 
+import static com.googlecode.catchexception.apis.BDDCatchException.caughtException;
+import static com.googlecode.catchexception.apis.BDDCatchException.when;
+import static org.assertj.core.api.BDDAssertions.then;
+
 import java.io.Reader;
 import java.lang.reflect.Field;
 
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.annotations.CacheNamespace;
+import org.apache.ibatis.annotations.CacheNamespaceRef;
 import org.apache.ibatis.annotations.Property;
+import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheException;
-import org.apache.ibatis.annotations.CacheNamespaceRef;
-import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -32,9 +36,6 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static com.googlecode.catchexception.apis.BDDCatchException.*;
-import static org.assertj.core.api.BDDAssertions.then;
 
 // issue #524
 class CacheTest {
@@ -50,18 +51,21 @@ class CacheTest {
 
     // populate in-memory database
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/cache/CreateDB.sql");
+        "org/apache/ibatis/submitted/cache/CreateDB.sql");
   }
 
-  /*
+  /**
    * Test Plan:
-   *  1) SqlSession 1 executes "select * from A".
-   *  2) SqlSession 1 closes.
-   *  3) SqlSession 2 executes "delete from A where id = 1"
-   *  4) SqlSession 2 executes "select * from A"
-   *
+   * <ol>
+   * <li>SqlSession 1 executes "select * from A".</li>
+   * <li>SqlSession 1 closes.</li>
+   * <li>SqlSession 2 executes "delete from A where id = 1"</li>
+   * <li>SqlSession 2 executes "select * from A"</li>
+   * </ol>
    * Assert:
-   *   Step 4 returns 1 row. (This case fails when caching is enabled.)
+   * <ol>
+   * <li>Step 4 returns 1 row. (This case fails when caching is enabled.)</li
+   * <ol>
    */
   @Test
   void testplan1() {
@@ -81,17 +85,20 @@ class CacheTest {
     }
   }
 
-  /*
+  /**
    * Test Plan:
-   *  1) SqlSession 1 executes "select * from A".
-   *  2) SqlSession 1 closes.
-   *  3) SqlSession 2 executes "delete from A where id = 1"
-   *  4) SqlSession 2 executes "select * from A"
-   *  5) SqlSession 2 rollback
-   *  6) SqlSession 3 executes "select * from A"
-   *
+   * <ol>
+   * <li>SqlSession 1 executes "select * from A".</li>
+   * <li>SqlSession 1 closes.</li>
+   * <li>SqlSession 2 executes "delete from A where id = 1"</li>
+   * <li>SqlSession 2 executes "select * from A"</li>
+   * <li>SqlSession 2 rollback</li>
+   * <li>SqlSession 3 executes "select * from A"</li>
+   * </ol>
    * Assert:
-   *   Step 6 returns 2 rows.
+   * <ol>
+   * <li>Step 6 returns 2 rows.</li>
+   * </ol>
    */
   @Test
   void testplan2() {
@@ -115,17 +122,20 @@ class CacheTest {
     }
   }
 
-  /*
+  /**
    * Test Plan with Autocommit on:
-   *  1) SqlSession 1 executes "select * from A".
-   *  2) SqlSession 1 closes.
-   *  3) SqlSession 2 executes "delete from A where id = 1"
-   *  4) SqlSession 2 closes.
-   *  5) SqlSession 2 executes "select * from A".
-   *  6) SqlSession 3 closes.
-   *
+   * <ol>
+   * <li>SqlSession 1 executes "select * from A".</li>
+   * <li>SqlSession 1 closes.</li>
+   * <li>SqlSession 2 executes "delete from A where id = 1"</li>
+   * <li>SqlSession 2 closes.</li>
+   * <li>SqlSession 2 executes "select * from A".</li>
+   * <li>SqlSession 3 closes.</li>
+   * </ol>
    * Assert:
-   *   Step 6 returns 1 row.
+   * <ol>
+   * <li>Step 6 returns 1 row.</li>
+   * </ol>
    */
   @Test
   void testplan3() {
@@ -133,7 +143,6 @@ class CacheTest {
       PersonMapper pm = sqlSession1.getMapper(PersonMapper.class);
       Assertions.assertEquals(2, pm.findAll().size());
     }
-
 
     try (SqlSession sqlSession2 = sqlSessionFactory.openSession(true)) {
       PersonMapper pm = sqlSession2.getMapper(PersonMapper.class);
@@ -146,19 +155,20 @@ class CacheTest {
     }
   }
 
-  /*-
-   * Test case for #405
-   *
-   * Test Plan with Autocommit on:
-   *  1) SqlSession 1 executes "select * from A".
-   *  2) SqlSession 1 closes.
-   *  3) SqlSession 2 executes "insert into person (id, firstname, lastname) values (3, hello, world)"
-   *  4) SqlSession 2 closes.
-   *  5) SqlSession 3 executes "select * from A".
-   *  6) SqlSession 3 closes.
-   *
+  /**
+   * Test case for #405 Test Plan with Autocommit on:
+   * <ol>
+   * <li>SqlSession 1 executes "select * from A".</li>
+   * <li>SqlSession 1 closes.</li>
+   * <li>SqlSession 2 executes "insert into person (id, firstname, lastname) values (3, hello, world)"</li>
+   * <li>SqlSession 2 closes.</li>
+   * <li>SqlSession 3 executes "select * from A".</li>
+   * <li>SqlSession 3 closes.</li>
+   * </ol>
    * Assert:
-   *   Step 5 returns 3 row.
+   * <ol>
+   * <li>Step 5 returns 3 row.</li>
+   * </ol>
    */
   @Test
   void shouldInsertWithOptionsFlushesCache() {
@@ -179,20 +189,23 @@ class CacheTest {
     }
   }
 
-  /*-
+  /**
    * Test Plan with Autocommit on:
-   *  1) SqlSession 1 executes select to cache result
-   *  2) SqlSession 1 closes.
-   *  3) SqlSession 2 executes insert without flushing cache
-   *  4) SqlSession 2 closes.
-   *  5) SqlSession 3 executes select (flushCache = false)
-   *  6) SqlSession 3 closes.
-   *  7) SqlSession 4 executes select (flushCache = true)
-   *  8) SqlSession 4 closes.
-   *
+   * <ol>
+   * <li>SqlSession 1 executes select to cache result</li>
+   * <li>SqlSession 1 closes.</li>
+   * <li>SqlSession 2 executes insert without flushing cache</li>
+   * <li>SqlSession 2 closes.</li>
+   * <li>SqlSession 3 executes select (flushCache = false)</li>
+   * <li>SqlSession 3 closes.</li>
+   * <li>SqlSession 4 executes select (flushCache = true)</li>
+   * <li>SqlSession 4 closes.</li>
+   * </ol>
    * Assert:
-   *   Step 5 returns 2 row.
-   *   Step 7 returns 3 row.
+   * <ol>
+   * <li>Step 5 returns 2 row.</li>
+   * <li>Step 7 returns 3 row.</li>
+   * </ol>
    */
   @Test
   void shouldApplyFlushCacheOptions() {
@@ -251,6 +264,25 @@ class CacheTest {
   }
 
   @Test
+  void shouldResultBeCachedAfterInsert() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession(true)) {
+      PersonMapper pm = sqlSession.getMapper(PersonMapper.class);
+      // create
+      Person p = new Person(3, "hello", "world");
+      pm.create(p);
+      // select (result should be cached)
+      Assertions.assertEquals(3, pm.findAll().size());
+      // create without flush (cache unchanged)
+      Person p2 = new Person(4, "bonjour", "world");
+      pm.createWithoutFlushCache(p2);
+    }
+    try (SqlSession sqlSession = sqlSessionFactory.openSession(true)) {
+      PersonMapper pm = sqlSession.getMapper(PersonMapper.class);
+      Assertions.assertEquals(3, pm.findAll().size());
+    }
+  }
+
+  @Test
   void shouldApplyCustomCacheProperties() {
     CustomCache customCache = unwrap(sqlSessionFactory.getConfiguration().getCache(CustomCacheMapper.class.getName()));
     Assertions.assertEquals("bar", customCache.getStringValue());
@@ -272,28 +304,28 @@ class CacheTest {
 
   @Test
   void shouldErrorUnsupportedProperties() {
-    when(sqlSessionFactory.getConfiguration()).addMapper(CustomCacheUnsupportedPropertyMapper.class);
+    when(() -> sqlSessionFactory.getConfiguration().addMapper(CustomCacheUnsupportedPropertyMapper.class));
     then(caughtException()).isInstanceOf(CacheException.class)
-      .hasMessage("Unsupported property type for cache: 'date' of type class java.util.Date");
+        .hasMessage("Unsupported property type for cache: 'date' of type class java.util.Date");
   }
 
   @Test
   void shouldErrorInvalidCacheNamespaceRefAttributesSpecifyBoth() {
-    when(sqlSessionFactory.getConfiguration().getMapperRegistry())
-      .addMapper(InvalidCacheNamespaceRefBothMapper.class);
+    when(() -> sqlSessionFactory.getConfiguration().getMapperRegistry()
+        .addMapper(InvalidCacheNamespaceRefBothMapper.class));
     then(caughtException()).isInstanceOf(BuilderException.class)
-      .hasMessage("Cannot use both value() and name() attribute in the @CacheNamespaceRef");
+        .hasMessage("Cannot use both value() and name() attribute in the @CacheNamespaceRef");
   }
 
   @Test
   void shouldErrorInvalidCacheNamespaceRefAttributesIsEmpty() {
-    when(sqlSessionFactory.getConfiguration().getMapperRegistry())
-      .addMapper(InvalidCacheNamespaceRefEmptyMapper.class);
+    when(() -> sqlSessionFactory.getConfiguration().getMapperRegistry()
+        .addMapper(InvalidCacheNamespaceRefEmptyMapper.class));
     then(caughtException()).isInstanceOf(BuilderException.class)
-      .hasMessage("Should be specified either value() or name() attribute in the @CacheNamespaceRef");
+        .hasMessage("Should be specified either value() or name() attribute in the @CacheNamespaceRef");
   }
 
-  private CustomCache unwrap(Cache cache){
+  private CustomCache unwrap(Cache cache) {
     Field field;
     try {
       field = cache.getClass().getDeclaredField("delegate");
@@ -302,7 +334,7 @@ class CacheTest {
     }
     try {
       field.setAccessible(true);
-      return (CustomCache)field.get(cache);
+      return (CustomCache) field.get(cache);
     } catch (IllegalAccessException e) {
       throw new IllegalStateException(e);
     } finally {
@@ -310,9 +342,7 @@ class CacheTest {
     }
   }
 
-  @CacheNamespace(implementation = CustomCache.class, properties = {
-      @Property(name = "date", value = "2016/11/21")
-  })
+  @CacheNamespace(implementation = CustomCache.class, properties = { @Property(name = "date", value = "2016/11/21") })
   private interface CustomCacheUnsupportedPropertyMapper {
   }
 

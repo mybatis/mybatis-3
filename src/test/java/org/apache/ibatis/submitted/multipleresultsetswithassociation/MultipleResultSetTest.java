@@ -1,11 +1,11 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
+/*
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -39,22 +39,25 @@ class MultipleResultSetTest {
 
   @BeforeAll
   static void setUp() throws Exception {
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multipleresultsetswithassociation/mybatis-config.xml")) {
+    try (Reader reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/multipleresultsetswithassociation/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
     // populate in-memory database
     // Could not get the table creation, procedure creation, and data population to work from the same script.
     // Once it was in three scripts, all seemed well.
-    try (SqlSession session = sqlSessionFactory.openSession();
-         Connection conn = session.getConnection()) {
-      try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multipleresultsetswithassociation/CreateDB1.sql")) {
+    try (SqlSession session = sqlSessionFactory.openSession(); Connection conn = session.getConnection()) {
+      try (Reader reader = Resources
+          .getResourceAsReader("org/apache/ibatis/submitted/multipleresultsetswithassociation/CreateDB1.sql")) {
         runReaderScript(conn, reader);
       }
-      try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multipleresultsetswithassociation/CreateDB2.sql")) {
+      try (Reader reader = Resources
+          .getResourceAsReader("org/apache/ibatis/submitted/multipleresultsetswithassociation/CreateDB2.sql")) {
         runReaderScript(conn, reader);
       }
-      try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multipleresultsetswithassociation/CreateDB3.sql")) {
+      try (Reader reader = Resources
+          .getResourceAsReader("org/apache/ibatis/submitted/multipleresultsetswithassociation/CreateDB3.sql")) {
         runReaderScript(conn, reader);
       }
     }
@@ -81,8 +84,8 @@ class MultipleResultSetTest {
 
       // Each order detail should have a corresponding OrderHeader
       // Only 2 of 6 orderDetails have orderHeaders
-      for(OrderDetail orderDetail : orderDetails){
-          Assertions.assertNotNull(orderDetail.getOrderHeader());
+      for (OrderDetail orderDetail : orderDetails) {
+        Assertions.assertNotNull(orderDetail.getOrderHeader());
       }
     }
   }
@@ -99,8 +102,8 @@ class MultipleResultSetTest {
 
       // Each order detail should have a corresponding OrderHeader
       // Only 2 of 6 orderDetails have orderHeaders
-      for(OrderDetail orderDetail : orderDetails){
-          Assertions.assertNotNull(orderDetail.getOrderHeader());
+      for (OrderDetail orderDetail : orderDetails) {
+        Assertions.assertNotNull(orderDetail.getOrderHeader());
       }
     }
   }

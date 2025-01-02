@@ -1,11 +1,11 @@
-/**
- *    Copyright 2009-2018 the original author or authors.
+/*
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,22 +15,23 @@
  */
 package org.apache.ibatis.builder;
 
-import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
-
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
+
 public class ExampleObjectFactory extends DefaultObjectFactory {
+  private static final long serialVersionUID = 1L;
   private Properties properties;
 
   @Override
   public <T> T create(Class<T> type) {
-    return super.<T> create(type);
+    return super.create(type);
   }
 
   @Override
   public <T> T create(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
-    return super.<T> create(type, constructorArgTypes, constructorArgs);
+    return super.create(type, constructorArgTypes, constructorArgs);
   }
 
   @Override

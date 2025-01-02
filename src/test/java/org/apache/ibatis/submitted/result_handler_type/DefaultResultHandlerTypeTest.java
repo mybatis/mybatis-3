@@ -1,11 +1,11 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
+/*
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.submitted.result_handler_type;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.Reader;
 import java.util.List;
@@ -31,37 +31,37 @@ import org.junit.jupiter.api.Test;
 class DefaultResultHandlerTypeTest {
 
   @Test
-  void testSelectList() throws Exception {
+  void selectList() throws Exception {
     String xmlConfig = "org/apache/ibatis/submitted/result_handler_type/MapperConfig.xml";
     SqlSessionFactory sqlSessionFactory = getSqlSessionFactoryXmlConfig(xmlConfig);
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       List<Person> list = sqlSession
           .selectList("org.apache.ibatis.submitted.result_handler_type.PersonMapper.doSelect");
-      assertEquals(list.size(), 2);
+      assertEquals(2, list.size());
       assertEquals("java.util.LinkedList", list.getClass().getCanonicalName());
     }
   }
 
   @Test
-  void testSelectMap() throws Exception {
+  void selectMap() throws Exception {
     String xmlConfig = "org/apache/ibatis/submitted/result_handler_type/MapperConfig.xml";
     SqlSessionFactory sqlSessionFactory = getSqlSessionFactoryXmlConfig(xmlConfig);
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      Map<Integer, Person> map = sqlSession.selectMap(
-          "org.apache.ibatis.submitted.result_handler_type.PersonMapper.doSelect", "id");
-      assertEquals(map.size(), 2);
+      Map<Integer, Person> map = sqlSession
+          .selectMap("org.apache.ibatis.submitted.result_handler_type.PersonMapper.doSelect", "id");
+      assertEquals(2, map.size());
       assertEquals("java.util.LinkedHashMap", map.getClass().getCanonicalName());
     }
   }
 
   @Test
-  void testSelectMapAnnotation() throws Exception {
+  void selectMapAnnotation() throws Exception {
     String xmlConfig = "org/apache/ibatis/submitted/result_handler_type/MapperConfig.xml";
     SqlSessionFactory sqlSessionFactory = getSqlSessionFactoryXmlConfig(xmlConfig);
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       PersonMapper mapper = sqlSession.getMapper(PersonMapper.class);
       Map<Integer, Person> map = mapper.selectAsMap();
-      assertEquals(map.size(), 2);
+      assertEquals(2, map.size());
       assertEquals("java.util.LinkedHashMap", map.getClass().getCanonicalName());
     }
   }
@@ -70,7 +70,7 @@ class DefaultResultHandlerTypeTest {
     try (Reader configReader = Resources.getResourceAsReader(resource)) {
       SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configReader);
       BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/result_handler_type/CreateDB.sql");
+          "org/apache/ibatis/submitted/result_handler_type/CreateDB.sql");
 
       return sqlSessionFactory;
     }

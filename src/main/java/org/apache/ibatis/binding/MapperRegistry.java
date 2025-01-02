@@ -1,11 +1,11 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
+/*
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,9 +17,9 @@ package org.apache.ibatis.binding;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.ibatis.builder.annotation.MapperAnnotationBuilder;
 import org.apache.ibatis.io.ResolverUtil;
@@ -34,7 +34,7 @@ import org.apache.ibatis.session.SqlSession;
 public class MapperRegistry {
 
   private final Configuration config;
-  private final Map<Class<?>, MapperProxyFactory<?>> knownMappers = new HashMap<>();
+  private final Map<Class<?>, MapperProxyFactory<?>> knownMappers = new ConcurrentHashMap<>();
 
   public MapperRegistry(Configuration config) {
     this.config = config;
@@ -80,6 +80,10 @@ public class MapperRegistry {
   }
 
   /**
+   * Gets the mappers.
+   *
+   * @return the mappers
+   *
    * @since 3.2.2
    */
   public Collection<Class<?>> getMappers() {
@@ -87,6 +91,13 @@ public class MapperRegistry {
   }
 
   /**
+   * Adds the mappers.
+   *
+   * @param packageName
+   *          the package name
+   * @param superType
+   *          the super type
+   *
    * @since 3.2.2
    */
   public void addMappers(String packageName, Class<?> superType) {
@@ -99,6 +110,11 @@ public class MapperRegistry {
   }
 
   /**
+   * Adds the mappers.
+   *
+   * @param packageName
+   *          the package name
+   *
    * @since 3.2.2
    */
   public void addMappers(String packageName) {

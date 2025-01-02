@@ -1,11 +1,11 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
+/*
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -36,7 +36,8 @@ class DaoTest {
 
   @BeforeEach
   void setUp() throws Exception {
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/emptycollection/mybatis-config.xml")) {
+    try (Reader reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/emptycollection/mybatis-config.xml")) {
       SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
       sqlSession = sqlSessionFactory.openSession();
     }
@@ -53,7 +54,7 @@ class DaoTest {
   }
 
   @Test
-  void testWithEmptyList() {
+  void withEmptyList() {
     final List<TodoLists> actual = dao.selectWithEmptyList();
     Assertions.assertEquals(1, actual.size());
     final List<TodoItem> todoItems = actual.get(0).getTodoItems();
@@ -61,20 +62,21 @@ class DaoTest {
   }
 
   @Test
-  void testWithNonEmptyList() {
+  void withNonEmptyList() {
     final List<TodoLists> actual = dao.selectWithNonEmptyList();
     checkNonEmptyList(actual);
   }
 
   @Test
-  void testWithNonEmptyList_noCollectionId() {
+  void withNonEmptyListNoCollectionId() {
     final List<TodoLists> actual = dao.selectWithNonEmptyList_noCollectionId();
 
     checkNonEmptyList(actual);
   }
 
   private void checkNonEmptyList(final List<TodoLists> actual) {
-//  Assertions.assertEquals("[List(1)=[a description(1), a 2nd description(2)], List(2)=[a description(1)]]", actual.toString());
+    // Assertions.assertEquals("[List(1)=[a description(1), a 2nd description(2)], List(2)=[a description(1)]]",
+    // actual.toString());
     Assertions.assertEquals(2, actual.size());
 
     Assertions.assertEquals(2, actual.get(0).getTodoItems().size());

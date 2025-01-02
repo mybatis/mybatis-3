@@ -1,11 +1,11 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
+/*
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -41,7 +41,7 @@ class AutomappingTest {
 
     // populate in-memory database
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/automapping/CreateDB.sql");
+        "org/apache/ibatis/submitted/automapping/CreateDB.sql");
   }
 
   @Test
@@ -153,7 +153,7 @@ class AutomappingTest {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       // no errors throw
       List<Book> books = mapper.getBooks();
-      Assertions.assertTrue(!books.isEmpty(), "should return results,no errors throw");
+      Assertions.assertFalse(books.isEmpty(), "should return results,no errors throw");
     }
   }
 

@@ -1,11 +1,11 @@
-/**
- *    Copyright 2009-2015 the original author or authors.
+/*
+ *    Copyright 2009-2022 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,25 +16,31 @@
 package org.apache.ibatis.submitted.selectkey;
 
 public class Name {
-    private int nameId;
-    private String name;
-    private String generatedName;
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-    public int getNameId() {
-        return nameId;
-    }
-    public void setNameId(int nameId) {
-        this.nameId = nameId;
-    }
-    public String getGeneratedName() {
-        return generatedName;
-    }
-    public void setGeneratedName(String generatedName) {
-        this.generatedName = generatedName;
-    }
+  private int nameId;
+  private String name;
+  private String generatedName;
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public int getNameId() {
+    return nameId;
+  }
+
+  public void setNameId(int nameId) {
+    this.nameId = nameId;
+  }
+
+  public String getGeneratedName() {
+    return generatedName;
+  }
+
+  public void setGeneratedName(String generatedName) {
+    this.generatedName = generatedName;
+  }
 }

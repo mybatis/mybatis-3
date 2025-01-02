@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2019 the original author or authors.
+       Copyright 2009-2023 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
        You may obtain a copy of the License at
 
-          http://www.apache.org/licenses/LICENSE-2.0
+          https://www.apache.org/licenses/LICENSE-2.0
 
        Unless required by applicable law or agreed to in writing, software
        distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,8 +16,8 @@
        limitations under the License.
 
 -->
-<project name="${project.name}" xmlns="http://maven.apache.org/DECORATION/1.8.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/DECORATION/1.8.0 http://maven.apache.org/xsd/decoration-1.8.0.xsd">
+<site name="${project.name}" xmlns="http://maven.apache.org/SITE/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/SITE/2.0.0 https://maven.apache.org/xsd/site-2.0.0.xsd">
 
   <body>
     <menu name="Reference Documentation">
@@ -26,26 +26,26 @@
       <item name="Configuration XML" href="configuration.html" collapse="true">
         <item href="configuration.html#properties" name="properties" />
         <item href="configuration.html#settings" name="settings" />
-        <item href="configuration.html#typeAliases" name="typeAliases" />
-        <item href="configuration.html#typeHandlers" name="typeHandlers" />
-        <item href="configuration.html#objectFactory" name="objectFactory" />
+        <item href="configuration.html#typealiases" name="typeAliases" />
+        <item href="configuration.html#typehandlers" name="typeHandlers" />
+        <item href="configuration.html#objectfactory" name="objectFactory" />
         <item href="configuration.html#plugins" name="plugins" />
         <item href="configuration.html#environments" name="environments" />
-        <item href="configuration.html#databaseIdProvider" name="databaseIdProvider" />
+        <item href="configuration.html#databaseidprovider" name="databaseIdProvider" />
         <item href="configuration.html#mappers" name="mappers" />
       </item>
       <item name="Mapper XML Files" href="sqlmap-xml.html" collapse="true">
         <item href="sqlmap-xml.html#select" name="select" />
-        <item href="sqlmap-xml.html#insert_update_and_delete" name="insert, update and delete" />
-        <item href="sqlmap-xml.html#Parameters" name="Parameters" />
-        <item href="sqlmap-xml.html#Result_Maps" name="Result Maps" />
-        <item href="sqlmap-xml.html#Auto-mapping" name="Auto-mapping" />
+        <item href="sqlmap-xml.html#insert-update-and-delete" name="insert, update and delete" />
+        <item href="sqlmap-xml.html#parameters" name="Parameters" />
+        <item href="sqlmap-xml.html#result-maps" name="Result Maps" />
+        <item href="sqlmap-xml.html#auto-mapping" name="Auto-mapping" />
         <item href="sqlmap-xml.html#cache" name="cache" />
       </item>
       <item name="Dynamic SQL" href="dynamic-sql.html"/>
       <item name="Java API" href="java-api.html" collapse="true">
-        <item name="Directory Structure" href="java-api.html#directoryStructure" />
-        <item name="SqlSessions" href="java-api.html#sqlSessions" />
+        <item name="Directory Structure" href="java-api.html#directory-structure" />
+        <item name="SqlSessions" href="java-api.html#sqlsessions" />
       </item>
       <item name="SQL Builder Class" href="statement-builders.html" collapse="true"/>
       <item name="Logging" href="logging.html"/>
@@ -53,4 +53,4 @@
 
     <menu ref="reports"/>
   </body>
-</project>
+</site>

@@ -1,0 +1,37 @@
+--
+--    Copyright 2009-2022 the original author or authors.
+--
+--    Licensed under the Apache License, Version 2.0 (the "License");
+--    you may not use this file except in compliance with the License.
+--    You may obtain a copy of the License at
+--
+--       https://www.apache.org/licenses/LICENSE-2.0
+--
+--    Unless required by applicable law or agreed to in writing, software
+--    distributed under the License is distributed on an "AS IS" BASIS,
+--    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+--    See the License for the specific language governing permissions and
+--    limitations under the License.
+--
+
+drop table users if exists;
+
+create table users (
+  id int,
+  name varchar(20),
+  team int
+);
+
+insert into users (id, name, team) values
+(1, 'User1', 99);
+
+drop table tasks if exists;
+
+create table tasks (
+  id int,
+  name varchar(20),
+  assignee_id int
+);
+
+insert into tasks (id, name, assignee_id) values
+(11, 'Task1', 1);

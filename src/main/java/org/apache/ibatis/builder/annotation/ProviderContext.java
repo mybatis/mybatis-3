@@ -1,11 +1,11 @@
-/**
- *    Copyright 2009-2017 the original author or authors.
+/*
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,22 +21,29 @@ import java.lang.reflect.Method;
  * The context object for sql provider method.
  *
  * @author Kazuki Shimizu
+ *
  * @since 3.4.5
  */
 public final class ProviderContext {
 
   private final Class<?> mapperType;
   private final Method mapperMethod;
+  private final String databaseId;
 
   /**
    * Constructor.
    *
-   * @param mapperType A mapper interface type that specified provider
-   * @param mapperMethod A mapper method that specified provider
+   * @param mapperType
+   *          A mapper interface type that specified provider
+   * @param mapperMethod
+   *          A mapper method that specified provider
+   * @param databaseId
+   *          A database id
    */
-  ProviderContext(Class<?> mapperType, Method mapperMethod) {
+  ProviderContext(Class<?> mapperType, Method mapperMethod, String databaseId) {
     this.mapperType = mapperType;
     this.mapperMethod = mapperMethod;
+    this.databaseId = databaseId;
   }
 
   /**
@@ -55,6 +62,17 @@ public final class ProviderContext {
    */
   public Method getMapperMethod() {
     return mapperMethod;
+  }
+
+  /**
+   * Get a database id that provided from {@link org.apache.ibatis.mapping.DatabaseIdProvider}.
+   *
+   * @return A database id
+   *
+   * @since 3.5.1
+   */
+  public String getDatabaseId() {
+    return databaseId;
   }
 
 }

@@ -1,11 +1,11 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
+/*
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -54,7 +54,7 @@ public class CachingExecutor implements Executor {
   @Override
   public void close(boolean forceRollback) {
     try {
-      //issues #499, #524 and #573
+      // issues #499, #524 and #573
       if (forceRollback) {
         tcm.rollback();
       } else {
@@ -77,21 +77,22 @@ public class CachingExecutor implements Executor {
   }
 
   @Override
-  public <E> List<E> query(MappedStatement ms, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler) throws SQLException {
-    BoundSql boundSql = ms.getBoundSql(parameterObject);
-    CacheKey key = createCacheKey(ms, parameterObject, rowBounds, boundSql);
-    return query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
-  }
-
-  @Override
   public <E> Cursor<E> queryCursor(MappedStatement ms, Object parameter, RowBounds rowBounds) throws SQLException {
     flushCacheIfRequired(ms);
     return delegate.queryCursor(ms, parameter, rowBounds);
   }
 
   @Override
-  public <E> List<E> query(MappedStatement ms, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql)
+  public <E> List<E> query(MappedStatement ms, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler)
       throws SQLException {
+    BoundSql boundSql = ms.getBoundSql(parameterObject);
+    CacheKey key = createCacheKey(ms, parameterObject, rowBounds, boundSql);
+    return query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
+  }
+
+  @Override
+  public <E> List<E> query(MappedStatement ms, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler,
+      CacheKey key, BoundSql boundSql) throws SQLException {
     Cache cache = ms.getCache();
     if (cache != null) {
       flushCacheIfRequired(ms);
@@ -135,7 +136,9 @@ public class CachingExecutor implements Executor {
     if (ms.getStatementType() == StatementType.CALLABLE) {
       for (ParameterMapping parameterMapping : boundSql.getParameterMappings()) {
         if (parameterMapping.getMode() != ParameterMode.IN) {
-          throw new ExecutorException("Caching stored procedures with OUT params is not supported.  Please configure useCache=false in " + ms.getId() + " statement.");
+          throw new ExecutorException(
+              "Caching stored procedures with OUT params is not supported.  Please configure useCache=false in "
+                  + ms.getId() + " statement.");
         }
       }
     }
@@ -152,7 +155,8 @@ public class CachingExecutor implements Executor {
   }
 
   @Override
-  public void deferLoad(MappedStatement ms, MetaObject resultObject, String property, CacheKey key, Class<?> targetType) {
+  public void deferLoad(MappedStatement ms, MetaObject resultObject, String property, CacheKey key,
+      Class<?> targetType) {
     delegate.deferLoad(ms, resultObject, property, key, targetType);
   }
 

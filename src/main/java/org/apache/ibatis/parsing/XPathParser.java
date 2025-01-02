@@ -1,11 +1,11 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
+/*
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -141,8 +142,7 @@ public class XPathParser {
 
   public String evalString(Object root, String expression) {
     String result = (String) evaluate(expression, root, XPathConstants.STRING);
-    result = PropertyParser.parse(result, variables);
-    return result;
+    return PropertyParser.parse(result, variables);
   }
 
   public Boolean evalBoolean(String expression) {
@@ -230,13 +230,14 @@ public class XPathParser {
     // important: this must only be called AFTER common constructor
     try {
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+      factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
       factory.setValidating(validation);
 
       factory.setNamespaceAware(false);
       factory.setIgnoringComments(true);
       factory.setIgnoringElementContentWhitespace(false);
       factory.setCoalescing(false);
-      factory.setExpandEntityReferences(true);
+      factory.setExpandEntityReferences(false);
 
       DocumentBuilder builder = factory.newDocumentBuilder();
       builder.setEntityResolver(entityResolver);
@@ -253,6 +254,7 @@ public class XPathParser {
 
         @Override
         public void warning(SAXParseException exception) throws SAXException {
+          // NOP
         }
       });
       return builder.parse(inputSource);

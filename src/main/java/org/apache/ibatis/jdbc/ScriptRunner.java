@@ -1,11 +1,11 @@
-/**
- *    Copyright 2009-2018 the original author or authors.
+/*
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -28,15 +28,21 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * This is an internal testing utility.<br>
+ * You are welcome to use this class for your own purposes,<br>
+ * but if there is some feature/enhancement you need for your own usage,<br>
+ * please make and modify your own copy instead of sending us an enhancement request.<br>
+ *
  * @author Clinton Begin
  */
 public class ScriptRunner {
 
-  private static final String LINE_SEPARATOR = System.getProperty("line.separator", "\n");
+  private static final String LINE_SEPARATOR = System.lineSeparator();
 
   private static final String DEFAULT_DELIMITER = ";";
 
-  private static final Pattern DELIMITER_PATTERN = Pattern.compile("^\\s*((--)|(//))?\\s*(//)?\\s*@DELIMITER\\s+([^\\s]+)", Pattern.CASE_INSENSITIVE);
+  private static final Pattern DELIMITER_PATTERN = Pattern
+      .compile("^\\s*((--)|(//))?\\s*(//)?\\s*@DELIMITER\\s+([^\\s]+)", Pattern.CASE_INSENSITIVE);
 
   private final Connection connection;
 
@@ -78,6 +84,11 @@ public class ScriptRunner {
   }
 
   /**
+   * Sets the escape processing.
+   *
+   * @param escapeProcessing
+   *          the new escape processing
+   *
    * @since 3.1.1
    */
   public void setEscapeProcessing(boolean escapeProcessing) {
@@ -151,6 +162,10 @@ public class ScriptRunner {
     }
   }
 
+  /**
+   * @deprecated Since 3.5.4, this method is deprecated. Please close the {@link Connection} outside of this class.
+   */
+  @Deprecated
   public void closeConnection() {
     try {
       connection.close();
@@ -204,7 +219,7 @@ public class ScriptRunner {
       }
       println(trimmedLine);
     } else if (commandReadyToExecute(trimmedLine)) {
-      command.append(line.substring(0, line.lastIndexOf(delimiter)));
+      command.append(line, 0, line.lastIndexOf(delimiter));
       command.append(LINE_SEPARATOR);
       println(command);
       executeStatement(command.toString());
@@ -225,15 +240,16 @@ public class ScriptRunner {
   }
 
   private void executeStatement(String command) throws SQLException {
-    Statement statement = connection.createStatement();
-    try {
+    try (Statement statement = connection.createStatement()) {
       statement.setEscapeProcessing(escapeProcessing);
       String sql = command;
       if (removeCRs) {
-        sql = sql.replaceAll("\r\n", "\n");
+        sql = sql.replace("\r\n", "\n");
       }
       try {
         boolean hasResults = statement.execute(sql);
+        // DO NOT try to 'improve' the condition even if IDE tells you to!
+        // It's important that getUpdateCount() is called here.
         while (!(!hasResults && statement.getUpdateCount() == -1)) {
           checkWarnings(statement);
           printResults(statement, hasResults);
@@ -244,17 +260,9 @@ public class ScriptRunner {
       } catch (SQLException e) {
         if (stopOnError) {
           throw e;
-        } else {
-          String message = "Error executing: " + command + ".  Cause: " + e;
-          printlnError(message);
         }
-      }
-    } finally {
-      try {
-        statement.close();
-      } catch (Exception e) {
-        // Ignore to workaround a bug in some connection pools
-        // (Does anyone know the details of the bug?)
+        String message = "Error executing: " + command + ".  Cause: " + e;
+        printlnError(message);
       }
     }
   }

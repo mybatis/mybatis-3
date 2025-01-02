@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+       Copyright 2009-2022 the original author or authors.
+
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+
+          https://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
+-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.apache.ibatis.submitted.sptests.SPMapper">
+
+  <resultMap type="org.apache.ibatis.submitted.sptests.Name" id="nameResult">
+    <result column="ID" property="id"/>
+    <result column="FIRST_NAME" property="firstName"/>
+    <result column="LAST_NAME" property="lastName"/>
+  </resultMap>
+
+  <resultMap type="org.apache.ibatis.submitted.sptests.Name" id="nameResultLinked">
+    <result column="ID" property="id"/>
+    <result column="FIRST_NAME" property="firstName"/>
+    <result column="LAST_NAME" property="lastName"/>
+    <collection property="items" column="id" foreignColumn="name_id" resultSet="items" resultMap="itemResult"/>
+  </resultMap>
+
+  <resultMap type="org.apache.ibatis.submitted.sptests.Name" id="nameResultLinkedNoMatchingInfo">
+    <result column="ID" property="id"/>
+    <result column="FIRST_NAME" property="firstName"/>
+    <result column="LAST_NAME" property="lastName"/>
+    <collection property="items" resultSet="items" resultMap="itemResult"/>
+  </resultMap>
+
+  <resultMap type="org.apache.ibatis.submitted.sptests.Item" id="itemResult">
+    <result column="ID" property="id"/>
+    <result column="ITEM" property="item"/>
+  </resultMap>
+
+  <parameterMap type="map" id="testParameterMap">
+    <parameter property="addend1" jdbcType="INTEGER" mode="IN"/>
+    <parameter property="addend2" jdbcType="INTEGER" mode="IN"/>
+    <parameter property="sum" jdbcType="INTEGER" mode="OUT"/>
+  </parameterMap>
+
+  <!-- Important things for stored procedures:
+    1. Must set the statement type to CALLABLE
+    2. Must use the JDBC standard escape sequence for stored procedures:
+       {call xxx (parm1, parm2)}
+    3. Must set the MODE of all parameters (IN, OUT, INOUT)
+    4. All IN, OUT, and INOUT parameters must be a part of the
+       parameterType or parameterMap (discouraged).  The only exception
+       is if you are using a Map as a parameter object.  In that case you
+       do not need to add OUT parameters to the map before calling, MyBatis
+       will add them for you automatically.
+    5. resultType or resultMap (more typically) is only used if
+       the procedure returns a result set. IMPORTANT: Oracle ref
+       cursors are usually returned as parameters, NOT directly
+       from the stored proc.  So with ref cursors, resultMap
+       and/or resultType is usually not used.
+   -->
+
+  <select id="adderAsSelect" parameterType="org.apache.ibatis.submitted.sptests.Parameter" statementType="CALLABLE">
+    {call sptest.adder(
+      #{addend1,jdbcType=INTEGER,mode=IN},
+      #{addend2,jdbcType=INTEGER,mode=IN},
+      #{sum,jdbcType=INTEGER,mode=OUT}
+    )}
+  </select>
+
+  <update id="adderAsUpdate" parameterType="org.apache.ibatis.submitted.sptests.Parameter" statementType="CALLABLE">
+    {call sptest.adder(
+      #{addend1,jdbcType=INTEGER,mode=IN},
+      #{addend2,jdbcType=INTEGER,mode=IN},
+      #{sum,jdbcType=INTEGER,mode=OUT}
+    )}
+  </update>
+
+  <update id="adderWithParameterMap" parameterMap="testParameterMap" statementType="CALLABLE">
+    {call sptest.adder(?, ?, ?)}
+  </update>
+
+  <select id="getName" parameterType="java.lang.Integer" statementType="CALLABLE"
+    resultMap="nameResult">
+    {call sptest.getname(
+      #{id,jdbcType=INTEGER,mode=IN})}
+  </select>
+
+  <select id="getNames" parameterType="java.util.Map" statementType="CALLABLE"
+    resultMap="nameResult">
+    {call sptest.getnames(
+      #{lowestId,jdbcType=INTEGER,mode=IN},
+      #{totalRows,jdbcType=INTEGER,mode=OUT})}
+  </select>
+
+  <select id="getNamesWithArray" parameterType="java.util.Map" statementType="CALLABLE"
+    resultMap="nameResult">
+    {call sptest.arraytest(
+      #{ids,mode=IN,jdbcType=ARRAY},
+      #{requestedRows,jdbcType=INTEGER,mode=OUT},
+      #{returnedIds,mode=OUT,jdbcType=ARRAY})}
+  </select>
+
+  <select id="getNamesAndItems" statementType="CALLABLE"
+    resultMap="nameResult,itemResult">
+    {call sptest.getnamesanditems()}
+  </select>
+
+  <select id="getNamesAndItemsLinked" statementType="CALLABLE" resultSets="names,items" resultMap="nameResultLinked">
+    {call sptest.getnamesanditems()}
+  </select>
+
+  <select id="getNamesAndItemsLinkedById" statementType="CALLABLE" resultSets="names,items" resultMap="nameResultLinkedNoMatchingInfo">
+    {call sptest.getnamesanditemsbyid(#{id,jdbcType=INTEGER,mode=IN})}
+  </select>
+
+  <!-- issue #145 -->
+  <select id="echoDate" parameterType="java.util.HashMap" statementType="CALLABLE">
+    {call sptest.echoDate(
+      #{input date,jdbcType=DATE,mode=IN},
+      #{output date,jdbcType=DATE,mode=OUT}
+    )}
+  </select>
+
+  <resultMap type="org.apache.ibatis.submitted.sptests.Book" id="bookAndGenreRM">
+    <id column="ID" property="id" />
+    <result column="NAME" property="name" />
+    <association property="genre" column="genre1,genre2" foreignColumn="id1,id2" resultSet="genreRS" resultMap="genreRM" />
+  </resultMap>
+
+  <resultMap type="org.apache.ibatis.submitted.sptests.Genre" id="genreRM">
+    <id column="ID1" />
+    <id column="ID2" />
+    <result column="NAME" property="name" />
+  </resultMap>
+
+  <select id="getBookAndGenre" statementType="CALLABLE" resultSets="bookRS,genreRS" resultMap="bookAndGenreRM">
+    {call sptest.getbookandgenre()}
+  </select>
+
+</mapper>

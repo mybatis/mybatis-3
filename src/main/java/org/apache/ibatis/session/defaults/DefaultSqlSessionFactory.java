@@ -1,11 +1,11 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
+/*
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -87,14 +87,19 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
     return configuration;
   }
 
-  private SqlSession openSessionFromDataSource(ExecutorType execType, TransactionIsolationLevel level, boolean autoCommit) {
+  protected SqlSession createSqlSession(Configuration configuration, Executor executor, boolean autoCommit) {
+    return new DefaultSqlSession(configuration, executor, autoCommit);
+  }
+
+  private SqlSession openSessionFromDataSource(ExecutorType execType, TransactionIsolationLevel level,
+      boolean autoCommit) {
     Transaction tx = null;
     try {
       final Environment environment = configuration.getEnvironment();
       final TransactionFactory transactionFactory = getTransactionFactoryFromEnvironment(environment);
       tx = transactionFactory.newTransaction(environment.getDataSource(), level, autoCommit);
       final Executor executor = configuration.newExecutor(tx, execType);
-      return new DefaultSqlSession(configuration, executor, autoCommit);
+      return createSqlSession(configuration, executor, autoCommit);
     } catch (Exception e) {
       closeTransaction(tx); // may have fetched a connection so lets call close()
       throw ExceptionFactory.wrapException("Error opening session.  Cause: " + e, e);
@@ -117,7 +122,7 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
       final TransactionFactory transactionFactory = getTransactionFactoryFromEnvironment(environment);
       final Transaction tx = transactionFactory.newTransaction(connection);
       final Executor executor = configuration.newExecutor(tx, execType);
-      return new DefaultSqlSession(configuration, executor, autoCommit);
+      return createSqlSession(configuration, executor, autoCommit);
     } catch (Exception e) {
       throw ExceptionFactory.wrapException("Error opening session.  Cause: " + e, e);
     } finally {

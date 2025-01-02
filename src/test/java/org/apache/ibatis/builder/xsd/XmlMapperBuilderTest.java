@@ -1,11 +1,11 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
+/*
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,6 +14,8 @@
  *    limitations under the License.
  */
 package org.apache.ibatis.builder.xsd;
+
+import java.io.InputStream;
 
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.io.Resources;
@@ -25,8 +27,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
-
 @Disabled("We'll try a different approach. See #1393")
 class XmlMapperBuilderTest {
 
@@ -36,7 +36,8 @@ class XmlMapperBuilderTest {
     Configuration configuration = new Configuration();
     String resource = "org/apache/ibatis/builder/xsd/AuthorMapper.xml";
     try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
-      XMLMapperBuilder builder = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
+      XMLMapperBuilder builder = new XMLMapperBuilder(inputStream, configuration, resource,
+          configuration.getSqlFragments());
       builder.parse();
 
       MappedStatement mappedStatement = configuration.getMappedStatement("selectWithOptions");

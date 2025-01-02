@@ -1,0 +1,27 @@
+name: Coveralls
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    if: github.repository_owner == 'mybatis'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          cache: maven
+          distribution: temurin
+          java-version: 21
+      - name: Report Coverage to Coveralls for Pull Requests
+        if: github.event_name == 'pull_request'
+        run: ./mvnw -B -V test jacoco:report coveralls:report -q -Dlicense.skip=true -DrepoToken=$GITHUB_TOKEN -DserviceName=github -DpullRequest=$PR_NUMBER --no-transfer-progress
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.number }}
+      - name: Report Coverage to Coveralls for General Push
+        if: github.event_name == 'push'
+        run: ./mvnw -B -V test jacoco:report coveralls:report -q -Dlicense.skip=true -DrepoToken=$GITHUB_TOKEN -DserviceName=github --no-transfer-progress
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

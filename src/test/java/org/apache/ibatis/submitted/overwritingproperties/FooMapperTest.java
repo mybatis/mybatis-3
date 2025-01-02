@@ -1,11 +1,11 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
+/*
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,7 +16,6 @@
 package org.apache.ibatis.submitted.overwritingproperties;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
@@ -34,18 +33,19 @@ import org.junit.jupiter.api.Test;
  */
 class FooMapperTest {
 
-  private final static String SQL_MAP_CONFIG = "org/apache/ibatis/submitted/overwritingproperties/sqlmap.xml";
+  private static final String SQL_MAP_CONFIG = "org/apache/ibatis/submitted/overwritingproperties/sqlmap.xml";
   private static SqlSession session;
   private static Connection conn;
 
   @BeforeAll
   static void setUpBeforeClass() throws Exception {
-    final SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(Resources.getResourceAsReader(SQL_MAP_CONFIG));
+    final SqlSessionFactory factory = new SqlSessionFactoryBuilder()
+        .build(Resources.getResourceAsReader(SQL_MAP_CONFIG));
     session = factory.openSession();
     conn = session.getConnection();
 
     BaseDataTest.runScript(factory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/overwritingproperties/create-schema-mysql.sql");
+        "org/apache/ibatis/submitted/overwritingproperties/create-schema-mysql.sql");
   }
 
   @BeforeEach
@@ -56,7 +56,7 @@ class FooMapperTest {
   }
 
   @Test
-  void testOverwriteWithDefault() {
+  void overwriteWithDefault() {
     final FooMapper mapper = session.getMapper(FooMapper.class);
     final Bar bar = new Bar(2L);
     final Foo inserted = new Foo(1L, bar, 3, 4);
@@ -70,7 +70,7 @@ class FooMapperTest {
 
     // field4 is not mapped in the result map
     // <result property="field4" column="field3" jdbcType="INTEGER"/>
-    Assertions.assertEquals(inserted.getField3(), selected.getField4() );
+    Assertions.assertEquals(inserted.getField3(), selected.getField4());
 
     // field4 is explicitly remapped to field3 in the resultmap
     // <result property="field3" column="field4" jdbcType="INTEGER"/>
@@ -86,11 +86,9 @@ class FooMapperTest {
 
   @AfterAll
   static void tearDownAfterClass() {
-    try {
+    Assertions.assertDoesNotThrow(() -> {
       conn.close();
-    } catch (SQLException e) {
-      Assertions.fail(e.getMessage());
-    }
+    });
     session.close();
   }
 

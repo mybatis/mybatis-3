@@ -1,11 +1,11 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
+/*
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.submitted.xml_external_ref;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -35,12 +35,12 @@ import org.junit.jupiter.api.Test;
 class ParameterMapReferenceTest {
 
   @Test
-  void testCrossReferenceXmlConfig() throws Exception {
+  void crossReferenceXmlConfig() throws Exception {
     testCrossReference(getSqlSessionFactoryXmlConfig());
   }
 
   @Test
-  void testCrossReferenceJavaConfig() throws Exception {
+  void crossReferenceJavaConfig() throws Exception {
     testCrossReference(getSqlSessionFactoryJavaConfig());
   }
 
@@ -50,7 +50,7 @@ class ParameterMapReferenceTest {
       Person parameter = new Person();
       parameter.setId(1);
       Person person = personMapper.select(parameter);
-      assertEquals((Integer)1, person.getId());
+      assertEquals((Integer) 1, person.getId());
     }
   }
 
@@ -67,8 +67,8 @@ class ParameterMapReferenceTest {
 
   private SqlSessionFactory getSqlSessionFactoryJavaConfig() throws Exception {
     Configuration configuration = new Configuration();
-    Environment environment = new Environment("development", new JdbcTransactionFactory(), new UnpooledDataSource(
-        "org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:xmlextref", null));
+    Environment environment = new Environment("development", new JdbcTransactionFactory(),
+        new UnpooledDataSource("org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:xmlextref", null));
     configuration.setEnvironment(environment);
     configuration.addMapper(ParameterMapReferencePersonMapper.class);
     configuration.addMapper(ParameterMapReferencePetMapper.class);
@@ -80,10 +80,9 @@ class ParameterMapReferenceTest {
     return sqlSessionFactory;
   }
 
-
   private static void initDb(SqlSessionFactory sqlSessionFactory) throws IOException, SQLException {
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/xml_external_ref/CreateDB.sql");
+        "org/apache/ibatis/submitted/xml_external_ref/CreateDB.sql");
   }
 
 }

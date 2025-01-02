@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2019 the original author or authors.
+       Copyright 2009-2024 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
        You may obtain a copy of the License at
 
-          http://www.apache.org/licenses/LICENSE-2.0
+          https://www.apache.org/licenses/LICENSE-2.0
 
        Unless required by applicable law or agreed to in writing, software
        distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,7 +17,7 @@
 
 -->
 <document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
 
   <properties>
     <title>MyBatis 3 | 設定</title>
@@ -200,10 +200,10 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
             </tr>
             <tr>
               <td>
-                multipleResultSetsEnabled
+                <strike>multipleResultSetsEnabled</strike>
               </td>
               <td>
-                １つのステートメントから複数の ResultSet を返すことを許可するかどうかを指定します（複数 ResultSet に対応したドライバが必要です）。
+                非推奨。この設定は何の効果もありません。
               </td>
               <td>
                 true | false
@@ -271,6 +271,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                   <li><code>WARNING</code>: 警告ログを出力します (<code>'org.apache.ibatis.session.AutoMappingUnknownColumnBehavior'</code> のログレベルを<code>WARN</code>に設定してください)</li>
                   <li><code>FAILING</code>: 自動マッピング処理をエラーにします。(<code>SqlSessionException</code>が発生します)</li>
                 </ul>
+                この機能には制限があり、`autoMappingBehavior` に `FULL` がセットされていると誤った結果が報告される場合があります。
               </td>
               <td>
                 NONE, WARNING, FAILING
@@ -322,6 +323,20 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               </td>
               <td>
                 正の整数
+              </td>
+              <td>
+                なし (null)
+              </td>
+            </tr>
+            <tr>
+              <td>
+                defaultResultSetType
+              </td>
+              <td>
+                ステートメント毎の設定を省略した場合のスクロール方法を指定します。 (導入されたバージョン: 3.5.2)
+              </td>
+              <td>
+                FORWARD_ONLY | SCROLL_SENSITIVE | SCROLL_INSENSITIVE | DEFAULT(指定しない時と同じ動作)
               </td>
               <td>
                 なし (null)
@@ -494,7 +509,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 MyBatis のログ出力に使用するロギング実装を指定します。未指定の場合は自動的検出されます。
               </td>
               <td>
-                SLF4J | LOG4J | LOG4J2 | JDK_LOGGING | COMMONS_LOGGING | STDOUT_LOGGING | NO_LOGGING
+                SLF4J | LOG4J(3.5.9以降非推奨) | LOG4J2 | JDK_LOGGING | COMMONS_LOGGING | STDOUT_LOGGING | NO_LOGGING
               </td>
               <td>
                 未指定
@@ -508,7 +523,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 Lazy Loading（遅延読み込み）に対応したオブジェクトを生成する際に使用するプロクシツールを指定します。
               </td>
               <td>
-                CGLIB | JAVASSIST
+                CGLIB (3.5.10 以降非推奨) | JAVASSIST
               </td>
               <td>
                 JAVASSIST (MyBatis 3.3 以上)
@@ -558,6 +573,63 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 未指定
               </td>
             </tr>
+            <tr>
+              <td>
+                shrinkWhitespacesInSql
+              </td>
+              <td>
+                SQL 内の余分な空白文字を削除します。リテラル文字列も対象となる点に注意してください。（導入されたバージョン: 3.5.5）
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
+              </td>
+            </tr>
+            <tr>
+              <td>
+                defaultSqlProviderType
+              </td>
+              <td>
+                SQLを提供するメソッドを保持するSQLプロバイダクラスを指定します(導入されたバージョン: 3.5.6)。
+                ここで指定したクラスは、SQLプロバイダアノテーション(例: <code>@SelectProvider</code>)の<code>type</code>(または <code>value</code>) 属性を省略した際に適用されます。
+              </td>
+              <td>
+                タイプエイリアスまたは完全修飾クラス名
+              </td>
+              <td>
+                未指定
+              </td>
+            </tr>
+            <tr>
+              <td>
+                nullableOnForEach
+              </td>
+              <td>
+                'foreach' タグの 'nullable' 属性のデフォルト値. (導入されたバージョン: 3.5.9)
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
+              </td>
+            </tr>
+            <tr>
+              <td>
+                argNameBasedConstructorAutoMapping
+              </td>
+              <td>
+                引数を受け取るコンストラクタに対して自動マッピングを適用する際、引数名に一致する列をマップ対象にします。<code>false</code> の場合は列の順序依存となります。 (導入されたバージョン: 3.5.10）
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
+              </td>
+            </tr>
           </tbody>
         </table>
         <p>
@@ -566,7 +638,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
         <source><![CDATA[<settings>
   <setting name="cacheEnabled" value="true"/>
   <setting name="lazyLoadingEnabled" value="true"/>
-  <setting name="multipleResultSetsEnabled" value="true"/>
+  <setting name="aggressiveLazyLoading" value="true"/>
   <setting name="useColumnLabel" value="true"/>
   <setting name="useGeneratedKeys" value="false"/>
   <setting name="autoMappingBehavior" value="PARTIAL"/>
@@ -575,10 +647,21 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
   <setting name="defaultStatementTimeout" value="25"/>
   <setting name="defaultFetchSize" value="100"/>
   <setting name="safeRowBoundsEnabled" value="false"/>
+  <setting name="safeResultHandlerEnabled" value="true"/>
   <setting name="mapUnderscoreToCamelCase" value="false"/>
   <setting name="localCacheScope" value="SESSION"/>
   <setting name="jdbcTypeForNull" value="OTHER"/>
   <setting name="lazyLoadTriggerMethods" value="equals,clone,hashCode,toString"/>
+  <setting name="defaultScriptingLanguage" value="org.apache.ibatis.scripting.xmltags.XMLLanguageDriver"/>
+  <setting name="defaultEnumTypeHandler" value="org.apache.ibatis.type.EnumTypeHandler"/>
+  <setting name="callSettersOnNulls" value="false"/>
+  <setting name="returnInstanceForEmptyRow" value="false"/>
+  <setting name="logPrefix" value="exampleLogPreFix_"/>
+  <setting name="logImpl" value="SLF4J | LOG4J | LOG4J2 | JDK_LOGGING | COMMONS_LOGGING | STDOUT_LOGGING | NO_LOGGING"/>
+  <setting name="proxyFactory" value="CGLIB | JAVASSIST"/>
+  <setting name="vfsImpl" value="org.mybatis.example.YourselfVfsImpl"/>
+  <setting name="useActualParamName" value="true"/>
+  <setting name="configurationFactory" value="org.mybatis.example.ConfigurationFactory"/>
 </settings>]]></source>
 
       </subsection>
@@ -657,6 +740,22 @@ public class Author {
             </tr>
             <tr>
               <td>
+                _char （3.5.10 以降）
+              </td>
+              <td>
+                char
+              </td>
+            </tr>
+            <tr>
+              <td>
+                _character （3.5.10 以降）
+              </td>
+              <td>
+                char
+              </td>
+            </tr>
+            <tr>
+              <td>
                 _long
               </td>
               <td>
@@ -725,6 +824,22 @@ public class Author {
               </td>
               <td>
                 Byte
+              </td>
+            </tr>
+            <tr>
+              <td>
+                char （3.5.10 以降）
+              </td>
+              <td>
+                Character
+              </td>
+            </tr>
+            <tr>
+              <td>
+                character （3.5.10 以降）
+              </td>
+              <td>
+                Character
               </td>
             </tr>
             <tr>
@@ -809,10 +924,58 @@ public class Author {
             </tr>
             <tr>
               <td>
+                biginteger
+              </td>
+              <td>
+                BigInteger
+              </td>
+            </tr>
+            <tr>
+              <td>
                 object
               </td>
               <td>
                 Object
+              </td>
+            </tr>
+            <tr>
+              <td>
+                date[]
+              </td>
+              <td>
+                Date[]
+              </td>
+            </tr>
+            <tr>
+              <td>
+                decimal[]
+              </td>
+              <td>
+                BigDecimal[]
+              </td>
+            </tr>
+            <tr>
+              <td>
+                bigdecimal[]
+              </td>
+              <td>
+                BigDecimal[]
+              </td>
+            </tr>
+            <tr>
+              <td>
+                biginteger[]
+              </td>
+              <td>
+                BigInteger[]
+              </td>
+            </tr>
+            <tr>
+              <td>
+                object[]
+              </td>
+              <td>
+                Object[]
               </td>
             </tr>
             <tr>
@@ -1342,7 +1505,7 @@ public class StringTypeHandler extends BaseTypeHandler<String> {
         </p>
 
         <p>
-          MyBatis は、このタイプハンドラーの総称型（Genric Type）から適用対象の Java タイプを自動判定しますが、この動作をオーバーライドする方法が２つあります。
+          MyBatis は、このタイプハンドラーの総称型（Generic Type）から適用対象の Java タイプを自動判定しますが、この動作をオーバーライドする方法が２つあります。
         </p>
         <ul>
           <li>typeHandler 要素に javaType 属性を追加する（例：javaType="String"）
@@ -1434,39 +1597,39 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
         </p>
         <source><![CDATA[<!DOCTYPE mapper
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.apache.ibatis.submitted.rounding.Mapper">
-	<resultMap type="org.apache.ibatis.submitted.rounding.User" id="usermap">
-		<id column="id" property="id"/>
-		<result column="name" property="name"/>
-		<result column="funkyNumber" property="funkyNumber"/>
-		<result column="roundingMode" property="roundingMode"/>
-	</resultMap>
+  <resultMap type="org.apache.ibatis.submitted.rounding.User" id="usermap">
+    <id column="id" property="id"/>
+    <result column="name" property="name"/>
+    <result column="funkyNumber" property="funkyNumber"/>
+    <result column="roundingMode" property="roundingMode"/>
+  </resultMap>
 
-	<select id="getUser" resultMap="usermap">
-		select * from users
-	</select>
-	<insert id="insert">
-	    insert into users (id, name, funkyNumber, roundingMode) values (
-	    	#{id}, #{name}, #{funkyNumber}, #{roundingMode}
-	    )
-	</insert>
+  <select id="getUser" resultMap="usermap">
+    select * from users
+  </select>
+  <insert id="insert">
+      insert into users (id, name, funkyNumber, roundingMode) values (
+        #{id}, #{name}, #{funkyNumber}, #{roundingMode}
+      )
+  </insert>
 
-	<resultMap type="org.apache.ibatis.submitted.rounding.User" id="usermap2">
-		<id column="id" property="id"/>
-		<result column="name" property="name"/>
-		<result column="funkyNumber" property="funkyNumber"/>
-		<result column="roundingMode" property="roundingMode" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
-	</resultMap>
-	<select id="getUser2" resultMap="usermap2">
-		select * from users2
-	</select>
-	<insert id="insert2">
-	    insert into users2 (id, name, funkyNumber, roundingMode) values (
-	    	#{id}, #{name}, #{funkyNumber}, #{roundingMode, typeHandler=org.apache.ibatis.type.EnumTypeHandler}
-	    )
-	</insert>
+  <resultMap type="org.apache.ibatis.submitted.rounding.User" id="usermap2">
+    <id column="id" property="id"/>
+    <result column="name" property="name"/>
+    <result column="funkyNumber" property="funkyNumber"/>
+    <result column="roundingMode" property="roundingMode" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
+  </resultMap>
+  <select id="getUser2" resultMap="usermap2">
+    select * from users2
+  </select>
+  <insert id="insert2">
+      insert into users2 (id, name, funkyNumber, roundingMode) values (
+        #{id}, #{name}, #{funkyNumber}, #{roundingMode, typeHandler=org.apache.ibatis.type.EnumTypeHandler}
+      )
+  </insert>
 
 </mapper>
 ]]></source>
@@ -1484,15 +1647,22 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
         </p>
         <source><![CDATA[// ExampleObjectFactory.java
 public class ExampleObjectFactory extends DefaultObjectFactory {
-  public Object create(Class type) {
+  @Override
+  public <T> T create(Class<T> type) {
     return super.create(type);
   }
-  public Object create(Class type, List<Class> constructorArgTypes, List<Object> constructorArgs) {
+
+  @Override
+  public <T> T create(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
     return super.create(type, constructorArgTypes, constructorArgs);
   }
+
+  @Override
   public void setProperties(Properties properties) {
     super.setProperties(properties);
   }
+
+  @Override
   public <T> boolean isCollection(Class<T> type) {
     return Collection.class.isAssignableFrom(type);
   }}
@@ -1551,13 +1721,19 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
   method = "update",
   args = {MappedStatement.class,Object.class})})
 public class ExamplePlugin implements Interceptor {
+  private Properties properties = new Properties();
+
+  @Override
   public Object intercept(Invocation invocation) throws Throwable {
-    return invocation.proceed();
+    // implement pre processing if need
+    Object returnObject = invocation.proceed();
+    // implement post processing if need
+    return returnObject;
   }
-  public Object plugin(Object target) {
-    return Plugin.wrap(target, this);
-  }
+
+  @Override
   public void setProperties(Properties properties) {
+    this.properties = properties;
   }
 }]]></source>
 
@@ -1599,8 +1775,8 @@ public class ExamplePlugin implements Interceptor {
           </li>
         </ul>
         <p>
-          SqlSessionFactoryBuilder に envrionment を渡すことで、どの環境に対する SqlSessionFactory をビルドするか指定することができます。
-          envrionment を引数に取るシグネチャは下記の２つです。
+          SqlSessionFactoryBuilder に environment を渡すことで、どの環境に対する SqlSessionFactory をビルドするか指定することができます。
+          environment を引数に取るシグネチャは下記の２つです。
         </p>
 
         <source><![CDATA[SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environment);
@@ -1660,7 +1836,10 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
         <ul>
           <li>
             JDBC - JDBC トランザクションマネージャーは、単純に JDBC のコミットとロールバックの機能を直接利用します。
-            この場合、トランザクションのスコープはデータソースから取得した接続に依存します。
+            この場合、トランザクションのスコープはデータソースから取得した接続に依存します。一部のドライバーとの互換性を保つため、デフォルトでは接続をクローズする前にオートコミットを有効化するようになっていますが、この処理は他のドライバにとっては不要なだけでなく負荷の高い操作となる可能性があります。バージョン 3.5.10 以降では skipSetAutoCommitOnClose に false を設定することでオートコミットの有効化処理をスキップできるようになっています。
+            <source><![CDATA[<transactionManager type="JDBC">
+  <property name="skipSetAutoCommitOnClose" value="false"/>
+</transactionManager>]]></source>
           </li>
           <li>
             MANAGED - MANAGED トランザクションマネージャーはコミットもロールバックもしません。
@@ -1679,7 +1858,9 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
           トランザクションマネージャーに必須のプロパティはありませんが、これらはともにタイプエイリアスです。つまり、TransactionFactory インターフェイスの実装クラスの完全修飾クラス名を指定すれば、MyBatis が用意した二種類のトランザクションマネージャーの代わりに独自に実装したトランザクションマネージャーを利用することが可能です。
         </p>
         <source><![CDATA[public interface TransactionFactory {
-  void setProperties(Properties props);
+  default void setProperties(Properties props) { // Since 3.5.2, change to default method
+    // NOP
+  }
   Transaction newTransaction(Connection conn);
   Transaction newTransaction(DataSource dataSource, TransactionIsolationLevel level, boolean autoCommit);
 }]]></source>
@@ -1717,7 +1898,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
           少々遅いですが、即時の接続を必要としないシンプルなアプリケーションの場合は良い選択肢です。
           パフォーマンスに関しては、お使いのデータベースによっても変わってきます。
           接続プールの重要性が低いデータベースの場合はこの設定が最適となります。
-          UNPOOLED データソースは５つのプロパティで設定できます。
+          UNPOOLED データソースに対して設定可能なプロパティは下記の通りです。
         </p>
         <ul>
           <li>driver – JDBC ドライバーの完全修飾 Java クラス名（ドライバーに含まれているデータソースクラスではありません）
@@ -1729,6 +1910,8 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
           <li>password - データベース接続時のパスワード
           </li>
           <li>defaultTransactionIsolationLevel – デフォルトのトランザクション分離レベル
+          </li>
+          <li>defaultNetworkTimeout – 任意の要求に対するデータベースからの応答待機期限のデフォルト値（ミリ秒）。詳細は <code>java.sql.Connection#setNetworkTimeout()</code> の javadoc 参照。
           </li>
         </ul>
         <p>
@@ -1749,7 +1932,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
           Web アプリケーションでは応答速度向上のために良く使われる設定です。
         </p>
         <p>
-          POOLED データソースには、UNPOOLED の設定で見た５つの他に様々なプロパティを指定することができます。
+          POOLED データソースには、UNPOOLED に対して設定可能なプロパティに加えて以下を指定することができます。
         </p>
         <ul>
           <li>poolMaximumActiveConnections – 同時にプールされる接続数の最大値です。
@@ -1878,7 +2061,9 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
     </p>
 
         <source><![CDATA[public interface DatabaseIdProvider {
-  void setProperties(Properties p);
+  default void setProperties(Properties p) { // Since 3.5.2, change to default method
+    // NOP
+  }
   String getDatabaseId(DataSource dataSource) throws SQLException;
 }]]></source>
 

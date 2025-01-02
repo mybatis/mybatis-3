@@ -1,11 +1,11 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
+/*
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -29,7 +29,7 @@ import org.apache.ibatis.reflection.ExceptionUtil;
 class PooledConnection implements InvocationHandler {
 
   private static final String CLOSE = "close";
-  private static final Class<?>[] IFACES = new Class<?>[] { Connection.class };
+  private static final Class<?>[] IFACES = { Connection.class };
 
   private final int hashCode;
   private final PooledDataSource dataSource;
@@ -44,8 +44,10 @@ class PooledConnection implements InvocationHandler {
   /**
    * Constructor for SimplePooledConnection that uses the Connection and PooledDataSource passed in.
    *
-   * @param connection - the connection that is to be presented as a pooled connection
-   * @param dataSource - the dataSource that the connection is from
+   * @param connection
+   *          - the connection that is to be presented as a pooled connection
+   * @param dataSource
+   *          - the dataSource that the connection is from
    */
   public PooledConnection(Connection connection, PooledDataSource dataSource) {
     this.hashCode = connection.hashCode();
@@ -112,7 +114,8 @@ class PooledConnection implements InvocationHandler {
   /**
    * Setter for the connection type.
    *
-   * @param connectionTypeCode - the connection type
+   * @param connectionTypeCode
+   *          - the connection type
    */
   public void setConnectionTypeCode(int connectionTypeCode) {
     this.connectionTypeCode = connectionTypeCode;
@@ -130,7 +133,8 @@ class PooledConnection implements InvocationHandler {
   /**
    * Setter for the time that the connection was created.
    *
-   * @param createdTimestamp - the timestamp
+   * @param createdTimestamp
+   *          - the timestamp
    */
   public void setCreatedTimestamp(long createdTimestamp) {
     this.createdTimestamp = createdTimestamp;
@@ -148,7 +152,8 @@ class PooledConnection implements InvocationHandler {
   /**
    * Setter for the time that the connection was last used.
    *
-   * @param lastUsedTimestamp - the timestamp
+   * @param lastUsedTimestamp
+   *          - the timestamp
    */
   public void setLastUsedTimestamp(long lastUsedTimestamp) {
     this.lastUsedTimestamp = lastUsedTimestamp;
@@ -184,7 +189,8 @@ class PooledConnection implements InvocationHandler {
   /**
    * Setter for the timestamp that this connection was checked out.
    *
-   * @param timestamp the timestamp
+   * @param timestamp
+   *          the timestamp
    */
   public void setCheckoutTimestamp(long timestamp) {
     this.checkoutTimestamp = timestamp;
@@ -207,14 +213,17 @@ class PooledConnection implements InvocationHandler {
   /**
    * Allows comparing this connection to another.
    *
-   * @param obj - the other connection to test for equality
+   * @param obj
+   *          - the other connection to test for equality
+   *
    * @see Object#equals(Object)
    */
   @Override
   public boolean equals(Object obj) {
     if (obj instanceof PooledConnection) {
       return realConnection.hashCode() == ((PooledConnection) obj).realConnection.hashCode();
-    } else if (obj instanceof Connection) {
+    }
+    if (obj instanceof Connection) {
       return hashCode == obj.hashCode();
     } else {
       return false;
@@ -224,15 +233,19 @@ class PooledConnection implements InvocationHandler {
   /**
    * Required for InvocationHandler implementation.
    *
-   * @param proxy  - not used
-   * @param method - the method to be executed
-   * @param args   - the parameters to be passed to the method
+   * @param proxy
+   *          - not used
+   * @param method
+   *          - the method to be executed
+   * @param args
+   *          - the parameters to be passed to the method
+   *
    * @see java.lang.reflect.InvocationHandler#invoke(Object, java.lang.reflect.Method, Object[])
    */
   @Override
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
     String methodName = method.getName();
-    if (CLOSE.hashCode() == methodName.hashCode() && CLOSE.equals(methodName)) {
+    if (CLOSE.equals(methodName)) {
       dataSource.pushConnection(this);
       return null;
     }

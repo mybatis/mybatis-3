@@ -1,11 +1,11 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
+/*
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,38 +15,32 @@
  */
 package org.apache.ibatis.type;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.SQLXML;
-import java.util.Collections;
 
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.apache.ibatis.testcontainers.PgContainer;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-
 import org.mockito.Mock;
-import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres;
-import ru.yandex.qatools.embed.postgresql.util.SocketUtil;
 
-@Tag("EmbeddedPostgresqlTests")
+@Tag("TestcontainersTests")
 class SqlxmlTypeHandlerTest extends BaseTypeHandlerTest {
   private static final TypeHandler<String> TYPE_HANDLER = new SqlxmlTypeHandler();
-  private static final EmbeddedPostgres postgres = new EmbeddedPostgres();
 
   private static SqlSessionFactory sqlSessionFactory;
 
@@ -58,25 +52,15 @@ class SqlxmlTypeHandlerTest extends BaseTypeHandlerTest {
 
   @BeforeAll
   static void setUp() throws Exception {
-    // Launch PostgreSQL server. Download / unarchive if necessary.
-    String url = postgres.start(
-        EmbeddedPostgres.cachedRuntimeConfig(Paths.get(System.getProperty("java.io.tmpdir"), "pgembed")), "localhost",
-        SocketUtil.findFreePort(), "postgres_sqlxml", "postgres", "root", Collections.emptyList());
-
     Configuration configuration = new Configuration();
-    Environment environment = new Environment("development", new JdbcTransactionFactory(), new UnpooledDataSource(
-        "org.postgresql.Driver", url, null));
+    Environment environment = new Environment("development", new JdbcTransactionFactory(),
+        PgContainer.getUnpooledDataSource());
     configuration.setEnvironment(environment);
     configuration.addMapper(Mapper.class);
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
 
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/type/SqlxmlTypeHandlerTest.sql");
-  }
-
-  @AfterAll
-  static void tearDown() {
-    postgres.stop();
+        "org/apache/ibatis/type/SqlxmlTypeHandlerTest.sql");
   }
 
   @Override
@@ -147,8 +131,7 @@ class SqlxmlTypeHandlerTest extends BaseTypeHandlerTest {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       Mapper mapper = session.getMapper(Mapper.class);
       XmlBean bean = mapper.select(1);
-      assertEquals("<title>XML data</title>",
-          bean.getContent());
+      assertEquals("<title>XML data</title>", bean.getContent());
     }
   }
 

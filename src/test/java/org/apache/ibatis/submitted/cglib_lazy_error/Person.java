@@ -1,11 +1,11 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
+/*
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,21 +25,20 @@ public class Person {
   public Person getAncestor() {
     if (getParent() == null) {
       return this;
-    } else {
-      return getParent().getAncestor();
     }
+    return getParent().getAncestor();
   }
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof Person)) return false;
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof Person person)) {
+      return false;
+    }
 
-    Person person = (Person) o;
-
-    if (id != null ? !id.equals(person.id) : person.id != null) return false;
-
-    return true;
+    return id != null ? id.equals(person.id) : person.id == null;
   }
 
   @Override
@@ -49,7 +48,7 @@ public class Person {
 
   @Override
   public String toString() {
-    return id + ": " + firstName + " " + lastName + " ("+parent+")";
+    return id + ": " + firstName + " " + lastName + " (" + parent + ")";
   }
 
   public String getFirstName() {

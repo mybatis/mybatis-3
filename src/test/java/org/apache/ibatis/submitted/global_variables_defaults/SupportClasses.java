@@ -1,11 +1,11 @@
-/**
- *    Copyright 2009-2016 the original author or authors.
+/*
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,12 +15,12 @@
  */
 package org.apache.ibatis.submitted.global_variables_defaults;
 
+import java.lang.reflect.Field;
+import java.util.Properties;
+
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
-
-import java.lang.reflect.Field;
-import java.util.Properties;
 
 public class SupportClasses {
 
@@ -54,7 +54,7 @@ public class SupportClasses {
     }
   }
 
-  static class Utils {
+  static final class Utils {
     static SupportClasses.CustomCache unwrap(Cache cache) {
       Field field;
       try {
@@ -70,6 +70,9 @@ public class SupportClasses {
       } finally {
         field.setAccessible(false);
       }
+    }
+
+    private Utils() {
     }
   }
 

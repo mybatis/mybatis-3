@@ -1,11 +1,11 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
+/*
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,8 +15,16 @@
  */
 package org.apache.ibatis.autoconstructor;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.io.Reader;
+import java.util.List;
+
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.exceptions.PersistenceException;
+import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -24,12 +32,6 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
-import java.io.Reader;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class AutoConstructorTest {
   private static SqlSessionFactory sqlSessionFactory;
@@ -72,6 +74,16 @@ class AutoConstructorTest {
   }
 
   @Test
+  void badMultipleAnnotatedSubject() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      final AutoConstructorMapper mapper = sqlSession.getMapper(AutoConstructorMapper.class);
+      final PersistenceException ex = assertThrows(PersistenceException.class, mapper::getBadAnnotatedSubjects);
+      final ExecutorException cause = (ExecutorException) ex.getCause();
+      assertEquals("@AutomapConstructor should be used in only one constructor.", cause.getMessage());
+    }
+  }
+
+  @Test
   void badSubject() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       final AutoConstructorMapper mapper = sqlSession.getMapper(AutoConstructorMapper.class);
@@ -83,12 +95,12 @@ class AutoConstructorTest {
   void extensiveSubject() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       final AutoConstructorMapper mapper = sqlSession.getMapper(AutoConstructorMapper.class);
-      verifySubjects(mapper.getExtensiveSubject());
+      verifySubjects(mapper.getExtensiveSubjects());
     }
   }
 
   private void verifySubjects(final List<?> subjects) {
     assertNotNull(subjects);
-    Assertions.assertThat(subjects.size()).isEqualTo(3);
+    Assertions.assertThat(subjects).hasSize(3);
   }
 }

@@ -1,11 +1,11 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
+/*
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,14 +20,15 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.BaseDataTest;
-import org.junit.jupiter.api.Assertions;
-
 import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.LocalCacheScope;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
 class AssociationTypeTest {
 
@@ -36,23 +37,33 @@ class AssociationTypeTest {
   @BeforeAll
   static void setUp() throws Exception {
     // create a SqlSessionFactory
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/associationtype/mybatis-config.xml")) {
+    try (Reader reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/associationtype/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
     // populate in-memory database
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/associationtype/CreateDB.sql");
+        "org/apache/ibatis/submitted/associationtype/CreateDB.sql");
   }
 
-  @Test
-  void shouldGetAUser() {
+  @ParameterizedTest
+  @EnumSource
+  void shouldGetAUser(LocalCacheScope localCacheScope) {
+    sqlSessionFactory.getConfiguration().setLocalCacheScope(localCacheScope);
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      List<Map> results = sqlSession.selectList("getUser");
-      for (Map r : results) {
-        Assertions.assertEquals(String.class, r.get("a1").getClass());
-        Assertions.assertEquals(String.class, r.get("a2").getClass());
+      List<Map<String, ?>> results = sqlSession.selectList("getUser");
+      for (Map<String, ?> r : results) {
+        Object a1 = r.get("a1");
+        Object a2 = r.get("a2");
+        Assertions.assertEquals(String.class, a1.getClass());
+        Assertions.assertEquals(String.class, a2.getClass());
+        Assertions.assertSame(a1, a2,
+            "The result should be put into local cache regardless of localCacheScope setting.");
       }
+    } finally {
+      // Reset the scope for other tests
+      sqlSessionFactory.getConfiguration().setLocalCacheScope(LocalCacheScope.SESSION);
     }
   }
 

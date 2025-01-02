@@ -1,11 +1,11 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
+/*
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 class SqlTimetampTypeHandlerTest extends BaseTypeHandlerTest {
 
   private static final TypeHandler<Timestamp> TYPE_HANDLER = new SqlTimestampTypeHandler();
-  private static final java.sql.Timestamp SQL_TIME = new java.sql.Timestamp(new Date().getTime());
+  private static final Timestamp SQL_TIME = new Timestamp(new Date().getTime());
 
   @Override
   @Test

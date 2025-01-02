@@ -1,11 +1,11 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
+/*
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,6 +16,7 @@
 package org.apache.ibatis.logging;
 
 import java.lang.reflect.Constructor;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author Clinton Begin
@@ -28,6 +29,7 @@ public final class LogFactory {
    */
   public static final String MARKER = "MYBATIS";
 
+  private static final ReentrantLock lock = new ReentrantLock();
   private static Constructor<? extends Log> logConstructor;
 
   static {
@@ -43,8 +45,8 @@ public final class LogFactory {
     // disable construction
   }
 
-  public static Log getLog(Class<?> aClass) {
-    return getLog(aClass.getName());
+  public static Log getLog(Class<?> clazz) {
+    return getLog(clazz.getName());
   }
 
   public static Log getLog(String logger) {
@@ -55,35 +57,39 @@ public final class LogFactory {
     }
   }
 
-  public static synchronized void useCustomLogging(Class<? extends Log> clazz) {
+  public static void useCustomLogging(Class<? extends Log> clazz) {
     setImplementation(clazz);
   }
 
-  public static synchronized void useSlf4jLogging() {
+  public static void useSlf4jLogging() {
     setImplementation(org.apache.ibatis.logging.slf4j.Slf4jImpl.class);
   }
 
-  public static synchronized void useCommonsLogging() {
+  public static void useCommonsLogging() {
     setImplementation(org.apache.ibatis.logging.commons.JakartaCommonsLoggingImpl.class);
   }
 
-  public static synchronized void useLog4JLogging() {
+  /**
+   * @deprecated Since 3.5.9 - See https://github.com/mybatis/mybatis-3/issues/1223. This method will remove future.
+   */
+  @Deprecated
+  public static void useLog4JLogging() {
     setImplementation(org.apache.ibatis.logging.log4j.Log4jImpl.class);
   }
 
-  public static synchronized void useLog4J2Logging() {
+  public static void useLog4J2Logging() {
     setImplementation(org.apache.ibatis.logging.log4j2.Log4j2Impl.class);
   }
 
-  public static synchronized void useJdkLogging() {
+  public static void useJdkLogging() {
     setImplementation(org.apache.ibatis.logging.jdk14.Jdk14LoggingImpl.class);
   }
 
-  public static synchronized void useStdOutLogging() {
+  public static void useStdOutLogging() {
     setImplementation(org.apache.ibatis.logging.stdout.StdOutImpl.class);
   }
 
-  public static synchronized void useNoLogging() {
+  public static void useNoLogging() {
     setImplementation(org.apache.ibatis.logging.nologging.NoLoggingImpl.class);
   }
 
@@ -98,6 +104,7 @@ public final class LogFactory {
   }
 
   private static void setImplementation(Class<? extends Log> implClass) {
+    lock.lock();
     try {
       Constructor<? extends Log> candidate = implClass.getConstructor(String.class);
       Log log = candidate.newInstance(LogFactory.class.getName());
@@ -107,6 +114,8 @@ public final class LogFactory {
       logConstructor = candidate;
     } catch (Throwable t) {
       throw new LogException("Error setting Log implementation.  Cause: " + t, t);
+    } finally {
+      lock.unlock();
     }
   }
 

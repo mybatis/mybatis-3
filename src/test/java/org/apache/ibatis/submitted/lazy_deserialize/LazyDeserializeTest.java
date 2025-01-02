@@ -1,11 +1,11 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
+/*
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,7 +15,10 @@
  */
 package org.apache.ibatis.submitted.lazy_deserialize;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -34,8 +37,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- *
  * @since 2011-04-06T10:58:55+0200
+ *
  * @author Franta Mejta
  */
 class LazyDeserializeTest {
@@ -56,11 +59,11 @@ class LazyDeserializeTest {
     }
 
     BaseDataTest.runScript(factory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/lazy_deserialize/CreateDB.sql");
+        "org/apache/ibatis/submitted/lazy_deserialize/CreateDB.sql");
   }
 
   @Test
-  void testLoadLazyDeserialize() throws Exception {
+  void loadLazyDeserialize() throws Exception {
     factory.getConfiguration().setConfigurationFactory(this.getClass());
     try (SqlSession session = factory.openSession()) {
       final Mapper mapper = session.getMapper(Mapper.class);
@@ -77,7 +80,7 @@ class LazyDeserializeTest {
   }
 
   @Test
-  void testLoadLazyDeserializeWithoutConfigurationFactory() throws Exception {
+  void loadLazyDeserializeWithoutConfigurationFactory() throws Exception {
     try (SqlSession session = factory.openSession()) {
       final Mapper mapper = session.getMapper(Mapper.class);
       final LazyObjectFoo foo = mapper.loadFoo(FOO_ID);
@@ -94,7 +97,7 @@ class LazyDeserializeTest {
 
   private byte[] serializeFoo(final LazyObjectFoo foo) throws Exception {
     try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
-         ObjectOutputStream oos = new ObjectOutputStream(bos)) {
+        ObjectOutputStream oos = new ObjectOutputStream(bos)) {
       oos.writeObject(foo);
       return bos.toByteArray();
     }
@@ -102,7 +105,7 @@ class LazyDeserializeTest {
 
   private LazyObjectFoo deserializeFoo(final byte[] serializedFoo) throws Exception {
     try (ByteArrayInputStream bis = new ByteArrayInputStream(serializedFoo);
-         ObjectInputStream ios = new ObjectInputStream(bis)) {
+        ObjectInputStream ios = new ObjectInputStream(bis)) {
       return (LazyObjectFoo) ios.readObject();
     }
   }

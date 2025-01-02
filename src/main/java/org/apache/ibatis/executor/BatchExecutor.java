@@ -1,11 +1,11 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
+/*
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -54,7 +54,8 @@ public class BatchExecutor extends BaseExecutor {
   @Override
   public int doUpdate(MappedStatement ms, Object parameterObject) throws SQLException {
     final Configuration configuration = ms.getConfiguration();
-    final StatementHandler handler = configuration.newStatementHandler(this, ms, parameterObject, RowBounds.DEFAULT, null, null);
+    final StatementHandler handler = configuration.newStatementHandler(this, ms, parameterObject, RowBounds.DEFAULT,
+        null, null);
     final BoundSql boundSql = handler.getBoundSql();
     final String sql = boundSql.getSql();
     final Statement stmt;
@@ -62,13 +63,13 @@ public class BatchExecutor extends BaseExecutor {
       int last = statementList.size() - 1;
       stmt = statementList.get(last);
       applyTransactionTimeout(stmt);
-      handler.parameterize(stmt);//fix Issues 322
+      handler.parameterize(stmt);// fix Issues 322
       BatchResult batchResult = batchResultList.get(last);
       batchResult.addParameterObject(parameterObject);
     } else {
       Connection connection = getConnection(ms.getStatementLog());
       stmt = handler.prepare(connection, transaction.getTimeout());
-      handler.parameterize(stmt);    //fix Issues 322
+      handler.parameterize(stmt); // fix Issues 322
       currentSql = sql;
       currentStatement = ms;
       statementList.add(stmt);
@@ -79,13 +80,14 @@ public class BatchExecutor extends BaseExecutor {
   }
 
   @Override
-  public <E> List<E> doQuery(MappedStatement ms, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql)
-      throws SQLException {
+  public <E> List<E> doQuery(MappedStatement ms, Object parameterObject, RowBounds rowBounds,
+      ResultHandler resultHandler, BoundSql boundSql) throws SQLException {
     Statement stmt = null;
     try {
       flushStatements();
       Configuration configuration = ms.getConfiguration();
-      StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameterObject, rowBounds, resultHandler, boundSql);
+      StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameterObject, rowBounds,
+          resultHandler, boundSql);
       Connection connection = getConnection(ms.getStatementLog());
       stmt = handler.prepare(connection, transaction.getTimeout());
       handler.parameterize(stmt);
@@ -96,15 +98,17 @@ public class BatchExecutor extends BaseExecutor {
   }
 
   @Override
-  protected <E> Cursor<E> doQueryCursor(MappedStatement ms, Object parameter, RowBounds rowBounds, BoundSql boundSql) throws SQLException {
+  protected <E> Cursor<E> doQueryCursor(MappedStatement ms, Object parameter, RowBounds rowBounds, BoundSql boundSql)
+      throws SQLException {
     flushStatements();
     Configuration configuration = ms.getConfiguration();
     StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, null, boundSql);
     Connection connection = getConnection(ms.getStatementLog());
     Statement stmt = handler.prepare(connection, transaction.getTimeout());
-    stmt.closeOnCompletion();
     handler.parameterize(stmt);
-    return handler.queryCursor(stmt);
+    Cursor<E> cursor = handler.queryCursor(stmt);
+    stmt.closeOnCompletion();
+    return cursor;
   }
 
   @Override
@@ -126,7 +130,7 @@ public class BatchExecutor extends BaseExecutor {
           if (Jdbc3KeyGenerator.class.equals(keyGenerator.getClass())) {
             Jdbc3KeyGenerator jdbc3KeyGenerator = (Jdbc3KeyGenerator) keyGenerator;
             jdbc3KeyGenerator.processBatch(ms, stmt, parameterObjects);
-          } else if (!NoKeyGenerator.class.equals(keyGenerator.getClass())) { //issue #141
+          } else if (!NoKeyGenerator.class.equals(keyGenerator.getClass())) { // issue #141
             for (Object parameter : parameterObjects) {
               keyGenerator.processAfter(this, ms, stmt, parameter);
             }
@@ -135,14 +139,10 @@ public class BatchExecutor extends BaseExecutor {
           closeStatement(stmt);
         } catch (BatchUpdateException e) {
           StringBuilder message = new StringBuilder();
-          message.append(batchResult.getMappedStatement().getId())
-              .append(" (batch index #")
-              .append(i + 1)
-              .append(")")
+          message.append(batchResult.getMappedStatement().getId()).append(" (batch index #").append(i + 1).append(")")
               .append(" failed.");
           if (i > 0) {
-            message.append(" ")
-                .append(i)
+            message.append(" ").append(i)
                 .append(" prior sub executor(s) completed successfully, but will be rolled back.");
           }
           throw new BatchExecutorException(message.toString(), e, results, batchResult);

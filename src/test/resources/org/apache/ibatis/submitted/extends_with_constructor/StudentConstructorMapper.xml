@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+
+       Copyright 2009-2022 the original author or authors.
+
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+
+          https://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
+-->
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.apache.ibatis.submitted.extends_with_constructor.StudentConstructorMapper">
+    <resultMap id="StudentConstructorMap" type="org.apache.ibatis.submitted.extends_with_constructor.StudentConstructor">
+        <constructor>
+            <idArg column="id" javaType="int"/>
+            <arg column="name" javaType="string"/>
+        </constructor>
+        <association property="teacher" column="teacher_id" select="org.apache.ibatis.submitted.extends_with_constructor.TeacherMapper.selectById"/>
+    </resultMap>
+    <resultMap id="StudentConstructorWithTeacherMap" type="org.apache.ibatis.submitted.extends_with_constructor.StudentConstructor" extends="StudentConstructorMap">
+        <association property="teacher" resultMap="org.apache.ibatis.submitted.extends_with_constructor.TeacherMapper.TeacherMap"/>
+    </resultMap>
+    <resultMap id="StudentNoNameMap" type="org.apache.ibatis.submitted.extends_with_constructor.StudentConstructor" extends="StudentConstructorMap">
+        <constructor>
+            <idArg column="id" javaType="int"/>
+        </constructor>
+    </resultMap>
+
+    <select id="selectWithTeacherById" resultMap="StudentConstructorWithTeacherMap" parameterType="int">
+        SELECT id, name, teacher_id
+        FROM student
+        WHERE id = #{id}
+    </select>
+    <select id="selectNoNameById" resultMap="StudentNoNameMap" parameterType="int">
+        SELECT id, name, teacher_id
+        FROM student
+        WHERE id = #{id}
+    </select>
+</mapper>

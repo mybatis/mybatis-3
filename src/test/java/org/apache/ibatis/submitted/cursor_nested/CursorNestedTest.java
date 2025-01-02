@@ -1,11 +1,11 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
+/*
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,6 +14,9 @@
  *    limitations under the License.
  */
 package org.apache.ibatis.submitted.cursor_nested;
+
+import java.io.Reader;
+import java.util.Iterator;
 
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.cursor.Cursor;
@@ -26,9 +29,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.io.Reader;
-import java.util.Iterator;
-
 class CursorNestedTest {
 
   private static SqlSessionFactory sqlSessionFactory;
@@ -36,7 +36,8 @@ class CursorNestedTest {
   @BeforeAll
   static void setUp() throws Exception {
     // create a SqlSessionFactory
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/cursor_nested/mybatis-config.xml")) {
+    try (
+        Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/cursor_nested/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
@@ -89,7 +90,7 @@ class CursorNestedTest {
   }
 
   @Test
-  void testCursorWithRowBound() {
+  void cursorWithRowBound() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Cursor<User> usersCursor = sqlSession.selectCursor("getAllUsers", null, new RowBounds(2, 1));
 

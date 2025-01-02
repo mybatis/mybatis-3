@@ -1,11 +1,11 @@
-/**
- *    Copyright 2009-2018 the original author or authors.
+/*
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -73,9 +73,8 @@ public class MetaClass {
     if (prop.hasNext()) {
       MetaClass metaProp = metaClassForProperty(prop.getName());
       return metaProp.getSetterType(prop.getChildren());
-    } else {
-      return reflector.getSetterType(prop.getName());
     }
+    return reflector.getSetterType(prop.getName());
   }
 
   public Class<?> getGetterType(String name) {
@@ -116,47 +115,45 @@ public class MetaClass {
     try {
       Invoker invoker = reflector.getGetInvoker(propertyName);
       if (invoker instanceof MethodInvoker) {
-        Field _method = MethodInvoker.class.getDeclaredField("method");
-        _method.setAccessible(true);
-        Method method = (Method) _method.get(invoker);
+        Field declaredMethod = MethodInvoker.class.getDeclaredField("method");
+        declaredMethod.setAccessible(true);
+        Method method = (Method) declaredMethod.get(invoker);
         return TypeParameterResolver.resolveReturnType(method, reflector.getType());
-      } else if (invoker instanceof GetFieldInvoker) {
-        Field _field = GetFieldInvoker.class.getDeclaredField("field");
-        _field.setAccessible(true);
-        Field field = (Field) _field.get(invoker);
+      }
+      if (invoker instanceof GetFieldInvoker) {
+        Field declaredField = GetFieldInvoker.class.getDeclaredField("field");
+        declaredField.setAccessible(true);
+        Field field = (Field) declaredField.get(invoker);
         return TypeParameterResolver.resolveFieldType(field, reflector.getType());
       }
-    } catch (NoSuchFieldException | IllegalAccessException ignored) {
+    } catch (NoSuchFieldException | IllegalAccessException e) {
+      // Ignored
     }
     return null;
   }
 
   public boolean hasSetter(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
-    if (prop.hasNext()) {
-      if (reflector.hasSetter(prop.getName())) {
-        MetaClass metaProp = metaClassForProperty(prop.getName());
-        return metaProp.hasSetter(prop.getChildren());
-      } else {
-        return false;
-      }
-    } else {
+    if (!prop.hasNext()) {
       return reflector.hasSetter(prop.getName());
     }
+    if (reflector.hasSetter(prop.getName())) {
+      MetaClass metaProp = metaClassForProperty(prop.getName());
+      return metaProp.hasSetter(prop.getChildren());
+    }
+    return false;
   }
 
   public boolean hasGetter(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
-    if (prop.hasNext()) {
-      if (reflector.hasGetter(prop.getName())) {
-        MetaClass metaProp = metaClassForProperty(prop);
-        return metaProp.hasGetter(prop.getChildren());
-      } else {
-        return false;
-      }
-    } else {
+    if (!prop.hasNext()) {
       return reflector.hasGetter(prop.getName());
     }
+    if (reflector.hasGetter(prop.getName())) {
+      MetaClass metaProp = metaClassForProperty(prop);
+      return metaProp.hasGetter(prop.getChildren());
+    }
+    return false;
   }
 
   public Invoker getGetInvoker(String name) {

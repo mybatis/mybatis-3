@@ -1,11 +1,11 @@
-/**
- *    Copyright 2009-2016 the original author or authors.
+/*
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -48,8 +48,7 @@ public class JndiDataSourceFactory implements DataSourceFactory {
         initCtx = new InitialContext(env);
       }
 
-      if (properties.containsKey(INITIAL_CONTEXT)
-          && properties.containsKey(DATA_SOURCE)) {
+      if (properties.containsKey(INITIAL_CONTEXT) && properties.containsKey(DATA_SOURCE)) {
         Context ctx = (Context) initCtx.lookup(properties.getProperty(INITIAL_CONTEXT));
         dataSource = (DataSource) ctx.lookup(properties.getProperty(DATA_SOURCE));
       } else if (properties.containsKey(DATA_SOURCE)) {
@@ -67,16 +66,15 @@ public class JndiDataSourceFactory implements DataSourceFactory {
   }
 
   private static Properties getEnvProperties(Properties allProps) {
-    final String PREFIX = ENV_PREFIX;
     Properties contextProperties = null;
     for (Entry<Object, Object> entry : allProps.entrySet()) {
       String key = (String) entry.getKey();
       String value = (String) entry.getValue();
-      if (key.startsWith(PREFIX)) {
+      if (key.startsWith(ENV_PREFIX)) {
         if (contextProperties == null) {
           contextProperties = new Properties();
         }
-        contextProperties.put(key.substring(PREFIX.length()), value);
+        contextProperties.put(key.substring(ENV_PREFIX.length()), value);
       }
     }
     return contextProperties;

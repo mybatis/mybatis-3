@@ -1,11 +1,11 @@
-/**
- *    Copyright 2009-2018 the original author or authors.
+/*
+ *    Copyright 2009-2022 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,6 +20,7 @@ import java.lang.reflect.Proxy;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.ibatis.binding.MapperProxy.MapperMethodInvoker;
 import org.apache.ibatis.session.SqlSession;
 
 /**
@@ -28,7 +29,7 @@ import org.apache.ibatis.session.SqlSession;
 public class MapperProxyFactory<T> {
 
   private final Class<T> mapperInterface;
-  private final Map<Method, MapperMethod> methodCache = new ConcurrentHashMap<>();
+  private final Map<Method, MapperMethodInvoker> methodCache = new ConcurrentHashMap<>();
 
   public MapperProxyFactory(Class<T> mapperInterface) {
     this.mapperInterface = mapperInterface;
@@ -38,7 +39,7 @@ public class MapperProxyFactory<T> {
     return mapperInterface;
   }
 
-  public Map<Method, MapperMethod> getMethodCache() {
+  public Map<Method, MapperMethodInvoker> getMethodCache() {
     return methodCache;
   }
 

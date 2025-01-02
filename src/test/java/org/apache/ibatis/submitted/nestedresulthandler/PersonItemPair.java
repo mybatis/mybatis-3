@@ -1,11 +1,11 @@
-/**
- *    Copyright 2009-2015 the original author or authors.
+/*
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,32 +19,27 @@ package org.apache.ibatis.submitted.nestedresulthandler;
  * Created by eyal on 12/9/2015.
  */
 public class PersonItemPair {
-    private Person  person;
-    private Item item;
+  private Person person;
+  private Item item;
 
-    public String toString(){
-        return new StringBuilder()
-                .append("PersonItemPair(")
-                .append(person)
-                .append(", ")
-                .append(item)
-                .append(" )")
-                .toString();
-    }
+  @Override
+  public String toString() {
+    return "PersonItemPair(" + person + ", " + item + " )";
+  }
 
-    public Person getPerson() {
-        return person;
-    }
+  public Person getPerson() {
+    return person;
+  }
 
-    public void setPerson(Person person) {
-        this.person = person;
-    }
+  public void setPerson(Person person) {
+    this.person = person;
+  }
 
-    public Item getItem() {
-        return item;
-    }
+  public Item getItem() {
+    return item;
+  }
 
-    public void setItem(Item item) {
-        this.item = item;
-    }
+  public void setItem(Item item) {
+    this.item = item;
+  }
 }

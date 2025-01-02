@@ -1,11 +1,11 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
+/*
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,22 +15,24 @@
  */
 package org.apache.ibatis.datasource.jndi;
 
-import org.apache.ibatis.BaseDataTest;
-import org.apache.ibatis.datasource.DataSourceException;
-import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
+import java.util.Properties;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.naming.spi.InitialContextFactory;
 import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.Properties;
+
+import org.apache.ibatis.BaseDataTest;
+import org.apache.ibatis.datasource.DataSourceException;
+import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class JndiDataSourceFactoryTest extends BaseDataTest {
 
@@ -49,6 +51,7 @@ class JndiDataSourceFactoryTest extends BaseDataTest {
     createJndiDataSource();
     JndiDataSourceFactory factory = new JndiDataSourceFactory();
     factory.setProperties(new Properties() {
+      private static final long serialVersionUID = 1L;
       {
         setProperty(JndiDataSourceFactory.ENV_PREFIX + Context.INITIAL_CONTEXT_FACTORY, TEST_INITIAL_CONTEXT_FACTORY);
         setProperty(JndiDataSourceFactory.INITIAL_CONTEXT, TEST_INITIAL_CONTEXT);
@@ -82,7 +85,7 @@ class JndiDataSourceFactoryTest extends BaseDataTest {
   }
 
   public static class MockContext extends InitialContext {
-    private static Map<String,Object> bindings = new HashMap<>();
+    private static final Map<String, Object> bindings = new HashMap<>();
 
     MockContext(boolean lazy) throws NamingException {
       super(lazy);
