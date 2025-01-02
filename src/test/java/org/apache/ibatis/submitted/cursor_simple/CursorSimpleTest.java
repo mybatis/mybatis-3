@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package org.apache.ibatis.submitted.cursor_simple;
 
-import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -162,7 +161,7 @@ class CursorSimpleTest {
   }
 
   @Test
-  void cursorIteratorNoSuchElementExceptionWithHasNext() throws IOException {
+  void cursorIteratorNoSuchElementExceptionWithHasNext() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession();
         Cursor<User> usersCursor = sqlSession.selectCursor("getAllUsers", null, new RowBounds(1, 1))) {
       try {
@@ -183,7 +182,7 @@ class CursorSimpleTest {
   }
 
   @Test
-  void cursorIteratorNoSuchElementExceptionNoHasNext() throws IOException {
+  void cursorIteratorNoSuchElementExceptionNoHasNext() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession();
         Cursor<User> usersCursor = sqlSession.selectCursor("getAllUsers", null, new RowBounds(1, 1))) {
       try {
@@ -260,7 +259,7 @@ class CursorSimpleTest {
   }
 
   @Test
-  void cursorMultipleCloseCall() throws IOException {
+  void cursorMultipleCloseCall() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Cursor<User> usersCursor = mapper.getAllUsers();
@@ -290,7 +289,7 @@ class CursorSimpleTest {
   }
 
   @Test
-  void cursorUsageAfterClose() throws IOException {
+  void cursorUsageAfterClose() {
 
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
