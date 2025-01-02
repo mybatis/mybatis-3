@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TrimSqlNode.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.scripting.xmltags</a> &gt; <span class="el_source">TrimSqlNode.java</span></div><h1>TrimSqlNode.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2023 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.scripting.xmltags;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.StringTokenizer;
+
+import org.apache.ibatis.session.Configuration;
+
+/**
+ * @author Clinton Begin
+ */
+public class TrimSqlNode implements SqlNode {
+
+  private final SqlNode contents;
+  private final String prefix;
+  private final String suffix;
+  private final List&lt;String&gt; prefixesToOverride;
+  private final List&lt;String&gt; suffixesToOverride;
+  private final Configuration configuration;
+
+  public TrimSqlNode(Configuration configuration, SqlNode contents, String prefix, String prefixesToOverride,
+      String suffix, String suffixesToOverride) {
+<span class="fc" id="L41">    this(configuration, contents, prefix, parseOverrides(prefixesToOverride), suffix,</span>
+<span class="fc" id="L42">        parseOverrides(suffixesToOverride));</span>
+<span class="fc" id="L43">  }</span>
+
+  protected TrimSqlNode(Configuration configuration, SqlNode contents, String prefix, List&lt;String&gt; prefixesToOverride,
+<span class="fc" id="L46">      String suffix, List&lt;String&gt; suffixesToOverride) {</span>
+<span class="fc" id="L47">    this.contents = contents;</span>
+<span class="fc" id="L48">    this.prefix = prefix;</span>
+<span class="fc" id="L49">    this.prefixesToOverride = prefixesToOverride;</span>
+<span class="fc" id="L50">    this.suffix = suffix;</span>
+<span class="fc" id="L51">    this.suffixesToOverride = suffixesToOverride;</span>
+<span class="fc" id="L52">    this.configuration = configuration;</span>
+<span class="fc" id="L53">  }</span>
+
+  @Override
+  public boolean apply(DynamicContext context) {
+<span class="fc" id="L57">    FilteredDynamicContext filteredDynamicContext = new FilteredDynamicContext(context);</span>
+<span class="fc" id="L58">    boolean result = contents.apply(filteredDynamicContext);</span>
+<span class="fc" id="L59">    filteredDynamicContext.applyAll();</span>
+<span class="fc" id="L60">    return result;</span>
+  }
+
+  private static List&lt;String&gt; parseOverrides(String overrides) {
+<span class="fc bfc" id="L64" title="All 2 branches covered.">    if (overrides != null) {</span>
+<span class="fc" id="L65">      final StringTokenizer parser = new StringTokenizer(overrides, &quot;|&quot;, false);</span>
+<span class="fc" id="L66">      final List&lt;String&gt; list = new ArrayList&lt;&gt;(parser.countTokens());</span>
+<span class="fc bfc" id="L67" title="All 2 branches covered.">      while (parser.hasMoreTokens()) {</span>
+<span class="fc" id="L68">        list.add(parser.nextToken().toUpperCase(Locale.ENGLISH));</span>
+      }
+<span class="fc" id="L70">      return list;</span>
+    }
+<span class="fc" id="L72">    return Collections.emptyList();</span>
+  }
+
+  private class FilteredDynamicContext extends DynamicContext {
+    private final DynamicContext delegate;
+    private boolean prefixApplied;
+    private boolean suffixApplied;
+    private StringBuilder sqlBuffer;
+
+<span class="fc" id="L81">    public FilteredDynamicContext(DynamicContext delegate) {</span>
+<span class="fc" id="L82">      super(configuration, null);</span>
+<span class="fc" id="L83">      this.delegate = delegate;</span>
+<span class="fc" id="L84">      this.prefixApplied = false;</span>
+<span class="fc" id="L85">      this.suffixApplied = false;</span>
+<span class="fc" id="L86">      this.sqlBuffer = new StringBuilder();</span>
+<span class="fc" id="L87">    }</span>
+
+    public void applyAll() {
+<span class="fc" id="L90">      sqlBuffer = new StringBuilder(sqlBuffer.toString().trim());</span>
+<span class="fc" id="L91">      String trimmedUppercaseSql = sqlBuffer.toString().toUpperCase(Locale.ENGLISH);</span>
+<span class="fc bfc" id="L92" title="All 2 branches covered.">      if (trimmedUppercaseSql.length() &gt; 0) {</span>
+<span class="fc" id="L93">        applyPrefix(sqlBuffer, trimmedUppercaseSql);</span>
+<span class="fc" id="L94">        applySuffix(sqlBuffer, trimmedUppercaseSql);</span>
+      }
+<span class="fc" id="L96">      delegate.appendSql(sqlBuffer.toString());</span>
+<span class="fc" id="L97">    }</span>
+
+    @Override
+    public Map&lt;String, Object&gt; getBindings() {
+<span class="fc" id="L101">      return delegate.getBindings();</span>
+    }
+
+    @Override
+    public void bind(String name, Object value) {
+<span class="fc" id="L106">      delegate.bind(name, value);</span>
+<span class="fc" id="L107">    }</span>
+
+    @Override
+    public int getUniqueNumber() {
+<span class="fc" id="L111">      return delegate.getUniqueNumber();</span>
+    }
+
+    @Override
+    public void appendSql(String sql) {
+<span class="fc" id="L116">      sqlBuffer.append(sql);</span>
+<span class="fc" id="L117">    }</span>
+
+    @Override
+    public String getSql() {
+<span class="nc" id="L121">      return delegate.getSql();</span>
+    }
+
+    private void applyPrefix(StringBuilder sql, String trimmedUppercaseSql) {
+<span class="pc bpc" id="L125" title="1 of 2 branches missed.">      if (prefixApplied) {</span>
+<span class="nc" id="L126">        return;</span>
+      }
+<span class="fc" id="L128">      prefixApplied = true;</span>
+<span class="pc bpc" id="L129" title="1 of 2 branches missed.">      if (prefixesToOverride != null) {</span>
+<span class="fc" id="L130">        prefixesToOverride.stream().filter(trimmedUppercaseSql::startsWith).findFirst()</span>
+<span class="fc" id="L131">            .ifPresent(toRemove -&gt; sql.delete(0, toRemove.trim().length()));</span>
+      }
+<span class="pc bpc" id="L133" title="1 of 2 branches missed.">      if (prefix != null) {</span>
+<span class="fc" id="L134">        sql.insert(0, &quot; &quot;).insert(0, prefix);</span>
+      }
+<span class="fc" id="L136">    }</span>
+
+    private void applySuffix(StringBuilder sql, String trimmedUppercaseSql) {
+<span class="pc bpc" id="L139" title="1 of 2 branches missed.">      if (suffixApplied) {</span>
+<span class="nc" id="L140">        return;</span>
+      }
+<span class="fc" id="L142">      suffixApplied = true;</span>
+<span class="fc bfc" id="L143" title="All 2 branches covered.">      if (suffixesToOverride != null) {</span>
+<span class="fc" id="L144">        suffixesToOverride.stream()</span>
+<span class="pc bpc" id="L145" title="1 of 4 branches missed.">            .filter(toRemove -&gt; trimmedUppercaseSql.endsWith(toRemove) || trimmedUppercaseSql.endsWith(toRemove.trim()))</span>
+<span class="fc" id="L146">            .findFirst().ifPresent(toRemove -&gt; {</span>
+<span class="fc" id="L147">              int start = sql.length() - toRemove.trim().length();</span>
+<span class="fc" id="L148">              int end = sql.length();</span>
+<span class="fc" id="L149">              sql.delete(start, end);</span>
+<span class="fc" id="L150">            });</span>
+      }
+<span class="fc bfc" id="L152" title="All 2 branches covered.">      if (suffix != null) {</span>
+<span class="fc" id="L153">        sql.append(&quot; &quot;).append(suffix);</span>
+      }
+<span class="fc" id="L155">    }</span>
+
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,1212 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Configuration.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.session</a> &gt; <span class="el_source">Configuration.java</span></div><h1>Configuration.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2024 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.session;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.BiFunction;
+
+import org.apache.ibatis.binding.MapperRegistry;
+import org.apache.ibatis.builder.CacheRefResolver;
+import org.apache.ibatis.builder.IncompleteElementException;
+import org.apache.ibatis.builder.ResultMapResolver;
+import org.apache.ibatis.builder.annotation.MethodResolver;
+import org.apache.ibatis.builder.xml.XMLStatementBuilder;
+import org.apache.ibatis.cache.Cache;
+import org.apache.ibatis.cache.decorators.FifoCache;
+import org.apache.ibatis.cache.decorators.LruCache;
+import org.apache.ibatis.cache.decorators.SoftCache;
+import org.apache.ibatis.cache.decorators.WeakCache;
+import org.apache.ibatis.cache.impl.PerpetualCache;
+import org.apache.ibatis.datasource.jndi.JndiDataSourceFactory;
+import org.apache.ibatis.datasource.pooled.PooledDataSourceFactory;
+import org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory;
+import org.apache.ibatis.executor.BatchExecutor;
+import org.apache.ibatis.executor.CachingExecutor;
+import org.apache.ibatis.executor.Executor;
+import org.apache.ibatis.executor.ReuseExecutor;
+import org.apache.ibatis.executor.SimpleExecutor;
+import org.apache.ibatis.executor.keygen.KeyGenerator;
+import org.apache.ibatis.executor.loader.ProxyFactory;
+import org.apache.ibatis.executor.loader.cglib.CglibProxyFactory;
+import org.apache.ibatis.executor.loader.javassist.JavassistProxyFactory;
+import org.apache.ibatis.executor.parameter.ParameterHandler;
+import org.apache.ibatis.executor.resultset.DefaultResultSetHandler;
+import org.apache.ibatis.executor.resultset.ResultSetHandler;
+import org.apache.ibatis.executor.statement.RoutingStatementHandler;
+import org.apache.ibatis.executor.statement.StatementHandler;
+import org.apache.ibatis.io.VFS;
+import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.logging.LogFactory;
+import org.apache.ibatis.logging.commons.JakartaCommonsLoggingImpl;
+import org.apache.ibatis.logging.jdk14.Jdk14LoggingImpl;
+import org.apache.ibatis.logging.log4j.Log4jImpl;
+import org.apache.ibatis.logging.log4j2.Log4j2Impl;
+import org.apache.ibatis.logging.nologging.NoLoggingImpl;
+import org.apache.ibatis.logging.slf4j.Slf4jImpl;
+import org.apache.ibatis.logging.stdout.StdOutImpl;
+import org.apache.ibatis.mapping.BoundSql;
+import org.apache.ibatis.mapping.Environment;
+import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.ParameterMap;
+import org.apache.ibatis.mapping.ResultMap;
+import org.apache.ibatis.mapping.ResultSetType;
+import org.apache.ibatis.mapping.VendorDatabaseIdProvider;
+import org.apache.ibatis.parsing.XNode;
+import org.apache.ibatis.plugin.Interceptor;
+import org.apache.ibatis.plugin.InterceptorChain;
+import org.apache.ibatis.reflection.DefaultReflectorFactory;
+import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.reflection.ReflectorFactory;
+import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
+import org.apache.ibatis.reflection.factory.ObjectFactory;
+import org.apache.ibatis.reflection.wrapper.DefaultObjectWrapperFactory;
+import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
+import org.apache.ibatis.scripting.LanguageDriver;
+import org.apache.ibatis.scripting.LanguageDriverRegistry;
+import org.apache.ibatis.scripting.defaults.RawLanguageDriver;
+import org.apache.ibatis.scripting.xmltags.XMLLanguageDriver;
+import org.apache.ibatis.transaction.Transaction;
+import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
+import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
+import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.TypeAliasRegistry;
+import org.apache.ibatis.type.TypeHandler;
+import org.apache.ibatis.type.TypeHandlerRegistry;
+
+/**
+ * @author Clinton Begin
+ */
+public class Configuration {
+
+  protected Environment environment;
+
+  protected boolean safeRowBoundsEnabled;
+<span class="fc" id="L108">  protected boolean safeResultHandlerEnabled = true;</span>
+  protected boolean mapUnderscoreToCamelCase;
+  protected boolean aggressiveLazyLoading;
+  protected boolean useGeneratedKeys;
+<span class="fc" id="L112">  protected boolean useColumnLabel = true;</span>
+<span class="fc" id="L113">  protected boolean cacheEnabled = true;</span>
+  protected boolean callSettersOnNulls;
+<span class="fc" id="L115">  protected boolean useActualParamName = true;</span>
+  protected boolean returnInstanceForEmptyRow;
+  protected boolean shrinkWhitespacesInSql;
+  protected boolean nullableOnForEach;
+  protected boolean argNameBasedConstructorAutoMapping;
+
+  protected String logPrefix;
+  protected Class&lt;? extends Log&gt; logImpl;
+  protected Class&lt;? extends VFS&gt; vfsImpl;
+  protected Class&lt;?&gt; defaultSqlProviderType;
+<span class="fc" id="L125">  protected LocalCacheScope localCacheScope = LocalCacheScope.SESSION;</span>
+<span class="fc" id="L126">  protected JdbcType jdbcTypeForNull = JdbcType.OTHER;</span>
+<span class="fc" id="L127">  protected Set&lt;String&gt; lazyLoadTriggerMethods = new HashSet&lt;&gt;(</span>
+<span class="fc" id="L128">      Arrays.asList(&quot;equals&quot;, &quot;clone&quot;, &quot;hashCode&quot;, &quot;toString&quot;));</span>
+  protected Integer defaultStatementTimeout;
+  protected Integer defaultFetchSize;
+  protected ResultSetType defaultResultSetType;
+<span class="fc" id="L132">  protected ExecutorType defaultExecutorType = ExecutorType.SIMPLE;</span>
+<span class="fc" id="L133">  protected AutoMappingBehavior autoMappingBehavior = AutoMappingBehavior.PARTIAL;</span>
+<span class="fc" id="L134">  protected AutoMappingUnknownColumnBehavior autoMappingUnknownColumnBehavior = AutoMappingUnknownColumnBehavior.NONE;</span>
+
+<span class="fc" id="L136">  protected Properties variables = new Properties();</span>
+<span class="fc" id="L137">  protected ReflectorFactory reflectorFactory = new DefaultReflectorFactory();</span>
+<span class="fc" id="L138">  protected ObjectFactory objectFactory = new DefaultObjectFactory();</span>
+<span class="fc" id="L139">  protected ObjectWrapperFactory objectWrapperFactory = new DefaultObjectWrapperFactory();</span>
+
+  protected boolean lazyLoadingEnabled;
+<span class="fc" id="L142">  protected ProxyFactory proxyFactory = new JavassistProxyFactory(); // #224 Using internal Javassist instead of OGNL</span>
+
+  protected String databaseId;
+  /**
+   * Configuration factory class. Used to create Configuration for loading deserialized unread properties.
+   *
+   * @see &lt;a href='https://github.com/mybatis/old-google-code-issues/issues/300'&gt;Issue 300 (google code)&lt;/a&gt;
+   */
+  protected Class&lt;?&gt; configurationFactory;
+
+<span class="fc" id="L152">  protected final MapperRegistry mapperRegistry = new MapperRegistry(this);</span>
+<span class="fc" id="L153">  protected final InterceptorChain interceptorChain = new InterceptorChain();</span>
+<span class="fc" id="L154">  protected final TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry(this);</span>
+<span class="fc" id="L155">  protected final TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();</span>
+<span class="fc" id="L156">  protected final LanguageDriverRegistry languageRegistry = new LanguageDriverRegistry();</span>
+
+<span class="fc" id="L158">  protected final Map&lt;String, MappedStatement&gt; mappedStatements = new StrictMap&lt;MappedStatement&gt;(</span>
+      &quot;Mapped Statements collection&quot;)
+<span class="fc" id="L160">          .conflictMessageProducer((savedValue, targetValue) -&gt; &quot;. please check &quot; + savedValue.getResource() + &quot; and &quot;</span>
+<span class="fc" id="L161">              + targetValue.getResource());</span>
+<span class="fc" id="L162">  protected final Map&lt;String, Cache&gt; caches = new StrictMap&lt;&gt;(&quot;Caches collection&quot;);</span>
+<span class="fc" id="L163">  protected final Map&lt;String, ResultMap&gt; resultMaps = new StrictMap&lt;&gt;(&quot;Result Maps collection&quot;);</span>
+<span class="fc" id="L164">  protected final Map&lt;String, ParameterMap&gt; parameterMaps = new StrictMap&lt;&gt;(&quot;Parameter Maps collection&quot;);</span>
+<span class="fc" id="L165">  protected final Map&lt;String, KeyGenerator&gt; keyGenerators = new StrictMap&lt;&gt;(&quot;Key Generators collection&quot;);</span>
+
+<span class="fc" id="L167">  protected final Set&lt;String&gt; loadedResources = new HashSet&lt;&gt;();</span>
+<span class="fc" id="L168">  protected final Map&lt;String, XNode&gt; sqlFragments = new StrictMap&lt;&gt;(&quot;XML fragments parsed from previous mappers&quot;);</span>
+<span class="fc" id="L169">  protected final Collection&lt;XMLStatementBuilder&gt; incompleteStatements = new LinkedList&lt;&gt;();</span>
+<span class="fc" id="L170">  protected final Collection&lt;CacheRefResolver&gt; incompleteCacheRefs = new LinkedList&lt;&gt;();</span>
+<span class="fc" id="L171">  protected final Collection&lt;ResultMapResolver&gt; incompleteResultMaps = new LinkedList&lt;&gt;();</span>
+<span class="fc" id="L172">  protected final Collection&lt;MethodResolver&gt; incompleteMethods = new LinkedList&lt;&gt;();</span>
+
+<span class="fc" id="L174">  private final ReentrantLock incompleteResultMapsLock = new ReentrantLock();</span>
+<span class="fc" id="L175">  private final ReentrantLock incompleteCacheRefsLock = new ReentrantLock();</span>
+<span class="fc" id="L176">  private final ReentrantLock incompleteStatementsLock = new ReentrantLock();</span>
+<span class="fc" id="L177">  private final ReentrantLock incompleteMethodsLock = new ReentrantLock();</span>
+
+  /*
+   * A map holds cache-ref relationship. The key is the namespace that references a cache bound to another namespace and
+   * the value is the namespace which the actual cache is bound to.
+   */
+<span class="fc" id="L183">  protected final Map&lt;String, String&gt; cacheRefMap = new HashMap&lt;&gt;();</span>
+
+  public Configuration(Environment environment) {
+<span class="fc" id="L186">    this();</span>
+<span class="fc" id="L187">    this.environment = environment;</span>
+<span class="fc" id="L188">  }</span>
+
+<span class="fc" id="L190">  public Configuration() {</span>
+<span class="fc" id="L191">    typeAliasRegistry.registerAlias(&quot;JDBC&quot;, JdbcTransactionFactory.class);</span>
+<span class="fc" id="L192">    typeAliasRegistry.registerAlias(&quot;MANAGED&quot;, ManagedTransactionFactory.class);</span>
+
+<span class="fc" id="L194">    typeAliasRegistry.registerAlias(&quot;JNDI&quot;, JndiDataSourceFactory.class);</span>
+<span class="fc" id="L195">    typeAliasRegistry.registerAlias(&quot;POOLED&quot;, PooledDataSourceFactory.class);</span>
+<span class="fc" id="L196">    typeAliasRegistry.registerAlias(&quot;UNPOOLED&quot;, UnpooledDataSourceFactory.class);</span>
+
+<span class="fc" id="L198">    typeAliasRegistry.registerAlias(&quot;PERPETUAL&quot;, PerpetualCache.class);</span>
+<span class="fc" id="L199">    typeAliasRegistry.registerAlias(&quot;FIFO&quot;, FifoCache.class);</span>
+<span class="fc" id="L200">    typeAliasRegistry.registerAlias(&quot;LRU&quot;, LruCache.class);</span>
+<span class="fc" id="L201">    typeAliasRegistry.registerAlias(&quot;SOFT&quot;, SoftCache.class);</span>
+<span class="fc" id="L202">    typeAliasRegistry.registerAlias(&quot;WEAK&quot;, WeakCache.class);</span>
+
+<span class="fc" id="L204">    typeAliasRegistry.registerAlias(&quot;DB_VENDOR&quot;, VendorDatabaseIdProvider.class);</span>
+
+<span class="fc" id="L206">    typeAliasRegistry.registerAlias(&quot;XML&quot;, XMLLanguageDriver.class);</span>
+<span class="fc" id="L207">    typeAliasRegistry.registerAlias(&quot;RAW&quot;, RawLanguageDriver.class);</span>
+
+<span class="fc" id="L209">    typeAliasRegistry.registerAlias(&quot;SLF4J&quot;, Slf4jImpl.class);</span>
+<span class="fc" id="L210">    typeAliasRegistry.registerAlias(&quot;COMMONS_LOGGING&quot;, JakartaCommonsLoggingImpl.class);</span>
+<span class="fc" id="L211">    typeAliasRegistry.registerAlias(&quot;LOG4J&quot;, Log4jImpl.class);</span>
+<span class="fc" id="L212">    typeAliasRegistry.registerAlias(&quot;LOG4J2&quot;, Log4j2Impl.class);</span>
+<span class="fc" id="L213">    typeAliasRegistry.registerAlias(&quot;JDK_LOGGING&quot;, Jdk14LoggingImpl.class);</span>
+<span class="fc" id="L214">    typeAliasRegistry.registerAlias(&quot;STDOUT_LOGGING&quot;, StdOutImpl.class);</span>
+<span class="fc" id="L215">    typeAliasRegistry.registerAlias(&quot;NO_LOGGING&quot;, NoLoggingImpl.class);</span>
+
+<span class="fc" id="L217">    typeAliasRegistry.registerAlias(&quot;CGLIB&quot;, CglibProxyFactory.class);</span>
+<span class="fc" id="L218">    typeAliasRegistry.registerAlias(&quot;JAVASSIST&quot;, JavassistProxyFactory.class);</span>
+
+<span class="fc" id="L220">    languageRegistry.setDefaultDriverClass(XMLLanguageDriver.class);</span>
+<span class="fc" id="L221">    languageRegistry.register(RawLanguageDriver.class);</span>
+<span class="fc" id="L222">  }</span>
+
+  public String getLogPrefix() {
+<span class="fc" id="L225">    return logPrefix;</span>
+  }
+
+  public void setLogPrefix(String logPrefix) {
+<span class="fc" id="L229">    this.logPrefix = logPrefix;</span>
+<span class="fc" id="L230">  }</span>
+
+  public Class&lt;? extends Log&gt; getLogImpl() {
+<span class="fc" id="L233">    return logImpl;</span>
+  }
+
+  public void setLogImpl(Class&lt;? extends Log&gt; logImpl) {
+<span class="fc bfc" id="L237" title="All 2 branches covered.">    if (logImpl != null) {</span>
+<span class="fc" id="L238">      this.logImpl = logImpl;</span>
+<span class="fc" id="L239">      LogFactory.useCustomLogging(this.logImpl);</span>
+    }
+<span class="fc" id="L241">  }</span>
+
+  public Class&lt;? extends VFS&gt; getVfsImpl() {
+<span class="nc" id="L244">    return this.vfsImpl;</span>
+  }
+
+  public void setVfsImpl(Class&lt;? extends VFS&gt; vfsImpl) {
+<span class="nc bnc" id="L248" title="All 2 branches missed.">    if (vfsImpl != null) {</span>
+<span class="nc" id="L249">      this.vfsImpl = vfsImpl;</span>
+<span class="nc" id="L250">      VFS.addImplClass(this.vfsImpl);</span>
+    }
+<span class="nc" id="L252">  }</span>
+
+  /**
+   * Gets an applying type when omit a type on sql provider annotation(e.g.
+   * {@link org.apache.ibatis.annotations.SelectProvider}).
+   *
+   * @return the default type for sql provider annotation
+   *
+   * @since 3.5.6
+   */
+  public Class&lt;?&gt; getDefaultSqlProviderType() {
+<span class="fc" id="L263">    return defaultSqlProviderType;</span>
+  }
+
+  /**
+   * Sets an applying type when omit a type on sql provider annotation(e.g.
+   * {@link org.apache.ibatis.annotations.SelectProvider}).
+   *
+   * @param defaultSqlProviderType
+   *          the default type for sql provider annotation
+   *
+   * @since 3.5.6
+   */
+  public void setDefaultSqlProviderType(Class&lt;?&gt; defaultSqlProviderType) {
+<span class="fc" id="L276">    this.defaultSqlProviderType = defaultSqlProviderType;</span>
+<span class="fc" id="L277">  }</span>
+
+  public boolean isCallSettersOnNulls() {
+<span class="fc" id="L280">    return callSettersOnNulls;</span>
+  }
+
+  public void setCallSettersOnNulls(boolean callSettersOnNulls) {
+<span class="fc" id="L284">    this.callSettersOnNulls = callSettersOnNulls;</span>
+<span class="fc" id="L285">  }</span>
+
+  public boolean isUseActualParamName() {
+<span class="fc" id="L288">    return useActualParamName;</span>
+  }
+
+  public void setUseActualParamName(boolean useActualParamName) {
+<span class="fc" id="L292">    this.useActualParamName = useActualParamName;</span>
+<span class="fc" id="L293">  }</span>
+
+  public boolean isReturnInstanceForEmptyRow() {
+<span class="fc" id="L296">    return returnInstanceForEmptyRow;</span>
+  }
+
+  public void setReturnInstanceForEmptyRow(boolean returnEmptyInstance) {
+<span class="fc" id="L300">    this.returnInstanceForEmptyRow = returnEmptyInstance;</span>
+<span class="fc" id="L301">  }</span>
+
+  public boolean isShrinkWhitespacesInSql() {
+<span class="fc" id="L304">    return shrinkWhitespacesInSql;</span>
+  }
+
+  public void setShrinkWhitespacesInSql(boolean shrinkWhitespacesInSql) {
+<span class="fc" id="L308">    this.shrinkWhitespacesInSql = shrinkWhitespacesInSql;</span>
+<span class="fc" id="L309">  }</span>
+
+  /**
+   * Sets the default value of 'nullable' attribute on 'foreach' tag.
+   *
+   * @param nullableOnForEach
+   *          If nullable, set to {@code true}
+   *
+   * @since 3.5.9
+   */
+  public void setNullableOnForEach(boolean nullableOnForEach) {
+<span class="fc" id="L320">    this.nullableOnForEach = nullableOnForEach;</span>
+<span class="fc" id="L321">  }</span>
+
+  /**
+   * Returns the default value of 'nullable' attribute on 'foreach' tag.
+   * &lt;p&gt;
+   * Default is {@code false}.
+   *
+   * @return If nullable, set to {@code true}
+   *
+   * @since 3.5.9
+   */
+  public boolean isNullableOnForEach() {
+<span class="fc" id="L333">    return nullableOnForEach;</span>
+  }
+
+  public boolean isArgNameBasedConstructorAutoMapping() {
+<span class="fc" id="L337">    return argNameBasedConstructorAutoMapping;</span>
+  }
+
+  public void setArgNameBasedConstructorAutoMapping(boolean argNameBasedConstructorAutoMapping) {
+<span class="fc" id="L341">    this.argNameBasedConstructorAutoMapping = argNameBasedConstructorAutoMapping;</span>
+<span class="fc" id="L342">  }</span>
+
+  public String getDatabaseId() {
+<span class="fc" id="L345">    return databaseId;</span>
+  }
+
+  public void setDatabaseId(String databaseId) {
+<span class="fc" id="L349">    this.databaseId = databaseId;</span>
+<span class="fc" id="L350">  }</span>
+
+  public Class&lt;?&gt; getConfigurationFactory() {
+<span class="fc" id="L353">    return configurationFactory;</span>
+  }
+
+  public void setConfigurationFactory(Class&lt;?&gt; configurationFactory) {
+<span class="fc" id="L357">    this.configurationFactory = configurationFactory;</span>
+<span class="fc" id="L358">  }</span>
+
+  public boolean isSafeResultHandlerEnabled() {
+<span class="fc" id="L361">    return safeResultHandlerEnabled;</span>
+  }
+
+  public void setSafeResultHandlerEnabled(boolean safeResultHandlerEnabled) {
+<span class="fc" id="L365">    this.safeResultHandlerEnabled = safeResultHandlerEnabled;</span>
+<span class="fc" id="L366">  }</span>
+
+  public boolean isSafeRowBoundsEnabled() {
+<span class="fc" id="L369">    return safeRowBoundsEnabled;</span>
+  }
+
+  public void setSafeRowBoundsEnabled(boolean safeRowBoundsEnabled) {
+<span class="fc" id="L373">    this.safeRowBoundsEnabled = safeRowBoundsEnabled;</span>
+<span class="fc" id="L374">  }</span>
+
+  public boolean isMapUnderscoreToCamelCase() {
+<span class="fc" id="L377">    return mapUnderscoreToCamelCase;</span>
+  }
+
+  public void setMapUnderscoreToCamelCase(boolean mapUnderscoreToCamelCase) {
+<span class="fc" id="L381">    this.mapUnderscoreToCamelCase = mapUnderscoreToCamelCase;</span>
+<span class="fc" id="L382">  }</span>
+
+  public void addLoadedResource(String resource) {
+<span class="fc" id="L385">    loadedResources.add(resource);</span>
+<span class="fc" id="L386">  }</span>
+
+  public boolean isResourceLoaded(String resource) {
+<span class="fc" id="L389">    return loadedResources.contains(resource);</span>
+  }
+
+  public Environment getEnvironment() {
+<span class="fc" id="L393">    return environment;</span>
+  }
+
+  public void setEnvironment(Environment environment) {
+<span class="fc" id="L397">    this.environment = environment;</span>
+<span class="fc" id="L398">  }</span>
+
+  public AutoMappingBehavior getAutoMappingBehavior() {
+<span class="fc" id="L401">    return autoMappingBehavior;</span>
+  }
+
+  public void setAutoMappingBehavior(AutoMappingBehavior autoMappingBehavior) {
+<span class="fc" id="L405">    this.autoMappingBehavior = autoMappingBehavior;</span>
+<span class="fc" id="L406">  }</span>
+
+  /**
+   * Gets the auto mapping unknown column behavior.
+   *
+   * @return the auto mapping unknown column behavior
+   *
+   * @since 3.4.0
+   */
+  public AutoMappingUnknownColumnBehavior getAutoMappingUnknownColumnBehavior() {
+<span class="fc" id="L416">    return autoMappingUnknownColumnBehavior;</span>
+  }
+
+  /**
+   * Sets the auto mapping unknown column behavior.
+   *
+   * @param autoMappingUnknownColumnBehavior
+   *          the new auto mapping unknown column behavior
+   *
+   * @since 3.4.0
+   */
+  public void setAutoMappingUnknownColumnBehavior(AutoMappingUnknownColumnBehavior autoMappingUnknownColumnBehavior) {
+<span class="fc" id="L428">    this.autoMappingUnknownColumnBehavior = autoMappingUnknownColumnBehavior;</span>
+<span class="fc" id="L429">  }</span>
+
+  public boolean isLazyLoadingEnabled() {
+<span class="fc" id="L432">    return lazyLoadingEnabled;</span>
+  }
+
+  public void setLazyLoadingEnabled(boolean lazyLoadingEnabled) {
+<span class="fc" id="L436">    this.lazyLoadingEnabled = lazyLoadingEnabled;</span>
+<span class="fc" id="L437">  }</span>
+
+  public ProxyFactory getProxyFactory() {
+<span class="fc" id="L440">    return proxyFactory;</span>
+  }
+
+  public void setProxyFactory(ProxyFactory proxyFactory) {
+<span class="fc bfc" id="L444" title="All 2 branches covered.">    if (proxyFactory == null) {</span>
+<span class="fc" id="L445">      proxyFactory = new JavassistProxyFactory();</span>
+    }
+<span class="fc" id="L447">    this.proxyFactory = proxyFactory;</span>
+<span class="fc" id="L448">  }</span>
+
+  public boolean isAggressiveLazyLoading() {
+<span class="fc" id="L451">    return aggressiveLazyLoading;</span>
+  }
+
+  public void setAggressiveLazyLoading(boolean aggressiveLazyLoading) {
+<span class="fc" id="L455">    this.aggressiveLazyLoading = aggressiveLazyLoading;</span>
+<span class="fc" id="L456">  }</span>
+
+  /**
+   * @deprecated You can safely remove the call to this method as this option had no effect.
+   */
+  @Deprecated
+  public boolean isMultipleResultSetsEnabled() {
+<span class="nc" id="L463">    return true;</span>
+  }
+
+  /**
+   * @deprecated You can safely remove the call to this method as this option had no effect.
+   */
+  @Deprecated
+  public void setMultipleResultSetsEnabled(boolean multipleResultSetsEnabled) {
+    // nop
+<span class="nc" id="L472">  }</span>
+
+  public Set&lt;String&gt; getLazyLoadTriggerMethods() {
+<span class="fc" id="L475">    return lazyLoadTriggerMethods;</span>
+  }
+
+  public void setLazyLoadTriggerMethods(Set&lt;String&gt; lazyLoadTriggerMethods) {
+<span class="fc" id="L479">    this.lazyLoadTriggerMethods = lazyLoadTriggerMethods;</span>
+<span class="fc" id="L480">  }</span>
+
+  public boolean isUseGeneratedKeys() {
+<span class="fc" id="L483">    return useGeneratedKeys;</span>
+  }
+
+  public void setUseGeneratedKeys(boolean useGeneratedKeys) {
+<span class="fc" id="L487">    this.useGeneratedKeys = useGeneratedKeys;</span>
+<span class="fc" id="L488">  }</span>
+
+  public ExecutorType getDefaultExecutorType() {
+<span class="fc" id="L491">    return defaultExecutorType;</span>
+  }
+
+  public void setDefaultExecutorType(ExecutorType defaultExecutorType) {
+<span class="fc" id="L495">    this.defaultExecutorType = defaultExecutorType;</span>
+<span class="fc" id="L496">  }</span>
+
+  public boolean isCacheEnabled() {
+<span class="fc" id="L499">    return cacheEnabled;</span>
+  }
+
+  public void setCacheEnabled(boolean cacheEnabled) {
+<span class="fc" id="L503">    this.cacheEnabled = cacheEnabled;</span>
+<span class="fc" id="L504">  }</span>
+
+  public Integer getDefaultStatementTimeout() {
+<span class="fc" id="L507">    return defaultStatementTimeout;</span>
+  }
+
+  public void setDefaultStatementTimeout(Integer defaultStatementTimeout) {
+<span class="fc" id="L511">    this.defaultStatementTimeout = defaultStatementTimeout;</span>
+<span class="fc" id="L512">  }</span>
+
+  /**
+   * Gets the default fetch size.
+   *
+   * @return the default fetch size
+   *
+   * @since 3.3.0
+   */
+  public Integer getDefaultFetchSize() {
+<span class="fc" id="L522">    return defaultFetchSize;</span>
+  }
+
+  /**
+   * Sets the default fetch size.
+   *
+   * @param defaultFetchSize
+   *          the new default fetch size
+   *
+   * @since 3.3.0
+   */
+  public void setDefaultFetchSize(Integer defaultFetchSize) {
+<span class="fc" id="L534">    this.defaultFetchSize = defaultFetchSize;</span>
+<span class="fc" id="L535">  }</span>
+
+  /**
+   * Gets the default result set type.
+   *
+   * @return the default result set type
+   *
+   * @since 3.5.2
+   */
+  public ResultSetType getDefaultResultSetType() {
+<span class="fc" id="L545">    return defaultResultSetType;</span>
+  }
+
+  /**
+   * Sets the default result set type.
+   *
+   * @param defaultResultSetType
+   *          the new default result set type
+   *
+   * @since 3.5.2
+   */
+  public void setDefaultResultSetType(ResultSetType defaultResultSetType) {
+<span class="fc" id="L557">    this.defaultResultSetType = defaultResultSetType;</span>
+<span class="fc" id="L558">  }</span>
+
+  public boolean isUseColumnLabel() {
+<span class="fc" id="L561">    return useColumnLabel;</span>
+  }
+
+  public void setUseColumnLabel(boolean useColumnLabel) {
+<span class="fc" id="L565">    this.useColumnLabel = useColumnLabel;</span>
+<span class="fc" id="L566">  }</span>
+
+  public LocalCacheScope getLocalCacheScope() {
+<span class="fc" id="L569">    return localCacheScope;</span>
+  }
+
+  public void setLocalCacheScope(LocalCacheScope localCacheScope) {
+<span class="fc" id="L573">    this.localCacheScope = localCacheScope;</span>
+<span class="fc" id="L574">  }</span>
+
+  public JdbcType getJdbcTypeForNull() {
+<span class="fc" id="L577">    return jdbcTypeForNull;</span>
+  }
+
+  public void setJdbcTypeForNull(JdbcType jdbcTypeForNull) {
+<span class="fc" id="L581">    this.jdbcTypeForNull = jdbcTypeForNull;</span>
+<span class="fc" id="L582">  }</span>
+
+  public Properties getVariables() {
+<span class="fc" id="L585">    return variables;</span>
+  }
+
+  public void setVariables(Properties variables) {
+<span class="fc" id="L589">    this.variables = variables;</span>
+<span class="fc" id="L590">  }</span>
+
+  public TypeHandlerRegistry getTypeHandlerRegistry() {
+<span class="fc" id="L593">    return typeHandlerRegistry;</span>
+  }
+
+  /**
+   * Set a default {@link TypeHandler} class for {@link Enum}. A default {@link TypeHandler} is
+   * {@link org.apache.ibatis.type.EnumTypeHandler}.
+   *
+   * @param typeHandler
+   *          a type handler class for {@link Enum}
+   *
+   * @since 3.4.5
+   */
+  public void setDefaultEnumTypeHandler(Class&lt;? extends TypeHandler&gt; typeHandler) {
+<span class="pc bpc" id="L606" title="1 of 2 branches missed.">    if (typeHandler != null) {</span>
+<span class="nc" id="L607">      getTypeHandlerRegistry().setDefaultEnumTypeHandler(typeHandler);</span>
+    }
+<span class="fc" id="L609">  }</span>
+
+  public TypeAliasRegistry getTypeAliasRegistry() {
+<span class="fc" id="L612">    return typeAliasRegistry;</span>
+  }
+
+  /**
+   * Gets the mapper registry.
+   *
+   * @return the mapper registry
+   *
+   * @since 3.2.2
+   */
+  public MapperRegistry getMapperRegistry() {
+<span class="fc" id="L623">    return mapperRegistry;</span>
+  }
+
+  public ReflectorFactory getReflectorFactory() {
+<span class="fc" id="L627">    return reflectorFactory;</span>
+  }
+
+  public void setReflectorFactory(ReflectorFactory reflectorFactory) {
+<span class="nc" id="L631">    this.reflectorFactory = reflectorFactory;</span>
+<span class="nc" id="L632">  }</span>
+
+  public ObjectFactory getObjectFactory() {
+<span class="fc" id="L635">    return objectFactory;</span>
+  }
+
+  public void setObjectFactory(ObjectFactory objectFactory) {
+<span class="fc" id="L639">    this.objectFactory = objectFactory;</span>
+<span class="fc" id="L640">  }</span>
+
+  public ObjectWrapperFactory getObjectWrapperFactory() {
+<span class="fc" id="L643">    return objectWrapperFactory;</span>
+  }
+
+  public void setObjectWrapperFactory(ObjectWrapperFactory objectWrapperFactory) {
+<span class="fc" id="L647">    this.objectWrapperFactory = objectWrapperFactory;</span>
+<span class="fc" id="L648">  }</span>
+
+  /**
+   * Gets the interceptors.
+   *
+   * @return the interceptors
+   *
+   * @since 3.2.2
+   */
+  public List&lt;Interceptor&gt; getInterceptors() {
+<span class="nc" id="L658">    return interceptorChain.getInterceptors();</span>
+  }
+
+  public LanguageDriverRegistry getLanguageRegistry() {
+<span class="fc" id="L662">    return languageRegistry;</span>
+  }
+
+  public void setDefaultScriptingLanguage(Class&lt;? extends LanguageDriver&gt; driver) {
+<span class="fc bfc" id="L666" title="All 2 branches covered.">    if (driver == null) {</span>
+<span class="fc" id="L667">      driver = XMLLanguageDriver.class;</span>
+    }
+<span class="fc" id="L669">    getLanguageRegistry().setDefaultDriverClass(driver);</span>
+<span class="fc" id="L670">  }</span>
+
+  public LanguageDriver getDefaultScriptingLanguageInstance() {
+<span class="fc" id="L673">    return languageRegistry.getDefaultDriver();</span>
+  }
+
+  /**
+   * Gets the language driver.
+   *
+   * @param langClass
+   *          the lang class
+   *
+   * @return the language driver
+   *
+   * @since 3.5.1
+   */
+  public LanguageDriver getLanguageDriver(Class&lt;? extends LanguageDriver&gt; langClass) {
+<span class="fc bfc" id="L687" title="All 2 branches covered.">    if (langClass == null) {</span>
+<span class="fc" id="L688">      return languageRegistry.getDefaultDriver();</span>
+    }
+<span class="fc" id="L690">    languageRegistry.register(langClass);</span>
+<span class="fc" id="L691">    return languageRegistry.getDriver(langClass);</span>
+  }
+
+  /**
+   * Gets the default scripting language instance.
+   *
+   * @return the default scripting language instance
+   *
+   * @deprecated Use {@link #getDefaultScriptingLanguageInstance()}
+   */
+  @Deprecated
+  public LanguageDriver getDefaultScriptingLanuageInstance() {
+<span class="nc" id="L703">    return getDefaultScriptingLanguageInstance();</span>
+  }
+
+  public MetaObject newMetaObject(Object object) {
+<span class="fc" id="L707">    return MetaObject.forObject(object, objectFactory, objectWrapperFactory, reflectorFactory);</span>
+  }
+
+  public ParameterHandler newParameterHandler(MappedStatement mappedStatement, Object parameterObject,
+      BoundSql boundSql) {
+<span class="fc" id="L712">    ParameterHandler parameterHandler = mappedStatement.getLang().createParameterHandler(mappedStatement,</span>
+        parameterObject, boundSql);
+<span class="fc" id="L714">    return (ParameterHandler) interceptorChain.pluginAll(parameterHandler);</span>
+  }
+
+  public ResultSetHandler newResultSetHandler(Executor executor, MappedStatement mappedStatement, RowBounds rowBounds,
+      ParameterHandler parameterHandler, ResultHandler resultHandler, BoundSql boundSql) {
+<span class="fc" id="L719">    ResultSetHandler resultSetHandler = new DefaultResultSetHandler(executor, mappedStatement, parameterHandler,</span>
+        resultHandler, boundSql, rowBounds);
+<span class="fc" id="L721">    return (ResultSetHandler) interceptorChain.pluginAll(resultSetHandler);</span>
+  }
+
+  public StatementHandler newStatementHandler(Executor executor, MappedStatement mappedStatement,
+      Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
+<span class="fc" id="L726">    StatementHandler statementHandler = new RoutingStatementHandler(executor, mappedStatement, parameterObject,</span>
+        rowBounds, resultHandler, boundSql);
+<span class="fc" id="L728">    return (StatementHandler) interceptorChain.pluginAll(statementHandler);</span>
+  }
+
+  public Executor newExecutor(Transaction transaction) {
+<span class="nc" id="L732">    return newExecutor(transaction, defaultExecutorType);</span>
+  }
+
+  public Executor newExecutor(Transaction transaction, ExecutorType executorType) {
+<span class="pc bpc" id="L736" title="1 of 2 branches missed.">    executorType = executorType == null ? defaultExecutorType : executorType;</span>
+    Executor executor;
+<span class="fc bfc" id="L738" title="All 2 branches covered.">    if (ExecutorType.BATCH == executorType) {</span>
+<span class="fc" id="L739">      executor = new BatchExecutor(this, transaction);</span>
+<span class="fc bfc" id="L740" title="All 2 branches covered.">    } else if (ExecutorType.REUSE == executorType) {</span>
+<span class="fc" id="L741">      executor = new ReuseExecutor(this, transaction);</span>
+    } else {
+<span class="fc" id="L743">      executor = new SimpleExecutor(this, transaction);</span>
+    }
+<span class="pc bpc" id="L745" title="1 of 2 branches missed.">    if (cacheEnabled) {</span>
+<span class="fc" id="L746">      executor = new CachingExecutor(executor);</span>
+    }
+<span class="fc" id="L748">    return (Executor) interceptorChain.pluginAll(executor);</span>
+  }
+
+  public void addKeyGenerator(String id, KeyGenerator keyGenerator) {
+<span class="fc" id="L752">    keyGenerators.put(id, keyGenerator);</span>
+<span class="fc" id="L753">  }</span>
+
+  public Collection&lt;String&gt; getKeyGeneratorNames() {
+<span class="nc" id="L756">    return keyGenerators.keySet();</span>
+  }
+
+  public Collection&lt;KeyGenerator&gt; getKeyGenerators() {
+<span class="nc" id="L760">    return keyGenerators.values();</span>
+  }
+
+  public KeyGenerator getKeyGenerator(String id) {
+<span class="fc" id="L764">    return keyGenerators.get(id);</span>
+  }
+
+  public boolean hasKeyGenerator(String id) {
+<span class="fc" id="L768">    return keyGenerators.containsKey(id);</span>
+  }
+
+  public void addCache(Cache cache) {
+<span class="fc" id="L772">    caches.put(cache.getId(), cache);</span>
+<span class="fc" id="L773">  }</span>
+
+  public Collection&lt;String&gt; getCacheNames() {
+<span class="nc" id="L776">    return caches.keySet();</span>
+  }
+
+  public Collection&lt;Cache&gt; getCaches() {
+<span class="nc" id="L780">    return caches.values();</span>
+  }
+
+  public Cache getCache(String id) {
+<span class="fc" id="L784">    return caches.get(id);</span>
+  }
+
+  public boolean hasCache(String id) {
+<span class="nc" id="L788">    return caches.containsKey(id);</span>
+  }
+
+  public void addResultMap(ResultMap rm) {
+<span class="fc" id="L792">    resultMaps.put(rm.getId(), rm);</span>
+<span class="fc" id="L793">    checkLocallyForDiscriminatedNestedResultMaps(rm);</span>
+<span class="fc" id="L794">    checkGloballyForDiscriminatedNestedResultMaps(rm);</span>
+<span class="fc" id="L795">  }</span>
+
+  public Collection&lt;String&gt; getResultMapNames() {
+<span class="nc" id="L798">    return resultMaps.keySet();</span>
+  }
+
+  public Collection&lt;ResultMap&gt; getResultMaps() {
+<span class="fc" id="L802">    return resultMaps.values();</span>
+  }
+
+  public ResultMap getResultMap(String id) {
+<span class="fc" id="L806">    return resultMaps.get(id);</span>
+  }
+
+  public boolean hasResultMap(String id) {
+<span class="fc" id="L810">    return resultMaps.containsKey(id);</span>
+  }
+
+  public void addParameterMap(ParameterMap pm) {
+<span class="fc" id="L814">    parameterMaps.put(pm.getId(), pm);</span>
+<span class="fc" id="L815">  }</span>
+
+  public Collection&lt;String&gt; getParameterMapNames() {
+<span class="nc" id="L818">    return parameterMaps.keySet();</span>
+  }
+
+  public Collection&lt;ParameterMap&gt; getParameterMaps() {
+<span class="nc" id="L822">    return parameterMaps.values();</span>
+  }
+
+  public ParameterMap getParameterMap(String id) {
+<span class="fc" id="L826">    return parameterMaps.get(id);</span>
+  }
+
+  public boolean hasParameterMap(String id) {
+<span class="nc" id="L830">    return parameterMaps.containsKey(id);</span>
+  }
+
+  public void addMappedStatement(MappedStatement ms) {
+<span class="fc" id="L834">    mappedStatements.put(ms.getId(), ms);</span>
+<span class="fc" id="L835">  }</span>
+
+  public Collection&lt;String&gt; getMappedStatementNames() {
+<span class="fc" id="L838">    buildAllStatements();</span>
+<span class="fc" id="L839">    return mappedStatements.keySet();</span>
+  }
+
+  public Collection&lt;MappedStatement&gt; getMappedStatements() {
+<span class="nc" id="L843">    buildAllStatements();</span>
+<span class="nc" id="L844">    return mappedStatements.values();</span>
+  }
+
+  /**
+   * @deprecated call {@link #parsePendingStatements(boolean)}
+   */
+  @Deprecated
+  public Collection&lt;XMLStatementBuilder&gt; getIncompleteStatements() {
+<span class="nc" id="L852">    return incompleteStatements;</span>
+  }
+
+  public void addIncompleteStatement(XMLStatementBuilder incompleteStatement) {
+<span class="fc" id="L856">    incompleteStatementsLock.lock();</span>
+    try {
+<span class="fc" id="L858">      incompleteStatements.add(incompleteStatement);</span>
+    } finally {
+<span class="fc" id="L860">      incompleteStatementsLock.unlock();</span>
+    }
+<span class="fc" id="L862">  }</span>
+
+  /**
+   * @deprecated call {@link #parsePendingCacheRefs(boolean)}
+   */
+  @Deprecated
+  public Collection&lt;CacheRefResolver&gt; getIncompleteCacheRefs() {
+<span class="nc" id="L869">    return incompleteCacheRefs;</span>
+  }
+
+  public void addIncompleteCacheRef(CacheRefResolver incompleteCacheRef) {
+<span class="fc" id="L873">    incompleteCacheRefsLock.lock();</span>
+    try {
+<span class="fc" id="L875">      incompleteCacheRefs.add(incompleteCacheRef);</span>
+    } finally {
+<span class="fc" id="L877">      incompleteCacheRefsLock.unlock();</span>
+    }
+<span class="fc" id="L879">  }</span>
+
+  /**
+   * @deprecated call {@link #parsePendingResultMaps(boolean)}
+   */
+  @Deprecated
+  public Collection&lt;ResultMapResolver&gt; getIncompleteResultMaps() {
+<span class="nc" id="L886">    return incompleteResultMaps;</span>
+  }
+
+  public void addIncompleteResultMap(ResultMapResolver resultMapResolver) {
+<span class="fc" id="L890">    incompleteResultMapsLock.lock();</span>
+    try {
+<span class="fc" id="L892">      incompleteResultMaps.add(resultMapResolver);</span>
+    } finally {
+<span class="fc" id="L894">      incompleteResultMapsLock.unlock();</span>
+    }
+<span class="fc" id="L896">  }</span>
+
+  public void addIncompleteMethod(MethodResolver builder) {
+<span class="fc" id="L899">    incompleteMethodsLock.lock();</span>
+    try {
+<span class="fc" id="L901">      incompleteMethods.add(builder);</span>
+    } finally {
+<span class="fc" id="L903">      incompleteMethodsLock.unlock();</span>
+    }
+<span class="fc" id="L905">  }</span>
+
+  /**
+   * @deprecated call {@link #parsePendingMethods(boolean)}
+   */
+  @Deprecated
+  public Collection&lt;MethodResolver&gt; getIncompleteMethods() {
+<span class="nc" id="L912">    return incompleteMethods;</span>
+  }
+
+  public MappedStatement getMappedStatement(String id) {
+<span class="fc" id="L916">    return this.getMappedStatement(id, true);</span>
+  }
+
+  public MappedStatement getMappedStatement(String id, boolean validateIncompleteStatements) {
+<span class="fc bfc" id="L920" title="All 2 branches covered.">    if (validateIncompleteStatements) {</span>
+<span class="fc" id="L921">      buildAllStatements();</span>
+    }
+<span class="fc" id="L923">    return mappedStatements.get(id);</span>
+  }
+
+  public Map&lt;String, XNode&gt; getSqlFragments() {
+<span class="fc" id="L927">    return sqlFragments;</span>
+  }
+
+  public void addInterceptor(Interceptor interceptor) {
+<span class="fc" id="L931">    interceptorChain.addInterceptor(interceptor);</span>
+<span class="fc" id="L932">  }</span>
+
+  public void addMappers(String packageName, Class&lt;?&gt; superType) {
+<span class="nc" id="L935">    mapperRegistry.addMappers(packageName, superType);</span>
+<span class="nc" id="L936">  }</span>
+
+  public void addMappers(String packageName) {
+<span class="fc" id="L939">    mapperRegistry.addMappers(packageName);</span>
+<span class="fc" id="L940">  }</span>
+
+  public &lt;T&gt; void addMapper(Class&lt;T&gt; type) {
+<span class="fc" id="L943">    mapperRegistry.addMapper(type);</span>
+<span class="fc" id="L944">  }</span>
+
+  public &lt;T&gt; T getMapper(Class&lt;T&gt; type, SqlSession sqlSession) {
+<span class="fc" id="L947">    return mapperRegistry.getMapper(type, sqlSession);</span>
+  }
+
+  public boolean hasMapper(Class&lt;?&gt; type) {
+<span class="fc" id="L951">    return mapperRegistry.hasMapper(type);</span>
+  }
+
+  public boolean hasStatement(String statementName) {
+<span class="fc" id="L955">    return hasStatement(statementName, true);</span>
+  }
+
+  public boolean hasStatement(String statementName, boolean validateIncompleteStatements) {
+<span class="fc bfc" id="L959" title="All 2 branches covered.">    if (validateIncompleteStatements) {</span>
+<span class="fc" id="L960">      buildAllStatements();</span>
+    }
+<span class="fc" id="L962">    return mappedStatements.containsKey(statementName);</span>
+  }
+
+  public void addCacheRef(String namespace, String referencedNamespace) {
+<span class="fc" id="L966">    cacheRefMap.put(namespace, referencedNamespace);</span>
+<span class="fc" id="L967">  }</span>
+
+  /*
+   * Parses all the unprocessed statement nodes in the cache. It is recommended to call this method once all the mappers
+   * are added as it provides fail-fast statement validation.
+   */
+  protected void buildAllStatements() {
+<span class="fc" id="L974">    parsePendingResultMaps(true);</span>
+<span class="fc" id="L975">    parsePendingCacheRefs(true);</span>
+<span class="fc" id="L976">    parsePendingStatements(true);</span>
+<span class="fc" id="L977">    parsePendingMethods(true);</span>
+<span class="fc" id="L978">  }</span>
+
+  public void parsePendingMethods(boolean reportUnresolved) {
+<span class="fc bfc" id="L981" title="All 2 branches covered.">    if (incompleteMethods.isEmpty()) {</span>
+<span class="fc" id="L982">      return;</span>
+    }
+<span class="fc" id="L984">    incompleteMethodsLock.lock();</span>
+    try {
+<span class="fc" id="L986">      incompleteMethods.removeIf(x -&gt; {</span>
+<span class="fc" id="L987">        x.resolve();</span>
+<span class="fc" id="L988">        return true;</span>
+      });
+<span class="fc" id="L990">    } catch (IncompleteElementException e) {</span>
+<span class="pc bpc" id="L991" title="1 of 2 branches missed.">      if (reportUnresolved) {</span>
+<span class="nc" id="L992">        throw e;</span>
+      }
+    } finally {
+<span class="fc" id="L995">      incompleteMethodsLock.unlock();</span>
+    }
+<span class="fc" id="L997">  }</span>
+
+  public void parsePendingStatements(boolean reportUnresolved) {
+<span class="fc bfc" id="L1000" title="All 2 branches covered.">    if (incompleteStatements.isEmpty()) {</span>
+<span class="fc" id="L1001">      return;</span>
+    }
+<span class="fc" id="L1003">    incompleteStatementsLock.lock();</span>
+    try {
+<span class="fc" id="L1005">      incompleteStatements.removeIf(x -&gt; {</span>
+<span class="fc" id="L1006">        x.parseStatementNode();</span>
+<span class="fc" id="L1007">        return true;</span>
+      });
+<span class="fc" id="L1009">    } catch (IncompleteElementException e) {</span>
+<span class="fc bfc" id="L1010" title="All 2 branches covered.">      if (reportUnresolved) {</span>
+<span class="fc" id="L1011">        throw e;</span>
+      }
+    } finally {
+<span class="fc" id="L1014">      incompleteStatementsLock.unlock();</span>
+    }
+<span class="fc" id="L1016">  }</span>
+
+  public void parsePendingCacheRefs(boolean reportUnresolved) {
+<span class="fc bfc" id="L1019" title="All 2 branches covered.">    if (incompleteCacheRefs.isEmpty()) {</span>
+<span class="fc" id="L1020">      return;</span>
+    }
+<span class="fc" id="L1022">    incompleteCacheRefsLock.lock();</span>
+    try {
+<span class="pc bpc" id="L1024" title="1 of 2 branches missed.">      incompleteCacheRefs.removeIf(x -&gt; x.resolveCacheRef() != null);</span>
+<span class="fc" id="L1025">    } catch (IncompleteElementException e) {</span>
+<span class="pc bpc" id="L1026" title="1 of 2 branches missed.">      if (reportUnresolved) {</span>
+<span class="nc" id="L1027">        throw e;</span>
+      }
+    } finally {
+<span class="fc" id="L1030">      incompleteCacheRefsLock.unlock();</span>
+    }
+<span class="fc" id="L1032">  }</span>
+
+  public void parsePendingResultMaps(boolean reportUnresolved) {
+<span class="fc bfc" id="L1035" title="All 2 branches covered.">    if (incompleteResultMaps.isEmpty()) {</span>
+<span class="fc" id="L1036">      return;</span>
+    }
+<span class="fc" id="L1038">    incompleteResultMapsLock.lock();</span>
+    try {
+      boolean resolved;
+<span class="fc" id="L1041">      IncompleteElementException ex = null;</span>
+      do {
+<span class="fc" id="L1043">        resolved = false;</span>
+<span class="fc" id="L1044">        Iterator&lt;ResultMapResolver&gt; iterator = incompleteResultMaps.iterator();</span>
+<span class="fc bfc" id="L1045" title="All 2 branches covered.">        while (iterator.hasNext()) {</span>
+          try {
+<span class="fc" id="L1047">            iterator.next().resolve();</span>
+<span class="fc" id="L1048">            iterator.remove();</span>
+<span class="fc" id="L1049">            resolved = true;</span>
+<span class="fc" id="L1050">          } catch (IncompleteElementException e) {</span>
+<span class="fc" id="L1051">            ex = e;</span>
+<span class="fc" id="L1052">          }</span>
+        }
+<span class="fc bfc" id="L1054" title="All 2 branches covered.">      } while (resolved);</span>
+<span class="pc bpc" id="L1055" title="5 of 6 branches missed.">      if (reportUnresolved &amp;&amp; !incompleteResultMaps.isEmpty() &amp;&amp; ex != null) {</span>
+        // At least one result map is unresolvable.
+<span class="nc" id="L1057">        throw ex;</span>
+      }
+    } finally {
+<span class="fc" id="L1060">      incompleteResultMapsLock.unlock();</span>
+    }
+<span class="fc" id="L1062">  }</span>
+
+  /**
+   * Extracts namespace from fully qualified statement id.
+   *
+   * @param statementId
+   *          the statement id
+   *
+   * @return namespace or null when id does not contain period.
+   */
+  protected String extractNamespace(String statementId) {
+<span class="nc" id="L1073">    int lastPeriod = statementId.lastIndexOf('.');</span>
+<span class="nc bnc" id="L1074" title="All 2 branches missed.">    return lastPeriod &gt; 0 ? statementId.substring(0, lastPeriod) : null;</span>
+  }
+
+  // Slow but a one time cost. A better solution is welcome.
+  protected void checkGloballyForDiscriminatedNestedResultMaps(ResultMap rm) {
+<span class="fc bfc" id="L1079" title="All 2 branches covered.">    if (rm.hasNestedResultMaps()) {</span>
+<span class="fc" id="L1080">      final String resultMapId = rm.getId();</span>
+<span class="fc bfc" id="L1081" title="All 2 branches covered.">      for (Object resultMapObject : resultMaps.values()) {</span>
+<span class="fc bfc" id="L1082" title="All 2 branches covered.">        if (resultMapObject instanceof ResultMap) {</span>
+<span class="fc" id="L1083">          ResultMap entryResultMap = (ResultMap) resultMapObject;</span>
+<span class="fc bfc" id="L1084" title="All 4 branches covered.">          if (!entryResultMap.hasNestedResultMaps() &amp;&amp; entryResultMap.getDiscriminator() != null) {</span>
+<span class="fc" id="L1085">            Collection&lt;String&gt; discriminatedResultMapNames = entryResultMap.getDiscriminator().getDiscriminatorMap()</span>
+<span class="fc" id="L1086">                .values();</span>
+<span class="pc bpc" id="L1087" title="1 of 2 branches missed.">            if (discriminatedResultMapNames.contains(resultMapId)) {</span>
+<span class="nc" id="L1088">              entryResultMap.forceNestedResultMaps();</span>
+            }
+          }
+        }
+<span class="fc" id="L1092">      }</span>
+    }
+<span class="fc" id="L1094">  }</span>
+
+  // Slow but a one time cost. A better solution is welcome.
+  protected void checkLocallyForDiscriminatedNestedResultMaps(ResultMap rm) {
+<span class="fc bfc" id="L1098" title="All 4 branches covered.">    if (!rm.hasNestedResultMaps() &amp;&amp; rm.getDiscriminator() != null) {</span>
+<span class="fc bfc" id="L1099" title="All 2 branches covered.">      for (String discriminatedResultMapName : rm.getDiscriminator().getDiscriminatorMap().values()) {</span>
+<span class="fc bfc" id="L1100" title="All 2 branches covered.">        if (hasResultMap(discriminatedResultMapName)) {</span>
+<span class="fc" id="L1101">          ResultMap discriminatedResultMap = resultMaps.get(discriminatedResultMapName);</span>
+<span class="fc bfc" id="L1102" title="All 2 branches covered.">          if (discriminatedResultMap.hasNestedResultMaps()) {</span>
+<span class="fc" id="L1103">            rm.forceNestedResultMaps();</span>
+<span class="fc" id="L1104">            break;</span>
+          }
+        }
+<span class="fc" id="L1107">      }</span>
+    }
+<span class="fc" id="L1109">  }</span>
+
+  protected static class StrictMap&lt;V&gt; extends ConcurrentHashMap&lt;String, V&gt; {
+
+    private static final long serialVersionUID = -4950446264854982944L;
+    private final String name;
+    private BiFunction&lt;V, V, String&gt; conflictMessageProducer;
+
+    public StrictMap(String name, int initialCapacity, float loadFactor) {
+<span class="nc" id="L1118">      super(initialCapacity, loadFactor);</span>
+<span class="nc" id="L1119">      this.name = name;</span>
+<span class="nc" id="L1120">    }</span>
+
+    public StrictMap(String name, int initialCapacity) {
+<span class="nc" id="L1123">      super(initialCapacity);</span>
+<span class="nc" id="L1124">      this.name = name;</span>
+<span class="nc" id="L1125">    }</span>
+
+<span class="fc" id="L1127">    public StrictMap(String name) {</span>
+<span class="fc" id="L1128">      this.name = name;</span>
+<span class="fc" id="L1129">    }</span>
+
+    public StrictMap(String name, Map&lt;String, ? extends V&gt; m) {
+<span class="nc" id="L1132">      super(m);</span>
+<span class="nc" id="L1133">      this.name = name;</span>
+<span class="nc" id="L1134">    }</span>
+
+    /**
+     * Assign a function for producing a conflict error message when contains value with the same key.
+     * &lt;p&gt;
+     * function arguments are 1st is saved value and 2nd is target value.
+     *
+     * @param conflictMessageProducer
+     *          A function for producing a conflict error message
+     *
+     * @return a conflict error message
+     *
+     * @since 3.5.0
+     */
+    public StrictMap&lt;V&gt; conflictMessageProducer(BiFunction&lt;V, V, String&gt; conflictMessageProducer) {
+<span class="fc" id="L1149">      this.conflictMessageProducer = conflictMessageProducer;</span>
+<span class="fc" id="L1150">      return this;</span>
+    }
+
+    @Override
+    @SuppressWarnings(&quot;unchecked&quot;)
+    public V put(String key, V value) {
+<span class="fc bfc" id="L1156" title="All 2 branches covered.">      if (containsKey(key)) {</span>
+<span class="fc" id="L1157">        throw new IllegalArgumentException(name + &quot; already contains key &quot; + key</span>
+<span class="fc bfc" id="L1158" title="All 2 branches covered.">            + (conflictMessageProducer == null ? &quot;&quot; : conflictMessageProducer.apply(super.get(key), value)));</span>
+      }
+<span class="fc bfc" id="L1160" title="All 2 branches covered.">      if (key.contains(&quot;.&quot;)) {</span>
+<span class="fc" id="L1161">        final String shortKey = getShortName(key);</span>
+<span class="fc bfc" id="L1162" title="All 2 branches covered.">        if (super.get(shortKey) == null) {</span>
+<span class="fc" id="L1163">          super.put(shortKey, value);</span>
+        } else {
+<span class="fc" id="L1165">          super.put(shortKey, (V) new Ambiguity(shortKey));</span>
+        }
+      }
+<span class="fc" id="L1168">      return super.put(key, value);</span>
+    }
+
+    @Override
+    public boolean containsKey(Object key) {
+<span class="fc bfc" id="L1173" title="All 2 branches covered.">      if (key == null) {</span>
+<span class="fc" id="L1174">        return false;</span>
+      }
+
+<span class="fc bfc" id="L1177" title="All 2 branches covered.">      return super.get(key) != null;</span>
+    }
+
+    @Override
+    public V get(Object key) {
+<span class="fc" id="L1182">      V value = super.get(key);</span>
+<span class="fc bfc" id="L1183" title="All 2 branches covered.">      if (value == null) {</span>
+<span class="fc" id="L1184">        throw new IllegalArgumentException(name + &quot; does not contain value for &quot; + key);</span>
+      }
+<span class="fc bfc" id="L1186" title="All 2 branches covered.">      if (value instanceof Ambiguity) {</span>
+<span class="fc" id="L1187">        throw new IllegalArgumentException(((Ambiguity) value).getSubject() + &quot; is ambiguous in &quot; + name</span>
+            + &quot; (try using the full name including the namespace, or rename one of the entries)&quot;);
+      }
+<span class="fc" id="L1190">      return value;</span>
+    }
+
+    protected static class Ambiguity {
+      private final String subject;
+
+<span class="fc" id="L1196">      public Ambiguity(String subject) {</span>
+<span class="fc" id="L1197">        this.subject = subject;</span>
+<span class="fc" id="L1198">      }</span>
+
+      public String getSubject() {
+<span class="fc" id="L1201">        return subject;</span>
+      }
+    }
+
+    private String getShortName(String key) {
+<span class="fc" id="L1206">      final String[] keyParts = key.split(&quot;\\.&quot;);</span>
+<span class="fc" id="L1207">      return keyParts[keyParts.length - 1];</span>
+    }
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

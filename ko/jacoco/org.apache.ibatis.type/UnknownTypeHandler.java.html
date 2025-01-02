@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UnknownTypeHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.type</a> &gt; <span class="el_source">UnknownTypeHandler.java</span></div><h1>UnknownTypeHandler.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2023 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.type;
+
+import java.sql.CallableStatement;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Supplier;
+
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.Configuration;
+
+/**
+ * @author Clinton Begin
+ */
+public class UnknownTypeHandler extends BaseTypeHandler&lt;Object&gt; {
+
+<span class="fc" id="L35">  private static final ObjectTypeHandler OBJECT_TYPE_HANDLER = new ObjectTypeHandler();</span>
+  // TODO Rename to 'configuration' after removing the 'configuration' property(deprecated property) on parent class
+  private final Configuration config;
+  private final Supplier&lt;TypeHandlerRegistry&gt; typeHandlerRegistrySupplier;
+
+  /**
+   * The constructor that pass a MyBatis configuration.
+   *
+   * @param configuration
+   *          a MyBatis configuration
+   *
+   * @since 3.5.4
+   */
+<span class="fc" id="L48">  public UnknownTypeHandler(Configuration configuration) {</span>
+<span class="fc" id="L49">    this.config = configuration;</span>
+<span class="fc" id="L50">    this.typeHandlerRegistrySupplier = configuration::getTypeHandlerRegistry;</span>
+<span class="fc" id="L51">  }</span>
+
+  /**
+   * The constructor that pass the type handler registry.
+   *
+   * @param typeHandlerRegistry
+   *          a type handler registry
+   *
+   * @deprecated Since 3.5.4, please use the {@link #UnknownTypeHandler(Configuration)}.
+   */
+  @Deprecated
+<span class="nc" id="L62">  public UnknownTypeHandler(TypeHandlerRegistry typeHandlerRegistry) {</span>
+<span class="nc" id="L63">    this.config = new Configuration();</span>
+<span class="nc" id="L64">    this.typeHandlerRegistrySupplier = () -&gt; typeHandlerRegistry;</span>
+<span class="nc" id="L65">  }</span>
+
+  @Override
+  public void setNonNullParameter(PreparedStatement ps, int i, Object parameter, JdbcType jdbcType)
+      throws SQLException {
+<span class="fc" id="L70">    TypeHandler handler = resolveTypeHandler(parameter, jdbcType);</span>
+<span class="fc" id="L71">    handler.setParameter(ps, i, parameter, jdbcType);</span>
+<span class="fc" id="L72">  }</span>
+
+  @Override
+  public Object getNullableResult(ResultSet rs, String columnName) throws SQLException {
+<span class="fc" id="L76">    TypeHandler&lt;?&gt; handler = resolveTypeHandler(rs, columnName);</span>
+<span class="fc" id="L77">    return handler.getResult(rs, columnName);</span>
+  }
+
+  @Override
+  public Object getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
+<span class="fc" id="L82">    TypeHandler&lt;?&gt; handler = resolveTypeHandler(rs.getMetaData(), columnIndex);</span>
+<span class="pc bpc" id="L83" title="2 of 4 branches missed.">    if (handler == null || handler instanceof UnknownTypeHandler) {</span>
+<span class="nc" id="L84">      handler = OBJECT_TYPE_HANDLER;</span>
+    }
+<span class="fc" id="L86">    return handler.getResult(rs, columnIndex);</span>
+  }
+
+  @Override
+  public Object getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
+<span class="fc" id="L91">    return cs.getObject(columnIndex);</span>
+  }
+
+  private TypeHandler&lt;?&gt; resolveTypeHandler(Object parameter, JdbcType jdbcType) {
+    TypeHandler&lt;?&gt; handler;
+<span class="pc bpc" id="L96" title="1 of 2 branches missed.">    if (parameter == null) {</span>
+<span class="nc" id="L97">      handler = OBJECT_TYPE_HANDLER;</span>
+    } else {
+<span class="fc" id="L99">      handler = typeHandlerRegistrySupplier.get().getTypeHandler(parameter.getClass(), jdbcType);</span>
+      // check if handler is null (issue #270)
+<span class="pc bpc" id="L101" title="2 of 4 branches missed.">      if (handler == null || handler instanceof UnknownTypeHandler) {</span>
+<span class="nc" id="L102">        handler = OBJECT_TYPE_HANDLER;</span>
+      }
+    }
+<span class="fc" id="L105">    return handler;</span>
+  }
+
+  private TypeHandler&lt;?&gt; resolveTypeHandler(ResultSet rs, String column) {
+    try {
+      Map&lt;String, Integer&gt; columnIndexLookup;
+<span class="fc" id="L111">      columnIndexLookup = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L112">      ResultSetMetaData rsmd = rs.getMetaData();</span>
+<span class="fc" id="L113">      int count = rsmd.getColumnCount();</span>
+<span class="fc" id="L114">      boolean useColumnLabel = config.isUseColumnLabel();</span>
+<span class="fc bfc" id="L115" title="All 2 branches covered.">      for (int i = 1; i &lt;= count; i++) {</span>
+<span class="fc bfc" id="L116" title="All 2 branches covered.">        String name = useColumnLabel ? rsmd.getColumnLabel(i) : rsmd.getColumnName(i);</span>
+<span class="fc" id="L117">        columnIndexLookup.put(name, i);</span>
+      }
+<span class="fc" id="L119">      Integer columnIndex = columnIndexLookup.get(column);</span>
+<span class="fc" id="L120">      TypeHandler&lt;?&gt; handler = null;</span>
+<span class="fc bfc" id="L121" title="All 2 branches covered.">      if (columnIndex != null) {</span>
+<span class="fc" id="L122">        handler = resolveTypeHandler(rsmd, columnIndex);</span>
+      }
+<span class="pc bpc" id="L124" title="1 of 4 branches missed.">      if (handler == null || handler instanceof UnknownTypeHandler) {</span>
+<span class="fc" id="L125">        handler = OBJECT_TYPE_HANDLER;</span>
+      }
+<span class="fc" id="L127">      return handler;</span>
+<span class="nc" id="L128">    } catch (SQLException e) {</span>
+<span class="nc" id="L129">      throw new TypeException(&quot;Error determining JDBC type for column &quot; + column + &quot;.  Cause: &quot; + e, e);</span>
+    }
+  }
+
+  private TypeHandler&lt;?&gt; resolveTypeHandler(ResultSetMetaData rsmd, Integer columnIndex) {
+<span class="fc" id="L134">    TypeHandler&lt;?&gt; handler = null;</span>
+<span class="fc" id="L135">    JdbcType jdbcType = safeGetJdbcTypeForColumn(rsmd, columnIndex);</span>
+<span class="fc" id="L136">    Class&lt;?&gt; javaType = safeGetClassForColumn(rsmd, columnIndex);</span>
+<span class="pc bpc" id="L137" title="2 of 4 branches missed.">    if (javaType != null &amp;&amp; jdbcType != null) {</span>
+<span class="fc" id="L138">      handler = typeHandlerRegistrySupplier.get().getTypeHandler(javaType, jdbcType);</span>
+<span class="nc bnc" id="L139" title="All 2 branches missed.">    } else if (javaType != null) {</span>
+<span class="nc" id="L140">      handler = typeHandlerRegistrySupplier.get().getTypeHandler(javaType);</span>
+<span class="nc bnc" id="L141" title="All 2 branches missed.">    } else if (jdbcType != null) {</span>
+<span class="nc" id="L142">      handler = typeHandlerRegistrySupplier.get().getTypeHandler(jdbcType);</span>
+    }
+<span class="fc" id="L144">    return handler;</span>
+  }
+
+  private JdbcType safeGetJdbcTypeForColumn(ResultSetMetaData rsmd, Integer columnIndex) {
+    try {
+<span class="fc" id="L149">      return JdbcType.forCode(rsmd.getColumnType(columnIndex));</span>
+<span class="nc" id="L150">    } catch (Exception e) {</span>
+<span class="nc" id="L151">      return null;</span>
+    }
+  }
+
+  private Class&lt;?&gt; safeGetClassForColumn(ResultSetMetaData rsmd, Integer columnIndex) {
+    try {
+<span class="fc" id="L157">      return Resources.classForName(rsmd.getColumnClassName(columnIndex));</span>
+<span class="nc" id="L158">    } catch (Exception e) {</span>
+<span class="nc" id="L159">      return null;</span>
+    }
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

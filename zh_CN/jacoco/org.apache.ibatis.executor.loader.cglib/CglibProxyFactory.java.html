@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CglibProxyFactory.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.executor.loader.cglib</a> &gt; <span class="el_source">CglibProxyFactory.java</span></div><h1>CglibProxyFactory.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2024 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.executor.loader.cglib;
+
+import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.locks.ReentrantLock;
+
+import net.sf.cglib.proxy.Callback;
+import net.sf.cglib.proxy.Enhancer;
+import net.sf.cglib.proxy.MethodInterceptor;
+import net.sf.cglib.proxy.MethodProxy;
+
+import org.apache.ibatis.executor.loader.AbstractEnhancedDeserializationProxy;
+import org.apache.ibatis.executor.loader.AbstractSerialStateHolder;
+import org.apache.ibatis.executor.loader.ProxyFactory;
+import org.apache.ibatis.executor.loader.ResultLoaderMap;
+import org.apache.ibatis.executor.loader.WriteReplaceInterface;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.logging.LogFactory;
+import org.apache.ibatis.reflection.ExceptionUtil;
+import org.apache.ibatis.reflection.factory.ObjectFactory;
+import org.apache.ibatis.reflection.property.PropertyCopier;
+import org.apache.ibatis.reflection.property.PropertyNamer;
+import org.apache.ibatis.session.Configuration;
+
+/**
+ * @author Clinton Begin
+ *
+ * @deprecated Since 3.5.10, use Javassist instead.
+ */
+@Deprecated
+public class CglibProxyFactory implements ProxyFactory {
+
+  private static final String FINALIZE_METHOD = &quot;finalize&quot;;
+  private static final String WRITE_REPLACE_METHOD = &quot;writeReplace&quot;;
+
+<span class="nc" id="L54">  public CglibProxyFactory() {</span>
+    try {
+<span class="nc" id="L56">      Resources.classForName(&quot;net.sf.cglib.proxy.Enhancer&quot;);</span>
+<span class="nc" id="L57">    } catch (Throwable e) {</span>
+<span class="nc" id="L58">      throw new IllegalStateException(</span>
+          &quot;Cannot enable lazy loading because CGLIB is not available. Add CGLIB to your classpath.&quot;, e);
+<span class="nc" id="L60">    }</span>
+<span class="nc" id="L61">  }</span>
+
+  @Override
+  public Object createProxy(Object target, ResultLoaderMap lazyLoader, Configuration configuration,
+      ObjectFactory objectFactory, List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs) {
+<span class="nc" id="L66">    return EnhancedResultObjectProxyImpl.createProxy(target, lazyLoader, configuration, objectFactory,</span>
+        constructorArgTypes, constructorArgs);
+  }
+
+  public Object createDeserializationProxy(Object target, Map&lt;String, ResultLoaderMap.LoadPair&gt; unloadedProperties,
+      ObjectFactory objectFactory, List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs) {
+<span class="nc" id="L72">    return EnhancedDeserializationProxyImpl.createProxy(target, unloadedProperties, objectFactory, constructorArgTypes,</span>
+        constructorArgs);
+  }
+
+  static Object createStaticProxy(Class&lt;?&gt; type, Callback callback, List&lt;Class&lt;?&gt;&gt; constructorArgTypes,
+      List&lt;Object&gt; constructorArgs) {
+<span class="nc" id="L78">    LogHolder.log.warn(&quot;CglibProxyFactory is deprecated. Use another proxy factory implementation.&quot;);</span>
+<span class="nc" id="L79">    Enhancer enhancer = new Enhancer();</span>
+<span class="nc" id="L80">    enhancer.setCallback(callback);</span>
+<span class="nc" id="L81">    enhancer.setSuperclass(type);</span>
+    try {
+<span class="nc" id="L83">      type.getDeclaredMethod(WRITE_REPLACE_METHOD);</span>
+      // ObjectOutputStream will call writeReplace of objects returned by writeReplace
+<span class="nc bnc" id="L85" title="All 2 branches missed.">      if (LogHolder.log.isDebugEnabled()) {</span>
+<span class="nc" id="L86">        LogHolder.log.debug(WRITE_REPLACE_METHOD + &quot; method was found on bean &quot; + type + &quot;, make sure it returns this&quot;);</span>
+      }
+<span class="nc" id="L88">    } catch (NoSuchMethodException e) {</span>
+<span class="nc" id="L89">      enhancer.setInterfaces(new Class[] { WriteReplaceInterface.class });</span>
+<span class="nc" id="L90">    } catch (SecurityException e) {</span>
+      // nothing to do here
+<span class="nc" id="L92">    }</span>
+    Object enhanced;
+<span class="nc bnc" id="L94" title="All 2 branches missed.">    if (constructorArgTypes.isEmpty()) {</span>
+<span class="nc" id="L95">      enhanced = enhancer.create();</span>
+    } else {
+<span class="nc" id="L97">      Class&lt;?&gt;[] typesArray = constructorArgTypes.toArray(new Class[constructorArgTypes.size()]);</span>
+<span class="nc" id="L98">      Object[] valuesArray = constructorArgs.toArray(new Object[constructorArgs.size()]);</span>
+<span class="nc" id="L99">      enhanced = enhancer.create(typesArray, valuesArray);</span>
+    }
+<span class="nc" id="L101">    return enhanced;</span>
+  }
+
+  private static class EnhancedResultObjectProxyImpl implements MethodInterceptor {
+
+    private final Class&lt;?&gt; type;
+    private final ResultLoaderMap lazyLoader;
+    private final boolean aggressive;
+    private final Set&lt;String&gt; lazyLoadTriggerMethods;
+    private final ObjectFactory objectFactory;
+    private final List&lt;Class&lt;?&gt;&gt; constructorArgTypes;
+    private final List&lt;Object&gt; constructorArgs;
+<span class="nc" id="L113">    private final ReentrantLock lock = new ReentrantLock();</span>
+
+    private EnhancedResultObjectProxyImpl(Class&lt;?&gt; type, ResultLoaderMap lazyLoader, Configuration configuration,
+<span class="nc" id="L116">        ObjectFactory objectFactory, List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs) {</span>
+<span class="nc" id="L117">      this.type = type;</span>
+<span class="nc" id="L118">      this.lazyLoader = lazyLoader;</span>
+<span class="nc" id="L119">      this.aggressive = configuration.isAggressiveLazyLoading();</span>
+<span class="nc" id="L120">      this.lazyLoadTriggerMethods = configuration.getLazyLoadTriggerMethods();</span>
+<span class="nc" id="L121">      this.objectFactory = objectFactory;</span>
+<span class="nc" id="L122">      this.constructorArgTypes = constructorArgTypes;</span>
+<span class="nc" id="L123">      this.constructorArgs = constructorArgs;</span>
+<span class="nc" id="L124">    }</span>
+
+    public static Object createProxy(Object target, ResultLoaderMap lazyLoader, Configuration configuration,
+        ObjectFactory objectFactory, List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs) {
+<span class="nc" id="L128">      final Class&lt;?&gt; type = target.getClass();</span>
+<span class="nc" id="L129">      EnhancedResultObjectProxyImpl callback = new EnhancedResultObjectProxyImpl(type, lazyLoader, configuration,</span>
+          objectFactory, constructorArgTypes, constructorArgs);
+<span class="nc" id="L131">      Object enhanced = createStaticProxy(type, callback, constructorArgTypes, constructorArgs);</span>
+<span class="nc" id="L132">      PropertyCopier.copyBeanProperties(type, target, enhanced);</span>
+<span class="nc" id="L133">      return enhanced;</span>
+    }
+
+    @Override
+    public Object intercept(Object enhanced, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
+<span class="nc" id="L138">      final String methodName = method.getName();</span>
+<span class="nc" id="L139">      lock.lock();</span>
+      try {
+<span class="nc bnc" id="L141" title="All 2 branches missed.">        if (WRITE_REPLACE_METHOD.equals(methodName)) {</span>
+          Object original;
+<span class="nc bnc" id="L143" title="All 2 branches missed.">          if (constructorArgTypes.isEmpty()) {</span>
+<span class="nc" id="L144">            original = objectFactory.create(type);</span>
+          } else {
+<span class="nc" id="L146">            original = objectFactory.create(type, constructorArgTypes, constructorArgs);</span>
+          }
+<span class="nc" id="L148">          PropertyCopier.copyBeanProperties(type, enhanced, original);</span>
+<span class="nc bnc" id="L149" title="All 2 branches missed.">          if (lazyLoader.size() &gt; 0) {</span>
+<span class="nc" id="L150">            return new CglibSerialStateHolder(original, lazyLoader.getProperties(), objectFactory, constructorArgTypes,</span>
+                constructorArgs);
+          } else {
+<span class="nc" id="L153">            return original;</span>
+          }
+        }
+<span class="nc bnc" id="L156" title="All 4 branches missed.">        if (lazyLoader.size() &gt; 0 &amp;&amp; !FINALIZE_METHOD.equals(methodName)) {</span>
+<span class="nc bnc" id="L157" title="All 4 branches missed.">          if (aggressive || lazyLoadTriggerMethods.contains(methodName)) {</span>
+<span class="nc" id="L158">            lazyLoader.loadAll();</span>
+<span class="nc bnc" id="L159" title="All 2 branches missed.">          } else if (PropertyNamer.isSetter(methodName)) {</span>
+<span class="nc" id="L160">            final String property = PropertyNamer.methodToProperty(methodName);</span>
+<span class="nc" id="L161">            lazyLoader.remove(property);</span>
+<span class="nc bnc" id="L162" title="All 2 branches missed.">          } else if (PropertyNamer.isGetter(methodName)) {</span>
+<span class="nc" id="L163">            final String property = PropertyNamer.methodToProperty(methodName);</span>
+<span class="nc bnc" id="L164" title="All 2 branches missed.">            if (lazyLoader.hasLoader(property)) {</span>
+<span class="nc" id="L165">              lazyLoader.load(property);</span>
+            }
+          }
+        }
+<span class="nc" id="L169">        return methodProxy.invokeSuper(enhanced, args);</span>
+<span class="nc" id="L170">      } catch (Throwable t) {</span>
+<span class="nc" id="L171">        throw ExceptionUtil.unwrapThrowable(t);</span>
+      } finally {
+<span class="nc" id="L173">        lock.unlock();</span>
+      }
+    }
+  }
+
+  private static class EnhancedDeserializationProxyImpl extends AbstractEnhancedDeserializationProxy
+      implements MethodInterceptor {
+
+    private EnhancedDeserializationProxyImpl(Class&lt;?&gt; type, Map&lt;String, ResultLoaderMap.LoadPair&gt; unloadedProperties,
+        ObjectFactory objectFactory, List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs) {
+<span class="nc" id="L183">      super(type, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);</span>
+<span class="nc" id="L184">    }</span>
+
+    public static Object createProxy(Object target, Map&lt;String, ResultLoaderMap.LoadPair&gt; unloadedProperties,
+        ObjectFactory objectFactory, List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs) {
+<span class="nc" id="L188">      final Class&lt;?&gt; type = target.getClass();</span>
+<span class="nc" id="L189">      EnhancedDeserializationProxyImpl callback = new EnhancedDeserializationProxyImpl(type, unloadedProperties,</span>
+          objectFactory, constructorArgTypes, constructorArgs);
+<span class="nc" id="L191">      Object enhanced = createStaticProxy(type, callback, constructorArgTypes, constructorArgs);</span>
+<span class="nc" id="L192">      PropertyCopier.copyBeanProperties(type, target, enhanced);</span>
+<span class="nc" id="L193">      return enhanced;</span>
+    }
+
+    @Override
+    public Object intercept(Object enhanced, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
+<span class="nc" id="L198">      final Object o = super.invoke(enhanced, method, args);</span>
+<span class="nc bnc" id="L199" title="All 2 branches missed.">      return o instanceof AbstractSerialStateHolder ? o : methodProxy.invokeSuper(o, args);</span>
+    }
+
+    @Override
+    protected AbstractSerialStateHolder newSerialStateHolder(Object userBean,
+        Map&lt;String, ResultLoaderMap.LoadPair&gt; unloadedProperties, ObjectFactory objectFactory,
+        List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs) {
+<span class="nc" id="L206">      return new CglibSerialStateHolder(userBean, unloadedProperties, objectFactory, constructorArgTypes,</span>
+          constructorArgs);
+    }
+  }
+
+  private static class LogHolder {
+<span class="nc" id="L212">    private static final Log log = LogFactory.getLog(CglibProxyFactory.class);</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

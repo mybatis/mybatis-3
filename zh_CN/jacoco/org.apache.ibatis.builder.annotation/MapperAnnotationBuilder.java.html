@@ -1,0 +1,707 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MapperAnnotationBuilder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.builder.annotation</a> &gt; <span class="el_source">MapperAnnotationBuilder.java</span></div><h1>MapperAnnotationBuilder.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2009-2024 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.builder.annotation;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Array;
+import java.lang.reflect.GenericArrayType;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Properties;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.apache.ibatis.annotations.Arg;
+import org.apache.ibatis.annotations.CacheNamespace;
+import org.apache.ibatis.annotations.CacheNamespaceRef;
+import org.apache.ibatis.annotations.Case;
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.DeleteProvider;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.InsertProvider;
+import org.apache.ibatis.annotations.Lang;
+import org.apache.ibatis.annotations.MapKey;
+import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Options.FlushCachePolicy;
+import org.apache.ibatis.annotations.Property;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.ResultMap;
+import org.apache.ibatis.annotations.ResultType;
+import org.apache.ibatis.annotations.Results;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.SelectKey;
+import org.apache.ibatis.annotations.SelectProvider;
+import org.apache.ibatis.annotations.TypeDiscriminator;
+import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.UpdateProvider;
+import org.apache.ibatis.binding.MapperMethod.ParamMap;
+import org.apache.ibatis.builder.BuilderException;
+import org.apache.ibatis.builder.CacheRefResolver;
+import org.apache.ibatis.builder.IncompleteElementException;
+import org.apache.ibatis.builder.MapperBuilderAssistant;
+import org.apache.ibatis.builder.xml.XMLMapperBuilder;
+import org.apache.ibatis.cursor.Cursor;
+import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
+import org.apache.ibatis.executor.keygen.KeyGenerator;
+import org.apache.ibatis.executor.keygen.NoKeyGenerator;
+import org.apache.ibatis.executor.keygen.SelectKeyGenerator;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.mapping.Discriminator;
+import org.apache.ibatis.mapping.FetchType;
+import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.ResultFlag;
+import org.apache.ibatis.mapping.ResultMapping;
+import org.apache.ibatis.mapping.ResultSetType;
+import org.apache.ibatis.mapping.SqlCommandType;
+import org.apache.ibatis.mapping.SqlSource;
+import org.apache.ibatis.mapping.StatementType;
+import org.apache.ibatis.parsing.PropertyParser;
+import org.apache.ibatis.reflection.TypeParameterResolver;
+import org.apache.ibatis.scripting.LanguageDriver;
+import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.ResultHandler;
+import org.apache.ibatis.session.RowBounds;
+import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.TypeHandler;
+import org.apache.ibatis.type.UnknownTypeHandler;
+
+/**
+ * @author Clinton Begin
+ * @author Kazuki Shimizu
+ */
+public class MapperAnnotationBuilder {
+
+<span class="fc" id="L98">  private static final Set&lt;Class&lt;? extends Annotation&gt;&gt; statementAnnotationTypes = Stream</span>
+<span class="fc" id="L99">      .of(Select.class, Update.class, Insert.class, Delete.class, SelectProvider.class, UpdateProvider.class,</span>
+          InsertProvider.class, DeleteProvider.class)
+<span class="fc" id="L101">      .collect(Collectors.toSet());</span>
+
+  private final Configuration configuration;
+  private final MapperBuilderAssistant assistant;
+  private final Class&lt;?&gt; type;
+
+<span class="fc" id="L107">  public MapperAnnotationBuilder(Configuration configuration, Class&lt;?&gt; type) {</span>
+<span class="fc" id="L108">    String resource = type.getName().replace('.', '/') + &quot;.java (best guess)&quot;;</span>
+<span class="fc" id="L109">    this.assistant = new MapperBuilderAssistant(configuration, resource);</span>
+<span class="fc" id="L110">    this.configuration = configuration;</span>
+<span class="fc" id="L111">    this.type = type;</span>
+<span class="fc" id="L112">  }</span>
+
+  public void parse() {
+<span class="fc" id="L115">    String resource = type.toString();</span>
+<span class="pc bpc" id="L116" title="1 of 2 branches missed.">    if (!configuration.isResourceLoaded(resource)) {</span>
+<span class="fc" id="L117">      loadXmlResource();</span>
+<span class="fc" id="L118">      configuration.addLoadedResource(resource);</span>
+<span class="fc" id="L119">      assistant.setCurrentNamespace(type.getName());</span>
+<span class="fc" id="L120">      parseCache();</span>
+<span class="fc" id="L121">      parseCacheRef();</span>
+<span class="fc bfc" id="L122" title="All 2 branches covered.">      for (Method method : type.getMethods()) {</span>
+<span class="fc bfc" id="L123" title="All 2 branches covered.">        if (!canHaveStatement(method)) {</span>
+<span class="fc" id="L124">          continue;</span>
+        }
+<span class="fc bfc" id="L126" title="All 2 branches covered.">        if (getAnnotationWrapper(method, false, Select.class, SelectProvider.class).isPresent()</span>
+<span class="fc bfc" id="L127" title="All 2 branches covered.">            &amp;&amp; method.getAnnotation(ResultMap.class) == null) {</span>
+<span class="fc" id="L128">          parseResultMap(method);</span>
+        }
+        try {
+<span class="fc" id="L131">          parseStatement(method);</span>
+<span class="fc" id="L132">        } catch (IncompleteElementException e) {</span>
+<span class="fc" id="L133">          configuration.addIncompleteMethod(new MethodResolver(this, method));</span>
+<span class="fc" id="L134">        }</span>
+      }
+    }
+<span class="fc" id="L137">    configuration.parsePendingMethods(false);</span>
+<span class="fc" id="L138">  }</span>
+
+  private static boolean canHaveStatement(Method method) {
+    // issue #237
+<span class="fc bfc" id="L142" title="All 4 branches covered.">    return !method.isBridge() &amp;&amp; !method.isDefault();</span>
+  }
+
+  private void loadXmlResource() {
+    // Spring may not know the real resource name so we check a flag
+    // to prevent loading again a resource twice
+    // this flag is set at XMLMapperBuilder#bindMapperForNamespace
+<span class="fc bfc" id="L149" title="All 2 branches covered.">    if (!configuration.isResourceLoaded(&quot;namespace:&quot; + type.getName())) {</span>
+<span class="fc" id="L150">      String xmlResource = type.getName().replace('.', '/') + &quot;.xml&quot;;</span>
+      // #1347
+<span class="fc" id="L152">      InputStream inputStream = type.getResourceAsStream(&quot;/&quot; + xmlResource);</span>
+<span class="fc bfc" id="L153" title="All 2 branches covered.">      if (inputStream == null) {</span>
+        // Search XML mapper that is not in the module but in the classpath.
+        try {
+<span class="nc" id="L156">          inputStream = Resources.getResourceAsStream(type.getClassLoader(), xmlResource);</span>
+<span class="fc" id="L157">        } catch (IOException e2) {</span>
+          // ignore, resource is not required
+<span class="nc" id="L159">        }</span>
+      }
+<span class="fc bfc" id="L161" title="All 2 branches covered.">      if (inputStream != null) {</span>
+<span class="fc" id="L162">        XMLMapperBuilder xmlParser = new XMLMapperBuilder(inputStream, assistant.getConfiguration(), xmlResource,</span>
+<span class="fc" id="L163">            configuration.getSqlFragments(), type.getName());</span>
+<span class="fc" id="L164">        xmlParser.parse();</span>
+      }
+    }
+<span class="fc" id="L167">  }</span>
+
+  private void parseCache() {
+<span class="fc" id="L170">    CacheNamespace cacheDomain = type.getAnnotation(CacheNamespace.class);</span>
+<span class="fc bfc" id="L171" title="All 2 branches covered.">    if (cacheDomain != null) {</span>
+<span class="pc bpc" id="L172" title="1 of 2 branches missed.">      Integer size = cacheDomain.size() == 0 ? null : cacheDomain.size();</span>
+<span class="pc bpc" id="L173" title="1 of 2 branches missed.">      Long flushInterval = cacheDomain.flushInterval() == 0 ? null : cacheDomain.flushInterval();</span>
+<span class="fc" id="L174">      Properties props = convertToProperties(cacheDomain.properties());</span>
+<span class="fc" id="L175">      assistant.useNewCache(cacheDomain.implementation(), cacheDomain.eviction(), flushInterval, size,</span>
+<span class="fc" id="L176">          cacheDomain.readWrite(), cacheDomain.blocking(), props);</span>
+    }
+<span class="fc" id="L178">  }</span>
+
+  private Properties convertToProperties(Property[] properties) {
+<span class="fc bfc" id="L181" title="All 2 branches covered.">    if (properties.length == 0) {</span>
+<span class="fc" id="L182">      return null;</span>
+    }
+<span class="fc" id="L184">    Properties props = new Properties();</span>
+<span class="fc bfc" id="L185" title="All 2 branches covered.">    for (Property property : properties) {</span>
+<span class="fc" id="L186">      props.setProperty(property.name(), PropertyParser.parse(property.value(), configuration.getVariables()));</span>
+    }
+<span class="fc" id="L188">    return props;</span>
+  }
+
+  private void parseCacheRef() {
+<span class="fc" id="L192">    CacheNamespaceRef cacheDomainRef = type.getAnnotation(CacheNamespaceRef.class);</span>
+<span class="fc bfc" id="L193" title="All 2 branches covered.">    if (cacheDomainRef != null) {</span>
+<span class="fc" id="L194">      Class&lt;?&gt; refType = cacheDomainRef.value();</span>
+<span class="fc" id="L195">      String refName = cacheDomainRef.name();</span>
+<span class="fc bfc" id="L196" title="All 4 branches covered.">      if (refType == void.class &amp;&amp; refName.isEmpty()) {</span>
+<span class="fc" id="L197">        throw new BuilderException(&quot;Should be specified either value() or name() attribute in the @CacheNamespaceRef&quot;);</span>
+      }
+<span class="fc bfc" id="L199" title="All 4 branches covered.">      if (refType != void.class &amp;&amp; !refName.isEmpty()) {</span>
+<span class="fc" id="L200">        throw new BuilderException(&quot;Cannot use both value() and name() attribute in the @CacheNamespaceRef&quot;);</span>
+      }
+<span class="fc bfc" id="L202" title="All 2 branches covered.">      String namespace = refType != void.class ? refType.getName() : refName;</span>
+      try {
+<span class="fc" id="L204">        assistant.useCacheRef(namespace);</span>
+<span class="fc" id="L205">      } catch (IncompleteElementException e) {</span>
+<span class="fc" id="L206">        configuration.addIncompleteCacheRef(new CacheRefResolver(assistant, namespace));</span>
+<span class="fc" id="L207">      }</span>
+    }
+<span class="fc" id="L209">  }</span>
+
+  private String parseResultMap(Method method) {
+<span class="fc" id="L212">    Class&lt;?&gt; returnType = getReturnType(method, type);</span>
+<span class="fc" id="L213">    Arg[] args = method.getAnnotationsByType(Arg.class);</span>
+<span class="fc" id="L214">    Result[] results = method.getAnnotationsByType(Result.class);</span>
+<span class="fc" id="L215">    TypeDiscriminator typeDiscriminator = method.getAnnotation(TypeDiscriminator.class);</span>
+<span class="fc" id="L216">    String resultMapId = generateResultMapName(method);</span>
+<span class="fc" id="L217">    applyResultMap(resultMapId, returnType, args, results, typeDiscriminator);</span>
+<span class="fc" id="L218">    return resultMapId;</span>
+  }
+
+  private String generateResultMapName(Method method) {
+<span class="fc" id="L222">    Results results = method.getAnnotation(Results.class);</span>
+<span class="fc bfc" id="L223" title="All 4 branches covered.">    if (results != null &amp;&amp; !results.id().isEmpty()) {</span>
+<span class="fc" id="L224">      return type.getName() + &quot;.&quot; + results.id();</span>
+    }
+<span class="fc" id="L226">    StringBuilder suffix = new StringBuilder();</span>
+<span class="fc bfc" id="L227" title="All 2 branches covered.">    for (Class&lt;?&gt; c : method.getParameterTypes()) {</span>
+<span class="fc" id="L228">      suffix.append(&quot;-&quot;);</span>
+<span class="fc" id="L229">      suffix.append(c.getSimpleName());</span>
+    }
+<span class="fc bfc" id="L231" title="All 2 branches covered.">    if (suffix.length() &lt; 1) {</span>
+<span class="fc" id="L232">      suffix.append(&quot;-void&quot;);</span>
+    }
+<span class="fc" id="L234">    return type.getName() + &quot;.&quot; + method.getName() + suffix;</span>
+  }
+
+  private void applyResultMap(String resultMapId, Class&lt;?&gt; returnType, Arg[] args, Result[] results,
+      TypeDiscriminator discriminator) {
+<span class="fc" id="L239">    List&lt;ResultMapping&gt; resultMappings = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L240">    applyConstructorArgs(args, returnType, resultMappings);</span>
+<span class="fc" id="L241">    applyResults(results, returnType, resultMappings);</span>
+<span class="fc" id="L242">    Discriminator disc = applyDiscriminator(resultMapId, returnType, discriminator);</span>
+    // TODO add AutoMappingBehaviour
+<span class="fc" id="L244">    assistant.addResultMap(resultMapId, returnType, null, disc, resultMappings, null);</span>
+<span class="fc" id="L245">    createDiscriminatorResultMaps(resultMapId, returnType, discriminator);</span>
+<span class="fc" id="L246">  }</span>
+
+  private void createDiscriminatorResultMaps(String resultMapId, Class&lt;?&gt; resultType, TypeDiscriminator discriminator) {
+<span class="fc bfc" id="L249" title="All 2 branches covered.">    if (discriminator != null) {</span>
+<span class="fc bfc" id="L250" title="All 2 branches covered.">      for (Case c : discriminator.cases()) {</span>
+<span class="fc" id="L251">        String caseResultMapId = resultMapId + &quot;-&quot; + c.value();</span>
+<span class="fc" id="L252">        List&lt;ResultMapping&gt; resultMappings = new ArrayList&lt;&gt;();</span>
+        // issue #136
+<span class="fc" id="L254">        applyConstructorArgs(c.constructArgs(), resultType, resultMappings);</span>
+<span class="fc" id="L255">        applyResults(c.results(), resultType, resultMappings);</span>
+        // TODO add AutoMappingBehaviour
+<span class="fc" id="L257">        assistant.addResultMap(caseResultMapId, c.type(), resultMapId, null, resultMappings, null);</span>
+      }
+    }
+<span class="fc" id="L260">  }</span>
+
+  private Discriminator applyDiscriminator(String resultMapId, Class&lt;?&gt; resultType, TypeDiscriminator discriminator) {
+<span class="fc bfc" id="L263" title="All 2 branches covered.">    if (discriminator != null) {</span>
+<span class="fc" id="L264">      String column = discriminator.column();</span>
+<span class="pc bpc" id="L265" title="1 of 2 branches missed.">      Class&lt;?&gt; javaType = discriminator.javaType() == void.class ? String.class : discriminator.javaType();</span>
+<span class="pc bpc" id="L266" title="1 of 2 branches missed.">      JdbcType jdbcType = discriminator.jdbcType() == JdbcType.UNDEFINED ? null : discriminator.jdbcType();</span>
+      @SuppressWarnings(&quot;unchecked&quot;)
+      Class&lt;? extends TypeHandler&lt;?&gt;&gt; typeHandler = (Class&lt;? extends TypeHandler&lt;?&gt;&gt;) (discriminator
+<span class="fc bfc" id="L269" title="All 2 branches covered.">          .typeHandler() == UnknownTypeHandler.class ? null : discriminator.typeHandler());</span>
+<span class="fc" id="L270">      Case[] cases = discriminator.cases();</span>
+<span class="fc" id="L271">      Map&lt;String, String&gt; discriminatorMap = new HashMap&lt;&gt;();</span>
+<span class="fc bfc" id="L272" title="All 2 branches covered.">      for (Case c : cases) {</span>
+<span class="fc" id="L273">        String value = c.value();</span>
+<span class="fc" id="L274">        String caseResultMapId = resultMapId + &quot;-&quot; + value;</span>
+<span class="fc" id="L275">        discriminatorMap.put(value, caseResultMapId);</span>
+      }
+<span class="fc" id="L277">      return assistant.buildDiscriminator(resultType, column, javaType, jdbcType, typeHandler, discriminatorMap);</span>
+    }
+<span class="fc" id="L279">    return null;</span>
+  }
+
+  void parseStatement(Method method) {
+<span class="fc" id="L283">    final Class&lt;?&gt; parameterTypeClass = getParameterType(method);</span>
+<span class="fc" id="L284">    final LanguageDriver languageDriver = getLanguageDriver(method);</span>
+
+<span class="fc" id="L286">    getAnnotationWrapper(method, true, statementAnnotationTypes).ifPresent(statementAnnotation -&gt; {</span>
+<span class="fc" id="L287">      final SqlSource sqlSource = buildSqlSource(statementAnnotation.getAnnotation(), parameterTypeClass,</span>
+          languageDriver, method);
+<span class="fc" id="L289">      final SqlCommandType sqlCommandType = statementAnnotation.getSqlCommandType();</span>
+<span class="fc" id="L290">      final Options options = getAnnotationWrapper(method, false, Options.class).map(x -&gt; (Options) x.getAnnotation())</span>
+<span class="fc" id="L291">          .orElse(null);</span>
+<span class="fc" id="L292">      final String mappedStatementId = type.getName() + &quot;.&quot; + method.getName();</span>
+
+      final KeyGenerator keyGenerator;
+<span class="fc" id="L295">      String keyProperty = null;</span>
+<span class="fc" id="L296">      String keyColumn = null;</span>
+<span class="fc bfc" id="L297" title="All 4 branches covered.">      if (SqlCommandType.INSERT.equals(sqlCommandType) || SqlCommandType.UPDATE.equals(sqlCommandType)) {</span>
+        // first check for SelectKey annotation - that overrides everything else
+<span class="fc" id="L299">        SelectKey selectKey = getAnnotationWrapper(method, false, SelectKey.class)</span>
+<span class="fc" id="L300">            .map(x -&gt; (SelectKey) x.getAnnotation()).orElse(null);</span>
+<span class="fc bfc" id="L301" title="All 2 branches covered.">        if (selectKey != null) {</span>
+<span class="fc" id="L302">          keyGenerator = handleSelectKeyAnnotation(selectKey, mappedStatementId, getParameterType(method),</span>
+              languageDriver);
+<span class="fc" id="L304">          keyProperty = selectKey.keyProperty();</span>
+<span class="fc bfc" id="L305" title="All 2 branches covered.">        } else if (options == null) {</span>
+<span class="fc bfc" id="L306" title="All 2 branches covered.">          keyGenerator = configuration.isUseGeneratedKeys() ? Jdbc3KeyGenerator.INSTANCE : NoKeyGenerator.INSTANCE;</span>
+        } else {
+<span class="fc bfc" id="L308" title="All 2 branches covered.">          keyGenerator = options.useGeneratedKeys() ? Jdbc3KeyGenerator.INSTANCE : NoKeyGenerator.INSTANCE;</span>
+<span class="fc" id="L309">          keyProperty = options.keyProperty();</span>
+<span class="fc" id="L310">          keyColumn = options.keyColumn();</span>
+        }
+<span class="fc" id="L312">      } else {</span>
+<span class="fc" id="L313">        keyGenerator = NoKeyGenerator.INSTANCE;</span>
+      }
+
+<span class="fc" id="L316">      Integer fetchSize = null;</span>
+<span class="fc" id="L317">      Integer timeout = null;</span>
+<span class="fc" id="L318">      StatementType statementType = StatementType.PREPARED;</span>
+<span class="fc" id="L319">      ResultSetType resultSetType = configuration.getDefaultResultSetType();</span>
+<span class="fc bfc" id="L320" title="All 2 branches covered.">      boolean isSelect = sqlCommandType == SqlCommandType.SELECT;</span>
+<span class="fc bfc" id="L321" title="All 2 branches covered.">      boolean flushCache = !isSelect;</span>
+<span class="fc" id="L322">      boolean useCache = isSelect;</span>
+<span class="fc bfc" id="L323" title="All 2 branches covered.">      if (options != null) {</span>
+<span class="fc bfc" id="L324" title="All 2 branches covered.">        if (FlushCachePolicy.TRUE.equals(options.flushCache())) {</span>
+<span class="fc" id="L325">          flushCache = true;</span>
+<span class="fc bfc" id="L326" title="All 2 branches covered.">        } else if (FlushCachePolicy.FALSE.equals(options.flushCache())) {</span>
+<span class="fc" id="L327">          flushCache = false;</span>
+        }
+<span class="fc" id="L329">        useCache = options.useCache();</span>
+        // issue #348
+<span class="fc bfc" id="L331" title="All 4 branches covered.">        fetchSize = options.fetchSize() &gt; -1 || options.fetchSize() == Integer.MIN_VALUE ? options.fetchSize() : null;</span>
+<span class="fc bfc" id="L332" title="All 2 branches covered.">        timeout = options.timeout() &gt; -1 ? options.timeout() : null;</span>
+<span class="fc" id="L333">        statementType = options.statementType();</span>
+<span class="fc bfc" id="L334" title="All 2 branches covered.">        if (options.resultSetType() != ResultSetType.DEFAULT) {</span>
+<span class="fc" id="L335">          resultSetType = options.resultSetType();</span>
+        }
+      }
+
+<span class="fc" id="L339">      String resultMapId = null;</span>
+<span class="fc bfc" id="L340" title="All 2 branches covered.">      if (isSelect) {</span>
+<span class="fc" id="L341">        ResultMap resultMapAnnotation = method.getAnnotation(ResultMap.class);</span>
+<span class="fc bfc" id="L342" title="All 2 branches covered.">        if (resultMapAnnotation != null) {</span>
+<span class="fc" id="L343">          resultMapId = String.join(&quot;,&quot;, resultMapAnnotation.value());</span>
+        } else {
+<span class="fc" id="L345">          resultMapId = generateResultMapName(method);</span>
+        }
+      }
+
+<span class="fc" id="L349">      assistant.addMappedStatement(mappedStatementId, sqlSource, statementType, sqlCommandType, fetchSize, timeout,</span>
+          // ParameterMapID
+<span class="fc" id="L351">          null, parameterTypeClass, resultMapId, getReturnType(method, type), resultSetType, flushCache, useCache,</span>
+          // TODO gcode issue #577
+<span class="fc" id="L353">          false, keyGenerator, keyProperty, keyColumn, statementAnnotation.getDatabaseId(), languageDriver,</span>
+          // ResultSets
+<span class="fc bfc" id="L355" title="All 2 branches covered.">          options != null ? nullOrEmpty(options.resultSets()) : null, statementAnnotation.isDirtySelect());</span>
+<span class="fc" id="L356">    });</span>
+<span class="fc" id="L357">  }</span>
+
+  private LanguageDriver getLanguageDriver(Method method) {
+<span class="fc" id="L360">    Lang lang = method.getAnnotation(Lang.class);</span>
+<span class="fc" id="L361">    Class&lt;? extends LanguageDriver&gt; langClass = null;</span>
+<span class="fc bfc" id="L362" title="All 2 branches covered.">    if (lang != null) {</span>
+<span class="fc" id="L363">      langClass = lang.value();</span>
+    }
+<span class="fc" id="L365">    return configuration.getLanguageDriver(langClass);</span>
+  }
+
+  private Class&lt;?&gt; getParameterType(Method method) {
+<span class="fc" id="L369">    Class&lt;?&gt; parameterType = null;</span>
+<span class="fc" id="L370">    Class&lt;?&gt;[] parameterTypes = method.getParameterTypes();</span>
+<span class="fc bfc" id="L371" title="All 2 branches covered.">    for (Class&lt;?&gt; currentParameterType : parameterTypes) {</span>
+<span class="fc bfc" id="L372" title="All 2 branches covered.">      if (!RowBounds.class.isAssignableFrom(currentParameterType)</span>
+<span class="fc bfc" id="L373" title="All 2 branches covered.">          &amp;&amp; !ResultHandler.class.isAssignableFrom(currentParameterType)) {</span>
+<span class="fc bfc" id="L374" title="All 2 branches covered.">        if (parameterType == null) {</span>
+<span class="fc" id="L375">          parameterType = currentParameterType;</span>
+        } else {
+          // issue #135
+<span class="fc" id="L378">          parameterType = ParamMap.class;</span>
+        }
+      }
+    }
+<span class="fc" id="L382">    return parameterType;</span>
+  }
+
+  private static Class&lt;?&gt; getReturnType(Method method, Class&lt;?&gt; type) {
+<span class="fc" id="L386">    Class&lt;?&gt; returnType = method.getReturnType();</span>
+<span class="fc" id="L387">    Type resolvedReturnType = TypeParameterResolver.resolveReturnType(method, type);</span>
+<span class="fc bfc" id="L388" title="All 2 branches covered.">    if (resolvedReturnType instanceof Class) {</span>
+<span class="fc" id="L389">      returnType = (Class&lt;?&gt;) resolvedReturnType;</span>
+<span class="fc bfc" id="L390" title="All 2 branches covered.">      if (returnType.isArray()) {</span>
+<span class="fc" id="L391">        returnType = returnType.getComponentType();</span>
+      }
+      // gcode issue #508
+<span class="fc bfc" id="L394" title="All 2 branches covered.">      if (void.class.equals(returnType)) {</span>
+<span class="fc" id="L395">        ResultType rt = method.getAnnotation(ResultType.class);</span>
+<span class="fc bfc" id="L396" title="All 2 branches covered.">        if (rt != null) {</span>
+<span class="fc" id="L397">          returnType = rt.value();</span>
+        }
+<span class="fc" id="L399">      }</span>
+<span class="pc bpc" id="L400" title="1 of 2 branches missed.">    } else if (resolvedReturnType instanceof ParameterizedType) {</span>
+<span class="fc" id="L401">      ParameterizedType parameterizedType = (ParameterizedType) resolvedReturnType;</span>
+<span class="fc" id="L402">      Class&lt;?&gt; rawType = (Class&lt;?&gt;) parameterizedType.getRawType();</span>
+<span class="fc bfc" id="L403" title="All 4 branches covered.">      if (Collection.class.isAssignableFrom(rawType) || Cursor.class.isAssignableFrom(rawType)) {</span>
+<span class="fc" id="L404">        Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();</span>
+<span class="pc bpc" id="L405" title="2 of 4 branches missed.">        if (actualTypeArguments != null &amp;&amp; actualTypeArguments.length == 1) {</span>
+<span class="fc" id="L406">          Type returnTypeParameter = actualTypeArguments[0];</span>
+<span class="fc bfc" id="L407" title="All 2 branches covered.">          if (returnTypeParameter instanceof Class&lt;?&gt;) {</span>
+<span class="fc" id="L408">            returnType = (Class&lt;?&gt;) returnTypeParameter;</span>
+<span class="pc bpc" id="L409" title="1 of 2 branches missed.">          } else if (returnTypeParameter instanceof ParameterizedType) {</span>
+            // (gcode issue #443) actual type can be a also a parameterized type
+<span class="fc" id="L411">            returnType = (Class&lt;?&gt;) ((ParameterizedType) returnTypeParameter).getRawType();</span>
+<span class="nc bnc" id="L412" title="All 2 branches missed.">          } else if (returnTypeParameter instanceof GenericArrayType) {</span>
+<span class="nc" id="L413">            Class&lt;?&gt; componentType = (Class&lt;?&gt;) ((GenericArrayType) returnTypeParameter).getGenericComponentType();</span>
+            // (gcode issue #525) support List&lt;byte[]&gt;
+<span class="nc" id="L415">            returnType = Array.newInstance(componentType, 0).getClass();</span>
+          }
+        }
+<span class="pc bpc" id="L418" title="1 of 4 branches missed.">      } else if (method.isAnnotationPresent(MapKey.class) &amp;&amp; Map.class.isAssignableFrom(rawType)) {</span>
+        // (gcode issue 504) Do not look into Maps if there is not MapKey annotation
+<span class="fc" id="L420">        Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();</span>
+<span class="pc bpc" id="L421" title="2 of 4 branches missed.">        if (actualTypeArguments != null &amp;&amp; actualTypeArguments.length == 2) {</span>
+<span class="fc" id="L422">          Type returnTypeParameter = actualTypeArguments[1];</span>
+<span class="fc bfc" id="L423" title="All 2 branches covered.">          if (returnTypeParameter instanceof Class&lt;?&gt;) {</span>
+<span class="fc" id="L424">            returnType = (Class&lt;?&gt;) returnTypeParameter;</span>
+<span class="pc bpc" id="L425" title="1 of 2 branches missed.">          } else if (returnTypeParameter instanceof ParameterizedType) {</span>
+            // (gcode issue 443) actual type can be a also a parameterized type
+<span class="fc" id="L427">            returnType = (Class&lt;?&gt;) ((ParameterizedType) returnTypeParameter).getRawType();</span>
+          }
+        }
+<span class="fc bfc" id="L430" title="All 2 branches covered.">      } else if (Optional.class.equals(rawType)) {</span>
+<span class="fc" id="L431">        Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();</span>
+<span class="fc" id="L432">        Type returnTypeParameter = actualTypeArguments[0];</span>
+<span class="pc bpc" id="L433" title="1 of 2 branches missed.">        if (returnTypeParameter instanceof Class&lt;?&gt;) {</span>
+<span class="fc" id="L434">          returnType = (Class&lt;?&gt;) returnTypeParameter;</span>
+        }
+      }
+    }
+
+<span class="fc" id="L439">    return returnType;</span>
+  }
+
+  private void applyResults(Result[] results, Class&lt;?&gt; resultType, List&lt;ResultMapping&gt; resultMappings) {
+<span class="fc bfc" id="L443" title="All 2 branches covered.">    for (Result result : results) {</span>
+<span class="fc" id="L444">      List&lt;ResultFlag&gt; flags = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L445" title="All 2 branches covered.">      if (result.id()) {</span>
+<span class="fc" id="L446">        flags.add(ResultFlag.ID);</span>
+      }
+      @SuppressWarnings(&quot;unchecked&quot;)
+      Class&lt;? extends TypeHandler&lt;?&gt;&gt; typeHandler = (Class&lt;? extends TypeHandler&lt;?&gt;&gt;) (result
+<span class="fc bfc" id="L450" title="All 2 branches covered.">          .typeHandler() == UnknownTypeHandler.class ? null : result.typeHandler());</span>
+<span class="fc" id="L451">      boolean hasNestedResultMap = hasNestedResultMap(result);</span>
+<span class="fc" id="L452">      ResultMapping resultMapping = assistant.buildResultMapping(resultType, nullOrEmpty(result.property()),</span>
+<span class="fc bfc" id="L453" title="All 2 branches covered.">          nullOrEmpty(result.column()), result.javaType() == void.class ? null : result.javaType(),</span>
+<span class="fc bfc" id="L454" title="All 2 branches covered.">          result.jdbcType() == JdbcType.UNDEFINED ? null : result.jdbcType(),</span>
+<span class="fc bfc" id="L455" title="All 2 branches covered.">          hasNestedSelect(result) ? nestedSelectId(result) : null,</span>
+<span class="fc bfc" id="L456" title="All 2 branches covered.">          hasNestedResultMap ? nestedResultMapId(result) : null, null,</span>
+<span class="fc bfc" id="L457" title="All 2 branches covered.">          hasNestedResultMap ? findColumnPrefix(result) : null, typeHandler, flags, null, null, isLazy(result));</span>
+<span class="fc" id="L458">      resultMappings.add(resultMapping);</span>
+    }
+<span class="fc" id="L460">  }</span>
+
+  private String findColumnPrefix(Result result) {
+<span class="fc" id="L463">    String columnPrefix = result.one().columnPrefix();</span>
+<span class="fc bfc" id="L464" title="All 2 branches covered.">    if (columnPrefix.length() &lt; 1) {</span>
+<span class="fc" id="L465">      columnPrefix = result.many().columnPrefix();</span>
+    }
+<span class="fc" id="L467">    return columnPrefix;</span>
+  }
+
+  private String nestedResultMapId(Result result) {
+<span class="fc" id="L471">    String resultMapId = result.one().resultMap();</span>
+<span class="fc bfc" id="L472" title="All 2 branches covered.">    if (resultMapId.length() &lt; 1) {</span>
+<span class="fc" id="L473">      resultMapId = result.many().resultMap();</span>
+    }
+<span class="fc bfc" id="L475" title="All 2 branches covered.">    if (!resultMapId.contains(&quot;.&quot;)) {</span>
+<span class="fc" id="L476">      resultMapId = type.getName() + &quot;.&quot; + resultMapId;</span>
+    }
+<span class="fc" id="L478">    return resultMapId;</span>
+  }
+
+  private boolean hasNestedResultMap(Result result) {
+<span class="pc bpc" id="L482" title="1 of 4 branches missed.">    if (result.one().resultMap().length() &gt; 0 &amp;&amp; result.many().resultMap().length() &gt; 0) {</span>
+<span class="nc" id="L483">      throw new BuilderException(&quot;Cannot use both @One and @Many annotations in the same @Result&quot;);</span>
+    }
+<span class="fc bfc" id="L485" title="All 4 branches covered.">    return result.one().resultMap().length() &gt; 0 || result.many().resultMap().length() &gt; 0;</span>
+  }
+
+  private String nestedSelectId(Result result) {
+<span class="fc" id="L489">    String nestedSelect = result.one().select();</span>
+<span class="fc bfc" id="L490" title="All 2 branches covered.">    if (nestedSelect.length() &lt; 1) {</span>
+<span class="fc" id="L491">      nestedSelect = result.many().select();</span>
+    }
+<span class="fc bfc" id="L493" title="All 2 branches covered.">    if (!nestedSelect.contains(&quot;.&quot;)) {</span>
+<span class="fc" id="L494">      nestedSelect = type.getName() + &quot;.&quot; + nestedSelect;</span>
+    }
+<span class="fc" id="L496">    return nestedSelect;</span>
+  }
+
+  private boolean isLazy(Result result) {
+<span class="fc" id="L500">    boolean isLazy = configuration.isLazyLoadingEnabled();</span>
+<span class="fc bfc" id="L501" title="All 4 branches covered.">    if (result.one().select().length() &gt; 0 &amp;&amp; FetchType.DEFAULT != result.one().fetchType()) {</span>
+<span class="pc bpc" id="L502" title="1 of 2 branches missed.">      isLazy = result.one().fetchType() == FetchType.LAZY;</span>
+<span class="fc bfc" id="L503" title="All 4 branches covered.">    } else if (result.many().select().length() &gt; 0 &amp;&amp; FetchType.DEFAULT != result.many().fetchType()) {</span>
+<span class="pc bpc" id="L504" title="1 of 2 branches missed.">      isLazy = result.many().fetchType() == FetchType.LAZY;</span>
+    }
+<span class="fc" id="L506">    return isLazy;</span>
+  }
+
+  private boolean hasNestedSelect(Result result) {
+<span class="fc bfc" id="L510" title="All 4 branches covered.">    if (result.one().select().length() &gt; 0 &amp;&amp; result.many().select().length() &gt; 0) {</span>
+<span class="fc" id="L511">      throw new BuilderException(&quot;Cannot use both @One and @Many annotations in the same @Result&quot;);</span>
+    }
+<span class="fc bfc" id="L513" title="All 4 branches covered.">    return result.one().select().length() &gt; 0 || result.many().select().length() &gt; 0;</span>
+  }
+
+  private void applyConstructorArgs(Arg[] args, Class&lt;?&gt; resultType, List&lt;ResultMapping&gt; resultMappings) {
+<span class="fc bfc" id="L517" title="All 2 branches covered.">    for (Arg arg : args) {</span>
+<span class="fc" id="L518">      List&lt;ResultFlag&gt; flags = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L519">      flags.add(ResultFlag.CONSTRUCTOR);</span>
+<span class="fc bfc" id="L520" title="All 2 branches covered.">      if (arg.id()) {</span>
+<span class="fc" id="L521">        flags.add(ResultFlag.ID);</span>
+      }
+      @SuppressWarnings(&quot;unchecked&quot;)
+      Class&lt;? extends TypeHandler&lt;?&gt;&gt; typeHandler = (Class&lt;? extends TypeHandler&lt;?&gt;&gt;) (arg
+<span class="fc bfc" id="L525" title="All 2 branches covered.">          .typeHandler() == UnknownTypeHandler.class ? null : arg.typeHandler());</span>
+<span class="fc" id="L526">      ResultMapping resultMapping = assistant.buildResultMapping(resultType, nullOrEmpty(arg.name()),</span>
+<span class="fc bfc" id="L527" title="All 2 branches covered.">          nullOrEmpty(arg.column()), arg.javaType() == void.class ? null : arg.javaType(),</span>
+<span class="fc bfc" id="L528" title="All 2 branches covered.">          arg.jdbcType() == JdbcType.UNDEFINED ? null : arg.jdbcType(), nullOrEmpty(arg.select()),</span>
+<span class="fc" id="L529">          nullOrEmpty(arg.resultMap()), null, nullOrEmpty(arg.columnPrefix()), typeHandler, flags, null, null, false);</span>
+<span class="fc" id="L530">      resultMappings.add(resultMapping);</span>
+    }
+<span class="fc" id="L532">  }</span>
+
+  private String nullOrEmpty(String value) {
+<span class="pc bpc" id="L535" title="1 of 4 branches missed.">    return value == null || value.trim().length() == 0 ? null : value;</span>
+  }
+
+  private KeyGenerator handleSelectKeyAnnotation(SelectKey selectKeyAnnotation, String baseStatementId,
+      Class&lt;?&gt; parameterTypeClass, LanguageDriver languageDriver) {
+<span class="fc" id="L540">    String id = baseStatementId + SelectKeyGenerator.SELECT_KEY_SUFFIX;</span>
+<span class="fc" id="L541">    Class&lt;?&gt; resultTypeClass = selectKeyAnnotation.resultType();</span>
+<span class="fc" id="L542">    StatementType statementType = selectKeyAnnotation.statementType();</span>
+<span class="fc" id="L543">    String keyProperty = selectKeyAnnotation.keyProperty();</span>
+<span class="fc" id="L544">    String keyColumn = selectKeyAnnotation.keyColumn();</span>
+<span class="fc" id="L545">    boolean executeBefore = selectKeyAnnotation.before();</span>
+
+    // defaults
+<span class="fc" id="L548">    boolean useCache = false;</span>
+<span class="fc" id="L549">    KeyGenerator keyGenerator = NoKeyGenerator.INSTANCE;</span>
+<span class="fc" id="L550">    Integer fetchSize = null;</span>
+<span class="fc" id="L551">    Integer timeout = null;</span>
+<span class="fc" id="L552">    boolean flushCache = false;</span>
+<span class="fc" id="L553">    String parameterMap = null;</span>
+<span class="fc" id="L554">    String resultMap = null;</span>
+<span class="fc" id="L555">    ResultSetType resultSetTypeEnum = null;</span>
+<span class="fc bfc" id="L556" title="All 2 branches covered.">    String databaseId = selectKeyAnnotation.databaseId().isEmpty() ? null : selectKeyAnnotation.databaseId();</span>
+
+<span class="fc" id="L558">    SqlSource sqlSource = buildSqlSource(selectKeyAnnotation, parameterTypeClass, languageDriver, null);</span>
+<span class="fc" id="L559">    SqlCommandType sqlCommandType = SqlCommandType.SELECT;</span>
+
+<span class="fc" id="L561">    assistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType, fetchSize, timeout, parameterMap,</span>
+        parameterTypeClass, resultMap, resultTypeClass, resultSetTypeEnum, flushCache, useCache, false, keyGenerator,
+        keyProperty, keyColumn, databaseId, languageDriver, null, false);
+
+<span class="fc" id="L565">    id = assistant.applyCurrentNamespace(id, false);</span>
+
+<span class="fc" id="L567">    MappedStatement keyStatement = configuration.getMappedStatement(id, false);</span>
+<span class="fc" id="L568">    SelectKeyGenerator answer = new SelectKeyGenerator(keyStatement, executeBefore);</span>
+<span class="fc" id="L569">    configuration.addKeyGenerator(id, answer);</span>
+<span class="fc" id="L570">    return answer;</span>
+  }
+
+  private SqlSource buildSqlSource(Annotation annotation, Class&lt;?&gt; parameterType, LanguageDriver languageDriver,
+      Method method) {
+<span class="fc bfc" id="L575" title="All 2 branches covered.">    if (annotation instanceof Select) {</span>
+<span class="fc" id="L576">      return buildSqlSourceFromStrings(((Select) annotation).value(), parameterType, languageDriver);</span>
+    }
+<span class="fc bfc" id="L578" title="All 2 branches covered.">    if (annotation instanceof Update) {</span>
+<span class="fc" id="L579">      return buildSqlSourceFromStrings(((Update) annotation).value(), parameterType, languageDriver);</span>
+<span class="fc bfc" id="L580" title="All 2 branches covered.">    } else if (annotation instanceof Insert) {</span>
+<span class="fc" id="L581">      return buildSqlSourceFromStrings(((Insert) annotation).value(), parameterType, languageDriver);</span>
+<span class="fc bfc" id="L582" title="All 2 branches covered.">    } else if (annotation instanceof Delete) {</span>
+<span class="fc" id="L583">      return buildSqlSourceFromStrings(((Delete) annotation).value(), parameterType, languageDriver);</span>
+<span class="fc bfc" id="L584" title="All 2 branches covered.">    } else if (annotation instanceof SelectKey) {</span>
+<span class="fc" id="L585">      return buildSqlSourceFromStrings(((SelectKey) annotation).statement(), parameterType, languageDriver);</span>
+    }
+<span class="fc" id="L587">    return new ProviderSqlSource(assistant.getConfiguration(), annotation, type, method);</span>
+  }
+
+  private SqlSource buildSqlSourceFromStrings(String[] strings, Class&lt;?&gt; parameterTypeClass,
+      LanguageDriver languageDriver) {
+<span class="fc" id="L592">    return languageDriver.createSqlSource(configuration, String.join(&quot; &quot;, strings).trim(), parameterTypeClass);</span>
+  }
+
+  @SafeVarargs
+  private final Optional&lt;AnnotationWrapper&gt; getAnnotationWrapper(Method method, boolean errorIfNoMatch,
+      Class&lt;? extends Annotation&gt;... targetTypes) {
+<span class="fc" id="L598">    return getAnnotationWrapper(method, errorIfNoMatch, Arrays.asList(targetTypes));</span>
+  }
+
+  private Optional&lt;AnnotationWrapper&gt; getAnnotationWrapper(Method method, boolean errorIfNoMatch,
+      Collection&lt;Class&lt;? extends Annotation&gt;&gt; targetTypes) {
+<span class="fc" id="L603">    String databaseId = configuration.getDatabaseId();</span>
+<span class="fc" id="L604">    Map&lt;String, AnnotationWrapper&gt; statementAnnotations = targetTypes.stream()</span>
+<span class="fc" id="L605">        .flatMap(x -&gt; Arrays.stream(method.getAnnotationsByType(x))).map(AnnotationWrapper::new)</span>
+<span class="fc" id="L606">        .collect(Collectors.toMap(AnnotationWrapper::getDatabaseId, x -&gt; x, (existing, duplicate) -&gt; {</span>
+<span class="fc" id="L607">          throw new BuilderException(</span>
+<span class="fc" id="L608">              String.format(&quot;Detected conflicting annotations '%s' and '%s' on '%s'.&quot;, existing.getAnnotation(),</span>
+<span class="fc" id="L609">                  duplicate.getAnnotation(), method.getDeclaringClass().getName() + &quot;.&quot; + method.getName()));</span>
+        }));
+<span class="fc" id="L611">    AnnotationWrapper annotationWrapper = null;</span>
+<span class="fc bfc" id="L612" title="All 2 branches covered.">    if (databaseId != null) {</span>
+<span class="fc" id="L613">      annotationWrapper = statementAnnotations.get(databaseId);</span>
+    }
+<span class="fc bfc" id="L615" title="All 2 branches covered.">    if (annotationWrapper == null) {</span>
+<span class="fc" id="L616">      annotationWrapper = statementAnnotations.get(&quot;&quot;);</span>
+    }
+<span class="fc bfc" id="L618" title="All 6 branches covered.">    if (errorIfNoMatch &amp;&amp; annotationWrapper == null &amp;&amp; !statementAnnotations.isEmpty()) {</span>
+      // Annotations exist, but there is no matching one for the specified databaseId
+<span class="fc" id="L620">      throw new BuilderException(String.format(</span>
+          &quot;Could not find a statement annotation that correspond a current database or default statement on method '%s.%s'. Current database id is [%s].&quot;,
+<span class="fc" id="L622">          method.getDeclaringClass().getName(), method.getName(), databaseId));</span>
+    }
+<span class="fc" id="L624">    return Optional.ofNullable(annotationWrapper);</span>
+  }
+
+  public static Class&lt;?&gt; getMethodReturnType(String mapperFqn, String localStatementId) {
+<span class="pc bpc" id="L628" title="2 of 4 branches missed.">    if (mapperFqn == null || localStatementId == null) {</span>
+<span class="nc" id="L629">      return null;</span>
+    }
+    try {
+<span class="fc" id="L632">      Class&lt;?&gt; mapperClass = Resources.classForName(mapperFqn);</span>
+<span class="fc bfc" id="L633" title="All 2 branches covered.">      for (Method method : mapperClass.getMethods()) {</span>
+<span class="pc bpc" id="L634" title="1 of 4 branches missed.">        if (method.getName().equals(localStatementId) &amp;&amp; canHaveStatement(method)) {</span>
+<span class="fc" id="L635">          return getReturnType(method, mapperClass);</span>
+        }
+      }
+<span class="fc" id="L638">    } catch (ClassNotFoundException e) {</span>
+      // No corresponding mapper interface which is OK
+<span class="fc" id="L640">    }</span>
+<span class="fc" id="L641">    return null;</span>
+  }
+
+  private static class AnnotationWrapper {
+    private final Annotation annotation;
+    private final String databaseId;
+    private final SqlCommandType sqlCommandType;
+    private boolean dirtySelect;
+
+<span class="fc" id="L650">    AnnotationWrapper(Annotation annotation) {</span>
+<span class="fc" id="L651">      this.annotation = annotation;</span>
+<span class="fc bfc" id="L652" title="All 2 branches covered.">      if (annotation instanceof Select) {</span>
+<span class="fc" id="L653">        databaseId = ((Select) annotation).databaseId();</span>
+<span class="fc" id="L654">        sqlCommandType = SqlCommandType.SELECT;</span>
+<span class="fc" id="L655">        dirtySelect = ((Select) annotation).affectData();</span>
+<span class="fc bfc" id="L656" title="All 2 branches covered.">      } else if (annotation instanceof Update) {</span>
+<span class="fc" id="L657">        databaseId = ((Update) annotation).databaseId();</span>
+<span class="fc" id="L658">        sqlCommandType = SqlCommandType.UPDATE;</span>
+<span class="fc bfc" id="L659" title="All 2 branches covered.">      } else if (annotation instanceof Insert) {</span>
+<span class="fc" id="L660">        databaseId = ((Insert) annotation).databaseId();</span>
+<span class="fc" id="L661">        sqlCommandType = SqlCommandType.INSERT;</span>
+<span class="fc bfc" id="L662" title="All 2 branches covered.">      } else if (annotation instanceof Delete) {</span>
+<span class="fc" id="L663">        databaseId = ((Delete) annotation).databaseId();</span>
+<span class="fc" id="L664">        sqlCommandType = SqlCommandType.DELETE;</span>
+<span class="fc bfc" id="L665" title="All 2 branches covered.">      } else if (annotation instanceof SelectProvider) {</span>
+<span class="fc" id="L666">        databaseId = ((SelectProvider) annotation).databaseId();</span>
+<span class="fc" id="L667">        sqlCommandType = SqlCommandType.SELECT;</span>
+<span class="fc" id="L668">        dirtySelect = ((SelectProvider) annotation).affectData();</span>
+<span class="fc bfc" id="L669" title="All 2 branches covered.">      } else if (annotation instanceof UpdateProvider) {</span>
+<span class="fc" id="L670">        databaseId = ((UpdateProvider) annotation).databaseId();</span>
+<span class="fc" id="L671">        sqlCommandType = SqlCommandType.UPDATE;</span>
+<span class="fc bfc" id="L672" title="All 2 branches covered.">      } else if (annotation instanceof InsertProvider) {</span>
+<span class="fc" id="L673">        databaseId = ((InsertProvider) annotation).databaseId();</span>
+<span class="fc" id="L674">        sqlCommandType = SqlCommandType.INSERT;</span>
+<span class="fc bfc" id="L675" title="All 2 branches covered.">      } else if (annotation instanceof DeleteProvider) {</span>
+<span class="fc" id="L676">        databaseId = ((DeleteProvider) annotation).databaseId();</span>
+<span class="fc" id="L677">        sqlCommandType = SqlCommandType.DELETE;</span>
+      } else {
+<span class="fc" id="L679">        sqlCommandType = SqlCommandType.UNKNOWN;</span>
+<span class="fc bfc" id="L680" title="All 2 branches covered.">        if (annotation instanceof Options) {</span>
+<span class="fc" id="L681">          databaseId = ((Options) annotation).databaseId();</span>
+<span class="pc bpc" id="L682" title="1 of 2 branches missed.">        } else if (annotation instanceof SelectKey) {</span>
+<span class="fc" id="L683">          databaseId = ((SelectKey) annotation).databaseId();</span>
+        } else {
+<span class="nc" id="L685">          databaseId = &quot;&quot;;</span>
+        }
+      }
+<span class="fc" id="L688">    }</span>
+
+    Annotation getAnnotation() {
+<span class="fc" id="L691">      return annotation;</span>
+    }
+
+    SqlCommandType getSqlCommandType() {
+<span class="fc" id="L695">      return sqlCommandType;</span>
+    }
+
+    String getDatabaseId() {
+<span class="fc" id="L699">      return databaseId;</span>
+    }
+
+    boolean isDirtySelect() {
+<span class="fc" id="L703">      return dirtySelect;</span>
+    }
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
