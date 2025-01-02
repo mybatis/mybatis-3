@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -35,14 +35,15 @@ class DuplicateStatementsTest {
 
   @BeforeEach
   void setupDb() throws Exception {
-      // create a SqlSessionFactory
-      try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/duplicate_statements/mybatis-config.xml")) {
-        sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-      }
+    // create a SqlSessionFactory
+    try (Reader reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/duplicate_statements/mybatis-config.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    }
 
-      // populate in-memory database
-      BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-              "org/apache/ibatis/submitted/duplicate_statements/CreateDB.sql");
+    // populate in-memory database
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/duplicate_statements/CreateDB.sql");
   }
 
   @Test

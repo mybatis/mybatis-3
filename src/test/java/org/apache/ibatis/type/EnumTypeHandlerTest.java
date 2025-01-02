@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -26,11 +26,10 @@ import org.junit.jupiter.api.Test;
 class EnumTypeHandlerTest extends BaseTypeHandlerTest {
 
   enum MyEnum {
-    ONE,
-    TWO
+    ONE, TWO
   }
 
-  private static final TypeHandler<MyEnum> TYPE_HANDLER = new EnumTypeHandler<MyEnum>(MyEnum.class);
+  private static final TypeHandler<MyEnum> TYPE_HANDLER = new EnumTypeHandler<>(MyEnum.class);
 
   @Override
   @Test
@@ -40,7 +39,7 @@ class EnumTypeHandlerTest extends BaseTypeHandlerTest {
   }
 
   @Test
-  public void shouldSetNullParameter() throws Exception {
+  void shouldSetNullParameter() throws Exception {
     TYPE_HANDLER.setParameter(ps, 1, null, JdbcType.VARCHAR);
     verify(ps).setNull(1, JdbcType.VARCHAR.TYPE_CODE);
   }

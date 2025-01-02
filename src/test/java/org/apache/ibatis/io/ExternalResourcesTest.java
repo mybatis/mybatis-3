@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,13 +15,17 @@
  */
 package org.apache.ibatis.io;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,19 +43,17 @@ class ExternalResourcesTest {
    */
   @BeforeEach
   void setUp() throws Exception {
-    tempFile = File.createTempFile("migration", "properties");
+    tempFile = Files.createTempFile("migration", "properties").toFile();
     tempFile.canWrite();
-    sourceFile = File.createTempFile("test1", "sql");
-    destFile = File.createTempFile("test2", "sql");
+    sourceFile = Files.createTempFile("test1", "sql").toFile();
+    destFile = Files.createTempFile("test2", "sql").toFile();
   }
 
   @Test
   void testcopyExternalResource() {
-
-    try {
+    assertDoesNotThrow(() -> {
       ExternalResources.copyExternalResource(sourceFile, destFile);
-    } catch (IOException e) {
-    }
+    });
 
   }
 
@@ -80,7 +82,7 @@ class ExternalResourcesTest {
   }
 
   @Test
-  void testGetConfiguredTemplate() {
+  void getConfiguredTemplate() {
     String templateName = "";
 
     try (FileWriter fileWriter = new FileWriter(tempFile, StandardCharsets.UTF_8)) {

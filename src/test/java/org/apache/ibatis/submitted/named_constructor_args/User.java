@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,23 +24,19 @@ public class User {
   private Long team;
 
   public User(@Param("id") String id) {
-    super();
     this.id = Integer.valueOf(id);
   }
 
   public User(Integer userId, @Param("name") String userName) {
-    super();
     this.id = userId;
     this.name = userName;
   }
 
   public User(@Param("id") int id, @Param("name") String name, @Param("team") String team) {
-    super();
     // NOP constructor to make sure MyBatis performs strict type matching.
   }
 
   public User(@Param("id") Integer id, @Param("name") String name, @Param("team") String team) {
-    super();
     this.id = id;
     this.name = name;
     this.team = Long.valueOf(team);

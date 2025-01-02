@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -26,28 +26,24 @@ import java.sql.SQLException;
 public class ByteTypeHandler extends BaseTypeHandler<Byte> {
 
   @Override
-  public void setNonNullParameter(PreparedStatement ps, int i, Byte parameter, JdbcType jdbcType)
-      throws SQLException {
+  public void setNonNullParameter(PreparedStatement ps, int i, Byte parameter, JdbcType jdbcType) throws SQLException {
     ps.setByte(i, parameter);
   }
 
   @Override
-  public Byte getNullableResult(ResultSet rs, String columnName)
-      throws SQLException {
+  public Byte getNullableResult(ResultSet rs, String columnName) throws SQLException {
     byte result = rs.getByte(columnName);
     return result == 0 && rs.wasNull() ? null : result;
   }
 
   @Override
-  public Byte getNullableResult(ResultSet rs, int columnIndex)
-      throws SQLException {
+  public Byte getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
     byte result = rs.getByte(columnIndex);
     return result == 0 && rs.wasNull() ? null : result;
   }
 
   @Override
-  public Byte getNullableResult(CallableStatement cs, int columnIndex)
-      throws SQLException {
+  public Byte getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
     byte result = cs.getByte(columnIndex);
     return result == 0 && cs.wasNull() ? null : result;
   }

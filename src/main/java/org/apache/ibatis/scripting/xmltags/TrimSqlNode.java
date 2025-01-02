@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -36,11 +36,14 @@ public class TrimSqlNode implements SqlNode {
   private final List<String> suffixesToOverride;
   private final Configuration configuration;
 
-  public TrimSqlNode(Configuration configuration, SqlNode contents, String prefix, String prefixesToOverride, String suffix, String suffixesToOverride) {
-    this(configuration, contents, prefix, parseOverrides(prefixesToOverride), suffix, parseOverrides(suffixesToOverride));
+  public TrimSqlNode(Configuration configuration, SqlNode contents, String prefix, String prefixesToOverride,
+      String suffix, String suffixesToOverride) {
+    this(configuration, contents, prefix, parseOverrides(prefixesToOverride), suffix,
+        parseOverrides(suffixesToOverride));
   }
 
-  protected TrimSqlNode(Configuration configuration, SqlNode contents, String prefix, List<String> prefixesToOverride, String suffix, List<String> suffixesToOverride) {
+  protected TrimSqlNode(Configuration configuration, SqlNode contents, String prefix, List<String> prefixesToOverride,
+      String suffix, List<String> suffixesToOverride) {
     this.contents = contents;
     this.prefix = prefix;
     this.prefixesToOverride = prefixesToOverride;
@@ -70,7 +73,7 @@ public class TrimSqlNode implements SqlNode {
   }
 
   private class FilteredDynamicContext extends DynamicContext {
-    private DynamicContext delegate;
+    private final DynamicContext delegate;
     private boolean prefixApplied;
     private boolean suffixApplied;
     private StringBuilder sqlBuffer;
@@ -110,40 +113,35 @@ public class TrimSqlNode implements SqlNode {
     }
 
     private void applyPrefix(StringBuilder sql, String trimmedUppercaseSql) {
-      if (!prefixApplied) {
-        prefixApplied = true;
-        if (prefixesToOverride != null) {
-          for (String toRemove : prefixesToOverride) {
-            if (trimmedUppercaseSql.startsWith(toRemove)) {
-              sql.delete(0, toRemove.trim().length());
-              break;
-            }
-          }
-        }
-        if (prefix != null) {
-          sql.insert(0, " ");
-          sql.insert(0, prefix);
-        }
+      if (prefixApplied) {
+        return;
+      }
+      prefixApplied = true;
+      if (prefixesToOverride != null) {
+        prefixesToOverride.stream().filter(trimmedUppercaseSql::startsWith).findFirst()
+            .ifPresent(toRemove -> sql.delete(0, toRemove.trim().length()));
+      }
+      if (prefix != null) {
+        sql.insert(0, " ").insert(0, prefix);
       }
     }
 
     private void applySuffix(StringBuilder sql, String trimmedUppercaseSql) {
-      if (!suffixApplied) {
-        suffixApplied = true;
-        if (suffixesToOverride != null) {
-          for (String toRemove : suffixesToOverride) {
-            if (trimmedUppercaseSql.endsWith(toRemove) || trimmedUppercaseSql.endsWith(toRemove.trim())) {
+      if (suffixApplied) {
+        return;
+      }
+      suffixApplied = true;
+      if (suffixesToOverride != null) {
+        suffixesToOverride.stream()
+            .filter(toRemove -> trimmedUppercaseSql.endsWith(toRemove) || trimmedUppercaseSql.endsWith(toRemove.trim()))
+            .findFirst().ifPresent(toRemove -> {
               int start = sql.length() - toRemove.trim().length();
               int end = sql.length();
               sql.delete(start, end);
-              break;
-            }
-          }
-        }
-        if (suffix != null) {
-          sql.append(" ");
-          sql.append(suffix);
-        }
+            });
+      }
+      if (suffix != null) {
+        sql.append(" ").append(suffix);
       }
     }
 

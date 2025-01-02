@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -51,14 +51,12 @@ public class ResultExtractor {
         }
         value = array;
       } else {
-        value = list.toArray((Object[])array);
+        value = list.toArray((Object[]) array);
       }
-    } else {
-      if (list != null && list.size() > 1) {
-        throw new ExecutorException("Statement returned more than one row, where no more than one was expected.");
-      } else if (list != null && list.size() == 1) {
-        value = list.get(0);
-      }
+    } else if (list != null && list.size() > 1) {
+      throw new ExecutorException("Statement returned more than one row, where no more than one was expected.");
+    } else if (list != null && list.size() == 1) {
+      value = list.get(0);
     }
     return value;
   }

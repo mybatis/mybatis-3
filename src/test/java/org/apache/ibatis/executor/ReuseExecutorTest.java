@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  */
 package org.apache.ibatis.executor;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 import org.apache.ibatis.transaction.Transaction;
 import org.junit.jupiter.api.Test;
 
@@ -26,12 +28,12 @@ class ReuseExecutorTest extends BaseExecutorTest {
 
   @Override
   @Test
-  public void shouldFetchPostWithBlogWithCompositeKey() throws Exception {
-    super.shouldFetchPostWithBlogWithCompositeKey();
+  public void shouldFetchPostWithBlogWithCompositeKey() {
+    assertDoesNotThrow(super::shouldFetchPostWithBlogWithCompositeKey);
   }
 
   @Override
   protected Executor createExecutor(Transaction transaction) {
-    return new ReuseExecutor(config,transaction);
+    return new ReuseExecutor(config, transaction);
   }
 }

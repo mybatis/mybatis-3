@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -45,16 +45,13 @@ public class Binome<T, U> {
 
   @Override
   public int hashCode() {
-    return (one != null ? one.hashCode() : 0)
-        + (two != null ? two.hashCode() : 0);
+    return (one != null ? one.hashCode() : 0) + (two != null ? two.hashCode() : 0);
   }
 
   @Override
   public boolean equals(final Object obj) {
-    if (obj instanceof Binome<?, ?>) {
-      Binome<?, ?> bin = (Binome<?, ?>) obj;
-      return one != null && one.equals(bin.getOne()) && two != null
-          && two.equals(bin.getTwo());
+    if (obj instanceof Binome<?, ?> bin) {
+      return one != null && one.equals(bin.getOne()) && two != null && two.equals(bin.getTwo());
     }
     return super.equals(obj);
   }

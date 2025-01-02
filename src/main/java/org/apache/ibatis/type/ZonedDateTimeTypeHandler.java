@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -23,13 +23,14 @@ import java.time.ZonedDateTime;
 
 /**
  * @since 3.4.5
+ *
  * @author Tomas Rohovsky
  */
 public class ZonedDateTimeTypeHandler extends BaseTypeHandler<ZonedDateTime> {
 
   @Override
   public void setNonNullParameter(PreparedStatement ps, int i, ZonedDateTime parameter, JdbcType jdbcType)
-          throws SQLException {
+      throws SQLException {
     ps.setObject(i, parameter);
   }
 

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -43,14 +43,14 @@ class EncodingTest {
       // make sure that the SQL file has been saved in UTF-8!
       Resources.setCharset(Charset.forName("utf-8"));
       BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-              "org/apache/ibatis/submitted/encoding/CreateDB.sql");
+          "org/apache/ibatis/submitted/encoding/CreateDB.sql");
     } finally {
       Resources.setCharset(charset);
     }
   }
 
   @Test
-  void testEncoding1() {
+  void encoding1() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       EncodingMapper mapper = sqlSession.getMapper(EncodingMapper.class);
       String answer = mapper.select1();
@@ -59,7 +59,7 @@ class EncodingTest {
   }
 
   @Test
-  void testEncoding2() {
+  void encoding2() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       EncodingMapper mapper = sqlSession.getMapper(EncodingMapper.class);
       String answer = mapper.select2();

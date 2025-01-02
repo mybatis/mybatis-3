@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -113,6 +113,7 @@ public class XMLIncludeTransformer {
    *          Include node instance
    * @param inheritedVariablesContext
    *          Current context used for replace variables in new variables values
+   *
    * @return variables context from include instance (no inherited values)
    */
   private Properties getVariablesContext(Node node, Properties inheritedVariablesContext) {
@@ -134,11 +135,10 @@ public class XMLIncludeTransformer {
     }
     if (declaredProperties == null) {
       return inheritedVariablesContext;
-    } else {
-      Properties newProperties = new Properties();
-      newProperties.putAll(inheritedVariablesContext);
-      newProperties.putAll(declaredProperties);
-      return newProperties;
     }
+    Properties newProperties = new Properties();
+    newProperties.putAll(inheritedVariablesContext);
+    newProperties.putAll(declaredProperties);
+    return newProperties;
   }
 }

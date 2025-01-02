@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -27,20 +27,17 @@ import org.apache.ibatis.cache.impl.PerpetualCache;
 
 /**
  * The annotation that specify to use cache on namespace(e.g. mapper interface).
- *
  * <p>
  * <b>How to use:</b>
  *
- * <pre>
- * &#064;CacheNamespace(implementation = CustomCache.class, properties = {
- *   &#064;Property(name = "host", value = "${mybatis.cache.host}"),
- *   &#064;Property(name = "port", value = "${mybatis.cache.port}"),
- *   &#064;Property(name = "name", value = "usersCache")
- * })
+ * <pre>{@code
+ * @CacheNamespace(implementation = CustomCache.class, properties = {
+ *     &#064;Property(name = "host", value = "${mybatis.cache.host}"),
+ *     &#064;Property(name = "port", value = "${mybatis.cache.port}"), &#064;Property(name = "name", value = "usersCache") })
  * public interface UserMapper {
  *   // ...
  * }
- * </pre>
+ * }</pre>
  *
  * @author Clinton Begin
  * @author Kazuki Shimizu
@@ -96,6 +93,7 @@ public @interface CacheNamespace {
    * Returns property values for a implementation object.
    *
    * @return property values
+   *
    * @since 3.4.2
    */
   Property[] properties() default {};

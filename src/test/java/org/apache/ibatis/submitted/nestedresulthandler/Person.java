@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -22,18 +22,11 @@ import java.util.List;
 public class Person {
   private Integer id;
   private String name;
-  private List<Item> items = new ArrayList<>();
+  private final List<Item> items = new ArrayList<>();
 
-  public String toString(){
-    return new StringBuilder()
-            .append("Person(")
-            .append(id)
-            .append(", ")
-            .append(name)
-            .append(", ")
-            .append(items)
-            .append(" )")
-            .toString();
+  @Override
+  public String toString() {
+    return "Person(" + id + ", " + name + ", " + items + " )";
   }
 
   public Integer getId() {
@@ -58,8 +51,9 @@ public class Person {
 
   public boolean owns(String name) {
     for (Item item : getItems()) {
-      if (item.getName().equals(name))
+      if (item.getName().equals(name)) {
         return true;
+      }
     }
     return false;
   }

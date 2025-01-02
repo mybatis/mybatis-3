@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,11 +15,12 @@
  */
 package org.apache.ibatis.submitted.lazy_properties;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.Reader;
-import java.util.Collections;
 import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.executor.loader.ProxyFactory;
@@ -138,7 +139,7 @@ class LazyPropertiesTest {
   void verifyCustomLazyLoadTriggerMethods() {
     Configuration configuration = sqlSessionFactory.getConfiguration();
     configuration.setAggressiveLazyLoading(false);
-    configuration.setLazyLoadTriggerMethods(new HashSet<>(Collections.singleton("trigger")));
+    configuration.setLazyLoadTriggerMethods(new HashSet<>(Set.of("trigger")));
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUser(1);

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -23,21 +23,18 @@ import java.lang.annotation.Target;
 
 /**
  * The annotation that be grouping mapping definitions for constructor.
- *
  * <p>
  * <b>How to use:</b>
  *
- * <pre>
+ * <pre>{@code
  * public interface UserMapper {
- *   &#064;ConstructorArgs({
- *     &#064;Arg(column = "id", javaType = int.class, id = true),
- *     &#064;Arg(column = "name", javaType = String.class),
- *     &#064;Arg(javaType = UserEmail.class, select = "selectUserEmailById", column = "id")
- *   })
+ *   @ConstructorArgs({ &#064;Arg(column = "id", javaType = int.class, id = true),
+ *       &#064;Arg(column = "name", javaType = String.class),
+ *       &#064;Arg(javaType = UserEmail.class, select = "selectUserEmailById", column = "id") })
  *   &#064;Select("SELECT id, name FROM users WHERE id = #{id}")
  *   User selectById(int id);
  * }
- * </pre>
+ * }</pre>
  *
  * @author Clinton Begin
  */

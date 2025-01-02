@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -42,19 +42,19 @@ class AutodiscoverTest {
   }
 
   @Test
-  void testTypeAlias() {
+  void typeAlias() {
     TypeAliasRegistry typeAliasRegistry = sqlSessionFactory.getConfiguration().getTypeAliasRegistry();
     assertNotNull(typeAliasRegistry.resolveAlias("testAlias"));
   }
 
   @Test
-  void testTypeHandler() {
+  void typeHandler() {
     TypeHandlerRegistry typeHandlerRegistry = sqlSessionFactory.getConfiguration().getTypeHandlerRegistry();
     assertTrue(typeHandlerRegistry.hasTypeHandler(BigInteger.class));
   }
 
   @Test
-  void testMapper() {
+  void mapper() {
     assertTrue(sqlSessionFactory.getConfiguration().hasMapper(DummyMapper.class));
   }
 }

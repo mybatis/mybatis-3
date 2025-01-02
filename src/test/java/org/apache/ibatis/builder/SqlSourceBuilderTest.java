@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ class SqlSourceBuilderTest {
   private final String sqlFromXml = "\t\n\n  SELECT * \n        FROM user\n \t        WHERE user_id = 1\n\t  ";
 
   @Test
-  void testShrinkWhitespacesInSqlIsTrue() {
+  void shrinkWhitespacesInSqlIsTrue() {
     String actual = SqlSourceBuilder.removeExtraWhitespaces(sqlFromXml);
     String shrankWhitespacesInSql = "SELECT * FROM user WHERE user_id = 1";
     Assertions.assertEquals(shrankWhitespacesInSql, actual);

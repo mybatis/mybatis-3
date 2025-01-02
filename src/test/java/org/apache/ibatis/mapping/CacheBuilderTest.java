@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,8 @@
  */
 package org.apache.ibatis.mapping;
 
-import static com.googlecode.catchexception.apis.BDDCatchException.*;
+import static com.googlecode.catchexception.apis.BDDCatchException.caughtException;
+import static com.googlecode.catchexception.apis.BDDCatchException.when;
 import static org.assertj.core.api.BDDAssertions.then;
 
 import java.lang.reflect.Field;
@@ -30,17 +31,17 @@ import org.junit.jupiter.api.Test;
 class CacheBuilderTest {
 
   @Test
-  void testInitializing() {
+  void initializing() {
     InitializingCache cache = unwrap(new CacheBuilder("test").implementation(InitializingCache.class).build());
 
     Assertions.assertThat(cache.initialized).isTrue();
   }
 
   @Test
-  void testInitializingFailure() {
+  void initializingFailure() {
     when(() -> new CacheBuilder("test").implementation(InitializingFailureCache.class).build());
-    then(caughtException()).isInstanceOf(CacheException.class)
-      .hasMessage("Failed cache initialization for 'test' on 'org.apache.ibatis.mapping.CacheBuilderTest$InitializingFailureCache'");
+    then(caughtException()).isInstanceOf(CacheException.class).hasMessage(
+        "Failed cache initialization for 'test' on 'org.apache.ibatis.mapping.CacheBuilderTest$InitializingFailureCache'");
   }
 
   @SuppressWarnings("unchecked")

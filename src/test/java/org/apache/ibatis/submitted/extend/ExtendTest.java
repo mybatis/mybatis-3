@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -38,15 +38,15 @@ class ExtendTest {
     }
 
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/extend/CreateDB.sql");
+        "org/apache/ibatis/submitted/extend/CreateDB.sql");
   }
 
   @Test
-  void testExtend() {
+  void extend() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       ExtendMapper mapper = sqlSession.getMapper(ExtendMapper.class);
       Child answer = mapper.selectChild();
-      assertEquals(answer.getMyProperty(), "last");
+      assertEquals("last", answer.getMyProperty());
     }
   }
 

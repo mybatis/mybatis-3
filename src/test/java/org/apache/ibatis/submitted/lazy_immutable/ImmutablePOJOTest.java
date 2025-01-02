@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,9 @@
  */
 package org.apache.ibatis.submitted.lazy_immutable;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.Reader;
 
@@ -43,7 +45,7 @@ final class ImmutablePOJOTest {
   }
 
   @Test
-  void testLoadLazyImmutablePOJO() {
+  void loadLazyImmutablePOJO() {
     try (SqlSession session = factory.openSession()) {
       final ImmutablePOJOMapper mapper = session.getMapper(ImmutablePOJOMapper.class);
       final ImmutablePOJO pojo = mapper.getImmutablePOJO(POJO_ID);
