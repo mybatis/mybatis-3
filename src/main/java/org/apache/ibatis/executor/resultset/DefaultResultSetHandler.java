@@ -365,7 +365,6 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   private void handleRowValuesForSimpleResultMap(ResultSetWrapper rsw, ResultMap resultMap,
       ResultHandler<?> resultHandler, RowBounds rowBounds, ResultMapping parentMapping) throws SQLException {
     final boolean useCollectionConstructorInjection = resultMap.hasResultMapsUsingConstructorCollection();
-    PendingConstructorCreation lastHandledCreation = null;
 
     DefaultResultContext<Object> resultContext = new DefaultResultContext<>();
     ResultSet resultSet = rsw.getResultSet();
@@ -381,7 +380,6 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         }
 
         createAndStorePendingCreation(resultHandler, resultSet, resultContext, (PendingConstructorCreation) rowValue);
-        lastHandledCreation = (PendingConstructorCreation) rowValue;
       }
     }
   }
