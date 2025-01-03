@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
@@ -514,6 +515,7 @@ public class MapperAnnotationBuilder {
   }
 
   private void applyConstructorArgs(Arg[] args, Class<?> resultType, List<ResultMapping> resultMappings) {
+    final List<ResultMapping> mappings = new ArrayList<>();
     for (Arg arg : args) {
       List<ResultFlag> flags = new ArrayList<>();
       flags.add(ResultFlag.CONSTRUCTOR);
@@ -527,8 +529,11 @@ public class MapperAnnotationBuilder {
           nullOrEmpty(arg.column()), arg.javaType() == void.class ? null : arg.javaType(),
           arg.jdbcType() == JdbcType.UNDEFINED ? null : arg.jdbcType(), nullOrEmpty(arg.select()),
           nullOrEmpty(arg.resultMap()), null, nullOrEmpty(arg.columnPrefix()), typeHandler, flags, null, null, false);
-      resultMappings.add(resultMapping);
+      mappings.add(resultMapping);
     }
+
+    final List<ResultMapping> autoMappings = assistant.autoTypeResultMappingsForUnknownJavaTypes(resultType, mappings);
+    resultMappings.addAll(Objects.requireNonNullElse(autoMappings, mappings));
   }
 
   private String nullOrEmpty(String value) {

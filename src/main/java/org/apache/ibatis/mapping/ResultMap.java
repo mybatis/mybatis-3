@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -137,7 +137,7 @@ public class ResultMap {
         if (actualArgNames == null) {
           throw new BuilderException("Error in result map '" + resultMap.id + "'. Failed to find a constructor in '"
               + resultMap.getType().getName() + "' with arg names " + constructorArgNames
-              + ". Note that 'javaType' is required when there is no writable property with the same name ('name' is optional, BTW). There might be more info in debug log.");
+              + ". Note that 'javaType' is required when there is ambiguous constructors or there is no writable property with the same name ('name' is optional, BTW). There might be more info in debug log.");
         }
         resultMap.constructorResultMappings.sort((o1, o2) -> {
           int paramIdx1 = actualArgNames.indexOf(o1.getProperty());
