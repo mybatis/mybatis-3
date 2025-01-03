@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,9 +15,11 @@
  */
 package org.apache.ibatis.reflection.wrapper;
 
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.SystemMetaObject;
@@ -92,6 +94,12 @@ public class MapWrapper extends BaseWrapper {
   }
 
   @Override
+  public Entry<Type, Class<?>> getGenericSetterType(String name) {
+    Class<?> setterType = getSetterType(name);
+    return Map.entry(setterType, setterType);
+  }
+
+  @Override
   public Class<?> getGetterType(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
@@ -107,6 +115,12 @@ public class MapWrapper extends BaseWrapper {
     } else {
       return Object.class;
     }
+  }
+
+  @Override
+  public Entry<Type, Class<?>> getGenericGetterType(String name) {
+    Class<?> getterType = getGetterType(name);
+    return Map.entry(getterType, getterType);
   }
 
   @Override

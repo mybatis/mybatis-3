@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package org.apache.ibatis.scripting.defaults;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.parsing.XNode;
+import org.apache.ibatis.reflection.ParamNameResolver;
 import org.apache.ibatis.scripting.xmltags.XMLLanguageDriver;
 import org.apache.ibatis.session.Configuration;
 
@@ -39,8 +40,9 @@ public class RawLanguageDriver extends XMLLanguageDriver {
   }
 
   @Override
-  public SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType) {
-    SqlSource source = super.createSqlSource(configuration, script, parameterType);
+  public SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType,
+      ParamNameResolver paramNameResolver) {
+    SqlSource source = super.createSqlSource(configuration, script, parameterType, paramNameResolver);
     checkIsNotDynamic(source);
     return source;
   }

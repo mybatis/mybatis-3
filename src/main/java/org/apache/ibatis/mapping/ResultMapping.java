@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import java.util.Set;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
-import org.apache.ibatis.type.TypeHandlerRegistry;
 
 /**
  * @author Clinton Begin
@@ -136,7 +135,6 @@ public class ResultMapping {
       // lock down collections
       resultMapping.flags = Collections.unmodifiableList(resultMapping.flags);
       resultMapping.composites = Collections.unmodifiableList(resultMapping.composites);
-      resolveTypeHandler();
       validate();
       return resultMapping;
     }
@@ -150,7 +148,7 @@ public class ResultMapping {
       // Issue #5: there should be no mappings without typehandler
       if (resultMapping.nestedQueryId == null && resultMapping.nestedResultMapId == null
           && resultMapping.typeHandler == null) {
-        throw new IllegalStateException("No typehandler found for property " + resultMapping.property);
+        // throw new IllegalStateException("No typehandler found for property " + resultMapping.property);
       }
       // Issue #4 and GH #39: column is optional only in nested resultmaps but not in the rest
       if (resultMapping.nestedResultMapId == null && resultMapping.column == null
@@ -170,14 +168,6 @@ public class ResultMapping {
           throw new IllegalStateException(
               "There should be the same number of columns and foreignColumns in property " + resultMapping.property);
         }
-      }
-    }
-
-    private void resolveTypeHandler() {
-      if (resultMapping.typeHandler == null && resultMapping.javaType != null) {
-        Configuration configuration = resultMapping.configuration;
-        TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();
-        resultMapping.typeHandler = typeHandlerRegistry.getTypeHandler(resultMapping.javaType, resultMapping.jdbcType);
       }
     }
 
