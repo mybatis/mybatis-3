@@ -15,6 +15,10 @@
  */
 package org.apache.ibatis.submitted.global_variables_defaults;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.util.Properties;
+
 import org.apache.ibatis.builder.StaticSqlSource;
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.apache.ibatis.io.Resources;
@@ -27,10 +31,6 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.type.JdbcType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
-import java.io.Reader;
-import java.util.Properties;
 
 class ConfigurationTest {
 
