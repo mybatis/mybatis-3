@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,20 +14,6 @@
  *    limitations under the License.
  */
 package org.apache.ibatis.session;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.function.BiFunction;
 
 import org.apache.ibatis.binding.MapperRegistry;
 import org.apache.ibatis.builder.CacheRefResolver;
@@ -96,6 +82,20 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeAliasRegistry;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.BiFunction;
 
 /**
  * @author Clinton Begin
@@ -1113,6 +1113,7 @@ public class Configuration {
     private static final long serialVersionUID = -4950446264854982944L;
     private final String name;
     private BiFunction<V, V, String> conflictMessageProducer;
+    private static final Object AMBIGUITY_INSTANCE = new Object();
 
     public StrictMap(String name, int initialCapacity, float loadFactor) {
       super(initialCapacity, loadFactor);
@@ -1162,7 +1163,7 @@ public class Configuration {
         if (super.get(shortKey) == null) {
           super.put(shortKey, value);
         } else {
-          super.put(shortKey, (V) new Ambiguity(shortKey));
+          super.put(shortKey, (V) AMBIGUITY_INSTANCE);
         }
       }
       return super.put(key, value);
@@ -1183,23 +1184,11 @@ public class Configuration {
       if (value == null) {
         throw new IllegalArgumentException(name + " does not contain value for " + key);
       }
-      if (value instanceof Ambiguity) {
-        throw new IllegalArgumentException(((Ambiguity) value).getSubject() + " is ambiguous in " + name
+      if (AMBIGUITY_INSTANCE == value) {
+        throw new IllegalArgumentException(key + " is ambiguous in " + name
             + " (try using the full name including the namespace, or rename one of the entries)");
       }
       return value;
-    }
-
-    protected static class Ambiguity {
-      private final String subject;
-
-      public Ambiguity(String subject) {
-        this.subject = subject;
-      }
-
-      public String getSubject() {
-        return subject;
-      }
     }
 
     private String getShortName(String key) {
