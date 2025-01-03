@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,20 +14,6 @@
  *    limitations under the License.
  */
 package org.apache.ibatis.session;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.function.BiFunction;
 
 import org.apache.ibatis.binding.MapperRegistry;
 import org.apache.ibatis.builder.CacheRefResolver;
@@ -96,6 +82,20 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeAliasRegistry;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.BiFunction;
 
 /**
  * @author Clinton Begin

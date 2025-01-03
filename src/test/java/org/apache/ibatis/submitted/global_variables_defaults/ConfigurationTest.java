@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,16 +15,10 @@
  */
 package org.apache.ibatis.submitted.global_variables_defaults;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.util.ArrayList;
-import java.util.Properties;
-
 import org.apache.ibatis.builder.StaticSqlSource;
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.parsing.PropertyParser;
 import org.apache.ibatis.session.Configuration;
@@ -33,6 +27,10 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.type.JdbcType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
+import java.io.Reader;
+import java.util.Properties;
 
 class ConfigurationTest {
 
@@ -87,24 +85,24 @@ class ConfigurationTest {
   @Test
   void testAmbiguityCache() {
     Configuration configuration = new Configuration();
+
     configuration.addMappedStatement(
-      new MappedStatement.Builder(configuration,
-        "org.apache.ibatis.submitted.DemoMapper1.selectById",
-        new StaticSqlSource(configuration, "select * from test where id = 1"), SqlCommandType.SELECT).build()
-    );
-    configuration.addMappedStatement(
-      new MappedStatement.Builder(configuration,
-        "org.apache.ibatis.submitted.DemoMapper1.test",
-        new StaticSqlSource(configuration, "select * from test"), SqlCommandType.SELECT).build()
-    );
-    configuration.addMappedStatement(
-      new MappedStatement.Builder(configuration,
-        "org.apache.ibatis.submitted.DemoMapper2.test",
-        new StaticSqlSource(configuration, "select * from test"), SqlCommandType.SELECT).build()
-    );
+        new MappedStatement.Builder(configuration, "org.apache.ibatis.submitted.DemoMapper1.selectById",
+            new StaticSqlSource(configuration, "select * from test where id = 1"), SqlCommandType.SELECT).build());
+    configuration
+        .addMappedStatement(new MappedStatement.Builder(configuration, "org.apache.ibatis.submitted.DemoMapper1.test",
+            new StaticSqlSource(configuration, "select * from test"), SqlCommandType.SELECT).build());
+    configuration
+        .addMappedStatement(new MappedStatement.Builder(configuration, "org.apache.ibatis.submitted.DemoMapper2.test",
+            new StaticSqlSource(configuration, "select * from test"), SqlCommandType.SELECT).build());
+
     Assertions.assertThat(configuration.getMappedStatement("selectById")).isNotNull();
+    Assertions.assertThat(configuration.getMappedStatement("org.apache.ibatis.submitted.DemoMapper1.test")).isNotNull();
+    Assertions.assertThat(configuration.getMappedStatement("org.apache.ibatis.submitted.DemoMapper2.test")).isNotNull();
+
     Assertions.assertThatThrownBy(() -> configuration.getMappedStatement("test"))
-      .isInstanceOf(IllegalArgumentException.class).hasMessage("test is ambiguous in Mapped Statements collection (try using the full name including the namespace, or rename one of the entries)");
+        .isInstanceOf(IllegalArgumentException.class).hasMessage(
+            "test is ambiguous in Mapped Statements collection (try using the full name including the namespace, or rename one of the entries)");
   }
 
 }
