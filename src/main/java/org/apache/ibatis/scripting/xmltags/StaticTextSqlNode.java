@@ -19,6 +19,7 @@ package org.apache.ibatis.scripting.xmltags;
  * @author Clinton Begin
  */
 public class StaticTextSqlNode implements SqlNode {
+  public static final EMPTY = new StaticTextSqlNode("\n");
   private final String text;
 
   public StaticTextSqlNode(String text) {
