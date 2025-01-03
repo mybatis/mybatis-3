@@ -15,13 +15,6 @@
  */
 package org.apache.ibatis.mapping;
 
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.builder.BuilderException;
-import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.logging.LogFactory;
-import org.apache.ibatis.reflection.ParamNameUtil;
-import org.apache.ibatis.session.Configuration;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -30,6 +23,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.builder.BuilderException;
+import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.logging.LogFactory;
+import org.apache.ibatis.reflection.ParamNameUtil;
+import org.apache.ibatis.session.Configuration;
 
 /**
  * @author Clinton Begin
