@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -35,7 +35,8 @@ import org.apache.ibatis.session.Configuration;
 public class XMLLanguageDriver implements LanguageDriver {
 
   @Override
-  public ParameterHandler createParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql) {
+  public ParameterHandler createParameterHandler(MappedStatement mappedStatement, Object parameterObject,
+      BoundSql boundSql) {
     return new DefaultParameterHandler(mappedStatement, parameterObject, boundSql);
   }
 
@@ -45,7 +46,8 @@ public class XMLLanguageDriver implements LanguageDriver {
   }
 
   @Override
-  public SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType, ParamNameResolver paramNameResolver) {
+  public SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType,
+      ParamNameResolver paramNameResolver) {
     XMLScriptBuilder builder = new XMLScriptBuilder(configuration, script, parameterType, paramNameResolver);
     return builder.parseScriptNode();
   }
@@ -56,20 +58,20 @@ public class XMLLanguageDriver implements LanguageDriver {
   }
 
   @Override
-  public SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType, ParamNameResolver paramNameResolver) {
+  public SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType,
+      ParamNameResolver paramNameResolver) {
     // issue #3
     if (script.startsWith("<script>")) {
       XPathParser parser = new XPathParser(script, false, configuration.getVariables(), new XMLMapperEntityResolver());
       return createSqlSource(configuration, parser.evalNode("/script"), parameterType);
+    }
+    // issue #127
+    script = PropertyParser.parse(script, configuration.getVariables());
+    TextSqlNode textSqlNode = new TextSqlNode(script);
+    if (textSqlNode.isDynamic()) {
+      return new DynamicSqlSource(configuration, textSqlNode);
     } else {
-      // issue #127
-      script = PropertyParser.parse(script, configuration.getVariables());
-      TextSqlNode textSqlNode = new TextSqlNode(script);
-      if (textSqlNode.isDynamic()) {
-        return new DynamicSqlSource(configuration, textSqlNode);
-      } else {
-        return new RawSqlSource(configuration, script, parameterType, paramNameResolver);
-      }
+      return new RawSqlSource(configuration, script, parameterType, paramNameResolver);
     }
   }
 

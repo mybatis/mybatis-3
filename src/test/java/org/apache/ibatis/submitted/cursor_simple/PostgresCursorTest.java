@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,9 +15,8 @@
  */
 package org.apache.ibatis.submitted.cursor_simple;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.io.IOException;
 import java.util.Iterator;
 
 import org.apache.ibatis.BaseDataTest;
@@ -49,11 +48,11 @@ class PostgresCursorTest {
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
 
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-      "org/apache/ibatis/submitted/cursor_simple/CreateDB.sql");
+        "org/apache/ibatis/submitted/cursor_simple/CreateDB.sql");
   }
 
   @Test
-  void shouldBeAbleToReuseStatement() throws IOException {
+  void shouldBeAbleToReuseStatement() {
     // #1351
     try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.REUSE)) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);

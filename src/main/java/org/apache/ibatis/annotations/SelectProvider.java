@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,14 +24,13 @@ import java.lang.annotation.Target;
 
 /**
  * The annotation that specify a method that provide an SQL for retrieving record(s).
- *
  * <p>
  * <b>How to use:</b>
  *
- * <pre>
+ * <pre>{@code
  * public interface UserMapper {
  *
- *   &#064;SelectProvider(type = SqlProvider.class, method = "selectById")
+ *   @SelectProvider(type = SqlProvider.class, method = "selectById")
  *   User selectById(int id);
  *
  *   public static class SqlProvider {
@@ -41,7 +40,7 @@ import java.lang.annotation.Target;
  *   }
  *
  * }
- * </pre>
+ * }</pre>
  *
  * @author Clinton Begin
  */
@@ -55,7 +54,9 @@ public @interface SelectProvider {
    * Specify a type that implements an SQL provider method.
    *
    * @return a type that implements an SQL provider method
+   *
    * @since 3.5.2
+   *
    * @see #type()
    */
   Class<?> value() default void.class;
@@ -64,29 +65,26 @@ public @interface SelectProvider {
    * Specify a type that implements an SQL provider method.
    * <p>
    * This attribute is alias of {@link #value()}.
-   * </p>
    *
    * @return a type that implements an SQL provider method
+   *
    * @see #value()
    */
   Class<?> type() default void.class;
 
   /**
    * Specify a method for providing an SQL.
-   *
    * <p>
    * Since 3.5.1, this attribute can omit.
+   * <p>
    * If this attribute omit, the MyBatis will call a method that decide by following rules.
    * <ul>
-   *   <li>
-   *     If class that specified the {@link #type()} attribute implements the
-   *     {@link org.apache.ibatis.builder.annotation.ProviderMethodResolver},
-   *     the MyBatis use a method that returned by it
-   *   </li>
-   *   <li>
-   *     If cannot resolve a method by {@link org.apache.ibatis.builder.annotation.ProviderMethodResolver}(= not implement it or it was returned {@code null}),
-   *     the MyBatis will search and use a fallback method that named {@code provideSql} from specified type
-   *   </li>
+   * <li>If class that specified the {@link #type()} attribute implements the
+   * {@link org.apache.ibatis.builder.annotation.ProviderMethodResolver}, the MyBatis use a method that returned by it.
+   * </li>
+   * <li>If cannot resolve a method by {@link org.apache.ibatis.builder.annotation.ProviderMethodResolver} (= not
+   * implement it or it was returned <code>null</code>), the MyBatis will search and use a fallback method that named
+   * <code>provideSql</code> from specified type.</li>
    * </ul>
    *
    * @return a method name of method for providing an SQL
@@ -95,6 +93,7 @@ public @interface SelectProvider {
 
   /**
    * @return A database id that correspond this provider
+   *
    * @since 3.5.5
    */
   String databaseId() default "";
@@ -104,13 +103,16 @@ public @interface SelectProvider {
    * e.g. RETURNING of PostgreSQL or OUTPUT of MS SQL Server.
    *
    * @return {@code true} if this select affects DB data; {@code false} if otherwise
+   *
    * @since 3.5.12
    */
   boolean affectData() default false;
 
   /**
    * The container annotation for {@link SelectProvider}.
+   *
    * @author Kazuki Shimizu
+   *
    * @since 3.5.5
    */
   @Documented

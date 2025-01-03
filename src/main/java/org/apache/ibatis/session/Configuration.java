@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.BiFunction;
 
 import org.apache.ibatis.binding.MapperRegistry;
@@ -109,7 +110,6 @@ public class Configuration {
   protected boolean safeResultHandlerEnabled = true;
   protected boolean mapUnderscoreToCamelCase;
   protected boolean aggressiveLazyLoading;
-  protected boolean multipleResultSetsEnabled = true;
   protected boolean useGeneratedKeys;
   protected boolean useColumnLabel = true;
   protected boolean cacheEnabled = true;
@@ -126,7 +126,8 @@ public class Configuration {
   protected Class<?> defaultSqlProviderType;
   protected LocalCacheScope localCacheScope = LocalCacheScope.SESSION;
   protected JdbcType jdbcTypeForNull = JdbcType.OTHER;
-  protected Set<String> lazyLoadTriggerMethods = new HashSet<>(Arrays.asList("equals", "clone", "hashCode", "toString"));
+  protected Set<String> lazyLoadTriggerMethods = new HashSet<>(
+      Arrays.asList("equals", "clone", "hashCode", "toString"));
   protected Integer defaultStatementTimeout;
   protected Integer defaultFetchSize;
   protected ResultSetType defaultResultSetType;
@@ -139,13 +140,12 @@ public class Configuration {
   protected ObjectFactory objectFactory = new DefaultObjectFactory();
   protected ObjectWrapperFactory objectWrapperFactory = new DefaultObjectWrapperFactory();
 
-  protected boolean lazyLoadingEnabled = false;
+  protected boolean lazyLoadingEnabled;
   protected ProxyFactory proxyFactory = new JavassistProxyFactory(); // #224 Using internal Javassist instead of OGNL
 
   protected String databaseId;
   /**
-   * Configuration factory class.
-   * Used to create Configuration for loading deserialized unread properties.
+   * Configuration factory class. Used to create Configuration for loading deserialized unread properties.
    *
    * @see <a href='https://github.com/mybatis/old-google-code-issues/issues/300'>Issue 300 (google code)</a>
    */
@@ -158,9 +158,10 @@ public class Configuration {
   protected final TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
   protected final LanguageDriverRegistry languageRegistry = new LanguageDriverRegistry();
 
-  protected final Map<String, MappedStatement> mappedStatements = new StrictMap<MappedStatement>("Mapped Statements collection")
-      .conflictMessageProducer((savedValue, targetValue) ->
-          ". please check " + savedValue.getResource() + " and " + targetValue.getResource());
+  protected final Map<String, MappedStatement> mappedStatements = new StrictMap<MappedStatement>(
+      "Mapped Statements collection")
+          .conflictMessageProducer((savedValue, targetValue) -> ". please check " + savedValue.getResource() + " and "
+              + targetValue.getResource());
   protected final Map<String, Cache> caches = new StrictMap<>("Caches collection");
   protected final Map<String, ResultMap> resultMaps = new StrictMap<>("Result Maps collection");
   protected final Map<String, ParameterMap> parameterMaps = new StrictMap<>("Parameter Maps collection");
@@ -168,16 +169,19 @@ public class Configuration {
 
   protected final Set<String> loadedResources = new HashSet<>();
   protected final Map<String, XNode> sqlFragments = new StrictMap<>("XML fragments parsed from previous mappers");
-
   protected final Collection<XMLStatementBuilder> incompleteStatements = new LinkedList<>();
   protected final Collection<CacheRefResolver> incompleteCacheRefs = new LinkedList<>();
   protected final Collection<ResultMapResolver> incompleteResultMaps = new LinkedList<>();
   protected final Collection<MethodResolver> incompleteMethods = new LinkedList<>();
 
+  private final ReentrantLock incompleteResultMapsLock = new ReentrantLock();
+  private final ReentrantLock incompleteCacheRefsLock = new ReentrantLock();
+  private final ReentrantLock incompleteStatementsLock = new ReentrantLock();
+  private final ReentrantLock incompleteMethodsLock = new ReentrantLock();
+
   /*
-   * A map holds cache-ref relationship. The key is the namespace that
-   * references a cache bound to another namespace and the value is the
-   * namespace which the actual cache is bound to.
+   * A map holds cache-ref relationship. The key is the namespace that references a cache bound to another namespace and
+   * the value is the namespace which the actual cache is bound to.
    */
   protected final Map<String, String> cacheRefMap = new HashMap<>();
 
@@ -251,9 +255,11 @@ public class Configuration {
   }
 
   /**
-   * Gets an applying type when omit a type on sql provider annotation(e.g. {@link org.apache.ibatis.annotations.SelectProvider}).
+   * Gets an applying type when omit a type on sql provider annotation(e.g.
+   * {@link org.apache.ibatis.annotations.SelectProvider}).
    *
    * @return the default type for sql provider annotation
+   *
    * @since 3.5.6
    */
   public Class<?> getDefaultSqlProviderType() {
@@ -261,10 +267,12 @@ public class Configuration {
   }
 
   /**
-   * Sets an applying type when omit a type on sql provider annotation(e.g. {@link org.apache.ibatis.annotations.SelectProvider}).
+   * Sets an applying type when omit a type on sql provider annotation(e.g.
+   * {@link org.apache.ibatis.annotations.SelectProvider}).
    *
    * @param defaultSqlProviderType
    *          the default type for sql provider annotation
+   *
    * @since 3.5.6
    */
   public void setDefaultSqlProviderType(Class<?> defaultSqlProviderType) {
@@ -306,7 +314,9 @@ public class Configuration {
   /**
    * Sets the default value of 'nullable' attribute on 'foreach' tag.
    *
-   * @param nullableOnForEach If nullable, set to {@code true}
+   * @param nullableOnForEach
+   *          If nullable, set to {@code true}
+   *
    * @since 3.5.9
    */
   public void setNullableOnForEach(boolean nullableOnForEach) {
@@ -315,10 +325,11 @@ public class Configuration {
 
   /**
    * Returns the default value of 'nullable' attribute on 'foreach' tag.
-   *
-   * <p>Default is {@code false}.
+   * <p>
+   * Default is {@code false}.
    *
    * @return If nullable, set to {@code true}
+   *
    * @since 3.5.9
    */
   public boolean isNullableOnForEach() {
@@ -401,6 +412,7 @@ public class Configuration {
    * Gets the auto mapping unknown column behavior.
    *
    * @return the auto mapping unknown column behavior
+   *
    * @since 3.4.0
    */
   public AutoMappingUnknownColumnBehavior getAutoMappingUnknownColumnBehavior() {
@@ -412,6 +424,7 @@ public class Configuration {
    *
    * @param autoMappingUnknownColumnBehavior
    *          the new auto mapping unknown column behavior
+   *
    * @since 3.4.0
    */
   public void setAutoMappingUnknownColumnBehavior(AutoMappingUnknownColumnBehavior autoMappingUnknownColumnBehavior) {
@@ -445,12 +458,20 @@ public class Configuration {
     this.aggressiveLazyLoading = aggressiveLazyLoading;
   }
 
+  /**
+   * @deprecated You can safely remove the call to this method as this option had no effect.
+   */
+  @Deprecated
   public boolean isMultipleResultSetsEnabled() {
-    return multipleResultSetsEnabled;
+    return true;
   }
 
+  /**
+   * @deprecated You can safely remove the call to this method as this option had no effect.
+   */
+  @Deprecated
   public void setMultipleResultSetsEnabled(boolean multipleResultSetsEnabled) {
-    this.multipleResultSetsEnabled = multipleResultSetsEnabled;
+    // nop
   }
 
   public Set<String> getLazyLoadTriggerMethods() {
@@ -497,6 +518,7 @@ public class Configuration {
    * Gets the default fetch size.
    *
    * @return the default fetch size
+   *
    * @since 3.3.0
    */
   public Integer getDefaultFetchSize() {
@@ -508,6 +530,7 @@ public class Configuration {
    *
    * @param defaultFetchSize
    *          the new default fetch size
+   *
    * @since 3.3.0
    */
   public void setDefaultFetchSize(Integer defaultFetchSize) {
@@ -518,6 +541,7 @@ public class Configuration {
    * Gets the default result set type.
    *
    * @return the default result set type
+   *
    * @since 3.5.2
    */
   public ResultSetType getDefaultResultSetType() {
@@ -529,6 +553,7 @@ public class Configuration {
    *
    * @param defaultResultSetType
    *          the new default result set type
+   *
    * @since 3.5.2
    */
   public void setDefaultResultSetType(ResultSetType defaultResultSetType) {
@@ -572,9 +597,12 @@ public class Configuration {
   }
 
   /**
-   * Set a default {@link TypeHandler} class for {@link Enum}.
-   * A default {@link TypeHandler} is {@link org.apache.ibatis.type.EnumTypeHandler}.
-   * @param typeHandler a type handler class for {@link Enum}
+   * Set a default {@link TypeHandler} class for {@link Enum}. A default {@link TypeHandler} is
+   * {@link org.apache.ibatis.type.EnumTypeHandler}.
+   *
+   * @param typeHandler
+   *          a type handler class for {@link Enum}
+   *
    * @since 3.4.5
    */
   public void setDefaultEnumTypeHandler(Class<? extends TypeHandler> typeHandler) {
@@ -591,6 +619,7 @@ public class Configuration {
    * Gets the mapper registry.
    *
    * @return the mapper registry
+   *
    * @since 3.2.2
    */
   public MapperRegistry getMapperRegistry() {
@@ -629,6 +658,7 @@ public class Configuration {
    * Gets the interceptors.
    *
    * @return the interceptors
+   *
    * @since 3.2.2
    */
   public List<Interceptor> getInterceptors() {
@@ -655,7 +685,9 @@ public class Configuration {
    *
    * @param langClass
    *          the lang class
+   *
    * @return the language driver
+   *
    * @since 3.5.1
    */
   public LanguageDriver getLanguageDriver(Class<? extends LanguageDriver> langClass) {
@@ -670,6 +702,7 @@ public class Configuration {
    * Gets the default scripting language instance.
    *
    * @return the default scripting language instance
+   *
    * @deprecated Use {@link #getDefaultScriptingLanguageInstance()}
    */
   @Deprecated
@@ -681,23 +714,25 @@ public class Configuration {
     return MetaObject.forObject(object, objectFactory, objectWrapperFactory, reflectorFactory);
   }
 
-  public ParameterHandler newParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql) {
-    ParameterHandler parameterHandler = mappedStatement.getLang().createParameterHandler(mappedStatement, parameterObject, boundSql);
-    parameterHandler = (ParameterHandler) interceptorChain.pluginAll(parameterHandler);
-    return parameterHandler;
+  public ParameterHandler newParameterHandler(MappedStatement mappedStatement, Object parameterObject,
+      BoundSql boundSql) {
+    ParameterHandler parameterHandler = mappedStatement.getLang().createParameterHandler(mappedStatement,
+        parameterObject, boundSql);
+    return (ParameterHandler) interceptorChain.pluginAll(parameterHandler);
   }
 
-  public ResultSetHandler newResultSetHandler(Executor executor, MappedStatement mappedStatement, RowBounds rowBounds, ParameterHandler parameterHandler,
-      ResultHandler resultHandler, BoundSql boundSql) {
-    ResultSetHandler resultSetHandler = new DefaultResultSetHandler(executor, mappedStatement, parameterHandler, resultHandler, boundSql, rowBounds);
-    resultSetHandler = (ResultSetHandler) interceptorChain.pluginAll(resultSetHandler);
-    return resultSetHandler;
+  public ResultSetHandler newResultSetHandler(Executor executor, MappedStatement mappedStatement, RowBounds rowBounds,
+      ParameterHandler parameterHandler, ResultHandler resultHandler, BoundSql boundSql) {
+    ResultSetHandler resultSetHandler = new DefaultResultSetHandler(executor, mappedStatement, parameterHandler,
+        resultHandler, boundSql, rowBounds);
+    return (ResultSetHandler) interceptorChain.pluginAll(resultSetHandler);
   }
 
-  public StatementHandler newStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
-    StatementHandler statementHandler = new RoutingStatementHandler(executor, mappedStatement, parameterObject, rowBounds, resultHandler, boundSql);
-    statementHandler = (StatementHandler) interceptorChain.pluginAll(statementHandler);
-    return statementHandler;
+  public StatementHandler newStatementHandler(Executor executor, MappedStatement mappedStatement,
+      Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
+    StatementHandler statementHandler = new RoutingStatementHandler(executor, mappedStatement, parameterObject,
+        rowBounds, resultHandler, boundSql);
+    return (StatementHandler) interceptorChain.pluginAll(statementHandler);
   }
 
   public Executor newExecutor(Transaction transaction) {
@@ -717,8 +752,7 @@ public class Configuration {
     if (cacheEnabled) {
       executor = new CachingExecutor(executor);
     }
-    executor = (Executor) interceptorChain.pluginAll(executor);
-    return executor;
+    return (Executor) interceptorChain.pluginAll(executor);
   }
 
   public void addKeyGenerator(String id, KeyGenerator keyGenerator) {
@@ -817,34 +851,70 @@ public class Configuration {
     return mappedStatements.values();
   }
 
+  /**
+   * @deprecated call {@link #parsePendingStatements(boolean)}
+   */
+  @Deprecated
   public Collection<XMLStatementBuilder> getIncompleteStatements() {
     return incompleteStatements;
   }
 
   public void addIncompleteStatement(XMLStatementBuilder incompleteStatement) {
-    incompleteStatements.add(incompleteStatement);
+    incompleteStatementsLock.lock();
+    try {
+      incompleteStatements.add(incompleteStatement);
+    } finally {
+      incompleteStatementsLock.unlock();
+    }
   }
 
+  /**
+   * @deprecated call {@link #parsePendingCacheRefs(boolean)}
+   */
+  @Deprecated
   public Collection<CacheRefResolver> getIncompleteCacheRefs() {
     return incompleteCacheRefs;
   }
 
   public void addIncompleteCacheRef(CacheRefResolver incompleteCacheRef) {
-    incompleteCacheRefs.add(incompleteCacheRef);
+    incompleteCacheRefsLock.lock();
+    try {
+      incompleteCacheRefs.add(incompleteCacheRef);
+    } finally {
+      incompleteCacheRefsLock.unlock();
+    }
   }
 
+  /**
+   * @deprecated call {@link #parsePendingResultMaps(boolean)}
+   */
+  @Deprecated
   public Collection<ResultMapResolver> getIncompleteResultMaps() {
     return incompleteResultMaps;
   }
 
   public void addIncompleteResultMap(ResultMapResolver resultMapResolver) {
-    incompleteResultMaps.add(resultMapResolver);
+    incompleteResultMapsLock.lock();
+    try {
+      incompleteResultMaps.add(resultMapResolver);
+    } finally {
+      incompleteResultMapsLock.unlock();
+    }
   }
 
   public void addIncompleteMethod(MethodResolver builder) {
-    incompleteMethods.add(builder);
+    incompleteMethodsLock.lock();
+    try {
+      incompleteMethods.add(builder);
+    } finally {
+      incompleteMethodsLock.unlock();
+    }
   }
 
+  /**
+   * @deprecated call {@link #parsePendingMethods(boolean)}
+   */
+  @Deprecated
   public Collection<MethodResolver> getIncompleteMethods() {
     return incompleteMethods;
   }
@@ -904,40 +974,76 @@ public class Configuration {
   }
 
   /*
-   * Parses all the unprocessed statement nodes in the cache. It is recommended
-   * to call this method once all the mappers are added as it provides fail-fast
-   * statement validation.
+   * Parses all the unprocessed statement nodes in the cache. It is recommended to call this method once all the mappers
+   * are added as it provides fail-fast statement validation.
    */
   protected void buildAllStatements() {
-    parsePendingResultMaps();
-    if (!incompleteCacheRefs.isEmpty()) {
-      synchronized (incompleteCacheRefs) {
-        incompleteCacheRefs.removeIf(x -> x.resolveCacheRef() != null);
-      }
+    parsePendingResultMaps(true);
+    parsePendingCacheRefs(true);
+    parsePendingStatements(true);
+    parsePendingMethods(true);
+  }
+
+  public void parsePendingMethods(boolean reportUnresolved) {
+    if (incompleteMethods.isEmpty()) {
+      return;
     }
-    if (!incompleteStatements.isEmpty()) {
-      synchronized (incompleteStatements) {
-        incompleteStatements.removeIf(x -> {
-          x.parseStatementNode();
-          return true;
-        });
+    incompleteMethodsLock.lock();
+    try {
+      incompleteMethods.removeIf(x -> {
+        x.resolve();
+        return true;
+      });
+    } catch (IncompleteElementException e) {
+      if (reportUnresolved) {
+        throw e;
       }
-    }
-    if (!incompleteMethods.isEmpty()) {
-      synchronized (incompleteMethods) {
-        incompleteMethods.removeIf(x -> {
-          x.resolve();
-          return true;
-        });
-      }
+    } finally {
+      incompleteMethodsLock.unlock();
     }
   }
 
-  private void parsePendingResultMaps() {
+  public void parsePendingStatements(boolean reportUnresolved) {
+    if (incompleteStatements.isEmpty()) {
+      return;
+    }
+    incompleteStatementsLock.lock();
+    try {
+      incompleteStatements.removeIf(x -> {
+        x.parseStatementNode();
+        return true;
+      });
+    } catch (IncompleteElementException e) {
+      if (reportUnresolved) {
+        throw e;
+      }
+    } finally {
+      incompleteStatementsLock.unlock();
+    }
+  }
+
+  public void parsePendingCacheRefs(boolean reportUnresolved) {
+    if (incompleteCacheRefs.isEmpty()) {
+      return;
+    }
+    incompleteCacheRefsLock.lock();
+    try {
+      incompleteCacheRefs.removeIf(x -> x.resolveCacheRef() != null);
+    } catch (IncompleteElementException e) {
+      if (reportUnresolved) {
+        throw e;
+      }
+    } finally {
+      incompleteCacheRefsLock.unlock();
+    }
+  }
+
+  public void parsePendingResultMaps(boolean reportUnresolved) {
     if (incompleteResultMaps.isEmpty()) {
       return;
     }
-    synchronized (incompleteResultMaps) {
+    incompleteResultMapsLock.lock();
+    try {
       boolean resolved;
       IncompleteElementException ex = null;
       do {
@@ -953,10 +1059,12 @@ public class Configuration {
           }
         }
       } while (resolved);
-      if (!incompleteResultMaps.isEmpty() && ex != null) {
+      if (reportUnresolved && !incompleteResultMaps.isEmpty() && ex != null) {
         // At least one result map is unresolvable.
         throw ex;
       }
+    } finally {
+      incompleteResultMapsLock.unlock();
     }
   }
 
@@ -965,6 +1073,7 @@ public class Configuration {
    *
    * @param statementId
    *          the statement id
+   *
    * @return namespace or null when id does not contain period.
    */
   protected String extractNamespace(String statementId) {
@@ -975,13 +1084,14 @@ public class Configuration {
   // Slow but a one time cost. A better solution is welcome.
   protected void checkGloballyForDiscriminatedNestedResultMaps(ResultMap rm) {
     if (rm.hasNestedResultMaps()) {
-      for (Map.Entry<String, ResultMap> entry : resultMaps.entrySet()) {
-        Object value = entry.getValue();
-        if (value instanceof ResultMap) {
-          ResultMap entryResultMap = (ResultMap) value;
+      final String resultMapId = rm.getId();
+      for (Object resultMapObject : resultMaps.values()) {
+        if (resultMapObject instanceof ResultMap) {
+          ResultMap entryResultMap = (ResultMap) resultMapObject;
           if (!entryResultMap.hasNestedResultMaps() && entryResultMap.getDiscriminator() != null) {
-            Collection<String> discriminatedResultMapNames = entryResultMap.getDiscriminator().getDiscriminatorMap().values();
-            if (discriminatedResultMapNames.contains(rm.getId())) {
+            Collection<String> discriminatedResultMapNames = entryResultMap.getDiscriminator().getDiscriminatorMap()
+                .values();
+            if (discriminatedResultMapNames.contains(resultMapId)) {
               entryResultMap.forceNestedResultMaps();
             }
           }
@@ -993,8 +1103,7 @@ public class Configuration {
   // Slow but a one time cost. A better solution is welcome.
   protected void checkLocallyForDiscriminatedNestedResultMaps(ResultMap rm) {
     if (!rm.hasNestedResultMaps() && rm.getDiscriminator() != null) {
-      for (Map.Entry<String, String> entry : rm.getDiscriminator().getDiscriminatorMap().entrySet()) {
-        String discriminatedResultMapName = entry.getValue();
+      for (String discriminatedResultMapName : rm.getDiscriminator().getDiscriminatorMap().values()) {
         if (hasResultMap(discriminatedResultMapName)) {
           ResultMap discriminatedResultMap = resultMaps.get(discriminatedResultMapName);
           if (discriminatedResultMap.hasNestedResultMaps()) {
@@ -1023,7 +1132,6 @@ public class Configuration {
     }
 
     public StrictMap(String name) {
-      super();
       this.name = name;
     }
 
@@ -1036,8 +1144,12 @@ public class Configuration {
      * Assign a function for producing a conflict error message when contains value with the same key.
      * <p>
      * function arguments are 1st is saved value and 2nd is target value.
-     * @param conflictMessageProducer A function for producing a conflict error message
+     *
+     * @param conflictMessageProducer
+     *          A function for producing a conflict error message
+     *
      * @return a conflict error message
+     *
      * @since 3.5.0
      */
     public StrictMap<V> conflictMessageProducer(BiFunction<V, V, String> conflictMessageProducer) {
@@ -1049,7 +1161,7 @@ public class Configuration {
     @SuppressWarnings("unchecked")
     public V put(String key, V value) {
       if (containsKey(key)) {
-        throw new IllegalArgumentException(name + " already contains value for " + key
+        throw new IllegalArgumentException(name + " already contains key " + key
             + (conflictMessageProducer == null ? "" : conflictMessageProducer.apply(super.get(key), value)));
       }
       if (key.contains(".")) {

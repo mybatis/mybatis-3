@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,8 @@
  */
 package org.apache.ibatis.submitted.keycolumn;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.List;
 
@@ -55,7 +56,7 @@ class InsertTest {
   }
 
   @Test
-  void testInsertAnnotated() {
+  void insertAnnotated() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       InsertMapper mapper = sqlSession.getMapper(InsertMapper.class);
       Name name = new Name();
@@ -70,7 +71,7 @@ class InsertTest {
   }
 
   @Test
-  void testInsertMapped() {
+  void insertMapped() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       InsertMapper mapper = sqlSession.getMapper(InsertMapper.class);
       Name name = new Name();
@@ -85,7 +86,7 @@ class InsertTest {
   }
 
   @Test
-  void testInsertMappedBatch() {
+  void insertMappedBatch() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH)) {
       InsertMapper mapper = sqlSession.getMapper(InsertMapper.class);
       Name name = new Name();

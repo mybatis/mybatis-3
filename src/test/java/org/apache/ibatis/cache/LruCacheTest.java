@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,12 @@
  */
 package org.apache.ibatis.cache;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+import java.lang.reflect.Field;
+import java.util.Map;
 
 import org.apache.ibatis.cache.decorators.LruCache;
 import org.apache.ibatis.cache.impl.PerpetualCache;
@@ -56,6 +61,20 @@ class LruCacheTest {
     cache.clear();
     assertNull(cache.getObject(0));
     assertNull(cache.getObject(4));
+  }
+
+  @Test
+  void shouldCacheSizeEqualsKeyMapSize() throws Exception {
+    LruCache cache = new LruCache(new PerpetualCache("default"));
+    cache.setSize(5);
+    for (int i = 0; i < 5; i++) {
+      cache.putObject(i, i);
+    }
+    cache.removeObject(1);
+    Field keyMap = cache.getClass().getDeclaredField("keyMap");
+    keyMap.setAccessible(true);
+    Map<Object, Object> map = (Map<Object, Object>) keyMap.get(cache);
+    assertEquals(map.size(), cache.getSize());
   }
 
 }

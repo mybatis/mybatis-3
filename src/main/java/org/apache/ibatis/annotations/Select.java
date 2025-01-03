@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,18 +24,35 @@ import java.lang.annotation.Target;
 
 /**
  * The annotation that specify an SQL for retrieving record(s).
- *
  * <p>
  * <b>How to use:</b>
+ * <ul>
+ * <li>Simple:
  *
- * <pre>
+ * <pre>{@code
  * public interface UserMapper {
- *   &#064;Select("SELECT id, name FROM users WHERE id = #{id}")
+ *   @Select("SELECT id, name FROM users WHERE id = #{id}")
  *   User selectById(int id);
  * }
- * </pre>
+ * }</pre>
+ *
+ * </li>
+ * <li>Dynamic SQL:
+ *
+ * <pre>{@code
+ * public interface UserMapper {
+ *   @Select({ "<script>", "select * from users", "where name = #{name}",
+ *       "<if test=\"age != null\"> age = #{age} </if>", "</script>" })
+ *   User select(@NotNull String name, @Nullable Integer age);
+ * }
+ * }</pre>
+ *
+ * </li>
+ * </ul>
  *
  * @author Clinton Begin
+ *
+ * @see <a href="https://mybatis.org/mybatis-3/dynamic-sql.html">How to use Dynamic SQL</a>
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
@@ -51,6 +68,7 @@ public @interface Select {
 
   /**
    * @return A database id that correspond this statement
+   *
    * @since 3.5.5
    */
   String databaseId() default "";
@@ -60,13 +78,16 @@ public @interface Select {
    * e.g. RETURNING of PostgreSQL or OUTPUT of MS SQL Server.
    *
    * @return {@code true} if this select affects DB data; {@code false} if otherwise
+   *
    * @since 3.5.12
    */
   boolean affectData() default false;
 
   /**
    * The container annotation for {@link Select}.
+   *
    * @author Kazuki Shimizu
+   *
    * @since 3.5.5
    */
   @Documented

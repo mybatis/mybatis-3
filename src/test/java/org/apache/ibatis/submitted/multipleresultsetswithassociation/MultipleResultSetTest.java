@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -47,9 +47,9 @@ class MultipleResultSetTest {
     // populate in-memory database
     // Could not get the table creation, procedure creation, and data population to work from the same script.
     // Once it was in three scripts, all seemed well.
-    try (SqlSession session = sqlSessionFactory.openSession();
-         Connection conn = session.getConnection()) {
-      try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multipleresultsetswithassociation/CreateDB1.sql")) {
+    try (SqlSession session = sqlSessionFactory.openSession(); Connection conn = session.getConnection()) {
+      try (Reader reader = Resources
+          .getResourceAsReader("org/apache/ibatis/submitted/multipleresultsetswithassociation/CreateDB1.sql")) {
         runReaderScript(conn, reader);
       }
       try (Reader reader = Resources

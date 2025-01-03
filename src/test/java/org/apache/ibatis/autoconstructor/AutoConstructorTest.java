@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -78,7 +78,7 @@ class AutoConstructorTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       final AutoConstructorMapper mapper = sqlSession.getMapper(AutoConstructorMapper.class);
       final PersistenceException ex = assertThrows(PersistenceException.class, mapper::getBadAnnotatedSubjects);
-      final ExecutorException cause = (ExecutorException)  ex.getCause();
+      final ExecutorException cause = (ExecutorException) ex.getCause();
       assertEquals("@AutomapConstructor should be used in only one constructor.", cause.getMessage());
     }
   }
@@ -101,6 +101,6 @@ class AutoConstructorTest {
 
   private void verifySubjects(final List<?> subjects) {
     assertNotNull(subjects);
-    Assertions.assertThat(subjects.size()).isEqualTo(3);
+    Assertions.assertThat(subjects).hasSize(3);
   }
 }

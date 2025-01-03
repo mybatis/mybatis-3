@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package org.apache.ibatis.builder;
 
 import java.lang.reflect.Type;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -152,12 +153,12 @@ public class SqlSourceBuilder extends BaseBuilder {
       if (metaParameters.hasGetter(property)) { // issue #448 get type from additional params
         return metaParameters.getGetterType(property);
       }
-      typeHandler = resolveTypeHandler(parameterType, null, null, jdbcType, (Class<? extends TypeHandler<?>>)null);
+      typeHandler = resolveTypeHandler(parameterType, null, null, jdbcType, (Class<? extends TypeHandler<?>>) null);
       if (typeHandler != null) {
         return parameterType;
       }
       if (JdbcType.CURSOR.equals(jdbcType)) {
-        return java.sql.ResultSet.class;
+        return ResultSet.class;
       }
       if (paramNameResolver != null && ParamMap.class.equals(parameterType)) {
         Type actualParamType = paramNameResolver.getType(property);
@@ -196,7 +197,8 @@ public class SqlSourceBuilder extends BaseBuilder {
       } catch (BuilderException ex) {
         throw ex;
       } catch (Exception ex) {
-        throw new BuilderException("Parsing error was found in mapping #{" + content + "}.  Check syntax #{property|(expression), var1=value1, var2=value2, ...} ", ex);
+        throw new BuilderException("Parsing error was found in mapping #{" + content
+            + "}.  Check syntax #{property|(expression), var1=value1, var2=value2, ...} ", ex);
       }
     }
   }

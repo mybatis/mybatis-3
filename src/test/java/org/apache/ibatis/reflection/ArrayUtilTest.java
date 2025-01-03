@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,18 +15,19 @@
  */
 package org.apache.ibatis.reflection;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
 
-class ArrayUtilTest extends ArrayUtil {
+class ArrayUtilTest {
 
   @Test
   void testHashCode() {
-    Object arr;
-    arr = new long[] { 1 };
+    Object arr = new long[] { 1 };
     assertEquals(Arrays.hashCode((long[]) arr), ArrayUtil.hashCode(arr));
     arr = new int[] { 1 };
     assertEquals(Arrays.hashCode((int[]) arr), ArrayUtil.hashCode(arr));
@@ -82,8 +83,7 @@ class ArrayUtilTest extends ArrayUtil {
 
   @Test
   void testToString() {
-    Object arr;
-    arr = new long[] { 1 };
+    Object arr = new long[] { 1 };
     assertEquals(Arrays.toString((long[]) arr), ArrayUtil.toString(arr));
     arr = new int[] { 1 };
     assertEquals(Arrays.toString((int[]) arr), ArrayUtil.toString(arr));
@@ -102,7 +102,7 @@ class ArrayUtilTest extends ArrayUtil {
     arr = new Object[] { "str" };
     assertEquals(Arrays.toString((Object[]) arr), ArrayUtil.toString(arr));
 
-    assertEquals(Integer.valueOf(1).toString(), ArrayUtil.toString(1));
+    assertEquals(Integer.toString(1), ArrayUtil.toString(1));
     assertEquals("null", ArrayUtil.toString(null));
   }
 

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -48,43 +48,40 @@ class GenericTokenParserTest {
   @ParameterizedTest
   @MethodSource("shouldDemonstrateGenericTokenReplacementProvider")
   void shouldDemonstrateGenericTokenReplacement(String expected, String text) {
-    GenericTokenParser parser = new GenericTokenParser("${", "}", new VariableTokenHandler(new HashMap<String, String>() {
-      {
-        put("first_name", "James");
-        put("initial", "T");
-        put("last_name", "Kirk");
-        put("var{with}brace", "Hiya");
-        put("", "");
-      }
-    }));
+    GenericTokenParser parser = new GenericTokenParser("${", "}",
+        new VariableTokenHandler(new HashMap<String, String>() {
+          private static final long serialVersionUID = 1L;
+
+          {
+            put("first_name", "James");
+            put("initial", "T");
+            put("last_name", "Kirk");
+            put("var{with}brace", "Hiya");
+            put("", "");
+          }
+        }));
     assertEquals(expected, parser.parse(text));
   }
 
   static Stream<Arguments> shouldDemonstrateGenericTokenReplacementProvider() {
-    return Stream.of(
-      arguments("James T Kirk reporting.", "${first_name} ${initial} ${last_name} reporting."),
-      arguments("Hello captain James T Kirk", "Hello captain ${first_name} ${initial} ${last_name}"),
-      arguments("James T Kirk", "${first_name} ${initial} ${last_name}"),
-      arguments("JamesTKirk", "${first_name}${initial}${last_name}"),
-      arguments("{}JamesTKirk", "{}${first_name}${initial}${last_name}"),
-      arguments("}JamesTKirk", "}${first_name}${initial}${last_name}"),
+    return Stream.of(arguments("James T Kirk reporting.", "${first_name} ${initial} ${last_name} reporting."),
+        arguments("Hello captain James T Kirk", "Hello captain ${first_name} ${initial} ${last_name}"),
+        arguments("James T Kirk", "${first_name} ${initial} ${last_name}"),
+        arguments("JamesTKirk", "${first_name}${initial}${last_name}"),
+        arguments("{}JamesTKirk", "{}${first_name}${initial}${last_name}"),
+        arguments("}JamesTKirk", "}${first_name}${initial}${last_name}"),
 
-      arguments("}James{{T}}Kirk", "}${first_name}{{${initial}}}${last_name}"),
-      arguments("}James}T{Kirk", "}${first_name}}${initial}{${last_name}"),
-      arguments("}James}T{Kirk", "}${first_name}}${initial}{${last_name}"),
-      arguments("}James}T{Kirk{{}}", "}${first_name}}${initial}{${last_name}{{}}"),
-      arguments("}James}T{Kirk{{}}", "}${first_name}}${initial}{${last_name}{{}}${}"),
+        arguments("}James{{T}}Kirk", "}${first_name}{{${initial}}}${last_name}"),
+        arguments("}James}T{Kirk", "}${first_name}}${initial}{${last_name}"),
+        arguments("}James}T{Kirk", "}${first_name}}${initial}{${last_name}"),
+        arguments("}James}T{Kirk{{}}", "}${first_name}}${initial}{${last_name}{{}}"),
+        arguments("}James}T{Kirk{{}}", "}${first_name}}${initial}{${last_name}{{}}${}"),
 
-      arguments("{$$something}JamesTKirk", "{$$something}${first_name}${initial}${last_name}"),
-      arguments("${", "${"),
-      arguments("${\\}", "${\\}"),
-      arguments("Hiya", "${var{with\\}brace}"),
-      arguments("", "${}"),
-      arguments("}", "}"),
-      arguments("Hello ${ this is a test.", "Hello ${ this is a test."),
-      arguments("Hello } this is a test.", "Hello } this is a test."),
-      arguments("Hello } ${ this is a test.", "Hello } ${ this is a test.")
-    );
+        arguments("{$$something}JamesTKirk", "{$$something}${first_name}${initial}${last_name}"), arguments("${", "${"),
+        arguments("${\\}", "${\\}"), arguments("Hiya", "${var{with\\}brace}"), arguments("", "${}"),
+        arguments("}", "}"), arguments("Hello ${ this is a test.", "Hello ${ this is a test."),
+        arguments("Hello } this is a test.", "Hello } this is a test."),
+        arguments("Hello } ${ this is a test.", "Hello } ${ this is a test."));
   }
 
   @ParameterizedTest
@@ -95,12 +92,10 @@ class GenericTokenParserTest {
   }
 
   static Stream<Arguments> shallNotInterpolateSkippedVariablesProvider() {
-    return Stream.of(
-      arguments("${skipped} variable", "\\${skipped} variable"),
-      arguments("This is a ${skipped} variable", "This is a \\${skipped} variable"),
-      arguments("null ${skipped} variable", "${skipped} \\${skipped} variable"),
-      arguments("The null is ${skipped} variable", "The ${skipped} is \\${skipped} variable")
-    );
+    return Stream.of(arguments("${skipped} variable", "\\${skipped} variable"),
+        arguments("This is a ${skipped} variable", "This is a \\${skipped} variable"),
+        arguments("null ${skipped} variable", "${skipped} \\${skipped} variable"),
+        arguments("The null is ${skipped} variable", "The ${skipped} is \\${skipped} variable"));
   }
 
   @Disabled("Because it randomly fails on Github CI. It could be useful during development.")
@@ -108,14 +103,17 @@ class GenericTokenParserTest {
   void shouldParseFastOnJdk7u6() {
     Assertions.assertTimeout(Duration.ofMillis(1000), () -> {
       // issue #760
-      GenericTokenParser parser = new GenericTokenParser("${", "}", new VariableTokenHandler(new HashMap<String, String>() {
-        {
-          put("first_name", "James");
-          put("initial", "T");
-          put("last_name", "Kirk");
-          put("", "");
-        }
-      }));
+      GenericTokenParser parser = new GenericTokenParser("${", "}",
+          new VariableTokenHandler(new HashMap<String, String>() {
+            private static final long serialVersionUID = 1L;
+
+            {
+              put("first_name", "James");
+              put("initial", "T");
+              put("last_name", "Kirk");
+              put("", "");
+            }
+          }));
 
       StringBuilder input = new StringBuilder();
       for (int i = 0; i < 10000; i++) {

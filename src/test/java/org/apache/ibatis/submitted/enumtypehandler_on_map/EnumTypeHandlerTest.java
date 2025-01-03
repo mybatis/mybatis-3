@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -31,44 +31,46 @@ import org.junit.jupiter.api.Test;
 
 class EnumTypeHandlerTest {
 
-    private static SqlSessionFactory sqlSessionFactory;
+  private static SqlSessionFactory sqlSessionFactory;
 
-    @BeforeAll
-    static void initDatabase() throws Exception {
-        try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/enumtypehandler_on_map/ibatisConfig.xml")) {
-            sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-        }
-
-        BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-                "org/apache/ibatis/submitted/enumtypehandler_on_map/CreateDB.sql");
+  @BeforeAll
+  static void initDatabase() throws Exception {
+    try (Reader reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/enumtypehandler_on_map/ibatisConfig.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
-    @Test
-    void testEnumWithParam() {
-        try (SqlSession sqlSession = sqlSessionFactory.openSession() ) {
-            PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
-            List<Person> persons = personMapper.getByType(Person.Type.PERSON, "");
-            Assertions.assertNotNull(persons, "Persons must not be null");
-            Assertions.assertEquals(1, persons.size(), "Persons must contain exactly 1 person");
-        }
-    }
-    @Test
-    void testEnumWithoutParam() {
-        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-            PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
-            List<Person> persons = personMapper.getByTypeNoParam(new TypeName() {
-                @Override
-                public String getName() {
-                    return "";
-                }
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/enumtypehandler_on_map/CreateDB.sql");
+  }
 
-                @Override
-                public Type getType() {
-                    return Person.Type.PERSON;
-                }
-            });
-            Assertions.assertNotNull(persons, "Persons must not be null");
-            Assertions.assertEquals(1, persons.size(), "Persons must contain exactly 1 person");
-        }
+  @Test
+  void enumWithParam() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
+      List<Person> persons = personMapper.getByType(Person.Type.PERSON, "");
+      Assertions.assertNotNull(persons, "Persons must not be null");
+      Assertions.assertEquals(1, persons.size(), "Persons must contain exactly 1 person");
     }
+  }
+
+  @Test
+  void enumWithoutParam() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
+      List<Person> persons = personMapper.getByTypeNoParam(new TypeName() {
+        @Override
+        public String getName() {
+          return "";
+        }
+
+        @Override
+        public Type getType() {
+          return Person.Type.PERSON;
+        }
+      });
+      Assertions.assertNotNull(persons, "Persons must not be null");
+      Assertions.assertEquals(1, persons.size(), "Persons must contain exactly 1 person");
+    }
+  }
 }

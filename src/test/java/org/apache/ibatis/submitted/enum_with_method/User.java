@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,31 +17,40 @@ package org.apache.ibatis.submitted.enum_with_method;
 
 public class User {
 
-    private Integer id;
-    private String name;
-    private Currency cur;
+  private Integer id;
+  private String name;
+  private Currency cur;
+  private Mood mood;
 
-    public Integer getId() {
-        return id;
-    }
+  public Integer getId() {
+    return id;
+  }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public Currency getCur() {
-        return cur;
-    }
+  public Currency getCur() {
+    return cur;
+  }
 
-    public void setCur(Currency cur) {
-        this.cur = cur;
-    }
+  public void setCur(Currency cur) {
+    this.cur = cur;
+  }
+
+  public Mood getMood() {
+    return mood;
+  }
+
+  public void setMood(Mood mood) {
+    this.mood = mood;
+  }
 }

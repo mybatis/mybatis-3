@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,11 +19,10 @@ import org.apache.ibatis.annotations.Param;
 
 public class User2 {
 
-  private Integer userId;
-  private String name;
+  private final Integer userId;
+  private final String name;
 
   public User2(Integer userId, @Param("userName") String name) {
-    super();
     this.userId = userId;
     this.name = name;
   }

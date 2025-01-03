@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -94,37 +94,49 @@ public interface Mapper {
   @Select("SELECT COUNT(*) FROM users WHERE name LIKE '%' || #{dataabse} || '%'")
   int countByCurrentDatabase(String database);
 
-  class HsqlSqlProvider {
+  final class HsqlSqlProvider {
     public static String getUserUsingProvider() {
       return "SELECT id, name, 'HSQL' as databaseName FROM users WHERE id = #{id}";
     }
+
     public static String insertUserUsingProvider() {
       return "INSERT INTO users (id, name) VALUES(#{id}, #{name} || ' HSQL')";
     }
+
     public static String updateUserNameUsingProvider() {
       return "UPDATE users SET name = name || ' HSQL' WHERE id = #{id}";
     }
+
     public static String delete() {
       return "DELETE FROM users WHERE name LIKE '%HSQL%'";
     }
+
+    private HsqlSqlProvider() {
+    }
   }
 
-  class DerbySqlProvider {
+  final class DerbySqlProvider {
     public static String getUserUsingProvider() {
       return "SELECT id, name, 'DERBY' as databaseName FROM users WHERE id = #{id}";
     }
+
     public static String insertUserUsingProvider() {
       return "INSERT INTO users (id, name) VALUES(#{id}, #{name} || ' DERBY')";
     }
+
     public static String updateUserNameUsingProvider() {
       return "UPDATE users SET name = name || ' DERBY' WHERE id = #{id}";
     }
+
     public static String delete() {
       return "DELETE FROM users WHERE name LIKE '%DERBY%'";
     }
+
+    private DerbySqlProvider() {
+    }
   }
 
-  class DefaultSqlProvider {
+  final class DefaultSqlProvider {
     public static String getUserUsingProvider() {
       return "SELECT id, name, 'DEFAULT' as databaseName FROM users WHERE id = #{id}";
     }
@@ -132,11 +144,16 @@ public interface Mapper {
     public static String insertUserUsingProvider() {
       return "INSERT INTO users (id, name) VALUES(#{id}, #{name} || ' DEFAULT')";
     }
+
     public static String updateUserNameUsingProvider() {
       return "UPDATE users SET name = name || ' DEFAULT' WHERE id = #{id}";
     }
+
     public static String delete() {
       return "DELETE FROM users WHERE name LIKE '%DEFAULT%'";
+    }
+
+    private DefaultSqlProvider() {
     }
   }
 

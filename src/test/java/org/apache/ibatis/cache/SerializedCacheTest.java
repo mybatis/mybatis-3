@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package org.apache.ibatis.cache;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.Serializable;
@@ -45,18 +46,18 @@ class SerializedCacheTest {
       cache.putObject(i, null);
     }
     for (int i = 0; i < 5; i++) {
-      assertEquals(null, cache.getObject(i));
+      assertNull(cache.getObject(i));
     }
   }
 
   @Test
   void throwExceptionWhenTryingToCacheNonSerializableObject() {
     SerializedCache cache = new SerializedCache(new PerpetualCache("default"));
-    assertThrows(CacheException.class,
-      () -> cache.putObject(0, new CachingObjectWithoutSerializable(0)));
+    assertThrows(CacheException.class, () -> cache.putObject(0, new CachingObjectWithoutSerializable(0)));
   }
 
   static class CachingObject implements Serializable {
+    private static final long serialVersionUID = 1L;
     int x;
 
     public CachingObject(int x) {
@@ -65,8 +66,12 @@ class SerializedCacheTest {
 
     @Override
     public boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
+      if (this == o) {
+        return true;
+      }
+      if (o == null || getClass() != o.getClass()) {
+        return false;
+      }
       CachingObject obj = (CachingObject) o;
       return x == obj.x;
     }
@@ -86,8 +91,12 @@ class SerializedCacheTest {
 
     @Override
     public boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
+      if (this == o) {
+        return true;
+      }
+      if (o == null || getClass() != o.getClass()) {
+        return false;
+      }
       CachingObjectWithoutSerializable obj = (CachingObjectWithoutSerializable) o;
       return x == obj.x;
     }

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import org.apache.ibatis.session.Configuration;
 public class ForEachSqlNode implements SqlNode {
   public static final String ITEM_PREFIX = "__frch_";
 
-  private final ExpressionEvaluator evaluator;
+  private final ExpressionEvaluator evaluator = ExpressionEvaluator.INSTANCE;
   private final String collectionExpression;
   private final Boolean nullable;
   private final SqlNode contents;
@@ -39,18 +39,20 @@ public class ForEachSqlNode implements SqlNode {
   private final Configuration configuration;
 
   /**
-   * @deprecated Since 3.5.9, use the {@link #ForEachSqlNode(Configuration, SqlNode, String, Boolean, String, String, String, String, String)}.
+   * @deprecated Since 3.5.9, use the
+   *             {@link #ForEachSqlNode(Configuration, SqlNode, String, Boolean, String, String, String, String, String)}.
    */
   @Deprecated
-  public ForEachSqlNode(Configuration configuration, SqlNode contents, String collectionExpression, String index, String item, String open, String close, String separator) {
+  public ForEachSqlNode(Configuration configuration, SqlNode contents, String collectionExpression, String index,
+      String item, String open, String close, String separator) {
     this(configuration, contents, collectionExpression, null, index, item, open, close, separator);
   }
 
   /**
    * @since 3.5.9
    */
-  public ForEachSqlNode(Configuration configuration, SqlNode contents, String collectionExpression, Boolean nullable, String index, String item, String open, String close, String separator) {
-    this.evaluator = new ExpressionEvaluator();
+  public ForEachSqlNode(Configuration configuration, SqlNode contents, String collectionExpression, Boolean nullable,
+      String index, String item, String open, String close, String separator) {
     this.collectionExpression = collectionExpression;
     this.nullable = nullable;
     this.contents = contents;
@@ -66,7 +68,7 @@ public class ForEachSqlNode implements SqlNode {
   public boolean apply(DynamicContext context) {
     Map<String, Object> bindings = context.getBindings();
     final Iterable<?> iterable = evaluator.evaluateIterable(collectionExpression, bindings,
-      Optional.ofNullable(nullable).orElseGet(configuration::isNullableOnForEach));
+        Optional.ofNullable(nullable).orElseGet(configuration::isNullableOnForEach));
     if (iterable == null || !iterable.iterator().hasNext()) {
       return true;
     }
@@ -140,7 +142,8 @@ public class ForEachSqlNode implements SqlNode {
     private final String itemIndex;
     private final String item;
 
-    public FilteredDynamicContext(Configuration configuration,DynamicContext delegate, String itemIndex, String item, int i) {
+    public FilteredDynamicContext(Configuration configuration, DynamicContext delegate, String itemIndex, String item,
+        int i) {
       super(configuration, null);
       this.delegate = delegate;
       this.index = i;
@@ -182,7 +185,6 @@ public class ForEachSqlNode implements SqlNode {
     }
 
   }
-
 
   private class PrefixedContext extends DynamicContext {
     private final DynamicContext delegate;

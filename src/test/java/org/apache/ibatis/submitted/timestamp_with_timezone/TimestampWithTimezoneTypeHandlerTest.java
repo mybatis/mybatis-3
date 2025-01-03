@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.submitted.timestamp_with_timezone;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.Reader;
 import java.time.OffsetDateTime;
@@ -52,8 +52,7 @@ class TimestampWithTimezoneTypeHandlerTest {
       Record record = mapper.selectById(1);
       assertEquals(OffsetDateTime.of(2018, 1, 2, 11, 22, 33, 123456000, ZoneOffset.ofHoursMinutes(1, 23)),
           record.getOdt());
-      // HSQLDB 2.4.1 truncates nano seconds.
-      assertEquals(OffsetTime.of(11, 22, 33, 0, ZoneOffset.ofHoursMinutes(1, 23)), record.getOt());
+      assertEquals(OffsetTime.of(11, 22, 33, 123456000, ZoneOffset.ofHoursMinutes(1, 23)), record.getOt());
     }
   }
 
@@ -76,7 +75,7 @@ class TimestampWithTimezoneTypeHandlerTest {
     }
   }
 
-  @Disabled("HSQLDB 2.4.1 does not support this.")
+  @Disabled("HSQLDB does not support this.")
   @Test
   void shouldInsertOffsetTime() {
     OffsetTime ot = OffsetTime.of(11, 22, 33, 123456000, ZoneOffset.ofHoursMinutes(1, 23));

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -45,21 +45,22 @@ class SPTest {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
-    ScriptRunner runner = new ScriptRunner(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource().getConnection());
+    ScriptRunner runner = new ScriptRunner(
+        sqlSessionFactory.getConfiguration().getEnvironment().getDataSource().getConnection());
     runner.setDelimiter("go");
     runner.setLogWriter(null);
     runner.setErrorLogWriter(null);
     BaseDataTest.runScript(runner, "org/apache/ibatis/submitted/sptests/CreateDB.sql");
   }
 
-  /*
-   * This test shows how to use input and output parameters in a stored
-   * procedure. This procedure does not return a result set.
-   *
+  /**
+   * This test shows how to use input and output parameters in a stored procedure. This procedure does not return a
+   * result set.
+   * <p>
    * This test shows using a multi-property parameter.
    */
   @Test
-  void testAdderAsSelect() {
+  void adderAsSelect() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Parameter parameter = new Parameter();
       parameter.setAddend1(2);
@@ -72,14 +73,14 @@ class SPTest {
     }
   }
 
-  /*
-   * This test shows how to use input and output parameters in a stored
-   * procedure. This procedure does not return a result set.
-   *
+  /**
+   * This test shows how to use input and output parameters in a stored procedure. This procedure does not return a
+   * result set.
+   * <p>
    * This test shows using a multi-property parameter.
    */
   @Test
-  void testAdderAsSelectDoubleCall1() {
+  void adderAsSelectDoubleCall1() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Parameter parameter = new Parameter();
       parameter.setAddend1(2);
@@ -98,16 +99,14 @@ class SPTest {
     }
   }
 
-  /*
-   * This test shows how to use input and output parameters in a stored
-   * procedure. This procedure does not return a result set.
-   *
-   * This test also demonstrates session level cache for output parameters.
-   *
+  /**
+   * This test shows how to use input and output parameters in a stored procedure. This procedure does not return a
+   * result set. This test also demonstrates session level cache for output parameters.
+   * <p>
    * This test shows using a multi-property parameter.
    */
   @Test
-  void testAdderAsSelectDoubleCall2() {
+  void adderAsSelectDoubleCall2() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Parameter parameter = new Parameter();
       parameter.setAddend1(2);
@@ -126,15 +125,14 @@ class SPTest {
     }
   }
 
-  /*
-   * This test shows how to call a stored procedure defined as <update> rather
-   * then <select>. Of course, this only works if you are not returning a result
-   * set.
-   *
+  /**
+   * This test shows how to call a stored procedure defined as <update> rather then <select>. Of course, this only works
+   * if you are not returning a result set.
+   * <p>
    * This test shows using a multi-property parameter.
    */
   @Test
-  void testAdderAsUpdate() {
+  void adderAsUpdate() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Parameter parameter = new Parameter();
       parameter.setAddend1(2);
@@ -155,7 +153,7 @@ class SPTest {
 
   // issue #145
   @Test
-  void testEchoDate() {
+  void echoDate() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       HashMap<String, Object> parameter = new HashMap<>();
       Date now = new Date();
@@ -169,13 +167,12 @@ class SPTest {
     }
   }
 
-  /*
-   * This test shows the use of a declared parameter map. We generally prefer
-   * inline parameters, because the syntax is more intuitive (no pesky question
-   * marks), but a parameter map will work.
+  /**
+   * This test shows the use of a declared parameter map. We generally prefer inline parameters, because the syntax is
+   * more intuitive (no pesky question marks), but a parameter map will work.
    */
   @Test
-  void testAdderAsUpdateWithParameterMap() {
+  void adderAsUpdateWithParameterMap() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Map<String, Object> parms = new HashMap<>();
       parms.put("addend1", 3);
@@ -194,14 +191,13 @@ class SPTest {
     }
   }
 
-  /*
-   * This test shows how to use an input parameter and return a result set from
-   * a stored procedure.
-   *
+  /**
+   * This test shows how to use an input parameter and return a result set from a stored procedure.
+   * <p>
    * This test shows using a single value parameter.
    */
   @Test
-  void testCallWithResultSet1() {
+  void callWithResultSet1() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
@@ -211,14 +207,13 @@ class SPTest {
     }
   }
 
-  /*
-   * This test shows how to use an input and output parameters and return a
-   * result set from a stored procedure.
-   *
+  /**
+   * This test shows how to use an input and output parameters and return a result set from a stored procedure.
+   * <p>
    * This test shows using a single value parameter.
    */
   @Test
-  void testCallWithResultSet2() {
+  void callWithResultSet2() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
@@ -230,14 +225,13 @@ class SPTest {
     }
   }
 
-  /*
-   * This test shows how to use an input and output parameters and return a
-   * result set from a stored procedure.
-   *
+  /**
+   * This test shows how to use an input and output parameters and return a result set from a stored procedure.
+   * <p>
    * This test shows using a Map parameter.
    */
   @Test
-  void testCallWithResultSet3() {
+  void callWithResultSet3() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
@@ -255,14 +249,13 @@ class SPTest {
     }
   }
 
-  /*
-   * This test shows how to use an input and output parameters and return a
-   * result set from a stored procedure.
-   *
+  /**
+   * This test shows how to use an input and output parameters and return a result set from a stored procedure.
+   * <p>
    * This test shows using a Map parameter.
    */
   @Test
-  void testCallWithResultSet4() {
+  void callWithResultSet4() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
@@ -280,13 +273,13 @@ class SPTest {
     }
   }
 
-  /*
+  /**
    * This test shows how to use the ARRAY JDBC type with MyBatis.
    *
    * @throws SQLException
    */
   @Test
-  void testGetNamesWithArray() throws SQLException {
+  void getNamesWithArray() throws SQLException {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
@@ -302,13 +295,13 @@ class SPTest {
     }
   }
 
-  /*
+  /**
    * This test shows how to call procedures that return multiple result sets
    *
    * @throws SQLException
    */
   @Test
-  void testGetNamesAndItems() {
+  void getNamesAndItems() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
@@ -319,16 +312,14 @@ class SPTest {
     }
   }
 
-  /*
-   * This test shows how to use input and output parameters in a stored
-   * procedure. This procedure does not return a result set.
-   *
-   * This test shows using a multi-property parameter.
-   *
-   * This test shows using annotations for stored procedures
+  /**
+   * This test shows how to use input and output parameters in a stored procedure. This procedure does not return a
+   * result set. This test shows using a multi-property parameter.
+   * <p>
+   * This test shows using annotations for stored procedures.
    */
   @Test
-  void testAdderAsSelectAnnotated() {
+  void adderAsSelectAnnotated() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Parameter parameter = new Parameter();
       parameter.setAddend1(2);
@@ -341,16 +332,14 @@ class SPTest {
     }
   }
 
-  /*
-   * This test shows how to use input and output parameters in a stored
-   * procedure. This procedure does not return a result set.
-   *
-   * This test shows using a multi-property parameter.
-   *
-   * This test shows using annotations for stored procedures
+  /**
+   * This test shows how to use input and output parameters in a stored procedure. This procedure does not return a
+   * result set. This test shows using a multi-property parameter.
+   * <p>
+   * This test shows using annotations for stored procedures.
    */
   @Test
-  void testAdderAsSelectDoubleCallAnnotated1() {
+  void adderAsSelectDoubleCallAnnotated1() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Parameter parameter = new Parameter();
       parameter.setAddend1(2);
@@ -369,18 +358,18 @@ class SPTest {
     }
   }
 
-  /*
-   * This test shows how to use input and output parameters in a stored
-   * procedure. This procedure does not return a result set.
-   *
+  /**
+   * This test shows how to use input and output parameters in a stored procedure. This procedure does not return a
+   * result set.
+   * <p>
    * This test also demonstrates session level cache for output parameters.
-   *
+   * <p>
    * This test shows using a multi-property parameter.
-   *
-   * This test shows using annotations for stored procedures
+   * <p>
+   * This test shows using annotations for stored procedures.
    */
   @Test
-  void testAdderAsSelectDoubleCallAnnotated2() {
+  void adderAsSelectDoubleCallAnnotated2() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Parameter parameter = new Parameter();
       parameter.setAddend1(2);
@@ -399,17 +388,16 @@ class SPTest {
     }
   }
 
-  /*
-   * This test shows how to call a stored procedure defined as <update> rather
-   * then <select>. Of course, this only works if you are not returning a result
-   * set.
-   *
+  /**
+   * This test shows how to call a stored procedure defined as <update> rather then <select>. Of course, this only works
+   * if you are not returning a result set.
+   * <p>
    * This test shows using a multi-property parameter.
-   *
-   * This test shows using annotations for stored procedures
+   * <p>
+   * This test shows using annotations for stored procedures.
    */
   @Test
-  void testAdderAsUpdateAnnotated() {
+  void adderAsUpdateAnnotated() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Parameter parameter = new Parameter();
       parameter.setAddend1(2);
@@ -428,16 +416,15 @@ class SPTest {
     }
   }
 
-  /*
-   * This test shows how to use an input parameter and return a result set from
-   * a stored procedure.
-   *
+  /**
+   * This test shows how to use an input parameter and return a result set from a stored procedure.
+   * <p>
    * This test shows using a single value parameter.
-   *
-   * This test shows using annotations for stored procedures
+   * <p>
+   * This test shows using annotations for stored procedures.
    */
   @Test
-  void testCallWithResultSet1Annotated() {
+  void callWithResultSet1Annotated() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
@@ -447,17 +434,15 @@ class SPTest {
     }
   }
 
-  /*
-   * This test shows how to use an input parameter and return a result set from
-   * a stored procedure.
-   *
+  /**
+   * This test shows how to use an input parameter and return a result set from a stored procedure.
+   * <p>
    * This test shows using a single value parameter.
-   *
-   * This test shows using annotations for stored procedures and using a
-   * resultMap in XML
+   * <p>
+   * This test shows using annotations for stored procedures and using a resultMap in XML.
    */
   @Test
-  void testCallWithResultSet1_a2() {
+  void callWithResultSet1A2() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
@@ -467,16 +452,15 @@ class SPTest {
     }
   }
 
-  /*
-   * This test shows how to use an input and output parameters and return a
-   * result set from a stored procedure.
-   *
+  /**
+   * This test shows how to use an input and output parameters and return a result set from a stored procedure.
+   * <p>
    * This test shows using a single value parameter.
-   *
-   * This test shows using annotations for stored procedures
+   * <p>
+   * This test shows using annotations for stored procedures.
    */
   @Test
-  void testCallWithResultSet2_a1() {
+  void callWithResultSet2A1() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
@@ -488,17 +472,15 @@ class SPTest {
     }
   }
 
-  /*
-   * This test shows how to use an input and output parameters and return a
-   * result set from a stored procedure.
-   *
+  /**
+   * This test shows how to use an input and output parameters and return a result set from a stored procedure.
+   * <p>
    * This test shows using a single value parameter.
-   *
-   * This test shows using annotations for stored procedures and using a
-   * resultMap in XML
+   * <p>
+   * This test shows using annotations for stored procedures and using a resultMap in XML.
    */
   @Test
-  void testCallWithResultSet2_a2() {
+  void callWithResultSet2A2() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
@@ -510,16 +492,15 @@ class SPTest {
     }
   }
 
-  /*
-   * This test shows how to use an input and output parameters and return a
-   * result set from a stored procedure.
-   *
+  /**
+   * This test shows how to use an input and output parameters and return a result set from a stored procedure.
+   * <p>
    * This test shows using a Map parameter.
-   *
-   * This test shows using annotations for stored procedures
+   * <p>
+   * This test shows using annotations for stored procedures.
    */
   @Test
-  void testCallWithResultSet3_a1() {
+  void callWithResultSet3A1() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
@@ -537,17 +518,15 @@ class SPTest {
     }
   }
 
-  /*
-   * This test shows how to use an input and output parameters and return a
-   * result set from a stored procedure.
-   *
+  /**
+   * This test shows how to use an input and output parameters and return a result set from a stored procedure.
+   * <p>
    * This test shows using a Map parameter.
-   *
-   * This test shows using annotations for stored procedures and using a
-   * resultMap in XML
+   * <p>
+   * This test shows using annotations for stored procedures and using a resultMap in XML.
    */
   @Test
-  void testCallWithResultSet3_a2() {
+  void callWithResultSet3A2() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
@@ -565,16 +544,15 @@ class SPTest {
     }
   }
 
-  /*
-   * This test shows how to use an input and output parameters and return a
-   * result set from a stored procedure.
-   *
+  /**
+   * This test shows how to use an input and output parameters and return a result set from a stored procedure.
+   * <p>
    * This test shows using a Map parameter.
-   *
-   * This test shows using annotations for stored procedures
+   * <p>
+   * This test shows using annotations for stored procedures.
    */
   @Test
-  void testCallWithResultSet4_a1() {
+  void callWithResultSet4A1() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
@@ -592,17 +570,15 @@ class SPTest {
     }
   }
 
-  /*
-   * This test shows how to use an input and output parameters and return a
-   * result set from a stored procedure.
-   *
+  /**
+   * This test shows how to use an input and output parameters and return a result set from a stored procedure.
+   * <p>
    * This test shows using a Map parameter.
-   *
-   * This test shows using annotations for stored procedures and using a
-   * resultMap in XML
+   * <p>
+   * This test shows using annotations for stored procedures and using a resultMap in XML.
    */
   @Test
-  void testCallWithResultSet4_a2() {
+  void callWithResultSet4A2() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
@@ -620,15 +596,13 @@ class SPTest {
     }
   }
 
-  /*
-   *
+  /**
    * This test shows using a two named parameters.
-   *
-   * This test shows using annotations for stored procedures and using a
-   * resultMap in XML
+   * <p>
+   * This test shows using annotations for stored procedures and using a resultMap in XML
    */
   @Test
-  void testCallLowHighWithResultSet() {
+  void callLowHighWithResultSet() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
       List<Name> names = spMapper.getNamesAnnotatedLowHighWithXMLResultMap(1, 1);
@@ -636,15 +610,15 @@ class SPTest {
     }
   }
 
-  /*
+  /**
    * This test shows how to use the ARRAY JDBC type with MyBatis.
-   *
-   * This test shows using annotations for stored procedures
+   * <p>
+   * This test shows using annotations for stored procedures.
    *
    * @throws SQLException
    */
   @Test
-  void testGetNamesWithArray_a1() throws SQLException {
+  void getNamesWithArrayA1() throws SQLException {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
@@ -660,16 +634,15 @@ class SPTest {
     }
   }
 
-  /*
+  /**
    * This test shows how to use the ARRAY JDBC type with MyBatis.
-   *
-   * This test shows using annotations for stored procedures and using a
-   * resultMap in XML
+   * <p>
+   * This test shows using annotations for stored procedures and using a resultMap in XML.
    *
    * @throws SQLException
    */
   @Test
-  void testGetNamesWithArray_a2() throws SQLException {
+  void getNamesWithArrayA2() throws SQLException {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
@@ -685,16 +658,15 @@ class SPTest {
     }
   }
 
-  /*
-   * This test shows how to call procedures that return multiple result sets
-   *
-   * This test shows using annotations for stored procedures and referring to
-   * multiple resultMaps in XML
+  /**
+   * This test shows how to call procedures that return multiple result sets.
+   * <p>
+   * This test shows using annotations for stored procedures and referring to multiple resultMaps in XML.
    *
    * @throws SQLException
    */
   @Test
-  void testGetNamesAndItems_a2() {
+  void getNamesAndItemsA2() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
@@ -706,7 +678,7 @@ class SPTest {
   }
 
   @Test
-  void testGetNamesAndItems_a3() {
+  void getNamesAndItemsA3() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
@@ -718,7 +690,7 @@ class SPTest {
   }
 
   @Test
-  void testGetNamesAndItemsLinked() {
+  void getNamesAndItemsLinked() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
@@ -732,7 +704,7 @@ class SPTest {
   }
 
   @Test
-  void testGetNamesAndItemsLinkedWithNoMatchingInfo() {
+  void getNamesAndItemsLinkedWithNoMatchingInfo() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
@@ -743,7 +715,7 @@ class SPTest {
   }
 
   @Test
-  void testMultipleForeignKeys() {
+  void multipleForeignKeys() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
       List<Book> books = spMapper.getBookAndGenre();

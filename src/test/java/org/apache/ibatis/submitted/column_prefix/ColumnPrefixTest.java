@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,8 @@
  */
 package org.apache.ibatis.submitted.column_prefix;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.io.Reader;
 import java.util.List;
@@ -39,11 +40,11 @@ class ColumnPrefixTest {
     }
 
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/column_prefix/CreateDB.sql");
+        "org/apache/ibatis/submitted/column_prefix/CreateDB.sql");
   }
 
   @Test
-  void testSelectPetAndRoom() {
+  void selectPetAndRoom() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       List<Pet> pets = getPetAndRoom(sqlSession);
       assertEquals(3, pets.size());
@@ -54,7 +55,7 @@ class ColumnPrefixTest {
   }
 
   @Test
-  void testComplexPerson() {
+  void complexPerson() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       List<Person> list = getPersons(sqlSession);
       Person person1 = list.get(0);
@@ -115,13 +116,11 @@ class ColumnPrefixTest {
   }
 
   protected List<Pet> getPetAndRoom(SqlSession sqlSession) {
-    List<Pet> pets = sqlSession.selectList("org.apache.ibatis.submitted.column_prefix.Mapper.selectPets");
-    return pets;
+    return sqlSession.selectList("org.apache.ibatis.submitted.column_prefix.Mapper.selectPets");
   }
 
   protected List<Person> getPersons(SqlSession sqlSession) {
-    List<Person> list = sqlSession.selectList("org.apache.ibatis.submitted.column_prefix.Mapper.selectPersons");
-    return list;
+    return sqlSession.selectList("org.apache.ibatis.submitted.column_prefix.Mapper.selectPersons");
   }
 
   protected String getConfigPath() {

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -34,12 +34,11 @@ public class SetFieldInvoker implements Invoker {
     try {
       field.set(target, args[0]);
     } catch (IllegalAccessException e) {
-      if (Reflector.canControlMemberAccessible()) {
-        field.setAccessible(true);
-        field.set(target, args[0]);
-      } else {
+      if (!Reflector.canControlMemberAccessible()) {
         throw e;
       }
+      field.setAccessible(true);
+      field.set(target, args[0]);
     }
     return null;
   }

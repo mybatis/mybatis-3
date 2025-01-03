@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,8 @@
  */
 package org.apache.ibatis.submitted.selectkey;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.Reader;
 import java.util.HashMap;
@@ -48,7 +49,7 @@ class SelectKeyTest {
   }
 
   @Test
-  void testSelectKey() throws Exception {
+  void selectKey() throws Exception {
     // this test checks to make sure that we can have select keys with the same
     // insert id in different namespaces
     String resource = "org/apache/ibatis/submitted/selectkey/MapperConfig.xml";
@@ -59,7 +60,7 @@ class SelectKeyTest {
   }
 
   @Test
-  void testInsertTable1() {
+  void insertTable1() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Map<String, Object> parms = new HashMap<>();
       parms.put("name", "Fred");
@@ -70,7 +71,7 @@ class SelectKeyTest {
   }
 
   @Test
-  void testInsertTable2() {
+  void insertTable2() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Map<String, Object> parms = new HashMap<>();
       parms.put("name", "Fred");
@@ -81,7 +82,7 @@ class SelectKeyTest {
   }
 
   @Test
-  void testSeleckKeyReturnsNoData() {
+  void seleckKeyReturnsNoData() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Map<String, String> parms = new HashMap<>();
       parms.put("name", "Fred");
@@ -91,7 +92,7 @@ class SelectKeyTest {
   }
 
   @Test
-  void testSeleckKeyReturnsTooManyData() {
+  void seleckKeyReturnsTooManyData() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Map<String, String> parms = new HashMap<>();
       parms.put("name", "Fred");
@@ -102,7 +103,7 @@ class SelectKeyTest {
   }
 
   @Test
-  void testAnnotatedInsertTable2() {
+  void annotatedInsertTable2() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Name name = new Name();
       name.setName("barney");
@@ -114,7 +115,7 @@ class SelectKeyTest {
   }
 
   @Test
-  void testAnnotatedInsertTable2WithGeneratedKey() {
+  void annotatedInsertTable2WithGeneratedKey() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Name name = new Name();
       name.setName("barney");
@@ -128,7 +129,7 @@ class SelectKeyTest {
 
   @Test
   @Disabled("HSQLDB is not returning the generated column after the update")
-  void testAnnotatedUpdateTable2WithGeneratedKey() {
+  void annotatedUpdateTable2WithGeneratedKey() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Name name = new Name();
       name.setName("barney");
@@ -148,7 +149,7 @@ class SelectKeyTest {
 
   @Test
   @Disabled("HSQLDB is not returning the generated column after the update")
-  void testAnnotatedUpdateTable2WithGeneratedKeyXml() {
+  void annotatedUpdateTable2WithGeneratedKeyXml() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Name name = new Name();
       name.setName("barney");
@@ -167,7 +168,7 @@ class SelectKeyTest {
   }
 
   @Test
-  void testAnnotatedInsertTable2WithGeneratedKeyXml() {
+  void annotatedInsertTable2WithGeneratedKeyXml() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Name name = new Name();
       name.setName("barney");
@@ -180,7 +181,7 @@ class SelectKeyTest {
   }
 
   @Test
-  void testAnnotatedInsertTable2WithSelectKeyWithKeyMap() {
+  void annotatedInsertTable2WithSelectKeyWithKeyMap() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Name name = new Name();
       name.setName("barney");
@@ -193,7 +194,7 @@ class SelectKeyTest {
   }
 
   @Test
-  void testAnnotatedUpdateTable2WithSelectKeyWithKeyMap() {
+  void annotatedUpdateTable2WithSelectKeyWithKeyMap() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Name name = new Name();
       name.setName("barney");
@@ -212,7 +213,7 @@ class SelectKeyTest {
   }
 
   @Test
-  void testAnnotatedInsertTable2WithSelectKeyWithKeyMapXml() {
+  void annotatedInsertTable2WithSelectKeyWithKeyMapXml() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Name name = new Name();
       name.setName("barney");
@@ -225,7 +226,7 @@ class SelectKeyTest {
   }
 
   @Test
-  void testAnnotatedUpdateTable2WithSelectKeyWithKeyMapXml() {
+  void annotatedUpdateTable2WithSelectKeyWithKeyMapXml() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Name name = new Name();
       name.setName("barney");
@@ -244,7 +245,7 @@ class SelectKeyTest {
   }
 
   @Test
-  void testAnnotatedInsertTable2WithSelectKeyWithKeyObject() {
+  void annotatedInsertTable2WithSelectKeyWithKeyObject() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Name name = new Name();
       name.setName("barney");
@@ -257,7 +258,7 @@ class SelectKeyTest {
   }
 
   @Test
-  void testAnnotatedUpdateTable2WithSelectKeyWithKeyObject() {
+  void annotatedUpdateTable2WithSelectKeyWithKeyObject() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Name name = new Name();
       name.setName("barney");
@@ -276,7 +277,7 @@ class SelectKeyTest {
   }
 
   @Test
-  void testAnnotatedUpdateTable2WithSelectKeyWithKeyObjectXml() {
+  void annotatedUpdateTable2WithSelectKeyWithKeyObjectXml() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Name name = new Name();
       name.setName("barney");
@@ -295,7 +296,7 @@ class SelectKeyTest {
   }
 
   @Test
-  void testAnnotatedInsertTable2WithSelectKeyWithKeyObjectXml() {
+  void annotatedInsertTable2WithSelectKeyWithKeyObjectXml() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Name name = new Name();
       name.setName("barney");
@@ -308,7 +309,7 @@ class SelectKeyTest {
   }
 
   @Test
-  void testAnnotatedInsertTable3() {
+  void annotatedInsertTable3() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Name name = new Name();
       name.setName("barney");
@@ -320,7 +321,7 @@ class SelectKeyTest {
   }
 
   @Test
-  void testAnnotatedInsertTable3_2() {
+  void annotatedInsertTable32() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Name name = new Name();
       name.setName("barney");
@@ -332,7 +333,7 @@ class SelectKeyTest {
   }
 
   @Test
-  void testSeleckKeyWithWrongKeyProperty() {
+  void seleckKeyWithWrongKeyProperty() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Name name = new Name();
       name.setName("Kyoto");

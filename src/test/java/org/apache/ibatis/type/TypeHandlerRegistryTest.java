@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,11 @@
  */
 package org.apache.ibatis.type;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -60,7 +64,7 @@ class TypeHandlerRegistryTest {
 
   @Test
   void shouldRegisterAndRetrieveComplexTypeHandler() {
-    TypeHandler<List<URI>> fakeHandler = new TypeHandler<List<URI>>() {
+    TypeHandler<List<URI>> fakeHandler = new TypeHandler<>() {
 
       @Override
       public void setParameter(PreparedStatement ps, int i, List<URI> parameter, JdbcType jdbcType) {
@@ -87,7 +91,8 @@ class TypeHandlerRegistryTest {
 
     };
 
-    TypeReference<List<URI>> type = new TypeReference<List<URI>>(){};
+    TypeReference<List<URI>> type = new TypeReference<>() {
+    };
 
     typeHandlerRegistry.register(type, fakeHandler);
     assertSame(fakeHandler, typeHandlerRegistry.getTypeHandler(type));
@@ -95,7 +100,7 @@ class TypeHandlerRegistryTest {
 
   @Test
   void shouldAutoRegisterAndRetrieveComplexTypeHandler() {
-    TypeHandler<List<URI>> fakeHandler = new BaseTypeHandler<List<URI>>() {
+    TypeHandler<List<URI>> fakeHandler = new BaseTypeHandler<>() {
 
       @Override
       public void setNonNullParameter(PreparedStatement ps, int i, List<URI> parameter, JdbcType jdbcType) {
@@ -124,7 +129,8 @@ class TypeHandlerRegistryTest {
 
     typeHandlerRegistry.register(fakeHandler);
 
-    assertSame(fakeHandler, typeHandlerRegistry.getTypeHandler(new TypeReference<List<URI>>(){}));
+    assertSame(fakeHandler, typeHandlerRegistry.getTypeHandler(new TypeReference<List<URI>>() {
+    }));
   }
 
   @Test
@@ -229,8 +235,7 @@ class TypeHandlerRegistryTest {
   }
 
   enum TestEnum {
-    ONE,
-    TWO
+    ONE, TWO
   }
 
   @Test
@@ -241,11 +246,10 @@ class TypeHandlerRegistryTest {
       for (int iteration = 0; iteration < 2000; iteration++) {
         TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry();
         List<Future<Boolean>> taskResults = IntStream.range(0, 2)
-            .mapToObj(taskIndex -> executorService.submit(() -> {
-              return typeHandlerRegistry.hasTypeHandler(TestEnum.class, JdbcType.VARCHAR);
-            })).collect(Collectors.toList());
-        for (int i = 0; i < taskResults.size(); i++) {
-          Future<Boolean> future = taskResults.get(i);
+            .mapToObj(taskIndex -> executorService
+                .submit(() -> typeHandlerRegistry.hasTypeHandler(TestEnum.class, JdbcType.VARCHAR)))
+            .collect(Collectors.toList());
+        for (Future<Boolean> future : taskResults) {
           assertTrue(future.get(), "false is returned at round " + iteration);
         }
       }

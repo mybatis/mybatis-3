@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,8 +18,6 @@ package org.apache.ibatis.reflection;
 import java.lang.reflect.Type;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-
-import org.apache.ibatis.util.MapUtil;
 
 public class DefaultReflectorFactory implements ReflectorFactory {
   private boolean classCacheEnabled = true;
@@ -42,10 +40,9 @@ public class DefaultReflectorFactory implements ReflectorFactory {
   public Reflector findForClass(Type type) {
     if (classCacheEnabled) {
       // synchronized (type) removed see issue #461
-      return MapUtil.computeIfAbsent(reflectorMap, type, Reflector::new);
-    } else {
-      return new Reflector(type);
+      return reflectorMap.computeIfAbsent(type, Reflector::new);
     }
+    return new Reflector(type);
   }
 
 }

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,10 +16,8 @@
 package org.apache.ibatis.scripting.defaults;
 
 import java.lang.reflect.Type;
-import java.sql.CallableStatement;
 import java.sql.ParameterMetaData;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -37,7 +35,6 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.ParamNameResolver;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 import org.apache.ibatis.session.Configuration;
-import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.ObjectTypeHandler;
 import org.apache.ibatis.type.TypeException;
@@ -96,6 +93,7 @@ public class DefaultParameterHandler implements ParameterHandler {
     ErrorContext.instance().activity("setting parameters").object(mappedStatement.getParameterMap().getId());
     List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
     if (parameterMappings != null) {
+      MetaObject metaObject = null;
       ParamNameResolver paramNameResolver = mappedStatement.getParamNameResolver();
       for (int i = 0; i < parameterMappings.size(); i++) {
         ParameterMapping parameterMapping = parameterMappings.get(i);
@@ -121,7 +119,9 @@ public class DefaultParameterHandler implements ParameterHandler {
               value = parameterObject;
               typeHandler = paramTypeHandler;
             } else {
-              MetaObject metaObject = getParamMetaObject();
+              if (metaObject == null) {
+                metaObject = configuration.newMetaObject(parameterObject);
+              }
               value = metaObject.getValue(propertyName);
               if (typeHandler == null && value != null) {
                 if (paramNameResolver != null && ParamMap.class.equals(parameterClass)) {

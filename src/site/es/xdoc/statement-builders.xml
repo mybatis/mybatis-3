@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2022 the original author or authors.
+       Copyright 2009-2023 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ String sql = "SELECT P.ID, P.USERNAME, P.PASSWORD, P.FULL_NAME, "
 
   <subsection name="La Solución">
   <p>MyBatis 3 introduce un concepto un tanto distinto para tratar con el problema.
-    Con la clase SQL, puecdes crear una sentencia SQL en un sólo paso invocando a sus métodos.
+    Con la clase SQL, puedes crear una sentencia SQL en un sólo paso invocando a sus métodos.
     El ejemplo anterior tendría este aspecto si se rescribe con la clase SQL:
   </p>
 

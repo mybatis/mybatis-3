@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,7 +17,12 @@ package org.apache.ibatis.domain.jpetstore;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public class Cart implements Serializable {
 
@@ -59,10 +64,9 @@ public class Cart implements Serializable {
     CartItem cartItem = itemMap.remove(itemId);
     if (cartItem == null) {
       return null;
-    } else {
-      itemList.remove(cartItem);
-      return cartItem.getItem();
     }
+    itemList.remove(cartItem);
+    return cartItem.getItem();
   }
 
   public void incrementQuantityByItemId(String itemId) {

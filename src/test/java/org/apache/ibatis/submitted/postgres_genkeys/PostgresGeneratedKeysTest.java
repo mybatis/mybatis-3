@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.submitted.postgres_genkeys;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.mapping.Environment;
@@ -49,7 +49,7 @@ class PostgresGeneratedKeysTest {
   }
 
   @Test
-  void testInsertIntoTableWithNoSerialColumn() {
+  void insertIntoTableWithNoSerialColumn() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Section section = new Section();
@@ -61,7 +61,7 @@ class PostgresGeneratedKeysTest {
   }
 
   @Test
-  void testUpdateTableWithSerial() {
+  void updateTableWithSerial() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = new User();
@@ -73,7 +73,7 @@ class PostgresGeneratedKeysTest {
   }
 
   @Test
-  void testUnusedGeneratedKey() {
+  void unusedGeneratedKey() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       int result = mapper.insertUser("John");

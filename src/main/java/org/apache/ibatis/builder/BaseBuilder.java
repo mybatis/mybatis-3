@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -65,33 +65,24 @@ public abstract class BaseBuilder {
   }
 
   protected JdbcType resolveJdbcType(String alias) {
-    if (alias == null) {
-      return null;
-    }
     try {
-      return JdbcType.valueOf(alias);
+      return alias == null ? null : JdbcType.valueOf(alias);
     } catch (IllegalArgumentException e) {
       throw new BuilderException("Error resolving JdbcType. Cause: " + e, e);
     }
   }
 
   protected ResultSetType resolveResultSetType(String alias) {
-    if (alias == null) {
-      return null;
-    }
     try {
-      return ResultSetType.valueOf(alias);
+      return alias == null ? null : ResultSetType.valueOf(alias);
     } catch (IllegalArgumentException e) {
       throw new BuilderException("Error resolving ResultSetType. Cause: " + e, e);
     }
   }
 
   protected ParameterMode resolveParameterMode(String alias) {
-    if (alias == null) {
-      return null;
-    }
     try {
-      return ParameterMode.valueOf(alias);
+      return alias == null ? null : ParameterMode.valueOf(alias);
     } catch (IllegalArgumentException e) {
       throw new BuilderException("Error resolving ParameterMode. Cause: " + e, e);
     }
@@ -99,22 +90,16 @@ public abstract class BaseBuilder {
 
   protected Object createInstance(String alias) {
     Class<?> clazz = resolveClass(alias);
-    if (clazz == null) {
-      return null;
-    }
     try {
-      return clazz.getDeclaredConstructor().newInstance();
+      return clazz == null ? null : clazz.getDeclaredConstructor().newInstance();
     } catch (Exception e) {
       throw new BuilderException("Error creating instance. Cause: " + e, e);
     }
   }
 
   protected <T> Class<? extends T> resolveClass(String alias) {
-    if (alias == null) {
-      return null;
-    }
     try {
-      return resolveAlias(alias);
+      return alias == null ? null : resolveAlias(alias);
     } catch (Exception e) {
       throw new BuilderException("Error resolving class. Cause: " + e, e);
     }

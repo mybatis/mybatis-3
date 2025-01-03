@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -38,11 +38,11 @@ class CountTest {
     }
 
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/count/CreateDB.sql");
+        "org/apache/ibatis/submitted/count/CreateDB.sql");
   }
 
   @Test
-  void testCount() {
+  void count() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       CountMapper mapper = sqlSession.getMapper(CountMapper.class);
       int answer = mapper.count();

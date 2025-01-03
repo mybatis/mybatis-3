@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 
-       Copyright 2009-2022 the original author or authors.
+       Copyright 2009-2024 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -32,7 +32,6 @@
     <setting name="proxyFactory" value="CGLIB"/>
     <setting name="lazyLoadingEnabled" value="true"/>
     <setting name="aggressiveLazyLoading" value="true"/>
-    <setting name="multipleResultSetsEnabled" value="false"/>
     <setting name="useColumnLabel" value="false"/>
     <setting name="useGeneratedKeys" value="true"/>
     <setting name="defaultExecutorType" value="BATCH"/>

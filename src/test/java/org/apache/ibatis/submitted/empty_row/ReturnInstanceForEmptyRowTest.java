@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,10 @@
  */
 package org.apache.ibatis.submitted.empty_row;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.Reader;
 import java.util.Map;
@@ -36,14 +39,13 @@ class ReturnInstanceForEmptyRowTest {
   @BeforeAll
   static void setUp() throws Exception {
     // create an SqlSessionFactory
-    try (Reader reader = Resources
-        .getResourceAsReader("org/apache/ibatis/submitted/empty_row/mybatis-config.xml")) {
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/empty_row/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
     // populate in-memory database
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/empty_row/CreateDB.sql");
+        "org/apache/ibatis/submitted/empty_row/CreateDB.sql");
   }
 
   @BeforeEach
@@ -121,7 +123,7 @@ class ReturnInstanceForEmptyRowTest {
   }
 
   @Test
-  void testCollection() {
+  void collection() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Parent parent = mapper.getCollection(1);
@@ -141,7 +143,7 @@ class ReturnInstanceForEmptyRowTest {
   }
 
   @Test
-  void testConstructorAutomapping() {
+  void constructorAutomapping() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       ImmutableParent parent = mapper.selectImmutable(1);
@@ -150,7 +152,7 @@ class ReturnInstanceForEmptyRowTest {
   }
 
   @Test
-  void testArgNameBasedConstructorAutomapping() {
+  void argNameBasedConstructorAutomapping() {
     sqlSessionFactory.getConfiguration().setArgNameBasedConstructorAutoMapping(true);
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);

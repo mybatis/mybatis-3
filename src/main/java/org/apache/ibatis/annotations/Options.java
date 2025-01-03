@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -27,7 +27,6 @@ import org.apache.ibatis.mapping.StatementType;
 
 /**
  * The annotation that specify options for customizing default behaviors.
- *
  * <p>
  * <b>How to use:</b>
  *
@@ -47,8 +46,7 @@ import org.apache.ibatis.mapping.StatementType;
 @Repeatable(Options.List.class)
 public @interface Options {
   /**
-   * The options for the {@link Options#flushCache()}.
-   * The default is {@link FlushCachePolicy#DEFAULT}
+   * The options for the {@link Options#flushCache()}. The default is {@link FlushCachePolicy#DEFAULT}
    */
   enum FlushCachePolicy {
     /** <code>false</code> for select statement; <code>true</code> for insert/update/delete statement. */
@@ -112,7 +110,6 @@ public @interface Options {
    * Returns property names that holds a key value.
    * <p>
    * If you specify multiple property, please separate using comma(',').
-   * </p>
    *
    * @return property names that separate with comma(',')
    */
@@ -122,7 +119,6 @@ public @interface Options {
    * Returns column names that retrieves a key value.
    * <p>
    * If you specify multiple column, please separate using comma(',').
-   * </p>
    *
    * @return column names that separate with comma(',')
    */
@@ -132,7 +128,6 @@ public @interface Options {
    * Returns result set names.
    * <p>
    * If you specify multiple result set, please separate using comma(',').
-   * </p>
    *
    * @return result set names that separate with comma(',')
    */
@@ -140,13 +135,16 @@ public @interface Options {
 
   /**
    * @return A database id that correspond this options
+   *
    * @since 3.5.5
    */
   String databaseId() default "";
 
   /**
    * The container annotation for {@link Options}.
+   *
    * @author Kazuki Shimizu
+   *
    * @since 3.5.5
    */
   @Documented

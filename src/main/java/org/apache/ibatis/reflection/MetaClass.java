@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,13 +17,12 @@ package org.apache.ibatis.reflection;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.AbstractMap;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.ibatis.reflection.invoker.Invoker;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
-import org.apache.ibatis.util.MapUtil;
 
 /**
  * @author Clinton Begin
@@ -72,9 +71,8 @@ public class MetaClass {
     if (prop.hasNext()) {
       MetaClass metaProp = metaClassForProperty(prop.getName());
       return metaProp.getSetterType(prop.getChildren());
-    } else {
-      return reflector.getSetterType(prop.getName());
     }
+    return reflector.getSetterType(prop.getName());
   }
 
   public Entry<Type, Class<?>> getGenericSetterType(String name) {
@@ -120,9 +118,9 @@ public class MetaClass {
         if (actualTypeArguments != null && actualTypeArguments.length == 1) {
           returnType = actualTypeArguments[0];
           if (returnType instanceof Class) {
-            return MapUtil.entry(returnType, (Class<?>)returnType);
+            return Map.entry(returnType, (Class<?>) returnType);
           } else if (returnType instanceof ParameterizedType) {
-            return MapUtil.entry(returnType, (Class<?>)((ParameterizedType)returnType).getRawType());
+            return Map.entry(returnType, (Class<?>) ((ParameterizedType) returnType).getRawType());
           }
         }
       }
@@ -132,30 +130,26 @@ public class MetaClass {
 
   public boolean hasSetter(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
-    if (prop.hasNext()) {
-      if (reflector.hasSetter(prop.getName())) {
-        MetaClass metaProp = metaClassForProperty(prop.getName());
-        return metaProp.hasSetter(prop.getChildren());
-      } else {
-        return false;
-      }
-    } else {
+    if (!prop.hasNext()) {
       return reflector.hasSetter(prop.getName());
     }
+    if (reflector.hasSetter(prop.getName())) {
+      MetaClass metaProp = metaClassForProperty(prop.getName());
+      return metaProp.hasSetter(prop.getChildren());
+    }
+    return false;
   }
 
   public boolean hasGetter(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
-    if (prop.hasNext()) {
-      if (reflector.hasGetter(prop.getName())) {
-        MetaClass metaProp = metaClassForProperty(prop);
-        return metaProp.hasGetter(prop.getChildren());
-      } else {
-        return false;
-      }
-    } else {
+    if (!prop.hasNext()) {
       return reflector.hasGetter(prop.getName());
     }
+    if (reflector.hasGetter(prop.getName())) {
+      MetaClass metaProp = metaClassForProperty(prop);
+      return metaProp.hasGetter(prop.getChildren());
+    }
+    return false;
   }
 
   public Invoker getGetInvoker(String name) {

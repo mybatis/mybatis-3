@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,10 +20,11 @@ import java.util.List;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
+import org.apache.ibatis.reflection.wrapper.ObjectWrapper;
 
-public class CustomObjectWrapper implements org.apache.ibatis.reflection.wrapper.ObjectWrapper {
+public class CustomObjectWrapper implements ObjectWrapper {
 
-  private CustomCollection collection;
+  private final CustomCollection collection;
 
   public CustomObjectWrapper(CustomCollection collection) {
     this.collection = collection;
