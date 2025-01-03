@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 
 import org.apache.ibatis.builder.BaseBuilder;
@@ -267,14 +268,21 @@ public class XMLMapperBuilder extends BaseBuilder {
 
   private void processConstructorElement(XNode resultChild, Class<?> resultType, List<ResultMapping> resultMappings) {
     List<XNode> argChildren = resultChild.getChildren();
+
+    final List<ResultMapping> mappings = new ArrayList<>();
     for (XNode argChild : argChildren) {
       List<ResultFlag> flags = new ArrayList<>();
       flags.add(ResultFlag.CONSTRUCTOR);
       if ("idArg".equals(argChild.getName())) {
         flags.add(ResultFlag.ID);
       }
-      resultMappings.add(buildResultMappingFromContext(argChild, resultType, flags));
+
+      mappings.add(buildResultMappingFromContext(argChild, resultType, flags));
     }
+
+    final List<ResultMapping> autoMappings = builderAssistant.autoTypeResultMappingsForUnknownJavaTypes(resultType,
+        mappings);
+    resultMappings.addAll(Objects.requireNonNullElse(autoMappings, mappings));
   }
 
   private Discriminator processDiscriminatorElement(XNode context, Class<?> resultType,

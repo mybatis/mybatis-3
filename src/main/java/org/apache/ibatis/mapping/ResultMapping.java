@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,15 +15,15 @@
  */
 package org.apache.ibatis.mapping;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Clinton Begin
@@ -70,6 +70,24 @@ public class ResultMapping {
       resultMapping.flags = new ArrayList<>();
       resultMapping.composites = new ArrayList<>();
       resultMapping.lazy = configuration.isLazyLoadingEnabled();
+    }
+
+    public Builder(ResultMapping otherMapping) {
+      this(otherMapping.configuration, otherMapping.property);
+
+      resultMapping.flags.addAll(otherMapping.flags);
+      resultMapping.composites.addAll(otherMapping.composites);
+
+      resultMapping.column = otherMapping.column;
+      resultMapping.javaType = otherMapping.javaType;
+      resultMapping.jdbcType = otherMapping.jdbcType;
+      resultMapping.typeHandler = otherMapping.typeHandler;
+      resultMapping.nestedResultMapId = otherMapping.nestedResultMapId;
+      resultMapping.nestedQueryId = otherMapping.nestedQueryId;
+      resultMapping.notNullColumns = otherMapping.notNullColumns;
+      resultMapping.columnPrefix = otherMapping.columnPrefix;
+      resultMapping.resultSet = otherMapping.resultSet;
+      resultMapping.foreignColumn = otherMapping.foreignColumn;
     }
 
     public Builder javaType(Class<?> javaType) {
@@ -243,16 +261,8 @@ public class ResultMapping {
     return foreignColumn;
   }
 
-  public void setForeignColumn(String foreignColumn) {
-    this.foreignColumn = foreignColumn;
-  }
-
   public boolean isLazy() {
     return lazy;
-  }
-
-  public void setLazy(boolean lazy) {
-    this.lazy = lazy;
   }
 
   public boolean isSimple() {
