@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.executor;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -62,7 +63,6 @@ class BaseExecutorTest extends BaseDataTest {
     config = new Configuration();
     config.setLazyLoadingEnabled(true);
     config.setUseGeneratedKeys(false);
-    config.setMultipleResultSetsEnabled(true);
     config.setUseColumnLabel(true);
     config.setDefaultStatementTimeout(5000);
     config.setDefaultFetchSize(100);
@@ -453,33 +453,35 @@ class BaseExecutorTest extends BaseDataTest {
   }
 
   @Test
-  void shouldClearDeferredLoads() throws Exception {
+  void shouldClearDeferredLoads() {
+    assertDoesNotThrow(() -> {
 
-    Executor executor = createExecutor(new JdbcTransaction(ds, null, false));
-    try {
-      MappedStatement selectBlog = ExecutorTestHelper.prepareComplexSelectBlogMappedStatement(config);
-      MappedStatement selectPosts = ExecutorTestHelper.prepareSelectPostsForBlogMappedStatement(config);
-      config.addMappedStatement(selectBlog);
-      config.addMappedStatement(selectPosts);
-      MappedStatement selectAuthor = ExecutorTestHelper.prepareSelectOneAuthorMappedStatement(config);
-      MappedStatement insertAuthor = ExecutorTestHelper.prepareInsertAuthorMappedStatement(config);
+      Executor executor = createExecutor(new JdbcTransaction(ds, null, false));
+      try {
+        MappedStatement selectBlog = ExecutorTestHelper.prepareComplexSelectBlogMappedStatement(config);
+        MappedStatement selectPosts = ExecutorTestHelper.prepareSelectPostsForBlogMappedStatement(config);
+        config.addMappedStatement(selectBlog);
+        config.addMappedStatement(selectPosts);
+        MappedStatement selectAuthor = ExecutorTestHelper.prepareSelectOneAuthorMappedStatement(config);
+        MappedStatement insertAuthor = ExecutorTestHelper.prepareInsertAuthorMappedStatement(config);
 
-      // generate DeferredLoads
-      executor.query(selectPosts, 1, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
+        // generate DeferredLoads
+        executor.query(selectPosts, 1, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
 
-      Author author = new Author(-1, "someone", "******", "someone@apache.org", null, Section.NEWS);
-      executor.update(insertAuthor, author);
-      executor.query(selectAuthor, -1, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
-      executor.flushStatements();
-      executor.rollback(true);
-    } finally {
-      executor.rollback(true);
-      executor.close(false);
-    }
+        Author author = new Author(-1, "someone", "******", "someone@apache.org", null, Section.NEWS);
+        executor.update(insertAuthor, author);
+        executor.query(selectAuthor, -1, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
+        executor.flushStatements();
+        executor.rollback(true);
+      } finally {
+        executor.rollback(true);
+        executor.close(false);
+      }
+    });
   }
 
   @Test
-  void testCreateCacheKeyWithAdditionalParameter() {
+  void createCacheKeyWithAdditionalParameter() {
     TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
 
     MappedStatement mappedStatement = new MappedStatement.Builder(config, "testSelect",
@@ -488,6 +490,8 @@ class BaseExecutorTest extends BaseDataTest {
     Object parameterObject = 1;
 
     BoundSql boundSql = new BoundSql(config, "some select statement", new ArrayList<ParameterMapping>() {
+      private static final long serialVersionUID = 1L;
+
       {
         add(new ParameterMapping.Builder(config, "id", registry.getTypeHandler(int.class)).build());
       }
@@ -511,7 +515,7 @@ class BaseExecutorTest extends BaseDataTest {
   }
 
   @Test
-  void testCreateCacheKeyWithNull() {
+  void createCacheKeyWithNull() {
     TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
 
     MappedStatement mappedStatement = new MappedStatement.Builder(config, "testSelect",
@@ -520,6 +524,8 @@ class BaseExecutorTest extends BaseDataTest {
     Object parameterObject = null;
 
     BoundSql boundSql = new BoundSql(config, "some select statement", new ArrayList<ParameterMapping>() {
+      private static final long serialVersionUID = 1L;
+
       {
         add(new ParameterMapping.Builder(config, "id", registry.getTypeHandler(int.class)).build());
       }
@@ -539,7 +545,7 @@ class BaseExecutorTest extends BaseDataTest {
   }
 
   @Test
-  void testCreateCacheKeyWithTypeHandler() {
+  void createCacheKeyWithTypeHandler() {
     TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
 
     MappedStatement mappedStatement = new MappedStatement.Builder(config, "testSelect",
@@ -548,6 +554,8 @@ class BaseExecutorTest extends BaseDataTest {
     Object parameterObject = 1;
 
     BoundSql boundSql = new BoundSql(config, "some select statement", new ArrayList<ParameterMapping>() {
+      private static final long serialVersionUID = 1L;
+
       {
         add(new ParameterMapping.Builder(config, "id", registry.getTypeHandler(int.class)).build());
       }
@@ -567,7 +575,7 @@ class BaseExecutorTest extends BaseDataTest {
   }
 
   @Test
-  void testCreateCacheKeyWithMetaObject() {
+  void createCacheKeyWithMetaObject() {
     TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
 
     MappedStatement mappedStatement = new MappedStatement.Builder(config, "testSelect",
@@ -576,6 +584,8 @@ class BaseExecutorTest extends BaseDataTest {
     Author parameterObject = new Author(-1, "cbegin", "******", "cbegin@nowhere.com", "N/A", Section.NEWS);
 
     BoundSql boundSql = new BoundSql(config, "some select statement", new ArrayList<ParameterMapping>() {
+      private static final long serialVersionUID = 1L;
+
       {
         add(new ParameterMapping.Builder(config, "id", registry.getTypeHandler(int.class)).build());
         add(new ParameterMapping.Builder(config, "username", registry.getTypeHandler(String.class)).build());

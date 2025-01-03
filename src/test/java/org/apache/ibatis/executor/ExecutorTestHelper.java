@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
-class ExecutorTestHelper {
+final class ExecutorTestHelper {
 
   static final Cache authorCache;
 
@@ -374,9 +374,18 @@ class ExecutorTestHelper {
 
   static MappedStatement prepareComplexSelectBlogMappedStatement(final Configuration config) {
     final TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
-    final SqlSource sqlSource = new StaticSqlSource(config,
-        "SELECT b.id, b.author_id, b.title, a.username, a.password, a.email, a.bio" + " FROM blog b"
-            + " INNER JOIN author a ON b.author_id = a.id" + " WHERE b.id = ?");
+    final SqlSource sqlSource = new StaticSqlSource(config, """
+        SELECT b.id \
+             , b.author_id \
+             , b.title \
+             , a.username \
+             , a.password \
+             , a.email \
+             , a.bio\
+          FROM blog b\
+         INNER JOIN author a ON b.author_id = a.id\
+         WHERE b.id = ?\
+        """);
     final ParameterMap parameterMap = new ParameterMap.Builder(config, "defaultParameterMap", int.class,
         new ArrayList<ParameterMapping>() {
           private static final long serialVersionUID = 1L;
@@ -421,9 +430,18 @@ class ExecutorTestHelper {
 
   static MappedStatement prepareSelectBlogByIdAndAuthor(final Configuration config) {
     final TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
-    final SqlSource sqlSource = new StaticSqlSource(config,
-        "SELECT b.id, b.author_id, b.title, a.username, a.password, a.email, a.bio" + " FROM blog b"
-            + " INNER JOIN author a ON b.author_id = a.id" + " WHERE b.id = ? and a.id = ?");
+    final SqlSource sqlSource = new StaticSqlSource(config, """
+        SELECT b.id\
+             , b.author_id\
+             , b.title\
+             , a.username\
+             , a.password\
+             , a.email\
+             , a.bio\
+          FROM blog b\
+         INNER JOIN author a ON b.author_id = a.id\
+         WHERE b.id = ? and a.id = ?\
+         """);
     final ParameterMap parameterMap = new ParameterMap.Builder(config, "defaultParameterMap", Map.class,
         new ArrayList<ParameterMapping>() {
           private static final long serialVersionUID = 1L;
@@ -470,11 +488,24 @@ class ExecutorTestHelper {
 
   static MappedStatement prepareSelectPostsForBlogMappedStatement(final Configuration config) {
     final TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
-    final SqlSource sqlSource = new StaticSqlSource(config,
-        "SELECT p.id, p.created_on, p.blog_id, p.section, p.subject, p.body, pt.tag_id,"
-            + " t.name as tag_name, c.id as comment_id, c.name as comment_name, c.comment" + " FROM post p"
-            + " INNER JOIN post_tag pt ON pt.post_id = p.id" + " INNER JOIN tag t ON pt.tag_id = t.id"
-            + " LEFT OUTER JOIN comment c ON c.post_id = p.id" + " WHERE p.blog_id = ?");
+    final SqlSource sqlSource = new StaticSqlSource(config, """
+        SELECT p.id\
+             , p.created_on\
+             , p.blog_id\
+             , p.section\
+             , p.subject\
+             , p.body\
+             , pt.tag_id\
+             , t.name as tag_name\
+             , c.id as comment_id\
+             , c.name as comment_name\
+             , c.comment\
+          FROM post p\
+         INNER JOIN post_tag pt ON pt.post_id = p.id\
+         INNER JOIN tag t ON pt.tag_id = t.id\
+         LEFT OUTER JOIN comment c ON c.post_id = p.id\
+         WHERE p.blog_id = ?\
+        """);
     final ParameterMap parameterMap = new ParameterMap.Builder(config, "defaultParameterMap", Author.class,
         new ArrayList<ParameterMapping>() {
           private static final long serialVersionUID = 1L;
@@ -548,11 +579,24 @@ class ExecutorTestHelper {
 
   static MappedStatement prepareSelectPostMappedStatement(final Configuration config) {
     final TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
-    final SqlSource sqlSource = new StaticSqlSource(config,
-        "SELECT p.id, p.created_on, p.blog_id, p.section, p.subject, p.body, pt.tag_id,"
-            + " t.name as tag_name, c.id as comment_id, c.name as comment_name, c.comment" + " FROM post p"
-            + " LEFT OUTER JOIN post_tag pt ON pt.post_id = p.id" + " LEFT OUTER JOIN tag t ON pt.tag_id = t.id"
-            + " LEFT OUTER JOIN comment c ON c.post_id = p.id" + " WHERE p.id = ?");
+    final SqlSource sqlSource = new StaticSqlSource(config, """
+        SELECT p.id\
+             , p.created_on\
+             , p.blog_id\
+             , p.section\
+             , p.subject\
+             , p.body\
+             , pt.tag_id\
+             , t.name as tag_name\
+             , c.id as comment_id\
+             , c.name as comment_name\
+             , c.comment\
+          FROM post p\
+          LEFT OUTER JOIN post_tag pt ON pt.post_id = p.id\
+          LEFT OUTER JOIN tag t ON pt.tag_id = t.id\
+          LEFT OUTER JOIN comment c ON c.post_id = p.id\
+         WHERE p.id = ?\
+         """);
     final ParameterMap parameterMap = new ParameterMap.Builder(config, "defaultParameterMap", Author.class,
         new ArrayList<ParameterMapping>() {
           private static final long serialVersionUID = 1L;
@@ -624,11 +668,25 @@ class ExecutorTestHelper {
 
   static MappedStatement prepareSelectPostWithBlogByAuthorMappedStatement(final Configuration config) {
     final TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
-    final SqlSource sqlSource = new StaticSqlSource(config,
-        "SELECT p.id, p.created_on, p.blog_id, p.author_id, p.section, p.subject, p.body, pt.tag_id,"
-            + " t.name as tag_name, c.id as comment_id, c.name as comment_name, c.comment" + " FROM post p"
-            + " LEFT OUTER JOIN post_tag pt ON pt.post_id = p.id" + " LEFT OUTER JOIN tag t ON pt.tag_id = t.id"
-            + " LEFT OUTER JOIN comment c ON c.post_id = p.id" + " WHERE p.id = ?");
+    final SqlSource sqlSource = new StaticSqlSource(config, """
+        SELECT p.id\
+             , p.created_on\
+             , p.blog_id\
+             , p.author_id\
+             , p.section\
+             , p.subject\
+             , p.body\
+             , pt.tag_id\
+             , t.name as tag_name\
+             , c.id as comment_id\
+             , c.name as comment_name\
+             , c.comment\
+          FROM post p\
+          LEFT OUTER JOIN post_tag pt ON pt.post_id = p.id\
+          LEFT OUTER JOIN tag t ON pt.tag_id = t.id\
+          LEFT OUTER JOIN comment c ON c.post_id = p.id\
+         WHERE p.id = ?\
+         """);
     final ParameterMap parameterMap = new ParameterMap.Builder(config, "defaultParameterMap", Author.class,
         new ArrayList<ParameterMapping>() {
           private static final long serialVersionUID = 1L;

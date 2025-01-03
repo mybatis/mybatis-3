@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -63,7 +63,7 @@ class LazyDeserializeTest {
   }
 
   @Test
-  void testLoadLazyDeserialize() throws Exception {
+  void loadLazyDeserialize() throws Exception {
     factory.getConfiguration().setConfigurationFactory(this.getClass());
     try (SqlSession session = factory.openSession()) {
       final Mapper mapper = session.getMapper(Mapper.class);
@@ -80,7 +80,7 @@ class LazyDeserializeTest {
   }
 
   @Test
-  void testLoadLazyDeserializeWithoutConfigurationFactory() throws Exception {
+  void loadLazyDeserializeWithoutConfigurationFactory() throws Exception {
     try (SqlSession session = factory.openSession()) {
       final Mapper mapper = session.getMapper(Mapper.class);
       final LazyObjectFoo foo = mapper.loadFoo(FOO_ID);

@@ -1,55 +1,30 @@
 name: Java CI
 
-on: [push, pull_request]
+on: [workflow_dispatch, push, pull_request]
 
 jobs:
   test:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
+        cache: [maven]
+        distribution: [temurin]
+        java: [17, 21, 23, 24-ea, 25-ea]
         os: [ubuntu-latest, macos-latest, windows-latest]
-        java: [11, 17, 21, 22, 23-ea]
-        distribution: ['temurin']
       fail-fast: false
       max-parallel: 4
     name: Test JDK ${{ matrix.java }}, ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v4
-      - name: Set up JDK
+      - name: Set up JDK ${{ matrix.java }} ${{ matrix.distribution }}
         uses: actions/setup-java@v4
         with:
-          java-version: ${{ matrix.java }}
+          cache: ${{ matrix.cache }}
           distribution: ${{ matrix.distribution }}
-      - name: Print JDK Version
-        run: java -version
-      - name: Cache local Maven m2
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-m2
-      - name: Set argLine command line option
-        if: ${{ matrix.java == '11' }}
-        run: echo 'ARG_LINE=-D"argLine=--illegal-access=permit"' >> $GITHUB_ENV
-      - name: Run all tests
-        if: ${{ matrix.os == 'ubuntu-latest' && matrix.java == '11' }}
-        run: echo 'ARG_LINE=-D"excludedGroups="' >> $GITHUB_ENV
-      - name: Skip tests that require illegal reflective access
-        if: ${{ matrix.os == 'ubuntu-latest' && matrix.java != '11' }}
-        run: echo 'ARG_LINE=-D"excludedGroups=RequireIllegalAccess"' >> $GITHUB_ENV
-      - name: Skip tests that require illegal reflective access
-        if: ${{ matrix.os != 'ubuntu-latest' && matrix.java != '11' }}
-        run: echo 'ARG_LINE=-D"excludedGroups=TestcontainersTests,RequireIllegalAccess"' >> $GITHUB_ENV
-      - name: Active Profiles
-        run: ./mvnw help:active-profiles
+          java-version: ${{ matrix.java }}
+      - name: Setup testContainers profile for ubuntu
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: echo 'TEST_CONTAINERS_PROFILE=-PtestContainers' >> $GITHUB_ENV
       - name: Test with Maven
-        if: ${{ matrix.os != 'windows-latest' }}
-        run: ./mvnw test -B -V  --no-transfer-progress -D"license.skip=true" -D"jacoco.skip=true" $ARG_LINE
-      - name: Test with Maven
-        if: ${{ matrix.os == 'windows-latest' && matrix.java == '11' }}
-        run: ./mvnw test -B -V  --no-transfer-progress -D"license.skip=true" -D"jacoco.skip=true" -D"argLine=--illegal-access=permit"
-      - name: Test with Maven
-        if: ${{ matrix.os == 'windows-latest' && matrix.java != '11' }}
-        run: ./mvnw test -B -V  --no-transfer-progress -D"license.skip=true" -D"jacoco.skip=true" -D"excludedGroups=TestcontainersTests,RequireIllegalAccess"
+        run: ./mvnw test -B -V  --no-transfer-progress -D"license.skip=true" $TEST_CONTAINERS_PROFILE

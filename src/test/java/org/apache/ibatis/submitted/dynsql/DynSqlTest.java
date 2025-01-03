@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ class DynSqlTest {
   }
 
   @Test
-  void testSelect() {
+  void select() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       List<Integer> ids = new ArrayList<>();
       ids.add(1);
@@ -73,7 +73,7 @@ class DynSqlTest {
   }
 
   @Test
-  void testSelectSimple() {
+  void selectSimple() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       List<Integer> ids = new ArrayList<>();
       ids.add(1);
@@ -92,7 +92,7 @@ class DynSqlTest {
   }
 
   @Test
-  void testSelectLike() {
+  void selectLike() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 
       List<Map<String, Object>> answer = sqlSession.selectList("org.apache.ibatis.submitted.dynsql.selectLike", "Ba");
@@ -104,7 +104,7 @@ class DynSqlTest {
   }
 
   @Test
-  void testNumerics() {
+  void numerics() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       List<NumericRow> answer = sqlSession.selectList("org.apache.ibatis.submitted.dynsql.selectNumerics");
 
@@ -125,7 +125,7 @@ class DynSqlTest {
   }
 
   @Test
-  void testOgnlStaticMethodCall() {
+  void ognlStaticMethodCall() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       List<Map<String, Object>> answer = sqlSession
           .selectList("org.apache.ibatis.submitted.dynsql.ognlStaticMethodCall", "Rock 'n Roll");
@@ -135,7 +135,7 @@ class DynSqlTest {
   }
 
   @Test
-  void testBindNull() {
+  void bindNull() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       DynSqlMapper mapper = sqlSession.getMapper(DynSqlMapper.class);
       String description = mapper.selectDescription(null);
@@ -150,7 +150,7 @@ class DynSqlTest {
    * https://github.com/mybatis/mybatis-3/issues/1486
    */
   @Test
-  void testValueObjectWithoutParamAnnotation() {
+  void valueObjectWithoutParamAnnotation() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       DynSqlMapper mapper = sqlSession.getMapper(DynSqlMapper.class);
       List<String> descriptions = mapper.selectDescriptionById(3);
@@ -165,7 +165,7 @@ class DynSqlTest {
    * Variations for with https://github.com/mybatis/mybatis-3/issues/1486
    */
   @Test
-  void testNonValueObjectWithoutParamAnnotation() {
+  void nonValueObjectWithoutParamAnnotation() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       DynSqlMapper mapper = sqlSession.getMapper(DynSqlMapper.class);
       DynSqlMapper.Conditions conditions = new DynSqlMapper.Conditions();
@@ -210,7 +210,7 @@ class DynSqlTest {
    * Variations for with https://github.com/mybatis/mybatis-3/issues/1486
    */
   @Test
-  void testCustomValueObjectWithoutParamAnnotation() throws IOException {
+  void customValueObjectWithoutParamAnnotation() throws IOException {
     SqlSessionFactory sqlSessionFactory;
     try (Reader configReader = Resources.getResourceAsReader("org/apache/ibatis/submitted/dynsql/MapperConfig.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(configReader);

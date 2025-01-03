@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ class EnumTypeHandlerTest {
   }
 
   @Test
-  void testEnumWithParam() {
+  void enumWithParam() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
       List<Person> persons = personMapper.getByType(Person.Type.PERSON, "");
@@ -55,7 +55,7 @@ class EnumTypeHandlerTest {
   }
 
   @Test
-  void testEnumWithoutParam() {
+  void enumWithoutParam() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
       List<Person> persons = personMapper.getByTypeNoParam(new TypeName() {

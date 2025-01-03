@@ -1,6 +1,8 @@
 title: MyBatis 3 | ロギング
 author: Clinton Begin, Iwao AVE!
 
+<h1 class="d-none">Avoid blank site</h1>
+
 ## ロギング
 
 MyBatis は、内部の Log Factory を通してログ情報を出力します。この Log Factory は、ログ情報を次に挙げる実装のいずれかに委譲（delegate）します。

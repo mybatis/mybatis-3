@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,14 +19,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -73,7 +71,7 @@ class DefaultParameterHandlerTest {
         any(JdbcType.class));
     ParameterMapping parameterMapping = new ParameterMapping.Builder(mappedStatement.getConfiguration(), "prop",
         typeHandler).build();
-    List<ParameterMapping> parameterMappings = Collections.singletonList(parameterMapping);
+    List<ParameterMapping> parameterMappings = List.of(parameterMapping);
     when(boundSql.getParameterMappings()).thenReturn(parameterMappings);
 
     DefaultParameterHandler defaultParameterHandler = new DefaultParameterHandler(mappedStatement, parameterObject,
@@ -111,7 +109,7 @@ class DefaultParameterHandlerTest {
   }
 
   @Test
-  void testParameterObjectGetPropertyValueWithAdditionalParameter() throws SQLException {
+  void parameterObjectGetPropertyValueWithAdditionalParameter() throws SQLException {
     Configuration config = new Configuration();
     TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
 
@@ -121,6 +119,8 @@ class DefaultParameterHandlerTest {
     Object parameterObject = 1;
 
     BoundSql boundSql = new BoundSql(config, "some select statement", new ArrayList<ParameterMapping>() {
+      private static final long serialVersionUID = 1L;
+
       {
         add(new ParameterMapping.Builder(config, "id", registry.getTypeHandler(int.class)).build());
       }
@@ -137,11 +137,11 @@ class DefaultParameterHandlerTest {
 
     defaultParameterHandler.setParameters(ps);
 
-    verify(ps, times(1)).setInt(1, 2);
+    verify(ps).setInt(1, 2);
   }
 
   @Test
-  void testParameterObjectGetPropertyValueWithNull() throws SQLException {
+  void parameterObjectGetPropertyValueWithNull() throws SQLException {
     Configuration config = new Configuration();
     TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
 
@@ -151,6 +151,8 @@ class DefaultParameterHandlerTest {
     Object parameterObject = null;
 
     BoundSql boundSql = new BoundSql(config, "some select statement", new ArrayList<ParameterMapping>() {
+      private static final long serialVersionUID = 1L;
+
       {
         add(new ParameterMapping.Builder(config, "id", registry.getTypeHandler(int.class)).build());
       }
@@ -163,11 +165,11 @@ class DefaultParameterHandlerTest {
 
     defaultParameterHandler.setParameters(ps);
 
-    verify(ps, times(1)).setNull(1, config.getJdbcTypeForNull().TYPE_CODE);
+    verify(ps).setNull(1, config.getJdbcTypeForNull().TYPE_CODE);
   }
 
   @Test
-  void testParameterObjectGetPropertyValueWithTypeHandler() throws SQLException {
+  void parameterObjectGetPropertyValueWithTypeHandler() throws SQLException {
     Configuration config = new Configuration();
     TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
 
@@ -177,6 +179,8 @@ class DefaultParameterHandlerTest {
     Object parameterObject = 1;
 
     BoundSql boundSql = new BoundSql(config, "some select statement", new ArrayList<ParameterMapping>() {
+      private static final long serialVersionUID = 1L;
+
       {
         add(new ParameterMapping.Builder(config, "id", registry.getTypeHandler(int.class)).build());
       }
@@ -189,11 +193,11 @@ class DefaultParameterHandlerTest {
 
     defaultParameterHandler.setParameters(ps);
 
-    verify(ps, times(1)).setInt(1, (Integer) parameterObject);
+    verify(ps).setInt(1, (Integer) parameterObject);
   }
 
   @Test
-  void testParameterObjectGetPropertyValueWithMetaObject() throws SQLException {
+  void parameterObjectGetPropertyValueWithMetaObject() throws SQLException {
     Configuration config = new Configuration();
     TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
 
@@ -203,6 +207,8 @@ class DefaultParameterHandlerTest {
     Author parameterObject = new Author(-1, "cbegin", "******", "cbegin@nowhere.com", "N/A", Section.NEWS);
 
     BoundSql boundSql = new BoundSql(config, "some select statement", new ArrayList<ParameterMapping>() {
+      private static final long serialVersionUID = 1L;
+
       {
         add(new ParameterMapping.Builder(config, "id", registry.getTypeHandler(int.class)).build());
         add(new ParameterMapping.Builder(config, "username", registry.getTypeHandler(String.class)).build());
@@ -222,16 +228,16 @@ class DefaultParameterHandlerTest {
 
     defaultParameterHandler.setParameters(ps);
 
-    verify(ps, times(1)).setInt(1, parameterObject.getId());
-    verify(ps, times(1)).setString(2, parameterObject.getUsername());
-    verify(ps, times(1)).setString(3, parameterObject.getPassword());
-    verify(ps, times(1)).setString(4, parameterObject.getEmail());
-    verify(ps, times(1)).setString(5, parameterObject.getBio());
-    verify(ps, times(1)).setObject(6, parameterObject.getFavouriteSection().name(), JdbcType.VARCHAR.TYPE_CODE);
+    verify(ps).setInt(1, parameterObject.getId());
+    verify(ps).setString(2, parameterObject.getUsername());
+    verify(ps).setString(3, parameterObject.getPassword());
+    verify(ps).setString(4, parameterObject.getEmail());
+    verify(ps).setString(5, parameterObject.getBio());
+    verify(ps).setObject(6, parameterObject.getFavouriteSection().name(), JdbcType.VARCHAR.TYPE_CODE);
   }
 
   @Test
-  void testParameterObjectGetPropertyValueWithMetaObjectAndCreateOnce() {
+  void parameterObjectGetPropertyValueWithMetaObjectAndCreateOnce() {
     Author parameterObject = mock(Author.class);
 
     Configuration mockConfig = mock(Configuration.class);
@@ -251,6 +257,8 @@ class DefaultParameterHandlerTest {
         new StaticSqlSource(mockConfig, "some select statement"), SqlCommandType.SELECT).build();
 
     BoundSql boundSql = new BoundSql(mockConfig, "some select statement", new ArrayList<ParameterMapping>() {
+      private static final long serialVersionUID = 1L;
+
       {
         add(new ParameterMapping.Builder(mockConfig, "id", registry.getTypeHandler(int.class))
             .jdbcType(JdbcType.INTEGER).build());
@@ -274,13 +282,13 @@ class DefaultParameterHandlerTest {
 
     defaultParameterHandler.setParameters(ps);
 
-    verify(parameterObject, times(1)).getId();
-    verify(parameterObject, times(1)).getUsername();
-    verify(parameterObject, times(1)).getPassword();
-    verify(parameterObject, times(1)).getEmail();
-    verify(parameterObject, times(1)).getBio();
-    verify(parameterObject, times(1)).getFavouriteSection();
+    verify(parameterObject).getId();
+    verify(parameterObject).getUsername();
+    verify(parameterObject).getPassword();
+    verify(parameterObject).getEmail();
+    verify(parameterObject).getBio();
+    verify(parameterObject).getFavouriteSection();
 
-    verify(mockConfig, times(1)).newMetaObject(parameterObject);
+    verify(mockConfig).newMetaObject(parameterObject);
   }
 }

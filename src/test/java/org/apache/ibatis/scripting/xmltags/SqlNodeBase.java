@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -13,21 +13,26 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.lang;
+package org.apache.ibatis.scripting.xmltags;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.apache.ibatis.session.Configuration;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
- * <p>
- * Indicates that the element uses Java 8 API.
- * </p>
+ * @author <a href="1181963012mw@gmail.com">mawen12</a>
+ *
+ * @see SqlNode
  */
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.TYPE, ElementType.METHOD, ElementType.FIELD })
-public @interface UsesJava8 {
+@ExtendWith(MockitoExtension.class)
+abstract class SqlNodeBase {
+
+  @Mock
+  protected Configuration configuration;
+
+  @Mock
+  protected DynamicContext context;
+
+  public abstract void shouldApply() throws Exception;
 }

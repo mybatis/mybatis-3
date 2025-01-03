@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ class ParametrizedListTest {
   }
 
   @Test
-  void testShouldDetectUsersAsParameterInsideAList() {
+  void shouldDetectUsersAsParameterInsideAList() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<User<String>> list = mapper.getAListOfUsers();
@@ -52,7 +52,7 @@ class ParametrizedListTest {
   }
 
   @Test
-  void testShouldDetectUsersAsParameterInsideAMap() {
+  void shouldDetectUsersAsParameterInsideAMap() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Map<Integer, User<String>> map = mapper.getAMapOfUsers();
@@ -61,7 +61,7 @@ class ParametrizedListTest {
   }
 
   @Test
-  void testShouldGetAUserAsAMap() {
+  void shouldGetAUserAsAMap() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Map<String, Object> map = mapper.getUserAsAMap();
@@ -70,7 +70,7 @@ class ParametrizedListTest {
   }
 
   @Test
-  void testShouldGetAListOfMaps() {
+  void shouldGetAListOfMaps() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<Map<String, Object>> map = mapper.getAListOfMaps();

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -13,10 +13,11 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-
 package org.apache.ibatis.mapping;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -48,6 +49,13 @@ class VendorDatabaseIdProviderTest {
   @Test
   void shouldProductNameBeReturnedIfPropertiesIsNull() throws Exception {
     VendorDatabaseIdProvider provider = new VendorDatabaseIdProvider();
+    assertEquals(PRODUCT_NAME, provider.getDatabaseId(mockDataSource()));
+  }
+
+  @Test
+  void shouldProductNameBeReturnedIfPropertiesIsEmpty() throws Exception {
+    VendorDatabaseIdProvider provider = new VendorDatabaseIdProvider();
+    provider.setProperties(new Properties());
     assertEquals(PRODUCT_NAME, provider.getDatabaseId(mockDataSource()));
   }
 

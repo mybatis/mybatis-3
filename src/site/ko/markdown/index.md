@@ -1,6 +1,8 @@
 title: 마이바티스 3 | 소개
 author: Clinton Begin, 이동국(한국어 번역)
 
+<h1 class="d-none">Avoid blank site</h1>
+
 ## 소개
 
 ### 마이바티스는 무엇인가?

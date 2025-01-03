@@ -1,6 +1,8 @@
 title: MyBatis 3 | Introduction
 author: Clinton Begin
 
+<h1 class="d-none">Avoid blank site</h1>
+
 ## Introduction
 
 ### What is MyBatis?
@@ -8,6 +10,8 @@ author: Clinton Begin
 MyBatis is a first class persistence framework with support for custom SQL, stored procedures and advanced mappings. MyBatis eliminates almost all of the JDBC code and manual setting of parameters and retrieval of results. MyBatis can use simple XML or Annotations for configuration and map primitives, Map interfaces and Java POJOs (Plain Old Java Objects) to database records.
 
 If you are completely new to database access in Java, https://www.marcobehler.com/guides/a-guide-to-accessing-databases-in-java contains a good overview of the various parts, pieces and options and shows you where exactly MyBatis fits in.
+
+For tips, news, etc., follow these accounts [🦋Bluesky](https://bsky.app/profile/mybatis.bsky.social) , [X](https://x.com/MyBatisJava) run by [Alejandro Duarte](https://bsky.app/profile/alejandro-du.bsky.social).
 
 ### Help make this documentation better…
 

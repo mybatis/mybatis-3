@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2023 the original author or authors.
+       Copyright 2009-2024 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@
     <title>마이바티스 3 | 자바 API</title>
     <author email="clinton.begin@gmail.com">Clinton Begin</author>
     <author email="fromm0@gmail.com">이동국(한국어 번역)</author>
+    <author email="qkrehdals97@naver.com">박동민(한국어 번역)</author>
   </properties>
 
   <body>
@@ -269,7 +270,7 @@ int insert(String statement)
 int update(String statement)
 int delete(String statement)]]></source>
 
-  <p>A Cursor offers the same results as a List, except it fetches data lazily using an Iterator.</p>
+  <p>Cursor는 List와 동일한 결과를 보여주지만, 데이터를 반복문을 통해 지연로딩을 한다.</p>
   <source><![CDATA[try (Cursor<MyEntity> entities = session.selectCursor(statement, param)) {
    for (MyEntity entity:entities) {
       // process one entity
@@ -304,11 +305,11 @@ public interface ResultHandler<T> {
 
   <p>ResultContext파라미터는 결과 객체에 접근할 수 있도록 해준다.</p>
 
-  <p>Using a ResultHandler has two limitations that you should be aware of:</p>
+  <p>ResultHandler를 사용할 때 유의해야 할 제약사항이 2개 있다:</p>
 
   <ul>
-  <li>Data got from an method called with a ResultHandler will not be cached.</li>
-  <li>When using advanced resultmaps MyBatis will probably require several rows to build an object. If a ResultHandler is used you may be given an object whose associations or collections are not yet filled.</li>
+    <li>ResultHandler를 사용하여 호출된 메소드의 데이터는 캐싱 되지 않는다.</li>
+    <li>고급 resualtMap을 사용할 경우, 마이바티스는 객체를 완성하기 위해 여러 줄의 코드를 필요로 할 수 있다. ResultHandler를 사용할 때 받는 객체는 associations나 collections가 완전히 채워지지 않은 상태일 수도 있다.</li>
   </ul>
 
   <h5>배치 수정시 flush메소드</h5>
@@ -750,36 +751,37 @@ class UserSqlBuilder {
   }
 }]]></source>
 
-    <p>This example shows usage that share an sql provider class to all mapper methods using global configuration(Available since 3.5.6):</p>
+    <p>이 예제는 모든 매퍼 메소드에 SQL 프로바이더 클래스를 전역 설정으로 공유하는 방법을 보여준다. (3.5.6 버전부터 사용 가능):</p>
     <source><![CDATA[
 Configuration configuration = new Configuration();
-configuration.setDefaultSqlProviderType(TemplateFilePathProvider.class); // Specify an sql provider class for sharing on all mapper methods
+configuration.setDefaultSqlProviderType(TemplateFilePathProvider.class); // 모든 mapper 메소드에 공유할 시, SQL 프로바이더 클래스를 지정한다.
 // ...]]></source>
     <source><![CDATA[
-// Can omit the type/value attribute on sql provider annotation
-// If omit it, the MyBatis apply the class that specified on defaultSqlProviderType.
+// sql provider 애노테이션에서 type/value 속성을 생략할 수 있다.
+// 생략시, 마이바티스는 defaultSqlProviderType으로 지정된 클래스를 적용한다.
 public interface UserMapper {
 
-  @SelectProvider // Same with @SelectProvider(TemplateFilePathProvider.class)
+  @SelectProvider // @SelectProvider(TemplateFilePathProvider.class) 와 동일하다.
   User findUser(int id);
 
-  @InsertProvider // Same with @InsertProvider(TemplateFilePathProvider.class)
+  @InsertProvider // @InsertProvider(TemplateFilePathProvider.class) 와 동일하다.
   void createUser(User user);
 
-  @UpdateProvider // Same with @UpdateProvider(TemplateFilePathProvider.class)
+  @UpdateProvider // @UpdateProvider(TemplateFilePathProvider.class) 와 동일하다.
   void updateUser(User user);
 
-  @DeleteProvider // Same with @DeleteProvider(TemplateFilePathProvider.class)
+  @DeleteProvider // @DeleteProvider(TemplateFilePathProvider.class) 와 동일하다.
   void deleteUser(int id);
 }]]></source>
 
-    <p>This example shows usage the default implementation of <code>ProviderMethodResolver</code>(available since MyBatis 3.5.1 or later):</p>
+    <p>이 예제는 <code>ProviderMethodResolver</code>의 기본 구현 사용법을 보여준다.(MyBatis 3.5.1 버전 이상부터 사용가능):</p>
     <source><![CDATA[@SelectProvider(UserSqlProvider.class)
 List<User> getUsersByName(String name);
 
-// Implements the ProviderMethodResolver on your provider class
+// provider 클래스에서 ProviderMethodResolver 를 구현한다.
 class UserSqlProvider implements ProviderMethodResolver {
   // In default implementation, it will resolve a method that method name is matched with mapper method
+  // 기본 구현에서, 메소드 이름이 mapper 메소드와 일치하는 경우 해당 메소드를 찾는다.
   public static String getUsersByName(final String name) {
     return new SQL(){{
       SELECT("*");
@@ -792,11 +794,11 @@ class UserSqlProvider implements ProviderMethodResolver {
   }
 }]]></source>
 
-    <p>This example shows usage the <code>databaseId</code> attribute on the statement annotation(Available since 3.5.5):</p>
+    <p>이 예제는 statement 애노테이션에서 <code>databaseId</code>  속성이 어떻게 활용되는지를 보여준다(3.5.5 버전부터 사용 가능):</p>
     <source><![CDATA[
-@Select(value = "SELECT SYS_GUID() FROM dual", databaseId = "oracle") // Use this statement if DatabaseIdProvider provide "oracle"
-@Select(value = "SELECT uuid_generate_v4()", databaseId = "postgres") // Use this statement if DatabaseIdProvider provide "postgres"
-@Select("SELECT RANDOM_UUID()") // Use this statement if the DatabaseIdProvider not configured or not matches databaseId
+@Select(value = "SELECT SYS_GUID() FROM dual", databaseId = "oracle") // DatabaseIdProvider가 "oracle"을 제공하면 이 구문을 사용한다.
+@Select(value = "SELECT uuid_generate_v4()", databaseId = "postgres") // DatabaseIdProvider가 "postgres"를 제공하면 이 구문을 사용한다.
+@Select("SELECT RANDOM_UUID()") // DatabaseIdProvider가 설정되지 않았거나 일치하는 databaseId가 없는 경우 이 구문을 사용한다.
 String generateId();
 ]]></source>
 

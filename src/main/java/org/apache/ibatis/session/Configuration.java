@@ -108,7 +108,6 @@ public class Configuration {
   protected boolean safeResultHandlerEnabled = true;
   protected boolean mapUnderscoreToCamelCase;
   protected boolean aggressiveLazyLoading;
-  protected boolean multipleResultSetsEnabled = true;
   protected boolean useGeneratedKeys;
   protected boolean useColumnLabel = true;
   protected boolean cacheEnabled = true;
@@ -456,12 +455,20 @@ public class Configuration {
     this.aggressiveLazyLoading = aggressiveLazyLoading;
   }
 
+  /**
+   * @deprecated You can safely remove the call to this method as this option had no effect.
+   */
+  @Deprecated
   public boolean isMultipleResultSetsEnabled() {
-    return multipleResultSetsEnabled;
+    return true;
   }
 
+  /**
+   * @deprecated You can safely remove the call to this method as this option had no effect.
+   */
+  @Deprecated
   public void setMultipleResultSetsEnabled(boolean multipleResultSetsEnabled) {
-    this.multipleResultSetsEnabled = multipleResultSetsEnabled;
+    // nop
   }
 
   public Set<String> getLazyLoadTriggerMethods() {

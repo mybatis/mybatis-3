@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -50,8 +50,7 @@ public class Binome<T, U> {
 
   @Override
   public boolean equals(final Object obj) {
-    if (obj instanceof Binome<?, ?>) {
-      Binome<?, ?> bin = (Binome<?, ?>) obj;
+    if (obj instanceof Binome<?, ?> bin) {
       return one != null && one.equals(bin.getOne()) && two != null && two.equals(bin.getTwo());
     }
     return super.equals(obj);

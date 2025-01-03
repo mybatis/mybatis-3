@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2023 the original author or authors.
+       Copyright 2009-2025 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -1175,6 +1175,123 @@ public class User {
             </tr>
           </tbody>
         </table>
+
+<h5>コレクションや複雑なオブジェクトを引数に含むコンストラクタに対して、ネストされた結果をマッピングする</h5>
+
+<p>以降のセクションで <code>association</code> と <code>collection</code> について説明しますが、バージョン 3.6.0 以降ではコンストラクタの引数としてコレクションを指定できるようになりました。</p>
+
+<p>次のクラスを例にして説明します。</p>
+
+<source><![CDATA[public class User {
+   //...
+   public User(Integer id, String username, List<UserRole> userRoles) {
+     //...
+   }
+}
+
+public class UserRole {
+    // ...
+    public UserRole(Integer id, String role) {
+      // ...
+    }
+}
+]]></source>
+
+<p>クエリがネストされた結果を返す場合、<code>User</code> のコンストラクタ引数に含まれているコレクション <code>List&lt;UserRole&gt;</code> をマッピングするためには、下記のような ResultMap を定義します。</p>
+<p>MyBatis は <code>UserRole</code> が全て読み込まれてから <code>User</code> のコンストラクタを呼び出します。つまり、<code>User</code> をイミュータブルなオブジェクトとして定義することもできるということです。</p>
+
+<source><![CDATA[<resultMap id="userResultMap" type="User">
+  <constructor>
+    <idArg column="id" javaType="int" />
+    <arg column="username" javaType="String" />
+    <arg javaType="List" resultMap="userRoleResultMap" columnPrefix="role_"/>
+  </constructor>
+</resultMap>
+]]></source>
+
+<p>上記の ResultMap で参照している <code>UserRole</code> 用の ResultMap でもコンストラクタマッピングを使用すれば、<code>UserRole</code> もイミュータブルにできます。</p>
+
+<source><![CDATA[<resultMap id="userRoleResultMap" type="UserRole">
+  <constructor>
+    <idArg column="id" javaType="int" />
+    <arg column="role" javaType="String" />
+  </constructor>
+</resultMap>
+]]></source>
+
+<p>このマッピングを実現するためには、結果セットが正しい順番でソートされていることが前提となるので、クエリで適切な <code>ORDER BY</code> 句を指定した上で、<code>&lt;select&gt;</code> 要素の <code>resultOrdered</code> 属性に <code>true</code> を設定してください。</p>
+
+<source><![CDATA[<select id="getAllUsers" resultMap="userResultMap" resultOrdered="true">
+    select
+      u.id,
+      u.username,
+      r.id as role_id,
+      r.role as role_role,
+    from user u
+      left join user_role ur on u.id = ur.user_id
+      inner join role r on r.id = ur.role_id
+    order by u.id, r.id
+</select>
+]]></source>
+
+<p>下記のように正しくソートされた結果セットが返ってくれば、期待通りにマッピングすることができます。</p>
+
+<table class="table table-striped">
+<thead>
+<tr class="a">
+<th>row_nr</th>
+<th>u.id</th>
+<th>u.username</th>
+<th>r.id</th>
+<th>r.role</th></tr></thead><tbody>
+<tr class="b">
+<td>1</td>
+<td>1</td>
+<td>John</td>
+<td>1</td>
+<td>Admins</td></tr>
+<tr class="a">
+<td>2</td>
+<td>1</td>
+<td>John</td>
+<td>2</td>
+<td>Users</td></tr>
+<tr class="b">
+<td>3</td>
+<td>2</td>
+<td>Jack</td>
+<td>null</td>
+<td>null</td></tr>
+<tr class="a">
+<td>4</td>
+<td>3</td>
+<td>Peter</td>
+<td>2</td>
+<td>Users</td></tr>
+<tr class="b">
+<td>5</td>
+<td>3</td>
+<td>Peter</td>
+<td>3</td>
+<td>Maintainers</td></tr>
+<tr class="a">
+<td>6</td>
+<td>3</td>
+<td>Peter</td>
+<td>4</td>
+<td>Approvers</td></tr></tbody>
+</table>
+
+<p>作成される <code>User</code> オブジェクトは下記のようになります。</p>
+
+<source><![CDATA[User{username=John, roles=[Admins, Users]}
+User{username=Jack, roles=[]}
+User{username=Peter, roles=[Users, Maintainers, Approvers]}
+]]></source>
+
+<p>仮に、誤ったソート条件が指定されていて５行目のデータが１行目の直後に出現するようなクエリを実行してしまうと、全ての <code>UserRole</code> を読み込む前に <code>John</code> ユーザのコンストラクタが呼び出されてしまうので、期待通りの結果を得ることはできません。</p>
+
+<p>コンストラクタ引数にコレクションを含むオブジェクトを使う場合は、完全にイミュータブルなオブジェクトとして定義してください。ResultMap にコンストラクタマッピングとプロパティマッピングが混在する ResultMap は正しく動作しない可能性があります。</p>
 
         <h4>association</h4>
 

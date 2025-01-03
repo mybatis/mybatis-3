@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -51,11 +51,7 @@ class InvalidNamedConstructorArgsTest {
   }
 
   interface NoMatchingConstructorMapper {
-    // @formatter:off
-    @ConstructorArgs({
-        @Arg(column = "id", name = "noSuchConstructorArg"),
-      })
-    // @formatter:on
+    @ConstructorArgs({ @Arg(column = "id", name = "noSuchConstructorArg"), })
     @Select("select * from users ")
     User select();
   }
@@ -74,11 +70,7 @@ class InvalidNamedConstructorArgsTest {
   interface ConstructorWithWrongJavaType {
     // There is a constructor with arg name 'id', but
     // its type is different from the specified javaType.
-    // @formatter:off
-    @ConstructorArgs({
-        @Arg(column = "id", name = "id", javaType = Integer.class),
-      })
-    // @formatter:on
+    @ConstructorArgs({ @Arg(column = "id", name = "id", javaType = Integer.class), })
     @Select("select * from users ")
     User select();
   }
@@ -97,11 +89,7 @@ class InvalidNamedConstructorArgsTest {
     // is different from the type of a property with the same name.
     // javaType is required in this case.
     // Debug log shows the detail of the matching error.
-    // @formatter:off
-    @ConstructorArgs({
-        @Arg(column = "id", name = "id"),
-      })
-    // @formatter:on
+    @ConstructorArgs({ @Arg(column = "id", name = "id"), })
     @Select("select * from users ")
     User select();
   }

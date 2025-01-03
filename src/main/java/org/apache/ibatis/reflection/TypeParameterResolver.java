@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -206,7 +206,8 @@ public class TypeParameterResolver {
       if (declaringClass == parentAsClass) {
         for (int i = 0; i < parentTypeVars.length; i++) {
           if (typeVar.equals(parentTypeVars[i])) {
-            return parentAsType.getActualTypeArguments()[i];
+            Type actualType = parentAsType.getActualTypeArguments()[i];
+            return actualType instanceof TypeVariable<?> ? Object.class : actualType;
           }
         }
       }

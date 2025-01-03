@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import static com.googlecode.catchexception.apis.BDDCatchException.caughtExcepti
 import static com.googlecode.catchexception.apis.BDDCatchException.when;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.BDDAssertions.then;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import java.io.InputStream;
 import java.util.regex.Pattern;
@@ -36,14 +37,16 @@ import org.junit.jupiter.api.Test;
 class XmlMapperBuilderTest {
 
   @Test
-  void shouldSuccessfullyLoadXMLMapperFile() throws Exception {
-    Configuration configuration = new Configuration();
-    String resource = "org/apache/ibatis/builder/AuthorMapper.xml";
-    try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
-      XMLMapperBuilder builder = new XMLMapperBuilder(inputStream, configuration, resource,
-          configuration.getSqlFragments());
-      builder.parse();
-    }
+  void shouldSuccessfullyLoadXMLMapperFile() {
+    assertDoesNotThrow(() -> {
+      Configuration configuration = new Configuration();
+      String resource = "org/apache/ibatis/builder/AuthorMapper.xml";
+      try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
+        XMLMapperBuilder builder = new XMLMapperBuilder(inputStream, configuration, resource,
+            configuration.getSqlFragments());
+        builder.parse();
+      }
+    });
   }
 
   @Test
@@ -221,7 +224,7 @@ class XmlMapperBuilderTest {
       builder.parse();
       String resultMapName = "java.lang.String";
       // namespace + "." + id
-      String statementId = "org.mybatis.spring.ErrorProblemMapper" + "." + "findProblemResultMapTest";
+      String statementId = "org.mybatis.spring.ErrorProblemMapper.findProblemResultMapTest";
       // same as MapperBuilderAssistant.getStatementResultMaps Exception message
       String message = "Could not find result map '" + resultMapName + "' referenced from '" + statementId + "'";
       IncompleteElementException exception = Assertions.assertThrows(IncompleteElementException.class,

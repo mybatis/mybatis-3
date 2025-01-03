@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -40,8 +40,8 @@ public interface RecordTypeMapper {
   // @formatter:off
   @Select({
       "select i.id, p.id p_id, p.val p_val, p.url p_url",
-      "from item i left join prop p on p.id = i.prop_id",
-      "where i.id = #{id}"})
+        "from item i left join prop p on p.id = i.prop_id",
+       "where i.id = #{id}"})
   // @formatter:on
   Item selectItem(Integer id);
 

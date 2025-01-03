@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-
 package org.apache.ibatis.parsing;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,74 +31,71 @@ class XNodeTest {
     String userNodeToString = parser.evalNode("/users/user").toString();
     String carsNodeToString = parser.evalNode("/users/user/cars").toString();
 
-    // @formatter:off
-    String usersNodeToStringExpect =
-      "<users>\n"
-      + "  <user>\n"
-      + "    <id>\n"
-      + "      100\n"
-      + "    </id>\n"
-      + "    <name>\n"
-      + "      Tom\n"
-      + "    </name>\n"
-      + "    <age>\n"
-      + "      30\n"
-      + "    </age>\n"
-      + "    <cars>\n"
-      + "      <car index=\"1\">\n"
-      + "        BMW\n"
-      + "      </car>\n"
-      + "      <car index=\"2\">\n"
-      + "        Audi\n"
-      + "      </car>\n"
-      + "      <car index=\"3\">\n"
-      + "        Benz\n"
-      + "      </car>\n"
-      + "    </cars>\n"
-      + "  </user>\n"
-      + "</users>\n";
-    // @formatter:on
+    String usersNodeToStringExpect = """
+        <users>
+          <user>
+            <id>
+              100
+            </id>
+            <name>
+              Tom
+            </name>
+            <age>
+              30
+            </age>
+            <cars>
+              <car index="1">
+                BMW
+              </car>
+              <car index="2">
+                Audi
+              </car>
+              <car index="3">
+                Benz
+              </car>
+            </cars>
+          </user>
+        </users>
+        """;
 
-    // @formatter:off
-    String userNodeToStringExpect =
-      "<user>\n"
-      + "  <id>\n"
-      + "    100\n"
-      + "  </id>\n"
-      + "  <name>\n"
-      + "    Tom\n"
-      + "  </name>\n"
-      + "  <age>\n"
-      + "    30\n"
-      + "  </age>\n"
-      + "  <cars>\n"
-      + "    <car index=\"1\">\n"
-      + "      BMW\n"
-      + "    </car>\n"
-      + "    <car index=\"2\">\n"
-      + "      Audi\n"
-      + "    </car>\n"
-      + "    <car index=\"3\">\n"
-      + "      Benz\n"
-      + "    </car>\n"
-      + "  </cars>\n"
-      + "</user>\n";
-    // @formatter:on
+    String userNodeToStringExpect = """
+        <user>
+          <id>
+            100
+          </id>
+          <name>
+            Tom
+          </name>
+          <age>
+            30
+          </age>
+          <cars>
+            <car index="1">
+              BMW
+            </car>
+            <car index="2">
+              Audi
+            </car>
+            <car index="3">
+              Benz
+            </car>
+          </cars>
+        </user>
+        """;
 
-    // @formatter:off
-    String carsNodeToStringExpect =
-      "<cars>\n"
-      + "  <car index=\"1\">\n"
-      + "    BMW\n"
-      + "  </car>\n"
-      + "  <car index=\"2\">\n"
-      + "    Audi\n"
-      + "  </car>\n"
-      + "  <car index=\"3\">\n"
-      + "    Benz\n"
-      + "  </car>\n"
-      + "</cars>\n";
-    // @formatter:on
+    String carsNodeToStringExpect = """
+        <cars>
+          <car index="1">
+            BMW
+          </car>
+          <car index="2">
+            Audi
+          </car>
+          <car index="3">
+            Benz
+          </car>
+        </cars>
+        """;
 
     assertEquals(usersNodeToStringExpect, usersNodeToString);
     assertEquals(userNodeToStringExpect, userNodeToString);
@@ -108,54 +104,56 @@ class XNodeTest {
 
   @Test
   void xNodeToString() {
-    // @formatter:off
-    String xml = "<mapper>\n" +
-        "  <select id='select' resultType='map'>\n" +
-        "    select\n" +
-        "    <var set='foo' value='bar' />\n" +
-        "      ID,\n" +
-        "      NAME\n" +
-        "    from STUDENT\n" +
-        "    <where>\n" +
-        "      <if test=\"name != null\">\n" +
-        "        NAME = #{name}\n" +
-        "      </if>\n" +
-        "      and DISABLED = false\n" +
-        "    </where>\n" +
-        "    order by ID\n" +
-        "    <choose>\n" +
-        "      <when test='limit10'>\n" +
-        "        limit 10\n" +
-        "      </when>\n" +
-        "      <otherwise>limit 20</otherwise>\n" +
-        "    </choose>\n" +
-        "  </select>\n" +
-        "</mapper>";
+    String xml = """
+        <mapper>
+          <select id='select' resultType='map'>
+            select
+            <var set='foo' value='bar' />
+              ID,
+              NAME
+            from STUDENT
+            <where>
+              <if test="name != null">
+                NAME = #{name}
+              </if>
+              and DISABLED = false
+            </where>
+            order by ID
+            <choose>
+              <when test='limit10'>
+                limit 10
+              </when>
+              <otherwise>limit 20</otherwise>
+            </choose>
+          </select>
+        </mapper>
+        """;
 
-    String expected = "<select id=\"select\" resultType=\"map\">\n" +
-        "  select\n" +
-        "  <var set=\"foo\" value=\"bar\" />\n" +
-        "  ID,\n" +
-        // a little bit ugly here, but not a blocker
-        "      NAME\n" +
-        "    from STUDENT\n" +
-        "  <where>\n" +
-        "    <if test=\"name != null\">\n" +
-        "      NAME = #{name}\n" +
-        "    </if>\n" +
-        "    and DISABLED = false\n" +
-        "  </where>\n" +
-        "  order by ID\n" +
-        "  <choose>\n" +
-        "    <when test=\"limit10\">\n" +
-        "      limit 10\n" +
-        "    </when>\n" +
-        "    <otherwise>\n" +
-        "      limit 20\n" +
-        "    </otherwise>\n" +
-        "  </choose>\n" +
-        "</select>\n";
-    // @formatter:on
+    // a little bit ugly with id/name break, but not a blocker
+    String expected = """
+        <select id="select" resultType="map">
+          select
+          <var set="foo" value="bar" />
+          ID,
+              NAME
+            from STUDENT
+          <where>
+            <if test="name != null">
+              NAME = #{name}
+            </if>
+            and DISABLED = false
+          </where>
+          order by ID
+          <choose>
+            <when test="limit10">
+              limit 10
+            </when>
+            <otherwise>
+              limit 20
+            </otherwise>
+          </choose>
+        </select>
+        """;
 
     XPathParser parser = new XPathParser(xml);
     XNode selectNode = parser.evalNode("/mapper/select");
@@ -163,7 +161,7 @@ class XNodeTest {
   }
 
   @Test
-  void testXnodeToStringVariables() throws Exception {
+  void xnodeToStringVariables() throws Exception {
     String src = "<root attr='${x}'>y = ${y}<sub attr='${y}'>x = ${x}</sub></root>";
     String expected = "<root attr=\"foo\">\n  y = bar\n  <sub attr=\"bar\">\n    x = foo\n  </sub>\n</root>\n";
     Properties vars = new Properties();

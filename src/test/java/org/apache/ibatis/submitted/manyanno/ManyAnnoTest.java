@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test;
 class ManyAnnoTest extends BaseDataTest {
 
   @Test
-  void testGetMessageForEmptyDatabase() throws Exception {
+  void getMessageForEmptyDatabase() throws Exception {
     final Environment environment = new Environment("test", new JdbcTransactionFactory(),
         BaseDataTest.createBlogDataSource());
     final Configuration config = new Configuration(environment);

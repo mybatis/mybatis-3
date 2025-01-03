@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -25,27 +25,23 @@ import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.decorators.LruCache;
 import org.apache.ibatis.cache.impl.PerpetualCache;
 
-// @formatter:off
 /**
  * The annotation that specify to use cache on namespace(e.g. mapper interface).
  * <p>
  * <b>How to use:</b>
  *
- * <pre>
- * &#064;CacheNamespace(implementation = CustomCache.class, properties = {
- *   &#064;Property(name = "host", value = "${mybatis.cache.host}"),
- *   &#064;Property(name = "port", value = "${mybatis.cache.port}"),
- *   &#064;Property(name = "name", value = "usersCache")
- * })
+ * <pre>{@code
+ * @CacheNamespace(implementation = CustomCache.class, properties = {
+ *     &#064;Property(name = "host", value = "${mybatis.cache.host}"),
+ *     &#064;Property(name = "port", value = "${mybatis.cache.port}"), &#064;Property(name = "name", value = "usersCache") })
  * public interface UserMapper {
  *   // ...
  * }
- * </pre>
+ * }</pre>
  *
  * @author Clinton Begin
  * @author Kazuki Shimizu
  */
-// @formatter:on
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

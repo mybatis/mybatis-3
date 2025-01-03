@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package org.apache.ibatis.cache;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.Serializable;
@@ -45,7 +46,7 @@ class SerializedCacheTest {
       cache.putObject(i, null);
     }
     for (int i = 0; i < 5; i++) {
-      assertEquals(null, cache.getObject(i));
+      assertNull(cache.getObject(i));
     }
   }
 

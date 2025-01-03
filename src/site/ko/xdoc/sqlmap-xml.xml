@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2023 the original author or authors.
+       Copyright 2009-2025 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -1046,6 +1046,124 @@ public class User {
             </tr>
           </tbody>
         </table>
+
+<h5>Nested Results for association or collection</h5>
+
+<p>While the following sections describe how to use <code>association</code> and <code>collection</code> for both Nested selects and Nested results, Since 3.6.0 we can now inject both using <code>constructor</code> mapping.</p>
+
+<p>Considering the following:</p>
+
+<source><![CDATA[public class User {
+   //...
+   public User(Integer id, String username, List<UserRole> userRoles) {
+     //...
+   }
+}
+
+public class UserRole {
+    // ...
+    public UserRole(Integer id, String role) {
+      // ...
+    }
+}
+]]></source>
+
+<p>We can map <code>UserRole</code> as a nested result, MyBatis will wait until the row has been fully &#x2018;completed&#x2019; before creating the object, this means that by the time the <code>User</code> gets created, <code>userRoles</code> will be complete and cannot be modified anymore.</p>
+
+<source><![CDATA[<resultMap id="userResultMap" type="User">
+  <constructor>
+    <idArg column="id" javaType="int" />
+    <arg column="username" javaType="String" />
+    <arg javaType="List" resultMap="userRoleResultMap" columnPrefix="role_"/>
+  </constructor>
+</resultMap>
+]]></source>
+
+<p>To achieve fully immutable objects in this example, we can also use constructor injection for <code>UserRole</code></p>
+
+<source><![CDATA[<resultMap id="userRoleResultMap" type="UserRole">
+  <constructor>
+    <idArg column="id" javaType="int" />
+    <arg column="role" javaType="String" />
+  </constructor>
+</resultMap>
+]]></source>
+
+<p>MyBatis needs to be explicitly told that the results have been ordered in such a way, that when a new main row is retrieved from the result set, no previous row results will be retrieved again. This can be set on the statement with the <code>resultOrdered</code> attribute:</p>
+
+<source><![CDATA[<select id="getAllUsers" resultMap="userResultMap" resultOrdered="true">
+    select
+      u.id,
+      u.username,
+      r.id as role_id,
+      r.role as role_role,
+    from user u
+      left join user_role ur on u.id = ur.user_id
+      inner join role r on r.id = ur.role_id
+    order by u.id, r.id
+</select>
+]]></source>
+
+<p>Note that <code>order by</code> is specified to order the results correctly. We can imagine the output to look something like:</p>
+
+<table class="table table-striped">
+<thead>
+<tr class="a">
+<th>row_nr</th>
+<th>u.id</th>
+<th>u.username</th>
+<th>r.id</th>
+<th>r.role</th></tr></thead><tbody>
+<tr class="b">
+<td>1</td>
+<td>1</td>
+<td>John</td>
+<td>1</td>
+<td>Admins</td></tr>
+<tr class="a">
+<td>2</td>
+<td>1</td>
+<td>John</td>
+<td>2</td>
+<td>Users</td></tr>
+<tr class="b">
+<td>3</td>
+<td>2</td>
+<td>Jack</td>
+<td>null</td>
+<td>null</td></tr>
+<tr class="a">
+<td>4</td>
+<td>3</td>
+<td>Peter</td>
+<td>2</td>
+<td>Users</td></tr>
+<tr class="b">
+<td>5</td>
+<td>3</td>
+<td>Peter</td>
+<td>3</td>
+<td>Maintainers</td></tr>
+<tr class="a">
+<td>6</td>
+<td>3</td>
+<td>Peter</td>
+<td>4</td>
+<td>Approvers</td></tr></tbody>
+</table>
+
+<p>After this query is run, we would have the following results:</p>
+
+<source><![CDATA[User{username=John, roles=[Admins, Users]}
+User{username=Jack, roles=[]}
+User{username=Peter, roles=[Users, Maintainers, Approvers]}
+]]></source>
+
+<p>If the 5th row here would have somehow appeared below the first row (via some <code>ORDER BY</code>), MyBatis would not be able to fully construct the <code>John</code> user correctly using constructor collection mapping.</p>
+
+<p>It is important to note that mixed mappings have limited support, i.e. property mappings combined with nested constructor mappings are likely to fail.
+When using this functionality, it is preferable for the entire mapping hierarchy to use immutable constructor mappings.</p>
+
 
         <h4>association</h4>
 
