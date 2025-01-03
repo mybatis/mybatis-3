@@ -25,6 +25,7 @@ import static org.mockito.Mockito.when;
 import java.sql.ParameterMetaData;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -136,6 +137,9 @@ class DefaultParameterHandlerTest {
         boundSql);
 
     PreparedStatement ps = mock(PreparedStatement.class);
+    ParameterMetaData pmd = mock(ParameterMetaData.class);
+    when(pmd.getParameterType(1)).thenReturn(Types.INTEGER);
+    when(ps.getParameterMetaData()).thenReturn(pmd);
 
     defaultParameterHandler.setParameters(ps);
 
@@ -164,6 +168,9 @@ class DefaultParameterHandlerTest {
         boundSql);
 
     PreparedStatement ps = mock(PreparedStatement.class);
+    ParameterMetaData pmd = mock(ParameterMetaData.class);
+    when(pmd.getParameterType(1)).thenReturn(Types.INTEGER);
+    when(ps.getParameterMetaData()).thenReturn(pmd);
 
     defaultParameterHandler.setParameters(ps);
 
@@ -192,6 +199,9 @@ class DefaultParameterHandlerTest {
         boundSql);
 
     PreparedStatement ps = mock(PreparedStatement.class);
+    ParameterMetaData pmd = mock(ParameterMetaData.class);
+    when(pmd.getParameterType(1)).thenReturn(Types.INTEGER);
+    when(ps.getParameterMetaData()).thenReturn(pmd);
 
     defaultParameterHandler.setParameters(ps);
 
@@ -227,6 +237,9 @@ class DefaultParameterHandlerTest {
         boundSql);
 
     PreparedStatement ps = mock(PreparedStatement.class);
+    ParameterMetaData pmd = mock(ParameterMetaData.class);
+    when(pmd.getParameterType(1)).thenReturn(Types.INTEGER);
+    when(ps.getParameterMetaData()).thenReturn(pmd);
 
     defaultParameterHandler.setParameters(ps);
 
