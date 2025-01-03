@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,8 @@
  */
 package org.apache.ibatis.submitted.typebasedtypehandlerresolution;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -257,9 +258,8 @@ class LocallySpecifiedTypeHandlerResolutionTest {
   @Test
   void specifyHandlerInXmlResultMap() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      User user = sqlSession
-          .selectOne(
-              "org.apache.ibatis.submitted.typebasedtypehandlerresolution.LocallySpecifiedHandlerMapper.selectXml", 1);
+      User user = sqlSession.selectOne(
+          "org.apache.ibatis.submitted.typebasedtypehandlerresolution.LocallySpecifiedHandlerMapper.selectXml", 1);
       assertEquals("garden", user.getStrvalue().getValue());
       assertEquals(31, user.getIntvalue().getValue());
       assertEquals(LocalDate.of(2020, 5, 11), user.getDatevalue());
@@ -281,10 +281,8 @@ class LocallySpecifiedTypeHandlerResolutionTest {
         user.setDatevalue2(LocalDate.of(2020, 5, 7));
         user.setStrings(Arrays.asList("aa", "bb"));
         user.setIntegers(Arrays.asList(11, 22));
-        sqlSession
-            .insert(
-                "org.apache.ibatis.submitted.typebasedtypehandlerresolution.LocallySpecifiedHandlerMapper.insertXml",
-                user);
+        sqlSession.insert(
+            "org.apache.ibatis.submitted.typebasedtypehandlerresolution.LocallySpecifiedHandlerMapper.insertXml", user);
       }
       {
         LocallySpecifiedHandlerMapper mapper = sqlSession.getMapper(LocallySpecifiedHandlerMapper.class);
@@ -308,10 +306,9 @@ class LocallySpecifiedTypeHandlerResolutionTest {
       user.setIntvalue(new FuzzyBean<Integer>(23));
       user.setDatevalue(LocalDate.of(2020, 5, 13));
       user.setDatevalue2(LocalDate.of(2020, 5, 7));
-      PersistenceException ex = assertThrows(PersistenceException.class, () -> sqlSession
-          .insert(
-              "org.apache.ibatis.submitted.typebasedtypehandlerresolution.LocallySpecifiedHandlerMapper.insertXmlWithoutParameterType",
-              user));
+      PersistenceException ex = assertThrows(PersistenceException.class, () -> sqlSession.insert(
+          "org.apache.ibatis.submitted.typebasedtypehandlerresolution.LocallySpecifiedHandlerMapper.insertXmlWithoutParameterType",
+          user));
       assertEquals("Unknown rawType : class java.lang.Object", ex.getCause().getCause().getMessage());
     }
   }

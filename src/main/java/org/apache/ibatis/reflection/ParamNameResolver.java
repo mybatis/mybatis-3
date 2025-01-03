@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -186,8 +186,8 @@ public class ParamNameResolver {
       if (type instanceof ParameterizedType) {
         Type[] typeArgs = ((ParameterizedType) type).getActualTypeArguments();
         return typeArgs[0];
-      } else if (type instanceof Class && ((Class<?>)type).isArray()) {
-        return ((Class<?>)type).getComponentType();
+      } else if (type instanceof Class && ((Class<?>) type).isArray()) {
+        return ((Class<?>) type).getComponentType();
       }
     }
     // TODO: param1, param2

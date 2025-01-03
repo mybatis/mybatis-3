@@ -49,7 +49,8 @@ public class XMLScriptBuilder extends BaseBuilder {
     this(configuration, context, parameterType, null);
   }
 
-  public XMLScriptBuilder(Configuration configuration, XNode context, Class<?> parameterType, ParamNameResolver paramNameResolver) {
+  public XMLScriptBuilder(Configuration configuration, XNode context, Class<?> parameterType,
+      ParamNameResolver paramNameResolver) {
     super(configuration);
     this.context = context;
     this.parameterType = parameterType;

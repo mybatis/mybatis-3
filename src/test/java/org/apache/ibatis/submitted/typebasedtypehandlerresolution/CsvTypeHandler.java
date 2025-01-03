@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -43,9 +43,9 @@ public class CsvTypeHandler extends BaseTypeHandler<Object> {
       throws SQLException {
     // test if the parameter matches 'type'
     if (parameter instanceof List) {
-      Class<?> elementClass = (Class<?>) ((ParameterizedType)type).getActualTypeArguments()[0];
+      Class<?> elementClass = (Class<?>) ((ParameterizedType) type).getActualTypeArguments()[0];
       if (String.class.equals(elementClass)) {
-        ps.setString(i, String.join(",", (List)parameter));
+        ps.setString(i, String.join(",", (List) parameter));
       } else if (Integer.class.equals(elementClass)) {
         ps.setString(i, (String) ((List) parameter).stream().map(String::valueOf).collect(Collectors.joining(",")));
       }

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -60,7 +60,8 @@ public interface LanguageDriver {
    */
   SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType);
 
-  default SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType, ParamNameResolver paramNameResolver) {
+  default SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType,
+      ParamNameResolver paramNameResolver) {
     return createSqlSource(configuration, script, parameterType);
   }
 
@@ -80,7 +81,8 @@ public interface LanguageDriver {
    */
   SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType);
 
-  default SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType, ParamNameResolver paramNameResolver) {
+  default SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType,
+      ParamNameResolver paramNameResolver) {
     return createSqlSource(configuration, script, parameterType);
   }
 

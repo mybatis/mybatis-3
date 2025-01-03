@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.submitted.typebasedtypehandlerresolution;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Arrays;
 import java.util.List;
@@ -116,10 +116,8 @@ class GloballyRegisteredTypeHandlerResolutionTest {
   @Test
   void handlerResolutionInXmlResultMap() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      User user = sqlSession
-          .selectOne(
-              "org.apache.ibatis.submitted.typebasedtypehandlerresolution.GloballyRegisteredHandlerMapper.selectXml",
-              1);
+      User user = sqlSession.selectOne(
+          "org.apache.ibatis.submitted.typebasedtypehandlerresolution.GloballyRegisteredHandlerMapper.selectXml", 1);
       assertEquals("garden", user.getStrvalue().getValue());
       assertEquals(31, user.getIntvalue().getValue());
       assertEquals(Arrays.asList("a", "b", "c"), user.getStrings());
@@ -137,10 +135,9 @@ class GloballyRegisteredTypeHandlerResolutionTest {
         user.setIntvalue(new FuzzyBean<Integer>(23));
         user.setStrings(Arrays.asList("aa", "bb"));
         user.setIntegers(Arrays.asList(11, 22));
-        sqlSession
-            .insert(
-                "org.apache.ibatis.submitted.typebasedtypehandlerresolution.GloballyRegisteredHandlerMapper.insertXml",
-                user);
+        sqlSession.insert(
+            "org.apache.ibatis.submitted.typebasedtypehandlerresolution.GloballyRegisteredHandlerMapper.insertXml",
+            user);
       }
       {
         GloballyRegisteredHandlerMapper mapper = sqlSession.getMapper(GloballyRegisteredHandlerMapper.class);
@@ -163,10 +160,9 @@ class GloballyRegisteredTypeHandlerResolutionTest {
         user.setIntvalue(new FuzzyBean<Integer>(38));
         user.setStrings(Arrays.asList("aa", "bb"));
         user.setIntegers(Arrays.asList(11, 22));
-        sqlSession
-            .insert(
-                "org.apache.ibatis.submitted.typebasedtypehandlerresolution.GloballyRegisteredHandlerMapper.insertXmlWithoutParameterType",
-                user);
+        sqlSession.insert(
+            "org.apache.ibatis.submitted.typebasedtypehandlerresolution.GloballyRegisteredHandlerMapper.insertXmlWithoutParameterType",
+            user);
       }
       {
         GloballyRegisteredHandlerMapper mapper = sqlSession.getMapper(GloballyRegisteredHandlerMapper.class);

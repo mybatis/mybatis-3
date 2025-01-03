@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -30,11 +30,11 @@ public interface GloballyRegisteredHandlerMapper {
   User getUser(Integer id);
 
   @Insert({ "insert into users (id, strvalue, intvalue, strings, integers)",
-    "values (#{id}, #{strvalue}, #{intvalue}, #{strings}, #{integers})" })
+      "values (#{id}, #{strvalue}, #{intvalue}, #{strings}, #{integers})" })
   void insertUser(User user);
 
   @Insert({ "insert into users (id, strvalue, intvalue, strings, integers)",
-    "values (#{user.id}, #{user.strvalue}, #{user.intvalue}, #{user.strings}, #{user.integers})" })
+      "values (#{user.id}, #{user.strvalue}, #{user.intvalue}, #{user.strings}, #{user.integers})" })
   void insertUserMultiParam(User user, String foo);
 
   @Select("select strvalue from users where id = #{id}")

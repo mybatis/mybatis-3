@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -70,7 +70,8 @@ public class ConflictedTypeHandler implements TypeHandler<Object> {
   private ExecutorException exception() {
     // TODO:
     return new ExecutorException(
-        "Multiple type-aware handlers are registered and being looked up without type; javaType=" + javaType + ", jdbcType=" + jdbcType + ", type handlers="
+        "Multiple type-aware handlers are registered and being looked up without type; javaType=" + javaType
+            + ", jdbcType=" + jdbcType + ", type handlers="
             + conflictedTypeHandlers.stream().map(x -> x.getClass().getName()).collect(Collectors.joining(",")));
   }
 }

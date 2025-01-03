@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -41,7 +41,8 @@ public class RawSqlSource implements SqlSource {
     this(configuration, rootSqlNode, parameterType, null);
   }
 
-  public RawSqlSource(Configuration configuration, SqlNode rootSqlNode, Class<?> parameterType, ParamNameResolver paramNameResolver) {
+  public RawSqlSource(Configuration configuration, SqlNode rootSqlNode, Class<?> parameterType,
+      ParamNameResolver paramNameResolver) {
     this(configuration, getSql(configuration, rootSqlNode), parameterType, paramNameResolver);
   }
 
@@ -49,7 +50,8 @@ public class RawSqlSource implements SqlSource {
     this(configuration, sql, parameterType, null);
   }
 
-  public RawSqlSource(Configuration configuration, String sql, Class<?> parameterType, ParamNameResolver paramNameResolver) {
+  public RawSqlSource(Configuration configuration, String sql, Class<?> parameterType,
+      ParamNameResolver paramNameResolver) {
     SqlSourceBuilder sqlSourceParser = new SqlSourceBuilder(configuration);
     Class<?> clazz = parameterType == null ? Object.class : parameterType;
     sqlSource = sqlSourceParser.parse(sql, clazz, new HashMap<>(), paramNameResolver);
