@@ -78,6 +78,7 @@
     <mockito.version>5.15.2</mockito.version>
     <mssql-jdbc.version>12.8.1.jre11</mssql-jdbc.version>
     <testcontainers.version>1.20.4</testcontainers.version>
+    <git-build-hook.version>3.5.0</git-build-hook.version>
 
     <!-- Add slow test groups here and annotate classes similar to @Tag('groupName'). -->
     <!-- Excluded groups are ran on github ci, to force here, pass -d"excludedGroups=" -->
@@ -418,6 +419,24 @@
             </enforceBytecodeVersion>
           </rules>
         </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>com.rudikershaw.gitbuildhook</groupId>
+        <artifactId>git-build-hook-maven-plugin</artifactId>
+        <version>${git-build-hook.version}</version>
+        <configuration>
+          <installHooks>
+            <pre-commit>hooks/pre-commit.sh</pre-commit>
+          </installHooks>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>install</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
