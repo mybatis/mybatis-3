@@ -480,11 +480,16 @@ public class MapperBuilderAssistant extends BaseBuilder {
    *          the current mappings
    *
    * @return null if there are no missing javaType mappings, or if no suitable mapping could be determined
+   *
+   * @see <a href="https://github.com/mybatis/mybatis-3/issues/2618">#2618</a>
    */
   public List<ResultMapping> autoTypeResultMappingsForUnknownJavaTypes(Class<?> resultType,
       List<ResultMapping> resultMappings) {
+    final List<Class<?>> typesToMatch = resultMappings.stream().map(ResultMapping::getJavaType)
+        .collect(Collectors.toList());
+
     // check if we have any undefined java types present, and try to set them automatically
-    if (resultMappings.stream().noneMatch(resultMapping -> Object.class.equals(resultMapping.getJavaType()))) {
+    if (typesToMatch.stream().noneMatch(type -> type == null || Object.class.equals(type))) {
       return null;
     }
 
@@ -492,18 +497,21 @@ public class MapperBuilderAssistant extends BaseBuilder {
         .map(Constructor::getParameterTypes).filter(parameters -> parameters.length == resultMappings.size())
         .map(Arrays::asList).collect(Collectors.toList());
 
-    final List<Class<?>> typesToMatch = resultMappings.stream().map(ResultMapping::getJavaType)
-        .collect(Collectors.toList());
-
     List<Class<?>> matchingTypes = null;
-
-    outer: for (final List<Class<?>> actualTypes : matchingConstructors) {
+    for (List<Class<?>> actualTypes : matchingConstructors) {
+      boolean matchesType = true;
       for (int j = 0; j < typesToMatch.size(); j++) {
         final Class<?> type = typesToMatch.get(j);
+
         // pre-filled a type, check if it matches the constructor
-        if (!Object.class.equals(type) && !type.equals(actualTypes.get(j))) {
-          continue outer;
+        if (type != null && !Object.class.equals(type) && !type.equals(actualTypes.get(j))) {
+          matchesType = false;
+          break;
         }
+      }
+
+      if (!matchesType) {
+        continue;
       }
 
       if (matchingTypes != null) {
