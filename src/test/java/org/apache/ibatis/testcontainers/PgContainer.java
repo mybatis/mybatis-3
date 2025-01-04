@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -31,8 +31,8 @@ public final class PgContainer {
 
   private static PostgreSQLContainer<?> initContainer() {
     @SuppressWarnings("resource")
-    PostgreSQLContainer<?> container = new PostgreSQLContainer<>().withDatabaseName(DB_NAME).withUsername(USERNAME)
-        .withPassword(PASSWORD);
+    PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres").withDatabaseName(DB_NAME)
+        .withUsername(USERNAME).withPassword(PASSWORD);
     container.start();
     return container;
   }
