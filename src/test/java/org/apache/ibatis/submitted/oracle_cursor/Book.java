@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package org.apache.ibatis.submitted.oracle_implicit_cursor;
+package org.apache.ibatis.submitted.oracle_cursor;
 
 import java.util.Objects;
 

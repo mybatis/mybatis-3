@@ -13,7 +13,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.submitted.oracle_implicit_cursor;
+package org.apache.ibatis.submitted.oracle_cursor;
 
 import java.util.List;
 
@@ -24,5 +24,15 @@ public interface Mapper {
   List<Author> selectImplicitCursors_Prepared();
 
   List<Author> selectImplicitCursors_Callable();
+
+  List<Author> selectNestedCursor_Statement();
+
+  List<Author> selectNestedCursor_Prepared();
+
+  List<Author> selectNestedCursor_Callable();
+
+  List<Author2> selectNestedCursorOfStrings();
+
+  List<Book2> selectNestedCursorAssociation();
 
 }

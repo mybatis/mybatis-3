@@ -13,10 +13,13 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.submitted.oracle_implicit_cursor;
+package org.apache.ibatis.submitted.oracle_cursor;
 
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -33,7 +36,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 @Tag("TestcontainersTests")
-class OracleImplicitCursorTest {
+class OracleCursorTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
@@ -47,7 +50,7 @@ class OracleImplicitCursorTest {
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
 
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-        "org/apache/ibatis/submitted/oracle_implicit_cursor/CreateDB.sql");
+        "org/apache/ibatis/submitted/oracle_cursor/CreateDB.sql");
   }
 
   @Test
@@ -65,7 +68,26 @@ class OracleImplicitCursorTest {
     doTest(Mapper::selectImplicitCursors_Callable);
   }
 
+  @Test
+  void nestedCursors_Statement() {
+    doTest(Mapper::selectNestedCursor_Statement, LinkedList.class);
+  }
+
+  @Test
+  void nestedCursors_Prepared() {
+    doTest(Mapper::selectNestedCursor_Prepared, LinkedList.class);
+  }
+
+  @Test
+  void nestedCursors_Callable() {
+    doTest(Mapper::selectNestedCursor_Callable, LinkedList.class);
+  }
+
   private void doTest(Function<Mapper, List<Author>> query) {
+    doTest(query, ArrayList.class);
+  }
+
+  private void doTest(Function<Mapper, List<Author>> query, Class<?> expectedBooksType) {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<Author> authors = query.apply(mapper);
@@ -73,6 +95,28 @@ class OracleImplicitCursorTest {
           List.of(new Author(1, "John", List.of(new Book(1, "C#"), new Book(2, "Python"), new Book(5, "Ruby"))),
               new Author(2, "Jane", List.of(new Book(3, "SQL"), new Book(4, "Java")))),
           authors);
+      assertSame(expectedBooksType, authors.get(0).getBooks().getClass());
+    }
+  }
+
+  @Test
+  void nestedCursorOfStrings() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      List<Author2> authors = mapper.selectNestedCursorOfStrings();
+      assertIterableEquals(List.of(new Author2(1, "John", List.of("C#", "Python", "Ruby")),
+          new Author2(2, "Jane", List.of("SQL", "Java"))), authors);
+    }
+  }
+
+  @Test
+  void nestedCursorAssociation() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      List<Book2> books = mapper.selectNestedCursorAssociation();
+      assertIterableEquals(List.of(new Book2(1, "C#", new Author(1, "John")),
+          new Book2(2, "Python", new Author(1, "John")), new Book2(3, "SQL", new Author(2, "Jane")),
+          new Book2(4, "Java", new Author(2, "Jane")), new Book2(5, "Ruby", new Author(1, "John"))), books);
     }
   }
 }

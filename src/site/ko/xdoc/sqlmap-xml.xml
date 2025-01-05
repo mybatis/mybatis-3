@@ -1455,6 +1455,102 @@ When using this functionality, it is preferable for the entire mapping hierarchy
     columnPrefix="co_" />
 </resultMap>]]></source>
 
+
+<h4>Nested Cursor for Association</h4>
+
+<p>Some databases can return <code>java.sql.ResultSet</code> as a column value.<br />
+Here is the statement and result map.</p>
+
+<source><![CDATA[<resultMap id="blogResult" type="Blog">
+  <id property="id" column="id" />
+  <result property="title" column="title" />
+  <association property="author" column="author" resultSet="NESTED_CURSOR">
+    <id property="id" column="id" />
+    <result property="username" column="username" />
+  </association>
+</resultMap>
+
+<select id="selectBlog" resultMap="blogResult">
+  select b.id, b.name, cursor(
+    select a.id, a.username from author a where b.author_id = a.id
+  ) author from blog b
+</select>]]></source>
+
+<p>Compared to the examples in the previous section, the key difference is the <code>resultSet</code> attribute in the <code>&lt;association&gt;</code> element.<br />
+Its value <code>NESTED_CURSOR</code> indicates that the value of the column <code>author</code> is nested cursor.</p>
+
+
+        <h4>Multiple ResultSets for Association</h4>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Attribute</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>column</code></td>
+              <td>
+                When using multiple resultset this attribute specifies the columns (separated by commas) that will be correlated
+                with the <code>foreignColumn</code> to identify the parent and the child of a relationship.
+              </td>
+            </tr>
+            <tr>
+              <td><code>foreignColumn</code></td>
+              <td>
+                Identifies the name of the columns that contains the foreign keys which values will be matched against the
+                values of the columns specified in the <code>column</code> attibute of the parent type.
+              </td>
+            </tr>
+            <tr>
+              <td><code>resultSet</code></td>
+              <td>
+                Identifies the name of the result set where this complex type will be loaded from.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>Starting from version 3.2.3 MyBatis provides yet another way to solve the N+1 problem.</p>
+
+        <p>Some databases allow stored procedures to return more than one resultset or execute more than one statement
+         at once and return a resultset per each one. This can be used to hit the database just once
+         and return related data without using a join.</p>
+
+        <p>In the example, the stored procedure executes the following queries and returns two result sets.
+          The first will contain Blogs and the second Authors.</p>
+
+        <source><![CDATA[SELECT * FROM BLOG WHERE ID = #{id}
+
+SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
+
+        <p>A name must be given to each result set by adding a
+        <code>resultSets</code> attribute to the mapped statement with a list of names separated by commas.</p>
+
+        <source><![CDATA[<select id="selectBlog" resultSets="blogs,authors" resultMap="blogResult" statementType="CALLABLE">
+  {call getBlogsAndAuthors(#{id,jdbcType=INTEGER,mode=IN})}
+</select>
+]]></source>
+
+        <p>
+        Now we can specify that the data to fill the "author" association comes in the "authors" result set:
+        </p>
+
+        <source><![CDATA[<resultMap id="blogResult" type="Blog">
+  <id property="id" column="id" />
+  <result property="title" column="title"/>
+  <association property="author" javaType="Author" resultSet="authors" column="author_id" foreignColumn="id">
+    <id property="id" column="id"/>
+    <result property="username" column="username"/>
+    <result property="password" column="password"/>
+    <result property="email" column="email"/>
+    <result property="bio" column="bio"/>
+  </association>
+</resultMap>]]></source>
+
+
         <p>지금까지 “has one” 관계를 다루는 방법을 보았다.
     하지만 “has many” 는 어떻게 처리할까?
     그건 다음 섹션에서 다루어보자.</p>
@@ -1561,6 +1657,60 @@ When using this functionality, it is preferable for the entire mapping hierarchy
   <result property="subject" column="subject"/>
   <result property="body" column="body"/>
 </resultMap>]]></source>
+
+
+<h4>Nested Cursor for Collection</h4>
+
+<p>It might be obvious, but nested cursor can return multiple rows.<br />
+Just like <code>&lt;association&gt;</code>, you just need to specify <code>resultSet="NESTED_CURSOR"</code> in the <code>&lt;collection&gt;</code> element.</p>
+
+<source><![CDATA[<resultMap id="blogResult" type="Blog">
+  <id property="id" column="id" />
+  <result property="title" column="title" />
+  <collection property="posts" column="posts" resultSet="NESTED_CURSOR">
+    <id property="id" column="id" />
+    <result property="subject" column="subject" />
+    <result property="body" column="body" />
+  </collection>
+</resultMap>
+
+<select id="selectBlog" resultMap="blogResult">
+  select b.id, b.name, cursor(
+    select p.id, p.subject, p.body from post p where p.blog_id = b.id
+  ) posts from blog b
+</select>]]></source>
+
+
+        <h4>Multiple ResultSets for Collection</h4>
+
+        <p>
+          As we did for the association, we can call a stored procedure that executes two queries and returns two result sets, one with Blogs
+          and another with Posts:
+        </p>
+
+        <source><![CDATA[SELECT * FROM BLOG WHERE ID = #{id}
+
+SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
+
+        <p>A name must be given to each result set by adding a
+        <code>resultSets</code> attribute to the mapped statement with a list of names separated by commas.</p>
+
+        <source><![CDATA[<select id="selectBlog" resultSets="blogs,posts" resultMap="blogResult">
+  {call getBlogsAndPosts(#{id,jdbcType=INTEGER,mode=IN})}
+</select>]]></source>
+
+        <p>We specify that the "posts" collection will be filled out of data contained in the result set named "posts":</p>
+
+        <source><![CDATA[<resultMap id="blogResult" type="Blog">
+  <id property="id" column="id" />
+  <result property="title" column="title"/>
+  <collection property="posts" ofType="Post" resultSet="posts" column="id" foreignColumn="blog_id">
+    <id property="id" column="id"/>
+    <result property="subject" column="subject"/>
+    <result property="body" column="body"/>
+  </collection>
+</resultMap>]]></source>
+
 
         <p><span class="label important">참고</span> associations과 collections에서 내포의 단계 혹은 조합에는 제한이 없다.
     매핑할때는 성능을 생각해야 한다.

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,6 +14,10 @@
  *    limitations under the License.
  */
 package org.apache.ibatis.mapping;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.apache.ibatis.session.Configuration;
 import org.junit.jupiter.api.Assertions;
@@ -30,15 +34,29 @@ class ResultMappingTest {
   // Issue 697: Association with both a resultMap and a select attribute should throw exception
   @Test
   void shouldThrowErrorWhenBothResultMapAndNestedSelectAreSet() {
-    Assertions.assertThrows(IllegalStateException.class, () -> new ResultMapping.Builder(configuration, "prop")
+    assertThrows(IllegalStateException.class, () -> new ResultMapping.Builder(configuration, "prop")
         .nestedQueryId("nested query ID").nestedResultMapId("nested resultMap").build());
   }
 
   // Issue 4: column is mandatory on nested queries
   @Test
   void shouldFailWithAMissingColumnInNetstedSelect() {
-    Assertions.assertThrows(IllegalStateException.class,
+    assertThrows(IllegalStateException.class,
         () -> new ResultMapping.Builder(configuration, "prop").nestedQueryId("nested query ID").build());
+  }
+
+  @Test
+  void shouldFailIfSizeOfColumnsAndForeignColumnsDontMatch() {
+    IllegalStateException ex = Assertions.assertThrows(IllegalStateException.class,
+        () -> new ResultMapping.Builder(configuration, "books").resultSet("bookRS").column("id,x")
+            .foreignColumn("author_id").nestedResultMapId("bookRM").build());
+    assertEquals("There should be the same number of columns and foreignColumns in property books", ex.getMessage());
+  }
+
+  @Test
+  void shouldNestedCursorNotRequireForeignColumns() {
+    assertNotNull(new ResultMapping.Builder(configuration, "books").resultSet(ResultMapping.NESTED_CURSOR)
+        .nestedResultMapId("bookRM").column("books").build());
   }
 
 }

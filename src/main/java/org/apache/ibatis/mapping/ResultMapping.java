@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -29,6 +29,11 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
  * @author Clinton Begin
  */
 public class ResultMapping {
+
+  /**
+   * Reserved result set name indicating a nested cursor is mapped to this property.
+   */
+  public static final String NESTED_CURSOR = "NESTED_CURSOR";
 
   private Configuration configuration;
   private String property;
@@ -166,7 +171,8 @@ public class ResultMapping {
         if (resultMapping.foreignColumn != null) {
           numForeignColumns = resultMapping.foreignColumn.split(",").length;
         }
-        if (numColumns != numForeignColumns) {
+        if (numColumns != numForeignColumns && !NESTED_CURSOR.equals(resultMapping.resultSet)) {
+          // Nested cursor does not use 'foreignKey'
           throw new IllegalStateException(
               "There should be the same number of columns and foreignColumns in property " + resultMapping.property);
         }

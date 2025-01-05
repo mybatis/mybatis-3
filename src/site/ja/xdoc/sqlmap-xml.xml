@@ -1608,6 +1608,31 @@ User{username=Peter, roles=[Users, Maintainers, Approvers]}
     columnPrefix="co_" />
 </resultMap>]]></source>
 
+
+<h4>ネストされたカーソルを association にマッピングする</h4>
+
+<p>データベースによっては列の値として <code>java.sql.ResultSet</code> 返すことができます。<br />
+このような結果をマッピングする例を説明します。</p>
+
+<source><![CDATA[<resultMap id="blogResult" type="Blog">
+  <id property="id" column="id" />
+  <result property="title" column="title" />
+  <association property="author" column="author" resultSet="NESTED_CURSOR">
+    <id property="id" column="id" />
+    <result property="username" column="username" />
+  </association>
+</resultMap>
+
+<select id="selectBlog" resultMap="blogResult">
+  select b.id, b.name, cursor(
+    select a.id, a.username from author a where b.author_id = a.id
+  ) author from blog b
+</select>]]></source>
+
+<p>上の章の例との重要な違いは、<code>&lt;association&gt;</code> 要素の <code>resultSet</code> 属性に特別な値 <code>NESTED_CURSOR</code> を指定している点です。<br />
+これによって、<code>author</code> 列の値をネストされたカーソルとしてマッピングすることができます。</p>
+
+
         <h4>複数の ResultSet を association にマッピングする</h4>
 
         <table>
@@ -1788,6 +1813,29 @@ SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
   <result property="subject" column="subject"/>
   <result property="body" column="body"/>
 </resultMap>]]></source>
+
+
+<h4>ネストされたカーソルを collection にマッピングする</h4>
+
+<p>当然ですが、ネストされたカーソルが複数の値を返す場合もあります。<br />
+先に説明した <code>&lt;association&gt;</code> の場合と同様、 <code>&lt;collection&gt;</code> 要素に <code>resultSet="NESTED_CURSOR"</code> を指定してください。</p>
+
+<source><![CDATA[<resultMap id="blogResult" type="Blog">
+  <id property="id" column="id" />
+  <result property="title" column="title" />
+  <collection property="posts" column="posts" resultSet="NESTED_CURSOR">
+    <id property="id" column="id" />
+    <result property="subject" column="subject" />
+    <result property="body" column="body" />
+  </collection>
+</resultMap>
+
+<select id="selectBlog" resultMap="blogResult">
+  select b.id, b.name, cursor(
+    select p.id, p.subject, p.body from post p where p.blog_id = b.id
+  ) posts from blog b
+</select>]]></source>
+
 
         <h4>複数の ResultSets を collection にマッピングする</h4>
 
