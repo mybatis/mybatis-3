@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2024 the original author or authors.
+       Copyright 2009-2025 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -231,7 +231,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 true | false
               </td>
               <td>
-                False
+                false
               </td>
             </tr>
             <tr>
@@ -263,7 +263,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                   的日志等级必须设置为 <code>WARN</code>）</li>
                   <li><code>FAILING</code>: 映射失败 (抛出 <code>SqlSessionException</code>)</li>
                 </ul>
-                Note that there could be false-positives when `autoMappingBehavior` is set to `FULL`.
+                请注意，当<code>autoMappingBehavior</code>设置为<code>FULL</code>时，可能会出现误报。
               </td>
               <td>
                 NONE, WARNING, FAILING
@@ -342,7 +342,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 true | false
               </td>
               <td>
-                False
+                false
               </td>
             </tr>
             <tr>
@@ -356,7 +356,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 true | false
               </td>
               <td>
-                True
+                true
               </td>
             </tr>
             <tr>
@@ -371,7 +371,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 true | false
               </td>
               <td>
-                False
+                false
               </td>
             </tr>
             <tr>
