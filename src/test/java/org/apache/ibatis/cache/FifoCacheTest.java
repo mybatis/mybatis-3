@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -70,6 +70,21 @@ class FifoCacheTest {
     cache.removeObject(1);
     cache.putObject(1, 1);
     assertNotNull(cache.getObject(0));
+  }
+
+  @Test
+  void shouldResizeKeyList() {
+    FifoCache cache = new FifoCache(new PerpetualCache("default"));
+    cache.setSize(5);
+    for (int i = 0; i < 5; i++) {
+      cache.putObject(i, i);
+    }
+    cache.setSize(3);
+    assertNull(cache.getObject(0));
+    assertNull(cache.getObject(1));
+    assertNotNull(cache.getObject(2));
+    assertNotNull(cache.getObject(3));
+    assertNotNull(cache.getObject(4));
   }
 
 }
