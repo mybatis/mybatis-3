@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ public final class MysqlContainer {
 
   private static MySQLContainer<?> initContainer() {
     @SuppressWarnings("resource")
-    MySQLContainer<?> container = new MySQLContainer<>().withDatabaseName(DB_NAME).withUsername(USERNAME)
+    MySQLContainer<?> container = new MySQLContainer<>("mysql").withDatabaseName(DB_NAME).withUsername(USERNAME)
         .withPassword(PASSWORD).withUrlParam("useSSL", "false");
     container.start();
     return container;

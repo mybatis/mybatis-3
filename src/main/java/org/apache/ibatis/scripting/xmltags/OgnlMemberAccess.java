@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ class OgnlMemberAccess implements MemberAccess {
     Object result = null;
     if (isAccessible(context, target, member, propertyName)) {
       AccessibleObject accessible = (AccessibleObject) member;
-      if (!accessible.isAccessible()) {
+      if (!accessible.canAccess(target)) {
         result = Boolean.FALSE;
         accessible.setAccessible(true);
       }
