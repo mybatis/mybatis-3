@@ -128,6 +128,36 @@
     <include refid="nestedCursor" />
   </select>
 
+  <!-- Map nested cursor to property using type handler. -->
+  <resultMap id="authorRM_TypeHandler"
+    type="org.apache.ibatis.submitted.oracle_cursor.Author">
+    <id property="id" column="id" />
+    <result property="name" column="name" />
+    <result property="books" column="books"
+      typeHandler="org.apache.ibatis.submitted.oracle_cursor.BooksTypeHandler" />
+  </resultMap>
+
+  <select id="selectNestedCursorTypeHandler"
+    resultMap="authorRM_TypeHandler">
+    <include refid="nestedCursor" />
+  </select>
+
+  <!-- Map nested cursor to constructor arg using type handler. -->
+  <resultMap id="authorRM_TypeHandlerConstructor"
+    type="org.apache.ibatis.submitted.oracle_cursor.Author">
+    <constructor>
+      <idArg column="id" javaType="int" />
+      <arg column="name" javaType="string" />
+      <arg column="books" javaType="list"
+        typeHandler="org.apache.ibatis.submitted.oracle_cursor.BooksTypeHandler" />
+    </constructor>
+  </resultMap>
+
+  <select id="selectNestedCursorTypeHandlerConstructor"
+    resultMap="authorRM_TypeHandlerConstructor">
+    <include refid="nestedCursor" />
+  </select>
+
   <!-- Use inline result map to map nested cursor to collection. -->
   <resultMap id="author2RM_InlineRM"
     type="org.apache.ibatis.submitted.oracle_cursor.Author2">

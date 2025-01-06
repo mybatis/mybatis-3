@@ -35,6 +35,10 @@ public interface Mapper {
 
   List<Author> selectNestedCursorConstructorCollection();
 
+  List<Author> selectNestedCursorTypeHandler();
+
+  List<Author> selectNestedCursorTypeHandlerConstructor();
+
   List<Author2> selectNestedCursorOfStrings();
 
   List<Book2> selectNestedCursorAssociation();

@@ -93,6 +93,16 @@ class OracleCursorTest {
     doTest(Mapper::selectNestedCursorConstructorCollection);
   }
 
+  @Test
+  void nestedCursorsTypeHandler() {
+    doTest(Mapper::selectNestedCursorTypeHandler);
+  }
+
+  @Test
+  void nestedCursorsTypeHandlerConstructor() {
+    doTest(Mapper::selectNestedCursorTypeHandlerConstructor);
+  }
+
   private void doTest(Function<Mapper, List<Author>> query) {
     doTest(query, ArrayList.class);
   }
