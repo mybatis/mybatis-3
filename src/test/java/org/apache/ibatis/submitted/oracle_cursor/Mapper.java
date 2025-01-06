@@ -31,6 +31,8 @@ public interface Mapper {
 
   List<Author> selectNestedCursor_Callable();
 
+  List<Author> selectNestedCursor_Automap();
+
   List<Author2> selectNestedCursorOfStrings();
 
   List<Book2> selectNestedCursorAssociation();

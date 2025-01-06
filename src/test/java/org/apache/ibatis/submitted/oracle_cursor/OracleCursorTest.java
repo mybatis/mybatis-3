@@ -83,6 +83,11 @@ class OracleCursorTest {
     doTest(Mapper::selectNestedCursor_Callable, LinkedList.class);
   }
 
+  @Test
+  void nestedCursors_Automap() {
+    doTest(Mapper::selectNestedCursor_Automap);
+  }
+
   private void doTest(Function<Mapper, List<Author>> query) {
     doTest(query, ArrayList.class);
   }

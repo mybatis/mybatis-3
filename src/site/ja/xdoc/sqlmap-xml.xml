@@ -1617,7 +1617,7 @@ User{username=Peter, roles=[Users, Maintainers, Approvers]}
 <source><![CDATA[<resultMap id="blogResult" type="Blog">
   <id property="id" column="id" />
   <result property="title" column="title" />
-  <association property="author" column="author" resultSet="NESTED_CURSOR">
+  <association property="author" column="author" jdbcType="CURSOR">
     <id property="id" column="id" />
     <result property="username" column="username" />
   </association>
@@ -1629,7 +1629,7 @@ User{username=Peter, roles=[Users, Maintainers, Approvers]}
   ) author from blog b
 </select>]]></source>
 
-<p>上の章の例との重要な違いは、<code>&lt;association&gt;</code> 要素の <code>resultSet</code> 属性に特別な値 <code>NESTED_CURSOR</code> を指定している点です。<br />
+<p>上の章の例との重要な違いは、<code>&lt;association&gt;</code> 要素の <code>jdbcType</code> 属性に <code>CURSOR</code> を指定している点です。<br />
 これによって、<code>author</code> 列の値をネストされたカーソルとしてマッピングすることができます。</p>
 
 
@@ -1818,12 +1818,12 @@ SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
 <h4>ネストされたカーソルを collection にマッピングする</h4>
 
 <p>当然ですが、ネストされたカーソルが複数の値を返す場合もあります。<br />
-先に説明した <code>&lt;association&gt;</code> の場合と同様、 <code>&lt;collection&gt;</code> 要素に <code>resultSet="NESTED_CURSOR"</code> を指定してください。</p>
+先に説明した <code>&lt;association&gt;</code> の場合と同様、 <code>&lt;collection&gt;</code> 要素に <code>jdbcType="CURSOR"</code> を指定してください。</p>
 
 <source><![CDATA[<resultMap id="blogResult" type="Blog">
   <id property="id" column="id" />
   <result property="title" column="title" />
-  <collection property="posts" column="posts" resultSet="NESTED_CURSOR">
+  <collection property="posts" column="posts" jdbcType="CURSOR">
     <id property="id" column="id" />
     <result property="subject" column="subject" />
     <result property="body" column="body" />

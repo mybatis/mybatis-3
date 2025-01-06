@@ -1669,7 +1669,7 @@ Here is the statement and result map.</p>
 <source><![CDATA[<resultMap id="blogResult" type="Blog">
   <id property="id" column="id" />
   <result property="title" column="title" />
-  <association property="author" column="author" resultSet="NESTED_CURSOR">
+  <association property="author" column="author" jdbcType="CURSOR">
     <id property="id" column="id" />
     <result property="username" column="username" />
   </association>
@@ -1681,8 +1681,8 @@ Here is the statement and result map.</p>
   ) author from blog b
 </select>]]></source>
 
-<p>Compared to the examples in the previous section, the key difference is the <code>resultSet</code> attribute in the <code>&lt;association&gt;</code> element.<br />
-Its value <code>NESTED_CURSOR</code> indicates that the value of the column <code>author</code> is nested cursor.</p>
+<p>Compared to the examples in the previous section, the key difference is the <code>jdbcType</code> attribute in the <code>&lt;association&gt;</code> element.<br />
+Its value <code>CURSOR</code> indicates that the value of the column <code>author</code> is nested cursor.</p>
 
 
         <h4>关联的多结果集（ResultSet）</h4>
@@ -1879,12 +1879,12 @@ SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
 <h4>Nested Cursor for Collection</h4>
 
 <p>It might be obvious, but nested cursor can return multiple rows.<br />
-Just like <code>&lt;association&gt;</code>, you just need to specify <code>resultSet="NESTED_CURSOR"</code> in the <code>&lt;collection&gt;</code> element.</p>
+Just like <code>&lt;association&gt;</code>, you just need to specify <code>jdbcType="CURSOR"</code> in the <code>&lt;collection&gt;</code> element.</p>
 
 <source><![CDATA[<resultMap id="blogResult" type="Blog">
   <id property="id" column="id" />
   <result property="title" column="title" />
-  <collection property="posts" column="posts" resultSet="NESTED_CURSOR">
+  <collection property="posts" column="posts" jdbcType="CURSOR">
     <id property="id" column="id" />
     <result property="subject" column="subject" />
     <result property="body" column="body" />

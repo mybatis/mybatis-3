@@ -64,12 +64,14 @@
     <include refid="implicitCursors" />
   </select>
 
-  <resultMap id="authorNestedCursorRM"
+  <!-- Referencing external result map to map nested curso to collectionr.
+    Specifying `javaType` to use particular `List` implementation. -->
+  <resultMap id="authorRM_NestedCursor"
     type="org.apache.ibatis.submitted.oracle_cursor.Author">
     <id property="id" column="id" />
     <result property="name" column="name" />
     <collection property="books" column="books"
-      javaType="java.util.LinkedList" resultSet="NESTED_CURSOR"
+      javaType="java.util.LinkedList" jdbcType="CURSOR"
       resultMap="bookRM" />
   </resultMap>
 
@@ -80,49 +82,67 @@
   ]]></sql>
 
   <select id="selectNestedCursor_Statement"
-    resultMap="authorNestedCursorRM" statementType="STATEMENT">
+    resultMap="authorRM_NestedCursor" statementType="STATEMENT">
     <include refid="nestedCursor" />
   </select>
 
   <select id="selectNestedCursor_Prepared"
-    resultMap="authorNestedCursorRM" statementType="PREPARED">
+    resultMap="authorRM_NestedCursor" statementType="PREPARED">
     <include refid="nestedCursor" />
   </select>
 
   <select id="selectNestedCursor_Callable"
-    resultMap="authorNestedCursorRM" statementType="CALLABLE">
+    resultMap="authorRM_NestedCursor" statementType="CALLABLE">
     <include refid="nestedCursor" />
   </select>
 
-  <resultMap id="author2NestedCursorRM"
+  <!-- As mapping Book does not require <association> nor <collection>, you
+    can specify `ofType="Book"` and automap the properties. -->
+  <resultMap id="authorRM_Automap"
+    type="org.apache.ibatis.submitted.oracle_cursor.Author">
+    <id property="id" column="id" />
+    <result property="name" column="name" />
+    <collection property="books" column="books"
+      jdbcType="CURSOR"
+      ofType="org.apache.ibatis.submitted.oracle_cursor.Book" />
+  </resultMap>
+
+  <select id="selectNestedCursor_Automap"
+    resultMap="authorRM_Automap">
+    <include refid="nestedCursor" />
+  </select>
+
+  <!-- Use inline result map to map nested cursor to collection. -->
+  <resultMap id="author2RM_InlineRM"
     type="org.apache.ibatis.submitted.oracle_cursor.Author2">
     <id property="id" column="id" />
     <result property="name" column="name" />
     <collection property="bookNames" column="book_names"
-      ofType="string" javaType="list" resultSet="NESTED_CURSOR">
+      ofType="string" jdbcType="CURSOR">
       <result column="name" />
     </collection>
   </resultMap>
 
   <select id="selectNestedCursorOfStrings"
-    resultMap="author2NestedCursorRM"><![CDATA[
+    resultMap="author2RM_InlineRM"><![CDATA[
     select a.id, a.name, cursor(
       select b.name from book b where b.author_id = a.id
     ) book_names from author a
   ]]></select>
 
-  <resultMap id="book2InlineAssociationRM"
+  <!-- Map nested cursor to association. -->
+  <resultMap id="book2RM_Association"
     type="org.apache.ibatis.submitted.oracle_cursor.Book2">
     <id property="id" column="id" />
     <result property="name" column="name" />
-    <association property="author" column="author" resultSet="NESTED_CURSOR">
+    <association property="author" column="author" jdbcType="CURSOR">
       <id property="id" column="id" />
       <result property="name" column="name" />
     </association>
   </resultMap>
 
   <select id="selectNestedCursorAssociation"
-    resultMap="book2InlineAssociationRM"><![CDATA[
+    resultMap="book2RM_Association"><![CDATA[
     select b.id, b.name, cursor(
       select a.id, a.name from author a where b.author_id = a.id
     ) author from book b

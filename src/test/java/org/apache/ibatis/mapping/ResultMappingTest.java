@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.type.JdbcType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -55,7 +56,7 @@ class ResultMappingTest {
 
   @Test
   void shouldNestedCursorNotRequireForeignColumns() {
-    assertNotNull(new ResultMapping.Builder(configuration, "books").resultSet(ResultMapping.NESTED_CURSOR)
+    assertNotNull(new ResultMapping.Builder(configuration, "books").jdbcType(JdbcType.CURSOR)
         .nestedResultMapId("bookRM").column("books").build());
   }
 

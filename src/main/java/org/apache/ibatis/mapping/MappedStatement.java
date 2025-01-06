@@ -16,7 +16,6 @@
 package org.apache.ibatis.mapping;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -204,11 +203,6 @@ public final class MappedStatement {
       assert mappedStatement.id != null;
       assert mappedStatement.sqlSource != null;
       assert mappedStatement.lang != null;
-      if (mappedStatement.resultSets != null
-          && Arrays.asList(mappedStatement.resultSets).contains(ResultMapping.NESTED_CURSOR)) {
-        throw new IllegalStateException(
-            "Result set name '" + ResultMapping.NESTED_CURSOR + "' is reserved, please assign another name.");
-      }
       mappedStatement.resultMaps = Collections.unmodifiableList(mappedStatement.resultMaps);
       return mappedStatement;
     }

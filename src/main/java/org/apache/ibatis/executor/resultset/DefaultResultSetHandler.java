@@ -532,7 +532,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     final List<ResultMapping> propertyMappings = resultMap.getPropertyResultMappings();
     for (ResultMapping propertyMapping : propertyMappings) {
       String column = prependPrefix(propertyMapping.getColumn(), columnPrefix);
-      if (propertyMapping.getNestedResultMapId() != null) {
+      if (propertyMapping.getNestedResultMapId() != null && !JdbcType.CURSOR.equals(propertyMapping.getJdbcType())) {
         // the user added a column attribute to a nested result map, ignore it
         column = null;
       }
@@ -568,26 +568,31 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     if (propertyMapping.getNestedQueryId() != null) {
       return getNestedQueryMappingValue(rs, metaResultObject, propertyMapping, lazyLoader, columnPrefix);
     }
+    if (JdbcType.CURSOR.equals(propertyMapping.getJdbcType())) {
+      return getNestedCursorValue(rs, metaResultObject, propertyMapping, columnPrefix);
+    }
     if (propertyMapping.getResultSet() != null) {
-      if (ResultMapping.NESTED_CURSOR.equals(propertyMapping.getResultSet())) {
-        final String column = prependPrefix(propertyMapping.getColumn(), columnPrefix);
-        ResultMap nestedResultMap = resolveDiscriminatedResultMap(rs,
-            configuration.getResultMap(propertyMapping.getNestedResultMapId()),
-            getColumnPrefix(columnPrefix, propertyMapping));
-        ResultSetWrapper rsw = new ResultSetWrapper(rs.getObject(column, ResultSet.class), configuration);
-        List<Object> results = new ArrayList<>();
-        handleResultSet(rsw, nestedResultMap, results, null);
-        linkObjects(metaResultObject, propertyMapping, results.get(0), true);
-        return metaResultObject.getValue(propertyMapping.getProperty());
-      } else {
-        addPendingChildRelation(rs, metaResultObject, propertyMapping); // TODO is that OK?
-        return DEFERRED;
-      }
+      addPendingChildRelation(rs, metaResultObject, propertyMapping); // TODO is that OK?
+      return DEFERRED;
     } else {
       final TypeHandler<?> typeHandler = propertyMapping.getTypeHandler();
       final String column = prependPrefix(propertyMapping.getColumn(), columnPrefix);
       return typeHandler.getResult(rs, column);
     }
+  }
+
+  private Object getNestedCursorValue(ResultSet rs, MetaObject metaResultObject, ResultMapping propertyMapping,
+      String parentColumnPrefix) throws SQLException {
+    final String column = prependPrefix(propertyMapping.getColumn(), parentColumnPrefix);
+    final String property = propertyMapping.getProperty();
+    ResultMap nestedResultMap = resolveDiscriminatedResultMap(rs,
+        configuration.getResultMap(propertyMapping.getNestedResultMapId()),
+        getColumnPrefix(parentColumnPrefix, propertyMapping));
+    ResultSetWrapper rsw = new ResultSetWrapper(rs.getObject(column, ResultSet.class), configuration);
+    List<Object> results = new ArrayList<>();
+    handleResultSet(rsw, nestedResultMap, results, null);
+    linkObjects(metaResultObject, propertyMapping, results.get(0), true);
+    return metaResultObject.getValue(property);
   }
 
   private List<UnMappedColumnAutoMapping> createAutomaticMappings(ResultSetWrapper rsw, ResultMap resultMap,

@@ -948,7 +948,7 @@ Here is the statement and result map.
 <resultMap id="blogResult" type="Blog">
   <id property="id" column="id" />
   <result property="title" column="title" />
-  <association property="author" column="author" resultSet="NESTED_CURSOR">
+  <association property="author" column="author" jdbcType="CURSOR">
     <id property="id" column="id" />
     <result property="username" column="username" />
   </association>
@@ -961,8 +961,9 @@ Here is the statement and result map.
 </select>
 ```
 
-Compared to the examples in the previous section, the key difference is the `resultSet` attribute in the `<association>` element.
-Its value `NESTED_CURSOR` indicates that the value of the column `author` is nested cursor.
+Compared to the examples in the previous section, the key difference is the `jdbcType` attribute in the `<association>` element.
+Its value `CURSOR` indicates that the value of the column `author` is nested cursor.
+
 
 #### Multiple ResultSets for Association
 
@@ -1008,6 +1009,7 @@ Now we can specify that the data to fill the "author" association comes in the "
   </association>
 </resultMap>
 ```
+
 
 You've seen above how to deal with a "has one" type association. But what about "has many"? That's the subject of the next section.
 
@@ -1119,13 +1121,13 @@ Also, if you prefer the longer form that allows for more reusability of your res
 #### Nested Cursor for Collection
 
 It might be obvious, but nested cursor can return multiple rows.
-Just like `<association>`, you just need to specify `resultSet="NESTED_CURSOR"` in the `<collection>` element.
+Just like `<association>`, you just need to specify `jdbcType="CURSOR""` in the `<collection>` element.
 
 ```xml
 <resultMap id="blogResult" type="Blog">
   <id property="id" column="id" />
   <result property="title" column="title" />
-  <collection property="posts" column="posts" resultSet="NESTED_CURSOR">
+  <collection property="posts" column="posts" jdbcType="CURSOR">
     <id property="id" column="id" />
     <result property="subject" column="subject" />
     <result property="body" column="body" />

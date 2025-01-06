@@ -30,11 +30,6 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
  */
 public class ResultMapping {
 
-  /**
-   * Reserved result set name indicating a nested cursor is mapped to this property.
-   */
-  public static final String NESTED_CURSOR = "NESTED_CURSOR";
-
   private Configuration configuration;
   private String property;
   private String column;
@@ -171,8 +166,7 @@ public class ResultMapping {
         if (resultMapping.foreignColumn != null) {
           numForeignColumns = resultMapping.foreignColumn.split(",").length;
         }
-        if (numColumns != numForeignColumns && !NESTED_CURSOR.equals(resultMapping.resultSet)) {
-          // Nested cursor does not use 'foreignKey'
+        if (numColumns != numForeignColumns) {
           throw new IllegalStateException(
               "There should be the same number of columns and foreignColumns in property " + resultMapping.property);
         }
