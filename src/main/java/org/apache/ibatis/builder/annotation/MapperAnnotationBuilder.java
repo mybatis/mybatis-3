@@ -462,7 +462,7 @@ public class MapperAnnotationBuilder {
 
   private String findColumnPrefix(Result result) {
     String columnPrefix = result.one().columnPrefix();
-    if (columnPrefix.length() < 1) {
+    if (columnPrefix.isEmpty()) {
       columnPrefix = result.many().columnPrefix();
     }
     return columnPrefix;
@@ -470,7 +470,7 @@ public class MapperAnnotationBuilder {
 
   private String nestedResultMapId(Result result) {
     String resultMapId = result.one().resultMap();
-    if (resultMapId.length() < 1) {
+    if (resultMapId.isEmpty()) {
       resultMapId = result.many().resultMap();
     }
     if (!resultMapId.contains(".")) {
@@ -480,15 +480,15 @@ public class MapperAnnotationBuilder {
   }
 
   private boolean hasNestedResultMap(Result result) {
-    if (result.one().resultMap().length() > 0 && result.many().resultMap().length() > 0) {
+    if (!result.one().resultMap().isEmpty() && !result.many().resultMap().isEmpty()) {
       throw new BuilderException("Cannot use both @One and @Many annotations in the same @Result");
     }
-    return result.one().resultMap().length() > 0 || result.many().resultMap().length() > 0;
+    return !result.one().resultMap().isEmpty() || !result.many().resultMap().isEmpty();
   }
 
   private String nestedSelectId(Result result) {
     String nestedSelect = result.one().select();
-    if (nestedSelect.length() < 1) {
+    if (nestedSelect.isEmpty()) {
       nestedSelect = result.many().select();
     }
     if (!nestedSelect.contains(".")) {
@@ -499,19 +499,19 @@ public class MapperAnnotationBuilder {
 
   private boolean isLazy(Result result) {
     boolean isLazy = configuration.isLazyLoadingEnabled();
-    if (result.one().select().length() > 0 && FetchType.DEFAULT != result.one().fetchType()) {
+    if (!result.one().select().isEmpty() && FetchType.DEFAULT != result.one().fetchType()) {
       isLazy = result.one().fetchType() == FetchType.LAZY;
-    } else if (result.many().select().length() > 0 && FetchType.DEFAULT != result.many().fetchType()) {
+    } else if (!result.many().select().isEmpty() && FetchType.DEFAULT != result.many().fetchType()) {
       isLazy = result.many().fetchType() == FetchType.LAZY;
     }
     return isLazy;
   }
 
   private boolean hasNestedSelect(Result result) {
-    if (result.one().select().length() > 0 && result.many().select().length() > 0) {
+    if (!result.one().select().isEmpty() && !result.many().select().isEmpty()) {
       throw new BuilderException("Cannot use both @One and @Many annotations in the same @Result");
     }
-    return result.one().select().length() > 0 || result.many().select().length() > 0;
+    return !result.one().select().isEmpty() || !result.many().select().isEmpty();
   }
 
   private void applyConstructorArgs(Arg[] args, Class<?> resultType, List<ResultMapping> resultMappings,
@@ -539,7 +539,7 @@ public class MapperAnnotationBuilder {
   }
 
   private String nullOrEmpty(String value) {
-    return value == null || value.trim().length() == 0 ? null : value;
+    return value == null || value.trim().isEmpty() ? null : value;
   }
 
   private KeyGenerator handleSelectKeyAnnotation(SelectKey selectKeyAnnotation, String baseStatementId,
