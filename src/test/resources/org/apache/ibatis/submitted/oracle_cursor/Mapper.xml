@@ -112,6 +112,22 @@
     <include refid="nestedCursor" />
   </select>
 
+  <!-- Map nested cursor to constructor arg (collection). -->
+  <resultMap id="authorRM_ConstructorCollection"
+    type="org.apache.ibatis.submitted.oracle_cursor.Author">
+    <constructor>
+      <idArg column="id" javaType="int" />
+      <arg column="name" javaType="string" />
+      <arg column="books" jdbcType="CURSOR"
+        javaType="list" resultMap="bookRM" />
+    </constructor>
+  </resultMap>
+
+  <select id="selectNestedCursorConstructorCollection"
+    resultMap="authorRM_ConstructorCollection">
+    <include refid="nestedCursor" />
+  </select>
+
   <!-- Use inline result map to map nested cursor to collection. -->
   <resultMap id="author2RM_InlineRM"
     type="org.apache.ibatis.submitted.oracle_cursor.Author2">
@@ -130,21 +146,52 @@
     ) book_names from author a
   ]]></select>
 
+  <sql id="bookNestedCursor"><![CDATA[
+    select b.id, b.name, cursor(
+      select a.id, a.name from author a where b.author_id = a.id
+    ) author from book b
+  ]]></sql>
+
   <!-- Map nested cursor to association. -->
   <resultMap id="book2RM_Association"
     type="org.apache.ibatis.submitted.oracle_cursor.Book2">
     <id property="id" column="id" />
     <result property="name" column="name" />
-    <association property="author" column="author" jdbcType="CURSOR">
+    <association property="author" column="author"
+      jdbcType="CURSOR" resultMap="authorRM">
       <id property="id" column="id" />
       <result property="name" column="name" />
     </association>
   </resultMap>
 
   <select id="selectNestedCursorAssociation"
-    resultMap="book2RM_Association"><![CDATA[
-    select b.id, b.name, cursor(
-      select a.id, a.name from author a where b.author_id = a.id
-    ) author from book b
-  ]]></select>
+    resultMap="book2RM_Association">
+    <include refid="bookNestedCursor" />
+  </select>
+
+  <resultMap id="authorRM_ConstructorIdName"
+    type="org.apache.ibatis.submitted.oracle_cursor.Author">
+    <constructor>
+      <idArg column="id" javaType="int" />
+      <arg column="name" javaType="string" />
+    </constructor>
+  </resultMap>
+
+  <!-- Map nested cursor to constructor arg (single). -->
+  <resultMap id="book2RM_ConstructorAssociation"
+    type="org.apache.ibatis.submitted.oracle_cursor.Book2">
+    <constructor>
+      <idArg column="id" javaType="int" />
+      <arg column="name" javaType="string" />
+      <arg column="author" jdbcType="CURSOR"
+        javaType="org.apache.ibatis.submitted.oracle_cursor.Author"
+        resultMap="authorRM_ConstructorIdName" />
+    </constructor>
+  </resultMap>
+
+  <select id="selectNestedCursorConstructorAssociation"
+    resultMap="book2RM_ConstructorAssociation">
+    <include refid="bookNestedCursor" />
+  </select>
+
 </mapper>

@@ -33,8 +33,12 @@ public interface Mapper {
 
   List<Author> selectNestedCursor_Automap();
 
+  List<Author> selectNestedCursorConstructorCollection();
+
   List<Author2> selectNestedCursorOfStrings();
 
   List<Book2> selectNestedCursorAssociation();
+
+  List<Book2> selectNestedCursorConstructorAssociation();
 
 }

@@ -88,6 +88,11 @@ class OracleCursorTest {
     doTest(Mapper::selectNestedCursor_Automap);
   }
 
+  @Test
+  void nestedCursorsConstructorCollection() {
+    doTest(Mapper::selectNestedCursorConstructorCollection);
+  }
+
   private void doTest(Function<Mapper, List<Author>> query) {
     doTest(query, ArrayList.class);
   }
@@ -116,9 +121,18 @@ class OracleCursorTest {
 
   @Test
   void nestedCursorAssociation() {
+    doTestBook2(Mapper::selectNestedCursorAssociation);
+  }
+
+  @Test
+  void nestedCursorConstructorAssociation() {
+    doTestBook2(Mapper::selectNestedCursorConstructorAssociation);
+  }
+
+  private void doTestBook2(Function<Mapper, List<Book2>> query) {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
-      List<Book2> books = mapper.selectNestedCursorAssociation();
+      List<Book2> books = query.apply(mapper);
       assertIterableEquals(List.of(new Book2(1, "C#", new Author(1, "John")),
           new Book2(2, "Python", new Author(1, "John")), new Book2(3, "SQL", new Author(2, "Jane")),
           new Book2(4, "Java", new Author(2, "Jane")), new Book2(5, "Ruby", new Author(1, "John"))), books);
